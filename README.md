@@ -41,13 +41,16 @@ See the [Software](/Software) directory for more info
 # DC27 dev team
 
 Project owner
-[@nemus](https://twitter.com/Nemus801)
+ - [@nemus](https://twitter.com/Nemus801)
+
 Software Team
-[@professor__plum](https://twitter.com/professor__plum)
-[@_bashNinja](https://twitter.com/_bashNinja)
+ - [@professor__plum](https://twitter.com/professor__plum)
+ - [@_bashNinja](https://twitter.com/_bashNinja)
+
 Hardware Team
-[@dvdfreitag](https://twitter.com/dvdfreitag)
-[@hamster](https://twitter.com/hamster)
+ - [@dvdfreitag](https://twitter.com/dvdfreitag)
+ - [@hamster](https://twitter.com/hamster)
+
 Honorable Mention
-[@SirGed](https://twitter.com/SirGed)
+ - [@SirGed](https://twitter.com/SirGed)
 
