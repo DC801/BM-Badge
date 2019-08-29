@@ -1,0 +1,122 @@
+Source:	C:\Users\hamster\Documents\Development\dc801\dc27-party-badge\Hardware\hcrn.sch
+Date:	4/23/2019 11:14:18 PM
+Tool:	Eeschema (5.1.0)-1
+Component Count:	117
+Ref	Value	Part	Footprint	Description	Vendor
+BT1	Battery	Device:Battery	Battery:BatteryHolder_Keystone_2479_3xAAA	Multiple-cell battery	
+C1	0.1uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C2	0.1uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C3	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C4	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C5	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C6	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C7	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C8	22uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C9	1nF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C10	0.1uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C11	0.1uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C12	47pF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C13	47pF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C14	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C15	4.7uF	Device:C	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor	
+C16	0.1uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C17	0.47uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C18	0.1uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C19	0.47uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C20	22uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C21	0.1uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C22	0.47uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+C23	0.47uF	Device:C_Small	Capacitor_SMD:C_0603_1608Metric	Unpolarized capacitor, small symbol	
+D1	D_Schottky	Device:D_Schottky	Diode_SMD:D_0603_1608Metric	Schottky diode	
+D2	SP0503BAHT	Power_Protection:SP0502BAJT	Package_TO_SOT_SMD:SOT-143	TVS Diode Array, 5.5V Standoff, 2 Channels, SC-70 package	
+D3	RED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D4	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D5	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D6	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D7	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D8	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D9	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D10	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D11	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D12	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D13	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D14	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D15	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D16	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D17	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D18	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D19	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D20	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D21	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D22	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D23	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D24	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D25	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D26	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D27	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D28	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D29	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D30	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D31	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D32	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D33	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D34	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D35	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D36	LED	Device:LED	LED_SMD:LED_0603_1608Metric	Light emitting diode	
+D38	LED_ARGB	Device:LED_ARGB	LED_THT:LED_D5.0mm-4_RGB	RGB LED, anode/red/green/blue	
+F1	1.1A	Device:Polyfuse_Small	Fuse:Fuse_0805_2012Metric	Resettable fuse, polymeric positive temperature coefficient, small symbol	
+F2	1.1A	Device:Polyfuse_Small	Fuse:Fuse_0805_2012Metric	Resettable fuse, polymeric positive temperature coefficient, small symbol	
+J1	JTAG	Connector_Generic:Conn_02x05_Odd_Even	Connector_PinHeader_1.27mm:PinHeader_2x05_P1.27mm_Vertical	Generic connector, double row, 02x05, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)	
+J2	Micro_SD_Card_SPI	MicroSD-Retention:Micro_SD_Card_SPI_Seeed-MicroSD-SPI-Seeed	lib_fp:MicroSD-Socket-Seeed-320090008		
+J4	SPKR+	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J5	SPKR-	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J6	3.3V	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J7	GND	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J8	UART_TX	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J9	UART_RX	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J10	SCK1	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J11	MOSI1	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J12	CS1	Connector_Generic:Conn_01x01	TestPoint:TestPoint_Pad_1.5x1.5mm	Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J16	LCD	Connector_Generic:Conn_01x10	lib_fp:XF2L-1035-1A	Generic connector, single row, 01x10, script generated (kicad-library-utils/schlib/autogen/connector/)	
+J17	USB_B_Micro	Connector_Specialized:USB_B_Micro	Connector_USB:USB_Micro-B_Molex-105017-0001	USB Micro Type B connector	
+J18	Battery	Connector_Generic:Conn_01x02	Connector_JST:JST_PH_S2B-PH-SM4-TB_1x02-1MP_P2.00mm_Horizontal	Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)	
+JP1	LiPo Charger Enable	Jumper:SolderJumper_2_Open	Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm	Solder Jumper, 2-pole, open	
+L1	4.7uH	Device:L_Small	Inductor_SMD:L_0805_2012Metric	Inductor, small symbol	
+Q1	FDN360P	Device:Q_PMOS_GSD	Package_TO_SOT_SMD:SuperSOT-3	P-MOSFET transistor, gate/source/drain	
+R1	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R2	4.7k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R3	4.7k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R4	806k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R5	2M	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R6	3.9k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R7	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R8	15k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R9	4.99k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R10	27R	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R11	27R	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R12	33R	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R13	470R	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R14	2.0k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R15	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R16	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R17	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R18	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R19	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R20	10k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R21	100k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+R22	20k	Device:R	Resistor_SMD:R_0603_1608Metric	Resistor	
+SW1	Power	Switch:SW_SPDT	lib_fp:SW_SPDT_CK-JS102011SAQN	Switch, single pole double throw	
+SW2	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+SW3	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+SW4	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+SW5	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+SW6	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+SW7	SW_Push	Switch:SW_Push	lib_fp:SW_SPST_B3S-1000	Push button switch, generic, two pins	
+U1	NAU8810	Nuvoton:NAU8810	Package_DFN_QFN:QFN-20-1EP_4x4mm_P0.5mm_EP2.5x2.5mm		
+U2	PAM2305	pam230x:PAM2305	Package_TO_SOT_SMD:SOT-23-5		
+U3	BMD-340	BMD-340:BMD-340	lib_fp:RIGADO_BMD-340		
+U4	Minibadge 1	saintcon-minibadge:SAINTCON-Minibadge	lib_fp:SAINTCON-Minibadge		
+U5	SHITTY_ADDON	shitty_addon:SHITTY_ADDON_v1.69bis	lib_fp:Badgelife-Shitty-v1.69bis		
+U6	SHITTY_ADDON	shitty_addon:SHITTY_ADDON_v1.69bis	lib_fp:Badgelife-Shitty-v1.69bis		
+U7	MCP73832-2-OT	mcp73832-2-ot:MCP73832-2-OT	Package_TO_SOT_SMD:SOT-23-5	Single cell, Li-Ion/Li-Po charge management controller, 4.20V, Open-Drain Status Output, in SOT23-5 package	
+U8	IS31FL3736	is31fl3736:IS31FL3736	Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm_ThermalVias		

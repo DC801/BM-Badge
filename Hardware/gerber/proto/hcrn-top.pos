@@ -1,0 +1,45 @@
+### Module positions - created on 4/28/2019 10:37:38 PM ###
+### Printed by Pcbnew version kicad (5.1.0)-1
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val       Package                   PosX       PosY       Rot  Side
+D4        LED       LED_0603_1608Metric    86.3200   -91.7600   90.0000  top
+D5        LED       LED_0603_1608Metric    83.1500   -74.5100  180.0000  top
+D6        LED       LED_0603_1608Metric    83.1500   -76.8162  180.0000  top
+D7        LED       LED_0603_1608Metric    83.1500   -79.1225  180.0000  top
+D8        LED       LED_0603_1608Metric    83.1500   -81.4287  180.0000  top
+D9        LED       LED_0603_1608Metric    83.1500   -83.7350  180.0000  top
+D10       LED       LED_0603_1608Metric    72.3000  -101.8300   90.0000  top
+D11       LED       LED_0603_1608Metric    84.5100   -53.5700  180.0000  top
+D12       LED       LED_0603_1608Metric    92.1700  -106.0100  270.0000  top
+D13       LED       LED_0603_1608Metric    92.1700  -109.1200   90.0000  top
+D14       LED       LED_0603_1608Metric    92.4600  -122.8100   90.0000  top
+D15       LED       LED_0603_1608Metric    89.9600  -151.3700  180.0000  top
+D16       LED       LED_0603_1608Metric    89.3300  -134.3000  270.0000  top
+D17       LED       LED_0603_1608Metric    87.4200  -134.3000  270.0000  top
+D18       LED       LED_0603_1608Metric    95.8400  -162.1700   90.0000  top
+D19       LED       LED_0603_1608Metric   103.3600  -146.5200    0.0000  top
+D20       LED       LED_0603_1608Metric   114.8600  -106.0300  270.0000  top
+D21       LED       LED_0603_1608Metric   114.8700  -109.1200   90.0000  top
+D22       LED       LED_0603_1608Metric   114.5000  -122.8000   90.0000  top
+D23       LED       LED_0603_1608Metric   117.0700  -151.3100    0.0000  top
+D24       LED       LED_0603_1608Metric   117.6800  -134.2800  270.0000  top
+D25       LED       LED_0603_1608Metric   119.6700  -134.2700  270.0000  top
+D26       LED       LED_0603_1608Metric   111.0300  -162.1700   90.0000  top
+D27       LED       LED_0603_1608Metric   103.3600  -148.3600    0.0000  top
+D28       LED       LED_0603_1608Metric   120.1600   -91.7600   90.0000  top
+D29       LED       LED_0603_1608Metric   135.8500  -102.1700  180.0000  top
+D30       LED       LED_0603_1608Metric   144.3700   -98.8500   90.0000  top
+D31       LED       LED_0603_1608Metric   121.9500   -53.4400    0.0000  top
+D32       LED       LED_0603_1608Metric   102.5300   -40.2200  270.0000  top
+D33       LED       LED_0603_1608Metric   104.5700   -40.2400  270.0000  top
+D34       LED       LED_0603_1608Metric   108.2200   -29.1600    0.0000  top
+D35       LED       LED_0603_1608Metric    95.5300   -23.0400    0.0000  top
+D36       LED       LED_0603_1608Metric   103.7100  -155.8900    0.0000  top
+SW2       SW_Push   SW_SPST_B3S-1000       72.2100   -93.1700    0.0000  top
+SW3       SW_Push   SW_SPST_B3S-1000       72.1300  -110.9700    0.0000  top
+SW4       SW_Push   SW_SPST_B3S-1000       64.1300  -102.0700    0.0000  top
+SW5       SW_Push   SW_SPST_B3S-1000       80.1500  -102.0700    0.0000  top
+SW6       SW_Push   SW_SPST_B3S-1000      141.0900  -108.3100  180.0000  top
+SW7       SW_Push   SW_SPST_B3S-1000      130.7500   -96.4900    0.0000  top
+## End

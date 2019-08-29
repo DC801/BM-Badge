@@ -1,0 +1,22 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Badgelife_sao_connector_v169bis
+#
+DEF Badgelife_sao_connector_v169bis X 0 40 Y Y 1 F N
+F0 "X" -280 330 50 H V C CNN
+F1 "Badgelife_sao_connector_v169bis" 0 250 50 H V C CNN
+F2 "" 200 0 50 V I C CNN
+F3 "" 200 0 50 V I C CNN
+DRAW
+S 300 200 -300 -200 0 1 0 f
+X VCC 1 500 100 200 L 50 50 1 1 I
+X GND 2 -500 100 200 R 50 50 1 1 I
+X SDA 3 500 0 200 L 50 50 1 1 I
+X SCL 4 -500 0 200 R 50 50 1 1 I
+X GPIO1 5 500 -100 200 L 50 50 1 1 I
+X GPIO2 6 -500 -100 200 R 50 50 1 1 I
+ENDDRAW
+ENDDEF
+#
+#End Library
