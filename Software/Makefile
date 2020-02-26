@@ -3,11 +3,13 @@ TARGETS          := dc27_badge
 OUTPUT_DIRECTORY := _build
 BOOTLOADER       := bootloader/_build/bootloader.hex
 
-SDK_ROOT := $(HOME)/dev/nordic-sdk15/
+GNU_INSTALL_ROOT :=
+
+SDK_ROOT := ../../nordic-sdk15.3
 PROJ_DIR := $(CURDIR)
 PYTHON3 := $(shell which python 2>/dev/null)
 UF2CONV :=$(PROJ_DIR)/uf2conv.py
-ifeq ($(OS),Windows_NT) 
+ifeq ($(OS),Windows_NT)
 	NRFJPROG := C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe
 	MERGEHEX := C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/mergehex.exe
 else
@@ -195,8 +197,8 @@ SRC_FILES += \
 #   $(PROJ_DIR)/games/galaga/Objects/ObjectActions/MoveableCharacter.cpp \
 #   $(PROJ_DIR)/games/galaga/Objects/renderableObjects/AlienGroup.cpp \
 
-  
-  
+
+
 #  $(PROJ_DIR)/games/galaga/galaga.cpp \
 #  $(PROJ_DIR)/games/galaga/shot.cpp \
 
@@ -436,14 +438,14 @@ flash: $(OUTPUT_DIRECTORY)/dc27_badge.hex
 
 erase:
 	$(NRFJPROG) --eraseall -f nrf52
-	
+
 recover:
 	$(NRFJPROG) --recover -f nrf52
 
 god: CFLAGS += -D GODMODE
 god: dc27_badge
 	@echo Compiling for GODMODE
-	
+
 debug: CFLAGS += -D DEBUGMODE
 debug: dc27_badge
 	@echo Compiling for DEBUGMODE
@@ -479,7 +481,7 @@ flash_god: merge_god
 	@echo Flashing: $<
 	$(NRFJPROG) --program dc27_badge_merged_god.hex -f nrf52 --sectorerase
 	$(NRFJPROG) --reset -f nrf52
-	
+
 merge_debug: debug bootloader
 	@echo Merging softdevice, bootloader and user hex
 	@$(MERGEHEX) -m $(SOFTDEVICE) $(BOOTLOADER) $(OUTPUT_DIRECTORY)/dc27_badge.hex -o dc27_badge_merged_debug.hex
@@ -500,4 +502,4 @@ CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_
 sdk_config:
 	java -jar $(CMSIS_CONFIG_TOOL) $(SDK_CONFIG_FILE)
 
-	
+
