@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := _build
 
 GNU_INSTALL_ROOT :=
 
-SDK_ROOT := ../../../nordic-sdk15.3
+SDK_ROOT := ../../../nordic-sdk16.0
 PROJ_DIR := $(CURDIR)
 NRFJPROG := $(HOME)/dev/bin/nrfjprog/nrfjprog
 
@@ -102,7 +102,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/sortlist/nrf_sortlist.c \
   $(SDK_ROOT)/components/libraries/strerror/nrf_strerror.c \
   $(SDK_ROOT)/components/libraries/timer/app_timer.c \
-  $(SDK_ROOT)/components/libraries/timer/experimental/drv_rtc.c \
+  $(SDK_ROOT)/components/libraries/timer/drv_rtc.c \
   $(SDK_ROOT)/components/libraries/uart/app_uart_fifo.c \
   $(SDK_ROOT)/components/libraries/uart/retarget.c \
   $(SDK_ROOT)/components/libraries/usbd/app_usbd.c \
@@ -271,7 +271,6 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/libraries/usbd/class/hid/kbd \
   $(SDK_ROOT)/components/libraries/usbd/class/hid/mouse \
   $(SDK_ROOT)/components/libraries/usbd/class/msc \
-  $(SDK_ROOT)/components/libraries/timer/experimental \
   $(SDK_ROOT)/components/libraries/util \
   $(SDK_ROOT)/components/nfc/ndef/conn_hand_parser \
   $(SDK_ROOT)/components/nfc/ndef/conn_hand_parser/ac_rec_parser \
@@ -302,7 +301,7 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/softdevice/common \
   $(SDK_ROOT)/components/softdevice/s140/headers \
   $(SDK_ROOT)/components/softdevice/s140/headers/nrf52 \
-  $(SDK_ROOT)/components/softdevice/mbr/nrf52840/headers \
+  $(SDK_ROOT)/components/softdevice/mbr/headers \
   $(SDK_ROOT)/components/toolchain/cmsis/include \
   \
   $(SDK_ROOT)/external/fatfs/port/ \

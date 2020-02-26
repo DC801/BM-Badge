@@ -5,7 +5,7 @@ BOOTLOADER       := bootloader/_build/bootloader.hex
 
 GNU_INSTALL_ROOT :=
 
-SDK_ROOT := ../../nordic-sdk15.3
+SDK_ROOT := ../../nordic-sdk16.0
 PROJ_DIR := $(CURDIR)
 PYTHON3 := $(shell which python 2>/dev/null)
 UF2CONV :=$(PROJ_DIR)/uf2conv.py

@@ -5189,6 +5189,31 @@
 #define NRF_BL_APP_SIGNATURE_CHECK_REQUIRED 0
 #endif
 
+#ifndef NRF_BL_RESET_DELAY_MS
+#define NRF_BL_RESET_DELAY_MS 0
+#endif
+
+//==========================================================
+// <q> NRF_BL_DEBUG_PORT_DISABLE  - Disable access to the chip via the debug port.
+// <i> Disable access to the chip via the debug port.
+// <i> This modifies the APPROTECT and DEBUGCTRL registers.
+// <i> Enable this option in production code if such
+// <i> access should be prohibited. Read about the registers
+// <i> for more details.
+#ifndef NRF_BL_DEBUG_PORT_DISABLE
+#define NRF_BL_DEBUG_PORT_DISABLE 0
+#endif
+
+// <q> NRF_BL_DFU_ALLOW_UPDATE_FROM_APP  - Whether to allow the app to receive firmware updates for the bootloader to activate.
+
+
+// <i> Enable this to allow the app to instruct the bootloader to activate firmware.
+// <i> The bootloader will do its own postvalidation.
+
+#ifndef NRF_BL_DFU_ALLOW_UPDATE_FROM_APP
+#define NRF_BL_DFU_ALLOW_UPDATE_FROM_APP 0
+#endif
+
 // <<< end of configuration section >>>
 #endif //SDK_CONFIG_H
 
