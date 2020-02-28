@@ -835,15 +835,6 @@
 #define NRF_CRYPTO_BACKEND_MICRO_ECC_PUBLIC_KEY_TRUSTED_ENABLED 1
 #endif
 
-// <q> NRF_CRYPTO_BACKEND_MICRO_ECC_LITTLE_ENDIAN_ENABLED  - Enable non-standard little endian byte order.
-
-
-// <i> This affects parameters for all ECC API (raw keys, signature, digest, shared secret). Only for use in nRF SDK DFU!
-
-/* #ifndef NRF_CRYPTO_BACKEND_MICRO_ECC_LITTLE_ENDIAN_ENABLED
-#define NRF_CRYPTO_BACKEND_MICRO_ECC_LITTLE_ENDIAN_ENABLED 0
-#endif */
-
 // </e>
 
 // <e> NRF_CRYPTO_BACKEND_NRF_HW_RNG_ENABLED - Enable the nRF HW RNG backend.
@@ -879,15 +870,6 @@
 #ifndef NRF_CRYPTO_BACKEND_NRF_SW_HASH_SHA256_ENABLED
 #define NRF_CRYPTO_BACKEND_NRF_SW_HASH_SHA256_ENABLED 1
 #endif
-
-// <q> NRF_CRYPTO_BACKEND_NRF_SW_HASH_LITTLE_ENDIAN_DIGEST_ENABLED  - nRF SW hash outputs digests in little endian
-
-
-// <i> Makes the nRF SH hash functions output digests in little endian format. Only for use in nRF SDK DFU!
-
-/* #ifndef NRF_CRYPTO_BACKEND_NRF_SW_HASH_LITTLE_ENDIAN_DIGEST_ENABLED
-#define NRF_CRYPTO_BACKEND_NRF_SW_HASH_LITTLE_ENDIAN_DIGEST_ENABLED 0
-#endif */
 
 // </e>
 
@@ -3607,17 +3589,6 @@
 
 // </e>
 
-// <o> APP_TIMER_SAFE_WINDOW_MS - Maximum possible latency (in milliseconds) of handling app_timer event.
-// <i> Maximum possible timeout that can be set is reduced by safe window.
-// <i> Example: RTC frequency 16384 Hz, maximum possible timeout 1024 seconds - APP_TIMER_SAFE_WINDOW_MS.
-// <i> Since RTC is not stopped when processor is halted in debugging session, this value
-// <i> must cover it if debugging is needed. It is possible to halt processor for APP_TIMER_SAFE_WINDOW_MS
-// <i> without corrupting app_timer behavior.
-
-#ifndef APP_TIMER_SAFE_WINDOW_MS
-#define APP_TIMER_SAFE_WINDOW_MS 300000
-#endif
-
 // <e> APP_USBD_CDC_ACM_CONFIG_LOG_ENABLED - Enables logging in the module.
 //==========================================================
 #ifndef APP_USBD_CDC_ACM_CONFIG_LOG_ENABLED
@@ -4321,27 +4292,6 @@
 
 // </e>
 
-#ifndef NRF_SDH_CLOCK_LF_SRC
-#define NRF_SDH_CLOCK_LF_SRC 0
-#endif
-
-// <o> NRF_SDH_CLOCK_LF_RC_CTIV - SoftDevice calibration timer interval.
-#ifndef NRF_SDH_CLOCK_LF_RC_CTIV
-#define NRF_SDH_CLOCK_LF_RC_CTIV 16
-#endif
-
-// <o> NRF_SDH_CLOCK_LF_RC_TEMP_CTIV - SoftDevice calibration timer interval under constant temperature.
-// <i> How often (in number of calibration intervals) the RC oscillator shall be calibrated
-// <i>  if the temperature has not changed.
-
-#ifndef NRF_SDH_CLOCK_LF_RC_TEMP_CTIV
-#define NRF_SDH_CLOCK_LF_RC_TEMP_CTIV 2
-#endif
-
-#ifndef NRF_SDH_CLOCK_LF_ACCURACY
-#define NRF_SDH_CLOCK_LF_ACCURACY 1
-#endif
-
 // <e> NRF_SDH_ANT_LOG_ENABLED - Enable logging in SoftDevice handler (ANT) module.
 //==========================================================
 #ifndef NRF_SDH_ANT_LOG_ENABLED
@@ -4392,28 +4342,6 @@
 #endif
 
 // </e>
-
-#ifndef NRF_SDH_STACK_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_STACK_OBSERVER_PRIO_LEVELS 2
-#endif
-
-// <o> NRF_SDH_SOC_STACK_OBSERVER_PRIO
-// <i> This setting configures the priority with which SoC events are processed with respect to other events coming from the stack.
-// <i> Modify this setting if you need to have SoC events dispatched before or after other stack events, such as ANT or BLE.
-// <i> Zero is the highest priority.
-
-#ifndef NRF_SDH_SOC_STACK_OBSERVER_PRIO
-#define NRF_SDH_SOC_STACK_OBSERVER_PRIO 0
-#endif
-
-// <o> NRF_SDH_BLE_STACK_OBSERVER_PRIO
-// <i> This setting configures the priority with which BLE events are processed with respect to other events coming from the stack.
-// <i> Modify this setting if you need to have BLE events dispatched before or after other stack events, such as ANT or SoC.
-// <i> Zero is the highest priority.
-
-#ifndef NRF_SDH_BLE_STACK_OBSERVER_PRIO
-#define NRF_SDH_BLE_STACK_OBSERVER_PRIO 0
-#endif
 
 // <e> NRF_SDH_BLE_LOG_ENABLED - Enable logging in SoftDevice handler (BLE) module.
 //==========================================================
@@ -4516,68 +4444,6 @@
 #endif
 
 // </e>
-
-// <e> NRF_SDH_SOC_ENABLED - nrf_sdh_soc - SoftDevice SoC event handler
-//==========================================================
-#ifndef NRF_SDH_SOC_ENABLED
-#define NRF_SDH_SOC_ENABLED 1
-#endif
-
-// </e>
-
-// <o> NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE - Attribute Table size in bytes. The size must be a multiple of 4.
-#ifndef NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE
-#define NRF_SDH_BLE_GATTS_ATTR_TAB_SIZE 1408
-#endif
-
-// <o> NRF_SDH_BLE_GATT_MAX_MTU_SIZE - Static maximum MTU size.
-#ifndef NRF_SDH_BLE_GATT_MAX_MTU_SIZE
-#define NRF_SDH_BLE_GATT_MAX_MTU_SIZE 23
-#endif
-
-// <o> NRF_SDH_BLE_VS_UUID_COUNT - The number of vendor-specific UUIDs.
-#ifndef NRF_SDH_BLE_VS_UUID_COUNT
-#define NRF_SDH_BLE_VS_UUID_COUNT 10
-#endif
-
-// <q> NRF_SDH_BLE_SERVICE_CHANGED  - Include the Service Changed characteristic in the Attribute Table.
-
-
-#ifndef NRF_SDH_BLE_SERVICE_CHANGED
-#define NRF_SDH_BLE_SERVICE_CHANGED 0
-#endif
-
-//==========================================================
-// <o> NRF_SDH_SOC_OBSERVER_PRIO_LEVELS - Total number of priority levels for SoC observers.
-// <i> This setting configures the number of priority levels available for the SoC event handlers.
-// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
-
-#ifndef NRF_SDH_SOC_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_SOC_OBSERVER_PRIO_LEVELS 2
-#endif
-
-// <e> NRF_SDH_ENABLED - nrf_sdh - SoftDevice handler
-//==========================================================
-#ifndef NRF_SDH_ENABLED
-#define NRF_SDH_ENABLED 1
-#endif
-
-//==========================================================
-// <o> NRF_SDH_REQ_OBSERVER_PRIO_LEVELS - Total number of priority levels for request observers.
-// <i> This setting configures the number of priority levels available for the SoftDevice request event handlers.
-// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
-
-#ifndef NRF_SDH_REQ_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_REQ_OBSERVER_PRIO_LEVELS 2
-#endif
-
-// <o> NRF_SDH_STATE_OBSERVER_PRIO_LEVELS - Total number of priority levels for state observers.
-// <i> This setting configures the number of priority levels available for the SoftDevice state event handlers.
-// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
-
-#ifndef NRF_SDH_STATE_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_STATE_OBSERVER_PRIO_LEVELS 2
-#endif
 
 // <e> NRF_SDH_SOC_LOG_ENABLED - Enable logging in SoftDevice handler (SoC) module.
 //==========================================================
@@ -4843,33 +4709,6 @@
 
 #ifndef SEGGER_RTT_CONFIG_DEFAULT_MODE
 #define SEGGER_RTT_CONFIG_DEFAULT_MODE 0
-#endif
-
-// <h> nRF_SoftDevice
-
-//==========================================================
-// <e> NRF_SDH_BLE_ENABLED - nrf_sdh_ble - SoftDevice BLE event handler
-//==========================================================
-#ifndef NRF_SDH_BLE_ENABLED
-#define NRF_SDH_BLE_ENABLED 1
-#endif
-
-// <o> BLE_CONN_STATE_BLE_OBSERVER_PRIO
-// <i> Priority with which BLE events are dispatched to the Connection State module.
-
-#ifndef BLE_CONN_STATE_BLE_OBSERVER_PRIO
-#define BLE_CONN_STATE_BLE_OBSERVER_PRIO 0
-#endif
-
-// <h> BLE Observers - Observers and priority levels
-
-//==========================================================
-// <o> NRF_SDH_BLE_OBSERVER_PRIO_LEVELS - Total number of priority levels for BLE observers.
-// <i> This setting configures the number of priority levels available for BLE event handlers.
-// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
-
-#ifndef NRF_SDH_BLE_OBSERVER_PRIO_LEVELS
-#define NRF_SDH_BLE_OBSERVER_PRIO_LEVELS 4
 #endif
 
 // <e> NRFX_SPIM_ENABLED - nrfx_spim - SPIM peripheral driver
@@ -5216,4 +5055,3 @@
 
 // <<< end of configuration section >>>
 #endif //SDK_CONFIG_H
-
