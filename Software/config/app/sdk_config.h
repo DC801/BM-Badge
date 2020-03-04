@@ -3851,7 +3851,7 @@
 
 
 #ifndef NRFX_TWIM0_ENABLED
-#define NRFX_TWIM0_ENABLED 0
+#define NRFX_TWIM0_ENABLED 1
 #endif
 
 // <q> NRFX_TWIM1_ENABLED  - Enable TWIM1 instance
@@ -4103,7 +4103,7 @@
 
 
 #ifndef NRFX_TWI0_ENABLED
-#define NRFX_TWI0_ENABLED 0
+#define NRFX_TWI0_ENABLED 1
 #endif
 
 // <q> NRFX_TWI1_ENABLED  - Enable TWI1 instance
@@ -12486,6 +12486,269 @@
 
 #ifndef APP_USBD_DEVICE_VER_SUB
 #define APP_USBD_DEVICE_VER_SUB 0
+#endif
+
+//==========================================================
+// <q> NRF_DFU_PROTOCOL_FW_VERSION_MSG  - Firmware version message support.
+
+
+// <i> Firmware version message support.
+// <i> If disabled, firmware version requests will return NRF_DFU_RES_CODE_OP_CODE_NOT_SUPPORTED.
+
+#ifndef NRF_DFU_PROTOCOL_FW_VERSION_MSG
+#define NRF_DFU_PROTOCOL_FW_VERSION_MSG 1
+#endif
+
+// <q> NRF_DFU_PROTOCOL_VERSION_MSG  - Protocol version message support.
+
+
+// <i> Protocol version message support.
+// <i> If disabled, protocol version requests will return NRF_DFU_RES_CODE_OP_CODE_NOT_SUPPORTED.
+
+#ifndef NRF_DFU_PROTOCOL_VERSION_MSG
+#define NRF_DFU_PROTOCOL_VERSION_MSG 1
+#endif
+
+// <q> NRF_DFU_SAVE_PROGRESS_IN_FLASH  - Save DFU progress in flash.
+
+
+// <i> Save DFU progress to flash so that it can be resumed if interrupted, instead of being restarted.
+// <i> Keep this setting disabled to maximize transfer speed and minimize flash wear.
+// <i> The init packet is always saved in flash, regardless of this setting.
+
+#ifndef NRF_DFU_SAVE_PROGRESS_IN_FLASH
+#define NRF_DFU_SAVE_PROGRESS_IN_FLASH 0
+#endif
+
+#ifndef NRF_DFU_SETTINGS_COMPATIBILITY_MODE
+#define NRF_DFU_SETTINGS_COMPATIBILITY_MODE 1
+#endif
+
+#ifndef NRF_DFU_SETTINGS_VERSION
+#define NRF_DFU_SETTINGS_VERSION 1
+#endif
+
+
+#ifndef NRF_DFU_IN_APP
+#define NRF_DFU_IN_APP 1
+#endif
+
+// <q> NRF_DFU_REQUIRE_SIGNED_APP_UPDATE  - Require a valid signature to update the application or SoftDevice.
+
+
+#ifndef NRF_DFU_REQUIRE_SIGNED_APP_UPDATE
+#define NRF_DFU_REQUIRE_SIGNED_APP_UPDATE 0
+#endif
+
+// <q> NRF_DFU_SINGLE_BANK_APP_UPDATES  - Place the application and the SoftDevice directly where they are supposed to be.
+
+
+// <i> Note that this creates security concerns when signing and  version checks
+// <i> are enabled. An attacker will be able to delete (but not replace)
+// <i> the current app or SoftDevice without knowing the signature key.
+
+#ifndef NRF_DFU_SINGLE_BANK_APP_UPDATES
+#define NRF_DFU_SINGLE_BANK_APP_UPDATES 1
+#endif
+
+// <q> NRF_DFU_FORCE_DUAL_BANK_APP_UPDATES  - Accept only dual-bank application updates.
+
+
+// <i> If not enabled then if there is not enough space to perform dual-bank update
+// <i> application is deleted and single-bank update is performed. In case it is considered
+// <i> security concern user can prefer to discard update request rather than overwrite
+// <i> current application.
+
+#ifndef NRF_DFU_FORCE_DUAL_BANK_APP_UPDATES
+#define NRF_DFU_FORCE_DUAL_BANK_APP_UPDATES 0
+#endif
+
+// <q> NRF_DFU_APP_DOWNGRADE_PREVENTION  - Check the firmware version and SoftDevice requirements of application (and SoftDevice) updates.
+
+
+// <i> Whether to check the incoming version against the version of the existing app and/or
+// <i> the incoming SoftDevice requirements against the existing SoftDevice.
+// <i> This applies to application updates, and possibly to SoftDevice updates.
+// <i> Disabling this causes the checks to always ignore the incoming firmware version and
+// <i> to ignore the SoftDevice requirements if the first requirement is 0.
+// <i> This does not apply the bootloader updates. If the bootloader depends on the SoftDevice
+// <i> e.g. for BLE transport, this does not apply to SoftDevice updates.
+// <i> See @ref lib_bootloader_dfu_validation for more information.
+// <i> When signed updates are required, version checking should always be enabled.
+
+#ifndef NRF_DFU_APP_DOWNGRADE_PREVENTION
+#define NRF_DFU_APP_DOWNGRADE_PREVENTION 0
+#endif
+
+// <o> NRF_DFU_HW_VERSION - Device hardware version.
+// <i> This is used to determine if given update is targeting the device.
+// <i> It is checked against the hw_version value in the init packet
+
+#ifndef NRF_DFU_HW_VERSION
+#define NRF_DFU_HW_VERSION 52
+#endif
+
+// <o> NRF_BL_DFU_INACTIVITY_TIMEOUT_MS - Timeout in ms before automatically starting a valid application due to inactivity.  <0-60000000>
+
+
+// <i> If 0, no inactivity timer will be used. Values 1-99 are invalid.
+
+#ifndef NRF_BL_DFU_INACTIVITY_TIMEOUT_MS
+#define NRF_BL_DFU_INACTIVITY_TIMEOUT_MS 120000
+#endif
+
+#ifndef NRF_BL_RESET_DELAY_MS
+#define NRF_BL_RESET_DELAY_MS 0
+#endif
+
+// <q> NRF_BL_DFU_ALLOW_UPDATE_FROM_APP  - Whether to allow the app to receive firmware updates for the bootloader to activate.
+
+
+// <i> Enable this to allow the app to instruct the bootloader to activate firmware.
+// <i> The bootloader will do its own postvalidation.
+
+#ifndef NRF_BL_DFU_ALLOW_UPDATE_FROM_APP
+#define NRF_BL_DFU_ALLOW_UPDATE_FROM_APP 0
+#endif
+
+// <q> NRF_BL_APP_CRC_CHECK_SKIPPED_ON_GPREGRET2  - Skip integrity check of the application when bit 1 (0-indexed) is set in the GPREGRET2 register.
+
+
+#ifndef NRF_BL_APP_CRC_CHECK_SKIPPED_ON_GPREGRET2
+#define NRF_BL_APP_CRC_CHECK_SKIPPED_ON_GPREGRET2 1
+#endif
+
+// <q> NRF_BL_APP_CRC_CHECK_SKIPPED_ON_SYSTEMOFF_RESET  - Skip integrity check of the application when waking up from the System Off state.
+
+
+#ifndef NRF_BL_APP_CRC_CHECK_SKIPPED_ON_SYSTEMOFF_RESET
+#define NRF_BL_APP_CRC_CHECK_SKIPPED_ON_SYSTEMOFF_RESET 1
+#endif
+
+// <q> NRF_BL_DFU_ENTER_METHOD_BUTTONLESS  - Enter DFU mode when the Boolean enter_buttonless_dfu in DFU settings is true.
+
+
+#ifndef NRF_BL_DFU_ENTER_METHOD_BUTTONLESS
+#define NRF_BL_DFU_ENTER_METHOD_BUTTONLESS 0
+#endif
+
+
+// <o> NRF_BL_DFU_ENTER_METHOD_BUTTON_PIN  - Button for entering DFU mode.
+
+// <0=> 0 (P0.0)
+// <1=> 1 (P0.1)
+// <2=> 2 (P0.2)
+// <3=> 3 (P0.3)
+// <4=> 4 (P0.4)
+// <5=> 5 (P0.5)
+// <6=> 6 (P0.6)
+// <7=> 7 (P0.7)
+// <8=> 8 (P0.8)
+// <9=> 9 (P0.9)
+// <10=> 10 (P0.10)
+// <11=> 11 (P0.11)
+// <12=> 12 (P0.12)
+// <13=> 13 (P0.13)
+// <14=> 14 (P0.14)
+// <15=> 15 (P0.15)
+// <16=> 16 (P0.16)
+// <17=> 17 (P0.17)
+// <18=> 18 (P0.18)
+// <19=> 19 (P0.19)
+// <20=> 20 (P0.20)
+// <21=> 21 (P0.21)
+// <22=> 22 (P0.22)
+// <23=> 23 (P0.23)
+// <24=> 24 (P0.24)
+// <25=> 25 (P0.25)
+// <26=> 26 (P0.26)
+// <27=> 27 (P0.27)
+// <28=> 28 (P0.28)
+// <29=> 29 (P0.29)
+// <30=> 30 (P0.30)
+// <31=> 31 (P0.31)
+
+#ifndef NRF_BL_DFU_ENTER_METHOD_BUTTON_PIN
+#define NRF_BL_DFU_ENTER_METHOD_BUTTON_PIN 19
+#endif
+
+#ifndef NRF_BL_APP_SIGNATURE_CHECK_REQUIRED
+#define NRF_BL_APP_SIGNATURE_CHECK_REQUIRED 0
+#endif
+
+// <q> NRF_BL_DFU_ENTER_METHOD_PINRESET  - Enter DFU mode on pin reset.
+
+
+#ifndef NRF_BL_DFU_ENTER_METHOD_PINRESET
+#define NRF_BL_DFU_ENTER_METHOD_PINRESET 0
+#endif
+
+//==========================================================
+// <e> NRF_DFU_TRANSPORT_BLE - BLE transport settings
+//==========================================================
+#ifndef NRF_DFU_TRANSPORT_BLE
+#define NRF_DFU_TRANSPORT_BLE 0
+#endif
+
+// <q> NRF_BL_DFU_ENTER_METHOD_GPREGRET  - Enter DFU mode when bit 1 (0-indexed) is set in the NRF_POWER_GPREGRET register.
+
+
+#ifndef NRF_BL_DFU_ENTER_METHOD_GPREGRET
+#define NRF_BL_DFU_ENTER_METHOD_GPREGRET 1
+#endif
+
+//==========================================================
+// <e> NRF_BL_DFU_ENTER_METHOD_BUTTON - Enter DFU mode on button press.
+//==========================================================
+#ifndef NRF_BL_DFU_ENTER_METHOD_BUTTON
+#define NRF_BL_DFU_ENTER_METHOD_BUTTON 1
+#endif
+
+//==========================================================
+// <q> NRF_BL_DEBUG_PORT_DISABLE  - Disable access to the chip via the debug port.
+// <i> Disable access to the chip via the debug port.
+// <i> This modifies the APPROTECT and DEBUGCTRL registers.
+// <i> Enable this option in production code if such
+// <i> access should be prohibited. Read about the registers
+// <i> for more details.
+#ifndef NRF_BL_DEBUG_PORT_DISABLE
+#define NRF_BL_DEBUG_PORT_DISABLE 0
+#endif
+
+// <i> This timeout is used after updating the SoftDevice, when there is
+// <i> already a valid application present. The bootloader will enter DFU mode
+// <i> for a short time instead of booting the old application to allow the host
+// <i> to immediately transfer a new application if it wishes.
+
+#ifndef NRF_BL_DFU_CONTINUATION_TIMEOUT_MS
+#define NRF_BL_DFU_CONTINUATION_TIMEOUT_MS 10000
+#endif
+
+//==========================================================
+// <o> NRF_BL_FW_COPY_PROGRESS_STORE_STEP - Number of pages copied after which progress in the settings page is updated.
+// <i> Progress stored in the settings page allows the bootloader to resume
+// <i> copying the new firmware in case of interruption (reset).
+// <i> If the value is small, then the resume point is more accurate. However,
+// <i>  it also impacts negatively on flash wear.
+
+#ifndef NRF_BL_FW_COPY_PROGRESS_STORE_STEP
+#define NRF_BL_FW_COPY_PROGRESS_STORE_STEP 8
+#endif
+
+// <o> NRF_DFU_SERIAL_UART_RX_BUFFERS - Number of RX buffers.
+// <i> Number of buffers depends on flash access vs.
+// <i> transport throughtput. If value is too low it may lead
+// <i> to received packets being dropped.
+
+#ifndef NRF_DFU_SERIAL_UART_RX_BUFFERS
+#define NRF_DFU_SERIAL_UART_RX_BUFFERS 3
+#endif
+
+// <q> NRF_DFU_SERIAL_UART_USES_HWFC  - HWFC configuration
+
+
+#ifndef NRF_DFU_SERIAL_UART_USES_HWFC
+#define NRF_DFU_SERIAL_UART_USES_HWFC 0
 #endif
 
 // <<< end of configuration section >>>

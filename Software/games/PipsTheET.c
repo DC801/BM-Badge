@@ -7,7 +7,6 @@
 
 #define PIPS
 
-#include "../common.h"
 #include "PipsTheET.h"
 
 #define PIPS_SIZE (12 * 12 * 2)

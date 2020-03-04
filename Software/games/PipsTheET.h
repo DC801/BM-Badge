@@ -5,6 +5,8 @@
 #ifndef DC26_BADGE_PIPSTHEET_H
 #define DC26_BADGE_PIPSTHEET_H
 
+#include "common.h"
+
 int PipsTheET(void);
 
 #ifdef PIPS

@@ -11,7 +11,7 @@
 
 #include <stdint.h>
 extern "C" {
-#include "../../common.h"
+#include_next "common.h"
 }
 
 #define TILE_SIZE   12

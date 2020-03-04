@@ -4292,6 +4292,10 @@
 
 // </e>
 
+#ifndef NRF_SDH_ENABLED
+#define NRF_SDH_ENABLED 0
+#endif
+
 // <e> NRF_SDH_ANT_LOG_ENABLED - Enable logging in SoftDevice handler (ANT) module.
 //==========================================================
 #ifndef NRF_SDH_ANT_LOG_ENABLED
@@ -4341,7 +4345,30 @@
 #define NRF_SDH_ANT_DEBUG_COLOR 0
 #endif
 
+//==========================================================
+// <e> NRF_SDH_BLE_ENABLED - nrf_sdh_ble - SoftDevice BLE event handler
+//==========================================================
+#ifndef NRF_SDH_BLE_ENABLED
+#define NRF_SDH_BLE_ENABLED 0
+#endif
+
 // </e>
+
+//==========================================================
+// <o> NRF_SDH_BLE_OBSERVER_PRIO_LEVELS - Total number of priority levels for BLE observers.
+// <i> This setting configures the number of priority levels available for BLE event handlers.
+// <i> The priority level of a handler determines the order in which it receives events, with respect to other handlers.
+
+#ifndef NRF_SDH_BLE_OBSERVER_PRIO_LEVELS
+#define NRF_SDH_BLE_OBSERVER_PRIO_LEVELS 4
+#endif
+
+// <o> BLE_CONN_STATE_BLE_OBSERVER_PRIO
+// <i> Priority with which BLE events are dispatched to the Connection State module.
+
+#ifndef BLE_CONN_STATE_BLE_OBSERVER_PRIO
+#define BLE_CONN_STATE_BLE_OBSERVER_PRIO 0
+#endif
 
 // <e> NRF_SDH_BLE_LOG_ENABLED - Enable logging in SoftDevice handler (BLE) module.
 //==========================================================
@@ -5051,6 +5078,10 @@
 
 #ifndef NRF_BL_DFU_ALLOW_UPDATE_FROM_APP
 #define NRF_BL_DFU_ALLOW_UPDATE_FROM_APP 0
+#endif
+
+#ifndef NRF_DFU_SETTINGS_VERSION
+#define NRF_DFU_SETTINGS_VERSION 1
 #endif
 
 // <<< end of configuration section >>>

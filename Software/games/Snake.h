@@ -5,9 +5,9 @@
 #ifndef SOFTWARE_SNAKE_H
 #define SOFTWARE_SNAKE_H
 
-#include <common.h>
 #include <stdlib.h>
-#include "../common.h"
+
+#include "common.h"
 
 //snake
 int Snake(void);
