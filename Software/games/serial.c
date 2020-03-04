@@ -2,7 +2,7 @@
 // DC801
 //
 
-#include "../common.h"
+#include "common.h"
 #include <games/serial.h>
 
 #define ESCAPE "\x1b"

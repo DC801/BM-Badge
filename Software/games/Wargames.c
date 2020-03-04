@@ -6,7 +6,7 @@
 
 #define WARGAMES
 
-#include "../common.h"
+#include "common.h"
 #include "Wargames.h"
 
 const char* wg_login = "HAMSTER";

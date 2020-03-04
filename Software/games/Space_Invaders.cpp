@@ -12,6 +12,10 @@
 #include "../fonts/gameplay.h"
 #include "../modules/led.h"
 
+extern "C" {
+#include "common.h"
+}
+
 #define ENEMY_NUM 15
 #define ENEMY_ROWS 3
 

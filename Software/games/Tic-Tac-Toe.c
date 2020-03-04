@@ -10,7 +10,7 @@
 
 #define TICTACTOE
 
-#include "../common.h"
+#include "common.h"
 //#include "Tic-Tac-Toe.h"
 
 // Game data

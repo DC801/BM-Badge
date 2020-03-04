@@ -23,7 +23,7 @@
 #include "config/app/sdk_config.h"
 #include "config/custom_board.h"
 
-// Nordic headers 
+// Nordic headers
 #include "nordic_common.h"
 #include "nrf.h"
 #include "app_error.h"
@@ -62,6 +62,7 @@
 #include "nrf_drv_ppi.h"
 #include "nrf_drv_timer.h"
 #include "app_uart.h"
+#include "nrf_soc.h"
 
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
