@@ -1,5 +1,8 @@
 include(CMakeForceCompiler)
 
+# This is necessary to stop cmake from trying to run automated tests
+#  otherwise it will throw errors like missing symbol '_exit',
+#  which is apparently a bug
 if("${CMAKE_VERSION}" VERSION_GREATER 3.6.0)
 	set(CMAKE_C_COMPILER   "arm-none-eabi-gcc")
 	set(CMAKE_CXX_COMPILER "arm-none-eabi-g++")
