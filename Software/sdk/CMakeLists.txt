@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.13)
 
 set(PROJ_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
 set(SDK_ROOT ${PROJ_DIR}/../../nordic-sdk16.0)
