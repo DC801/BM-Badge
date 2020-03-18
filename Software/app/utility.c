@@ -8,7 +8,6 @@
  *
  */
 
-#include <hal/nrf_gpio.h>
 #include "common.h"
 //#include "modules/adc.h"
 
@@ -59,7 +58,7 @@ uint16_t morseIdx =0;
 uint8_t ls;
 void morseTickHandler(void * p_context) {
     uint8_t s = morseMessage[morseIdx];
-    
+
     if (s != ls){
         if (s)
             ledOn(LED_SIGNAL);
@@ -67,7 +66,7 @@ void morseTickHandler(void * p_context) {
             ledOff(LED_SIGNAL);
     }
     ls=s;
-    
+
     morseIdx = ((morseIdx+1) % sizeof(morseMessage));
 }
 
@@ -444,7 +443,7 @@ void setLevelLEDs(LEVEL level) {
  * @param powerUp
  */
 void setPowerUpLEDs(POWERUP powerUp){
-    
+
     switch (powerUp) {
         default:
         case POWERUP_0:
@@ -479,6 +478,8 @@ void setPowerUpLEDs(POWERUP powerUp){
             break;
     }
 }
+
+#ifdef DC801_EMBEDDED
 
 /**
  * Get a list of files on a path
@@ -520,6 +521,8 @@ uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
 
     return counter;
 }
+
+#endif
 
 /**
  * Calculate the CRC on a chunk of memory

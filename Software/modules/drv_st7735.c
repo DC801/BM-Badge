@@ -26,6 +26,8 @@
  * 	Adapted for Nordic SDK15 by @hamster for use with the dc801 defcon 26 badge
  *****************************************************************************/
 
+#ifdef DC801_EMBEDDED
+
 // System headers
 #include <ctype.h>
 #include <math.h>
@@ -632,4 +634,4 @@ void st7735_start() {
 
 }
 
-
+#endif

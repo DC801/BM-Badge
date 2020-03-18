@@ -33,23 +33,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-#include <common.h>
 
-#include "nordic_common.h"
-#include "nrf52840_peripherals.h"
-#include "nrf_gpio.h"
-#include "nrf_spim.h"
-#include "nrf_drv_spi.h"
-#include "ff.h"
-#include "nrf_block_dev_sdc.h"
-#include "nrf_block_dev.h"
-#include "diskio.h"
-#include "diskio_blkdev.h"
-#include "nrf_delay.h"
-#include "nrf_soc.h"
+#include "common.h"
 
 #include "sd.h"
 #include "gfx.h"
+
+#ifdef DC801_EMBEDDED
 
 ////SPI 1 is for SD
 //static nrf_drv_spi_t spi1 = NRF_DRV_SPI_INSTANCE(1);
@@ -269,3 +259,5 @@ uint8_t util_sd_getnum_files(const char *path, const char *extension){
 	return counter;
 
 }
+
+#endif

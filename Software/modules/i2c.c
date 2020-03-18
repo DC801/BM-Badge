@@ -5,6 +5,7 @@
 #include <common.h>
 #include "i2c.h"
 
+#ifdef DC801_EMBEDDED
 
 static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(MASTER_TWI_INST);
 
@@ -30,4 +31,14 @@ void i2cMasterTransmit(uint16_t addr, uint8_t const * pdata, size_t size){
 
 }
 
+#else
 
+void twi_master_init(void) { }
+void i2cMasterTransmit(uint16_t addr, uint8_t const * pdata, size_t size)
+{
+    UNUSED_PARAMETER(addr);
+    UNUSED_PARAMETER(pdata);
+    UNUSED_PARAMETER(size);
+}
+
+#endif

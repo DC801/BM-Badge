@@ -9,8 +9,14 @@
  */
 
 
-
+#ifdef DC801_EMBEDDED
 #include <softdevice/s132/headers/ble_gap.h>
+#else
+#include "sdk_shim.h"
+#endif
+
+#ifdef DC801_EMBEDDED
+
 #include "common.h"
 #include "ble.h"
 
@@ -928,3 +934,5 @@ void handleGodMode(BADGE_ADV badge, int *scoreModifier){
     }
 
 }
+
+#endif

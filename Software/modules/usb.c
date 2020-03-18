@@ -1,3 +1,5 @@
+#ifdef DC801_EMBEDDED
+
 #include "common.h"
 #include "nrf_drv_usbd.h"
 #include "nrf_drv_clock.h"
@@ -198,3 +200,5 @@ bool usb_serial_is_connected() {
 
 
 /** @} */
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef DC801_EMBEDDED
+
 #include "FrameBuffer.h"
 #include <math.h>
 #include <fcntl.h>
@@ -338,3 +340,5 @@ void FrameBuffer::blt() {
     util_gfx_draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
     
 }
+
+#endif
