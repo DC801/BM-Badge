@@ -2,6 +2,8 @@
 // Created by hamster on 8/2/18.
 //
 
+#ifdef DC801_EMBEDDED
+
 #include <mdk/nrf52840_bitfields.h>
 #include <hal/nrf_uart.h>
 #include "common.h"
@@ -76,3 +78,4 @@ void uart_init(void) {
     APP_ERROR_CHECK(err_code);
 }
 
+#endif

@@ -153,5 +153,5 @@ list(APPEND SDK_INCLUDES
         "${SDK_ROOT}/modules/nrfx/hal"
         "${SDK_ROOT}/modules/nrfx/mdk"
         "${PROJ_DIR}/config"
-		"${PROJ_DIR}"
+        "${PROJ_DIR}"
 )

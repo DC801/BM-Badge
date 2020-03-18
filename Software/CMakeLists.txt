@@ -4,6 +4,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(PROJ_DIR ${CMAKE_CURRENT_LIST_DIR})
 
+if (DEFINED BOOTLOADER)
+    set(FLAVOR "EMBEDDED")
+endif(DEFINED BOOTLOADER)
+
 if (NOT DEFINED FLAVOR)
     if (DEFINED ENV{DC801_EMBEDDED})
         set(FLAVOR "EMBEDDED")
@@ -29,18 +33,12 @@ if (NOT DEFINED VALID_TARGET)
     message(FATAL_ERROR "You must specify a valid build target. EMBEDDED or DESKTOP by calling:\n\tcmake -DFLAVOR=[flavor].")
 endif (NOT DEFINED VALID_TARGET)
 
-# Bootloader must be build in embedded mode
-if(DEFINED BOOTLOADER)
-    if(NOT DEFINED TARGET_IS_EMBEDDED)
-        message(FATAL_ERROR "Bootloader must be build as embedded")
-    endif(NOT DEFINED TARGET_IS_EMBEDDED)
-endif(DEFINED BOOTLOADER)
-
 project(dc27_badge C CXX)
+
+set(SDK_ROOT ${PROJ_DIR}/../../nordic-sdk16.0)
 
 # Include the nordic-sdk library for embedded targets
 if(TARGET_IS_EMBEDDED)
-    set(SDK_ROOT ${PROJ_DIR}/../../nordic-sdk16.0)
     include(${PROJ_DIR}/sdk/sdk-includes.cmake)
 
     add_definitions(
@@ -57,33 +55,41 @@ if(TARGET_IS_EMBEDDED)
         -DuECC_SUPPORT_COMPRESSED_POINT=0
         -DuECC_VLI_NATIVE_LITTLE_ENDIAN=1
     )
-endif(TARGET_IS_EMBEDDED)
 
-# Define stack sizes and linker scripts if necessary
-if(NOT DEFINED BOOTLOADER)
-    # App
-    add_definitions(
-        -D__HEAP_SIZE=16384
-        -D__STACK_SIZE=16384
-    )
+    # Define stack sizes and linker scripts if necessary
+    if(NOT DEFINED BOOTLOADER)
+        # App
+        add_definitions(
+            -D__HEAP_SIZE=16384
+            -D__STACK_SIZE=16384
+        )
 
-    if(TARGET_IS_EMBEDDED)
         set(LINKER_SCRIPT ${PROJ_DIR}/app/badge_gcc_nrf52.ld)
         set(SDK_LIB ${PROJ_DIR}/sdk/output/app/libnordic-sdk.a)
         set(CONFIG_INCLUDE ${PROJ_DIR}/config/app)
-    endif(TARGET_IS_EMBEDDED)
-else(NOT DEFINED BOOTLOADER)
-    # Bootloader
-    add_definitions(
-        -D__HEAP_SIZE=0
-        -D__STACK_SIZE=0
+    else(NOT DEFINED BOOTLOADER)
+        # Bootloader
+        add_definitions(
+            -D__HEAP_SIZE=0
+            -D__STACK_SIZE=0
+        )
+
+        set(LINKER_SCRIPT ${PROJ_DIR}/bootloader/secure_bootloader_gcc_nrf52.ld)
+        set(SDK_LIB ${PROJ_DIR}/sdk/output/bootloader/libnordic-sdk.a)
+        set(CONFIG_INCLUDE ${PROJ_DIR}/config/bootloader)
+    endif(NOT DEFINED BOOTLOADER)
+else()
+    file(GLOB SHIM_SOURCES
+        "${PROJ_DIR}/sdk/shim/*.c"
     )
 
-    # TARGET_IS_EMBEDDED is implied
-    set(LINKER_SCRIPT ${PROJ_DIR}/bootloader/secure_bootloader_gcc_nrf52.ld)
-    set(SDK_LIB ${PROJ_DIR}/sdk/output/bootloader/libnordic-sdk.a)
-    set(CONFIG_INCLUDE ${PROJ_DIR}/config/bootloader)
-endif(NOT DEFINED BOOTLOADER)
+    list(APPEND INCLUDES
+        "${PROJ_DIR}/config"
+        "${PROJ_DIR}"
+    )
+endif(TARGET_IS_EMBEDDED)
+
+
 
 # Add linker script flags for embedded
 if(TARGET_IS_EMBEDDED)
@@ -117,11 +123,20 @@ else(DEFINED BOOTLOADER)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/output/app)
 endif(DEFINED BOOTLOADER)
 
+if(TARGET_IS_EMBEDDED)
+    add_definitions(-DDC801_EMBEDDED)
+endif(TARGET_IS_EMBEDDED)
+if(TARGET_IS_DESKTOP)
+    add_definitions(-DDC801_DESKTOP)
+endif(TARGET_IS_DESKTOP)
+
 add_compile_options(
     -Wno-unused-function
     -Wno-unused-variable
 )
 
-add_executable(dc27_badge ${SOURCES})
+set(SHIM_INCLUDE ${PROJ_DIR}/sdk/shim)
+
+add_executable(dc27_badge ${SOURCES} ${SHIM_SOURCES})
 target_link_libraries(dc27_badge ${SDK_LIB})
-target_include_directories(dc27_badge PUBLIC ${SDK_INCLUDES} ${INCLUDES} ${CONFIG_INCLUDE})
+target_include_directories(dc27_badge PUBLIC ${SDK_INCLUDES} ${INCLUDES} ${CONFIG_INCLUDE} ${SHIM_INCLUDE})

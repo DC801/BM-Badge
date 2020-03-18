@@ -20,6 +20,10 @@
 #include <cstring>
 #include <cstddef>
 
+#ifndef DC801_EMBEDDED
+#include "shim_filesystem.h"
+#endif
+
 GameEngine game;
 
 char ble_name[11];
@@ -849,7 +853,7 @@ void GameEngine::updateScore(){
 	int score = getScore();
 
 	advertising_setScore(score);
-	printf("Score: %d\n", score)
+	printf("Score: %d\n", score);
 }
 
 int GameEngine::getScore(){

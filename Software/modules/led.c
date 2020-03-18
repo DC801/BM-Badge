@@ -42,11 +42,9 @@
  * the firmware update succeeds we set them all green.
  */
 
-#include <common.h>
+#include "common.h"
 #include "led.h"
 #include "i2c.h"
-
-#include "nrf_delay.h"
 
 #include <string.h>
 

@@ -34,19 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
-#include <common.h>
 
-#include "nordic_common.h"
-#include "nrf52840_peripherals.h"
-#include "nrf_spim.h"
-#include "nrf_drv_spi.h"
-#include "ff.h"
-#include "nrf_block_dev_sdc.h"
-#include "nrf_block_dev.h"
-#include "diskio.h"
-#include "diskio_blkdev.h"
-#include "nrf_delay.h"
-#include "nrf_soc.h"
+#include "common.h"
 
 #include "gfx.h"
 #include "drv_st7735.h"
@@ -249,7 +238,7 @@ void util_gfx_draw_bmp_file(const char *filename, uint8_t x, uint16_t y) {
 
     uint32_t fsize = util_sd_file_size(filename);
     if (fsize == 0) {
-        NRF_LOG_INFO("Can't stat %s", filename)
+        NRF_LOG_INFO("Can't stat %s", filename);
     }
 
 	// Open requested file on SD card
