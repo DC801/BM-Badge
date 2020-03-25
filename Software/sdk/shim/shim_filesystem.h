@@ -1,6 +1,17 @@
 #ifndef SHIM_FILESYSTEM_H
 #define SHIM_FILESYSTEM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define FIL int
+#define DIR int
+
+#define FSIZE_t unsigned long
+
+#define UINT unsigned int
+
 typedef enum {
 	FR_OK = 0,				/* (0) Succeeded */
 	FR_DISK_ERR,			/* (1) A hard error occurred in the low level disk I/O layer */
@@ -24,14 +35,15 @@ typedef enum {
 	FR_INVALID_PARAMETER	/* (19) Given parameter is invalid */
 } FRESULT;
 
-#define FIL int
-#define DIR int
-#define FILINFO int
+typedef struct {
+	FSIZE_t			fsize;			/* File size */
+	unsigned short	fdate;			/* Modified date */
+	unsigned short	ftime;			/* Modified time */
+	unsigned char	fattrib;		/* File attribute */
+	char			fname[13];		/* File name */
+} FILINFO;
 
-#define UINT unsigned int
-#define BYTE unsigned char
-#define FSIZE_t unsigned long
-
+/* File access mode and open method flags (3rd argument of f_open) */
 #define	FA_READ				0x01
 #define	FA_WRITE			0x02
 #define	FA_OPEN_EXISTING	0x00
@@ -40,14 +52,42 @@ typedef enum {
 #define	FA_OPEN_ALWAYS		0x10
 #define	FA_OPEN_APPEND		0x30
 
-FRESULT f_open (FIL* fp, const char* path, BYTE mode);				/* Open or create a file */
+/* Format options (2nd argument of f_mkfs) */
+#define FM_FAT		0x01
+#define FM_FAT32	0x02
+#define FM_EXFAT	0x04
+#define FM_ANY		0x07
+#define FM_SFD		0x08
+
+/* Filesystem type (FATFS.fs_type) */
+#define FS_FAT12	1
+#define FS_FAT16	2
+#define FS_FAT32	3
+#define FS_EXFAT	4
+
+/* File attribute bits for directory entry (FILINFO.fattrib) */
+#define	AM_RDO	0x01	/* Read only */
+#define	AM_HID	0x02	/* Hidden */
+#define	AM_SYS	0x04	/* System */
+#define AM_DIR	0x10	/* Directory */
+#define AM_ARC	0x20	/* Archive */
+
+FRESULT f_open (FIL* fp, const char* path, unsigned char mode);				/* Open or create a file */
 FRESULT f_close (FIL* fp);											/* Close an open file object */
-FRESULT f_read (FIL* fp, void* buff, UINT btr, UINT* br);			/* Read data from the file */
-FRESULT f_write (FIL* fp, const void* buff, UINT btw, UINT* bw);	/* Write data to the file */
+FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br);			/* Read data from the file */
+FRESULT f_write (FIL* fp, const void* buff, unsigned int btw, unsigned int* bw);	/* Write data to the file */
 FRESULT f_lseek (FIL* fp, FSIZE_t ofs);								/* Move file pointer of the file object */
 FRESULT f_stat (const char* path, FILINFO* fno);					/* Get file status */
 FRESULT f_unlink (const char* path);								/* Delete an existing file or directory */
 
 FSIZE_t f_tell(FIL* fp);
+
+FRESULT f_opendir (DIR* dp, const char* path);						/* Open a directory */
+FRESULT f_closedir (DIR* dp);										/* Close an open directory */
+FRESULT f_readdir (DIR* dp, FILINFO* fno);							/* Read a directory item */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

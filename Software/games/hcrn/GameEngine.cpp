@@ -21,7 +21,7 @@
 #include <cstddef>
 
 #ifndef DC801_EMBEDDED
-#include "shim_filesystem.h"
+#include "sdk_shim.h"
 #endif
 
 GameEngine game;
@@ -98,6 +98,13 @@ void GameEngine::run() {
     lastTime = millis();
     
     while (!quit){
+        #ifdef DC801_DESKTOP
+            if (application_quit != 0)
+            {
+                break;
+            }
+        #endif
+
         uint32_t now = millis();
         
         loop(millis_elapsed(now, lastTime));

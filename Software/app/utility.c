@@ -234,6 +234,13 @@ bool isButtonDown(int button){
 void pauseUntilPress(int button){
 
 	while(true){
+        #ifdef DC801_DESKTOP
+            if (application_quit != 0)
+            {
+                break;
+            }
+        #endif
+
 		if(nrf_gpio_pin_read(button) == BUTTON_PRESSED){
 			// Debounce
 			nrf_delay_ms(button);
@@ -479,8 +486,6 @@ void setPowerUpLEDs(POWERUP powerUp){
     }
 }
 
-#ifdef DC801_EMBEDDED
-
 /**
  * Get a list of files on a path
  * @param files
@@ -521,8 +526,6 @@ uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
 
     return counter;
 }
-
-#endif
 
 /**
  * Calculate the CRC on a chunk of memory

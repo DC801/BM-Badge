@@ -15,8 +15,6 @@
 #include "sdk_shim.h"
 #endif
 
-#ifdef DC801_EMBEDDED
-
 #include "common.h"
 #include "ble.h"
 
@@ -47,6 +45,8 @@ const BADGE_INFO badgeInfo[NUM_BADGE_GROUPS - 1] = {
 static BADGE_ADV badgeAdv[NUM_BADGES_TO_STORE];
 static uint8_t badgeAdvNum;
 static volatile bool lockBadges = false;
+
+#ifdef DC801_EMBEDDED
 
 static ble_gap_adv_params_t m_adv_params;                                  /**< Parameters to be passed to the stack when starting advertising. */
 static uint8_t              m_adv_handle = BLE_GAP_ADV_SET_HANDLE_NOT_SET; /**< Advertising handle used to identify an advertising set. */
@@ -201,6 +201,7 @@ bool macAddressMatch(const uint8_t left[], const uint8_t right[]){
     return true;
 }
 
+#endif
 
 /**
  * @return a pointer to the seen badges
@@ -221,7 +222,6 @@ uint8_t getBadges(BADGE_ADV *badges){
 
     return retVal;
 }
-
 
 /**
  * Get a single badge
@@ -272,6 +272,8 @@ uint8_t getBadgeYear(BADGE_YEAR year){
 	else
 		return 0;
 }
+
+#ifdef DC801_EMBEDDED
 
 /**
  * See if we have seen this badge, and if not, stick in the seen array
@@ -756,6 +758,8 @@ void advertising_setGodCommand(GODMODE_COMMAND command, uint32_t data){
 
 }
 
+#endif
+
 /**
  * @param group we want info on
  * @return string, group name
@@ -771,7 +775,6 @@ char* getBadgeGroupName(BADGE_GROUP group){
     return "Mystery Badge";
 
 }
-
 
 /**
  * Get the icon file for a given group
@@ -789,7 +792,6 @@ char* getBadgeIconFile(BADGE_GROUP group){
     return NULL;
 
 }
-
 
 /**
  * Get the contact info for a given group
@@ -825,6 +827,7 @@ uint16_t getBadgeAppearance(BADGE_GROUP group){
 
 }
 
+#ifdef DC801_EMBEDDED
 
 /**
  * Get the group from a given appearance

@@ -81,6 +81,7 @@ if(TARGET_IS_EMBEDDED)
 else()
     file(GLOB SHIM_SOURCES
         "${PROJ_DIR}/sdk/shim/*.c"
+        "${PROJ_DIR}/sdk/shim/*.cpp"
     )
 
     list(APPEND INCLUDES
@@ -128,6 +129,21 @@ if(TARGET_IS_EMBEDDED)
 endif(TARGET_IS_EMBEDDED)
 if(TARGET_IS_DESKTOP)
     add_definitions(-DDC801_DESKTOP)
+
+    add_compile_options(
+        -ffunction-sections
+        -fdata-sections
+        -O3
+        -g3
+    )
+
+    add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Weffc++>)
+
+    add_link_options(
+        -Wl,--gc-sections
+    )
+
+    set(SHIM_LIBS pthread)
 endif(TARGET_IS_DESKTOP)
 
 add_compile_options(
@@ -138,5 +154,5 @@ add_compile_options(
 set(SHIM_INCLUDE ${PROJ_DIR}/sdk/shim)
 
 add_executable(dc27_badge ${SOURCES} ${SHIM_SOURCES})
-target_link_libraries(dc27_badge ${SDK_LIB})
+target_link_libraries(dc27_badge ${SDK_LIB} ${SHIM_LIBS})
 target_include_directories(dc27_badge PUBLIC ${SDK_INCLUDES} ${INCLUDES} ${CONFIG_INCLUDE} ${SHIM_INCLUDE})

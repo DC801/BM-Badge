@@ -114,6 +114,8 @@ bool util_sd_init() {
 	return true;
 }
 
+#endif
+
 uint32_t util_sd_file_size(const char *path) {
 	FILINFO info;
 
@@ -188,10 +190,20 @@ uint32_t util_sd_read_32(FIL *p_file) {
 	return result;
 }
 
+#ifdef DC801_EMBEDDED
+
 bool util_sd_recover() {
 	disk_uninitialize(0);
 	return util_sd_init();
 }
+
+#else
+
+bool util_sd_recover() {
+	return true;
+}
+
+#endif
 
 void util_sd_error(){
 
@@ -215,9 +227,15 @@ void util_sd_error(){
     util_gfx_set_cursor(38, 92);
     util_gfx_print("reboot");
 
+	#ifdef DC801_EMBEDDED
     while(true);
-
+	#else
+	printf("SD Card Error\n");
+	exit(1);
+	#endif
 }
+
+#ifdef DC801_EMBEDDED
 
 /**
  * @param dir Directory to scan
