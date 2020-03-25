@@ -598,6 +598,13 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 			//Blast data to TFT
 			while (bytecount > 0) {
                 
+				#ifdef DC801_DESKTOP
+					if (application_quit != 0)
+					{
+						break;
+					}
+				#endif
+
                 //Hang out until LCD is free
                 while (st7735_is_busy()) {
                     APP_ERROR_CHECK(sd_app_evt_wait());
@@ -629,6 +636,13 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 				break;
 			}
 		}
+
+		#ifdef DC801_DESKTOP
+			if (application_quit != 0)
+			{
+				break;
+			}
+		#endif
 
 	} while (loop && !m_stop);
 

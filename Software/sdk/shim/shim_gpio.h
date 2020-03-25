@@ -19,6 +19,18 @@ void nrf_gpio_pin_write(uint32_t pin_number, uint32_t value);
 void nrf_gpio_pin_clear(uint32_t pin_number);
 void nrf_gpio_pin_set(uint32_t pin_number);
 
+// -- External shim stuff --
+typedef struct
+{
+    uint32_t state;
+    uint32_t direction;
+    nrf_gpio_pin_pull_t config;
+} PIN;
+
+typedef int (*nrf_gpio_callback)(uint32_t index, PIN *pin);
+
+void nrf_gpio_set_callback(nrf_gpio_callback *gpio_callback);
+
 #ifdef __cplusplus
 }
 #endif

@@ -24,29 +24,24 @@ enum {
 
 typedef void (*app_timer_timeout_handler_t)(void * p_context);
 
-typedef struct nrf_sortlist_item_s nrf_sortlist_item_t;
-struct nrf_sortlist_item_s
-{
-    nrf_sortlist_item_t * p_next;             // Pointer to the next item in the list.
-};
-
-typedef struct
-{
-    nrf_sortlist_item_t         list_item;     // Token used by sortlist
-    uint64_t                    end_val;       // RTC counter value when timer expires
-    uint32_t                    repeat_period; // Repeat period (0 if single shot mode)
-    app_timer_timeout_handler_t handler;       // User handler
-    void *                      p_context;     // User context
-    volatile bool               active;        // Flag indicating that timer is active
-} app_timer_t;
-
-typedef app_timer_t * app_timer_id_t;
-
 typedef enum
 {
     APP_TIMER_MODE_SINGLE_SHOT,                // The timer will expire only once.
     APP_TIMER_MODE_REPEATED                    // The timer will restart each time it expires
 } app_timer_mode_t;
+
+typedef struct
+{
+    uint32_t                    ticks_to_expire;                            /**< Number of ticks from previous timer interrupt to timer expiry. */
+    uint32_t                    ticks_at_start;                             /**< Current RTC counter value when the timer was started. */
+    uint32_t                    ticks_first_interval;                       /**< Number of ticks in the first timer interval. */
+    uint32_t                    ticks_periodic_interval;                    /**< Timer period (for repeating timers). */
+    bool                        is_running;                                 /**< True if timer is running, False otherwise. */
+    app_timer_mode_t            mode;                                       /**< Timer mode. */
+    app_timer_timeout_handler_t p_timeout_handler;                          /**< Pointer to function to be executed when the timer expires. */
+} app_timer_t;
+
+typedef app_timer_t * app_timer_id_t;
 
 #define CONCAT_2(p1, p2)      CONCAT_2_(p1, p2)
 #define CONCAT_2_(p1, p2)     p1##p2
@@ -54,8 +49,11 @@ typedef enum
 #define CONCAT_3(p1, p2, p3)  CONCAT_3_(p1, p2, p3)
 #define CONCAT_3_(p1, p2, p3) p1##p2##p3
 
+// static app_timer_t standby_animation_timer_id_data = { 0 };
+// static const app_timer_id_t standby_animation_timer_id = standby_animation_timer_id_data;
+
 #define APP_TIMER_DEF(timer_id)                                      \
-    static app_timer_t CONCAT_2(timer_id,_data) = { {0} };           \
+    static app_timer_t CONCAT_2(timer_id,_data) = { 0 };             \
     static const app_timer_id_t timer_id = &CONCAT_2(timer_id,_data)
 
 #define NRF_TIMER_CC_CHANNEL_COUNT(id)  CONCAT_3(TIMER, id, _CC_NUM)

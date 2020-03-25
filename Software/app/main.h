@@ -14,6 +14,11 @@
 #define NORDICSDK "15.3"
 #define SAOSPEC "1.69bis"
 
+#ifdef DC801_DESKTOP
+#include <signal.h>
+extern volatile sig_atomic_t application_quit;
+#endif
+
 extern volatile bool shoutsAllowed;
 extern volatile bool menuDisplayed;
 

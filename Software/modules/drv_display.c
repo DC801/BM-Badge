@@ -4,7 +4,7 @@
 
 uint16_t st7735_color565(uint8_t r, uint8_t g, uint8_t b)
 {
-
+    return 0;
 }
 
 void st7735_init()
@@ -14,7 +14,7 @@ void st7735_init()
 
 bool st7735_is_busy()
 {
-
+    return false;
 }
 
 void st7735_push_color(uint16_t color)
@@ -29,7 +29,7 @@ void st7735_push_colors(uint8_t *p_colors, int32_t size)
 
 nrfx_err_t st7735_push_colors_fast(uint8_t *p_colors, int32_t size)
 {
-
+    return NRF_SUCCESS;
 }
 
 void st7735_set_addr(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1)

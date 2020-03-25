@@ -13,6 +13,22 @@
 #include "common.h"
 #include "user.h"
 
+#ifdef DC801_DESKTOP
+#include<signal.h>
+
+volatile sig_atomic_t application_quit = 0;
+
+void sig_handler(int signo)
+{
+    if (signo == SIGINT)
+    {
+        printf("received SIGINT\n");
+        application_quit = 1;
+    }
+}
+
+#endif
+
 #define XVAL(x) #x
 #define VAL(x)  XVAL(x)
 
@@ -40,12 +56,21 @@ static void standby_animation_timeout_handler(void *p_context) {
  */
 static void button_init(void){
     // Setup the buttons
+    #ifdef DC801_EMBEDDED
     nrf_gpio_cfg_input(USER_BUTTON_UP, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(USER_BUTTON_DOWN, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(USER_BUTTON_LEFT, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(USER_BUTTON_RIGHT, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(USER_BUTTON_A, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(USER_BUTTON_B, NRF_GPIO_PIN_NOPULL);
+    #else
+    nrf_gpio_cfg_input(USER_BUTTON_UP, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(USER_BUTTON_DOWN, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(USER_BUTTON_LEFT, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(USER_BUTTON_RIGHT, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(USER_BUTTON_A, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(USER_BUTTON_B, NRF_GPIO_PIN_PULLUP);
+    #endif
 }
 
 /**
@@ -206,6 +231,12 @@ MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
  */
 int main(void){
 
+    #ifdef DC801_DESKTOP
+
+    signal(SIGINT, sig_handler);
+
+    #endif
+
     // Setup the system
     log_init();
     button_init();
@@ -294,15 +325,34 @@ int main(void){
     advertising_setUser(ble_name);
     ble_adv_start();
 
+#ifdef DC801_EMBEDDED
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-noreturn"
+#endif
     while(true) {
+
+        #ifdef DC801_DESKTOP
+
+        if (application_quit)
+        {
+            break;
+        }
+
+        #endif
 
         util_gfx_fill_screen(COLOR_BLACK);
         HCRN();
     }
+#ifdef DC801_EMBEDDED
 #pragma clang diagnostic pop
+#endif
 
+    #ifdef DC801_DESKTOP
+
+    printf("Exiting gracefully...\n");
+    return 0;
+
+    #endif
 }
 
 /**

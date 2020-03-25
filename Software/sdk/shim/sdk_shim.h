@@ -27,8 +27,8 @@ extern "C" {
 #define NRF_LOG_INIT(unused) NRF_SUCCESS
 #define NRF_LOG_DEFAULT_BACKENDS_INIT()
 
-#define NRF_LOG_RAW_INFO printf
-#define NRF_LOG_INFO(...)                      NRF_LOG_RAW_INFO( __VA_ARGS__)
+#define NRF_LOG_INFO(...)   printf(__VA_ARGS__);printf("\n")
+#define NRF_LOG_ERROR(...)  fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) < (b) ? (b) : (a))
