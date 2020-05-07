@@ -17,10 +17,18 @@ If you are targeting embedded and receive link errors, you need to build the sdk
 ## Primary application
 
 ```bash
-$ cd ./Software
-$ mkdir build
-$ cd build
-$ cmake -DFLAVOR=<flavor> -j<n> ..
+THREADS="4"
+OUTPUT_FLAVOR="EMBEDDED"
+APP_PATH="../output/app/dc27_badge"
+HEX_PATH="$APP_PATH.hex"
+
+cd ./Software
+mkdir build
+cd build
+cmake -DFLAVOR=$OUTPUT_FLAVOR -j$THREADS ..
+make -j$THREADS
+arm-none-eabi-objcopy -O ihex $APP_PATH $HEX_PATH
+nrfjprog --program $HEX_PATH -f nrf52 --sectorerase
 ```
 
 Where `<flavor>` can be:
