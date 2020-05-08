@@ -5,6 +5,8 @@ from argparse import RawTextHelpFormatter
 from contextlib import contextmanager
 import fcntl
 import os
+import pathlib
+import re
 import subprocess
 import sys
 import tempfile
@@ -116,7 +118,7 @@ def gdb():
     except FileNotFoundError:
         return False
 
-
+# from: https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
 # Debug helper function, runs all servers including gdb
 def debug():
     print('Running debug helper...')
@@ -155,6 +157,122 @@ def debug():
     finally:
         os.remove(cmdpath)
 
+# Print iterations progress
+def progress(iteration, total, prefix = 'Progress:', suffix = 'Complete', decimals = 0, length = 50, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
+def run_clean(threads, directory, flavor, bootloader):
+    # Capture current working directory
+    dir = os.getcwd()
+
+    # Nuke build directory
+    subprocess.run(['rm', '-rf', directory])
+    # Create new build directory
+    pathlib.Path(directory).mkdir()
+    # Change directory to build
+    os.chdir(directory)
+    print('Running cmake')
+    # Run cmake
+    cmake_args = ['cmake', f'-j{threads}']
+
+    if len(flavor) > 0:
+        cmake_args.append(f'-DFLAVOR={flavor}')
+
+    if bootloader:
+        cmake_args.append('-DBOOTLOADER=1')
+
+    cmake_args.append('..')
+
+    cmake = subprocess.Popen(cmake_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # Wait for cmake to do its thing
+    while cmake.poll() is None:
+        time.sleep(0.1)
+
+    if cmake.returncode != 0:
+        print('There was an error running cmake')
+        exit(1)
+    
+    os.chdir(dir)
+
+def run_build(threads, clean, directory, flavor="", bootloader=False):
+    # If we force clean, or the build directory 
+    if clean or not os.path.isdir(directory):
+        run_clean(threads, directory, flavor, bootloader)
+    
+    # Capture current working directory
+    dir = os.getcwd()
+    # Enter build directory
+    os.chdir(directory)
+
+    print('Running make')
+    # Run make, long running process
+    make = subprocess.Popen(['make', f'-j{threads}'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    progress(0, 100)
+    while make.poll() is None:
+        line = make.stdout.readline().decode()
+        # Match percentage from make process on Building and Built lines, "[ 25%] Building..."
+        match = re.search('^\[\s*(\d+)%\] (Building|Built)', line)
+        if match is not None and len(match.groups()) > 0:
+            progress(int(match.group(1)), 100)
+
+        time.sleep(0.1)
+    
+    if make.returncode != 0:
+        print('\nThere was an error running make')
+        exit(1)
+
+    # Return to previous working directory
+    os.chdir(dir)
+
+def build(targets, threads, clean):
+    try:
+        # Prioritize SDK because app/bootloader will need it
+        sdk_index = targets.index('sdk')
+        # Swap SDK with first element
+        targets[0], targets[sdk_index] = targets[sdk_index], targets[0]
+    except ValueError:
+        # SDK wasn't in the list, we don't care
+        pass
+
+    for target in targets:
+        if target == 'app':
+            print('Building application')
+            run_build(threads, clean, 'build', 'EMBEDDED')
+            print('Application built\n')
+        elif target == 'sdk':
+            print('Building sdk')
+            run_build(threads, clean, 'sdk/build')
+            print('SDK built\n')
+        elif target == 'bootloader':
+            print('Building bootloader')
+            run_build(threads, clean, 'build', 'EMBEDDED', True)
+            print('Bootloader built\n')
+        elif target == 'app-desktop':
+            print('Building desktop')
+            run_build(threads, clean, 'build', 'DESKTOP')
+            print('Desktop built\n')
+        else:
+            print(f'Unknown target: {target}')
+
 def main():
     global APP, BOOTLOADER, MERGED, UF2
 
@@ -185,6 +303,9 @@ def main():
     parser.add_argument('-u', '--uf2',      action='store_true', help='Generates a uf2 image from application hex')
     parser.add_argument('-a', '--all',      action='store_true', help='Generates app/boot hex files, and merges them')
     parser.add_argument('-d', '--debug',    action='store_true', help='Runs JLinkExe, JLinkDBGServer, and gdb to allow remote debugging')
+    parser.add_argument('-B', '--build',    type=str,            help='Builds the requested target', choices=['app', 'sdk', 'bootloader', 'app-desktop'], nargs='+')
+    parser.add_argument('-j', '--threads',  type=int,            help='The number of threads to run while building', default=1)
+    parser.add_argument('-c', '--clean',    action='store_true', help='Force clean before building (rm -rf applicable build dir)', default=False)
 
     # Print help for no flags
     if len(sys.argv)==1:
@@ -216,6 +337,8 @@ def main():
         uf2(f'{APP}.hex', UF2)
     if args.debug:
         debug()
+    if args.build:
+        build(args.build, args.threads, args.clean)
 
 if __name__ == '__main__':
     main()
