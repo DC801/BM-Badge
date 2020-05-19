@@ -26,7 +26,7 @@
 
 #ifdef DC801_EMBEDDED
 
-	#include "config/app/sdk_config.h"
+	#include "config/sdk_config.h"
 
 	// Nordic headers
 	#include "nordic_common.h"
@@ -69,6 +69,8 @@
 	#include "nrf_soc.h"
 	#include "nrf_gpio.h"
 
+	#include "nrfx_i2s.h"
+
 	#include "nrf_log.h"
 	#include "nrf_log_ctrl.h"
 	#include "nrf_log_default_backends.h"
@@ -108,6 +110,7 @@ typedef enum{
 #include "modules/adc.h"
 #include "modules/uart.h"
 #include "modules/i2c.h"
+#include "modules/i2s.h"
 #include "modules/led.h"
 #include "modules/usb.h"
 #include "adafruit/gfxfont.h"

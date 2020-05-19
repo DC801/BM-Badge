@@ -30,10 +30,10 @@ public:
     void kill();
 };
 
-timer_manager::timer_manager() : interval{1.0 / APP_TIMER_CLOCK_FREQ}, timers{}, timers_mutex{}, 
+timer_manager::timer_manager() : interval{1.0 / APP_TIMER_CLOCK_FREQ}, timers{}, timers_mutex{},
     running{true}, runner{} // runner{&timer_manager::worker, this}
 {
-    
+
 }
 
 timer_manager::~timer_manager()
@@ -90,8 +90,8 @@ void timer_manager::kill()
             runner.join();
         }
     }
-    catch(const std::system_error) { }
-    
+    catch(const std::system_error&) { }
+
     printf("Done\n");
 }
 

@@ -33,7 +33,6 @@ extern "C" {
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) < (b) ? (b) : (a))
 
-#define app_usbd_event_queue_process() 0
 #define CRITICAL_REGION_ENTER()
 #define CRITICAL_REGION_EXIT()
 
@@ -52,6 +51,8 @@ typedef struct {
 } NRF_FICR_Type;
 
 extern NRF_FICR_Type *NRF_FICR;
+
+bool app_usbd_event_queue_process(void);
 
 uint32_t sd_app_evt_wait(void);
 
