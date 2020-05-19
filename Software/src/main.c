@@ -98,7 +98,7 @@ static void log_init(void){
  */
 static void bootCallback(uint8_t frame, void *p_data){
     const int speed = 4;
-    
+
     if (frame == 5) {
         ledOn(LED_COMPBAY);
         ledOn(LED_CARGO);
@@ -241,12 +241,12 @@ int main(void){
     log_init();
     button_init();
     speaker_init();
-    
-    
+
+
     // Timers
     app_timer_init();
     usb_serial_init();
-    
+
     // BLE
     //gap_params_init();
     ble_stack_init();
@@ -270,12 +270,15 @@ int main(void){
     // Setup I2C
     twi_master_init();
 
+    // Setup I2S
+    i2s_master_init();
+
     // Setup LEDs
     ledInit();
     ledsOff();
-    
+
     morseInit();
-    
+
     if(!util_sd_init()){
         util_sd_error();
     }
@@ -283,12 +286,12 @@ int main(void){
     // Boot! Boot! Boot!
     printf("Booted!\n");
     // printf goes to the RTT_Terminal.log after you've fired up debug.sh
-    
+
 
     util_gfx_draw_raw_file("BOOT.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, bootCallback, false, NULL);
-    
+
     EEpwm_init();
-    
+
     ledsOff();
     ledPulseFast(LED_PERSON_COMPBAY);
     ledPulseFast(LED_PERSON_ENGINE);
@@ -298,17 +301,17 @@ int main(void){
     ledPulseFast(LED_PERSON_DAMAGED);
     ledPulseFast(LED_PERSON_BRIDGE);
     util_gfx_draw_bmp_file("NuCypher.bmp", 0, 0);
-    
+
     for (int i=0; i< 200; ++i) {
         if (isButtonDown(USER_BUTTON_A))
             break;
         nrf_delay_ms(10);
     }
-    
+
     //debounce
     while (isButtonDown(USER_BUTTON_A))
         nrf_delay_ms(10);
-    
+
     ledsOff();
 
     // Init the WarGames game
@@ -316,7 +319,7 @@ int main(void){
 
     // Configure the systick
     sysTickStart();
-    
+
     // Setup a timer for shutting down animations in standby
     app_timer_create(&standby_animation_timer_id, APP_TIMER_MODE_SINGLE_SHOT, standby_animation_timeout_handler);
 
@@ -648,9 +651,9 @@ void credits(void){
 void menu(void) {
     util_gfx_fill_screen(COLOR_BLACK);
     drawScreenTemplate();
-    
+
     int subMenu = getMenuSelection(mainMenu, 25, ARRAY_SIZE(mainMenu), 4, 15000, true);
-    
+
     switch(subMenu){
         case item_games:
             games();

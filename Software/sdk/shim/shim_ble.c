@@ -9,7 +9,7 @@ void ble_stack_init(void)
 
 void ble_adv_start(void)
 {
-    
+
 }
 
 void scan_start(void)

@@ -22,7 +22,7 @@ FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br)
 {
 	UNUSED_PARAMETER(fp);
     UNUSED_PARAMETER(buff);
-    
+
     *br = btr;
 
     return FR_OK;
@@ -70,7 +70,10 @@ FSIZE_t f_tell(FIL* fp)
 
 FRESULT f_opendir (DIR* dp, const char* path)
 {
-	
+    UNUSED_PARAMETER(dp);
+    UNUSED_PARAMETER(path);
+
+    return FR_OK;
 }
 
 FRESULT f_closedir (DIR* dp)

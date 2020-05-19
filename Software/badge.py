@@ -22,13 +22,7 @@ MERGED = 'output/dc27_badge_merged.hex'
 # Run command and print any output, we don't care about errors since
 #  failures will be handled by humans
 def run(args):
-    process = subprocess.run(args, universal_newlines=True, capture_output=True)
-
-    if (len(process.stdout) > 0):
-        print(process.stdout)
-
-    if (len(process.stderr) > 0):
-        print(process.stderr)
+    process = subprocess.run(args, universal_newlines=True)
 
 # Run objcopy to generate intel hex files
 def hex(file):
@@ -37,7 +31,7 @@ def hex(file):
 # Run NRF mergehex tool to merge binaries
 def merge(app, bootloader, merged):
     global SOFTDEVICE
-    run(['mergehex', '-m', SOFTDEVICE, bootloader, app, '-o', merged])
+    run(['mergehex', '-m', SOFTDEVICE, app, '-o', merged])
 
 # Flash merged binary with NRF utility
 def flash(file):

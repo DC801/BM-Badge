@@ -3,6 +3,11 @@
 static NRF_FICR_Type FICR_internal;
 NRF_FICR_Type *NRF_FICR = &FICR_internal;
 
+bool app_usbd_event_queue_process(void)
+{
+    return false;
+}
+
 uint32_t sd_app_evt_wait(void)
 {
     return NRF_SUCCESS;
