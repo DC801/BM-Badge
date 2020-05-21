@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    // This configuration requires the Cortex-Debug VS Code extension
+    "configurations": [
+        {
+            "name": "Debug (Linux)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "serverpath": "/usr/bin/JLinkGDBServer",
+            "executable": "${workspaceRoot}/Software/output/dc28_badge.out",
+            "runToMain": true,
+            "cwd": "${workspaceRoot}",
+            "device": "NRF52840_XXAA",
+            "interface": "swd",
+            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+        }
+    ]
+}
