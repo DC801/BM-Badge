@@ -26,7 +26,7 @@ BUILD_DIR ?= $(PRJ_ROOT)/build
 
 UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
 
-SOFTDEVICE ?= $(SDK_ROOT)/components/softdevice/s140/hex//s140_nrf52_7.0.1_softdevice.hex
+SOFTDEVICE ?= $(SDK_ROOT)/components/softdevice/s140/hex/s140_nrf52_6.1.1_softdevice.hex
 
 CONFIG_INCLUDE := -I$(PRJ_ROOT)/config
 
