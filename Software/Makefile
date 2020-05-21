@@ -20,7 +20,7 @@ else
     endif
 endif
 
-SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk16.0
+SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk15.3.0
 TARGET := $(PRJ_ROOT)/output/dc28_badge
 BUILD_DIR ?= $(PRJ_ROOT)/build
 
