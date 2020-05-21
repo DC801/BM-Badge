@@ -11,6 +11,7 @@
             "request": "launch",
             "servertype": "jlink",
             "serverpath": "/usr/bin/JLinkGDBServer",
+            "armToolchainPath": "/usr/bin",
             "executable": "${workspaceRoot}/Software/output/dc28_badge.out",
             "runToMain": true,
             "cwd": "${workspaceRoot}",
