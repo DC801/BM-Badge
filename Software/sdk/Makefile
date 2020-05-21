@@ -7,7 +7,7 @@ else
 endif
 
 
-SDK_ROOT ?= $(PRJ_ROOT)/../../../nordic-sdk16.0
+SDK_ROOT ?= $(PRJ_ROOT)/../../../nordic-sdk15.3.0
 BUILD_DIR ?= $(PRJ_ROOT)/build
 
 CONFIG_INCLUDE := -I$(PRJ_ROOT)/../config
