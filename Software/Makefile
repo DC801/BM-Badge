@@ -75,7 +75,13 @@ $(SDK_TARGET):
 # Link ELF
 $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
-	@$(MKDIR) -p $(@D)
+
+ifeq ($(OS),Windows_NT)
+	@$(MKDIR) $(subst /,\,$@D)
+else
+	@$(MKDIR) $(@D)
+endif
+
 	@$(CC) $(LDFLAGS) -Wl,-Map=$(@:.out=.map) -o "$@" $^ $(LD_LIBRARIES) $(SDK_TARGET)
 
 ifndef DESKTOP

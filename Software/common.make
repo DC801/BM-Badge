@@ -104,19 +104,37 @@ ASMFLAGS += -D__STACK_SIZE=16384
 # C files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.c
 	@echo "[ CC ] $(notdir $<)"
+
+ifeq ($(OS),Windows_NT)
+	@$(MKDIR) $(subst /,\,$@D)
+else
 	@$(MKDIR) $(@D)
+endif
+
 	@$(CC) -x c -c -std=c11 $(CFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
 # C++ files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cpp
 	@echo "[ CXX ] $(notdir $<)"
+
+ifeq ($(OS),Windows_NT)
+	@$(MKDIR) $(subst /,\,$@D)
+else
 	@$(MKDIR) $(@D)
+endif
+
 	@$(CC) -x c++ -c -std=c++0x $(CFLAGS) $(CXXFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
 # ASM files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.S
 	@echo "[ AS ] $(notdir $<)"
+
+ifeq ($(OS),Windows_NT)
+	@$(MKDIR) $(subst /,\,$@D)
+else
 	@$(MKDIR) $(@D)
+endif
+
 	@$(CC) -x assembler-with-cpp -c $(ASMFLAGS) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
 # Intel format Hex files
