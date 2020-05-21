@@ -1,15 +1,13 @@
-PRJ_ROOT ?= $(shell pwd)
-SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk16.0
-TARGET := $(PRJ_ROOT)/output/dc28_badge
-BUILD_DIR ?= $(PRJ_ROOT)/build
-
-UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
-
 ifeq ($(OS),Windows_NT)
+    PRJ_ROOT ?= $(CURDIR)
+	MKDIR := "mkdir"
+
     NRFJPROG := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
     MERGEHEX := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/mergehex.exe"
 else
     UNAME_S := $(shell uname -s)
+	PRJ_ROOT ?= $(shell pwd)
+	MKDIR := "mkdir -p"
 
     ifeq ($(UNAME_S),Linux)
         NRFJPROG := /usr/bin/nrfjprog
@@ -21,6 +19,12 @@ else
         MERGEHEX := $(PRJ_ROOT)/mergehex/mergehex
     endif
 endif
+
+SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk16.0
+TARGET := $(PRJ_ROOT)/output/dc28_badge
+BUILD_DIR ?= $(PRJ_ROOT)/build
+
+UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
 
 SOFTDEVICE ?= $(PRJ_ROOT)/softdevice/s140_nrf52_7.0.1_softdevice.hex
 
@@ -71,7 +75,7 @@ $(SDK_TARGET):
 # Link ELF
 $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
-	@mkdir -p $(@D)
+	@$(MKDIR) -p $(@D)
 	@$(CC) $(LDFLAGS) -Wl,-Map=$(@:.out=.map) -o "$@" $^ $(LD_LIBRARIES) $(SDK_TARGET)
 
 ifndef DESKTOP
