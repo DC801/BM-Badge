@@ -1,4 +1,12 @@
-PRJ_ROOT ?= $(shell pwd)
+ifeq ($(OS),Windows_NT)
+    PRJ_ROOT ?= $(CURDIR)
+	MKDIR := mkdir 2> NUL
+else
+	PRJ_ROOT ?= $(shell pwd)
+	MKDIR := mkdir -p
+endif
+
+
 SDK_ROOT ?= $(PRJ_ROOT)/../../../nordic-sdk16.0
 BUILD_DIR ?= $(PRJ_ROOT)/build
 
@@ -35,7 +43,13 @@ include ../common.make
 
 $(SDK_TARGET): $(SDK_OBJS)
 	@echo "[ AR ] $(notdir $@)"
-	@mkdir -p $(@D)
+
+ifeq ($(OS),Windows_NT)
+	@if not exist $(subst /,\,$(@D)) $(MKDIR) $(subst /,\,$(@D))
+else
+	@$(MKDIR) $(@D)
+endif
+
 	@$(AR) -rcs "$@" $^
 
 clean:
