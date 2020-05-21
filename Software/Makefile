@@ -1,13 +1,13 @@
 ifeq ($(OS),Windows_NT)
     PRJ_ROOT ?= $(CURDIR)
-	MKDIR := "mkdir"
+	MKDIR := mkdir
 
     NRFJPROG := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
     MERGEHEX := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/mergehex.exe"
 else
     UNAME_S := $(shell uname -s)
 	PRJ_ROOT ?= $(shell pwd)
-	MKDIR := "mkdir -p"
+	MKDIR := mkdir -p
 
     ifeq ($(UNAME_S),Linux)
         NRFJPROG := /usr/bin/nrfjprog
