@@ -1,6 +1,5 @@
 ifeq ($(OS),Windows_NT)
     PRJ_ROOT ?= $(CURDIR)
-	# Redirect errors to emulate -p for windows
 	MKDIR := mkdir 2> NUL
 
     NRFJPROG := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
@@ -78,7 +77,8 @@ $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
 
 ifeq ($(OS),Windows_NT)
-	@$(MKDIR) $(subst /,\,$(@D))
+	DIR = $(subst /,\,$(@D))
+	@if not exist $(DIR) $(MKDIR) $(DIR)
 else
 	@$(MKDIR) $(@D)
 endif
@@ -123,7 +123,7 @@ merge: $(TARGET).hex
 
 uf2: merge
 	@echo "Generating UF2 image"
-	@python $(UF2CONV) -c -f 0xADA52840 -o $(TARGET).uf2
+	@python $(UF2CONV) $(TARGET).merged.hex -c -f 0xADA52840 -o $(TARGET).uf2
 
 clean:
 	@rm -rf $(BUILD_DIR) $(TARGET).out $(TARGET).map $(TARGET).hex $(TARGET).bin $(TARGET).merged.hex $(TARGET).uf2
