@@ -1,6 +1,7 @@
 ifeq ($(OS),Windows_NT)
     PRJ_ROOT ?= $(CURDIR)
-	MKDIR := mkdir
+	# Redirect errors to emulate -p for windows
+	MKDIR := mkdir 2> NUL
 
     NRFJPROG := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
     MERGEHEX := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/mergehex.exe"
@@ -77,7 +78,7 @@ $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
 
 ifeq ($(OS),Windows_NT)
-	@$(MKDIR) $(subst /,\,$@D)
+	@$(MKDIR) $(subst /,\,$(@D))
 else
 	@$(MKDIR) $(@D)
 endif
