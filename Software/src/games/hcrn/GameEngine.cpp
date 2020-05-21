@@ -85,33 +85,62 @@ void GameEngine::run() {
     quit = false;
     ledsOff();
     racestart = 0;
-    
+
     util_gfx_draw_raw_file("hcrn/display.raw", 0, 0, 128, 128, introCallback, true, NULL);
 
     changeRoom(16);
     player.setLife(60);
-    
+
     if (FR_OK == f_stat(SAVEFILE, NULL) ) {
         loadGame(SAVEFILE);
     }
-    
+
+#ifdef DC801_EMBEDDED
     lastTime = millis();
-    
-    while (!quit){
+#endif
+
+#ifdef DC801_DESKTOP
+    SDL_Event e;
+    lastTime = SDL_GetTicks();
+#endif
+
+    while (!quit) {
         #ifdef DC801_DESKTOP
             if (application_quit != 0)
             {
                 break;
             }
+
+            uint32_t now = SDL_GetTicks();
+
+            loop(millis_elapsed(now, lastTime));
+
+            while (SDL_PollEvent(&e)) {
+                if (e.type == SDL_QUIT){
+                    quit = true;
+                }
+
+                if (e.type == SDL_KEYDOWN) {
+                    if (e.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                    }
+
+                    if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
+                        quit = true;
+                    }
+                }
+            }
         #endif
 
-        uint32_t now = millis();
-        
-        loop(millis_elapsed(now, lastTime));
-        lastTime = now;
-        app_usbd_event_queue_process();
+        #ifdef DC01_EMBEDDED
+            uint32_t now = millis();
+
+            loop(millis_elapsed(now, lastTime));
+            lastTime = now;
+            app_usbd_event_queue_process();
+        #endif
     }
-    
+
     //Game Over
     uint16_t fontcolor = st7735_color565(220, 220, 220);
     area_t area = {32, 55, 96, 80};
@@ -122,17 +151,17 @@ void GameEngine::run() {
     util_gfx_print("Game Over");
     nrf_delay_ms(1000);
     pauseUntilPress(USER_BUTTON_A);
-    
+
     //debounce
     while (isButtonDown(USER_BUTTON_A))
         nrf_delay_ms(10);
-    
+
 }
 
 void GameEngine::loop(uint32_t dt) {
     lastFrame += dt;
     lastThink += dt;
-    
+
     if (lastFrame > FRAME_INTERVAL) {
         while (st7735_is_busy()) {
             APP_ERROR_CHECK(sd_app_evt_wait());
@@ -185,7 +214,7 @@ void GameEngine::loop(uint32_t dt) {
         }
 
         canvas.blt();
-        
+
         if (isTaskComplete(RACE_START) && !isTaskComplete(BEAT_RACE)) {
             if (racestart == 0)
                 racestart = getSystick();
@@ -197,16 +226,16 @@ void GameEngine::loop(uint32_t dt) {
 
             if (secs < 0)
                 player.setLife(0);
-            
+
             char line[5]= {0};
-            
+
             sprintf(line, "%d:%02d", secs/60, secs%60);
             util_gfx_set_color(st7735_color565(220, 220, 220));
             util_gfx_set_font(FONT_PRACTICAL);
             util_gfx_set_cursor(90, 115);
             util_gfx_print(line);
         }
-        
+
         if (!isTaskComplete(MESSAGE1)) {
             ShowDialog("Oh good, you're awake.\nI was starting to think \nyou would never come\nback.\n", MILLER_AVATAR, true);
             if (!DialogRequestResponse("You okay?\nIs anything broken?","I feel like shit. What\n did you do to me?", "Na. I'm OK.", MILLER_AVATAR))
@@ -397,7 +426,7 @@ void GameEngine::loop(uint32_t dt) {
         	}
         }
     }
-    
+
     if (lastThink > THINK_INTERVAL) {
         if (!player.think(&currentRoom))
             quit = true;
@@ -405,7 +434,7 @@ void GameEngine::loop(uint32_t dt) {
             if (objects[i])
                 if (!objects[i]->think(&currentRoom))
                     delObject(i);
-        
+
         for(int i=0; i<24; ++i)
             if (objects[i]) {
                 for(int j=i+1; j<24;++j)
@@ -414,13 +443,13 @@ void GameEngine::loop(uint32_t dt) {
                             objects[i]->collide(objects[j]);
                             objects[j]->collide(objects[i]);
                         }
-                
+
                 if (objects[i]->getBoundingbox().intersects(player.getBoundingbox())) {
                     objects[i]->collide(&player);
                     player.collide(objects[i]);
                 }
             }
-        
+
         if ((currentRoom.getId() == 30) && isTaskComplete(SHOOT_OUT) && (!isTaskComplete(EXPLODED))) {
             int count = 0;
             for (int i=0; i<24; ++i) {
@@ -439,7 +468,7 @@ void GameEngine::loop(uint32_t dt) {
         }
         lastThink %= THINK_INTERVAL;
     }
-    
+
     if (player.position.x < TILE_SIZE/2) {
         changeRoom(currentRoom.getNextRoom(LEFT));
         player.position.x = GWIDTH - TILE_SIZE/2;
@@ -456,7 +485,7 @@ void GameEngine::loop(uint32_t dt) {
         changeRoom(currentRoom.getNextRoom(DOWN));
         player.position.y = TILE_SIZE/2;
     }
-    
+
 }
 
 
@@ -469,7 +498,7 @@ void GameEngine::changeRoom(int id) {
     }
     currentRoom = Room(id, mapstates[id]);
     updateLocator();
-    
+
     //Enable voltage measuring
     if (id == 0)
         nrf_gpio_pin_set(27);
@@ -583,23 +612,23 @@ bool GameEngine::saveGame(const char* filename) {
     FIL file;
     uint32_t crc=0;
     uint32_t did = NRF_FICR->DEVICEADDR[0];
-    
+
     if (game.isTaskComplete(RACE_START) && (!game.isTaskComplete(BEAT_RACE) && (currentRoom.getId() != 4))) {
         printf("Player tried to save during race! No cheating!\n");
         return false;
     }
     if (!game.isTaskComplete(SETBLE))
     	snprintf(ble_name, 11, "TaSheep801");
-    
+
     uint8_t p[4] = {(uint8_t)player.position.x, (uint8_t)player.position.y, (uint8_t)player.getLife(), currentRoom.getId()};
     UINT br=0;
-    
+
     FRESULT result = f_open(&file, filename, FA_WRITE | FA_OPEN_ALWAYS);
     if (result != FR_OK) {
         NRF_LOG_INFO("Can't load file %s\n", filename);
         return false;
     }
-    
+
     crc32(p, 4, &crc);
     f_write(&file, p, 4, &br);
     crc32(gamestate, sizeof(gamestate), &crc);
@@ -620,16 +649,16 @@ bool GameEngine::loadGame(const char* filename) {
     FIL file;
     uint32_t crc=0, check=0;
     uint32_t did;
-    
+
     uint8_t p[4];
     UINT br=0;
-    
+
     FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
     if (result != FR_OK) {
         NRF_LOG_INFO("Can't load file %s\n", filename);
         return false;
     }
-    
+
     f_read(&file, p, 4, &br);
     crc32(p, 4, &crc);
     player.position = Point(p[0], p[1]);
@@ -647,7 +676,7 @@ bool GameEngine::loadGame(const char* filename) {
     crc32(&ble_name, sizeof(ble_name), &crc);
     f_read(&file, &check, sizeof(crc), &br);
     f_close(&file);
-    
+
     bool failed=false;
     if (did != NRF_FICR->DEVICEADDR[0]) {
         NRF_LOG_INFO("Save file not for this device! %x!=%x", did, NRF_FICR->DEVICEADDR[0]);
@@ -673,7 +702,7 @@ bool GameEngine::loadGame(const char* filename) {
 
 void GameEngine::updateShipLights() {
     shipLightsOff();
-    
+
     if (isTaskComplete(ALL_DONE)) {
         ledPulse(LED_PERSON_COMPBAY);
         ledPulse(LED_PERSON_ENGINE);
@@ -693,7 +722,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_HULL3);
         return;
     }
-    
+
     if (isTaskComplete(CORE_POWERED)) {
         ledOn(LED_ENGINEERING);
     }
@@ -701,7 +730,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_ENGINEERING);
         return;
     }
-    
+
     if (isTaskComplete(COMP_UNLOCKED)) {
         ledOn(LED_COMPBAY);
     }
@@ -709,7 +738,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_COMPBAY);
         return;
     }
-    
+
     if (isTaskComplete(BRIDGE_OPEN)) {
         ledOn(LED_BRIDGE);
     }
@@ -728,7 +757,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_ENGINE1);
         ledPulse(LED_ENGINE2);
     }
-    
+
     if (isTaskComplete(WEAPONS_ON)) {
         ledOn(LED_WEAPONS1);
         ledOn(LED_WEAPONS2);
@@ -737,18 +766,18 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_WEAPONS1);
         ledPulse(LED_WEAPONS2);
     }
-    
+
     if (isTaskComplete(RACE_START))
             ledPulseFast(LED_BRIDGE);
     else
         return;
-    
+
     if (isTaskComplete(BEAT_RACE)) {
         ledOn(LED_BRIDGE);
     }
     else
         return;
-    
+
 
     if (isTaskComplete(SHIELDS_ON)) {
         ledOn(LED_SHIELDS);
@@ -757,7 +786,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_SHIELDS);
         return;
     }
-    
+
     if (isTaskComplete(DEAD_OPEN)) {
         ledOn(LED_DAMAGED);
     }
@@ -765,7 +794,7 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_DAMAGED);
         return;
     }
-    
+
     if (isTaskComplete(COMMS_ON)) {
         ledOn(LED_COMM1);
         ledOn(LED_COMM2);
@@ -775,11 +804,11 @@ void GameEngine::updateShipLights() {
         ledPulse(LED_COMM2);
         return;
     }
-    
+
     if (!isTaskComplete(ALL_DONE)) {
         ledPulse(LED_BRIDGE);
     }
-    
+
 
 }
 
@@ -791,7 +820,7 @@ void GameEngine::updateLocator() {
     ledOff(LED_PERSON_BRIDGE);
     ledOff(LED_PERSON_ENGINE);
     ledOff(LED_PERSON_ENGINEERING);
-    
+
     switch (currentRoom.getId()) {
         case 0:
         case 37:

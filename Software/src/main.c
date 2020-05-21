@@ -16,6 +16,12 @@
 #ifdef DC801_DESKTOP
 #include<signal.h>
 
+const int SCREEN_WIDTH = 128;
+const int SCREEN_HEIGHT = 128;
+
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+
 volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
@@ -344,13 +350,40 @@ int main(void){
         #endif
 
         util_gfx_fill_screen(COLOR_BLACK);
+
+    #ifdef DC801_EMBEDDED
         HCRN();
+    #endif
+
+    #ifdef DC801_DESKTOP
+        if(SDL_Init(SDL_INIT_VIDEO) < 0)
+        {
+            printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+        }
+        else
+        {
+            //Create window
+            SDL_CreateWindowAndRenderer(512, 512, SDL_WINDOW_SHOWN, &window, &renderer);
+            if( window == NULL )
+            {
+                printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+            }
+            else
+            {
+                SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+                HCRN();
+            }
+        }
+    #endif
     }
 #ifdef DC801_EMBEDDED
 #pragma clang diagnostic pop
 #endif
 
     #ifdef DC801_DESKTOP
+
+    SDL_DestroyWindow( window );
+    SDL_Quit();
 
     printf("Exiting gracefully...\n");
     return 0;

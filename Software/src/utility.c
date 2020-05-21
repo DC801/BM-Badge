@@ -218,10 +218,55 @@ uint8_t getButton(bool waitForLongPress){
  * @return true if button is pressed down
  */
 bool isButtonDown(int button){
-
+#ifdef DC801_EMBEDDED
 	if(nrf_gpio_pin_read(button) == BUTTON_PRESSED){
 		return true;
 	}
+#endif
+
+#ifdef DC801_DESKTOP
+    const uint8_t *keys = SDL_GetKeyboardState(NULL);
+
+    switch (button)
+    {
+        case USER_BUTTON_UP:
+            if (keys[SDL_SCANCODE_UP]) {
+                return true;
+            }
+
+            break;
+        case USER_BUTTON_DOWN:
+            if (keys[SDL_SCANCODE_DOWN]) {
+                return true;
+            }
+
+            break;
+        case USER_BUTTON_LEFT:
+            if (keys[SDL_SCANCODE_LEFT]) {
+                return true;
+            }
+
+            break;
+        case USER_BUTTON_RIGHT:
+            if (keys[SDL_SCANCODE_RIGHT]) {
+                return true;
+            }
+
+            break;
+        case USER_BUTTON_A:
+            if (keys[SDL_SCANCODE_A]) {
+                return true;
+            }
+
+            break;
+        case USER_BUTTON_B:
+            if (keys[SDL_SCANCODE_S]) {
+                return true;
+            }
+
+            break;
+    }
+#endif
 
 	return false;
 }

@@ -47,7 +47,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
-	for (int i=s1; i<=s2; ++i) 
+	for (int i=s1; i<=s2; ++i)
 		frame[i*WIDTH+x]=color;
 }
 
@@ -101,7 +101,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, in
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color) {
-    
+
     for (int j=0; j<h; ++j)
         for (int i=0; i<w; ++i) {
             uint16_t c = data[pitch*(fy+j)+i+fx];
@@ -111,15 +111,15 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, in
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
-    
+
     FIL file;
-    
+
     FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
     if (result != FR_OK) {
         printf("Can't load file %s\n", filename);
         return;
     }
-    
+
     f_lseek(&file, (pitch*fy+fx)*sizeof(uint16_t));
     for (int i=0; i<h; ++i) {
         UINT bytesread=0;
@@ -128,7 +128,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
         f_lseek(&file, at + ((pitch-w)*sizeof(uint16_t)));
     }
     f_close(&file);
-    
+
     /*
     FILE *fd = fopen(filename, "rb");
     fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
@@ -141,15 +141,15 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color) {
     uint16_t buf[w*h];
-    
+
     FIL file;
-    
+
     FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
     if (result != FR_OK) {
         printf("Can't load file %s\n", filename);
         return;
     }
-    
+
     f_lseek(&file, (pitch*fy+fx)*sizeof(uint16_t));
     for (int i=0; i<h; ++i) {
         UINT bytesread=0;
@@ -166,7 +166,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
         fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
     }
     fclose(fd);*/
-    
+
     drawImage(x, y, w, h, buf, tansparent_color);
 }
 
@@ -188,7 +188,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dy=y2-y1;
 	int y=y1;
 	int p=2*dy-dx;
- 
+
 	for(int x=x1; x<x2; ++x) {
 		frame[x+y*WIDTH]=color;
 		if(p>=0) {
@@ -334,11 +334,11 @@ void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, i
 
 
 void FrameBuffer::blt() {
-    
+
     for (int i=0; i< WIDTH * HEIGHT; ++i)
         frame[i] = ((frame[i] >> 8 ) & 0xff) | ((frame[i]&0xff )<< 8);
     util_gfx_draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
-    
+
 }
 
 #endif

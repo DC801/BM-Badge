@@ -80,7 +80,9 @@
 	#define printf NRF_LOG_RAW_INFO
 #else
 
+	#include <fcntl.h>
 	#include "sdk_shim.h"
+	#include <SDL2/SDL.h>
 
 #endif
 

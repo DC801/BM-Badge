@@ -8,24 +8,24 @@ FRESULT f_open (FIL* fp, const char* path, unsigned char mode)
     UNUSED_PARAMETER(path);
     UNUSED_PARAMETER(mode);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_close (FIL* fp)
 {
 	UNUSED_PARAMETER(fp);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br)
 {
 	UNUSED_PARAMETER(fp);
     UNUSED_PARAMETER(buff);
+    UNUSED_PARAMETER(btr);
+    UNUSED_PARAMETER(br);
 
-    *br = btr;
-
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_write (FIL* fp, const void* buff, unsigned int btw, unsigned int* bw)
@@ -35,7 +35,7 @@ FRESULT f_write (FIL* fp, const void* buff, unsigned int btw, unsigned int* bw)
     UNUSED_PARAMETER(btw);
     UNUSED_PARAMETER(bw);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_lseek (FIL* fp, FSIZE_t ofs)
@@ -43,7 +43,7 @@ FRESULT f_lseek (FIL* fp, FSIZE_t ofs)
 	UNUSED_PARAMETER(fp);
     UNUSED_PARAMETER(ofs);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_stat (const char* path, FILINFO* fno)
@@ -51,14 +51,14 @@ FRESULT f_stat (const char* path, FILINFO* fno)
 	UNUSED_PARAMETER(path);
     UNUSED_PARAMETER(fno);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_unlink (const char* path)
 {
 	UNUSED_PARAMETER(path);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FSIZE_t f_tell(FIL* fp)
@@ -73,14 +73,14 @@ FRESULT f_opendir (DIR* dp, const char* path)
     UNUSED_PARAMETER(dp);
     UNUSED_PARAMETER(path);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_closedir (DIR* dp)
 {
 	UNUSED_PARAMETER(dp);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 FRESULT f_readdir (DIR* dp, FILINFO* fno)
@@ -88,7 +88,7 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 	UNUSED_PARAMETER(dp);
     UNUSED_PARAMETER(fno);
 
-    return FR_OK;
+    return FR_TIMEOUT;
 }
 
 bool util_sd_init(void)
