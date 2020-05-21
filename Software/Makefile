@@ -77,7 +77,7 @@ $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
 
 ifeq ($(OS),Windows_NT)
-	DIR = $(subst /,\,$(@D))
+	DIR := $(subst /,\,$(@D))
 	@if not exist $(DIR) $(MKDIR) $(DIR)
 else
 	@$(MKDIR) $(@D)

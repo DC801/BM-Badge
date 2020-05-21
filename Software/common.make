@@ -106,7 +106,7 @@ $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.c
 	@echo "[ CC ] $(notdir $<)"
 
 ifeq ($(OS),Windows_NT)
-	DIR = $(subst /,\,$(@D))
+	DIR := $(subst /,\,$(@D))
 	@if not exist $(DIR) $(MKDIR) $(DIR)
 else
 	@$(MKDIR) $(@D)
@@ -119,7 +119,7 @@ $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cpp
 	@echo "[ CXX ] $(notdir $<)"
 
 ifeq ($(OS),Windows_NT)
-	DIR = $(subst /,\,$(@D))
+	DIR := $(subst /,\,$(@D))
 	@if not exist $(DIR) $(MKDIR) $(DIR)
 else
 	@$(MKDIR) $(@D)
@@ -132,7 +132,7 @@ $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.S
 	@echo "[ AS ] $(notdir $<)"
 
 ifeq ($(OS),Windows_NT)
-	DIR = $(subst /,\,$(@D))
+	DIR := $(subst /,\,$(@D))
 	@if not exist $(DIR) $(MKDIR) $(DIR)
 else
 	@$(MKDIR) $(@D)
