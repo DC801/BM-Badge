@@ -4,3 +4,7 @@ _build/
 .project
 .settings/
 .idea/
+
+# Ignore Cortex-Debug files
+.cortex-debug.peripherals.state.json
+.cortex-debug.registers.state.json

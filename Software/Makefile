@@ -70,7 +70,7 @@ $(TARGET): $(TARGET).out $(TARGET).hex $(TARGET).bin
 
 # Ensure SDK is built
 $(SDK_TARGET):
-	@$(MAKE) -C sdk
+	@$(MAKE) -C sdk SDK_ROOT=$(SDK_ROOT)
 
 # Link ELF
 $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
