@@ -1,4 +1,4 @@
-#ifndef FRAMEBUFFER_H
+/*#ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
 #include <stdint.h>
@@ -51,3 +51,4 @@ extern FrameBuffer canvas;
 
 
 #endif //FRAMEBUFFER_H
+*/

@@ -30,11 +30,18 @@ FLAGS = -DBOARD_CUSTOM \
 	-DSOFTDEVICE_PRESENT \
 	-DSWI_DISABLE0
 
+ifdef DESKTOP
+    ifeq ($(OS),Windows_NT)
+        # Placeholder
+    else
+        FLAGS += $(shell pkg-config --cflags-only-other sdl2)
+    endif
+endif
+
 # C flags common to all targets
 CFLAGS = $(OPT) \
 	$(FLAGS) \
 	$(DEVICE_FLAGS) \
-	--short-enums \
 	-DDEBUG \
 	-DSTLVECTOR \
 	-Wall \
@@ -49,14 +56,14 @@ CFLAGS = $(OPT) \
 	-fno-strict-aliasing
 
 ifndef DESKTOP
-CFLAGS += -DDC801_EMBEDDED
+CFLAGS += -DDC801_EMBEDDED --short-enums
 
 # C++ flags common to all targets
 CXXFLAGS = -felide-constructors \
 	-fno-exceptions \
 	-fno-rtti
 else
-CFLAGS += -DDC801_DESKTOP
+CFLAGS += -DDC801_DESKTOP -fno-short-enums
 endif
 
 # Assembler flags common to all targets
@@ -81,7 +88,13 @@ LD_LIBRARIES = -lc \
 	-lstdc++
 
 ifndef DESKTOP
-LD_LIBRARIES += -lnosys
+    LD_LIBRARIES += -lnosys
+else
+    ifeq ($(OS),Windows_NT)
+        # Placeholder
+    else
+        LD_LIBRARIES += $(shell pkg-config --libs sdl2)
+    endif
 endif
 
 CFLAGS += -D__HEAP_SIZE=16384

@@ -139,7 +139,9 @@
                 "${SDK_ROOT}/modules/nrfx/mdk",
                 "${workspaceRoot}/Software",
                 "${workspaceRoot}/Software/src",
-                "${workspaceRoot}/Software/sdk/shim"
+                "${workspaceRoot}/Software/sdk/shim",
+                "/usr/include",
+                "${GCC_ROOT}/include"
             ],
             "defines": [
                 "BOARD_CUSTOM",
@@ -159,6 +161,7 @@
     ],
     "version": 4,
     "env": {
-        "SDK_ROOT": "${workspaceRoot}/../nordic-sdk15.3.0"
+        "SDK_ROOT": "${workspaceRoot}/../nordic-sdk15.3.0",
+        "GCC_ROOT": "/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0"
     }
 }

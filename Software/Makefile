@@ -69,8 +69,13 @@ include common.make
 $(TARGET): $(TARGET).out $(TARGET).hex $(TARGET).bin
 
 # Ensure SDK is built
+ifdef DESKTOP
+$(SDK_TARGET):
+	@$(MAKE) -C sdk DESKTOP=1 SDK_ROOT=$(SDK_ROOT)
+else
 $(SDK_TARGET):
 	@$(MAKE) -C sdk SDK_ROOT=$(SDK_ROOT)
+endif
 
 # Link ELF
 $(TARGET).out: $(APP_OBJS) $(SDK_TARGET)

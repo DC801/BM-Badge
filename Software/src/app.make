@@ -49,4 +49,12 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 
 APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT)
 
+ifdef DESKTOP
+    ifeq ($(OS),Windows_NT)
+        # Placeholder
+    else
+        APP_INCLUDES += $(shell pkg-config --cflags-only-I sdl2)
+    endif
+endif
+
 LINKER_SCRIPT ?= $(PRJ_ROOT)/badge_gcc_nrf52.ld
