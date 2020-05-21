@@ -38,7 +38,6 @@ CFLAGS = $(OPT) \
 	-DDEBUG \
 	-DSTLVECTOR \
 	-Wall \
-	-Werror \
 	-Wformat=0 \
 	-Wno-unknown-pragmas \
 	-Wno-unused-function \

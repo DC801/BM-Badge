@@ -2,8 +2,8 @@ ifeq ($(OS),Windows_NT)
     PRJ_ROOT ?= $(CURDIR)
 	MKDIR := mkdir 2> NUL
 
-    NRFJPROG := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
-    MERGEHEX := "C:/Program\ Files/Nordic\ Semiconductor/nrf-command-line-tools/bin/mergehex.exe"
+    NRFJPROG := "C:/Program Files/Nordic Semiconductor/nrf-command-line-tools/bin/nrfjprog.exe"
+    MERGEHEX := "C:/Program Files/Nordic Semiconductor/nrf-command-line-tools/bin/mergehex.exe"
 else
     UNAME_S := $(shell uname -s)
 	PRJ_ROOT ?= $(shell pwd)
@@ -26,7 +26,7 @@ BUILD_DIR ?= $(PRJ_ROOT)/build
 
 UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
 
-SOFTDEVICE ?= $(PRJ_ROOT)/softdevice/s140_nrf52_7.0.1_softdevice.hex
+SOFTDEVICE ?= $(SDK_ROOT)/components/softdevice/s140/hex//s140_nrf52_7.0.1_softdevice.hex
 
 CONFIG_INCLUDE := -I$(PRJ_ROOT)/config
 
