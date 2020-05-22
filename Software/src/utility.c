@@ -9,7 +9,6 @@
  */
 
 #include "common.h"
-//#include "modules/adc.h"
 
 #define EE_R1 3900
 #define EE_R2 10000
@@ -531,6 +530,7 @@ void setPowerUpLEDs(POWERUP powerUp){
     }
 }
 
+#ifdef DC801_EMBEDDED
 /**
  * Get a list of files on a path
  * @param files
@@ -571,6 +571,54 @@ uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
 
     return counter;
 }
+#endif
+
+#ifdef DC801_DESKTOP
+/**
+ * Get a list of files on a path
+ * @param files
+ * @param path
+ * @param fileMax
+ * @return
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
+
+    FRESULT ff_result;
+    DIR *dir;
+    FILINFO *fno;
+
+    ff_result = f_opendir(dir, path);
+    if (ff_result) {
+        printf("Can't open extras\n");
+        return 0;
+    }
+
+    uint8_t counter = 0;
+    for (uint8_t i = 0; i < fileMax; i++) {
+        ff_result = f_readdir(dir, fno);                   /* Read a directory item */
+        if (ff_result != FR_OK || fno->fname[0] == 0) {
+            break;  /* Break on error or end of dir */
+        }
+        if ((fno->fattrib & AM_DIR)) {
+            // Ignore subdirs
+        }
+        else{
+            char *ext = strrchr(fno->fname, '.') + 1;
+            if (strcmp(ext, "RAW") == 0){
+                // Add the file
+                memcpy(&files[counter++], fno->fname, ext - fno->fname - 1);
+            }
+        }
+    }
+    f_closedir(dir);
+
+    return counter;
+}
+#pragma GCC diagnostic pop
+#endif
 
 /**
  * Calculate the CRC on a chunk of memory

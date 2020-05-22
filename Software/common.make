@@ -63,7 +63,7 @@ CXXFLAGS = -felide-constructors \
 	-fno-exceptions \
 	-fno-rtti
 else
-CFLAGS += -DDC801_DESKTOP -fno-short-enums
+CFLAGS += -DDC801_DESKTOP -fno-short-enums -D_DEFAULT_SOURCE
 endif
 
 # Assembler flags common to all targets

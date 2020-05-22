@@ -14,11 +14,23 @@
 #include "Marine.h"
 #include "nearby.h"
 #include "NPC.h"
+
+#include "config/custom_board.h"
+
 #include "modules/adc.h"
+#include "modules/ble.h"
+#include "modules/drv_st7735.h"
+#include "modules/gfx.h"
+#include "modules/led.h"
+
+#include "utility.h"
+
 #include "FrameBuffer.h"
 #include "sprites_raw.h"
+
 #include <cstring>
 #include <cstddef>
+#include <cstdio>
 
 #ifndef DC801_EMBEDDED
 #include "sdk_shim.h"
