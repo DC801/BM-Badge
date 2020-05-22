@@ -21,8 +21,9 @@ else
 endif
 
 SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk15.3.0
-TARGET := $(PRJ_ROOT)/output/dc28_badge
 BUILD_DIR ?= $(PRJ_ROOT)/build
+OUTPUT_DIR ?= $(PRJ_ROOT)/output
+TARGET := $(OUTPUT_DIR)/dc28_badge
 
 UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
 
@@ -133,8 +134,9 @@ clean:
 	@rm -rf $(BUILD_DIR) $(TARGET).out $(TARGET).map $(TARGET).hex $(TARGET).bin $(TARGET).merged.hex $(TARGET).uf2
 
 cleanall: clean
+	@rm -rf $(BUILD_DIR) $(OUTPUT_DIR)
 	@$(MAKE) -C sdk clean
-	@$(MAKE) -C sdk clean DESKTOP=1
+	@$(MAKE) -C sdk DESKTOP=1 clean
 
 SDK_CONFIG_FILE := config/sdk_config.h
 CMSIS_CONFIG_TOOL := $(SDK_ROOT)/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar

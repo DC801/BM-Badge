@@ -236,7 +236,6 @@ void util_sd_error(){
 }
 
 #ifdef DC801_EMBEDDED
-
 /**
  * @param dir Directory to scan
  * @param extension extension to filter with
@@ -277,5 +276,50 @@ uint8_t util_sd_getnum_files(const char *path, const char *extension){
 	return counter;
 
 }
+#endif
 
+#ifdef DC801_DESKTOP
+/**
+ * @param dir Directory to scan
+ * @param extension extension to filter with
+ * @return number of files in the directory
+ */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+uint8_t util_sd_getnum_files(const char *path, const char *extension){
+
+	FRESULT ff_result;
+	DIR *dir;
+	FILINFO *fno;
+
+	ff_result = f_opendir(dir, path);
+	if (ff_result) {
+		// Can't open
+		return 0;
+	}
+
+	uint8_t counter = 0;
+	do {
+		ff_result = f_readdir(dir, fno);
+		if (ff_result != FR_OK || fno->fname[0] == 0) {
+		    // Break on error or last file
+			break;
+		}
+		if ((fno->fattrib & AM_DIR)) {
+			// Ignore subdirs
+		}
+		else{
+			char *ext = strrchr(fno->fname, '.') + 1;
+			if (strcmp(ext, extension) == 0){
+				counter++;
+			}
+		}
+	} while(counter < 255);
+
+	f_closedir(dir);
+
+	return counter;
+}
+#pragma GCC diagnostic pop
 #endif

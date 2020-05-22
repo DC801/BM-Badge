@@ -25,7 +25,6 @@
 #include "config/custom_board.h"
 
 #ifdef DC801_EMBEDDED
-
 	#include "config/sdk_config.h"
 
 	// Nordic headers
@@ -78,8 +77,9 @@
 	#include "ff.h"
 
 	#define printf NRF_LOG_RAW_INFO
-#else
+#endif
 
+#ifdef DC801_DESKTOP
 	#include <fcntl.h>
 	#include "sdk_shim.h"
 	#include <SDL2/SDL.h>

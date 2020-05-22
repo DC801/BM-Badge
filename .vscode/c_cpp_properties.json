@@ -151,7 +151,8 @@
                 "NRF_SD_BLE_API_VERSION=6",
                 "S140",
                 "SOFTDEVICE_PRESENT",
-                "SWI_DISABLE0"
+                "SWI_DISABLE0",
+                "_DEFAULT_SOURCE"
             ],
             "compilerPath": "/usr/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
