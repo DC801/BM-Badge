@@ -20,13 +20,14 @@
 Room::Room() : id(0) {
 }
 
+#ifdef DC801_EMBEDDED
 Room::Room(uint8_t roomID, uint8_t states) : id(roomID) {
     FIL fd;
     FRESULT result = f_open(&fd, "HCRN/level2.dat", FA_READ | FA_OPEN_EXISTING);
     if (result == FR_OK) {
         UINT bytesread=0;
         uint8_t dummy[8];
-        
+
         f_lseek(&fd, 12 + (TILES_WIDE * TILES_HIGH + 44)*roomID);
         f_read(&fd, neighbors, 4, &bytesread);
         f_read(&fd, dummy, 8, &bytesread); //skip flags and loc
@@ -45,21 +46,57 @@ Room::Room(uint8_t roomID, uint8_t states) : id(roomID) {
         memset(map, 256, TILES_WIDE * TILES_HIGH);
     }
 }
+#endif
+
+#ifdef DC801_DESKTOP
+Room::Room(uint8_t roomID, uint8_t states) : id(roomID) {
+    FIL *fd;
+    FRESULT result = f_open(&fd, "HCRN/level2.dat", FA_READ | FA_OPEN_EXISTING);
+    if (result == FR_OK) {
+        UINT bytesread=0;
+        uint8_t dummy[8];
+
+        f_lseek(fd, 12 + (TILES_WIDE * TILES_HIGH + 44)*roomID);
+        f_read(fd, neighbors, 4, &bytesread);
+        f_read(fd, dummy, 8, &bytesread); //skip flags and loc
+        f_read(fd, map, TILES_WIDE * TILES_HIGH, &bytesread);
+        for (int i=0; i<8; ++i) {
+            uint8_t oinfo[4];
+            f_read(fd, oinfo, 4, &bytesread);
+            if (!(states & (1<<i))) {
+                makeDude(i, (dude_id)oinfo[0], oinfo[1], Point(oinfo[2], oinfo[3]));
+            }
+        }
+        f_close(fd);
+    }
+    else {
+        printf("Can't find level.dat\n");
+        memset(map, 256, TILES_WIDE * TILES_HIGH);
+    }
+}
+#endif
 
 Room::~Room(){
-    
+
 }
 
-void Room::draw(FrameBuffer* canvas) {
-    for (int x=0; x< TILES_WIDE; ++x)
-        for (int y=0; y<TILES_HIGH; ++y) {
-            const int mapwidth=12;
-            int fx = TILE_SIZE*(map[x][y] % mapwidth);
-            int fy = TILE_SIZE*(map[x][y] / mapwidth);
-            canvas->drawImage(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, tile12_raw, fx, fy, mapwidth*TILE_SIZE);
+void Room::draw(FrameBuffer* canvas)
+{
+    for (int x = 0; x < TILES_WIDE; ++x)
+    {
+        for (int y = 0; y < TILES_HIGH; ++y)
+        {
+            const int mapwidth = 12;
+
+            int fx = TILE_SIZE * (map[x][y] % mapwidth);
+            int fy = TILE_SIZE * (map[x][y] / mapwidth);
+
+            canvas->drawImage(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, tile12_raw, fx, fy, mapwidth * TILE_SIZE);
         }
-    canvas->fillRect(TILE_SIZE*TILES_WIDE, 0, WIDTH - (TILE_SIZE*TILES_WIDE), HEIGHT, 0);
-    canvas->fillRect(0, TILE_SIZE*TILES_HIGH, WIDTH, HEIGHT - (TILE_SIZE*TILES_HIGH), 0);
+    }
+
+    canvas->fillRect(TILE_SIZE * TILES_WIDE, 0, WIDTH - (TILE_SIZE * TILES_WIDE), HEIGHT, 0);
+    canvas->fillRect(0, TILE_SIZE * TILES_HIGH, WIDTH, HEIGHT - (TILE_SIZE * TILES_HIGH), 0);
 }
 
 bool Room::isOpen(Rect r) {
@@ -69,14 +106,14 @@ bool Room::isOpen(Rect r) {
     Point p2 = Point(r.x+r.w, r.y)/TILE_SIZE;
     Point p3 = Point(r.x, r.y+r.h)/TILE_SIZE;
     Point p4 = Point(r.x+r.w, r.y+r.h)/TILE_SIZE;
-    
+
     if ((map[p1.x][p1.y] < WALL) || (map[p2.x][p2.y] < WALL) ||
         (map[p3.x][p3.y] < WALL) || (map[p4.x][p4.y] < WALL))
         return false;
-    
+
     if (game.isBlocked(r))
         return false;
-    
+
     return true;
 }
 
@@ -87,14 +124,14 @@ bool Room::isWalkable(Rect r) {
     Point p2 = Point(r.x+r.w, r.y)/TILE_SIZE;
     Point p3 = Point(r.x, r.y+r.h)/TILE_SIZE;
     Point p4 = Point(r.x+r.w, r.y+r.h)/TILE_SIZE;
-    
+
     if ((map[p1.x][p1.y] < WALKABLE) || (map[p2.x][p2.y] < WALKABLE) ||
         (map[p3.x][p3.y] < WALKABLE) || (map[p4.x][p4.y] < WALKABLE))
         return false;
-    
+
     if (game.isBlocked(r))
         return false;
-    
+
     return true;
 }
 

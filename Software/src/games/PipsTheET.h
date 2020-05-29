@@ -13,7 +13,7 @@ int PipsTheET(void);
 
 static void pauseGame(void);
 static void updateSteps(int steps);
-static void updateBanner(char *string);
+static void updateBanner(const char *string);
 static void movePips(uint8_t x, uint8_t y);
 static bool checkIfInPit();
 static void movePipsInPit(uint8_t x);

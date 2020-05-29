@@ -1,7 +1,7 @@
 #ifndef ROOM_H
 #define ROOM_H
 
-#include "common.h"
+#include "hcrn_common.h"
 #include "FrameBuffer.h"
 #include "Point.h"
 #include "Rect.h"
@@ -67,13 +67,13 @@ public:
 
 	bool isOpen(Rect r);
     bool isWalkable(Rect r);
-	
+
 	uint8_t getNextRoom(Direction dir);
     uint8_t getId();
-    
+
     private:
         void makeDude(uint8_t i, dude_id id, uint8_t un, Point at);
-    
+
 		char tileset[256];
 		uint8_t map[TILES_WIDE][TILES_HIGH];
 		uint8_t exitcount, doorcount, spritecount;

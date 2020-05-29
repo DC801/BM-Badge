@@ -224,6 +224,7 @@ bool isButtonDown(int button){
 #endif
 
 #ifdef DC801_DESKTOP
+    SDL_PumpEvents();
     const uint8_t *keys = SDL_GetKeyboardState(NULL);
 
     switch (button)
@@ -285,10 +286,13 @@ void pauseUntilPress(int button){
             }
         #endif
 
-		if(nrf_gpio_pin_read(button) == BUTTON_PRESSED){
+		if(nrf_gpio_pin_read(button) == BUTTON_PRESSED)
+        {
 			// Debounce
 			nrf_delay_ms(button);
-			if(nrf_gpio_pin_read(button) == BUTTON_PRESSED){
+
+			if(nrf_gpio_pin_read(button) == BUTTON_PRESSED)
+            {
 				while(nrf_gpio_pin_read(button) == BUTTON_PRESSED);
 				return;
 			}
@@ -327,19 +331,26 @@ void beep(int duration, int frequency){
  * @param chars
  * @param showScroll
  */
-void getString(char *retString, uint8_t chars, bool showScroll) {
+void getString(GFXfont font, char *retString, uint8_t chars, bool showScroll) {
 
 	uint8_t curIndex = 0;
 	char string[32];
 	char pre;
 	char post;
-	int16_t xPos = util_gfx_cursor_x_get(), yPos = util_gfx_cursor_y_get();
-	bool done = false;
+
+    cursor_t cursor = { 0 };
+    p_canvas()->getCursorPosition(&cursor);
+    // int16_t xPos = util_gfx_cursor_x_get();
+    //int16_t yPos = util_gfx_cursor_y_get();
+
+    uint8_t width = p_canvas()->getFontWidth(font);
+    uint8_t height = p_canvas()->getFontHeight(font);
+
+    bool done = false;
 
 	memcpy(string, retString, chars);
 
 	do {
-
         if (string[curIndex] == 0) {
             string[curIndex] = ' ';
         }
@@ -355,27 +366,39 @@ void getString(char *retString, uint8_t chars, bool showScroll) {
 
 
         if (showScroll) {
-            util_gfx_fill_rect(xPos, yPos - 3, util_gfx_font_width() * chars + util_gfx_font_width(), util_gfx_font_height() * 3, COLOR_BLACK);
+            p_canvas()->fillRect(cursor.x, cursor.y - 3, width * chars + width, height * 3, COLOR_BLACK);
+            // util_gfx_fill_rect(cursor.x, cursor.y - 3, util_gfx_font_width() * chars + util_gfx_font_width(), util_gfx_font_height() * 3, COLOR_BLACK);
 
-            util_gfx_set_cursor(xPos + (util_gfx_font_width() * curIndex), yPos);
-            util_gfx_print_char(pre);
-            util_gfx_set_cursor(xPos, yPos + util_gfx_font_height());
-            util_gfx_print(string);
-            util_gfx_draw_line(
-                    xPos + (util_gfx_font_width() * curIndex),
-                    yPos + (util_gfx_font_height() * 2) - 4,
-                    xPos + (util_gfx_font_width() * curIndex) + util_gfx_font_width(),
-                    yPos + (util_gfx_font_height() * 2) - 4,
-                    COLOR_RED);
-            util_gfx_set_cursor(xPos + (util_gfx_font_width() * curIndex), yPos + (util_gfx_font_height() * 2));
-            util_gfx_print_char(post);
+            p_canvas()->write_char(pre, font);
+            // util_gfx_set_cursor(cursor.x + (util_gfx_font_width() * curIndex), cursor.y);
+            // util_gfx_print_char(pre);
+
+            p_canvas()->printMessage(string, font, COLOR_WHITE, cursor.x, cursor.y + height);
+            // util_gfx_set_cursor(cursor.x, cursor.y + util_gfx_font_height());
+            // util_gfx_print(string);
+
+            p_canvas()->drawHorizontalLine(cursor.x + (width * curIndex), cursor.y + (height * 2) - 4, cursor.x + (width * curIndex) + width, COLOR_RED);
+            // util_gfx_draw_line(
+            //         cursor.x + (util_gfx_font_width() * curIndex),
+            //         cursor.y + (util_gfx_font_height() * 2) - 4,
+            //         cursor.x + (util_gfx_font_width() * curIndex) + util_gfx_font_width(),
+            //         cursor.y + (util_gfx_font_height() * 2) - 4,
+            //         COLOR_RED);
+
+            p_canvas()->write_char(post, font);
+            // util_gfx_set_cursor(cursor.x + (util_gfx_font_width() * curIndex), cursor.y + (util_gfx_font_height() * 2));
+            // util_gfx_print_char(post);
         }
         else{
-            util_gfx_fill_rect(xPos, yPos - 3, util_gfx_font_width() * chars, util_gfx_font_height(), COLOR_BLACK);
+            p_canvas()->fillRect(cursor.x, cursor.y - 3, width * chars, height, COLOR_BLACK);
+            // util_gfx_fill_rect(cursor.x, cursor.y - 3, util_gfx_font_width() * chars, util_gfx_font_height(), COLOR_BLACK);
 
-            util_gfx_set_cursor(xPos + (util_gfx_font_width() * curIndex), yPos);
-            util_gfx_print(string);
-            util_gfx_draw_line(xPos, yPos + util_gfx_font_height(), xPos + util_gfx_font_width(), yPos + util_gfx_font_height(), COLOR_RED);
+            p_canvas()->printMessage(string, font, COLOR_WHITE, cursor.x + (width * curIndex), cursor.y);
+            // util_gfx_set_cursor(cursor.x + (util_gfx_font_width() * curIndex), cursor.y);
+            // util_gfx_print(string);
+
+            p_canvas()->drawHorizontalLine(cursor.x, cursor.y + height, cursor.x + width, COLOR_RED);
+            // util_gfx_draw_line(cursor.x, cursor.y + util_gfx_font_height(), cursor.x + util_gfx_font_width(), cursor.y + util_gfx_font_height(), COLOR_RED);
         }
 
 
@@ -445,7 +468,6 @@ void getString(char *retString, uint8_t chars, bool showScroll) {
 	} while (!done);
 
 	memcpy(retString, string, chars);
-
 }
 
 /**
@@ -538,7 +560,7 @@ void setPowerUpLEDs(POWERUP powerUp){
  * @param fileMax
  * @return
  */
-uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
+uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
 
     FRESULT ff_result;
     DIR dir;
@@ -584,13 +606,13 @@ uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-uint8_t getFiles(char files[][9], char *path, uint8_t fileMax){
-
+uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
+{
     FRESULT ff_result;
     DIR *dir;
     FILINFO *fno;
 
-    ff_result = f_opendir(dir, path);
+    ff_result = f_opendir(&dir, path);
     if (ff_result) {
         printf("Can't open extras\n");
         return 0;
@@ -667,7 +689,11 @@ uint16_t crc16(uint16_t crcValue, uint8_t newByte, const uint16_t POLYNOM){
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 {
-    if(currentMillis < previousMillis) return(currentMillis + OVERFLOW + 1 - previousMillis);
+    if(currentMillis <= previousMillis)
+    {
+        return 0;
+    }
+
     return(currentMillis - previousMillis);
 }
 

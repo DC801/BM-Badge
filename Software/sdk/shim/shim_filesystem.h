@@ -10,7 +10,7 @@ extern "C" {
 
 #define FIL FILE
 
-#define FSIZE_t unsigned long
+#define FSIZE_t long int
 
 #define UINT unsigned int
 
@@ -75,7 +75,7 @@ typedef struct {
 #define AM_DIR				0x10	/* Directory */
 #define AM_ARC				0x20	/* Archive */
 
-FRESULT f_open (FIL* fp, const char* path, unsigned char mode);						/* Open or create a file */
+FRESULT f_open (FIL** fp, const char* path, unsigned char mode);					/* Open or create a file */
 FRESULT f_close (FIL* fp);															/* Close an open file object */
 FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br);			/* Read data from the file */
 FRESULT f_write (FIL* fp, const void* buff, unsigned int btw, unsigned int* bw);	/* Write data to the file */
@@ -85,7 +85,7 @@ FRESULT f_unlink (const char* path);												/* Delete an existing file or di
 
 FSIZE_t f_tell(FIL* fp);
 
-FRESULT f_opendir (DIR* dp, const char* path);										/* Open a directory */
+FRESULT f_opendir (DIR** dp, const char* path);										/* Open a directory */
 FRESULT f_closedir (DIR* dp);														/* Close an open directory */
 FRESULT f_readdir (DIR* dp, FILINFO* fno);											/* Read a directory item */
 

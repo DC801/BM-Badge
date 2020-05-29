@@ -8,10 +8,14 @@
 
 #include <sys/stat.h>
 
-FRESULT f_open (FIL* fp, const char* path, unsigned char mode)
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+FRESULT f_open (FIL** fp, const char* path, unsigned char mode)
 {
 	// Verify arguments are valid
-	if ((fp == NULL) || (path == NULL))
+	if (path == NULL)
 	{
 		fprintf(stderr, "f_open error: Invalid arguments\n");
 		return FR_INVALID_PARAMETER;
@@ -44,7 +48,7 @@ FRESULT f_open (FIL* fp, const char* path, unsigned char mode)
 	// A valid pointer will be returned on success
 	if (retval)
 	{
-		fp = retval;
+		*fp = retval;
 		return FR_OK;
 	}
 
@@ -238,8 +242,8 @@ FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br)
 		// The fread() function shall fail if data needs to be read and:
 		case EAGAIN:
 			// The O_NONBLOCK flag is set for the file descriptor underlying stream and the thread would be delayed in the fread() operation.
-			fprintf(stderr, "f_read error: [EAGAIN]\n");
-			return FR_TIMEOUT;
+			//fprintf(stderr, "f_read warning: [EAGAIN]\n");
+			return FR_OK;
 		case EBADF:
 			// The file descriptor underlying stream is not a valid file descriptor open for reading.
 			fprintf(stderr, "f_read error: [EBADF]\n");
@@ -554,6 +558,67 @@ FRESULT f_stat (const char* path, FILINFO* fno)
 	// Returns 0 upon success
 	if (retval == 0)
 	{
+		// Now we need to close the file
+		int close = fclose(fp);
+
+		// Returns 0 upon success
+		if (close != 0)
+		{
+			// Capture errno
+			int error = errno;
+
+			// See why we failed
+			switch (error)
+			{
+				// The fclose() function shall fail if:
+				case EAGAIN:
+					// The O_NONBLOCK flag is set for the file descriptor underlying stream and the thread would be delayed in the write operation.
+					fprintf(stderr, "f_stat (fclose) error: [EAGAIN]\n");
+					return FR_TIMEOUT;
+				case EBADF:
+					// The file descriptor underlying stream is not valid.
+					fprintf(stderr, "f_stat (fclose) error: [EBADF]\n");
+					return FR_NO_FILE;
+				case EFBIG:
+					// An attempt was made to write a file that exceeds the maximum file size.
+					// An attempt was made to write a file that exceeds the file size limit of the process.
+					// The file is a regular file and an attempt was made to write at or beyond the offset maximum associated with the corresponding stream.
+					fprintf(stderr, "f_stat (fclose) error: [EFBIG]\n");
+					return FR_INVALID_PARAMETER;
+				case EINTR:
+					// The fclose() function was interrupted by a signal.
+					fprintf(stderr, "f_stat (fclose) error: [EINTR]\n");
+					return FR_DISK_ERR;
+				case EIO:
+					// The process is a member of a background process group attempting to write to its controlling terminal, TOSTOP is set, the calling thread is not blocking SIGTTOU, the process is not ignoring SIGTTOU, and the process group of the process is orphaned. This error may also be returned under implementation-defined conditions.
+					fprintf(stderr, "f_stat (fclose) error: [EIO]\n");
+					return FR_DISK_ERR;
+				case ENOMEM:
+					// The underlying stream was created by open_memstream() or open_wmemstream() and insufficient memory is available.
+					fprintf(stderr, "f_stat (fclose) error: [ENOMEM]\n");
+					return FR_NOT_ENOUGH_CORE;
+				case ENOSPC:
+					// There was no free space remaining on the device containing the file or in the buffer used by the fmemopen() function.
+					fprintf(stderr, "f_stat (fclose) error: [ENOSPC]\n");
+					return FR_NOT_ENABLED;
+				case EPIPE:
+					// An attempt is made to write to a pipe or FIFO that is not open for reading by any process. A SIGPIPE signal shall also be sent to the thread.
+					fprintf(stderr, "f_stat (fclose) error: [EPIPE]\n");
+					return FR_DENIED;
+
+				// The fclose() function may fail if:
+				case ENXIO:
+					// A request was made of a nonexistent device, or the request was outside the capabilities of the device.
+					fprintf(stderr, "f_stat (fclose) error: [ENXIO]\n");
+					return FR_NOT_READY;
+
+				default:
+					// Unknown failure (catch all)
+					fprintf(stderr, "f_stat (fclose) error: [UNKNWON] (%d)\n", error);
+					return FR_TIMEOUT;
+			}
+		}
+
 		// If we care about file info
 		if (fno != NULL)
 		{
@@ -751,10 +816,10 @@ FSIZE_t f_tell(FIL* fp)
 	}
 }
 
-FRESULT f_opendir (DIR* dp, const char* path)
+FRESULT f_opendir (DIR** dp, const char* path)
 {
 	// Verify arguments aren't null
-	if ((dp == NULL) || (path == NULL))
+	if (path == NULL)
 	{
 		fprintf(stderr, "f_opendir error: Invalid argument\n");
 		return FR_INVALID_PARAMETER;
@@ -766,7 +831,7 @@ FRESULT f_opendir (DIR* dp, const char* path)
 	// Valid pointer means success
 	if (retval)
 	{
-		dp = retval;
+		*dp = retval;
 		return FR_OK;
 	}
 
@@ -954,3 +1019,7 @@ bool util_sd_init(void)
 {
 	return true;
 }
+
+#ifdef __cplusplus
+}
+#endif

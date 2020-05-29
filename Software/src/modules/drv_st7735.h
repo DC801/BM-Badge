@@ -26,6 +26,10 @@
 #ifndef DRV_ST7735_H_
 #define DRV_ST7735_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ST7735_WIDTH  				128
 #define ST7735_HEIGHT 				128
 #define ST7735_X_OFFSET				2
@@ -47,5 +51,9 @@ extern void st7735_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_
  * Force and update of the display, update inverted status and redraw from internal memory
  */
 extern void st7735_update();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

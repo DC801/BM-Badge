@@ -10,14 +10,19 @@
 #include <cstdio>
 #include <cstdlib>
 
+#include <iostream>
+
 // TODO: Implement this shit
+
+NRF_TIMER_Type NRF_TIMER_1 = { 0 };
+NRF_TIMER_Type *NRF_TIMER1 = &NRF_TIMER_1;
 
 class timer_manager
 {
 private:
     const double interval;
     std::list<app_timer_t*> timers;
-    std::mutex timers_mutex;
+    std::recursive_mutex timers_mutex;
     std::atomic<bool> running;
     std::thread runner;
 public:
@@ -33,7 +38,7 @@ public:
 timer_manager::timer_manager() : interval{1.0 / APP_TIMER_CLOCK_FREQ}, timers{}, timers_mutex{},
     running{true}, runner{} // runner{&timer_manager::worker, this}
 {
-
+    std::cout << "New timer manager" << std::endl;
 }
 
 timer_manager::~timer_manager()
@@ -48,10 +53,14 @@ void timer_manager::worker()
 
     while(running)
     {
-        std::lock_guard<std::mutex> lock(timers_mutex);
+        std::cout << "Locking worker" << std::endl;
+        std::unique_lock<std::recursive_mutex> lock(timers_mutex);
 
         // Do stuff
         printf("butt stuff\n");
+
+        lock.unlock();
+        std::cout << "Unlocked worker" << std::endl;
 
         std::this_thread::sleep_for(duration);
     }
@@ -59,7 +68,8 @@ void timer_manager::worker()
 
 bool timer_manager::timer_exists(app_timer_t *timer)
 {
-    std::lock_guard<std::mutex> lock(timers_mutex);
+    std::cout << "Locking exists" << std::endl;
+    std::unique_lock<std::recursive_mutex> lock(timers_mutex);
 
     bool exists = false;
 
@@ -68,14 +78,21 @@ bool timer_manager::timer_exists(app_timer_t *timer)
         if (item == timer) exists = true;
     }
 
+    lock.unlock();
+    std::cout << "Unlocked exists" << std::endl;
+
     return exists;
 }
 
 void timer_manager::add_timer(app_timer_t *timer)
 {
-    std::lock_guard<std::mutex> lock(timers_mutex);
+    std::cout << "Locking add" << std::endl;
 
+    std::unique_lock<std::recursive_mutex> lock(timers_mutex);
     timers.push_back(timer);
+    lock.unlock();
+
+    std::cout << "Unlocked add" << std::endl;
 }
 
 void timer_manager::kill()
@@ -95,8 +112,6 @@ void timer_manager::kill()
     printf("Done\n");
 }
 
-extern "C" {
-
 timer_manager manager;
 
 void signal_handler(int signal)
@@ -107,7 +122,7 @@ void signal_handler(int signal)
 
 ret_code_t app_timer_init(void)
 {
-	return NRF_SUCCESS;
+    return NRF_SUCCESS;
 }
 
 ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t mode, app_timer_timeout_handler_t timeout_handler)
@@ -133,14 +148,14 @@ ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t m
     timer->mode = mode;
     timer->p_timeout_handler = timeout_handler;
 
-    manager.add_timer(timer);
+    // manager.add_timer(timer);
 
     return NRF_SUCCESS;
 }
 
 ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *p_context)
 {
-	UNUSED_PARAMETER(timer_id);
+    UNUSED_PARAMETER(timer_id);
     UNUSED_PARAMETER(timeout_ticks);
     UNUSED_PARAMETER(p_context);
 
@@ -149,7 +164,7 @@ ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void
 
 ret_code_t app_timer_stop(app_timer_id_t timer_id)
 {
-	UNUSED_PARAMETER(timer_id);
+    UNUSED_PARAMETER(timer_id);
 
     return NRF_SUCCESS;
 }
@@ -157,25 +172,18 @@ ret_code_t app_timer_stop(app_timer_id_t timer_id)
 
 uint32_t app_timer_cnt_get(void)
 {
-	return 0;
+    return 0;
 }
 
 
 void nrf_delay_us(uint32_t time_us)
 {
-	UNUSED_PARAMETER(time_us);
+    const auto duration = std::chrono::microseconds(time_us);
+    std::this_thread::sleep_for(duration);
 }
 
 void nrf_delay_ms(uint32_t time_ms)
 {
-	if (time_ms == 0)
-    {
-        return;
-    }
-
-    do {
-        nrf_delay_us(1000);
-    } while (--time_ms);
-}
-
+    const auto duration = std::chrono::milliseconds(time_ms);
+    std::this_thread::sleep_for(duration);
 }

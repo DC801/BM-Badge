@@ -46,6 +46,9 @@
  **
  */
 
+#ifndef ORGFONT_H
+#define ORGFONT_H
+
 #define TOMTHUMB_USE_EXTENDED 0
 
 const uint8_t TomThumbBitmaps[] PROGMEM = {
@@ -472,3 +475,5 @@ const GFXfont TomThumb PROGMEM = {
     (uint8_t  *)TomThumbBitmaps,
     (GFXglyph *)TomThumbGlyphs,
     0x20, 0x7E, 6 };
+
+#endif

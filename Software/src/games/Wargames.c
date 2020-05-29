@@ -70,7 +70,8 @@ void wg_Reset() {
  */
 bool wg_GotString(char *string, size_t len){
 
-    for(int i = 0 ; i < strlen(string); i++){
+    for(size_t i = 0 ; i < strlen(string); i++)
+    {
         string[i] = toupper(string[i]);
     }
 

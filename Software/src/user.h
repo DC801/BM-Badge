@@ -20,8 +20,8 @@ typedef enum {
 
 typedef struct {
     CLAN clan;
-    char* name;
-    char* filename;
+    const char* name;
+    const char* filename;
 } CLAN_STRUCT;
 
 typedef struct __attribute__ ((__packed__)) {
@@ -36,9 +36,8 @@ typedef struct __attribute__ ((__packed__)) {
 
 void loadUser(void);
 void storeUser(void);
-void userConfigure(void);
-char* getClanFile(CLAN clan);
-char* getClanName(CLAN clan);
+const char* getClanFile(CLAN clan);
+const char* getClanName(CLAN clan);
 
 int getTempScoreModifier(void);
 void setTempScoreModifier(int);

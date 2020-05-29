@@ -123,7 +123,7 @@ else
 	@$(MKDIR) $(@D)
 endif
 
-	@$(CC) -x c -c -std=c11 $(CFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
+	@$(CC) -x c++ -c -std=c++0x $(CFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
 # C++ files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cpp

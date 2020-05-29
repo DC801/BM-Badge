@@ -33,6 +33,10 @@
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define ISSI_I2C_ADDR		0x50
 #define ISSI_REG_MAX		0xBE
 
@@ -132,5 +136,9 @@ extern void ledShow();
 
 extern void ledGunsShoot(uint32_t ms);
 extern void ledThrusterFire(uint32_t ms);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //SOFTWARE_LED_H

@@ -133,6 +133,7 @@ uint32_t util_sd_file_size(const char *path) {
 	return info.fsize;
 }
 
+#ifdef DC801_EMBEDDED
 /**
  * Read a file completely into memory, careful!
  */
@@ -153,7 +154,29 @@ FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 	f_close(&file);
 	return result;
 }
+#endif
 
+#ifdef DC801_DESKTOP
+FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
+	FIL *file;
+
+    printf("Try to load %s\n", path);
+
+	FRESULT result = f_open(&file, path, FA_READ | FA_OPEN_EXISTING);
+	if (result != FR_OK) {
+		printf("Can't load file %s\n", path);
+		return result;
+	}
+
+	UINT bytesread = 0;
+	result = f_read(file, p_buffer, count, &bytesread);
+
+	f_close(file);
+	return result;
+}
+#endif
+
+#ifdef DC801_EMBEDDED
 /**
  * Store some data
  * @param p_file
@@ -175,6 +198,26 @@ FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
     return result;
 
 }
+#endif
+
+#ifdef DC801_DESKTOP
+FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
+    FIL *file;
+
+    FRESULT result = f_open(&file, path, FA_WRITE | FA_OPEN_ALWAYS);
+    if(result != FR_OK){
+        return result;
+    }
+
+    UINT byteswritten = 0;
+    result = f_write(file, p_buffer, count, &byteswritten);
+
+	f_close(file);
+
+    return result;
+
+}
+#endif
 
 uint16_t util_sd_read_16(FIL *p_file) {
 	uint16_t result;
@@ -208,24 +251,28 @@ bool util_sd_recover() {
 void util_sd_error(){
 
     // Something is wrong with the SD card
-    util_gfx_fill_screen(COLOR_BLACK);
+	p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
 
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_WHITE);
-    util_gfx_set_cursor(22, 20);
-    util_gfx_print("SD Card");
+	p_canvas()->printMessage("SD Card", Computerfont12pt7b, COLOR_WHITE, 22, 20);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_WHITE);
+    // util_gfx_set_cursor(22, 20);
+    // util_gfx_print("SD Card");
 
-    util_gfx_set_cursor(38, 38);
-    util_gfx_print("Error");
+	p_canvas()->printMessage("Error", Computerfont12pt7b, COLOR_WHITE, 38, 38);
+    // util_gfx_set_cursor(38, 38);
+    // util_gfx_print("Error");
 
-    util_gfx_set_font(FONT_MONO55_8PT);
-    util_gfx_set_color(COLOR_RED);
+	p_canvas()->printMessage("Check card and", monof558pt7b, COLOR_RED, 10, 80);
+    // util_gfx_set_font(FONT_MONO55_8PT);
+    // util_gfx_set_color(COLOR_RED);
+    // util_gfx_set_cursor(10, 80);
+    // util_gfx_print("Check card and");
 
-    util_gfx_set_cursor(10, 80);
-    util_gfx_print("Check card and");
-
-    util_gfx_set_cursor(38, 92);
-    util_gfx_print("reboot");
+	p_canvas()->printMessage("reboot", monof558pt7b, COLOR_RED, 38, 92);
+    // util_gfx_set_cursor(38, 92);
+    // util_gfx_print("reboot");
 
 	#ifdef DC801_EMBEDDED
     while(true);
@@ -293,7 +340,7 @@ uint8_t util_sd_getnum_files(const char *path, const char *extension){
 	DIR *dir;
 	FILINFO *fno;
 
-	ff_result = f_opendir(dir, path);
+	ff_result = f_opendir(&dir, path);
 	if (ff_result) {
 		// Can't open
 		return 0;

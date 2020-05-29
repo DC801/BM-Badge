@@ -13,13 +13,26 @@
 #include "common.h"
 //#include "Tic-Tac-Toe.h"
 
+static void updateScore(int points);
+static void drawBoard(PLAYER board[9]);
+static void pauseGame(void);
+static bool getYN(const char* message);
+void drawPlayer(uint8_t location, PLAYER player);
+
+static void drawCompute();
+static int computeMove(PLAYER board[9]);
+static int minmax(PLAYER board[9], bool flag);
+static GAME_STATE gameState(const PLAYER board[9]);
+static void endGame(GAME_STATE state);
+static void drawGoYNOptions(const char* message);
+
 // Game data
 struct {
     int score;
     bool quitGame;
     bool goFirst;
     PLAYER gameBoard[9];
-    int state;
+    GAME_STATE state;
 } TicTacToeData;
 
 uint8_t WIDTH_OF_BOARD = 3;
@@ -45,7 +58,8 @@ int TicTacToe(void) {
 
     bool newGame = true;
 
-    util_gfx_fill_screen(COLOR_BLACK);
+    p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
 
     updateScore(0);
 
@@ -243,57 +257,59 @@ int TicTacToe(void) {
 /**
  * Update the scoreboard
  */
-static void updateScore(int points) {
+void updateScore(int points) {
 
     if (points != 0) {
         TicTacToeData.score = TicTacToeData.score + points;
     }
 
-    util_gfx_fill_rect(0, 0, GFX_WIDTH, 17, COLOR_BLACK);
-    util_gfx_draw_line(0, 16, GFX_WIDTH, 16, COLOR_BLUE);
+    p_canvas()->fillRect(0, 0, WIDTH, 17, COLOR_BLACK);
+    //util_gfx_fill_rect(0, 0, GFX_WIDTH, 17, COLOR_BLACK);
+    p_canvas()->drawHorizontalLine(0, 16, WIDTH, COLOR_BLUE);
+    //util_gfx_draw_line(0, 16, GFX_WIDTH, 16, COLOR_BLUE);
 
-    util_gfx_set_font(FONT_GAMEPLAY_5PT);
-    util_gfx_set_color(COLOR_BLUE);
-    util_gfx_set_cursor(5, 5);
+
     char header[25];
     snprintf(header, 25, "%d", TicTacToeData.score);
-    util_gfx_print(header);
 
+    p_canvas()->printMessage(header, gameplay5pt7b, COLOR_BLUE, 5, 5);
+    // util_gfx_set_font(FONT_GAMEPLAY_5PT);
+    // util_gfx_set_color(COLOR_BLUE);
+    // util_gfx_set_cursor(5, 5);
+    // util_gfx_print(header);
 }
 
 
 /**
  * Draw the game board
  */
-static void drawBoard(PLAYER board[9]) {
+void drawBoard(PLAYER board[9]) {
 
     // Clear the board
-    util_gfx_fill_rect(OFFSET, OFFSET, (BLOCKSIZE + SPACING) * 3, (BLOCKSIZE + SPACING) * 3, COLOR_BLACK);
+    p_canvas()->fillRect(OFFSET, OFFSET, (BLOCKSIZE + SPACING) * 3, (BLOCKSIZE + SPACING) * 3, COLOR_BLACK);
+    //util_gfx_fill_rect(OFFSET, OFFSET, (BLOCKSIZE + SPACING) * 3, (BLOCKSIZE + SPACING) * 3, COLOR_BLACK);
 
     // Draw the bars
-    util_gfx_fill_rect(OFFSET, OFFSET + BLOCKSIZE,
-                       ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
-    util_gfx_fill_rect(OFFSET, OFFSET + (BLOCKSIZE * 2) + SPACING,
-                       ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
+    p_canvas()->fillRect(OFFSET, OFFSET + BLOCKSIZE, ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
+    // util_gfx_fill_rect(OFFSET, OFFSET + BLOCKSIZE, ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
+    p_canvas()->fillRect(OFFSET, OFFSET + (BLOCKSIZE * 2) + SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
+    // util_gfx_fill_rect(OFFSET, OFFSET + (BLOCKSIZE * 2) + SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, SPACING, COLOR_WHITE);
 
-    util_gfx_fill_rect(OFFSET + BLOCKSIZE, OFFSET,
-                       SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
-    util_gfx_fill_rect(OFFSET + (BLOCKSIZE * 2) + SPACING, OFFSET,
-                       SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
+    p_canvas()->fillRect(OFFSET + BLOCKSIZE, OFFSET, SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
+    // util_gfx_fill_rect(OFFSET + BLOCKSIZE, OFFSET, SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
+    p_canvas()->fillRect(OFFSET + (BLOCKSIZE * 2) + SPACING, OFFSET, SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
+    // util_gfx_fill_rect(OFFSET + (BLOCKSIZE * 2) + SPACING, OFFSET, SPACING, ((BLOCKSIZE + SPACING) * 3) - SPACING, COLOR_WHITE);
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            util_gfx_fill_rect(OFFSET + (j * (BLOCKSIZE + SPACING)),
-                               OFFSET + (i * (BLOCKSIZE + SPACING)),
-                               BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
+            p_canvas()->fillRect(OFFSET + (j * (BLOCKSIZE + SPACING)), OFFSET + (i * (BLOCKSIZE + SPACING)), BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
+            // util_gfx_fill_rect(OFFSET + (j * (BLOCKSIZE + SPACING)), OFFSET + (i * (BLOCKSIZE + SPACING)), BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
         }
     }
 
     for (int i = 0; i < 9; i++) {
         drawPlayer(i, board[i]);
     }
-
-
 }
 
 
@@ -347,33 +363,36 @@ void drawPlayer(uint8_t location, PLAYER player) {
             break;
     }
 
-    util_gfx_fill_rect(x, y, BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
+    p_canvas()->fillRect(x, y, BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
+    // util_gfx_fill_rect(x, y, BLOCKSIZE, BLOCKSIZE, COLOR_BLACK);
+
     if (player == player_x) {
-        util_gfx_draw_raw_file("/GAMES/TTT/1.RAW",
-                               x, y, BLOCKSIZE, BLOCKSIZE,
-                               NULL, false, NULL);
+        p_canvas()->drawImageFromFile(x, y, BLOCKSIZE, BLOCKSIZE, "GAMES/TTT/1.RAW");
+        // util_gfx_draw_raw_file("/GAMES/TTT/1.RAW", x, y, BLOCKSIZE, BLOCKSIZE, NULL, false, NULL);
     }
     if (player == player_o) {
-        util_gfx_draw_raw_file("/GAMES/TTT/2.RAW",
-                               x, y, BLOCKSIZE, BLOCKSIZE,
-                               NULL, false, NULL);
+        p_canvas()->drawImageFromFile(x, y, BLOCKSIZE, BLOCKSIZE, "GAMES/TTT/2.RAW");
+        // util_gfx_draw_raw_file("/GAMES/TTT/2.RAW", x, y, BLOCKSIZE, BLOCKSIZE, NULL, false, NULL);
     }
-
-
 }
 
 /**
  * Pause the game
  */
-static void pauseGame(void) {
+void pauseGame(void) {
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_YELLOW);
+    // util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
-	area_t pause_area = {25, 60, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(pause_area);
-	util_gfx_set_cursor(pause_area.xs, pause_area.ys);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_print("PAUSED");
+    area_t pause_area = { 25, 60, WIDTH, HEIGHT };
+    p_canvas()->setTextArea(&pause_area);
+    // area_t pause_area = {25, 60, GFX_WIDTH, GFX_HEIGHT};
+	// util_gfx_cursor_area_set(pause_area);
+
+    p_canvas()->printMessage("PAUSED", Computerfont12pt7b, COLOR_BLACK, pause_area.xs, pause_area.ys);
+    // util_gfx_set_cursor(pause_area.xs, pause_area.ys);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_print("PAUSED");
 
     uint8_t button;
     bool resume = false;
@@ -396,8 +415,8 @@ static void pauseGame(void) {
         }
     }
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_BLACK);
-
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_BLACK);
+    // util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_BLACK);
 }
 
 
@@ -405,30 +424,39 @@ static void pauseGame(void) {
  * Show a banner of the end condition
  * @param state
  */
-static void endGame(GAME_STATE state) {
+void endGame(GAME_STATE state) {
 
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
 
     // State is from the computer's viewpoint
 
     switch (state) {
         case state_draw:
-            util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_YELLOW);
-            util_gfx_set_cursor(35, GFX_HEIGHT - 20);
-            util_gfx_print("DRAW");
+            p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_YELLOW);
+            // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_YELLOW);
+
+            p_canvas()->printMessage("DRAW", Computerfont12pt7b, COLOR_BLACK, 35, HEIGHT - 20);
+            // util_gfx_set_cursor(35, GFX_HEIGHT - 20);
+            // util_gfx_print("DRAW");
             updateScore(0);
             break;
         case state_win:
-            util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_RED);
-            util_gfx_set_cursor(40, GFX_HEIGHT - 20);
-            util_gfx_print("LOSE");
+            p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_RED);
+            // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_RED);
+
+            p_canvas()->printMessage("LOSE", Computerfont12pt7b, COLOR_BLACK, 40, HEIGHT - 20);
+            // util_gfx_set_cursor(40, GFX_HEIGHT - 20);
+            // util_gfx_print("LOSE");
             updateScore(-10);
             break;
         case state_lose:
-            util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_GREEN);
-            util_gfx_set_cursor(45, GFX_HEIGHT - 20);
-            util_gfx_print("WIN");
+            p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_GREEN);
+            // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_GREEN);
+
+            p_canvas()->printMessage("WIN", Computerfont12pt7b, COLOR_BLACK, 45, HEIGHT - 20);
+            // util_gfx_set_cursor(45, GFX_HEIGHT - 20);
+            // util_gfx_print("WIN");
             updateScore(10);
             break;
         default:
@@ -444,36 +472,42 @@ static void endGame(GAME_STATE state) {
         while (getButton(false)) {}
     }
 
-    util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLACK);
-
-
+    p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_BLACK);
+    // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLACK);
 }
 
 /**
  * Draw box for if you want to go first
  */
-static void drawGoYNOptions(const char* message) {
+void drawGoYNOptions(const char* message) {
 
-	area_t pause_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(pause_area);
-	//util_gfx_set_cursor(pause_area.xs, pause_area.ys);
+    area_t pause_area = { 0, 0, WIDTH, HEIGHT };
+    p_canvas()->setTextArea(&pause_area);
+	// area_t pause_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
+	// util_gfx_cursor_area_set(pause_area);
+	// util_gfx_set_cursor(pause_area.xs, pause_area.ys);
 
-    util_gfx_fill_rect(10, 30, GFX_WIDTH - 20, 55, COLOR_LIGHTGREY);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_set_cursor(12, 32);
-    util_gfx_print(message);
+    p_canvas()->fillRect(10, 30, WIDTH - 20, 55, COLOR_LIGHTGREY);
+    // util_gfx_fill_rect(10, 30, GFX_WIDTH - 20, 55, COLOR_LIGHTGREY);
 
-    util_gfx_set_cursor(58, 50);
-    util_gfx_print("Y");
+    p_canvas()->printMessage(message, Computerfont12pt7b, COLOR_BLACK, 12, 32);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_cursor(12, 32);
+    // util_gfx_print(message);
 
-    util_gfx_set_cursor(58, 67);
-    util_gfx_print("N");
+    p_canvas()->printMessage("Y", Computerfont12pt7b, COLOR_BLACK, 58, 50);
+    // util_gfx_set_cursor(58, 50);
+    // util_gfx_print("Y");
 
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_cursor(70, 50);
-    util_gfx_print("<");
+    p_canvas()->printMessage("N", Computerfont12pt7b, COLOR_BLACK, 58, 67);
+    // util_gfx_set_cursor(58, 67);
+    // util_gfx_print("N");
 
+    p_canvas()->printMessage("<", Computerfont12pt7b, COLOR_BLACK, 70, 50);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_cursor(70, 50);
+    // util_gfx_print("<");
 }
 
 
@@ -481,7 +515,7 @@ static void drawGoYNOptions(const char* message) {
  * Get whether the player wants to go first or not
  * @return
  */
-static bool getYN(const char* message) {
+bool getYN(const char* message) {
 
     bool selection = true;
     drawGoYNOptions(message);
@@ -491,7 +525,8 @@ static bool getYN(const char* message) {
         switch (getButton(false)) {
             case USER_BUTTON_A:
                 // Square selected
-                util_gfx_fill_rect(10, 30, GFX_WIDTH - 20, 55, COLOR_BLACK);
+                p_canvas()->fillRect(10, 30, WIDTH - 20, 55, COLOR_BLACK);
+                // util_gfx_fill_rect(10, 30, GFX_WIDTH - 20, 55, COLOR_BLACK);
                 while (getButton(false) == USER_BUTTON_A) {}
                 return selection;
             case USER_BUTTON_B:
@@ -509,22 +544,28 @@ static bool getYN(const char* message) {
                 break;
             case USER_BUTTON_UP:
                 // Move up
-                util_gfx_set_color(COLOR_BLACK);
-                util_gfx_set_cursor(70, 50);
-                util_gfx_print("<");
-                util_gfx_set_color(COLOR_LIGHTGREY);
-                util_gfx_set_cursor(70, 67);
-                util_gfx_print("<");
+                p_canvas()->printMessage("<", Computerfont12pt7b, COLOR_BLACK, 70, 50);
+                // util_gfx_set_color(COLOR_BLACK);
+                // util_gfx_set_cursor(70, 50);
+                // util_gfx_print("<");
+
+                p_canvas()->printMessage("<", Computerfont12pt7b, COLOR_LIGHTGREY, 70, 67);
+                // util_gfx_set_color(COLOR_LIGHTGREY);
+                // util_gfx_set_cursor(70, 67);
+                // util_gfx_print("<");
                 selection = true;
                 break;
             case USER_BUTTON_DOWN:
                 // Move down
-                util_gfx_set_color(COLOR_BLACK);
-                util_gfx_set_cursor(70, 67);
-                util_gfx_print("<");
-                util_gfx_set_color(COLOR_LIGHTGREY);
-                util_gfx_set_cursor(70, 50);
-                util_gfx_print("<");
+                p_canvas()->printMessage("<", Computerfont12pt7b, COLOR_BLACK, 70, 67);
+                // util_gfx_set_color(COLOR_BLACK);
+                // util_gfx_set_cursor(70, 67);
+                // util_gfx_print("<");
+
+                p_canvas()->printMessage("<", Computerfont12pt7b, COLOR_LIGHTGREY, 70, 50);
+                // util_gfx_set_color(COLOR_LIGHTGREY);
+                // util_gfx_set_cursor(70, 50);
+                // util_gfx_print("<");
                 selection = false;
                 break;
             default:
@@ -545,8 +586,8 @@ static bool getYN(const char* message) {
  * @param board
  * @return
  */
-static int gameState(const PLAYER board[9]) {
-    int state;
+GAME_STATE gameState(const PLAYER board[9]) {
+    GAME_STATE state;
     uint8_t chess = 0;
 
     // Check if the board is full
@@ -610,7 +651,7 @@ static int gameState(const PLAYER board[9]) {
             }
 
             if (finds[0] > 1 && finds[1] < 1) {
-                state = -state_connected;
+                state = state_disconnected;
             } else if (finds[0] < 1 && finds[1] > 1) {
                 state = state_connected;
             } else {
@@ -621,12 +662,16 @@ static int gameState(const PLAYER board[9]) {
     return state;
 }
 
-static void drawCompute(){
-    util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLUE);
-    util_gfx_set_cursor(20, GFX_HEIGHT - 20);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_print("COMPUTE");
+void drawCompute(){
+    p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_BLUE);
+    // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLUE);
+
+    p_canvas()->printMessage("COMPUTE", Computerfont12pt7b, COLOR_BLACK, 20, HEIGHT - 20);
+    // util_gfx_set_cursor(20, GFX_HEIGHT - 20);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_print("COMPUTE");
+
     nrf_delay_ms(1250);
 }
 
@@ -637,7 +682,7 @@ static void drawCompute(){
  * @return
  */
 
-static int computeMove(PLAYER board[9]) {
+int computeMove(PLAYER board[9]) {
 
     drawCompute();
 
@@ -661,9 +706,9 @@ static int computeMove(PLAYER board[9]) {
 
     printf("AI Picks: %d\n", bestPos);
 
-    util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLACK);
+    p_canvas()->fillRect(0, HEIGHT - 25, WIDTH, 25, COLOR_BLACK);
+    // util_gfx_fill_rect(0, GFX_HEIGHT - 25, GFX_WIDTH, 25, COLOR_BLACK);
     return bestPos;
-
 }
 
 
@@ -673,7 +718,7 @@ static int computeMove(PLAYER board[9]) {
  * @param flag
  * @return
  */
-static int minmax(PLAYER board[9], bool flag) {
+int minmax(PLAYER board[9], bool flag) {
     int positionValue = gameState(board);
 
     if (positionValue != state_inProgress) {
@@ -695,4 +740,3 @@ static int minmax(PLAYER board[9], bool flag) {
     }
     return bestValue;
 }
-

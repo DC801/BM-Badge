@@ -599,7 +599,7 @@ bool parseAdvertisementData(uint8_t *data, uint8_t len, ADVERTISEMENT *adv){
 /**
  * @brief Update the advertised long name
  */
-void advertising_setUser(char *user){
+void advertising_setUser(const char *user){
 
     ble_gap_conn_sec_mode_t sec_mode;
 
@@ -764,7 +764,7 @@ void advertising_setGodCommand(GODMODE_COMMAND command, uint32_t data){
  * @param group we want info on
  * @return string, group name
  */
-char* getBadgeGroupName(BADGE_GROUP group){
+const char* getBadgeGroupName(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || SWAP(badgeInfo[i].group) == group){
@@ -781,7 +781,7 @@ char* getBadgeGroupName(BADGE_GROUP group){
  * @param group badge group we want
  * @return a string that is the file name
  */
-char* getBadgeIconFile(BADGE_GROUP group){
+const char* getBadgeIconFile(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || badgeInfo[i].group == SWAP(group)){
@@ -798,7 +798,7 @@ char* getBadgeIconFile(BADGE_GROUP group){
  * @param group badge group we want
  * @return a string that is the contact info
  */
-char* getBadgeContact(BADGE_GROUP group){
+const char* getBadgeContact(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || badgeInfo[i].group == SWAP(group)){

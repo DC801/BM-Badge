@@ -32,6 +32,10 @@
 #include <cstddef>
 #include <cstdio>
 
+#ifdef DC801_DESKTOP
+#include <unistd.h>
+#endif
+
 #ifndef DC801_EMBEDDED
 #include "sdk_shim.h"
 #endif
@@ -88,22 +92,27 @@ GameEngine::~GameEngine() {
 
 }
 
-static void introCallback(uint8_t frame, void *p_data){
-
-}
-
 void GameEngine::run() {
     printf("Game starting\n");
     quit = false;
     ledsOff();
     racestart = 0;
 
-    util_gfx_draw_raw_file("hcrn/display.raw", 0, 0, 128, 128, introCallback, true, NULL);
+    canvas.drawLoopImageFromFile(0, 0, 128, 128, "HCRN/display.raw");
+    // util_gfx_draw_raw_file("HCRN/display.raw", 0, 0, 128, 128, introCallback, true, NULL);
 
     changeRoom(16);
     player.setLife(60);
 
-    if (FR_OK == f_stat(SAVEFILE, NULL) ) {
+    if (FR_OK == f_stat(SAVEFILE, NULL))
+    {
+        printf("Loading save\n");
+        loadGame(SAVEFILE);
+    }
+    else
+    {
+        printf("Creating new save\n");
+        saveGame(SAVEFILE);
         loadGame(SAVEFILE);
     }
 
@@ -114,34 +123,50 @@ void GameEngine::run() {
 #ifdef DC801_DESKTOP
     SDL_Event e;
     lastTime = SDL_GetTicks();
+
+    bool exit = false;
 #endif
 
-    while (!quit) {
+    while ((quit == false) && (exit == false))
+    {
         #ifdef DC801_DESKTOP
             if (application_quit != 0)
             {
+                exit = true;
+                quit = true;
                 break;
             }
 
             uint32_t now = SDL_GetTicks();
 
             loop(millis_elapsed(now, lastTime));
+            lastTime = now;
 
-            while (SDL_PollEvent(&e)) {
-                if (e.type == SDL_QUIT){
+            while (SDL_PollEvent(&e))
+            {
+                if (e.type == SDL_QUIT)
+                {
+                    exit = true;
                     quit = true;
                 }
 
-                if (e.type == SDL_KEYDOWN) {
-                    if (e.key.keysym.sym == SDLK_ESCAPE) {
+                if (e.type == SDL_KEYDOWN)
+                {
+                    if (e.key.keysym.sym == SDLK_ESCAPE)
+                    {
+                        exit = true;
                         quit = true;
                     }
 
-                    if (e.key.keysym.scancode == SDL_SCANCODE_Q) {
+                    if (e.key.keysym.scancode == SDL_SCANCODE_Q)
+                    {
+                        exit = true;
                         quit = true;
                     }
                 }
             }
+
+            nrf_delay_ms(5);
         #endif
 
         #ifdef DC01_EMBEDDED
@@ -154,63 +179,117 @@ void GameEngine::run() {
     }
 
     //Game Over
-    uint16_t fontcolor = st7735_color565(220, 220, 220);
-    area_t area = {32, 55, 96, 80};
-    util_gfx_set_color(fontcolor);
-    util_gfx_cursor_area_set(area);
-    util_gfx_set_font(FONT_PRACTICAL);
-    util_gfx_set_cursor(area.xs, area.ys+1);
-    util_gfx_print("Game Over");
+    // uint16_t fontcolor = st7735_color565(220, 220, 220);
+    // area_t area = {32, 55, 96, 80};
+
+    area_t area = { 32, 55, 96, 80 };
+    canvas.setTextArea(&area);
+
+    #ifdef DC801_DESKTOP
+    if (exit == false)
+    {
+    #endif
+        canvas.clearScreen(COLOR_DARKRED);
+        canvas.printMessage("Game Over", practical8pt7b, COLOR_LIGHTGREY, area.xs, area.ys + 1);
+    #ifdef DC801_DESKTOP
+    }
+    else
+    {
+        canvas.clearScreen(COLOR_DARKGREY);
+        canvas.printMessage("Goodbye", practical8pt7b, COLOR_LIGHTGREY, area.xs, area.ys + 1);
+        application_quit = 1;
+
+        saveGame(SAVEFILE);
+    }
+    #endif
+
+    // util_gfx_set_color(fontcolor);
+    // util_gfx_cursor_area_set(area);
+    // util_gfx_set_font(FONT_PRACTICAL);
+    // util_gfx_set_cursor(area.xs, area.ys+1);
+    // util_gfx_print("Game Over");
+
+    // pauseUntilPress(USER_BUTTON_A);
+
     nrf_delay_ms(1000);
-    pauseUntilPress(USER_BUTTON_A);
 
-    //debounce
-    while (isButtonDown(USER_BUTTON_A))
-        nrf_delay_ms(10);
+#ifdef DC801_EMBEDDED
+    int button = USER_BUTTON_NONE;
 
+    do
+    {
+        button = getButton(false);
+    } while (button != USER_BUTTON_A);
+#endif
 }
 
-void GameEngine::loop(uint32_t dt) {
+void GameEngine::loop(uint32_t dt)
+{
     lastFrame += dt;
     lastThink += dt;
 
-    if (lastFrame > FRAME_INTERVAL) {
-        while (st7735_is_busy()) {
+    if (lastFrame > FRAME_INTERVAL)
+    {
+        while (st7735_is_busy())
+        {
             APP_ERROR_CHECK(sd_app_evt_wait());
         }
 
         //canvas.clearScreen(RGB(0,0,255));
         //canvas.drawHorizontalLine(10, 20, 100, RGB(0,255,0));
         currentRoom.draw(&canvas);
-        for (int i=0; i<24; ++i)
+
+        for (int i = 0; i < 24; ++i)
+        {
             if (objects[i])
+            {
                 objects[i]->draw(&canvas);
+            }
+        }
+
         player.draw(&canvas);
         lastFrame %= FRAME_INTERVAL;
 
-        if (_flicker) {
-            if ((_flicker % 2) && ((_flicker < 4) || (_flicker>47))) {
+        if (_flicker)
+        {
+            if ((_flicker % 2) && ((_flicker < 4) || (_flicker > 47)))
+            {
                 canvas.mask(player.position.x, player.position.y, 16, 32, 48);
                 shipLightsOff();
             }
             else
+            {
                 shipLightsOn();
+            }
+
             if (!--_flicker)
+            {
                 updateShipLights();
+            }
         }
         else if (!isTaskComplete(CORE_POWERED))
+        {
             canvas.mask(player.position.x, player.position.y, 16, 32, 48);
-        for (unsigned int i=0; i< sizeof(dmgRooms); ++i)
-            if (currentRoom.getId() == dmgRooms[i])
-                canvas.mask(player.position.x, player.position.y, 16, 32, 48);
+        }
 
+        for (unsigned int i = 0; i< sizeof(dmgRooms); ++i)
+        {
+            if (currentRoom.getId() == dmgRooms[i])
+            {
+                canvas.mask(player.position.x, player.position.y, 16, 32, 48);
+            }
+        }
 
         // TODO: battery notification here.
         int battery_level = getBatteryPercent();
-        if ( (battery_level <= 25) && battery_level != 0){
+
+        if ((battery_level <= 25) && battery_level != 0)
+        {
         	int BATTERY_WIDTH = 17;
         	int BATTERY_HEIGHT = 10;
-        	switch(battery_level){
+
+        	switch(battery_level)
+            {
         	        case 25:
         	        	canvas.drawImage(128-BATTERY_WIDTH, 0, BATTERY_WIDTH, BATTERY_HEIGHT, battery_raw, BATTERY_WIDTH * 2, 0, BATTERY_WIDTH*6);
         	            break;
@@ -227,60 +306,95 @@ void GameEngine::loop(uint32_t dt) {
 
         canvas.blt();
 
-        if (isTaskComplete(RACE_START) && !isTaskComplete(BEAT_RACE)) {
+        if (isTaskComplete(RACE_START) && !isTaskComplete(BEAT_RACE))
+        {
             if (racestart == 0)
+            {
                 racestart = getSystick();
+            }
+
             int secs = 0;
+
             if (isTaskComplete(RACE_START_AT_THRUSTERS))
+            {
             	secs = RACETIME + racestart - getSystick();
+            }
             else
+            {
             	secs = RACETIME + racestart - getSystick() - 45; //started at weapons 45s less time
+            }
 
             if (secs < 0)
+            {
                 player.setLife(0);
+            }
 
-            char line[5]= {0};
-
+            char line[5] = {0};
             sprintf(line, "%d:%02d", secs/60, secs%60);
-            util_gfx_set_color(st7735_color565(220, 220, 220));
-            util_gfx_set_font(FONT_PRACTICAL);
-            util_gfx_set_cursor(90, 115);
-            util_gfx_print(line);
+
+            canvas.printMessage(line, practical8pt7b, COLOR_LIGHTGREY, 90, 115);
+            // util_gfx_set_color(st7735_color565(220, 220, 220));
+            // util_gfx_set_font(FONT_PRACTICAL);
+            // util_gfx_set_cursor(90, 115);
+            // util_gfx_print(line);
         }
 
-        if (!isTaskComplete(MESSAGE1)) {
+        if (!isTaskComplete(MESSAGE1))
+        {
             ShowDialog("Oh good, you're awake.\nI was starting to think \nyou would never come\nback.\n", MILLER_AVATAR, true);
+
             if (!DialogRequestResponse("You okay?\nIs anything broken?","I feel like shit. What\n did you do to me?", "Na. I'm OK.", MILLER_AVATAR))
-            	ShowDialog("This wasn't me. I just\nfound you. You're going\nto feel like this for the\nfor next bit, so you \nmight as well get used \nto it.", MILLER_AVATAR, true);
+            {
+                ShowDialog("This wasn't me. I just\nfound you. You're going\nto feel like this for the\nfor next bit, so you \nmight as well get used \nto it.", MILLER_AVATAR, true);
+            }
             else
+            {
             	ShowDialog("I'm glad you're doing\nwell. You might feel a\nbit off for the next\nwhile, but that's\nexpected.", MILLER_AVATAR, true);
+            }
+
             ShowDialog("The ship doesn't seem\nto be powered up. You \nneed to find a terminal.\nGo see if you can get\nsome lights on.", MILLER_AVATAR, true);
+
             if (!DialogRequestResponse("Do you think you can\nhandle that?","I'm a big boy. Of\ncourse I can.", "I think I'd like some\nhelp.", MILLER_AVATAR))
+            {
             	ShowDialog("Well. Don't get cocky\nkid. Move along.", MILLER_AVATAR, true);
+            }
             else
+            {
             	ShowDialog("Sorry. I can't help on\nthis one.\n\nYou can handle this.", MILLER_AVATAR, true);
+            }
+
             completeTask(MESSAGE1);
         }
 
-        if (!isTaskComplete(LEAVE_FIRST_ROOM_MESSAGE)) {
-        	if (currentRoom.getId() == 23 || currentRoom.getId() == 9){
+        if (!isTaskComplete(LEAVE_FIRST_ROOM_MESSAGE))
+        {
+        	if (currentRoom.getId() == 23 || currentRoom.getId() == 9)
+            {
         		talking_timer += dt;
-        		if (talking_timer > 25){
+
+            	if (talking_timer > 25)
+                {
 					ShowDialog("Also, I didn't to tell you\nbut I have no idea\nwhat's going on either.\n            \nSo don't ask me.", MILLER_AVATAR, true);
 					completeTask(LEAVE_FIRST_ROOM_MESSAGE);
         		}
         	}
         }
 
-        if (!isTaskComplete(PICKED_UP_GUN_MESSAGE)) {
-        	if (currentRoom.getId() == 24 && isTaskComplete(HAS_GUN)){
-        		if(!isTaskComplete(RESET_TIMER_THREE)){
+        if (!isTaskComplete(PICKED_UP_GUN_MESSAGE))
+        {
+        	if (currentRoom.getId() == 24 && isTaskComplete(HAS_GUN))
+            {
+        		if(!isTaskComplete(RESET_TIMER_THREE))
+                {
         			dt = 0;
         			talking_timer = 0;
         			completeTask(RESET_TIMER_THREE);
         		}
+
         		talking_timer += dt;
-        		if (talking_timer > 15){
+
+        		if (talking_timer > 15)
+                {
         			ShowDialog("You found a gun. Nice\nwork kid. Do you know\nhow to use it?\n                      \nEh. You'll figure it out.", MILLER_AVATAR, true);
                     ShowDialog("The lights are still off\nthough...\nBetter get on that.", MILLER_AVATAR, false);
 					completeTask(PICKED_UP_GUN_MESSAGE);
@@ -288,29 +402,44 @@ void GameEngine::loop(uint32_t dt) {
         	}
         }
 
-        if (!isTaskComplete(CORE_POWERED_MESSAGE)) {
-        	if (currentRoom.getId() == 18 && isTaskComplete(CORE_POWERED)){
-        		if(!isTaskComplete(RESET_TIMER_ONE)){
+        if (!isTaskComplete(CORE_POWERED_MESSAGE))
+        {
+        	if (currentRoom.getId() == 18 && isTaskComplete(CORE_POWERED))
+            {
+        		if(!isTaskComplete(RESET_TIMER_ONE))
+                {
         			dt = 0;
         			talking_timer = 0;
         			completeTask(RESET_TIMER_ONE);
         		}
+
         		talking_timer += dt;
-        		if (talking_timer > 40){
+
+        		if (talking_timer > 40)
+                {
 		            if (!DialogRequestResponse("Ok. So you got the\npower back on. Thanks.","Yes. Now tell me\nwhat's going on!?", "I'm awesome like\n that aren't I?", MILLER_AVATAR))
+                    {
 		            	ShowDialog("Sure. You deserve that\nmuch at least.", MILLER_AVATAR, true);
+                    }
 		            else
+                    {
 		            	ShowDialog("Yeah, sure you are...\nI guess you deserve a\ncrown too?", MILLER_AVATAR, true);
+                    }
 
 		            if (!DialogRequestResponse("How much do you\nknow about the ship?","The terminal said it\nwas named Tahsheep?", "I have no idea where\nI am.", MILLER_AVATAR))
+                    {
 		            	ShowDialog("Very good. You must be\npaying attention.\nTasheep. Cute name.\nYou'll see later that\nthe captain had a 'thing'\nfor sheep.", MILLER_AVATAR, true);
+                    }
 		            else
+                    {
 		            	ShowDialog("Oh boy. You must have\nhit your head hard.\nThe name of the ship\nis Tasheep and you're\nin space... On the\nship.", MILLER_AVATAR, true);
+                    }
 
 	            	ShowDialog("It used to be called...\nRoci... Quixote... Um...\nI don't remember. It was\na weird name though.\nAnyways, obviously the", MILLER_AVATAR, true);
 		            ShowDialog("ship is broken. Getting\nthe lights on was the\nfirst step of getting\nout of here. We need\neverything else working\ntoo.", MILLER_AVATAR, true);
 		            ShowDialog("That's on you.\nGood luck.\nMake your way to the\nbridge. Don't get hurt.\nSystems are turned\non now.", MILLER_AVATAR, false);
-		            completeTask(CORE_POWERED_MESSAGE);
+
+                    completeTask(CORE_POWERED_MESSAGE);
 		            game.saveGame();
         		}
         	}
@@ -481,25 +610,27 @@ void GameEngine::loop(uint32_t dt) {
         lastThink %= THINK_INTERVAL;
     }
 
-    if (player.position.x < TILE_SIZE/2) {
+    if (player.position.x < TILE_SIZE / 2)
+    {
         changeRoom(currentRoom.getNextRoom(LEFT));
-        player.position.x = GWIDTH - TILE_SIZE/2;
+        player.position.x = GWIDTH - TILE_SIZE / 2;
     }
-    else if (player.position.x > (GWIDTH - TILE_SIZE/2)) {
+    else if (player.position.x > (GWIDTH - TILE_SIZE / 2))
+    {
         changeRoom(currentRoom.getNextRoom(RIGHT));
-        player.position.x = TILE_SIZE/2;
+        player.position.x = TILE_SIZE / 2;
     }
-    else if (player.position.y < TILE_SIZE/2) {
+    else if (player.position.y < TILE_SIZE / 2)
+    {
         changeRoom(currentRoom.getNextRoom(UP));
-        player.position.y = GHEIGHT - TILE_SIZE/2;
+        player.position.y = GHEIGHT - TILE_SIZE / 2;
     }
-    else if (player.position.y > (GHEIGHT - TILE_SIZE/2)) {
+    else if (player.position.y > (GHEIGHT - TILE_SIZE / 2))
+    {
         changeRoom(currentRoom.getNextRoom(DOWN));
-        player.position.y = TILE_SIZE/2;
+        player.position.y = TILE_SIZE / 2;
     }
-
 }
-
 
 void GameEngine::changeRoom(int id) {
     for (int i=0; i<24; ++i) {
@@ -620,8 +751,9 @@ void crc32(const void *data, size_t n_bytes, uint32_t* crc) {
         *crc = table[(uint8_t)*crc ^ ((uint8_t*)data)[i]] ^ *crc >> 8;
 }
 
+#ifdef DC801_EMBEDDED
 bool GameEngine::saveGame(const char* filename) {
-    FIL file;
+    FIL *file;
     uint32_t crc=0;
     uint32_t did = NRF_FICR->DEVICEADDR[0];
 
@@ -642,23 +774,22 @@ bool GameEngine::saveGame(const char* filename) {
     }
 
     crc32(p, 4, &crc);
-    f_write(&file, p, 4, &br);
+    f_write(file, p, 4, &br);
     crc32(gamestate, sizeof(gamestate), &crc);
-    f_write(&file, gamestate, sizeof(gamestate), &br);
+    f_write(file, gamestate, sizeof(gamestate), &br);
     crc32(mapstates, sizeof(mapstates), &crc);
-    f_write(&file, mapstates, sizeof(mapstates), &br);
+    f_write(file, mapstates, sizeof(mapstates), &br);
     crc32(&did, sizeof(did), &crc);
-    f_write(&file, &did, sizeof(did), &br);
+    f_write(file, &did, sizeof(did), &br);
     crc32(&ble_name, sizeof(ble_name), &crc);
-    f_write(&file, &ble_name, sizeof(ble_name), &br);
-    f_write(&file, &crc, sizeof(crc), &br);
-    f_close(&file);
+    f_write(file, &ble_name, sizeof(ble_name), &br);
+    f_write(file, &crc, sizeof(crc), &br);
+    f_close(file);
     return true;
 }
 
-
 bool GameEngine::loadGame(const char* filename) {
-    FIL file;
+    FIL *file;
     uint32_t crc=0, check=0;
     uint32_t did;
 
@@ -671,23 +802,23 @@ bool GameEngine::loadGame(const char* filename) {
         return false;
     }
 
-    f_read(&file, p, 4, &br);
+    f_read(file, p, 4, &br);
     crc32(p, 4, &crc);
     player.position = Point(p[0], p[1]);
     int life = p[2];
     if (life < 33) life = 33; //don't want to restore a save with low life
     player.setLife(life);
     changeRoom(p[3]);
-    f_read(&file, gamestate, sizeof(gamestate), &br);
+    f_read(file, gamestate, sizeof(gamestate), &br);
     crc32(gamestate, sizeof(gamestate), &crc);
-    f_read(&file, mapstates, sizeof(mapstates), &br);
+    f_read(file, mapstates, sizeof(mapstates), &br);
     crc32(mapstates, sizeof(mapstates), &crc);
-    f_read(&file, &did, sizeof(did), &br);
+    f_read(file, &did, sizeof(did), &br);
     crc32(&did, sizeof(did), &crc);
-    f_read(&file, &ble_name, sizeof(ble_name), &br);
+    f_read(file, &ble_name, sizeof(ble_name), &br);
     crc32(&ble_name, sizeof(ble_name), &crc);
-    f_read(&file, &check, sizeof(crc), &br);
-    f_close(&file);
+    f_read(file, &check, sizeof(crc), &br);
+    f_close(file);
 
     bool failed=false;
     if (did != NRF_FICR->DEVICEADDR[0]) {
@@ -711,6 +842,143 @@ bool GameEngine::loadGame(const char* filename) {
     updateScore();
     return true;
 }
+#endif
+
+#ifdef DC801_DESKTOP
+bool GameEngine::saveGame(const char* filename)
+{
+    FILE *file;
+    uint32_t crc = 0;
+    uint32_t did = NRF_FICR->DEVICEADDR[0];
+
+    if (game.isTaskComplete(RACE_START) && (!game.isTaskComplete(BEAT_RACE) && (currentRoom.getId() != 4)))
+    {
+        printf("Player tried to save during race! No cheating!\n");
+        return false;
+    }
+
+    if (!game.isTaskComplete(SETBLE))
+    {
+    	snprintf(ble_name, 11, "TaSheep801");
+    }
+
+    uint8_t p[4] = {(uint8_t)player.position.x, (uint8_t)player.position.y, (uint8_t)player.getLife(), currentRoom.getId()};
+    UINT br = 0;
+
+    file = fopen(filename, "wb");
+
+    if (file == NULL)
+    {
+        NRF_LOG_INFO("Can't load file %s\n", filename);
+        return false;
+    }
+
+    crc32(p, 4, &crc);
+    fwrite(p, sizeof(uint8_t), sizeof(p), file);
+
+    crc32(gamestate, sizeof(gamestate), &crc);
+    fwrite(gamestate, sizeof(uint8_t), sizeof(gamestate), file);
+
+    crc32(mapstates, sizeof(mapstates), &crc);
+    fwrite(mapstates, sizeof(uint8_t), sizeof(mapstates), file);
+
+    crc32(&did, sizeof(did), &crc);
+    fwrite(&did, sizeof(uint8_t), sizeof(did), file);
+
+    crc32(ble_name, sizeof(ble_name), &crc);
+    fwrite(ble_name, sizeof(char), sizeof(ble_name), file);
+
+    fwrite(&crc, sizeof(uint8_t), sizeof(crc), file);
+
+    fclose(file);
+
+    return true;
+}
+
+bool GameEngine::loadGame(const char* filename)
+{
+    FILE *file;
+    uint32_t crc=0, check=0;
+    uint32_t did;
+
+    uint8_t p[4];
+    UINT br = 0;
+
+    file = fopen(filename, "rb");
+
+    if (file == NULL)
+    {
+        NRF_LOG_INFO("Can't load file %s\n", filename);
+        return false;
+    }
+
+    fread(p, sizeof(uint8_t), sizeof(p), file);
+    crc32(p, 4, &crc);
+
+    player.position = Point(p[0], p[1]);
+    int life = p[2];
+
+    if (life < 33)
+    {
+        life = 33; //don't want to restore a save with low life
+    }
+
+    player.setLife(life);
+    changeRoom(p[3]);
+
+    fread(gamestate, sizeof(uint8_t), sizeof(gamestate), file);
+    crc32(gamestate, sizeof(gamestate), &crc);
+
+    fread(mapstates, sizeof(uint8_t), sizeof(mapstates), file);
+    crc32(mapstates, sizeof(mapstates), &crc);
+
+    fread(&did, sizeof(uint8_t), sizeof(did), file);
+    crc32(&did, sizeof(did), &crc);
+
+    fread(ble_name, sizeof(char), sizeof(ble_name), file);
+    crc32(&ble_name, sizeof(ble_name), &crc);
+
+    fread(&check, sizeof(uint8_t), sizeof(check), file);
+
+    fclose(file);
+
+    bool failed = false;
+
+    if (did != NRF_FICR->DEVICEADDR[0])
+    {
+        NRF_LOG_INFO("Save file not for this device! %x!=%x", did, NRF_FICR->DEVICEADDR[0]);
+        failed = true;
+    }
+
+    if (check != crc)
+    {
+        NRF_LOG_INFO("Bad CRC! %x!=%x", crc, check);
+        failed = true;
+    }
+
+    if (failed)
+    {
+        changeRoom(16);
+        player.setLife(60);
+
+        memset(mapstates, 0, sizeof(mapstates));
+        memset(gamestate, 0, sizeof(gamestate));
+
+        printf("Deleting %s", filename);
+
+        unlink(filename);
+    }
+
+    updateShipLights();
+    advertising_setUser(ble_name);
+    updateScore();
+
+    return true;
+}
+#endif
+
+
+
 
 void GameEngine::updateShipLights() {
     shipLightsOff();

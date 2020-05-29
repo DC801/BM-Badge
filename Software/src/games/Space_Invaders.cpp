@@ -6,15 +6,34 @@
 
 #define INVADERS
 
+#include <cstring>
+#include <cstdio>
+
 #include "hcrn/FrameBuffer.h"
 #include "Space_Invaders.h"
 #include "Space_Invaders_HCRN_Sprites.h"
-#include "../fonts/gameplay.h"
-#include "../modules/led.h"
+#include "Space_Invaders_c.h"
+#include "fonts/gameplay.h"
+#include "config/custom_board.h"
+
+#define PROGMEM
 
 extern "C" {
-#include "common.h"
+#include "modules/led.h"
+#include "modules/sd.h"
+#include "utility.h"
+#include "modules/drv_st7735.h"
+#include "fonts/computerfont12pt7b.h"
 }
+
+#ifdef DC801_DESKTOP
+#include "sdk_shim.h"
+#endif
+
+#ifdef DC801_EMBEDDED
+#include "app_error.h"
+#include "nrf_soc.h"
+#endif
 
 #define ENEMY_NUM 15
 #define ENEMY_ROWS 3
@@ -31,6 +50,19 @@ extern "C" {
 
 #define INVADER_SIZE    (INVADER_HEIGHT * INVADER_WIDTH * 2)
 #define TANK_SIZE       (TANK_HEIGHT * TANK_WIDTH * 2)
+
+static void drawTank(uint8_t x);
+static void drawInvader(uint8_t x, uint8_t y, uint8_t type);
+static void drawAllInvaders();
+static void updateInvaders(bool move);
+static void pauseGame();
+static void levelUp();
+static void resetBoard();
+static void updateScore(int points);
+static void drawLives();
+static void drawScore(int points);
+static void updateBullet();
+static void drawBullet(void);
 
 // Game play data
 struct {
@@ -113,9 +145,9 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 
 
 			//canvas.clearScreen(RGB(0,0,0));
-			canvas.fillRect(0, 16, GFX_WIDTH, GFX_HEIGHT-16, COLOR_BLACK);
+			canvas.fillRect(0, 16, WIDTH, HEIGHT-16, COLOR_BLACK);
 			//do frame drawing here
-			canvas.drawLine(0, 16, GFX_WIDTH, 16, RGB(0, 0, 255));
+			canvas.drawLine(0, 16, WIDTH, 16, RGB(0, 0, 255));
 			drawAllInvaders();
 			drawTank(Invaders.tank.x);
 			drawBullet();
@@ -164,7 +196,7 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 					break;
 				case USER_BUTTON_RIGHT:
 					// Move tank right
-					if (Invaders.tank.x < GFX_WIDTH - 16) {
+					if (Invaders.tank.x < WIDTH - 16) {
 						Invaders.tank.x += 4;
 					}
                     if (!thrustersOn && Invaders.gameplay != normal) {
@@ -211,22 +243,35 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 	canvas.clearScreen(RGB(0,0,0));
 	canvas.blt();
 
-	util_gfx_set_font(FONT_COMPUTER_12PT);
-	util_gfx_set_color(COLOR_BLACK);
-	if (Invaders.gameplay == normal){
-		util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_RED);
-		util_gfx_set_cursor(5, 60);
-		util_gfx_print("GAME OVER");
+	// util_gfx_set_font(FONT_COMPUTER_12PT);
+	// util_gfx_set_color(COLOR_BLACK);
+
+	if (Invaders.gameplay == normal)
+    {
+        canvas.fillRect(0, 50, WIDTH, 35, COLOR_RED);
+		//util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_RED);
+
+        canvas.printMessage("GAME OVER", Computerfont12pt7b, COLOR_BLACK, 5, 60);
+		// util_gfx_set_cursor(5, 60);
+		// util_gfx_print("GAME OVER");
 	}
-	else if (Invaders.tank.lives == 0) {
-		util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_RED);
-		util_gfx_set_cursor(40, 60);
-		util_gfx_print("DEAD");
+	else if (Invaders.tank.lives == 0)
+    {
+        canvas.fillRect(0, 50, WIDTH, 35, COLOR_RED);
+		// util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_RED);
+
+        canvas.printMessage("DEAD", Computerfont12pt7b, COLOR_BLACK, 40, 60);
+		// util_gfx_set_cursor(40, 60);
+		// util_gfx_print("DEAD");
 	}
-	else {
-		util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_GREEN);
-		util_gfx_set_cursor(15, 60);
-		util_gfx_print("SURVIVED");
+	else
+    {
+        canvas.fillRect(0, 50, WIDTH, 35, COLOR_GREEN);
+		// util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_GREEN);
+
+        canvas.printMessage("SURVIVED", Computerfont12pt7b, COLOR_BLACK, 15, 60);
+		// util_gfx_set_cursor(15, 60);
+		// util_gfx_print("SURVIVED");
 		win = true;
 	}
 
@@ -248,8 +293,8 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
  */
 static void drawTank(uint8_t x) {
     // Erase the old tank
-    //util_gfx_fill_rect(0, 116, GFX_WIDTH, 116, COLOR_BLACK);
-    canvas.fillRect(0, 116, GFX_WIDTH, GFX_WIDTH-116, COLOR_BLACK);
+    //util_gfx_fill_rect(0, 116, WIDTH, 116, COLOR_BLACK);
+    canvas.fillRect(0, 116, WIDTH, WIDTH-116, COLOR_BLACK);
     // Draw the new one
     if (Invaders.gameplay == normal)
     	canvas.drawImage(x, 116, 12, 12, Invaders.tankSprite, COLOR_BLACK);
@@ -275,7 +320,7 @@ static void updateInvaders(bool move) {
             if (!Invaders.enemy[i].dead || Invaders.enemy[i].type != 6) {
                 if (!Invaders.bounce) {
                     // Going right
-                    if (Invaders.enemy[i].x >= GFX_WIDTH - 16) {
+                    if (Invaders.enemy[i].x >= WIDTH - 16) {
                         // Bounce left!
                         Invaders.bounce = true;
                         drop = 4;
@@ -389,12 +434,14 @@ static void drawInvader(uint8_t x, uint8_t y, uint8_t type) {
  * Show a pause game banner, and if needed, exit the game
  */
 static void pauseGame(void) {
+    canvas.fillRect(0, 50, WIDTH, 35, COLOR_YELLOW);
+    // util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_YELLOW);
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_set_cursor(30, 60);
-    util_gfx_print("PAUSED");
+    canvas.printMessage("PAUSED", Computerfont12pt7b, COLOR_BLACK, 30, 60);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_cursor(30, 60);
+    // util_gfx_print("PAUSED");
 
     uint8_t button;
     bool resume = false;
@@ -445,9 +492,10 @@ static void resetBoard(void) {
     canvas.clearScreen(RGB(0,0,0));
     canvas.blt();
 
-	area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(game_area);
-	util_gfx_set_cursor(game_area.xs, game_area.ys);
+	area_t game_area = {0, 0, WIDTH, HEIGHT};
+    canvas.setTextArea(&game_area);
+	// util_gfx_cursor_area_set(game_area);
+	// util_gfx_set_cursor(game_area.xs, game_area.ys);
     updateInvaders(false);
     drawTank(Invaders.tank.x);
     updateScore(0);
@@ -522,7 +570,7 @@ static void updateScore(int points) {
 
 static void drawScore(int points) {
 	if (Invaders.gameplay == normal){
-		canvas.fillRect(30, 0, GFX_WIDTH - ((TANK_WIDTH + 2) * 3) - 30, 15, COLOR_BLACK);
+		canvas.fillRect(30, 0, WIDTH - ((TANK_WIDTH + 2) * 3) - 30, 15, COLOR_BLACK);
 	    char header[25];
 	    snprintf(header, 25, "L%d", Invaders.level);
 	    canvas.printMessage(header, gameplay5pt7b, COLOR_BLUE, 5, 5);
@@ -530,7 +578,7 @@ static void drawScore(int points) {
 	    canvas.printMessage(header, gameplay5pt7b, COLOR_BLUE, 30, 5);
 	}
 	else {
-		canvas.fillRect(55, 0, GFX_WIDTH - ((TANK_WIDTH + 2) * 3) - 55, 15, COLOR_BLACK);
+		canvas.fillRect(55, 0, WIDTH - ((TANK_WIDTH + 2) * 3) - 55, 15, COLOR_BLACK);
 	    char header[25];
 	    snprintf(header, 25, "WAVE %d", Invaders.level);
 	    canvas.printMessage(header, gameplay5pt7b, COLOR_BLUE, 5, 5);
@@ -543,10 +591,10 @@ static void drawScore(int points) {
 static void drawLives() {
     for (uint8_t i = 0; i < Invaders.tank.lives; i++) {
     	if (Invaders.gameplay == normal){
-    		canvas.drawImage( GFX_WIDTH - ((TANK_WIDTH + 2) * (i + 1)), 0, TANK_WIDTH, TANK_HEIGHT, Invaders.tankSprite);
+    		canvas.drawImage( WIDTH - ((TANK_WIDTH + 2) * (i + 1)), 0, TANK_WIDTH, TANK_HEIGHT, Invaders.tankSprite);
     	}
     	else{
-    		canvas.drawImage( GFX_WIDTH - ((TANK_WIDTH + 2) * (i + 1)), 0, TANK_WIDTH, TANK_HEIGHT, hcrn_tank_raw);
+    		canvas.drawImage( WIDTH - ((TANK_WIDTH + 2) * (i + 1)), 0, TANK_WIDTH, TANK_HEIGHT, hcrn_tank_raw);
     	}
     }
 }

@@ -85,11 +85,11 @@ void storeUser(void){
  * @param clan we want to lookup
  * @return filename
  */
-char* getClanFile(CLAN clan){
+const char* getClanFile(CLAN clan){
 
-    char *retFile = NULL;
+    const char *retFile = NULL;
 
-    for(int i = 0; i < NUM_CLANS; i++){
+    for(size_t i = 0; i < NUM_CLANS; i++){
         if(clans[i].clan == clan){
             retFile = clans[i].filename;
         }
@@ -103,11 +103,11 @@ char* getClanFile(CLAN clan){
  * @param clan we want to lookup
  * @return filename
  */
-char* getClanName(CLAN clan){
+const char* getClanName(CLAN clan){
 
-    char *retName = NULL;
+    const char *retName = NULL;
 
-    for(int i = 0; i < NUM_CLANS; i++){
+    for(size_t i = 0; i < NUM_CLANS; i++){
         if(clans[i].clan == clan){
             retName = clans[i].name;
         }
@@ -115,163 +115,6 @@ char* getClanName(CLAN clan){
 
     return retName;
 }
-
-/**
- * Configure the username and clan
- */
-void userConfigure(void){
-
-    bool gotName = false;
-
-    do{
-        util_gfx_fill_screen(COLOR_BLACK);
-        util_gfx_set_cursor(28, 5);
-        util_gfx_print("Username?\n    10 chars");
-
-        util_gfx_set_cursor(22, 95);
-        util_gfx_print("< > to move");
-
-        util_gfx_set_cursor(30, 110);
-        util_gfx_print("A to save");
-
-        util_gfx_set_cursor(15, 40);
-
-        getString(user.name, 10, true);
-
-        // Trim spaces from the end
-        for (int i = 10; i >= 0; i--) {
-            if (user.name[i] == ' ') {
-                user.name[i] = '\0';
-            }
-        }
-
-        // Did the user enter something?
-        if (user.name[0] != '\0') {
-            gotName = true;
-        }
-
-    } while(!gotName);
-
-    while(getButton(false) == USER_BUTTON_A){
-        // Wait until released
-    }
-
-
-
-
-    CLAN curClan = user.clan;
-    bool gotClan = false;
-
-    do {
-        util_gfx_fill_screen(COLOR_BLACK);
-
-        util_gfx_draw_raw_file(getClanFile(curClan), 0, 29, GFX_WIDTH, 100, NULL, false, NULL);
-
-        util_gfx_fill_rect(0, 0, GFX_WIDTH, 28, COLOR_BLACK);
-
-        util_gfx_set_cursor(22, 5);
-        util_gfx_print("<  Clan  >");
-        uint16_t w, h;
-        util_gfx_get_text_bounds(getClanName(curClan), 0, 0, &w, &h);
-        util_gfx_set_cursor(64 - (w / 2), 20);
-        util_gfx_print(getClanName(curClan));
-
-        bool waitForButton = true;
-
-        while (waitForButton) {
-
-            switch (getButton(false)) {
-                case USER_BUTTON_A:
-                    waitForButton = false;
-                    gotClan = true;
-                    while (getButton(false) == USER_BUTTON_A) {
-
-                    }
-                    break;
-                case USER_BUTTON_B:
-                    waitForButton = false;
-                    gotClan = true;
-                    while (getButton(false) == USER_BUTTON_B) {
-
-                    }
-                    break;
-                case USER_BUTTON_RIGHT:
-                    if (curClan == CLAN_BADGELIFE) {
-                        curClan = CLAN_MARVWASHERE;
-                    }
-                    else{
-                        curClan++;
-                    }
-                    waitForButton = false;
-                    while (getButton(false) == USER_BUTTON_RIGHT) {
-
-                    }
-                    break;
-                case USER_BUTTON_LEFT:
-                    if (curClan == CLAN_MARVWASHERE){
-                        curClan = CLAN_BADGELIFE;
-                    }
-                    else{
-                        curClan--;
-                    }
-                    waitForButton = false;
-                    while (getButton(false) == USER_BUTTON_LEFT) {
-
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            nrf_delay_ms(1);
-        }
-
-    } while(!gotClan);
-
-    user.clan = curClan;
-
-    while(getButton(false) == USER_BUTTON_A){
-        // Wait until released
-    }
-
-    util_gfx_fill_screen(COLOR_BLACK);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLUE);
-    util_gfx_set_cursor(15, 0);
-    util_gfx_print("Power Up!");
-
-    util_gfx_set_font(FONT_MONO55_8PT);
-    util_gfx_set_color(COLOR_WHITE);
-    util_gfx_set_cursor(25, 40);
-    util_gfx_print("Good luck,");
-
-    uint16_t w, h;
-    util_gfx_get_text_bounds(user.name, 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 57);
-    util_gfx_print(user.name);
-
-    util_gfx_set_cursor(50, 80);
-    util_gfx_print("Clan");
-
-    util_gfx_get_text_bounds(getClanName(user.clan), 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 94);
-    util_gfx_print(getClanName(user.clan));
-
-
-    while(getButton(false) != USER_BUTTON_A){
-        // Wait until pressed
-    }
-    while(getButton(false) == USER_BUTTON_A){
-        // Wait until released
-    }
-
-    storeUser();
-
-    advertising_setUser(user.name);
-    advertising_setClan(user.clan);
-    ble_adv_start();
-}
-
 
 /**
  * @return Get the temp score modifier, in percent

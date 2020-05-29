@@ -140,6 +140,7 @@
                 "${workspaceRoot}/Software",
                 "${workspaceRoot}/Software/src",
                 "${workspaceRoot}/Software/sdk/shim",
+                "${workspaceRoot}/Software/config",
                 "/usr/include",
                 "${GCC_ROOT}/include"
             ],
@@ -152,7 +153,8 @@
                 "S140",
                 "SOFTDEVICE_PRESENT",
                 "SWI_DISABLE0",
-                "_DEFAULT_SOURCE"
+                "_DEFAULT_SOURCE",
+                "DC801_EMBEDDED"
             ],
             "compilerPath": "/usr/bin/arm-none-eabi-gcc",
             "cStandard": "c11",

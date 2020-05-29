@@ -6,8 +6,8 @@
  *
  */
 
-#ifndef BLE_H_
-#define BLE_H_
+#ifndef DC801_BLE_H_
+#define DC801_BLE_H_
 
 #include <common.h>
 
@@ -69,9 +69,9 @@ typedef struct {
 typedef struct {
 	BADGE_GROUP group;
 	uint16_t appearance;
-	char *name;
-	char *icon;
-	char *contact;
+	const char *name;
+	const char *icon;
+	const char *contact;
 } BADGE_INFO;
 
 extern const BADGE_INFO badgeInfo[NUM_BADGE_GROUPS - 1];
@@ -82,7 +82,7 @@ void ble_stack_init(void);
 void gap_params_init(void);
 void scan_start(void);
 
-void advertising_setUser(char *user);
+void advertising_setUser(const char *user);
 void advertising_setClan(uint8_t clan);
 void advertising_setScore(uint32_t score);
 void advertising_setGodCommand(GODMODE_COMMAND command, uint32_t data);
@@ -94,9 +94,9 @@ uint8_t getBadges(BADGE_ADV *badges);
 bool getBadge(uint8_t index, BADGE_ADV *badge);
 uint8_t getBadgeNum(void);
 uint8_t getBadgeYear(BADGE_YEAR year);
-char* getBadgeGroupName(BADGE_GROUP group);
-char* getBadgeIconFile(BADGE_GROUP group);
-char* getBadgeContact(BADGE_GROUP group);
+const char* getBadgeGroupName(BADGE_GROUP group);
+const char* getBadgeIconFile(BADGE_GROUP group);
+const char* getBadgeContact(BADGE_GROUP group);
 uint16_t getBadgeAppearance(BADGE_GROUP group);
 BADGE_GROUP getBadgeGroupFromAppearance(uint16_t appearance);
 
