@@ -11,6 +11,16 @@
 #ifndef UTILITY_H_
 #define UTILITY_H_
 
+#include "adafruit/gfxfont.h"
+
+#ifdef DC801_DESKTOP
+#include "sdk_shim.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define BUTTON_PRESSED 	0
 #define BUTTON_RELEASED 1
 #define BUTTON_DEBOUNCE_MS		15
@@ -44,7 +54,7 @@ uint8_t getButton(bool waitForLongPress);
 bool isButtonDown(int button);
 void pauseUntilPress(int button);
 void beep(int duration, int frequency);
-void getString(char *string, uint8_t chars, bool showScroll);
+void getString(GFXfont font, char *string, uint8_t chars, bool showScroll);
 void setLevelLEDs(LEVEL level);
 void setPowerUpLEDs(POWERUP powerUp);
 
@@ -56,7 +66,7 @@ uint32_t getSystick(void);
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis);
 uint32_t millis();
 
-uint8_t getFiles(char files[][9], char *path, uint8_t fileMax);
+uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax);
 
 void EEpwm_init();
 void EEpwm_set(int percent);
@@ -71,5 +81,9 @@ void morseInit(void);
 void morseStart(void);
 void morseStop(void);
 bool morseGetRunning(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* UTILITY_H_ */

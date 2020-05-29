@@ -9,7 +9,7 @@
 
 typedef struct {
     uint8_t index;
-    char *name;
+    const char *name;
 } MENU;
 
 int getMenuSelection(MENU *menu, uint16_t startRow, uint8_t numItems, uint8_t numRows, uint16_t timeout, bool updateHeader);

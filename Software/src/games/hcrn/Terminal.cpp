@@ -22,7 +22,7 @@ Terminal::Terminal(Point at) :frame(0), id(255), solved(false) {
 }
 
 Terminal::~Terminal() {
-    
+
 }
 
 void Terminal::draw(FrameBuffer* canvas) {
@@ -41,7 +41,7 @@ bool Terminal::think(Room* room) {
     uint8_t roomid = room->getId();
     if (id == 255)
         id = roomid;
-    
+
     //Big ugly code mess below
     if ((frame % 10) == 0) {// only needs to be check once in a while
         if ((roomid == 23) && game.isTaskComplete(FIRST_ATTEMPT))
@@ -65,7 +65,7 @@ bool Terminal::think(Room* room) {
         else if ((roomid == 89) && game.isTaskComplete(BEAT_RACE))
             solved = true;
     }
-    
+
     return true;
 }
 
@@ -99,15 +99,15 @@ void Terminal::interact(FrameBuffer* canvas) {
             	showMainMenu();
             }
             // fun captcha
-            else if (game.ShowTerminalCaptcha("The Main Reactor is on lock down.\n\nProve your humanity.","Enter captcha:", 5, "hcrn/DC801.bmp") == 0xDC801)
+            else if (game.ShowTerminalCaptcha("The Main Reactor is on lock down.\n\nProve your humanity.","Enter captcha:", 5, "HCRN/DC801.bmp") == 0xDC801)
             {   // random trivia
             	int hex1 = game.ShowTerminal("Please answer the\nfollowing question:\n\nWhat is the answer to\nlife the universe, and\neverything?", 4);
             	if (hex1 == 42 || hex2dec(hex1) == 42)
             	{   // math question
-                	int hex2 = game.ShowTerminalCaptcha("Please solve the\nfollowing equation:\n\nGiven DEF, find DE\n","Enter (DE x 100):", 4, "hcrn/trig.bmp");
+                	int hex2 = game.ShowTerminalCaptcha("Please solve the\nfollowing equation:\n\nGiven DEF, find DE\n","Enter (DE x 100):", 4, "HCRN/trig.bmp");
             		if (hex2 == 690 || hex2dec(hex2) == 690)
             		{   //  V=IR electronics question
-                    	int hex3 = game.ShowTerminalCaptcha("Please solve: \nWhat is the current\nflowing through R1?\n","Enter in mA:", 4, "hcrn/res.bmp");
+                    	int hex3 = game.ShowTerminalCaptcha("Please solve: \nWhat is the current\nflowing through R1?\n","Enter in mA:", 4, "HCRN/res.bmp");
                 		if (hex3 == 227 || hex2dec(hex3) == 227)
                 		{   // xkcd question
 							if (!game.TerminalRequestResponse("WHEN LITTLEFOOT'S\nMOTHER DIED IN THE\nORIGINAL 'LAND BEFORE\nTIME, 'DID YOU FEEL SAD?\n\n(BOTS: NO LYING)", "YES", "NO"))
@@ -205,8 +205,8 @@ void Terminal::interact(FrameBuffer* canvas) {
             	game.ShowTerminal("Engines have failed.\n\nRepair Instructions:\n-----------\nConnect to the ship\nvia USB and connect\nto the COM port.\n\nWhen connected,\ncontinue to the next\nscreen.", 0);
 
             	game.ShowTerminalNoResponse("Debug Started.\n\nContinue all work via\nthe USB diagnostic\nport.\n");
-                
-                
+
+
                 //wait for connection
                 for (int i=0; i<5000; ++i) {
                     app_usbd_event_queue_process();
@@ -221,7 +221,7 @@ void Terminal::interact(FrameBuffer* canvas) {
 
                 if (usb_serial_is_connected()) {
                     wg_Reset();
-                    
+
                     while (usb_serial_is_connected() && (getButton(false) != USER_BUTTON_A)) {
                         const size_t max_len = 1024;
                         char response[max_len];
@@ -311,7 +311,7 @@ void Terminal::interact(FrameBuffer* canvas) {
             else {
             	game.ShowTerminal("--- Comms Station ---\nATTENTION:\nExternal communication\nrecorded.\n\nMessages saved to\ncollect.cap on the\nShip's SD Card.", 0);
                 if (FR_NO_FILE == f_stat("collect.cap", NULL)) {
-                    decryptFile("SuperSecretRc4Key", "hcrn/collect.enc", "collect.cap");
+                    decryptFile("SuperSecretRc4Key", "HCRN/collect.enc", "collect.cap");
                 }
                 if(!game.isTaskComplete(COMMS_EXTERNAL_MESSAGE)){
                 	game.ShowDialog("This looks important.\nPower off the ship, look\nat the communications\nthen come back and\nenter in any useful\ninformation.", MILLER_AVATAR, false);
@@ -394,8 +394,8 @@ void Terminal::interact(FrameBuffer* canvas) {
                     game.updateShipLights();
     				game.ShowTerminal("Enemies Destroyed!", 0);
     				game.completeTask(ALL_DONE);
-    				game.ShowDialog("Baaaaa\nYou WON.\nGame Over.", "hcrn/sheep.bmp", true);\
-    				game.ShowDialog("You can continue\nto explore, but\nthat's all we have\nfor you. Hope you\nenjoyed playing!", "hcrn/sheep.bmp", true);
+    				game.ShowDialog("Baaaaa\nYou WON.\nGame Over.", "HCRN/sheep.bmp", true);\
+    				game.ShowDialog("You can continue\nto explore, but\nthat's all we have\nfor you. Hope you\nenjoyed playing!", "HCRN/sheep.bmp", true);
     				game.ShowTerminal("CREDITS\n-------\nEVERYONE WHO BOUGHT A BADGE\n\nBADGE MAKERS\n@nemus\n@professor__plum\n@SirGed\n@_bashNinja\n@dvdfreitag\n@hamster  @matweaver7", 0);
     				game.completeTask(ALL_DONE);
     				game.saveGame();

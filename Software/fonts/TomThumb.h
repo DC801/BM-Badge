@@ -4,7 +4,7 @@
 ** Copyright 1999 Brian J. Swetland
 ** Copyright 1999 Vassilii Khachaturov
 ** Portions (of vt100.c/vt100.h) copyright Dan Marks
-** 
+**
 ** All rights reserved.
 **
 ** Redistribution and use in source and binary forms, with or without
@@ -28,13 +28,13 @@
 ** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 ** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 ** THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-** 
-** Modifications to Tom Thumb for improved readability are from Robey Pointer, 
+**
+** Modifications to Tom Thumb for improved readability are from Robey Pointer,
 ** see:
 ** http://robey.lag.net/2010/01/23/tiny-monospace-font.html
-** 
-** The original author does not have any objection to relicensing of Robey 
-** Pointer's modifications (in this file) in a more permissive license.  See 
+**
+** The original author does not have any objection to relicensing of Robey
+** Pointer's modifications (in this file) in a more permissive license.  See
 ** the discussion at the above blog, and also here:
 ** http://opengameart.org/forumtopic/how-to-submit-art-using-the-3-clause-bsd-license
 **
@@ -43,8 +43,11 @@
 ** https://gist.github.com/skelliam/322d421f028545f16f6d
 ** William Skellenger (williamj@skellenger.net)
 ** Twitter: @skelliam
-** 
+**
 */
+
+#ifndef TOMTHUMBFONT_H
+#define TOMTHUMBFONT_H
 
 #define TOMTHUMB_USE_EXTENDED 0
 
@@ -472,3 +475,5 @@ const GFXfont TomThumb = {
   (uint8_t  *)TomThumbBitmaps,
   (GFXglyph *)TomThumbGlyphs,
   0x20, 0x7E, 6 };
+
+#endif

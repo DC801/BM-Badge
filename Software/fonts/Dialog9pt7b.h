@@ -1,3 +1,6 @@
+#ifndef DIALOGFONT_H
+#define DIALOGFONT_H
+
 // Created by http://oleddisplay.squix.ch/ Consider a donation
 // In case of problems make sure that you are using the font file with the correct version!
 const uint8_t Dialog_plain_9Bitmaps[] = {
@@ -197,3 +200,5 @@ const GFXglyph Dialog_plain_9Glyphs[] = {
 };
 const GFXfont Dialog_plain_9 = {
 (uint8_t  *)Dialog_plain_9Bitmaps,(GFXglyph *)Dialog_plain_9Glyphs,0x20, 0x7E, 12};
+
+#endif

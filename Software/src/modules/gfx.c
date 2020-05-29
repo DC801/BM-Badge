@@ -26,7 +26,7 @@
  * 	Adapted for the dc801 dc26 badge and SDK15 by @hamster
  *
  *****************************************************************************/
-
+/*
 // System headers
 #include <ctype.h>
 #include <math.h>
@@ -111,10 +111,8 @@ static inline GFXfont __get_font() {
 	return font;
 }
 
-/**
- * Draw single character anywhere on the screen. Adapted from Adafruit GFX library.
- * Only supports custom fonts.
- */
+// Draw single character anywhere on the screen. Adapted from Adafruit GFX library.
+// Only supports custom fonts.
 static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 		uint16_t bg, GFXfont font) {
 
@@ -167,12 +165,8 @@ static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 	}
 }
 
-/**
- * Adapted from Adafruit GFX library. Draws custom font to the screen
- * at the current cursor position.
- *
- *
- */
+// Adapted from Adafruit GFX library. Draws custom font to the screen
+// at the current cursor position.
 static void __write_char(uint8_t c, GFXfont font) {
 	//If newline, move down a row
 	if (c == '\n') {
@@ -214,10 +208,9 @@ void util_gfx_cursor_area_reset() {
 	m_cursor_area.ye = GFX_HEIGHT;
 }
 
-/**
- * Adapted for our custom ili9163 driver and Nordic from:
- * https://github.com/adafruit/Adafruit_ili9163/blob/master/examples/spitftbitmap/spitftbitmap.ino
- */
+#ifdef DC801_EMBEDDED
+// * Adapted for our custom ili9163 driver and Nordic from:
+// * https://github.com/adafruit/Adafruit_ili9163/blob/master/examples/spitftbitmap/spitftbitmap.ino
 void util_gfx_draw_bmp_file(const char *filename, uint8_t x, uint16_t y) {
 
 	FIL bmp_file;
@@ -364,6 +357,156 @@ void util_gfx_draw_bmp_file(const char *filename, uint8_t x, uint16_t y) {
 
 	f_close(&bmp_file);
 }
+#endif
+
+#ifdef DC801_DESKTOP
+void util_gfx_draw_bmp_file(const char *filename, uint8_t x, uint16_t y) {
+
+	FIL *bmp_file;
+	int32_t width, height;	   	// W+H in pixels
+	uint8_t depth;				// Bit depth (currently must be 24)
+	uint32_t bmp_image_offset;        // Start of image data in file
+	uint32_t rowSize;               // Not always = bmpWidth; may have padding
+	uint8_t sdbuffer[3 * PIXEL_BUFFER_COUNT]; // pixel buffer (R+G+B per pixel)
+	uint32_t buffidx = sizeof(sdbuffer); // Current position in sdbuffer
+	bool flip = true;        // BMP is stored bottom-to-top
+	int w, h, row, col;
+	uint8_t r, g, b;
+	FSIZE_t pos = 0;
+
+	if ((x >= GFX_WIDTH) || (y >= GFX_HEIGHT)) {
+		return;
+	}
+
+    uint32_t fsize = util_sd_file_size(filename);
+    if (fsize == 0) {
+        NRF_LOG_INFO("Can't stat %s", filename);
+    }
+
+	// Open requested file on SD card
+	FRESULT result = f_open(&bmp_file, filename, FA_READ | FA_OPEN_EXISTING);
+	if (result != FR_OK) {
+	    NRF_LOG_INFO("Open %s failed", filename);
+		return;
+	}
+
+	// Parse BMP header
+	uint16_t magic = util_sd_read_16(bmp_file);
+	if (magic == 0x4D42) { // BMP signature
+
+		util_sd_read_32(bmp_file); // Read & ignore file size
+		util_sd_read_32(bmp_file); // Read & ignore creator bytes
+		bmp_image_offset = util_sd_read_32(bmp_file); // Start of image data
+		util_sd_read_32(bmp_file); // Read & ignore DIB header size
+
+		// Read DIB header
+		width = util_sd_read_32(bmp_file);
+		height = util_sd_read_32(bmp_file);
+		uint8_t planes = util_sd_read_16(bmp_file);
+		if (planes == 1) { // # planes -- must be '1'
+			depth = util_sd_read_16(bmp_file); // bits per pixel
+			util_sd_read_32(bmp_file); //Ignore compression, YOLO!
+			// If bmpHeight is negative, image is in top-down order.
+			// This is not canon but has been observed in the wild.
+			if (height < 0) {
+				height = -height;
+				flip = false;
+			}
+
+			// Crop area to be loaded
+			w = width;
+			h = height;
+			if ((x + w - 1) >= GFX_WIDTH)
+				w = GFX_WIDTH - x;
+			if ((y + h - 1) >= GFX_HEIGHT)
+				h = GFX_HEIGHT - y;
+
+			// Set TFT address window to clipped image bounds
+			st7735_set_addr(x, y, x + w - 1, y + h - 1);
+
+			//Handle 16-bit 565 bmp
+			if (depth == 16) {
+				// BMP rows are padded (if needed) to 4-byte boundary
+				rowSize = (width * 2 + 3) & ~3;
+
+				for (row = 0; row < h; row++) { // For each scanline...
+
+					// Seek to start of scan line.  It might seem labor-
+					// intensive to be doing this on every line, but this
+					// method covers a lot of gritty details like cropping
+					// and scanline padding.  Also, the seek only takes
+					// place if the file position actually needs to change
+					// (avoids a lot of cluster math in SD library).
+					if (flip) // Bitmap is stored bottom-to-top order (normal BMP)
+						pos = bmp_image_offset + (height - 1 - row) * rowSize;
+					else
+						// Bitmap is stored top-to-bottom
+						pos = bmp_image_offset + row * rowSize;
+					if (f_tell(bmp_file) != pos) { // Need seek?
+						f_lseek(bmp_file, pos);
+						buffidx = sizeof(sdbuffer); // Force buffer reload
+					}
+
+					//Populate the row buffer
+					UINT count;
+					f_read(bmp_file, sdbuffer, rowSize, &count);
+					buffidx = 0; // Set index to beginning
+
+					for (uint16_t i = 0; i < rowSize; i += 2) {
+						uint16_t temp = sdbuffer[i];
+						sdbuffer[i] = sdbuffer[i + 1];
+						sdbuffer[i + 1] = temp;
+					}
+
+					st7735_push_colors(sdbuffer, rowSize);
+				} // end scanline
+			}
+			//Handle 24-bit RGB bmp
+			else if (depth == 24) { // 0 = uncompressed
+				// BMP rows are padded (if needed) to 4-byte boundary
+				rowSize = (width * 3 + 3) & ~3;
+
+				for (row = 0; row < h; row++) { // For each scanline...
+
+					// Seek to start of scan line.  It might seem labor-
+					// intensive to be doing this on every line, but this
+					// method covers a lot of gritty details like cropping
+					// and scanline padding.  Also, the seek only takes
+					// place if the file position actually needs to change
+					// (avoids a lot of cluster math in SD library).
+					if (flip) // Bitmap is stored bottom-to-top order (normal BMP)
+						pos = bmp_image_offset + (height - 1 - row) * rowSize;
+					else
+						// Bitmap is stored top-to-bottom
+						pos = bmp_image_offset + row * rowSize;
+					if (f_tell(bmp_file) != pos) { // Need seek?
+						f_lseek(bmp_file, pos);
+						buffidx = sizeof(sdbuffer); // Force buffer reload
+					}
+
+					for (col = 0; col < w; col++) { // For each pixel...
+						// Time to read more pixel data?
+						if (buffidx >= sizeof(sdbuffer)) { // Indeed
+							UINT count;
+							f_read(bmp_file, sdbuffer, sizeof(sdbuffer),
+									&count);
+							buffidx = 0; // Set index to beginning
+						}
+
+						// Convert pixel from BMP to TFT format, push to display
+						b = sdbuffer[buffidx++];
+						g = sdbuffer[buffidx++];
+						r = sdbuffer[buffidx++];
+						st7735_push_color(st7735_color565(r, g, b));
+					} // end pixel
+				} // end scanline
+			} // end goodBmp
+		}
+	}
+
+	f_close(bmp_file);
+}
+#endif
 
 void util_gfx_draw_bmp(bitmap_t *p_bitmap, uint16_t x, uint16_t y, uint16_t color) {
 	int16_t i, j;
@@ -395,10 +538,8 @@ void util_gfx_draw_bmp(bitmap_t *p_bitmap, uint16_t x, uint16_t y, uint16_t colo
 	}
 }
 
-/**
- * Draw a circle at x, y with radius r and color.
- * NOTE: Color is 16-bit (565)
- */
+// Draw a circle at x, y with radius r and color.
+// NOTE: Color is 16-bit (565)
 void util_gfx_draw_circle(int16_t x0, int16_t y0, int16_t r, uint16_t color) {
 	int16_t f = 1 - r;
 	int16_t ddF_x = 1;
@@ -439,7 +580,7 @@ void util_gfx_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t
         _swap_int16_t(x0, x1);
         _swap_int16_t(y0, y1);
     }
-    
+
 	//Horizontal line, draw fast
 	if (y0 == y1) {
 		util_gfx_fill_rect(x0, y0, x1 - x0, 1, color);
@@ -523,12 +664,12 @@ void util_gfx_draw_raw_int16(int16_t x, int16_t y, uint16_t w, uint16_t h, const
 }
 
 void util_gfx_draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_raw) {
-    
+
     //clip
     if (x < 0 || x > GFX_WIDTH - w || y < 0 || y > GFX_HEIGHT - h) {
         return;
     }
-    
+
     //Hang out until LCD is free
     while (st7735_is_busy()) {
         APP_ERROR_CHECK(sd_app_evt_wait());
@@ -542,7 +683,15 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
                                void (*p_frame_callback)(uint8_t frame, void *p_data),
                                bool loop,
                                void *data) {
+
+#ifdef DC801_EMBEDDED
 	FIL raw_file;
+#endif
+
+#ifdef DC801_DESKTOP
+	FIL *raw_file;
+#endif
+
 	FRESULT result;
 	int32_t bytecount;
 	uint16_t chunk_size = 8 * 128 * 2;
@@ -572,7 +721,13 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 
 	m_stop = false;
 	do {
-        result = f_lseek(&raw_file, 0);	//Ensure we're starting at beginning of file for first frame
+	#ifdef DC801_EMBEDDED
+		result = f_lseek(&raw_file, 0);	//Ensure we're starting at beginning of file for first frame
+	#endif
+
+	#ifdef DC801_DESKTOP
+		result = f_lseek(raw_file, 0);	//Ensure we're starting at beginning of file for first frame
+	#endif
 		if (result != FR_OK) {
             NRF_LOG_INFO("Error while seeking SD. Error code: %d", result);
             util_sd_error();
@@ -585,11 +740,6 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
                 APP_ERROR_CHECK(sd_app_evt_wait());
 			}
 
-//			//Run scheduled events
-//			if (loop) {
-//				app_sched_execute();
-//			}
-
 			// Set TFT address window to clipped image bounds
 			st7735_set_addr(x, y, x + w - 1, y + h - 1);
 
@@ -597,7 +747,7 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 
 			//Blast data to TFT
 			while (bytecount > 0) {
-                
+
 				#ifdef DC801_DESKTOP
 					if (application_quit != 0)
 					{
@@ -609,18 +759,26 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
                 while (st7735_is_busy()) {
                     APP_ERROR_CHECK(sd_app_evt_wait());
                 }
-                
+
 				//Populate the row buffer
+			#ifdef DC801_EMBEDDED
 				result = f_read(&raw_file, sdbuffer, MIN(chunk_size, bytecount), &count);
+			#endif
+
+			#ifdef DC801_DESKTOP
+				result = f_read(raw_file, sdbuffer, MIN(chunk_size, bytecount), &count);
+			#endif
 
 				//Check for error
 				if (result != FR_OK) {
+					printf("Failed to read file: %s, size: %d\n", filename, MIN(chunk_size, bytecount));
+					printf("Read count: %d\n", count);
                     util_sd_error();
 				}
 
                 //Push the colors async
 				APP_ERROR_CHECK(st7735_push_colors_fast(sdbuffer, count));
-                
+
 				bytecount -= count;
 			}
 
@@ -645,6 +803,14 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 		#endif
 
 	} while (loop && !m_stop);
+
+#ifdef DC801_EMBEDDED
+	f_close(&raw_file);
+#endif
+
+#ifdef DC801_DESKTOP
+	f_close(raw_file);
+#endif
 
 	//Hang out until LCD is free
 	while (st7735_is_busy()) {
@@ -685,9 +851,7 @@ uint8_t util_gfx_font_height() {
 	return __get_font().yAdvance;
 }
 
-/**
- * Returns the width of a character for the current font, careful,  this is unreliable with non-fixed fonts
- */
+// * Returns the width of a character for the current font, careful,  this is unreliable with non-fixed fonts
 uint8_t util_gfx_font_width() {
 	GFXfont font = __get_font();
 	return font.glyph[0].xAdvance;
@@ -717,6 +881,7 @@ inline bool util_gfx_is_valid_state() {
 	return m_valid_state;
 }
 
+#ifdef DC801_EMBEDDED
 void util_gfx_load_raw(uint8_t *raw, char *filename, uint16_t size) {
 	FIL raw_file;
 	UINT count = 0;
@@ -737,6 +902,30 @@ void util_gfx_load_raw(uint8_t *raw, char *filename, uint16_t size) {
 
 	f_close(&raw_file);
 }
+#endif
+
+#ifdef DC801_DESKTOP
+void util_gfx_load_raw(uint8_t *raw, char *filename, uint16_t size) {
+	FIL *raw_file;
+	UINT count = 0;
+	FRESULT result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
+	if (result != FR_OK) {
+//		char message[128];
+//		sprintf(message, "Could not open %s.", filename);
+		//mbp_ui_error(message);
+		return;
+	}
+
+	result = f_read(raw_file, raw, size, &count);
+	if (result != FR_OK) {
+//		char message[128];
+//		sprintf(message, "Could not read %s.", filename);
+		//mbp_ui_error(message);
+	}
+
+	f_close(raw_file);
+}
+#endif
 
 void util_gfx_get_text_bounds(char *str, int16_t x, int16_t y, uint16_t *w, uint16_t *h) {
 	uint8_t c; // Current character
@@ -820,9 +1009,7 @@ void util_gfx_print(const char *text) {
 	}
 }
 
-/**
- * Converts 32-bit RGB color to 565
- */
+// Converts 32-bit RGB color to 565
 uint16_t util_gfx_rgb_to_565(uint32_t rgb) {
 	uint32_t c = ((0xF80000 & rgb) >> 8) | ((0x00FC00 & rgb) >> 5) | (0xF8 & rgb) >> 3;
 	return (uint16_t) c;
@@ -853,3 +1040,4 @@ void util_gfx_set_wrap(bool wrap) {
 	m_wrap = wrap;
 }
 
+*/

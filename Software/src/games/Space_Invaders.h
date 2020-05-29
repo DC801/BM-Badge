@@ -29,20 +29,6 @@ typedef struct {
     bool active;
 } BULLET;
 
-
-static void drawTank(uint8_t x);
-static void drawInvader(uint8_t x, uint8_t y, uint8_t type);
-static void drawAllInvaders();
-static void updateInvaders(bool move);
-static void pauseGame();
-static void levelUp();
-static void resetBoard();
-static void updateScore(int points);
-static void drawLives();
-static void drawScore(int points);
-static void updateBullet();
-static void drawBullet(void);
-
 #endif
 
 

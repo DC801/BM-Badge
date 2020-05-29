@@ -3,10 +3,6 @@
 
 #include "shim_err.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define TIMER1_CC_NUM 4
 
 enum {
@@ -16,10 +12,6 @@ enum {
 //    NRFX_TIMER3_INST_IDX,
 //    NRFX_TIMER4_INST_IDX,
     NRFX_TIMER_ENABLED_COUNT
-};
-
-enum {
-    NRF_TIMER1 = 0,
 };
 
 typedef void (*app_timer_timeout_handler_t)(void * p_context);
@@ -93,6 +85,9 @@ typedef struct
     uint8_t          cc_channel_count; ///< Number of capture/compare channels.
 } nrf_drv_timer_t;
 
+
+extern NRF_TIMER_Type *NRF_TIMER1;
+
 ret_code_t app_timer_init(void);
 ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t mode, app_timer_timeout_handler_t timeout_handler);
 ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *p_context);
@@ -102,9 +97,5 @@ uint32_t app_timer_cnt_get(void);
 
 void nrf_delay_us(uint32_t time_us);
 void nrf_delay_ms(uint32_t time_ms);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

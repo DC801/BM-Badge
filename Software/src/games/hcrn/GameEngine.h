@@ -7,7 +7,7 @@
 #ifndef Game_h
 #define Game_h
 
-#include "common.h"
+#include "hcrn_common.h"
 #include "Player.h"
 #include "Room.h"
 #include "FrameBuffer.h"
@@ -17,7 +17,7 @@
 #define FRAME_INTERVAL 50
 #define GAMESTATE_SIZE 12
 
-#define MILLER_AVATAR "hcrn/miller.bmp"
+#define MILLER_AVATAR "HCRN/miller.bmp"
 
 enum Checkpoint {
     FIRST_ATTEMPT,
@@ -73,26 +73,26 @@ class GameEngine {
 public:
     GameEngine();
     ~GameEngine();
-    
+
     void run();
     void addObject(GameObject* obj);
     void addObject(GameObject* obj, uint8_t id);
     Player* getPlayer();
-    
+
     bool isBlocked(Rect box);
-    
+
     bool saveGame(const char* filename=SAVEFILE);
     bool loadGame(const char* filename=SAVEFILE);
-    
+
     bool isTaskComplete(Checkpoint it);
     void completeTask(Checkpoint it);
     void unCompleteTask(Checkpoint it);
-    
+
     void flicker(bool twice);
-    
+
     void interact(Rect loc);
-    
-    void WriteMessage(const char* message, uint16_t fontcolor, uint8_t font, area_t area);
+
+    void WriteMessage(const char* message, uint16_t fontcolor, GFXfont font, area_t area);
     int DrawInput(int inputs, int16_t HEIGHT_OFFSET, uint16_t bgcolor, uint16_t fontcolor, uint16_t highlight);
     void DrawInputText(char* response, int inputs, uint8_t start_char, uint8_t numOfChars, uint8_t initialize_char, int16_t HEIGHT_OFFSET, uint16_t bgcolor, uint16_t fontcolor, uint16_t highlight);
     bool DrawThisOrThat(const char* query, area_t query_area, const char* response_one, const char* response_two, uint16_t bgcolor, uint16_t fontcolor, uint16_t highlight);
@@ -120,25 +120,25 @@ private:
     void loop(uint32_t dt);
     void changeRoom(int id);
     void delObject(int idx);
-    
+
     void doMesageOverlay(const char* message);
     int doInputOverlay(const char* message, int inputs);
-    
+
 
     void updateLocator();
     void updateScore();
-    
+
     bool quit;
     uint32_t lastFrame, lastThink, _flicker, lastTime;
-    
+
     Player player;
     Room currentRoom;
-    
+
     GameObject* objects[24];
     uint32_t racestart;
     uint8_t mapstates[100];
     uint8_t gamestate[GAMESTATE_SIZE];
-    
+
 };
 
 extern char ble_name[11];

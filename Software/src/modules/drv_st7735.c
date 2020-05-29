@@ -295,7 +295,7 @@ void st7735_init() {
 			nrfx_spim_init(&spim0, &spi_config, __spim_event_handler, NULL)
 	);
 
-	
+
 	nrf_gpio_cfg_output(ST7735_PIN_DC);
 	nrf_gpio_cfg_output(ST7735_PIN_RESET);
 	nrf_gpio_cfg_output(ST7735_PIN_LED);

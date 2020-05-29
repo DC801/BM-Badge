@@ -18,7 +18,7 @@ bool chal_opened = false;
 bool serial_GotString(char *string, uint8_t len){
 
 	int newArray = 0;
-    for(int i = 0 ; i < strlen(string); i++){
+    for(size_t i = 0 ; i < strlen(string); i++){
     	if(string[i] != '\b' && string[i] != 0x7F && string[i] != 0x0D){ //0x7F = DEL key  0x0D = Carriage Return
             newArray += 1;
     	}

@@ -17,7 +17,7 @@ void scan_start(void)
 
 }
 
-void advertising_setUser(char *user)
+void advertising_setUser(const char *user)
 {
     UNUSED_PARAMETER(user);
 }

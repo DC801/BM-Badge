@@ -76,7 +76,7 @@
 
 	#include "ff.h"
 
-	#define printf NRF_LOG_RAW_INFO
+	#define NRF_LOG_RAW_INFO printf
 #endif
 
 #ifdef DC801_DESKTOP
@@ -122,9 +122,19 @@ typedef enum{
 #include "games/Tic-Tac-Toe.h"
 #include "games/Wargames.h"
 #include "games/hcrn/hcrn.h"
+#include "games/hcrn/FrameBuffer.h"
 #include "games/serial.h"
 #include "games/galaga/galaga_c.h"
 
+#define PROGMEM
+
+#include "../fonts/computerfont12pt7b.h"
+#include "../fonts/monof55.h"
+#include "../fonts/gameplay.h"
+#include "../fonts/veramono5pt7b.h"
+#include "../fonts/TomThumb.h"
+#include "../fonts/practical8pt7b.h"
+#include "../fonts/SFAlienEncounters5pt7b.h"
 
 
 #define min(A,B) ((A)<(B)?(A):(B))

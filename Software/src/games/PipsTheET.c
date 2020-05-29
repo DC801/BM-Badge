@@ -34,12 +34,20 @@ int PipsTheET(void) {
     Pips.x = 56;
     Pips.y = 24;
 
-    util_gfx_fill_screen(COLOR_BLACK);
-    util_gfx_fill_rect(0, 2, GFX_WIDTH, 17, COLOR_MAGENTA);
-    util_gfx_fill_rect(0, 110, GFX_WIDTH, 16, COLOR_LIGHTBLUE);
-	area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(game_area);
-	util_gfx_set_cursor(game_area.xs, game_area.ys);
+    p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
+
+    p_canvas()->fillRect(0, 2, WIDTH, 17, COLOR_MAGENTA);
+    // util_gfx_fill_rect(0, 2, GFX_WIDTH, 17, COLOR_MAGENTA);
+
+    p_canvas()->fillRect(0, 110, WIDTH, 16, COLOR_LIGHTBLUE);
+    // util_gfx_fill_rect(0, 110, GFX_WIDTH, 16, COLOR_LIGHTBLUE);
+
+    // TODO: Check this
+	area_t game_area = {0, 0, WIDTH, HEIGHT};
+    p_canvas()->setTextArea(&game_area);
+	// util_gfx_cursor_area_set(game_area);
+	// util_gfx_set_cursor(game_area.xs, game_area.ys);
 
     util_sd_load_file("GAMES/PIPS/PIPS.RAW", Pips.pipsSprite, PIPS_SIZE);
     movePips(Pips.x, Pips.y);
@@ -199,11 +207,14 @@ int PipsTheET(void) {
 
     if (Pips.lives == 0) {
 
-        util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_RED);
-        util_gfx_set_font(FONT_COMPUTER_12PT);
-        util_gfx_set_color(COLOR_BLACK);
-        util_gfx_set_cursor(5, 60);
-        util_gfx_print("GAME OVER");
+        p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_RED);
+        // util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_RED);
+
+        p_canvas()->printMessage("GAME OVER", Computerfont12pt7b, COLOR_BLACK, 5, 60);
+        // util_gfx_set_font(FONT_COMPUTER_12PT);
+        // util_gfx_set_color(COLOR_BLACK);
+        // util_gfx_set_cursor(5, 60);
+        // util_gfx_print("GAME OVER");
 
         while (getButton(false) != USER_BUTTON_A) {
             // Wait until pressed
@@ -224,21 +235,29 @@ int PipsTheET(void) {
  * Update the banner at the top of the screen with a centered string
  * @param string
  */
-static void updateBanner(char *string) {
-    util_gfx_fill_rect(0, 2, GFX_WIDTH, 17, COLOR_MAGENTA);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_LIGHTGREY);
+static void updateBanner(const char *string) {
+    p_canvas()->fillRect(0, 2, WIDTH, 17, COLOR_MAGENTA);
+    // util_gfx_fill_rect(0, 2, GFX_WIDTH, 17, COLOR_MAGENTA);
 
-	area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(game_area);
-	util_gfx_set_cursor(game_area.xs, game_area.ys);
-    uint16_t w = 0;
-    uint16_t h = 0;
-    util_gfx_get_text_bounds(string, 0, 0, &w, &h);
-    printf("Pips: '%s', w: %d\n", string, w);
-    util_gfx_set_cursor(64 - (w / 2), 4);
+    // area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
+	// util_gfx_cursor_area_set(game_area);
+	// util_gfx_set_cursor(game_area.xs, game_area.ys);
 
-    util_gfx_print(string);
+    // uint16_t w = 0;
+    // uint16_t h = 0;
+    // util_gfx_get_text_bounds(string, 0, 0, &w, &h);
+
+    area_t game_area = {0, 0, WIDTH, HEIGHT};
+    bounds_t bounds = { 0 };
+    p_canvas()->getTextBounds(Computerfont12pt7b, string, 0, 0, &game_area, &bounds);
+
+    printf("Pips: '%s', w: %d\n", string, bounds.width);
+
+    p_canvas()->printMessage(string, Computerfont12pt7b, COLOR_LIGHTGREY, 64 - (bounds.width / 2), 4);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_LIGHTGREY);
+    // util_gfx_set_cursor(64 - (bounds.width / 2), 4);
+    // util_gfx_print(string);
 }
 
 /**
@@ -280,10 +299,11 @@ static bool checkIfInPit(void) {
  * @param y top side
  */
 static void movePips(uint8_t x, uint8_t y) {
+    p_canvas()->drawImageFromFile(0, 22, 128, 85, "GAMES/PIPS/GAMEBACK.RAW");
+    // util_gfx_draw_raw_file("GAMES/PIPS/GAMEBACK.RAW", 0, 22, 128, 85, NULL, false, NULL);
 
-    util_gfx_draw_raw_file("GAMES/PIPS/GAMEBACK.RAW", 0, 22, 128, 85, NULL, false, NULL);
-    util_gfx_draw_raw(x, y, 12, 12, Pips.pipsSprite);
-
+    p_canvas()->drawImage(x, y, 12, 12, Pips.pipsSprite);
+    // util_gfx_draw_raw(x, y, 12, 12, Pips.pipsSprite);
 }
 
 /**
@@ -292,21 +312,25 @@ static void movePips(uint8_t x, uint8_t y) {
  */
 static void movePipsInPit(uint8_t x) {
 
-    util_gfx_draw_raw_file("GAMES/PIPS/GAMEPIT.RAW", 0, 22, 128, 85, NULL, false, NULL);
-    util_gfx_draw_raw(x, 83, 12, 12, Pips.pipsSprite);
+    p_canvas()->drawImageFromFile(0, 22, 128, 85, "GAMES/PIPS/GAMEPIT.RAW");
+    // util_gfx_draw_raw_file("GAMES/PIPS/GAMEPIT.RAW", 0, 22, 128, 85, NULL, false, NULL);
 
+    p_canvas()->drawImage(x, 83, 12, 12, Pips.pipsSprite);
+    // util_gfx_draw_raw(x, 83, 12, 12, Pips.pipsSprite);
 }
 
 /**
  * Pause the exciting action
  */
 static void pauseGame(void) {
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_YELLOW);
+    // util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_set_cursor(30, 60);
-    util_gfx_print("PAUSED");
+    p_canvas()->printMessage("PAUSED", Computerfont12pt7b, COLOR_BLACK, 30, 60);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_cursor(30, 60);
+    // util_gfx_print("PAUSED");
 
     uint8_t button;
     bool resume = false;
@@ -328,31 +352,37 @@ static void pauseGame(void) {
         }
     }
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_BLACK);
-
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_BLACK);
+    // util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_BLACK);
 }
 
 /**
  * Update the step counter at the bottom
  */
 static void updateSteps(int steps) {
+    p_canvas()->fillRect(36, 110, 56, 16, COLOR_LIGHTBLUE);
+    // util_gfx_fill_rect(36, 110, 56, 16, COLOR_LIGHTBLUE);
 
-    util_gfx_fill_rect(36, 110, 56, 16, COLOR_LIGHTBLUE);
+    // TODO: Check this
+	// area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
+    // util_gfx_cursor_area_set(game_area);
+	// util_gfx_set_cursor(game_area.xs, game_area.ys);
 
-	area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_DARKGREEN);
-	util_gfx_cursor_area_set(game_area);
-	util_gfx_set_cursor(game_area.xs, game_area.ys);
     char header[6];
     snprintf(header, 6, "%u", steps);
-    uint16_t w, h;
-    util_gfx_get_text_bounds(header, 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 111);
-    printf("PipsSTEPS: '%s', w: %d\n", header, w);
 
+    // uint16_t w, h;
+    // util_gfx_get_text_bounds(header, 0, 0, &w, &h);
 
+    area_t game_area = {0, 0, WIDTH, HEIGHT};
+    bounds_t bounds = { 0 };
+    p_canvas()->getTextBounds(Computerfont12pt7b, header, 0, 0, &game_area, &bounds);
 
-    util_gfx_print(header);
+    p_canvas()->printMessage(header, Computerfont12pt7b, COLOR_DARKGREEN, 64 - (bounds.width / 2), 111);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_DARKGREEN);
+    // util_gfx_set_cursor(64 - (bounds.width / 2), 111);
+    // util_gfx_print(header);
 
+    printf("PipsSTEPS: '%s', w: %d\n", header, bounds.width);
 }

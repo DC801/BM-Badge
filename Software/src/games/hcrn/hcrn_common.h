@@ -10,9 +10,8 @@
 #define common_h
 
 #include <stdint.h>
-extern "C" {
-#include_next "common.h"
-}
+
+#include "common.h"
 
 #define TILE_SIZE   12
 #define BGCOLOR RGB(52,75,103)

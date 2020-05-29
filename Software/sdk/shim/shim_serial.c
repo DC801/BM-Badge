@@ -45,7 +45,7 @@ bool usb_serial_write(const char* data, size_t len) {
 }
 
 bool usb_serial_read_line(char* input_buffer, size_t max_len) {
-    for (int i = 0; i < usb_index; ++i)
+    for (uint32_t i = 0; i < usb_index; ++i)
     {
         if ((usb_buffer[i] == '\n') || (usb_buffer[i] == '\r'))
         {
@@ -59,7 +59,7 @@ bool usb_serial_read_line(char* input_buffer, size_t max_len) {
             size_t read =  MIN(i, max_len);
 
             memcpy(input_buffer, usb_buffer, read);
-            
+
             if (usb_index > read)
             {
                 memmove(usb_buffer, &usb_buffer[read], usb_index - read);
@@ -87,7 +87,7 @@ size_t usb_serial_write_in(const char *buffer)
         len = BUFFER_SIZE;
     }
 
-    for (int i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++)
     {
         if ((usb_index > 0) && (buffer[i] == '\b'))
         {

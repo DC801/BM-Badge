@@ -2,6 +2,9 @@
 // Created by hamster on 8/4/18.
 //
 
+#ifndef TIC_TAC_TOE_H
+#define TIC_TAC_TOE_H
+
 typedef enum {
     player_none = '-',
     player_x    = 'x',
@@ -25,6 +28,7 @@ typedef enum {
     state_draw          = 0,
     state_inProgress    = 1,
     state_connected     = 50,
+    state_disconnected  = -50,
     state_win           = -100
 } GAME_STATE;
 
@@ -33,15 +37,5 @@ typedef enum {
 #define SPACING     4
 
 int TicTacToe(void);
-static void updateScore(int points);
-static void drawBoard(PLAYER board[9]);
-static void pauseGame(void);
-static bool getYN(const char* message);
-void drawPlayer(uint8_t location, PLAYER player);
 
-static void drawCompute();
-static int computeMove(PLAYER board[9]);
-static int minmax(PLAYER board[9], bool flag);
-static int gameState(const PLAYER board[9]);
-static void endGame(GAME_STATE state);
-static void drawGoYNOptions(const char* message);
+#endif

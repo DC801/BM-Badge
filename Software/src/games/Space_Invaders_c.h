@@ -1,7 +1,5 @@
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef SPACE_INVADERS_C_H
+#define SPACE_INVADERS_C_H
 
 typedef enum {
 	normal,
@@ -14,10 +12,8 @@ typedef struct {
 	int score;
 	int level;
 	bool win;
-} invadersScore ;
+} invadersScore;
 
 invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels);
-#ifdef __cplusplus
-}
-#endif
 
+#endif

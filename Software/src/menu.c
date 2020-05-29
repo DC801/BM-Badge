@@ -12,13 +12,17 @@
  * @param numItems how many rows
  * @param startRow which row offset to start
  */
-static void drawMenu(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t startRow){
-    uint8_t spacing = util_gfx_font_height() - 5;
+static void drawMenu(MENU *menu, GFXfont font, uint16_t color, uint16_t startY, uint8_t numItems, uint8_t startRow){
+    uint8_t spacing = p_canvas()->getFontHeight(font);
+    //uint8_t spacing = util_gfx_font_height() - 5;
 
-    util_gfx_fill_rect(0, startY, GFX_WIDTH, spacing * numItems, COLOR_BLACK);
+    p_canvas()->fillRect(0, startY, WIDTH, spacing * numItems, COLOR_BLACK);
+    // util_gfx_fill_rect(0, startY, GFX_WIDTH, spacing * numItems, COLOR_BLACK);
+
     for(int i = 0; i < numItems; i++){
-        util_gfx_set_cursor(15, startY);
-        util_gfx_print(menu[i + startRow].name);
+        p_canvas()->printMessage(menu[i + startRow].name, font, color, 15, startY);
+        // util_gfx_set_cursor(15, startY);
+        // util_gfx_print(menu[i + startRow].name);
         startY = startY + spacing;
     }
 }
@@ -52,12 +56,13 @@ int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numR
         updateBatteryIcon(getBatteryPercent());
     }
 
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_WHITE);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_WHITE);
 
-    drawMenu(menu, startY, numRows, 0);
+    drawMenu(menu, Computerfont12pt7b, COLOR_WHITE, startY, numRows, 0);
 
-    uint8_t spacing = util_gfx_font_height() - 5;
+    uint8_t spacing = p_canvas()->getFontHeight(Computerfont12pt7b);
+    //uint8_t spacing = util_gfx_font_height() - 5;
 
     drawCaret(startY, startY);
 
@@ -70,7 +75,7 @@ int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numR
                     // Do we need to scroll up?
                     if(cursor == 0){
                         // Need to scroll
-                        drawMenu(menu, startY, numRows, --startRow);
+                        drawMenu(menu, Computerfont12pt7b, COLOR_WHITE, startY, numRows, --startRow);
                         drawCaret((cursor * spacing) + startY, (cursor * spacing) + startY);
                     }
                     else {
@@ -89,7 +94,7 @@ int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numR
                     // Do we need to scroll down?
                     if(cursor == numRows - 1){
                         // Need to scroll
-                        drawMenu(menu, startY, numRows, ++startRow);
+                        drawMenu(menu, Computerfont12pt7b, COLOR_WHITE, startY, numRows, ++startRow);
                         drawCaret((cursor * spacing) + startY, (cursor * spacing) + startY);
                     }
                     else {
@@ -151,31 +156,46 @@ int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numR
  */
 void updateBatteryIcon(uint8_t percent){
 
-    util_gfx_fill_rect(GFX_WIDTH - 20, 0, 20, 12, COLOR_BLACK);
+    p_canvas()->fillRect(WIDTH - 20, 0, 20, 12, COLOR_BLACK);
+    //util_gfx_fill_rect(GFX_WIDTH - 20, 0, 20, 12, COLOR_BLACK);
+
+    const char *filename = NULL;
 
     switch(percent){
         case 255:
-            util_gfx_draw_raw_file("SYSTEM/AC.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/AC.RAW";
+            //util_gfx_draw_raw_file("SYSTEM/AC.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         case 100:
-            util_gfx_draw_raw_file("SYSTEM/BAT100.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BAT100.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BAT100.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         case 75:
-            util_gfx_draw_raw_file("SYSTEM/BAT75.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BAT75.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BAT75.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         case 50:
-            util_gfx_draw_raw_file("SYSTEM/BAT50.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BAT50.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BAT50.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         case 25:
-            util_gfx_draw_raw_file("SYSTEM/BAT25.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BAT25.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BAT25.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         case 1:
-            util_gfx_draw_raw_file("SYSTEM/BATOUT.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BATOUT.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BATOUT.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
         default:
         case 0:
-            util_gfx_draw_raw_file("SYSTEM/BATINIT.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
+            filename = "SYSTEM/BATINT.RAW";
+            // util_gfx_draw_raw_file("SYSTEM/BATINIT.RAW", GFX_WIDTH - 20, 0, 20, 12, NULL, false, NULL);
             break;
+    }
+
+    if (filename != NULL)
+    {
+        p_canvas()->drawImageFromFile(WIDTH - 20, 0, 20, 12, filename);
     }
 }
 
@@ -187,20 +207,20 @@ void updateBatteryIcon(uint8_t percent){
 void drawCaret(uint16_t oldY, uint16_t newY){
 
     //uint16_t oldColor = util_gfx_color_get();
-    util_gfx_set_font(FONT_COMPUTER_12PT);
 
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_set_cursor(0, oldY);
-    util_gfx_print(">");
+    p_canvas()->printMessage(">", Computerfont12pt7b, COLOR_BLACK, 0, oldY);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_cursor(0, oldY);
+    // util_gfx_print(">");
 
+    p_canvas()->printMessage(">", Computerfont12pt7b, COLOR_GREENYELLOW, 0, newY);
+    // util_gfx_set_color(COLOR_GREENYELLOW);
+    // util_gfx_set_cursor(0, newY);
+    // util_gfx_print(">");
 
-    util_gfx_set_color(COLOR_GREENYELLOW);
-    util_gfx_set_cursor(0, newY);
-    util_gfx_print(">");
-
-    util_gfx_set_color(COLOR_WHITE);
-    //util_gfx_set_color(oldColor);
-
+    // util_gfx_set_color(COLOR_WHITE);
+    // util_gfx_set_color(oldColor);
 }
 
 /**
@@ -209,31 +229,24 @@ void drawCaret(uint16_t oldY, uint16_t newY){
 void drawScreenTemplate(void){
     // Setup the main screen
     //util_gfx_fill_screen(COLOR_BLACK);
-    util_gfx_fill_rect(0, 0, GFX_WIDTH, 25, COLOR_BLACK);
-    util_gfx_cursor_area_reset();
-
-    // Show the username
-    util_gfx_set_font(FONT_MONO55_8PT);
-    util_gfx_set_color(COLOR_WHITE);
+    p_canvas()->fillRect(0, 0, WIDTH, 25, COLOR_BLACK);
+    // util_gfx_fill_rect(0, 0, GFX_WIDTH, 25, COLOR_BLACK);
+    // util_gfx_cursor_area_reset();
 
     uint16_t w, h;
-    /*util_gfx_get_text_bounds(user.name, 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 2);
-    util_gfx_print(user.name);
-
-    util_gfx_get_text_bounds(getClanName(user.clan), 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 15);
-    util_gfx_print(getClanName(user.clan));*/
-
-    util_gfx_set_font(FONT_GAMEPLAY_5PT);
-    util_gfx_set_color(COLOR_BLUE);
-    util_gfx_set_cursor(2, 2);
 
     char score[11];
     snprintf(score, 11, "%u", user.score);
-    util_gfx_print(score);
 
-    util_gfx_draw_line(0, 15, GFX_WIDTH, 15, COLOR_WHITE);
+    // Print score
+    p_canvas()->printMessage(score, gameplay5pt7b, COLOR_BLUE, 2, 2);
+    // util_gfx_set_font(FONT_GAMEPLAY_5PT);
+    // util_gfx_set_color(COLOR_BLUE);
+    // util_gfx_set_cursor(2, 2);
+    // util_gfx_print(score);
+
+    p_canvas()->drawHorizontalLine(0, 15, WIDTH, COLOR_WHITE);
+    // util_gfx_draw_line(0, 15, GFX_WIDTH, 15, COLOR_WHITE);
 }
 
 

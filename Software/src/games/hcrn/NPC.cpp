@@ -12,10 +12,10 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
     life=100;
     position = at;
     blocking = true;
-    
+
     switch (type) {
         case MR_ROBBOT:
-            avatar = "hcrn/bender.bmp";
+            avatar = "HCRN/bender.bmp";
             group = badge_andnxor;
             bitmask = B_BENDER;
             y = TILE_SIZE*0;
@@ -23,7 +23,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "I ain't moving for \nanybody but myself!";
             break;
         case FURRY:
-            avatar = "hcrn/furry.bmp";
+            avatar = "HCRN/furry.bmp";
             group = badge_dcfurs;
             bitmask = B_FURRY;
             y = TILE_SIZE*1;
@@ -31,7 +31,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "zzzzzz...\n(he appears to\nbe sleeping)";
             break;
         case HAK4KIDZ: // TODO: switch to netik code
-            avatar = "hcrn/tinker.bmp";
+            avatar = "HCRN/tinker.bmp";
             group = badge_ides;
             bitmask = B_KIDZ;
             y = TILE_SIZE*2;
@@ -39,7 +39,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "This bomb looks too\ncomplicated. Go around.";
             break;
         case DC801:
-            avatar = "hcrn/sheep.bmp";
+            avatar = "HCRN/sheep.bmp";
             group = badge_dc801;
             bitmask = B_DC801;
             y = TILE_SIZE*3;
@@ -47,7 +47,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "Error 801\nNot enough sheep";
             break;
         case DC801_duzzy:
-            avatar = "hcrn/sheep.bmp";
+            avatar = "HCRN/sheep.bmp";
             group = badge_none;
             //bitmask = B_DC801;
             y = TILE_SIZE*3;
@@ -55,7 +55,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "No clone!";
             break;
 		case DC801_sirged:
-			avatar = "hcrn/sheep.bmp";
+			avatar = "HCRN/sheep.bmp";
 			group = badge_none;
 			//bitmask = B_DC801;
 			y = TILE_SIZE*3;
@@ -63,7 +63,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
 			badmsg = "Saftey Third!";
 			break;
         case DCZIA:
-            avatar = "hcrn/rcross.bmp";
+            avatar = "HCRN/rcross.bmp";
             group = badge_dczia;
             bitmask = B_DCZIA;
             y = TILE_SIZE*4;
@@ -71,7 +71,7 @@ NPC::NPC(Point at, int Type) : frame(0), type(Type) {
             badmsg = "Invalid Identity";
             break;
         case PIRATE:
-            avatar = "hcrn/skull.bmp";
+            avatar = "HCRN/skull.bmp";
             group = badge_pirates;
             bitmask = B_PIRATE;
             y = TILE_SIZE*5;
@@ -93,12 +93,12 @@ NPC::~NPC() {
 
 void NPC::draw(FrameBuffer* canvas) {
     int x=0;
-    
+
     if ((frame % 25) == 0)
         x = TILE_SIZE;
-    
+
     canvas->drawImage(position.x, position.y, TILE_SIZE, TILE_SIZE, ble_raw, x, y, TILE_SIZE*2, BGCOLOR);
-    
+
     frame++;
 }
 
@@ -116,17 +116,17 @@ bool NPC::think(Room *room) {
 
 
 void NPC::collide(GameObject *other) {
-    
+
 }
 
 void NPC::takeDamage(int d) {
-    
+
 }
 
 void NPC::interact(FrameBuffer* canvas) {
     BADGE_ADV badges[NUM_BADGES_TO_STORE];
     uint8_t blen = getBadges(badges);
-    
+
     bool found = false;
     for (int i=0; i<blen; ++i) {
         if (badges[i].group == group) {
@@ -134,7 +134,7 @@ void NPC::interact(FrameBuffer* canvas) {
             break;
         }
     }
-    
+
     game.DrawDialogBackground(avatar, st7735_color565(30, 30, 200), st7735_color565(180, 180, 180), st7735_color565(90, 90, 90));
     game.Scanning(found);
     if (found) {

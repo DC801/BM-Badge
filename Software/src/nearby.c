@@ -17,11 +17,17 @@ static uint8_t numBadges = 0;
  */
 static void drawMarker(uint16_t oldY, uint16_t newY){
 
-    util_gfx_draw_line(GFX_WIDTH - 1, oldY + 3, GFX_WIDTH - 1, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
-    util_gfx_draw_line(0, oldY + 3, 0, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
+    p_canvas()->drawVerticalLine(WIDTH - 1, oldY + 3, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
+    p_canvas()->drawVerticalLine(0, oldY + 3, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
 
-    util_gfx_draw_line(GFX_WIDTH - 1, newY + 3, GFX_WIDTH - 1, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
-    util_gfx_draw_line(0, newY + 3, 0, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
+    // util_gfx_draw_line(GFX_WIDTH - 1, oldY + 3, GFX_WIDTH - 1, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
+    // util_gfx_draw_line(0, oldY + 3, 0, oldY + BLOCK_HEIGHT - 8, COLOR_BLACK);
+
+    p_canvas()->drawVerticalLine(WIDTH - 1, newY + 3, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
+    p_canvas()->drawVerticalLine(0, newY + 3, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
+
+    // util_gfx_draw_line(GFX_WIDTH - 1, newY + 3, GFX_WIDTH - 1, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
+    // util_gfx_draw_line(0, newY + 3, 0, newY + BLOCK_HEIGHT - 8, COLOR_LIGHTBLUE);
 
 }
 
@@ -35,40 +41,48 @@ static void drawMarker(uint16_t oldY, uint16_t newY){
 static void drawItems(BADGE_ADV *badge, uint8_t numItems, uint8_t startRow){
 //TODO: turn this to a module
     char row[25];
-    util_gfx_fill_rect(0, 15, GFX_WIDTH, GFX_HEIGHT - 15, COLOR_BLACK);
+
+    p_canvas()->fillRect(0, 15, WIDTH, HEIGHT - 15, COLOR_BLACK);
+    //util_gfx_fill_rect(0, 15, GFX_WIDTH, GFX_HEIGHT - 15, COLOR_BLACK);
 
     for(int i = 0; i < numItems; i++){
 
         // Line at the top
-        util_gfx_draw_line(10, (BLOCK_HEIGHT * i) + 17, GFX_WIDTH - 10, (BLOCK_HEIGHT * i) + 17, COLOR_WHITE);
-
-        util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 20);
-        util_gfx_set_font(FONT_VERAMONO_5PT);
+        p_canvas()->drawHorizontalLine(10, (BLOCK_HEIGHT * i) + 17, WIDTH - 10, COLOR_WHITE);
+        // util_gfx_draw_line(10, (BLOCK_HEIGHT * i) + 17, GFX_WIDTH - 10, (BLOCK_HEIGHT * i) + 17, COLOR_WHITE);
 
         // First row
         snprintf(row, 25, "%d %02X%02X%02X%02X%02X%02X DC%d", i + startRow + 1,
                 badge[i + startRow].mac[0], badge[i + startRow].mac[1], badge[i + startRow].mac[2],
                 badge[i + startRow].mac[3], badge[i + startRow].mac[4], badge[i + startRow].mac[5],
-				getBadgeYear(badge[i + startRow].year));
-        util_gfx_print(row);
+                getBadgeYear(badge[i + startRow].year));
+
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 2, (BLOCK_HEIGHT * i) + 20);
+        // util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 20);
+        // util_gfx_set_font(FONT_VERAMONO_5PT);
+        // util_gfx_print(row);
 
         // Second row
-        util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 30);
         snprintf(row, 25, "%s", badge[i + startRow].name);
-        util_gfx_print(row);
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 2, (BLOCK_HEIGHT * i) + 30);
+        // util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 30);
+        // util_gfx_print(row);
 
-        util_gfx_set_cursor(83, (BLOCK_HEIGHT * i) + 30);
         snprintf(row, 25, "% 4ddB", badge[i + startRow].rssi);
-        util_gfx_print(row);
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 83, (BLOCK_HEIGHT * i) + 30);
+        // util_gfx_set_cursor(83, (BLOCK_HEIGHT * i) + 30);
+        // util_gfx_print(row);
 
         // Third row
-        util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 40);
         snprintf(row, 25, "%s", getBadgeGroupName(badge[i + startRow].group));
-        util_gfx_print(row);
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 2, (BLOCK_HEIGHT * i) + 40);
+        // util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 40);
+        // util_gfx_print(row);
 
-        util_gfx_set_cursor(95, (BLOCK_HEIGHT * i) + 40);
         snprintf(row, 25, "%04X", badge[i + startRow].appearance);
-        util_gfx_print(row);
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 95, (BLOCK_HEIGHT * i) + 40);
+        // util_gfx_set_cursor(95, (BLOCK_HEIGHT * i) + 40);
+        // util_gfx_print(row);
 
         // 4th row
         memset(row, 0, sizeof(row));
@@ -131,9 +145,9 @@ static void drawItems(BADGE_ADV *badge, uint8_t numItems, uint8_t startRow){
             }
         }
 
-        util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 50);
-        util_gfx_print(row);
-
+        p_canvas()->printMessage(row, VeraMono5pt7b, COLOR_WHITE, 2, (BLOCK_HEIGHT * i) + 50);
+        // util_gfx_set_cursor(2, (BLOCK_HEIGHT * i) + 50);
+        // util_gfx_print(row);
     }
 }
 
@@ -145,11 +159,8 @@ void drawNearby(void){
     numBadges = getBadges(&badges[0]);
 
     // Setup the main screen
-    util_gfx_fill_screen(COLOR_BLACK);
-
-    // Show header
-    util_gfx_set_font(FONT_VERAMONO_5PT);
-    util_gfx_set_color(COLOR_WHITE);
+    p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
 
     char header[15];
     if(numBadges == 1){
@@ -159,15 +170,21 @@ void drawNearby(void){
         snprintf(header, 15, "I see %u badges", numBadges);
     }
 
-    uint16_t w, h;
+    // uint16_t w, h;
     area_t nearby_area = {0,0, 128, 128};
-    util_gfx_cursor_area_set(nearby_area);
-    util_gfx_get_text_bounds(header, 0, 0, &w, &h);
-    util_gfx_set_cursor(64 - (w / 2), 0);
-    util_gfx_print(header);
+    bounds_t bounds = { 0, 0 };
+
+    // Show header
+    p_canvas()->getTextBounds(VeraMono5pt7b, header, 0, 0, &nearby_area, &bounds);
+    p_canvas()->printMessage(header, VeraMono5pt7b, COLOR_WHITE, 64 - (bounds.width / 2), 0);
+    // util_gfx_set_font(FONT_VERAMONO_5PT);
+    // util_gfx_set_color(COLOR_WHITE);
+    // util_gfx_cursor_area_set(nearby_area);
+    // util_gfx_get_text_bounds(header, 0, 0, &w, &h);
+    // util_gfx_set_cursor(64 - (w / 2), 0);
+    // util_gfx_print(header);
 
     drawItems(badges, MIN(numBadges, MAX_ROWS), 0);
-
 }
 
 /**

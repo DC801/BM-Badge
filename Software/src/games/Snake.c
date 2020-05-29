@@ -22,8 +22,8 @@
 #define TILE_FOOD_2 2
 #define TILE_FOOD_3 3
 
-#define HEIGHT 21
-#define WIDTH 21
+#define SNAKE_HEIGHT 21
+#define SNAKE_WIDTH 21
 
 struct {
     uint8_t foodSprite[2][FOOD_SIZE];
@@ -55,148 +55,56 @@ static int run_game() {
 
     int retScore = 0;
 
-    util_gfx_fill_screen(COLOR_BLACK);
+    p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
 
-    util_gfx_fill_rect(0, 0, GFX_WIDTH, 16, COLOR_BLACK);
-    util_gfx_draw_line(0, 16, GFX_WIDTH, 16, COLOR_BLUE);
+    p_canvas()->fillRect(0, 0, WIDTH, 16, COLOR_BLACK);
+    // util_gfx_fill_rect(0, 0, WIDTH, 16, COLOR_BLACK);
+    p_canvas()->drawHorizontalLine(0, 16, WIDTH, COLOR_BLUE);
+    // util_gfx_draw_line(0, 16, WIDTH, 16, COLOR_BLUE);
 
-	area_t game_area = {0, 0, GFX_WIDTH, GFX_HEIGHT};
-	util_gfx_cursor_area_set(game_area);
-	util_gfx_set_cursor(game_area.xs, game_area.ys);
+    area_t game_area = { 0, 0, WIDTH, HEIGHT };
+    p_canvas()->setTextArea(&game_area);
+	// area_t game_area = {0, 0, WIDTH, HEIGHT};
+	// util_gfx_cursor_area_set(game_area);
+	// util_gfx_set_cursor(game_area.xs, game_area.ys);
 
-
-    util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
     if (rand > 128) {
-        util_gfx_set_color(COLOR_RED);
-        util_gfx_set_cursor(44, 40);
-        util_gfx_print("OMG");
-        util_gfx_set_cursor(20, 58);
-        util_gfx_print("A SNAKE");
+        p_canvas()->printMessage("OMG", Computerfont12pt7b, COLOR_RED, 44, 40);
+        // util_gfx_set_color(COLOR_RED);
+        // util_gfx_set_cursor(44, 40);
+        // util_gfx_print("OMG");
+
+        p_canvas()->printMessage("A SNAKE", Computerfont12pt7b, COLOR_RED, 20, 58);
+        // util_gfx_set_cursor(20, 58);
+        // util_gfx_print("A SNAKE");
         retScore = -100;
     } else {
-        util_gfx_set_color(COLOR_GREEN);
-        util_gfx_set_cursor(5, 55);
-        util_gfx_print("NO SNAKES!");
+        p_canvas()->printMessage("NO SNAKES!", Computerfont12pt7b, COLOR_GREEN, 5, 55);
+        // util_gfx_set_color(COLOR_GREEN);
+        // util_gfx_set_cursor(5, 55);
+        // util_gfx_print("NO SNAKES!");
         retScore = 100;
     }
 
-    util_gfx_set_font(FONT_GAMEPLAY_5PT);
-    util_gfx_set_color(COLOR_BLUE);
-    util_gfx_set_cursor(5, 5);
     char header[25];
     snprintf(header, 25, "%d", retScore);
-    util_gfx_print(header);
+
+    p_canvas()->printMessage(header, gameplay5pt7b, COLOR_BLUE, 5, 5);
+    // util_gfx_set_font(FONT_GAMEPLAY_5PT);
+    // util_gfx_set_color(COLOR_BLUE);
+    // util_gfx_set_cursor(5, 5);
+    // util_gfx_print(header);
 
     while (!getButton(false)) {}
     while (getButton(false)) {}
 
     return retScore;
-
-    /**
-    char board[WIDTH][HEIGHT];
-    struct SNAKE_TILE *head = NULL;
-    if ((head = malloc(sizeof(struct SNAKE_TILE))) == NULL)
-        return -1;
-    head->x = 0;
-    head->y = 0;
-    head->next = NULL;
-    init_board(&board[WIDTH][HEIGHT]);
-    int score = 0;
-    int direction_of_travel = WEST;
-
-    do {
-
-        // Get move
-        switch(getButton(false)){
-            case USER_BUTTON_B:
-                // Pause game
-                while(getButton(false)){ }
-                if (pauseSnake())
-                    return score;
-                break;
-            case USER_BUTTON_RIGHT:
-                direction_of_travel = EAST;
-                break;
-            case USER_BUTTON_LEFT:
-                direction_of_travel = WEST;
-                break;
-            case USER_BUTTON_UP:
-                direction_of_travel = NORTH;
-                break;
-            case USER_BUTTON_DOWN:
-                direction_of_travel = SOUTH;
-                break;
-        }
-
-        // Step game
-        int new_x = head->x;
-        int new_y = head->y;
-        switch (direction_of_travel) {
-            case NORTH:
-                if (head->y == 0)
-                    return score;
-                new_y--;
-                break;
-            case SOUTH:
-                if (head->x == WIDTH - 1)
-                    return score;
-                new_x++;
-                break;
-            case EAST:
-                if (head->y == HEIGHT - 1)
-                    return score;
-                new_y++;
-                break;
-            case WEST:
-                if (head->x == 0)
-                    new_x--;
-                break;
-        }
-        // Check for collision with self
-        struct SNAKE_TILE* node = head;
-        while (node != NULL) {
-            if (node->x == new_x && node->y == new_y)
-                return score;
-            node = node->next;
-        }
-        // Push new head
-        if ((node = malloc(sizeof(struct SNAKE_TILE))) == NULL)
-            return -1;
-        node->next = head;
-        node = head;
-        // Check for food
-        bool ate_food = false;
-        switch (board[head->x][head->y]) {
-            case TILE_FOOD_1:
-            case TILE_FOOD_2:
-            case TILE_FOOD_3:
-                score += 10;
-                ate_food = true;
-                break;
-        }
-        if (!ate_food) {
-            struct SNAKE_TILE* last_node = head;
-            node = head->next;
-            while (node != NULL) {
-                if (node->next == NULL)
-                    last_node->next = NULL;
-                last_node = node;
-                node = node->next;
-            }
-        }
-
-
-        // Print board
-        util_gfx_fill_screen(COLOR_BLACK);
-        util_gfx_fill_rect(0,50,128,35,COLOR_GREEN);
-
-    } while (true);
-
-     */
 }
 
 static void init_board(char *board) {
-    int length = WIDTH * HEIGHT;
+    int length = SNAKE_WIDTH * SNAKE_HEIGHT;
     for (int i = 0; i < length; i++) {
         board = TILE_EMPTY;
         board++;
@@ -204,12 +112,14 @@ static void init_board(char *board) {
 }
 
 static bool pauseSnake(void) {
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_YELLOW);
+    // util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_YELLOW);
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_YELLOW);
-    util_gfx_set_font(FONT_COMPUTER_12PT);
-    util_gfx_set_color(COLOR_BLACK);
-    util_gfx_set_cursor(30, 60);
-    util_gfx_print("PAUSED");
+    p_canvas()->printMessage("PAUSED", Computerfont12pt7b, COLOR_BLACK, 30, 60);
+    // util_gfx_set_font(FONT_COMPUTER_12PT);
+    // util_gfx_set_color(COLOR_BLACK);
+    // util_gfx_set_cursor(30, 60);
+    // util_gfx_print("PAUSED");
 
     uint8_t button;
     bool resume = false;
@@ -231,7 +141,8 @@ static bool pauseSnake(void) {
         }
     }
 
-    util_gfx_fill_rect(0, 50, GFX_WIDTH, 35, COLOR_BLACK);
+    p_canvas()->fillRect(0, 50, WIDTH, 35, COLOR_BLACK);
+    // util_gfx_fill_rect(0, 50, WIDTH, 35, COLOR_BLACK);
 
     return false;
 }

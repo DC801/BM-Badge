@@ -28,5 +28,5 @@ nrfx_err_t nrf_drv_saadc_channel_init(uint8_t channel, nrf_saadc_channel_config_
 	UNUSED_PARAMETER(channel);
     UNUSED_PARAMETER(p_config);
 
-    return NRF_SUCCESS;
+    return NRFX_SUCCESS;
 }

@@ -54,7 +54,8 @@ APP_TIMER_DEF(standby_animation_timer_id);
 static void standby_animation_timeout_handler(void *p_context) {
     UNUSED_PARAMETER(p_context);
 
-    util_gfx_draw_raw_file_stop();
+    p_canvas()->drawStop();
+    // util_gfx_draw_raw_file_stop();
 }
 
 /**
@@ -258,10 +259,12 @@ int main(void){
     ble_stack_init();
     scan_start();
 
+#ifdef DC801_EMBEDDED
     // Init the display
     st7735_init();
 	st7735_start();
 	util_gfx_init();
+#endif
 
     // Init the random number generator
     nrf_drv_rng_init(NULL);
@@ -289,12 +292,37 @@ int main(void){
         util_sd_error();
     }
 
+#ifdef DC801_DESKTOP
+    if(SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        exit(1);
+    }
+    else
+    {
+        //Create window
+        SDL_CreateWindowAndRenderer(512, 512, SDL_WINDOW_SHOWN, &window, &renderer);
+
+        if( window == NULL )
+        {
+            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+            exit(1);
+        }
+        else
+        {
+            SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+        }
+    }
+#endif
+
     // Boot! Boot! Boot!
     printf("Booted!\n");
     // printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
+    p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "BOOT.RAW", bootCallback, NULL);
+    // util_gfx_draw_raw_file("BOOT.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, bootCallback, false, NULL);
 
-    util_gfx_draw_raw_file("BOOT.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, bootCallback, false, NULL);
+    nrf_delay_ms(500);
 
     EEpwm_init();
 
@@ -306,17 +334,19 @@ int main(void){
     ledPulseFast(LED_PERSON_CARGO);
     ledPulseFast(LED_PERSON_DAMAGED);
     ledPulseFast(LED_PERSON_BRIDGE);
-    util_gfx_draw_bmp_file("NuCypher.bmp", 0, 0);
 
-    for (int i=0; i< 200; ++i) {
-        if (isButtonDown(USER_BUTTON_A))
+    p_canvas()->drawBitmapFromFile(0, 0, WIDTH, HEIGHT, "NuCypher.bmp");
+    // util_gfx_draw_bmp_file("NuCypher.bmp", 0, 0);
+
+    for (int i = 0; i < 200; ++i)
+    {
+        if (getButton(false) == USER_BUTTON_A)
+        {
             break;
+        }
+
         nrf_delay_ms(10);
     }
-
-    //debounce
-    while (isButtonDown(USER_BUTTON_A))
-        nrf_delay_ms(10);
 
     ledsOff();
 
@@ -329,7 +359,7 @@ int main(void){
     // Setup a timer for shutting down animations in standby
     app_timer_create(&standby_animation_timer_id, APP_TIMER_MODE_SINGLE_SHOT, standby_animation_timeout_handler);
 
-    char* ble_name = "TaSheep801"; // must be 10char
+    const char* ble_name = "TaSheep801"; // must be 10char
     printf("advertising user: %s\n", ble_name);
     advertising_setUser(ble_name);
     ble_adv_start();
@@ -349,46 +379,22 @@ int main(void){
 
         #endif
 
-        util_gfx_fill_screen(COLOR_BLACK);
+        p_canvas()->clearScreen(COLOR_BLACK);
+        // util_gfx_fill_screen(COLOR_BLACK);
 
-    #ifdef DC801_EMBEDDED
         HCRN();
-    #endif
-
-    #ifdef DC801_DESKTOP
-        if(SDL_Init(SDL_INIT_VIDEO) < 0)
-        {
-            printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-        }
-        else
-        {
-            //Create window
-            SDL_CreateWindowAndRenderer(512, 512, SDL_WINDOW_SHOWN, &window, &renderer);
-            if( window == NULL )
-            {
-                printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-            }
-            else
-            {
-                SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-                HCRN();
-            }
-        }
-    #endif
     }
 #ifdef DC801_EMBEDDED
 #pragma clang diagnostic pop
 #endif
 
-    #ifdef DC801_DESKTOP
-
-    SDL_DestroyWindow( window );
+#ifdef DC801_DESKTOP
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
     printf("Exiting gracefully...\n");
     return 0;
-
-    #endif
+#endif
 }
 
 /**
@@ -411,49 +417,68 @@ void showStandby(void){
 
         if(partyMode){
             // PARTYYYY!
-            util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, partyCallback, true, NULL);
+            p_canvas()->drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW", partyCallback, NULL);
+            // util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, partyCallback, true, NULL);
         }
 
         if(sheepMode){
             // SHEEEEP
             do{
                 uint8_t i;
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP1.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP1.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP1.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
                     }
                     nrf_delay_ms(25);
                 }
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP2.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP2.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP2.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
                     }
                     nrf_delay_ms(25);
                 }
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP3.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP3.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP3.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
                     }
                     nrf_delay_ms(25);
                 }
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP4.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP4.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP4.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
                     }
                     nrf_delay_ms(25);
                 }
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP5.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP5.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP5.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
                     }
                     nrf_delay_ms(25);
                 }
-                util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
+                p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW");
+                // util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+
                 for(i = 0; i < 100; i++){
                     if(getButton(false)){
                         break;
@@ -461,7 +486,6 @@ void showStandby(void){
                     nrf_delay_ms(25);
                 }
             }while (!getButton(false));
-
         }
 
         if(animationCounter ++ > (15000 / 25)){
@@ -484,7 +508,8 @@ void showStandby(void){
             char filename[21];
             snprintf(filename, 21, "/EXTRAS/%s.RAW", files[rand]);
 
-            util_gfx_draw_raw_file(filename, 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, true, NULL);
+            p_canvas()->drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, filename);
+            // util_gfx_draw_raw_file(filename, 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, true, NULL);
 
             animationCounter = 0;
 
@@ -503,22 +528,33 @@ void showStandby(void){
 
             if(getBadge(rand, &badge)){
 
-                if(getBadgeIconFile(badge.group) != NULL) {
-                    util_gfx_draw_raw_file(getBadgeIconFile(badge.group), 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+                if(getBadgeIconFile(badge.group) != NULL)
+                {
+                    p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, getBadgeIconFile(badge.group));
+                    // util_gfx_draw_raw_file(getBadgeIconFile(badge.group), 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
                 }
-                else{
-                    util_gfx_draw_raw_file("/GROUPS/MISSING.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
+                else
+                {
+                    p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "GROUPS/MISSING.RAW");
+                    // util_gfx_draw_raw_file("/GROUPS/MISSING.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
-                    util_gfx_fill_rect(0, 0, GFX_WIDTH, 15, COLOR_BLACK);
+                    p_canvas()->fillRect(0, 0, WIDTH, 15, COLOR_BLACK);
+                    // util_gfx_fill_rect(0, 0, GFX_WIDTH, 15, COLOR_BLACK);
 
-                    uint16_t w, h;
+                    // uint16_t w, h;
+                    // util_gfx_get_text_bounds(groupName, 0, 0, &w, &h);
+
+                    const char *groupName = getBadgeGroupName(badge.group);
+                    bounds_t bounds = { 0 };
+                    p_canvas()->getTextBounds(VeraMono5pt7b, groupName, 0, 0, &bounds);
+
                     char name[16];
-                    util_gfx_set_font(FONT_VERAMONO_5PT);
-                    util_gfx_get_text_bounds(getBadgeGroupName(badge.group), 0, 0, &w, &h);
-                    util_gfx_set_cursor(64 - (w / 2), 2);
+                    snprintf(name, 16, "%s", groupName);
 
-                    snprintf(name, 16, "%s", getBadgeGroupName(badge.group));
-                    util_gfx_print(name);
+                    p_canvas()->printMessage(name, VeraMono5pt7b, COLOR_WHITE, 64 - (bounds.width / 2), 2);
+                    // util_gfx_set_font(FONT_VERAMONO_5PT);
+                    // util_gfx_set_cursor(64 - (w / 2), 2);
+                    // util_gfx_print(name);
                 }
 
                 for(int i = 0; i < 10; i++){
@@ -644,13 +680,14 @@ MENU extraMenu[NUM_MENU_EXTRA_ITEMS] = {
 /**
  * Show the extras menu
  */
-void extras(void){
-
+void extras(void)
+{
     drawScreenTemplate();
 
     int getExtra = getMenuSelection(extraMenu, 25, ARRAY_SIZE(extraMenu), 4, 15000, true);
 
-    switch(getExtra){
+    switch(getExtra)
+    {
         case extra_fun:
             extraFunBrowser();
             break;
@@ -660,34 +697,39 @@ void extras(void){
         default:
             break;
     }
-
 }
 
 /**
  * Show the credits
  */
-void credits(void){
+void credits(void)
+{
+    p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "CREDITS.RAW");
+    // util_gfx_draw_raw_file("CREDITS.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
-    util_gfx_draw_raw_file("CREDITS.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
-
-    while(true){
-        if(getButton(false)){
+    while(true)
+    {
+        if(getButton(false))
+        {
             // User pressed a button
             return;
         }
         nrf_delay_ms(10);
     }
-
 }
 
 
-void menu(void) {
-    util_gfx_fill_screen(COLOR_BLACK);
+void menu(void)
+{
+    p_canvas()->clearScreen(COLOR_BLACK);
+    // util_gfx_fill_screen(COLOR_BLACK);
+
     drawScreenTemplate();
 
     int subMenu = getMenuSelection(mainMenu, 25, ARRAY_SIZE(mainMenu), 4, 15000, true);
 
-    switch(subMenu){
+    switch(subMenu)
+    {
         case item_games:
             games();
             break;
@@ -700,5 +742,4 @@ void menu(void) {
         default:
             return;
     }
-
 }

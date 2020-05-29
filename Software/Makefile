@@ -92,6 +92,9 @@ endif
 
 ifndef DESKTOP
 	@$(SIZE) $@
+else
+	@echo "Copying SD Card files"
+	@cp -r $(PRJ_ROOT)/../SD_Card/* $(OUTPUT_DIR)
 endif
 
 # Flash hex file using nrfjprog
