@@ -91,7 +91,16 @@ void Room::draw(FrameBuffer* canvas)
             int fx = TILE_SIZE * (map[x][y] % mapwidth);
             int fy = TILE_SIZE * (map[x][y] / mapwidth);
 
-            canvas->drawImage(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE, tile12_raw, fx, fy, mapwidth * TILE_SIZE);
+            canvas->drawImage(
+                x * TILE_SIZE,
+                y * TILE_SIZE,
+                TILE_SIZE,
+                TILE_SIZE,
+                tile12_raw,
+                fx,
+                fy,
+                mapwidth * TILE_SIZE
+            );
         }
     }
 

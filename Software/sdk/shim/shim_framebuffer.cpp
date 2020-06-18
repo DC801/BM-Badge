@@ -47,7 +47,6 @@ void FrameBuffer::clearScreen(uint16_t color) {
 		frame[i] = color;
 	}
 
-	blt();
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
@@ -63,7 +62,6 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 		frame[y*WIDTH+i]=color;
 	}
 
-	blt();
 }
 
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
@@ -75,7 +73,6 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 		frame[i*WIDTH+x]=color;
 	}
 
-	blt();
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
@@ -90,7 +87,6 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
 		}
 	}
 
-	blt();
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t tansparent_color)
@@ -648,8 +644,6 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 			frame[index] = color;
 		}
 	}
-
-	blt();
 }
 
 void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
@@ -686,8 +680,6 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 			p += 2 * dy;
 		}
 	}
-
-	blt();
 }
 
 void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
@@ -709,8 +701,6 @@ void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
 			}
 		}
 	}
-
-	blt();
 }
 
 void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
@@ -850,8 +840,6 @@ void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, i
 	{
 		write_char(text[i], font);
 	}
-
-	blt();
 }
 
 void FrameBuffer::getCursorPosition(cursor_t *cursor)
