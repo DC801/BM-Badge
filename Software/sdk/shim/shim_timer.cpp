@@ -11,6 +11,7 @@
 #include <cstdlib>
 
 #include <iostream>
+#include <SDL2/SDL_timer.h>
 
 // TODO: Implement this shit
 
@@ -172,7 +173,7 @@ ret_code_t app_timer_stop(app_timer_id_t timer_id)
 
 uint32_t app_timer_cnt_get(void)
 {
-    return 0;
+    return SDL_GetTicks();
 }
 
 

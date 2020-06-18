@@ -287,7 +287,7 @@ bool GameEngine::DrawThisOrThat(const char* query, area_t query_area, const char
                     {
                         canvas.drawTriangle(4, 88, 6, 90, 4, 92, bgcolor);
                         // util_gfx_draw_triangle(4, 88, 6, 90, 4, 92, bgcolor);
-                        canvas.drawTriangle(4, 180, 6, 110, 4, 112, highlight);
+                        canvas.drawTriangle(4, 108, 6, 110, 4, 112, highlight);
                         // util_gfx_draw_triangle(4, 108, 6, 110, 4, 112, highlight);
 
                         selected = 1;
@@ -503,6 +503,7 @@ void GameEngine::ShowDialog(const char* message, const char* avatar, bool page)
         // util_gfx_draw_triangle(118, 125, 120, 127, 122, 125, fontcolor);
     }
 
+    canvas.blt();
     while (getButton(false) != USER_BUTTON_A)
     {
         app_usbd_event_queue_process();

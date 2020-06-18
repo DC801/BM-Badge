@@ -76,15 +76,15 @@ static const uint32_t power_up_led_list[POWER_UP_LEDS_NUMBER] = POWER_UP_LEDS_LI
 #define BUTTONS_NUMBER 6
 
 
-#define USER_BUTTON_NONE	0
-#define USER_BUTTON_UP      	31
-#define USER_BUTTON_DOWN       	2
-#define USER_BUTTON_LEFT       	9+32
-#define USER_BUTTON_RIGHT       1
-#define USER_BUTTON_A		25
-#define USER_BUTTON_B		6+32
+#define USER_BUTTON_NONE     0
+#define USER_BUTTON_UP       31
+#define USER_BUTTON_DOWN     2
+#define USER_BUTTON_LEFT     9+32
+#define USER_BUTTON_RIGHT    1
+#define USER_BUTTON_A        25
+#define USER_BUTTON_B        6+32
 
-#define LONG_PRESS_MASK		0x8000
+#define LONG_PRESS_MASK      0x8000
 
 #define USER_BUTTON_UP_LONG    	(17  | LONG_PRESS_MASK)
 #define USER_BUTTON_DOWN_LONG   (19  | LONG_PRESS_MASK)
@@ -94,12 +94,13 @@ static const uint32_t power_up_led_list[POWER_UP_LEDS_NUMBER] = POWER_UP_LEDS_LI
 #define USER_BUTTON_B_LONG		(26 | LONG_PRESS_MASK)
 
 #define BUTTONS_LIST { \
-		USER_BUTTON_UP,	\
-		USER_BUTTON_DOWN,	\
-		USER_BUTTON_LEFT,	\
-		USER_BUTTON_RIGHT,	\
-		USER_BUTTON_A,		\
-		USER_BUTTON_B	}
+    USER_BUTTON_UP, \
+    USER_BUTTON_DOWN, \
+    USER_BUTTON_LEFT, \
+    USER_BUTTON_RIGHT, \
+    USER_BUTTON_A, \
+    USER_BUTTON_B \
+}
 
 // Low is active
 #define BUTTONS_ACTIVE_STATE	0
