@@ -319,36 +319,7 @@ int main(void){
     printf("Booted!\n");
     // printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
-    p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "BOOT.RAW", bootCallback, NULL);
-    // util_gfx_draw_raw_file("BOOT.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, bootCallback, false, NULL);
-
-    nrf_delay_ms(500);
-
     EEpwm_init();
-
-    ledsOff();
-    ledPulseFast(LED_PERSON_COMPBAY);
-    ledPulseFast(LED_PERSON_ENGINE);
-    ledPulseFast(LED_PERSON_SHIELDS);
-    ledPulseFast(LED_PERSON_ENGINEERING);
-    ledPulseFast(LED_PERSON_CARGO);
-    ledPulseFast(LED_PERSON_DAMAGED);
-    ledPulseFast(LED_PERSON_BRIDGE);
-
-    p_canvas()->drawBitmapFromFile(0, 0, WIDTH, HEIGHT, "NuCypher.bmp");
-    // util_gfx_draw_bmp_file("NuCypher.bmp", 0, 0);
-
-    for (int i = 0; i < 200; ++i)
-    {
-        if (getButton(false) == USER_BUTTON_A)
-        {
-            break;
-        }
-
-        nrf_delay_ms(10);
-    }
-
-    ledsOff();
 
     // Init the WarGames game
     wg_Init();
@@ -382,7 +353,8 @@ int main(void){
         p_canvas()->clearScreen(COLOR_BLACK);
         // util_gfx_fill_screen(COLOR_BLACK);
 
-        HCRN();
+        // HCRN();
+        MAGE();
     }
 #ifdef DC801_EMBEDDED
 #pragma clang diagnostic pop
