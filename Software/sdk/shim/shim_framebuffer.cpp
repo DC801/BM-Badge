@@ -1,4 +1,3 @@
-#include <endian.h>
 #include "main.h"
 #include "utility.h"
 #include "games/hcrn/FrameBuffer.h"
@@ -39,12 +38,14 @@ extern "C" {
 	}
 }
 
+uint16_t uint16Native = 0xFF00;
+uint8_t *uint16TopBit = (uint8_t *)&uint16Native;
+bool needsBigToLittleConversion = *uint16TopBit == 0x00;
 void bigE16BufferToHost (uint16_t *buf, size_t bufferSize) {
-	uint16_t native = 0xFF00;
-	if(native != be16toh(native)) {
+	if (needsBigToLittleConversion) {
 		// printf("Buffer wrong endian, correcting\n");
-		for(size_t i = 0; i < bufferSize; i++) {
-			buf[i] = be16toh(buf[i]);
+		for (size_t i = 0; i < bufferSize; i++) {
+			buf[i] = __builtin_bswap16(buf[i]);
 		}
 	} else {
 		// printf("Buffer already correct format, skipping\n");
@@ -282,6 +283,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		bigE16BufferToHost(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
+		canvas.blt();
 
 		uint8_t retVal = getButton(false);
 		if (retVal != USER_BUTTON_NONE || m_stop)
@@ -296,7 +298,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 	fclose(file);
 
 	bigE16BufferToHost(buf, bufferSize);
-	drawImage(x, y, w, h, buf);
+	canvas.drawImage(x, y, w, h, buf);
+	canvas.blt();
 	return;
 }
 
@@ -366,6 +369,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		bigE16BufferToHost(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
+		canvas.blt();
 
 		if (p_callback != NULL)
 		{
@@ -470,6 +474,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			bigE16BufferToHost(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
+			canvas.blt();
 
 			uint8_t retVal = getButton(false);
 			if (retVal != USER_BUTTON_NONE || m_stop)
@@ -587,6 +592,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			bigE16BufferToHost(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
+			canvas.blt();
 
 			if (p_callback != NULL)
 			{
