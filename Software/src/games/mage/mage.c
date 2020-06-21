@@ -54,12 +54,34 @@ void mage_game_loop () {
     mage_canvas->drawImage(
         32,
         32,
-        TILE_SIZE,
-        TILE_SIZE,
-        black_mage_tiny_raw,
+        32,
+        32,
+        black_mage_raw,
         0,
         0,
-        2 * TILE_SIZE
+        32,
+        0x0000
+    );
+    mage_canvas->drawImageFromFile(
+        64,
+        32,
+        32,
+        32,
+        "MAGE/mage.dat",
+        0,
+        0,
+        32,
+        0x020
+    );
+    mage_canvas->drawImageFromFile(
+        64,
+        64,
+        32,
+        32,
+        "MAGE/mage.dat",
+        0,
+        0,
+        32
     );
     mage_canvas->blt();
 
