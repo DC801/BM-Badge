@@ -1,3 +1,4 @@
+#include <endian.h>
 #include "main.h"
 #include "utility.h"
 #include "games/hcrn/FrameBuffer.h"
@@ -35,6 +36,18 @@ extern "C" {
 	FrameBuffer *p_canvas()
 	{
 		return &canvas;
+	}
+}
+
+void bigE16BufferToHost (uint16_t *buf, size_t bufferSize) {
+	uint16_t native = 0xFF00;
+	if(native != be16toh(native)) {
+		// printf("Buffer wrong endian, correcting\n");
+		for(size_t i = 0; i < bufferSize; i++) {
+			buf[i] = be16toh(buf[i]);
+		}
+	} else {
+		// printf("Buffer already correct format, skipping\n");
 	}
 }
 
@@ -93,7 +106,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, ui
 {
 	int idx = 0;
 
-    for (int j = y; j < (y + h); ++j)
+	for (int j = y; j < (y + h); ++j)
 	{
 		for (int i=x; i < (x + w); ++i)
 		{
@@ -111,7 +124,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
 {
 	int idx = 0;
 
-    for (int j = y; j < (y + h); ++j)
+	for (int j = y; j < (y + h); ++j)
 	{
 		for (int i = x; i < (x + w); ++i)
 		{
@@ -120,14 +133,14 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
 
 			frame[j * WIDTH + i] = ((uint16_t) d1 << 8) | d2;
 		}
-    }
+	}
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color)
 {
 	int idx = 0;
 
-    for (int j = y; j < (y + h); ++j)
+	for (int j = y; j < (y + h); ++j)
 	{
 		for (int i = x; i < (x + w); ++i)
 		{
@@ -140,69 +153,73 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uin
 				frame[j * WIDTH + i] = c;
 			}
 		}
-    }
+	}
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch)
 {
-    for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
+	for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
 	{
-        memcpy(&frame[(y + i) * WIDTH + x], &data[idx], sizeof(uint16_t) * w);
-    }
+		memcpy(&frame[(y + i) * WIDTH + x], &data[idx], sizeof(uint16_t) * w);
+	}
 }
 
 void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color)
 {
-    for (int j = 0; j < h; ++j)
+	for (int j = 0; j < h; ++j)
 	{
-        for (int i = 0; i < w; ++i)
+		for (int i = 0; i < w; ++i)
 		{
-            uint16_t c = data[pitch * (fy + j) + i + fx];
+			uint16_t c = data[pitch * (fy + j) + i + fx];
 
-		    if (c != tansparent_color)
+			if (c != tansparent_color)
 			{
-                frame[(j + y) * WIDTH + i + x] = c;
+				frame[(j + y) * WIDTH + i + x] = c;
 			}
-        }
+		}
 	}
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-    //TODO: replace with SD specific implimentation
-    FILE *fd = fopen(filename, "rb");
-    fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
-
-    for (int i=0; i<h; ++i)
+	for (int i=0; i<h; ++i)
 	{
-        fread(&frame[(y+i)*WIDTH + x], sizeof(uint16_t), w, fd);
-        fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
-    }
+		fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
+	}
 
-    fclose(fd);
+	fclose(fd);
+	bigE16BufferToHost(buf, bufferSize);
+	drawImage(x, y, w, h, buf);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color) {
-    uint16_t buf[w*h];
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
 
-    //TODO: replace with SD specific implimentation
-    FILE *fd = fopen(filename, "rb");
-    fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-    for (int i=0; i<h; ++i)
+	for (int i=0; i<h; ++i)
 	{
-        fread(&buf[i*w], sizeof(uint16_t), w, fd);
-        fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
-    }
+		fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
+	}
 
-    fclose(fd);
+	fclose(fd);
 
-    drawImage(x, y, w, h, buf, tansparent_color);
+	bigE16BufferToHost(buf, bufferSize);
+	drawImage(x, y, w, h, buf, tansparent_color);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	uint16_t buf[w * h];
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint32_t offset = 0;
 	m_stop = false;
 
@@ -263,6 +280,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
+		bigE16BufferToHost(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 
 		uint8_t retVal = getButton(false);
@@ -277,13 +295,15 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
+	bigE16BufferToHost(buf, bufferSize);
 	drawImage(x, y, w, h, buf);
 	return;
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
-	uint16_t buf[w * h];
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint32_t offset = 0;
 	m_stop = false;
 
@@ -344,6 +364,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
+		bigE16BufferToHost(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 
 		if (p_callback != NULL)
@@ -366,7 +387,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	uint16_t buf[w * h];
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
@@ -446,6 +468,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
+			bigE16BufferToHost(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 
 			uint8_t retVal = getButton(false);
@@ -481,7 +504,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
-	uint16_t buf[w * h];
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
@@ -561,6 +585,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
+			bigE16BufferToHost(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 
 			if (p_callback != NULL)
@@ -606,13 +631,13 @@ void FrameBuffer::drawStop()
 
 void FrameBuffer::drawBitmapFromFile(int x, int y, int w, int h, const char *filename)
 {
-    SDL_Surface *image = SDL_LoadBMP(filename);
+	SDL_Surface *image = SDL_LoadBMP(filename);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
 
 	SDL_Rect dstrect = { x, y, w, h };
 	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-    SDL_DestroyTexture(texture);
-    SDL_RenderPresent(renderer);
+	SDL_DestroyTexture(texture);
+	SDL_RenderPresent(renderer);
 }
 
 void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
@@ -649,8 +674,8 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
 	drawHorizontalLine(x, y, x + w, color);
 	drawHorizontalLine(x, y + h, x + w, color);
-    drawVerticalLine(x, y, y + h, color);
-    drawVerticalLine(x + w, y, y + h, color);
+	drawVerticalLine(x, y, y + h, color);
+	drawVerticalLine(x + w, y, y + h, color);
 }
 
 void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
@@ -705,41 +730,41 @@ void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
 
 void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
 {
-    int minx = px - rad3;
+	int minx = px - rad3;
 	int maxx = px + rad3;
 
-    int miny = py - rad3;
+	int miny = py - rad3;
 	int maxy = py + rad3;
 
-    for (int y = 0; y < HEIGHT; ++y)
+	for (int y = 0; y < HEIGHT; ++y)
 	{
-        for (int x = 0; x < WIDTH; ++x)
+		for (int x = 0; x < WIDTH; ++x)
 		{
-            if ((x < minx) || (x > maxx) || (y < miny) || (y > maxy))
+			if ((x < minx) || (x > maxx) || (y < miny) || (y > maxy))
 			{
-                frame[x + y * WIDTH] = 0;
+				frame[x + y * WIDTH] = 0;
 			}
-            else
+			else
 			{
-                int dx = abs(x - px);
-                int dy = abs(y - py);
+				int dx = abs(x - px);
+				int dy = abs(y - py);
 
-                int dist = (dx * dx) + (dy * dy);
+				int dist = (dx * dx) + (dy * dy);
 
-                if (dist > (rad3 * rad3))
+				if (dist > (rad3 * rad3))
 				{
-                    frame[x + y * WIDTH] = 0;
+					frame[x + y * WIDTH] = 0;
 				}
-                else if (dist > (rad2 * rad2))
+				else if (dist > (rad2 * rad2))
 				{
-                    frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & 0xF9E7;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & 0xF9E7;
 				}
-                else if (dist > (rad1 * rad1))
+				else if (dist > (rad1 * rad1))
 				{
-                    frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & 0xFBEF;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & 0xFBEF;
 				}
-            }
-        }
+			}
+		}
 	}
 }
 
@@ -788,7 +813,7 @@ static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 				yyy = y + yo + yy;
 				if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye) {
 					//util_gfx_set_pixel(x + xo + xx, y + yo + yy, color);
-					canvas.drawPixel(    x + xo + xx, y + yo + yy, color);
+					canvas.drawPixel(	x + xo + xx, y + yo + yy, color);
 				}
 			}
 			bits <<= 1;
@@ -963,13 +988,19 @@ uint8_t FrameBuffer::getFontHeight(GFXfont font)
 
 void FrameBuffer::blt()
 {
-    void* pixels;
-    int pitch;
-    SDL_Texture* tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB565, SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT);
-    SDL_LockTexture(tex, NULL, &pixels, &pitch);
-    memcpy(pixels, frame, WIDTH*HEIGHT*sizeof(uint16_t));
-    SDL_UnlockTexture(tex);
-    SDL_RenderCopy(renderer, tex, NULL, NULL);
-    SDL_DestroyTexture(tex);
-    SDL_RenderPresent(renderer);
+	void* pixels;
+	int pitch;
+	SDL_Texture* tex = SDL_CreateTexture(
+		renderer,
+		SDL_PIXELFORMAT_RGB565,
+		SDL_TEXTUREACCESS_STREAMING,
+		WIDTH,
+		HEIGHT
+	);
+	SDL_LockTexture(tex, NULL, &pixels, &pitch);
+	memcpy(pixels, frame, WIDTH*HEIGHT*sizeof(uint16_t));
+	SDL_UnlockTexture(tex);
+	SDL_RenderCopy(renderer, tex, NULL, NULL);
+	SDL_DestroyTexture(tex);
+	SDL_RenderPresent(renderer);
 }
