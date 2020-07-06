@@ -44,6 +44,15 @@ void handle_input () {
     #endif
 }
 #define TILE_SIZE 16
+struct GameDataMemoryAddresses {
+    uint16_t mapCount;
+    size_t *mapOffsets;
+    uint16_t tilesetCount;
+    size_t *tilesetOffsets;
+    uint16_t imageCount;
+    size_t *imageOffsets;
+};
+
 void mage_game_loop () {
     now = millis();
     delta_time = now - lastTime;
@@ -67,7 +76,7 @@ void mage_game_loop () {
         32,
         32,
         32,
-        "MAGE/mage.dat",
+        "MAGE/game.dat",
         0,
         0,
         32,
@@ -78,7 +87,17 @@ void mage_game_loop () {
         64,
         32,
         32,
-        "MAGE/mage.dat",
+        "MAGE/game.dat",
+        0,
+        0,
+        32
+    );
+    mage_canvas->drawImageFromFile(
+        64,
+        96,
+        32,
+        32,
+        "MAGE/exa.dat",
         0,
         0,
         32

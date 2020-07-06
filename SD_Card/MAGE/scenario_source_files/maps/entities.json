@@ -1,0 +1,115 @@
+[
+    {
+        "color": "#ffe27f05",
+        "name": "exa",
+        "properties": [
+            {
+                "name": "detect",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "dialog",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "script",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "stateByteAddress",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "testBool",
+                "type": "bool",
+                "value": true
+            },
+            {
+                "name": "testColor",
+                "type": "color",
+                "value": "#ff010203"
+            },
+            {
+                "name": "testFile",
+                "type": "file",
+                "value": "entities.json"
+            },
+            {
+                "name": "testFloat",
+                "type": "float",
+                "value": 22.5
+            },
+            {
+                "name": "testInt",
+                "type": "int",
+                "value": 0
+            }
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "name": "goat",
+        "properties": [
+            {
+                "name": "eating",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "value": "idle"
+            }
+        ]
+    },
+    {
+        "color": "#ff0985e3",
+        "name": "mage",
+        "properties": [
+            {
+                "name": "animation",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "detect",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "dialog",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "script",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "value": "dancing"
+            }
+        ]
+    }
+]

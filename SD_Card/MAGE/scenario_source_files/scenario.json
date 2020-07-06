@@ -1,0 +1,116 @@
+{
+	"scripts": {
+		"init": [
+			{
+				"name": "loadMap",
+				"value": "mini_dungeon"
+			}
+		]
+	},
+	"maps": {
+		"mini_dungeon": "maps/mini_dungeon_map.json"
+	},
+	"entities": {
+		"goat": {
+			"sprite": {
+				"image": "goat.png",
+				"imageWidth": 512,
+				"imageHeight": 1024,
+				"spriteWidth": 128,
+				"spriteHeight": 128,
+				"orientationAxis": 1,
+				"frameAxis": 0,
+				"orientations": [0,3,2,1],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 10
+						},
+						{
+							"frameIndex": 1,
+							"duration": 10
+						},
+						{
+							"frameIndex": 2,
+							"duration": 10
+						},
+						{
+							"frameIndex": 3,
+							"duration": 10
+						}
+					]
+				}
+			}
+		},
+		"bob": {
+			"isBob": true
+		},
+		"exa": {
+			"isCute": true,
+			"sprite": {
+				"image": "exa.png",
+				"imageWidth": 32,
+				"imageHeight": 64,
+				"spriteWidth": 32,
+				"spriteHeight": 32,
+				"orientationAxis": 0,
+				"frameAxis": 1,
+				"orientations": [0,0,0,0],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 10
+						},
+						{
+							"frameIndex": 1,
+							"duration": 10
+						}
+					]
+				}
+			}
+		},
+		"mage": {
+			"sprite": {
+				"image": "blackmage.png",
+				"sheetWidth": 128,
+				"sheetHeight": 192,
+				"width": 32,
+				"height": 32,
+				"directions": 4,
+				"orientations": [2,3,1,0],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 10
+						},
+						{
+							"frameIndex": 1,
+							"duration": 2
+						}
+					],
+					"walk": [
+						{
+							"frameIndex": 2,
+							"duration": 2
+						},
+						{
+							"frameIndex": 3,
+							"duration": 2
+						},
+						{
+							"frameIndex": 4,
+							"duration": 2
+						},
+						{
+							"frameIndex": 5,
+							"duration": 2
+						}
+					]
+				}
+			}
+		}
+	}
+}
