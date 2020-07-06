@@ -40,9 +40,22 @@
 										multiple
 										directory
 										webkitdirectory
-										@change="handleChange"
+										@input="handleChange"
 									/>
 								</label>
+							</div>
+							<div
+								v-if="error"
+								class="alert alert-dismissible alert-danger"
+							>
+								<button
+									type="button"
+									class="close"
+									data-dismiss="alert"
+								>×</button>
+								<h2>Oh bother.</h2>
+								<p>{{error}}</p>
+								<p>Change a few things up and try dragging your <strong>scenario_source_files</strong> folder in again.</p>
 							</div>
 							<div>
 								<a
