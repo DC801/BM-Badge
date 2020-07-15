@@ -89,8 +89,8 @@
     "tileset.lastUsedFilter": "JSON tileset files (*.json)",
     "tileset.lastUsedFormat": "json",
     "tileset.tileSize": {
-        "height": 128,
-        "width": 128
+        "height": 32,
+        "width": 32
     },
     "tileset.type": 0
 }

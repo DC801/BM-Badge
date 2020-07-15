@@ -53,40 +53,35 @@ Task list:
     - [ ] Tilesets
         - [ ] offset
         - [ ] how many
-            - [ ] names
-            - [ ] image
-            - Convert tiles data format to something more binary
-                - Tile asset logistics
-                    - uint32_t offset in file where image data can be read from
-                    - uint8_t width
-                    - uint8_t height
-                - Tiled file description output is sparse array :/
-                    - explicitly list all tiles rather than search for properties by id
-                    - 8 bytes for tile name?
-                    - 2 bytes for tile props?
-                        collision quad 0
-                        collision quad 2
-                        collision quad 3
-                        collision quad 4
+            - [x] char[16] name
+            - [x] uint16_t imageIndex
+            - [x] uint16_t imageWidth
+            - [x] uint16_t imageHeight
+            - [x] uint16_t width
+            - [x] uint16_t height
+            - [ ] data
+                - [ ] Tiled file description output is sparse array. Explicitly list all tiles rather than search for properties by id
+                - [ ] 1 byte for first char of type
     - [ ] Maps
         - [ ] offset
         - [ ] how many
             - [ ] name
             - 1 byte to specify number of layers
-            - 1 byte to store map tile width
-            - 1 byte to store map tile height
+            - 2 bytes to store map tile width
+            - 2 bytes to store map tile height
             - layer format
                 - https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tile-flipping
+                - 1 byte for mapTilesetIndex index
                 - 2 bytes for tile index
                 - 1 byte for tile flags
+                    ?
+                    ?
+                    ?
+                    ?
+                    ?
                     x-mirror
                     y-mirror
                     diagonal-mirror
-                    ?
-                    ?
-                    ?
-                    ?
-                    ?
             - [ ] layers
             - [ ] EntityInstances
                 - [ ] offset
