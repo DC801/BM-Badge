@@ -18,13 +18,83 @@ var getFileJson = function (file) {
 		});
 };
 
-var handleTilesetData = function (tilesetFile, fileNameMap) {
+var setCharsIntoDataView = function (
+	dataView,
+	string,
+	offset,
+	maxLength
+) {
+	var source = string.slice(0, maxLength);
+	for (var i = 0; i < source.length; i++) {
+		dataView.setUint8(
+			i + offset,
+			source.charCodeAt(i)
+		);
+	}
+};
+
+var getTilesetHeader = function (tilesetData, image) {
+	var result = new ArrayBuffer(
+		16 // char[16] name
+		+ 2 // uint16_t imageIndex
+		+ 2 // uint16_t tileWidth
+		+ 2 // uint16_t tileHeight
+		+ 2 // uint16_t width
+		+ 2 // uint16_t height
+	);
+	var dataView = new DataView(result);
+	var offset = 0;
+	setCharsIntoDataView(
+		dataView,
+		tilesetData.name,
+		0,
+		offset += 16
+	);
+	dataView.setUint16(
+		offset, // uint16_t imageIndex
+		image.scenarioIndex,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint16_t tileWidth
+		tilesetData.imagewidth,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint16_t tileHeight
+		tilesetData.imageheight,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint8_t width
+		tilesetData.columns,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint8_t height
+		Math.floor(tilesetData.imageheight / tilesetData.tileheight),
+		false
+	);
+	return result;
+};
+var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
 		console.log(
 			'Tileset:',
 			tilesetFile.name,
 			tilesetData
 		);
+		tilesetData.serialized = {
+			tiles: new ArrayBuffer(tilesetData.tilecount)
+		};
+		var tileDataView = new DataView(tilesetData.serialized.tiles);
+		// forget about the built-in name, using file name instead.
+		tilesetData.name = tilesetFile.name.split('.')[0];
+		// already has columns, add the missing pair
 		tilesetData.tiles.forEach(function (tile) {
 			mergeInProperties(
 				tile,
@@ -44,10 +114,22 @@ var handleTilesetData = function (tilesetFile, fileNameMap) {
 					entityPrototype,
 					tile
 				)
-			)
-		})
-		tilesetFile.parsed = tilesetData;
-		return tilesetData;
+			);
+			if (tile.type) {
+				tileDataView.setUint8(
+					tile.id,
+					tile.type.charCodeAt(0)
+				);
+			}
+		});
+		return handleImage(tilesetData.image, scenarioData, fileNameMap)
+			.then(function (image) {
+				tilesetData.scenarioIndex = scenarioData.parsed.tilesets.length;
+				scenarioData.parsed.tilesets.push(tilesetData);
+				tilesetData.serialized.header = getTilesetHeader(tilesetData, image);
+				tilesetFile.parsed = tilesetData;
+				return tilesetData;
+			});
 	};
 };
 
@@ -64,9 +146,9 @@ var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
 				tilesetFile.parsed
 					? Promise.resolve(tilesetFile.parsed)
 					: getFileJson(tilesetFile)
-						.then(handleTilesetData(tilesetFile, fileNameMap))
+						.then(handleTilesetData(tilesetFile, scenarioData, fileNameMap))
 			).then(function (tilesetParsed) {
-				mapTilesetItem.parsed = tilesetParsed
+				mapTilesetItem.parsed = tilesetParsed;
 			})
 		}
 	}));
@@ -146,7 +228,7 @@ var assignToLessFalsy = function () {
 			}
 			target[key] = value;
 		});
-	})
+	});
 	return target;
 };
 
@@ -163,9 +245,11 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 		| FLIPPED_VERTICALLY_FLAG
 		| FLIPPED_DIAGONALLY_FLAG
 	);
-	map.tilesets.find(function (tileset) {
+	var mapTilesetIndex = 0;
+	map.tilesets.find(function (tileset, index) {
 		var overshot = tileId < tileset.firstgid;
 		if(!overshot) {
+			mapTilesetIndex = index;
 			targetTileset = tileset;
 		}
 		return overshot;
@@ -174,11 +258,10 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 	return {
 		tileset: targetTileset,
 		tileIndex: tileIndex,
-		orientation: {
-			flipped_horizontally: !!(tileGID & FLIPPED_HORIZONTALLY_FLAG),
-			flipped_vertically: !!(tileGID & FLIPPED_VERTICALLY_FLAG),
-			flipped_diagonally: !!(tileGID & FLIPPED_DIAGONALLY_FLAG)
-		},
+		mapTilesetIndex: mapTilesetIndex,
+		flip_x: !!(tileGID & FLIPPED_HORIZONTALLY_FLAG),
+		flip_y: !!(tileGID & FLIPPED_VERTICALLY_FLAG),
+		flip_xy: !!(tileGID & FLIPPED_DIAGONALLY_FLAG),
 		tile: targetTileset.parsed.tiles.find(function (tile) {
 			return tile.id === tileIndex;
 		}) || {
@@ -187,7 +270,42 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 	}
 };
 
-var handleTiledObjectLayer = function (layer, map, fileNameMap, scenarioData) {
+var handleTileLayer = function(layer, map) {
+	var bytesPerTile = 4;
+	var mapLayerByteSize = bytesPerTile * map.height * map.width;
+	var serializedLayer = new ArrayBuffer(mapLayerByteSize);
+	var dataView = new DataView(serializedLayer);
+	var offset = 0;
+	var tileGid;
+	var tileData;
+	while (offset < layer.data.length) {
+		tileGid = layer.data[offset];
+		if (tileGid) { // if tileGid is 0, it's an empty tile, no work to do
+			tileData = getMapTileAndOrientationByGID(tileGid, map);
+			dataView.setUint8(
+				offset * bytesPerTile,
+				tileData.mapTilesetIndex
+			);
+			dataView.setUint16(
+				(offset * bytesPerTile) + 1,
+				tileData.tileIndex,
+				false // fix endianness of output, little -> big
+			);
+			dataView.setUint8(
+				(offset * bytesPerTile) + 3,
+				(
+					(tileData.flip_x << 2)
+					+ (tileData.flip_y << 1)
+					+ (tileData.flip_xy << 0)
+				)
+			);
+		}
+		offset += 1;
+	}
+	map.serialized.layers.push(serializedLayer);
+};
+
+var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 	layer.objects.forEach(function (entityInstance, index, objects) {
 		if (entityInstance.gid) {
 			var entity = getMapTileAndOrientationByGID(
@@ -202,7 +320,6 @@ var handleTiledObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 			var mergedWithType = assignToLessFalsy(
 				{},
 				entity.tile,
-				entity.orientation,
 				entityInstance
 			);
 			var entityPrototype = (
@@ -239,14 +356,18 @@ var handleTiledObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 
 var handleMapLayers = function (map, scenarioData, fileNameMap) {
 	map.entityInstances = [];
+	map.serialized = {
+		layers: []
+	};
 	map.layers.forEach(function (layer) {
 		console.log(
 			'Layer:',
 			layer
 		)
 		if (layer.type === 'tilelayer') {
+			handleTileLayer(layer, map);
 		} else if (layer.type === 'objectgroup') {
-			handleTiledObjectLayer(layer, map, fileNameMap, scenarioData);
+			handleObjectLayer(layer, map, fileNameMap, scenarioData);
 		}
 	});
 	map.entityInstances.forEach(function (entityInstance) {
@@ -255,6 +376,22 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			entityInstance
 		)
 	});
+	map.serialized.header = new ArrayBuffer(
+		16 // char[] name
+		+ 2 // uint16_t width
+		+ 2 // uint16_t height
+		+ 1 // uint8_t layer count
+	);
+	var headerDataView = new DataView(map.serialized.header);
+	setCharsIntoDataView(
+		headerDataView,
+		map.name,
+		0,
+		16
+	);
+	headerDataView.setUint16(16, map.width, false);
+	headerDataView.setUint16(18, map.height, false);
+	headerDataView.setUint8(20, map.serialized.layers.length);
 };
 
 var handleMapData = function (mapFileName, fileNameMap, scenarioData) {
@@ -264,10 +401,13 @@ var handleMapData = function (mapFileName, fileNameMap, scenarioData) {
 			mapFileName,
 			map
 		);
+		map.name = mapFileName.split('.')[0];
 		fileNameMap[mapFileName].parsed = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
+				map.scenarioIndex = scenarioData.parsed.maps.length;
+				scenarioData.parsed.maps.push(map);
 				return map;
 			});
 	};
@@ -314,21 +454,21 @@ var handleEntitiesData = function (scenarioData, entitiesFile) {
 };
 
 var supportedImageTypes = ['png', 'gif'];
-var handleImage = function(imageFileName, fileNameMap) {
-	var file = fileNameMap[imageFileName];
-	var mimeTypeSuffix = file.type.split('/').pop();
-	if (supportedImageTypes.indexOf(mimeTypeSuffix) === -1) {
-		throw new Error(
-			'Unsupported image type: "'
-			+ file.type
-			+ '" detected in file named: "'
-			+ file.name
-			+ '". Supported types are: '
-			+ supportedImageTypes.join()
-		);
-	}
+var handleImage = function(imageFileName, scenarioData, fileNameMap) {
+	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
 	if (!file.serialized) {
+		var mimeTypeSuffix = file.type.split('/').pop();
+		if (supportedImageTypes.indexOf(mimeTypeSuffix) === -1) {
+			throw new Error(
+				'Unsupported image type: "'
+				+ file.type
+				+ '" detected in file named: "'
+				+ file.name
+				+ '". Supported types are: '
+				+ supportedImageTypes.join()
+			);
+		}
 		var blobUrl = URL.createObjectURL(file);
 		result = new Promise(function (resolve) {
 			window.getPixels(
@@ -376,6 +516,8 @@ var handleImage = function(imageFileName, fileNameMap) {
 					offset += 1;
 				}
 				file.serialized = data;
+				file.scenarioIndex = scenarioData.parsed.images.length;
+				scenarioData.parsed.images.push(file);
 				return file;
 			});
 	}
@@ -388,6 +530,11 @@ var handleScenarioData = function(fileNameMap) {
 			'scenario.json',
 			scenarioData
 		);
+		scenarioData.parsed = {
+			maps: [],
+			tilesets: [],
+			images: []
+		};
 		var entitiesFile = fileNameMap['entities.json'];
 		var entitiesPromise = !entitiesFile
 			? Promise.resolve()
@@ -404,18 +551,61 @@ var handleScenarioData = function(fileNameMap) {
 
 var generateIndexAndComposite = function (scenarioData) {
 	// TODO: scenarioData.parsed
-	var chunks = [];
+	console.log(
+		'generateIndexAndComposite:scenarioData',
+		scenarioData
+	);
+	var indices = new ArrayBuffer(
+		8 // signature
+		+ 2 // uint16_t mapCount
+		+ 4 * scenarioData.parsed.maps.length // uint32_t *mapOffsets
+		+ 2 // uint16_t tilesetCount
+		+ 4 * scenarioData.parsed.tilesets.length // uint32_t *tilesetOffsets
+		+ 2 // uint16_t imageCount
+		+ 4 * scenarioData.parsed.images.length // uint32_t *imageOffsets
+	);
+	var indicesDataView = new DataView(indices);
+	setCharsIntoDataView(
+		indicesDataView,
+		'MAGEGAME',
+		0
+	);
+	var chunks = [
+		indices
+	];
+	var offset = indices.byteLength;
+	indicesDataView.setUint16(
+		0,
+		scenarioData.parsed.maps.length,
+		false
+	);
+	scenarioData.parsed.maps.forEach(function(map, mapIndex) {
+		indicesDataView.setUint32(
+			2 + (mapIndex * 4),
+			offset,
+			false
+		)
+		chunks.push(map.serialized.header);
+		offset += map.serialized.header.byteLength;
+		map.serialized.layers.forEach(function (
+			layer,
+			layerIndex
+		) {
+			chunks.push(layer);
+			offset += layer.byteLength;
+		})
+	});
 	var compositeSize = chunks.reduce(
 		function (accumulator, item) {
-			return accumulator + item.data.byteLength;
+			return accumulator + item.byteLength;
 		},
 		0
 	);
 	var compositeArray = new Uint8Array(compositeSize);
 	var currentOffset = 0;
 	chunks.forEach(function (item) {
-		compositeArray.set(item.data, currentOffset);
-		currentOffset += item.data.byteLength;
+		compositeArray.set(item, currentOffset);
+		currentOffset += item.byteLength;
 	});
 	console.log(
 		'compositeArray',

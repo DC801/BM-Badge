@@ -44,14 +44,6 @@ void handle_input () {
     #endif
 }
 #define TILE_SIZE 16
-struct GameDataMemoryAddresses {
-    uint16_t mapCount;
-    size_t *mapOffsets;
-    uint16_t tilesetCount;
-    size_t *tilesetOffsets;
-    uint16_t imageCount;
-    size_t *imageOffsets;
-};
 
 void mage_game_loop () {
     now = millis();
@@ -107,7 +99,15 @@ void mage_game_loop () {
     lastTime = now;
 }
 
+GameDataMemoryAddresses dataMemoryAddresses;
 int MAGE() {
+    FILE *dataFile = fopen("game.data", "rb");
+    fread(
+            dataFile,
+            &dataMemoryAddresses.mapCount,
+            sizeof(dataMemoryAddresses.mapCount)
+    );
+    dataMemoryAddresses.mapCount
     mage_canvas = p_canvas();
     lastTime = millis();
     while (running)
