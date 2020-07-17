@@ -555,46 +555,116 @@ var generateIndexAndComposite = function (scenarioData) {
 		'generateIndexAndComposite:scenarioData',
 		scenarioData
 	);
-	var indices = new ArrayBuffer(
-		8 // signature
-		+ 2 // uint16_t mapCount
-		+ 4 * scenarioData.parsed.maps.length // uint32_t *mapOffsets
-		+ 2 // uint16_t tilesetCount
-		+ 4 * scenarioData.parsed.tilesets.length // uint32_t *tilesetOffsets
-		+ 2 // uint16_t imageCount
-		+ 4 * scenarioData.parsed.images.length // uint32_t *imageOffsets
-	);
-	var indicesDataView = new DataView(indices);
+	var signature = new ArrayBuffer(8);
+	var signatureDataView = new DataView(signature);
 	setCharsIntoDataView(
-		indicesDataView,
+		signatureDataView,
 		'MAGEGAME',
 		0
 	);
+	var indices = new ArrayBuffer(
+		+ 2 // uint16_t mapCount
+		+ (4 * scenarioData.parsed.maps.length) // uint32_t *mapOffsets
+		+ (4 * scenarioData.parsed.maps.length) // uint32_t *mapLengths
+		+ 2 // uint16_t tilesetCount
+		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetOffsets
+		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetLengths
+		+ 2 // uint16_t imageCount
+		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageOffsets
+		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageLengths
+	);
+	var indicesDataView = new DataView(indices);
 	var chunks = [
+		signature,
 		indices
 	];
-	var offset = indices.byteLength;
+	var fileOffset = indices.byteLength;
+	var indicesOffset = 0;
 	indicesDataView.setUint16(
-		0,
+		indicesOffset,
 		scenarioData.parsed.maps.length,
 		false
 	);
-	scenarioData.parsed.maps.forEach(function(map, mapIndex) {
+	indicesOffset += 2;
+	scenarioData.parsed.maps.forEach(function(map, index, maps) {
+		var offset = indicesOffset + (index * 4);
+		var lengthOffset = (
+			offset
+			+ (maps.length * 4)
+		);
+		var totalSize = 0;
 		indicesDataView.setUint32(
-			2 + (mapIndex * 4),
 			offset,
+			fileOffset,
 			false
 		)
 		chunks.push(map.serialized.header);
-		offset += map.serialized.header.byteLength;
-		map.serialized.layers.forEach(function (
-			layer,
-			layerIndex
-		) {
+		totalSize += map.serialized.header.byteLength;
+		map.serialized.layers.forEach(function (layer) {
 			chunks.push(layer);
-			offset += layer.byteLength;
-		})
+			totalSize += layer.byteLength;
+		});
+		indicesDataView.setUint32(
+			lengthOffset,
+			totalSize,
+			false
+		);
+		fileOffset += totalSize;
 	});
+	indicesOffset += scenarioData.parsed.maps.length * 8;
+	indicesDataView.setUint16(
+		indicesOffset,
+		scenarioData.parsed.tilesets.length,
+		false
+	);
+	indicesOffset += 2;
+	scenarioData.parsed.tilesets.forEach(function(tileset, index, tilesets) {
+		var offset = indicesOffset + (index * 4);
+		var lengthOffset = (
+			offset
+			+ (tilesets.length * 4)
+		);
+		var totalSize = 0;
+		indicesDataView.setUint32(
+			offset,
+			fileOffset,
+			false
+		)
+		chunks.push(tileset.serialized.header);
+		totalSize += tileset.serialized.header.byteLength;
+		chunks.push(tileset.serialized.tiles);
+		totalSize += tileset.serialized.tiles.byteLength;
+		indicesDataView.setUint32(
+			lengthOffset,
+			totalSize,
+			false
+		)
+		fileOffset += totalSize;
+	});
+	indicesOffset += scenarioData.parsed.tilesets.length * 8;
+	indicesDataView.setUint16(
+		indicesOffset,
+		scenarioData.parsed.images.length,
+		false
+	);
+	indicesOffset += 2;
+	scenarioData.parsed.images.forEach(function(image, index, images) {
+		indicesDataView.setUint32(
+			indicesOffset, // item offset
+			fileOffset,
+			false
+		)
+		indicesDataView.setUint32(
+			indicesOffset
+			+ (images.length * 4),
+			image.serialized.byteLength,
+			false
+		)
+		indicesOffset += 4;
+		chunks.push(image.serialized);
+		fileOffset += image.serialized.byteLength;
+	});
+	indicesOffset += scenarioData.parsed.images.length * 8;
 	var compositeSize = chunks.reduce(
 		function (accumulator, item) {
 			return accumulator + item.byteLength;
@@ -604,7 +674,10 @@ var generateIndexAndComposite = function (scenarioData) {
 	var compositeArray = new Uint8Array(compositeSize);
 	var currentOffset = 0;
 	chunks.forEach(function (item) {
-		compositeArray.set(item, currentOffset);
+		compositeArray.set(
+			new Uint8Array(item),
+			currentOffset
+		);
 		currentOffset += item.byteLength;
 	});
 	console.log(
@@ -653,10 +726,12 @@ window.vueApp = new window.Vue({
 				if (!scenarioFile) {
 					vm.error = 'No `scenario.json` file detected in folder, no where to start!';
 				} else {
-					var compositeArray = getFileJson(scenarioFile)
+					getFileJson(scenarioFile)
 						.then(handleScenarioData(fileNameMap))
-						.then(generateIndexAndComposite);
-					vm.prepareDownload([compositeArray], 'game.dat');
+						.then(generateIndexAndComposite)
+						.then(function (compositeArray) {
+							vm.prepareDownload([compositeArray], 'game.dat');
+						});
 				}
 			} catch (error) {
 				vm.error = error.message;
