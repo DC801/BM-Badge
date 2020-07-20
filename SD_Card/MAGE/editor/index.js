@@ -37,10 +37,12 @@ var getTilesetHeader = function (tilesetData, image) {
 	var result = new ArrayBuffer(
 		16 // char[16] name
 		+ 2 // uint16_t imageIndex
+		+ 2 // uint16_t imageWidth
+		+ 2 // uint16_t imageHeight
 		+ 2 // uint16_t tileWidth
 		+ 2 // uint16_t tileHeight
-		+ 2 // uint16_t width
-		+ 2 // uint16_t height
+		+ 2 // uint16_t cols
+		+ 2 // uint16_t rows
 	);
 	var dataView = new DataView(result);
 	var offset = 0;
@@ -57,25 +59,37 @@ var getTilesetHeader = function (tilesetData, image) {
 	);
 	offset += 2
 	dataView.setUint16(
-		offset, // uint16_t tileWidth
+		offset, // uint16_t imageWidth
 		tilesetData.imagewidth,
 		false
 	);
 	offset += 2
 	dataView.setUint16(
-		offset, // uint16_t tileHeight
+		offset, // uint16_t imageHeight
 		tilesetData.imageheight,
 		false
 	);
 	offset += 2
 	dataView.setUint16(
-		offset, // uint8_t width
+		offset, // uint16_t tileWidth
+		tilesetData.tilewidth,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint16_t tileHeight
+		tilesetData.tileheight,
+		false
+	);
+	offset += 2
+	dataView.setUint16(
+		offset, // uint16_t cols
 		tilesetData.columns,
 		false
 	);
 	offset += 2
 	dataView.setUint16(
-		offset, // uint8_t height
+		offset, // uint16_t rows
 		Math.floor(tilesetData.imageheight / tilesetData.tileheight),
 		false
 	);
@@ -550,7 +564,6 @@ var handleScenarioData = function(fileNameMap) {
 };
 
 var generateIndexAndComposite = function (scenarioData) {
-	// TODO: scenarioData.parsed
 	console.log(
 		'generateIndexAndComposite:scenarioData',
 		scenarioData
@@ -578,7 +591,7 @@ var generateIndexAndComposite = function (scenarioData) {
 		signature,
 		indices
 	];
-	var fileOffset = indices.byteLength;
+	var fileOffset = signature.byteLength + indices.byteLength;
 	var indicesOffset = 0;
 	indicesDataView.setUint16(
 		indicesOffset,
