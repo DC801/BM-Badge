@@ -75,12 +75,15 @@ void handle_input () {
 
 GameDataMemoryAddresses dataMemoryAddresses = {};
 
+uint32_t mapIndex = 0;
+uint32_t currentMapIndex = 0;
+
 void mage_game_loop (uint8_t *data) {
     now = millis();
     delta_time = now - lastTime;
 
     mage_canvas->clearScreen(RGB(0,0,255));
-    mage_canvas->drawHorizontalLine(10, 20, 100, RGB(0,255,0));
+    mage_canvas->drawHorizontalLine(0, 96, 127, RGB(0,255,0));
 
     mage_canvas->drawImage(
         0,
@@ -148,6 +151,62 @@ void correct_image_data_endinness (uint8_t *data, uint32_t length) {
     );
 }
 
+GameMap currentMap = {};
+void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
+    printf("data: %p\n", data);
+
+    data[15] = 0x00; // null terminate it so things don't go bad
+    currentMap.name = (char *) data;
+    printf("currentMap.name: %s\n", currentMap.name);
+    uint32_t offset = 16;
+
+    currentMap.tileWidth = (uint16_t *) (data + offset);
+    offset += 2;
+    ceU2(currentMap.tileWidth);
+    printf("currentMap.tileWidth: %p\n", currentMap.tileWidth);
+    printf("currentMap.tileWidth: %" PRIu16 "\n", *currentMap.tileWidth);
+
+    currentMap.tileHeight = (uint16_t *) (data + offset);
+    offset += 2;
+    ceU2(currentMap.tileHeight);
+    printf("currentMap.tileHeight: %p\n", currentMap.tileHeight);
+    printf("currentMap.tileHeight: %" PRIu16 "\n", *currentMap.tileHeight);
+
+    currentMap.width = (uint16_t *) (data + offset);
+    offset += 2;
+    ceU2(currentMap.width);
+    printf("currentMap.width: %p\n", currentMap.width);
+    printf("currentMap.width: %" PRIu16 "\n", *currentMap.width);
+
+    currentMap.height = (uint16_t *) (data + offset);
+    offset += 2;
+    ceU2(currentMap.height);
+    printf("currentMap.height: %p\n", currentMap.height);
+    printf("currentMap.height: %" PRIu16 "\n", *currentMap.height);
+
+    currentMap.layerCount = (data + offset);
+    offset += 1;
+    printf("currentMap.layerCount: %p\n", currentMap.layerCount);
+    printf("currentMap.layerCount: %" PRIu8 "\n", *currentMap.layerCount);
+
+    currentMap.tilesetCount = (data + offset);
+    offset += 1;
+    printf("currentMap.tilesetCount: %p\n", currentMap.tilesetCount);
+    printf("currentMap.tilesetCount: %" PRIu8 "\n", *currentMap.tilesetCount);
+
+    currentMap.tilesetGlobalIds = (uint16_t *) (data + offset);
+    offset += *currentMap.tilesetCount * 2;
+    ceU2Buf(currentMap.tilesetGlobalIds, *currentMap.tilesetCount);
+    printf("currentMap.tilesetGlobalIds: %p\n", currentMap.tilesetGlobalIds);
+    for (uint8_t i = 0; i < *currentMap.tilesetCount; i++) {
+        printf("currentMap.tilesetGlobalId[%" PRIu8 "]: %" PRIu16 "\n", i, currentMap.tilesetGlobalIds[i]);
+    }
+
+    currentMap.startOfLayers = (uint32_t *) (data + (offset + 4 - (offset % 4)));
+    printf("currentMap.startOfLayers %p\n", currentMap.startOfLayers);
+    currentMapIndex = incomingMapIndex;
+}
+
 uint32_t load_data_headers (uint8_t *data) {
     uint32_t offset = 8; // seek past identifier
     offset += count_with_offsets(
@@ -210,6 +269,11 @@ int MAGE() {
     printf("dataMemoryAddresses.mapCount: %" PRIu32 "\n", *dataMemoryAddresses.mapCount);
     printf("dataMemoryAddresses.tilesetCount: %" PRIu32 "\n", *dataMemoryAddresses.tilesetCount);
     printf("dataMemoryAddresses.imageCount: %" PRIu32 "\n", *dataMemoryAddresses.imageCount);
+
+    load_map_headers(
+        data + dataMemoryAddresses.mapOffsets[0],
+        0
+    );
 
     mage_canvas = p_canvas();
     lastTime = millis();
