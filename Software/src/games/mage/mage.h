@@ -18,17 +18,15 @@ struct GameDataMemoryAddresses {
 } typedef GameDataMemoryAddresses;
 
 struct GameMap {
-    char name[16];
-    uint16_t entityCount;
-    uint32_t *entityOffsets;
-    uint8_t layerCount;
-    uint32_t *layerOffsets;
-    uint16_t tilesetCount;
-    uint32_t *tilesetOffsets;
-    uint16_t tileWidth;
-    uint16_t tileHeight;
-    uint16_t width;
-    uint16_t height;
+    char *name;
+    uint16_t *tileWidth;
+    uint16_t *tileHeight;
+    uint16_t *width;
+    uint16_t *height;
+    uint8_t *layerCount;
+    uint8_t *tilesetCount;
+    uint16_t *tilesetGlobalIds;
+    uint32_t *startOfLayers;
 } typedef GameMap;
 
 struct GameTileset {
