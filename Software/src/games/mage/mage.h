@@ -3,20 +3,18 @@
 
 #include "common.h"
 
-char name[16];
-char *nameButItsAPointer;
-
-int main() {
-    nameButItsAPointer = malloc(16 * sizeOf(char));
-}
+int main();
 
 struct GameDataMemoryAddresses {
-    uint16_t mapCount;
+    uint32_t *mapCount;
     uint32_t *mapOffsets;
-    uint16_t tilesetCount;
+    uint32_t *mapLengths;
+    uint32_t *tilesetCount;
     uint32_t *tilesetOffsets;
-    uint16_t imageCount;
+    uint32_t *tilesetLengths;
+    uint32_t *imageCount;
     uint32_t *imageOffsets;
+    uint32_t *imageLengths;
 } typedef GameDataMemoryAddresses;
 
 struct GameMap {

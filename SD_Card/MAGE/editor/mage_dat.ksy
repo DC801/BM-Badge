@@ -28,7 +28,7 @@ types:
   count_with_offsets:
     seq:
       - id: count
-        type: u2
+        type: u4
         doc: The number of items of type the file
       - id: offsets
         type: u4
@@ -47,6 +47,12 @@ types:
         type: strz
         size: 16
         encoding: UTF8
+      - id: tile_width
+        type: u2
+        doc: The width of the map tiles in pixels
+      - id: tile_height
+        type: u2
+        doc: The height of the map tiles in pixels
       - id: width
         type: u2
         doc: The width of the map, in tiles
@@ -56,6 +62,14 @@ types:
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
+      - id: tileset_count
+        type: u1
+        doc: The number of tilesets this map's tile use
+      - id: tileset_global_ids
+        type: u2
+        repeat: expr
+        repeat-expr: tileset_count
+        doc: The global IDs of the tilesets this map's tiles use
       - id: tiles
         type: map_tile
         repeat: expr
