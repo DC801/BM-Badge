@@ -26,16 +26,19 @@ struct GameMap {
     uint8_t *layerCount;
     uint8_t *tilesetCount;
     uint16_t *tilesetGlobalIds;
-    uint32_t *startOfLayers;
+    uint32_t startOfLayers;
 } typedef GameMap;
 
 struct GameTileset {
-    char name[16];
-    uint32_t imageOffset;
-    uint16_t tileWidth;
-    uint16_t tileHeight;
-    uint16_t width;
-    uint16_t height;
+    char *name;
+    uint16_t *imageIndex;
+    uint16_t *imageWidth;
+    uint16_t *imageHeight;
+    uint16_t *tileWidth;
+    uint16_t *tileHeight;
+    uint16_t *cols;
+    uint16_t *rows;
+    uint32_t startOfTiles;
 };
 
 struct GameTile {
