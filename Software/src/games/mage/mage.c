@@ -16,6 +16,11 @@ void ceU2 (uint16_t *value) {
         *value = __builtin_bswap16(*value);
     }
 }
+uint16_t ceU2v (uint16_t value) {
+    return _needsSwap
+         ? __builtin_bswap16(value)
+         : value;
+}
 void ceU2Buf (uint16_t *buf, size_t bufferSize) {
     if (_needsSwap) {
         for (size_t i = 0; i < bufferSize; i++) {
@@ -77,6 +82,57 @@ GameDataMemoryAddresses dataMemoryAddresses = {};
 
 uint32_t mapIndex = 0;
 uint32_t currentMapIndex = 0;
+GameMap currentMap = {};
+GameTileset *currentMapTilesets;
+
+void draw_map (uint8_t *data) {
+    uint32_t tileCount = *currentMap.width * *currentMap.height;
+    uint8_t flags = 0;
+    uint8_t tilesetId = 0;
+    uint16_t tileId = 0;
+    uint16_t cols = 0;
+    int32_t x = 0;
+    int32_t y = 0;
+    uint8_t *tiles = data + currentMap.startOfLayers;
+    GameTileset tileset;
+    GameTile *tile;
+    for (uint32_t mapTileIndex = 0; mapTileIndex < tileCount; ++mapTileIndex) {
+        x = (*currentMap.tileWidth * (mapTileIndex % *currentMap.width));
+        y = (*currentMap.tileHeight * (mapTileIndex / *currentMap.width));
+        if (
+            x > -*currentMap.tileWidth
+            && x < WIDTH - 1
+            && y > -*currentMap.tileHeight
+            && y < HEIGHT - 1
+        ) {
+            tile = (GameTile *) &tiles[mapTileIndex * 4];
+            tileId = ceU2v((*tile).tileId);
+            tilesetId = (*tile).tilesetId;
+            flags = (*tile).flags;
+            tileset = currentMapTilesets[tilesetId];
+            cols = *tileset.cols;
+            // printf(
+            //         "flags: %" PRIu8 "; tilesetId: %" PRIu8 "; tileId: %" PRIu16 "; tileset.name: %s; cols: %" PRIu16 ";\n",
+            //         flags,
+            //         tilesetId,
+            //         tileId,
+            //         tileset.name,
+            //         cols
+            // );
+            mage_canvas->drawImage(
+                    x,
+                    y,
+                    *currentMap.tileWidth,
+                    *currentMap.tileHeight,
+                    (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
+                    (tileId % cols) * *tileset.tileWidth,
+                    (tileId / cols) * *tileset.tileHeight,
+                    *tileset.imageWidth,
+                    0x0020
+            );
+        }
+    }
+}
 
 void mage_game_loop (uint8_t *data) {
     now = millis();
@@ -85,12 +141,13 @@ void mage_game_loop (uint8_t *data) {
     mage_canvas->clearScreen(RGB(0,0,255));
     mage_canvas->drawHorizontalLine(0, 96, 127, RGB(0,255,0));
 
+    draw_map (data);
     mage_canvas->drawImage(
         0,
         0,
         128,
         128,
-        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),
         256,
         128,
         512,
@@ -101,7 +158,7 @@ void mage_game_loop (uint8_t *data) {
         32,
         32,
         32,
-        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[1]),
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
         0,
         0,
         128,
@@ -112,7 +169,7 @@ void mage_game_loop (uint8_t *data) {
         64,
         32,
         32,
-        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[1]),
         0,
         0,
         32,
@@ -151,15 +208,12 @@ void correct_image_data_endinness (uint8_t *data, uint32_t length) {
     );
 }
 
-
-GameMap currentMap = {};
-GameTileset *currentMapTilesets;
-
 void load_tilesets_headers (
-    GameTileset tileset,
+    GameTileset *tilesetPointer,
     uint8_t *data,
     uint32_t tilesetIndex
 ) {
+    GameTileset tileset = {};
     uint8_t *tilesetData = data + dataMemoryAddresses.tilesetOffsets[tilesetIndex];
     printf("tileset[%" PRIu32 "]: offset %" PRIu32 "\n", tilesetIndex, dataMemoryAddresses.tilesetOffsets[tilesetIndex]);
     printf("tileset[%" PRIu32 "]: %p\n", tilesetIndex, tilesetData);
@@ -214,6 +268,7 @@ void load_tilesets_headers (
     offset += 2; // pad to to uint32_t alignment
 
     tileset.startOfTiles = dataMemoryAddresses.tilesetOffsets[tilesetIndex] + offset;
+    *tilesetPointer = tileset;
 }
 
 void load_map_tilesets (uint8_t *data) {
@@ -224,7 +279,7 @@ void load_map_tilesets (uint8_t *data) {
     );
     for (uint8_t i = 0; i < *currentMap.tilesetCount; i++) {
         load_tilesets_headers(
-            currentMapTilesets[i],
+            &currentMapTilesets[i],
             data,
             currentMap.tilesetGlobalIds[i]
         );

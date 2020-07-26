@@ -42,8 +42,9 @@ struct GameTileset {
 };
 
 struct GameTile {
-    char type[8];
-    uint8_t collision;
+    uint16_t tileId;
+    uint8_t tilesetId;
+    uint8_t flags;
 } typedef GameTile;
 
 struct GameImage {
