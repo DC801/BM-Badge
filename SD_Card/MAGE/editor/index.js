@@ -390,22 +390,45 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			entityInstance
 		)
 	});
-	map.serialized.header = new ArrayBuffer(
+	return map;
+};
+
+var generateMapHeader = function (map) {
+	var result = new ArrayBuffer(
 		16 // char[] name
+		+ 2 // uint16_t tileWidth
+		+ 2 // uint16_t tileHeight
 		+ 2 // uint16_t width
 		+ 2 // uint16_t height
 		+ 1 // uint8_t layer count
+		+ 1 // uint8_t tileset count
+		+ map.tilesets.length * 2 // global tileset IDs
 	);
-	var headerDataView = new DataView(map.serialized.header);
+	var headerDataView = new DataView(result);
 	setCharsIntoDataView(
 		headerDataView,
 		map.name,
 		0,
 		16
 	);
-	headerDataView.setUint16(16, map.width, false);
-	headerDataView.setUint16(18, map.height, false);
-	headerDataView.setUint8(20, map.serialized.layers.length);
+	var offset = 16;
+	headerDataView.setUint16(offset, map.tilewidth, false);
+	offset += 2;
+	headerDataView.setUint16(offset, map.tileheight, false);
+	offset += 2;
+	headerDataView.setUint16(offset, map.width, false);
+	offset += 2;
+	headerDataView.setUint16(offset, map.height, false);
+	offset += 2;
+	headerDataView.setUint8(offset, map.serialized.layers.length);
+	offset += 1;
+	headerDataView.setUint8(offset, map.tilesets.length);
+	offset += 1;
+	map.tilesets.forEach(function (tileset) {
+		headerDataView.setUint16(offset, tileset.parsed.scenarioIndex, false);
+		offset += 2;
+	});
+	return result;
 };
 
 var handleMapData = function (mapFileName, fileNameMap, scenarioData) {
@@ -420,6 +443,7 @@ var handleMapData = function (mapFileName, fileNameMap, scenarioData) {
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
+				map.serialized.header = generateMapHeader(map);
 				map.scenarioIndex = scenarioData.parsed.maps.length;
 				scenarioData.parsed.maps.push(map);
 				return map;
@@ -576,13 +600,13 @@ var generateIndexAndComposite = function (scenarioData) {
 		0
 	);
 	var indices = new ArrayBuffer(
-		+ 2 // uint16_t mapCount
+		+ 4 // uint32_t mapCount
 		+ (4 * scenarioData.parsed.maps.length) // uint32_t *mapOffsets
 		+ (4 * scenarioData.parsed.maps.length) // uint32_t *mapLengths
-		+ 2 // uint16_t tilesetCount
+		+ 4 // uint32_t tilesetCount
 		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetOffsets
 		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetLengths
-		+ 2 // uint16_t imageCount
+		+ 4 // uint32_t imageCount
 		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageOffsets
 		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageLengths
 	);
@@ -593,12 +617,12 @@ var generateIndexAndComposite = function (scenarioData) {
 	];
 	var fileOffset = signature.byteLength + indices.byteLength;
 	var indicesOffset = 0;
-	indicesDataView.setUint16(
+	indicesDataView.setUint32(
 		indicesOffset,
 		scenarioData.parsed.maps.length,
 		false
 	);
-	indicesOffset += 2;
+	indicesOffset += 4;
 	scenarioData.parsed.maps.forEach(function(map, index, maps) {
 		var offset = indicesOffset + (index * 4);
 		var lengthOffset = (
@@ -625,12 +649,12 @@ var generateIndexAndComposite = function (scenarioData) {
 		fileOffset += totalSize;
 	});
 	indicesOffset += scenarioData.parsed.maps.length * 8;
-	indicesDataView.setUint16(
+	indicesDataView.setUint32(
 		indicesOffset,
 		scenarioData.parsed.tilesets.length,
 		false
 	);
-	indicesOffset += 2;
+	indicesOffset += 4;
 	scenarioData.parsed.tilesets.forEach(function(tileset, index, tilesets) {
 		var offset = indicesOffset + (index * 4);
 		var lengthOffset = (
@@ -655,12 +679,12 @@ var generateIndexAndComposite = function (scenarioData) {
 		fileOffset += totalSize;
 	});
 	indicesOffset += scenarioData.parsed.tilesets.length * 8;
-	indicesDataView.setUint16(
+	indicesDataView.setUint32(
 		indicesOffset,
 		scenarioData.parsed.images.length,
 		false
 	);
-	indicesOffset += 2;
+	indicesOffset += 4;
 	scenarioData.parsed.images.forEach(function(image, index, images) {
 		indicesDataView.setUint32(
 			indicesOffset, // item offset
