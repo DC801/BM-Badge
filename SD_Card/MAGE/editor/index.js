@@ -34,7 +34,7 @@ var setCharsIntoDataView = function (
 };
 
 var getTilesetHeader = function (tilesetData, image) {
-	var result = new ArrayBuffer(
+	var tilesetHeaderLength = (
 		16 // char[16] name
 		+ 2 // uint16_t imageIndex
 		+ 2 // uint16_t imageWidth
@@ -43,6 +43,10 @@ var getTilesetHeader = function (tilesetData, image) {
 		+ 2 // uint16_t tileHeight
 		+ 2 // uint16_t cols
 		+ 2 // uint16_t rows
+	);
+	var result = new ArrayBuffer(
+		tilesetHeaderLength
+		+ 4 - (tilesetHeaderLength % 4) // pad to to uint32_t alignment
 	);
 	var dataView = new DataView(result);
 	var offset = 0;
@@ -103,7 +107,10 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 			tilesetData
 		);
 		tilesetData.serialized = {
-			tiles: new ArrayBuffer(tilesetData.tilecount)
+			tiles: new ArrayBuffer(
+				tilesetData.tilecount
+				+ 4 - (tilesetData.tilecount % 4) // pad to to uint32_t alignment
+			)
 		};
 		var tileDataView = new DataView(tilesetData.serialized.tiles);
 		// forget about the built-in name, using file name instead.
@@ -298,20 +305,20 @@ var handleTileLayer = function(layer, map) {
 			tileData = getMapTileAndOrientationByGID(tileGid, map);
 			dataView.setUint8(
 				offset * bytesPerTile,
-				tileData.mapTilesetIndex
-			);
-			dataView.setUint16(
-				(offset * bytesPerTile) + 1,
-				tileData.tileIndex,
-				false // fix endianness of output, little -> big
-			);
-			dataView.setUint8(
-				(offset * bytesPerTile) + 3,
 				(
 					(tileData.flip_x << 2)
 					+ (tileData.flip_y << 1)
 					+ (tileData.flip_xy << 0)
 				)
+			);
+			dataView.setUint8(
+				(offset * bytesPerTile) + 1,
+				tileData.mapTilesetIndex
+			);
+			dataView.setUint16(
+				(offset * bytesPerTile) + 2,
+				tileData.tileIndex,
+				false // fix endianness of output, little -> big
 			);
 		}
 		offset += 1;
@@ -394,7 +401,7 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 };
 
 var generateMapHeader = function (map) {
-	var result = new ArrayBuffer(
+	var headerLength = (
 		16 // char[] name
 		+ 2 // uint16_t tileWidth
 		+ 2 // uint16_t tileHeight
@@ -403,6 +410,10 @@ var generateMapHeader = function (map) {
 		+ 1 // uint8_t layer count
 		+ 1 // uint8_t tileset count
 		+ map.tilesets.length * 2 // global tileset IDs
+	);
+	var result = new ArrayBuffer(
+		headerLength
+		+ 4 - (headerLength % 4) // pad to to uint32_t alignment
 	);
 	var headerDataView = new DataView(result);
 	setCharsIntoDataView(
