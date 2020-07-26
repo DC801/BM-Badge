@@ -70,6 +70,11 @@ types:
         repeat: expr
         repeat-expr: tileset_count
         doc: The global IDs of the tilesets this map's tiles use
+      - id: tileset_global_ids_padding
+        type: u2
+        repeat: expr
+        repeat-expr: ((tileset_count + 1) % 4)
+        doc: Padding to align things back to uint32_t
       - id: tiles
         type: map_tile
         repeat: expr
@@ -80,12 +85,12 @@ types:
 
   map_tile:
     seq:
+      - id: tile_flags
+        type: u1
       - id: map_tileset_index
         type: u1
       - id: tile_id
         type: u2
-      - id: tile_flags
-        type: u1
     instances:
       flip_x:
         value: '(tile_flags & 0b00000100) != 0'
@@ -114,12 +119,20 @@ types:
         type: u2
       - id: rows
         type: u2
+      - id: tileset_header_padding
+        type: u2
+        doc: Padding bytes to get things back to uint32_t alignment
       - id: tiles
         type: str
         size: 1
         encoding: ASCII
         repeat: expr
         repeat-expr: tile_count
+      - id: tileset_footer_padding
+        type: u1
+        repeat: expr
+        repeat-expr: 4 - (tile_count % 4)
+        doc: Padding bytes to get things back to uint32_t alignment
     instances:
       tile_count:
         value: 'cols * rows'

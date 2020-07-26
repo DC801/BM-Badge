@@ -73,39 +73,52 @@ void handle_input () {
     #endif
 }
 
-void mage_game_loop () {
+GameDataMemoryAddresses dataMemoryAddresses = {};
+
+void mage_game_loop (uint8_t *data) {
     now = millis();
     delta_time = now - lastTime;
 
     mage_canvas->clearScreen(RGB(0,0,255));
     mage_canvas->drawHorizontalLine(10, 20, 100, RGB(0,255,0));
 
-    mage_canvas->drawImageFromFile(
-        64,
-        64,
-        32,
-        32,
-        "MAGE/game.dat",
+    mage_canvas->drawImage(
         0,
         0,
-        32
+        128,
+        128,
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
+        256,
+        128,
+        512,
+        0x0020
     );
-    mage_canvas->drawImageFromFile(
+    mage_canvas->drawImage(
+        50,
+        32,
+        32,
+        32,
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[1]),
+        0,
+        0,
+        128,
+        0x0020
+    );
+    mage_canvas->drawImage(
+        8,
         64,
-        96,
         32,
         32,
-        "MAGE/exa.dat",
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),
         0,
         0,
-        32
+        32,
+        0x0020
     );
     mage_canvas->blt();
 
     lastTime = now;
 }
-
-GameDataMemoryAddresses dataMemoryAddresses = {};
 
 uint32_t count_with_offsets (
     uint8_t *data,
@@ -114,34 +127,28 @@ uint32_t count_with_offsets (
     uint32_t **lengths
 ) {
     uint32_t offset = 0;
-    printf("count_with_offsets START ----------------------\n");
-
-    printf("count_with_offsets data: %p\n", data);
     *count = (uint32_t *) data + offset;
-    printf("count_with_offsets *count: %p\n", *count);
     offset += 1;
     ceU4(*count);
-    printf("count_with_offsets Data Size: %" PRIu32 "\n", **count);
 
     *offsets = (uint32_t *) data + offset;
-    printf("count_with_offsets *offsets: %p\n", *offsets);
     offset += **count;
-    printf("count_with_offsets offsets before swizzle: %" PRIu32 "\n", **offsets);
     ceU4Buf(*offsets, **count);
-    printf("count_with_offsets offsets after swizzle:  %" PRIu32 "\n", **offsets);
 
     *lengths = (uint32_t *) data + offset;
-    printf("count_with_offsets *lengths: %p\n", *lengths);
     offset += **count;
-    printf("count_with_offsets lengths before swizzle: %" PRIu32 "\n", **lengths);
     ceU4Buf(*lengths, **count);
-    printf("count_with_offsets lengths after swizzle:  %" PRIu32 "\n", **lengths);
-
-    printf("count_with_offsets END ----------------------\n");
     return offset * 4; // but return the offset in # of bytes
 }
 
-void load_data_headers (uint8_t *data) {
+void correct_image_data_endinness (uint8_t *data, uint32_t length) {
+    ceU2Buf(
+        (uint16_t *) data,
+        length / 2
+    );
+}
+
+uint32_t load_data_headers (uint8_t *data) {
     uint32_t offset = 8; // seek past identifier
     offset += count_with_offsets(
         data + offset,
@@ -161,28 +168,18 @@ void load_data_headers (uint8_t *data) {
         &dataMemoryAddresses.imageOffsets,
         &dataMemoryAddresses.imageLengths
     );
-    printf("data: %p\n", data);
 
-    printf("dataMemoryAddresses.mapCount: %p\n", dataMemoryAddresses.mapCount);
-    printf("dataMemoryAddresses.mapOffsets[0]: %p\n", dataMemoryAddresses.mapOffsets);
-    printf("dataMemoryAddresses.mapLengths[0]: %p\n", dataMemoryAddresses.mapLengths);
-    printf("dataMemoryAddresses.tilesetCount: %p\n", dataMemoryAddresses.tilesetCount);
-    printf("dataMemoryAddresses.tilesetOffsets[0]: %p\n", dataMemoryAddresses.tilesetOffsets);
-    printf("dataMemoryAddresses.tilesetLengths[0]: %p\n", dataMemoryAddresses.tilesetLengths);
-    printf("dataMemoryAddresses.imageCount: %p\n", dataMemoryAddresses.imageCount);
-    printf("dataMemoryAddresses.imageOffsets[0]: %p\n", dataMemoryAddresses.imageOffsets);
-    printf("dataMemoryAddresses.imageLengths[0]: %p\n", dataMemoryAddresses.imageLengths);
+    if (_needsSwap) {
+        for (uint32_t i = 0; i < *dataMemoryAddresses.imageCount; i++) {
+            correct_image_data_endinness(
+                data + dataMemoryAddresses.imageOffsets[i],
+                dataMemoryAddresses.imageLengths[i]
+            );
+        }
+    }
 
-    printf("dataMemoryAddresses.mapCount: %" PRIu32 "\n", *dataMemoryAddresses.mapCount);
-    printf("dataMemoryAddresses.mapOffsets[0]: %" PRIu32 "\n", *dataMemoryAddresses.mapOffsets);
-    printf("dataMemoryAddresses.mapLengths[0]: %" PRIu32 "\n", *dataMemoryAddresses.mapLengths);
-    printf("dataMemoryAddresses.tilesetCount: %" PRIu32 "\n", *dataMemoryAddresses.tilesetCount);
-    printf("dataMemoryAddresses.tilesetOffsets[0]: %" PRIu32 "\n", *dataMemoryAddresses.tilesetOffsets);
-    printf("dataMemoryAddresses.tilesetLengths[0]: %" PRIu32 "\n", *dataMemoryAddresses.tilesetLengths);
-    printf("dataMemoryAddresses.imageCount: %" PRIu32 "\n", *dataMemoryAddresses.imageCount);
-    printf("dataMemoryAddresses.imageOffsets[0]: %" PRIu32 "\n", *dataMemoryAddresses.imageOffsets);
-    printf("dataMemoryAddresses.imageLengths[0]: %" PRIu32 "\n", *dataMemoryAddresses.imageLengths);
-    printf("offset: %" PRIu32 "\n", offset);
+    printf("end of headers: %" PRIu32 "\n", offset);
+    return offset;
 }
 
 int MAGE() {
@@ -209,12 +206,17 @@ int MAGE() {
     }
 
     load_data_headers(data);
+
+    printf("dataMemoryAddresses.mapCount: %" PRIu32 "\n", *dataMemoryAddresses.mapCount);
+    printf("dataMemoryAddresses.tilesetCount: %" PRIu32 "\n", *dataMemoryAddresses.tilesetCount);
+    printf("dataMemoryAddresses.imageCount: %" PRIu32 "\n", *dataMemoryAddresses.imageCount);
+
     mage_canvas = p_canvas();
     lastTime = millis();
     while (running)
     {
         handle_input();
-        mage_game_loop();
+        mage_game_loop(data);
     }
-    return 0;
+    exit(0);
 }
