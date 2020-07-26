@@ -143,14 +143,17 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 				);
 			}
 		});
-		return handleImage(tilesetData.image, scenarioData, fileNameMap)
-			.then(function (image) {
-				tilesetData.scenarioIndex = scenarioData.parsed.tilesets.length;
-				scenarioData.parsed.tilesets.push(tilesetData);
-				tilesetData.serialized.header = getTilesetHeader(tilesetData, image);
-				tilesetFile.parsed = tilesetData;
+		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
+		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
+		var filePromise = handleImage(tilesetData.image, scenarioData, fileNameMap)
+			.then(function () {
 				return tilesetData;
 			});
+		var imageFileName = tilesetData.image.split('/').pop();
+		var imageFile = fileNameMap[imageFileName];
+		tilesetData.serialized.header = getTilesetHeader(tilesetData, imageFile);
+		tilesetFile.parsed = tilesetData;
+		return filePromise
 	};
 };
 
@@ -163,6 +166,13 @@ var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
 				'Tileset `' + tilesetFileName + '` could not be found in folder!'
 			);
 		} else {
+			if (tilesetFile.scenarioIndex === undefined) {
+				tilesetFile.scenarioIndex = scenarioData.parsed.tilesets.length;
+				scenarioData.parsed.tilesets.push({
+					name: 'temporary - awaiting parse',
+					scenarioIndex: tilesetFile.scenarioIndex,
+				});
+			}
 			return (
 				tilesetFile.parsed
 					? Promise.resolve(tilesetFile.parsed)
@@ -442,21 +452,21 @@ var generateMapHeader = function (map) {
 	return result;
 };
 
-var handleMapData = function (mapFileName, fileNameMap, scenarioData) {
+var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 	return function (map) {
 		console.log(
 			'Map:',
-			mapFileName,
+			mapFile.name,
 			map
 		);
-		map.name = mapFileName.split('.')[0];
-		fileNameMap[mapFileName].parsed = map;
+		map.name = mapFile.name.split('.')[0];
+		mapFile.parsed = map;
+		map.scenarioIndex = mapFile.scenarioIndex;
+		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
 				map.serialized.header = generateMapHeader(map);
-				map.scenarioIndex = scenarioData.parsed.maps.length;
-				scenarioData.parsed.maps.push(map);
 				return map;
 			});
 	};
@@ -467,13 +477,18 @@ var handleScenarioMaps = function (scenarioData, fileNameMap) {
 	return Promise.all(Object.keys(maps).map(function (key) {
 		var mapFileName = maps[key].split('/').pop();
 		var mapFile = fileNameMap[mapFileName];
+		mapFile.scenarioIndex = scenarioData.parsed.maps.length;
+		scenarioData.parsed.maps.push({
+			name: 'temporary - still parsing',
+			scenarioIndex: mapFile.scenarioIndex
+		});
 		if (!mapFile) {
 			throw new Error(
 				'Map `' + mapFileName + '` could not be found in folder!'
 			);
 		} else {
 			return getFileJson(mapFile)
-				.then(handleMapData(mapFileName, fileNameMap, scenarioData));
+				.then(handleMapData(mapFile, fileNameMap, scenarioData));
 		}
 	}));
 };
@@ -519,6 +534,8 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 			);
 		}
 		var blobUrl = URL.createObjectURL(file);
+		file.scenarioIndex = scenarioData.parsed.images.length;
+		scenarioData.parsed.images.push(file);
 		result = new Promise(function (resolve) {
 			window.getPixels(
 				blobUrl,
@@ -565,8 +582,6 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 					offset += 1;
 				}
 				file.serialized = data;
-				file.scenarioIndex = scenarioData.parsed.images.length;
-				scenarioData.parsed.images.push(file);
 				return file;
 			});
 	}

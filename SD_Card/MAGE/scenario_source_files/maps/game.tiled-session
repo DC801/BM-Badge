@@ -30,11 +30,11 @@
             }
         },
         "dungeon_map.json": {
-            "scale": 2,
+            "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 264.25,
-                "y": 206
+                "x": 29.625,
+                "y": 78.25
             }
         },
         "dungeon_tiles.json": {

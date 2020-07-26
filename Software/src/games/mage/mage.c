@@ -120,15 +120,15 @@ void draw_map (uint8_t *data) {
             //         cols
             // );
             mage_canvas->drawImage(
-                    x,
-                    y,
-                    *currentMap.tileWidth,
-                    *currentMap.tileHeight,
-                    (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
-                    (tileId % cols) * *tileset.tileWidth,
-                    (tileId / cols) * *tileset.tileHeight,
-                    *tileset.imageWidth,
-                    0x0020
+                x,
+                y,
+                *currentMap.tileWidth,
+                *currentMap.tileHeight,
+                (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
+                (tileId % cols) * *tileset.tileWidth,
+                (tileId / cols) * *tileset.tileHeight,
+                *tileset.imageWidth,
+                0x0020
             );
         }
     }
@@ -147,7 +147,7 @@ void mage_game_loop (uint8_t *data) {
         0,
         128,
         128,
-        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
         256,
         128,
         512,
@@ -158,7 +158,7 @@ void mage_game_loop (uint8_t *data) {
         32,
         32,
         32,
-        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
+        (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),
         0,
         0,
         128,
