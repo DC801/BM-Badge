@@ -151,50 +151,130 @@ void correct_image_data_endinness (uint8_t *data, uint32_t length) {
     );
 }
 
-GameMap currentMap = {};
-void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
-    printf("data: %p\n", data);
 
-    data[15] = 0x00; // null terminate it so things don't go bad
-    currentMap.name = (char *) data;
+GameMap currentMap = {};
+GameTileset *currentMapTilesets;
+
+void load_tilesets_headers (
+    GameTileset tileset,
+    uint8_t *data,
+    uint32_t tilesetIndex
+) {
+    uint8_t *tilesetData = data + dataMemoryAddresses.tilesetOffsets[tilesetIndex];
+    printf("tileset[%" PRIu32 "]: offset %" PRIu32 "\n", tilesetIndex, dataMemoryAddresses.tilesetOffsets[tilesetIndex]);
+    printf("tileset[%" PRIu32 "]: %p\n", tilesetIndex, tilesetData);
+
+    tilesetData[15] = 0x00; // null terminate it so things don't go bad
+    tileset.name = (char *) tilesetData;
+    printf("tileset.name: %s\n", tileset.name);
+    uint32_t offset = 16;
+
+    tileset.imageIndex = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.imageIndex);
+    printf("tileset.imageIndex: %p\n", tileset.imageIndex);
+    printf("tileset.imageIndex: %" PRIu16 "\n", *tileset.imageIndex);
+
+    tileset.imageWidth = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.imageWidth);
+    printf("tileset.imageWidth: %p\n", tileset.imageWidth);
+    printf("tileset.imageWidth: %" PRIu16 "\n", *tileset.imageWidth);
+
+    tileset.imageHeight = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.imageHeight);
+    printf("tileset.imageHeight: %p\n", tileset.imageHeight);
+    printf("tileset.imageHeight: %" PRIu16 "\n", *tileset.imageHeight);
+
+    tileset.tileWidth = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.tileWidth);
+    printf("tileset.tileWidth: %p\n", tileset.tileWidth);
+    printf("tileset.tileWidth: %" PRIu16 "\n", *tileset.tileWidth);
+
+    tileset.tileHeight = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.tileHeight);
+    printf("tileset.tileHeight: %p\n", tileset.tileHeight);
+    printf("tileset.tileHeight: %" PRIu16 "\n", *tileset.tileHeight);
+
+    tileset.cols = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.cols);
+    printf("tileset.cols: %p\n", tileset.cols);
+    printf("tileset.cols: %" PRIu16 "\n", *tileset.cols);
+
+    tileset.rows = (uint16_t *) (tilesetData + offset);
+    offset += 2;
+    ceU2(tileset.rows);
+    printf("tileset.rows: %p\n", tileset.rows);
+    printf("tileset.rows: %" PRIu16 "\n", *tileset.rows);
+
+    offset += 2; // pad to to uint32_t alignment
+
+    tileset.startOfTiles = dataMemoryAddresses.tilesetOffsets[tilesetIndex] + offset;
+}
+
+void load_map_tilesets (uint8_t *data) {
+    free(currentMapTilesets);
+    currentMapTilesets = (GameTileset *) calloc(
+        *currentMap.tilesetCount,
+        sizeof(GameTileset)
+    );
+    for (uint8_t i = 0; i < *currentMap.tilesetCount; i++) {
+        load_tilesets_headers(
+            currentMapTilesets[i],
+            data,
+            currentMap.tilesetGlobalIds[i]
+        );
+    }
+}
+
+void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
+    uint8_t *mapData = data + dataMemoryAddresses.mapOffsets[incomingMapIndex];
+    printf("mapData: %p\n", mapData);
+
+    mapData[15] = 0x00; // null terminate it so things don't go bad
+    currentMap.name = (char *) mapData;
     printf("currentMap.name: %s\n", currentMap.name);
     uint32_t offset = 16;
 
-    currentMap.tileWidth = (uint16_t *) (data + offset);
+    currentMap.tileWidth = (uint16_t *) (mapData + offset);
     offset += 2;
     ceU2(currentMap.tileWidth);
     printf("currentMap.tileWidth: %p\n", currentMap.tileWidth);
     printf("currentMap.tileWidth: %" PRIu16 "\n", *currentMap.tileWidth);
 
-    currentMap.tileHeight = (uint16_t *) (data + offset);
+    currentMap.tileHeight = (uint16_t *) (mapData + offset);
     offset += 2;
     ceU2(currentMap.tileHeight);
     printf("currentMap.tileHeight: %p\n", currentMap.tileHeight);
     printf("currentMap.tileHeight: %" PRIu16 "\n", *currentMap.tileHeight);
 
-    currentMap.width = (uint16_t *) (data + offset);
+    currentMap.width = (uint16_t *) (mapData + offset);
     offset += 2;
     ceU2(currentMap.width);
     printf("currentMap.width: %p\n", currentMap.width);
     printf("currentMap.width: %" PRIu16 "\n", *currentMap.width);
 
-    currentMap.height = (uint16_t *) (data + offset);
+    currentMap.height = (uint16_t *) (mapData + offset);
     offset += 2;
     ceU2(currentMap.height);
     printf("currentMap.height: %p\n", currentMap.height);
     printf("currentMap.height: %" PRIu16 "\n", *currentMap.height);
 
-    currentMap.layerCount = (data + offset);
+    currentMap.layerCount = (mapData + offset);
     offset += 1;
     printf("currentMap.layerCount: %p\n", currentMap.layerCount);
     printf("currentMap.layerCount: %" PRIu8 "\n", *currentMap.layerCount);
 
-    currentMap.tilesetCount = (data + offset);
+    currentMap.tilesetCount = (mapData + offset);
     offset += 1;
     printf("currentMap.tilesetCount: %p\n", currentMap.tilesetCount);
     printf("currentMap.tilesetCount: %" PRIu8 "\n", *currentMap.tilesetCount);
 
-    currentMap.tilesetGlobalIds = (uint16_t *) (data + offset);
+    currentMap.tilesetGlobalIds = (uint16_t *) (mapData + offset);
     offset += *currentMap.tilesetCount * 2;
     ceU2Buf(currentMap.tilesetGlobalIds, *currentMap.tilesetCount);
     printf("currentMap.tilesetGlobalIds: %p\n", currentMap.tilesetGlobalIds);
@@ -202,9 +282,10 @@ void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
         printf("currentMap.tilesetGlobalId[%" PRIu8 "]: %" PRIu16 "\n", i, currentMap.tilesetGlobalIds[i]);
     }
 
-    currentMap.startOfLayers = (uint32_t *) (data + (offset + 4 - (offset % 4)));
+    currentMap.startOfLayers = (dataMemoryAddresses.mapOffsets[incomingMapIndex] + (offset + 4 - (offset % 4)));
     printf("currentMap.startOfLayers %p\n", currentMap.startOfLayers);
     currentMapIndex = incomingMapIndex;
+    load_map_tilesets(data);
 }
 
 uint32_t load_data_headers (uint8_t *data) {
@@ -271,7 +352,7 @@ int MAGE() {
     printf("dataMemoryAddresses.imageCount: %" PRIu32 "\n", *dataMemoryAddresses.imageCount);
 
     load_map_headers(
-        data + dataMemoryAddresses.mapOffsets[0],
+        data,
         0
     );
 
