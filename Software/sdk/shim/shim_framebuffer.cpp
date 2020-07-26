@@ -166,15 +166,15 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, in
 }
 
 void FrameBuffer::drawImage(
-        int x,
-        int y,
-        int w,
-        int h,
-        const uint16_t *data,
-        int fx,
-        int fy,
-        int pitch,
-        uint16_t tansparent_color
+	int x,
+	int y,
+	int w,
+	int h,
+	const uint16_t *data,
+	int fx,
+	int fy,
+	int pitch,
+	uint16_t tansparent_color
 ) {
 	for (int j = 0; j < h; ++j)
 	{

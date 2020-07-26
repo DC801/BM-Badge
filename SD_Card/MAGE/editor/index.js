@@ -303,22 +303,22 @@ var handleTileLayer = function(layer, map) {
 		tileGid = layer.data[offset];
 		if (tileGid) { // if tileGid is 0, it's an empty tile, no work to do
 			tileData = getMapTileAndOrientationByGID(tileGid, map);
+			dataView.setUint16(
+				(offset * bytesPerTile),
+				tileData.tileIndex,
+				false // fix endianness of output, little -> big
+			);
 			dataView.setUint8(
-				offset * bytesPerTile,
+				(offset * bytesPerTile) + 2,
+				tileData.mapTilesetIndex
+			);
+			dataView.setUint8(
+				(offset * bytesPerTile) + 3,
 				(
 					(tileData.flip_x << 2)
 					+ (tileData.flip_y << 1)
 					+ (tileData.flip_xy << 0)
 				)
-			);
-			dataView.setUint8(
-				(offset * bytesPerTile) + 1,
-				tileData.mapTilesetIndex
-			);
-			dataView.setUint16(
-				(offset * bytesPerTile) + 2,
-				tileData.tileIndex,
-				false // fix endianness of output, little -> big
 			);
 		}
 		offset += 1;

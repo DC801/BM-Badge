@@ -85,12 +85,12 @@ types:
 
   map_tile:
     seq:
-      - id: tile_flags
-        type: u1
-      - id: map_tileset_index
-        type: u1
       - id: tile_id
         type: u2
+      - id: map_tileset_index
+        type: u1
+      - id: tile_flags
+        type: u1
     instances:
       flip_x:
         value: '(tile_flags & 0b00000100) != 0'
