@@ -25,7 +25,7 @@ static bool m_wrap = true;
 static volatile bool m_stop = false;
 
 
-uint16_t frame[WIDTH * HEIGHT];
+uint16_t frame[FRAMEBUFFER_SIZE];
 FrameBuffer canvas;
 
 extern "C" {
@@ -39,7 +39,7 @@ FrameBuffer::FrameBuffer() {}
 FrameBuffer::~FrameBuffer() {}
 
 void FrameBuffer::clearScreen(uint16_t color) {
-	for (int i=0; i<WIDTH*HEIGHT; ++i)
+	for (int i=0; i<FRAMEBUFFER_SIZE; ++i)
 		frame[i] = color;
 }
 
@@ -109,14 +109,41 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, in
     }
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color) {
-
-    for (int j=0; j<h; ++j)
-        for (int i=0; i<w; ++i) {
-            uint16_t c = data[pitch*(fy+j)+i+fx];
-            if (c != tansparent_color)
-                frame[(j+y)*WIDTH+i+x] = c;
+void FrameBuffer::drawImage(
+    int x,
+    int y,
+    int w,
+    int h,
+    const uint16_t *data,
+    int fx,
+    int fy,
+    int pitch,
+    uint16_t tansparent_color
+) {
+    int32_t currentX = 0;
+    int32_t currentY = 0;
+    for (int offsetY = 0; (offsetY < h) && (currentY < HEIGHT); ++offsetY)
+    {
+        currentY = offsetY + y;
+        currentX = 0;
+        for (int offsetX = 0; (offsetX < w) && (currentX < WIDTH); ++offsetX)
+        {
+            currentX = offsetX + x;
+            if (
+                currentX >= 0
+                && currentX < WIDTH
+                && currentY >= 0
+                && currentY < HEIGHT
+            )
+            {
+                uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
+                if (color != tansparent_color)
+                {
+                    frame[(currentY * WIDTH) + currentX] = color;
+                }
+            }
         }
+    }
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
@@ -814,7 +841,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 
 void FrameBuffer::blt() {
 
-	for (int i=0; i< WIDTH * HEIGHT; ++i)
+	for (int i=0; i< FRAMEBUFFER_SIZE; ++i)
 	{
 		frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
 	}
