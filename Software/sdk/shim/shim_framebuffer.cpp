@@ -28,7 +28,7 @@ static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
 
-uint16_t frame[WIDTH * HEIGHT];
+uint16_t frame[FRAMEBUFFER_SIZE];
 FrameBuffer canvas;
 
 extern "C" {
@@ -56,7 +56,7 @@ FrameBuffer::FrameBuffer() {}
 FrameBuffer::~FrameBuffer() {}
 
 void FrameBuffer::clearScreen(uint16_t color) {
-	for (int i=0; i<WIDTH*HEIGHT; ++i)
+	for (int i=0; i<FRAMEBUFFER_SIZE; ++i)
 	{
 		frame[i] = color;
 	}
@@ -176,15 +176,27 @@ void FrameBuffer::drawImage(
 	int pitch,
 	uint16_t tansparent_color
 ) {
-	for (int j = 0; j < h; ++j)
+	int32_t currentX = 0;
+	int32_t currentY = 0;
+	for (int offsetY = 0; (offsetY < h) && (currentY < HEIGHT); ++offsetY)
 	{
-		for (int i = 0; i < w; ++i)
+		currentY = offsetY + y;
+		currentX = 0;
+		for (int offsetX = 0; (offsetX < w) && (currentX < WIDTH); ++offsetX)
 		{
-			uint16_t c = data[pitch * (fy + j) + i + fx];
-
-			if (c != tansparent_color)
+			currentX = offsetX + x;
+			if (
+				currentX >= 0
+				&& currentX < WIDTH
+				&& currentY >= 0
+				&& currentY < HEIGHT
+			)
 			{
-				frame[(j + y) * WIDTH + i + x] = c;
+				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
+				if (color != tansparent_color)
+				{
+					frame[(currentY * WIDTH) + currentX] = color;
+				}
 			}
 		}
 	}
@@ -1013,7 +1025,7 @@ void FrameBuffer::blt()
 		HEIGHT
 	);
 	SDL_LockTexture(tex, NULL, &pixels, &pitch);
-	memcpy(pixels, frame, WIDTH*HEIGHT*sizeof(uint16_t));
+	memcpy(pixels, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
 	SDL_UnlockTexture(tex);
 	SDL_RenderCopy(renderer, tex, NULL, NULL);
 	SDL_DestroyTexture(tex);

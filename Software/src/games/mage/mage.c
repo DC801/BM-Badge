@@ -1,4 +1,5 @@
 #include "common.h"
+#include "entity.h"
 #include <inttypes.h>
 
 bool running = true;
@@ -84,6 +85,7 @@ uint32_t mapIndex = 0;
 uint32_t currentMapIndex = 0;
 GameMap currentMap = {};
 GameTileset *currentMapTilesets;
+Point cameraPosition = {};
 
 void draw_map (uint8_t *data) {
     uint32_t tileCount = *currentMap.width * *currentMap.height;
@@ -97,13 +99,13 @@ void draw_map (uint8_t *data) {
     GameTileset tileset;
     GameTile *tile;
     for (uint32_t mapTileIndex = 0; mapTileIndex < tileCount; ++mapTileIndex) {
-        x = (*currentMap.tileWidth * (mapTileIndex % *currentMap.width));
-        y = (*currentMap.tileHeight * (mapTileIndex / *currentMap.width));
+        x = ((int32_t) *currentMap.tileWidth * (mapTileIndex % *currentMap.width)) - cameraPosition.x;
+        y = ((int32_t) *currentMap.tileHeight * (mapTileIndex / *currentMap.width)) - cameraPosition.y;
         if (
             x > -*currentMap.tileWidth
-            && x < WIDTH - 1
+            && x < WIDTH
             && y > -*currentMap.tileHeight
-            && y < HEIGHT - 1
+            && y < HEIGHT
         ) {
             tile = (GameTile *) &tiles[mapTileIndex * 4];
             tileId = ceU2v((*tile).tileId);
@@ -139,8 +141,9 @@ void mage_game_loop (uint8_t *data) {
     delta_time = now - lastTime;
 
     mage_canvas->clearScreen(RGB(0,0,255));
-    mage_canvas->drawHorizontalLine(0, 96, 127, RGB(0,255,0));
-
+    float_t phase = now / 10.0 / M_PI_2;
+    cameraPosition.x = (cos(phase) * 128) + 64;
+    cameraPosition.y = (sin(phase) * 128) + 64;
     draw_map (data);
     mage_canvas->drawImage(
         0,

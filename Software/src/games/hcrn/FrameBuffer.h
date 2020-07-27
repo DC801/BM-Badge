@@ -9,6 +9,7 @@
 
 #define WIDTH		128
 #define HEIGHT		128
+const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
