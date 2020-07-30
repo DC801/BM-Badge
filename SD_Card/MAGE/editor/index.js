@@ -315,7 +315,7 @@ var handleTileLayer = function(layer, map) {
 			tileData = getMapTileAndOrientationByGID(tileGid, map);
 			dataView.setUint16(
 				(offset * bytesPerTile),
-				tileData.tileIndex,
+				tileData.tileIndex + 1, // because 0 must mean "empty"
 				false // fix endianness of output, little -> big
 			);
 			dataView.setUint8(

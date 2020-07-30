@@ -87,7 +87,7 @@ GameMap currentMap = {};
 GameTileset *currentMapTilesets;
 Point cameraPosition = {};
 
-void draw_map (uint8_t *data) {
+void draw_map (uint8_t *data, uint8_t layer) {
     uint32_t tileCount = *currentMap.width * *currentMap.height;
     uint8_t flags = 0;
     uint8_t tilesetId = 0;
@@ -107,31 +107,37 @@ void draw_map (uint8_t *data) {
             && y > -*currentMap.tileHeight
             && y < HEIGHT
         ) {
-            tile = (GameTile *) &tiles[mapTileIndex * 4];
+            tile = (GameTile *) &tiles[
+                (layer * tileCount * 4)
+                + (mapTileIndex * 4)
+            ];
             tileId = ceU2v((*tile).tileId);
-            tilesetId = (*tile).tilesetId;
-            flags = (*tile).flags;
-            tileset = currentMapTilesets[tilesetId];
-            cols = *tileset.cols;
-            // printf(
-            //         "flags: %" PRIu8 "; tilesetId: %" PRIu8 "; tileId: %" PRIu16 "; tileset.name: %s; cols: %" PRIu16 ";\n",
-            //         flags,
-            //         tilesetId,
-            //         tileId,
-            //         tileset.name,
-            //         cols
-            // );
-            mage_canvas->drawImage(
-                x,
-                y,
-                *currentMap.tileWidth,
-                *currentMap.tileHeight,
-                (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
-                (tileId % cols) * *tileset.tileWidth,
-                (tileId / cols) * *tileset.tileHeight,
-                *tileset.imageWidth,
-                0x0020
-            );
+            if (tileId != 0) {
+                tileId -= 1;
+                tilesetId = (*tile).tilesetId;
+                flags = (*tile).flags;
+                tileset = currentMapTilesets[tilesetId];
+                cols = *tileset.cols;
+                // printf(
+                //         "flags: %" PRIu8 "; tilesetId: %" PRIu8 "; tileId: %" PRIu16 "; tileset.name: %s; cols: %" PRIu16 ";\n",
+                //         flags,
+                //         tilesetId,
+                //         tileId,
+                //         tileset.name,
+                //         cols
+                // );
+                mage_canvas->drawImage(
+                    x,
+                    y,
+                    *currentMap.tileWidth,
+                    *currentMap.tileHeight,
+                    (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
+                    (tileId % cols) * *tileset.tileWidth,
+                    (tileId / cols) * *tileset.tileHeight,
+                    *tileset.imageWidth,
+                    0x0020
+                );
+            }
         }
     }
 }
@@ -144,7 +150,8 @@ void mage_game_loop (uint8_t *data) {
     float_t phase = now / 10.0 / M_PI_2;
     cameraPosition.x = (cos(phase) * 128) + 64;
     cameraPosition.y = (sin(phase) * 128) + 64;
-    draw_map (data);
+    draw_map(data, 0);
+    draw_map(data, 1);
     mage_canvas->drawImage(
         0,
         0,
@@ -178,6 +185,9 @@ void mage_game_loop (uint8_t *data) {
         32,
         0x0020
     );
+
+    draw_map(data, 2);
+
     mage_canvas->blt();
 
     lastTime = now;
