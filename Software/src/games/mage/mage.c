@@ -150,8 +150,14 @@ void mage_game_loop (uint8_t *data) {
     float_t phase = now / 10.0 / M_PI_2;
     cameraPosition.x = (cos(phase) * 128) + 64;
     cameraPosition.y = (sin(phase) * 128) + 64;
-    draw_map(data, 0);
-    draw_map(data, 1);
+
+    if (*currentMap.layerCount > 1) {
+        for (uint8_t layerIndex = 0; layerIndex < *currentMap.layerCount -1; layerIndex++) {
+            draw_map(data, layerIndex);
+        }
+    } else {
+        draw_map(data, 0);
+    }
     mage_canvas->drawImage(
         0,
         0,
@@ -186,8 +192,9 @@ void mage_game_loop (uint8_t *data) {
         0x0020
     );
 
-    draw_map(data, 2);
-
+    if (*currentMap.layerCount > 1) {
+        draw_map(data, *currentMap.layerCount - 1);
+    }
     mage_canvas->blt();
 
     lastTime = now;
