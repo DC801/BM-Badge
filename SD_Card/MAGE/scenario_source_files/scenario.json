@@ -3,12 +3,12 @@
 		"init": [
 			{
 				"name": "loadMap",
-				"value": "mini_dungeon"
+				"value": "town_map"
 			}
 		]
 	},
 	"maps": {
-		"mini_dungeon": "maps/mini_dungeon_map.json"
+		"mini_dungeon": "maps/town_map.json"
 	},
 	"entities": {
 		"goat": {

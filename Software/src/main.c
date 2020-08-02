@@ -16,8 +16,9 @@
 #ifdef DC801_DESKTOP
 #include<signal.h>
 
-const int SCREEN_WIDTH = 128;
-const int SCREEN_HEIGHT = 128;
+const int SCREEN_MULTIPLIER = 3;
+const int SCREEN_WIDTH = WIDTH * SCREEN_MULTIPLIER;
+const int SCREEN_HEIGHT = HEIGHT * SCREEN_MULTIPLIER;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -301,7 +302,7 @@ int main(void){
     else
     {
         //Create window
-        SDL_CreateWindowAndRenderer(512, 512, SDL_WINDOW_SHOWN, &window, &renderer);
+        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer);
 
         if( window == NULL )
         {

@@ -120,26 +120,75 @@ void FrameBuffer::drawImage(
     int pitch,
     uint16_t tansparent_color
 ) {
-    int32_t currentX = 0;
-    int32_t currentY = 0;
-    for (int offsetY = 0; (offsetY < h) && (currentY < HEIGHT); ++offsetY)
+    int32_t current_x = 0;
+    int32_t current_y = 0;
+    for (int offsetY = 0; (offsetY < h) && (current_y < HEIGHT); ++offsetY)
     {
-        currentY = offsetY + y;
-        currentX = 0;
-        for (int offsetX = 0; (offsetX < w) && (currentX < WIDTH); ++offsetX)
+        current_y = offsetY + y;
+        current_x = 0;
+        for (int offsetX = 0; (offsetX < w) && (current_x < WIDTH); ++offsetX)
         {
-            currentX = offsetX + x;
+            current_x = offsetX + x;
             if (
-                currentX >= 0
-                && currentX < WIDTH
-                && currentY >= 0
-                && currentY < HEIGHT
+                current_x >= 0
+                && current_x < WIDTH
+                && current_y >= 0
+                && current_y < HEIGHT
             )
             {
                 uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
                 if (color != tansparent_color)
                 {
-                    frame[(currentY * WIDTH) + currentX] = color;
+                    frame[(current_y * WIDTH) + current_x] = color;
+                }
+            }
+        }
+    }
+}
+
+void FrameBuffer::drawImageWithFlags(
+    int x,
+    int y,
+    int w,
+    int h,
+    const uint16_t *data,
+    int fx,
+    int fy,
+    int pitch,
+    uint16_t tansparent_color,
+    uint8_t flags
+) {
+    int32_t current_x = 0;
+    int32_t current_y = 0;
+    uint32_t sprite_x = 0;
+    uint32_t sprite_y = 0;
+    bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
+    bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
+    bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
+    for (int offset_y = 0; (offset_y < h) && (current_y < HEIGHT); ++offset_y)
+    {
+        current_y = offset_y + y;
+        current_x = 0;
+        for (int offset_x = 0; (offset_x < w) && (current_x < WIDTH); ++offset_x)
+        {
+            current_x = offset_x + x;
+            if (
+                current_x >= 0
+                && current_x < WIDTH
+                && current_y >= 0
+                && current_y < HEIGHT
+            )
+            {
+                sprite_x = flip_x
+                    ? fx + (w - offset_x - 1)
+                    : fx + offset_x;
+                sprite_y = flip_y
+                    ? fy + (w - offset_y - 1)
+                    : fy + offset_y;
+                uint16_t color = data[(pitch * sprite_y) + sprite_x];
+                if (color != tansparent_color)
+                {
+                    frame[(current_y * WIDTH) + current_x] = color;
                 }
             }
         }

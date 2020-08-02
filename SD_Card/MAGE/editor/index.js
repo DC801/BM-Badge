@@ -116,7 +116,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		// forget about the built-in name, using file name instead.
 		tilesetData.name = tilesetFile.name.split('.')[0];
 		// already has columns, add the missing pair
-		tilesetData.tiles.forEach(function (tile) {
+		(tilesetData.tiles || []).forEach(function (tile) {
 			mergeInProperties(
 				tile,
 				tile.properties
@@ -293,7 +293,7 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 		flip_x: !!(tileGID & FLIPPED_HORIZONTALLY_FLAG),
 		flip_y: !!(tileGID & FLIPPED_VERTICALLY_FLAG),
 		flip_xy: !!(tileGID & FLIPPED_DIAGONALLY_FLAG),
-		tile: targetTileset.parsed.tiles.find(function (tile) {
+		tile: (targetTileset.parsed.tiles || []).find(function (tile) {
 			return tile.id === tileIndex;
 		}) || {
 			id: tileIndex
