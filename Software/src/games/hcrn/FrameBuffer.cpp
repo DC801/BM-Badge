@@ -162,6 +162,8 @@ void FrameBuffer::drawImageWithFlags(
     int32_t current_y = 0;
     uint32_t sprite_x = 0;
     uint32_t sprite_y = 0;
+    uint32_t source_x = 0;
+    uint32_t source_y = 0;
     bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
     bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
     bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
@@ -179,12 +181,14 @@ void FrameBuffer::drawImageWithFlags(
                 && current_y < HEIGHT
             )
             {
+                source_x = flip_diag ? offset_y : offset_x;
+                source_y = flip_diag ? offset_x : offset_y;
                 sprite_x = flip_x
-                    ? fx + (w - offset_x - 1)
-                    : fx + offset_x;
+                    ? fx + (w - source_x - 1)
+                    : fx + source_x;
                 sprite_y = flip_y
-                    ? fy + (w - offset_y - 1)
-                    : fy + offset_y;
+                    ? fy + (h - source_y - 1)
+                    : fy + source_y;
                 uint16_t color = data[(pitch * sprite_y) + sprite_x];
                 if (color != tansparent_color)
                 {
