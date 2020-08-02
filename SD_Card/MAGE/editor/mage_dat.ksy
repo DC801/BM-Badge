@@ -75,10 +75,25 @@ types:
         repeat: expr
         repeat-expr: ((tileset_count + 1) % 4)
         doc: Padding to align things back to uint32_t
+      - id: layers
+        type: map_layer(width, height)
+        repeat: expr
+        repeat-expr: layer_count
+    instances:
+      tiles_per_layer:
+        value: 'width * height'
+
+  map_layer:
+    params:
+      - id: width
+        type: u2
+      - id: height
+        type: u2
+    seq:
       - id: tiles
         type: map_tile
         repeat: expr
-        repeat-expr: tiles_per_layer * layer_count
+        repeat-expr: tiles_per_layer
     instances:
       tiles_per_layer:
         value: 'width * height'
@@ -139,7 +154,7 @@ types:
 
   image:
     params:
-      - id: i               # => receive `_index` as `i` here
+      - id: i   # => receive `_index` as `i` here
         type: s4
     instances:
       offset:

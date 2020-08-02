@@ -85,7 +85,10 @@ uint32_t mapIndex = 0;
 uint32_t currentMapIndex = 0;
 GameMap currentMap = {};
 GameTileset *currentMapTilesets;
-Point cameraPosition = {};
+Point cameraPosition = {
+    .x = 96,
+    .y = 128,
+};
 
 void draw_map (uint8_t *data, uint8_t layer) {
     uint32_t tileCount = *currentMap.width * *currentMap.height;
@@ -119,14 +122,14 @@ void draw_map (uint8_t *data, uint8_t layer) {
                 tileset = currentMapTilesets[tilesetId];
                 cols = *tileset.cols;
                 // printf(
-                //         "flags: %" PRIu8 "; tilesetId: %" PRIu8 "; tileId: %" PRIu16 "; tileset.name: %s; cols: %" PRIu16 ";\n",
-                //         flags,
-                //         tilesetId,
-                //         tileId,
-                //         tileset.name,
-                //         cols
+                //    "flags: %" PRIu8 "; tilesetId: %" PRIu8 "; tileId: %" PRIu16 "; tileset.name: %s; cols: %" PRIu16 ";\n",
+                //    flags,
+                //    tilesetId,
+                //    tileId,
+                //    tileset.name,
+                //    cols
                 // );
-                mage_canvas->drawImage(
+                mage_canvas->drawImageWithFlags(
                     x,
                     y,
                     *currentMap.tileWidth,
@@ -135,7 +138,8 @@ void draw_map (uint8_t *data, uint8_t layer) {
                     (tileId % cols) * *tileset.tileWidth,
                     (tileId / cols) * *tileset.tileHeight,
                     *tileset.imageWidth,
-                    0x0020
+                    0x0020,
+                    flags
                 );
             }
         }
@@ -147,9 +151,6 @@ void mage_game_loop (uint8_t *data) {
     delta_time = now - lastTime;
 
     mage_canvas->clearScreen(RGB(0,0,255));
-    float_t phase = now / 10.0 / M_PI_2;
-    cameraPosition.x = (cos(phase) * 128) + 64;
-    cameraPosition.y = (sin(phase) * 128) + 64;
 
     if (*currentMap.layerCount > 1) {
         for (uint8_t layerIndex = 0; layerIndex < *currentMap.layerCount -1; layerIndex++) {
@@ -159,8 +160,8 @@ void mage_game_loop (uint8_t *data) {
         draw_map(data, 0);
     }
     mage_canvas->drawImage(
-        0,
-        0,
+        192,
+        64,
         128,
         128,
         (uint16_t *) (data + dataMemoryAddresses.imageOffsets[3]),
@@ -170,8 +171,8 @@ void mage_game_loop (uint8_t *data) {
         0x0020
     );
     mage_canvas->drawImage(
-        50,
-        32,
+        240,
+        96,
         32,
         32,
         (uint16_t *) (data + dataMemoryAddresses.imageOffsets[2]),

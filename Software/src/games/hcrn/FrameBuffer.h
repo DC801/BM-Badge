@@ -7,8 +7,8 @@
 
 #include "adafruit/gfxfont.h"
 
-#define WIDTH		128
-#define HEIGHT		128
+#define WIDTH		320
+#define HEIGHT		240
 const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
@@ -74,6 +74,22 @@ public:
     void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color);
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color);
+
+#define FLIPPED_HORIZONTALLY_FLAG 0x04;
+#define FLIPPED_VERTICALLY_FLAG   0x02;
+#define FLIPPED_DIAGONALLY_FLAG   0x01;
+    void drawImageWithFlags(
+        int x,
+        int y,
+        int w,
+        int h,
+        const uint16_t *data,
+        int fx,
+        int fy,
+        int pitch,
+        uint16_t tansparent_color,
+        uint8_t flags
+    );
 
     void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);
     void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color);
