@@ -61,6 +61,42 @@
         ]
     },
     {
+        "color": "#ffbb00bb",
+        "name": "eye_faerie",
+        "properties": [
+            {
+                "name": "animation",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "detect",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "dialog",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "script",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "value": "flying"
+            }
+        ]
+    },
+    {
         "color": "#ffa0a0a4",
         "name": "goat",
         "properties": [
@@ -73,6 +109,42 @@
                 "name": "state",
                 "type": "string",
                 "value": "idle"
+            }
+        ]
+    },
+    {
+        "color": "#ff888888",
+        "name": "golem",
+        "properties": [
+            {
+                "name": "animation",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "detect",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "dialog",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "script",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "state",
+                "type": "string",
+                "value": "flying"
             }
         ]
     },

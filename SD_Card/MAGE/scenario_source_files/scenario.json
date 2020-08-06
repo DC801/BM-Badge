@@ -8,7 +8,7 @@
 		]
 	},
 	"maps": {
-		"mini_dungeon": "maps/town_map.json"
+		"town_map": "maps/town_map.json"
 	},
 	"entities": {
 		"goat": {
@@ -43,11 +43,7 @@
 				}
 			}
 		},
-		"bob": {
-			"isBob": true
-		},
 		"exa": {
-			"isCute": true,
 			"sprite": {
 				"image": "exa.png",
 				"imageWidth": 32,
@@ -107,6 +103,109 @@
 						{
 							"frameIndex": 5,
 							"duration": 2
+						}
+					]
+				}
+			}
+		},
+		"eye_faerie": {
+			"sprite": {
+				"image": "eye_faerie.png",
+				"imageWidth": 32,
+				"imageHeight": 64,
+				"spriteWidth": 32,
+				"spriteHeight": 32,
+				"orientationAxis": 0,
+				"frameAxis": 1,
+				"orientations": [
+					"0x80000000",
+					"0x80000000",
+					"0x00000000",
+					"0x00000000"
+				],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 10
+						},
+						{
+							"frameIndex": 1,
+							"duration": 10
+						}
+					]
+				}
+			}
+		},
+		"dragon_skull": {
+			"sprite": {
+				"image": "dragon_skull.png",
+				"imageWidth": 32,
+				"imageHeight": 128,
+				"spriteWidth": 32,
+				"spriteHeight": 32,
+				"orientationAxis": 0,
+				"frameAxis": 1,
+				"orientations": [
+					"0x80000000",
+					"0x80000000",
+					"0x00000000",
+					"0x00000000"
+				],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 10
+						},
+						{
+							"frameIndex": 1,
+							"duration": 10
+						},
+						{
+							"frameIndex": 2,
+							"duration": 10
+						},
+						{
+							"frameIndex": 3,
+							"duration": 10
+						}
+					]
+				}
+			}
+		},
+		"golem": {
+			"sprite": {
+				"image": "golem.png",
+				"imageWidth": 64,
+				"imageHeight": 256,
+				"spriteWidth": 64,
+				"spriteHeight": 64,
+				"orientationAxis": 0,
+				"frameAxis": 1,
+				"orientations": [
+					"0x80000000",
+					"0x80000000",
+					"0x00000000",
+					"0x00000000"
+				],
+				"animations": {
+					"idle": [
+						{
+							"frameIndex": 0,
+							"duration": 200
+						},
+						{
+							"frameIndex": 1,
+							"duration": 10
+						},
+						{
+							"frameIndex": 2,
+							"duration": 100
+						},
+						{
+							"frameIndex": 3,
+							"duration": 10
 						}
 					]
 				}
