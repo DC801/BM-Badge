@@ -33,13 +33,13 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 29.625,
+                "x": 27.375,
                 "y": 78.25
             }
         },
         "dungeon_tiles.json": {
             "scaleInDock": 1,
-            "scaleInEditor": 1
+            "scaleInEditor": 2
         },
         "entities-tileset.json": {
             "dynamicWrapping": true,
@@ -48,13 +48,17 @@
         },
         "entity-exa.json": {
             "dynamicWrapping": false,
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 2
+        },
+        "entity-goat.json": {
+            "scaleInEditor": 2
         },
         "mini_dungeon_map.json": {
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 128.5,
+                "x": 125.5,
                 "y": 127.66666666666664
             }
         },
@@ -63,15 +67,15 @@
             "scaleInEditor": 1
         },
         "town_map.json": {
-            "scale": 1,
+            "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 268.5,
-                "y": 256
+                "x": 259.375,
+                "y": 263.5
             }
         }
     },
-    "frame.defaultDuration": 400,
+    "frame.defaultDuration": 500,
     "map.height": 16,
     "map.lastUsedFormat": "json",
     "map.layerDataFormat": null,
@@ -86,20 +90,22 @@
     "project": "game.tiled-project",
     "property.type": "color",
     "recentFiles": [
-        "town_map.json",
         "mini_dungeon_map.json",
-        "entities-tileset.json",
-        "sprite_exa.json",
+        "entity-goat.json",
+        "entity-exa.json",
         "dungeon_tiles.json",
         "dungeon_map.json",
+        "town_map.json",
+        "entities-tileset.json",
+        "sprite_exa.json",
         "/home/admiral/Desktop/DC28_badge_dev/DC28PartyBadge/SD_Card/MAGE/scenario_source_files/dungeon_map.json",
         "/home/admiral/Desktop/DC28_badge_dev/DC28PartyBadge/SD_Card/MAGE/scenario_source_files/dungeon_tiles.json"
     ],
     "tileset.lastUsedFilter": "JSON tileset files (*.json)",
     "tileset.lastUsedFormat": "json",
     "tileset.tileSize": {
-        "height": 32,
-        "width": 32
+        "height": 64,
+        "width": 64
     },
     "tileset.type": 0
 }
