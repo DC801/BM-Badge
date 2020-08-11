@@ -1,0 +1,32 @@
+EESchema-LIBRARY Version 2.3
+#encoding utf-8
+#(c) SnapEDA 2016 (snapeda.com)
+#This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with Design Exception 1.0
+#
+# SAMTEC-TSM-105-02-X-DH
+#
+DEF SAMTEC-TSM-105-02-X-DH J 0 40 Y Y 1 L N
+F0 "J" 0 200 50 H V L BNN
+F1 "SAMTEC-TSM-105-02-X-DH" 0 -800 50 H V L BNN
+F2 "SAMTEC-TSM-105-02-X-DH" 0 0 50 H I L BNN
+DRAW
+P 2 0 0 10 0 200 799 200 N
+P 2 0 0 10 799 200 799 -600 N
+P 2 0 0 10 799 -600 0 -600 N
+P 2 0 0 10 0 -600 0 200 N
+T 0 0 -700 90 0 0 0 >PARTNO Normal 0 L B
+T 0 0 -900 90 0 0 0 SAMTEC-TSM-105-02-X-DH Normal 0 L B
+X 1 1 -200 -0 200 R 40 40 0 0 P 
+X 2 2 1000 -0 200 L 40 40 0 0 P 
+X 3 3 -200 -100 200 R 40 40 0 0 P 
+X 4 4 1000 -100 200 L 40 40 0 0 P 
+X 5 5 -200 -200 200 R 40 40 0 0 P 
+X 6 6 1000 -200 200 L 40 40 0 0 P 
+X 7 7 -200 -300 200 R 40 40 0 0 P 
+X 8 8 1000 -300 200 L 40 40 0 0 P 
+X 9 9 -200 -400 200 R 40 40 0 0 P 
+X 10 10 1000 -400 200 L 40 40 0 0 P 
+ENDDRAW
+ENDDEF
+#
+# End Library
