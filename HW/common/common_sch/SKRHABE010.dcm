@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SKRHABE010
+D 4-direction with Center-push Function (Surface Mount Type)
+K switch 4-direction dpad
+F ~
+$ENDCMP
+#
+#End Doc Library

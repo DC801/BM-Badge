@@ -1,0 +1,215 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "DC801 Badge - ART Template"
+Date "2020-06-01"
+Rev "1.0"
+Comp "DC801"
+Comment1 "codename purplewizard"
+Comment2 ""
+Comment3 ""
+Comment4 "@hamster and the dc801 badge team"
+$EndDescr
+$Comp
+L Connector_Generic:Conn_02x05_Odd_Even J3
+U 1 1 5F1B5012
+P 5390 3865
+F 0 "J3" H 5440 4282 50  0000 C CNN
+F 1 "ART Expansion" H 5440 4191 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_2x05_P2.54mm_Vertical_SMD" H 5390 3865 50  0001 C CNN
+F 3 "~" H 5390 3865 50  0001 C CNN
+	1    5390 3865
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 5F1B56DD
+P 5190 3665
+F 0 "#PWR01" H 5190 3415 50  0001 C CNN
+F 1 "GND" V 5190 3475 50  0000 C CNN
+F 2 "" H 5190 3665 50  0001 C CNN
+F 3 "" H 5190 3665 50  0001 C CNN
+	1    5190 3665
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR03
+U 1 1 5F1B5C50
+P 5190 4065
+F 0 "#PWR03" H 5190 3815 50  0001 C CNN
+F 1 "GND" V 5190 3875 50  0000 C CNN
+F 2 "" H 5190 4065 50  0001 C CNN
+F 3 "" H 5190 4065 50  0001 C CNN
+	1    5190 4065
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 5F1B60AA
+P 5690 3665
+F 0 "#PWR04" H 5690 3415 50  0001 C CNN
+F 1 "GND" V 5690 3475 50  0000 C CNN
+F 2 "" H 5690 3665 50  0001 C CNN
+F 3 "" H 5690 3665 50  0001 C CNN
+	1    5690 3665
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR06
+U 1 1 5F1B6C48
+P 5690 4065
+F 0 "#PWR06" H 5690 3815 50  0001 C CNN
+F 1 "GND" V 5690 3875 50  0000 C CNN
+F 2 "" H 5690 4065 50  0001 C CNN
+F 3 "" H 5690 4065 50  0001 C CNN
+	1    5690 4065
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J4
+U 1 1 5F32FC70
+P 6105 3740
+F 0 "J4" H 6185 3745 50  0000 L CNN
+F 1 "EXP1" H 6335 3745 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 6105 3740 50  0001 C CNN
+F 3 "~" H 6105 3740 50  0001 C CNN
+	1    6105 3740
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J5
+U 1 1 5F330049
+P 6105 3990
+F 0 "J5" H 6185 3995 50  0000 L CNN
+F 1 "EXP2" H 6335 3995 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 6105 3990 50  0001 C CNN
+F 3 "~" H 6105 3990 50  0001 C CNN
+	1    6105 3990
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5810 3765 5810 3740
+Wire Wire Line
+	5810 3740 5905 3740
+Wire Wire Line
+	5690 3765 5810 3765
+Wire Wire Line
+	5810 3965 5810 3990
+Wire Wire Line
+	5810 3990 5905 3990
+Wire Wire Line
+	5690 3965 5810 3965
+Wire Wire Line
+	5070 3765 5070 3740
+Wire Wire Line
+	5070 3740 4975 3740
+Wire Wire Line
+	5070 3965 5070 3990
+Wire Wire Line
+	5070 3990 4975 3990
+Wire Wire Line
+	5070 3965 5190 3965
+Wire Wire Line
+	5070 3765 5190 3765
+$Comp
+L Connector_Generic:Conn_01x01 J1
+U 1 1 5F33537A
+P 4775 3740
+F 0 "J1" H 4855 3745 50  0000 L CNN
+F 1 "SDA" H 5005 3745 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 4775 3740 50  0001 C CNN
+F 3 "~" H 4775 3740 50  0001 C CNN
+	1    4775 3740
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J2
+U 1 1 5F335384
+P 4775 3990
+F 0 "J2" H 4855 3995 50  0000 L CNN
+F 1 "SCL" H 5005 3995 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_2.0x2.0mm" H 4775 3990 50  0001 C CNN
+F 3 "~" H 4775 3990 50  0001 C CNN
+	1    4775 3990
+	-1   0    0    -1  
+$EndComp
+Wire Notes Line
+	4265 3320 4265 4305
+Text Notes 4265 3305 0    50   ~ 0
+ART Expansion Header
+$Comp
+L Connector_Generic:Conn_01x01 J7
+U 1 1 5F32D291
+P 6980 3945
+F 0 "J7" H 7060 3950 50  0000 L CNN
+F 1 "GND" H 7210 3950 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_4.0x4.0mm" H 6980 3945 50  0001 C CNN
+F 3 "~" H 6980 3945 50  0001 C CNN
+	1    6980 3945
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR08
+U 1 1 5F32DE48
+P 6780 3945
+F 0 "#PWR08" H 6780 3695 50  0001 C CNN
+F 1 "GND" H 6780 3755 50  0000 C CNN
+F 2 "" H 6780 3945 50  0001 C CNN
+F 3 "" H 6780 3945 50  0001 C CNN
+	1    6780 3945
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR07
+U 1 1 5F32EC83
+P 6780 3780
+F 0 "#PWR07" H 6780 3630 50  0001 C CNN
+F 1 "+3V3" H 6795 3953 50  0000 C CNN
+F 2 "" H 6780 3780 50  0001 C CNN
+F 3 "" H 6780 3780 50  0001 C CNN
+	1    6780 3780
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J6
+U 1 1 5F32F6BB
+P 6980 3780
+F 0 "J6" H 7060 3785 50  0000 L CNN
+F 1 "3v3" H 7210 3785 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_4.0x4.0mm" H 6980 3780 50  0001 C CNN
+F 3 "~" H 6980 3780 50  0001 C CNN
+	1    6980 3780
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR05
+U 1 1 5F330ABA
+P 5690 3865
+F 0 "#PWR05" H 5690 3715 50  0001 C CNN
+F 1 "+3V3" V 5685 3990 50  0000 L CNN
+F 2 "" H 5690 3865 50  0001 C CNN
+F 3 "" H 5690 3865 50  0001 C CNN
+	1    5690 3865
+	0    1    1    0   
+$EndComp
+$Comp
+L power:+3V3 #PWR02
+U 1 1 5F331A3F
+P 5190 3865
+F 0 "#PWR02" H 5190 3715 50  0001 C CNN
+F 1 "+3V3" V 5185 3990 50  0000 L CNN
+F 2 "" H 5190 3865 50  0001 C CNN
+F 3 "" H 5190 3865 50  0001 C CNN
+	1    5190 3865
+	0    -1   -1   0   
+$EndComp
+Wire Notes Line
+	4265 3320 7490 3320
+Wire Notes Line
+	7490 3320 7490 4295
+Wire Notes Line
+	7490 4295 4265 4295
+$EndSCHEMATC
