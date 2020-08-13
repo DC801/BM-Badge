@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "dungeon_map.json",
+    "activeFile": "town_2.json",
     "expandedProjectPaths": [
         "."
     ],
@@ -33,7 +33,7 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 27.375,
+                "x": 27.5,
                 "y": 78.25
             }
         },
@@ -46,13 +46,39 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "entity-dragon_skull.json": {
+            "scaleInDock": 1
+        },
         "entity-exa.json": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 2
         },
+        "entity-eye_faerie.json": {
+            "scaleInDock": 1
+        },
         "entity-goat.json": {
+            "scaleInDock": 1,
             "scaleInEditor": 2
+        },
+        "entity-golem.json": {
+            "scaleInDock": 1
+        },
+        "entity-lightning_boy.json": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "entity-lightning_boy_cyan.json": {
+            "scaleInDock": 1
+        },
+        "entity-lightning_boy_yellow.json": {
+            "scaleInEditor": 1
+        },
+        "entity-mage.json": {
+            "scaleInDock": 1
+        },
+        "fountain.json": {
+            "scaleInDock": 1
         },
         "mini_dungeon_map.json": {
             "scale": 3,
@@ -62,20 +88,46 @@
                 "y": 127.66666666666664
             }
         },
+        "scenario_source_files/maps/entity-dragon_skull.json": {
+            "scaleInDock": 1
+        },
+        "scenario_source_files/maps/entity-eye_faerie.json": {
+            "scaleInDock": 1
+        },
+        "scenario_source_files/maps/entity-golem.json": {
+            "scaleInDock": 1
+        },
+        "scenario_source_files/maps/entity-mage.json": {
+            "scaleInDock": 1
+        },
         "sprite_exa.json": {
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "town-tileset.json": {
+            "scaleInDock": 1
+        },
+        "town_2.json": {
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 495.75,
+                "y": 795
+            }
         },
         "town_map.json": {
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 259.375,
-                "y": 263.5
+                "x": 512,
+                "y": 762.75
             }
+        },
+        "town_tiles.json": {
+            "scaleInDock": 1
         }
     },
-    "frame.defaultDuration": 500,
+    "frame.defaultDuration": 100,
     "map.height": 16,
     "map.lastUsedFormat": "json",
     "map.layerDataFormat": null,
@@ -85,27 +137,30 @@
     "openFiles": [
         "dungeon_map.json",
         "dungeon_tiles.json",
-        "sprite_exa.json"
+        "town_map.json",
+        "town_2.json"
     ],
     "project": "game.tiled-project",
     "property.type": "color",
     "recentFiles": [
+        "entity-lightning_boy_yellow.json",
+        "entity-lightning_boy.json",
+        "town_map.json",
+        "town_2.json",
+        "dungeon_map.json",
+        "dungeon_tiles.json",
         "mini_dungeon_map.json",
         "entity-goat.json",
         "entity-exa.json",
-        "dungeon_tiles.json",
-        "dungeon_map.json",
-        "town_map.json",
         "entities-tileset.json",
         "sprite_exa.json",
-        "/home/admiral/Desktop/DC28_badge_dev/DC28PartyBadge/SD_Card/MAGE/scenario_source_files/dungeon_map.json",
-        "/home/admiral/Desktop/DC28_badge_dev/DC28PartyBadge/SD_Card/MAGE/scenario_source_files/dungeon_tiles.json"
+        "/home/admiral/Desktop/DC28_badge_dev/DC28PartyBadge/SD_Card/MAGE/scenario_source_files/dungeon_map.json"
     ],
     "tileset.lastUsedFilter": "JSON tileset files (*.json)",
     "tileset.lastUsedFormat": "json",
     "tileset.tileSize": {
-        "height": 64,
-        "width": 64
+        "height": 48,
+        "width": 48
     },
     "tileset.type": 0
 }

@@ -44,36 +44,36 @@ Task list:
     - [x] decode multiple formats into 0xRRGGBBAA values
     - [x] convert #RRGGBB value to 2 byte R5 G6 B5 screen format data
     - [x] 0x0020 aka 32 (the least significant green bit) is used as alpha color
-- [ ] Build a manual index of data types
+- [x] Build a manual index of data types
     - [ ] Scenario States
         - [ ] offset
         - [ ] how many
             - [ ] name
             - [ ] setup script?
-    - [ ] Tilesets
-        - [ ] offset
-        - [ ] how many
+    - [x] Tilesets
+        - [x] offset
+        - [x] how many
             - [x] char[16] name
             - [x] uint16_t imageIndex
             - [x] uint16_t imageWidth
             - [x] uint16_t imageHeight
             - [x] uint16_t width
             - [x] uint16_t height
-            - [ ] data
-                - [ ] Tiled file description output is sparse array. Explicitly list all tiles rather than search for properties by id
-                - [ ] 1 byte for first char of type
-    - [ ] Maps
-        - [ ] offset
-        - [ ] how many
-            - [ ] name
-            - 1 byte to specify number of layers
-            - 2 bytes to store map tile width
-            - 2 bytes to store map tile height
-            - layer format
-                - https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tile-flipping
-                - 1 byte for mapTilesetIndex index
-                - 2 bytes for tile index
-                - 1 byte for tile flags
+            - [x] data
+                - [x] Tiled file description output is sparse array. Explicitly list all tiles rather than search for properties by id
+                - [x] 1 byte for first char of type
+    - [x] Maps
+        - [x] offset
+        - [x] how many
+            - [x] name
+            - [x] 1 byte to specify number of layers
+            - [x] 2 bytes to store map tile width
+            - [x] 2 bytes to store map tile height
+            - [x] layer format
+                - [x] https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tile-flipping
+                - [x] 2 bytes for tile index
+                - [x] 1 byte for mapTilesetIndex index
+                - [x] 1 byte for tile flags
                     ?
                     ?
                     ?
@@ -82,24 +82,32 @@ Task list:
                     x-mirror
                     y-mirror
                     diagonal-mirror
-            - [ ] layers
-            - [ ] EntityInstances
-                - [ ] offset
-                - [ ] how many
-                    - [ ] name
-                    - [ ] type
-                    - [ ] collision
-                    - [ ] onHack
-                    - [ ] onInteract
-                    - [ ] sprite
-                        - [ ] file
-                        - [ ] orientations
-                        - [ ] dimensions
-                        - [ ] animations
-                    - [ ] position
-                    - [ ] state - Is this a byte address?
-                    - [ ] direction
-                    - [ ] onHack
-                    - [ ] onInteract
+            - [x] layers
+    - [x] Animations
+        - [x] tileset_index
+        - [x] frame_count
+            - [x] tile_index
+            - [x] duration
+    - [x] EntityTypes
+        - [x] animation_count
+        - [x] animations
+            - [x] directions
+            - [x] global_animation_index
+            - [x] flipping for directions without artwork
+    - [ ] Entities
+        - [x] offset
+        - [x] how many
+            - [x] name
+            - [x] type_index
+            - [ ] collision
+            - [x] position
+                - [x] x
+                - [x] y
+            - [x] current animation
+            - [x] current frame
+            - [x] hackable_state - Is this a byte address?
+            - [x] direction
+            - [ ] onHack
+            - [ ] onInteract
 
 

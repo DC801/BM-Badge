@@ -18,6 +18,13 @@ var getFileJson = function (file) {
 		});
 };
 
+var combineArrayBuffers = function(bufferA, bufferB) {
+	var temp = new Uint8Array(bufferA.byteLength + bufferB.byteLength);
+	temp.set(new Uint8Array(bufferA), 0);
+	temp.set(new Uint8Array(bufferB), bufferA.byteLength);
+	return temp.buffer;
+};
+
 var setCharsIntoDataView = function (
 	dataView,
 	string,
@@ -33,8 +40,65 @@ var setCharsIntoDataView = function (
 	}
 };
 
-var getTilesetHeader = function (tilesetData, image) {
-	var tilesetHeaderLength = (
+var getPaddedHeaderLength = function(length) {
+	// pad to to uint32_t alignment
+	var mod = length % 4;
+	return length + (
+		mod
+			? 4 - mod
+			: 0
+	);
+};
+
+var serializeAnimationData = function (tile, tilesetData, scenarioData) {
+	tile.animation.scenarioIndex = scenarioData.parsed.animations.length;
+	scenarioData.parsed.animations.push(tile.animation);
+	var headerLength = (
+		2 // uint16_t tileset_index
+		+ 2 // uint16_t frame_count
+		+ (
+			(
+				2 // uint16_t tileid
+				+ 2 // uint16_t duration
+			)
+			* tile.animation.length
+		)
+	);
+	tile.animation.serialized = new ArrayBuffer(
+		getPaddedHeaderLength(headerLength)
+	);
+	var dataView = new DataView(tile.animation.serialized);
+	var offset = 0;
+	dataView.setUint16(
+		offset,
+		tilesetData.scenarioIndex,
+		false
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset,
+		tile.animation.length,
+		false
+	);
+	offset += 2;
+	tile.animation.forEach(function (frame) {
+		dataView.setUint16(
+			offset,
+			frame.tileid,
+			false
+		);
+		offset += 2;
+		dataView.setUint16(
+			offset,
+			frame.duration,
+			false,
+		);
+		offset += 2;
+	});
+};
+
+var serializeTileset = function (tilesetData, image) {
+	var tilesetHeaderLength = getPaddedHeaderLength(
 		16 // char[16] name
 		+ 2 // uint16_t imageIndex
 		+ 2 // uint16_t imageWidth
@@ -44,11 +108,10 @@ var getTilesetHeader = function (tilesetData, image) {
 		+ 2 // uint16_t cols
 		+ 2 // uint16_t rows
 	);
-	var result = new ArrayBuffer(
+	var header = new ArrayBuffer(
 		tilesetHeaderLength
-		+ 4 - (tilesetHeaderLength % 4) // pad to to uint32_t alignment
 	);
-	var dataView = new DataView(result);
+	var dataView = new DataView(header);
 	var offset = 0;
 	setCharsIntoDataView(
 		dataView,
@@ -97,22 +160,25 @@ var getTilesetHeader = function (tilesetData, image) {
 		Math.floor(tilesetData.imageheight / tilesetData.tileheight),
 		false
 	);
+	var result = combineArrayBuffers(
+		header,
+		tilesetData.serializedTiles
+	);
 	return result;
 };
 var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
+		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
+		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
 		console.log(
 			'Tileset:',
 			tilesetFile.name,
 			tilesetData
 		);
-		tilesetData.serialized = {
-			tiles: new ArrayBuffer(
-				tilesetData.tilecount
-				+ 4 - (tilesetData.tilecount % 4) // pad to to uint32_t alignment
-			)
-		};
-		var tileDataView = new DataView(tilesetData.serialized.tiles);
+		tilesetData.serializedTiles = new ArrayBuffer(
+			getPaddedHeaderLength(tilesetData.tilecount)
+		);
+		var tileDataView = new DataView(tilesetData.serializedTiles);
 		// forget about the built-in name, using file name instead.
 		tilesetData.name = tilesetFile.name.split('.')[0];
 		// already has columns, add the missing pair
@@ -142,16 +208,18 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 					tile.type.charCodeAt(0)
 				);
 			}
+			if (tile.animation) {
+				serializeAnimationData(tile, tilesetData, scenarioData);
+			}
 		});
-		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
-		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
 		var filePromise = handleImage(tilesetData.image, scenarioData, fileNameMap)
 			.then(function () {
 				return tilesetData;
 			});
 		var imageFileName = tilesetData.image.split('/').pop();
 		var imageFile = fileNameMap[imageFileName];
-		tilesetData.serialized.header = getTilesetHeader(tilesetData, imageFile);
+		tilesetData.imageFile = imageFile;
+		tilesetData.serialized = serializeTileset(tilesetData, imageFile);
 		tilesetFile.parsed = tilesetData;
 		return filePromise
 	};
@@ -290,9 +358,11 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 		tileset: targetTileset,
 		tileIndex: tileIndex,
 		mapTilesetIndex: mapTilesetIndex,
-		flip_x: !!(tileGID & FLIPPED_HORIZONTALLY_FLAG),
-		flip_y: !!(tileGID & FLIPPED_VERTICALLY_FLAG),
-		flip_xy: !!(tileGID & FLIPPED_DIAGONALLY_FLAG),
+		renderFlags: (
+			(!!(tileGID & FLIPPED_HORIZONTALLY_FLAG) << 2)
+			+ (!!(tileGID & FLIPPED_VERTICALLY_FLAG) << 1)
+			+ (!!(tileGID & FLIPPED_DIAGONALLY_FLAG) << 0)
+		),
 		tile: (targetTileset.parsed.tiles || []).find(function (tile) {
 			return tile.id === tileIndex;
 		}) || {
@@ -324,41 +394,201 @@ var handleTileLayer = function(layer, map) {
 			);
 			dataView.setUint8(
 				(offset * bytesPerTile) + 3,
-				(
-					(tileData.flip_x << 2)
-					+ (tileData.flip_y << 1)
-					+ (tileData.flip_xy << 0)
-				)
+				tileData.renderFlags
 			);
 		}
 		offset += 1;
 	}
-	map.serialized.layers.push(serializedLayer);
+	map.serializedLayers.push(serializedLayer);
+};
+
+var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
+	var animations = Object.values(entityType.animations);
+	var headerLength = (
+		16 // char[16] name
+		+ 1 // uint8_t ??? padding
+		+ 1 // uint8_t ??? padding
+		+ 1 // uint8_t flags??? (still padding atm)
+		+ 1 // uint8_t animation_count
+		+ (
+			(
+				+ 2 // uint16_t type_index
+				+ 1 // uint8_t type (
+						// 0: type_index is the ID of an animation,
+						// !0: type is now a lookup on the tileset table,
+							// and type_index is the ID of the tile on that tileset
+					// )
+				+ 1 // uint8_t render_flags
+			)
+			* 4 // the number of directions supported in the engine
+			* animations.length
+		)
+	);
+	var result = new ArrayBuffer(
+		getPaddedHeaderLength(headerLength)
+	);
+	var dataView = new DataView(result);
+	var offset = 0;
+	setCharsIntoDataView(
+		dataView,
+		entityType.name || entityType.type,
+		0,
+		offset += 16
+	);
+	offset += 3; // padding
+	dataView.setUint8(
+		offset, // uint8_t animation_count
+		animations.length
+	);
+	offset += 1;
+	animations.forEach(function (animation) {
+		animation.forEach(function (direction) {
+			var tileset = fileNameMap[entityType.tileset];
+			var tile = tileset.parsed.tiles.find(function (tile) {
+				return tile.id === direction.tileid
+			});
+			var animation = tile && tile.animation;
+			dataView.setUint16(
+				offset, // uint16_t type_index
+				animation
+					? animation.scenarioIndex
+					: direction.tileid,
+				false
+			);
+			offset += 2;
+			dataView.setUint8(
+				offset, // uint8_t type
+				animation
+					? 0
+					: tileset.parsed.scenarioIndex + 1
+			);
+			offset += 1;
+			dataView.setUint8(
+				offset, // uint8_t render_flags
+				(
+					(direction.flip_x << 2)
+					+ (direction.flip_y << 1)
+					+ (direction.flip_diag << 0)
+				)
+			);
+			offset += 1;
+		});
+	});
+	return result;
+}
+
+var serializeEntity = function (entity, scenarioData, fileNameMap) {
+	var headerLength = (
+		16 // char[16] name
+		+ 2 // uint16_t entity_type_index
+		+ 2 // uint16_t script_index
+		+ 2 // uint16_t x
+		+ 2 // uint16_t y
+		+ 1 // uint8_t current_animation
+		+ 1 // uint8_t current_frame
+		+ 1 // uint8_t direction
+		+ 1 // uint8_t hackable_state
+	);
+	entity.serialized = new ArrayBuffer(
+		getPaddedHeaderLength(headerLength)
+	);
+	var dataView = new DataView(entity.serialized);
+	var offset = 0;
+	setCharsIntoDataView(
+		dataView,
+		entity.name || entity.type,
+		0,
+		offset += 16
+	);
+	var entityType = scenarioData.entityTypes[entity.type];
+	if (!entityType.scenarioIndex) {
+		entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
+		scenarioData.parsed.entityTypes.push(entityType);
+		entityType.serialized = serializeEntityType(
+			entityType,
+			scenarioData,
+			fileNameMap
+		);
+	}
+	dataView.setUint16(
+		offset, // uint16_t entity_type_index
+		entityType.scenarioIndex,
+		false
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset, // uint16_t script_index
+		0, // only padding at the moment
+		false
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset, // uint16_t x
+		Math.round(entity.x),
+		false
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset, // uint16_t y
+		Math.round(entity.y),
+		false
+	);
+	offset += 2;
+	dataView.setUint8(
+		offset, // uint8_t currentAnimation
+		entity.currentAnimation || 0
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t currentFrame
+		0
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t direction
+		(
+			(entity.flip_x << 2)
+			+ (entity.flip_y << 1)
+			+ (entity.flip_diag << 0)
+		)
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t hackable_state
+		0
+	);
+	offset += 1;
+	entity.scenarioIndex = scenarioData.parsed.entities.length;
+	scenarioData.parsed.entities.push(entity);
+	return entity;
 };
 
 var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
-	layer.objects.forEach(function (entityInstance, index, objects) {
-		if (entityInstance.gid) {
-			var entity = getMapTileAndOrientationByGID(
-				entityInstance.gid,
+	layer.objects.forEach(function (entity, index, objects) {
+		if (entity.gid) {
+			var tileData = getMapTileAndOrientationByGID(
+				entity.gid,
 				map
 			);
+			entity.flip_x = tileData.flip_x;
+			entity.flip_y = tileData.flip_y;
+			entity.flip_diag = tileData.flip_diag;
 			mergeInProperties(
-				entityInstance,
-				entityInstance.properties,
+				entity,
+				entity.properties,
 				objects
 			);
 			var mergedWithType = assignToLessFalsy(
 				{},
-				entity.tile,
-				entityInstance
+				tileData.tile,
+				entity
 			);
 			var entityPrototype = (
 				(
 					fileNameMap['entities.json']
 					&& fileNameMap['entities.json'].parsed[mergedWithType.type]
 				)
-				|| scenarioData.entities[mergedWithType.type]
+				|| scenarioData.entityTypes[mergedWithType.type]
 			);
 			if (!entityPrototype) {
 				console.error(
@@ -367,7 +597,7 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 					+ '"; Ignoring.'
 				);
 			} else {
-				var compositeEntityInstance = assignToLessFalsy(
+				var compositeEntity = assignToLessFalsy(
 					{},
 					entityPrototype,
 					mergedWithType
@@ -375,21 +605,24 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 				// console.table([
 				//  entityPrototype,
 				//  entity.tile,
-				//  entityInstance,
+				//  entity,
 				//  mergedWithType,
-				//  compositeEntityInstance
+				//  compositeEntity
 				// ])
-				map.entityInstances.push(compositeEntityInstance);
+				serializeEntity(
+					compositeEntity,
+					scenarioData,
+					fileNameMap
+				);
+				map.entityIndices.push(
+					compositeEntity.scenarioIndex
+				);
 			}
 		}
 	});
 };
 
 var handleMapLayers = function (map, scenarioData, fileNameMap) {
-	map.entityInstances = [];
-	map.serialized = {
-		layers: []
-	};
 	map.layers.forEach(function (layer) {
 		console.log(
 			'Layer:',
@@ -401,52 +634,59 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			handleObjectLayer(layer, map, fileNameMap, scenarioData);
 		}
 	});
-	map.entityInstances.forEach(function (entityInstance) {
-		console.log(
-			'entityInstance:',
-			entityInstance
-		)
-	});
 	return map;
 };
 
 var generateMapHeader = function (map) {
 	var headerLength = (
 		16 // char[] name
-		+ 2 // uint16_t tileWidth
-		+ 2 // uint16_t tileHeight
-		+ 2 // uint16_t width
-		+ 2 // uint16_t height
-		+ 1 // uint8_t layer count
-		+ 1 // uint8_t tileset count
-		+ map.tilesets.length * 2 // global tileset IDs
+		+ 2 // uint16_t tile_width
+		+ 2 // uint16_t tile_height
+		+ 2 // uint16_t cols
+		+ 2 // uint16_t rows
+		+ 1 // uint8_t layer_count
+		+ 1 // uint8_t tileset_count
+		+ (
+			2 // uint16_t  tileset_index
+			* map.tilesets.length
+		)
+		+ 2 // uint16_t entity_count
+		+ (
+			2 // uint16_t entity_index
+			* map.entityIndices.length
+		)
 	);
 	var result = new ArrayBuffer(
-		headerLength
-		+ 4 - (headerLength % 4) // pad to to uint32_t alignment
+		getPaddedHeaderLength(headerLength)
 	);
-	var headerDataView = new DataView(result);
+	var dataView = new DataView(result);
 	setCharsIntoDataView(
-		headerDataView,
+		dataView,
 		map.name,
 		0,
 		16
 	);
 	var offset = 16;
-	headerDataView.setUint16(offset, map.tilewidth, false);
+	dataView.setUint16(offset, map.tilewidth, false);
 	offset += 2;
-	headerDataView.setUint16(offset, map.tileheight, false);
+	dataView.setUint16(offset, map.tileheight, false);
 	offset += 2;
-	headerDataView.setUint16(offset, map.width, false);
+	dataView.setUint16(offset, map.width, false);
 	offset += 2;
-	headerDataView.setUint16(offset, map.height, false);
+	dataView.setUint16(offset, map.height, false);
 	offset += 2;
-	headerDataView.setUint8(offset, map.serialized.layers.length);
+	dataView.setUint8(offset, map.serializedLayers.length);
 	offset += 1;
-	headerDataView.setUint8(offset, map.tilesets.length);
+	dataView.setUint8(offset, map.tilesets.length);
 	offset += 1;
 	map.tilesets.forEach(function (tileset) {
-		headerDataView.setUint16(offset, tileset.parsed.scenarioIndex, false);
+		dataView.setUint16(offset, tileset.parsed.scenarioIndex, false);
+		offset += 2;
+	});
+	dataView.setUint16(offset, map.entityIndices.length, false);
+	offset += 2;
+	map.entityIndices.forEach(function (entityIndex) {
+		dataView.setUint16(offset, entityIndex, false);
 		offset += 2;
 	});
 	return result;
@@ -462,11 +702,19 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 		map.name = mapFile.name.split('.')[0];
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;
+		map.entityIndices = [];
+		map.serializedLayers = [];
 		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
-				map.serialized.header = generateMapHeader(map);
+				map.serialized = generateMapHeader(map);
+				map.serializedLayers.forEach(function (layer) {
+					map.serialized = combineArrayBuffers(
+						map.serialized,
+						layer
+					);
+				})
 				return map;
 			});
 	};
@@ -505,7 +753,7 @@ var handleEntitiesData = function (scenarioData, entitiesFile) {
 				{
 					type: entityItem.name
 				},
-				scenarioData.entities[entityItem.name]
+				scenarioData.entityTypes[entityItem.name]
 			);
 			mergeInProperties(
 				item,
@@ -594,10 +842,16 @@ var handleScenarioData = function(fileNameMap) {
 			'scenario.json',
 			scenarioData
 		);
+		Object.keys(scenarioData.entityTypes).forEach(function (key) {
+			scenarioData.entityTypes[key].type = key;
+		})
 		scenarioData.parsed = {
 			maps: [],
 			tilesets: [],
-			images: []
+			images: [],
+			animations: [],
+			entityTypes: [],
+			entities: []
 		};
 		var entitiesFile = fileNameMap['entities.json'];
 		var entitiesPromise = !entitiesFile
@@ -613,6 +867,40 @@ var handleScenarioData = function(fileNameMap) {
 	}
 };
 
+var addParsedTypeToHeadersAndChunks = function (
+	parsedItems,
+	indicesDataView,
+	chunks
+) {
+	indicesDataView.setUint32(
+		indicesDataView.headerOffset,
+		parsedItems.length,
+		false
+	);
+	indicesDataView.headerOffset += 4;
+	parsedItems.forEach(function(item, index, list) {
+		var headerOffsetOffset = indicesDataView.headerOffset + (index * 4);
+		var headerLengthOffset = (
+			headerOffsetOffset
+			+ (list.length * 4)
+		);
+		var totalSize = 0;
+		indicesDataView.setUint32(
+			headerOffsetOffset,
+			indicesDataView.fileOffset,
+			false
+		)
+		chunks.push(item.serialized);
+		totalSize += item.serialized.byteLength;
+		indicesDataView.setUint32(
+			headerLengthOffset,
+			totalSize,
+			false
+		);
+		indicesDataView.fileOffset += totalSize;
+	});
+	indicesDataView.headerOffset += parsedItems.length * 8;
+};
 var generateIndexAndComposite = function (scenarioData) {
 	console.log(
 		'generateIndexAndComposite:scenarioData',
@@ -632,6 +920,15 @@ var generateIndexAndComposite = function (scenarioData) {
 		+ 4 // uint32_t tilesetCount
 		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetOffsets
 		+ (4 * scenarioData.parsed.tilesets.length) // uint32_t *tilesetLengths
+		+ 4 // uint32_t animationCount
+		+ (4 * scenarioData.parsed.animations.length) // uint32_t *animationOffsets
+		+ (4 * scenarioData.parsed.animations.length) // uint32_t *animationLengths
+		+ 4 // uint32_t entityTypeCount
+		+ (4 * scenarioData.parsed.entityTypes.length) // uint32_t *entityTypeOffsets
+		+ (4 * scenarioData.parsed.entityTypes.length) // uint32_t *entityTypeLengths
+		+ 4 // uint32_t entityCount
+		+ (4 * scenarioData.parsed.entities.length) // uint32_t *entityOffsets
+		+ (4 * scenarioData.parsed.entities.length) // uint32_t *entityLengths
 		+ 4 // uint32_t imageCount
 		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageOffsets
 		+ (4 * scenarioData.parsed.images.length) // uint32_t *imageLengths
@@ -641,93 +938,24 @@ var generateIndexAndComposite = function (scenarioData) {
 		signature,
 		indices
 	];
-	var fileOffset = signature.byteLength + indices.byteLength;
-	var indicesOffset = 0;
-	indicesDataView.setUint32(
-		indicesOffset,
-		scenarioData.parsed.maps.length,
-		false
-	);
-	indicesOffset += 4;
-	scenarioData.parsed.maps.forEach(function(map, index, maps) {
-		var offset = indicesOffset + (index * 4);
-		var lengthOffset = (
-			offset
-			+ (maps.length * 4)
+	indicesDataView.fileOffset = signature.byteLength + indices.byteLength;
+	indicesDataView.headerOffset = 0;
+
+	[
+		'maps',
+		'tilesets',
+		'animations',
+		'entityTypes',
+		'entities',
+		'images'
+	].forEach(function (type) {
+		addParsedTypeToHeadersAndChunks(
+			scenarioData.parsed[type],
+			indicesDataView,
+			chunks
 		);
-		var totalSize = 0;
-		indicesDataView.setUint32(
-			offset,
-			fileOffset,
-			false
-		)
-		chunks.push(map.serialized.header);
-		totalSize += map.serialized.header.byteLength;
-		map.serialized.layers.forEach(function (layer) {
-			chunks.push(layer);
-			totalSize += layer.byteLength;
-		});
-		indicesDataView.setUint32(
-			lengthOffset,
-			totalSize,
-			false
-		);
-		fileOffset += totalSize;
-	});
-	indicesOffset += scenarioData.parsed.maps.length * 8;
-	indicesDataView.setUint32(
-		indicesOffset,
-		scenarioData.parsed.tilesets.length,
-		false
-	);
-	indicesOffset += 4;
-	scenarioData.parsed.tilesets.forEach(function(tileset, index, tilesets) {
-		var offset = indicesOffset + (index * 4);
-		var lengthOffset = (
-			offset
-			+ (tilesets.length * 4)
-		);
-		var totalSize = 0;
-		indicesDataView.setUint32(
-			offset,
-			fileOffset,
-			false
-		)
-		chunks.push(tileset.serialized.header);
-		totalSize += tileset.serialized.header.byteLength;
-		chunks.push(tileset.serialized.tiles);
-		totalSize += tileset.serialized.tiles.byteLength;
-		indicesDataView.setUint32(
-			lengthOffset,
-			totalSize,
-			false
-		)
-		fileOffset += totalSize;
-	});
-	indicesOffset += scenarioData.parsed.tilesets.length * 8;
-	indicesDataView.setUint32(
-		indicesOffset,
-		scenarioData.parsed.images.length,
-		false
-	);
-	indicesOffset += 4;
-	scenarioData.parsed.images.forEach(function(image, index, images) {
-		indicesDataView.setUint32(
-			indicesOffset, // item offset
-			fileOffset,
-			false
-		)
-		indicesDataView.setUint32(
-			indicesOffset
-			+ (images.length * 4),
-			image.serialized.byteLength,
-			false
-		)
-		indicesOffset += 4;
-		chunks.push(image.serialized);
-		fileOffset += image.serialized.byteLength;
-	});
-	indicesOffset += scenarioData.parsed.images.length * 8;
+	})
+
 	var compositeSize = chunks.reduce(
 		function (accumulator, item) {
 			return accumulator + item.byteLength;
