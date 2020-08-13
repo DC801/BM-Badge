@@ -8,6 +8,12 @@ seq:
     type: count_with_offsets
   - id: tileset_offsets
     type: count_with_offsets
+  - id: animation_offsets
+    type: count_with_offsets
+  - id: entity_type_offsets
+    type: count_with_offsets
+  - id: entity_offsets
+    type: count_with_offsets
   - id: image_offsets
     type: count_with_offsets
   - id: maps
@@ -18,6 +24,18 @@ seq:
     type: tileset
     repeat: expr
     repeat-expr: tileset_offsets.count
+  - id: animations
+    type: animation
+    repeat: expr
+    repeat-expr: animation_offsets.count
+  - id: entity_types
+    type: entity_type
+    repeat: expr
+    repeat-expr: entity_type_offsets.count
+  - id: entites
+    type: entity
+    repeat: expr
+    repeat-expr: entity_offsets.count
 instances:
   images:
     type: image(_index)
@@ -70,10 +88,18 @@ types:
         repeat: expr
         repeat-expr: tileset_count
         doc: The global IDs of the tilesets this map's tiles use
-      - id: tileset_global_ids_padding
+      - id: entity_count
+        type: u2
+        doc: The number of entities placed on this map
+      - id: entity_global_ids
         type: u2
         repeat: expr
-        repeat-expr: ((tileset_count + 1) % 4)
+        repeat-expr: entity_count
+        doc: The global IDs of the tilesets this map's tiles use
+      - id: map_header_padding
+        type: u2
+        repeat: expr
+        repeat-expr: (tileset_count + entity_count + 4) % 2
         doc: Padding to align things back to uint32_t
       - id: layers
         type: map_layer(width, height)
@@ -108,11 +134,11 @@ types:
         type: u1
     instances:
       flip_x:
-        value: '(tile_flags & 0b00000100) != 0'
+        value: (tile_flags & 0b00000100) != 0
       flip_y:
-        value: '(tile_flags & 0b00000010) != 0'
+        value: (tile_flags & 0b00000010) != 0
       flip_diag:
-        value: '(tile_flags & 0b00000001) != 0'
+        value: (tile_flags & 0b00000001) != 0
 
   tileset:
     seq:
@@ -134,33 +160,111 @@ types:
         type: u2
       - id: rows
         type: u2
-      - id: tileset_header_padding
+      - id: padding
         type: u2
-        doc: Padding bytes to get things back to uint32_t alignment
       - id: tiles
-        type: str
-        size: 1
-        encoding: ASCII
+        type: u1
         repeat: expr
         repeat-expr: tile_count
       - id: tileset_footer_padding
         type: u1
         repeat: expr
-        repeat-expr: 4 - (tile_count % 4)
+        repeat-expr: (tile_count % 4)
         doc: Padding bytes to get things back to uint32_t alignment
     instances:
       tile_count:
-        value: 'cols * rows'
+        value: cols * rows
+
+  animation:
+    seq:
+      - id: tileset_index
+        type: u2
+      - id: frame_count
+        type: u2
+      - id: animation_frames
+        type: animation_frame
+        repeat: expr
+        repeat-expr: frame_count
+
+  animation_frame:
+    seq:
+      - id: frame_id
+        type: u2
+      - id: duration
+        type: u2
+
+  entity_type:
+    seq:
+      - id: name
+        type: strz
+        size: 16
+        encoding: UTF8
+      - id: padding_a
+        type: u1
+      - id: padding_b
+        type: u1
+      - id: padding_c
+        type: u1
+      - id: animation_count
+        type: u1
+      - id: entity_type_animations
+        type: entity_type_animation
+        repeat: expr
+        repeat-expr: animation_count
+
+  entity_type_animation:
+    seq:
+      - id: north
+        type: entity_type_animation_direction
+      - id: east
+        type: entity_type_animation_direction
+      - id: south
+        type: entity_type_animation_direction
+      - id: west
+        type: entity_type_animation_direction
+
+  entity_type_animation_direction:
+    seq:
+      - id: type_index
+        type: u2
+      - id: type
+        type: u1
+        doc: if value is 0, type_index is the ID of an animation. If value is not 0, type is now a lookup on the tileset table, and type_index is the ID of the tile on that tileset
+      - id: render_flags
+        type: u1
+
+  entity:
+    seq:
+      - id: name
+        type: strz
+        size: 16
+        encoding: UTF8
+      - id: entity_type_index
+        type: u2
+      - id: script_index
+        type: u2
+      - id: x
+        type: u2
+      - id: y
+        type: u2
+      - id: current_animation
+        type: u1
+      - id: current_frame
+        type: u1
+      - id: direction
+        type: u1
+      - id: hackable_state
+        type: u1
 
   image:
     params:
-      - id: i   # => receive `_index` as `i` here
-        type: s4
+      - id: index
+        type: u4
     instances:
       offset:
-        value: '_parent.image_offsets.offsets[i]'
+        value: '_parent.image_offsets.offsets[index]'
       pixel_count:
-        value: '_parent.image_offsets.lengths[i] / 2'
+        value: '_parent.image_offsets.lengths[index] / 2'
       colors:
         pos: offset
         type: image_color

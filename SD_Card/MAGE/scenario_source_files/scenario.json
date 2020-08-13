@@ -10,205 +10,207 @@
 	"maps": {
 		"town_map": "maps/town_map.json"
 	},
-	"entities": {
-		"goat": {
-			"sprite": {
-				"image": "goat.png",
-				"imageWidth": 512,
-				"imageHeight": 1024,
-				"spriteWidth": 128,
-				"spriteHeight": 128,
-				"orientationAxis": 1,
-				"frameAxis": 0,
-				"orientations": [0,3,2,1],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 10
-						},
-						{
-							"frameIndex": 1,
-							"duration": 10
-						},
-						{
-							"frameIndex": 2,
-							"duration": 10
-						},
-						{
-							"frameIndex": 3,
-							"duration": 10
-						}
-					]
-				}
+	"entityTypes": {
+		"mage": {
+			"tileset": "entity-mage.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 6,
+						"flip_x": false
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 5,
+						"flip_x": false
+					},
+					{
+						"tileid": 4,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 10,
+						"flip_x": false
+					},
+					{
+						"tileid": 11,
+						"flip_x": false
+					},
+					{
+						"tileid": 9,
+						"flip_x": false
+					},
+					{
+						"tileid": 8,
+						"flip_x": false
+					}
+				]
 			}
 		},
 		"exa": {
-			"sprite": {
-				"image": "exa.png",
-				"imageWidth": 32,
-				"imageHeight": 64,
-				"spriteWidth": 32,
-				"spriteHeight": 32,
-				"orientationAxis": 0,
-				"frameAxis": 1,
-				"orientations": [0,0,0,0],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 10
-						},
-						{
-							"frameIndex": 1,
-							"duration": 10
-						}
-					]
-				}
-			}
-		},
-		"mage": {
-			"sprite": {
-				"image": "blackmage.png",
-				"sheetWidth": 128,
-				"sheetHeight": 192,
-				"width": 32,
-				"height": 32,
-				"directions": 4,
-				"orientations": [2,3,1,0],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 10
-						},
-						{
-							"frameIndex": 1,
-							"duration": 2
-						}
-					],
-					"walk": [
-						{
-							"frameIndex": 2,
-							"duration": 2
-						},
-						{
-							"frameIndex": 3,
-							"duration": 2
-						},
-						{
-							"frameIndex": 4,
-							"duration": 2
-						},
-						{
-							"frameIndex": 5,
-							"duration": 2
-						}
-					]
-				}
+			"tileset": "entity-exa.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
 			}
 		},
 		"eye_faerie": {
-			"sprite": {
-				"image": "eye_faerie.png",
-				"imageWidth": 32,
-				"imageHeight": 64,
-				"spriteWidth": 32,
-				"spriteHeight": 32,
-				"orientationAxis": 0,
-				"frameAxis": 1,
-				"orientations": [
-					"0x80000000",
-					"0x80000000",
-					"0x00000000",
-					"0x00000000"
-				],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 10
-						},
-						{
-							"frameIndex": 1,
-							"duration": 10
-						}
-					]
-				}
+			"tileset": "entity-eye_faerie.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
 			}
 		},
 		"dragon_skull": {
-			"sprite": {
-				"image": "dragon_skull.png",
-				"imageWidth": 32,
-				"imageHeight": 128,
-				"spriteWidth": 32,
-				"spriteHeight": 32,
-				"orientationAxis": 0,
-				"frameAxis": 1,
-				"orientations": [
-					"0x80000000",
-					"0x80000000",
-					"0x00000000",
-					"0x00000000"
-				],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 10
-						},
-						{
-							"frameIndex": 1,
-							"duration": 10
-						},
-						{
-							"frameIndex": 2,
-							"duration": 10
-						},
-						{
-							"frameIndex": 3,
-							"duration": 10
-						}
-					]
-				}
+			"tileset": "entity-dragon_skull.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
 			}
 		},
 		"golem": {
-			"sprite": {
-				"image": "golem.png",
-				"imageWidth": 64,
-				"imageHeight": 256,
-				"spriteWidth": 64,
-				"spriteHeight": 64,
-				"orientationAxis": 0,
-				"frameAxis": 1,
-				"orientations": [
-					"0x80000000",
-					"0x80000000",
-					"0x00000000",
-					"0x00000000"
-				],
-				"animations": {
-					"idle": [
-						{
-							"frameIndex": 0,
-							"duration": 200
-						},
-						{
-							"frameIndex": 1,
-							"duration": 10
-						},
-						{
-							"frameIndex": 2,
-							"duration": 100
-						},
-						{
-							"frameIndex": 3,
-							"duration": 10
-						}
-					]
-				}
+			"tileset": "entity-golem.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"lightning_boy_cyan": {
+			"tileset": "entity-lightning_boy_cyan.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"lightning_boy_yellow": {
+			"tileset": "entity-lightning_boy_yellow.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"goat": {
+			"tileset": "entity-goat.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
 			}
 		}
 	}
