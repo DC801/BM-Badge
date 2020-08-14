@@ -33,7 +33,7 @@
             "scale": 4,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 27.5,
+                "x": 12.625,
                 "y": 78.25
             }
         },
@@ -116,11 +116,11 @@
             }
         },
         "town_map.json": {
-            "scale": 4,
+            "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 512,
-                "y": 762.75
+                "x": 160.25,
+                "y": 106
             }
         },
         "town_tiles.json": {
@@ -143,9 +143,9 @@
     "project": "game.tiled-project",
     "property.type": "color",
     "recentFiles": [
+        "town_map.json",
         "entity-lightning_boy_yellow.json",
         "entity-lightning_boy.json",
-        "town_map.json",
         "town_2.json",
         "dungeon_map.json",
         "dungeon_tiles.json",

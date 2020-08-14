@@ -12,6 +12,15 @@ struct GameDataMemoryAddresses {
     uint32_t *tilesetCount;
     uint32_t *tilesetOffsets;
     uint32_t *tilesetLengths;
+    uint32_t *animationCount;
+    uint32_t *animationOffsets;
+    uint32_t *animationLengths;
+    uint32_t *entityTypeCount;
+    uint32_t *entityTypeOffsets;
+    uint32_t *entityTypeLengths;
+    uint32_t *entityCount;
+    uint32_t *entityOffsets;
+    uint32_t *entityLengths;
     uint32_t *imageCount;
     uint32_t *imageOffsets;
     uint32_t *imageLengths;
@@ -26,8 +35,16 @@ struct GameMap {
     uint8_t *layerCount;
     uint8_t *tilesetCount;
     uint16_t *tilesetGlobalIds;
+    uint16_t *entityCount;
+    uint16_t *entityGlobalIds;
     uint32_t startOfLayers;
 } typedef GameMap;
+
+struct GameTile {
+    uint16_t tileId;
+    uint8_t tilesetId;
+    uint8_t flags;
+} typedef GameTile;
 
 struct GameTileset {
     char *name;
@@ -39,27 +56,51 @@ struct GameTileset {
     uint16_t *cols;
     uint16_t *rows;
     uint32_t startOfTiles;
-};
+} typedef GameTileset;
 
-struct GameTile {
-    uint16_t tileId;
-    uint8_t tilesetId;
-    uint8_t flags;
-} typedef GameTile;
+struct GameAnimationFrame {
+    uint16_t tileIndex;
+    uint16_t duration;
+} typedef GameAnimationFrame;
+
+struct GameAnimation {
+    uint16_t tilesetIndex;
+    uint16_t frameCount;
+    GameAnimationFrame animationFrames;
+} typedef GameAnimation;
+
+struct GameEntityTypeAnimationDirection {
+    uint16_t typeIndex;
+    uint8_t type;
+    uint8_t renderFlags;
+} typedef GameEntityTypeAnimationDirection;
+
+struct GameEntityType {
+    char name[16];
+    uint8_t padding_a;
+    uint8_t padding_b;
+    uint8_t padding_c;
+    uint8_t animationCount;
+    GameEntityTypeAnimationDirection entityTypeAnimationDirection;
+} typedef GameEntityType;
+
+struct GameEntity {
+    char name[16];
+    uint16_t entityTypeIndex;
+    uint16_t scriptIndex;
+    uint16_t x;
+    uint16_t y;
+    uint8_t currentAnimation;
+    uint8_t currentFrame;
+    uint8_t direction;
+    uint8_t hackableState;
+} typedef GameEntity;
 
 struct GameImage {
     char name[16];
     uint16_t width;
     uint16_t height;
 } typedef GameImage;
-
-struct GameEntity {
-    char type[16];
-    char name[16];
-    uint32_t imageOffset;
-    uint16_t width;
-    uint16_t height;
-} typedef GameEntity;
 
 int MAGE(void);
 

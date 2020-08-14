@@ -130,15 +130,20 @@ types:
         type: u2
       - id: map_tileset_index
         type: u1
-      - id: tile_flags
+      - id: render_flags
+        type: render_flags
+
+  render_flags:
+    seq:
+      - id: flags
         type: u1
     instances:
       flip_x:
-        value: (tile_flags & 0b00000100) != 0
+        value: (flags & 0b00000100) != 0
       flip_y:
-        value: (tile_flags & 0b00000010) != 0
+        value: (flags & 0b00000010) != 0
       flip_diag:
-        value: (tile_flags & 0b00000001) != 0
+        value: (flags & 0b00000001) != 0
 
   tileset:
     seq:
@@ -188,7 +193,7 @@ types:
 
   animation_frame:
     seq:
-      - id: frame_id
+      - id: tile_index
         type: u2
       - id: duration
         type: u2
@@ -231,7 +236,7 @@ types:
         type: u1
         doc: if value is 0, type_index is the ID of an animation. If value is not 0, type is now a lookup on the tileset table, and type_index is the ID of the tile on that tileset
       - id: render_flags
-        type: u1
+        type: render_flags
 
   entity:
     seq:
