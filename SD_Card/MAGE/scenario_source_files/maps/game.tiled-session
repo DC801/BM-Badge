@@ -34,7 +34,7 @@
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 12.625,
-                "y": 78.25
+                "y": 78
             }
         },
         "dungeon_tiles.json": {
@@ -119,15 +119,15 @@
             "scale": 2,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 160.25,
-                "y": 106
+                "x": 530.75,
+                "y": 771
             }
         },
         "town_tiles.json": {
             "scaleInDock": 1
         }
     },
-    "frame.defaultDuration": 100,
+    "frame.defaultDuration": 50,
     "map.height": 16,
     "map.lastUsedFormat": "json",
     "map.layerDataFormat": null,
@@ -159,8 +159,8 @@
     "tileset.lastUsedFilter": "JSON tileset files (*.json)",
     "tileset.lastUsedFormat": "json",
     "tileset.tileSize": {
-        "height": 48,
-        "width": 48
+        "height": 32,
+        "width": 32
     },
     "tileset.type": 0
 }

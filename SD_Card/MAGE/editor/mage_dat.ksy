@@ -80,14 +80,8 @@ types:
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
-      - id: tileset_count
+      - id: padding
         type: u1
-        doc: The number of tilesets this map's tile use
-      - id: tileset_global_ids
-        type: u2
-        repeat: expr
-        repeat-expr: tileset_count
-        doc: The global IDs of the tilesets this map's tiles use
       - id: entity_count
         type: u2
         doc: The number of entities placed on this map
@@ -99,7 +93,7 @@ types:
       - id: map_header_padding
         type: u2
         repeat: expr
-        repeat-expr: (tileset_count + entity_count + 4) % 2
+        repeat-expr: (entity_count + 4) % 2
         doc: Padding to align things back to uint32_t
       - id: layers
         type: map_layer(width, height)
@@ -128,7 +122,7 @@ types:
     seq:
       - id: tile_id
         type: u2
-      - id: map_tileset_index
+      - id: map_tileset_id
         type: u1
       - id: render_flags
         type: render_flags
@@ -151,7 +145,7 @@ types:
         type: strz
         size: 16
         encoding: UTF8
-      - id: image_index
+      - id: image_id
         type: u2
       - id: image_width
         type: u2
@@ -182,7 +176,7 @@ types:
 
   animation:
     seq:
-      - id: tileset_index
+      - id: tileset_id
         type: u2
       - id: frame_count
         type: u2
@@ -193,7 +187,7 @@ types:
 
   animation_frame:
     seq:
-      - id: tile_index
+      - id: tile_id
         type: u2
       - id: duration
         type: u2
@@ -230,11 +224,11 @@ types:
 
   entity_type_animation_direction:
     seq:
-      - id: type_index
+      - id: type_id
         type: u2
       - id: type
         type: u1
-        doc: if value is 0, type_index is the ID of an animation. If value is not 0, type is now a lookup on the tileset table, and type_index is the ID of the tile on that tileset
+        doc: if value is 0, type_id is the ID of an animation. If value is not 0, type is now a lookup on the tileset table, and type_id is the ID of the tile on that tileset
       - id: render_flags
         type: render_flags
 
@@ -244,14 +238,21 @@ types:
         type: strz
         size: 16
         encoding: UTF8
-      - id: entity_type_index
+      - id: primary_id
         type: u2
-      - id: script_index
+        doc: may be: entity_type_id, animation_id, tileset_id
+      - id: secondary_id
+        type: u2
+        doc: if primary_id_type is tileset_id, this is the tile_id, otherwise 0
+      - id: script_id
         type: u2
       - id: x
         type: u2
       - id: y
         type: u2
+      - id: primary_id_type
+        type: u1
+        enum: entity_primary_id_type
       - id: current_animation
         type: u1
       - id: current_frame
@@ -259,6 +260,8 @@ types:
       - id: direction
         type: u1
       - id: hackable_state
+        type: u1
+      - id: padding
         type: u1
 
   image:
@@ -289,3 +292,9 @@ types:
         value: '(color_565 & 0b0000000000011111)'
       a:
         value: '(color_565 & 0b0000000000100000 ^ 0b0000000000100000) >> 5'
+
+enums:
+  entity_primary_id_type:
+    0: tileset_id
+    1: animation_id
+    2: entity_type_id

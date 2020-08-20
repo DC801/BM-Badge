@@ -33,8 +33,7 @@ struct GameMap {
     uint16_t *width;
     uint16_t *height;
     uint8_t *layerCount;
-    uint8_t *tilesetCount;
-    uint16_t *tilesetGlobalIds;
+    uint8_t *padding;
     uint16_t *entityCount;
     uint16_t *entityGlobalIds;
     uint32_t startOfLayers;
@@ -84,16 +83,24 @@ struct GameEntityType {
     GameEntityTypeAnimationDirection entityTypeAnimationDirection;
 } typedef GameEntityType;
 
+enum GameEntityPrimaryIdType {
+    ENTITY_PRIMARY_TILESET = 0,
+    ENTITY_PRIMARY_ANIMATION = 1,
+    ENTITY_PRIMARY_ENTITY_TYPE = 2
+} typedef GameEntityPrimaryIdType;
 struct GameEntity {
     char name[16];
-    uint16_t entityTypeIndex;
+    uint16_t primaryTypeIndex;
+    uint16_t secondaryTypeIndex;
     uint16_t scriptIndex;
     uint16_t x;
     uint16_t y;
+    uint8_t primaryType;
     uint8_t currentAnimation;
     uint8_t currentFrame;
     uint8_t direction;
     uint8_t hackableState;
+    uint8_t padding;
 } typedef GameEntity;
 
 struct GameImage {
