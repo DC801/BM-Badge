@@ -58,19 +58,19 @@
 				"idle": [
 					{
 						"tileid": 0,
-						"flip_x": true
-					},
-					{
-						"tileid": 0,
-						"flip_x": true
-					},
-					{
-						"tileid": 0,
 						"flip_x": false
 					},
 					{
 						"tileid": 0,
 						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
 					}
 				]
 			}

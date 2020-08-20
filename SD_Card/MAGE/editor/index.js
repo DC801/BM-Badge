@@ -54,7 +54,7 @@ var serializeAnimationData = function (tile, tilesetData, scenarioData) {
 	tile.animation.scenarioIndex = scenarioData.parsed.animations.length;
 	scenarioData.parsed.animations.push(tile.animation);
 	var headerLength = (
-		2 // uint16_t tileset_index
+		2 // uint16_t tileset_id
 		+ 2 // uint16_t frame_count
 		+ (
 			(
@@ -344,24 +344,28 @@ var getMapTileAndOrientationByGID = function (tileGID, map) {
 		| FLIPPED_VERTICALLY_FLAG
 		| FLIPPED_DIAGONALLY_FLAG
 	);
-	var mapTilesetIndex = 0;
 	map.tilesets.find(function (tileset, index) {
 		var overshot = tileId < tileset.firstgid;
 		if(!overshot) {
-			mapTilesetIndex = index;
 			targetTileset = tileset;
 		}
 		return overshot;
 	});
 	var tileIndex = tileId - targetTileset.firstgid;
+
+	var flip_x = !!(tileGID & FLIPPED_HORIZONTALLY_FLAG);
+	var flip_y = !!(tileGID & FLIPPED_VERTICALLY_FLAG);
+	var flip_diag = !!(tileGID & FLIPPED_DIAGONALLY_FLAG);
 	return {
 		tileset: targetTileset,
 		tileIndex: tileIndex,
-		mapTilesetIndex: mapTilesetIndex,
+		flip_x: flip_x,
+		flip_y: flip_y,
+		flip_diag: flip_diag,
 		renderFlags: (
-			(!!(tileGID & FLIPPED_HORIZONTALLY_FLAG) << 2)
-			+ (!!(tileGID & FLIPPED_VERTICALLY_FLAG) << 1)
-			+ (!!(tileGID & FLIPPED_DIAGONALLY_FLAG) << 0)
+			(flip_x << 2)
+			+ (flip_y << 1)
+			+ (flip_diag << 0)
 		),
 		tile: (targetTileset.parsed.tiles || []).find(function (tile) {
 			return tile.id === tileIndex;
@@ -390,7 +394,7 @@ var handleTileLayer = function(layer, map) {
 			);
 			dataView.setUint8(
 				(offset * bytesPerTile) + 2,
-				tileData.mapTilesetIndex
+				tileData.tileset.parsed.scenarioIndex
 			);
 			dataView.setUint8(
 				(offset * bytesPerTile) + 3,
@@ -412,11 +416,11 @@ var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
 		+ 1 // uint8_t animation_count
 		+ (
 			(
-				+ 2 // uint16_t type_index
+				+ 2 // uint16_t type_id
 				+ 1 // uint8_t type (
-						// 0: type_index is the ID of an animation,
+						// 0: type_id is the ID of an animation,
 						// !0: type is now a lookup on the tileset table,
-							// and type_index is the ID of the tile on that tileset
+							// and type_id is the ID of the tile on that tileset
 					// )
 				+ 1 // uint8_t render_flags
 			)
@@ -449,7 +453,7 @@ var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
 			});
 			var animation = tile && tile.animation;
 			dataView.setUint16(
-				offset, // uint16_t type_index
+				offset, // uint16_t type_id
 				animation
 					? animation.scenarioIndex
 					: direction.tileid,
@@ -480,14 +484,17 @@ var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
 var serializeEntity = function (entity, scenarioData, fileNameMap) {
 	var headerLength = (
 		16 // char[16] name
-		+ 2 // uint16_t entity_type_index
-		+ 2 // uint16_t script_index
+		+ 2 // uint16_t primary_id // may be: entity_type_id, animation_id, tileset_id
+		+ 2 // uint16_t secondary_id // if primary_id_type is tileset_id, this is the tile_id, otherwise 0
+		+ 2 // uint16_t script_id
 		+ 2 // uint16_t x
 		+ 2 // uint16_t y
+		+ 1 // uint8_t primary_id_type
 		+ 1 // uint8_t current_animation
 		+ 1 // uint8_t current_frame
-		+ 1 // uint8_t direction
+		+ 1 // uint8_t direction OR render_flags
 		+ 1 // uint8_t hackable_state
+		+ 1 // uint8_t padding
 	);
 	entity.serialized = new ArrayBuffer(
 		getPaddedHeaderLength(headerLength)
@@ -496,12 +503,12 @@ var serializeEntity = function (entity, scenarioData, fileNameMap) {
 	var offset = 0;
 	setCharsIntoDataView(
 		dataView,
-		entity.name || entity.type,
+		entity.name || entity.type || '',
 		0,
 		offset += 16
 	);
 	var entityType = scenarioData.entityTypes[entity.type];
-	if (!entityType.scenarioIndex) {
+	if (entityType && !entityType.scenarioIndex) {
 		entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
 		scenarioData.parsed.entityTypes.push(entityType);
 		entityType.serialized = serializeEntityType(
@@ -510,14 +517,51 @@ var serializeEntity = function (entity, scenarioData, fileNameMap) {
 			fileNameMap
 		);
 	}
+	var primaryIndexType = 0; // tileset_id
+	var primaryIndex;
+	var secondaryIndex = 0;
+	var directionOrRenderFlags = 0;
+	if (entityType) {
+		primaryIndexType = 2; // entity_type_id
+		primaryIndex = entityType.scenarioIndex;
+		Object.keys(entityType.animations)
+			.find(function (animationName) {
+				var animation = entityType.animations[animationName]
+				return animation.find(function (animationDirection, direction) {
+					if(
+						(entity.tileIndex === animationDirection.tileid)
+						&& (!!entity.flip_x === !!animationDirection.flip_x)
+						&& (!!entity.flip_y === !!animationDirection.flip_y)
+					) {
+						directionOrRenderFlags = direction;
+						return true
+					}
+				});
+			});
+	} else if (entity.animation) {
+		primaryIndexType = 1; // animation_id
+		primaryIndex = entity.animation.scenarioIndex;
+	} else {
+		primaryIndex = entity.tileset.parsed.scenarioIndex;
+		secondaryIndex = entity.tileIndex;
+	}
+	if(primaryIndexType !== 2) {
+		directionOrRenderFlags = entity.renderFlags;
+	}
 	dataView.setUint16(
-		offset, // uint16_t entity_type_index
-		entityType.scenarioIndex,
+		offset, // primary_id // may be: entity_type_id, animation_id, tileset_id
+		primaryIndex,
 		false
 	);
 	offset += 2;
 	dataView.setUint16(
-		offset, // uint16_t script_index
+		offset, // secondary_id // if primary_id_type is tileset_id, this is the tile_id, otherwise 0
+		secondaryIndex,
+		false
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset, // uint16_t script_id
 		0, // only padding at the moment
 		false
 	);
@@ -535,6 +579,11 @@ var serializeEntity = function (entity, scenarioData, fileNameMap) {
 	);
 	offset += 2;
 	dataView.setUint8(
+		offset, // uint8_t primary_id_type
+		primaryIndexType
+	);
+	offset += 1;
+	dataView.setUint8(
 		offset, // uint8_t currentAnimation
 		entity.currentAnimation || 0
 	);
@@ -545,16 +594,17 @@ var serializeEntity = function (entity, scenarioData, fileNameMap) {
 	);
 	offset += 1;
 	dataView.setUint8(
-		offset, // uint8_t direction
-		(
-			(entity.flip_x << 2)
-			+ (entity.flip_y << 1)
-			+ (entity.flip_diag << 0)
-		)
+		offset, // uint8_t direction OR render_flags
+		directionOrRenderFlags
 	);
 	offset += 1;
 	dataView.setUint8(
 		offset, // uint8_t hackable_state
+		0
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t padding
 		0
 	);
 	offset += 1;
@@ -578,7 +628,7 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 				entity.properties,
 				objects
 			);
-			var mergedWithType = assignToLessFalsy(
+			var mergedWithTile = assignToLessFalsy(
 				{},
 				tileData.tile,
 				entity
@@ -586,38 +636,33 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 			var entityPrototype = (
 				(
 					fileNameMap['entities.json']
-					&& fileNameMap['entities.json'].parsed[mergedWithType.type]
+					&& fileNameMap['entities.json'].parsed[mergedWithTile.type]
 				)
-				|| scenarioData.entityTypes[mergedWithType.type]
+				|| scenarioData.entityTypes[mergedWithTile.type]
 			);
-			if (!entityPrototype) {
-				console.error(
-					'Unsupported entity type in map objectgroup layer: "'
-					+ mergedWithType.type
-					+ '"; Ignoring.'
-				);
-			} else {
-				var compositeEntity = assignToLessFalsy(
-					{},
-					entityPrototype,
-					mergedWithType
-				);
-				// console.table([
-				//  entityPrototype,
-				//  entity.tile,
-				//  entity,
-				//  mergedWithType,
-				//  compositeEntity
-				// ])
-				serializeEntity(
-					compositeEntity,
-					scenarioData,
-					fileNameMap
-				);
-				map.entityIndices.push(
-					compositeEntity.scenarioIndex
-				);
-			}
+			var compositeEntity = assignToLessFalsy(
+				{},
+				entityPrototype || {},
+				mergedWithTile
+			);
+			compositeEntity.renderFlags = tileData.renderFlags;
+			compositeEntity.tileIndex = tileData.tileIndex;
+			compositeEntity.tileset = tileData.tileset
+			// console.table([
+			//  entityPrototype,
+			//  entity.tile,
+			//  entity,
+			//  mergedWithType,
+			//  compositeEntity
+			// ])
+			serializeEntity(
+				compositeEntity,
+				scenarioData,
+				fileNameMap
+			);
+			map.entityIndices.push(
+				compositeEntity.scenarioIndex
+			);
 		}
 	});
 };
@@ -645,14 +690,10 @@ var generateMapHeader = function (map) {
 		+ 2 // uint16_t cols
 		+ 2 // uint16_t rows
 		+ 1 // uint8_t layer_count
-		+ 1 // uint8_t tileset_count
-		+ (
-			2 // uint16_t  tileset_index
-			* map.tilesets.length
-		)
+		+ 1 // uint8_t padding
 		+ 2 // uint16_t entity_count
 		+ (
-			2 // uint16_t entity_index
+			2 // uint16_t entity_id
 			* map.entityIndices.length
 		)
 	);
@@ -677,12 +718,8 @@ var generateMapHeader = function (map) {
 	offset += 2;
 	dataView.setUint8(offset, map.serializedLayers.length);
 	offset += 1;
-	dataView.setUint8(offset, map.tilesets.length);
+	dataView.setUint8(offset, 0); // padding
 	offset += 1;
-	map.tilesets.forEach(function (tileset) {
-		dataView.setUint16(offset, tileset.parsed.scenarioIndex, false);
-		offset += 2;
-	});
 	dataView.setUint16(offset, map.entityIndices.length, false);
 	offset += 2;
 	map.entityIndices.forEach(function (entityIndex) {
