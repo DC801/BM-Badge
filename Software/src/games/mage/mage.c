@@ -42,7 +42,15 @@ void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize) {
     }
 }
 
+ButtonStates buttons;
+
 void handle_input () {
+    buttons = {
+        .up    = false,
+        .down  = false,
+        .left  = false,
+        .right = false,
+    };
     #ifdef DC801_DESKTOP
     SDL_Event e;
     if (application_quit != 0)
@@ -77,6 +85,19 @@ void handle_input () {
     #ifdef DC01_EMBEDDED
     app_usbd_event_queue_process();
     #endif
+
+    if (isButtonDown(USER_BUTTON_UP)) {
+        buttons.up = true;
+    }
+    if (isButtonDown(USER_BUTTON_DOWN)) {
+        buttons.down = true;
+    }
+    if (isButtonDown(USER_BUTTON_LEFT)) {
+        buttons.left = true;
+    }
+    if (isButtonDown(USER_BUTTON_RIGHT)) {
+        buttons.right = true;
+    }
 }
 
 GameDataMemoryAddresses dataMemoryAddresses = {};
@@ -88,8 +109,8 @@ GameMap currentMap = {};
 GameTileset *currentMapTilesets;
 GameEntity *currentMapEntities;
 Point cameraPosition = {
-    .x = 352,
-    .y = 608,
+    .x = 0,
+    .y = 0,
 };
 
 void draw_map (uint8_t *data, uint8_t layer) {
@@ -138,26 +159,86 @@ void draw_map (uint8_t *data, uint8_t layer) {
     }
 }
 
+bool increaseFrame = false;
+
+void get_renderable_data_from_entity (
+    uint8_t *data,
+    GameEntity *entity,
+    GameEntityRenderableData *renderableData,
+    bool shouldAnimate
+) {
+    renderableData->animation = nullptr;
+    renderableData->renderFlags = &entity->direction;
+    renderableData->tileset = nullptr;
+    if(entity->primaryType == ENTITY_PRIMARY_TILESET) {
+        renderableData->tileset = allTilesets + entity->primaryTypeIndex;
+        renderableData->tileIndex = &entity->secondaryTypeIndex;
+    } else if(entity->primaryType == ENTITY_PRIMARY_ANIMATION) {
+        uint32_t animationOffset = *(
+            dataMemoryAddresses.animationOffsets
+            + entity->primaryTypeIndex
+        );
+        renderableData->animation = (GameAnimation *) (data + animationOffset);
+    } else if(entity->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
+        uint32_t entityTypeOffset = *(
+            dataMemoryAddresses.entityTypeOffsets
+            + entity->primaryTypeIndex
+        );
+        auto *entityType = (GameEntityType *) (data + entityTypeOffset);
+        GameEntityTypeAnimationDirection *entityTypeAnimationDirection = (
+            &entityType->entityTypeAnimationDirection
+            + (
+                entity->currentAnimation
+                * 4
+            )
+            + entity->direction
+        );
+        renderableData->renderFlags = &entityTypeAnimationDirection->renderFlags;
+        if(entityTypeAnimationDirection->type == 0) {
+            uint32_t animationOffset = *(
+                dataMemoryAddresses.animationOffsets
+                + entityTypeAnimationDirection->typeIndex
+            );
+            renderableData->animation = (GameAnimation *) (data + animationOffset);
+        } else {
+            renderableData->tileset = allTilesets + entityTypeAnimationDirection->type;
+            renderableData->tileIndex = &entityTypeAnimationDirection->typeIndex;
+        }
+    }
+    if(renderableData->animation) {
+        renderableData->tileset = allTilesets + renderableData->animation->tilesetIndex;
+        if(shouldAnimate && increaseFrame) {
+            entity->currentFrame++;
+            entity->currentFrame = (
+                entity->currentFrame
+                % renderableData->animation->frameCount
+            );
+        }
+        GameAnimationFrame *animationFrame = (
+            &renderableData->animation->animationFrames
+            + entity->currentFrame
+        );
+        renderableData->tileIndex = &animationFrame->tileIndex;
+    }
+}
+
+GameEntityRenderableData renderableEntityData = {};
 uint8_t animation_frame_limiter = 0;
 uint8_t animation_frame = 0;
 void draw_entities(
     uint8_t *data
 ) {
     animation_frame_limiter++;
-    bool increaseFrame = false;
+    increaseFrame = false;
     if(animation_frame_limiter > 20) {
         increaseFrame = true;
         animation_frame_limiter = 0;
     }
     uint16_t entityCount = *currentMap.entityCount;
     GameEntity *entity;
-    GameEntityType *entityType;
-    GameEntityTypeAnimationDirection *entityTypeAnimationDirection;
     GameTileset *tileset;
     GameAnimation *animation;
     GameAnimationFrame *animationFrame;
-    uint32_t entityTypeOffset;
-    uint32_t animationOffset;
     uint32_t imageOffset;
     uint16_t tileIndex;
     uint16_t tilesetX;
@@ -165,58 +246,15 @@ void draw_entities(
     uint8_t renderFlags;
     for(uint16_t i = 0; i < entityCount; i++) {
         entity = currentMapEntities + i;
-        animation = nullptr;
-        renderFlags = entity->direction;
-        if(entity->primaryType == ENTITY_PRIMARY_TILESET) {
-            tileset = allTilesets + entity->primaryTypeIndex;
-            tileIndex = entity->secondaryTypeIndex;
-        } else if(entity->primaryType == ENTITY_PRIMARY_ANIMATION) {
-            animationOffset = *(
-                dataMemoryAddresses.animationOffsets
-                + entity->primaryTypeIndex
-            );
-            animation = (GameAnimation *) (data + animationOffset);
-        } else if(entity->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
-            entityTypeOffset = *(
-                dataMemoryAddresses.entityTypeOffsets
-                + entity->primaryTypeIndex
-            );
-            entityType = (GameEntityType *) (data + entityTypeOffset);
-            entityTypeAnimationDirection = (
-                &entityType->entityTypeAnimationDirection
-                + (
-                    entity->currentAnimation
-                    * 4
-                )
-                + entity->direction
-            );
-            renderFlags = entityTypeAnimationDirection->renderFlags;
-            if(entityTypeAnimationDirection->type == 0) {
-                animationOffset = *(
-                    dataMemoryAddresses.animationOffsets
-                    + entityTypeAnimationDirection->typeIndex
-                );
-                animation = (GameAnimation *) (data + animationOffset);
-            } else {
-                tileset = allTilesets + entityTypeAnimationDirection->type;
-                tileIndex = entityTypeAnimationDirection->typeIndex;
-            }
-        }
-        if(animation) {
-            tileset = allTilesets + animation->tilesetIndex;
-            if(increaseFrame) {
-                entity->currentFrame++;
-                entity->currentFrame = (
-                    entity->currentFrame
-                    % animation->frameCount
-                );
-            }
-            animationFrame = (
-                &animation->animationFrames
-                + entity->currentFrame
-            );
-            tileIndex = animationFrame->tileIndex;
-        }
+        get_renderable_data_from_entity(
+            data,
+            entity,
+            &renderableEntityData,
+            true
+        );
+        tileset     = renderableEntityData.tileset;
+        tileIndex   = *renderableEntityData.tileIndex;
+        renderFlags = *renderableEntityData.renderFlags;
         tilesetX = *tileset->tileWidth * (tileIndex % *tileset->cols);
         tilesetY = *tileset->tileHeight * (tileIndex / *tileset->cols);
         // printf("tileset->name: %s\n", tileset->name);
@@ -238,11 +276,33 @@ void draw_entities(
     }
 }
 
+GameEntity *playerEntity;
+uint8_t mageSpeed = 2;
+bool isMoving = false;
+void apply_input_to_player (uint8_t *data) {
+    isMoving = false;
+    if(buttons.left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
+    if(buttons.right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
+    if(buttons.up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
+    if(buttons.down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+    playerEntity->currentAnimation = isMoving ? 1 : 0;
+    get_renderable_data_from_entity(
+        data,
+        playerEntity,
+        &renderableEntityData,
+        false
+    );
+    cameraPosition.x = playerEntity->x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
+    cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
+}
+
 void mage_game_loop (uint8_t *data) {
     now = millis();
     delta_time = now - lastTime;
 
     mage_canvas->clearScreen(RGB(0,0,255));
+
+    apply_input_to_player(data);
 
     if (*currentMap.layerCount > 1) {
         for (uint8_t layerIndex = 0; layerIndex < *currentMap.layerCount -1; layerIndex++) {
@@ -393,6 +453,22 @@ void allocate_current_map_entities(
             entityInROM,
             sizeof(GameEntity)
         );
+
+        uint32_t entityTypeOffset;
+        GameEntityType *entityType;
+        char mageType[16] = "mage";
+        if(entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
+            entityTypeOffset = *(
+                dataMemoryAddresses.entityTypeOffsets
+                + entityInRAM->primaryTypeIndex
+            );
+            entityType = (GameEntityType *) (data + entityTypeOffset);
+            int32_t entityTypeNameComparison = strncmp(mageType, entityType->name, 16);
+            // printf("Is this entity the player? A: %s; B %s\n", mageType, entityType->name);
+            if(entityTypeNameComparison == 0) {
+                playerEntity = entityInRAM;
+            }
+        }
         // printf("  primaryTypeIndex: %" PRIu16 "\n", entityInRAM->primaryTypeIndex);
         // printf("  secondaryTypeIndex: %" PRIu16 "\n", entityInRAM->secondaryTypeIndex);
         // printf("  scriptIndex: %" PRIu16 "\n", entityInRAM->scriptIndex);
