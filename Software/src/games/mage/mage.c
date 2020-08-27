@@ -277,7 +277,7 @@ void draw_entities(
 }
 
 GameEntity *playerEntity;
-uint8_t mageSpeed = 2;
+uint8_t mageSpeed = 1;
 bool isMoving = false;
 void apply_input_to_player (uint8_t *data) {
     isMoving = false;
