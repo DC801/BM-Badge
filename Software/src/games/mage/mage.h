@@ -109,6 +109,20 @@ struct GameImage {
     uint16_t height;
 } typedef GameImage;
 
+struct GameEntityRenderableData {
+    GameTileset *tileset;
+    GameAnimation *animation;
+    uint16_t *tileIndex;
+    uint8_t *renderFlags;
+} typedef GameEntityRenderableData;
+
+struct ButtonStates {
+    bool up;
+    bool down;
+    bool left;
+    bool right;
+} typedef ButtonStates;
+
 int MAGE(void);
 
 #endif //SOFTWARE_MAGE_H

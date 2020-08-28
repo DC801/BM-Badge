@@ -9,6 +9,8 @@
 
 #define WIDTH		320
 #define HEIGHT		240
+#define HALF_WIDTH	160
+#define HALF_HEIGHT	120
 const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
