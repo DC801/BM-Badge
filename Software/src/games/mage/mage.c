@@ -108,6 +108,7 @@ uint32_t currentMapIndex = 0;
 GameMap currentMap = {};
 GameTileset *currentMapTilesets;
 GameEntity *currentMapEntities;
+GameEntity **currentMapEntitiesSortedByRenderOrder;
 Point cameraPosition = {
     .x = 0,
     .y = 0,
@@ -222,6 +223,35 @@ void get_renderable_data_from_entity (
     }
 }
 
+void swap_entity_pointers (GameEntity** xp, GameEntity** yp) {
+    GameEntity* temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+void sort_current_map_entities_by_render_order () {
+    uint16_t i, j, min_idx;
+    uint16_t n = *currentMap.entityCount;
+    GameEntity **array = currentMapEntitiesSortedByRenderOrder;
+    for(i = 0; i < n; i++) {
+        array[i] = currentMapEntities + i;
+    }
+    // One by one move boundary of unsorted subarray
+    for (i = 0; i < n - 1; i++) {
+
+        // Find the minimum element in unsorted array
+        min_idx = i;
+        for (j = i + 1; j < n; j++){
+            if (array[j]->y < array[min_idx]->y) {
+                min_idx = j;
+            }
+        }
+
+        // Swap the found minimum element
+        // with the first element
+        swap_entity_pointers(&array[min_idx], &array[i]);
+    }
+}
+
 GameEntityRenderableData renderableEntityData = {};
 uint8_t animation_frame_limiter = 0;
 uint8_t animation_frame = 0;
@@ -237,15 +267,14 @@ void draw_entities(
     uint16_t entityCount = *currentMap.entityCount;
     GameEntity *entity;
     GameTileset *tileset;
-    GameAnimation *animation;
-    GameAnimationFrame *animationFrame;
     uint32_t imageOffset;
     uint16_t tileIndex;
     uint16_t tilesetX;
     uint16_t tilesetY;
     uint8_t renderFlags;
+    sort_current_map_entities_by_render_order();
     for(uint16_t i = 0; i < entityCount; i++) {
-        entity = currentMapEntities + i;
+        entity = *(currentMapEntitiesSortedByRenderOrder + i);
         get_renderable_data_from_entity(
             data,
             entity,
@@ -434,6 +463,7 @@ void allocate_current_map_entities(
     uint16_t entityCount
 ) {
     currentMapEntities = (GameEntity *) calloc(entityCount, sizeof(GameEntity));
+    currentMapEntitiesSortedByRenderOrder = (GameEntity **) calloc(entityCount, sizeof(void*));
     GameEntity *entityInROM;
     GameEntity *entityInRAM;
     uint16_t entityIndex;
