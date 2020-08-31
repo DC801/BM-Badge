@@ -212,6 +212,47 @@
 					}
 				]
 			}
+		},
+		"goose": {
+			"tileset": "entity-goose.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": true
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 5,
+						"flip_x": true
+					},
+					{
+						"tileid": 3,
+						"flip_x": true
+					},
+					{
+						"tileid": 4,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": false
+					}
+				]
+			}
 		}
 	}
 }

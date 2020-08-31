@@ -486,7 +486,7 @@ void allocate_current_map_entities(
 
         uint32_t entityTypeOffset;
         GameEntityType *entityType;
-        char mageType[16] = "mage";
+        char mageType[16] = "goose";
         if(entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
             entityTypeOffset = *(
                 dataMemoryAddresses.entityTypeOffsets
