@@ -6,6 +6,25 @@
     // This configuration requires the Cortex-Debug VS Code extension
     "configurations": [
         {
+            "name": "Debug Desktop",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/Software/output/dc28_badge.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/Software/output",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
             "name": "Debug (Linux)",
             "type": "cortex-debug",
             "request": "launch",
