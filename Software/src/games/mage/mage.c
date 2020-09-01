@@ -556,6 +556,9 @@ void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
 
     currentMap.entityGlobalIds = (uint16_t *) (mapData + offset);
     offset += *currentMap.entityCount * 2;
+    if (*currentMap.entityCount % 2 != 0) {
+        offset += 2;
+    }
     convert_endian_u2_buffer(currentMap.entityGlobalIds, *currentMap.entityCount);
     printf("currentMap.entityGlobalIds: %p\n", currentMap.entityGlobalIds);
     for (uint8_t i = 0; i < *currentMap.entityCount; i++) {
@@ -569,7 +572,7 @@ void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
 
     currentMap.startOfLayers = (
         dataMemoryAddresses.mapOffsets[incomingMapIndex]
-        + (offset + 4 - (offset % 4))
+        + offset
     );
     printf("currentMap.startOfLayers %p\n", currentMap.startOfLayers);
     currentMapIndex = incomingMapIndex;
