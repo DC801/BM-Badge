@@ -1,11 +1,17 @@
-#include <cstdint>
+#ifndef SOFTWARE_MAGE_ENTITY_H
+#define SOFTWARE_MAGE_ENTITY_H
 
-struct Point {
+#include <stdint.h>
+
+typedef struct {
     int32_t x;
     int32_t y;
-};
-struct Entity {
+} Point;
+
+typedef struct {
     char name[16];
     uint16_t spriteIndex;
     Point position;
-};
+} Entity;
+
+#endif

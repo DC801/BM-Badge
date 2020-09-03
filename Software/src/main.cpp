@@ -12,6 +12,7 @@
 #include <stdint.h>
 #include "common.h"
 #include "user.h"
+#include "games/hcrn/FrameBuffer.h"
 
 #ifdef DC801_DESKTOP
 #include<signal.h>
@@ -279,9 +280,6 @@ int main(void){
 
     // Setup I2C
     twi_master_init();
-
-    // Setup I2S
-    i2s_master_init();
 
     // Setup LEDs
     ledInit();

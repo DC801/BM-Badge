@@ -980,7 +980,7 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 
 		// File name
 		memcpy(fno->fname, entry->d_name, FILENAME_SIZE - 1);
-		fno->fname[FILENAME_SIZE] = 0;
+		fno->fname[FILENAME_SIZE - 1] = 0;
 
 		return FR_OK;
 	}

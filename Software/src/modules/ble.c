@@ -357,13 +357,13 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
                     // Parsed OK
                     // Is this a defcon badge?
-                    if (getBadgeYear(adv.appearance)) {
+                    if (getBadgeYear((BADGE_YEAR)adv.appearance)) {
                         // Yes
 
                         BADGE_ADV badge;
                         memset(&badge, 0, sizeof(BADGE_ADV));
 
-                        badge.year = adv.appearance;
+                        badge.year = (BADGE_YEAR)adv.appearance;
                         if(adv.long_name_len != 0){
                             memcpy(&badge.name, adv.long_name, MIN(adv.long_name_len, DATA_SAVE_LEN));
                             badge.name[DATA_SAVE_LEN] = '\0';

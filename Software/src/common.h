@@ -25,6 +25,9 @@
 #include "config/custom_board.h"
 
 #ifdef DC801_EMBEDDED
+#ifdef __cplusplus
+extern "C" {
+#endif
 	#include "config/sdk_config.h"
 
 	// Nordic headers
@@ -75,8 +78,9 @@
 	#include "nrf_log_default_backends.h"
 
 	#include "ff.h"
-
-	#define NRF_LOG_RAW_INFO printf
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 #ifdef DC801_DESKTOP
@@ -84,6 +88,7 @@
 	#include "sdk_shim.h"
 	#include <SDL2/SDL.h>
 
+	#define NRF_LOG_RAW_INFO printf
 #endif
 
 #define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
@@ -107,12 +112,12 @@ typedef enum{
 #include "modules/ble.h"
 #include "godmode.h"
 #include "modules/drv_st7735.h"
+#include "modules/drv_nau8810.h"
 #include "modules/gfx.h"
 #include "modules/sd.h"
 #include "modules/adc.h"
 #include "modules/uart.h"
 #include "modules/i2c.h"
-#include "modules/i2s.h"
 #include "modules/led.h"
 #include "modules/usb.h"
 #include "adafruit/gfxfont.h"
@@ -123,7 +128,6 @@ typedef enum{
 #include "games/Wargames.h"
 #include "games/hcrn/hcrn.h"
 #include "games/mage/mage.h"
-#include "games/hcrn/FrameBuffer.h"
 #include "games/serial.h"
 #include "games/galaga/galaga_c.h"
 

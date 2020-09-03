@@ -102,6 +102,7 @@ public:
     uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
     void drawStop();
 
+    void drawBitmapFromFile(const char *filename);
     void drawBitmapFromFile(int x, int y, int w, int h, const char *filename);
 
     void fillCircle(int x, int y, int radius, uint16_t color);

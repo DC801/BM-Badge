@@ -5,7 +5,7 @@
 
 int main();
 
-struct GameDataMemoryAddresses {
+typedef struct {
     uint32_t *mapCount;
     uint32_t *mapOffsets;
     uint32_t *mapLengths;
@@ -24,9 +24,9 @@ struct GameDataMemoryAddresses {
     uint32_t *imageCount;
     uint32_t *imageOffsets;
     uint32_t *imageLengths;
-} typedef GameDataMemoryAddresses;
+} GameDataMemoryAddresses;
 
-struct GameMap {
+typedef struct {
     char *name;
     uint16_t *tileWidth;
     uint16_t *tileHeight;
@@ -37,15 +37,15 @@ struct GameMap {
     uint16_t *entityCount;
     uint16_t *entityGlobalIds;
     uint32_t startOfLayers;
-} typedef GameMap;
+} GameMap;
 
-struct GameTile {
+typedef struct {
     uint16_t tileId;
     uint8_t tilesetId;
     uint8_t flags;
-} typedef GameTile;
+} GameTile;
 
-struct GameTileset {
+typedef struct {
     char *name;
     uint16_t *imageIndex;
     uint16_t *imageWidth;
@@ -55,40 +55,41 @@ struct GameTileset {
     uint16_t *cols;
     uint16_t *rows;
     uint32_t startOfTiles;
-} typedef GameTileset;
+} GameTileset;
 
-struct GameAnimationFrame {
+typedef struct {
     uint16_t tileIndex;
     uint16_t duration;
-} typedef GameAnimationFrame;
+} GameAnimationFrame;
 
-struct GameAnimation {
+typedef struct {
     uint16_t tilesetIndex;
     uint16_t frameCount;
     GameAnimationFrame animationFrames;
-} typedef GameAnimation;
+} GameAnimation;
 
-struct GameEntityTypeAnimationDirection {
+typedef struct {
     uint16_t typeIndex;
     uint8_t type;
     uint8_t renderFlags;
-} typedef GameEntityTypeAnimationDirection;
+} GameEntityTypeAnimationDirection;
 
-struct GameEntityType {
+typedef struct {
     char name[16];
     uint8_t padding_a;
     uint8_t padding_b;
     uint8_t padding_c;
     uint8_t animationCount;
     GameEntityTypeAnimationDirection entityTypeAnimationDirection;
-} typedef GameEntityType;
+} GameEntityType;
 
-enum GameEntityPrimaryIdType {
+typedef enum {
     ENTITY_PRIMARY_TILESET = 0,
     ENTITY_PRIMARY_ANIMATION = 1,
     ENTITY_PRIMARY_ENTITY_TYPE = 2
-} typedef GameEntityPrimaryIdType;
-struct GameEntity {
+} GameEntityPrimaryIdType;
+
+typedef struct {
     char name[16];
     uint16_t primaryTypeIndex;
     uint16_t secondaryTypeIndex;
@@ -101,27 +102,27 @@ struct GameEntity {
     uint8_t direction;
     uint8_t hackableState;
     uint8_t padding;
-} typedef GameEntity;
+} GameEntity;
 
-struct GameImage {
+typedef struct {
     char name[16];
     uint16_t width;
     uint16_t height;
-} typedef GameImage;
+} GameImage;
 
-struct GameEntityRenderableData {
+typedef struct {
     GameTileset *tileset;
     GameAnimation *animation;
     uint16_t *tileIndex;
     uint8_t *renderFlags;
-} typedef GameEntityRenderableData;
+} GameEntityRenderableData;
 
-struct ButtonStates {
+typedef struct {
     bool up;
     bool down;
     bool left;
     bool right;
-} typedef ButtonStates;
+} ButtonStates;
 
 int MAGE(void);
 

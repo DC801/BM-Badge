@@ -11,6 +11,10 @@
 
 #include <common.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DATA_SAVE_LEN 16
 
 typedef struct{
@@ -134,5 +138,9 @@ void handleGodMode(BADGE_ADV badge, int *modifier);
 
 #define FURRY_HAS_RABIES                0x35
 #define COMMAND_SEND_EMOTE              0xb2
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BLE_H_ */

@@ -82,6 +82,8 @@ void morseStart(void);
 void morseStop(void);
 bool morseGetRunning(void);
 
+void util_gfx_init(void);
+
 #ifdef __cplusplus
 }
 #endif
