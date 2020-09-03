@@ -8,6 +8,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     CLAN_MARVWASHERE,
     CLAN_HELGA,
@@ -48,5 +52,9 @@ extern USER user;
 
 #define FIRST_ALLOWED_CHAR ' '
 #define LAST_ALLOWED_CHAR '~'
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //DC27_BADGE_USER_H

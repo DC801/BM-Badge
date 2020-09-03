@@ -3,6 +3,10 @@
 
 #include "shim_err.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define TIMER1_CC_NUM 4
 
 enum {
@@ -97,5 +101,9 @@ uint32_t app_timer_cnt_get(void);
 
 void nrf_delay_us(uint32_t time_us);
 void nrf_delay_ms(uint32_t time_ms);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

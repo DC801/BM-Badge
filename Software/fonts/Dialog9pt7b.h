@@ -3,7 +3,7 @@
 
 // Created by http://oleddisplay.squix.ch/ Consider a donation
 // In case of problems make sure that you are using the font file with the correct version!
-const uint8_t Dialog_plain_9Bitmaps[] = {
+static const uint8_t Dialog_plain_9Bitmaps[] = {
 
 	// Bitmap Data:
 	0x00, // ' '
@@ -101,7 +101,7 @@ const uint8_t Dialog_plain_9Bitmaps[] = {
 	0xAA,0xAA,0x80, // '|'
 	0xC4,0x42,0x44,0x4C // '}'
 };
-const GFXglyph Dialog_plain_9Glyphs[] = {
+static const GFXglyph Dialog_plain_9Glyphs[] = {
 // bitmapOffset, width, height, xAdvance, xOffset, yOffset
 	  {     0,   1,   1,   4,    0,    0 }, // ' '
 	  {     1,   2,   7,   4,    1,   -7 }, // '!'
@@ -198,7 +198,7 @@ const GFXglyph Dialog_plain_9Glyphs[] = {
 	  {   414,   2,   9,   4,    1,   -7 }, // '|'
 	  {   417,   4,   8,   6,    1,   -7 } // '}'
 };
-const GFXfont Dialog_plain_9 = {
+static const GFXfont Dialog_plain_9 = {
 (uint8_t  *)Dialog_plain_9Bitmaps,(GFXglyph *)Dialog_plain_9Glyphs,0x20, 0x7E, 12};
 
 #endif

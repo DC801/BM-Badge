@@ -5,6 +5,7 @@
 #define SNAKE
 
 #include "Snake.h"
+#include "games/hcrn/FrameBuffer.h"
 
 #define FOOD_HEIGHT 6
 #define FOOD_WIDTH 6

@@ -3,6 +3,7 @@
 //
 
 #include "common.h"
+#include "games/hcrn/FrameBuffer.h"
 
 /**
  * Draw the menu items

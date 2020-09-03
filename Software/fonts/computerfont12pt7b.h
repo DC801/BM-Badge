@@ -1,7 +1,7 @@
 #ifndef COMPUTERFONT_H
 #define COMPUTERFONT_H
 
-const uint8_t Computerfont12pt7bBitmaps[] = {
+static const uint8_t Computerfont12pt7bBitmaps[] = {
   0xEE, 0xEE, 0xFF, 0xFF, 0xF0, 0x0F, 0xFF, 0xFB, 0xFF, 0x7F, 0xEF, 0x8C,
   0x31, 0x86, 0x30, 0xC0, 0x31, 0x86, 0x33, 0xFF, 0xFF, 0xF3, 0x18, 0x63,
   0x0C, 0x67, 0xFF, 0xFF, 0xE6, 0x30, 0xC6, 0x00, 0x06, 0x00, 0xC3, 0xFF,
@@ -126,7 +126,7 @@ const uint8_t Computerfont12pt7bBitmaps[] = {
   0xC3, 0x87, 0x0E, 0x1F, 0x3E, 0x70, 0xE1, 0xC3, 0x87, 0x0E, 0x7C, 0xF9,
   0xFF, 0xF3, 0xE0 };
 
-const GFXglyph Computerfont12pt7bGlyphs[] = {
+static const GFXglyph Computerfont12pt7bGlyphs[] = {
   {     0,   0,   0,  10,    0,    1 },   // 0x20 ' '
   {     0,   4,  14,   6,    1,  -12 },   // 0x21 '!'
   {     7,  11,   6,  14,    0,  -12 },   // 0x22 '"'
@@ -223,7 +223,7 @@ const GFXglyph Computerfont12pt7bGlyphs[] = {
   {  1449,   7,  16,   9,    0,  -13 },   // 0x7D '}'
   {  1463,   9,   3,  12,    1,  -12 } }; // 0x7E '~'
 
-const GFXfont Computerfont12pt7b = {
+static const GFXfont Computerfont12pt7b = {
   (uint8_t  *)Computerfont12pt7bBitmaps,
   (GFXglyph *)Computerfont12pt7bGlyphs,
   0x20, 0x7E, 24 };
