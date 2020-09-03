@@ -83,11 +83,12 @@ typedef struct {
     GameEntityTypeAnimationDirection entityTypeAnimationDirection;
 } GameEntityType;
 
-enum GameEntityPrimaryIdType {
+typedef enum {
     ENTITY_PRIMARY_TILESET = 0,
     ENTITY_PRIMARY_ANIMATION = 1,
     ENTITY_PRIMARY_ENTITY_TYPE = 2
 } GameEntityPrimaryIdType;
+
 typedef struct {
     char name[16];
     uint16_t primaryTypeIndex;
