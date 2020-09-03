@@ -113,6 +113,7 @@ typedef struct {
 typedef struct {
     GameTileset *tileset;
     GameAnimation *animation;
+    GameAnimationFrame *animationFrame;
     uint16_t *tileIndex;
     uint8_t *renderFlags;
 } GameEntityRenderableData;
