@@ -7,6 +7,11 @@
 
 #ifdef DC801_EMBEDDED
 
+/* Master Configuration */
+#define MASTER_TWI_INST     0       //!< TWI interface used as a master accessing EEPROM memory.
+#define TWI_SCL_M           7       //!< Master SCL pin.
+#define TWI_SDA_M           9       //!< Master SDA pin.
+
 static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(MASTER_TWI_INST);
 
 void twi_master_init(void){

@@ -11,6 +11,7 @@
 #define TICTACTOE
 
 #include "common.h"
+#include "games/hcrn/FrameBuffer.h"
 //#include "Tic-Tac-Toe.h"
 
 static void updateScore(int points);

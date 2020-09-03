@@ -1,7 +1,11 @@
 #include "common.h"
 #include "entity.h"
 #include "convert_endian.h"
+
+#include <stdint.h>
 #include <inttypes.h>
+
+#include "games/hcrn/FrameBuffer.h"
 
 bool running = true;
 FrameBuffer *mage_canvas;
@@ -13,10 +17,10 @@ ButtonStates buttons;
 
 void handle_input () {
     buttons = {
-        .up    = false,
-        .down  = false,
-        .left  = false,
-        .right = false,
+        buttons.up    = false,
+        buttons.down  = false,
+        buttons.left  = false,
+        buttons.right = false,
     };
     #ifdef DC801_DESKTOP
     SDL_Event e;

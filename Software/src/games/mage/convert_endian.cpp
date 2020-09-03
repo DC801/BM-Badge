@@ -1,7 +1,7 @@
 #include "common.h"
 #include "convert_endian.h"
 
-const bool needs_endian_correction = (*(uint16_t *)"\0\xff" > 255);
+const bool needs_endian_correction = *(uint16_t*)"\0\xff" > 255;
 
 void convert_endian_u2 (uint16_t *value) {
     if (needs_endian_correction) {

@@ -6,7 +6,9 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/nearby.c \
 	$(SRC_ROOT)/extras.c \
 	$(SRC_ROOT)/godmode.c \
+	$(SRC_ROOT)/modules/cmixer/cmixer.c \
 	$(SRC_ROOT)/modules/drv_st7735.c \
+	$(SRC_ROOT)/modules/drv_nau8810.c \
 	$(SRC_ROOT)/modules/gfx.c \
 	$(SRC_ROOT)/modules/sd.c \
 	$(SRC_ROOT)/modules/ble.c \
@@ -14,7 +16,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/uart.c \
 	$(SRC_ROOT)/modules/led.c \
 	$(SRC_ROOT)/modules/i2c.c \
-	$(SRC_ROOT)/modules/i2s.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/games/Space_Invaders.cpp \
@@ -23,6 +24,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
 	$(SRC_ROOT)/games/Wargames.c \
 	$(SRC_ROOT)/games/hcrn/Arcade.cpp \
+	$(SRC_ROOT)/games/hcrn/Audio.cpp \
 	$(SRC_ROOT)/games/hcrn/Boss.cpp \
 	$(SRC_ROOT)/games/hcrn/FrameBuffer.cpp \
 	$(SRC_ROOT)/games/hcrn/GameEngine.cpp \
@@ -49,7 +51,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
-APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT)
+APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules/cmixer
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)

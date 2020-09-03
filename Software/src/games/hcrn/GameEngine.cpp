@@ -125,9 +125,11 @@ void GameEngine::run() {
     lastTime = SDL_GetTicks();
 
     bool exit = false;
-#endif
 
     while ((quit == false) && (exit == false))
+#else
+    while (quit == false)
+#endif
     {
         #ifdef DC801_DESKTOP
             if (application_quit != 0)
@@ -753,7 +755,7 @@ void crc32(const void *data, size_t n_bytes, uint32_t* crc) {
 
 #ifdef DC801_EMBEDDED
 bool GameEngine::saveGame(const char* filename) {
-    FIL *file;
+    FIL *file = NULL;
     uint32_t crc=0;
     uint32_t did = NRF_FICR->DEVICEADDR[0];
 
@@ -767,7 +769,7 @@ bool GameEngine::saveGame(const char* filename) {
     uint8_t p[4] = {(uint8_t)player.position.x, (uint8_t)player.position.y, (uint8_t)player.getLife(), currentRoom.getId()};
     UINT br=0;
 
-    FRESULT result = f_open(&file, filename, FA_WRITE | FA_OPEN_ALWAYS);
+    FRESULT result = f_open(file, filename, FA_WRITE | FA_OPEN_ALWAYS);
     if (result != FR_OK) {
         NRF_LOG_INFO("Can't load file %s\n", filename);
         return false;
@@ -789,14 +791,14 @@ bool GameEngine::saveGame(const char* filename) {
 }
 
 bool GameEngine::loadGame(const char* filename) {
-    FIL *file;
+    FIL *file = NULL;
     uint32_t crc=0, check=0;
     uint32_t did;
 
     uint8_t p[4];
     UINT br=0;
 
-    FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
+    FRESULT result = f_open(file, filename, FA_READ | FA_OPEN_EXISTING);
     if (result != FR_OK) {
         NRF_LOG_INFO("Can't load file %s\n", filename);
         return false;

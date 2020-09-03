@@ -5,6 +5,10 @@
 #ifndef TIC_TAC_TOE_H
 #define TIC_TAC_TOE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     player_none = '-',
     player_x    = 'x',
@@ -37,5 +41,9 @@ typedef enum {
 #define SPACING     4
 
 int TicTacToe(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

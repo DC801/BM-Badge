@@ -4,7 +4,7 @@
 
 #include "common.h"
 #include "extras.h"
-
+#include "games/hcrn/FrameBuffer.h"
 
 /**
  * Handle showing the DC groups

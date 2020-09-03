@@ -36,18 +36,7 @@
 #include <string.h>
 #include <sys/time.h>
 
-#include "nordic_common.h"
-#include "nrf52840_peripherals.h"
-#include "nrf_gpio.h"
-#include "nrf_spim.h"
-#include "nrf_drv_spi.h"
-#include "ff.h"
-#include "nrf_block_dev_sdc.h"
-#include "nrf_block_dev.h"
-#include "diskio.h"
-#include "diskio_blkdev.h"
-#include "nrf_delay.h"
-#include "nrf_soc.h"
+#include <common.h>
 
 #include "drv_st7735.h"
 
@@ -278,18 +267,22 @@ void st7735_init() {
 	uint32_t err_code;
 
 	//Init SPI0 for the LCD
-	nrfx_spim_config_t spi_config = NRFX_SPIM_DEFAULT_CONFIG;
-	spi_config.sck_pin = ST7735_SCK_PIN;
-	spi_config.mosi_pin = ST7735_MOSI_PIN;
-	spi_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
-	spi_config.ss_pin = ST7735_PIN_CS;
-	spi_config.irq_priority = NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY;
-	spi_config.frequency = NRF_SPIM_FREQ_32M;
-	spi_config.orc = 0x00;
-	spi_config.mode = NRF_SPIM_MODE_0;
-	spi_config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
-    spi_config.use_hw_ss      = true;
-    spi_config.ss_active_high = false;
+	nrfx_spim_config_t spi_config = { 0 };
+
+	spi_config.sck_pin = 			ST7735_SCK_PIN;
+	spi_config.mosi_pin = 			ST7735_MOSI_PIN;
+	spi_config.miso_pin = 			NRFX_SPIM_PIN_NOT_USED;
+	spi_config.ss_pin = 			ST7735_PIN_CS;
+	spi_config.ss_active_high = 	false;
+	spi_config.irq_priority = 		NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY;
+	spi_config.orc = 				0x00;
+	spi_config.frequency = 			NRF_SPIM_FREQ_32M;
+	spi_config.mode = 				NRF_SPIM_MODE_0;
+	spi_config.bit_order = 			NRF_SPIM_BIT_ORDER_MSB_FIRST;
+	spi_config.dcx_pin = 			NRFX_SPIM_PIN_NOT_USED;
+	spi_config.rx_delay = 			0x02;
+	spi_config.ss_duration = 		0x02;
+	spi_config.use_hw_ss = 			true;
 
 	APP_ERROR_CHECK(
 			nrfx_spim_init(&spim0, &spi_config, __spim_event_handler, NULL)
@@ -360,7 +353,7 @@ nrfx_err_t inline st7735_push_colors_fast(uint8_t *p_colors, int32_t size) {
 	m_busy = true;
 	//count = MIN(254, size);
 
-	nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_colors, size);
+	nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_colors, (size_t)size);
 	return nrfx_spim_xfer(&spim0, &xfer_desc, 0);
 
 	/*m_large_tx = true;
