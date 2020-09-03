@@ -1,9 +1,9 @@
 #ifndef CONVERT_ENDIAN_H
-#define CONVERT_ENDIAND_H
+#define CONVERT_ENDIAN_H
 
 #include "common.h"
 
-const bool needs_endian_correction = (*(uint16_t *)"\0\xff" > 255);
+extern const bool needs_endian_correction;
 
 void convert_endian_u2 (uint16_t *value);
 uint16_t convert_endian_u2_value (uint16_t value);
