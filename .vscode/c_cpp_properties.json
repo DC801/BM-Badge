@@ -140,7 +140,8 @@
                 "${workspaceRoot}/Software",
                 "${workspaceRoot}/Software/src",
                 "${workspaceRoot}/Software/sdk/shim",
-                "${workspaceRoot}/Software/config",
+				"${workspaceRoot}/Software/config",
+				"${workspaceRoot}/Software/cmixer",
                 "/usr/include",
                 "${GCC_ROOT}/include"
             ],
@@ -154,7 +155,8 @@
                 "SOFTDEVICE_PRESENT",
                 "SWI_DISABLE0",
                 "_DEFAULT_SOURCE",
-                "DC801_EMBEDDED"
+				"DC801_EMBEDDED",
+				"NRFX_TWIM1_ENABLED=1"
             ],
             "compilerPath": "/usr/bin/arm-none-eabi-gcc",
             "cStandard": "c11",

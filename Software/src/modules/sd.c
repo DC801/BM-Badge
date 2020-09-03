@@ -248,40 +248,6 @@ bool util_sd_recover() {
 
 #endif
 
-void util_sd_error(){
-
-    // Something is wrong with the SD card
-	p_canvas()->clearScreen(COLOR_BLACK);
-    // util_gfx_fill_screen(COLOR_BLACK);
-
-	p_canvas()->printMessage("SD Card", Computerfont12pt7b, COLOR_WHITE, 22, 20);
-    // util_gfx_set_font(FONT_COMPUTER_12PT);
-    // util_gfx_set_color(COLOR_WHITE);
-    // util_gfx_set_cursor(22, 20);
-    // util_gfx_print("SD Card");
-
-	p_canvas()->printMessage("Error", Computerfont12pt7b, COLOR_WHITE, 38, 38);
-    // util_gfx_set_cursor(38, 38);
-    // util_gfx_print("Error");
-
-	p_canvas()->printMessage("Check card and", monof558pt7b, COLOR_RED, 10, 80);
-    // util_gfx_set_font(FONT_MONO55_8PT);
-    // util_gfx_set_color(COLOR_RED);
-    // util_gfx_set_cursor(10, 80);
-    // util_gfx_print("Check card and");
-
-	p_canvas()->printMessage("reboot", monof558pt7b, COLOR_RED, 38, 92);
-    // util_gfx_set_cursor(38, 92);
-    // util_gfx_print("reboot");
-
-	#ifdef DC801_EMBEDDED
-    while(true);
-	#else
-	printf("SD Card Error\n");
-	exit(1);
-	#endif
-}
-
 #ifdef DC801_EMBEDDED
 /**
  * @param dir Directory to scan

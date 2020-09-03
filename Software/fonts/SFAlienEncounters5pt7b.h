@@ -1,7 +1,7 @@
 #ifndef SFALIENFONT_H
 #define SFALIENFONT_H
 
-const uint8_t SFAlienEncountersSolid5pt7bBitmaps[] PROGMEM = {
+static const uint8_t SFAlienEncountersSolid5pt7bBitmaps[] PROGMEM = {
   0x7B, 0x3C, 0xF3, 0xCF, 0x37, 0x80, 0xED, 0xB6, 0xD8, 0xF8, 0x30, 0xDF,
   0xC3, 0x0F, 0xC0, 0xF8, 0x30, 0xCE, 0x0C, 0x3F, 0x80, 0xDB, 0x6D, 0xBF,
   0x18, 0x61, 0x80, 0xFF, 0x0C, 0x3E, 0x0C, 0x3F, 0x80, 0x7F, 0x0C, 0x3E,
@@ -15,7 +15,7 @@ const uint8_t SFAlienEncountersSolid5pt7bBitmaps[] PROGMEM = {
   0x0C, 0x3F, 0xC3, 0x0F, 0xC0, 0xFF, 0x0C, 0x3E, 0xC3, 0x0C, 0x00
 };
 
-const GFXglyph SFAlienEncountersSolid5pt7bGlyphs[] PROGMEM = {
+static const GFXglyph SFAlienEncountersSolid5pt7bGlyphs[] PROGMEM = {
   {     0,   6,   7,   8,    1,   -6 }   // '0'
  ,{     6,   3,   7,   8,    3,   -6 }   // '1'
  ,{     9,   6,   7,   8,    1,   -6 }   // '2'
@@ -41,7 +41,7 @@ const GFXglyph SFAlienEncountersSolid5pt7bGlyphs[] PROGMEM = {
  ,{   125,   6,   7,   6,    0,   -6 }   // 'F'
 };
 
-const GFXfont SFAlienEncountersSolid5pt7b PROGMEM = {
+static const GFXfont SFAlienEncountersSolid5pt7b PROGMEM = {
   (uint8_t  *)SFAlienEncountersSolid5pt7bBitmaps,
   (GFXglyph *)SFAlienEncountersSolid5pt7bGlyphs,
   0x30, 0x46, 9 };

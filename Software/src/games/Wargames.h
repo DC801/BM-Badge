@@ -5,6 +5,10 @@
 #ifndef DC26_BADGE_WARGAMES_H
 #define DC26_BADGE_WARGAMES_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GAMES_TO_UNLOCK 2
 
 void wg_Init(void);
@@ -42,5 +46,8 @@ void wg_Identifcation(void);
 
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif //DC26_BADGE_WARGAMES_H

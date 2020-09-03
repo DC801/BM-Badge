@@ -115,76 +115,77 @@ void timer_manager::kill()
 
 timer_manager manager;
 
-void signal_handler(int signal)
+extern "C"
 {
-    manager.kill();
-    exit(0);
-}
+	void signal_handler(int signal)
+	{
+		manager.kill();
+		exit(0);
+	}
 
-ret_code_t app_timer_init(void)
-{
-    return NRF_SUCCESS;
-}
+	ret_code_t app_timer_init(void)
+	{
+		return NRF_SUCCESS;
+	}
 
-ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t mode, app_timer_timeout_handler_t timeout_handler)
-{
-    if (timeout_handler == NULL)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
+	ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t mode, app_timer_timeout_handler_t timeout_handler)
+	{
+		if (timeout_handler == NULL)
+		{
+			return NRF_ERROR_INVALID_PARAM;
+		}
 
-    if (p_timer_id == NULL)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
+		if (p_timer_id == NULL)
+		{
+			return NRF_ERROR_INVALID_PARAM;
+		}
 
-    app_timer_t *timer = (app_timer_t *)*p_timer_id;
+		app_timer_t *timer = (app_timer_t *)*p_timer_id;
 
-    if (timer->is_running)
-    {
-        return NRF_ERROR_INVALID_STATE;
-    }
+		if (timer->is_running)
+		{
+			return NRF_ERROR_INVALID_STATE;
+		}
 
-    timer->is_running = false;
-    timer->mode = mode;
-    timer->p_timeout_handler = timeout_handler;
+		timer->is_running = false;
+		timer->mode = mode;
+		timer->p_timeout_handler = timeout_handler;
 
-    // manager.add_timer(timer);
+		// manager.add_timer(timer);
 
-    return NRF_SUCCESS;
-}
+		return NRF_SUCCESS;
+	}
 
-ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *p_context)
-{
-    UNUSED_PARAMETER(timer_id);
-    UNUSED_PARAMETER(timeout_ticks);
-    UNUSED_PARAMETER(p_context);
+	ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *p_context)
+	{
+		UNUSED_PARAMETER(timer_id);
+		UNUSED_PARAMETER(timeout_ticks);
+		UNUSED_PARAMETER(p_context);
 
-    return NRF_SUCCESS;
-}
+		return NRF_SUCCESS;
+	}
 
-ret_code_t app_timer_stop(app_timer_id_t timer_id)
-{
-    UNUSED_PARAMETER(timer_id);
+	ret_code_t app_timer_stop(app_timer_id_t timer_id)
+	{
+		UNUSED_PARAMETER(timer_id);
 
-    return NRF_SUCCESS;
-}
+		return NRF_SUCCESS;
+	}
 
+	uint32_t app_timer_cnt_get(void)
+	{
+		return SDL_GetTicks();
+	}
 
-uint32_t app_timer_cnt_get(void)
-{
-    return SDL_GetTicks();
-}
+	void nrf_delay_us(uint32_t time_us)
+	{
+		const auto duration = std::chrono::microseconds(time_us);
+		std::this_thread::sleep_for(duration);
+	}
 
-
-void nrf_delay_us(uint32_t time_us)
-{
-    const auto duration = std::chrono::microseconds(time_us);
-    std::this_thread::sleep_for(duration);
-}
-
-void nrf_delay_ms(uint32_t time_ms)
-{
-    const auto duration = std::chrono::milliseconds(time_ms);
-    std::this_thread::sleep_for(duration);
+	void nrf_delay_ms(uint32_t time_ms)
+	{
+		const auto duration = std::chrono::milliseconds(time_ms);
+		std::this_thread::sleep_for(duration);
+	}
 }
