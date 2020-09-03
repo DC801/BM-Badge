@@ -25,7 +25,7 @@
 
 #include "utility.h"
 
-#include "FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 #include "sprites_raw.h"
 
 #include <cstring>

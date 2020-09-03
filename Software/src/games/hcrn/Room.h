@@ -2,7 +2,7 @@
 #define ROOM_H
 
 #include "hcrn_common.h"
-#include "FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 #include "Point.h"
 #include "Rect.h"
 #include <stdint.h>

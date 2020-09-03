@@ -8,7 +8,7 @@
 #define PIPS
 
 #include "PipsTheET.h"
-#include "games/hcrn/FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 
 #define PIPS_SIZE (12 * 12 * 2)
 

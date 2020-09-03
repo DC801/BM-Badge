@@ -12,7 +12,7 @@
 #include "common.h"
 #include "Point.h"
 #include "Rect.h"
-#include "FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 #include "Room.h"
 
 class GameObject {
