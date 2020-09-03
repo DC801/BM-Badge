@@ -117,13 +117,6 @@ typedef struct {
     uint8_t *renderFlags;
 } GameEntityRenderableData;
 
-typedef struct {
-    bool up;
-    bool down;
-    bool left;
-    bool right;
-} ButtonStates;
-
 int MAGE(void);
 
 #endif //SOFTWARE_MAGE_H

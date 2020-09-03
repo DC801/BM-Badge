@@ -18,6 +18,8 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/i2c.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
+	$(SRC_ROOT)/engine/input.cpp \
+	$(SRC_ROOT)/engine/convert_endian.cpp \
 	$(SRC_ROOT)/games/Space_Invaders.cpp \
 	$(SRC_ROOT)/games/Snake.c \
 	$(SRC_ROOT)/games/PipsTheET.c \
@@ -46,7 +48,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/hcrn/Sprite.cpp \
 	$(SRC_ROOT)/games/hcrn/Zombie.cpp \
 	$(SRC_ROOT)/games/hcrn/hcrn.cpp \
-	$(SRC_ROOT)/games/mage/convert_endian.c \
 	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
