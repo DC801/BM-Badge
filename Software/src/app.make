@@ -46,6 +46,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/hcrn/Sprite.cpp \
 	$(SRC_ROOT)/games/hcrn/Zombie.cpp \
 	$(SRC_ROOT)/games/hcrn/hcrn.cpp \
+	$(SRC_ROOT)/games/mage/convert_endian.c \
 	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
