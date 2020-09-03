@@ -128,7 +128,6 @@ typedef enum{
 #include "games/Wargames.h"
 #include "games/hcrn/hcrn.h"
 #include "games/mage/mage.h"
-#include "games/hcrn/FrameBuffer.h"
 #include "games/serial.h"
 #include "games/galaga/galaga_c.h"
 
