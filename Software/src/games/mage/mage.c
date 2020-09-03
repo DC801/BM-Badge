@@ -1,5 +1,6 @@
 #include "common.h"
 #include "entity.h"
+#include "convert_endian.h"
 #include <inttypes.h>
 
 bool running = true;
@@ -7,40 +8,6 @@ FrameBuffer *mage_canvas;
 uint32_t lastTime;
 uint32_t now;
 uint32_t delta_time;
-
-uint16_t _uint16Native = 0xFF00;
-uint8_t *_uint16TopBit = (uint8_t *)&_uint16Native;
-bool _needsSwap = *_uint16TopBit == 0x00;
-
-void convert_endian_u2 (uint16_t *value) {
-    if (_needsSwap) {
-        *value = __builtin_bswap16(*value);
-    }
-}
-uint16_t convert_endian_u2_value (uint16_t value) {
-    return _needsSwap
-         ? __builtin_bswap16(value)
-         : value;
-}
-void convert_endian_u2_buffer (uint16_t *buf, size_t bufferSize) {
-    if (_needsSwap) {
-        for (size_t i = 0; i < bufferSize; i++) {
-            buf[i] = __builtin_bswap16(buf[i]);
-        }
-    }
-}
-void convert_endian_u4 (uint32_t *value) {
-    if (_needsSwap) {
-        *value = __builtin_bswap32(*value);
-    }
-}
-void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize) {
-    if (_needsSwap) {
-        for (size_t i = 0; i < bufferSize; i++) {
-            buf[i] = __builtin_bswap32(buf[i]);
-        }
-    }
-}
 
 ButtonStates buttons;
 
@@ -678,7 +645,7 @@ uint32_t load_data_headers (uint8_t *data) {
         &dataMemoryAddresses.imageLengths
     );
 
-    if (_needsSwap) {
+    if (needs_endian_correction) {
         for (uint32_t i = 0; i < *dataMemoryAddresses.imageCount; i++) {
             correct_image_data_endinness(
                 data + dataMemoryAddresses.imageOffsets[i],
