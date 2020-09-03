@@ -1,6 +1,10 @@
 #include "common.h"
 #include "entity.h"
+
+#include <stdint.h>
 #include <inttypes.h>
+
+#include "games/hcrn/FrameBuffer.h"
 
 bool running = true;
 FrameBuffer *mage_canvas;
@@ -8,9 +12,13 @@ uint32_t lastTime;
 uint32_t now;
 uint32_t delta_time;
 
-uint16_t _uint16Native = 0xFF00;
-uint8_t *_uint16TopBit = (uint8_t *)&_uint16Native;
-bool _needsSwap = *_uint16TopBit == 0x00;
+
+#pragma GCC diagnostic ignored "-Woverflow"
+#pragma GCC diagnostic push
+const uint16_t _uint16Native = 0xFF00;
+const uint8_t _uint16TopBit = _uint16Native;
+const bool _needsSwap = _uint16TopBit == 0x00;
+#pragma GCC diagnostic pop
 
 void convert_endian_u2 (uint16_t *value) {
     if (_needsSwap) {
@@ -46,10 +54,10 @@ ButtonStates buttons;
 
 void handle_input () {
     buttons = {
-        .up    = false,
-        .down  = false,
-        .left  = false,
-        .right = false,
+        buttons.up    = false,
+        buttons.down  = false,
+        buttons.left  = false,
+        buttons.right = false,
     };
     #ifdef DC801_DESKTOP
     SDL_Event e;
