@@ -1,75 +1,17 @@
 #include "common.h"
 #include "entity.h"
-#include "convert_endian.h"
 
 #include <stdint.h>
 #include <inttypes.h>
 
 #include "games/hcrn/FrameBuffer.h"
 
-bool running = true;
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
 uint32_t now;
 uint32_t delta_time;
 
-ButtonStates buttons;
-
-void handle_input () {
-    buttons = {
-        buttons.up    = false,
-        buttons.down  = false,
-        buttons.left  = false,
-        buttons.right = false,
-    };
-    #ifdef DC801_DESKTOP
-    SDL_Event e;
-    if (application_quit != 0)
-    {
-        running = false;
-    }
-
-    while (SDL_PollEvent(&e))
-    {
-        if (e.type == SDL_QUIT)
-        {
-            running = false;
-            break;
-        }
-
-        if (e.type == SDL_KEYDOWN)
-        {
-            if (
-                e.key.keysym.sym == SDLK_ESCAPE
-                || e.key.keysym.scancode == SDL_SCANCODE_Q
-            )
-            {
-                running = false;
-                break;
-            }
-        }
-    }
-
-    nrf_delay_ms(5);
-    #endif
-
-    #ifdef DC01_EMBEDDED
-    app_usbd_event_queue_process();
-    #endif
-
-    if (isButtonDown(USER_BUTTON_UP)) {
-        buttons.up = true;
-    }
-    if (isButtonDown(USER_BUTTON_DOWN)) {
-        buttons.down = true;
-    }
-    if (isButtonDown(USER_BUTTON_LEFT)) {
-        buttons.left = true;
-    }
-    if (isButtonDown(USER_BUTTON_RIGHT)) {
-        buttons.right = true;
-    }
-}
+ButtonStates buttons = { 0 };
 
 GameDataMemoryAddresses dataMemoryAddresses = {};
 
@@ -705,9 +647,9 @@ int MAGE() {
 
     mage_canvas = p_canvas();
     lastTime = millis();
-    while (running)
+    while (EngineIsRunning())
     {
-        handle_input();
+        EngineHandleInput(&buttons);
         mage_game_loop(data);
     }
     exit(0);

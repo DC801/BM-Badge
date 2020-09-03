@@ -131,6 +131,9 @@ typedef enum{
 #include "games/serial.h"
 #include "games/galaga/galaga_c.h"
 
+#include "engine/input.h"
+#include "engine/convert_endian.h"
+
 #define PROGMEM
 
 #include "../fonts/computerfont12pt7b.h"
@@ -140,7 +143,6 @@ typedef enum{
 #include "../fonts/TomThumb.h"
 #include "../fonts/practical8pt7b.h"
 #include "../fonts/SFAlienEncounters5pt7b.h"
-
 
 #define min(A,B) ((A)<(B)?(A):(B))
 #define max(A,B) ((A)>(B)?(A):(B))
