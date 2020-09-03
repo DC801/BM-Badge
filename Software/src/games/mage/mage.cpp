@@ -1,5 +1,6 @@
 #include "common.h"
 #include "entity.h"
+#include "convert_endian.h"
 
 #include <stdint.h>
 #include <inttypes.h>
