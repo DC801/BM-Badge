@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#include "games/hcrn/FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 
 FrameBuffer *mage_canvas;
 uint32_t lastTime;

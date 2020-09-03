@@ -1,6 +1,6 @@
 #include "main.h"
 #include "utility.h"
-#include "games/hcrn/FrameBuffer.h"
+#include "engine/FrameBuffer.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
 

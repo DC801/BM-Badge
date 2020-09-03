@@ -20,6 +20,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/engine/input.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
+	$(SRC_ROOT)/engine/FrameBuffer.cpp \
 	$(SRC_ROOT)/games/Space_Invaders.cpp \
 	$(SRC_ROOT)/games/Snake.c \
 	$(SRC_ROOT)/games/PipsTheET.c \
@@ -28,7 +29,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/hcrn/Arcade.cpp \
 	$(SRC_ROOT)/games/hcrn/Audio.cpp \
 	$(SRC_ROOT)/games/hcrn/Boss.cpp \
-	$(SRC_ROOT)/games/hcrn/FrameBuffer.cpp \
 	$(SRC_ROOT)/games/hcrn/GameEngine.cpp \
 	$(SRC_ROOT)/games/hcrn/Pickup.cpp \
 	$(SRC_ROOT)/games/hcrn/Laser.cpp \
