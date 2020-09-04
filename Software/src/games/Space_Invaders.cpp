@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cstdio>
 
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 #include "Space_Invaders.h"
 #include "Space_Invaders_HCRN_Sprites.h"
 #include "Space_Invaders_c.h"
