@@ -4,7 +4,7 @@
 
 #include "common.h"
 #include "extras.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 /**
  * Handle showing the DC groups

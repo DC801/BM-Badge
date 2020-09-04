@@ -5,5 +5,5 @@ SDK_SRCS := $(wildcard $(PRJ_ROOT)/shim/*.c)
 SDK_SRCS += $(wildcard $(PRJ_ROOT)/shim/*.cpp)
 SDK_SRCS += $(wildcard $(PRJ_ROOT)/shim/*.S)
 
-SDK_INCLUDES := -I$(PRJ_ROOT)/shim -I$(PRJ_ROOT)/.. -I$(PRJ_ROOT)/../src -I$(PRJ_ROOT)/../src/modules/cmixer
+SDK_INCLUDES := -I$(PRJ_ROOT)/shim -I$(PRJ_ROOT)/.. -I$(PRJ_ROOT)/../src -I$(PRJ_ROOT)/../src/modules/cmixer -I$(PRJ_ROOT)/../src/engine
 TOOLCHAIN = ""

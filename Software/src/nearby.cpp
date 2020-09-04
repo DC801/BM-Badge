@@ -4,7 +4,7 @@
 
 #include "common.h"
 #include "nearby.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 #define BLOCK_HEIGHT 50
 #define MAX_ROWS    2
