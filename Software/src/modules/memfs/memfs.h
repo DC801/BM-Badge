@@ -38,14 +38,16 @@ int     memfs_erase(void);
 // Nitems: number of objects to read/write
 size_t memfs_fread(void *buffer, size_t size, size_t nitems, uint8_t file);
 size_t memfs_fwrite(const void *buffer, size_t size, size_t nitems, uint8_t file);
+int    memfs_defrag(void);
 
 // File information
 
 // Offset: Negative values seek backwards
 // Whence: Where to seek from. Start, current offset, or end
-int  memfs_fseek(uint8_t file, long offset, MEMFS_WHENCE whence);
-long memfs_ftell(uint8_t file);
-long memfs_fstat(uint8_t file);
+int    memfs_fseek(uint8_t file, long offset, MEMFS_WHENCE whence);
+long   memfs_ftell(uint8_t file);
+long   memfs_fstat(uint8_t file);
+size_t memfs_free(void);
 
 // File errors
 MEMFS_ERROR memfs_ferror(uint8_t file);

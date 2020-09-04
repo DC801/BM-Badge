@@ -107,6 +107,15 @@ size_t memfs_fwrite(const void *buffer, size_t size, size_t nitems, uint8_t file
     return 0;
 }
 
+// Warning: Will take forever
+// Uses an internal buffer with EasyDMA to defragment files and reclaim space
+// between files. All files are stored contiguously.
+int memfs_defrag(void)
+{
+    // TODO: Implement me
+    return 0;
+}
+
 // This funciton will wrap positively and negatively so that the resulting absolute
 //  offset is within the interval [0, size], where size is the size of the file in bytes
 // Return value:
@@ -223,6 +232,13 @@ long memfs_fstat(uint8_t file)
         return -1;
     }
 
+    // TODO: Implement me
+    return 0;
+}
+
+// Reads the file table and computes the size of all files, then returns the number of free bytes
+size_t memfs_free(void)
+{
     // TODO: Implement me
     return 0;
 }
