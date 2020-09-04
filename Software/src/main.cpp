@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include "common.h"
 #include "user.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 #ifdef DC801_DESKTOP
 #include<signal.h>

@@ -1,7 +1,7 @@
 #ifdef DC801_EMBEDDED
 
 #include <common.h>
-#include "Audio.h"
+#include "EngineAudio.h"
 
 #include "cmixer.h"
 

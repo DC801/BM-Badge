@@ -9,7 +9,7 @@
  */
 
 #include "common.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 #define EE_R1 3900
 #define EE_R2 10000
