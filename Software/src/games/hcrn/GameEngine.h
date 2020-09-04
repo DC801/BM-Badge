@@ -10,7 +10,7 @@
 #include "hcrn_common.h"
 #include "Player.h"
 #include "Room.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 #include "GameObject.h"
 
 #define THINK_INTERVAL 25

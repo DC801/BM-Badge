@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
@@ -259,7 +259,7 @@ void update_entities (uint8_t *data) {
             currentFrameTimer
         );
     }
-    
+
 }
 
 void mage_game_loop (uint8_t *data) {

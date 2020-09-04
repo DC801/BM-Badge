@@ -18,7 +18,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/i2c.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
-	$(SRC_ROOT)/engine/input.cpp \
+	$(SRC_ROOT)/engine/EngineInput.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
 	$(SRC_ROOT)/engine/FrameBuffer.cpp \
 	$(SRC_ROOT)/games/Space_Invaders.cpp \
@@ -52,7 +52,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
-APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules/cmixer
+APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)

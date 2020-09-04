@@ -12,14 +12,14 @@
 #include "common.h"
 #include "Point.h"
 #include "Rect.h"
-#include "engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 #include "Room.h"
 
 class GameObject {
 public:
     GameObject(): blocking(false) {};
     virtual ~GameObject() {};
-    
+
     virtual void draw(FrameBuffer* canvas)=0;
     virtual Rect getBoundingbox()=0;
     virtual bool think(Room* room)=0;
@@ -28,7 +28,7 @@ public:
     bool isBlocking() {return blocking;};
     virtual void interact(FrameBuffer* canvas) {};
     int getLife() {return life;};
-    
+
     bool playerTeam;
     bool blocking;
     Point position;
@@ -41,7 +41,7 @@ class Dummy : public GameObject {
 public:
     Dummy() {};
     ~Dummy() {};
-    
+
     void draw(FrameBuffer* canvas) {};
     Rect getBoundingbox() {return Rect();};
     bool think(Room *room) {return true;};
