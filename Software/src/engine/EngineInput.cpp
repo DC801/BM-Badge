@@ -1,4 +1,5 @@
 #include "common.h"
+#include "EngineInput.h"
 
 bool running = true;
 

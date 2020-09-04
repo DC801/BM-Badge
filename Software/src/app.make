@@ -18,6 +18,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/i2c.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
+	$(SRC_ROOT)/engine/EngineAudio.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
 	$(SRC_ROOT)/engine/FrameBuffer.cpp \
@@ -26,28 +27,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/PipsTheET.c \
 	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
 	$(SRC_ROOT)/games/Wargames.c \
-	$(SRC_ROOT)/games/hcrn/Arcade.cpp \
-	$(SRC_ROOT)/games/hcrn/Audio.cpp \
-	$(SRC_ROOT)/games/hcrn/Boss.cpp \
-	$(SRC_ROOT)/games/hcrn/GameEngine.cpp \
-	$(SRC_ROOT)/games/hcrn/Pickup.cpp \
-	$(SRC_ROOT)/games/hcrn/Laser.cpp \
-	$(SRC_ROOT)/games/hcrn/Marine.cpp \
-	$(SRC_ROOT)/games/hcrn/NPC.cpp \
-	$(SRC_ROOT)/games/hcrn/Obstacle.cpp \
-	$(SRC_ROOT)/games/hcrn/Overlays.cpp \
-	$(SRC_ROOT)/games/hcrn/Player.cpp \
-	$(SRC_ROOT)/games/hcrn/Projectile.cpp \
-	$(SRC_ROOT)/games/hcrn/Robot.cpp \
-	$(SRC_ROOT)/games/hcrn/Room.cpp \
-	$(SRC_ROOT)/games/hcrn/Scout.cpp \
-	$(SRC_ROOT)/games/hcrn/Spider.cpp \
-	$(SRC_ROOT)/games/hcrn/Terminal.cpp \
-	$(SRC_ROOT)/games/hcrn/TNT.cpp \
-	$(SRC_ROOT)/games/hcrn/Turret.cpp \
-	$(SRC_ROOT)/games/hcrn/Sprite.cpp \
-	$(SRC_ROOT)/games/hcrn/Zombie.cpp \
-	$(SRC_ROOT)/games/hcrn/hcrn.cpp \
 	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
