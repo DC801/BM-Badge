@@ -141,7 +141,8 @@
                 "${workspaceRoot}/Software/src",
                 "${workspaceRoot}/Software/sdk/shim",
 				"${workspaceRoot}/Software/config",
-				"${workspaceRoot}/Software/src/modules/cmixer",
+                "${workspaceRoot}/Software/src/modules/cmixer",
+                "${workspaceRoot}/Software/src/engine",
                 "/usr/include",
                 "${GCC_ROOT}/include"
             ],

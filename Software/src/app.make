@@ -7,6 +7,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/extras.c \
 	$(SRC_ROOT)/godmode.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
+	$(SRC_ROOT)/modules/memfs/memfs.c \
 	$(SRC_ROOT)/modules/drv_st7735.c \
 	$(SRC_ROOT)/modules/drv_nau8810.c \
 	$(SRC_ROOT)/modules/gfx.c \
@@ -31,7 +32,12 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
-APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
+APP_INCLUDES := -I$(PRJ_ROOT) \
+	-I$(SRC_ROOT) \
+	-I$(SRC_ROOT)/engine \
+	-I$(SRC_ROOT)/modules/cmixer \
+	-I$(SRC_ROOT)/modules/memfs
+
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)

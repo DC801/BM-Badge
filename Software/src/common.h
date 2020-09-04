@@ -103,35 +103,41 @@ typedef enum{
 } GODMODE_COMMAND;
 
 // Includes for our app
-#include "utility.h"
-#include "main.h"
-#include "menu.h"
-#include "user.h"
-#include "nearby.h"
-#include "extras.h"
-#include "modules/ble.h"
-#include "godmode.h"
-#include "modules/drv_st7735.h"
-#include "modules/drv_nau8810.h"
-#include "modules/gfx.h"
-#include "modules/sd.h"
 #include "modules/adc.h"
-#include "modules/uart.h"
+#include "modules/ble.h"
+#include "modules/drv_nau8810.h"
+#include "modules/drv_st7735.h"
+#include "modules/gfx.h"
 #include "modules/i2c.h"
 #include "modules/led.h"
+#include "modules/memfs/memfs.h"
+#include "modules/sd.h"
+#include "modules/uart.h"
 #include "modules/usb.h"
+
 #include "adafruit/gfxfont.h"
-#include "games/Space_Invaders_c.h"
-#include "games/Snake.h"
+#include "extras.h"
+#include "godmode.h"
+#include "main.h"
+#include "menu.h"
+#include "nearby.h"
+#include "user.h"
+#include "utility.h"
+
+// Games
+#include "games/mage/mage.h"
+
+#include "games/galaga/galaga_c.h"
 #include "games/PipsTheET.h"
+#include "games/serial.h"
+#include "games/Snake.h"
+#include "games/Space_Invaders_c.h"
 #include "games/Tic-Tac-Toe.h"
 #include "games/Wargames.h"
-#include "games/mage/mage.h"
-#include "games/serial.h"
-#include "games/galaga/galaga_c.h"
 
+// Game Engine
 #include "EngineInput.h"
-#include "engine/convert_endian.h"
+#include "convert_endian.h"
 
 #define PROGMEM
 
