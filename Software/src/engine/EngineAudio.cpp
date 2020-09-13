@@ -27,7 +27,7 @@ AudioPlayer audio;
 uint32_t stream[2][BUFFER_SIZE];
 uint32_t soundCount = 0;
 
-AudioMutex mutex;
+AudioMutex audio_mutex;
 
 typedef struct sound
 {
@@ -46,12 +46,12 @@ void lockAudio(cm_Event *e)
 {
 	if (e->type == CM_EVENT_LOCK)
 	{
-		mutex.lock();
+		audio_mutex.lock();
 	}
 
 	if (e->type == CM_EVENT_UNLOCK)
 	{
-		mutex.unlock();
+		audio_mutex.unlock();
 	}
 }
 
@@ -234,7 +234,7 @@ void playAudio(const char *filename, bool loop, double gain)
 	// Sample is loaded, it's good to free
 	audio->free = true;
 
-	mutex.lock();
+	audio_mutex.lock();
 
 	// If the sample we're adding is looped, fade any and all existing looped samples
 	if (loop == true)
@@ -245,7 +245,7 @@ void playAudio(const char *filename, bool loop, double gain)
 	// Append the sample to the end of the list
 	addAudio(&head, audio);
 
-	mutex.unlock();
+	audio_mutex.unlock();
 }
 
 void AudioPlayer::play(const char *name, double gain)
