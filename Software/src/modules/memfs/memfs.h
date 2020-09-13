@@ -23,6 +23,8 @@ typedef enum
 #error "Maximum number of memfs errors reached"
 #endif
 
+void memfs_init(void);
+
 // File open/close
 uint8_t memfs_fopen(const char *filename);
 int     memfs_fclose(uint8_t file);
