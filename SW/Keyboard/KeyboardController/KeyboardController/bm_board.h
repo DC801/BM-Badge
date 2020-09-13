@@ -31,14 +31,14 @@ typedef enum {
 	KEY_SUB				= 14,	// SW16
 	KEY_PAGE			= 15,	// SW17
 	KEY_LJOY_CENTER		= 16,	// SW18
-	KEY_LJOY_UP			= 17,
+	KEY_LJOY_LEFT		= 17,
 	KEY_LJOY_DOWN		= 18,
-	KEY_LJOY_LEFT		= 19,
+	KEY_LJOY_UP			= 19,
 	KEY_LJOY_RIGHT		= 20,
 	KEY_RJOY_CENTER		= 21,	// SW19
-	KEY_RJOY_UP			= 22,
+	KEY_RJOY_LEFT		= 22,
 	KEY_RJOY_DOWN		= 23,
-	KEY_RJOY_LEFT		= 24,
+	KEY_RJOY_UP			= 24,
 	KEY_RJOY_RIGHT		= 25,
 	KEY_HAX				= 26,	// Cap Touch
 	NUM_KEYS					// Count of total number of keys
