@@ -17,6 +17,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/led.c \
 	$(SRC_ROOT)/modules/i2c.c \
 	$(SRC_ROOT)/modules/mutex.c \
+	$(SRC_ROOT)/modules/keyboard.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/engine/EngineAudio.cpp \
