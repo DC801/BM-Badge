@@ -4,7 +4,7 @@ This is the keyboard controller for the DC801 BM-Badge platform.
 
 # Hardware
 
-The microcontroller is an [attiny1617](https://www.microchip.com/wwwproducts/en/ATTINY1617) [datasheet](http://ww1.microchip.com/downloads/en/devicedoc/attiny3217_1617-data-sheet-40001999b.pdf)
+The microcontroller is an [attiny1617](https://www.microchip.com/wwwproducts/en/ATTINY1617) ([datasheet](http://ww1.microchip.com/downloads/en/devicedoc/attiny3217_1617-data-sheet-40001999b.pdf))
 
 Connected to this microcontroller is a 5x6 grid of physical buttons, one capacitive touch button, and a 4 wire resistive touch screen.
 
@@ -59,7 +59,10 @@ Bytes 5 and 6 are the X and Y positions of the touch screen.  Note that even whe
 
 You don't need to read all 6 bytes if you don't care about the touch screen, just read 4 bytes.
 
-The Key Interrupt GPIO will strobe high when a key changes state.  It will stay high for at least 10ms.  You will then need to read the I2C bus to find out the key state.  In practice it takes about 50ms to toggle a button on and off tapping as quick as you can.
+The Key Interrupt GPIO will strobe low when a key changes state.  It is typically at a 'high' level.  
+It will stay low for at least 10ms.  You will then need to read the I2C bus to find out the key state.  In practice it takes about 50ms to toggle a button on and off tapping as quick as you can.
+
+Since the Key Interrupt is tied to the nRF52840 pin for nRESET, it is set to be normally high.  If you don't want your application to reset when a key interrupt comes in, you need to make sure you remove "CONFIG_GPIO_AS_PINRESET" from your application Makefile. See [this page](https://devzone.nordicsemi.com/f/nordic-q-a/18170/how-can-i-disable-reset-of-p0-21) for further info.
 
 Keypresses are not stored or buffered, you must read the state before it changes or ignore the keypress.
 

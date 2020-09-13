@@ -91,7 +91,7 @@ int main(void){
 			measurement_done_touch = 0;
 			
 			// Grab the old value
-			bool oldVal = getKeyState(keyState, HAX);
+			bool oldVal = getKeyState(keyState, KEY_HAX);
 			bool newVal;
 			
 			// Determine the current value.  We only have one cap sense button, which is id 0
@@ -106,7 +106,7 @@ int main(void){
 			
 			if(oldVal != newVal){
 				// Cap touch has changed
-				setKeyState(keyState, HAX, newVal);
+				setKeyState(keyState, KEY_HAX, newVal);
 				keyChange = true;
 			}
 			

@@ -37,9 +37,6 @@ SUBDIRS :=  \
 ../documentation/ \
 ../doxygen/ \
 ../doxygen/generator/ \
-../examples/ \
-../examples/include/ \
-../examples/src/ \
 ../include/ \
 ../modules/ \
 ../modules/adc/ \
