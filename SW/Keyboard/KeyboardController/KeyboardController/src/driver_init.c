@@ -185,6 +185,7 @@ void system_init()
 
 	// Set pin direction to output
 
+	KEY_INT_set_inverted(true);
 	KEY_INT_set_level(false);
 	KEY_INT_set_dir(PORT_DIR_OUT);
 
