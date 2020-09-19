@@ -1,15 +1,15 @@
 #include "common.h"
 #include "keyboard.h"
 
+volatile uint32_t keyboard_mask = 0;
+keyboard_evt_handler_t keyboard_evt_handler = NULL;
+
 #ifdef DC801_EMBEDDED
 #include "nrfx_gpiote.h"
 #include "app_error.h"
 
 #define KEYBOARD_ADDR 0x23
 #define INTERRUPT_PIN 18
-
-volatile uint32_t keyboard_mask = 0;
-keyboard_evt_handler_t keyboard_evt_handler = NULL;
 
 void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
@@ -56,7 +56,6 @@ void keyboard_init(void)
 
 #endif
 
-/*
 int keyboard_key_is_down(KEYBOARD_KEY key)
 {
 	uint32_t mask = 0x01 << (uint32_t)key;
@@ -75,4 +74,3 @@ void keyboard_register_callback(keyboard_evt_handler_t handler)
 {
 	keyboard_evt_handler = handler;
 }
-*/
