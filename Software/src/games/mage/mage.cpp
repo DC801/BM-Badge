@@ -210,10 +210,10 @@ bool isMoving = false;
 void apply_input_to_player (uint8_t *data) {
     uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
     isMoving = false;
-    if(buttons.left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
-    if(buttons.right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
-    if(buttons.up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
-    if(buttons.down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+    if(buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
+    if(buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
+    if(buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
+    if(buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
     playerEntity->currentAnimation = isMoving ? 1 : 0;
     if(previousPlayerAnimation != playerEntity->currentAnimation) {
         playerEntity->currentFrame = 0;
@@ -292,6 +292,10 @@ void mage_game_loop (uint8_t *data) {
     mage_canvas->blt();
 
     lastTime = now;
+
+    #ifdef DC801_DESKTOP
+    nrf_delay_ms(5);
+    #endif
 }
 
 uint32_t count_with_offsets (

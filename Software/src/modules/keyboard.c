@@ -56,6 +56,7 @@ void keyboard_init(void)
 
 #endif
 
+/*
 int keyboard_key_is_down(KEYBOARD_KEY key)
 {
 	uint32_t mask = 0x01 << (uint32_t)key;
@@ -74,3 +75,4 @@ void keyboard_register_callback(keyboard_evt_handler_t handler)
 {
 	keyboard_evt_handler = handler;
 }
+*/
