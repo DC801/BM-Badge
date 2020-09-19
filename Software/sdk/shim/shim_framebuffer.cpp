@@ -3,6 +3,7 @@
 #include "FrameBuffer.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
+#include "EngineWindowFrame.h"
 
 #include "adafruit/gfxfont.h"
 #include "shim_timer.h"
@@ -16,9 +17,6 @@
 #ifndef max
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
-
-extern SDL_Window* window;
-extern SDL_Renderer* renderer;
 
 //Cursor coordinates
 static int16_t m_cursor_x = 0;
@@ -709,6 +707,7 @@ void FrameBuffer::drawStop()
 	m_stop = true;
 }
 
+/*
 void FrameBuffer::drawBitmapFromFile(int x, int y, int w, int h, const char *filename)
 {
 	SDL_Surface *image = SDL_LoadBMP(filename);
@@ -719,6 +718,7 @@ void FrameBuffer::drawBitmapFromFile(int x, int y, int w, int h, const char *fil
 	SDL_DestroyTexture(texture);
 	SDL_RenderPresent(renderer);
 }
+*/
 
 void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 {
@@ -1065,22 +1065,7 @@ uint8_t FrameBuffer::getFontHeight(GFXfont font)
 {
 	return font.yAdvance;
 }
-
 void FrameBuffer::blt()
 {
-	void* pixels;
-	int pitch;
-	SDL_Texture* tex = SDL_CreateTexture(
-		renderer,
-		SDL_PIXELFORMAT_RGB565,
-		SDL_TEXTUREACCESS_STREAMING,
-		WIDTH,
-		HEIGHT
-	);
-	SDL_LockTexture(tex, NULL, &pixels, &pitch);
-	memcpy(pixels, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
-	SDL_UnlockTexture(tex);
-	SDL_RenderCopy(renderer, tex, NULL, NULL);
-	SDL_DestroyTexture(tex);
-	SDL_RenderPresent(renderer);
+	EngineWindowFrameGameBlt(frame);
 }
