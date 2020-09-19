@@ -16,13 +16,7 @@
 
 #ifdef DC801_DESKTOP
 #include<signal.h>
-
-const int SCREEN_MULTIPLIER = 3;
-const int SCREEN_WIDTH = WIDTH * SCREEN_MULTIPLIER;
-const int SCREEN_HEIGHT = HEIGHT * SCREEN_MULTIPLIER;
-
-SDL_Window* window = NULL;
-SDL_Renderer* renderer = NULL;
+#include "EngineWindowFrame.h"
 
 volatile sig_atomic_t application_quit = 0;
 
@@ -299,18 +293,7 @@ int main(void){
     }
     else
     {
-        //Create window
-        SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer);
-
-        if( window == NULL )
-        {
-            printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-            exit(1);
-        }
-        else
-        {
-            SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-        }
+        EngineWindowFrameInit();
     }
 #endif
 
@@ -360,7 +343,7 @@ int main(void){
 #endif
 
 #ifdef DC801_DESKTOP
-    SDL_DestroyWindow(window);
+    EngineWindowFrameDestroy();
     SDL_Quit();
 
     printf("Exiting gracefully...\n");

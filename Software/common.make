@@ -93,7 +93,7 @@ else
     ifeq ($(OS),Windows_NT)
         # Placeholder
     else
-        LD_LIBRARIES += $(shell pkg-config --libs sdl2)
+        LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
     endif
 endif
 
