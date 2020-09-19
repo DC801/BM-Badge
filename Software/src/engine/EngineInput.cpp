@@ -1,8 +1,37 @@
-#include "common.h"
 #include "EngineInput.h"
-#include "modules/keyboard.h"
 
 bool running = true;
+
+ButtonStates buttons = {};
+bool *buttonBoolPointerArray[] = {
+	&buttons.mem0,
+	&buttons.mem1,
+	&buttons.mem2,
+	&buttons.mem3,
+	&buttons.bit_128,
+	&buttons.bit_64,
+	&buttons.bit_32,
+	&buttons.bit_16,
+	&buttons.bit_8,
+	&buttons.bit_4,
+	&buttons.bit_2,
+	&buttons.bit_1,
+	&buttons.op_xor,
+	&buttons.op_add,
+	&buttons.op_sub,
+	&buttons.op_page,
+	&buttons.ljoy_center,
+	&buttons.ljoy_left,
+	&buttons.ljoy_down,
+	&buttons.ljoy_up,
+	&buttons.ljoy_right,
+	&buttons.rjoy_center,
+	&buttons.rjoy_left,
+	&buttons.rjoy_down,
+	&buttons.rjoy_up,
+	&buttons.rjoy_right,
+	&buttons.hax,
+};
 
 #ifdef DC801_DESKTOP
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
@@ -66,44 +95,43 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 #endif
 
 void EngineSetHardwareBitmaskToButtonStates (
-	uint32_t keyboardBitmask,
-	ButtonStates* buttons
+	uint32_t keyboardBitmask
 )
 {
 	uint32_t oneBit = 0x80000000;
 	if(needs_endian_correction) {
 		oneBit = 0x00000001;
 	}
-	buttons->mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
-	buttons->mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
-	buttons->mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
-	buttons->mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
-	buttons->bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
-	buttons->bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
-	buttons->bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
-	buttons->bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
-	buttons->bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
-	buttons->bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
-	buttons->bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
-	buttons->bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
-	buttons->op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
-	buttons->op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
-	buttons->op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
-	buttons->op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
-	buttons->ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
-	buttons->ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
-	buttons->ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
-	buttons->ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
-	buttons->ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
-	buttons->rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
-	buttons->rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
-	buttons->rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
-	buttons->rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
-	buttons->rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
-	buttons->hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
+	buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
+	buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
+	buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
+	buttons.mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
+	buttons.bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
+	buttons.bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
+	buttons.bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
+	buttons.bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
+	buttons.bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
+	buttons.bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
+	buttons.bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
+	buttons.bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
+	buttons.op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
+	buttons.op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
+	buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
+	buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
+	buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
+	buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
+	buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
+	buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
+	buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
+	buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
+	buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
+	buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
+	buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
+	buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
+	buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
 }
 
-void EngineHandleInput (ButtonStates* buttons)
+void EngineHandleInput ()
 {
 	uint32_t keyboardBitmask = 0x00000000;
 	#ifdef DC801_DESKTOP
@@ -113,7 +141,7 @@ void EngineHandleInput (ButtonStates* buttons)
 	app_usbd_event_queue_process();
 	// ??? EngineGetEmbeddedInputState(&keyboardBitmask);
 	#endif
-	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask, buttons);
+	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 }
 
 bool EngineIsRunning()
