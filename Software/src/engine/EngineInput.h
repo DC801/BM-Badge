@@ -1,5 +1,7 @@
 #ifndef ENGINE_INPUT_H
 #define ENGINE_INPUT_H
+#include "common.h"
+#include "modules/keyboard.h"
 
 typedef struct {
 	bool mem0;
@@ -31,7 +33,10 @@ typedef struct {
 	bool hax;
 } ButtonStates;
 
-void EngineHandleInput(ButtonStates* buttons);
+extern ButtonStates buttons;
+extern bool *buttonBoolPointerArray[];
+
+void EngineHandleInput();
 bool EngineIsRunning();
 
 #endif

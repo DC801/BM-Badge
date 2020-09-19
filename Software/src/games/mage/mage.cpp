@@ -11,8 +11,6 @@ uint32_t lastTime;
 uint32_t now;
 uint32_t delta_time;
 
-ButtonStates buttons = { 0 };
-
 GameDataMemoryAddresses dataMemoryAddresses = {};
 
 GameTileset *allTilesets;
@@ -682,7 +680,7 @@ int MAGE() {
     lastTime = millis();
     while (EngineIsRunning())
     {
-        EngineHandleInput(&buttons);
+        EngineHandleInput();
         mage_game_loop(data);
     }
     exit(0);
