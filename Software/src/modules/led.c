@@ -42,11 +42,9 @@
  * the firmware update succeeds we set them all green.
  */
 
-#include "common.h"
 #include "led.h"
-#include "i2c.h"
 
-#include <string.h>
+bool led_states[LED_COUNT] = { 0 };
 
 //static void ledShow (void);
 static void ledSet (uint8_t, uint8_t);
@@ -100,10 +98,10 @@ static void single_shot_timer_handler(void * p_context)
 {
     ledPageSet(ISSI_PAGE_PWM);
     
-    ledRegSet(led_address[LED_GUN1] , 0);
-    ledRegSet(led_address[LED_GUN2] , 0);
-    ledRegSet(led_address[LED_GUN3] , 0);
-    ledRegSet(led_address[LED_GUN4] , 0);
+    ledRegSet(led_address[LED_MEM0] , 0);
+    ledRegSet(led_address[LED_MEM1] , 0);
+    ledRegSet(led_address[LED_XOR] , 0);
+    ledRegSet(led_address[LED_ADD] , 0);
 }
 
 void ledInit (void){
@@ -290,11 +288,11 @@ void ledPwm(LEDID id, uint8_t val) {
 void ledGunsShoot(uint32_t ms) {
     
     ledPageSet(ISSI_PAGE_PWM);
-    
-    ledRegSet(led_address[LED_GUN1] , 0xff);
-    ledRegSet(led_address[LED_GUN2] , 0xff);
-    ledRegSet(led_address[LED_GUN3] , 0xff);
-    ledRegSet(led_address[LED_GUN4] , 0xff);
+
+    ledRegSet(led_address[LED_MEM0] , 0xff);
+    ledRegSet(led_address[LED_MEM1] , 0xff);
+    ledRegSet(led_address[LED_XOR] , 0xff);
+    ledRegSet(led_address[LED_ADD] , 0xff);
     
     APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
 }
@@ -304,8 +302,8 @@ void ledThrusterFire(uint32_t ms) {
     ledPageSet(ISSI_PAGE_PWM);
 
     //ledRegSet(led_address[LED_THRUST_R] , 30);
-    ledRegSet(led_address[LED_THRUST_G] , 30);
-    ledRegSet(led_address[LED_THRUST_B] , 30);
+    ledRegSet(led_address[LED_MEM3] , 30);
+    ledRegSet(led_address[LED_PAGE] , 30);
 
     APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
 }

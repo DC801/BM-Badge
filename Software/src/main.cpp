@@ -9,13 +9,10 @@
  *
  */
 
-#include <stdint.h>
-#include "common.h"
-#include "user.h"
+#include "main.h"
 #include "FrameBuffer.h"
 
 #ifdef DC801_DESKTOP
-#include<signal.h>
 #include "EngineWindowFrame.h"
 
 volatile sig_atomic_t application_quit = 0;
@@ -100,109 +97,8 @@ static void log_init(void){
  * @param p_data
  */
 static void bootCallback(uint8_t frame, void *p_data){
-    const int speed = 4;
-
-    if (frame == 5) {
-        ledOn(LED_COMPBAY);
-        ledOn(LED_CARGO);
-        ledOn(LED_DAMAGED);
-        ledOn(LED_SHIELDS);
-        ledOn(LED_DAMAGED);
-        ledOn(LED_BRIDGE);
-        ledShow();
-    }
-    else if (frame == 30) {
-        ledOn(LED_GUN1);
-        ledOn(LED_GUN2);
-        ledOn(LED_GUN3);
-        ledOn(LED_GUN4);
-        ledShow();
-    }
-    else if (frame == 45) {
-        ledOn(LED_WEAPONS1);
-        ledOn(LED_WEAPONS2);
-        ledShow();
-    }
-    else if (frame == 55) {
-        ledOn(LED_COMM1);
-        ledOn(LED_COMM2);
-        ledShow();
-    }
-    else if (frame == 70) {
-        ledOn(LED_HULL1);
-        ledOn(LED_HULL2);
-        ledOn(LED_HULL3);
-        ledOn(LED_HULL4);
-        ledShow();
-    }
-    else if (frame == 75) {
-        ledOn(LED_ENGINE1);
-        ledOn(LED_ENGINE2);
-        ledOn(LED_ENGINEERING);
-        ledShow();
-    }
-    else if (frame == 85) {
-        ledOn(LED_LIFE1);
-        ledShow();
-    }
-    else if (frame == 95) {
-        ledOn(LED_LIFE2);
-        ledShow();
-    }
-    else if (frame == 105) {
-        ledOn(LED_LIFE3);
-        ledShow();
-    }
-    else if (frame == 115) {
-        ledOn(LED_LIFE4);
-        ledShow();
-    }
-    else if (frame == 125) {
-        ledOn(LED_LIFE5);
-        ledShow();
-    }
-    else if ((frame == 145) || (frame == 155) || (frame == 165) || (frame == 175)) {
-        ledOff(LED_COMPBAY);
-        ledOff(LED_CARGO);
-        ledOff(LED_DAMAGED);
-        ledOff(LED_SHIELDS);
-        ledOff(LED_DAMAGED);
-        ledOff(LED_BRIDGE);
-        ledOff(LED_ENGINE1);
-        ledOff(LED_ENGINE2);
-        ledOff(LED_ENGINEERING);
-        ledOn(LED_PERSON_COMPBAY);
-        ledOn(LED_PERSON_CARGO);
-        ledOn(LED_PERSON_DAMAGED);
-        ledOn(LED_PERSON_SHIELDS);
-        ledOn(LED_PERSON_BRIDGE);
-        ledOn(LED_PERSON_ENGINE);
-        ledOn(LED_PERSON_ENGINEERING);
-        ledShow();
-    }
-    else if ((frame == 140) || (frame == 150) || (frame == 160) || (frame == 170) || (frame == 180)) {
-        ledOn(LED_COMPBAY);
-        ledOn(LED_CARGO);
-        ledOn(LED_DAMAGED);
-        ledOn(LED_SHIELDS);
-        ledOn(LED_DAMAGED);
-        ledOn(LED_BRIDGE);
-        ledOn(LED_ENGINE1);
-        ledOn(LED_ENGINE2);
-        ledOn(LED_ENGINEERING);
-        ledOff(LED_PERSON_COMPBAY);
-        ledOff(LED_PERSON_CARGO);
-        ledOff(LED_PERSON_DAMAGED);
-        ledOff(LED_PERSON_SHIELDS);
-        ledOff(LED_PERSON_BRIDGE);
-        ledOff(LED_PERSON_ENGINE);
-        ledOff(LED_PERSON_ENGINEERING);
-        ledShow();
-    }
-    else if (frame == 195) {
-        ledPulse(LED_PERSON_ENGINEERING);
-        ledShow();
-    }
+	ledOn((LEDID) (frame % LED_COUNT));
+	ledShow();
 }
 
 /**

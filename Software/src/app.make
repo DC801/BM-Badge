@@ -22,7 +22,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/engine/EngineAudio.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
-	$(SRC_ROOT)/engine/EngineWindowFrame.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
 	$(SRC_ROOT)/engine/FrameBuffer.cpp \
 	$(SRC_ROOT)/games/Space_Invaders.cpp \
@@ -41,6 +40,7 @@ ifdef DESKTOP
         # Placeholder
     else
         APP_INCLUDES += $(shell pkg-config --cflags-only-I sdl2)
+        APP_SRCS += $(SRC_ROOT)/engine/EngineWindowFrame.cpp
     endif
 endif
 

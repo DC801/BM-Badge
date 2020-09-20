@@ -8,7 +8,7 @@
  *
  */
 
-#include "common.h"
+#include "utility.h"
 #include "FrameBuffer.h"
 
 #define EE_R1 3900
@@ -61,9 +61,9 @@ void morseTickHandler(void * p_context) {
 
     if (s != ls){
         if (s)
-            ledOn(LED_SIGNAL);
+            ledOn(LED_HAX);
         else
-            ledOff(LED_SIGNAL);
+            ledOff(LED_HAX);
     }
     ls=s;
 
@@ -83,7 +83,7 @@ void morseStart(void) {
 
 void morseStop(void) {
     app_timer_stop(morseID);
-    ledOff(LED_SIGNAL);
+    ledOff(LED_HAX);
     morse_running = false;
 }
 

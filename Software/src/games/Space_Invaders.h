@@ -5,6 +5,15 @@
 #ifndef DC26_BADGE_SPACEINVADERS_H
 #define DC26_BADGE_SPACEINVADERS_H
 
+#include <cstring>
+#include <cstdio>
+
+#include "FrameBuffer.h"
+#include "Space_Invaders_HCRN_Sprites.h"
+#include "Space_Invaders_c.h"
+#include "fonts/gameplay.h"
+#include "config/custom_board.h"
+
 #ifdef INVADERS
 
 typedef struct {

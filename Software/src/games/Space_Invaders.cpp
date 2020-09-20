@@ -6,15 +6,7 @@
 
 #define INVADERS
 
-#include <cstring>
-#include <cstdio>
-
-#include "FrameBuffer.h"
 #include "Space_Invaders.h"
-#include "Space_Invaders_HCRN_Sprites.h"
-#include "Space_Invaders_c.h"
-#include "fonts/gameplay.h"
-#include "config/custom_board.h"
 
 #define PROGMEM
 
@@ -201,8 +193,8 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 					}
                     if (!thrustersOn && Invaders.gameplay != normal) {
                         thrustersOn = true;
-                        ledPwm(LED_THRUST_G, 30);
-                        ledPwm(LED_THRUST_B, 30);
+                        ledPwm(LED_MEM3, 30);
+                        ledPwm(LED_PAGE, 30);
                     }
 					break;
 				case USER_BUTTON_LEFT:
@@ -212,15 +204,15 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 					}
                     if (!thrustersOn && Invaders.gameplay != normal) {
                         thrustersOn = true;
-                        ledPwm(LED_THRUST_G, 30);
-                        ledPwm(LED_THRUST_B, 30);
+                        ledPwm(LED_MEM3, 30);
+                        ledPwm(LED_PAGE, 30);
                     }
 					break;
                 default:
                     if (thrustersOn && Invaders.gameplay != normal) {
                         thrustersOn = false;
-                        ledOff(LED_THRUST_G);
-                        ledOff(LED_THRUST_B);
+                        ledOff(LED_MEM3);
+                        ledOff(LED_PAGE);
                     }
                     break;
 			}
