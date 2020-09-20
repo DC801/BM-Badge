@@ -12,6 +12,7 @@
 #define UTILITY_H_
 
 #include "adafruit/gfxfont.h"
+#include "common.h"
 
 #ifdef DC801_DESKTOP
 #include "sdk_shim.h"

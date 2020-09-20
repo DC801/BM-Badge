@@ -32,6 +32,9 @@
 
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
+#include "common.h"
+#include "i2c.h"
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -85,44 +88,27 @@ extern "C" {
 #define LED_INTENSITY		0x30
 
 typedef enum {
-    LED_GUN1 = 0,
-    LED_WEAPONS2,
-    LED_LIFE1,
-    LED_LIFE2,
-    LED_LIFE3,
-    LED_LIFE4,
-    LED_LIFE5,
-    LED_WEAPONS1,
-    LED_COMPBAY,
-    LED_PERSON_COMPBAY,
-    LED_HULL1,
-    LED_HULL3,
-    LED_CARGO,
-    LED_PERSON_CARGO,
-    LED_DAMAGED,
-    LED_PERSON_DAMAGED,
-    LED_HULL2,
-    LED_HULL4,
-    LED_SHIELDS,
-    LED_PERSON_SHIELDS,
-    LED_GUN2,
-    LED_COMM2,
-    LED_COMM1,
-    LED_SIGNAL,
-    LED_GUN4,
-    LED_BRIDGE,
-    LED_PERSON_BRIDGE,
-    LED_GUN3,
-    LED_PERSON_ENGINE,
-    LED_PERSON_ENGINEERING,
-    LED_ENGINE2,
-    LED_ENGINEERING,
-    LED_THRUST_R,
-    LED_THRUST_G,
-    LED_THRUST_B,
-    LED_ENGINE1,
+    LED_MEM0 = 0,
+    LED_MEM1,
+    LED_MEM2,
+    LED_MEM3,
+    LED_BIT128,
+    LED_BIT64,
+    LED_BIT32,
+    LED_BIT16,
+    LED_BIT8,
+    LED_BIT4,
+    LED_BIT2,
+    LED_BIT1,
+    LED_XOR,
+    LED_ADD,
+    LED_SUB,
+    LED_PAGE,
+    LED_HAX,
     LED_COUNT
 } LEDID;
+
+extern bool led_states[LED_COUNT];
 
 extern void ledInit(void);
 extern void ledsOn(void);

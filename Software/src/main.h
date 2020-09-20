@@ -15,6 +15,8 @@
 #define SAOSPEC "1.69bis"
 
 #include <stdint.h>
+#include "common.h"
+#include "user.h"
 
 #ifdef DC801_DESKTOP
 #include <signal.h>
