@@ -17,29 +17,49 @@ LEDID bit_leds[] = {
 	LED_BIT1,
 };
 
-void apply_input_to_game() {
+void apply_input_to_game()
+{
 	bool buttonState;
 	bool buttonStateHasChanged;
 	LEDID ledIndex;
-	for (int i = 0; i < BITS; ++i) {
+	for (int i = 0; i < BITS; ++i)
+	{
 		buttonState = *buttonBoolPointerArray[i + BITS_BUTTONS_OFFSET];
 		buttonStateHasChanged = buttonState != buttonBoolsLastTick[i + BITS_BUTTONS_OFFSET];
-		if(buttonState && buttonStateHasChanged) {
+		if (buttonState && buttonStateHasChanged)
+		{
 			ledIndex = bit_leds[i];
 			ledSet(ledIndex, led_states[ledIndex] ? 0x00 : 0xff);
 		}
 	}
-	memcpy(&buttonsLastTick, &buttons, sizeof(ButtonStates));
-	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i) {
+
+	// hex
+	buttonState = *buttonBoolPointerArray[KEYBOARD_KEY_HAX];
+	buttonStateHasChanged = buttonState != buttonBoolsLastTick[KEYBOARD_KEY_HAX];
+	if (buttonState && buttonStateHasChanged)
+	{
+		toggle_hex_editor();
+	}
+
+	memcpy(
+		&buttonsLastTick,
+		&buttons,
+		sizeof(ButtonStates)
+	);
+	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
+	{
 		buttonBoolsLastTick[i] = *buttonBoolPointerArray[i];
 	}
 }
 
-
-
 uint8_t mageSpeed = 1;
 bool isMoving = false;
-void apply_input_to_player (uint8_t *data) {
+void apply_input_to_player (uint8_t *data)
+{
+	if (*hexEditorState)
+	{
+		return;
+	}
 	uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
 	isMoving = false;
 	if(buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
@@ -47,7 +67,8 @@ void apply_input_to_player (uint8_t *data) {
 	if(buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
 	if(buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
 	playerEntity->currentAnimation = isMoving ? 1 : 0;
-	if(previousPlayerAnimation != playerEntity->currentAnimation) {
+	if (previousPlayerAnimation != playerEntity->currentAnimation)
+	{
 		playerEntity->currentFrame = 0;
 	}
 	get_renderable_data_from_entity(

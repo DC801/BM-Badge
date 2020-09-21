@@ -5,6 +5,7 @@
 #include <inttypes.h>
 
 #include "FrameBuffer.h"
+#include "mage_hex.h"
 #include "mage_input.h"
 
 FrameBuffer *mage_canvas;
@@ -237,43 +238,52 @@ void update_entities (uint8_t *data) {
             currentFrameTimer
         );
     }
-
 }
 
-void mage_game_loop (uint8_t *data) {
-    now = millis();
-    delta_time = now - lastTime;
+void mage_game_loop(uint8_t *data)
+{
+	now = millis();
+	delta_time = now - lastTime;
 
-    mage_canvas->clearScreen(RGB(0,0,255));
+	if (*hexEditorState)
+	{
+		mage_canvas->clearScreen(RGB(0,0,0));
+		render_hex_editor();
+	}
+	else
+	{
+		mage_canvas->clearScreen(RGB(0,0,255));
+		apply_input_to_player(data);
 
-    apply_input_to_player(data);
+		if (*currentMap.layerCount > 1)
+		{
+			for (
+				uint8_t layerIndex = 0;
+				layerIndex < *currentMap.layerCount -1;
+				layerIndex++
+			)
+			{
+				draw_map(data, layerIndex);
+			}
+		} else {
+			draw_map(data, 0);
+		}
 
-    if (*currentMap.layerCount > 1) {
-        for (uint8_t layerIndex = 0; layerIndex < *currentMap.layerCount -1; layerIndex++) {
-            draw_map(data, layerIndex);
-        }
-    } else {
-        draw_map(data, 0);
-    }
+		update_entities(data);
 
-    update_entities(
-        data
-    );
+		draw_entities(data);
 
-    draw_entities(
-        data
-    );
+		if (*currentMap.layerCount > 1)
+		{
+			draw_map(data, *currentMap.layerCount - 1);
+		}
+	}
 
-    if (*currentMap.layerCount > 1) {
-        draw_map(data, *currentMap.layerCount - 1);
-    }
-    mage_canvas->blt();
-
-    lastTime = now;
-
-    #ifdef DC801_DESKTOP
-    nrf_delay_ms(5);
-    #endif
+	mage_canvas->blt();
+	lastTime = now;
+	#ifdef DC801_DESKTOP
+	nrf_delay_ms(5);
+	#endif
 }
 
 uint32_t count_with_offsets (
