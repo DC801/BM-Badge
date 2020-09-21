@@ -24,7 +24,7 @@ typedef struct {
     uint32_t *imageCount;
     uint32_t *imageOffsets;
     uint32_t *imageLengths;
-} GameDataMemoryAddresses;
+} MageDataMemoryAddresses;
 
 typedef struct {
     char *name;
@@ -37,13 +37,13 @@ typedef struct {
     uint16_t *entityCount;
     uint16_t *entityGlobalIds;
     uint32_t startOfLayers;
-} GameMap;
+} MageMap;
 
 typedef struct {
     uint16_t tileId;
     uint8_t tilesetId;
     uint8_t flags;
-} GameTile;
+} MageTile;
 
 typedef struct {
     char *name;
@@ -55,24 +55,24 @@ typedef struct {
     uint16_t *cols;
     uint16_t *rows;
     uint32_t startOfTiles;
-} GameTileset;
+} MageTileset;
 
 typedef struct {
     uint16_t tileIndex;
     uint16_t duration;
-} GameAnimationFrame;
+} MageAnimationFrame;
 
 typedef struct {
     uint16_t tilesetIndex;
     uint16_t frameCount;
-    GameAnimationFrame animationFrames;
-} GameAnimation;
+    MageAnimationFrame animationFrames;
+} MageAnimation;
 
 typedef struct {
     uint16_t typeIndex;
     uint8_t type;
     uint8_t renderFlags;
-} GameEntityTypeAnimationDirection;
+} MageEntityTypeAnimationDirection;
 
 typedef struct {
     char name[16];
@@ -80,14 +80,14 @@ typedef struct {
     uint8_t padding_b;
     uint8_t padding_c;
     uint8_t animationCount;
-    GameEntityTypeAnimationDirection entityTypeAnimationDirection;
-} GameEntityType;
+    MageEntityTypeAnimationDirection entityTypeAnimationDirection;
+} MageEntityType;
 
 typedef enum {
     ENTITY_PRIMARY_TILESET = 0,
     ENTITY_PRIMARY_ANIMATION = 1,
     ENTITY_PRIMARY_ENTITY_TYPE = 2
-} GameEntityPrimaryIdType;
+} MageEntityPrimaryIdType;
 
 typedef struct {
     char name[16];
@@ -102,21 +102,21 @@ typedef struct {
     uint8_t direction;
     uint8_t hackableState;
     uint8_t padding;
-} GameEntity;
+} MageEntity;
 
 typedef struct {
     char name[16];
     uint16_t width;
     uint16_t height;
-} GameImage;
+} MageImage;
 
 typedef struct {
-    GameTileset *tileset;
-    GameAnimation *animation;
-    GameAnimationFrame *animationFrame;
+    MageTileset *tileset;
+    MageAnimation *animation;
+    MageAnimationFrame *animationFrame;
     uint16_t *tileIndex;
     uint8_t *renderFlags;
-} GameEntityRenderableData;
+} MageEntityRenderableData;
 
 int MAGE(void);
 

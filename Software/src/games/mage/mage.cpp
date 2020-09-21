@@ -11,17 +11,17 @@ uint32_t lastTime;
 uint32_t now;
 uint32_t delta_time;
 
-GameDataMemoryAddresses dataMemoryAddresses = {};
+MageDataMemoryAddresses dataMemoryAddresses = {};
 
-GameTileset *allTilesets;
+MageTileset *allTilesets;
 uint32_t mapIndex = 0;
 uint32_t currentMapIndex = 0;
-GameMap currentMap = {};
-GameTileset *currentMapTilesets;
-GameEntity *currentMapEntities;
+MageMap currentMap = {};
+MageTileset *currentMapTilesets;
+MageEntity *currentMapEntities;
 uint16_t *currentMapEntityFrameTicks;
-GameAnimationFrame *currentMapEntityFrames;
-GameEntity **currentMapEntitiesSortedByRenderOrder;
+MageAnimationFrame *currentMapEntityFrames;
+MageEntity **currentMapEntitiesSortedByRenderOrder;
 Point cameraPosition = {
     .x = 0,
     .y = 0,
@@ -35,8 +35,8 @@ void draw_map (uint8_t *data, uint8_t layer) {
     int32_t x = 0;
     int32_t y = 0;
     uint8_t *tiles = data + currentMap.startOfLayers;
-    GameTileset tileset;
-    GameTile *tile;
+    MageTileset tileset;
+    MageTile *tile;
     for (uint32_t mapTileIndex = 0; mapTileIndex < tileCount; ++mapTileIndex) {
         x = ((int32_t) *currentMap.tileWidth * (mapTileIndex % *currentMap.width)) - cameraPosition.x;
         y = ((int32_t) *currentMap.tileHeight * (mapTileIndex / *currentMap.width)) - cameraPosition.y;
@@ -46,7 +46,7 @@ void draw_map (uint8_t *data, uint8_t layer) {
             && y > -*currentMap.tileHeight
             && y < HEIGHT
         ) {
-            tile = (GameTile *) &tiles[
+            tile = (MageTile *) &tiles[
                 (layer * tileCount * 4)
                 + (mapTileIndex * 4)
             ];
@@ -74,9 +74,9 @@ void draw_map (uint8_t *data, uint8_t layer) {
 }
 
 void get_renderable_data_from_entity (
-    uint8_t *data,
-    GameEntity *entity,
-    GameEntityRenderableData *renderableData
+	uint8_t *data,
+	MageEntity *entity,
+	MageEntityRenderableData *renderableData
 ) {
     renderableData->animationFrame = nullptr;
     renderableData->animation = nullptr;
@@ -90,14 +90,14 @@ void get_renderable_data_from_entity (
             dataMemoryAddresses.animationOffsets
             + entity->primaryTypeIndex
         );
-        renderableData->animation = (GameAnimation *) (data + animationOffset);
+        renderableData->animation = (MageAnimation *) (data + animationOffset);
     } else if(entity->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
         uint32_t entityTypeOffset = *(
             dataMemoryAddresses.entityTypeOffsets
             + entity->primaryTypeIndex
         );
-        auto *entityType = (GameEntityType *) (data + entityTypeOffset);
-        GameEntityTypeAnimationDirection *entityTypeAnimationDirection = (
+        auto *entityType = (MageEntityType *) (data + entityTypeOffset);
+        MageEntityTypeAnimationDirection *entityTypeAnimationDirection = (
             &entityType->entityTypeAnimationDirection
             + (
                 entity->currentAnimation
@@ -111,7 +111,7 @@ void get_renderable_data_from_entity (
                 dataMemoryAddresses.animationOffsets
                 + entityTypeAnimationDirection->typeIndex
             );
-            renderableData->animation = (GameAnimation *) (data + animationOffset);
+            renderableData->animation = (MageAnimation *) (data + animationOffset);
         } else {
             renderableData->tileset = allTilesets + entityTypeAnimationDirection->type;
             renderableData->tileIndex = &entityTypeAnimationDirection->typeIndex;
@@ -127,15 +127,15 @@ void get_renderable_data_from_entity (
     }
 }
 
-void swap_entity_pointers (GameEntity** xp, GameEntity** yp) {
-    GameEntity* temp = *xp;
+void swap_entity_pointers (MageEntity** xp, MageEntity** yp) {
+    MageEntity* temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 void sort_current_map_entities_by_render_order () {
     uint16_t i, j, min_idx;
     uint16_t n = *currentMap.entityCount;
-    GameEntity **array = currentMapEntitiesSortedByRenderOrder;
+    MageEntity **array = currentMapEntitiesSortedByRenderOrder;
     for(i = 0; i < n; i++) {
         array[i] = currentMapEntities + i;
     }
@@ -156,15 +156,15 @@ void sort_current_map_entities_by_render_order () {
     }
 }
 
-GameEntityRenderableData renderableEntityData = {};
+MageEntityRenderableData renderableEntityData = {};
 uint8_t animation_frame_limiter = 0;
 uint8_t animation_frame = 0;
 void draw_entities(
     uint8_t *data
 ) {
     uint16_t entityCount = *currentMap.entityCount;
-    GameEntity *entity;
-    GameTileset *tileset;
+    MageEntity *entity;
+    MageTileset *tileset;
     uint32_t imageOffset;
     uint16_t tileIndex;
     uint16_t tilesetX;
@@ -202,7 +202,7 @@ void draw_entities(
     }
 }
 
-GameEntity *playerEntity;
+MageEntity *playerEntity;
 uint8_t mageSpeed = 1;
 bool isMoving = false;
 void apply_input_to_player (uint8_t *data) {
@@ -226,9 +226,9 @@ void apply_input_to_player (uint8_t *data) {
 }
 
 void update_entity_frame (
-    uint8_t *data,
-    GameEntity *entity,
-    uint16_t *currentFrameTimer
+	uint8_t *data,
+	MageEntity *entity,
+	uint16_t *currentFrameTimer
 ) {
     *currentFrameTimer += delta_time * 50;
     get_renderable_data_from_entity(data, entity, &renderableEntityData);
@@ -245,7 +245,7 @@ void update_entity_frame (
 }
 
 void update_entities (uint8_t *data) {
-    GameEntity *entity;
+    MageEntity *entity;
     uint16_t *currentFrameTimer;
     uint16_t entityCount = *currentMap.entityCount;
     for(uint16_t i = 0; i < entityCount; i++) {
@@ -325,11 +325,11 @@ void correct_image_data_endinness (uint8_t *data, uint32_t length) {
 }
 
 void load_tilesets_headers (
-    GameTileset *tilesetPointer,
-    uint8_t *data,
-    uint32_t tilesetIndex
+	MageTileset *tilesetPointer,
+	uint8_t *data,
+	uint32_t tilesetIndex
 ) {
-    GameTileset tileset = {};
+    MageTileset tileset = {};
     uint8_t *tilesetData = data + dataMemoryAddresses.tilesetOffsets[tilesetIndex];
     printf("tileset[%" PRIu32 "]: offset %" PRIu32 "\n", tilesetIndex, dataMemoryAddresses.tilesetOffsets[tilesetIndex]);
     printf("tileset[%" PRIu32 "]: %p\n", tilesetIndex, tilesetData);
@@ -390,7 +390,7 @@ void load_tilesets_headers (
 void load_all_tilesets (uint8_t *data) {
     printf("load_all_tilesets:\n");
     uint32_t tilesetCount = *dataMemoryAddresses.tilesetCount;
-    allTilesets = (GameTileset *) malloc(tilesetCount * sizeof(GameTileset));
+    allTilesets = (MageTileset *) malloc(tilesetCount * sizeof(MageTileset));
     for (uint32_t i = 0; i < tilesetCount; i++) {
         load_tilesets_headers(
             allTilesets + i,
@@ -405,18 +405,18 @@ void allocate_current_map_entities(
     uint16_t *entityIndices,
     uint16_t entityCount
 ) {
-    currentMapEntities = (GameEntity *) calloc(entityCount, sizeof(GameEntity));
+    currentMapEntities = (MageEntity *) calloc(entityCount, sizeof(MageEntity));
     currentMapEntityFrameTicks = (uint16_t *) calloc(entityCount, sizeof(uint16_t));
-    currentMapEntitiesSortedByRenderOrder = (GameEntity **) calloc(entityCount, sizeof(void*));
-    GameEntity *entityInROM;
-    GameEntity *entityInRAM;
+    currentMapEntitiesSortedByRenderOrder = (MageEntity **) calloc(entityCount, sizeof(void*));
+    MageEntity *entityInROM;
+    MageEntity *entityInRAM;
     uint16_t entityIndex;
     uint32_t offset;
     for(uint32_t i = 0; i < entityCount; i++) {
         entityIndex = *(entityIndices + i);
         offset = *(dataMemoryAddresses.entityOffsets + entityIndex);
         entityInRAM = currentMapEntities + i;
-        entityInROM = (GameEntity *) (data + offset);
+        entityInROM = (MageEntity *) (data + offset);
         // printf("name: %s\n", entityInROM->name);
         // printf("  entityIndex: %" PRIu16 "\n", entityIndex);
         // printf("  offset: %" PRIu32 "\n", offset);
@@ -425,18 +425,18 @@ void allocate_current_map_entities(
         memcpy(
             entityInRAM,
             entityInROM,
-            sizeof(GameEntity)
+            sizeof(MageEntity)
         );
 
         uint32_t entityTypeOffset;
-        GameEntityType *entityType;
+        MageEntityType *entityType;
         char mageType[16] = "goose";
         if(entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE) {
             entityTypeOffset = *(
                 dataMemoryAddresses.entityTypeOffsets
                 + entityInRAM->primaryTypeIndex
             );
-            entityType = (GameEntityType *) (data + entityTypeOffset);
+            entityType = (MageEntityType *) (data + entityTypeOffset);
             int32_t entityTypeNameComparison = strncmp(mageType, entityType->name, 16);
             // printf("Is this entity the player? A: %s; B %s\n", mageType, entityType->name);
             if(entityTypeNameComparison == 0) {
@@ -524,12 +524,12 @@ void load_map_headers (uint8_t *data, uint32_t incomingMapIndex) {
 
 void correct_entity_type_endians (uint8_t *data) {
     uint32_t offset;
-    GameEntityType *entityType;
-    GameEntityTypeAnimationDirection *entityTypeAnimationDirection;
+    MageEntityType *entityType;
+    MageEntityTypeAnimationDirection *entityTypeAnimationDirection;
     // printf("correct_entity_type_endians:\n");
     for (uint32_t i = 0; i < *dataMemoryAddresses.entityTypeCount; i++) {
         offset = *(dataMemoryAddresses.entityTypeOffsets + i);
-        entityType = (GameEntityType *) (data + offset);
+        entityType = (MageEntityType *) (data + offset);
         // printf("  name: %s\n", entityType->name);
         // printf("  animationCount: %" PRIu8 "\n", entityType->animationCount);
         for (uint32_t j = 0; j < (entityType->animationCount * 4); j++) {
@@ -542,11 +542,11 @@ void correct_entity_type_endians (uint8_t *data) {
 
 void correct_animation_endians (uint8_t *data) {
     uint32_t offset;
-    GameAnimation *animation;
-    GameAnimationFrame *animationFrame;
+    MageAnimation *animation;
+    MageAnimationFrame *animationFrame;
     for (uint32_t i = 0; i < *dataMemoryAddresses.animationCount; i++) {
         offset = *(dataMemoryAddresses.animationOffsets + i);
-        animation = (GameAnimation *) (data + offset);
+        animation = (MageAnimation *) (data + offset);
         convert_endian_u2(&animation->tilesetIndex);
         convert_endian_u2(&animation->frameCount);
         // printf("tilesetIndex: %" PRIu16 "\n", animation->tilesetIndex);
@@ -564,11 +564,11 @@ void correct_animation_endians (uint8_t *data) {
 
 void correct_entity_endians (uint8_t *data) {
     uint32_t offset;
-    GameEntity *entity;
+    MageEntity *entity;
     printf("correct_entity_endians\n");
     for (uint32_t i = 0; i < *dataMemoryAddresses.entityCount; i++) {
         offset = *(dataMemoryAddresses.entityOffsets + i);
-        entity = (GameEntity *) (data + offset);
+        entity = (MageEntity *) (data + offset);
         convert_endian_u2(&entity->primaryTypeIndex);
         convert_endian_u2(&entity->secondaryTypeIndex);
         convert_endian_u2(&entity->scriptIndex);
