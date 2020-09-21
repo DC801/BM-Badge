@@ -44,10 +44,10 @@
 
 #include "led.h"
 
-bool led_states[LED_COUNT] = { 0 };
+uint8_t led_states[LED_COUNT] = { 0 };
 
 //static void ledShow (void);
-static void ledSet (uint8_t, uint8_t);
+void ledSet (LEDID, uint8_t);
 static void ledPageSet (uint8_t);
 static void ledRegSet (uint8_t, uint8_t);
 static void ledRegGet (uint8_t);
@@ -212,11 +212,13 @@ void ledShow (void){
     return;
 }
 
-static void ledSet (uint8_t index, uint8_t intensity){
+void ledSet (LEDID index, uint8_t intensity){
     if (index > ISSI_LED_COUNT) {
         return;
     }
-    
+
+    led_states[index] = intensity;
+
     ledPageSet(ISSI_PAGE_PWM);
     
     ledRegSet(led_address[index] , intensity);
@@ -289,10 +291,10 @@ void ledGunsShoot(uint32_t ms) {
     
     ledPageSet(ISSI_PAGE_PWM);
 
-    ledRegSet(led_address[LED_MEM0] , 0xff);
-    ledRegSet(led_address[LED_MEM1] , 0xff);
-    ledRegSet(led_address[LED_XOR] , 0xff);
-    ledRegSet(led_address[LED_ADD] , 0xff);
+    ledSet(LED_MEM0 , 0xff);
+    ledSet(LED_MEM1 , 0xff);
+    ledSet(LED_XOR , 0xff);
+    ledSet(LED_ADD , 0xff);
     
     APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
 }
@@ -301,9 +303,8 @@ void ledThrusterFire(uint32_t ms) {
 
     ledPageSet(ISSI_PAGE_PWM);
 
-    //ledRegSet(led_address[LED_THRUST_R] , 30);
-    ledRegSet(led_address[LED_MEM3] , 30);
-    ledRegSet(led_address[LED_PAGE] , 30);
+    ledSet(LED_MEM3 , 30);
+    ledSet(LED_PAGE , 30);
 
     APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
 }

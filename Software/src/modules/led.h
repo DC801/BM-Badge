@@ -108,11 +108,12 @@ typedef enum {
     LED_COUNT
 } LEDID;
 
-extern bool led_states[LED_COUNT];
+extern uint8_t led_states[LED_COUNT];
 
 extern void ledInit(void);
 extern void ledsOn(void);
 extern void ledsOff(void);
+extern void ledSet(LEDID index, uint8_t intensity);
 extern void ledOn(LEDID id);
 extern void ledOff(LEDID id);
 extern void ledPulse(LEDID id);
