@@ -56,6 +56,7 @@ void EngineWindowFrameInit()
 	frameTexture = SDL_CreateTextureFromSurface(renderer, frameSurface);
 	frameButtonTexture = SDL_CreateTextureFromSurface(renderer, frameButtonSurface);
 	frameLEDTexture = SDL_CreateTextureFromSurface(renderer, frameLEDSurface);
+	SDL_SetTextureBlendMode(frameLEDTexture, SDL_BLENDMODE_BLEND);
 	gameViewportTexture = SDL_CreateTexture(
 		renderer,
 		SDL_PIXELFORMAT_RGB565,
@@ -149,19 +150,29 @@ const SDL_Point LEDDestPoints[] = {
 void drawLEDStates ()
 {
 	SDL_Point LEDPoint;
-	bool LEDState = false;
+	uint8_t LEDState;
 	for (int i = 0; i < LED_COUNT; ++i)
 	{
 		LEDPoint = LEDDestPoints[i];
-		// LEDState = *LEDBoolPointerArray[i];
+		LEDState = led_states[i];
 		LEDTargetRect.x = LEDPoint.x - LEDHalf.x;
 		LEDTargetRect.y = LEDPoint.y - LEDHalf.y;
+		SDL_SetTextureAlphaMod(frameLEDTexture, 255);
 		SDL_RenderCopy(
 			renderer,
 			frameLEDTexture,
-			LEDState ? &LEDOnSrcRect : &LEDOffSrcRect,
+			&LEDOffSrcRect,
 			&LEDTargetRect
 		);
+		if(LEDState > 0) {
+			SDL_SetTextureAlphaMod(frameLEDTexture, LEDState);
+			SDL_RenderCopy(
+				renderer,
+				frameLEDTexture,
+				&LEDOnSrcRect,
+				&LEDTargetRect
+			);
+		}
 	}
 }
 
