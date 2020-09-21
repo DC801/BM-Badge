@@ -2,6 +2,7 @@
 #define SOFTWARE_MAGE_H
 
 #include "common.h"
+#include "entity.h"
 
 int main();
 
@@ -119,5 +120,14 @@ typedef struct {
 } MageEntityRenderableData;
 
 int MAGE(void);
+void get_renderable_data_from_entity(
+	uint8_t *data,
+	MageEntity *entity,
+	MageEntityRenderableData *renderableData
+);
+
+extern MageEntity *playerEntity;
+extern MageEntityRenderableData renderableEntityData;
+extern Point cameraPosition;
 
 #endif //SOFTWARE_MAGE_H
