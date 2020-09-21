@@ -30,6 +30,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
 	$(SRC_ROOT)/games/Wargames.c \
 	$(SRC_ROOT)/games/mage/mage.cpp \
+	$(SRC_ROOT)/games/mage/mage_input.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
