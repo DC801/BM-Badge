@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstring>
 #include "mage.h"
+#include "mage_hex.h"
 #include "../../modules/led.h"
 #include "../../modules/keyboard.h"
 #include "../../engine/EngineInput.h"
