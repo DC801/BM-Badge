@@ -3,7 +3,7 @@
 
 #include "mage.h"
 #include "../../modules/led.h"
-#include "../../../fonts/veramono5pt7b.h"
+#include "../../../fonts/practical8pt7b.h"
 #include "FrameBuffer.h"
 
 extern FrameBuffer *mage_canvas;
