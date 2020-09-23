@@ -10,7 +10,7 @@ SDL_Surface *frameLEDSurface = nullptr;
 SDL_Texture *frameLEDTexture = nullptr;
 SDL_Texture *gameViewportTexture = nullptr;
 
-const int SCREEN_MULTIPLIER = 1;
+const int SCREEN_MULTIPLIER = 2;
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 
@@ -51,7 +51,7 @@ void EngineWindowFrameInit()
 	}
 	else
 	{
-		SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+		SDL_RenderSetLogicalSize(renderer, frameSurface->w, frameSurface->h);
 	}
 	frameTexture = SDL_CreateTextureFromSurface(renderer, frameSurface);
 	frameButtonTexture = SDL_CreateTextureFromSurface(renderer, frameButtonSurface);

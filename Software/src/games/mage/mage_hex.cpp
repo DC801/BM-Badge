@@ -15,7 +15,7 @@ void render_hex_editor()
 	{
 		mage_canvas->printMessage(
 			"THE SYSTEM IS DOWN",
-			VeraMono5pt7b,
+			practical8pt7b,
 			0xffff,
 			16,
 			16
