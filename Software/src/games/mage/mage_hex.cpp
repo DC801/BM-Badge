@@ -14,10 +14,10 @@ void render_hex_editor()
 	if (*hexEditorState)
 	{
 		mage_canvas->printMessage(
-			"THE SYSTEM IS DOWN",
-			practical8pt7b,
+			" !\"#$%&'()*+,-./0123456789:;<=>?\n@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\n`abcdefghijklmnopqrstuvwxyz{|}~",
+			Monaco9,
 			0xffff,
-			16,
+			0,
 			16
 		);
 	}
