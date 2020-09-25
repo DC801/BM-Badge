@@ -20,5 +20,12 @@ void render_hex_editor()
 			0,
 			16
 		);
+		mage_canvas->printMessage(
+			" !\"#$%&'()*+,-./0123456789:;<=>?\n@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\n`abcdefghijklmnopqrstuvwxyz{|}~",
+			DeterminationMono,
+			0xffff,
+			0,
+			120
+		);
 	}
 }
