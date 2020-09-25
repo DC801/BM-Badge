@@ -4,6 +4,7 @@
 #include "mage.h"
 #include "../../modules/led.h"
 #include "../../../fonts/Monaco9.h"
+#include "../../../fonts/DeterminationMono.h"
 #include "FrameBuffer.h"
 
 extern FrameBuffer *mage_canvas;
