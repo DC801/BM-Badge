@@ -21,7 +21,7 @@
 //Cursor coordinates
 static int16_t m_cursor_x = 0;
 static int16_t m_cursor_y = 0;
-static area_t m_cursor_area = { 0, 0, 128, 128 };
+static area_t m_cursor_area = { 0, 0, WIDTH, HEIGHT };
 static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
