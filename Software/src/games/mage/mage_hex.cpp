@@ -22,6 +22,13 @@ void render_hex_editor()
 		);
 		mage_canvas->printMessage(
 			" !\"#$%&'()*+,-./0123456789:;<=>?\n@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\n`abcdefghijklmnopqrstuvwxyz{|}~",
+			Scientifica,
+			0xffff,
+			0,
+			70
+		);
+		mage_canvas->printMessage(
+			" !\"#$%&'()*+,-./0123456789:;<=>?\n@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_\n`abcdefghijklmnopqrstuvwxyz{|}~",
 			DeterminationMono,
 			0xffff,
 			0,
