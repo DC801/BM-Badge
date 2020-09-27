@@ -126,6 +126,8 @@ void get_renderable_data_from_entity(
 	MageEntityRenderableData *renderableData
 );
 
+extern MageDataMemoryAddresses dataMemoryAddresses;
+extern MageEntity *currentMapEntities;
 extern MageEntity *playerEntity;
 extern MageEntityRenderableData renderableEntityData;
 extern Point cameraPosition;
