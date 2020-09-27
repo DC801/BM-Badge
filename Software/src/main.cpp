@@ -232,17 +232,6 @@ int main(void){
         // util_gfx_fill_screen(COLOR_BLACK);
 
         // HCRN();
-
-        ledSet(LED_BIT1, 255);
-        ledSet(LED_BIT128, 255);
-        ledSet(LED_MEM3, 255);
-        ledSet(LED_MEM2, 192);
-        ledSet(LED_MEM1, 128);
-        ledSet(LED_MEM0, 64);
-        ledSet(LED_PAGE, 255);
-        ledSet(LED_SUB, 192);
-        ledSet(LED_ADD, 128);
-        ledSet(LED_XOR, 64);
         MAGE();
     }
 #ifdef DC801_EMBEDDED

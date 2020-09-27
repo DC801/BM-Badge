@@ -245,7 +245,6 @@ void mage_game_loop(uint8_t *data)
 	now = millis();
 	delta_time = now - lastTime;
 
-	ledSet(LED_PAGE, buttons.op_page ? 0xFF : 0x00);
 	if (*hexEditorState)
 	{
 		mage_canvas->clearScreen(RGB(0,0,0));
@@ -671,6 +670,7 @@ int MAGE() {
 
     mage_canvas = p_canvas();
     lastTime = millis();
+    set_hex_op(HEX_OPS_XOR);
     while (EngineIsRunning())
     {
         EngineHandleInput();

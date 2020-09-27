@@ -9,16 +9,6 @@ void toggle_hex_editor()
 	);
 }
 
-#define BYTES_PER_PAGE 192
-#define BYTES_PER_ROW 16
-#define BYTE_OFFSET_X 12
-#define BYTE_OFFSET_Y 40
-#define BYTE_WIDTH 19
-#define BYTE_HEIGHT 14
-#define BYTE_CURSOR_OFFSET_X -4
-#define BYTE_CURSOR_OFFSET_Y 5
-#define HEX_TICK_DELAY 7
-
 uint16_t mem_total = 0;
 uint16_t mem_page = 0;
 uint16_t mem_pages = 0;
@@ -36,8 +26,53 @@ void update_hex_lights() {
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
 }
 
-void getHexStringForByte (uint8_t byte, char* outputString) {
-	sprintf(outputString,"%02X", byte);
+
+HEX_OPS currentOp = HEX_OPS_XOR;
+
+void runHex (uint8_t value) {
+	uint8_t *currentByte = (((uint8_t *) currentMapEntities) + hex_cursor);
+	uint8_t changedValue = *currentByte;
+	switch (currentOp) {
+		case HEX_OPS_XOR: changedValue ^= value; break;
+		case HEX_OPS_ADD: changedValue += value; break;
+		case HEX_OPS_SUB: changedValue -= value; break;
+		default: break;
+	}
+	*currentByte = changedValue;
+}
+
+void set_hex_op (enum HEX_OPS op) {
+	currentOp = op;
+	uint8_t led_op_xor = 0x00;
+	uint8_t led_op_add = 0x00;
+	uint8_t led_op_sub = 0x00;
+	switch (op) {
+		case HEX_OPS_XOR: led_op_xor = 0xFF; break;
+		case HEX_OPS_ADD: led_op_add = 0xFF; break;
+		case HEX_OPS_SUB: led_op_sub = 0xFF; break;
+		default: break;
+	}
+	ledSet(LED_XOR, led_op_xor);
+	ledSet(LED_ADD, led_op_add);
+	ledSet(LED_SUB, led_op_sub);
+}
+
+#define BITS 8
+#define BITS_BUTTONS_OFFSET 4
+void apply_input_to_hex_state() {
+	ledSet(LED_PAGE, buttons.op_page ? 0xFF : 0x00);
+	if (activated.hax) { toggle_hex_editor(); }
+	if (activated.op_xor) { set_hex_op(HEX_OPS_XOR); }
+	if (activated.op_add) { set_hex_op(HEX_OPS_ADD); }
+	if (activated.op_sub) { set_hex_op(HEX_OPS_SUB); }
+	if (activated.bit_128) { runHex(0b10000000); }
+	if (activated.bit_64 ) { runHex(0b01000000); }
+	if (activated.bit_32 ) { runHex(0b00100000); }
+	if (activated.bit_16 ) { runHex(0b00010000); }
+	if (activated.bit_8  ) { runHex(0b00001000); }
+	if (activated.bit_4  ) { runHex(0b00000100); }
+	if (activated.bit_2  ) { runHex(0b00000010); }
+	if (activated.bit_1  ) { runHex(0b00000001); }
 }
 
 bool anyHexMovement = false;
@@ -129,6 +164,11 @@ void render_hex_header()
 	);
 }
 
+void get_hex_string_for_byte (uint8_t byte, char* outputString)
+{
+	sprintf(outputString,"%02X", byte);
+}
+
 void render_hex_editor()
 {
 	char currentByteString[2];
@@ -152,7 +192,7 @@ void render_hex_editor()
 		i++
 	)
 	{
-		getHexStringForByte(
+		get_hex_string_for_byte(
 			*(((uint8_t *) currentMapEntities) + (i + (mem_page * BYTES_PER_PAGE))),
 			currentByteString
 		);

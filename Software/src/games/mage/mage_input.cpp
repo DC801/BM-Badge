@@ -1,55 +1,9 @@
 #include "mage_input.h"
 #include "../../engine/FrameBuffer.h"
 
-ButtonStates buttonsLastTick = {};
-
-bool buttonBoolsLastTick[KEYBOARD_NUM_KEYS];
-#define BITS 8
-#define BITS_BUTTONS_OFFSET 4
-LEDID bit_leds[] = {
-	LED_BIT128,
-	LED_BIT64,
-	LED_BIT32,
-	LED_BIT16,
-	LED_BIT8,
-	LED_BIT4,
-	LED_BIT2,
-	LED_BIT1,
-};
-
 void apply_input_to_game()
 {
-	bool buttonState;
-	bool buttonStateHasChanged;
-	LEDID ledIndex;
-	for (int i = 0; i < BITS; ++i)
-	{
-		buttonState = *buttonBoolPointerArray[i + BITS_BUTTONS_OFFSET];
-		buttonStateHasChanged = buttonState != buttonBoolsLastTick[i + BITS_BUTTONS_OFFSET];
-		if (buttonState && buttonStateHasChanged)
-		{
-			ledIndex = bit_leds[i];
-			ledSet(ledIndex, led_states[ledIndex] ? 0x00 : 0xff);
-		}
-	}
-
-	// hex
-	buttonState = *buttonBoolPointerArray[KEYBOARD_KEY_HAX];
-	buttonStateHasChanged = buttonState != buttonBoolsLastTick[KEYBOARD_KEY_HAX];
-	if (buttonState && buttonStateHasChanged)
-	{
-		toggle_hex_editor();
-	}
-
-	memcpy(
-		&buttonsLastTick,
-		&buttons,
-		sizeof(ButtonStates)
-	);
-	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
-	{
-		buttonBoolsLastTick[i] = *buttonBoolPointerArray[i];
-	}
+	apply_input_to_hex_state();
 }
 
 uint8_t mageSpeed = 1;
