@@ -248,6 +248,7 @@ void mage_game_loop(uint8_t *data)
 	if (*hexEditorState)
 	{
 		mage_canvas->clearScreen(RGB(0,0,0));
+		update_hex_editor();
 		render_hex_editor();
 	}
 	else
