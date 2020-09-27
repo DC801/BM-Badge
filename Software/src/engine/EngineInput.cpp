@@ -77,7 +77,7 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_9] << KEYBOARD_KEY_XOR;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_0] << KEYBOARD_KEY_ADD;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_MINUS] << KEYBOARD_KEY_SUB;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_EQUALS] << KEYBOARD_KEY_PAGE;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_GRAVE] << KEYBOARD_KEY_PAGE;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_Q] << KEYBOARD_KEY_LJOY_CENTER;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_LEFT] << KEYBOARD_KEY_LJOY_LEFT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_DOWN] << KEYBOARD_KEY_LJOY_DOWN;
