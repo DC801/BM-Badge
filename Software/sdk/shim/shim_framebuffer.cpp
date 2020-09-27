@@ -938,13 +938,15 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y)
 {
 	m_color = color;
-	m_cursor_x = x;
+	m_cursor_area.xs = x;
+	m_cursor_x = m_cursor_area.xs;
 	m_cursor_y = y + (font.yAdvance / 2);
 
 	for (uint16_t i = 0; i < strlen(text); i++)
 	{
 		write_char(text[i], font);
 	}
+	m_cursor_area.xs = 0;
 }
 
 void FrameBuffer::getCursorPosition(cursor_t *cursor)
