@@ -10,8 +10,10 @@
 
 extern FrameBuffer *mage_canvas;
 
+extern uint16_t hex_cursor;
 extern uint8_t *hexEditorState;
 extern void toggle_hex_editor();
+extern void update_hex_lights();
 extern void update_hex_editor();
 extern void render_hex_editor();
 

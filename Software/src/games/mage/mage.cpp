@@ -280,6 +280,7 @@ void mage_game_loop(uint8_t *data)
 		}
 	}
 
+	update_hex_lights();
 	mage_canvas->blt();
 	lastTime = now;
 	#ifdef DC801_DESKTOP

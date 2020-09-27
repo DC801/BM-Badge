@@ -17,9 +17,21 @@ void toggle_hex_editor()
 #define BYTE_HEIGHT 14
 #define BYTE_CURSOR_OFFSET_X -4
 #define BYTE_CURSOR_OFFSET_Y 5
-#define HEX_TICK_DELAY 5
+#define HEX_TICK_DELAY 7
 
 uint16_t hex_cursor = 0;
+
+void update_hex_lights() {
+	const uint8_t currentByte = *(((uint8_t *) currentMapEntities) + hex_cursor);
+	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT16, ((currentByte >> 4) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT8, ((currentByte >> 3) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+}
 
 void getHexStringForByte (uint8_t byte, char* outputString) {
 	sprintf(outputString,"%02X", byte);
@@ -55,7 +67,6 @@ void update_hex_editor()
 		}
 		if (anyHexMovement) {
 			delay = HEX_TICK_DELAY;
-			// updateHexLights();
 		}
 	}
 	else
@@ -66,6 +77,7 @@ void update_hex_editor()
 
 void render_hex_editor()
 {
+	char currentByteString[3];
 	mage_canvas->fillRect(
 		(hex_cursor % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X + BYTE_CURSOR_OFFSET_X,
 		(hex_cursor / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y + BYTE_CURSOR_OFFSET_Y,
@@ -75,8 +87,12 @@ void render_hex_editor()
 	);
 	for(uint16_t i = 0; i < HEX_BYTES; i++)
 	{
+		getHexStringForByte(
+			*(((uint8_t *) currentMapEntities) + i),
+			currentByteString
+		);
 		mage_canvas->printMessage(
-			"00",
+			currentByteString,
 			Monaco9,
 			0xffff,
 			(i % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X,
