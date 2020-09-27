@@ -12,6 +12,7 @@ extern FrameBuffer *mage_canvas;
 
 extern uint8_t *hexEditorState;
 extern void toggle_hex_editor();
+extern void update_hex_editor();
 extern void render_hex_editor();
 
 #endif //_MAGE_HEX_H
