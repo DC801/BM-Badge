@@ -34,6 +34,7 @@ typedef struct {
 } ButtonStates;
 
 extern ButtonStates buttons;
+extern ButtonStates activated;
 extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
 void EngineHandleInput();

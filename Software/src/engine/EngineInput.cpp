@@ -3,6 +3,7 @@
 bool running = true;
 
 ButtonStates buttons = {};
+ButtonStates activated = {};
 bool *buttonBoolPointerArray[] = {
 	&buttons.mem0,
 	&buttons.mem1,
@@ -102,6 +103,7 @@ void EngineSetHardwareBitmaskToButtonStates (
 	if(needs_endian_correction) {
 		oneBit = 0x00000001;
 	}
+	memcpy(&activated, &buttons, sizeof(ButtonStates));
 	buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
 	buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
 	buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
@@ -129,6 +131,34 @@ void EngineSetHardwareBitmaskToButtonStates (
 	buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
 	buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
 	buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
+
+	activated.mem0 = !activated.mem0 && buttons.mem0;
+	activated.mem1 = !activated.mem1 && buttons.mem1;
+	activated.mem2 = !activated.mem2 && buttons.mem2;
+	activated.mem3 = !activated.mem3 && buttons.mem3;
+	activated.bit_128 = !activated.bit_128 && buttons.bit_128;
+	activated.bit_64 = !activated.bit_64 && buttons.bit_64;
+	activated.bit_32 = !activated.bit_32 && buttons.bit_32;
+	activated.bit_16 = !activated.bit_16 && buttons.bit_16;
+	activated.bit_8 = !activated.bit_8 && buttons.bit_8;
+	activated.bit_4 = !activated.bit_4 && buttons.bit_4;
+	activated.bit_2 = !activated.bit_2 && buttons.bit_2;
+	activated.bit_1 = !activated.bit_1 && buttons.bit_1;
+	activated.op_xor = !activated.op_xor && buttons.op_xor;
+	activated.op_add = !activated.op_add && buttons.op_add;
+	activated.op_sub = !activated.op_sub && buttons.op_sub;
+	activated.op_page = !activated.op_page && buttons.op_page;
+	activated.ljoy_center = !activated.ljoy_center && buttons.ljoy_center;
+	activated.ljoy_left = !activated.ljoy_left && buttons.ljoy_left;
+	activated.ljoy_down = !activated.ljoy_down && buttons.ljoy_down;
+	activated.ljoy_up = !activated.ljoy_up && buttons.ljoy_up;
+	activated.ljoy_right = !activated.ljoy_right && buttons.ljoy_right;
+	activated.rjoy_center = !activated.rjoy_center && buttons.rjoy_center;
+	activated.rjoy_left = !activated.rjoy_left && buttons.rjoy_left;
+	activated.rjoy_down = !activated.rjoy_down && buttons.rjoy_down;
+	activated.rjoy_up = !activated.rjoy_up && buttons.rjoy_up;
+	activated.rjoy_right = !activated.rjoy_right && buttons.rjoy_right;
+	activated.hax = !activated.hax && buttons.hax;
 }
 
 void EngineHandleInput ()
