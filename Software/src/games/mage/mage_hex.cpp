@@ -162,30 +162,16 @@ void render_hex_header()
 		BYTE_OFFSET_X,
 		0
 	);
-	if (hex_cursor % 2 == 0)
-	{
-		uint16_t u2Value = *(uint16_t *) ((uint8_t *) currentMapEntities + hex_cursor);
-		sprintf(
-			headerString,
-			"%s | uint8: %03d | uint16: %05d\n"
-			"string output: %s",
-			endian_label,
-			*((uint8_t *) currentMapEntities + hex_cursor),
-			u2Value,
-			(uint8_t *) currentMapEntities + hex_cursor
-		);
-	}
-	else
-	{
-		sprintf(
-			headerString,
-			"%s | uint8: %03d\n"
-			"string output: %s",
-			endian_label,
-			*((uint8_t *) currentMapEntities + hex_cursor),
-			(uint8_t *) currentMapEntities + hex_cursor
-		);
-	}
+	uint16_t u2Value = *(uint16_t *) ((uint8_t *) currentMapEntities + (hex_cursor - (hex_cursor % 2)));
+	sprintf(
+		headerString,
+		"%s | uint8: %03d | uint16: %05d\n"
+		"string output: %s",
+		endian_label,
+		*((uint8_t *) currentMapEntities + hex_cursor),
+		u2Value,
+		(uint8_t *) currentMapEntities + hex_cursor
+	);
 	mage_canvas->printMessage(
 		headerString,
 		Monaco9,
