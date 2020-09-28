@@ -9,10 +9,10 @@
 #include "../../../fonts/Scientifica.h"
 #include "FrameBuffer.h"
 
-#define BYTES_PER_PAGE 192
 #define BYTES_PER_ROW 16
 #define BYTE_OFFSET_X 12
 #define BYTE_OFFSET_Y 30
+#define BYTE_FOOTER_OFFSET_Y 6
 #define BYTE_WIDTH 19
 #define BYTE_HEIGHT 14
 #define BYTE_CURSOR_OFFSET_X -4
