@@ -26,10 +26,16 @@ void apply_input_to_player (uint8_t *data)
 		playerEntity->currentFrame = 0;
 	}
 	get_renderable_data_from_entity(
-		data,
 		playerEntity,
 		&renderableEntityData
 	);
+	if (
+		!renderableEntityData.entityType
+		|| playerEntity->currentAnimation > (renderableEntityData.entityType->animationCount - 1)
+	)
+	{
+		playerEntity->currentAnimation = 0;
+	}
 	cameraPosition.x = playerEntity->x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
 	cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
 }
