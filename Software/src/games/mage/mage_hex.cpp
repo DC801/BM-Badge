@@ -160,7 +160,38 @@ void render_hex_header()
 		Monaco9,
 		0xffff,
 		BYTE_OFFSET_X,
-		4
+		0
+	);
+	if (hex_cursor % 2 == 0)
+	{
+		uint16_t u2Value = *(uint16_t *) ((uint8_t *) currentMapEntities + hex_cursor);
+		sprintf(
+			headerString,
+			"%s | uint8: %03d | uint16: %05d\n"
+			"string output: %s",
+			endian_label,
+			*((uint8_t *) currentMapEntities + hex_cursor),
+			u2Value,
+			(uint8_t *) currentMapEntities + hex_cursor
+		);
+	}
+	else
+	{
+		sprintf(
+			headerString,
+			"%s | uint8: %03d\n"
+			"string output: %s",
+			endian_label,
+			*((uint8_t *) currentMapEntities + hex_cursor),
+			(uint8_t *) currentMapEntities + hex_cursor
+		);
+	}
+	mage_canvas->printMessage(
+		headerString,
+		Monaco9,
+		0xffff,
+		BYTE_OFFSET_X,
+		202
 	);
 }
 
@@ -172,7 +203,6 @@ void get_hex_string_for_byte (uint8_t byte, char* outputString)
 void render_hex_editor()
 {
 	char currentByteString[2];
-	render_hex_header();
 	if ((hex_cursor / BYTES_PER_PAGE) == mem_page)
 	{
 		mage_canvas->fillRect(
@@ -183,6 +213,7 @@ void render_hex_editor()
 			0x38ff
 		);
 	}
+	render_hex_header();
 	for(
 		uint16_t i = 0;
 		(
