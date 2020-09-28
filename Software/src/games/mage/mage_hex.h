@@ -2,6 +2,7 @@
 #define _MAGE_HEX_H
 
 #include "mage.h"
+#include "mage_rom.h"
 #include "../../modules/led.h"
 #include "../../../fonts/Monaco9.h"
 #include "../../../fonts/DeterminationMono.h"
