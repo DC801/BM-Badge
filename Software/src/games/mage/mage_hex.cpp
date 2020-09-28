@@ -8,11 +8,18 @@ void toggle_hex_editor()
 		*hexEditorState ? 0x00 : 0xff
 	);
 }
-
+bool dialog_open = false;
+uint8_t bytes_per_page = 64;
+uint8_t hex_rows = 0;
 uint16_t mem_total = 0;
 uint16_t mem_page = 0;
 uint16_t mem_pages = 0;
 uint16_t hex_cursor = 0;
+
+void toggle_dialog () {
+	dialog_open = !dialog_open;
+	// bytes_per_page = (bytes_per_page % 192) + BYTES_PER_ROW;
+}
 
 void update_hex_lights() {
 	const uint8_t currentByte = *(((uint8_t *) currentMapEntities) + hex_cursor);
@@ -73,14 +80,17 @@ void apply_input_to_hex_state() {
 	if (activated.bit_4  ) { runHex(0b00000100); }
 	if (activated.bit_2  ) { runHex(0b00000010); }
 	if (activated.bit_1  ) { runHex(0b00000001); }
+	if (activated.ljoy_center) { toggle_dialog(); }
 }
 
 bool anyHexMovement = false;
 uint8_t delay = 0;
 void update_hex_editor()
 {
+	bytes_per_page = dialog_open ? 64 : 192;
+	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
 	mem_total = *dataMemoryAddresses.entityCount * sizeof(MageEntity);
-	mem_pages = ceil((0.0 + mem_total) / (0.0 + BYTES_PER_PAGE));
+	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
 	if (!delay)
 	{
 		anyHexMovement = (
@@ -177,7 +187,7 @@ void render_hex_header()
 		Monaco9,
 		0xffff,
 		BYTE_OFFSET_X,
-		202
+		BYTE_FOOTER_OFFSET_Y + (BYTE_HEIGHT * (hex_rows + 2))
 	);
 }
 
@@ -189,11 +199,11 @@ void get_hex_string_for_byte (uint8_t byte, char* outputString)
 void render_hex_editor()
 {
 	char currentByteString[2];
-	if ((hex_cursor / BYTES_PER_PAGE) == mem_page)
+	if ((hex_cursor / bytes_per_page) == mem_page)
 	{
 		mage_canvas->fillRect(
-			(hex_cursor % BYTES_PER_PAGE % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X + BYTE_CURSOR_OFFSET_X,
-			(hex_cursor % BYTES_PER_PAGE / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y + BYTE_CURSOR_OFFSET_Y,
+			(hex_cursor % bytes_per_page % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X + BYTE_CURSOR_OFFSET_X,
+			(hex_cursor % bytes_per_page / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y + BYTE_CURSOR_OFFSET_Y,
 			BYTE_WIDTH,
 			BYTE_HEIGHT,
 			0x38ff
@@ -203,14 +213,14 @@ void render_hex_editor()
 	for(
 		uint16_t i = 0;
 		(
-			i < BYTES_PER_PAGE
-			&& (i + (mem_page * BYTES_PER_PAGE)) < mem_total
+			i < bytes_per_page
+			&& (i + (mem_page * bytes_per_page)) < mem_total
 		);
 		i++
 	)
 	{
 		get_hex_string_for_byte(
-			*(((uint8_t *) currentMapEntities) + (i + (mem_page * BYTES_PER_PAGE))),
+			*(((uint8_t *) currentMapEntities) + (i + (mem_page * bytes_per_page))),
 			currentByteString
 		);
 		mage_canvas->printMessage(
