@@ -43,14 +43,14 @@ void draw_map (uint8_t layer)
             if (tileId != 0) {
                 tileId -= 1;
                 flags = (*tile).flags;
-                tileset = allTilesets[(*tile).tilesetId];
+                tileset = *get_tileset_by_id((*tile).tilesetId);
                 cols = *tileset.cols;
                 mage_canvas->drawImageWithFlags(
                     x,
                     y,
                     *currentMap.tileWidth,
                     *currentMap.tileHeight,
-                    (uint16_t *) (data + dataMemoryAddresses.imageOffsets[*tileset.imageIndex]),
+                    get_image_by_index(*tileset.imageIndex),
                     (tileId % cols) * *tileset.tileWidth,
                     (tileId / cols) * *tileset.tileHeight,
                     *tileset.imageWidth,
@@ -72,7 +72,7 @@ void get_renderable_data_from_entity (
     renderableData->entityType = nullptr;
     renderableData->tileset = nullptr;
     if(entity->primaryType == ENTITY_PRIMARY_TILESET) {
-        renderableData->tileset = allTilesets + entity->primaryTypeIndex;
+        renderableData->tileset = get_tileset_by_id(entity->primaryTypeIndex);
         renderableData->tileIndex = &entity->secondaryTypeIndex;
     } else if(entity->primaryType == ENTITY_PRIMARY_ANIMATION) {
         uint32_t animationOffset = *(
@@ -98,12 +98,13 @@ void get_renderable_data_from_entity (
             );
             renderableData->animation = (MageAnimation *) (data + animationOffset);
         } else {
-            renderableData->tileset = allTilesets + entityTypeAnimationDirection->type;
+            renderableData->tileset = get_tileset_by_id(entityTypeAnimationDirection->type);
             renderableData->tileIndex = &entityTypeAnimationDirection->typeIndex;
         }
     }
-    if(renderableData->animation) {
-        renderableData->tileset = allTilesets + renderableData->animation->tilesetIndex;
+    if(renderableData->animation)
+    {
+        renderableData->tileset = get_tileset_by_id(renderableData->animation->tilesetIndex);
         renderableData->animationFrame = (
             &renderableData->animation->animationFrames
             + entity->currentFrame
@@ -149,7 +150,6 @@ void draw_entities()
     uint16_t entityCount = *currentMap.entityCount;
     MageEntity *entity;
     MageTileset *tileset;
-    uint32_t imageOffset;
     uint16_t tileIndex;
     uint16_t tilesetX;
     uint16_t tilesetY;
@@ -169,13 +169,12 @@ void draw_entities()
         // printf("tileset->name: %s\n", tileset->name);
         // printf("tileset->tileWidth: %" PRIu16 "\n", *tileset->tileWidth);
         // printf("tileset->tileHeight: %" PRIu16 "\n", *tileset->tileHeight);
-        imageOffset = dataMemoryAddresses.imageOffsets[*tileset->imageIndex];
         mage_canvas->drawImageWithFlags(
             entity->x - cameraPosition.x,
             entity->y - cameraPosition.y - *tileset->tileHeight,
             *tileset->tileWidth,
             *tileset->tileHeight,
-            (uint16_t *) (data + imageOffset),
+            get_image_by_index(*tileset->imageIndex),
             tilesetX,
             tilesetY,
             *tileset->imageWidth,

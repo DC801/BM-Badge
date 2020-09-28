@@ -27,5 +27,7 @@ void correct_entity_type_endians ();
 void correct_animation_endians ();
 void correct_entity_endians ();
 extern MageEntityType* get_entity_type_by_index(uint8_t index);
+extern uint16_t* get_image_by_index(uint8_t index);
+extern MageTileset* get_tileset_by_id(uint8_t index);
 
 #endif //_MAGE_ROM_H

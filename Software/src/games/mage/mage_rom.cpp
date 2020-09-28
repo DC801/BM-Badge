@@ -406,8 +406,21 @@ void correct_entity_endians ()
 
 MageEntityType* get_entity_type_by_index(uint8_t index)
 {
-	uint32_t offset = *(dataMemoryAddresses.entityTypeOffsets + index);
 	return index < *dataMemoryAddresses.entityTypeCount
-		? (MageEntityType *) (data + offset)
+		? (MageEntityType *) (data + ((uint32_t) *(dataMemoryAddresses.entityTypeOffsets + index)))
+		: nullptr;
+}
+
+uint16_t* get_image_by_index(uint8_t index)
+{
+	return index < *dataMemoryAddresses.imageCount
+		? (uint16_t *) (data + ((uint32_t) *(dataMemoryAddresses.imageOffsets + index)))
+		: nullptr;
+}
+
+MageTileset* get_tileset_by_id(uint8_t index)
+{
+	return index < *dataMemoryAddresses.tilesetCount
+		? (MageTileset *) (allTilesets + index)
 		: nullptr;
 }
