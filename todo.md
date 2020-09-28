@@ -35,18 +35,17 @@
 	- [x] Render something on screen to see which RAM PAGE you're on
 	- [x] Add PAGE handler; Hold page + arrows to jump pages of bytes?
 	- [ ] Start adding error handling for when indexing outside of supported types ROM data
-		- [x] Move functions for reading from the ROM into `mage_rom.cpp`
-		- [ ] Create some `get_*_by_index` functions for reading from ROM
-			- [ ] These should return nullptr if not found
-			- [ ] Things that call these should check for null and have a fallback
-			- [ ] get_entity_type_by_index
-			- [ ] get_entity_by_index
-			- [ ] get_map_by_index
-			- [ ] get_tileset_by_index
-			- [ ] get_image_by_index
-			- [ ] get_animation_by_index
-			- [ ] get_animation_direction_by_index_and_direction
-			- [ ] get_image_by_index
+- [x] Move functions for reading from the ROM into `mage_rom.cpp`
+- [ ] Create some `get_*_by_index` functions for reading from ROM
+	- [ ] These should return nullptr if not found
+	- [ ] Things that call these should check for null and have a fallback
+	- [x] get_entity_type_by_index
+	- [ ] get_entity_by_index
+	- [ ] get_map_by_index
+	- [x] get_tileset_by_index
+	- [x] get_image_by_index
+	- [ ] get_animation_by_index
+	- [ ] get_animation_direction_by_index_and_direction
 - [ ] In the ROM header, the first u4 should be the length of the header
 	- [ ] In Mage init, Read header up to that length, then parse it
 - [ ] Make a list of some C functions we want scripts to be able to call
