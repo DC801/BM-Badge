@@ -4,6 +4,7 @@
 #include "common.h"
 
 extern const bool needs_endian_correction;
+extern const char endian_label[];
 
 void convert_endian_u2 (uint16_t *value);
 uint16_t convert_endian_u2_value (uint16_t value);
