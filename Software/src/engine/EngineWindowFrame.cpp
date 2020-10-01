@@ -16,6 +16,11 @@ int SCREEN_HEIGHT = 0;
 
 void EngineWindowFrameInit()
 {
+	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	{
+		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+		exit(1);
+	}
 	frameSurface = IMG_Load("MAGE/window_frame.png");
 	if (!frameSurface)
 	{
