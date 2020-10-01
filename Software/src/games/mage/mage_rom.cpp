@@ -1,5 +1,7 @@
 #include "mage_rom.h"
 
+#include <inttypes.h>
+
 MageDataMemoryAddresses dataMemoryAddresses = {};
 
 MageTileset *allTilesets;
