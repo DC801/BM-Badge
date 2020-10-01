@@ -124,6 +124,8 @@ MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
         { item_credits, "Credits" },
 };
 
+#include "EngineROM.h"
+
 /**
  * @brief Main app
  * @return Not used
@@ -229,9 +231,11 @@ int main(void){
         #endif
 
         p_canvas()->clearScreen(COLOR_BLACK);
-        // util_gfx_fill_screen(COLOR_BLACK);
 
-        // HCRN();
+        EngineROM_Init();
+        uint8_t buf[32];
+        EngineROM_Read(0, 32, buf);
+
         MAGE();
     }
 #ifdef DC801_EMBEDDED
