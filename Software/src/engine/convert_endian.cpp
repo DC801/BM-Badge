@@ -2,10 +2,10 @@
 #include "convert_endian.h"
 
 const bool needs_endian_correction = *(uint16_t*)"\0\xff" > 255;
-#if __BYTE_ORDER == __BIG_ENDIAN
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 const char endian_label[] = "Big Endian";
 #endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 const char endian_label[] = "Little Endian";
 #endif
 
