@@ -63,7 +63,7 @@ void draw_map (uint8_t layer)
 				tileset = *get_tileset_by_id((*tile).tilesetId);
 				cols = *tileset.cols;
 
-				mage_canvas->drawImageWithFlags(
+				mage_canvas->drawImageChunkWithFlags(
 					x,
 					y,
 					*currentMap.tileWidth,
@@ -275,7 +275,7 @@ void update_entities ()
 
 void mage_game_loop()
 {
-	/*now = millis();
+	now = millis();
 	delta_time = now - lastTime;
 
 	if (*hexEditorState)
@@ -287,9 +287,9 @@ void mage_game_loop()
 	else
 	{
 		mage_canvas->clearScreen(RGB(0,0,255));
-		apply_input_to_player(data);
+		// apply_input_to_player(data);
 
-		if (*currentMap.layerCount > 1)
+		/* if (*currentMap.layerCount > 1)
 		{
 			for (
 				uint8_t layerIndex = 0;
@@ -298,27 +298,33 @@ void mage_game_loop()
 			)
 			{
 				draw_map(layerIndex);
+				MageROM->DrawMap(layerIndex);
 			}
 		} else {
 			draw_map(0);
-		}
+			MageROM->DrawMap(0);
+		} */
 
-		update_entities();
+		/*update_entities();
 
-		draw_entities();
+		draw_entities();*/
 
-		if (*currentMap.layerCount > 1)
+		uint8_t layerCount = MageROM->Map().LayerCount();
+
+		if (layerCount > 1)
 		{
-			draw_map(*currentMap.layerCount - 1);
+			// draw_map(*currentMap.layerCount - 1);
+			// MageROM->DrawMap(layerCount - 1);
 		}
 	}
 
-	update_hex_lights();
+	// update_hex_lights();
 	mage_canvas->blt();
 	lastTime = now;
-	#ifdef DC801_DESKTOP
+
+#ifdef DC801_DESKTOP
 	nrf_delay_ms(5);
-	#endif*/
+#endif
 }
 
 void MAGE()
@@ -337,14 +343,13 @@ void MAGE()
 
 	// Close rom and any open files
 	EngineROM_Deinit();
-	return;
 
-	load_all_tilesets();
-	correct_animation_endians();
-	correct_entity_type_endians();
-	correct_entity_endians();
+	// load_all_tilesets();
+	// correct_animation_endians();
+	// correct_entity_type_endians();
+	/// correct_entity_endians();
 
-	load_map_headers(0);
+	// load_map_headers(0);
 
 	mage_canvas = p_canvas();
 	lastTime = millis();
