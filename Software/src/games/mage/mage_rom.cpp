@@ -1,8 +1,10 @@
 #include <inttypes.h>
 
 #include "mage_rom.h"
+
 #include "EngineROM.h"
 #include "EnginePanic.h"
+#include "FrameBuffer.h"
 
 #pragma region MageHeader
 
@@ -465,9 +467,99 @@ uint32_t MageRom::Size() const
 	return size;
 }
 
+const MageTileset& MageRom::Tile(uint32_t index) const
+{
+	static MageTileset tile;
+	if (!tiles) return tile;
+
+	if (tileHeader.count() > index)
+	{
+		return tiles[index];
+	}
+
+	return tile;
+}
+
+const MageMap& MageRom::Map() const
+{
+	return map;
+}
+
 void MageRom::LoadMap()
 {
 	map = MageMap(mapHeader.offset(currentMapIndex));
+}
+
+void MageRom::DrawMap(int32_t camera_x, int32_t camera_y) const
+{
+	uint32_t tilesPerLayer = map.Width() * map.Height();
+
+	for (uint8_t layer = 0; layer < map.LayerCount(); layer++)
+	{
+		for (uint32_t i = 0; i < tilesPerLayer; i++)
+		{
+			int32_t x = (int32_t)((map.TileWidth() * (i % map.Width())) - camera_x);
+			int32_t y = (int32_t)((map.TileHeight() * (i / map.Width())) - camera_y);
+
+			if ((x < (-map.TileWidth()) ||
+				(x > WIDTH) ||
+				(y < (-map.TileHeight())) ||
+				(y > HEIGHT)))
+			{
+				continue;
+			}
+
+			uint32_t address = map.LayerOffset(layer);
+
+			uint16_t tileId = 0;
+			uint8_t tilesetId = 0;
+			uint8_t flags = 0;
+
+			if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
+			{
+				ENGINE_PANIC("Failed to fetch map layer tile info");
+			}
+
+			convert_endian_u2(&tileId);
+			address += sizeof(tileId);
+
+			if (tileId == 0)
+			{
+				continue;
+			}
+
+			tileId -= 1;
+
+			if (EngineROM_Read(address, sizeof(tilesetId), &tilesetId) != sizeof(tilesetId))
+			{
+				ENGINE_PANIC("Failed to fetch map layer tile info");
+			}
+
+			address += sizeof(tilesetId);
+
+			if (EngineROM_Read(address, sizeof(flags), &flags) != sizeof(flags))
+			{
+				ENGINE_PANIC("Failed to fetch map layer tile info");
+			}
+
+			const MageTileset &tileset = Tile(tilesetId);
+
+			/*canvas.drawImageWithFlags(
+				x,
+				y,
+				tileset.TileWidth(),
+				tileset.TileHeight(),
+				// TODO: Implement me
+				// Get Image Chunk by index and offset
+				get_image_by_index(tileset.ImageIndex()),
+				(tileId % tileset.Cols()) * tileset.TileWidth(),
+				(tileId / tileset.Cols()) * tileset.TileHeight(),
+				tileset.ImageWidth,
+				0x0020,
+				flags
+			);*/
+		}
+	}
 }
 
 #pragma endregion

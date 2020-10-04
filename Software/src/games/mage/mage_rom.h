@@ -124,7 +124,10 @@ public:
 	MageRom();
 
 	uint32_t Size() const;
+	const MageTileset& Tile(uint32_t index) const;
+	const MageMap& Map() const;
 	void LoadMap();
+	void DrawMap(int32_t camera_x, int32_t camera_y) const;
 };
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
