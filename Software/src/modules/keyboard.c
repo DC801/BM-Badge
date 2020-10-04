@@ -70,6 +70,11 @@ int keyboard_key_is_down(KEYBOARD_KEY key)
 	}
 }
 
+void keyboard_get_mask(uint32_t *mask)
+{
+	*mask = keyboard_mask;
+}
+
 void keyboard_register_callback(keyboard_evt_handler_t handler)
 {
 	keyboard_evt_handler = handler;

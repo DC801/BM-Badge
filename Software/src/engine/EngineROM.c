@@ -1,5 +1,6 @@
 #include "common.h"
 #include "EngineROM.h"
+#include "EnginePanic.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +50,7 @@ void EngineROM_Init(void)
 
 	if (NRFX_SUCCESS != nrfx_qspi_init(&qspi_config, NULL, NULL))
 	{
-		return;
+		ENGINE_PANIC("Failed to initialize QSPI");
 	}
 
 	nrf_qspi_cinstr_conf_t cinstr_conf =
@@ -65,7 +66,7 @@ void EngineROM_Init(void)
 	// Software reset memory chip
 	if (NRFX_SUCCESS != nrfx_qspi_cinstr_xfer(&cinstr_conf, NULL, NULL))
 	{
-		return;
+		ENGINE_PANIC("Failed to Software Reset via QSPI");
 	}
 
 	// Switch to QSPI mode
@@ -80,20 +81,22 @@ void EngineROM_Init(void)
 
 	if (NRFX_SUCCESS != nrfx_qspi_cinstr_xfer(&cinstr_conf, buffer, NULL))
 	{
-		return;
+		ENGINE_PANIC("Failed to enable QSPI quad mode");
 	}
 }
+
+void EngineROM_Deinit(void) { }
 
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
 	if (data == NULL)
 	{
-		return 0;
+		ENGINE_PANIC("EngineROM_Read: Null pointer");
 	}
 
-	if (NRFX_SUCCESS != nrfx_qspi_write(data, length, address))
+	if (NRFX_SUCCESS != nrfx_qspi_read(data, length, address))
 	{
-		return 0;
+		ENGINE_PANIC("Failed to QSPI read");
 	}
 
 	return length;
@@ -103,12 +106,12 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 {
 	if (data == NULL)
 	{
-		return 0;
+		ENGINE_PANIC("EngineROM_Write: Null pointer");
 	}
 
-	if (NRFX_SUCCESS != nrfx_qspi_read(data, length, address))
+	if (NRFX_SUCCESS != nrfx_qspi_write(data, length, address))
 	{
-		return 0;
+		ENGINE_PANIC("Failed to QSPI write");
 	}
 
 	return length;
@@ -118,7 +121,7 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 {
 	if (data == NULL)
 	{
-		return 0;
+		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 
 	for (uint32_t i = 0; i < length; i++)
@@ -126,10 +129,7 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 		uint8_t read = 0;
 		uint8_t *ptr = &read;
 
-		if (NRFX_SUCCESS != nrfx_qspi_read(ptr, sizeof(uint8_t), address + i))
-		{
-			return 0;
-		}
+		EngineROM_Read(address + i, sizeof(uint8_t), ptr);
 
 		if (read != *data++)
 		{
@@ -144,6 +144,8 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 #ifdef DC801_DESKTOP
 
 FILE *romfile = NULL;
+#include <errno.h>
+#include <string.h>
 
 void EngineROM_Init(void)
 {
@@ -151,23 +153,60 @@ void EngineROM_Init(void)
 
 	if (romfile == NULL)
 	{
-		printf("Failed to load game.dat\n");
-		exit(1);
+		int error = errno;
+		fprintf(stderr, "Error: %s\n", strerror(error));
+		ENGINE_PANIC("Failed to load Game Data");
 	}
+}
+
+void EngineROM_Deinit(void)
+{
+	if (romfile == NULL)
+	{
+		ENGINE_PANIC("Game Data file is not open");
+	}
+
+	if (fclose(romfile) != 0)
+	{
+		ENGINE_PANIC("Failed to close Game Data file");
+	}
+
+	romfile = NULL;
+}
+
+bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
+{
+	uint8_t buffer[length];
+	uint8_t *ptr = buffer;
+
+	uint32_t read = EngineROM_Read(0, length, buffer);
+
+	if (read != length)
+	{
+		ENGINE_PANIC("Failed to match Game Data magic");
+	}
+
+	for (int i = 0; i < length; i++)
+	{
+		if (*magic++ != *ptr++)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
 	if (romfile == NULL || data == NULL)
 	{
-		printf("game.dat is not open: aborting\n");
-		exit(1);
+		ENGINE_PANIC("Game Data file is not open");
 	}
 
 	if (fseek(romfile, address, SEEK_SET) != 0)
 	{
-		printf("Failed to seek into game.dat\n");
-		exit(1);
+		ENGINE_PANIC("Failed to seek into Game Data");
 	}
 
 	return fread(data, sizeof(uint8_t), length, romfile);
@@ -177,14 +216,12 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 {
 	if (romfile == NULL || data == NULL)
 	{
-		printf("game.dat is not open: aborting\n");
-		exit(1);
+		ENGINE_PANIC("Game Data file is not open");
 	}
 
 	if (fseek(romfile, address, SEEK_SET) != 0)
 	{
-		printf("Failed to seek into game.dat\n");
-		exit(1);
+		ENGINE_PANIC("Failed to seek into Game Data");
 	}
 
 	return fwrite(data, sizeof(uint8_t), length, romfile);
@@ -194,14 +231,12 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 {
 	if (romfile == NULL || data == NULL)
 	{
-		printf("game.dat is not open: aborting\n");
-		exit(1);
+		ENGINE_PANIC("Game Data file is not open");
 	}
 
 	if (fseek(romfile, address, SEEK_SET) != 0)
 	{
-		printf("Failed to seek into game.dat\n");
-		exit(1);
+		ENGINE_PANIC("Failed to seek into Game Data");
 	}
 
 	for (uint32_t i = 0; i < length; i++)

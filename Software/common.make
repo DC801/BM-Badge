@@ -13,6 +13,7 @@ OPT ?= -Os -g3
 
 ifndef DESKTOP
 # Hardware flags
+# -mabi=aapcs -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -mthumb
 DEVICE_FLAGS = -mabi=aapcs \
 	-mcpu=cortex-m4 \
 	-mfloat-abi=hard \
@@ -135,7 +136,7 @@ else
 	@$(MKDIR) $(@D)
 endif
 
-	@$(CC) -x c++ -c -std=c++0x $(CFLAGS) $(CXXFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
+	@$(CC) -x c++ -c -std=c++17 $(CFLAGS) $(CXXFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
 # ASM files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.S

@@ -16,10 +16,10 @@ void apply_input_to_player (uint8_t *data)
 	}
 	uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
 	isMoving = false;
-	if(buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
-	if(buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
-	if(buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
-	if(buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
 	playerEntity->currentAnimation = isMoving ? 1 : 0;
 	if (previousPlayerAnimation != playerEntity->currentAnimation)
 	{

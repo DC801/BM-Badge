@@ -54,15 +54,14 @@ FrameBuffer::FrameBuffer() {}
 FrameBuffer::~FrameBuffer() {}
 
 void FrameBuffer::clearScreen(uint16_t color) {
-	for (int i=0; i<FRAMEBUFFER_SIZE; ++i)
+	for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
 	{
 		frame[i] = color;
 	}
-
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
-	frame[y*WIDTH+x] = color;
+	frame[y * WIDTH + x] = color;
 }
 
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {

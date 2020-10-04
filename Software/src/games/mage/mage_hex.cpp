@@ -67,20 +67,20 @@ void set_hex_op (enum HEX_OPS op) {
 #define BITS 8
 #define BITS_BUTTONS_OFFSET 4
 void apply_input_to_hex_state() {
-	ledSet(LED_PAGE, buttons.op_page ? 0xFF : 0x00);
-	if (activated.hax) { toggle_hex_editor(); }
-	if (activated.op_xor) { set_hex_op(HEX_OPS_XOR); }
-	if (activated.op_add) { set_hex_op(HEX_OPS_ADD); }
-	if (activated.op_sub) { set_hex_op(HEX_OPS_SUB); }
-	if (activated.bit_128) { runHex(0b10000000); }
-	if (activated.bit_64 ) { runHex(0b01000000); }
-	if (activated.bit_32 ) { runHex(0b00100000); }
-	if (activated.bit_16 ) { runHex(0b00010000); }
-	if (activated.bit_8  ) { runHex(0b00001000); }
-	if (activated.bit_4  ) { runHex(0b00000100); }
-	if (activated.bit_2  ) { runHex(0b00000010); }
-	if (activated.bit_1  ) { runHex(0b00000001); }
-	if (activated.ljoy_center) { toggle_dialog(); }
+	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
+	if (EngineInput_Activated.hax) { toggle_hex_editor(); }
+	if (EngineInput_Activated.op_xor) { set_hex_op(HEX_OPS_XOR); }
+	if (EngineInput_Activated.op_add) { set_hex_op(HEX_OPS_ADD); }
+	if (EngineInput_Activated.op_sub) { set_hex_op(HEX_OPS_SUB); }
+	if (EngineInput_Activated.bit_128) { runHex(0b10000000); }
+	if (EngineInput_Activated.bit_64 ) { runHex(0b01000000); }
+	if (EngineInput_Activated.bit_32 ) { runHex(0b00100000); }
+	if (EngineInput_Activated.bit_16 ) { runHex(0b00010000); }
+	if (EngineInput_Activated.bit_8  ) { runHex(0b00001000); }
+	if (EngineInput_Activated.bit_4  ) { runHex(0b00000100); }
+	if (EngineInput_Activated.bit_2  ) { runHex(0b00000010); }
+	if (EngineInput_Activated.bit_1  ) { runHex(0b00000001); }
+	if (EngineInput_Activated.ljoy_center) { toggle_dialog(); }
 }
 
 bool anyHexMovement = false;
@@ -94,31 +94,31 @@ void update_hex_editor()
 	if (!delay)
 	{
 		anyHexMovement = (
-			buttons.ljoy_left ||
-			buttons.ljoy_right ||
-			buttons.ljoy_up ||
-			buttons.ljoy_down ||
-			buttons.rjoy_left ||
-			buttons.rjoy_right ||
-			buttons.rjoy_up ||
-			buttons.rjoy_down
+			EngineInput_Buttons.ljoy_left ||
+			EngineInput_Buttons.ljoy_right ||
+			EngineInput_Buttons.ljoy_up ||
+			EngineInput_Buttons.ljoy_down ||
+			EngineInput_Buttons.rjoy_left ||
+			EngineInput_Buttons.rjoy_right ||
+			EngineInput_Buttons.rjoy_up ||
+			EngineInput_Buttons.rjoy_down
 		);
-		if (buttons.op_page)
+		if (EngineInput_Buttons.op_page)
 		{
 			if (
-				buttons.ljoy_up
-				|| buttons.rjoy_up
-				|| buttons.ljoy_left
-				|| buttons.rjoy_left
+				EngineInput_Buttons.ljoy_up
+				|| EngineInput_Buttons.rjoy_up
+				|| EngineInput_Buttons.ljoy_left
+				|| EngineInput_Buttons.rjoy_left
 			)
 			{
 				mem_page = (mem_page + mem_pages - 1) % mem_pages;
 			}
 			if (
-				buttons.ljoy_down
-				|| buttons.rjoy_down
-				|| buttons.ljoy_right
-				|| buttons.rjoy_right
+				EngineInput_Buttons.ljoy_down
+				|| EngineInput_Buttons.rjoy_down
+				|| EngineInput_Buttons.ljoy_right
+				|| EngineInput_Buttons.rjoy_right
 			)
 			{
 				mem_page = (mem_page + 1) % mem_pages;
@@ -126,19 +126,19 @@ void update_hex_editor()
 		}
 		else
 		{
-			if (buttons.ljoy_left || buttons.rjoy_left)
+			if (EngineInput_Buttons.ljoy_left || EngineInput_Buttons.rjoy_left)
 			{
 				hex_cursor = (hex_cursor + mem_total - 1) % mem_total;
 			}
-			if (buttons.ljoy_right || buttons.rjoy_right)
+			if (EngineInput_Buttons.ljoy_right || EngineInput_Buttons.rjoy_right)
 			{
 				hex_cursor = (hex_cursor + 1) % mem_total;
 			}
-			if (buttons.ljoy_up || buttons.rjoy_up)
+			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
 			{
 				hex_cursor = (hex_cursor + mem_total - BYTES_PER_ROW) % mem_total;
 			}
-			if (buttons.ljoy_down || buttons.rjoy_down)
+			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
 			{
 				hex_cursor = (hex_cursor + BYTES_PER_ROW) % mem_total;
 			}

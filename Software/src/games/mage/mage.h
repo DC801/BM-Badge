@@ -4,8 +4,6 @@
 #include "common.h"
 #include "entity.h"
 
-int main();
-
 typedef struct {
     uint32_t *mapCount;
     uint32_t *mapOffsets;
@@ -27,7 +25,7 @@ typedef struct {
     uint32_t *imageLengths;
 } MageDataMemoryAddresses;
 
-typedef struct {
+/*typedef struct {
     char *name;
     uint16_t *tileWidth;
     uint16_t *tileHeight;
@@ -38,7 +36,7 @@ typedef struct {
     uint16_t *entityCount;
     uint16_t *entityGlobalIds;
     uint32_t startOfLayers;
-} MageMap;
+} MageMap;*/
 
 typedef struct {
     uint16_t tileId;
@@ -46,7 +44,7 @@ typedef struct {
     uint8_t flags;
 } MageTile;
 
-typedef struct {
+/*typedef struct {
     char *name;
     uint16_t *imageIndex;
     uint16_t *imageWidth;
@@ -56,7 +54,7 @@ typedef struct {
     uint16_t *cols;
     uint16_t *rows;
     uint32_t startOfTiles;
-} MageTileset;
+} MageTileset;*/
 
 typedef struct {
     uint16_t tileIndex;
@@ -112,7 +110,7 @@ typedef struct {
 } MageImage;
 
 typedef struct {
-    MageTileset *tileset;
+    // MageTileset *tileset;
     MageEntityType *entityType;
     MageAnimation *animation;
     MageAnimationFrame *animationFrame;
@@ -120,15 +118,16 @@ typedef struct {
     uint8_t *renderFlags;
 } MageEntityRenderableData;
 
-int MAGE(void);
-void get_renderable_data_from_entity(
-	MageEntity *entity,
-	MageEntityRenderableData *renderableData
-);
-
 extern MageDataMemoryAddresses dataMemoryAddresses;
 extern MageEntity *playerEntity;
 extern MageEntityRenderableData renderableEntityData;
 extern Point cameraPosition;
+
+void MAGE(void);
+
+void get_renderable_data_from_entity(
+	MageEntity *entity,
+	MageEntityRenderableData *renderableData
+);
 
 #endif //SOFTWARE_MAGE_H

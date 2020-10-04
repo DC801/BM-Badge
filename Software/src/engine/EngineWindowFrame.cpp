@@ -1,4 +1,5 @@
 #include "EngineWindowFrame.h"
+#include "EnginePanic.h"
 
 SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
@@ -18,30 +19,34 @@ void EngineWindowFrameInit()
 {
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		exit(1);
+		ENGINE_PANIC("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
+
 	frameSurface = IMG_Load("MAGE/window_frame.png");
+
 	if (!frameSurface)
 	{
-		printf("IMG_Load: %s\n", IMG_GetError());
-		exit(1);
+		ENGINE_PANIC("Failed to load Window Frame\nIMG_Load: %s\n", IMG_GetError());
 	}
+
 	frameButtonSurface = IMG_Load("MAGE/window_frame-button.png");
+
 	if (!frameButtonSurface)
 	{
-		printf("IMG_Load: %s\n", IMG_GetError());
-		exit(1);
+		ENGINE_PANIC("Failed to load Window Frame Button\nIMG_Load: %s\n", IMG_GetError());
 	}
+
 	frameLEDSurface = IMG_Load("MAGE/window_frame-led.png");
+
 	if (!frameLEDSurface)
 	{
-		printf("IMG_Load: %s\n", IMG_GetError());
-		exit(1);
+		ENGINE_PANIC("Failed to load Window Frame LED\nIMG_Load: %s\n", IMG_GetError());
 	}
+
 	//Create window
 	SCREEN_WIDTH = frameSurface->w * SCREEN_MULTIPLIER;
 	SCREEN_HEIGHT = frameSurface->h * SCREEN_MULTIPLIER;
+
 	SDL_CreateWindowAndRenderer(
 		SCREEN_WIDTH,
 		SCREEN_HEIGHT,
@@ -49,19 +54,20 @@ void EngineWindowFrameInit()
 		&window,
 		&renderer
 	);
+
 	if(window == nullptr)
 	{
-		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		exit(1);
+		ENGINE_PANIC("Failed to create SDL Window\nSDL_Error: %s\n", SDL_GetError());
 	}
-	else
-	{
-		SDL_RenderSetLogicalSize(renderer, frameSurface->w, frameSurface->h);
-	}
+
+	SDL_RenderSetLogicalSize(renderer, frameSurface->w, frameSurface->h);
+
 	frameTexture = SDL_CreateTextureFromSurface(renderer, frameSurface);
 	frameButtonTexture = SDL_CreateTextureFromSurface(renderer, frameButtonSurface);
 	frameLEDTexture = SDL_CreateTextureFromSurface(renderer, frameLEDSurface);
+
 	SDL_SetTextureBlendMode(frameLEDTexture, SDL_BLENDMODE_BLEND);
+
 	gameViewportTexture = SDL_CreateTexture(
 		renderer,
 		SDL_PIXELFORMAT_RGB565,
@@ -222,10 +228,16 @@ void EngineWindowFrameDestroy()
 	frameTexture = nullptr;
 	SDL_DestroyTexture(frameButtonTexture);
 	frameButtonTexture = nullptr;
+	SDL_FreeSurface(frameButtonSurface);
+	frameButtonSurface = nullptr;
 	SDL_DestroyTexture(frameLEDTexture);
 	frameLEDTexture = nullptr;
+	SDL_FreeSurface(frameLEDSurface);
+	frameLEDSurface = nullptr;
 	SDL_FreeSurface(frameSurface);
 	frameSurface = nullptr;
+	SDL_DestroyRenderer(renderer);
+	renderer = nullptr;
 	SDL_DestroyWindow(window);
 	window = nullptr;
 }

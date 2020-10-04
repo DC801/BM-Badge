@@ -33,8 +33,8 @@ typedef struct {
 	bool hax;
 } ButtonStates;
 
-extern ButtonStates buttons;
-extern ButtonStates activated;
+extern ButtonStates EngineInput_Buttons;
+extern ButtonStates EngineInput_Activated;
 extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
 void EngineHandleInput();
