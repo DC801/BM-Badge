@@ -41,6 +41,8 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define COLOR_PINK        	0xFB56
 #define COLOR_NEONPURPLE	0xFD5F
 
+#define COLOR_BSOD			0x03DA
+
 typedef struct {
 	int16_t xs, ys, xe, ye;
 } area_t;

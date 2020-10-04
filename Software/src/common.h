@@ -143,7 +143,4 @@ typedef enum{
 #include "../fonts/practical8pt7b.h"
 #include "../fonts/SFAlienEncounters5pt7b.h"
 
-#define min(A,B) ((A)<(B)?(A):(B))
-#define max(A,B) ((A)>(B)?(A):(B))
-
 #endif /* SYSTEM_H_ */

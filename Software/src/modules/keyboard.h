@@ -1,6 +1,10 @@
 #ifndef MODULE_KEYBOARD_H
 #define MODULE_KEYBOARD_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // 27 keys
 // Bit position of the key within the key state array
 typedef enum
@@ -39,6 +43,11 @@ typedef void (*keyboard_evt_handler_t)(uint32_t keyboard_mask);
 
 void keyboard_init(void);
 int keyboard_key_is_down(KEYBOARD_KEY key);
+void keyboard_get_mask(uint32_t *mask);
 void keyboard_register_callback(keyboard_evt_handler_t handler);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

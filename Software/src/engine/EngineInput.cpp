@@ -2,67 +2,73 @@
 
 bool running = true;
 
-ButtonStates buttons = {};
-ButtonStates activated = {};
+ButtonStates EngineInput_Buttons = {};
+ButtonStates EngineInput_Activated = {};
 bool *buttonBoolPointerArray[] = {
-	&buttons.mem0,
-	&buttons.mem1,
-	&buttons.mem2,
-	&buttons.mem3,
-	&buttons.bit_128,
-	&buttons.bit_64,
-	&buttons.bit_32,
-	&buttons.bit_16,
-	&buttons.bit_8,
-	&buttons.bit_4,
-	&buttons.bit_2,
-	&buttons.bit_1,
-	&buttons.op_xor,
-	&buttons.op_add,
-	&buttons.op_sub,
-	&buttons.op_page,
-	&buttons.ljoy_center,
-	&buttons.ljoy_left,
-	&buttons.ljoy_down,
-	&buttons.ljoy_up,
-	&buttons.ljoy_right,
-	&buttons.rjoy_center,
-	&buttons.rjoy_left,
-	&buttons.rjoy_down,
-	&buttons.rjoy_up,
-	&buttons.rjoy_right,
-	&buttons.hax,
+	&EngineInput_Buttons.mem0,
+	&EngineInput_Buttons.mem1,
+	&EngineInput_Buttons.mem2,
+	&EngineInput_Buttons.mem3,
+	&EngineInput_Buttons.bit_128,
+	&EngineInput_Buttons.bit_64,
+	&EngineInput_Buttons.bit_32,
+	&EngineInput_Buttons.bit_16,
+	&EngineInput_Buttons.bit_8,
+	&EngineInput_Buttons.bit_4,
+	&EngineInput_Buttons.bit_2,
+	&EngineInput_Buttons.bit_1,
+	&EngineInput_Buttons.op_xor,
+	&EngineInput_Buttons.op_add,
+	&EngineInput_Buttons.op_sub,
+	&EngineInput_Buttons.op_page,
+	&EngineInput_Buttons.ljoy_center,
+	&EngineInput_Buttons.ljoy_left,
+	&EngineInput_Buttons.ljoy_down,
+	&EngineInput_Buttons.ljoy_up,
+	&EngineInput_Buttons.ljoy_right,
+	&EngineInput_Buttons.rjoy_center,
+	&EngineInput_Buttons.rjoy_left,
+	&EngineInput_Buttons.rjoy_down,
+	&EngineInput_Buttons.rjoy_up,
+	&EngineInput_Buttons.rjoy_right,
+	&EngineInput_Buttons.hax,
 };
 
 #ifdef DC801_DESKTOP
+
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 {
-	SDL_PumpEvents();
-	const uint8_t *keys = SDL_GetKeyboardState(nullptr);
-	SDL_Event e;
 	if (application_quit != 0)
 	{
 		running = false;
+		return;
 	}
+
+	SDL_PumpEvents();
+
+	const uint8_t *keys = SDL_GetKeyboardState(nullptr);
+	SDL_Event e;
+
 	while (SDL_PollEvent(&e))
 	{
 		if (e.type == SDL_QUIT)
 		{
 			running = false;
-			break;
+			return;
 		}
+
 		if (e.type == SDL_KEYDOWN)
 		{
-			if (
-				e.key.keysym.sym == SDLK_ESCAPE
-				)
+			if (e.key.keysym.sym == SDLK_ESCAPE)
 			{
 				running = false;
-				break;
+				return;
 			}
 		}
 	}
+
 	uint32_t newValue = 0x00000000;
+
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_O] << KEYBOARD_KEY_MEM0;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_P] << KEYBOARD_KEY_MEM1;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_LEFTBRACKET] << KEYBOARD_KEY_MEM2;
@@ -90,87 +96,94 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_W] << KEYBOARD_KEY_RJOY_UP;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_D] << KEYBOARD_KEY_RJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_TAB] << KEYBOARD_KEY_HAX;
+
 	*keyboardBitmask = newValue;
 	// printf("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
 }
+
 #endif
 
-void EngineSetHardwareBitmaskToButtonStates (
-	uint32_t keyboardBitmask
-)
+void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 {
 	uint32_t oneBit = 0x80000000;
-	if(needs_endian_correction) {
+
+	if(needs_endian_correction)
+	{
 		oneBit = 0x00000001;
 	}
-	memcpy(&activated, &buttons, sizeof(ButtonStates));
-	buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
-	buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
-	buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
-	buttons.mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
-	buttons.bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
-	buttons.bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
-	buttons.bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
-	buttons.bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
-	buttons.bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
-	buttons.bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
-	buttons.bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
-	buttons.bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
-	buttons.op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
-	buttons.op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
-	buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
-	buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
-	buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
-	buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
-	buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
-	buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
-	buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
-	buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
-	buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
-	buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
-	buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
-	buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
-	buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
 
-	activated.mem0 = !activated.mem0 && buttons.mem0;
-	activated.mem1 = !activated.mem1 && buttons.mem1;
-	activated.mem2 = !activated.mem2 && buttons.mem2;
-	activated.mem3 = !activated.mem3 && buttons.mem3;
-	activated.bit_128 = !activated.bit_128 && buttons.bit_128;
-	activated.bit_64 = !activated.bit_64 && buttons.bit_64;
-	activated.bit_32 = !activated.bit_32 && buttons.bit_32;
-	activated.bit_16 = !activated.bit_16 && buttons.bit_16;
-	activated.bit_8 = !activated.bit_8 && buttons.bit_8;
-	activated.bit_4 = !activated.bit_4 && buttons.bit_4;
-	activated.bit_2 = !activated.bit_2 && buttons.bit_2;
-	activated.bit_1 = !activated.bit_1 && buttons.bit_1;
-	activated.op_xor = !activated.op_xor && buttons.op_xor;
-	activated.op_add = !activated.op_add && buttons.op_add;
-	activated.op_sub = !activated.op_sub && buttons.op_sub;
-	activated.op_page = !activated.op_page && buttons.op_page;
-	activated.ljoy_center = !activated.ljoy_center && buttons.ljoy_center;
-	activated.ljoy_left = !activated.ljoy_left && buttons.ljoy_left;
-	activated.ljoy_down = !activated.ljoy_down && buttons.ljoy_down;
-	activated.ljoy_up = !activated.ljoy_up && buttons.ljoy_up;
-	activated.ljoy_right = !activated.ljoy_right && buttons.ljoy_right;
-	activated.rjoy_center = !activated.rjoy_center && buttons.rjoy_center;
-	activated.rjoy_left = !activated.rjoy_left && buttons.rjoy_left;
-	activated.rjoy_down = !activated.rjoy_down && buttons.rjoy_down;
-	activated.rjoy_up = !activated.rjoy_up && buttons.rjoy_up;
-	activated.rjoy_right = !activated.rjoy_right && buttons.rjoy_right;
-	activated.hax = !activated.hax && buttons.hax;
+	memcpy(&EngineInput_Activated, &EngineInput_Buttons, sizeof(ButtonStates));
+
+	EngineInput_Buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
+	EngineInput_Buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
+	EngineInput_Buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
+	EngineInput_Buttons.mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
+	EngineInput_Buttons.bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
+	EngineInput_Buttons.bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
+	EngineInput_Buttons.bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
+	EngineInput_Buttons.bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
+	EngineInput_Buttons.bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
+	EngineInput_Buttons.bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
+	EngineInput_Buttons.bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
+	EngineInput_Buttons.bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
+	EngineInput_Buttons.op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
+	EngineInput_Buttons.op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
+	EngineInput_Buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
+	EngineInput_Buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
+	EngineInput_Buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
+
+	EngineInput_Activated.mem0 = !EngineInput_Activated.mem0 && EngineInput_Buttons.mem0;
+	EngineInput_Activated.mem1 = !EngineInput_Activated.mem1 && EngineInput_Buttons.mem1;
+	EngineInput_Activated.mem2 = !EngineInput_Activated.mem2 && EngineInput_Buttons.mem2;
+	EngineInput_Activated.mem3 = !EngineInput_Activated.mem3 && EngineInput_Buttons.mem3;
+	EngineInput_Activated.bit_128 = !EngineInput_Activated.bit_128 && EngineInput_Buttons.bit_128;
+	EngineInput_Activated.bit_64 = !EngineInput_Activated.bit_64 && EngineInput_Buttons.bit_64;
+	EngineInput_Activated.bit_32 = !EngineInput_Activated.bit_32 && EngineInput_Buttons.bit_32;
+	EngineInput_Activated.bit_16 = !EngineInput_Activated.bit_16 && EngineInput_Buttons.bit_16;
+	EngineInput_Activated.bit_8 = !EngineInput_Activated.bit_8 && EngineInput_Buttons.bit_8;
+	EngineInput_Activated.bit_4 = !EngineInput_Activated.bit_4 && EngineInput_Buttons.bit_4;
+	EngineInput_Activated.bit_2 = !EngineInput_Activated.bit_2 && EngineInput_Buttons.bit_2;
+	EngineInput_Activated.bit_1 = !EngineInput_Activated.bit_1 && EngineInput_Buttons.bit_1;
+	EngineInput_Activated.op_xor = !EngineInput_Activated.op_xor && EngineInput_Buttons.op_xor;
+	EngineInput_Activated.op_add = !EngineInput_Activated.op_add && EngineInput_Buttons.op_add;
+	EngineInput_Activated.op_sub = !EngineInput_Activated.op_sub && EngineInput_Buttons.op_sub;
+	EngineInput_Activated.op_page = !EngineInput_Activated.op_page && EngineInput_Buttons.op_page;
+	EngineInput_Activated.ljoy_center = !EngineInput_Activated.ljoy_center && EngineInput_Buttons.ljoy_center;
+	EngineInput_Activated.ljoy_left = !EngineInput_Activated.ljoy_left && EngineInput_Buttons.ljoy_left;
+	EngineInput_Activated.ljoy_down = !EngineInput_Activated.ljoy_down && EngineInput_Buttons.ljoy_down;
+	EngineInput_Activated.ljoy_up = !EngineInput_Activated.ljoy_up && EngineInput_Buttons.ljoy_up;
+	EngineInput_Activated.ljoy_right = !EngineInput_Activated.ljoy_right && EngineInput_Buttons.ljoy_right;
+	EngineInput_Activated.rjoy_center = !EngineInput_Activated.rjoy_center && EngineInput_Buttons.rjoy_center;
+	EngineInput_Activated.rjoy_left = !EngineInput_Activated.rjoy_left && EngineInput_Buttons.rjoy_left;
+	EngineInput_Activated.rjoy_down = !EngineInput_Activated.rjoy_down && EngineInput_Buttons.rjoy_down;
+	EngineInput_Activated.rjoy_up = !EngineInput_Activated.rjoy_up && EngineInput_Buttons.rjoy_up;
+	EngineInput_Activated.rjoy_right = !EngineInput_Activated.rjoy_right && EngineInput_Buttons.rjoy_right;
+	EngineInput_Activated.hax = !EngineInput_Activated.hax && EngineInput_Buttons.hax;
 }
 
 void EngineHandleInput ()
 {
 	uint32_t keyboardBitmask = 0x00000000;
-	#ifdef DC801_DESKTOP
+
+#ifdef DC801_DESKTOP
 	EngineGetDesktopInputState(&keyboardBitmask);
-	#endif
-	#ifdef DC801_EMBEDDED
+#endif
+
+#ifdef DC801_EMBEDDED
 	app_usbd_event_queue_process();
-	// ??? EngineGetEmbeddedInputState(&keyboardBitmask);
-	#endif
+	keyboard_get_mask(&keyboardBitmask);
+#endif
+
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 }
 

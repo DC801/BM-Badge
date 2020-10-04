@@ -39,8 +39,10 @@ FrameBuffer::FrameBuffer() {}
 FrameBuffer::~FrameBuffer() {}
 
 void FrameBuffer::clearScreen(uint16_t color) {
-	for (int i=0; i<FRAMEBUFFER_SIZE; ++i)
+	for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
+	{
 		frame[i] = color;
+	}
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
@@ -775,7 +777,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 
 	GFXglyph glyph;
 
-	uint8_t c;
+	uint8_t c = *text;
 	uint8_t first = font.first;
 	uint8_t last = font.last;
 
@@ -792,7 +794,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 	int16_t ya = font.yAdvance;
 
 	// Walk the string
-	while (c = *text++)
+	do
 	{
 		if ((c != '\n') && (c != '\r'))
 		{
@@ -848,7 +850,10 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 			x = 0;
 			y += ya;
 		}
+
+		c = *text++;
 	}
+	while (c);
 
 	if (maxx >= minx)
 	{
@@ -898,7 +903,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 
 void FrameBuffer::blt() {
 
-	for (int i=0; i< FRAMEBUFFER_SIZE; ++i)
+	for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
 	{
 		frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
 	}
