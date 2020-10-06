@@ -287,34 +287,34 @@ void mage_game_loop()
 	else
 	{
 		mage_canvas->clearScreen(RGB(0,0,255));
-		// apply_input_to_player(data);
-
-		/* if (*currentMap.layerCount > 1)
-		{
-			for (
-				uint8_t layerIndex = 0;
-				layerIndex < *currentMap.layerCount -1;
-				layerIndex++
-			)
-			{
-				draw_map(layerIndex);
-				MageROM->DrawMap(layerIndex);
-			}
-		} else {
-			draw_map(0);
-			MageROM->DrawMap(0);
-		} */
-
-		/*update_entities();
-
-		draw_entities();*/
+		apply_input_to_player(data);
 
 		uint8_t layerCount = MageROM->Map().LayerCount();
 
 		if (layerCount > 1)
 		{
-			// draw_map(*currentMap.layerCount - 1);
-			// MageROM->DrawMap(layerCount - 1);
+			for (
+				uint8_t layerIndex = 0;
+				layerIndex < (layerCount - 1);
+				layerIndex++
+			)
+			{
+				draw_map(layerIndex);
+				MageROM->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+			}
+		}
+		else
+		{
+			MageROM->DrawMap(0, cameraPosition.x, cameraPosition.y);
+		}
+
+		/*update_entities();
+
+		draw_entities();*/
+
+		if (layerCount > 1)
+		{
+			MageROM->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
 		}
 	}
 
@@ -341,9 +341,6 @@ void MAGE()
 	// Construct MageRom object, loading all headers
 	MageROM = std::make_unique<MageRom>();
 
-	// Close rom and any open files
-	EngineROM_Deinit();
-
 	// load_all_tilesets();
 	// correct_animation_endians();
 	// correct_entity_type_endians();
@@ -361,6 +358,9 @@ void MAGE()
 		apply_input_to_game();
 		mage_game_loop();
 	}
+
+	// Close rom and any open files
+	EngineROM_Deinit();
 
 	return;
 }

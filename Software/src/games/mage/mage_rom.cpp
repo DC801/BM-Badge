@@ -405,6 +405,18 @@ uint32_t MageTileset::Size() const
 	return 16 + (sizeof(uint16_t) * 7) + (rows * cols);
 }
 
+bool MageTileset::Valid() const
+{
+	if (imageWidth < 1) return false;
+	if (imageHeight < 1) return false;
+	if (tileWidth < 1) return false;
+	if (tileHeight < 1) return false;
+	if (cols < 1) return false;
+	if (rows < 1) return false;
+
+	return true;
+}
+
 #pragma endregion
 
 #pragma region MageRom
@@ -490,75 +502,207 @@ void MageRom::LoadMap()
 	map = MageMap(mapHeader.offset(currentMapIndex));
 }
 
-void MageRom::DrawMap(int32_t camera_x, int32_t camera_y) const
+void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 {
 	uint32_t tilesPerLayer = map.Width() * map.Height();
 
-	for (uint8_t layer = 0; layer < map.LayerCount(); layer++)
+	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
-		for (uint32_t i = 0; i < tilesPerLayer; i++)
+		int32_t x = (int32_t)((map.TileWidth() * (i % map.Width())) - camera_x);
+		int32_t y = (int32_t)((map.TileHeight() * (i / map.Width())) - camera_y);
+
+		if ((x < (-map.TileWidth()) ||
+			(x > WIDTH) ||
+			(y < (-map.TileHeight())) ||
+			(y > HEIGHT)))
 		{
-			int32_t x = (int32_t)((map.TileWidth() * (i % map.Width())) - camera_x);
-			int32_t y = (int32_t)((map.TileHeight() * (i / map.Width())) - camera_y);
+			continue;
+		}
 
-			if ((x < (-map.TileWidth()) ||
-				(x > WIDTH) ||
-				(y < (-map.TileHeight())) ||
-				(y > HEIGHT)))
+		uint32_t address = map.LayerOffset(layer);
+
+		if (address == 0)
+		{
+			continue;
+		}
+
+
+		uint16_t tileId = 0;
+		uint8_t tilesetId = 0;
+		uint8_t flags = 0;
+
+		address += i * (sizeof(tileId) + sizeof(tilesetId) + sizeof(flags));
+
+		if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
+		{
+			ENGINE_PANIC("Failed to fetch map layer tile info");
+		}
+
+		convert_endian_u2(&tileId);
+		address += sizeof(tileId);
+
+		if (tileId == 0)
+		{
+			continue;
+		}
+
+		tileId -= 1;
+
+		if (EngineROM_Read(address, sizeof(tilesetId), &tilesetId) != sizeof(tilesetId))
+		{
+			ENGINE_PANIC("Failed to fetch map layer tile info");
+		}
+
+		address += sizeof(tilesetId);
+
+		if (EngineROM_Read(address, sizeof(flags), &flags) != sizeof(flags))
+		{
+			ENGINE_PANIC("Failed to fetch map layer tile info");
+		}
+
+		const MageTileset &tileset = Tile(tilesetId);
+
+		if (tileset.Valid() != true)
+		{
+			continue;
+		}
+
+		address = imageHeader.offset(tileset.ImageIndex());
+
+		canvas.drawChunkWithFlags(
+			address,
+			x,
+			y,
+			tileset.TileWidth(),
+			tileset.TileHeight(),
+			(tileId % tileset.Cols()) * tileset.TileWidth(),
+			(tileId / tileset.Cols()) * tileset.TileHeight(),
+			tileset.ImageWidth(),
+			0x0020,
+			flags
+		);
+
+		/*address = imageHeader.offset(tileset.ImageIndex());
+		uint32_t imageLength = imageHeader.length(tileset.ImageIndex());
+
+		if ((address == 0) || (imageLength == 0))
+		{
+			continue;
+		}
+
+		#define IMAGEBUF_SIZE 256 / sizeof(uint16_t)
+		uint32_t size = IMAGEBUF_SIZE;
+		uint32_t xSections = 1;
+
+		if (size > tileset.ImageWidth())
+		{
+			size = tileset.ImageWidth();
+		}
+		else
+		{
+			// 512 / 128 = 4 sections
+			xSections = tileset.ImageWidth() / size;
+		}
+
+		for (uint32_t i = 0; i < tileset.ImageHeight(); i++)
+		{
+			for (uint32_t j = 0; j < xSections; j++)
 			{
-				continue;
+				uint16_t buffer[size];
+
+				if (EngineROM_Read(address, size * sizeof(uint16_t), (uint8_t *)buffer) != size * sizeof(uint16_t))
+				{
+					ENGINE_PANIC("Failed to fetch tileset image");
+				}
+
+				convert_endian_u2_buffer(buffer, 128);
+
+				canvas.drawImageWithFlags(
+					x,
+					y,
+					size,
+					1,
+					buffer,
+					(tileId % tileset.Cols()) * size,
+					(tileId / tileset.Cols()),
+					0,
+					0x0020,
+					flags
+				);
+
+				x += size;
+				address += size * sizeof(uint16_t);
 			}
 
-			uint32_t address = map.LayerOffset(layer);
+			x = 0;
+			y += 1;
+		}*/
 
-			uint16_t tileId = 0;
-			uint8_t tilesetId = 0;
-			uint8_t flags = 0;
+		//return;
 
-			if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
+		#undef IMAGEBUF_SIZE
+
+
+
+
+
+
+
+		/*uint32_t yAdvance = 256 / (tileset.TileWidth() * sizeof(uint16_t));
+		int32_t yCurrent = y;
+		uint32_t length = 0;
+		uint32_t read = 256;
+
+		while (yCurrent < (y + tileset.TileHeight()))
+		{
+			uint16_t buffer[128];
+
+			if (EngineROM_Read(address, read, (uint8_t *)buffer) != read)
 			{
-				ENGINE_PANIC("Failed to fetch map layer tile info");
+				ENGINE_PANIC("Failed to fetch tileset image");
 			}
 
-			convert_endian_u2(&tileId);
-			address += sizeof(tileId);
+			convert_endian_u2_buffer(buffer, 128);
 
-			if (tileId == 0)
-			{
-				continue;
-			}
-
-			tileId -= 1;
-
-			if (EngineROM_Read(address, sizeof(tilesetId), &tilesetId) != sizeof(tilesetId))
-			{
-				ENGINE_PANIC("Failed to fetch map layer tile info");
-			}
-
-			address += sizeof(tilesetId);
-
-			if (EngineROM_Read(address, sizeof(flags), &flags) != sizeof(flags))
-			{
-				ENGINE_PANIC("Failed to fetch map layer tile info");
-			}
-
-			const MageTileset &tileset = Tile(tilesetId);
-
-			/*canvas.drawImageWithFlags(
+			canvas.drawImageWithFlags(
 				x,
-				y,
+				yCurrent,
 				tileset.TileWidth(),
-				tileset.TileHeight(),
-				// TODO: Implement me
-				// Get Image Chunk by index and offset
-				get_image_by_index(tileset.ImageIndex()),
+				yAdvance,
+				buffer,
 				(tileId % tileset.Cols()) * tileset.TileWidth(),
-				(tileId / tileset.Cols()) * tileset.TileHeight(),
-				tileset.ImageWidth,
+				(tileId / tileset.Cols()) * yAdvance,
+				tileset.TileWidth(),
 				0x0020,
 				flags
-			);*/
-		}
+			);
+
+			length += 256;
+			address += 256;
+			yCurrent += yAdvance;
+
+			if (length > imageLength)
+			{
+				read = (length - imageLength);
+			}
+
+			break;
+		}*/
+
+		/*canvas.drawImageWithFlags(
+			x,
+			y,
+			tileset.TileWidth(),
+			tileset.TileHeight(),
+			// TODO: Implement me
+			// Get Image Chunk by index and offset
+			get_image_by_index(tileset.ImageIndex()),
+			(tileId % tileset.Cols()) * tileset.TileWidth(),
+			(tileId / tileset.Cols()) * tileset.TileHeight(),
+			tileset.ImageWidth,
+			0x0020,
+			flags
+		);*/
 	}
 }
 

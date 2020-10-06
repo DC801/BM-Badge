@@ -103,6 +103,7 @@ public:
 	uint16_t Rows() const;
 	uint8_t Tile(uint32_t index) const;
 	uint32_t Size() const;
+	bool Valid() const;
 };
 
 class MageRom
@@ -127,7 +128,7 @@ public:
 	const MageTileset& Tile(uint32_t index) const;
 	const MageMap& Map() const;
 	void LoadMap();
-	void DrawMap(int32_t camera_x, int32_t camera_y) const;
+	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 };
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
