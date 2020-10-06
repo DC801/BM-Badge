@@ -44,7 +44,7 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define COLOR_BSOD			0x03DA
 
 typedef struct {
-	int16_t xs, ys, xe, ye;
+    int16_t xs, ys, xe, ye;
 } area_t;
 
 typedef struct {
@@ -79,15 +79,28 @@ public:
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color);
 
-#define FLIPPED_HORIZONTALLY_FLAG 0x04;
-#define FLIPPED_VERTICALLY_FLAG   0x02;
-#define FLIPPED_DIAGONALLY_FLAG   0x01;
+#define FLIPPED_HORIZONTALLY_FLAG 0x04
+#define FLIPPED_VERTICALLY_FLAG   0x02
+#define FLIPPED_DIAGONALLY_FLAG   0x01
     void drawImageWithFlags(
         int x,
         int y,
         int w,
         int h,
         const uint16_t *data,
+        int fx,
+        int fy,
+        int pitch,
+        uint16_t tansparent_color,
+        uint8_t flags
+    );
+
+    void drawChunkWithFlags(
+        uint32_t address,
+        int x,
+        int y,
+        int w,
+        int h,
         int fx,
         int fy,
         int pitch,
