@@ -1,5 +1,5 @@
 #include "mage_input.h"
-#include "../../engine/FrameBuffer.h"
+#include "FrameBuffer.h"
 
 void apply_input_to_game()
 {
@@ -36,6 +36,6 @@ void apply_input_to_player (uint8_t *data)
 	{
 		playerEntity->currentAnimation = 0;
 	}
-	cameraPosition.x = playerEntity->x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
-	cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
+	// cameraPosition.x = playerEntity->x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
+	// cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
 }
