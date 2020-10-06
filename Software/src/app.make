@@ -44,7 +44,7 @@ ifdef DESKTOP
     ifeq ($(OS),Windows_NT)
         # Placeholder
     else
-        APP_INCLUDES += $(shell pkg-config --cflags-only-I sdl2)
+        APP_INCLUDES += $(shell pkg-config --cflags-only-I sdl2) -I/usr/include
         APP_SRCS += $(SRC_ROOT)/engine/EngineWindowFrame.cpp
     endif
 endif

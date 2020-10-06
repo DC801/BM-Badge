@@ -86,7 +86,7 @@ extern "C" {
 #ifdef DC801_DESKTOP
 	#include <fcntl.h>
 	#include "sdk_shim.h"
-	#include <SDL2/SDL.h>
+	#include <SDL.h>
 
 	#define NRF_LOG_RAW_INFO printf
 #endif
