@@ -8,7 +8,7 @@
 #include "adafruit/gfxfont.h"
 #include "shim_timer.h"
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))

@@ -3,10 +3,10 @@
 
 #include "mage.h"
 #include "mage_rom.h"
-#include "../../modules/led.h"
-#include "../../../fonts/Monaco9.h"
-#include "../../../fonts/DeterminationMono.h"
-#include "../../../fonts/Scientifica.h"
+#include "modules/led.h"
+#include "fonts/Monaco9.h"
+#include "fonts/DeterminationMono.h"
+#include "fonts/Scientifica.h"
 #include "FrameBuffer.h"
 
 #define BYTES_PER_ROW 16

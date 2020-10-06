@@ -6,7 +6,7 @@
 
 #ifdef DC801_DESKTOP
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 AudioPlayer audio;
 
