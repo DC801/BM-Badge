@@ -62,7 +62,9 @@ CFLAGS += -DDC801_EMBEDDED --short-enums
 # C++ flags common to all targets
 CXXFLAGS = -felide-constructors \
 	-fno-exceptions \
-	-fno-rtti
+	-fno-rtti \
+	-stdlib=libc++
+
 else
 CFLAGS += -DDC801_DESKTOP -fno-short-enums -D_DEFAULT_SOURCE
 endif
