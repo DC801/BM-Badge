@@ -5,7 +5,7 @@ Want to get started developing for the DC801 badge?  Read through these instruct
 
 ## Assumptions
 
-This guide is written assuming you will be using Ubuntu 20.04.1.  It'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
+This guide is written assuming you will be using Ubuntu 20.04.1.  I'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
 
 Any line starting with $ is a command you should type into a terminal
 
@@ -327,3 +327,16 @@ J-Link>
 ```
 
 Now go back to VSCode and do `Run` -> `Start Debugging` or hit `F5`. You're debugging on hardware now!
+
+# Optional - Install Tiled
+Tiled is being used to edit the game map & character files. If you want to edit these, you'll need to install tiled. (The `wget` isn't grabbing the latest. If you want, download it manually to get the newest version of tiled)
+```
+$ cd ~/dev/installer
+$ wget https://github.com/bjorn/tiled/releases/download/v1.4.2/Tiled-1.4.2-x86_64.AppImage
+$ chmod +x Tiled-*-x86_64.AppImage
+$ sudo mkdir -p /usr/share/tiled/
+$ sudo mv Tiled-*-x86_64.AppImage /usr/share/tiled/
+$ sudo ln -s /usr/share/tiled/Tiled-*-x86_64.AppImage /usr/bin/tiled
+```
+
+You can now run `tiled` in the command line to start Tiled.
