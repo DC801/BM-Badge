@@ -5,7 +5,7 @@ Want to get started developing for the DC801 badge?  Read through these instruct
 
 ## Assumptions
 
-This guide is written assuming you will be using Ubuntu 20.04.1.  I'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
+This guide is written assuming you will be using Ubuntu 20.04.1.  It'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
 
 Any line starting with $ is a command you should type into a terminal
 
