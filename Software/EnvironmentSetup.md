@@ -45,7 +45,7 @@ If you're using a distro other than ubuntu, you'll need to figure out how to ins
  ```
  $ sudo apt update
  $ sudo apt upgrade -y
- $ sudo apt install -y build-essential make git libsdl2-2.0-0 libsdl2-image-2.0-0 libsdl2-dev libsdl2-image-dev libcurses libncurses-dev
+ $ sudo apt install -y build-essential make git libsdl2-2.0-0 libsdl2-image-2.0-0 libsdl2-dev libsdl2-image-dev libncurses5 libncurses-dev
  ```
  
  Verify these were installed:
