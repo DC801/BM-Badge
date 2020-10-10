@@ -5,7 +5,7 @@ Want to get started developing for the DC801 badge?  Read through these instruct
 
 ## Assumptions
 
-This guide is written assuming you will be using Ubuntu 16.04.2.  I'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
+This guide is written assuming you will be using Ubuntu 20.04.1.  I'll probably work with other versions of Linux, and possibly Windows, but you'll have to figure out the differences.  
 
 Any line starting with $ is a command you should type into a terminal
 
@@ -13,10 +13,10 @@ I've tried to note anything non-standard in this guide and to make it as easy as
 
 ## Software required
 
-- Nordic SDK version 13
+- Nordic SDK version 15.3.0
 - Nordic nrfjprog
 - J-Link segger tools
-- Eclipse
+- VSCode
 
 ## Hardware required
 
@@ -24,213 +24,306 @@ I've tried to note anything non-standard in this guide and to make it as easy as
 - Adapter for badge JTAG - ~$8 [Adafruit - cable](https://www.adafruit.com/product/1675) and [adapter](https://www.adafruit.com/product/2094)
 - A badge!
 
-In the near future we'll support upload of new images via serial UART, which means that unless you want to change out the bootloader you won't need a JTAG programmer.  JTAG is useful for debugging, however, and future badges will continue to make use of it, so we recommend that you pick one up.  The serial UART will require a serial port on your PC or a USB to serial adapter, and to solder onto a couple of pins on your badge.
-
+If you have the bootloader pre-installed, we also support upload of new images via USB, which means that unless you want to change out the badge code you won't need a JTAG programmer.  JTAG is useful for debugging, however, and future badges will continue to make use of it, so we recommend that you pick one up. 
 # Installation
 
-We're going to be using Eclipse and GCC to do our development.  There are other options out there, like Keil, but sticking with an open source stack means no pesky license fees and more flexibility.  Most of this install comes from [the Nordic Tutorial](https://devzone.nordicsemi.com/tutorials/7/)
+We're going to be using VSCode and GCC to do our development.  There are other options out there, like Keil or CLion, but sticking with an open source stack means no pesky license fees and more flexibility. In years past, we have used an Eclipse stack from [the Nordic Tutorial](https://devzone.nordicsemi.com/tutorials/7/), which still might work.
 
 ## Setup a dev directory structure
 
- Your structure can be whatever you want it to be, but this is how I do it, and you'll have less config steps to go through once you get the code if you copy me.
+Your structure is important for make, so try not to deviate from it. You can make it work with a different structure, but I suggest following ours.
 
  ```
+ $ mkdir -p ~/dev/
  $ mkdir -p ~/dev/installer
- $ mkdir -p ~/dev/bin
- $ mkdir -p ~/dev/nordic-sdk13
  ```
-
-## Configure your environment to add the new bin directory to your PATH
-
- Easiest way of doing this, assuming you are using bash, is:
  
- ```
- $ echo "PATH=\$PATH\$( find \$HOME/dev/bin -type d -printf \":%p\" )" >> ~/.bashrc 
- ```
+ ## Install dependancies
 
- You'll need to start a new terminal for this to take effect - log out and back in, or just launch a new terminal and close the old one.  It will automatically add any subdir to the path, which will be useful, below.
+If you're using a distro other than ubuntu, you'll need to figure out how to install the equivalent dependencies. 
+
+ ```
+ $ sudo apt update
+ $ sudo apt upgrade -y
+ $ sudo apt install -y build-essential make git libsdl2-2.0-0 libsdl2-image-2.0-0 libsdl2-dev libsdl2-image-dev libcurses libncurses-dev
+ ```
+ 
+ Verify these were installed:
+ 
+  ```
+ $ git --version
+git version 2.25.1
+ $ make --version
+GNU Make 4.2.1
+ ```
 
 ## ARM toolchain for GCC
 
- Luckily for us, there is a nice Ubuntu ppa that covers this.  It's pretty simple to get installed ([taken from launchpad](https://launchpad.net/~team-gcc-arm-embedded/+archive/ubuntu/ppa)):
+Unfortunately ARM is no longer supporting the PPA we used to use, so we get to install this manually.
+If the link in the wget below doesn't work, you can grab the latest from [ARM's website](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 
  ```
- $ sudo add-apt-repository ppa:team-gcc-arm-embedded/ppa
- $ sudo apt-get update
- $ sudo apt-get install gcc-arm-embedded
+ $ cd ~/dev/
+ $ wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+ $ tar -xvf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+ $ sudo mv gcc-arm-none-eabi-9-2020-q2-update /usr/share/
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc 
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-ar /usr/bin/arm-none-eabi-ar
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-nm /usr/bin/arm-none-eabi-nm
+ $ sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-strip /usr/bin/arm-none-eabi-strip
  ```
- 
- Step 3 is a 70mB download from a slow server, so go get yourself a beer - you deserve it!
 
- Make sure it works
+ Make sure it works:
 
  ```
  $ arm-none-eabi-gcc --version 
- arm-none-eabi-gcc (GNU Tools for ARM Embedded Processors 6-2017-q2-update) 6.3.1 20170215 (release) [ARM/embedded-6-branch revision 245512]
+ arm-none-eabi-gcc (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)
+ $ arm-none-eabi-gdb --version
+GNU gdb (GNU Arm Embedded Toolchain 9-2020-q2-update) 8.3.1.20191211-git
  ```
 
-## Build tools
+If you see the above, you've got it right.
 
- We need the build tools like make installed, so run:
-	
- ```
- $ sudo apt-get install build-essential checkinstall
- ```
+## Get the Nordic SDK 15
 
- After it completes, make should be installed on your system:
+ [Download from Nordic](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/)
+
+ Grab the zip file of your chosing - for this we're going with `nRF5_SDK_15.3.0_59ac345.zip` but that might change by the time you get there.
 
  ```
- $ make
- make: *** No targets specified and no makefile found.  Stop.
- ```
-
- You're rocking this install!
-
-## Get the Nordic SDK 13 
-
- [Download from Nordic](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v13.x.x/)
-
- Grab the zip file of your chosing - for this we're going with nRF5\_SDK\_13.0.0\_04a0bfd.zip but that might change by the time you get there.
-
- Save it to ~/dev/installer for safe keeping.
- 
- Unzip it with:
-
- ```
- $ cp ~/Downloads/nRF5_SDK_13*.zip ~/dev/installer/
- $ cd ~/dev/nordic-sdk13
- $ unzip ../installer/nRF5_SDK_13*.zip
+ $ cd ~/dev/installer/
+ $ wget http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.3.0_59ac345.zip
+ $ unzip nRF5_SDK_15.3.0_59ac345.zip
+ $ mv nRF5_SDK_*/ ../nordic-sdk15.3.0/
  ```
  Now you need to configure the SDK for the GCC compiler
 
- Edit the file ~/dev/nordic-sdk13/components/toolchain/gcc/Makefike.posix
+ Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefike.posix`
 
  It should read:
 
  ```
- GNU_INSTALL_ROOT := /usr
- GNU_VERSION := 6.3.1
- GNU_PREFIX := arm-none-eabi
+ GNU_INSTALL_ROOT ?= /usr/bin
+ GNU_VERSION ?= 9.3.1
+ GNU_PREFIX ?= arm-none-eabi
  ```
 
- _Note_: You'll find \^M at the end of the lines in the SDK.  This is due to DOS line endings being used.  UNIX does not use these, so you get control chars instead.  It's safe to delete these.  Beware that the \^M is actually a single char escape - if you paste in the two chars ^ and M you'll end up with a hard to track down error.  I recommend removing the \^M from any line you edit just to be on the safe side!
+ _Note_: You might find `\^M` at the end of the lines in the SDK.  This is due to DOS line endings being used.  UNIX does not use these, so you get control chars instead.  It's safe to delete these.  Beware that the `\^M` is actually a single char escape - if you paste in the two chars ^ and M you'll end up with a hard to track down error.  I recommend removing the `\^M` from any line you edit just to be on the safe side!
 
  Now we are going to test your install.  Do this before moving onto the next step, it'll make like easier.
 
  ```
- $ cd ~/dev/nordic-sdk13/examples/peripheral/blinky/pca10040/blank/armgcc/
+ $ cd ~/nordic-sdk15.3.0/examples/peripheral/blinky/pca10040/blank/armgcc
  $ make
  mkdir _build
- Compiling file: nrf_log_backend_serial.c
- Compiling file: nrf_log_frontend.c
- Compiling file: boards.c
- Compiling file: app_error.c
- Compiling file: app_error_weak.c
- Compiling file: app_scheduler.c
- Compiling file: app_timer.c
- Compiling file: app_util_platform.c
- Compiling file: hardfault_implementation.c
- Compiling file: nrf_assert.c
- Compiling file: nrf_strerror.c
- Compiling file: nrf_drv_clock.c
- Compiling file: nrf_drv_common.c
- Compiling file: nrf_drv_uart.c
- Compiling file: nrf_nvic.c
- Compiling file: nrf_soc.c
- Compiling file: main.c
- Compiling file: RTT_Syscalls_GCC.c
- Compiling file: SEGGER_RTT.c
- Compiling file: SEGGER_RTT_printf.c
- Assembling file: gcc_startup_nrf52.S
- Compiling file: system_nrf52.c
- Linking target: _build/nrf52832_xxaa.out
-
-    text	   data	    bss	    dec	    hex	filename
-    4728	    112	    372	   5212	   145c	_build/nrf52832_xxaa.out
-
- Preparing: _build/nrf52832_xxaa.hex
- Preparing: _build/nrf52832_xxaa.bin
+cd _build && mkdir nrf52832_xxaa
+Assembling file: gcc_startup_nrf52.S
+Compiling file: nrf_log_frontend.c
+Compiling file: nrf_log_str_formatter.c
+Compiling file: boards.c
+Compiling file: app_error.c
+Compiling file: app_error_handler_gcc.c
+Compiling file: app_error_weak.c
+Compiling file: app_util_platform.c
+Compiling file: nrf_assert.c
+Compiling file: nrf_atomic.c
+Compiling file: nrf_balloc.c
+Compiling file: nrf_fprintf.c
+Compiling file: nrf_fprintf_format.c
+Compiling file: nrf_memobj.c
+Compiling file: nrf_ringbuf.c
+Compiling file: nrf_strerror.c
+Compiling file: nrfx_atomic.c
+Compiling file: main.c
+Compiling file: system_nrf52.c
+Linking target: _build/nrf52832_xxaa.out
+   text	   data	    bss	    dec	    hex	filename
+   2072	    108	     28	   2208	    8a0	_build/nrf52832_xxaa.out
+Preparing: _build/nrf52832_xxaa.hex
+Preparing: _build/nrf52832_xxaa.bin
+DONE nrf52832_xxaa
  ```
 	
  If you see that, your toolchain is working, and you can generate binaries with the SDK.  Great job!
 
-## Install J-Link
+## Install NRF Command Line Tools
 
- Head to [J-Link](https://www.segger.com/downloads/jlink) and click on the 'Click for downloads' link for 'J-Link Software and Documentation Pack'.  Download the DEB installer for 64 bit Linux.  Move it to your installer directory and install it.
-
- ```
- $ mv ~/Downloads/JLink*.deb ~/dev/installer
- # sudo dpkg -i ~/dev/installer/JLink*.deb
- ```
-
-## Install nrfjprog
-
- You'll be using this to flash and interact with your badge.  It's a little more tricky.
- Goto [Nordic](http://www.nordicsemi.com/eng/Products/Bluetooth-low-energy/nRF52832) and click on the Downloads tab.  Scroll down and find 'nRF5x-Command-Line-Tools-Linux64' and click on it to download the tarball.  Save it to the installer directory.  Now let's set it up in bin:
-
- ```
- $ cp ~/Downloads/nRF5x-Command-Line-Tools_*_Linux-x86_64.tar ~/dev/installer/
- $ cd ~/dev/bin
- $ tar xvf ~/dev/installer/nRF5x-Command-Line-Tools_*_Linux-x86_64.tar
- ```
-
- Now, log out and back in or start a new terminal.  Let's test it:
-
- ```
- $ nrfjprog --version
- nrfjprog version: 9.4.0
- JLinkARM.dll version: 6.14h
- ```
-
- If you see that, you're good.  You have everything you need to program your badge now, how about that?
-
-## Install Eclipse
-
- You could just about stop here and do everything at the command line if you want.  Eclipse just uses the Makefile wrapper anyway, but it helps for editing your code.  Your call and all that.
-
- You'll need a Java Runtime Enviroment, ie, JRE installed first:
-
- ```
- $ sudo apt-get install default-jre
- ```
-
- Download the [Eclipse Installer](https://www.eclipse.org/downloads/)
+If the link in the wget below doesn't work, head to [J-Link](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) and download the latest nRF Command Line Tools for Linux. To do that, click the Downloads tab, switch the platform to Linux64, and download the tar.gz file provided. The one that's currently available is named `nRF-Command-Line-Tools_10_10_0_Linux-amd64.tar.gz`. Move it to your installer directory.
 
  ```
  $ cd ~/dev/installer
- $ cp ~/Downloads/eclipse-inst*.tar.gz .
- $ tar -xzvf eclipse-inst*.tar.gz
- $ ./eclipse-installer/eclipse-inst
+ $ wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-10-0-v2/nRFCommandLineTools10100Linuxamd64tar.gz
+ $ mv nRFCommandLineTools10100Linuxamd64tar.gz nRFCommandLineTools10100Linuxamd64.tar.gz
+ $ tar -xvf nRFCommandLineTools10100Linuxamd64.tar.gz
+ $ sudo dpkg -i JLink_Linux_V684a_x86_64.deb
+ $ sudo dpkg -i nRF-Command-Line-Tools_10_10_0_Linux-amd64.deb
+ ```
+ 
+ Let's verify that it installed correctly:
+ 
+ ```
+ $ JLinkExe version
+SEGGER J-Link Commander V6.84a (Compiled Sep  7 2020 18:28:09)
+DLL version V6.84a, compiled Sep  7 2020 18:27:57
+
+Unknown command line option version.
+$ nrfjprog --version
+nrfjprog version: 10.10.0 
+JLinkARM.dll version: 6.84a
+```
+
+  If you see that, you're good.  You have everything you need to program your badge now, how about that?
+ 
+## Get the badge source
+
+ Get the badge source code from git and save it out to ~/dev/DC28PartyBadge.
+ 
+ ```
+ $ cd ~/dev/
+ $ git clone https://github.com/AdmiralPotato/DC28PartyBadge/
+ ```
+ 
+## Install VSCode
+
+ You could just about stop here and do everything at the command line if you want. VSCode just uses the Makefile wrapper anyway, but it helps for editing your code.  Your call and all that.
+
+ ```
+ $ sudo snap install --classic code
+ ```
+ 
+ Now let's install `compiledb`. Thiscreates compile_commands.json which interfaces with VSCode's Intellisence system. This allows you to have tab completion, include path stuff, etc.
+ 
+ ```
+ $ sudo apt install python3-pip
+ $ sudo pip3 install compiledb
+ ```
+ 
+ With that done, go ahead and open VSCode.
+
+ You want to install the following plugins: `Cortex-Debug` by [marus25](https://github.com/Marus/cortex-debug.git), `C/C++` by [Microsoft](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools). You do that by pressing Ctrl+P then enter the following one at a time:
+ 
+ ```
+ext install marus25.cortex-debug
+ext install ms-vscode.cpptools
  ```
 
- You want to install the Eclipse IDE for C/C++ Developers
-
- Install it to ~/dev/bin/eclipse/cpp-neon
-
- Once it has been installed, launch it.  The workspace doesn't matter, it can be anywhere you want it.
-
- Now we need to install the GNU ARM plugins.
-
- Head to [GNU ARM Eclipse Plugin](http://gnuarmeclipse.github.io/plugins/install/) and follow the instructions, which is basically, 'drag and drop this thing into eclipse'.  It will take a bit.  Hope you're not doing this at defcon.
-
- For better debugging, you might want to install the device family packs.  It'll download a bunch of stuff, so be prepared for that.  From the Nordic tutorial:
-
- - Select the Window item from the menu bar, and enter perspective -> open perspective -> other -> Packs.
- - Click the refresh button in the top right corner of the window that got opened. This will fetch all packs from the repositories.
- - Select Nordic Semiconductor in the list of vendors, and install the latest version of Device family pack.
-
-## Get the source
-
- Get the badge source code from git and save it out to disk somewhere.  I recommend putting it in ~/dev/dc801
-
-## Import into Eclipse
-
- From within Eclipse, right click in the Project Explorer on the left side of the screen.  Select Import, open the 'General' folder and select 'Existing projects int Workspace'.  Browse to the folder where you saved the badge source code.  It should now find the project.  Go ahead and finish, and the project should now be sitting in Eclipse.  
+ Now let's open our badge code in VSCode.  `File` -> `Open Folder` -> `Navigate to ~/dev` -> `Highlight DC28PartyBadge` -> `Ok`
 
  At this point, you should be able to build, clean, flash, and even debug with the Segger.  Hurray!
 
- If you want to program the softdevice via Eclipse or the makefile, go download the s132 softdevice and unzip it into the softdevice folder.  Set the filename at the top of the Makefile to reflect the version, then the make flash_softdevice target will work for you.
+# Test Build & Flash
+### Desktop Build
 
-# Programming
+ Here are the steps to compile the badge code:
+ 
+- From within VSCode, make sure that the badge code folder is open (if you've followed the steps above, it should be).
+- Open a terminal (`Terminal` -> `New Terminal`)
+- From within the terminal that appears, run the following (replace `8` with the number of cores your machine has):
+   ```
+	 $ cd Software/
+	 $ compiledb make cleanall
+	 $ compiledb make -j8 DESKTOP=1 TEST_ALL=1
+	 ```
 
-Click here for [Program Structure Info](Structure.md)
+You should now have everything compiled in the `~/dev/DC28PartyBadge/Software/output` folder. Since we compiled the desktop build above, let's test running it.
+From within the VSCode Terminal:
+
+```
+$ cd ~/dev/DC28PartyBadge/Software/output
+$ ./dc28_badge.out
+```
+
+You should now have the badge running on your screen!
+
+To debug you need to open the Run/debug menu on the left (`Ctrl+Shift+D`). It looks like it has a triangle and a bug symbol. At the top, make sure that the dropdown says "Debug Desktop", and either click the green arrow or hit F5. You're debugging now!
+
+### Badge Build
+  
+Here are the steps to compile the badge code for the physical Badge:
+ 
+- From within VSCode, make sure that the badge code folder is open (if you've followed the steps above, it should be).
+- Open a terminal (`Terminal` -> `New Terminal`)
+- From within the terminal that appears, run the following (replace `8` with the number of cores your machine has):
+   ```
+	 $ cd Software/
+	 $ compiledb make cleanall
+	 $ compiledb make -j8 TEST_ALL=1
+	 ```
+
+You should now have everything compiled in the `~/dev/DC28PartyBadge/Software/output` folder.
+
+Let's flash it. Make sure you connect your badge to the J-Link Programmer and power on your badge. 
+
+From within the VSCode terminal:
+
+```
+$ make flash-merged
+```
+
+This flashed the badge code & the soft device to your badge. Now that you have the soft device, from now on only run `make flash`, unless you want to change or update your soft device.
+
+You should now have the badge running on your screen!
+
+To debug you need to open the Run/debug menu on the left (`Ctrl+Shift+D`). It looks like it has a triangle and a bug symbol. At the top, make sure that the dropdown says "Debug (Linux)". Now let's connect the JLink to your Badge. In a new terminal run these commands:
+
+```
+$ JLinkExe 
+SEGGER J-Link Commander V6.84a (Compiled Sep  7 2020 18:28:09)
+DLL version V6.84a, compiled Sep  7 2020 18:27:57
+
+Connecting to J-Link via USB...O.K.
+Firmware: J-Link EDU Mini V1 compiled Jul 17 2020 16:25:21
+Hardware version: V1.00
+S/N: 
+License(s): GDB, FlashBP
+VTref=1.043V
+
+
+Type "connect" to establish a target connection, '?' for help
+J-Link>connect
+Please specify device / core. <Default>: NRF52840_XXAA
+Type '?' for selection dialog
+Device>nrf52
+Please specify target interface:
+  J) JTAG (Default)
+  S) SWD
+  T) cJTAG
+TIF>s
+Specify target interface speed [kHz]. <Default>: 4000 kHz
+Speed>
+Device "NRF52" selected.
+
+
+Connecting to target via SWD
+InitTarget() start
+InitTarget() end
+Found SW-DP with ID 0x2BA01477
+DPIDR: 0x2BA01477
+Scanning AP map to find all available APs
+AP[2]: Stopped AP scan as end of AP map has been reached
+AP[0]: AHB-AP (IDR: 0x24770011)
+AP[1]: JTAG-AP (IDR: 0x02880000)
+Iterating through AP map to find AHB-AP to use
+AP[0]: Core found
+AP[0]: AHB-AP ROM base: 0xE00FF000
+CPUID register: 0x410FC241. Implementer code: 0x41 (ARM)
+Found Cortex-M4 r0p1, Little endian.
+FPUnit: 6 code (BP) slots and 2 literal slots
+CoreSight components:
+ROMTbl[0] @ E00FF000
+ROMTbl[0][0]: E000E000, CID: B105E00D, PID: 000BB00C SCS-M7
+ROMTbl[0][1]: E0001000, CID: B105E00D, PID: 003BB002 DWT
+ROMTbl[0][2]: E0002000, CID: B105E00D, PID: 002BB003 FPB
+ROMTbl[0][3]: E0000000, CID: B105E00D, PID: 003BB001 ITM
+ROMTbl[0][4]: E0040000, CID: B105900D, PID: 000BB9A1 TPIU
+ROMTbl[0][5]: E0041000, CID: B105900D, PID: 000BB925 ETM
+Cortex-M4 identified.
+J-Link>
+```
+
+Now go back to VSCode and do `Run` -> `Start Debugging` or hit `F5`. You're debugging on hardware now!
