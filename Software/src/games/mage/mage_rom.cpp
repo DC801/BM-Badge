@@ -419,6 +419,56 @@ bool MageTileset::Valid() const
 
 #pragma endregion
 
+#pragma region MageAnimationFrame
+
+MageAnimationFrame::MageAnimationFrame(uint32_t address)
+{
+	//I'm not sure how to read from the ROM yet, so this is blank for now -Tim
+}
+
+uint16_t MageAnimationFrame::TileIndex() const
+{
+	return tileIndex;
+}
+
+uint16_t MageAnimationFrame::Duration() const
+{
+	return duration;
+}
+
+#pragma endregion
+
+#pragma region MageAnimation
+
+MageAnimation::MageAnimation(uint32_t address)
+{
+	//I'm not sure how to read from the ROM yet, so this is blank for now -Tim
+}
+
+uint16_t MageAnimation::TilesetIndex() const
+{
+	return tilesetIndex;
+}
+
+uint16_t MageAnimation::FrameCount() const
+{
+	return frameCount;
+}
+
+MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
+{
+	if(index < frameCount)
+	{
+		return animationFrames[index];
+	}
+	else
+	{
+		return animationFrames[frameCount];
+	}
+}
+
+#pragma endregion
+
 #pragma region MageRom
 
 // Initializer list, default construct values
@@ -1067,6 +1117,7 @@ void correct_entity_type_endians ()
 
 void correct_animation_endians ()
 {
+	/* commented out to get new headers to compile -Tim
 	uint32_t offset;
 	MageAnimation *animation;
 	MageAnimationFrame *animationFrame;
@@ -1091,6 +1142,7 @@ void correct_animation_endians ()
 			// printf("  j: %" PRIu32 "\n", j);
 		}
 	}
+	*/
 }
 
 void correct_entity_endians ()

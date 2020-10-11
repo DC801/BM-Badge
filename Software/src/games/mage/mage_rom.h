@@ -25,7 +25,7 @@ public:
 	uint32_t length(uint8_t num) const;
 	uint32_t size() const;
 	bool valid() const;
-};
+}; //class MageHeader
 
 class MageMap
 {
@@ -64,7 +64,7 @@ public:
 	uint16_t EntityId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
 	uint32_t Size() const;
-};
+}; //class MageMap
 
 class MageTileset
 {
@@ -104,7 +104,44 @@ public:
 	uint8_t Tile(uint32_t index) const;
 	uint32_t Size() const;
 	bool Valid() const;
-};
+}; //class MageTileset
+
+class MageAnimationFrame
+{
+private:
+	uint16_t tileIndex;
+	uint16_t duration;
+public:
+	MageAnimationFrame() : tileIndex{0},
+		duration{0}
+	{};
+
+	MageAnimationFrame(uint32_t address);
+
+	uint16_t TileIndex() const;
+	uint16_t Duration() const;
+}; //class MageAnimationFrame
+
+
+class MageAnimation
+{
+private:
+	uint16_t tilesetIndex;
+	uint16_t frameCount;
+
+	std::unique_ptr<MageAnimationFrame[]> animationFrames;
+public:
+	MageAnimation() : tilesetIndex{0},
+		frameCount{0},
+		animationFrames{std::make_unique<MageAnimationFrame[]>(frameCount)}
+	{};
+
+	MageAnimation(uint32_t address);
+
+	uint16_t TilesetIndex() const;
+	uint16_t FrameCount() const;
+	MageAnimationFrame AnimationFrame(uint32_t index) const;
+}; //class MageAnimation
 
 class MageRom
 {
@@ -129,7 +166,7 @@ public:
 	const MageMap& Map() const;
 	void LoadMap();
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
-};
+}; //class MageRom
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
 // extern MageTileset *allTilesets;

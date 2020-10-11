@@ -56,16 +56,16 @@ typedef struct {
     uint32_t startOfTiles;
 } MageTileset;*/
 
-typedef struct {
+/*typedef struct {
     uint16_t tileIndex;
     uint16_t duration;
-} MageAnimationFrame;
+} MageAnimationFrame;*/
 
-typedef struct {
+/*typedef struct {
     uint16_t tilesetIndex;
     uint16_t frameCount;
-    MageAnimationFrame animationFrames;
-} MageAnimation;
+    //MageAnimationFrame animationFrames;
+} MageAnimation;*/
 
 typedef struct {
     uint16_t typeIndex;
@@ -112,8 +112,8 @@ typedef struct {
 typedef struct {
     // MageTileset *tileset;
     MageEntityType *entityType;
-    MageAnimation *animation;
-    MageAnimationFrame *animationFrame;
+    //MageAnimation *animation;
+    //MageAnimationFrame *animationFrame;
     uint16_t *tileIndex;
     uint8_t *renderFlags;
 } MageEntityRenderableData;
