@@ -469,6 +469,105 @@ MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
 
 #pragma endregion
 
+#pragma region MageEntityTypeAnimationDirection
+
+MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t index)
+{
+	//not yet implemented -Tim
+}
+
+uint16_t MageEntityTypeAnimationDirection::TypeID() const
+{
+	return typeId;
+}
+
+uint8_t MageEntityTypeAnimationDirection::Type() const
+{
+	return type;
+}
+
+uint8_t MageEntityTypeAnimationDirection::RenderFlags() const
+{
+	return renderFlags;
+}
+
+bool MageEntityTypeAnimationDirection::FlipX() const
+{
+	return renderFlags & FLIPPED_HORIZONTALLY_FLAG;
+}
+
+bool MageEntityTypeAnimationDirection::FlipY() const
+{
+	return renderFlags & FLIPPED_VERTICALLY_FLAG;
+}
+
+bool MageEntityTypeAnimationDirection::FlipDiag() const
+{
+	return renderFlags & FLIPPED_DIAGONALLY_FLAG;
+}
+
+#pragma endregion
+
+#pragma region MageEntityTypeAnimation
+
+MageEntityTypeAnimation::MageEntityTypeAnimation(uint32_t index)
+{
+	//not yet implemented - Tim
+}
+
+MageEntityTypeAnimationDirection MageEntityTypeAnimation::North() const
+{
+	return north;
+}
+
+MageEntityTypeAnimationDirection MageEntityTypeAnimation::East() const
+{
+	return east;
+}
+
+MageEntityTypeAnimationDirection MageEntityTypeAnimation::South() const
+{
+	return south;
+}
+
+MageEntityTypeAnimationDirection MageEntityTypeAnimation::West() const
+{
+	return west;
+}
+
+#pragma endregion
+
+#pragma region MageEntityType
+
+MageEntityType::MageEntityType(uint32_t index)
+{
+	//not yet implemented -Tim
+}
+
+std::string MageEntityType::Name() const
+{
+	return std::string(name);
+}
+
+uint8_t MageEntityType::AnimationCount() const
+{
+	return animationCount;
+}
+
+MageEntityTypeAnimation MageEntityType::EntityTypeAnimation(uint32_t index) const
+{
+	if(index < animationCount)
+	{
+		return entityTypeAnimations[index];
+	}
+	else
+	{
+		return entityTypeAnimations[animationCount];
+	}
+}
+
+#pragma endregion
+
 #pragma region MageRom
 
 // Initializer list, default construct values
@@ -995,6 +1094,7 @@ void allocate_current_map_entities(
 		uint32_t entityTypeOffset;
 		MageEntityType *entityType;
 		char mageType[16] = "goose";
+		/* commented out to get new classes to compile -Tim 		
 		if (entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE)
 		{
 			entityType = get_entity_type_by_index(entityInRAM->primaryTypeIndex);
@@ -1004,7 +1104,7 @@ void allocate_current_map_entities(
 			{
 				playerEntity = entityInRAM;
 			}
-		}
+		} */
 
 		// printf("  primaryTypeIndex: %" PRIu16 "\n", entityInRAM->primaryTypeIndex);
 		// printf("  secondaryTypeIndex: %" PRIu16 "\n", entityInRAM->secondaryTypeIndex);
@@ -1094,6 +1194,7 @@ void load_map_headers (uint32_t incomingMapIndex)
 
 void correct_entity_type_endians ()
 {
+	/* commented out to get new classes to compile -Tim
 	uint32_t offset;
 	MageEntityType *entityType;
 	MageEntityTypeAnimationDirection *entityTypeAnimationDirection;
@@ -1113,6 +1214,7 @@ void correct_entity_type_endians ()
 			// printf("    typeIndex: %" PRIu16 "\n", entityTypeAnimationDirection->typeIndex);
 		}
 	}
+	*/
 }
 
 void correct_animation_endians ()

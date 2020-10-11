@@ -30,7 +30,7 @@ public:
 class MageMap
 {
 private:
-	char name[17];
+	char name[16];
 	uint16_t tileWidth;
 	uint16_t tileHeight;
 	uint16_t width;
@@ -69,7 +69,7 @@ public:
 class MageTileset
 {
 private:
-	char name[17];
+	char name[16];
 	uint16_t imageIndex;
 	uint16_t imageWidth;
 	uint16_t imageHeight;
@@ -142,6 +142,80 @@ public:
 	uint16_t FrameCount() const;
 	MageAnimationFrame AnimationFrame(uint32_t index) const;
 }; //class MageAnimation
+
+class MageEntityTypeAnimationDirection
+{
+private:
+	uint16_t typeId;
+	uint8_t type;
+	uint8_t renderFlags;
+public:
+	MageEntityTypeAnimationDirection() : typeId{0},
+		type{0},
+		renderFlags{0}
+	{};
+
+	MageEntityTypeAnimationDirection(uint32_t index);
+
+	uint16_t TypeID() const;
+	uint8_t Type() const;
+	uint8_t RenderFlags() const;
+	bool FlipX() const;
+	bool FlipY() const;
+	bool FlipDiag() const;
+
+}; //class MageEntityTypeAnimationDirection
+
+class MageEntityTypeAnimation
+{
+private:
+	MageEntityTypeAnimationDirection north;
+	MageEntityTypeAnimationDirection east;
+	MageEntityTypeAnimationDirection south;
+	MageEntityTypeAnimationDirection west;
+public:
+	//not sure if I did this default constructor right, someone please check. -Tim
+	MageEntityTypeAnimation() : 
+		north{MageEntityTypeAnimationDirection(0)},
+		east{MageEntityTypeAnimationDirection(0)},
+		south{MageEntityTypeAnimationDirection(0)},
+		west{MageEntityTypeAnimationDirection(0)}
+	{};
+
+	MageEntityTypeAnimation(uint32_t index);
+
+	MageEntityTypeAnimationDirection North() const;
+	MageEntityTypeAnimationDirection East() const;
+	MageEntityTypeAnimationDirection South() const;
+	MageEntityTypeAnimationDirection West() const;
+
+}; //class MageEntityTypeAnimation
+
+class MageEntityType
+{
+private:
+	char name[16];
+	uint8_t paddingA;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t animationCount;
+	std::unique_ptr<MageEntityTypeAnimation[]> entityTypeAnimations;
+public:
+	MageEntityType() : name{0},
+		paddingA{0},
+		paddingB{0},
+		paddingC{0},
+		animationCount{0},
+		entityTypeAnimations{std::make_unique<MageEntityTypeAnimation[]>(animationCount)}
+	{};
+
+	MageEntityType(uint32_t index);
+
+	std::string Name() const;
+	//padding is not used, not making getter functions.
+	uint8_t AnimationCount() const;
+	MageEntityTypeAnimation EntityTypeAnimation(uint32_t index) const;
+}; //class MageEntityType
 
 class MageRom
 {
