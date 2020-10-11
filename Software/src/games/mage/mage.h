@@ -67,20 +67,20 @@ typedef struct {
     //MageAnimationFrame animationFrames;
 } MageAnimation;*/
 
-typedef struct {
+/*typedef struct {
     uint16_t typeIndex;
     uint8_t type;
     uint8_t renderFlags;
-} MageEntityTypeAnimationDirection;
+} MageEntityTypeAnimationDirection;*/
 
-typedef struct {
+/*typedef struct {
     char name[16];
     uint8_t padding_a;
     uint8_t padding_b;
     uint8_t padding_c;
     uint8_t animationCount;
     MageEntityTypeAnimationDirection entityTypeAnimationDirection;
-} MageEntityType;
+} MageEntityType;*/
 
 typedef enum {
     ENTITY_PRIMARY_TILESET = 0,
@@ -111,7 +111,7 @@ typedef struct {
 
 typedef struct {
     // MageTileset *tileset;
-    MageEntityType *entityType;
+    //MageEntityType *entityType;
     //MageAnimation *animation;
     //MageAnimationFrame *animationFrame;
     uint16_t *tileIndex;
