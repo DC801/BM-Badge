@@ -244,6 +244,7 @@ void update_entity_frame (
 	uint16_t *currentFrameTimer
 )
 {
+	/* Commented out to get new classes to compile -Tim
 	*currentFrameTimer += delta_time * 50;
 	get_renderable_data_from_entity(entity, &renderableEntityData);
 	if(renderableEntityData.animationFrame) {
@@ -255,7 +256,7 @@ void update_entity_frame (
 				% renderableEntityData.animation->frameCount
 			);
 		}
-	}
+		*/
 }
 
 void update_entities ()
