@@ -118,7 +118,7 @@ If you see the above, you've got it right.
  Now we are going to test your install.  Do this before moving onto the next step, it'll make like easier.
 
  ```
- $ cd ~/nordic-sdk15.3.0/examples/peripheral/blinky/pca10040/blank/armgcc
+ $ cd ~/dev/nordic-sdk15.3.0/examples/peripheral/blinky/pca10040/blank/armgcc
  $ make
  mkdir _build
 cd _build && mkdir nrf52832_xxaa
