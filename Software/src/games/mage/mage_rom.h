@@ -217,6 +217,41 @@ public:
 	MageEntityTypeAnimation EntityTypeAnimation(uint32_t index) const;
 }; //class MageEntityType
 
+class MageEntity
+{
+private:
+	//MageEntities are all public, for hackability.
+public:
+	char name[16];
+	uint16_t primaryId;
+	uint16_t secondaryId;
+	uint16_t scriptId;
+	uint16_t x;
+	uint16_t y;
+	uint8_t primaryIdType;
+	uint8_t currentAnimation;
+	uint8_t currentFrame;
+	uint8_t direction;
+	uint8_t hackableState;
+	uint8_t padding;
+
+	MageEntity() : primaryId{0},
+		secondaryId{0},
+		scriptId{0},
+		x{0},
+		y{0},
+		primaryIdType{0},
+		currentAnimation{0},
+		currentFrame{0},
+		direction{0},
+		hackableState{0},
+		padding{0}
+	{};
+
+	//I'm not sure what args will actually be needed to make an entity, adjust as needed. -Tim
+	MageEntity(uint32_t index);
+}; //class MageEntity
+
 class MageRom
 {
 private:

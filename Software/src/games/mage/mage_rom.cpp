@@ -568,6 +568,15 @@ MageEntityTypeAnimation MageEntityType::EntityTypeAnimation(uint32_t index) cons
 
 #pragma endregion
 
+#pragma region MageEntity
+
+MageEntity::MageEntity(uint32_t index)
+{
+	//not implemented yet. -Tim
+}
+
+#pragma endregion
+
 #pragma region MageRom
 
 // Initializer list, default construct values
@@ -1249,6 +1258,7 @@ void correct_animation_endians ()
 
 void correct_entity_endians ()
 {
+	/* commented out to make new classes work -Tim
 	uint32_t offset;
 	MageEntity *entity;
 	// printf("correct_entity_endians\n");
@@ -1270,6 +1280,7 @@ void correct_entity_endians ()
 		// printf("  x: %" PRIu16 "\n", entity->x);
 		// printf("  y: %" PRIu16 "\n", entity->y);
 	}
+	*/
 }
 
 MageEntityType* get_entity_type_by_index(uint8_t index)
