@@ -80,11 +80,12 @@ void draw_map (uint8_t layer)
 	}*/
 }
 
+/* removed to make new classes compile -Tim
 void get_renderable_data_from_entity (
 	MageEntity *entity,
 	MageEntityRenderableData *renderableData
 ) {
-	/*renderableData->animationFrame = nullptr;
+	renderableData->animationFrame = nullptr;
 	renderableData->animation = nullptr;
 	renderableData->renderFlags = &entity->direction;
 	renderableData->entityType = nullptr;
@@ -146,8 +147,9 @@ void get_renderable_data_from_entity (
 		);
 
 		renderableData->tileIndex = &renderableData->animationFrame->tileIndex;
-	}*/
+	}
 }
+*/
 
 void swap_entity_pointers (MageEntity** xp, MageEntity** yp)
 {

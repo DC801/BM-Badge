@@ -88,7 +88,7 @@ typedef enum {
     ENTITY_PRIMARY_ENTITY_TYPE = 2
 } MageEntityPrimaryIdType;
 
-typedef struct {
+/*typedef struct {
     char name[16];
     uint16_t primaryTypeIndex;
     uint16_t secondaryTypeIndex;
@@ -101,7 +101,7 @@ typedef struct {
     uint8_t direction;
     uint8_t hackableState;
     uint8_t padding;
-} MageEntity;
+} MageEntity;*/
 
 typedef struct {
     char name[16];
@@ -110,7 +110,7 @@ typedef struct {
 } MageImage;
 
 typedef struct {
-    // MageTileset *tileset;
+    //MageTileset *tileset;
     //MageEntityType *entityType;
     //MageAnimation *animation;
     //MageAnimationFrame *animationFrame;
@@ -119,15 +119,15 @@ typedef struct {
 } MageEntityRenderableData;
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
-extern MageEntity *playerEntity;
+//extern MageEntity *playerEntity;
 extern MageEntityRenderableData renderableEntityData;
 extern Point cameraPosition;
 
 void MAGE(void);
 
-void get_renderable_data_from_entity(
+/*void get_renderable_data_from_entity(
 	MageEntity *entity,
 	MageEntityRenderableData *renderableData
-);
+);*/
 
 #endif //SOFTWARE_MAGE_H
