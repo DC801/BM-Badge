@@ -284,6 +284,8 @@ public:
 	const MageMap& Map() const;
 	//this will load another map to be the current map.
 	void LoadMap();
+	//this will fill in an entity structure from ROM
+	MageEntity LoadEntity(uint32_t address);
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 
