@@ -30,7 +30,7 @@ public:
 class MageMap
 {
 private:
-	char name[16];
+	char name[17];
 	uint16_t tileWidth;
 	uint16_t tileHeight;
 	uint16_t width;
@@ -69,7 +69,7 @@ public:
 class MageTileset
 {
 private:
-	char name[16];
+	char name[17];
 	uint16_t imageIndex;
 	uint16_t imageWidth;
 	uint16_t imageHeight;
@@ -194,7 +194,7 @@ public:
 class MageEntityType
 {
 private:
-	char name[16];
+	char name[17];
 	uint8_t paddingA;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -222,6 +222,7 @@ class MageEntity
 private:
 	//MageEntities are all public, for hackability.
 public:
+	//Don't mes with the order or size of any of this, it's continuous for hackability:
 	char name[16];
 	uint16_t primaryId;
 	uint16_t secondaryId;
