@@ -311,9 +311,9 @@ void mage_game_loop()
 			MageROM->DrawMap(0, cameraPosition.x, cameraPosition.y);
 		}
 
-		/*update_entities();
+		//update_entities();
 
-		draw_entities();*/
+		//draw_entities();
 
 		if (layerCount > 1)
 		{
@@ -347,7 +347,7 @@ void MAGE()
 	// load_all_tilesets();
 	// correct_animation_endians();
 	// correct_entity_type_endians();
-	/// correct_entity_endians();
+	// correct_entity_endians();
 
 	// load_map_headers(0);
 
