@@ -436,6 +436,14 @@ uint16_t MageAnimationFrame::Duration() const
 	return duration;
 }
 
+uint32_t MageAnimationFrame::Size() const
+{
+	uint32_t size = sizeof(tileIndex) +
+		sizeof(duration);
+
+	return size;
+}
+
 #pragma endregion
 
 #pragma region MageAnimation
@@ -465,6 +473,19 @@ MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
 	{
 		return animationFrames[frameCount];
 	}
+}
+
+uint32_t MageAnimation::Size() const
+{
+	uint32_t size = sizeof(tilesetIndex) +
+		sizeof(frameCount);
+
+	for (uint32_t i = 0; i < frameCount; i++)
+	{
+		size += animationFrames[i].Size();
+	}
+
+	return size;
 }
 
 #pragma endregion
@@ -506,6 +527,15 @@ bool MageEntityTypeAnimationDirection::FlipDiag() const
 	return renderFlags & FLIPPED_DIAGONALLY_FLAG;
 }
 
+uint32_t MageEntityTypeAnimationDirection::Size() const
+{
+	uint32_t size = sizeof(typeId) +
+		sizeof(type) +
+		sizeof(renderFlags);
+
+	return size;
+}
+
 #pragma endregion
 
 #pragma region MageEntityTypeAnimation
@@ -533,6 +563,16 @@ MageEntityTypeAnimationDirection MageEntityTypeAnimation::South() const
 MageEntityTypeAnimationDirection MageEntityTypeAnimation::West() const
 {
 	return west;
+}
+
+uint32_t MageEntityTypeAnimation::Size() const
+{
+	uint32_t size = sizeof(north) +
+		sizeof(south) +
+		sizeof(east) +
+		sizeof(west);
+
+	return size;
 }
 
 #pragma endregion
@@ -566,13 +606,20 @@ MageEntityTypeAnimation MageEntityType::EntityTypeAnimation(uint32_t index) cons
 	}
 }
 
-#pragma endregion
-
-#pragma region MageEntity
-
-MageEntity::MageEntity(uint32_t index)
+uint32_t MageEntityType::Size() const
 {
-	//not implemented yet. -Tim
+	uint32_t size = sizeof(name) +
+		sizeof(paddingA) +
+		sizeof(paddingB) +
+		sizeof(paddingC) +
+		sizeof(animationCount);
+
+	for (uint32_t i = 0; i < animationCount; i++)
+	{
+		size += entityTypeAnimations[i].Size();
+	}
+
+	return size;
 }
 
 #pragma endregion
@@ -610,6 +657,12 @@ MageRom::MageRom()
 	map = MageMap(mapHeader.offset(currentMapIndex));
 
 	tiles = std::make_unique<MageTileset[]>(tileHeader.count());
+	
+	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
+	
+	entityTypes = std::make_unique<MageEntityType[]>(entityTypeHeader.count());
+	
+	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
@@ -627,11 +680,22 @@ uint32_t MageRom::Size() const
 		entityTypeHeader.size() +
 		entityHeader.size() +
 		imageHeader.size() +
-		map.Size();
+		map.Size() +
+		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP;
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
 		size += tiles[i].Size();
+	}
+
+	for (uint32_t i = 0; i < animationHeader.count(); i++)
+	{
+		size += animations[i].Size();
+	}
+
+	for (uint32_t i = 0; i < entityHeader.count(); i++)
+	{
+		size += entityTypes[i].Size();
 	}
 
 	return size;

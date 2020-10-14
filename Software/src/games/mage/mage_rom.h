@@ -5,6 +5,9 @@
 #include <string>
 #include "mage.h"
 
+//this is the most unique entities that can be in any map.
+#define MAX_ENTITIES_PER_MAP 32
+
 class MageHeader
 {
 private:
@@ -120,6 +123,7 @@ public:
 
 	uint16_t TileIndex() const;
 	uint16_t Duration() const;
+	uint32_t Size() const;
 }; //class MageAnimationFrame
 
 
@@ -141,6 +145,7 @@ public:
 	uint16_t TilesetIndex() const;
 	uint16_t FrameCount() const;
 	MageAnimationFrame AnimationFrame(uint32_t index) const;
+	uint32_t Size() const;
 }; //class MageAnimation
 
 class MageEntityTypeAnimationDirection
@@ -163,6 +168,7 @@ public:
 	bool FlipX() const;
 	bool FlipY() const;
 	bool FlipDiag() const;
+	uint32_t Size() const;
 
 }; //class MageEntityTypeAnimationDirection
 
@@ -188,6 +194,7 @@ public:
 	MageEntityTypeAnimationDirection East() const;
 	MageEntityTypeAnimationDirection South() const;
 	MageEntityTypeAnimationDirection West() const;
+	uint32_t Size() const;
 
 }; //class MageEntityTypeAnimation
 
@@ -215,50 +222,35 @@ public:
 	//padding is not used, not making getter functions.
 	uint8_t AnimationCount() const;
 	MageEntityTypeAnimation EntityTypeAnimation(uint32_t index) const;
+	uint32_t Size() const;
 }; //class MageEntityType
 
-class MageEntity
-{
-private:
-	//MageEntities are all public, for hackability.
-public:
-	//Don't mes with the order or size of any of this, it's continuous for hackability:
-	char name[16];
-	uint16_t primaryId;
-	uint16_t secondaryId;
-	uint16_t scriptId;
-	uint16_t x;
-	uint16_t y;
-	uint8_t primaryIdType;
-	uint8_t currentAnimation;
-	uint8_t currentFrame;
-	uint8_t direction;
-	uint8_t hackableState;
-	uint8_t padding;
-
-	MageEntity() : primaryId{0},
-		secondaryId{0},
-		scriptId{0},
-		x{0},
-		y{0},
-		primaryIdType{0},
-		currentAnimation{0},
-		currentFrame{0},
-		direction{0},
-		hackableState{0},
-		padding{0}
-	{};
-
-	//I'm not sure what args will actually be needed to make an entity, adjust as needed. -Tim
-	MageEntity(uint32_t index);
-}; //class MageEntity
+typedef struct {
+    char name[16];
+    uint16_t primaryTypeIndex;
+    uint16_t secondaryTypeIndex;
+    uint16_t scriptIndex;
+    uint16_t x;
+    uint16_t y;
+    uint8_t primaryType;
+    uint8_t currentAnimation;
+    uint8_t currentFrame;
+    uint8_t direction;
+    uint8_t hackableState;
+    uint8_t padding;
+} MageEntity;
 
 class MageRom
 {
 private:
+	//why is there a mapIndex and a currentMapIndex? Isn't the currentMapIndex enough? 
+	//I don't see this being used anywhere in the code -Tim
 	uint32_t mapIndex;
+	//Stores the current map's index value
 	uint32_t currentMapIndex;
 
+	//these header objects store the header information for all datasets on the ROM,
+	//including address offsets for each item, and the length of the item in memory.
 	MageHeader mapHeader;
 	MageHeader tileHeader;
 	MageHeader animationHeader;
@@ -266,16 +258,35 @@ private:
 	MageHeader entityHeader;
 	MageHeader imageHeader;
 
+	//this is where the current map data from the ROM is stored.
 	MageMap map;
+	//this is an array of the tileset data on the ROM.
+	//each entry is an indexed tileset.
 	std::unique_ptr<MageTileset[]> tiles;
+	//this is an array of the animation data on the ROM
+	//each entry is an indexed animation.
+	std::unique_ptr<MageAnimation[]> animations;
+	//this is an array of the entity types on the ROM
+	//each entry is an indexed entity type.
+	std::unique_ptr<MageEntityType[]> entityTypes;
+	//this is the hackable array of entities that are on the current map
+	//the data contained within is the data that can be hacked in the hex editor.
+	std::unique_ptr<MageEntity[]> entities;
 public:
+	//when the MageRom is created, it will populate all the above variables from ROM.
 	MageRom();
 
+	//returns the size in memory of the MageRom object.
 	uint32_t Size() const;
+	//this will return a specific MageTileset object by index.
 	const MageTileset& Tile(uint32_t index) const;
+	//this will return the current map object.
 	const MageMap& Map() const;
+	//this will load another map to be the current map.
 	void LoadMap();
+	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
+
 }; //class MageRom
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
