@@ -657,16 +657,35 @@ MageRom::MageRom()
 	map = MageMap(mapHeader.offset(currentMapIndex));
 
 	tiles = std::make_unique<MageTileset[]>(tileHeader.count());
-	
-	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
-	
-	entityTypes = std::make_unique<MageEntityType[]>(entityTypeHeader.count());
-	
-	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
 		tiles[i] = MageTileset(tileHeader.offset(i));
+	}
+	
+	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
+
+	for (uint32_t i = 0; i < animationHeader.count(); i++)
+	{
+		animations[i] = MageAnimation(animationHeader.offset(i));
+	}
+	
+	entityTypes = std::make_unique<MageEntityType[]>(entityTypeHeader.count());
+
+	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
+	{
+		entityTypes[i] = MageEntityType(entityTypeHeader.offset(i));
+	}
+	
+	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
+
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//only populate the entities if they are on the current map.
+		if(i < entityHeader.count())
+		{
+			entities[i] = LoadEntity(entityHeader.offset(i));
+		}
 	}
 }
 
@@ -722,6 +741,11 @@ const MageMap& MageRom::Map() const
 void MageRom::LoadMap()
 {
 	map = MageMap(mapHeader.offset(currentMapIndex));
+}
+
+MageEntity MageRom::LoadEntity(uint32_t address)
+{
+	//Need to read from RO and return the MageEntity structure at address. -Tim
 }
 
 void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
