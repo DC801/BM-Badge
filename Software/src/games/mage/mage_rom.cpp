@@ -813,6 +813,13 @@ MageRom::MageRom()
 	{
 		entityTypes[i] = MageEntityType(entityTypeHeader.offset(i));
 	}
+
+	#ifdef DC801_DESKTOP
+		if(entityHeader.count() > MAX_ENTITIES_PER_MAP)
+		{
+			fprintf(stderr, "Game is attempting to load more than 32 entities.");
+		}
+	#endif
 	
 	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
 
