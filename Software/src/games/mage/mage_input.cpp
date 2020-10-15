@@ -41,10 +41,11 @@ void apply_input_to_player (uint8_t *data)
 		playerEntity->currentAnimation = 0;
 	}*/
 
-	if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= 5; isMoving = true; }
-	if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += 5; isMoving = true; }
-	if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= 5; isMoving = true; }
-	if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += 5; isMoving = true; }
+	uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
+	if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
+	if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
 
 	// cameraPosition.x = playerEntity->x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
 	// cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
