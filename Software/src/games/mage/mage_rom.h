@@ -160,7 +160,7 @@ public:
 		renderFlags{0}
 	{};
 
-	MageEntityTypeAnimationDirection(uint32_t index);
+	MageEntityTypeAnimationDirection(uint32_t address);
 
 	uint16_t TypeID() const;
 	uint8_t Type() const;
@@ -188,7 +188,7 @@ public:
 		west{MageEntityTypeAnimationDirection(0)}
 	{};
 
-	MageEntityTypeAnimation(uint32_t index);
+	MageEntityTypeAnimation(uint32_t address);
 
 	MageEntityTypeAnimationDirection North() const;
 	MageEntityTypeAnimationDirection East() const;
@@ -216,7 +216,7 @@ public:
 		entityTypeAnimations{std::make_unique<MageEntityTypeAnimation[]>(animationCount)}
 	{};
 
-	MageEntityType(uint32_t index);
+	MageEntityType(uint32_t address);
 
 	std::string Name() const;
 	//padding is not used, not making getter functions.
@@ -227,12 +227,12 @@ public:
 
 typedef struct {
     char name[16];
-    uint16_t primaryTypeIndex;
-    uint16_t secondaryTypeIndex;
-    uint16_t scriptIndex;
+    uint16_t primaryId;
+    uint16_t secondaryId;
+    uint16_t scriptId;
     uint16_t x;
     uint16_t y;
-    uint8_t primaryType;
+    uint8_t primaryIdType;
     uint8_t currentAnimation;
     uint8_t currentFrame;
     uint8_t direction;
@@ -282,9 +282,9 @@ public:
 	const MageTileset& Tile(uint32_t index) const;
 	//this will return the current map object.
 	const MageMap& Map() const;
-	//this will load another map to be the current map.
+	//this will load a map to be the current map.
 	void LoadMap();
-	//this will fill in an entity structure from ROM
+	//this will fill in an entity structure's data from ROM
 	MageEntity LoadEntity(uint32_t address);
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
