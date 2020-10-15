@@ -171,9 +171,13 @@ MageMap::MageMap(uint32_t address)
 	{
 		goto MageMap_Error;
 	}
+	address += size;
 
 	convert_endian_u2_buffer(entityGlobalIds.get(), entityCount);
-	address += size + sizeof(uint16_t); // Padding
+	if (entityCount % 2)
+	{
+		address += sizeof(uint16_t); // Padding
+	}
 
 	mapLayerOffsets = std::make_unique<uint32_t[]>(layerCount);
 
