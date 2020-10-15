@@ -423,7 +423,32 @@ bool MageTileset::Valid() const
 
 MageAnimationFrame::MageAnimationFrame(uint32_t address)
 {
-	//I'm not sure how to read from the ROM yet, so this is blank for now -Tim
+	uint32_t size = 0; 
+	//read tileindex
+	if (EngineROM_Read(address, sizeof(tileIndex), (uint8_t *)&tileIndex) != sizeof(tileIndex))
+	{
+		goto MageAnimationFrame_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&tileIndex);
+
+	// Increment offset
+	address += sizeof(tileIndex);
+
+	//read duration
+	if (EngineROM_Read(address, sizeof(duration), (uint8_t *)&duration) != sizeof(duration))
+	{
+		goto MageAnimationFrame_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&duration);
+
+	return;
+
+MageAnimationFrame_Error:
+	ENGINE_PANIC("Failed to read animation frame data");
 }
 
 uint16_t MageAnimationFrame::TileIndex() const
@@ -450,7 +475,45 @@ uint32_t MageAnimationFrame::Size() const
 
 MageAnimation::MageAnimation(uint32_t address)
 {
-	//I'm not sure how to read from the ROM yet, so this is blank for now -Tim
+	uint32_t size = 0; 
+	//read tilesetIndex
+	if (EngineROM_Read(address, sizeof(tilesetIndex), (uint8_t *)&tilesetIndex) != sizeof(tilesetIndex))
+	{
+		goto MageAnimation_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&tilesetIndex);
+
+	// Increment offset
+	address += sizeof(tilesetIndex);
+
+	//read frameCount
+	if (EngineROM_Read(address, sizeof(frameCount), (uint8_t *)&frameCount) != sizeof(frameCount))
+	{
+		goto MageAnimation_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&frameCount);
+
+	// Increment offset
+	address += sizeof(frameCount);
+
+	// Construct array
+	animationFrames = std::make_unique<MageAnimationFrame[]>(frameCount);
+
+	//fill array
+	for(uint32_t frameIndex = 0; frameIndex < frameCount; frameIndex++)
+	{
+		animationFrames[frameIndex] = MageAnimationFrame(address);
+		address += animationFrames[frameIndex].Size();
+	}
+
+	return;
+
+MageAnimation_Error:
+	ENGINE_PANIC("Failed to read animation data");
 }
 
 uint16_t MageAnimation::TilesetIndex() const
@@ -492,9 +555,41 @@ uint32_t MageAnimation::Size() const
 
 #pragma region MageEntityTypeAnimationDirection
 
-MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t index)
+MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t address)
 {
-	//not yet implemented -Tim
+	uint32_t size = 0;
+
+	// Read count
+	if (EngineROM_Read(address, sizeof(typeId), (uint8_t *)&typeId) != sizeof(typeId))
+	{
+		goto MageEntityTypeAnimationDirection_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&typeId);
+
+	// Increment offset
+	address += sizeof(typeId);
+
+	// Read count
+	if (EngineROM_Read(address, sizeof(type), (uint8_t *)&type) != sizeof(type))
+	{
+		goto MageEntityTypeAnimationDirection_Error;
+	}
+
+	// Increment offset
+	address += sizeof(type);
+
+	// Read count
+	if (EngineROM_Read(address, sizeof(renderFlags), (uint8_t *)&renderFlags) != sizeof(renderFlags))
+	{
+		goto MageEntityTypeAnimationDirection_Error;
+	}
+
+	return;
+
+MageEntityTypeAnimationDirection_Error:
+	ENGINE_PANIC("Failed to read entity type animation direction data");
 }
 
 uint16_t MageEntityTypeAnimationDirection::TypeID() const
@@ -540,9 +635,17 @@ uint32_t MageEntityTypeAnimationDirection::Size() const
 
 #pragma region MageEntityTypeAnimation
 
-MageEntityTypeAnimation::MageEntityTypeAnimation(uint32_t index)
+MageEntityTypeAnimation::MageEntityTypeAnimation(uint32_t address)
 {
-	//not yet implemented - Tim
+	north = MageEntityTypeAnimationDirection(address);
+	address += north.Size();
+	east = MageEntityTypeAnimationDirection(address);
+	address += east.Size();
+	south = MageEntityTypeAnimationDirection(address);
+	address += south.Size();
+	west = MageEntityTypeAnimationDirection(address);
+
+	return;
 }
 
 MageEntityTypeAnimationDirection MageEntityTypeAnimation::North() const
@@ -567,10 +670,10 @@ MageEntityTypeAnimationDirection MageEntityTypeAnimation::West() const
 
 uint32_t MageEntityTypeAnimation::Size() const
 {
-	uint32_t size = sizeof(north) +
-		sizeof(south) +
-		sizeof(east) +
-		sizeof(west);
+	uint32_t size = north.Size() +
+		south.Size() +
+		east.Size() +
+		west.Size();
 
 	return size;
 }
@@ -579,9 +682,43 @@ uint32_t MageEntityTypeAnimation::Size() const
 
 #pragma region MageEntityType
 
-MageEntityType::MageEntityType(uint32_t index)
+MageEntityType::MageEntityType(uint32_t address)
 {
-	//not yet implemented -Tim
+	uint32_t size = 0;
+
+	// Read name
+	if (EngineROM_Read(address, 16, (uint8_t *)name) != 16)
+	{
+		goto MageEntityType_Error;
+	}
+
+	name[16] = 0; // Null terminate
+	//increment address
+	address += 16 + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t); //padding
+
+	// Read animationCount
+	if (EngineROM_Read(address, sizeof(animationCount), (uint8_t *)&animationCount) != sizeof(animationCount))
+	{
+		goto MageEntityType_Error;
+	}
+
+	//increment address
+	address += sizeof(animationCount);
+
+	// Construct array
+	entityTypeAnimations = std::make_unique<MageEntityTypeAnimation[]>(animationCount);
+
+	//increment through animations to fill entityTypeAnimations array:
+	for(uint32_t animationIndex = 0; animationIndex < animationCount; animationIndex++)
+	{
+		entityTypeAnimations[animationIndex] = MageEntityTypeAnimation(address);
+		address += entityTypeAnimations[animationIndex].Size();
+	}
+
+	return;
+
+MageEntityType_Error:
+	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
 std::string MageEntityType::Name() const
@@ -745,7 +882,128 @@ void MageRom::LoadMap()
 
 MageEntity MageRom::LoadEntity(uint32_t address)
 {
-	//Need to read from RO and return the MageEntity structure at address. -Tim
+	uint32_t size = 0;
+	MageEntity entity;
+
+	//Read Name
+	if (EngineROM_Read(address, 16, (uint8_t *)entity.name) != 16)
+	{
+		goto MageEntity_Error;
+	}
+
+	entity.name[16] = 0; // Null terminate
+	//increment address
+	address += 16;
+
+	// Read entity.primaryId
+	if (EngineROM_Read(address, sizeof(entity.primaryId), (uint8_t *)&entity.primaryId) != sizeof(entity.primaryId))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&entity.primaryId);
+
+	//increment address
+	address += sizeof(entity.primaryId);
+
+	// Read entity.secondaryId
+	if (EngineROM_Read(address, sizeof(entity.secondaryId), (uint8_t *)&entity.secondaryId) != sizeof(entity.secondaryId))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&entity.secondaryId);
+
+	//increment address
+	address += sizeof(entity.secondaryId);
+
+	// Read entity.scriptId
+	if (EngineROM_Read(address, sizeof(entity.scriptId), (uint8_t *)&entity.scriptId) != sizeof(entity.scriptId))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&entity.scriptId);
+
+	//increment address
+	address += sizeof(entity.scriptId);
+
+	// Read entity.x
+	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&entity.x);
+
+	//increment address
+	address += sizeof(entity.x);
+
+	// Read entity.y
+	if (EngineROM_Read(address, sizeof(entity.y), (uint8_t *)&entity.y) != sizeof(entity.y))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	convert_endian_u2(&entity.y);
+
+	//increment address
+	address += sizeof(entity.y);
+
+	// Read entity.primaryIdType
+	if (EngineROM_Read(address, sizeof(entity.primaryIdType), (uint8_t *)&entity.primaryIdType) != sizeof(entity.primaryIdType))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.primaryIdType);
+
+	// Read entity.currentAnimation
+	if (EngineROM_Read(address, sizeof(entity.currentAnimation), (uint8_t *)&entity.currentAnimation) != sizeof(entity.currentAnimation))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.currentAnimation);
+
+	// Read entity.currentFrame
+	if (EngineROM_Read(address, sizeof(entity.currentFrame), (uint8_t *)&entity.currentFrame) != sizeof(entity.currentFrame))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.currentFrame);
+
+	// Read entity.direction
+	if (EngineROM_Read(address, sizeof(entity.direction), (uint8_t *)&entity.direction) != sizeof(entity.direction))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.direction);
+
+	// Read entity.hackableState
+	if (EngineROM_Read(address, sizeof(entity.hackableState), (uint8_t *)&entity.hackableState) != sizeof(entity.hackableState))
+	{
+		goto MageEntity_Error;
+	}
+
+	//set padding to 0
+	entity.padding = 0;
+
+	return entity;
+
+MageEntity_Error:
+	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
 void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
