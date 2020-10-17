@@ -829,10 +829,10 @@ MageRom::MageRom()
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
-		//only populate the entities if they are on the current map.
+		//only populate the entities that are on the current map.
 		if(i < entityHeader.count())
 		{
-			entities[i] = LoadEntity(entityHeader.offset(i));
+			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
 		}
 	}
 }
