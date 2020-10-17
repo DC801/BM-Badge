@@ -774,7 +774,7 @@ MageRom::MageRom()
 {
 	uint32_t offset = 8;
 
-	currentMapIndex = 0;
+	currentMapIndex = DEFAULT_MAP;
 
 	mapHeader = MageHeader(offset);
 	offset += mapHeader.size();
@@ -793,8 +793,6 @@ MageRom::MageRom()
 
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
-
-	map = MageMap(mapHeader.offset(currentMapIndex));
 
 	tilesets = std::make_unique<MageTileset[]>(tileHeader.count());
 
@@ -817,34 +815,11 @@ MageRom::MageRom()
 		entityTypes[i] = MageEntityType(entityTypeHeader.offset(i));
 	}
 
-	#ifdef DC801_DESKTOP
-		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
-		{
-			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
-		}
-	#endif
-	
 	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
-
-	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
-	{
-		//only populate the entities that are on the current map.
-		if(i < entityHeader.count())
-		{
-			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
-		}
-	}
-
+	
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
-	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
-	{
-		//all entities start with 0 frame ticks
-		entityRenderableData[i].currentFrameTicks = 0;
-		//other values are filled in when getEntityRenderableData is called:
-		getEntityRenderableData(i);
-	}
-
+	LoadMap(currentMapIndex);
 }
 
 uint32_t MageRom::Size() const
@@ -896,19 +871,20 @@ const MageMap& MageRom::Map() const
 	return map;
 }
 
-void MageRom::LoadMap()
+void MageRom::LoadMap(uint16_t index)
 {
+	currentMapIndex = index;
+
 	//load new map:
 	map = MageMap(mapHeader.offset(currentMapIndex));
-	
-	//reload entities for new map:
+
 	#ifdef DC801_DESKTOP
 		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
 		{
 			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
 		}
 	#endif
-
+	
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//only populate the entities that are on the current map.
@@ -918,11 +894,12 @@ void MageRom::LoadMap()
 		}
 	}
 
-	//reset entity animation frame ticks on new map load:
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//all entities start with 0 frame ticks
 		entityRenderableData[i].currentFrameTicks = 0;
+		//other values are filled in when getEntityRenderableData is called:
+		getEntityRenderableData(i);
 	}
 }
 
