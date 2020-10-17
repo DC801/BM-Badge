@@ -60,10 +60,10 @@ typedef struct {
 class Rectangle
 {
 public:
-	volatile int16_t x;
-	volatile int16_t y;
-	volatile uint16_t width;
-	volatile uint16_t height;
+	int16_t x;
+	int16_t y;
+	uint16_t width;
+	uint16_t height;
 
 	Rectangle() :
 		x{0},
@@ -125,10 +125,10 @@ public:
 		uint32_t address,
 		int x,
 		int y,
-		volatile uint16_t w,
-		volatile uint16_t h,
-		volatile uint16_t source_x,
-		volatile uint16_t source_y,
+		uint16_t w,
+		uint16_t h,
+		uint16_t source_x,
+		uint16_t source_y,
 		int16_t pitch,
 		uint16_t transparent_color,
 		uint8_t flags
