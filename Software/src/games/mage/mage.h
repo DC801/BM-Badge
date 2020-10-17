@@ -4,7 +4,52 @@
 #include "common.h"
 #include "entity.h"
 
+typedef enum {
+    ENTITY_PRIMARY_TILESET = 0,
+    ENTITY_PRIMARY_ANIMATION = 1,
+    ENTITY_PRIMARY_ENTITY_TYPE = 2
+} MageEntityPrimaryIdType;
+
+typedef enum{
+    NORTH = 0,
+    EAST = 1,
+    SOUTH = 2,
+    WEST = 3
+} MageEntityAnimationDirection;
+
+extern Point cameraPosition;
+
 typedef struct {
+    char name[16];
+    uint16_t primaryId;
+    uint16_t secondaryId;
+    uint16_t scriptId;
+    uint16_t x;
+    uint16_t y;
+    uint8_t primaryIdType;
+    uint8_t currentAnimation;
+    uint8_t currentFrame;
+    uint8_t direction;
+    uint8_t hackableState;
+    uint8_t padding;
+} MageEntity;
+
+typedef struct {
+    uint16_t currentFrameTicks;
+    uint16_t tilesetId;
+    uint16_t tileId;
+    uint32_t duration;
+    uint16_t frameCount;
+    bool flipX;
+    bool flipY;
+    bool flipDiag;
+} MageEntityRenderableData;
+
+void MAGE(void);
+
+//Deprecated code below - clean up once everything is working: -Tim
+
+/*typedef struct {
     uint32_t *mapCount;
     uint32_t *mapOffsets;
     uint32_t *mapLengths;
@@ -23,7 +68,7 @@ typedef struct {
     uint32_t *imageCount;
     uint32_t *imageOffsets;
     uint32_t *imageLengths;
-} MageDataMemoryAddresses;
+} MageDataMemoryAddresses;*/
 
 /*typedef struct {
     char *name;
@@ -38,11 +83,11 @@ typedef struct {
     uint32_t startOfLayers;
 } MageMap;*/
 
-typedef struct {
+/*typedef struct {
     uint16_t tileId;
     uint8_t tilesetId;
     uint8_t flags;
-} MageTile;
+} MageTile;*/
 
 /*typedef struct {
     char *name;
@@ -82,12 +127,6 @@ typedef struct {
     MageEntityTypeAnimationDirection entityTypeAnimationDirection;
 } MageEntityType;*/
 
-typedef enum {
-    ENTITY_PRIMARY_TILESET = 0,
-    ENTITY_PRIMARY_ANIMATION = 1,
-    ENTITY_PRIMARY_ENTITY_TYPE = 2
-} MageEntityPrimaryIdType;
-
 /*typedef struct {
     char name[16];
     uint16_t primaryTypeIndex;
@@ -103,27 +142,24 @@ typedef enum {
     uint8_t padding;
 } MageEntity;*/
 
-typedef struct {
+/*typedef struct {
     char name[16];
     uint16_t width;
     uint16_t height;
-} MageImage;
+} MageImage;*/
 
-typedef struct {
-    //MageTileset *tileset;
-    //MageEntityType *entityType;
-    //MageAnimation *animation;
-    //MageAnimationFrame *animationFrame;
+/*typedef struct {
+    MageTileset *tileset;
+    MageEntityType *entityType;
+    MageAnimation *animation;
+    MageAnimationFrame *animationFrame;
     uint16_t *tileIndex;
     uint8_t *renderFlags;
-} MageEntityRenderableData;
+} MageEntityRenderableData;*/
 
-extern MageDataMemoryAddresses dataMemoryAddresses;
+//extern MageDataMemoryAddresses dataMemoryAddresses;
 //extern MageEntity *playerEntity;
-extern MageEntityRenderableData renderableEntityData;
-extern Point cameraPosition;
-
-void MAGE(void);
+//extern MageEntityRenderableData renderableEntityData;
 
 /*void get_renderable_data_from_entity(
 	MageEntity *entity,

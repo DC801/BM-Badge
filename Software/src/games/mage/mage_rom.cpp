@@ -818,9 +818,9 @@ MageRom::MageRom()
 	}
 
 	#ifdef DC801_DESKTOP
-		if(entityHeader.count() > MAX_ENTITIES_PER_MAP)
+		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
 		{
-			fprintf(stderr, "Game is attempting to load more than 32 entities.");
+			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
 		}
 	#endif
 	
@@ -834,6 +834,17 @@ MageRom::MageRom()
 			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
 		}
 	}
+
+	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
+
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//all entities start with 0 frame ticks
+		entityRenderableData[i].currentFrameTicks = 0;
+		//other values are filled in when getEntityRenderableData is called:
+		getEntityRenderableData(i);
+	}
+
 }
 
 uint32_t MageRom::Size() const
@@ -846,7 +857,8 @@ uint32_t MageRom::Size() const
 		entityHeader.size() +
 		imageHeader.size() +
 		map.Size() +
-		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP;
+		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+
+		sizeof(uint16_t)*MAX_ENTITIES_PER_MAP;
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
@@ -886,7 +898,32 @@ const MageMap& MageRom::Map() const
 
 void MageRom::LoadMap()
 {
+	//load new map:
 	map = MageMap(mapHeader.offset(currentMapIndex));
+	
+	//reload entities for new map:
+	#ifdef DC801_DESKTOP
+		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
+		{
+			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
+		}
+	#endif
+
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//only populate the entities that are on the current map.
+		if(i < entityHeader.count())
+		{
+			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
+		}
+	}
+
+	//reset entity animation frame ticks on new map load:
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//all entities start with 0 frame ticks
+		entityRenderableData[i].currentFrameTicks = 0;
+	}
 }
 
 MageEntity MageRom::LoadEntity(uint32_t address)
@@ -1102,7 +1139,134 @@ void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 	}
 }
 
+void MageRom::getEntityRenderableData(uint32_t index)
+{
+	//current entity for use in the loop:
+	MageEntity currentEnt = entities[index];
+
+	//increment frame and reset ticks if frame has been active long enough:
+	//Scenario 1: entity is of a standard EntityType:
+	if(currentEnt.primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_ENTITY_TYPE)
+	{
+		//check if entity type has an animation count:
+		uint16_t entityTypeIndex = entities[index].primaryId;
+		if(( entityTypes[entityTypeIndex].AnimationCount() ) > 0)
+		{
+			//get the current animation
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeIndex].EntityTypeAnimation(currentEnt.currentAnimation);
+			MageEntityTypeAnimationDirection directedAnimation; 
+			if(currentEnt.direction == MageEntityAnimationDirection::NORTH)
+			{
+				directedAnimation = currentAnimation.North();
+			}
+			else if(currentEnt.direction == MageEntityAnimationDirection::EAST)
+			{
+				directedAnimation = currentAnimation.East();
+			}
+			else if(currentEnt.direction == MageEntityAnimationDirection::SOUTH)
+			{
+				directedAnimation = currentAnimation.South();
+			}
+			else if(currentEnt.direction == MageEntityAnimationDirection::WEST)
+			{
+				directedAnimation = currentAnimation.West();
+			}
+			else
+			{
+				//this shouldn't be possible, so error:
+				#ifdef DC801_DESKTOP
+					fprintf(stderr, "Error: entity primaryIdType is invalid.");
+				#endif
+			}
+			//now that we have the animation, figure out the current animation index that needs to be run:
+			if(directedAnimation.Type() == 0)
+			{
+				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeID()].TilesetIndex();
+				entityRenderableData[index].tileId = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).TileIndex();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
+				entityRenderableData[index].flipX = directedAnimation.FlipX();
+				entityRenderableData[index].flipY = directedAnimation.FlipY();
+				entityRenderableData[index].flipDiag = directedAnimation.FlipDiag();
+			}
+			else
+			{
+				//do I need to subtract 1 from this to get the right tileset, since they are 0-indexed? -Tim
+				entityRenderableData[index].tilesetId = directedAnimation.Type();
+				entityRenderableData[index].tileId = directedAnimation.TypeID();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
+				entityRenderableData[index].flipX = directedAnimation.FlipX();
+				entityRenderableData[index].flipY = directedAnimation.FlipY();
+				entityRenderableData[index].flipDiag = directedAnimation.FlipDiag();
+			}
+		}
+	}
+	//Scenario 2: entity is an animation:
+	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_ANIMATION)
+	{
+		uint16_t aniIndex = entities[index].primaryId;
+		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetIndex();
+		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileIndex();
+		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(currentEnt.currentAnimation).Duration();
+		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
+		entityRenderableData[index].flipX = entities[index].direction & FLIPPED_HORIZONTALLY_FLAG;
+		entityRenderableData[index].flipY = entities[index].direction & FLIPPED_VERTICALLY_FLAG;
+		entityRenderableData[index].flipDiag = entities[index].direction & FLIPPED_DIAGONALLY_FLAG;
+}
+	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_TILESET)
+	{
+		entityRenderableData[index].tilesetId = entities[index].primaryId;
+		entityRenderableData[index].tileId = entities[index].secondaryId;
+		entityRenderableData[index].duration = 0; //unused
+		entityRenderableData[index].frameCount = 0; //unused
+		entityRenderableData[index].flipX = entities[index].direction & FLIPPED_HORIZONTALLY_FLAG;
+		entityRenderableData[index].flipY = entities[index].direction & FLIPPED_VERTICALLY_FLAG;
+		entityRenderableData[index].flipDiag = entities[index].direction & FLIPPED_DIAGONALLY_FLAG;
+	}
+	else
+	{
+		//this shouldn't be possible, so error:
+		#ifdef DC801_DESKTOP
+			fprintf(stderr, "Error: entity primaryIdType is invalid.");
+		#endif
+	}
+}
+
+void MageRom::UpdateEntities(uint32_t delta_time)
+{
+	//cycle through all map entities:
+	for(uint8_t i = 0; i < map.EntityCount(); i++)
+	{
+		//increment the frame ticks based on the delta_time since the last check:
+		entityRenderableData[i].currentFrameTicks += delta_time * 50;
+		
+		//update entity info:
+		getEntityRenderableData(i);
+
+		//check for frame change and adjust if needed:
+		if(entityRenderableData[i].currentFrameTicks > entityRenderableData[i].duration)
+		{
+			entities[i].currentFrame++;
+			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
+			{
+				entities[i].currentFrame = 0;
+			}
+		
+			//update the entity info again with the corrected frame index:
+			getEntityRenderableData(i);
+		}
+	}
+}
+
+void MageRom::DrawEntities()
+{
+
+}
+
 #pragma endregion
+
+//Deprecated Code Lives Below Here - Delete once everything is working again: -Tim
 
 //MageDataMemoryAddresses dataMemoryAddresses = {};
 

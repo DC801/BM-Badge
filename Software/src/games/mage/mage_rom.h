@@ -180,7 +180,6 @@ private:
 	MageEntityTypeAnimationDirection south;
 	MageEntityTypeAnimationDirection west;
 public:
-	//not sure if I did this default constructor right, someone please check. -Tim
 	MageEntityTypeAnimation() : 
 		north{MageEntityTypeAnimationDirection(0)},
 		east{MageEntityTypeAnimationDirection(0)},
@@ -225,21 +224,6 @@ public:
 	uint32_t Size() const;
 }; //class MageEntityType
 
-typedef struct {
-    char name[16];
-    uint16_t primaryId;
-    uint16_t secondaryId;
-    uint16_t scriptId;
-    uint16_t x;
-    uint16_t y;
-    uint8_t primaryIdType;
-    uint8_t currentAnimation;
-    uint8_t currentFrame;
-    uint8_t direction;
-    uint8_t hackableState;
-    uint8_t padding;
-} MageEntity;
-
 class MageRom
 {
 private:
@@ -257,34 +241,57 @@ private:
 
 	//this is where the current map data from the ROM is stored.
 	MageMap map;
+
 	//this is an array of the tileset data on the ROM.
 	//each entry is an indexed tileset.
 	std::unique_ptr<MageTileset[]> tiles;
+
 	//this is an array of the animation data on the ROM
 	//each entry is an indexed animation.
 	std::unique_ptr<MageAnimation[]> animations;
+
 	//this is an array of the entity types on the ROM
 	//each entry is an indexed entity type.
 	std::unique_ptr<MageEntityType[]> entityTypes;
+
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
 	std::unique_ptr<MageEntity[]> entities;
+
+	//this is an arrya storing the most current data needed to draw entities
+	//on the screen in their current animation state.
+	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 public:
 	//when the MageRom is created, it will populate all the above variables from ROM.
 	MageRom();
 
 	//returns the size in memory of the MageRom object.
 	uint32_t Size() const;
+
 	//this will return a specific MageTileset object by index.
 	const MageTileset& Tile(uint32_t index) const;
+
 	//this will return the current map object.
 	const MageMap& Map() const;
+
 	//this will load a map to be the current map.
 	void LoadMap();
+
 	//this will fill in an entity structure's data from ROM
 	MageEntity LoadEntity(uint32_t address);
+
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
+
+	//this calculates the relevant info to be able to draw an entity based on the
+	//current state of the data in MageRom and stores the info in entityRenderableData
+	void getEntityRenderableData(uint32_t index);
+
+	//this will update the current entities based on the current frame data
+	void UpdateEntities(uint32_t delta_time);
+
+	//this will draw the entities over the current state of the screen
+	void DrawEntities();
 
 }; //class MageRom
 
@@ -300,21 +307,21 @@ public:
 // extern MageEntity **currentMapEntitiesSortedByRenderOrder;
 // extern uint8_t *data;
 
-uint32_t load_data_headers();
+// uint32_t load_data_headers();
 
 /*void load_tilesets_headers(
 	MageTileset *tilesetPointer,
 	uint32_t tilesetIndex
 );*/
 
-void load_all_tilesets();
-void load_map_headers(uint32_t incomingMapIndex);
-void correct_entity_type_endians();
-void correct_animation_endians();
-void correct_entity_endians();
+// void load_all_tilesets();
+// void load_map_headers(uint32_t incomingMapIndex);
+// void correct_entity_type_endians();
+// void correct_animation_endians();
+// void correct_entity_endians();
 
-MageEntityType* get_entity_type_by_index(uint8_t index);
-uint16_t* get_image_by_index(uint8_t index);
+// MageEntityType* get_entity_type_by_index(uint8_t index);
+// uint16_t* get_image_by_index(uint8_t index);
 // MageTileset* get_tileset_by_id(uint8_t index);
 
 #endif //_MAGE_ROM_H

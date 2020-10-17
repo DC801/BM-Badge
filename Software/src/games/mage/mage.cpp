@@ -59,8 +59,10 @@ void mage_game_loop()
 		}
 
 		//update_entities();
+		MageROM->UpdateEntities(delta_time);
 
 		//draw_entities();
+		MageROM->DrawEntities();
 
 		if (layerCount > 1)
 		{
