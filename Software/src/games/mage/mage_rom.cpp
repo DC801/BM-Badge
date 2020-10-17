@@ -774,7 +774,6 @@ MageRom::MageRom()
 {
 	uint32_t offset = 8;
 
-	mapIndex = 0;
 	currentMapIndex = 0;
 
 	mapHeader = MageHeader(offset);
@@ -839,8 +838,7 @@ MageRom::MageRom()
 
 uint32_t MageRom::Size() const
 {
-	uint32_t size = sizeof(mapIndex) +
-		sizeof(currentMapIndex) +
+	uint32_t size = sizeof(currentMapIndex) +
 		mapHeader.size() +
 		tileHeader.size() +
 		animationHeader.size() +
@@ -1106,22 +1104,23 @@ void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 
 #pragma endregion
 
-MageDataMemoryAddresses dataMemoryAddresses = {};
+//MageDataMemoryAddresses dataMemoryAddresses = {};
 
 // MageTileset *allTilesets;
-uint32_t mapIndex = 0;
-uint32_t currentMapIndex = 0;
+//uint32_t mapIndex = 0;
+//uint32_t currentMapIndex = 0;
 // MageMap currentMap = {};
 // MageTileset *currentMapTilesets;
-MageEntity *currentMapEntities;
-uint16_t *currentMapEntityFrameTicks;
-MageAnimationFrame *currentMapEntityFrames;
-MageEntity **currentMapEntitiesSortedByRenderOrder;
-uint8_t *data;
+//MageEntity *currentMapEntities;
+//uint16_t *currentMapEntityFrameTicks;
+//MageAnimationFrame *currentMapEntityFrames;
+//MageEntity **currentMapEntitiesSortedByRenderOrder;
+//uint8_t *data;
 
-#define IDENTIFIER_LENGTH 8
-#define HEADER_START 8
+//#define IDENTIFIER_LENGTH 8
+//#define HEADER_START 8
 
+/*
 uint32_t count_with_offsets (
 	uint8_t *data,
 	uint32_t **count,
@@ -1159,14 +1158,14 @@ void correct_image_data_endinness (
 uint32_t load_data_headers ()
 {
 	// seek past identifier
-	uint32_t offset = HEADER_START;
+	//uint32_t offset = HEADER_START;
 
 	// TODO: Load entire header with size
 
 	// mapHeader = MageHeader(offset);
 	// offset += mapHeader.size();
 
-	/*offset += count_with_offsets(
+	offset += count_with_offsets(
 		data + offset,
 		&dataMemoryAddresses.mapCount,
 		&dataMemoryAddresses.mapOffsets,
@@ -1217,7 +1216,7 @@ uint32_t load_data_headers ()
 				dataMemoryAddresses.imageLengths[i]
 			);
 		}
-	}*/
+	}
 
 	// printf("dataMemoryAddresses.mapCount: %" PRIu32 "\n", *dataMemoryAddresses.mapCount);
 	// printf("dataMemoryAddresses.tilesetCount: %" PRIu32 "\n", *dataMemoryAddresses.tilesetCount);
@@ -1231,7 +1230,7 @@ uint32_t load_data_headers ()
 	return offset;
 }
 
-/*void load_tilesets_headers (
+void load_tilesets_headers (
 	MageTileset *tilesetPointer,
 	uint32_t tilesetIndex
 )
@@ -1293,19 +1292,19 @@ uint32_t load_data_headers ()
 
 	tileset.startOfTiles = dataMemoryAddresses.tilesetOffsets[tilesetIndex] + offset;
 	*tilesetPointer = tileset;
-}*/
+}
 
 void load_all_tilesets ()
 {
 	// printf("load_all_tilesets:\n");
 
-	/*uint32_t tilesetCount = *dataMemoryAddresses.tilesetCount;
+	uint32_t tilesetCount = *dataMemoryAddresses.tilesetCount;
 	allTilesets = (MageTileset *) malloc(tilesetCount * sizeof(MageTileset));
 
 	for (uint32_t i = 0; i < tilesetCount; i++)
 	{
 		load_tilesets_headers(allTilesets + i, i);
-	}*/
+	}
 }
 
 void allocate_current_map_entities(
@@ -1343,7 +1342,7 @@ void allocate_current_map_entities(
 		uint32_t entityTypeOffset;
 		MageEntityType *entityType;
 		char mageType[16] = "goose";
-		/* commented out to get new classes to compile -Tim 		
+		commented out to get new classes to compile -Tim 		
 		if (entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE)
 		{
 			entityType = get_entity_type_by_index(entityInRAM->primaryTypeIndex);
@@ -1353,7 +1352,7 @@ void allocate_current_map_entities(
 			{
 				playerEntity = entityInRAM;
 			}
-		} */
+		}
 
 		// printf("  primaryTypeIndex: %" PRIu16 "\n", entityInRAM->primaryTypeIndex);
 		// printf("  secondaryTypeIndex: %" PRIu16 "\n", entityInRAM->secondaryTypeIndex);
@@ -1365,7 +1364,7 @@ void allocate_current_map_entities(
 
 void load_map_headers (uint32_t incomingMapIndex)
 {
-	/*uint8_t *mapData = data + dataMemoryAddresses.mapOffsets[incomingMapIndex];
+	uint8_t *mapData = data + dataMemoryAddresses.mapOffsets[incomingMapIndex];
 	// printf("mapData: %p\n", mapData);
 
 	mapData[15] = 0x00; // null terminate it so things don't go bad
@@ -1438,12 +1437,11 @@ void load_map_headers (uint32_t incomingMapIndex)
 	);
 
 	// printf("currentMap.startOfLayers %p\n", currentMap.startOfLayers);
-	currentMapIndex = incomingMapIndex;*/
+	currentMapIndex = incomingMapIndex;
 }
 
 void correct_entity_type_endians ()
 {
-	/* commented out to get new classes to compile -Tim
 	uint32_t offset;
 	MageEntityType *entityType;
 	MageEntityTypeAnimationDirection *entityTypeAnimationDirection;
@@ -1463,12 +1461,10 @@ void correct_entity_type_endians ()
 			// printf("    typeIndex: %" PRIu16 "\n", entityTypeAnimationDirection->typeIndex);
 		}
 	}
-	*/
 }
 
 void correct_animation_endians ()
 {
-	/* commented out to get new headers to compile -Tim
 	uint32_t offset;
 	MageAnimation *animation;
 	MageAnimationFrame *animationFrame;
@@ -1493,12 +1489,10 @@ void correct_animation_endians ()
 			// printf("  j: %" PRIu32 "\n", j);
 		}
 	}
-	*/
 }
 
 void correct_entity_endians ()
 {
-	/* commented out to make new classes work -Tim
 	uint32_t offset;
 	MageEntity *entity;
 	// printf("correct_entity_endians\n");
@@ -1520,7 +1514,6 @@ void correct_entity_endians ()
 		// printf("  x: %" PRIu16 "\n", entity->x);
 		// printf("  y: %" PRIu16 "\n", entity->y);
 	}
-	*/
 }
 
 MageEntityType* get_entity_type_by_index(uint8_t index)
@@ -1537,11 +1530,12 @@ uint16_t* get_image_by_index(uint8_t index)
 		: nullptr;
 }
 
-/*MageTileset* get_tileset_by_id(uint8_t index)
+MageTileset* get_tileset_by_id(uint8_t index)
 {
 	return index < *dataMemoryAddresses.tilesetCount
 		? (MageTileset *) (allTilesets + index)
 		: nullptr;
 
 	return nullptr;
-}*/
+}
+*/

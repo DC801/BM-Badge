@@ -22,6 +22,7 @@ void toggle_dialog () {
 }
 
 void update_hex_lights() {
+	/* Need to update once entities are working again: -Tim
 	const uint8_t currentByte = *(((uint8_t *) currentMapEntities) + hex_cursor);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
@@ -31,12 +32,14 @@ void update_hex_lights() {
 	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+	*/
 }
 
 
 HEX_OPS currentOp = HEX_OPS_XOR;
 
 void runHex (uint8_t value) {
+	/* Need to update once entities are working again: -Tim
 	uint8_t *currentByte = (((uint8_t *) currentMapEntities) + hex_cursor);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
@@ -46,6 +49,7 @@ void runHex (uint8_t value) {
 		default: break;
 	}
 	*currentByte = changedValue;
+	*/
 }
 
 void set_hex_op (enum HEX_OPS op) {
@@ -87,6 +91,7 @@ bool anyHexMovement = false;
 uint8_t delay = 0;
 void update_hex_editor()
 {
+	/* Need to update once entities are working again: -Tim
 	bytes_per_page = dialog_open ? 64 : 192;
 	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
 	mem_total = *dataMemoryAddresses.entityCount * sizeof(MageEntity);
@@ -151,9 +156,11 @@ void update_hex_editor()
 	{
 		delay--;
 	}
+	*/
 }
 void render_hex_header()
 {
+	/* Need to update once entities are working again: -Tim
 	char headerString[128];
 	sprintf(
 		headerString,
@@ -189,6 +196,7 @@ void render_hex_header()
 		BYTE_OFFSET_X,
 		BYTE_FOOTER_OFFSET_Y + (BYTE_HEIGHT * (hex_rows + 2))
 	);
+	*/
 }
 
 void get_hex_string_for_byte (uint8_t byte, char* outputString)
@@ -198,6 +206,7 @@ void get_hex_string_for_byte (uint8_t byte, char* outputString)
 
 void render_hex_editor()
 {
+	/* Need to update once entities are working again: -Tim
 	char currentByteString[2];
 	if ((hex_cursor / bytes_per_page) == mem_page)
 	{
@@ -231,4 +240,5 @@ void render_hex_editor()
 			(i / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y
 		);
 	}
+	*/
 }
