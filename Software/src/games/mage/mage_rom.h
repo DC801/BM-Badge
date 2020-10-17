@@ -288,7 +288,7 @@ public:
 
 }; //class MageRom
 
-extern MageDataMemoryAddresses dataMemoryAddresses;
+// extern MageDataMemoryAddresses dataMemoryAddresses;
 // extern MageTileset *allTilesets;
 // extern uint32_t mapIndex;
 // extern uint32_t currentMapIndex;
