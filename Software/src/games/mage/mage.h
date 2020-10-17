@@ -5,9 +5,9 @@
 #include "entity.h"
 
 typedef enum {
-    ENTITY_PRIMARY_TILESET = 0,
-    ENTITY_PRIMARY_ANIMATION = 1,
-    ENTITY_PRIMARY_ENTITY_TYPE = 2
+    TILESET = 0,
+    ANIMATION = 1,
+    ENTITY_TYPE = 2
 } MageEntityPrimaryIdType;
 
 typedef enum{
@@ -40,9 +40,7 @@ typedef struct {
     uint16_t tileId;
     uint32_t duration;
     uint16_t frameCount;
-    bool flipX;
-    bool flipY;
-    bool flipDiag;
+    uint8_t renderFlags;
 } MageEntityRenderableData;
 
 void MAGE(void);

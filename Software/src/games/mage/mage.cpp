@@ -62,7 +62,7 @@ void mage_game_loop()
 		MageROM->UpdateEntities(delta_time);
 
 		//draw_entities();
-		MageROM->DrawEntities();
+		MageROM->DrawEntities(cameraPosition.x, cameraPosition.y);
 
 		if (layerCount > 1)
 		{
