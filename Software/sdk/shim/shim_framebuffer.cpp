@@ -259,26 +259,24 @@ void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
 	int x,
 	int y,
-	volatile uint16_t tile_width,
-	volatile uint16_t tile_height,
-	volatile uint16_t source_x,
-	volatile uint16_t source_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
 	int16_t pitch,
 	uint16_t transparent_color,
 	uint8_t flags
 )
 {
-	volatile uint16_t tile_x = 0;
-	volatile uint16_t tile_y = 0;
-	volatile uint16_t write_x = 0;
-	volatile uint16_t write_y = 0;
-	volatile int16_t dest_x = 0;
-	volatile int16_t dest_y = 0;
+	uint16_t tile_x = 0;
+	uint16_t tile_y = 0;
+	uint16_t write_x = 0;
+	uint16_t write_y = 0;
+	int16_t dest_x = 0;
+	int16_t dest_y = 0;
 	uint16_t colors[MAX_RUN] = {};
 	uint32_t location = 0;
 	uint32_t bytes_to_read = 0;
-	uint32_t pixels_in_frame = 0;
-	uint32_t pixels_out_frame = 0;
 
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
@@ -314,8 +312,6 @@ void FrameBuffer::drawChunkWithFlags(
 	uint16_t transposed_offset_y = flip_diag ? offset_x : offset_y;
 	int32_t inverse_transposed_offset_x = tile_width - transposed_width - transposed_offset_x;
 	int32_t inverse_transposed_offset_y = tile_height - transposed_height - transposed_offset_y;
-	bool cropped_x = tile_width != transposed_width;
-	bool cropped_y = tile_height != transposed_height;
 	Rectangle readRect = Rectangle(
 		source_x + (((!flip_x && flip_y && flip_diag) || (flip_x && !flip_diag)|| (flip_x && flip_y && flip_diag)) ? inverse_transposed_offset_x : transposed_offset_x),
 		source_y + (((!flip_y && flip_x && flip_diag) || (flip_y && !flip_diag)|| (flip_y && flip_x && flip_diag)) ? inverse_transposed_offset_y : transposed_offset_y),
@@ -327,6 +323,7 @@ void FrameBuffer::drawChunkWithFlags(
 	uint16_t remaining_pixels_this_row = readRect.width;
 	uint16_t pixels_to_read_now = 0;
 	uint16_t color = 0;
+	// These loops represent source coordinate space, not destination space
 	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
 	{
 		location = address + ((((readRect.y + tile_y) * pitch) + readRect.x) * sizeof(uint16_t));
@@ -358,51 +355,13 @@ void FrameBuffer::drawChunkWithFlags(
 			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
 			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
 			color = colors[tile_x % pixels_to_read_per_run];
-			uint32_t destination_pixel_index = (dest_y * WIDTH) + dest_x;
-			if (destination_pixel_index < FRAMEBUFFER_SIZE)
+			if (color != transparent_color)
 			{
-				pixels_in_frame++;
-				if (color != transparent_color)
-				{
-					frame[destination_pixel_index] = color;
-				}
+				frame[(dest_y * WIDTH) + dest_x] = color;
 			}
-			else
-			{
-//				printf(
-//					"Drawing tile: "
-//						"tile_y: %" PRIu16 "; "
-//						"tile_x: %" PRIu16 "; "
-//						"write_x: %" PRIu16 "; "
-//						"write_y: %" PRIu16 "; "
-//						"writetangle.width: %" PRIu16 "; "
-//						"writetangle.height: %" PRIu16 "; "
-//						"dest_x: %" PRIu16 "; "
-//						"dest_y: %" PRIu16 ";\n",
-//					tile_y,
-//					tile_x,
-//					write_x,
-//					write_y,
-//					writetangle.width,
-//					writetangle.height,
-//					dest_x,
-//					dest_y
-//				);
-				pixels_out_frame++;
-			}
-//			if (EngineInput_Buttons.mem1)
-//			{
-//				EngineHandleInput();
-//				canvas.blt();
-//			}
 			tile_x++;
 		}
 	}
-//	printf(
-//		"Drawing tile: pixels_in_frame: %" PRIu32 "; pixels_out_frame %" PRIu32 "\n",
-//		pixels_in_frame,
-//		pixels_out_frame
-//	);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
