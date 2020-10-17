@@ -9,7 +9,7 @@ void apply_input_to_game()
 uint8_t mageSpeed = 1;
 bool isMoving = false;
 
-void apply_input_to_player (uint8_t *data)
+void apply_input_to_player ()
 {
 	/*if (*hexEditorState)
 	{

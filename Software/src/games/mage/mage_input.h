@@ -9,7 +9,7 @@
 #include "modules/keyboard.h"
 #include "engine/EngineInput.h"
 
-void apply_input_to_player(uint8_t *data);
+void apply_input_to_player();
 
 void apply_input_to_game();
 

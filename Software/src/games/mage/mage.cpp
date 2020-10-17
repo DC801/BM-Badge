@@ -290,7 +290,7 @@ void mage_game_loop()
 	else
 	{
 		mage_canvas->clearScreen(RGB(0,0,255));
-		apply_input_to_player(data);
+		apply_input_to_player();
 
 		uint8_t layerCount = MageROM->Map().LayerCount();
 
