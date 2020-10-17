@@ -243,9 +243,6 @@ typedef struct {
 class MageRom
 {
 private:
-	//why is there a mapIndex and a currentMapIndex? Isn't the currentMapIndex enough? 
-	//I don't see this being used anywhere in the code -Tim
-	uint32_t mapIndex;
 	//Stores the current map's index value
 	uint32_t currentMapIndex;
 
