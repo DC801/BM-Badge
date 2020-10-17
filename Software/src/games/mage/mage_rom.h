@@ -290,15 +290,15 @@ public:
 
 extern MageDataMemoryAddresses dataMemoryAddresses;
 // extern MageTileset *allTilesets;
-extern uint32_t mapIndex;
-extern uint32_t currentMapIndex;
+// extern uint32_t mapIndex;
+// extern uint32_t currentMapIndex;
 // extern MageMap currentMap;
 // extern MageTileset *currentMapTilesets;
-extern MageEntity *currentMapEntities;
-extern uint16_t *currentMapEntityFrameTicks;
-extern MageAnimationFrame *currentMapEntityFrames;
-extern MageEntity **currentMapEntitiesSortedByRenderOrder;
-extern uint8_t *data;
+// extern MageEntity *currentMapEntities;
+// extern uint16_t *currentMapEntityFrameTicks;
+// extern MageAnimationFrame *currentMapEntityFrames;
+// extern MageEntity **currentMapEntitiesSortedByRenderOrder;
+// extern uint8_t *data;
 
 uint32_t load_data_headers();
 
