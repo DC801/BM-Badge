@@ -25,14 +25,14 @@ public:
     void drawVerticalLine(int x, int y1, int y2, uint16_t color);
 
     void drawImage(int x, int y, int w, int h, const uint16_t *data);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color);
     void drawImage(int x, int y, int w, int h, const uint8_t *data);
-    void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
 
     void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);
-    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color);
+    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color);
 
     void fillCircle(int x, int y, int radius, uint16_t color);
 

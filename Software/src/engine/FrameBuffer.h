@@ -57,6 +57,32 @@ typedef struct {
     int16_t y;
 } cursor_t;
 
+class Rectangle
+{
+public:
+	volatile int16_t x;
+	volatile int16_t y;
+	volatile uint16_t width;
+	volatile uint16_t height;
+
+	Rectangle() :
+		x{0},
+		y{0},
+		width{0},
+		height{0} {}
+
+	Rectangle(
+		int16_t x,
+		int16_t y,
+		uint16_t width,
+		uint16_t height
+	) :
+		x{x},
+		y{y},
+		width{width},
+		height{height} {}
+};
+
 #ifdef __cplusplus
 class FrameBuffer {
 public:
@@ -73,11 +99,11 @@ public:
     void drawVerticalLine(int x, int y1, int y2, uint16_t color);
 
     void drawImage(int x, int y, int w, int h, const uint16_t *data);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color);
     void drawImage(int x, int y, int w, int h, const uint8_t *data);
-    void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
     void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t tansparent_color);
+    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
 
 #define FLIPPED_HORIZONTALLY_FLAG 0x04
 #define FLIPPED_VERTICALLY_FLAG   0x02
@@ -91,25 +117,25 @@ public:
         int fx,
         int fy,
         int pitch,
-        uint16_t tansparent_color,
+        uint16_t transparent_color,
         uint8_t flags
     );
 
-    void drawChunkWithFlags(
-        uint32_t address,
-        int x,
-        int y,
-        int w,
-        int h,
-        int fx,
-        int fy,
-        int pitch,
-        uint16_t tansparent_color,
-        uint8_t flags
-    );
+	void drawChunkWithFlags(
+		uint32_t address,
+		int x,
+		int y,
+		volatile uint16_t w,
+		volatile uint16_t h,
+		volatile uint16_t source_x,
+		volatile uint16_t source_y,
+		int16_t pitch,
+		uint16_t transparent_color,
+		uint8_t flags
+	);
 
     void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);
-    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color);
+    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color);
 
     void drawImageFromFile(int x, int y, int w, int h, const char *filename);
     void drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
