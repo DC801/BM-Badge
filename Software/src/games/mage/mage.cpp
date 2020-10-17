@@ -24,9 +24,93 @@ Point cameraPosition = {
 	.y = 0,
 };
 
-void draw_map (uint8_t layer)
+void mage_game_loop()
 {
-	/*uint32_t tileCount = *currentMap.width * *currentMap.height;
+	now = millis();
+	delta_time = now - lastTime;
+
+	if (*hexEditorState)
+	{
+		mage_canvas->clearScreen(RGB(0,0,0));
+		update_hex_editor();
+		render_hex_editor();
+	}
+	else
+	{
+		mage_canvas->clearScreen(RGB(0,0,255));
+		apply_input_to_player();
+
+		uint8_t layerCount = MageROM->Map().LayerCount();
+
+		if (layerCount > 1)
+		{
+			for (
+				uint8_t layerIndex = 0;
+				layerIndex < (layerCount - 1);
+				layerIndex++
+			)
+			{
+				MageROM->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+			}
+		}
+		else
+		{
+			MageROM->DrawMap(0, cameraPosition.x, cameraPosition.y);
+		}
+
+		//update_entities();
+
+		//draw_entities();
+
+		if (layerCount > 1)
+		{
+			MageROM->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+		}
+	}
+
+	// update_hex_lights();
+	mage_canvas->blt();
+	lastTime = now;
+
+#ifdef DC801_DESKTOP
+	nrf_delay_ms(5);
+#endif
+}
+
+void MAGE()
+{
+	// Initialize ROM and drivers
+	EngineROM_Init();
+
+	// Verify magic
+	if (EngineROM_Magic((const uint8_t*)"MAGEGAME", 8) != true)
+	{
+		ENGINE_PANIC("Failed to match Game Magic");
+	}
+
+	// Construct MageRom object, loading all headers
+	MageROM = std::make_unique<MageRom>();
+
+	mage_canvas = p_canvas();
+	lastTime = millis();
+	set_hex_op(HEX_OPS_XOR);
+
+	while (EngineIsRunning())
+	{
+		EngineHandleInput();
+		apply_input_to_game();
+		mage_game_loop();
+	}
+
+	// Close rom and any open files
+	EngineROM_Deinit();
+
+	return;
+}
+
+/* void draw_map (uint8_t layer)
+{
+	uint32_t tileCount = *currentMap.width * *currentMap.height;
 	uint8_t flags = 0;
 	uint16_t tileId = 0;
 	uint16_t cols = 0;
@@ -77,10 +161,10 @@ void draw_map (uint8_t layer)
 				);
 			}
 		}
-	}*/
-}
+	}
+}*/
 
-/* removed to make new classes compile -Tim
+/*
 void get_renderable_data_from_entity (
 	MageEntity *entity,
 	MageEntityRenderableData *renderableData
@@ -148,16 +232,17 @@ void get_renderable_data_from_entity (
 
 		renderableData->tileIndex = &renderableData->animationFrame->tileIndex;
 	}
-}
-*/
+}*/
 
+/*
 void swap_entity_pointers (MageEntity** xp, MageEntity** yp)
 {
 	MageEntity* temp = *xp;
 	*xp = *yp;
 	*yp = temp;
-}
+}*/
 
+/*
 void sort_current_map_entities_by_render_order ()
 {
 	/*uint16_t i, j, min_idx;
@@ -186,16 +271,17 @@ void sort_current_map_entities_by_render_order ()
 		// Swap the found minimum element
 		// with the first element
 		swap_entity_pointers(&array[min_idx], &array[i]);
-	}*/
-}
+	}
+}*/
 
-MageEntityRenderableData renderableEntityData = {};
-uint8_t animation_frame_limiter = 0;
-uint8_t animation_frame = 0;
+// MageEntityRenderableData renderableEntityData = {};
+// uint8_t animation_frame_limiter = 0;
+// uint8_t animation_frame = 0;
 
+/*
 void draw_entities()
 {
-	/*uint16_t entityCount = *currentMap.entityCount;
+	uint16_t entityCount = *currentMap.entityCount;
 	MageEntity *entity;
 	MageTileset *tileset;
 	uint16_t tileIndex;
@@ -236,17 +322,17 @@ void draw_entities()
 			0x0020,
 			renderFlags
 		);
-	}*/
-}
+	}
+}*/
 
-MageEntity *playerEntity;
+// MageEntity *playerEntity;
 
+/*
 void update_entity_frame (
 	MageEntity *entity,
 	uint16_t *currentFrameTimer
 )
 {
-	/* Commented out to get new classes to compile -Tim
 	*currentFrameTimer += delta_time * 50;
 	get_renderable_data_from_entity(entity, &renderableEntityData);
 	if(renderableEntityData.animationFrame) {
@@ -258,9 +344,9 @@ void update_entity_frame (
 				% renderableEntityData.animation->frameCount
 			);
 		}
-		*/
-}
+}*/
 
+/*
 void update_entities ()
 {
 	/*MageEntity *entity;
@@ -273,97 +359,5 @@ void update_entities ()
 			entity,
 			currentFrameTimer
 		);
-	}*/
-}
-
-void mage_game_loop()
-{
-	now = millis();
-	delta_time = now - lastTime;
-
-	if (*hexEditorState)
-	{
-		mage_canvas->clearScreen(RGB(0,0,0));
-		update_hex_editor();
-		render_hex_editor();
 	}
-	else
-	{
-		mage_canvas->clearScreen(RGB(0,0,255));
-		apply_input_to_player();
-
-		uint8_t layerCount = MageROM->Map().LayerCount();
-
-		if (layerCount > 1)
-		{
-			for (
-				uint8_t layerIndex = 0;
-				layerIndex < (layerCount - 1);
-				layerIndex++
-			)
-			{
-				draw_map(layerIndex);
-				MageROM->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
-			}
-		}
-		else
-		{
-			MageROM->DrawMap(0, cameraPosition.x, cameraPosition.y);
-		}
-
-		//update_entities();
-
-		//draw_entities();
-
-		if (layerCount > 1)
-		{
-			MageROM->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
-		}
-	}
-
-	// update_hex_lights();
-	mage_canvas->blt();
-	lastTime = now;
-
-#ifdef DC801_DESKTOP
-	nrf_delay_ms(5);
-#endif
-}
-
-void MAGE()
-{
-	// Initialize ROM and drivers
-	EngineROM_Init();
-
-	// Verify magic
-	if (EngineROM_Magic((const uint8_t*)"MAGEGAME", 8) != true)
-	{
-		ENGINE_PANIC("Failed to match Game Magic");
-	}
-
-	// Construct MageRom object, loading all headers
-	MageROM = std::make_unique<MageRom>();
-
-	// load_all_tilesets();
-	// correct_animation_endians();
-	// correct_entity_type_endians();
-	// correct_entity_endians();
-
-	// load_map_headers(0);
-
-	mage_canvas = p_canvas();
-	lastTime = millis();
-	set_hex_op(HEX_OPS_XOR);
-
-	while (EngineIsRunning())
-	{
-		EngineHandleInput();
-		apply_input_to_game();
-		mage_game_loop();
-	}
-
-	// Close rom and any open files
-	EngineROM_Deinit();
-
-	return;
-}
+}*/
