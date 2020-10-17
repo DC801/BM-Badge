@@ -5,9 +5,6 @@
 #include <string>
 #include "mage.h"
 
-//this is the most unique entities that can be in any map.
-#define MAX_ENTITIES_PER_MAP 32
-
 class MageHeader
 {
 private:
@@ -278,7 +275,7 @@ public:
 	const MageMap& Map() const;
 
 	//this will load a map to be the current map.
-	void LoadMap();
+	void LoadMap(uint16_t index);
 
 	//this will fill in an entity structure's data from ROM
 	MageEntity LoadEntity(uint32_t address);

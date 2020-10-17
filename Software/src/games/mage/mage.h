@@ -4,6 +4,12 @@
 #include "common.h"
 #include "entity.h"
 
+//this is the most unique entities that can be in any map.
+#define MAX_ENTITIES_PER_MAP 32
+
+//this is the map that will load at the start of the game:
+#define DEFAULT_MAP 0
+
 typedef enum {
     TILESET = 0,
     ANIMATION = 1,

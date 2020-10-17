@@ -247,7 +247,7 @@ void swap_entity_pointers (MageEntity** xp, MageEntity** yp)
 /*
 void sort_current_map_entities_by_render_order ()
 {
-	/*uint16_t i, j, min_idx;
+	uint16_t i, j, min_idx;
 	uint16_t n = *currentMap.entityCount;
 	MageEntity **array = currentMapEntitiesSortedByRenderOrder;
 
@@ -351,7 +351,7 @@ void update_entity_frame (
 /*
 void update_entities ()
 {
-	/*MageEntity *entity;
+	MageEntity *entity;
 	uint16_t *currentFrameTimer;
 	uint16_t entityCount = *currentMap.entityCount;
 	for(uint16_t i = 0; i < entityCount; i++) {
