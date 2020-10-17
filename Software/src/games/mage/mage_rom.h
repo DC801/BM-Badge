@@ -230,6 +230,9 @@ private:
 	//Stores the current map's index value
 	uint32_t currentMapIndex;
 
+	//this is a pointer to the Player Entity
+	MageEntity* playerEntity;
+
 	//these header objects store the header information for all datasets on the ROM,
 	//including address offsets for each item, and the length of the item in memory.
 	MageHeader mapHeader;
@@ -244,7 +247,7 @@ private:
 
 	//this is an array of the tileset data on the ROM.
 	//each entry is an indexed tileset.
-	std::unique_ptr<MageTileset[]> tiles;
+	std::unique_ptr<MageTileset[]> tilesets;
 
 	//this is an array of the animation data on the ROM
 	//each entry is an indexed animation.
@@ -291,7 +294,7 @@ public:
 	void UpdateEntities(uint32_t delta_time);
 
 	//this will draw the entities over the current state of the screen
-	void DrawEntities();
+	void DrawEntities(int32_t cameraX, int32_t cameraY);
 
 }; //class MageRom
 

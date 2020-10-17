@@ -796,11 +796,11 @@ MageRom::MageRom()
 
 	map = MageMap(mapHeader.offset(currentMapIndex));
 
-	tiles = std::make_unique<MageTileset[]>(tileHeader.count());
+	tilesets = std::make_unique<MageTileset[]>(tileHeader.count());
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
-		tiles[i] = MageTileset(tileHeader.offset(i));
+		tilesets[i] = MageTileset(tileHeader.offset(i));
 	}
 	
 	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
@@ -862,7 +862,7 @@ uint32_t MageRom::Size() const
 
 	for (uint32_t i = 0; i < tileHeader.count(); i++)
 	{
-		size += tiles[i].Size();
+		size += tilesets[i].Size();
 	}
 
 	for (uint32_t i = 0; i < animationHeader.count(); i++)
@@ -881,11 +881,11 @@ uint32_t MageRom::Size() const
 const MageTileset& MageRom::Tile(uint32_t index) const
 {
 	static MageTileset tile;
-	if (!tiles) return tile;
+	if (!tilesets) return tile;
 
 	if (tileHeader.count() > index)
 	{
-		return tiles[index];
+		return tilesets[index];
 	}
 
 	return tile;
@@ -1146,7 +1146,7 @@ void MageRom::getEntityRenderableData(uint32_t index)
 
 	//increment frame and reset ticks if frame has been active long enough:
 	//Scenario 1: entity is of a standard EntityType:
-	if(currentEnt.primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_ENTITY_TYPE)
+	if(currentEnt.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
 	{
 		//check if entity type has an animation count:
 		uint16_t entityTypeIndex = entities[index].primaryId;
@@ -1185,9 +1185,7 @@ void MageRom::getEntityRenderableData(uint32_t index)
 				entityRenderableData[index].tileId = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).TileIndex();
 				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
-				entityRenderableData[index].flipX = directedAnimation.FlipX();
-				entityRenderableData[index].flipY = directedAnimation.FlipY();
-				entityRenderableData[index].flipDiag = directedAnimation.FlipDiag();
+				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
 			else
 			{
@@ -1196,33 +1194,27 @@ void MageRom::getEntityRenderableData(uint32_t index)
 				entityRenderableData[index].tileId = directedAnimation.TypeID();
 				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
-				entityRenderableData[index].flipX = directedAnimation.FlipX();
-				entityRenderableData[index].flipY = directedAnimation.FlipY();
-				entityRenderableData[index].flipDiag = directedAnimation.FlipDiag();
+				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
 		}
 	}
 	//Scenario 2: entity is an animation:
-	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_ANIMATION)
+	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ANIMATION)
 	{
 		uint16_t aniIndex = entities[index].primaryId;
 		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetIndex();
 		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileIndex();
 		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(currentEnt.currentAnimation).Duration();
 		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
-		entityRenderableData[index].flipX = entities[index].direction & FLIPPED_HORIZONTALLY_FLAG;
-		entityRenderableData[index].flipY = entities[index].direction & FLIPPED_VERTICALLY_FLAG;
-		entityRenderableData[index].flipDiag = entities[index].direction & FLIPPED_DIAGONALLY_FLAG;
-}
-	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_PRIMARY_TILESET)
+		entityRenderableData[index].renderFlags = entities[index].direction;
+	}
+	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::TILESET)
 	{
 		entityRenderableData[index].tilesetId = entities[index].primaryId;
 		entityRenderableData[index].tileId = entities[index].secondaryId;
 		entityRenderableData[index].duration = 0; //unused
 		entityRenderableData[index].frameCount = 0; //unused
-		entityRenderableData[index].flipX = entities[index].direction & FLIPPED_HORIZONTALLY_FLAG;
-		entityRenderableData[index].flipY = entities[index].direction & FLIPPED_VERTICALLY_FLAG;
-		entityRenderableData[index].flipDiag = entities[index].direction & FLIPPED_DIAGONALLY_FLAG;
+		entityRenderableData[index].renderFlags = entities[index].direction;
 	}
 	else
 	{
@@ -1245,7 +1237,10 @@ void MageRom::UpdateEntities(uint32_t delta_time)
 		getEntityRenderableData(i);
 
 		//check for frame change and adjust if needed:
-		if(entityRenderableData[i].currentFrameTicks > entityRenderableData[i].duration)
+		if(
+			(entityRenderableData[i].currentFrameTicks > entityRenderableData[i].duration) &&
+			(entities[i].primaryIdType != TILESET)
+		)
 		{
 			entities[i].currentFrame++;
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
@@ -1259,9 +1254,60 @@ void MageRom::UpdateEntities(uint32_t delta_time)
 	}
 }
 
-void MageRom::DrawEntities()
+void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 {
+	//first sort entities by their y values:
+	uint16_t entitySortOrder[map.EntityCount()];
+	//init index array:
+	for(uint16_t i=0; i<map.EntityCount(); i++)
+	{
+		entitySortOrder[i] = i;
+	}
 
+	// One by one move boundary of unsorted subarray
+	for (uint16_t i = 0; i < map.EntityCount() - 1; i++)
+	{
+
+		// Find the minimum element in unsorted array
+		uint16_t min_idx = i;
+		for (uint16_t j = i + 1; j < map.EntityCount(); j++)
+		{
+			if (entities[entitySortOrder[j]].y < entities[entitySortOrder[min_idx]].y)
+			{
+				min_idx = j;
+			}
+		}
+
+		// Swap the found minimum element
+		// with the first element
+		uint16_t temp = entitySortOrder[min_idx];
+		entitySortOrder[i] = entitySortOrder[min_idx];
+		entitySortOrder[min_idx] = temp;
+	}
+
+	//now that we've got a sorted array with the lowest y values first, 
+	//iterate through it and draw the entities one by one:
+	for(uint16_t i=0; i<map.EntityCount(); i++)
+	{
+		uint16_t entityIndex = entitySortOrder[i];
+		MageEntity entity = entities[entityIndex];
+		//MageTileset tileset = tilesets[entityRenderableData[entityIndex].tilesetId];
+		//uint32_t address = imageHeader.offset(tileset.ImageIndex());
+/*
+		canvas.drawChunkWithFlags(
+			address,
+			x,
+			y,
+			tileset.TileWidth(),
+			tileset.TileHeight(),
+			(tileId % tileset.Cols()) * tileset.TileWidth(),
+			(tileId / tileset.Cols()) * tileset.TileHeight(),
+			tileset.ImageWidth(),
+			0x0020,
+			flags
+		);
+		*/
+	}
 }
 
 #pragma endregion
@@ -1506,7 +1552,6 @@ void allocate_current_map_entities(
 		uint32_t entityTypeOffset;
 		MageEntityType *entityType;
 		char mageType[16] = "goose";
-		commented out to get new classes to compile -Tim 		
 		if (entityInRAM->primaryType == ENTITY_PRIMARY_ENTITY_TYPE)
 		{
 			entityType = get_entity_type_by_index(entityInRAM->primaryTypeIndex);
