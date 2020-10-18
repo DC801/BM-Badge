@@ -1280,11 +1280,6 @@ void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 		entitySortOrder[i] = temp;
 	}
 
-	for(uint16_t i=0; i<map.EntityCount(); i++)
-	{
-		printf("%d\r\n",entitySortOrder[i]);
-	}
-
 	//now that we've got a sorted array with the lowest y values first, 
 	//iterate through it and draw the entities one by one:
 	for(uint16_t i=0; i<map.EntityCount(); i++)
@@ -1301,10 +1296,12 @@ void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 		int32_t source_x = (tileId % cols) * tileWidth;
 		int32_t source_y = (tileId / cols) * tileHeight;
 
+		int32_t x = entities[entityIndex].x - cameraX;
+		int32_t y = entities[entityIndex].y - cameraY - tileHeight;
 		canvas.drawChunkWithFlags(
 			address,
-			i*2,
-			i*3,
+			x,
+			y,
 			tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth(),
 			tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight(),
 			source_x,
