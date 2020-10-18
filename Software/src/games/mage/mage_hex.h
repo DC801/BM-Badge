@@ -1,3 +1,6 @@
+/*
+This class contains all the code related to the hex editor hacking interface.
+*/
 #ifndef _MAGE_HEX_H
 #define _MAGE_HEX_H
 

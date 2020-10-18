@@ -1,3 +1,15 @@
+/*
+This is intended to be a shared header file with common formats used in all the
+MAGE() game functions. It contains common constants and structured used
+throughout the MAGE() game code, and should be included in all future header
+files as a way to consolidate redundant definitions and externs showing up all
+over the code base.
+
+Note: Do NOT try to include this in the "common.h" header file used outside of
+the MAGE() game, as the use of c++ standard libraries will cause issues with
+all of the old code used as the foundation of this badge.
+*/
+
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 

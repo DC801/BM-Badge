@@ -8,6 +8,23 @@
 #include "mage_animation.h"
 #include "mage_entity_type.h"
 
+/*
+The MageGameControl object handles several important tasks. It's basically the
+core of the entire MAGE() game, and contains all the important variables that
+track the state of the game.
+
+MageGameControl's first important function is to read all relevant data from
+the ROM chip into RAM, and also to have helper functions to read additional
+ROM data on demand as needed when updating variables.
+
+MageGameControl also tracks the state of all hackable entities in the game, and
+interprets the data contained in the array when deciding what needs to be drawn
+to the screen.
+
+Finally, MageGameControl handles the actual act of updating the state of the
+game based on input data and rendering it all to the screen every frame.
+*/
+
 class MageGameControl
 {
 private:
@@ -50,10 +67,10 @@ public:
 	//the entities[] array and also the offset to it from hackableDataAddress
 	int32_t playerEntityIndex;
 
-	//when the MageRom is created, it will populate all the above variables from ROM.
+	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
 
-	//returns the size in memory of the MageRom object.
+	//returns the size in memory of the MageGameControl object.
 	uint32_t Size() const;
 
 	//this will return a specific MageTileset object by index.
@@ -80,7 +97,7 @@ public:
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 
 	//this calculates the relevant info to be able to draw an entity based on the
-	//current state of the data in MageRom and stores the info in entityRenderableData
+	//current state of the data in MageGameControl and stores the info in entityRenderableData
 	void getEntityRenderableData(uint32_t index);
 
 	//this will update the current entities based on the current frame data

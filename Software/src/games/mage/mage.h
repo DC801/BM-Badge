@@ -5,8 +5,12 @@
 #include "mage_game_control.h"
 #include "FrameBuffer.h"
 
+//this is called in the main game loop, and is responsible for
+//updating the game state based on all inputs.
 void mage_game_loop();
 
+//this runs the actual game, preformining initial setup and then
+//running the game loop indefinitely until the game is exited.
 void MAGE();
 
 #endif //_MAGE_H
