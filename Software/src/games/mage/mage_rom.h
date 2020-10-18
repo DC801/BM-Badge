@@ -1,31 +1,8 @@
 #ifndef _MAGE_ROM_H
 #define _MAGE_ROM_H
 
-#include <memory>
-#include <string>
 #include "mage_defines.h"
-
-class MageHeader
-{
-private:
-	uint32_t counts;
-	std::unique_ptr<uint32_t[]> offsets;
-	std::unique_ptr<uint32_t[]> lengths;
-
-public:
-	MageHeader() : counts{0},
-		offsets{std::make_unique<uint32_t[]>(1)},
-		lengths{std::make_unique<uint32_t[]>(1)}
-	{ };
-
-	MageHeader(uint32_t address);
-
-	uint32_t count() const;
-	uint32_t offset(uint8_t num) const;
-	uint32_t length(uint8_t num) const;
-	uint32_t size() const;
-	bool valid() const;
-}; //class MageHeader
+#include "mage_header.h"
 
 class MageMap
 {
@@ -221,7 +198,7 @@ public:
 	uint32_t Size() const;
 }; //class MageEntityType
 
-class MageRom
+class MageGameControl
 {
 private:
 	//Stores the current map's index value
@@ -264,7 +241,7 @@ public:
 	int32_t playerEntityIndex;
 
 	//when the MageRom is created, it will populate all the above variables from ROM.
-	MageRom();
+	MageGameControl();
 
 	//returns the size in memory of the MageRom object.
 	uint32_t Size() const;

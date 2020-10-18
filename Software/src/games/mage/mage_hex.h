@@ -26,7 +26,7 @@ enum HEX_OPS {
 };
 
 extern FrameBuffer *mage_canvas;
-extern std::unique_ptr<MageRom> MageROM;
+extern std::unique_ptr<MageGameControl> MageGame;
 extern MageEntity *hackableDataAddress;
 
 extern uint16_t hex_cursor;

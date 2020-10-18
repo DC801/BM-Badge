@@ -1,0 +1,28 @@
+#ifndef _MAGE_HEADER_H
+#define _MAGE_HEADER_H
+
+#include "mage_defines.h"
+
+class MageHeader
+{
+private:
+	uint32_t counts;
+	std::unique_ptr<uint32_t[]> offsets;
+	std::unique_ptr<uint32_t[]> lengths;
+
+public:
+	MageHeader() : counts{0},
+		offsets{std::make_unique<uint32_t[]>(1)},
+		lengths{std::make_unique<uint32_t[]>(1)}
+	{ };
+
+	MageHeader(uint32_t address);
+
+	uint32_t count() const;
+	uint32_t offset(uint8_t num) const;
+	uint32_t length(uint8_t num) const;
+	uint32_t size() const;
+	bool valid() const;
+}; //class MageHeader
+
+#endif //_MAGE_HEADER_H
