@@ -3,6 +3,12 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "FrameBuffer.h"
+#include "mage_hex.h"
+
+
+extern uint8_t mageSpeed;
+extern bool isMoving;
+extern Point cameraPosition;
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
@@ -290,6 +296,61 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 			playerEntityIndex = NO_PLAYER;
 		}
 	}
+}
+
+void MageGameControl::applyInputToGame()
+{
+	if (*hexEditorState)
+	{
+		apply_input_to_hex_state();
+		return;
+	}
+	int32_t playerIndex = MageGame->playerEntityIndex;
+	if(playerIndex != NO_PLAYER)
+	{
+		//update renderable info before proceeding:
+		getEntityRenderableData(playerIndex);
+
+		MageEntity playerEntity = hackableDataAddress[playerIndex];
+		uint8_t previousPlayerAnimation = playerEntity.currentAnimation;
+		uint16_t tilesetWidth = tilesets[entityRenderableData[playerIndex].tilesetId].TileWidth();
+		uint16_t tilesetHeight = tilesets[entityRenderableData[playerIndex].tilesetId].TileHeight();
+		isMoving = false;
+
+		if(EngineInput_Buttons.ljoy_left ) { playerEntity.x -= mageSpeed; playerEntity.direction = 3; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { playerEntity.x += mageSpeed; playerEntity.direction = 1; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { playerEntity.y -= mageSpeed; playerEntity.direction = 0; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { playerEntity.y += mageSpeed; playerEntity.direction = 2; isMoving = true; }
+
+		playerEntity.currentAnimation = isMoving ? 1 : 0;
+
+		if (previousPlayerAnimation != playerEntity.currentAnimation)
+		{
+			playerEntity.currentFrame = 0;
+		}
+
+		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+
+		//set camera position to mage position
+		cameraPosition.x = playerEntity.x - HALF_WIDTH + ((tilesetWidth) / 2);
+		cameraPosition.y = playerEntity.y - HALF_HEIGHT - ((tilesetHeight) / 2);
+
+		//write changes back to player entity when done:
+		entities[playerIndex] = playerEntity;
+	}
+	else //no player on map
+	{
+		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+	}
+	
 }
 
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const

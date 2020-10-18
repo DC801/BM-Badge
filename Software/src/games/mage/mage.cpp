@@ -22,74 +22,8 @@ Point cameraPosition = {
 
 MageEntity *hackableDataAddress;
 
-void apply_input_to_game()
-{
-	apply_input_to_hex_state();
-}
-
 uint8_t mageSpeed = 1;
 bool isMoving = false;
-
-//-Tim Todo: Move this into MageRom as a class function to avoid messing with private variables.
-void apply_input_to_player ()
-{
-	if (*hexEditorState)
-	{
-		return;
-	}
-	int32_t playerIndex = MageGame->playerEntityIndex;
-	if(playerIndex != NO_PLAYER)
-	{
-		MageEntity playerEntity = hackableDataAddress[playerIndex];
-		uint8_t previousPlayerAnimation = playerEntity.currentAnimation;
-		isMoving = false;
-
-		if(EngineInput_Buttons.ljoy_left ) { playerEntity.x -= mageSpeed; playerEntity.direction = 3; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { playerEntity.x += mageSpeed; playerEntity.direction = 1; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { playerEntity.y -= mageSpeed; playerEntity.direction = 0; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { playerEntity.y += mageSpeed; playerEntity.direction = 2; isMoving = true; }
-
-		playerEntity.currentAnimation = isMoving ? 1 : 0;
-
-		if (previousPlayerAnimation != playerEntity.currentAnimation)
-		{
-			playerEntity.currentFrame = 0;
-		}
-
-	/*
-		get_renderable_data_from_entity(playerEntity, &renderableEntityData);
-
-		if (
-			!renderableEntityData.entityType
-			|| playerEntity->currentAnimation > (renderableEntityData.entityType->animationCount - 1)
-		)
-		{
-			playerEntity->currentAnimation = 0;
-		}
-	*/
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
-
-		//set camera position to mage position
-		//cameraPosition.x = playerEntity.x - HALF_WIDTH + ((*renderableEntityData.tileset->tileWidth) / 2);
-		//cameraPosition.y = playerEntity.y - HALF_HEIGHT - ((*renderableEntityData.tileset->tileHeight) / 2);
-
-		//write back to the array when done.
-		hackableDataAddress[playerIndex] = playerEntity;
-	}
-	else //no player on map
-	{
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
-	}
-	
-}
 
 void mage_game_loop()
 {
@@ -105,7 +39,7 @@ void mage_game_loop()
 	else
 	{
 		mage_canvas->clearScreen(RGB(0,0,255));
-		apply_input_to_player();
+		MageGame->applyInputToGame();
 
 		uint8_t layerCount = MageGame->Map().LayerCount();
 
@@ -170,7 +104,6 @@ void MAGE()
 	while (EngineIsRunning())
 	{
 		EngineHandleInput();
-		apply_input_to_game();
 		mage_game_loop();
 	}
 

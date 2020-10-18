@@ -5,10 +5,6 @@
 #include "mage_game_control.h"
 #include "FrameBuffer.h"
 
-void apply_input_to_player();
-
-void apply_input_to_game();
-
 void mage_game_loop();
 
 void MAGE();

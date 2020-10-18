@@ -72,6 +72,10 @@ public:
 	//it's entityType matching a specific string
 	void GetPointerToPlayerEntity(std::string name);
 
+	//this takes input information and moves the playerEntity around
+	//If there is no playerEntity, it just moves the camera freely.
+	void applyInputToGame();
+
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 
