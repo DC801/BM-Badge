@@ -8,7 +8,7 @@
 
 #include "mage_hex.h"
 
-std::unique_ptr<MageRom> MageROM;
+std::unique_ptr<MageGameControl> MageGame;
 
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
@@ -37,7 +37,7 @@ void apply_input_to_player ()
 	{
 		return;
 	}
-	int32_t playerIndex = MageROM->playerEntityIndex;
+	int32_t playerIndex = MageGame->playerEntityIndex;
 	if(playerIndex != NO_PLAYER)
 	{
 		MageEntity playerEntity = hackableDataAddress[playerIndex];
@@ -107,7 +107,7 @@ void mage_game_loop()
 		mage_canvas->clearScreen(RGB(0,0,255));
 		apply_input_to_player();
 
-		uint8_t layerCount = MageROM->Map().LayerCount();
+		uint8_t layerCount = MageGame->Map().LayerCount();
 
 		if (layerCount > 1)
 		{
@@ -117,23 +117,23 @@ void mage_game_loop()
 				layerIndex++
 			)
 			{
-				MageROM->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+				MageGame->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
 			}
 		}
 		else
 		{
-			MageROM->DrawMap(0, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
 		}
 
 		//update_entities();
-		MageROM->UpdateEntities(deltaTime);
+		MageGame->UpdateEntities(deltaTime);
 
 		//draw_entities();
-		MageROM->DrawEntities(cameraPosition.x, cameraPosition.y);
+		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
 
 		if (layerCount > 1)
 		{
-			MageROM->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
 		}
 	}
 
@@ -158,10 +158,10 @@ void MAGE()
 	}
 
 	// Construct MageRom object, loading all headers
-	MageROM = std::make_unique<MageRom>();
+	MageGame = std::make_unique<MageGameControl>();
 
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
-	hackableDataAddress = MageROM->entities.get();
+	hackableDataAddress = MageGame->entities.get();
 
 	mage_canvas = p_canvas();
 	lastTime = millis();

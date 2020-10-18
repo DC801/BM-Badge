@@ -89,7 +89,7 @@ void update_hex_editor()
 {
 	bytes_per_page = dialog_open ? 64 : 192;
 	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
-	mem_total = MageROM->Map().EntityCount() * sizeof(MageEntity);
+	mem_total = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
 	if (!delay)
 	{
@@ -162,7 +162,7 @@ void render_hex_header()
 		mem_page,
 		hex_cursor,
 		mem_pages,
-		MageROM->Map().EntityCount(),
+		MageGame->Map().EntityCount(),
 		mem_total
 	);
 	mage_canvas->printMessage(

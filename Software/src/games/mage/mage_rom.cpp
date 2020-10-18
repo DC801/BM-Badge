@@ -6,102 +6,6 @@
 #include "EnginePanic.h"
 #include "FrameBuffer.h"
 
-#pragma region MageHeader
-
-MageHeader::MageHeader(uint32_t address)
-{
-	uint32_t size = 0;
-
-	// Read count
-	if (EngineROM_Read(address, sizeof(counts), (uint8_t *)&counts) != sizeof(counts))
-	{
-		goto MageHeader_Error;
-	}
-
-	// Endianness conversion
-	convert_endian_u4(&counts);
-
-	// Increment offset
-	address += sizeof(counts);
-
-	// Construct arrays
-	offsets = std::make_unique<uint32_t[]>(counts);
-	lengths = std::make_unique<uint32_t[]>(counts);
-
-	// Size of array in bytes
-	size = counts * sizeof(uint32_t);
-
-	// Read arrays
-	if (EngineROM_Read(address, size, (uint8_t *)offsets.get()) != size)
-	{
-		goto MageHeader_Error;
-	}
-
-	convert_endian_u4_buffer(offsets.get(), counts);
-	address += counts * sizeof(uint32_t);
-
-	if (EngineROM_Read(address, size, (uint8_t *)lengths.get()) != size)
-	{
-		goto MageHeader_Error;
-	}
-
-	convert_endian_u4_buffer(lengths.get(), counts);
-	return;
-
-MageHeader_Error:
-	ENGINE_PANIC("Failed to read header data");
-}
-
-uint32_t MageHeader::count() const
-{
-	return counts;
-}
-
-uint32_t MageHeader::offset(uint8_t num) const
-{
-	if (!offsets) return 0;
-
-	if (counts > num)
-	{
-		return offsets[num];
-	}
-
-	return 0;
-}
-
-uint32_t MageHeader::length(uint8_t num) const
-{
-	if (!lengths) return 0;
-
-	if (counts > num)
-	{
-		return lengths[num];
-	}
-
-	return 0;
-}
-
-uint32_t MageHeader::size() const
-{
-	return sizeof(counts) + 			// Count
-		counts * sizeof(uint32_t) +		// Offsets
-		counts * sizeof(uint32_t);		// Lengths
-}
-
-bool MageHeader::valid() const
-{
-	if (offsets == nullptr || lengths == nullptr)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-#pragma endregion
-
-#pragma region MageMap
-
 MageMap::MageMap(uint32_t address)
 {
 	uint32_t size = 0;
@@ -770,7 +674,7 @@ uint32_t MageEntityType::Size() const
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
-MageRom::MageRom()
+MageGameControl::MageGameControl()
 {
 	uint32_t offset = 8;
 
@@ -825,7 +729,7 @@ MageRom::MageRom()
 	LoadMap(currentMapId);
 }
 
-uint32_t MageRom::Size() const
+uint32_t MageGameControl::Size() const
 {
 	uint32_t size = sizeof(currentMapId) +
 		mapHeader.size() +
@@ -856,7 +760,7 @@ uint32_t MageRom::Size() const
 	return size;
 }
 
-const MageTileset& MageRom::Tile(uint32_t index) const
+const MageTileset& MageGameControl::Tile(uint32_t index) const
 {
 	static MageTileset tile;
 	if (!tilesets) return tile;
@@ -869,12 +773,12 @@ const MageTileset& MageRom::Tile(uint32_t index) const
 	return tile;
 }
 
-const MageMap& MageRom::Map() const
+const MageMap& MageGameControl::Map() const
 {
 	return map;
 }
 
-MageEntity MageRom::LoadEntity(uint32_t address)
+MageEntity MageGameControl::LoadEntity(uint32_t address)
 {
 	uint32_t size = 0;
 	MageEntity entity;
@@ -999,7 +903,7 @@ MageEntity_Error:
 	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
-void MageRom::LoadMap(uint16_t index)
+void MageGameControl::LoadMap(uint16_t index)
 {
 	currentMapId = index;
 
@@ -1034,7 +938,7 @@ void MageRom::LoadMap(uint16_t index)
 	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
 }
 
-void MageRom::GetPointerToPlayerEntity(std::string name)
+void MageGameControl::GetPointerToPlayerEntity(std::string name)
 {
 
 	for(uint16_t i=0; i<map.EntityCount(); i++)
@@ -1055,7 +959,7 @@ void MageRom::GetPointerToPlayerEntity(std::string name)
 	}
 }
 
-void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
+void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 {
 	uint32_t tilesPerLayer = map.Width() * map.Height();
 
@@ -1142,7 +1046,7 @@ void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 	}
 }
 
-void MageRom::getEntityRenderableData(uint32_t index)
+void MageGameControl::getEntityRenderableData(uint32_t index)
 {
 	//current entity for use in the loop:
 	MageEntity currentEnt = entities[index];
@@ -1228,7 +1132,7 @@ void MageRom::getEntityRenderableData(uint32_t index)
 	}
 }
 
-void MageRom::UpdateEntities(uint32_t deltaTime)
+void MageGameControl::UpdateEntities(uint32_t deltaTime)
 {
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
@@ -1254,7 +1158,7 @@ void MageRom::UpdateEntities(uint32_t deltaTime)
 	}
 }
 
-void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
+void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 {
 	//first sort entities by their y values:
 	uint16_t entitySortOrder[map.EntityCount()];

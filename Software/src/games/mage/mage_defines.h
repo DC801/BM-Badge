@@ -4,6 +4,7 @@
 #include "common.h"
 #include <memory>
 #include <utility>
+#include <string>
 
 //this is the most unique entities that can be in any map.
 #define MAX_ENTITIES_PER_MAP 32
