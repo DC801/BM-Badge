@@ -104,6 +104,7 @@ void MAGE()
 	while (EngineIsRunning())
 	{
 		EngineHandleInput();
+		apply_input_to_hex_state();
 		mage_game_loop();
 	}
 
