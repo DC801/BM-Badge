@@ -2,7 +2,7 @@
 #define _MAGE_H
 
 #include "mage_defines.h"
-#include "mage_rom.h"
+#include "mage_game_control.h"
 #include "FrameBuffer.h"
 
 void apply_input_to_player();
