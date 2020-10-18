@@ -10,10 +10,11 @@
  */
 
 #include "main.h"
-#include "FrameBuffer.h"
 
 #ifdef DC801_DESKTOP
 #include "EngineWindowFrame.h"
+#include "games/mage/mage.h"
+#include "FrameBuffer.h"
 
 volatile sig_atomic_t application_quit = 0;
 
