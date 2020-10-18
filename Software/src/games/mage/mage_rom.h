@@ -70,7 +70,7 @@ class MageTileset
 {
 private:
 	char name[17];
-	uint16_t imageIndex;
+	uint16_t imageId;
 	uint16_t imageWidth;
 	uint16_t imageHeight;
 	uint16_t tileWidth;
@@ -81,7 +81,7 @@ private:
 
 public:
 	MageTileset() : name{""},
-		imageIndex{0},
+		imageId{0},
 		imageWidth{0},
 		imageHeight{0},
 		tileWidth{0},
@@ -274,11 +274,15 @@ public:
 	//this will return the current map object.
 	const MageMap& Map() const;
 
+	//this will fill in an entity structure's data from ROM
+	MageEntity LoadEntity(uint32_t address);
+
 	//this will load a map to be the current map.
 	void LoadMap(uint16_t index);
 
-	//this will fill in an entity structure's data from ROM
-	MageEntity LoadEntity(uint32_t address);
+	//this will set a pointer to the playerEntity based on 
+	//it's entityType matching a specific string
+	void GetPointerToPlayerEntity(std::string name);
 
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
