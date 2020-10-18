@@ -69,12 +69,12 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data) {
 			frame[j*WIDTH+i] = data[idx++];
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t tansparent_color) {
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color) {
 	int idx=0;
     for (int j = y; j<y+h; ++j)
 		for (int i=x; i<x+w; ++i) {
 			uint16_t c = data[idx++];
-			if (c != tansparent_color)
+			if (c != transparent_color)
 				frame[j*WIDTH+i] = c;
 		}
 
@@ -91,14 +91,14 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data) {
     }
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color) {
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color) {
 	int idx=0;
     for (int j = y; j<y+h; ++j){
 		for (int i=x; i<x+w; ++i) {
 			uint8_t d1 = data[idx++];
 			uint8_t d2 = data[idx++];
 			uint16_t c = ((uint16_t) d1 << 8) | d2;
-			if (c != tansparent_color){
+			if (c != transparent_color){
 				frame[j*WIDTH+i] = c;
 			}
 		}
@@ -120,7 +120,7 @@ void FrameBuffer::drawImage(
     int fx,
     int fy,
     int pitch,
-    uint16_t tansparent_color
+    uint16_t transparent_color
 ) {
     int32_t current_x = 0;
     int32_t current_y = 0;
@@ -139,7 +139,7 @@ void FrameBuffer::drawImage(
             )
             {
                 uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-                if (color != tansparent_color)
+                if (color != transparent_color)
                 {
                     frame[(current_y * WIDTH) + current_x] = color;
                 }
@@ -157,7 +157,7 @@ void FrameBuffer::drawImageWithFlags(
     int fx,
     int fy,
     int pitch,
-    uint16_t tansparent_color,
+    uint16_t transparent_color,
     uint8_t flags
 ) {
     int32_t current_x = 0;
@@ -192,7 +192,7 @@ void FrameBuffer::drawImageWithFlags(
                     ? fy + (h - source_y - 1)
                     : fy + source_y;
                 uint16_t color = data[(pitch * sprite_y) + sprite_x];
-                if (color != tansparent_color)
+                if (color != transparent_color)
                 {
                     frame[(current_y * WIDTH) + current_x] = color;
                 }
@@ -230,7 +230,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
     fclose(fd);*/
 }
 
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color) {
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
     uint16_t buf[w*h];
 
     FIL file;
@@ -258,7 +258,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
     }
     fclose(fd);*/
 
-    drawImage(x, y, w, h, buf, tansparent_color);
+    drawImage(x, y, w, h, buf, transparent_color);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)

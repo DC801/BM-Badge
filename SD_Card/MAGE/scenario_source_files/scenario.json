@@ -8,6 +8,7 @@
 		]
 	},
 	"maps": {
+		"test": "maps/test.json",
 		"town_map": "maps/town_map.json"
 	},
 	"entityTypes": {

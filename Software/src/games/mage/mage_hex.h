@@ -2,7 +2,7 @@
 #define _MAGE_HEX_H
 
 #include "mage.h"
-#include "mage_rom.h"
+#include "mage_game_control.h"
 #include "modules/led.h"
 #include "fonts/Monaco9.h"
 #include "fonts/DeterminationMono.h"
@@ -26,6 +26,8 @@ enum HEX_OPS {
 };
 
 extern FrameBuffer *mage_canvas;
+extern std::unique_ptr<MageGameControl> MageGame;
+extern MageEntity *hackableDataAddress;
 
 extern uint16_t hex_cursor;
 extern uint8_t *hexEditorState;

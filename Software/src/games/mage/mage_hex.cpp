@@ -22,7 +22,7 @@ void toggle_dialog () {
 }
 
 void update_hex_lights() {
-	const uint8_t currentByte = *(((uint8_t *) currentMapEntities) + hex_cursor);
+	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hex_cursor);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
@@ -37,7 +37,7 @@ void update_hex_lights() {
 HEX_OPS currentOp = HEX_OPS_XOR;
 
 void runHex (uint8_t value) {
-	uint8_t *currentByte = (((uint8_t *) currentMapEntities) + hex_cursor);
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
 		case HEX_OPS_XOR: changedValue ^= value; break;
@@ -89,7 +89,7 @@ void update_hex_editor()
 {
 	bytes_per_page = dialog_open ? 64 : 192;
 	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
-	mem_total = *dataMemoryAddresses.entityCount * sizeof(MageEntity);
+	mem_total = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
 	if (!delay)
 	{
@@ -162,7 +162,7 @@ void render_hex_header()
 		mem_page,
 		hex_cursor,
 		mem_pages,
-		*dataMemoryAddresses.entityCount,
+		MageGame->Map().EntityCount(),
 		mem_total
 	);
 	mage_canvas->printMessage(
@@ -172,15 +172,15 @@ void render_hex_header()
 		BYTE_OFFSET_X,
 		0
 	);
-	uint16_t u2Value = *(uint16_t *) ((uint8_t *) currentMapEntities + (hex_cursor - (hex_cursor % 2)));
+	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hex_cursor - (hex_cursor % 2)));
 	sprintf(
 		headerString,
 		"%s | uint8: %03d | uint16: %05d\n"
 		"string output: %s",
 		endian_label,
-		*((uint8_t *) currentMapEntities + hex_cursor),
+		*((uint8_t *) hackableDataAddress + hex_cursor),
 		u2Value,
-		(uint8_t *) currentMapEntities + hex_cursor
+		(uint8_t *) hackableDataAddress + hex_cursor
 	);
 	mage_canvas->printMessage(
 		headerString,
@@ -220,7 +220,7 @@ void render_hex_editor()
 	)
 	{
 		get_hex_string_for_byte(
-			*(((uint8_t *) currentMapEntities) + (i + (mem_page * bytes_per_page))),
+			*(((uint8_t *) hackableDataAddress) + (i + (mem_page * bytes_per_page))),
 			currentByteString
 		);
 		mage_canvas->printMessage(
