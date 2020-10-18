@@ -302,7 +302,6 @@ void MageGameControl::applyInputToGame()
 {
 	if (*hexEditorState)
 	{
-		apply_input_to_hex_state();
 		return;
 	}
 	int32_t playerIndex = MageGame->playerEntityIndex;
