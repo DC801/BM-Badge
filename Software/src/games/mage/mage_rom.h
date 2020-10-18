@@ -4,46 +4,7 @@
 #include "mage_defines.h"
 #include "mage_header.h"
 #include "mage_map.h"
-
-class MageTileset
-{
-private:
-	char name[17];
-	uint16_t imageId;
-	uint16_t imageWidth;
-	uint16_t imageHeight;
-	uint16_t tileWidth;
-	uint16_t tileHeight;
-	uint16_t cols;
-	uint16_t rows;
-	std::unique_ptr<uint8_t[]> tiles;
-
-public:
-	MageTileset() : name{""},
-		imageId{0},
-		imageWidth{0},
-		imageHeight{0},
-		tileWidth{0},
-		tileHeight{0},
-		cols{0},
-		rows{0},
-		tiles{std::make_unique<uint8_t[]>(1)}
-	{ };
-
-	MageTileset(uint32_t address);
-
-	std::string Name() const;
-	uint16_t ImageId() const;
-	uint16_t ImageWidth() const;
-	uint16_t ImageHeight() const;
-	uint16_t TileWidth() const;
-	uint16_t TileHeight() const;
-	uint16_t Cols() const;
-	uint16_t Rows() const;
-	uint8_t Tile(uint32_t index) const;
-	uint32_t Size() const;
-	bool Valid() const;
-}; //class MageTileset
+#include "mage_tileset.h"
 
 class MageAnimationFrame
 {
