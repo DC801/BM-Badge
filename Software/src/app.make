@@ -32,6 +32,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
 	$(SRC_ROOT)/games/Wargames.c \
 	$(SRC_ROOT)/games/mage/mage_header.cpp \
+	$(SRC_ROOT)/games/mage/mage_map.cpp \
 	$(SRC_ROOT)/games/mage/mage_rom.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
 	$(SRC_ROOT)/games/mage/mage.cpp \
