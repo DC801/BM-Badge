@@ -305,29 +305,28 @@ void MageGameControl::applyInputToPlayer()
 	{
 		return;
 	}
-	int32_t playerIndex = MageGame->playerEntityIndex;
-	if(playerIndex != NO_PLAYER)
+	if(playerEntityIndex != NO_PLAYER)
 	{
 		//update renderable info before proceeding:
-		getEntityRenderableData(playerIndex);
+		getEntityRenderableData(playerEntityIndex);
 
-		MageEntity playerEntity = hackableDataAddress[playerIndex];
-		uint8_t previousPlayerAnimation = playerEntity.currentAnimation;
-		uint16_t tilesetWidth = tilesets[entityRenderableData[playerIndex].tilesetId].TileWidth();
-		uint16_t tilesetHeight = tilesets[entityRenderableData[playerIndex].tilesetId].TileHeight();
+		uint8_t previousPlayerAnimation = entities[playerEntityIndex].currentAnimation;
+		uint16_t tilesetWidth = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileWidth();
+		uint16_t tilesetHeight = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileHeight();
+
 		isMoving = false;
 
 		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { playerEntity.x -= mageSpeed; playerEntity.direction = 3; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { playerEntity.x += mageSpeed; playerEntity.direction = 1; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { playerEntity.y -= mageSpeed; playerEntity.direction = 0; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { playerEntity.y += mageSpeed; playerEntity.direction = 2; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_left ) { entities[playerEntityIndex].x -= mageSpeed; entities[playerEntityIndex].direction = 3; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { entities[playerEntityIndex].x += mageSpeed; entities[playerEntityIndex].direction = 1; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { entities[playerEntityIndex].y -= mageSpeed; entities[playerEntityIndex].direction = 0; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { entities[playerEntityIndex].y += mageSpeed; entities[playerEntityIndex].direction = 2; isMoving = true; }
 
-		playerEntity.currentAnimation = isMoving ? 1 : 0;
+		entities[playerEntityIndex].currentAnimation = isMoving ? 1 : 0;
 
-		if (previousPlayerAnimation != playerEntity.currentAnimation)
+		if (previousPlayerAnimation != entities[playerEntityIndex].currentAnimation)
 		{
-			playerEntity.currentFrame = 0;
+			entities[playerEntityIndex].currentFrame = 0;
 		}
 
 		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; isMoving = true; }
@@ -336,11 +335,8 @@ void MageGameControl::applyInputToPlayer()
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; isMoving = true; }
 
 		//set camera position to mage position
-		cameraPosition.x = playerEntity.x - HALF_WIDTH + ((tilesetWidth) / 2);
-		cameraPosition.y = playerEntity.y - HALF_HEIGHT - ((tilesetHeight) / 2);
-
-		//write changes back to player entity when done:
-		entities[playerIndex] = playerEntity;
+		cameraPosition.x = entities[playerEntityIndex].x - HALF_WIDTH + ((tilesetWidth) / 2);
+		cameraPosition.y = entities[playerEntityIndex].y - HALF_HEIGHT - ((tilesetHeight) / 2);
 	}
 	else //no player on map
 	{
@@ -453,33 +449,31 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 		entityRenderableData[index].renderFlags = 0;
 		return;
 	}
-	//current entity for use in the loop:
-	MageEntity currentEnt = entities[index];
-
+	
 	//increment frame and reset ticks if frame has been active long enough:
 	//Scenario 1: entity is of a standard EntityType:
-	if(currentEnt.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+	if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
 	{
 		//check if entity type has an animation count:
 		uint16_t entityTypeId = entities[index].primaryId;
 		if(( entityTypes[entityTypeId].AnimationCount() ) > 0)
 		{
 			//get the current animation
-			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(currentEnt.currentAnimation);
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(entities[index].currentAnimation);
 			MageEntityTypeAnimationDirection directedAnimation; 
-			if(currentEnt.direction == MageEntityAnimationDirection::NORTH)
+			if(entities[index].direction == MageEntityAnimationDirection::NORTH)
 			{
 				directedAnimation = currentAnimation.North();
 			}
-			else if(currentEnt.direction == MageEntityAnimationDirection::EAST)
+			else if(entities[index].direction == MageEntityAnimationDirection::EAST)
 			{
 				directedAnimation = currentAnimation.East();
 			}
-			else if(currentEnt.direction == MageEntityAnimationDirection::SOUTH)
+			else if(entities[index].direction == MageEntityAnimationDirection::SOUTH)
 			{
 				directedAnimation = currentAnimation.South();
 			}
-			else if(currentEnt.direction == MageEntityAnimationDirection::WEST)
+			else if(entities[index].direction == MageEntityAnimationDirection::WEST)
 			{
 				directedAnimation = currentAnimation.West();
 			}
@@ -494,17 +488,16 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 			if(directedAnimation.Type() == 0)
 			{
 				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeId()].TilesetId();
-				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).TileId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).Duration();
+				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).TileId();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
 			else
 			{
-				//do I need to subtract 1 from this to get the right tileset, since they are 0-indexed? -Tim
 				entityRenderableData[index].tilesetId = directedAnimation.Type();
 				entityRenderableData[index].tileId = directedAnimation.TypeId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).Duration();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
@@ -516,7 +509,7 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 		uint16_t aniIndex = entities[index].primaryId;
 		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetId();
 		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileId();
-		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(currentEnt.currentAnimation).Duration();
+		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(entities[index].currentAnimation).Duration();
 		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
 		entityRenderableData[index].renderFlags = entities[index].direction;
 	}
@@ -547,6 +540,11 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
+		//tileset entities are not animated, return if entity is type tileset.
+		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
+		{
+			return;
+		}
 		//increment the frame ticks based on the delta_time since the last check:
 		entityRenderableData[i].currentFrameTicks += deltaTime;
 
@@ -560,10 +558,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		getEntityRenderableData(i);
 
 		//check for frame change and adjust if needed:
-		if(
-			(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration) &&
-			(entities[i].primaryIdType != MageEntityPrimaryIdType::TILESET)
-		)
+		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
 		{
 			entities[i].currentFrame++;
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
