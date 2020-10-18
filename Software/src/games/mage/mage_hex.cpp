@@ -22,8 +22,7 @@ void toggle_dialog () {
 }
 
 void update_hex_lights() {
-	/* Need to update once entities are working again: -Tim
-	const uint8_t currentByte = *(((uint8_t *) currentMapEntities) + hex_cursor);
+	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hex_cursor);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
@@ -32,15 +31,13 @@ void update_hex_lights() {
 	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
-	*/
 }
 
 
 HEX_OPS currentOp = HEX_OPS_XOR;
 
 void runHex (uint8_t value) {
-	/* Need to update once entities are working again: -Tim
-	uint8_t *currentByte = (((uint8_t *) currentMapEntities) + hex_cursor);
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
 		case HEX_OPS_XOR: changedValue ^= value; break;
@@ -49,7 +46,6 @@ void runHex (uint8_t value) {
 		default: break;
 	}
 	*currentByte = changedValue;
-	*/
 }
 
 void set_hex_op (enum HEX_OPS op) {
@@ -158,7 +154,6 @@ void update_hex_editor()
 }
 void render_hex_header()
 {
-	/* Need to update once entities are working again: -Tim
 	char headerString[128];
 	sprintf(
 		headerString,
@@ -167,7 +162,7 @@ void render_hex_header()
 		mem_page,
 		hex_cursor,
 		mem_pages,
-		*dataMemoryAddresses.entityCount,
+		MageROM->Map().EntityCount(),
 		mem_total
 	);
 	mage_canvas->printMessage(
@@ -177,15 +172,15 @@ void render_hex_header()
 		BYTE_OFFSET_X,
 		0
 	);
-	uint16_t u2Value = *(uint16_t *) ((uint8_t *) currentMapEntities + (hex_cursor - (hex_cursor % 2)));
+	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hex_cursor - (hex_cursor % 2)));
 	sprintf(
 		headerString,
 		"%s | uint8: %03d | uint16: %05d\n"
 		"string output: %s",
 		endian_label,
-		*((uint8_t *) currentMapEntities + hex_cursor),
+		*((uint8_t *) hackableDataAddress + hex_cursor),
 		u2Value,
-		(uint8_t *) currentMapEntities + hex_cursor
+		(uint8_t *) hackableDataAddress + hex_cursor
 	);
 	mage_canvas->printMessage(
 		headerString,
@@ -194,7 +189,6 @@ void render_hex_header()
 		BYTE_OFFSET_X,
 		BYTE_FOOTER_OFFSET_Y + (BYTE_HEIGHT * (hex_rows + 2))
 	);
-	*/
 }
 
 void get_hex_string_for_byte (uint8_t byte, char* outputString)
@@ -204,7 +198,6 @@ void get_hex_string_for_byte (uint8_t byte, char* outputString)
 
 void render_hex_editor()
 {
-	/* Need to update once entities are working again: -Tim
 	char currentByteString[2];
 	if ((hex_cursor / bytes_per_page) == mem_page)
 	{
@@ -227,7 +220,7 @@ void render_hex_editor()
 	)
 	{
 		get_hex_string_for_byte(
-			*(((uint8_t *) currentMapEntities) + (i + (mem_page * bytes_per_page))),
+			*(((uint8_t *) hackableDataAddress) + (i + (mem_page * bytes_per_page))),
 			currentByteString
 		);
 		mage_canvas->printMessage(
@@ -238,5 +231,4 @@ void render_hex_editor()
 			(i / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y
 		);
 	}
-	*/
 }
