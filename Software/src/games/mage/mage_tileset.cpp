@@ -1,7 +1,6 @@
 #include "mage_tileset.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
-#include "FrameBuffer.h"
 
 MageTileset::MageTileset(uint32_t address)
 {
