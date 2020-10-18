@@ -35,6 +35,10 @@ all of the old code used as the foundation of this badge.
 //entities loaded into the map
 #define NO_PLAYER -1
 
+//this is a fudge factor to make animations look better on the desktop
+//it's added to animation ticks every loop:
+#define DESKTOP_TIME_FUDGE_FACTOR 20
+
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
     TILESET = 0,
