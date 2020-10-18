@@ -544,7 +544,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		//tileset entities are not animated, return if entity is type tileset.
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{
-			return;
+			continue;
 		}
 		//increment the frame ticks based on the delta_time since the last check:
 		entityRenderableData[i].currentFrameTicks += deltaTime;
@@ -561,8 +561,11 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		//check for frame change and adjust if needed:
 		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
 		{
+			//increment frame and reset tick counter:
 			entities[i].currentFrame++;
 			entityRenderableData[i].currentFrameTicks = 0;
+
+			//reset animation to first frame after max frame is reached:
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
 			{
 				entities[i].currentFrame = 0;
