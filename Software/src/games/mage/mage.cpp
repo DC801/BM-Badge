@@ -17,17 +17,19 @@ std::unique_ptr<MageRom> MageROM;
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
 uint32_t now;
-uint32_t delta_time;
+uint32_t deltaTime;
 
 Point cameraPosition = {
 	.x = 0,
 	.y = 0,
 };
 
+MageEntity *hackableDataAddress;
+
 void mage_game_loop()
 {
 	now = millis();
-	delta_time = now - lastTime;
+	deltaTime = now - lastTime;
 
 	if (*hexEditorState)
 	{
@@ -59,7 +61,7 @@ void mage_game_loop()
 		}
 
 		//update_entities();
-		MageROM->UpdateEntities(delta_time);
+		MageROM->UpdateEntities(deltaTime);
 
 		//draw_entities();
 		MageROM->DrawEntities(cameraPosition.x, cameraPosition.y);
@@ -92,6 +94,9 @@ void MAGE()
 
 	// Construct MageRom object, loading all headers
 	MageROM = std::make_unique<MageRom>();
+
+	//load in the pointer to the array of MageEntities for use in hex editor mode:
+	hackableDataAddress = MageROM->entities.get();
 
 	mage_canvas = p_canvas();
 	lastTime = millis();

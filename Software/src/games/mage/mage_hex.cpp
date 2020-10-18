@@ -91,10 +91,9 @@ bool anyHexMovement = false;
 uint8_t delay = 0;
 void update_hex_editor()
 {
-	/* Need to update once entities are working again: -Tim
 	bytes_per_page = dialog_open ? 64 : 192;
 	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
-	mem_total = *dataMemoryAddresses.entityCount * sizeof(MageEntity);
+	mem_total = MageROM->Map().EntityCount() * sizeof(MageEntity);
 	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
 	if (!delay)
 	{
@@ -156,7 +155,6 @@ void update_hex_editor()
 	{
 		delay--;
 	}
-	*/
 }
 void render_hex_header()
 {
