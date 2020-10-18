@@ -327,6 +327,7 @@ void MageGameControl::applyInputToPlayer()
 		if (previousPlayerAnimation != entities[playerEntityIndex].currentAnimation)
 		{
 			entities[playerEntityIndex].currentFrame = 0;
+			entityRenderableData[playerEntityIndex].currentFrameTicks = 0;
 		}
 
 		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; isMoving = true; }
@@ -561,10 +562,10 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
 		{
 			entities[i].currentFrame++;
+			entityRenderableData[i].currentFrameTicks = 0;
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
 			{
 				entities[i].currentFrame = 0;
-				entityRenderableData[i].currentFrameTicks = 0;
 			}
 			//update the entity info again with the corrected frame index:
 			getEntityRenderableData(i);
