@@ -94,7 +94,7 @@ public:
 	MageTileset(uint32_t address);
 
 	std::string Name() const;
-	uint16_t ImageIndex() const;
+	uint16_t ImageId() const;
 	uint16_t ImageWidth() const;
 	uint16_t ImageHeight() const;
 	uint16_t TileWidth() const;
@@ -109,16 +109,16 @@ public:
 class MageAnimationFrame
 {
 private:
-	uint16_t tileIndex;
+	uint16_t tileId;
 	uint16_t duration;
 public:
-	MageAnimationFrame() : tileIndex{0},
+	MageAnimationFrame() : tileId{0},
 		duration{0}
 	{};
 
 	MageAnimationFrame(uint32_t address);
 
-	uint16_t TileIndex() const;
+	uint16_t TileId() const;
 	uint16_t Duration() const;
 	uint32_t Size() const;
 }; //class MageAnimationFrame
@@ -127,19 +127,19 @@ public:
 class MageAnimation
 {
 private:
-	uint16_t tilesetIndex;
+	uint16_t tilesetId;
 	uint16_t frameCount;
 
 	std::unique_ptr<MageAnimationFrame[]> animationFrames;
 public:
-	MageAnimation() : tilesetIndex{0},
+	MageAnimation() : tilesetId{0},
 		frameCount{0},
 		animationFrames{std::make_unique<MageAnimationFrame[]>(frameCount)}
 	{};
 
 	MageAnimation(uint32_t address);
 
-	uint16_t TilesetIndex() const;
+	uint16_t TilesetId() const;
 	uint16_t FrameCount() const;
 	MageAnimationFrame AnimationFrame(uint32_t index) const;
 	uint32_t Size() const;
@@ -159,7 +159,7 @@ public:
 
 	MageEntityTypeAnimationDirection(uint32_t address);
 
-	uint16_t TypeID() const;
+	uint16_t TypeId() const;
 	uint8_t Type() const;
 	uint8_t RenderFlags() const;
 	bool FlipX() const;
@@ -225,7 +225,7 @@ class MageRom
 {
 private:
 	//Stores the current map's index value
-	uint32_t currentMapIndex;
+	uint32_t currentMapId;
 
 	//this is a pointer to the Player Entity
 	MageEntity* playerEntity;

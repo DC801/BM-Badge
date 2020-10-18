@@ -355,7 +355,7 @@ std::string MageTileset::Name() const
 	return std::string(name);
 }
 
-uint16_t MageTileset::ImageIndex() const
+uint16_t MageTileset::ImageId() const
 {
 	return imageId;
 }
@@ -429,16 +429,16 @@ MageAnimationFrame::MageAnimationFrame(uint32_t address)
 {
 	uint32_t size = 0; 
 	//read tileindex
-	if (EngineROM_Read(address, sizeof(tileIndex), (uint8_t *)&tileIndex) != sizeof(tileIndex))
+	if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
 	{
 		goto MageAnimationFrame_Error;
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&tileIndex);
+	convert_endian_u2(&tileId);
 
 	// Increment offset
-	address += sizeof(tileIndex);
+	address += sizeof(tileId);
 
 	//read duration
 	if (EngineROM_Read(address, sizeof(duration), (uint8_t *)&duration) != sizeof(duration))
@@ -455,9 +455,9 @@ MageAnimationFrame_Error:
 	ENGINE_PANIC("Failed to read animation frame data");
 }
 
-uint16_t MageAnimationFrame::TileIndex() const
+uint16_t MageAnimationFrame::TileId() const
 {
-	return tileIndex;
+	return tileId;
 }
 
 uint16_t MageAnimationFrame::Duration() const
@@ -467,7 +467,7 @@ uint16_t MageAnimationFrame::Duration() const
 
 uint32_t MageAnimationFrame::Size() const
 {
-	uint32_t size = sizeof(tileIndex) +
+	uint32_t size = sizeof(tileId) +
 		sizeof(duration);
 
 	return size;
@@ -480,17 +480,17 @@ uint32_t MageAnimationFrame::Size() const
 MageAnimation::MageAnimation(uint32_t address)
 {
 	uint32_t size = 0; 
-	//read tilesetIndex
-	if (EngineROM_Read(address, sizeof(tilesetIndex), (uint8_t *)&tilesetIndex) != sizeof(tilesetIndex))
+	//read tilesetId
+	if (EngineROM_Read(address, sizeof(tilesetId), (uint8_t *)&tilesetId) != sizeof(tilesetId))
 	{
 		goto MageAnimation_Error;
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&tilesetIndex);
+	convert_endian_u2(&tilesetId);
 
 	// Increment offset
-	address += sizeof(tilesetIndex);
+	address += sizeof(tilesetId);
 
 	//read frameCount
 	if (EngineROM_Read(address, sizeof(frameCount), (uint8_t *)&frameCount) != sizeof(frameCount))
@@ -520,9 +520,9 @@ MageAnimation_Error:
 	ENGINE_PANIC("Failed to read animation data");
 }
 
-uint16_t MageAnimation::TilesetIndex() const
+uint16_t MageAnimation::TilesetId() const
 {
-	return tilesetIndex;
+	return tilesetId;
 }
 
 uint16_t MageAnimation::FrameCount() const
@@ -544,7 +544,7 @@ MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
 
 uint32_t MageAnimation::Size() const
 {
-	uint32_t size = sizeof(tilesetIndex) +
+	uint32_t size = sizeof(tilesetId) +
 		sizeof(frameCount);
 
 	for (uint32_t i = 0; i < frameCount; i++)
@@ -596,7 +596,7 @@ MageEntityTypeAnimationDirection_Error:
 	ENGINE_PANIC("Failed to read entity type animation direction data");
 }
 
-uint16_t MageEntityTypeAnimationDirection::TypeID() const
+uint16_t MageEntityTypeAnimationDirection::TypeId() const
 {
 	return typeId;
 }
@@ -774,7 +774,7 @@ MageRom::MageRom()
 {
 	uint32_t offset = 8;
 
-	currentMapIndex = DEFAULT_MAP;
+	currentMapId = DEFAULT_MAP;
 
 	mapHeader = MageHeader(offset);
 	offset += mapHeader.size();
@@ -820,12 +820,12 @@ MageRom::MageRom()
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
 	//load the map
-	LoadMap(currentMapIndex);
+	LoadMap(currentMapId);
 }
 
 uint32_t MageRom::Size() const
 {
-	uint32_t size = sizeof(currentMapIndex) +
+	uint32_t size = sizeof(currentMapId) +
 		mapHeader.size() +
 		tileHeader.size() +
 		animationHeader.size() +
@@ -883,7 +883,6 @@ MageEntity MageRom::LoadEntity(uint32_t address)
 		goto MageEntity_Error;
 	}
 
-	entity.name[16] = 0; // Null terminate
 	//increment address
 	address += 16;
 
@@ -1000,10 +999,10 @@ MageEntity_Error:
 
 void MageRom::LoadMap(uint16_t index)
 {
-	currentMapIndex = index;
+	currentMapId = index;
 
 	//load new map:
-	map = MageMap(mapHeader.offset(currentMapIndex));
+	map = MageMap(mapHeader.offset(currentMapId));
 
 	#ifdef DC801_DESKTOP
 		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
@@ -1112,7 +1111,7 @@ void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 			continue;
 		}
 
-		address = imageHeader.offset(tileset.ImageIndex());
+		address = imageHeader.offset(tileset.ImageId());
 
 		canvas.drawChunkWithFlags(
 			address,
@@ -1176,19 +1175,19 @@ void MageRom::getEntityRenderableData(uint32_t index)
 			//now that we have the animation, figure out the current animation index that needs to be run:
 			if(directedAnimation.Type() == 0)
 			{
-				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeID()].TilesetIndex();
-				entityRenderableData[index].tileId = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).TileIndex();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
-				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
+				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeId()].TilesetId();
+				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).TileId();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
 			else
 			{
 				//do I need to subtract 1 from this to get the right tileset, since they are 0-indexed? -Tim
 				entityRenderableData[index].tilesetId = directedAnimation.Type();
-				entityRenderableData[index].tileId = directedAnimation.TypeID();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeID()].AnimationFrame(currentEnt.currentAnimation).Duration();
-				entityRenderableData[index].frameCount = animations[directedAnimation.TypeID()].FrameCount();
+				entityRenderableData[index].tileId = directedAnimation.TypeId();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
 		}
@@ -1197,8 +1196,8 @@ void MageRom::getEntityRenderableData(uint32_t index)
 	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ANIMATION)
 	{
 		uint16_t aniIndex = entities[index].primaryId;
-		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetIndex();
-		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileIndex();
+		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetId();
+		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileId();
 		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(currentEnt.currentAnimation).Duration();
 		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
 		entityRenderableData[index].renderFlags = entities[index].direction;
@@ -1232,10 +1231,7 @@ void MageRom::UpdateEntities(uint32_t delta_time)
 		getEntityRenderableData(i);
 
 		//check for frame change and adjust if needed:
-		if(
-			(entityRenderableData[i].currentFrameTicks > entityRenderableData[i].duration) &&
-			(entities[i].primaryIdType != TILESET)
-		)
+		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
 		{
 			entities[i].currentFrame++;
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
@@ -1285,8 +1281,7 @@ void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
 		uint16_t entityIndex = entitySortOrder[i];
-		MageEntity entity = entities[entityIndex];
-		uint32_t imageIndex = tilesets[entityRenderableData[entityIndex].tilesetId].ImageIndex();
+		uint32_t imageIndex = tilesets[entityRenderableData[entityIndex].tilesetId].ImageId();
 		uint32_t tileWidth = tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth();
 		uint32_t tileHeight = tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight();
 		uint32_t cols = tilesets[entityRenderableData[entityIndex].tilesetId].Cols();
