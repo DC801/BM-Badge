@@ -1176,8 +1176,8 @@ void MageRom::getEntityRenderableData(uint32_t index)
 			if(directedAnimation.Type() == 0)
 			{
 				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeId()].TilesetId();
-				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).TileId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).TileId();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
@@ -1186,7 +1186,7 @@ void MageRom::getEntityRenderableData(uint32_t index)
 				//do I need to subtract 1 from this to get the right tileset, since they are 0-indexed? -Tim
 				entityRenderableData[index].tilesetId = directedAnimation.Type();
 				entityRenderableData[index].tileId = directedAnimation.TypeId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentAnimation).Duration();
+				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(currentEnt.currentFrame).Duration();
 				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
 				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
 			}
