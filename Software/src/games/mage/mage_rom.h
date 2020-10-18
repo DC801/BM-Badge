@@ -227,9 +227,6 @@ private:
 	//Stores the current map's index value
 	uint32_t currentMapId;
 
-	//this is a pointer to the Player Entity
-	MageEntity* playerEntity;
-
 	//these header objects store the header information for all datasets on the ROM,
 	//including address offsets for each item, and the length of the item in memory.
 	MageHeader mapHeader;
@@ -261,6 +258,10 @@ public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
 	std::unique_ptr<MageEntity[]> entities;
+
+	//this is the index value of where the playerEntity is located within
+	//the entities[] array and also the offset to it from hackableDataAddress
+	int32_t playerEntityIndex;
 
 	//when the MageRom is created, it will populate all the above variables from ROM.
 	MageRom();

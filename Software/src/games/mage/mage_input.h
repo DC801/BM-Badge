@@ -9,6 +9,9 @@
 #include "modules/keyboard.h"
 #include "engine/EngineInput.h"
 
+extern std::unique_ptr<MageRom> MageROM;
+extern MageEntity *hackableDataAddress;
+
 void apply_input_to_player();
 
 void apply_input_to_game();

@@ -17,6 +17,10 @@
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR 0x0020
 
+//this is used to note that no player entity was found within the 
+//entities loaded into the map
+#define NO_PLAYER -1
+
 typedef enum {
     TILESET = 0,
     ANIMATION = 1,

@@ -817,6 +817,8 @@ MageRom::MageRom()
 
 	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
 	
+	playerEntityIndex = NO_PLAYER;
+
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
 	//load the map
@@ -1028,11 +1030,13 @@ void MageRom::LoadMap(uint16_t index)
 		getEntityRenderableData(i);
 	}
 
+	//update playerEntity pointer whenever a new map is loaded:
 	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
 }
 
 void MageRom::GetPointerToPlayerEntity(std::string name)
 {
+
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
@@ -1040,8 +1044,13 @@ void MageRom::GetPointerToPlayerEntity(std::string name)
 			if(std::string(entities[i].name) == name)
 			{
 				// printf("Is this entity the player? A: %s; B %s\n", std::string(entities[i].name).c_str(), name.c_str());
-				playerEntity = &entities[i];
+				playerEntityIndex = i;
 			}
+		}
+		else if(i == (map.EntityCount()-1))
+		{
+			//if no valid match for the player is in the map, return NO_PLAYER
+			playerEntityIndex = NO_PLAYER;
 		}
 	}
 }
