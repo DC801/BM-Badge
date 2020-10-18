@@ -37,7 +37,7 @@ all of the old code used as the foundation of this badge.
 
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
-#define DESKTOP_TIME_FUDGE_FACTOR 20
+#define DESKTOP_TIME_FUDGE_FACTOR 50
 
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
