@@ -281,13 +281,13 @@ MageTileset::MageTileset(uint32_t address)
 	name[16] = 0; // Null terminate
 	address += 16;
 
-	if (EngineROM_Read(address, sizeof(imageIndex), (uint8_t *)&imageIndex) != sizeof(imageIndex))
+	if (EngineROM_Read(address, sizeof(imageId), (uint8_t *)&imageId) != sizeof(imageId))
 	{
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&imageIndex);
-	address += sizeof(imageIndex);
+	convert_endian_u2(&imageId);
+	address += sizeof(imageId);
 
 	if (EngineROM_Read(address, sizeof(imageWidth), (uint8_t *)&imageWidth) != sizeof(imageWidth))
 	{
@@ -357,7 +357,7 @@ std::string MageTileset::Name() const
 
 uint16_t MageTileset::ImageIndex() const
 {
-	return imageIndex;
+	return imageId;
 }
 
 uint16_t MageTileset::ImageWidth() const
@@ -819,6 +819,7 @@ MageRom::MageRom()
 	
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
+	//load the map
 	LoadMap(currentMapIndex);
 }
 
@@ -869,38 +870,6 @@ const MageTileset& MageRom::Tile(uint32_t index) const
 const MageMap& MageRom::Map() const
 {
 	return map;
-}
-
-void MageRom::LoadMap(uint16_t index)
-{
-	currentMapIndex = index;
-
-	//load new map:
-	map = MageMap(mapHeader.offset(currentMapIndex));
-
-	#ifdef DC801_DESKTOP
-		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
-		{
-			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
-		}
-	#endif
-	
-	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
-	{
-		//only populate the entities that are on the current map.
-		if(i < entityHeader.count())
-		{
-			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
-		}
-	}
-
-	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
-	{
-		//all entities start with 0 frame ticks
-		entityRenderableData[i].currentFrameTicks = 0;
-		//other values are filled in when getEntityRenderableData is called:
-		getEntityRenderableData(i);
-	}
 }
 
 MageEntity MageRom::LoadEntity(uint32_t address)
@@ -1029,6 +998,55 @@ MageEntity_Error:
 	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
+void MageRom::LoadMap(uint16_t index)
+{
+	currentMapIndex = index;
+
+	//load new map:
+	map = MageMap(mapHeader.offset(currentMapIndex));
+
+	#ifdef DC801_DESKTOP
+		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
+		{
+			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
+		}
+	#endif
+	
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//only populate the entities that are on the current map.
+		if(i < entityHeader.count())
+		{
+			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
+		}
+	}
+
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//all entities start with 0 frame ticks
+		entityRenderableData[i].currentFrameTicks = 0;
+		//other values are filled in when getEntityRenderableData is called:
+		getEntityRenderableData(i);
+	}
+
+	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
+}
+
+void MageRom::GetPointerToPlayerEntity(std::string name)
+{
+	for(uint16_t i=0; i<map.EntityCount(); i++)
+	{
+		if(entities[i].primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+		{
+			if(std::string(entities[i].name) == name)
+			{
+				// printf("Is this entity the player? A: %s; B %s\n", std::string(entities[i].name).c_str(), name.c_str());
+				playerEntity = &entities[i];
+			}
+		}
+	}
+}
+
 void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 {
 	uint32_t tilesPerLayer = map.Width() * map.Height();
@@ -1105,7 +1123,7 @@ void MageRom::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 			(tileId % tileset.Cols()) * tileset.TileWidth(),
 			(tileId / tileset.Cols()) * tileset.TileHeight(),
 			tileset.ImageWidth(),
-			0x0020,
+			TRANSPARENCY_COLOR,
 			flags
 		);
 
@@ -1258,8 +1276,13 @@ void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 		// Swap the found minimum element
 		// with the first element
 		uint16_t temp = entitySortOrder[min_idx];
-		entitySortOrder[i] = entitySortOrder[min_idx];
-		entitySortOrder[min_idx] = temp;
+		entitySortOrder[min_idx] = entitySortOrder[i];
+		entitySortOrder[i] = temp;
+	}
+
+	for(uint16_t i=0; i<map.EntityCount(); i++)
+	{
+		printf("%d\r\n",entitySortOrder[i]);
 	}
 
 	//now that we've got a sorted array with the lowest y values first, 
@@ -1268,22 +1291,28 @@ void MageRom::DrawEntities(int32_t cameraX, int32_t cameraY)
 	{
 		uint16_t entityIndex = entitySortOrder[i];
 		MageEntity entity = entities[entityIndex];
-		//MageTileset tileset = tilesets[entityRenderableData[entityIndex].tilesetId];
-		//uint32_t address = imageHeader.offset(tileset.ImageIndex());
-/*
+		uint32_t imageIndex = tilesets[entityRenderableData[entityIndex].tilesetId].ImageIndex();
+		uint32_t tileWidth = tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth();
+		uint32_t tileHeight = tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight();
+		uint32_t cols = tilesets[entityRenderableData[entityIndex].tilesetId].Cols();
+		uint32_t tileId = entityRenderableData[entityIndex].tileId;
+		uint32_t address = imageHeader.offset(imageIndex);
+
+		int32_t source_x = (tileId % cols) * tileWidth;
+		int32_t source_y = (tileId / cols) * tileHeight;
+
 		canvas.drawChunkWithFlags(
 			address,
-			x,
-			y,
-			tileset.TileWidth(),
-			tileset.TileHeight(),
-			(tileId % tileset.Cols()) * tileset.TileWidth(),
-			(tileId / tileset.Cols()) * tileset.TileHeight(),
-			tileset.ImageWidth(),
-			0x0020,
-			flags
+			i*2,
+			i*3,
+			tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth(),
+			tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight(),
+			source_x,
+			source_y,
+			tilesets[entityRenderableData[entityIndex].tilesetId].ImageWidth(),
+			TRANSPARENCY_COLOR,
+			entityRenderableData[entityIndex].renderFlags
 		);
-		*/
 	}
 }
 

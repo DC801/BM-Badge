@@ -158,7 +158,7 @@ void MAGE()
 					(tileId % cols) * *tileset.tileWidth,
 					(tileId / cols) * *tileset.tileHeight,
 					*tileset.imageWidth,
-					0x0020,
+					TRANSPARENCY_COLOR,
 					flags
 				);
 			}
@@ -321,7 +321,7 @@ void draw_entities()
 			tilesetX,
 			tilesetY,
 			*tileset->imageWidth,
-			0x0020,
+			TRANSPARENCY_COLOR,
 			renderFlags
 		);
 	}
