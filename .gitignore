@@ -5,6 +5,7 @@ _build/
 .settings/
 .idea/
 *.tiled-session
+*.code-workspace
 
 # Ignore Cortex-Debug files
 .cortex-debug.peripherals.state.json

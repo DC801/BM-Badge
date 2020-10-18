@@ -102,7 +102,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
 
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t tansparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
@@ -112,7 +112,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, ui
 		{
 			uint16_t c = data[idx++];
 
-			if (c != tansparent_color)
+			if (c != transparent_color)
 			{
 				frame[j*WIDTH+i] = c;
 			}
@@ -136,7 +136,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t tansparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
@@ -148,7 +148,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uin
 			uint8_t d2 = data[idx++];
 			uint16_t c = ((uint16_t) d1 << 8) | d2;
 
-			if (c != tansparent_color)
+			if (c != transparent_color)
 			{
 				frame[j * WIDTH + i] = c;
 			}
@@ -173,7 +173,7 @@ void FrameBuffer::drawImage(
 	int fx,
 	int fy,
 	int pitch,
-	uint16_t tansparent_color
+	uint16_t transparent_color
 ) {
 	int32_t current_x = 0;
 	int32_t current_y = 0;
@@ -192,7 +192,7 @@ void FrameBuffer::drawImage(
 			)
 			{
 				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-				if (color != tansparent_color)
+				if (color != transparent_color)
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -210,7 +210,7 @@ void FrameBuffer::drawImageWithFlags(
 	int fx,
 	int fy,
 	int pitch,
-	uint16_t tansparent_color,
+	uint16_t transparent_color,
 	uint8_t flags
 ) {
 	int32_t current_x = 0;
@@ -245,7 +245,7 @@ void FrameBuffer::drawImageWithFlags(
 					? fy + (h - source_y - 1)
 					: fy + source_y;
 				uint16_t color = data[(pitch * sprite_y) + sprite_x];
-				if (color != tansparent_color)
+				if (color != transparent_color)
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -254,73 +254,112 @@ void FrameBuffer::drawImageWithFlags(
 	}
 }
 
+#define MAX_RUN 128
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
 	int x,
 	int y,
-	int w,
-	int h,
-	int fx,
-	int fy,
-	int pitch,
-	uint16_t tansparent_color,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	int16_t pitch,
+	uint16_t transparent_color,
 	uint8_t flags
 )
 {
-	int32_t current_x = 0;
-	int32_t current_y = 0;
-	uint32_t sprite_x = 0;
-	uint32_t sprite_y = 0;
-	uint32_t source_x = 0;
-	uint32_t source_y = 0;
+	uint16_t tile_x = 0;
+	uint16_t tile_y = 0;
+	uint16_t write_x = 0;
+	uint16_t write_y = 0;
+	int16_t dest_x = 0;
+	int16_t dest_y = 0;
+	uint16_t colors[MAX_RUN] = {};
+	uint32_t location = 0;
+	uint32_t bytes_to_read = 0;
 
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
-
-	for (int offset_y = 0; (offset_y < h) && (current_y < HEIGHT); ++offset_y)
+	if (
+		(x > WIDTH) ||
+		(y > HEIGHT) ||
+		((x + tile_width) < 0) ||
+		((y + tile_height) < 0) ||
+		((tile_width != tile_height) && flip_diag) // can't transpose non-squares
+	)
 	{
-		current_y = offset_y + y;
-		current_x = 0;
+		return;
+	}
 
-		for (int offset_x = 0; (offset_x < w) && (current_x < WIDTH); ++offset_x)
+	Rectangle writeRect = Rectangle(
+		MAX(x, 0),
+		MAX(y, 0),
+		MIN(tile_width, MIN(tile_width + x, WIDTH - x)),
+		MIN(tile_height, MIN(tile_height + y, HEIGHT - y))
+	);
+
+	// FOR ALL OF THE SCENARIOS WHERE THE READ COORDINATE STARTS ON-SCREEN,
+	// THE READ COORDINATES -MUST NOT- TO BE SHIFTED!!!
+
+	// EXTREMELY CURSED BOOLEAN ALGEBRA
+	// - Do not touch
+	uint16_t transposed_width = flip_diag ? writeRect.height : writeRect.width;
+	uint16_t transposed_height = flip_diag ? writeRect.width : writeRect.height;
+	uint16_t offset_x = MAX(-x, 0);
+	uint16_t offset_y = MAX(-y, 0);
+	uint16_t transposed_offset_x = flip_diag ? offset_y : offset_x;
+	uint16_t transposed_offset_y = flip_diag ? offset_x : offset_y;
+	int32_t inverse_transposed_offset_x = tile_width - transposed_width - transposed_offset_x;
+	int32_t inverse_transposed_offset_y = tile_height - transposed_height - transposed_offset_y;
+	Rectangle readRect = Rectangle(
+		source_x + (((!flip_x && flip_y && flip_diag) || (flip_x && !flip_diag)|| (flip_x && flip_y && flip_diag)) ? inverse_transposed_offset_x : transposed_offset_x),
+		source_y + (((!flip_y && flip_x && flip_diag) || (flip_y && !flip_diag)|| (flip_y && flip_x && flip_diag)) ? inverse_transposed_offset_y : transposed_offset_y),
+		transposed_width,
+		transposed_height
+	);
+
+	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_RUN);
+	uint16_t remaining_pixels_this_row = readRect.width;
+	uint16_t pixels_to_read_now = 0;
+	uint16_t color = 0;
+	// These loops represent source coordinate space, not destination space
+	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
+	{
+		location = address + ((((readRect.y + tile_y) * pitch) + readRect.x) * sizeof(uint16_t));
+		bytes_to_read = pixels_to_read_per_run * sizeof(uint16_t);
+		if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
 		{
-			current_x = offset_x + x;
-
-			if (current_x < 0		||
-				current_x >= WIDTH	||
-				current_y < 0		||
-				current_y >= HEIGHT)
+			printf("Failed to read pixel data\n");
+			return;
+		}
+		convert_endian_u2_buffer(colors, pixels_to_read_per_run);
+		tile_x = 0;
+		while (tile_x < readRect.width)
+		{
+			if(tile_x > pixels_to_read_per_run)
 			{
-				continue;
+				remaining_pixels_this_row = readRect.width - tile_x;
+				location = address + ((((readRect.y + tile_y) * pitch) + readRect.x + tile_x) * sizeof(uint16_t));
+				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_RUN);
+				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
+				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
+				{
+					printf("Failed to read pixel data\n");
+					return;
+				}
+				convert_endian_u2_buffer(colors, pixels_to_read_now);
 			}
-
-			source_x = ((flip_diag) ? (offset_y) : (offset_x));
-			source_y = ((flip_diag) ? (offset_x) : (offset_y));
-
-			sprite_x = ((flip_x)
-				? (fx + (w - source_x - 1))
-				: (fx + source_x));
-
-			sprite_y = ((flip_y)
-				? (fy + (h - source_y - 1))
-				: (fy + source_y));
-
-			uint32_t location = address + (((pitch * sprite_y) + sprite_x) * sizeof(uint16_t));
-			uint16_t color = 0;
-
-			if (EngineROM_Read(location, sizeof(color), (uint8_t *)&color) != sizeof(color))
+			write_x = ((flip_diag) ? (tile_y) : (tile_x));
+			write_y = ((flip_diag) ? (tile_x) : (tile_y));
+			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
+			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
+			color = colors[tile_x % pixels_to_read_per_run];
+			if (color != transparent_color)
 			{
-				printf("Failed to read pixel data\n");
-				return;
+				frame[(dest_y * WIDTH) + dest_x] = color;
 			}
-
-			convert_endian_u2(&color);
-
-			if (color != tansparent_color)
-			{
-				frame[(current_y * WIDTH) + current_x] = color;
-			}
+			tile_x++;
 		}
 	}
 }
@@ -342,7 +381,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	drawImage(x, y, w, h, buf);
 }
 
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t tansparent_color) {
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
 	size_t bufferSize = w*h;
 	uint16_t buf[bufferSize];
 
@@ -358,7 +397,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	fclose(fd);
 
 	bigE16BufferToHost(buf, bufferSize);
-	drawImage(x, y, w, h, buf, tansparent_color);
+	drawImage(x, y, w, h, buf, transparent_color);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)

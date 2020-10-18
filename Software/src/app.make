@@ -31,10 +31,14 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/PipsTheET.c \
 	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
 	$(SRC_ROOT)/games/Wargames.c \
-	$(SRC_ROOT)/games/mage/mage.cpp \
-	$(SRC_ROOT)/games/mage/mage_rom.cpp \
-	$(SRC_ROOT)/games/mage/mage_input.cpp \
+	$(SRC_ROOT)/games/mage/mage_header.cpp \
+	$(SRC_ROOT)/games/mage/mage_map.cpp \
+	$(SRC_ROOT)/games/mage/mage_tileset.cpp \
+	$(SRC_ROOT)/games/mage/mage_animation.cpp \
+	$(SRC_ROOT)/games/mage/mage_entity_type.cpp \
+	$(SRC_ROOT)/games/mage/mage_game_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
+	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
