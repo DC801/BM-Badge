@@ -1219,13 +1219,13 @@ void MageRom::getEntityRenderableData(uint32_t index)
 	}
 }
 
-void MageRom::UpdateEntities(uint32_t delta_time)
+void MageRom::UpdateEntities(uint32_t deltaTime)
 {
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
 		//increment the frame ticks based on the delta_time since the last check:
-		entityRenderableData[i].currentFrameTicks += delta_time * 50;
+		entityRenderableData[i].currentFrameTicks += deltaTime;
 		
 		//update entity info:
 		getEntityRenderableData(i);

@@ -254,14 +254,14 @@ private:
 	//each entry is an indexed entity type.
 	std::unique_ptr<MageEntityType[]> entityTypes;
 
-	//this is the hackable array of entities that are on the current map
-	//the data contained within is the data that can be hacked in the hex editor.
-	std::unique_ptr<MageEntity[]> entities;
-
 	//this is an arrya storing the most current data needed to draw entities
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 public:
+	//this is the hackable array of entities that are on the current map
+	//the data contained within is the data that can be hacked in the hex editor.
+	std::unique_ptr<MageEntity[]> entities;
+
 	//when the MageRom is created, it will populate all the above variables from ROM.
 	MageRom();
 
@@ -292,7 +292,7 @@ public:
 	void getEntityRenderableData(uint32_t index);
 
 	//this will update the current entities based on the current frame data
-	void UpdateEntities(uint32_t delta_time);
+	void UpdateEntities(uint32_t deltaTime);
 
 	//this will draw the entities over the current state of the screen
 	void DrawEntities(int32_t cameraX, int32_t cameraY);
