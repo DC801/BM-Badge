@@ -44,7 +44,7 @@ void mage_game_loop()
 		mage_canvas->clearScreen(RGB(0,0,255));
 
 		//first apply input since the previous loop to the game state.
-		MageGame->applyInputToGame();
+		MageGame->applyInputToPlayer();
 
 		//then drawthe map and entities:
 		uint8_t layerCount = MageGame->Map().LayerCount();

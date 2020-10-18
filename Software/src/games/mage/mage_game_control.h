@@ -34,7 +34,7 @@ private:
 	//these header objects store the header information for all datasets on the ROM,
 	//including address offsets for each item, and the length of the item in memory.
 	MageHeader mapHeader;
-	MageHeader tileHeader;
+	MageHeader tilesetHeader;
 	MageHeader animationHeader;
 	MageHeader entityTypeHeader;
 	MageHeader entityHeader;
@@ -91,7 +91,7 @@ public:
 
 	//this takes input information and moves the playerEntity around
 	//If there is no playerEntity, it just moves the camera freely.
-	void applyInputToGame();
+	void applyInputToPlayer();
 
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
