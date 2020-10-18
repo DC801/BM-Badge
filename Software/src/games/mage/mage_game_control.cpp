@@ -22,8 +22,8 @@ MageGameControl::MageGameControl()
 	mapHeader = MageHeader(offset);
 	offset += mapHeader.size();
 
-	tileHeader = MageHeader(offset);
-	offset += tileHeader.size();
+	tilesetHeader = MageHeader(offset);
+	offset += tilesetHeader.size();
 
 	animationHeader = MageHeader(offset);
 	offset += animationHeader.size();
@@ -37,11 +37,11 @@ MageGameControl::MageGameControl()
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
 
-	tilesets = std::make_unique<MageTileset[]>(tileHeader.count());
+	tilesets = std::make_unique<MageTileset[]>(tilesetHeader.count());
 
-	for (uint32_t i = 0; i < tileHeader.count(); i++)
+	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
 	{
-		tilesets[i] = MageTileset(tileHeader.offset(i));
+		tilesets[i] = MageTileset(tilesetHeader.offset(i));
 	}
 	
 	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
@@ -72,16 +72,17 @@ uint32_t MageGameControl::Size() const
 {
 	uint32_t size = sizeof(currentMapId) +
 		mapHeader.size() +
-		tileHeader.size() +
+		tilesetHeader.size() +
 		animationHeader.size() +
 		entityTypeHeader.size() +
 		entityHeader.size() +
 		imageHeader.size() +
 		map.Size() +
-		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+
-		sizeof(uint16_t)*MAX_ENTITIES_PER_MAP;
+		sizeof(playerEntityIndex) +
+		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
+		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
-	for (uint32_t i = 0; i < tileHeader.count(); i++)
+	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
 	{
 		size += tilesets[i].Size();
 	}
@@ -104,7 +105,7 @@ const MageTileset& MageGameControl::Tile(uint32_t index) const
 	static MageTileset tile;
 	if (!tilesets) return tile;
 
-	if (tileHeader.count() > index)
+	if (tilesetHeader.count() > index)
 	{
 		return tilesets[index];
 	}
@@ -298,7 +299,7 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 	}
 }
 
-void MageGameControl::applyInputToGame()
+void MageGameControl::applyInputToPlayer()
 {
 	if (*hexEditorState)
 	{
@@ -316,6 +317,7 @@ void MageGameControl::applyInputToGame()
 		uint16_t tilesetHeight = tilesets[entityRenderableData[playerIndex].tilesetId].TileHeight();
 		isMoving = false;
 
+		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
 		if(EngineInput_Buttons.ljoy_left ) { playerEntity.x -= mageSpeed; playerEntity.direction = 3; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_right) { playerEntity.x += mageSpeed; playerEntity.direction = 1; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_up   ) { playerEntity.y -= mageSpeed; playerEntity.direction = 0; isMoving = true; }
@@ -328,11 +330,11 @@ void MageGameControl::applyInputToGame()
 			playerEntity.currentFrame = 0;
 		}
 
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= mageSpeed; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; isMoving = true; }
 
 		//set camera position to mage position
 		cameraPosition.x = playerEntity.x - HALF_WIDTH + ((tilesetWidth) / 2);
