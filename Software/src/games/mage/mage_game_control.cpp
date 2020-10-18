@@ -330,7 +330,6 @@ void MageGameControl::applyInputToPlayer()
 			playerEntity.currentFrame = 0;
 		}
 
-
 		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= mageSpeed; isMoving = true; }
@@ -443,6 +442,17 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 
 void MageGameControl::getEntityRenderableData(uint32_t index)
 {
+	//fill in default values if the map doesn't have an entity this high.
+	//should only be used when initializing the MageGameControl object.
+	if(index >= map.EntityCount())
+	{
+		entityRenderableData[index].tilesetId = 0;
+		entityRenderableData[index].tileId = 0;
+		entityRenderableData[index].duration = 0;
+		entityRenderableData[index].frameCount = 0;
+		entityRenderableData[index].renderFlags = 0;
+		return;
+	}
 	//current entity for use in the loop:
 	MageEntity currentEnt = entities[index];
 
@@ -451,11 +461,11 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 	if(currentEnt.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
 	{
 		//check if entity type has an animation count:
-		uint16_t entityTypeIndex = entities[index].primaryId;
-		if(( entityTypes[entityTypeIndex].AnimationCount() ) > 0)
+		uint16_t entityTypeId = entities[index].primaryId;
+		if(( entityTypes[entityTypeId].AnimationCount() ) > 0)
 		{
 			//get the current animation
-			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeIndex].EntityTypeAnimation(currentEnt.currentAnimation);
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(currentEnt.currentAnimation);
 			MageEntityTypeAnimationDirection directedAnimation; 
 			if(currentEnt.direction == MageEntityAnimationDirection::NORTH)
 			{
@@ -529,24 +539,38 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 
 void MageGameControl::UpdateEntities(uint32_t deltaTime)
 {
+	//if no time has passed, there is no need to update.
+	if(!deltaTime)
+	{
+		return;
+	}
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
 		//increment the frame ticks based on the delta_time since the last check:
 		entityRenderableData[i].currentFrameTicks += deltaTime;
+
+		#ifdef DC801_DESKTOP
+		//add fudge factor for desktop version to make animations 
+		//look better on slow-running emulation machine
+		entityRenderableData[i].currentFrameTicks += DESKTOP_TIME_FUDGE_FACTOR;
+		#endif
 		
 		//update entity info:
 		getEntityRenderableData(i);
 
 		//check for frame change and adjust if needed:
-		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
+		if(
+			(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration) &&
+			(entities[i].primaryIdType != MageEntityPrimaryIdType::TILESET)
+		)
 		{
 			entities[i].currentFrame++;
 			if(entities[i].currentFrame >= entityRenderableData[i].frameCount)
 			{
 				entities[i].currentFrame = 0;
+				entityRenderableData[i].currentFrameTicks = 0;
 			}
-		
 			//update the entity info again with the corrected frame index:
 			getEntityRenderableData(i);
 		}
@@ -589,12 +613,12 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
 		uint16_t entityIndex = entitySortOrder[i];
-		uint32_t imageIndex = tilesets[entityRenderableData[entityIndex].tilesetId].ImageId();
+		uint32_t imageId = tilesets[entityRenderableData[entityIndex].tilesetId].ImageId();
 		uint32_t tileWidth = tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth();
 		uint32_t tileHeight = tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight();
 		uint32_t cols = tilesets[entityRenderableData[entityIndex].tilesetId].Cols();
 		uint32_t tileId = entityRenderableData[entityIndex].tileId;
-		uint32_t address = imageHeader.offset(imageIndex);
+		uint32_t address = imageHeader.offset(imageId);
 
 		int32_t source_x = (tileId % cols) * tileWidth;
 		int32_t source_y = (tileId / cols) * tileHeight;
