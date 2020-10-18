@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include "mage.h"
+#include "mage_defines.h"
 
 class MageHeader
 {
@@ -299,34 +299,5 @@ public:
 	void DrawEntities(int32_t cameraX, int32_t cameraY);
 
 }; //class MageRom
-
-// extern MageDataMemoryAddresses dataMemoryAddresses;
-// extern MageTileset *allTilesets;
-// extern uint32_t mapIndex;
-// extern uint32_t currentMapIndex;
-// extern MageMap currentMap;
-// extern MageTileset *currentMapTilesets;
-// extern MageEntity *currentMapEntities;
-// extern uint16_t *currentMapEntityFrameTicks;
-// extern MageAnimationFrame *currentMapEntityFrames;
-// extern MageEntity **currentMapEntitiesSortedByRenderOrder;
-// extern uint8_t *data;
-
-// uint32_t load_data_headers();
-
-/*void load_tilesets_headers(
-	MageTileset *tilesetPointer,
-	uint32_t tilesetIndex
-);*/
-
-// void load_all_tilesets();
-// void load_map_headers(uint32_t incomingMapIndex);
-// void correct_entity_type_endians();
-// void correct_animation_endians();
-// void correct_entity_endians();
-
-// MageEntityType* get_entity_type_by_index(uint8_t index);
-// uint16_t* get_image_by_index(uint8_t index);
-// MageTileset* get_tileset_by_id(uint8_t index);
 
 #endif //_MAGE_ROM_H
