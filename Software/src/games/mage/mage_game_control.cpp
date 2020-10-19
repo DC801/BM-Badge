@@ -510,7 +510,7 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 		uint16_t aniIndex = entities[index].primaryId;
 		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetId();
 		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileId();
-		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(entities[index].currentAnimation).Duration();
+		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(entities[index].currentFrame).Duration();
 		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
 		entityRenderableData[index].renderFlags = entities[index].direction;
 	}
