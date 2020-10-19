@@ -19,7 +19,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&imageId);
+	imageId = convert_endian_u2_value(imageId);
 	address += sizeof(imageId);
 
 	if (EngineROM_Read(address, sizeof(imageWidth), (uint8_t *)&imageWidth) != sizeof(imageWidth))
@@ -27,7 +27,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&imageWidth);
+	imageWidth = convert_endian_u2_value(imageWidth);
 	address += sizeof(imageWidth);
 
 	if (EngineROM_Read(address, sizeof(imageHeight), (uint8_t *)&imageHeight) != sizeof(imageHeight))
@@ -35,7 +35,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&imageHeight);
+	imageHeight = convert_endian_u2_value(imageHeight);
 	address += sizeof(imageHeight);
 
 	if (EngineROM_Read(address, sizeof(tileWidth), (uint8_t *)&tileWidth) != sizeof(tileWidth))
@@ -43,7 +43,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&tileWidth);
+	tileWidth = convert_endian_u2_value(tileWidth);
 	address += sizeof(tileWidth);
 
 	if (EngineROM_Read(address, sizeof(tileHeight), (uint8_t *)&tileHeight) != sizeof(tileHeight))
@@ -51,7 +51,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&tileHeight);
+	tileHeight = convert_endian_u2_value(tileHeight);
 	address += sizeof(tileHeight);
 
 	if (EngineROM_Read(address, sizeof(cols), (uint8_t *)&cols) != sizeof(cols))
@@ -59,7 +59,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&cols);
+	cols = convert_endian_u2_value(cols);
 	address += sizeof(cols);
 
 	if (EngineROM_Read(address, sizeof(rows), (uint8_t *)&rows) != sizeof(rows))
@@ -67,7 +67,7 @@ MageTileset::MageTileset(uint32_t address)
 		goto MageTileset_Error;
 	}
 
-	convert_endian_u2(&rows);
+	rows = convert_endian_u2_value(rows);
 	address += sizeof(rows);
 	tileCount = rows * cols;
 	tiles = std::make_unique<uint8_t[]>(tileCount);

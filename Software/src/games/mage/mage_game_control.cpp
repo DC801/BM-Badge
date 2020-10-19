@@ -139,7 +139,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&entity.primaryId);
+	entity.primaryId = convert_endian_u2_value(entity.primaryId);
 
 	//increment address
 	address += sizeof(entity.primaryId);
@@ -151,7 +151,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&entity.secondaryId);
+	entity.secondaryId = convert_endian_u2_value(entity.secondaryId);
 
 	//increment address
 	address += sizeof(entity.secondaryId);
@@ -163,7 +163,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&entity.scriptId);
+	entity.scriptId = convert_endian_u2_value(entity.scriptId);
 
 	//increment address
 	address += sizeof(entity.scriptId);
@@ -175,7 +175,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&entity.x);
+	entity.x = convert_endian_u2_value(entity.x);
 
 	//increment address
 	address += sizeof(entity.x);
@@ -187,7 +187,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&entity.y);
+	entity.y = convert_endian_u2_value(entity.y);
 
 	//increment address
 	address += sizeof(entity.y);
@@ -393,7 +393,7 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			ENGINE_PANIC("Failed to fetch map layer tile info");
 		}
 
-		convert_endian_u2(&tileId);
+		tileId = convert_endian_u2_value(tileId);
 		address += sizeof(tileId);
 
 		if (tileId == 0)

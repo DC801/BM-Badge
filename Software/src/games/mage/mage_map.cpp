@@ -21,7 +21,7 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	convert_endian_u2(&tileWidth);
+	tileWidth = convert_endian_u2_value(tileWidth);
 	address += sizeof(tileWidth);
 
 	if (EngineROM_Read(address, sizeof(tileHeight), (uint8_t *)&tileHeight) != sizeof(tileHeight))
@@ -29,7 +29,7 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	convert_endian_u2(&tileHeight);
+	tileHeight = convert_endian_u2_value(tileHeight);
 	address += sizeof(tileHeight);
 
 	if (EngineROM_Read(address, sizeof(width), (uint8_t *)&width) != sizeof(width))
@@ -37,7 +37,7 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	convert_endian_u2(&width);
+	width = convert_endian_u2_value(width);
 	address += sizeof(width);
 
 	if (EngineROM_Read(address, sizeof(height), (uint8_t *)&height) != sizeof(height))
@@ -45,7 +45,7 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	convert_endian_u2(&height);
+	height = convert_endian_u2_value(height);
 	address += sizeof(height);
 	tilesPerLayer = width * height;
 
@@ -61,7 +61,7 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	convert_endian_u2(&entityCount);
+	entityCount = convert_endian_u2_value(entityCount);
 	address += sizeof(entityCount);
 
 	entityGlobalIds = std::make_unique<uint16_t[]>(entityCount);

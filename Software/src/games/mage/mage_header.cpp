@@ -13,7 +13,7 @@ MageHeader::MageHeader(uint32_t address)
 	}
 
 	// Endianness conversion
-	convert_endian_u4(&counts);
+	counts = convert_endian_u4_value(counts);
 
 	// Increment offset
 	address += sizeof(counts);
