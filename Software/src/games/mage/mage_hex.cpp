@@ -223,10 +223,25 @@ void render_hex_editor()
 			*(((uint8_t *) hackableDataAddress) + (i + (mem_page * bytes_per_page))),
 			currentByteString
 		);
+
+		//this bit will color the playerEntity differently than the other entities in the hex editor:
+		uint32_t font_color = 0xffff;
+		if(MageGame->playerEntityIndex != NO_PLAYER)
+		{
+			if(
+				( (i + (mem_page * bytes_per_page)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
+				( (i + (mem_page * bytes_per_page)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
+			)
+			{
+				font_color = 0xfc10;
+			}
+		}
+
+		//print the byte:
 		mage_canvas->printMessage(
 			currentByteString,
 			Monaco9,
-			0xffff,
+			font_color,
 			(i % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X,
 			(i / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y
 		);
