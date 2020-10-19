@@ -4,6 +4,7 @@ This class contains all the code related to the hex editor hacking interface.
 #ifndef _MAGE_HEX_H
 #define _MAGE_HEX_H
 
+#include "mage_defines.h"
 #include "mage.h"
 #include "mage_game_control.h"
 #include "modules/led.h"
