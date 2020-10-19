@@ -6,6 +6,10 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 
+#ifdef DC801_DESKTOP
+#include "EngineWindowFrame.h"
+#endif
+
 #include "mage_hex.h"
 
 std::unique_ptr<MageGameControl> MageGame;
@@ -96,6 +100,10 @@ void mage_game_loop()
 
 void MAGE()
 {
+#ifdef DC801_DESKTOP
+	EngineWindowFrameInit();
+#endif
+
 	// Initialize ROM and drivers
 	EngineROM_Init();
 
@@ -135,6 +143,11 @@ void MAGE()
 
 	// Close rom and any open files
 	EngineROM_Deinit();
+
+#ifdef DC801_DESKTOP
+	// Clean up
+	EngineWindowFrameDestroy();
+#endif
 
 	return;
 }

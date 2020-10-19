@@ -9,13 +9,22 @@
 #ifndef DC801_BLE_H_
 #define DC801_BLE_H_
 
-#include <common.h>
+#include "common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define DATA_SAVE_LEN 16
+
+typedef enum{
+    gm_command_none,
+    gm_command_addscoremodifier,
+    gm_command_addscore,
+    gm_command_party,
+    gm_command_sheep,
+    gm_command_beep
+} GODMODE_COMMAND;
 
 typedef struct{
 	uint16_t appearance;

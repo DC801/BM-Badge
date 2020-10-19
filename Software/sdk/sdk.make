@@ -219,6 +219,7 @@ SDK_INCLUDES := \
 	-I$(SDK_ROOT)/components/nfc/t4t_parser/cc_file \
 	-I$(SDK_ROOT)/components/nfc/t4t_parser/hl_detection_procedure \
 	-I$(SDK_ROOT)/components/nfc/t4t_parser/tlv \
+	-I$(SDK_ROOT)/components/softdevice \
 	-I$(SDK_ROOT)/components/softdevice/common \
 	-I$(SDK_ROOT)/components/softdevice/s140/headers \
 	-I$(SDK_ROOT)/components/softdevice/s140/headers/nrf52 \

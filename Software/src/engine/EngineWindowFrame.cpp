@@ -240,4 +240,6 @@ void EngineWindowFrameDestroy()
 	renderer = nullptr;
 	SDL_DestroyWindow(window);
 	window = nullptr;
+
+	SDL_Quit();
 }

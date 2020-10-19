@@ -42,7 +42,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
-APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
+APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)
