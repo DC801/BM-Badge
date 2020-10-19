@@ -41,6 +41,7 @@ extern "C" {
 uint16_t uint16Native = 0xFF00;
 uint8_t *uint16TopBit = (uint8_t *)&uint16Native;
 bool needsBigToLittleConversion = *uint16TopBit == 0x00;
+
 void bigE16BufferToHost (uint16_t *buf, size_t bufferSize) {
 	if (needsBigToLittleConversion) {
 		// printf("Buffer wrong endian, correcting\n");
@@ -818,19 +819,6 @@ void FrameBuffer::drawStop()
 	m_stop = true;
 }
 
-/*
-void FrameBuffer::drawBitmapFromFile(int x, int y, int w, int h, const char *filename)
-{
-	SDL_Surface *image = SDL_LoadBMP(filename);
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
-
-	SDL_Rect dstrect = { x, y, w, h };
-	SDL_RenderCopy(renderer, texture, NULL, &dstrect);
-	SDL_DestroyTexture(texture);
-	SDL_RenderPresent(renderer);
-}
-*/
-
 void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 {
 	if ((x >= WIDTH) || (y >= HEIGHT))
@@ -1178,6 +1166,7 @@ uint8_t FrameBuffer::getFontHeight(GFXfont font)
 {
 	return font.yAdvance;
 }
+
 void FrameBuffer::blt()
 {
 	EngineWindowFrameGameBlt(frame);

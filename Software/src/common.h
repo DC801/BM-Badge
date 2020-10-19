@@ -111,7 +111,7 @@ typedef enum{
 #include "extras.h"
 #include "modules/ble.h"
 #include "godmode.h"
-#include "modules/drv_st7735.h"
+#include "modules/drv_ili9341.h"
 #include "modules/drv_nau8810.h"
 #include "modules/gfx.h"
 #include "modules/sd.h"
@@ -130,6 +130,7 @@ typedef enum{
 #include "games/galaga/galaga_c.h"
 
 #include "EngineInput.h"
+#include "EngineROM.h"
 #include "engine/convert_endian.h"
 
 #define PROGMEM
