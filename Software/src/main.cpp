@@ -10,11 +10,11 @@
  */
 
 #include "main.h"
+#include "games/mage/mage.h"
+#include "FrameBuffer.h"
 
 #ifdef DC801_DESKTOP
 #include "EngineWindowFrame.h"
-#include "games/mage/mage.h"
-#include "FrameBuffer.h"
 
 volatile sig_atomic_t application_quit = 0;
 
@@ -48,7 +48,7 @@ APP_TIMER_DEF(standby_animation_timer_id);
 static void standby_animation_timeout_handler(void *p_context) {
 	UNUSED_PARAMETER(p_context);
 
-	p_canvas()->drawStop();
+	canvas.drawStop();
 	// util_gfx_draw_raw_file_stop();
 }
 
@@ -154,8 +154,8 @@ int main(void){
 
 #ifdef DC801_EMBEDDED
 	// Init the display
-	st7735_init();
-	st7735_start();
+	ili9341_init();
+	ili9341_start();
 	util_gfx_init();
 #endif
 
@@ -247,7 +247,7 @@ void showStandby(void)
 
 		if(partyMode){
 			// PARTYYYY!
-			p_canvas()->drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW", partyCallback, NULL);
+			canvas.drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW", partyCallback, NULL);
 			// util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, partyCallback, true, NULL);
 		}
 
@@ -256,7 +256,7 @@ void showStandby(void)
 			do{
 				uint8_t i;
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP1.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP1.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP1.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -266,7 +266,7 @@ void showStandby(void)
 					nrf_delay_ms(25);
 				}
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP2.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP2.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP2.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -276,7 +276,7 @@ void showStandby(void)
 					nrf_delay_ms(25);
 				}
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP3.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP3.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP3.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -286,7 +286,7 @@ void showStandby(void)
 					nrf_delay_ms(25);
 				}
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP4.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP4.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP4.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -296,7 +296,7 @@ void showStandby(void)
 					nrf_delay_ms(25);
 				}
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP5.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP5.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP5.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -306,7 +306,7 @@ void showStandby(void)
 					nrf_delay_ms(25);
 				}
 
-				p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW");
+				canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "EXTRAS/SHEEP6.RAW");
 				// util_gfx_draw_raw_file("/EXTRAS/SHEEP6.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 				for(i = 0; i < 100; i++){
@@ -338,7 +338,7 @@ void showStandby(void)
 			char filename[21];
 			snprintf(filename, 21, "/EXTRAS/%s.RAW", files[rand]);
 
-			p_canvas()->drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, filename);
+			canvas.drawLoopImageFromFile(0, 0, WIDTH, HEIGHT, filename);
 			// util_gfx_draw_raw_file(filename, 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, true, NULL);
 
 			animationCounter = 0;
@@ -360,15 +360,15 @@ void showStandby(void)
 
 				if(getBadgeIconFile(badge.group) != NULL)
 				{
-					p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, getBadgeIconFile(badge.group));
+					canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, getBadgeIconFile(badge.group));
 					// util_gfx_draw_raw_file(getBadgeIconFile(badge.group), 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 				}
 				else
 				{
-					p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "GROUPS/MISSING.RAW");
+					canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "GROUPS/MISSING.RAW");
 					// util_gfx_draw_raw_file("/GROUPS/MISSING.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
-					p_canvas()->fillRect(0, 0, WIDTH, 15, COLOR_BLACK);
+					canvas.fillRect(0, 0, WIDTH, 15, COLOR_BLACK);
 					// util_gfx_fill_rect(0, 0, GFX_WIDTH, 15, COLOR_BLACK);
 
 					// uint16_t w, h;
@@ -376,12 +376,12 @@ void showStandby(void)
 
 					const char *groupName = getBadgeGroupName(badge.group);
 					bounds_t bounds = { 0 };
-					p_canvas()->getTextBounds(VeraMono5pt7b, groupName, 0, 0, &bounds);
+					canvas.getTextBounds(VeraMono5pt7b, groupName, 0, 0, &bounds);
 
 					char name[16];
 					snprintf(name, 16, "%s", groupName);
 
-					p_canvas()->printMessage(name, VeraMono5pt7b, COLOR_WHITE, 64 - (bounds.width / 2), 2);
+					canvas.printMessage(name, VeraMono5pt7b, COLOR_WHITE, 64 - (bounds.width / 2), 2);
 					// util_gfx_set_font(FONT_VERAMONO_5PT);
 					// util_gfx_set_cursor(64 - (w / 2), 2);
 					// util_gfx_print(name);
@@ -534,7 +534,7 @@ void extras(void)
  */
 void credits(void)
 {
-	p_canvas()->drawImageFromFile(0, 0, WIDTH, HEIGHT, "CREDITS.RAW");
+	canvas.drawImageFromFile(0, 0, WIDTH, HEIGHT, "CREDITS.RAW");
 	// util_gfx_draw_raw_file("CREDITS.RAW", 0, 0, GFX_WIDTH, GFX_HEIGHT, NULL, false, NULL);
 
 	while(true)
@@ -551,7 +551,7 @@ void credits(void)
 
 void menu(void)
 {
-	p_canvas()->clearScreen(COLOR_BLACK);
+	canvas.clearScreen(COLOR_BLACK);
 	// util_gfx_fill_screen(COLOR_BLACK);
 
 	drawScreenTemplate();

@@ -55,6 +55,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	for (int i=s1; i<=s2; ++i)
 		frame[y*WIDTH+i]=color;
 }
+
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
@@ -199,6 +200,116 @@ void FrameBuffer::drawImageWithFlags(
             }
         }
     }
+}
+
+#define MAX_RUN 128
+void FrameBuffer::drawChunkWithFlags(
+	uint32_t address,
+	int x,
+	int y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	int16_t pitch,
+	uint16_t transparent_color,
+	uint8_t flags
+)
+{
+	uint16_t tile_x = 0;
+	uint16_t tile_y = 0;
+	uint16_t write_x = 0;
+	uint16_t write_y = 0;
+	int16_t dest_x = 0;
+	int16_t dest_y = 0;
+	uint16_t colors[MAX_RUN] = {};
+	uint32_t location = 0;
+	uint32_t bytes_to_read = 0;
+
+	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
+	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
+	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
+	if (
+		(x > WIDTH) ||
+		(y > HEIGHT) ||
+		((x + tile_width) < 0) ||
+		((y + tile_height) < 0) ||
+		((tile_width != tile_height) && flip_diag) // can't transpose non-squares
+	)
+	{
+		return;
+	}
+
+	Rectangle writeRect = Rectangle(
+		MAX(x, 0),
+		MAX(y, 0),
+		MIN(tile_width, MIN(tile_width + x, WIDTH - x)),
+		MIN(tile_height, MIN(tile_height + y, HEIGHT - y))
+	);
+
+	// FOR ALL OF THE SCENARIOS WHERE THE READ COORDINATE STARTS ON-SCREEN,
+	// THE READ COORDINATES -MUST NOT- TO BE SHIFTED!!!
+
+	// EXTREMELY CURSED BOOLEAN ALGEBRA
+	// - Do not touch
+	uint16_t transposed_width = flip_diag ? writeRect.height : writeRect.width;
+	uint16_t transposed_height = flip_diag ? writeRect.width : writeRect.height;
+	uint16_t offset_x = MAX(-x, 0);
+	uint16_t offset_y = MAX(-y, 0);
+	uint16_t transposed_offset_x = flip_diag ? offset_y : offset_x;
+	uint16_t transposed_offset_y = flip_diag ? offset_x : offset_y;
+	int32_t inverse_transposed_offset_x = tile_width - transposed_width - transposed_offset_x;
+	int32_t inverse_transposed_offset_y = tile_height - transposed_height - transposed_offset_y;
+	Rectangle readRect = Rectangle(
+		source_x + (((!flip_x && flip_y && flip_diag) || (flip_x && !flip_diag)|| (flip_x && flip_y && flip_diag)) ? inverse_transposed_offset_x : transposed_offset_x),
+		source_y + (((!flip_y && flip_x && flip_diag) || (flip_y && !flip_diag)|| (flip_y && flip_x && flip_diag)) ? inverse_transposed_offset_y : transposed_offset_y),
+		transposed_width,
+		transposed_height
+	);
+
+	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_RUN);
+	uint16_t remaining_pixels_this_row = readRect.width;
+	uint16_t pixels_to_read_now = 0;
+	uint16_t color = 0;
+	// These loops represent source coordinate space, not destination space
+	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
+	{
+		location = address + ((((readRect.y + tile_y) * pitch) + readRect.x) * sizeof(uint16_t));
+		bytes_to_read = pixels_to_read_per_run * sizeof(uint16_t);
+		if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
+		{
+			printf("Failed to read pixel data\n");
+			return;
+		}
+		convert_endian_u2_buffer(colors, pixels_to_read_per_run);
+		tile_x = 0;
+		while (tile_x < readRect.width)
+		{
+			if(tile_x > pixels_to_read_per_run)
+			{
+				remaining_pixels_this_row = readRect.width - tile_x;
+				location = address + ((((readRect.y + tile_y) * pitch) + readRect.x + tile_x) * sizeof(uint16_t));
+				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_RUN);
+				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
+				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
+				{
+					printf("Failed to read pixel data\n");
+					return;
+				}
+				convert_endian_u2_buffer(colors, pixels_to_read_now);
+			}
+			write_x = ((flip_diag) ? (tile_y) : (tile_x));
+			write_y = ((flip_diag) ? (tile_x) : (tile_y));
+			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
+			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
+			color = colors[tile_x % pixels_to_read_per_run];
+			if (color != transparent_color)
+			{
+				frame[(dest_y * WIDTH) + dest_x] = color;
+			}
+			tile_x++;
+		}
+	}
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
@@ -481,7 +592,7 @@ void FrameBuffer::drawBitmapFromFile(const char *filename)
 			}
 
 			// Set TFT address window to clipped image bounds
-			st7735_set_addr(0, 0, w - 1, h - 1);
+			ili9341_set_addr(0, 0, w - 1, h - 1);
 
 			//Handle 16-bit 565 bmp
 			if (depth == 16)
@@ -524,7 +635,7 @@ void FrameBuffer::drawBitmapFromFile(const char *filename)
 						sdbuffer[i + 1] = temp;
 					}
 
-					st7735_push_colors(sdbuffer, rowSize);
+					ili9341_push_colors(sdbuffer, rowSize);
 				} // end scanline
 			}
 			//Handle 24-bit RGB bmp
@@ -571,7 +682,7 @@ void FrameBuffer::drawBitmapFromFile(const char *filename)
 						b = sdbuffer[buffidx++];
 						g = sdbuffer[buffidx++];
 						r = sdbuffer[buffidx++];
-						st7735_push_color(st7735_color565(r, g, b));
+						ili9341_push_color(ili9341_color565(r, g, b));
 					} // end pixel
 				} // end scanline
 			} // end goodBmp
@@ -891,13 +1002,13 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
     }
 
     //Hang out until LCD is free
-    while (st7735_is_busy())
+    while (ili9341_is_busy())
 	{
         APP_ERROR_CHECK(sd_app_evt_wait());
     }
 
-    st7735_set_addr(x, y, x + w - 1, y + h - 1);
-    st7735_push_colors_fast((uint8_t*)p_raw, (w * h * 2));
+    ili9341_set_addr(x, y, x + w - 1, y + h - 1);
+    ili9341_push_colors_fast((uint8_t*)p_raw, (w * h * 2));
     //don't wait for it to finish
 }
 

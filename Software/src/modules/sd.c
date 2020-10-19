@@ -41,14 +41,6 @@
 
 #ifdef DC801_EMBEDDED
 
-////SPI 1 is for SD
-//static nrf_drv_spi_t spi1 = NRF_DRV_SPI_INSTANCE(1);
-
-#define SDC_SCK_PIN     (28)        ///< SDC serial clock (SCK) pin.
-#define SDC_MOSI_PIN    (29)        ///< SDC serial data in (DI) pin.
-#define SDC_MISO_PIN    (27)         ///< SDC serial data out (DO) pin.
-#define SDC_CS_PIN      (30)   		///< SDC chip select (CS) pin.
-
 /**
  * @brief  SDC block device definition
  * */

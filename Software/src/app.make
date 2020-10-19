@@ -7,7 +7,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/extras.c \
 	$(SRC_ROOT)/godmode.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
-	$(SRC_ROOT)/modules/drv_st7735.c \
+	$(SRC_ROOT)/modules/drv_ili9341.c \
 	$(SRC_ROOT)/modules/drv_nau8810.c \
 	$(SRC_ROOT)/modules/gfx.c \
 	$(SRC_ROOT)/modules/sd.c \
