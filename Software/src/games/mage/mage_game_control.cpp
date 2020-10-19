@@ -551,6 +551,8 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		//tileset entities are not animated, return if entity is type tileset.
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{
+			//Update Entity in case it's been hacked.
+			getEntityRenderableData(i);
 			continue;
 		}
 		//increment the frame ticks based on the delta_time since the last check:
