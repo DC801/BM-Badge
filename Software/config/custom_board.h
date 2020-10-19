@@ -124,9 +124,32 @@ static const uint32_t power_up_led_list[POWER_UP_LEDS_NUMBER] = POWER_UP_LEDS_LI
 #define SPEAKER		0
 
 // LCD
-// The SPI ports are defined in the config/sdk_config.h
-#define LCD_RESET	3
-#define LCD_LIGHT	12+32
+// LCD
+#define LCD_SPIM_INSTANCE   3
+
+#define ILI9341_SCK_PIN		28
+#define ILI9341_MOSI_PIN	30
+#define ILI9341_PIN_CS		31
+#define ILI9341_PIN_DC		29
+#define ILI9341_PIN_LED		0
+#define ILI9341_PIN_RESET	10+32
+
+#define LCD_WIDTH  			320
+#define LCD_HEIGHT 			240
+#define LCD_X_OFFSET		0
+#define LCD_Y_OFFSET		0
+
+// I2C configuration
+#define I2C_INSTANCE        0
+
+#define I2C_SCL_PIN         23
+#define I2C_SDA_PIN         22
+
+// SD card interface
+#define SDC_SCK_PIN         17
+#define SDC_MOSI_PIN        21
+#define SDC_MISO_PIN        16
+#define SDC_CS_PIN          19
 
 // Clock
 // Low frequency clock source to be used by the SoftDevice

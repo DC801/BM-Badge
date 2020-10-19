@@ -174,29 +174,6 @@ void EngineROM_Deinit(void)
 	romfile = NULL;
 }
 
-bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
-{
-	uint8_t buffer[length];
-	uint8_t *ptr = buffer;
-
-	uint32_t read = EngineROM_Read(0, length, buffer);
-
-	if (read != length)
-	{
-		ENGINE_PANIC("Failed to match Game Data magic");
-	}
-
-	for (int i = 0; i < length; i++)
-	{
-		if (*magic++ != *ptr++)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
 	if (romfile == NULL || data == NULL)
@@ -255,6 +232,29 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 	return 1;
 }
 #endif
+
+bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
+{
+	uint8_t buffer[length];
+	uint8_t *ptr = buffer;
+
+	uint32_t read = EngineROM_Read(0, length, buffer);
+
+	if (read != length)
+	{
+		ENGINE_PANIC("Failed to match Game Data magic");
+	}
+
+	for (int i = 0; i < length; i++)
+	{
+		if (*magic++ != *ptr++)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
 
 #ifdef __cplusplus
 }

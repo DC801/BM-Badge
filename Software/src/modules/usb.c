@@ -144,7 +144,7 @@ size_t usb_serial_read(char* data, size_t max_len) {
     if (idx == 0)
         return 0;
 
-    size_t read = min(max_len, idx);
+    size_t read = MIN(max_len, idx);
     memcpy(data, m_rx_buffer, read);
     if (idx>read)
         memmove(m_rx_buffer, &m_rx_buffer[read], idx-read);
@@ -158,7 +158,7 @@ bool usb_serial_read_line(char* input_buffer, size_t max_len) {
             m_rx_buffer[i++]='\0';
             while((i<idx) && ((m_rx_buffer[i] == '\n') || (m_rx_buffer[i] == '\r')))
                 m_rx_buffer[i++]='\0';
-            size_t read =  min(i, max_len);
+            size_t read =  MIN(i, max_len);
             memcpy(input_buffer, m_rx_buffer, read);
             if (idx>read)
                 memmove(m_rx_buffer, &m_rx_buffer[read], idx-read);
