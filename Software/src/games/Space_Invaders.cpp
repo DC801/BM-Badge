@@ -14,7 +14,6 @@ extern "C" {
 #include "modules/led.h"
 #include "modules/sd.h"
 #include "utility.h"
-#include "modules/drv_st7735.h"
 #include "fonts/computerfont12pt7b.h"
 }
 
@@ -130,7 +129,7 @@ invadersScore SpaceInvaders(gameType type, bool bonusLife, int extraLevels) {
 		uint32_t now = millis();
 		uint32_t dt = millis_elapsed(now, lasttime);
 		if (dt > GINTERVAL) {
-			while (st7735_is_busy()) {
+			while (ili9341_is_busy()) {
             	APP_ERROR_CHECK(sd_app_evt_wait());
         	}
 
