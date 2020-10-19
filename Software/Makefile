@@ -31,6 +31,11 @@ SOFTDEVICE ?= $(SDK_ROOT)/components/softdevice/s140/hex/s140_nrf52_6.1.1_softde
 
 CONFIG_INCLUDE := -I$(PRJ_ROOT)/config
 
+.PHONY: $(TARGET) flash flash-merged flash-dap erase recover merge uf2 clean cleanall sdk_config
+
+# Generate a phony for $(TARGET) to build output files
+$(TARGET): $(TARGET).out $(TARGET).hex $(TARGET).bin
+
 # Here we are providing SDK_TARGET as well as SDK_INCLUDES so we know wether to link against
 #  the SDK library/headers, or the Desktop shim.
 ifdef DESKTOP
@@ -41,6 +46,9 @@ include $(PRJ_ROOT)/sdk/sdk.make
 endif
 
 SDK_TARGET := $(PRJ_ROOT)/sdk/output/$(notdir $(SDK_TARGET))
+
+include $(PRJ_ROOT)/test/test.make
+TEST_OBJS := $(subst $(TEST_ROOT), $(BUILD_DIR), $(addsuffix .o, $(basename $(TEST_SRCS))))
 
 # Defines used from this file:
 #  SRC_ROOT:		Source file top-level directory for recipe glob matching
@@ -54,7 +62,8 @@ APP_OBJS := $(subst $(SRC_ROOT), $(BUILD_DIR), $(addsuffix .o, $(basename $(APP_
 # List all include directories
 INCLUDES := $(CONFIG_INCLUDE) \
 	$(APP_INCLUDES) \
-	$(SDK_INCLUDES)
+	$(SDK_INCLUDES) \
+	$(TEST_INCLUDES)
 
 # Contains generic recipies, as well as all toolchain-related definitions
 # Required definitions:
@@ -63,11 +72,6 @@ INCLUDES := $(CONFIG_INCLUDE) \
 #  SRC_ROOT:		Top-level source tree directory
 #  LINKER_SCRIPT:	Used in LD_FLAGS when linking embedded binaries
 include common.make
-
-.PHONY: $(TARGET) flash flash-merged flash-dap erase recover merge uf2 clean cleanall sdk_config
-
-# Generate a phony for $(TARGET) to build output files
-$(TARGET): $(TARGET).out $(TARGET).hex $(TARGET).bin
 
 # Ensure SDK is built
 ifdef DESKTOP
@@ -79,7 +83,7 @@ $(SDK_TARGET):
 endif
 
 # Link ELF
-$(TARGET).out: $(APP_OBJS) $(SDK_TARGET)
+$(TARGET).out: $(APP_OBJS) $(TEST_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
 
 ifeq ($(OS),Windows_NT)
@@ -127,7 +131,7 @@ recover:
 merge: $(TARGET).hex
 	@echo "Merging Application and Softdevice"
 	$(MERGEHEX) -m $(SOFTDEVICE) $< -o $(TARGET).merged.hex
-	@$(SIZE) $<
+	@$(SIZE) $(TARGET).merged.hex
 
 uf2: merge
 	@echo "Generating UF2 image"

@@ -904,6 +904,8 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 	int16_t gx1, gy1, gx2, gy2;
 	int16_t ya = font.yAdvance;
 
+	c = *text++;
+
 	// Walk the string
 	do
 	{

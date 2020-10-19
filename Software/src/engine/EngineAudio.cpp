@@ -90,6 +90,9 @@ void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 	// Pull the first audio sample
 	Audio *audio = previous->next;
 
+	int length = sizeof(stream[1]) * sizeof(stream[1][0]) / sizeof(cm_Int16);
+	memset(reinterpret_cast<cm_Int16*>(stream[1]), 0, length);
+
 	// Walk the list
 	while (audio != NULL)
 	{
@@ -99,12 +102,12 @@ void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 		if (audio->end == false)
 		{
 			// And the audio is being faded
-			if ((source->loop == 1) && (audio->fade == 1))
+			if (audio->fade == 1)
 			{
 				// Fade until gain is zero, then truncate sample to zero length
 				if (source->gain > 0.0)
 				{
-					cm_set_gain(source, source->gain - 0.01);
+					cm_set_gain(source, source->gain - 0.1);
 				}
 				else
 				{
@@ -119,11 +122,13 @@ void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 
 			// Continue to the next item
 			previous = audio;
-			audio = previous->next;
 		}
 		// Otherwise, this sample is finished
 		else
 		{
+			// Stop playing
+			cm_stop(audio->source);
+
 			// Unlink the sample
 			previous->next = audio->next;
 			// Offset our sample count for non-looped samples
@@ -136,9 +141,10 @@ void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 			audio->next = NULL;
 			// Free the sample and delete the audio object
 			freeAudio(audio);
-			// Iterate to the next sample
-			audio = previous->next;
 		}
+
+		// Iterate to the next sample
+		audio = previous->next;
 	}
 
 	if (!p_released->p_rx_buffer)
@@ -256,6 +262,25 @@ void AudioPlayer::play(const char *name, double gain)
 void AudioPlayer::loop(const char *name, double gain)
 {
 	playAudio(name, true, gain);
+}
+
+void AudioPlayer::stop_loop()
+{
+	Audio *item = &head;
+
+	while (item != NULL)
+	{
+		if (item->source != NULL)
+		{
+			if (item->source->loop != 0)
+			{
+				item->end = true;
+				return;
+			}
+		}
+
+		item = item->next;
+	}
 }
 
 AudioPlayer::AudioPlayer()

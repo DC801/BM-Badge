@@ -13,8 +13,9 @@
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
 
+#include "test.h"
+
 #ifdef DC801_DESKTOP
-#include "EngineWindowFrame.h"
 
 volatile sig_atomic_t application_quit = 0;
 
@@ -178,8 +179,7 @@ int main(void){
 
 	morseInit();
 
-	if(!util_sd_init())
-	{
+	if(!util_sd_init()){
 		util_sd_error();
 	}
 
@@ -203,18 +203,14 @@ int main(void){
 	advertising_setUser(ble_name);
 	ble_adv_start();
 
-#ifdef DC801_DESKTOP
-	EngineWindowFrameInit();
+#if defined(TEST) || defined(TEST_ALL)
+	DC801_Test::Test();
+	break;
+#else
+	MAGE();
 #endif
 
-	// Run main game
-	MAGE();
-
 #ifdef DC801_DESKTOP
-	// Clean up
-	EngineWindowFrameDestroy();
-	SDL_Quit();
-
 	printf("Exiting gracefully...\n");
 	return 0;
 #endif
@@ -222,6 +218,7 @@ int main(void){
 #ifdef DC801_EMBEDDED
 	while (1)
 	{
+		// If we make it here - we shouldn't - but if, reset the badge
 		NVIC_SystemReset();
 	}
 #endif

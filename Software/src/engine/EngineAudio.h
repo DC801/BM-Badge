@@ -39,6 +39,7 @@ class AudioPlayer
 public:
 	void play(const char *name, double gain);
 	void loop(const char *name, double gain);
+	void stop_loop();
 
 	AudioPlayer();
 	~AudioPlayer();

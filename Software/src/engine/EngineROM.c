@@ -149,7 +149,7 @@ FILE *romfile = NULL;
 
 void EngineROM_Init(void)
 {
-	romfile = fopen("MAGE/game.dat", "a+b");
+	romfile = fopen("MAGE/game.dat", "r+b");
 
 	if (romfile == NULL)
 	{

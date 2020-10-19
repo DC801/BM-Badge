@@ -25,7 +25,7 @@
 #include "config/custom_board.h"
 
 #ifdef DC801_EMBEDDED
-#ifdef __cplusplus
+	#ifdef __cplusplus
 extern "C" {
 #endif
 	#include "config/sdk_config.h"
@@ -35,7 +35,7 @@ extern "C" {
 	#include "nrf.h"
 	#include "app_error.h"
 	#include "app_pwm.h"
-	#include "ble.h"
+	#include "s140/headers/ble.h"
 	#include "ble_err.h"
 	#include "ble_hci.h"
 	#include "ble_srv_common.h"
@@ -93,14 +93,6 @@ extern "C" {
 
 #define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
 
-typedef enum{
-    gm_command_none,
-    gm_command_addscoremodifier,
-    gm_command_addscore,
-    gm_command_party,
-    gm_command_sheep,
-    gm_command_beep
-} GODMODE_COMMAND;
 
 // Includes for our app
 #include "utility.h"

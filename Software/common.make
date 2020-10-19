@@ -62,8 +62,8 @@ CFLAGS += -DDC801_EMBEDDED --short-enums
 # C++ flags common to all targets
 CXXFLAGS = -felide-constructors \
 	-fno-exceptions \
-	-fno-rtti
-
+	-fno-rtti \
+	-Wno-register
 else
 CFLAGS += -DDC801_DESKTOP -fno-short-enums -D_DEFAULT_SOURCE
 endif
@@ -105,6 +105,8 @@ CFLAGS += -D__HEAP_SIZE=16384
 CFLAGS += -D__STACK_SIZE=16384
 ASMFLAGS += -D__HEAP_SIZE=16384
 ASMFLAGS += -D__STACK_SIZE=16384
+
+CFLAGS += $(TEST_DEFINES)
 
 # GCC Dependency flags:
 #  -MD:		Generate dependency tree for specified object as a side effect of compilation
@@ -162,3 +164,16 @@ $(PRJ_ROOT)/output/%.hex: $(PRJ_ROOT)/output/%.out
 $(PRJ_ROOT)/output/%.bin: $(PRJ_ROOT)/output/%.out
 	@echo "[ BIN ] $(notdir $@)"
 	@$(OBJCOPY) -O binary "$<" "$@"
+
+# ---------- Test ----------
+# C++ files
+$(BUILD_DIR)/%.o: $(TEST_ROOT)/%.cpp
+	@echo "[ CXX ] $(notdir $<)"
+
+ifeq ($(OS),Windows_NT)
+	@if not exist $(subst /,\,$(@D)) $(MKDIR) $(subst /,\,$(@D))
+else
+	@$(MKDIR) $(@D)
+endif
+
+	@$(CC) -x c++ -c -std=c++17 $(CFLAGS) $(CXXFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"

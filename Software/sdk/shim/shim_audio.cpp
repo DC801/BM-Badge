@@ -122,6 +122,8 @@ void callback(void *userdata, Uint8 *stream, int len)
 	// Pull the first audio sample
 	Audio *audio = previous->next;
 
+	memset(stream, 0, len);
+
 	// Walk the list
 	while (audio != NULL)
 	{
@@ -131,12 +133,12 @@ void callback(void *userdata, Uint8 *stream, int len)
 		if (audio->end == false)
 		{
 			// And the audio is being faded
-			if ((source->loop == 1) && (audio->fade == 1))
+			if (audio->fade == 1)
 			{
 				// Fade until gain is zero, then truncate sample to zero length
 				if (source->gain > 0.0)
 				{
-					cm_set_gain(source, source->gain - 0.01);
+					cm_set_gain(source, source->gain - 0.1);
 				}
 				else
 				{
@@ -149,11 +151,13 @@ void callback(void *userdata, Uint8 *stream, int len)
 
 			// Continue to the next item
 			previous = audio;
-			audio = previous->next;
 		}
 		// Otherwise, this sample is finished
 		else
 		{
+			// Stop playing
+			cm_stop(audio->source);
+
 			// Unlink the sample
 			previous->next = audio->next;
 			// Offset our sample count for non-looped samples
@@ -166,9 +170,10 @@ void callback(void *userdata, Uint8 *stream, int len)
 			audio->next = NULL;
 			// Free the sample and delete the audio object
 			freeAudio(audio);
-			// Iterate to the next sample
-			audio = previous->next;
 		}
+
+		// Iterate to the next sample
+		audio = previous->next;
 	}
 }
 
@@ -244,6 +249,13 @@ void playAudio(const char *filename, bool loop, double gain)
 
 	// Ask cmixer to load our wave file
 	audio->source = cm_new_source_from_file(filename);
+	
+	if (audio->source == NULL)
+	{
+		delete audio;
+		return;
+	}
+
 	cm_set_gain(audio->source, gain);
 
 	if (loop == true)
@@ -293,6 +305,25 @@ void AudioPlayer::play(const char *name, double gain)
 void AudioPlayer::loop(const char *name, double gain)
 {
 	playAudio(name, true, gain);
+}
+
+void AudioPlayer::stop_loop()
+{
+	Audio *item = reinterpret_cast<Audio *>(device.spec.userdata);
+
+	while (item != NULL)
+	{
+		if (item->source != NULL)
+		{
+			if (item->source->loop != 0)
+			{
+				item->end = true;
+				return;
+			}
+		}
+
+		item = item->next;
+	}
 }
 
 // Constructor:
