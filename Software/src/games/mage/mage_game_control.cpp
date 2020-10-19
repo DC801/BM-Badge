@@ -309,24 +309,32 @@ void MageGameControl::applyInputToPlayer()
 	{
 		//update renderable info before proceeding:
 		getEntityRenderableData(playerEntityIndex);
-
-		uint8_t previousPlayerAnimation = entities[playerEntityIndex].currentAnimation;
+		
+		MageEntity *playerEntity = &entities[playerEntityIndex];
+		uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
 		uint16_t tilesetWidth = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileHeight();
 
 		isMoving = false;
 
 		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { entities[playerEntityIndex].x -= mageSpeed; entities[playerEntityIndex].direction = 3; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { entities[playerEntityIndex].x += mageSpeed; entities[playerEntityIndex].direction = 1; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { entities[playerEntityIndex].y -= mageSpeed; entities[playerEntityIndex].direction = 0; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { entities[playerEntityIndex].y += mageSpeed; entities[playerEntityIndex].direction = 2; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
+		if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
 
-		entities[playerEntityIndex].currentAnimation = isMoving ? 1 : 0;
-
-		if (previousPlayerAnimation != entities[playerEntityIndex].currentAnimation)
+		//check to see if the entityType has more than 1 animation:
+		if(entityTypes[playerEntity->primaryId].AnimationCount() > 1){
+			playerEntity->currentAnimation = isMoving ? 1 : 0;
+		}
+		else
 		{
-			entities[playerEntityIndex].currentFrame = 0;
+			playerEntity->currentAnimation = 0;
+		}
+
+		if (previousPlayerAnimation != playerEntity->currentAnimation)
+		{
+			playerEntity->currentFrame = 0;
 			entityRenderableData[playerEntityIndex].currentFrameTicks = 0;
 		}
 
@@ -336,8 +344,8 @@ void MageGameControl::applyInputToPlayer()
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; isMoving = true; }
 
 		//set camera position to mage position
-		cameraPosition.x = entities[playerEntityIndex].x - HALF_WIDTH + ((tilesetWidth) / 2);
-		cameraPosition.y = entities[playerEntityIndex].y - HALF_HEIGHT - ((tilesetHeight) / 2);
+		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
+		cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((tilesetHeight) / 2);
 	}
 	else //no player on map
 	{
@@ -347,7 +355,6 @@ void MageGameControl::applyInputToPlayer()
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
 	}
-	
 }
 
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
