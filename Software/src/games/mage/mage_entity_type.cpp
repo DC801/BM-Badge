@@ -14,7 +14,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t addr
 	}
 
 	// Endianness conversion
-	convert_endian_u2(&typeId);
+	typeId = convert_endian_u2_value(typeId);
 
 	// Increment offset
 	address += sizeof(typeId);
