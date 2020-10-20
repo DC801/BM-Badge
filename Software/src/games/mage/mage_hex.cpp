@@ -1,6 +1,17 @@
 #include "mage_hex.h"
 
 uint8_t *hexEditorState = &led_states[LED_HAX];
+HEX_OPS currentOp = HEX_OPS_XOR;
+bool anyHexMovement = false;
+bool dialog_open = false;
+uint8_t bytes_per_page = HEX_EDITOR_DEFAULT_BYTES_PER_PAGE;
+uint8_t hex_rows = 0;
+uint16_t mem_total = 0;
+uint16_t mem_page = 0;
+uint16_t mem_pages = 0;
+uint16_t hex_cursor = 0;
+
+
 void toggle_hex_editor()
 {
 	ledSet(
@@ -8,13 +19,6 @@ void toggle_hex_editor()
 		*hexEditorState ? 0x00 : 0xff
 	);
 }
-bool dialog_open = false;
-uint8_t bytes_per_page = 64;
-uint8_t hex_rows = 0;
-uint16_t mem_total = 0;
-uint16_t mem_page = 0;
-uint16_t mem_pages = 0;
-uint16_t hex_cursor = 0;
 
 void toggle_dialog () {
 	dialog_open = !dialog_open;
@@ -33,8 +37,6 @@ void update_hex_lights() {
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
 }
 
-
-HEX_OPS currentOp = HEX_OPS_XOR;
 
 void runHex (uint8_t value) {
 	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
@@ -64,8 +66,6 @@ void set_hex_op (enum HEX_OPS op) {
 	ledSet(LED_SUB, led_op_sub);
 }
 
-#define BITS 8
-#define BITS_BUTTONS_OFFSET 4
 void apply_input_to_hex_state() {
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
 	if (EngineInput_Activated.hax) { toggle_hex_editor(); }
@@ -83,15 +83,14 @@ void apply_input_to_hex_state() {
 	if (EngineInput_Activated.ljoy_center) { toggle_dialog(); }
 }
 
-bool anyHexMovement = false;
-uint8_t delay = 0;
 void update_hex_editor()
 {
+	static uint8_t hexTickDelay = 0;
 	bytes_per_page = dialog_open ? 64 : 192;
 	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
 	mem_total = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
-	if (!delay)
+	if (!hexTickDelay)
 	{
 		anyHexMovement = (
 			EngineInput_Buttons.ljoy_left ||
@@ -144,14 +143,15 @@ void update_hex_editor()
 			}
 		}
 		if (anyHexMovement) {
-			delay = HEX_TICK_DELAY;
+			hexTickDelay = HEX_TICK_DELAY;
 		}
 	}
 	else
 	{
-		delay--;
+		hexTickDelay--;
 	}
 }
+
 void render_hex_header()
 {
 	char headerString[128];

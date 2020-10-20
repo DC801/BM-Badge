@@ -22,6 +22,7 @@ This class contains all the code related to the hex editor hacking interface.
 #define BYTE_CURSOR_OFFSET_X -4
 #define BYTE_CURSOR_OFFSET_Y 5
 #define HEX_TICK_DELAY 7
+#define HEX_EDITOR_DEFAULT_BYTES_PER_PAGE 64
 
 enum HEX_OPS {
 	HEX_OPS_XOR,
