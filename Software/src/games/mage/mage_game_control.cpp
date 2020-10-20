@@ -531,10 +531,7 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 	}
 	else
 	{
-		//this shouldn't be possible, so error:
-		#ifdef DC801_DESKTOP
-			fprintf(stderr, "Error: entity primaryIdType is invalid.");
-		#endif
+		//this means that they hacked it into a bad state. Set invalid hack state flag and render missingno. -Tim
 	}
 }
 
