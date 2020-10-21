@@ -39,19 +39,7 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":257,
-                 "height":48,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":43,
-                 "y":83
-                }, 
-                {
-                 "gid":269,
+                 "gid":293,
                  "height":48,
                  "id":2,
                  "name":"",
@@ -63,7 +51,7 @@
                  "y":164
                 }, 
                 {
-                 "gid":305,
+                 "gid":335,
                  "height":32,
                  "id":3,
                  "name":"",
@@ -75,7 +63,7 @@
                  "y":266
                 }, 
                 {
-                 "gid":307,
+                 "gid":337,
                  "height":32,
                  "id":4,
                  "name":"",
@@ -85,6 +73,18 @@
                  "width":32,
                  "x":113,
                  "y":71
+                }, 
+                {
+                 "gid":2147483905,
+                 "height":48,
+                 "id":5,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":41.4966172520147,
+                 "y":86.4368222067456
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -105,7 +105,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":5,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
@@ -117,18 +117,18 @@
         }, 
         {
          "firstgid":257,
-         "source":"entity-lightning_boy_cyan.json"
+         "source":"entity-lightning_boy.json"
         }, 
         {
-         "firstgid":269,
+         "firstgid":293,
          "source":"entity-goose.json"
         }, 
         {
-         "firstgid":305,
+         "firstgid":335,
          "source":"entity-exa.json"
         }, 
         {
-         "firstgid":307,
+         "firstgid":337,
          "source":"entity-mage.json"
         }],
  "tilewidth":32,

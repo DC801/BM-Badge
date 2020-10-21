@@ -1,39 +1,87 @@
-{ "columns":6,
+{ "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/goose.png",
- "imageheight":288,
- "imagewidth":288,
+ "imageheight":672,
+ "imagewidth":144,
  "margin":0,
  "name":"entity-goose",
  "spacing":0,
- "tilecount":36,
+ "tilecount":42,
  "tiledversion":"1.4.2",
  "tileheight":48,
  "tiles":[
         {
          "animation":[
                 {
-                 "duration":1000,
+                 "duration":2000,
                  "tileid":0
                 }, 
                 {
-                 "duration":75,
-                 "tileid":6
+                 "duration":45,
+                 "tileid":36
                 }, 
                 {
-                 "duration":300,
-                 "tileid":12
+                 "duration":45,
+                 "tileid":0
                 }, 
                 {
-                 "duration":50,
-                 "tileid":18
+                 "duration":45,
+                 "tileid":39
                 }, 
                 {
-                 "duration":250,
-                 "tileid":24
+                 "duration":45,
+                 "tileid":0
                 }, 
                 {
-                 "duration":50,
-                 "tileid":30
+                 "duration":45,
+                 "tileid":36
+                }, 
+                {
+                 "duration":45,
+                 "tileid":0
+                }, 
+                {
+                 "duration":45,
+                 "tileid":39
+                }, 
+                {
+                 "duration":45,
+                 "tileid":0
+                }, 
+                {
+                 "duration":45,
+                 "tileid":36
+                }, 
+                {
+                 "duration":45,
+                 "tileid":0
+                }, 
+                {
+                 "duration":45,
+                 "tileid":39
+                }, 
+                {
+                 "duration":45,
+                 "tileid":0
+                }, 
+                {
+                 "duration":45,
+                 "tileid":36
+                }, 
+                {
+                 "duration":45,
+                 "tileid":0
+                }, 
+                {
+                 "duration":45,
+                 "tileid":39
                 }],
          "id":0,
          "type":"goose"
@@ -41,28 +89,8 @@
         {
          "animation":[
                 {
-                 "duration":1000,
+                 "duration":9000,
                  "tileid":1
-                }, 
-                {
-                 "duration":75,
-                 "tileid":7
-                }, 
-                {
-                 "duration":300,
-                 "tileid":13
-                }, 
-                {
-                 "duration":50,
-                 "tileid":19
-                }, 
-                {
-                 "duration":250,
-                 "tileid":25
-                }, 
-                {
-                 "duration":50,
-                 "tileid":31
                 }],
          "id":1,
          "type":"goose"
@@ -70,28 +98,68 @@
         {
          "animation":[
                 {
-                 "duration":1000,
+                 "duration":2000,
                  "tileid":2
                 }, 
                 {
-                 "duration":75,
-                 "tileid":8
+                 "duration":45,
+                 "tileid":38
                 }, 
                 {
-                 "duration":300,
-                 "tileid":14
+                 "duration":45,
+                 "tileid":2
                 }, 
                 {
-                 "duration":50,
-                 "tileid":20
+                 "duration":45,
+                 "tileid":41
                 }, 
                 {
-                 "duration":250,
-                 "tileid":26
+                 "duration":45,
+                 "tileid":2
                 }, 
                 {
-                 "duration":50,
-                 "tileid":32
+                 "duration":45,
+                 "tileid":38
+                }, 
+                {
+                 "duration":45,
+                 "tileid":2
+                }, 
+                {
+                 "duration":45,
+                 "tileid":41
+                }, 
+                {
+                 "duration":45,
+                 "tileid":2
+                }, 
+                {
+                 "duration":45,
+                 "tileid":38
+                }, 
+                {
+                 "duration":45,
+                 "tileid":2
+                }, 
+                {
+                 "duration":45,
+                 "tileid":41
+                }, 
+                {
+                 "duration":45,
+                 "tileid":2
+                }, 
+                {
+                 "duration":45,
+                 "tileid":38
+                }, 
+                {
+                 "duration":45,
+                 "tileid":2
+                }, 
+                {
+                 "duration":45,
+                 "tileid":41
                 }],
          "id":2,
          "type":"goose"
@@ -99,28 +167,24 @@
         {
          "animation":[
                 {
-                 "duration":75,
+                 "duration":90,
                  "tileid":3
                 }, 
                 {
-                 "duration":75,
+                 "duration":180,
+                 "tileid":6
+                }, 
+                {
+                 "duration":45,
                  "tileid":9
                 }, 
                 {
-                 "duration":75,
+                 "duration":270,
+                 "tileid":12
+                }, 
+                {
+                 "duration":45,
                  "tileid":15
-                }, 
-                {
-                 "duration":75,
-                 "tileid":21
-                }, 
-                {
-                 "duration":75,
-                 "tileid":27
-                }, 
-                {
-                 "duration":75,
-                 "tileid":33
                 }],
          "id":3,
          "type":"goose"
@@ -128,28 +192,24 @@
         {
          "animation":[
                 {
-                 "duration":75,
+                 "duration":90,
                  "tileid":4
                 }, 
                 {
-                 "duration":75,
+                 "duration":180,
+                 "tileid":7
+                }, 
+                {
+                 "duration":45,
                  "tileid":10
                 }, 
                 {
-                 "duration":75,
+                 "duration":270,
+                 "tileid":13
+                }, 
+                {
+                 "duration":45,
                  "tileid":16
-                }, 
-                {
-                 "duration":75,
-                 "tileid":22
-                }, 
-                {
-                 "duration":75,
-                 "tileid":28
-                }, 
-                {
-                 "duration":75,
-                 "tileid":34
                 }],
          "id":4,
          "type":"goose"
@@ -157,28 +217,24 @@
         {
          "animation":[
                 {
-                 "duration":75,
+                 "duration":90,
                  "tileid":5
                 }, 
                 {
-                 "duration":75,
+                 "duration":180,
+                 "tileid":8
+                }, 
+                {
+                 "duration":45,
                  "tileid":11
                 }, 
                 {
-                 "duration":75,
+                 "duration":270,
+                 "tileid":14
+                }, 
+                {
+                 "duration":45,
                  "tileid":17
-                }, 
-                {
-                 "duration":75,
-                 "tileid":23
-                }, 
-                {
-                 "duration":75,
-                 "tileid":29
-                }, 
-                {
-                 "duration":75,
-                 "tileid":35
                 }],
          "id":5,
          "type":"goose"
@@ -205,6 +261,201 @@
         }, 
         {
          "id":11,
+         "type":"goose"
+        }, 
+        {
+         "id":12,
+         "type":"goose"
+        }, 
+        {
+         "id":13,
+         "type":"goose"
+        }, 
+        {
+         "id":14,
+         "type":"goose"
+        }, 
+        {
+         "id":15,
+         "type":"goose"
+        }, 
+        {
+         "id":16,
+         "type":"goose"
+        }, 
+        {
+         "id":17,
+         "type":"goose"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":90,
+                 "tileid":33
+                }, 
+                {
+                 "duration":90,
+                 "tileid":18
+                }, 
+                {
+                 "duration":90,
+                 "tileid":21
+                }, 
+                {
+                 "duration":90,
+                 "tileid":24
+                }, 
+                {
+                 "duration":90,
+                 "tileid":27
+                }, 
+                {
+                 "duration":90,
+                 "tileid":30
+                }],
+         "id":18,
+         "type":"goose"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":90,
+                 "tileid":19
+                }, 
+                {
+                 "duration":90,
+                 "tileid":22
+                }, 
+                {
+                 "duration":90,
+                 "tileid":25
+                }, 
+                {
+                 "duration":90,
+                 "tileid":28
+                }, 
+                {
+                 "duration":90,
+                 "tileid":31
+                }, 
+                {
+                 "duration":90,
+                 "tileid":34
+                }],
+         "id":19,
+         "type":"goose"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":90,
+                 "tileid":20
+                }, 
+                {
+                 "duration":90,
+                 "tileid":23
+                }, 
+                {
+                 "duration":90,
+                 "tileid":26
+                }, 
+                {
+                 "duration":90,
+                 "tileid":29
+                }, 
+                {
+                 "duration":90,
+                 "tileid":32
+                }, 
+                {
+                 "duration":90,
+                 "tileid":35
+                }],
+         "id":20,
+         "type":"goose"
+        }, 
+        {
+         "id":21,
+         "type":"goose"
+        }, 
+        {
+         "id":22,
+         "type":"goose"
+        }, 
+        {
+         "id":23,
+         "type":"goose"
+        }, 
+        {
+         "id":24,
+         "type":"goose"
+        }, 
+        {
+         "id":25,
+         "type":"goose"
+        }, 
+        {
+         "id":26,
+         "type":"goose"
+        }, 
+        {
+         "id":27,
+         "type":"goose"
+        }, 
+        {
+         "id":28,
+         "type":"goose"
+        }, 
+        {
+         "id":29,
+         "type":"goose"
+        }, 
+        {
+         "id":30,
+         "type":"goose"
+        }, 
+        {
+         "id":31,
+         "type":"goose"
+        }, 
+        {
+         "id":32,
+         "type":"goose"
+        }, 
+        {
+         "id":33,
+         "type":"goose"
+        }, 
+        {
+         "id":34,
+         "type":"goose"
+        }, 
+        {
+         "id":35,
+         "type":"goose"
+        }, 
+        {
+         "id":36,
+         "type":"goose"
+        }, 
+        {
+         "id":37,
+         "type":"goose"
+        }, 
+        {
+         "id":38,
+         "type":"goose"
+        }, 
+        {
+         "id":39,
+         "type":"goose"
+        }, 
+        {
+         "id":40,
+         "type":"goose"
+        }, 
+        {
+         "id":41,
          "type":"goose"
         }],
  "tilewidth":48,
