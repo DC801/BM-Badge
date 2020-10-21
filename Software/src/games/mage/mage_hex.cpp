@@ -14,7 +14,7 @@ void MageHexEditor::toggleHexEditor()
 
 void MageHexEditor::toggleHexDialog()
 {
-	dialog_open = !dialog_open;
+	dialogOpen = !dialogOpen;
 	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
@@ -55,7 +55,7 @@ void MageHexEditor::applyInputToHexState()
 
 void MageHexEditor::updateHexLights()
 {
-	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hex_cursor);
+	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hexCursorLocation);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
@@ -69,10 +69,10 @@ void MageHexEditor::updateHexLights()
 void MageHexEditor::updateHexEditor()
 {
 	static uint8_t hexTickDelay = 0;
-	bytes_per_page = dialog_open ? 64 : 192;
-	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + HEXED_BYTES_PER_ROW));
-	mem_total = MageGame->Map().EntityCount() * sizeof(MageEntity);
-	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
+	bytesPerPage = dialogOpen ? 64 : 192;
+	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
+	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
+	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
 	if (!hexTickDelay)
 	{
 		anyHexMovement = (
@@ -94,7 +94,7 @@ void MageHexEditor::updateHexEditor()
 				|| EngineInput_Buttons.rjoy_left
 			)
 			{
-				mem_page = (mem_page + mem_pages - 1) % mem_pages;
+				currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
 			}
 			if (
 				EngineInput_Buttons.ljoy_down
@@ -103,26 +103,26 @@ void MageHexEditor::updateHexEditor()
 				|| EngineInput_Buttons.rjoy_right
 			)
 			{
-				mem_page = (mem_page + 1) % mem_pages;
+				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
 		}
 		else
 		{
 			if (EngineInput_Buttons.ljoy_left || EngineInput_Buttons.rjoy_left)
 			{
-				hex_cursor = (hex_cursor + mem_total - 1) % mem_total;
+				hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
 			}
 			if (EngineInput_Buttons.ljoy_right || EngineInput_Buttons.rjoy_right)
 			{
-				hex_cursor = (hex_cursor + 1) % mem_total;
+				hexCursorLocation = (hexCursorLocation + 1) % memTotal;
 			}
 			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
 			{
-				hex_cursor = (hex_cursor + mem_total - HEXED_BYTES_PER_ROW) % mem_total;
+				hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
 			}
 			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
 			{
-				hex_cursor = (hex_cursor + HEXED_BYTES_PER_ROW) % mem_total;
+				hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
 			}
 		}
 		if (anyHexMovement) {
@@ -147,11 +147,11 @@ void MageHexEditor::renderHexHeader()
 		headerString,
 		"CurrentPage: %03u              CurrentByte: 0x%04x\n"
 		    "TotalPages:  %03u   Entities: %05u    Mem: 0x%04x",
-		mem_page,
-		hex_cursor,
-		mem_pages,
+		currentMemPage,
+		hexCursorLocation,
+		totalMemPages,
 		MageGame->Map().EntityCount(),
-		mem_total
+		memTotal
 	);
 	mage_canvas->printMessage(
 		headerString,
@@ -160,33 +160,33 @@ void MageHexEditor::renderHexHeader()
 		HEXED_BYTE_OFFSET_X,
 		0
 	);
-	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hex_cursor - (hex_cursor % 2)));
+	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hexCursorLocation - (hexCursorLocation % 2)));
 	sprintf(
 		headerString,
 		"%s | uint8: %03d | uint16: %05d\n"
 		"string output: %s",
 		endian_label,
-		*((uint8_t *) hackableDataAddress + hex_cursor),
+		*((uint8_t *) hackableDataAddress + hexCursorLocation),
 		u2Value,
-		(uint8_t *) hackableDataAddress + hex_cursor
+		(uint8_t *) hackableDataAddress + hexCursorLocation
 	);
 	mage_canvas->printMessage(
 		headerString,
 		Monaco9,
 		0xffff,
 		HEXED_BYTE_OFFSET_X,
-		HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hex_rows + 2))
+		HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2))
 	);
 }
 
 void MageHexEditor::renderHexEditor()
 {
 	char currentByteString[2];
-	if ((hex_cursor / bytes_per_page) == mem_page)
+	if ((hexCursorLocation / bytesPerPage) == currentMemPage)
 	{
 		mage_canvas->fillRect(
-			(hex_cursor % bytes_per_page % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
-			(hex_cursor % bytes_per_page / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+			(hexCursorLocation % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+			(hexCursorLocation % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
 			HEXED_BYTE_WIDTH,
 			HEXED_BYTE_HEIGHT,
 			0x38ff
@@ -196,14 +196,14 @@ void MageHexEditor::renderHexEditor()
 	for(
 		uint16_t i = 0;
 		(
-			i < bytes_per_page
-			&& (i + (mem_page * bytes_per_page)) < mem_total
+			i < bytesPerPage
+			&& (i + (currentMemPage * bytesPerPage)) < memTotal
 		);
 		i++
 	)
 	{
 		get_hex_string_for_byte(
-			*(((uint8_t *) hackableDataAddress) + (i + (mem_page * bytes_per_page))),
+			*(((uint8_t *) hackableDataAddress) + (i + (currentMemPage * bytesPerPage))),
 			currentByteString
 		);
 
@@ -212,8 +212,8 @@ void MageHexEditor::renderHexEditor()
 		if(MageGame->playerEntityIndex != NO_PLAYER)
 		{
 			if(
-				( (i + (mem_page * bytes_per_page)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
-				( (i + (mem_page * bytes_per_page)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
+				( (i + (currentMemPage * bytesPerPage)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
+				( (i + (currentMemPage * bytesPerPage)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
 			)
 			{
 				font_color = 0xfc10;
@@ -233,7 +233,7 @@ void MageHexEditor::renderHexEditor()
 
 void MageHexEditor::runHex(uint8_t value)
 {
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
 		case HEX_OPS_XOR: changedValue ^= value; break;

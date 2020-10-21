@@ -38,27 +38,50 @@ extern MageEntity *hackableDataAddress;
 class MageHexEditor
 {
 private:
+	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp;
+
+	//tells the game if the hex editor should be visible or not.
 	bool hexEditorState;
+
+	//true if there has been any button presses that change the cursor position.
 	bool anyHexMovement;
-	bool dialog_open;
-	uint8_t bytes_per_page;
-	uint8_t hex_rows;
-	uint16_t mem_total;
-	uint16_t mem_page;
-	uint16_t mem_pages;
-	uint16_t hex_cursor;
+
+	//true if the hex editor screen is reduced in size to allow for a 
+	//dialog window to be displayed.
+	bool dialogOpen;
+
+	//how many bytes are visible per page. Changes depending on dialogOpen state.
+	uint8_t bytesPerPage;
+
+	//this is how many rows of bytes are to be displayed on a page.
+	uint8_t hexRows;
+
+	//this is the total number of bytes that will be accessible to the hex editor.
+	//it updates based on the MageGame map.entityCount()
+	uint16_t memTotal;
+
+	//this holds the current page that is displayed on the hex editor.
+	uint16_t currentMemPage;
+
+	//this holds the total number of pages needed to display memTotal bytes.
+	uint16_t totalMemPages;
+
+	//this is a vairable that stores the byte that is currently selected for hacking.
+	uint16_t hexCursorLocation;
 public:
+	//initialize the class with default values.
+	//No need for a constructor with arguments and non-default values.
 	MageHexEditor() : currentOp{HEX_OPS::HEX_OPS_XOR},
 		hexEditorState{false},
 		anyHexMovement{false},
-		dialog_open{false},
-		bytes_per_page{HEXED_DEFAULT_BYTES_PER_PAGE},
-		hex_rows{0},
-		mem_total{0},
-		mem_page{0},
-		mem_pages{0},
-		hex_cursor{0}
+		dialogOpen{false},
+		bytesPerPage{HEXED_DEFAULT_BYTES_PER_PAGE},
+		hexRows{0},
+		memTotal{0},
+		currentMemPage{0},
+		totalMemPages{0},
+		hexCursorLocation{0}
 	{};
 
 	//returns true if hex editor is open.
@@ -68,7 +91,7 @@ public:
 	void toggleHexEditor();
 
 	//this changes the hex editor layout to allow for a dialog window
-	//to be present on the bottom of the screen
+	//to be present on the bottom of the screen.
 	void toggleHexDialog();
 
 	//sets the current operation to be applied when pressing the bit buttons.
@@ -81,20 +104,20 @@ public:
 	//of the current byte in the hex editor.
 	void updateHexLights();
 
-	//this updates the hex editor to show the current state of memory
+	//this updates the hex editor to show the current state of memory.
 	void updateHexEditor();
 
 	//This sets a char array starting at the current byte with any printable characters.
 	//The string will terminate when the first non-printable char is found.
 	void get_hex_string_for_byte (uint8_t byte, char* outputString);
 
-	//this writes the header bit of the hex editor screen
+	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();
 
-	//this writes all the hex editor data to the screen
+	//this writes all the hex editor data to the screen.
 	void renderHexEditor();
 
-	//this applies input to the current byte value based on the state of currentOp
+	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
 };
 
