@@ -7,11 +7,11 @@
          "target":"."
         }
     },
- "image":"..\/sprites\/dragon_skull.png",
+ "image":"..\/sprites\/lightning_boy.png",
  "imageheight":576,
  "imagewidth":144,
  "margin":0,
- "name":"DragonSkull",
+ "name":"LightningBoy",
  "spacing":0,
  "tilecount":36,
  "tiledversion":"1.4.2",
@@ -34,90 +34,7 @@
                 {
                  "duration":90,
                  "tileid":9
-                }],
-         "id":0,
-         "type":"dragon_skull"
-        }, 
-        {
-         "animation":[
-                {
-                 "duration":90,
-                 "tileid":1
                 }, 
-                {
-                 "duration":90,
-                 "tileid":4
-                }, 
-                {
-                 "duration":90,
-                 "tileid":7
-                }, 
-                {
-                 "duration":90,
-                 "tileid":10
-                }],
-         "id":1,
-         "type":"dragon_skull"
-        }, 
-        {
-         "animation":[
-                {
-                 "duration":90,
-                 "tileid":2
-                }, 
-                {
-                 "duration":90,
-                 "tileid":5
-                }, 
-                {
-                 "duration":90,
-                 "tileid":8
-                }, 
-                {
-                 "duration":90,
-                 "tileid":11
-                }],
-         "id":2,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":3,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":4,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":5,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":6,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":7,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":8,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":9,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":10,
-         "type":"dragon_skull"
-        }, 
-        {
-         "id":11,
-         "type":"dragon_skull"
-        }, 
-        {
-         "animation":[
                 {
                  "duration":90,
                  "tileid":12
@@ -150,11 +67,27 @@
                  "duration":90,
                  "tileid":33
                 }],
-         "id":12,
-         "type":"dragon_skull"
+         "id":0,
+         "type":"lightning_boy"
         }, 
         {
          "animation":[
+                {
+                 "duration":90,
+                 "tileid":1
+                }, 
+                {
+                 "duration":90,
+                 "tileid":4
+                }, 
+                {
+                 "duration":90,
+                 "tileid":7
+                }, 
+                {
+                 "duration":90,
+                 "tileid":10
+                }, 
                 {
                  "duration":90,
                  "tileid":13
@@ -187,96 +120,193 @@
                  "duration":90,
                  "tileid":34
                 }],
+         "id":1,
+         "type":"lightning_boy"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":90,
+                 "tileid":2
+                }, 
+                {
+                 "duration":90,
+                 "tileid":5
+                }, 
+                {
+                 "duration":90,
+                 "tileid":8
+                }, 
+                {
+                 "duration":90,
+                 "tileid":11
+                }, 
+                {
+                 "duration":90,
+                 "tileid":14
+                }, 
+                {
+                 "duration":90,
+                 "tileid":17
+                }, 
+                {
+                 "duration":90,
+                 "tileid":20
+                }, 
+                {
+                 "duration":90,
+                 "tileid":23
+                }, 
+                {
+                 "duration":90,
+                 "tileid":26
+                }, 
+                {
+                 "duration":90,
+                 "tileid":29
+                }, 
+                {
+                 "duration":90,
+                 "tileid":32
+                }, 
+                {
+                 "duration":90,
+                 "tileid":35
+                }],
+         "id":2,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":3,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":4,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":5,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":6,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":7,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":8,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":9,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":10,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":11,
+         "type":"lightning_boy"
+        }, 
+        {
+         "id":12,
+         "type":"lightning_boy"
+        }, 
+        {
          "id":13,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":14,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":15,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":16,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":17,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":18,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":19,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":20,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":21,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":22,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":23,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":24,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":25,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":26,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":27,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":28,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":29,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":30,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":31,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":32,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":33,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":34,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }, 
         {
          "id":35,
-         "type":"dragon_skull"
+         "type":"lightning_boy"
         }],
  "tilewidth":48,
  "type":"tileset",
