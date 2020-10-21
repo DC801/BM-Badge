@@ -508,7 +508,7 @@ var serializeEntity = function (entity, scenarioData, fileNameMap) {
 		offset += 16
 	);
 	var entityType = scenarioData.entityTypes[entity.type];
-	if (entityType && !entityType.scenarioIndex) {
+	if (entityType && (entityType.scenarioIndex === undefined)) {
 		entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
 		scenarioData.parsed.entityTypes.push(entityType);
 		entityType.serialized = serializeEntityType(
