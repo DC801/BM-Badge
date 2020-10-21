@@ -4,7 +4,7 @@ uint8_t *hexEditorState = &led_states[LED_HAX];
 HEX_OPS currentOp = HEX_OPS_XOR;
 bool anyHexMovement = false;
 bool dialog_open = false;
-uint8_t bytes_per_page = HEX_EDITOR_DEFAULT_BYTES_PER_PAGE;
+uint8_t bytes_per_page = HEXED_DEFAULT_BYTES_PER_PAGE;
 uint8_t hex_rows = 0;
 uint16_t mem_total = 0;
 uint16_t mem_page = 0;
@@ -22,7 +22,7 @@ void toggle_hex_editor()
 
 void toggle_dialog () {
 	dialog_open = !dialog_open;
-	// bytes_per_page = (bytes_per_page % 192) + BYTES_PER_ROW;
+	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
 void update_hex_lights() {
@@ -87,7 +87,7 @@ void update_hex_editor()
 {
 	static uint8_t hexTickDelay = 0;
 	bytes_per_page = dialog_open ? 64 : 192;
-	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + BYTES_PER_ROW));
+	hex_rows = ceil((0.0 + bytes_per_page) / (0.0 + HEXED_BYTES_PER_ROW));
 	mem_total = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	mem_pages = ceil((0.0 + mem_total) / (0.0 + bytes_per_page));
 	if (!hexTickDelay)
@@ -135,15 +135,15 @@ void update_hex_editor()
 			}
 			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
 			{
-				hex_cursor = (hex_cursor + mem_total - BYTES_PER_ROW) % mem_total;
+				hex_cursor = (hex_cursor + mem_total - HEXED_BYTES_PER_ROW) % mem_total;
 			}
 			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
 			{
-				hex_cursor = (hex_cursor + BYTES_PER_ROW) % mem_total;
+				hex_cursor = (hex_cursor + HEXED_BYTES_PER_ROW) % mem_total;
 			}
 		}
 		if (anyHexMovement) {
-			hexTickDelay = HEX_TICK_DELAY;
+			hexTickDelay = HEXED_TICK_DELAY;
 		}
 	}
 	else
@@ -169,7 +169,7 @@ void render_hex_header()
 		headerString,
 		Monaco9,
 		0xffff,
-		BYTE_OFFSET_X,
+		HEXED_BYTE_OFFSET_X,
 		0
 	);
 	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hex_cursor - (hex_cursor % 2)));
@@ -186,8 +186,8 @@ void render_hex_header()
 		headerString,
 		Monaco9,
 		0xffff,
-		BYTE_OFFSET_X,
-		BYTE_FOOTER_OFFSET_Y + (BYTE_HEIGHT * (hex_rows + 2))
+		HEXED_BYTE_OFFSET_X,
+		HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hex_rows + 2))
 	);
 }
 
@@ -202,10 +202,10 @@ void render_hex_editor()
 	if ((hex_cursor / bytes_per_page) == mem_page)
 	{
 		mage_canvas->fillRect(
-			(hex_cursor % bytes_per_page % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X + BYTE_CURSOR_OFFSET_X,
-			(hex_cursor % bytes_per_page / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y + BYTE_CURSOR_OFFSET_Y,
-			BYTE_WIDTH,
-			BYTE_HEIGHT,
+			(hex_cursor % bytes_per_page % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+			(hex_cursor % bytes_per_page / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+			HEXED_BYTE_WIDTH,
+			HEXED_BYTE_HEIGHT,
 			0x38ff
 		);
 	}
@@ -242,8 +242,8 @@ void render_hex_editor()
 			currentByteString,
 			Monaco9,
 			font_color,
-			(i % BYTES_PER_ROW) * BYTE_WIDTH + BYTE_OFFSET_X,
-			(i / BYTES_PER_ROW) * BYTE_HEIGHT + BYTE_OFFSET_Y
+			(i % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X,
+			(i / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y
 		);
 	}
 }
