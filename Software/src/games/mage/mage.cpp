@@ -13,6 +13,7 @@
 #include "mage_hex.h"
 
 std::unique_ptr<MageGameControl> MageGame;
+std::unique_ptr<MageHexEditor> MageHex;
 
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
@@ -35,12 +36,12 @@ void mage_game_loop()
 	now = millis();
 	deltaTime = now - lastTime;
 
-	if (*hexEditorState)
+	if (MageHex->getHexEditorState())
 	{
 		//run hex editor if appropriate
 		mage_canvas->clearScreen(RGB(0,0,0));
-		update_hex_editor();
-		render_hex_editor();
+		MageHex->updateHexEditor();
+		MageHex->renderHexEditor();
 	}
 	else
 	{
@@ -85,7 +86,7 @@ void mage_game_loop()
 	}
 
 	//update the state of the LEDs
-	update_hex_lights();
+	MageHex->updateHexLights();
 
 	//update the screen
 	mage_canvas->blt();
@@ -115,6 +116,9 @@ void MAGE()
 
 	// Construct MageGameControl object, loading all headers
 	MageGame = std::make_unique<MageGameControl>();
+	
+	//construct MageHexEditor object, set hex editor defaults
+	MageHex = std::make_unique<MageHexEditor>();
 
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
 	hackableDataAddress = MageGame->entities.get();
@@ -126,7 +130,7 @@ void MAGE()
 	lastTime = millis();
 
 	//set a default hacking option.
-	set_hex_op(HEX_OPS_XOR);
+	MageHex->setHexOp(HEX_OPS_XOR);
 
 	//main game loop:
 	while (EngineIsRunning())
@@ -135,7 +139,7 @@ void MAGE()
 		EngineHandleInput();
 
 		//applies input states to the hacking functions
-		apply_input_to_hex_state();
+		MageHex->applyInputToHexState();
 
 		//updates the game based on inputs and hacked state
 		mage_game_loop();
