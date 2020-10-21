@@ -66,6 +66,28 @@ void MageHexEditor::updateHexLights()
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
 }
 
+uint16_t MageHexEditor::getCurrentMemPage()
+{
+	//assume we're on the first page until we find out otherwise.
+	uint16_t memPage = 0;
+
+	//start at the current location.
+	int32_t adjustedMem = hexCursorLocation;
+
+	while(adjustedMem >= 0){
+		//subtract a page worth of memory from the memory location
+		adjustedMem -= bytesPerPage;
+		//if the address doesn't get to 0, it must be on a higher page.
+		if(adjustedMem >= 0)
+		{
+			memPage++;
+		}
+	}
+	//once it's <0, that should be the correct mem page:
+	return memPage;
+
+}
+
 void MageHexEditor::updateHexEditor()
 {
 	static uint8_t hexTickDelay = 0;
@@ -87,6 +109,15 @@ void MageHexEditor::updateHexEditor()
 		);
 		if (EngineInput_Buttons.op_page)
 		{
+			//reset last press time only when the page button switches from unpressed to pressed
+			if(!previousPageButtonState)
+			{
+				lastPageButtonPressTime = millis();
+			}
+			//change the state to show the button has been pressed.
+			previousPageButtonState = true;
+
+			//check to see if there is any directional button action while the page button is pressed
 			if (
 				EngineInput_Buttons.ljoy_up
 				|| EngineInput_Buttons.rjoy_up
@@ -108,21 +139,46 @@ void MageHexEditor::updateHexEditor()
 		}
 		else
 		{
+			//check to see if the page button was pressed and released quickly
+			if(
+				(previousPageButtonState) && 
+				((millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
+			)
+			{
+				//if the page button was pressed and then released fast enough, advance one page.
+				currentMemPage = (currentMemPage + 1) % totalMemPages;
+			}
+			//reset this to false:
+			previousPageButtonState = false;
+
+			//check directional inputs and move cursor.
 			if (EngineInput_Buttons.ljoy_left || EngineInput_Buttons.rjoy_left)
 			{
+				//move the cursor left:
 				hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
+				//change the current page to wherever the cursor is:
+				currentMemPage = getCurrentMemPage();
 			}
 			if (EngineInput_Buttons.ljoy_right || EngineInput_Buttons.rjoy_right)
 			{
+				//move the cursor right:
 				hexCursorLocation = (hexCursorLocation + 1) % memTotal;
+				//change the current page to wherever the cursor is:
+				currentMemPage = getCurrentMemPage();
 			}
 			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
 			{
+				//move the cursor up:
 				hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
+				//change the current page to wherever the cursor is:
+				currentMemPage = getCurrentMemPage();
 			}
 			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
 			{
+				//move the cursor down:
 				hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
+				//change the current page to wherever the cursor is:
+				currentMemPage = getCurrentMemPage();
 			}
 		}
 		if (anyHexMovement) {
@@ -212,8 +268,8 @@ void MageHexEditor::renderHexEditor()
 		if(MageGame->playerEntityIndex != NO_PLAYER)
 		{
 			if(
-				( (i + (currentMemPage * bytesPerPage)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
-				( (i + (currentMemPage * bytesPerPage)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
+				( (uint32_t)(i + (currentMemPage * bytesPerPage)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
+				( (uint32_t)(i + (currentMemPage * bytesPerPage)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
 			)
 			{
 				font_color = 0xfc10;
