@@ -21,9 +21,16 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_HEIGHT 14
 #define HEXED_BYTE_CURSOR_OFFSET_X -4
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
-#define HEXED_TICK_DELAY 7
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
 
+//have to have two values since millis() doesn't work right for 801_DESKTOP:
+#ifndef DC801_DESKTOP
+#define HEXED_QUICK_PRESS_TIMEOUT 50
+#define HEXED_TICK_DELAY 50
+#else
+#define HEXED_QUICK_PRESS_TIMEOUT 7
+#define HEXED_TICK_DELAY 7
+#endif
 enum HEX_OPS {
 	HEX_OPS_XOR,
 	HEX_OPS_ADD,
@@ -69,6 +76,11 @@ private:
 
 	//this is a vairable that stores the byte that is currently selected for hacking.
 	uint16_t hexCursorLocation;
+
+	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
+	bool previousPageButtonState; //tracks previous button state
+	uint32_t lastPageButtonPressTime; //tracks time of last press of page button
+
 public:
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
@@ -81,7 +93,9 @@ public:
 		memTotal{0},
 		currentMemPage{0},
 		totalMemPages{0},
-		hexCursorLocation{0}
+		hexCursorLocation{0},
+		previousPageButtonState{false},
+		lastPageButtonPressTime{0}
 	{};
 
 	//returns true if hex editor is open.
@@ -99,6 +113,9 @@ public:
 
 	//this converts input from the buttons into actions for the hex editor.
 	void applyInputToHexState();
+
+	//this calculates which memory page the hexCursorLocation appears on.
+	uint16_t getCurrentMemPage();
 
 	//this updated the lights on the badge to match the bit state 
 	//of the current byte in the hex editor.
