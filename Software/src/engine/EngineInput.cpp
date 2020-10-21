@@ -104,6 +104,11 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_DOWN] << KEYBOARD_KEY_LJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_UP] << KEYBOARD_KEY_LJOY_UP;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_RIGHT] << KEYBOARD_KEY_LJOY_RIGHT;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_O] << KEYBOARD_KEY_RJOY_CENTER;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_J] << KEYBOARD_KEY_RJOY_LEFT;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_K] << KEYBOARD_KEY_RJOY_DOWN;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_I] << KEYBOARD_KEY_RJOY_UP;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_L] << KEYBOARD_KEY_RJOY_RIGHT;
 
 	*keyboardBitmask = newValue;
 	// printf("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
