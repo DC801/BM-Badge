@@ -9,6 +9,7 @@
 extern uint8_t mageSpeed;
 extern bool isMoving;
 extern Point cameraPosition;
+extern MageHexEditor MageHex;
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
@@ -301,7 +302,7 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 
 void MageGameControl::applyInputToPlayer()
 {
-	if (*hexEditorState)
+	if (!MageHex.getHexEditorState())
 	{
 		return;
 	}

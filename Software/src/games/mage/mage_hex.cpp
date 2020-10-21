@@ -1,56 +1,25 @@
 #include "mage_hex.h"
 
-uint8_t *hexEditorState = &led_states[LED_HAX];
-HEX_OPS currentOp = HEX_OPS_XOR;
-bool anyHexMovement = false;
-bool dialog_open = false;
-uint8_t bytes_per_page = HEXED_DEFAULT_BYTES_PER_PAGE;
-uint8_t hex_rows = 0;
-uint16_t mem_total = 0;
-uint16_t mem_page = 0;
-uint16_t mem_pages = 0;
-uint16_t hex_cursor = 0;
-
-
-void toggle_hex_editor()
+bool MageHexEditor::getHexEditorState()
 {
-	ledSet(
-		LED_HAX,
-		*hexEditorState ? 0x00 : 0xff
-	);
+	return hexEditorState;
 }
 
-void toggle_dialog () {
+void MageHexEditor::toggleHexEditor()
+{
+	hexEditorState = !hexEditorState;
+	//set LED to the state 
+	ledSet(LED_HAX, hexEditorState ? 0x00 : 0xff);
+}
+
+void MageHexEditor::toggleHexDialog()
+{
 	dialog_open = !dialog_open;
 	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
-void update_hex_lights() {
-	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hex_cursor);
-	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT16, ((currentByte >> 4) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT8, ((currentByte >> 3) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
-}
-
-
-void runHex (uint8_t value) {
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
-	uint8_t changedValue = *currentByte;
-	switch (currentOp) {
-		case HEX_OPS_XOR: changedValue ^= value; break;
-		case HEX_OPS_ADD: changedValue += value; break;
-		case HEX_OPS_SUB: changedValue -= value; break;
-		default: break;
-	}
-	*currentByte = changedValue;
-}
-
-void set_hex_op (enum HEX_OPS op) {
+void MageHexEditor::setHexOp (enum HEX_OPS op)
+{
 	currentOp = op;
 	uint8_t led_op_xor = 0x00;
 	uint8_t led_op_add = 0x00;
@@ -66,12 +35,13 @@ void set_hex_op (enum HEX_OPS op) {
 	ledSet(LED_SUB, led_op_sub);
 }
 
-void apply_input_to_hex_state() {
+void MageHexEditor::applyInputToHexState()
+{
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
-	if (EngineInput_Activated.hax) { toggle_hex_editor(); }
-	if (EngineInput_Activated.op_xor) { set_hex_op(HEX_OPS_XOR); }
-	if (EngineInput_Activated.op_add) { set_hex_op(HEX_OPS_ADD); }
-	if (EngineInput_Activated.op_sub) { set_hex_op(HEX_OPS_SUB); }
+	if (EngineInput_Activated.hax) { toggleHexEditor(); }
+	if (EngineInput_Activated.op_xor) { setHexOp(HEX_OPS_XOR); }
+	if (EngineInput_Activated.op_add) { setHexOp(HEX_OPS_ADD); }
+	if (EngineInput_Activated.op_sub) { setHexOp(HEX_OPS_SUB); }
 	if (EngineInput_Activated.bit_128) { runHex(0b10000000); }
 	if (EngineInput_Activated.bit_64 ) { runHex(0b01000000); }
 	if (EngineInput_Activated.bit_32 ) { runHex(0b00100000); }
@@ -80,10 +50,23 @@ void apply_input_to_hex_state() {
 	if (EngineInput_Activated.bit_4  ) { runHex(0b00000100); }
 	if (EngineInput_Activated.bit_2  ) { runHex(0b00000010); }
 	if (EngineInput_Activated.bit_1  ) { runHex(0b00000001); }
-	if (EngineInput_Activated.ljoy_center) { toggle_dialog(); }
+	if (EngineInput_Activated.ljoy_center) { toggleHexDialog(); }
 }
 
-void update_hex_editor()
+void MageHexEditor::updateHexLights()
+{
+	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hex_cursor);
+	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT16, ((currentByte >> 4) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT8, ((currentByte >> 3) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+}
+
+void MageHexEditor::updateHexEditor()
 {
 	static uint8_t hexTickDelay = 0;
 	bytes_per_page = dialog_open ? 64 : 192;
@@ -152,7 +135,12 @@ void update_hex_editor()
 	}
 }
 
-void render_hex_header()
+void MageHexEditor::get_hex_string_for_byte (uint8_t byte, char* outputString)
+{
+	sprintf(outputString,"%02X", byte);
+}
+
+void MageHexEditor::renderHexHeader()
 {
 	char headerString[128];
 	sprintf(
@@ -191,12 +179,7 @@ void render_hex_header()
 	);
 }
 
-void get_hex_string_for_byte (uint8_t byte, char* outputString)
-{
-	sprintf(outputString,"%02X", byte);
-}
-
-void render_hex_editor()
+void MageHexEditor::renderHexEditor()
 {
 	char currentByteString[2];
 	if ((hex_cursor / bytes_per_page) == mem_page)
@@ -209,7 +192,7 @@ void render_hex_editor()
 			0x38ff
 		);
 	}
-	render_hex_header();
+	renderHexHeader();
 	for(
 		uint16_t i = 0;
 		(
@@ -246,4 +229,17 @@ void render_hex_editor()
 			(i / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y
 		);
 	}
+}
+
+void MageHexEditor::runHex(uint8_t value)
+{
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hex_cursor);
+	uint8_t changedValue = *currentByte;
+	switch (currentOp) {
+		case HEX_OPS_XOR: changedValue ^= value; break;
+		case HEX_OPS_ADD: changedValue += value; break;
+		case HEX_OPS_SUB: changedValue -= value; break;
+		default: break;
+	}
+	*currentByte = changedValue;
 }
