@@ -57,7 +57,10 @@
 - [ ] Script system
 	- [ ] Binary Encoder parts
 	- [ ] List of scripts
-		- [ ] load_map_by_index(uint8_t);
+		- [ ] onLoad(uint16_t scriptId); //called once when the map or entity loads
+		- [ ] onTick(uint16_t scriptId); //called every tick
+		- [ ] onInteract(uint16_t scriptId); //called only when the player interacts with the entity or with the map if no entity is nearby
+		- [ ] load_map_by_index(uint8_t mapId);
 		- [ ] switch_renderable_font(uint8_t index);
 		- [ ] shake_screen(uint8_t amplitutde, uint8_t freq, uint16_t duration);
 		- [ ] show_dialog(uint16_t dialogIndex);
