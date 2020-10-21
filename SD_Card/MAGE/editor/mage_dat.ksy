@@ -168,7 +168,7 @@ types:
       - id: tileset_footer_padding
         type: u1
         repeat: expr
-        repeat-expr: (tile_count % 4)
+        repeat-expr: (4 - (tile_count % 4)) % 4
         doc: Padding bytes to get things back to uint32_t alignment
     instances:
       tile_count:
