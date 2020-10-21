@@ -54,3 +54,21 @@
 - [ ] Ability to specify which font is used in a dialog
 	- [ ] There can be a puzzle where changing the font to smaller makes all of a message readable
 - [ ] Music/SFX encoding in the binary asset encoder
+- [ ] Script system
+	- [ ] Binary Encoder parts
+	- [ ] List of scripts
+		- [ ] load_map_by_index(uint8_t);
+		- [ ] switch_renderable_font(uint8_t index);
+		- [ ] shake_screen(uint8_t amplitutde, uint8_t freq, uint16_t duration);
+		- [ ] show_dialog(uint16_t dialogIndex);
+		- [ ] check_current_entity_byte(uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
+		- [ ] check_save_flag(uint8_t offset, uint16_t successScriptIndex, bool expectedValue);
+		- [ ] move_entity_on_path(uint16_t entityIndex, uint16_t pathIndex);
+		- [ ] set_player_movable(bool moveable);
+		- [ ] play_skit(uint16_t skitIndex);
+		- [ ] set_byte(uint16_t offset, uint8_t);
+		- [ ] camera_set(uint16_t, uint16_t);
+		- [ ] camera_pan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration)
+		- [ ] highlight_hax_cell(uint16_t offset);
+		- [ ] unlock_hax_cell(uint8_t offset);
+		- [ ] lock_hax_cell(uint8_t offset);
