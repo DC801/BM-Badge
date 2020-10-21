@@ -13,16 +13,16 @@ This class contains all the code related to the hex editor hacking interface.
 #include "fonts/Scientifica.h"
 #include "FrameBuffer.h"
 
-#define BYTES_PER_ROW 16
-#define BYTE_OFFSET_X 12
-#define BYTE_OFFSET_Y 30
-#define BYTE_FOOTER_OFFSET_Y 6
-#define BYTE_WIDTH 19
-#define BYTE_HEIGHT 14
-#define BYTE_CURSOR_OFFSET_X -4
-#define BYTE_CURSOR_OFFSET_Y 5
-#define HEX_TICK_DELAY 7
-#define HEX_EDITOR_DEFAULT_BYTES_PER_PAGE 64
+#define HEXED_BYTES_PER_ROW 16
+#define HEXED_BYTE_OFFSET_X 12
+#define HEXED_BYTE_OFFSET_Y 30
+#define HEXED_BYTE_FOOTER_OFFSET_Y 6
+#define HEXED_BYTE_WIDTH 19
+#define HEXED_BYTE_HEIGHT 14
+#define HEXED_BYTE_CURSOR_OFFSET_X -4
+#define HEXED_BYTE_CURSOR_OFFSET_Y 5
+#define HEXED_TICK_DELAY 7
+#define HEXED_DEFAULT_BYTES_PER_PAGE 64
 
 enum HEX_OPS {
 	HEX_OPS_XOR,
