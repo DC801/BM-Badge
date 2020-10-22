@@ -5,11 +5,24 @@ bool MageHexEditor::getHexEditorState()
 	return hexEditorState;
 }
 
+uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
+{
+	if(index < HEXED_NUM_MEM_BUTTONS)
+	{
+		return memAddresses[index];
+	}
+	else
+	{
+		return memAddresses[0];
+	}
+	
+}
+
 void MageHexEditor::toggleHexEditor()
 {
 	hexEditorState = !hexEditorState;
 	//set LED to the state 
-	ledSet(LED_HAX, hexEditorState ? 0x00 : 0xff);
+	ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
 }
 
 void MageHexEditor::toggleHexDialog()
@@ -35,6 +48,11 @@ void MageHexEditor::setHexOp (enum HEX_OPS op)
 	ledSet(LED_SUB, led_op_sub);
 }
 
+void MageHexEditor::setHexCursorLocation(uint16_t address)
+{
+	hexCursorLocation = address;
+}
+
 void MageHexEditor::applyInputToHexState()
 {
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
@@ -50,7 +68,8 @@ void MageHexEditor::applyInputToHexState()
 	if (EngineInput_Activated.bit_4  ) { runHex(0b00000100); }
 	if (EngineInput_Activated.bit_2  ) { runHex(0b00000010); }
 	if (EngineInput_Activated.bit_1  ) { runHex(0b00000001); }
-	if (EngineInput_Activated.ljoy_center) { toggleHexDialog(); }
+	//this is activated even when outside the hex dialog. Also, I don't know why a player would need to activate it, so I commented it out. -Tim
+	//if (EngineInput_Activated.ljoy_center) { toggleHexDialog(); }
 }
 
 void MageHexEditor::updateHexLights()
@@ -139,6 +158,24 @@ void MageHexEditor::updateHexEditor()
 		}
 		else
 		{
+			//check for memory button presses:
+			if(EngineInput_Buttons.mem0 && getHexEditorState())
+			{
+				memAddresses[0] = hexCursorLocation;
+			}
+			if(EngineInput_Buttons.mem1 && getHexEditorState())
+			{
+				memAddresses[1] = hexCursorLocation;
+			}
+			if(EngineInput_Buttons.mem2 && getHexEditorState())
+			{
+				memAddresses[2] = hexCursorLocation;
+			}
+			if(EngineInput_Buttons.mem3 && getHexEditorState())
+			{
+				memAddresses[3] = hexCursorLocation;
+			}
+
 			//check to see if the page button was pressed and released quickly
 			if(
 				(previousPageButtonState) && 
