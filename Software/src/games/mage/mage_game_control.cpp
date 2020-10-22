@@ -9,7 +9,7 @@
 extern uint8_t mageSpeed;
 extern bool isMoving;
 extern Point cameraPosition;
-extern MageHexEditor MageHex;
+extern MageHexEditor *MageHex;
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
@@ -401,21 +401,21 @@ void MageGameControl::applyInputToPlayer()
 	}
 
 	//check for memory button presses and set the hex cursor to the memory location
-	if(EngineInput_Buttons.mem0)
+	if(EngineInput_Activated.mem0)
 	{
-		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(0));
+		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
 	}
-	if(EngineInput_Buttons.mem1)
+	if(EngineInput_Activated.mem1)
 	{
-		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(1));
+		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
 	}
-	if(EngineInput_Buttons.mem2)
+	if(EngineInput_Activated.mem2)
 	{
-		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(2));
+		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
 	}
-	if(EngineInput_Buttons.mem3)
+	if(EngineInput_Activated.mem3)
 	{
-		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(3));
+		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
 	}
 }
 
