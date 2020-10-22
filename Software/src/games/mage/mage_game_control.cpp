@@ -336,6 +336,7 @@ void MageGameControl::applyInputToPlayer()
 			//reset the map:
 			LoadMap(currentMapId);
 		}
+		//if not actioning or resetting, move player:
 		else
 		{
 			if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
@@ -344,6 +345,8 @@ void MageGameControl::applyInputToPlayer()
 			if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
 		}
 
+		//handle animation assignment for the player:
+		//Scenario 1 - preform action:
 		if(
 			isActioning &&
 			hasEntityType &&
@@ -352,6 +355,7 @@ void MageGameControl::applyInputToPlayer()
 		{
 			playerEntity->currentAnimation = 2;
 		}
+		//Scenario 2 - show movement animation:
 		else if (
 			isMoving &&
 			hasEntityType &&
@@ -360,22 +364,26 @@ void MageGameControl::applyInputToPlayer()
 		{
 			playerEntity->currentAnimation = 1;
 		}
+		//Scenario 3 - show idle animation:
 		else
 		{
 			playerEntity->currentAnimation = 0;
 		}
 
+		//this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
 		bool isPlayingActionButShouldReturnControlToPlayer = (
 			hasEntityType &&
 			(playerEntity->currentAnimation == 2) &&
 			(playerEntity->currentFrame == (renderableData->frameCount - 1))
 		);
 
+		//if the above bool is true, set the player back to their idle animation:
 		if (isPlayingActionButShouldReturnControlToPlayer) {
 			playerEntity->currentFrame = 0;
 			playerEntity->currentAnimation = 0;
 		}
 
+		//if the animation changed since the start of this function, reset to the first frame and restart the timer:
 		if (previousPlayerAnimation != playerEntity->currentAnimation)
 		{
 			playerEntity->currentFrame = 0;
