@@ -22,6 +22,7 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_CURSOR_OFFSET_X -4
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
+#define HEXED_NUM_MEM_BUTTONS 4
 
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
 #ifndef DC801_DESKTOP
@@ -77,6 +78,9 @@ private:
 	//this is a vairable that stores the byte that is currently selected for hacking.
 	uint16_t hexCursorLocation;
 
+	//this stores the byte addresses for the hex memory buttons:
+	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
+
 	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
 	bool previousPageButtonState; //tracks previous button state
 	uint32_t lastPageButtonPressTime; //tracks time of last press of page button
@@ -94,12 +98,16 @@ public:
 		currentMemPage{0},
 		totalMemPages{0},
 		hexCursorLocation{0},
+		memAddresses{0},
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0}
 	{};
 
 	//returns true if hex editor is open.
 	bool getHexEditorState();
+
+	//this returns the byte address stored in the memory button at index
+	uint16_t getMemoryAddress(uint8_t index);
 
 	//this turns the hex editor mode on or off.
 	void toggleHexEditor();
@@ -110,6 +118,9 @@ public:
 
 	//sets the current operation to be applied when pressing the bit buttons.
 	void setHexOp(enum HEX_OPS op);
+
+	//sets the hex cursor location to address:
+	void setHexCursorLocation(uint16_t address);
 
 	//this converts input from the buttons into actions for the hex editor.
 	void applyInputToHexState();

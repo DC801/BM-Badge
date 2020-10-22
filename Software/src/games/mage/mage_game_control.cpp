@@ -302,10 +302,6 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 
 void MageGameControl::applyInputToPlayer()
 {
-	if (!MageHex.getHexEditorState())
-	{
-		return;
-	}
 	if(playerEntityIndex != NO_PLAYER)
 	{
 		//update renderable info before proceeding:
@@ -393,6 +389,7 @@ void MageGameControl::applyInputToPlayer()
 		//set camera position to mage position
 		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
 		cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((tilesetHeight) / 2);
+
 	}
 	else //no player on map
 	{
@@ -401,6 +398,24 @@ void MageGameControl::applyInputToPlayer()
 		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+	}
+
+	//check for memory button presses and set the hex cursor to the memory location
+	if(EngineInput_Buttons.mem0)
+	{
+		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(0));
+	}
+	if(EngineInput_Buttons.mem1)
+	{
+		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(1));
+	}
+	if(EngineInput_Buttons.mem2)
+	{
+		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(2));
+	}
+	if(EngineInput_Buttons.mem3)
+	{
+		MageHex.setHexCursorLocation(MageHex.getMemoryAddress(3));
 	}
 }
 
