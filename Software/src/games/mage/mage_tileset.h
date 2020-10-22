@@ -43,6 +43,7 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
+	uint16_t Count() const;
 	uint8_t Tile(uint32_t index) const;
 	uint32_t Size() const;
 	bool Valid() const;

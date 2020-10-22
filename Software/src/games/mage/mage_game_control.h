@@ -8,6 +8,13 @@
 #include "mage_animation.h"
 #include "mage_entity_type.h"
 
+//these are the failover values that the game will use when an invalid hacked entity state is found:
+#define MAGE_TILESET_FAILOVER_ID 0
+#define MAGE_TILE_FAILOVER_ID 0
+#define MAGE_ANIMATION_DURATION_FAILOVER_VALUE 0
+#define MAGE_FRAME_COUNT_FAILOVER_VALUE 0
+#define MAGE_RENDER_FLAGS_FAILOVER_VALUE 0
+
 /*
 The MageGameControl object handles several important tasks. It's basically the
 core of the entire MAGE() game, and contains all the important variables that
@@ -96,6 +103,17 @@ public:
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 
+	//the functions below will validate specific entity properties to see if they are valid.
+	//these are used to ensure that we don't get segfaults from using the hacked entity data.
+	uint16_t getValidPrimaryIdType(uint16_t primaryIdType);
+	uint16_t getValidTilesetId(uint16_t tilesetId);
+	uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
+	uint16_t getValidAnimationId(uint16_t animationId);
+	uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
+	uint16_t getValidEntityTypeId(uint16_t entityTypeId);
+	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
+	uint8_t  getValidEntityTypeDirection(uint8_t direction);
+	
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
 	void getEntityRenderableData(uint32_t index);

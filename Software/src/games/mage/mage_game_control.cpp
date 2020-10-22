@@ -474,95 +474,198 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 	}
 }
 
+uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
+{
+	//always return a valid primaryId:
+	return primaryIdType % MAGE_NUM_PRIMARY_ID_TYPES;
+}
+
+uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
+{
+	//always return a valid animation ID. 
+	return animationId % (animationHeader.count()-1);
+}
+
+uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
+{
+	if(animationId >= animationHeader.count())
+	{
+		//use failover animation if an invalid animationId is submitted to the function.
+		//There's a good chance if that happens, it will break things.
+		return animationId % animationHeader.count();
+	}
+	//always return a valid animation frame for the animationId submitted. 
+	return animationFrame % animations[animationId].FrameCount();
+}
+
+uint16_t MageGameControl::getValidTilesetId(uint16_t tilesetId)
+{
+	//always return a valid tileset ID. 
+	return tilesetId % tilesetHeader.count();
+}
+
+uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
+{
+	if(tilesetId >= tilesetHeader.count())
+	{
+		//use failover animation if an invalid animationId is submitted to the function.
+		//There's a good chance if that happens, it will break things.
+		return tilesetId % tilesetHeader.count();
+	}
+	//always return a valid animation frame for the animationId submitted. 
+	return tileId % tilesets[tilesetId].Count();
+}
+	
+uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
+{
+	//avoid division by 0 error:
+
+	//always return a valid entity type for the entityTypeId submitted. 
+	return entityTypeId % entityTypeHeader.count();
+}
+
+uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId)
+{
+	if(entityTypeId >= entityTypeHeader.count())
+	{
+		//use failover animation if an invalid animationId is submitted to the function.
+		//There's a good chance if that happens, it will break things.
+		entityTypeId % entityTypeHeader.count();
+	}
+	//always return a valid entity type animation ID for the entityTypeAnimationId submitted. 
+	return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
+}
+
+uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
+{
+	//always return a valid direction. 
+	//Subtract 1 because they are 0-indexed.
+	return direction % MAGE_NUM_DIRECTIONS;
+}
+
 void MageGameControl::getEntityRenderableData(uint32_t index)
 {
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
 	if(index >= map.EntityCount())
 	{
-		entityRenderableData[index].tilesetId = 0;
-		entityRenderableData[index].tileId = 0;
-		entityRenderableData[index].duration = 0;
-		entityRenderableData[index].frameCount = 0;
-		entityRenderableData[index].renderFlags = 0;
+		entityRenderableData[index].tilesetId = MAGE_TILESET_FAILOVER_ID;
+		entityRenderableData[index].tileId = MAGE_TILE_FAILOVER_ID;
+		entityRenderableData[index].duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
+		entityRenderableData[index].frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
+		entityRenderableData[index].renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
 		return;
-	}
-	
-	//increment frame and reset ticks if frame has been active long enough:
-	//Scenario 1: entity is of a standard EntityType:
-	if(entities[index].primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
-	{
-		//check if entity type has an animation count:
-		uint16_t entityTypeId = entities[index].primaryId;
-		if(( entityTypes[entityTypeId].AnimationCount() ) > 0)
-		{
-			//get the current animation
-			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(entities[index].currentAnimation);
-			MageEntityTypeAnimationDirection directedAnimation; 
-			if(entities[index].direction == MageEntityAnimationDirection::NORTH)
-			{
-				directedAnimation = currentAnimation.North();
-			}
-			else if(entities[index].direction == MageEntityAnimationDirection::EAST)
-			{
-				directedAnimation = currentAnimation.East();
-			}
-			else if(entities[index].direction == MageEntityAnimationDirection::SOUTH)
-			{
-				directedAnimation = currentAnimation.South();
-			}
-			else if(entities[index].direction == MageEntityAnimationDirection::WEST)
-			{
-				directedAnimation = currentAnimation.West();
-			}
-			else
-			{
-				//this shouldn't be possible, so error:
-				#ifdef DC801_DESKTOP
-					fprintf(stderr, "Error: entity primaryIdType is invalid.");
-				#endif
-			}
-			//now that we have the animation, figure out the current animation index that needs to be run:
-			if(directedAnimation.Type() == 0)
-			{
-				entityRenderableData[index].tilesetId = animations[directedAnimation.TypeId()].TilesetId();
-				entityRenderableData[index].tileId = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).TileId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).Duration();
-				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
-				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
-			}
-			else
-			{
-				entityRenderableData[index].tilesetId = directedAnimation.Type();
-				entityRenderableData[index].tileId = directedAnimation.TypeId();
-				entityRenderableData[index].duration = animations[directedAnimation.TypeId()].AnimationFrame(entities[index].currentFrame).Duration();
-				entityRenderableData[index].frameCount = animations[directedAnimation.TypeId()].FrameCount();
-				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags();
-			}
-		}
-	}
-	//Scenario 2: entity is an animation:
-	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::ANIMATION)
-	{
-		uint16_t aniIndex = entities[index].primaryId;
-		entityRenderableData[index].tilesetId = animations[aniIndex].TilesetId();
-		entityRenderableData[index].tileId = animations[aniIndex].AnimationFrame(entities[index].currentFrame).TileId();
-		entityRenderableData[index].duration = animations[aniIndex].AnimationFrame(entities[index].currentFrame).Duration();
-		entityRenderableData[index].frameCount = animations[aniIndex].FrameCount();
-		entityRenderableData[index].renderFlags = entities[index].direction;
-	}
-	else if(entities[index].primaryIdType == MageEntityPrimaryIdType::TILESET)
-	{
-		entityRenderableData[index].tilesetId = entities[index].primaryId;
-		entityRenderableData[index].tileId = entities[index].secondaryId;
-		entityRenderableData[index].duration = 0; //unused
-		entityRenderableData[index].frameCount = 0; //unused
-		entityRenderableData[index].renderFlags = entities[index].direction;
 	}
 	else
 	{
-		//this means that they hacked it into a bad state. Set invalid hack state flag and render missingno. -Tim
+		//make a local copy of the entity so the hacked values remain unchanged:
+		MageEntity entity = entities[index];
+		
+		//ensure the primaryIdType is valid
+		entity.primaryIdType = getValidPrimaryIdType(entity.primaryIdType);
+
+
+		//then get valid tileset data based on primaryId type:
+		//Scenario 1: Entity primaryId is of type TILESET:
+		if(entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
+		{
+			//ensure the tilesetId (in this scenario, the entity's primaryId) is valid.
+			entityRenderableData[index].tilesetId = getValidTilesetId(entity.primaryId);
+			entityRenderableData[index].tileId = getValidTileId(entity.secondaryId, entityRenderableData[index].tilesetId);
+			entityRenderableData[index].duration = 0; //unused
+			entityRenderableData[index].frameCount = 0; //unused
+			entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+		}
+
+
+		//Scenario 2: Entity primaryId is of type ANIMATION:
+		else if(entity.primaryIdType == MageEntityPrimaryIdType::ANIMATION)
+		{
+			//ensure the animationId (in this scenario, the entity's primaryId) is valid.
+			uint16_t animationId = getValidAnimationId(entity.primaryId);
+			uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
+			entityRenderableData[index].tilesetId = getValidTilesetId(animations[animationId].TilesetId());
+			entityRenderableData[index].tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), entityRenderableData[index].tilesetId);
+			entityRenderableData[index].duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+			entityRenderableData[index].frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+			entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+		}
+
+
+		//Scenario 3: Entity primaryId is of type ENTITY_TYPE:
+		else if(entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+		{
+			//ensure the entityType (in this scenario, the entity's primaryId) is valid.
+			uint16_t entityType = getValidEntityTypeId(entity.primaryId);
+
+			//If the entity has no animations defined, return default:
+			if(( entityTypes[entityType].AnimationCount() ) == 0)
+			{
+				//the entity has no animations, so return default values and give up.
+				#ifdef DC801_DESKTOP
+					fprintf(stderr, "An entityType entity with no animations exists. Using fallback values.");
+				#endif
+				entityRenderableData[index].tilesetId = MAGE_TILESET_FAILOVER_ID;
+				entityRenderableData[index].tileId = MAGE_TILE_FAILOVER_ID;
+				entityRenderableData[index].duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
+				entityRenderableData[index].frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
+				entityRenderableData[index].renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
+			}
+
+			//get a valid entity type animation ID:
+			//note that entityType was already validated above.
+			uint8_t entityTypeAnimationId = getValidEntityTypeAnimationId(entity.currentAnimation, entityType);
+
+			//make a local copy of the current entity type animation:
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityType].EntityTypeAnimation(entityTypeAnimationId);
+
+			//get a valid direction for the animation:
+			uint8_t direction = getValidEntityTypeDirection(entity.direction);
+
+			//create a directedAnimation entity based on entity.direction:
+			MageEntityTypeAnimationDirection directedAnimation; 
+			if(entity.direction == MageEntityAnimationDirection::NORTH)
+			{
+				directedAnimation = currentAnimation.North();
+			}
+			else if(entity.direction == MageEntityAnimationDirection::EAST)
+			{
+				directedAnimation = currentAnimation.East();
+			}
+			else if(entity.direction == MageEntityAnimationDirection::SOUTH)
+			{
+				directedAnimation = currentAnimation.South();
+			}
+			else if(entity.direction == MageEntityAnimationDirection::WEST)
+			{
+				directedAnimation = currentAnimation.West();
+			}
+
+			//based on directedAnimation.Type(), you can get two different outcomes:
+			//Scenario A: Type is 0, TypeID is an animation ID:
+			if(directedAnimation.Type() == 0)
+			{
+				uint16_t animationId = getValidAnimationId(directedAnimation.TypeId());
+				uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
+				entityRenderableData[index].tilesetId = animations[animationId].TilesetId();
+				entityRenderableData[index].tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), entityRenderableData[index].tilesetId);
+				entityRenderableData[index].duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+				entityRenderableData[index].frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
+			}
+			//Test whether or not the 0-index stuff is working:
+			//Scenario B: Type is not 0, so TypeId is a tileset, and Type is the tileId (you will need to subtract 1 to get it 0-indexed).
+			else
+			{
+				entityRenderableData[index].tilesetId = directedAnimation.TypeId();
+				entityRenderableData[index].tileId = directedAnimation.TypeId()-1;
+				entityRenderableData[index].duration = 0; //does not animate;
+				entityRenderableData[index].frameCount = 0; //does not animate
+				entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+			}
+		}
 	}
+
 }
 
 void MageGameControl::UpdateEntities(uint32_t deltaTime)

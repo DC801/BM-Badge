@@ -25,8 +25,8 @@ This class contains all the code related to the hex editor hacking interface.
 
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
 #ifndef DC801_DESKTOP
-#define HEXED_QUICK_PRESS_TIMEOUT 50
-#define HEXED_TICK_DELAY 50
+#define HEXED_QUICK_PRESS_TIMEOUT 200
+#define HEXED_TICK_DELAY 200
 #else
 #define HEXED_QUICK_PRESS_TIMEOUT 7
 #define HEXED_TICK_DELAY 7
