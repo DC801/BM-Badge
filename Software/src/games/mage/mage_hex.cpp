@@ -114,6 +114,8 @@ void MageHexEditor::updateHexEditor()
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
 	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+
+	//debounce timer check.
 	if (!hexTickDelay)
 	{
 		anyHexMovement = (
@@ -159,19 +161,19 @@ void MageHexEditor::updateHexEditor()
 		else
 		{
 			//check for memory button presses:
-			if(EngineInput_Buttons.mem0 && getHexEditorState())
+			if(EngineInput_Activated.mem0 && getHexEditorState())
 			{
 				memAddresses[0] = hexCursorLocation;
 			}
-			if(EngineInput_Buttons.mem1 && getHexEditorState())
+			if(EngineInput_Activated.mem1 && getHexEditorState())
 			{
 				memAddresses[1] = hexCursorLocation;
 			}
-			if(EngineInput_Buttons.mem2 && getHexEditorState())
+			if(EngineInput_Activated.mem2 && getHexEditorState())
 			{
 				memAddresses[2] = hexCursorLocation;
 			}
-			if(EngineInput_Buttons.mem3 && getHexEditorState())
+			if(EngineInput_Activated.mem3 && getHexEditorState())
 			{
 				memAddresses[3] = hexCursorLocation;
 			}
@@ -222,6 +224,7 @@ void MageHexEditor::updateHexEditor()
 			hexTickDelay = HEXED_TICK_DELAY;
 		}
 	}
+	//decrement debounce timer
 	else
 	{
 		hexTickDelay--;
