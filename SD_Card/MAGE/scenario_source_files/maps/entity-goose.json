@@ -87,11 +87,71 @@
          "type":"goose"
         }, 
         {
-         "animation":[
-                {
-                 "duration":9000,
-                 "tileid":1
-                }],
+          "animation":[
+            {
+              "duration":2000,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":37
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":40
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":37
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":40
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":37
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":40
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":37
+            },
+            {
+              "duration":45,
+              "tileid":1
+            },
+            {
+              "duration":45,
+              "tileid":40
+            }],
          "id":1,
          "type":"goose"
         }, 
