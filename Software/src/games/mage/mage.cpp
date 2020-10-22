@@ -30,7 +30,7 @@ MageEntity *hackableDataAddress;
 uint8_t mageSpeed = 1;
 bool isMoving = false;
 
-void mage_game_loop()
+void MageGameLoop()
 {
 	//update timing information at the start of every game loop
 	now = millis();
@@ -94,9 +94,9 @@ void mage_game_loop()
 	//note the time of the completion of the loop
 	lastTime = now;
 
-#ifdef DC801_DESKTOP
-	nrf_delay_ms(5);
-#endif
+	#ifdef DC801_DESKTOP
+		nrf_delay_ms(5);
+	#endif
 }
 
 void MAGE()
@@ -142,7 +142,7 @@ void MAGE()
 		MageHex->applyInputToHexState();
 
 		//updates the game based on inputs and hacked state
-		mage_game_loop();
+		MageGameLoop();
 	}
 
 	// Close rom and any open files
