@@ -322,10 +322,19 @@ void MageGameControl::applyInputToPlayer()
 		isMoving = false;
 		bool isActioning = playerEntity->currentAnimation == 2;
 
+		//set mage speed based on if the right pad down is being pressed:
 		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
+
+		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
 		if(isActioning || EngineInput_Buttons.rjoy_left)
 		{
 			isActioning = true;
+		}
+		//check to see if both pads are being pressed at once, triggering map reload:
+		else if(EngineInput_Buttons.ljoy_center && EngineInput_Buttons.rjoy_center)
+		{
+			//reset the map:
+			LoadMap(currentMapId);
 		}
 		else
 		{
