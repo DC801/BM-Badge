@@ -316,10 +316,10 @@ void MageGameControl::applyInputToPlayer()
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
 
 		isMoving = false;
-		bool isActioning = playerEntity->currentAnimation == 2;
+		bool isActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
 		//set mage speed based on if the right pad down is being pressed:
-		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
+		mageSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
 
 		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
 		if(isActioning || EngineInput_Buttons.rjoy_left)
@@ -346,24 +346,24 @@ void MageGameControl::applyInputToPlayer()
 		if(
 			isActioning &&
 			hasEntityType &&
-			entityType->AnimationCount() > 2
+			entityType->AnimationCount() > MAGE_ACTION_ANIMATION_INDEX
 		)
 		{
-			playerEntity->currentAnimation = 2;
+			playerEntity->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
 		}
-		//Scenario 2 - show movement animation:
+		//Scenario 2 - show walk animation:
 		else if (
 			isMoving &&
 			hasEntityType &&
-			entityType->AnimationCount() > 1
+			entityType->AnimationCount() > MAGE_WALK_ANIMATION_INDEX
 		)
 		{
-			playerEntity->currentAnimation = 1;
+			playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
 		}
 		//Scenario 3 - show idle animation:
 		else
 		{
-			playerEntity->currentAnimation = 0;
+			playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 		}
 
 		//this checks to see if the player is currently animating, and if the animation is the last frame of the animation:

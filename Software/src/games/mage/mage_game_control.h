@@ -15,6 +15,18 @@
 #define MAGE_FRAME_COUNT_FAILOVER_VALUE 0
 #define MAGE_RENDER_FLAGS_FAILOVER_VALUE 0
 
+//these are used for setting player speed
+//speed is in x/y units per update
+#define MAGE_RUNNING_SPEED 5
+#define MAGE_WALKING_SPEED 1
+
+//these are the agreed-upon indices for entity_type entity animations
+//If you import entities that don't use this convention, their animations may
+//not work as intended.
+#define MAGE_IDLE_ANIMATION_INDEX 0
+#define MAGE_WALK_ANIMATION_INDEX 1
+#define MAGE_ACTION_ANIMATION_INDEX 2
+
 /*
 The MageGameControl object handles several important tasks. It's basically the
 core of the entire MAGE() game, and contains all the important variables that
