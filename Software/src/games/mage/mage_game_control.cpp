@@ -312,37 +312,66 @@ void MageGameControl::applyInputToPlayer()
 		getEntityRenderableData(playerEntityIndex);
 		
 		MageEntity *playerEntity = &entities[playerEntityIndex];
+		bool hasEntityType = playerEntity->primaryIdType == ENTITY_TYPE;
+		MageEntityType *entityType = hasEntityType ? &entityTypes[playerEntity->primaryId] : nullptr;
 		uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
-		uint16_t tilesetWidth = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileWidth();
-		uint16_t tilesetHeight = tilesets[entityRenderableData[playerEntityIndex].tilesetId].TileHeight();
+		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
+		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
+		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
 
 		isMoving = false;
+		bool isActioning = playerEntity->currentAnimation == 2;
 
 		mageSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+		if(isActioning || EngineInput_Buttons.rjoy_left)
+		{
+			isActioning = true;
+		}
+		else
+		{
+			if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+		}
 
-		//check to see if the entityType has more than 1 animation:
-		if(entityTypes[playerEntity->primaryId].AnimationCount() > 1){
-			playerEntity->currentAnimation = isMoving ? 1 : 0;
+		if(
+			isActioning &&
+			hasEntityType &&
+			entityType->AnimationCount() > 2
+		)
+		{
+			playerEntity->currentAnimation = 2;
+		}
+		else if (
+			isMoving &&
+			hasEntityType &&
+			entityType->AnimationCount() > 1
+		)
+		{
+			playerEntity->currentAnimation = 1;
 		}
 		else
 		{
 			playerEntity->currentAnimation = 0;
 		}
 
+		bool isPlayingActionButShouldReturnControlToPlayer = (
+			hasEntityType &&
+			(playerEntity->currentAnimation == 2) &&
+			(playerEntity->currentFrame == (renderableData->frameCount - 1))
+		);
+
+		if (isPlayingActionButShouldReturnControlToPlayer) {
+			playerEntity->currentFrame = 0;
+			playerEntity->currentAnimation = 0;
+		}
+
 		if (previousPlayerAnimation != playerEntity->currentAnimation)
 		{
 			playerEntity->currentFrame = 0;
-			entityRenderableData[playerEntityIndex].currentFrameTicks = 0;
+			renderableData->currentFrameTicks = 0;
 		}
-
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= mageSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; isMoving = true; }
 
 		//set camera position to mage position
 		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
