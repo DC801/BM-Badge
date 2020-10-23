@@ -352,7 +352,7 @@ void MageGameControl::applyInputToPlayer()
 		if(
 			isActioning &&
 			hasEntityType &&
-			entityType->AnimationCount() > MAGE_ACTION_ANIMATION_INDEX
+			entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX
 		)
 		{
 			playerEntity->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
@@ -361,7 +361,7 @@ void MageGameControl::applyInputToPlayer()
 		else if (
 			isMoving &&
 			hasEntityType &&
-			entityType->AnimationCount() > MAGE_WALK_ANIMATION_INDEX
+			entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX
 		)
 		{
 			playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
