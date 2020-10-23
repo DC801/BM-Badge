@@ -18,7 +18,7 @@
 	- [x] Toggle the button renderable states when buttons are down
 	- [x] Toggle the LED/Boolean values when the buttons are pressed
 - [x] Generate a bunch of different WAV files of different sample rates for Dovid
-- [ ] Port over the Hex Editor
+- [x] Port over the Hex Editor
 	- [x] Build Monaco 9 as an AdaGFXFont because we need a good monospace font
 	- [x] Start rendering the text for the byte grid
 	- [x] Render byte selection cursor behind the text
@@ -29,12 +29,11 @@
 	- [x] Trigger swap of hex ops enum
 	- [x] Build hex bit handler functions
 	- [x] Trigger hex bit handler to change value of bits on selected byte
-	- [ ] Build MEM button handler functions
-	- [ ] Trigger swap/set of MEM... position?
+	- [x] Build MEM button handler functions
 	- [x] Add ability to offset visible page of RAM by pages
 	- [x] Render something on screen to see which RAM PAGE you're on
 	- [x] Add PAGE handler; Hold page + arrows to jump pages of bytes?
-	- [ ] Start adding error handling for when indexing outside of supported types ROM data
+	- [x] Start adding error handling for when indexing outside of supported types ROM data
 - [x] Move functions for reading from the ROM into `mage_rom.cpp`
 - [x] Create some `get_*_by_index` functions for validating hackable datas
 	- [x] getValidEntityId
@@ -88,7 +87,7 @@
 		- [ ] lock_hax_cell(uint8_t offset);
 		- [ ] check_if_entity_is_in_geometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
 		- [ ] change_entity_type(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
-		- [ ] compare_entity_name(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr)
+		- [ ] compare_entity_name(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
 - [ ] Geometry
 	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
 		- [ ] inside_circle(point, circle) collision detection function
