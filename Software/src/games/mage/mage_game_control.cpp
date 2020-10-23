@@ -403,7 +403,6 @@ void MageGameControl::applyInputToPlayer()
 			//the offset to maintain camera centered on the player is equal to half the difference in size 
 			int32_t xOffset = (oldTileHeight - newTileWidth)/2;
 			int32_t yOffset = (oldTileHeight - newTileHeight)/2;
-			fprintf(stderr, "%d:%d\r\n",xOffset,yOffset);
 			//adjust player position so that the camera centring will not change from the previous tileset to the new tileset.
 			playerEntity->x = playerEntity->x + xOffset;
 			playerEntity->y = playerEntity->y - yOffset; //negative because player tile width is offset towards negative y
