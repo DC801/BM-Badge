@@ -77,6 +77,10 @@ private:
 	//this is an arrya storing the most current data needed to draw entities
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
+
+	//these two variables store the player's previous tilesetId and tileId
+	//for use in keeping the camera centerd while hacking.
+	uint16_t previousPlayerTilesetId;
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
