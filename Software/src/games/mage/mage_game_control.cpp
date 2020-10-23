@@ -506,6 +506,17 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 	}
 }
 
+uint16_t MageGameControl::getValidEntityId(uint16_t entityId)
+{
+	//always return a valid entityId:
+	return entityId % (Map().EntityCount());
+}
+
+uint16_t MageGameControl::getValidMapId(uint16_t mapId)
+{
+	return mapId % (mapHeader.count());
+}
+
 uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
 {
 	//always return a valid primaryId:
@@ -515,7 +526,7 @@ uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
 uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 {
 	//always return a valid animation ID. 
-	return animationId % (animationHeader.count()-1);
+	return animationId % (animationHeader.count());
 }
 
 uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
@@ -628,10 +639,10 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 		else if(entity.primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
 		{
 			//ensure the entityType (in this scenario, the entity's primaryId) is valid.
-			uint16_t entityType = getValidEntityTypeId(entity.primaryId);
+			uint16_t entityTypeId = getValidEntityTypeId(entity.primaryId);
 
 			//If the entity has no animations defined, return default:
-			if(( entityTypes[entityType].AnimationCount() ) == 0)
+			if(( entityTypes[entityTypeId].AnimationCount() ) == 0)
 			{
 				//the entity has no animations, so return default values and give up.
 				#ifdef DC801_DESKTOP
@@ -646,10 +657,10 @@ void MageGameControl::getEntityRenderableData(uint32_t index)
 
 			//get a valid entity type animation ID:
 			//note that entityType was already validated above.
-			uint8_t entityTypeAnimationId = getValidEntityTypeAnimationId(entity.currentAnimation, entityType);
+			uint8_t entityTypeAnimationId = getValidEntityTypeAnimationId(entity.currentAnimation, entityTypeId);
 
 			//make a local copy of the current entity type animation:
-			MageEntityTypeAnimation currentAnimation = entityTypes[entityType].EntityTypeAnimation(entityTypeAnimationId);
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(entityTypeAnimationId);
 
 			//get a valid direction for the animation:
 			uint8_t direction = getValidEntityTypeDirection(entity.direction);
