@@ -65,6 +65,8 @@ MageGameControl::MageGameControl()
 
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
+	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
+
 	//load the map
 	LoadMap(currentMapId);
 }
@@ -80,6 +82,7 @@ uint32_t MageGameControl::Size() const
 		imageHeader.size() +
 		map.Size() +
 		sizeof(playerEntityIndex) +
+		sizeof(previousPlayerTilesetId) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -277,6 +280,9 @@ void MageGameControl::LoadMap(uint16_t index)
 
 	//update playerEntity pointer whenever a new map is loaded:
 	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
+
+	//make sure the tileset Id is updated when the map loads to prevent player yeeting
+	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
 }
 
 void MageGameControl::GetPointerToPlayerEntity(std::string name)
@@ -386,10 +392,29 @@ void MageGameControl::applyInputToPlayer()
 			renderableData->currentFrameTicks = 0;
 		}
 
-		//set camera position to mage position
+		//set camera position to mage position, accounting for possible change in tile size due to hacking:
+		if(previousPlayerTilesetId != renderableData->tilesetId)
+		{
+			//get the relative sizes of the tile widths:
+			uint16_t oldTileWidth = tilesets[previousPlayerTilesetId].TileWidth();
+			uint16_t oldTileHeight = tilesets[previousPlayerTilesetId].TileHeight();
+			uint16_t newTileWidth = tilesets[renderableData->tilesetId].TileWidth();
+			uint16_t newTileHeight = tilesets[renderableData->tilesetId].TileHeight();
+			//the offset to maintain camera centered on the player is equal to half the difference in size 
+			int32_t xOffset = (oldTileHeight - newTileWidth)/2;
+			int32_t yOffset = (oldTileHeight - newTileHeight)/2;
+			fprintf(stderr, "%d:%d\r\n",xOffset,yOffset);
+			//adjust player position so that the camera centring will not change from the previous tileset to the new tileset.
+			playerEntity->x = playerEntity->x + xOffset;
+			playerEntity->y = playerEntity->y - yOffset; //negative because player tile width is offset towards negative y
+			//reset previous to prevent continuous updating
+			previousPlayerTilesetId = renderableData->tilesetId;
+		}
+
+		//set camera to center of player tile.
 		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
 		cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((tilesetHeight) / 2);
-
+		
 	}
 	else //no player on map
 	{
@@ -718,6 +743,8 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	{
 		return;
 	}
+	//store the current player tileset info for comparison when moving cameras while hacking:
+	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
