@@ -68,13 +68,14 @@
 			- [ ] onTick(uint16_t scriptId); //called every tick
 			- [ ] onInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions
-		- [ ] Logic and Flow Actions:
+		- [ ] Logic and Flow Actions: (We'll need a cap on how many of these deep we can go from a main script to prevent using too much RAM with nested scripts)
 			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
 			- [ ] checkSaveFlag(uint8_t saveFlagOffset, uint16_t successScriptIndex, bool expectedValue);
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
 			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
 			- [ ] runScript(uint16_t scriptId);
 			- [ ] playSkit(uint16_t skitIndex);
+			- [ ] checkDialogResponse(uint16_t dialogId, uint16_t successfulScriptIndex);
 		- [ ] Game State Effecting Actions:
 			- [ ] setEntityByte(uint8_t entityId, uint8_t offset, uint8_t newValue);
 			- [ ] setSaveFlag(uint8_t saveFlagOffset, bool newValue);
@@ -88,10 +89,10 @@
 			- [ ] screenShake(uint8_t amplitutde, uint8_t freq, uint16_t duration);
 			- [ ] screenFadeOut(uint16_t color, uint16_t duration); //should set a flag to keep the screen faded out until a screenFadeIn is called.
 			- [ ] screenFadeIn(uint16_6 color, uint16_t duration);
-			- [ ] showDialog(uint16_t dialogIndex);
-			- [ ] switchRenderableFont(uint8_t fontIndex);
+			- [ ] showDialog(uint16_t dialogId);
+			- [ ] switchRenderableFont(uint8_t fontId);
 			- [ ] moveEntityTo(uint16_t x, uint16_t y);
-			- [ ] moveEntityAlongPath(uint16_t entityIndex, uint16_t pathIndex);
+			- [ ] moveEntityAlongPath(uint16_t entityId, uint16_t pathIndex);
 			- [ ] cameraSet(uint16_t, uint16_t);
 			- [ ] cameraPan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration);
 			- [ ] highlightHaxCell(uint16_t offset);
@@ -100,12 +101,28 @@
 - [ ] Geometry
 	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
 		- [ ] inside_circle(point, circle) collision detection function
-	- [ ] rect(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
+	- [ ] rect(point, uint16_t width, uint16_t height)
 		- [ ] inside_rect(point, rect) collision detection function
-	- [ ] poly(uint8_t count, count x points[])
+	- [ ] poly(uint8_t count, x points[count])
 		- [ ] inside_poly(point, poly) collision detection function
 	- [ ] point(uint16_t x, uint16_t y)
 		- no collision, just may be used as an arg?
+- [ ] Dialog Data Type Ideas
+	- [ ] Display Name (we may want to show names like '???' or 'Old Man' until we know who they are. After we know them we can use an entity's name, hacks and all.)
+		- [ ] Can use string substitution to let us know when to use hacked entity name, vs a set name. 
+		- [ ] Something Like %%EntityId.001%% gets replaced with the hacked name, and all other strings display as written. 
+			- [ ] Substitution string needs to be 16 characters long to make sure it won't push other bits of the dialog off the end of a line when putting in haxed names.
+		- [ ] We'd need a way to encode a specific entityId into it when generating the binary file, though. It'd be map dependent as well.
+	- [ ] The actual text to display, probably with line breaks hard coded in to keep things simple.
+	- [ ] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, etc.).
+	- [ ] tilesetId and tileId for the portrait picture.
+	- [ ] display font.
+	- [ ] Player responses to dialog may be desired:
+			- [ ] Assuming pop-up happens while dialog is still active:
+				- [ ] select from a list of options
+				- [ ] enter a numerical code
+				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
+		- [ ] new script and/or dialog to call depending on player response
 
 ## Quests on the Village Quest Board
 - [ ] Save Timmy From The well
