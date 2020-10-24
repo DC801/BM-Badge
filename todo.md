@@ -59,6 +59,7 @@
 	- [ ] Scripts
 		- [ ] What is a script?
 			- [ ] It's a length + sequence of Actions
+			- [ ] We'll need a 'script stack' to handle scripts that call other scripts and allow returning to the original script and continuing down the list of actions.
 		- [ ] Map
 			- [ ] onLoad(uint16_t scriptId); //called once when the map loads
 			- [ ] onTick(uint16_t scriptId); //called every tick
@@ -67,27 +68,35 @@
 			- [ ] onTick(uint16_t scriptId); //called every tick
 			- [ ] onInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions
-		- [ ] load_map_by_index(uint8_t mapId);
-		- [ ] run_script(uint16_t scriptId);
-		- [ ] switch_renderable_font(uint8_t index);
-		- [ ] shake_screen(uint8_t amplitutde, uint8_t freq, uint16_t duration);
-		- [ ] show_dialog(uint16_t dialogIndex);
-		- [ ] check_current_entity_byte(uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
-		- [ ] check_save_flag(uint8_t offset, uint16_t successScriptIndex, bool expectedValue);
-		- [ ] move_entity_to(uint16_t x, uint16_t y);
-		- [ ] move_entity_on_path(uint16_t entityIndex, uint16_t pathIndex);
-		- [ ] set_interact_script(uint8_t targetEntityIndex, uint16_t scriptId);
-		- [ ] set_player_movable(bool moveable);
-		- [ ] play_skit(uint16_t skitIndex);
-		- [ ] set_byte(uint16_t offset, uint8_t);
-		- [ ] camera_set(uint16_t, uint16_t);
-		- [ ] camera_pan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration);
-		- [ ] highlight_hax_cell(uint16_t offset);
-		- [ ] unlock_hax_cell(uint8_t offset);
-		- [ ] lock_hax_cell(uint8_t offset);
-		- [ ] check_if_entity_is_in_geometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
-		- [ ] change_entity_type(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
-		- [ ] compare_entity_name(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
+		- [ ] Logic and Flow Actions:
+			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
+			- [ ] checkSaveFlag(uint8_t saveFlagOffset, uint16_t successScriptIndex, bool expectedValue);
+			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
+			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
+			- [ ] runScript(uint16_t scriptId);
+			- [ ] playSkit(uint16_t skitIndex);
+		- [ ] Game State Effecting Actions:
+			- [ ] setEntityByte(uint8_t entityId, uint8_t offset, uint8_t newValue);
+			- [ ] setSaveFlag(uint8_t saveFlagOffset, bool newValue);
+			- [ ] setPlayerMovable(bool moveable);
+			- [ ] setEntityInteractScript(uint8_t entityId, uint16_t scriptId);
+			- [ ] setEntityTickScript(uint8_t entityId, uint16_t scriptId);
+			- [ ] changeEntityType(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
+			- [ ] pauseGameState(bool pauseState); //this will stop the entire MageGameLoop() from happening until set to false
+		- [ ] Game Display changing actions:
+			- [ ] loadMapByIndex(uint8_t mapId);
+			- [ ] screenShake(uint8_t amplitutde, uint8_t freq, uint16_t duration);
+			- [ ] screenFadeOut(uint16_t color, uint16_t duration); //should set a flag to keep the screen faded out until a screenFadeIn is called.
+			- [ ] screenFadeIn(uint16_6 color, uint16_t duration);
+			- [ ] showDialog(uint16_t dialogIndex);
+			- [ ] switchRenderableFont(uint8_t fontIndex);
+			- [ ] moveEntityTo(uint16_t x, uint16_t y);
+			- [ ] moveEntityAlongPath(uint16_t entityIndex, uint16_t pathIndex);
+			- [ ] cameraSet(uint16_t, uint16_t);
+			- [ ] cameraPan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration);
+			- [ ] highlightHaxCell(uint16_t offset);
+			- [ ] unlockHaxCell(uint8_t cellOffset);
+			- [ ] lockHaxCell(uint8_t cellOffset);
 - [ ] Geometry
 	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
 		- [ ] inside_circle(point, circle) collision detection function
