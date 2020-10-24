@@ -27,15 +27,8 @@ Point cameraPosition = {
 
 MageEntity *hackableDataAddress;
 
-uint8_t mageSpeed = 1;
-bool isMoving = false;
-
 void MageGameLoop()
 {
-	//update timing information at the start of every game loop
-	now = millis();
-	deltaTime = now - lastTime;
-
 	if (MageHex->getHexEditorState())
 	{
 		//run hex editor if appropriate
@@ -91,9 +84,6 @@ void MageGameLoop()
 	//update the screen
 	mage_canvas->blt();
 
-	//note the time of the completion of the loop
-	lastTime = now;
-
 	#ifdef DC801_DESKTOP
 		nrf_delay_ms(5);
 	#endif
@@ -135,6 +125,11 @@ void MAGE()
 	//main game loop:
 	while (EngineIsRunning())
 	{
+		//update timing information at the start of every game loop
+		now = millis();
+		deltaTime = now - lastTime;
+		lastTime = now;
+
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
 

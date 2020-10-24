@@ -81,6 +81,10 @@ private:
 	//these two variables store the player's previous tilesetId and tileId
 	//for use in keeping the camera centerd while hacking.
 	uint16_t previousPlayerTilesetId;
+
+	//a couple of state variables for tracking player movement:
+	uint8_t mageSpeed;
+	bool isMoving;
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
