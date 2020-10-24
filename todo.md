@@ -60,6 +60,7 @@
 		- [ ] What is a script?
 			- [ ] It's a length + sequence of Actions
 			- [ ] We'll need a 'script stack' to handle scripts that call other scripts and allow returning to the original script and continuing down the list of actions.
+			- [ ] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
 		- [ ] Map
 			- [ ] onLoad(uint16_t scriptId); //called once when the map loads
 			- [ ] onTick(uint16_t scriptId); //called every tick
@@ -69,6 +70,7 @@
 			- [ ] onInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions
 		- [ ] Logic and Flow Actions: (We'll need a cap on how many of these deep we can go from a main script to prevent using too much RAM with nested scripts)
+			- [ ] addScriptToStack(uint16_t scriptId, uint8_t currentScriptActionIndex);
 			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
 			- [ ] checkSaveFlag(uint8_t saveFlagOffset, uint16_t successScriptIndex, bool expectedValue);
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
@@ -95,6 +97,7 @@
 			- [ ] moveEntityAlongPath(uint16_t entityId, uint16_t pathIndex);
 			- [ ] cameraSet(uint16_t, uint16_t);
 			- [ ] cameraPan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration);
+			- [ ] setHexEditorState(bool state);
 			- [ ] highlightHaxCell(uint16_t offset);
 			- [ ] unlockHaxCell(uint8_t cellOffset);
 			- [ ] lockHaxCell(uint8_t cellOffset);
