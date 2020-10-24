@@ -67,6 +67,9 @@ MageGameControl::MageGameControl()
 
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
 
+	mageSpeed = MAGE_WALKING_SPEED;
+	isMoving = false;
+
 	//load the map
 	LoadMap(currentMapId);
 }
@@ -83,6 +86,8 @@ uint32_t MageGameControl::Size() const
 		map.Size() +
 		sizeof(playerEntityIndex) +
 		sizeof(previousPlayerTilesetId) +
+		sizeof(mageSpeed) +
+		sizeof(isMoving) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
