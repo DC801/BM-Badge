@@ -122,22 +122,19 @@ public:
 	//sets the hex cursor location to address:
 	void setHexCursorLocation(uint16_t address);
 
-	//this converts input from the buttons into actions for the hex editor.
-	void applyInputToHexState();
-
 	//this calculates which memory page the hexCursorLocation appears on.
 	uint16_t getCurrentMemPage();
 
-	//this updated the lights on the badge to match the bit state 
+	//this updates the lights on the badge to match the bit state 
 	//of the current byte in the hex editor.
 	void updateHexLights();
 
 	//this updates the hex editor to show the current state of memory.
-	void updateHexEditor();
+	void applyHexModeInputs();
 
 	//This sets a char array starting at the current byte with any printable characters.
 	//The string will terminate when the first non-printable char is found.
-	void get_hex_string_for_byte (uint8_t byte, char* outputString);
+	void getHexStringForByte (uint8_t byte, char* outputString);
 
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();

@@ -33,12 +33,12 @@ void GameUpdate()
 	{
 		//work out best order for scripting and button handling -Tim
 		//apply inputs that work all the time
-		MageHex->applyInputToHexState();
+		MageGame->applyUniversalInputs();
 
 		//either do hax inputs:
 		if (MageHex->getHexEditorState())
 		{
-			MageHex->updateHexEditor();
+			MageHex->applyHexModeInputs();
 		}
 
 		//or be boring and normal:
@@ -46,7 +46,7 @@ void GameUpdate()
 		{
 			//first apply input since the previous loop to the game state.
 			//split reasonably into multiple functions - Tim
-			MageGame->applyInputToPlayer();
+			MageGame->applyGameModeInputs();
 			
 			//call MageScript::onMapTick() -Tim
 
@@ -179,10 +179,10 @@ void MAGE()
 	// Close rom and any open files
 	EngineROM_Deinit();
 
-#ifdef DC801_DESKTOP
-	// Clean up
-	EngineWindowFrameDestroy();
-#endif
+	#ifdef DC801_DESKTOP
+		// Clean up
+		EngineWindowFrameDestroy();
+	#endif
 
 	return;
 }
