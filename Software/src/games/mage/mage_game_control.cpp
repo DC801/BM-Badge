@@ -378,7 +378,8 @@ void MageGameControl::applyGameModeInputs()
 			if(EngineInput_Buttons.ljoy_down )
 				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
 			if(EngineInput_Buttons.rjoy_right );
-				//Put the onInteract script handling here -Tim
+				//This button is being used for onInteract script handling, and the handler 
+				//was moved into the GameUpdate() function in mage.cpp instead of here
 			if(EngineInput_Buttons.rjoy_up );
 				//no task assigned to rjoy_up in game mode
 			if(EngineInput_Buttons.ljoy_center );
