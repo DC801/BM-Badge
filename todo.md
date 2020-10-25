@@ -72,37 +72,38 @@
 			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
 			- [ ] checkSaveFlag(uint8_t saveFlagOffset, uint16_t successScriptIndex, bool expectedValue);
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
-			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
-			- [ ] runScript(uint16_t scriptId);
+			- [ ] checkForButtonPress(uint8_t buttonId, uint16_t successScriptIndex); //KEYBOARD_KEY:: enum value
 			- [ ] checkDialogResponse(uint16_t dialogId, uint16_t successfulScriptIndex);
+			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
 			- [ ] delay(uint32_t ms); //blocking delay for script timing
 			- [ ] nonBlockingDelay(uint32_t ms); //allows game loop to continue and then continues a script
-			- [ ] checkForButtonPress(uint8_t buttonId, uint16_t successScriptIndex); //KEYBOARD_KEY:: enum value
+			- [ ] pauseGameState(bool pauseState); //this will stop the entire MageGameLoop() from happening until set to false
 		- [ ] Game State Effecting Actions:
 			- [ ] setEntityByte(uint8_t entityId, uint8_t offset, uint8_t newValue);
 			- [ ] setSaveFlag(uint8_t saveFlagOffset, bool newValue);
-			- [ ] setPlayerMovable(bool moveable);
+			- [ ] setPlayerControl(bool playerHasControl);
 			- [ ] setEntityInteractScript(uint8_t entityId, uint16_t scriptId);
 			- [ ] setEntityTickScript(uint8_t entityId, uint16_t scriptId);
-			- [ ] changeEntityType(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
-			- [ ] pauseGameState(bool pauseState); //this will stop the entire MageGameLoop() from happening until set to false
+      - [ ] setMapTickScript(uint16_t scriptId);
+			- [ ] setEntityType(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
+			- [ ] setHexCursorLocation(uint16_t offset);
+			- [ ] setHexBit(uint8_t bitmask, bool state);
 		- [ ] Game Display changing actions:
-			- [ ] loadMapByIndex(uint8_t mapId);
+			- [ ] loadMap(uint8_t mapId);
 			- [ ] screenShake(uint8_t amplitutde, uint8_t freq, uint16_t duration);
 			- [ ] screenFadeOut(uint16_t color, uint16_t duration); //should set a flag to keep the screen faded out until a screenFadeIn is called.
 			- [ ] screenFadeIn(uint16_6 color, uint16_t duration);
 			- [ ] showDialog(uint16_t dialogId);
 			- [ ] switchRenderableFont(uint8_t fontId);
 			- [ ] moveEntityTo(uint16_t x, uint16_t y);
-			- [ ] moveEntityAlongGeometry(uint8_t entityId, uint32_t *geometry);
-			- [ ] loopEntityAlongGeometry(uint8_t entityId, uint32_t *geometry);
+			- [ ] moveEntityAlongGeometry(uint8_t entityId, uint32_t *geometry, uint16_t duration);
+			- [ ] loopEntityAlongGeometry(uint8_t entityId, uint32_t *geometry, uint16_t duration);
 			- [ ] setEntityDirection(uint8_t entityId, uint8_t direction);
-			- [ ] cameraSet(uint16_t, uint16_t);
-			- [ ] cameraPan(uint32_t *geometry, uint16_t duration);
+			- [ ] setCameraPosition(uint16_t, uint16_t);
+			- [ ] moveCameraAlongGeometry(uint32_t *geometry, uint16_t duration);
+			- [ ] loopCameraAlongGeometry(uint32_t *geometry, uint16_t duration);
 			- [ ] setHexEditorState(bool state);
 			- [ ] setHexEditorDialogMode(bool state);
-			- [ ] setHexCursor(uint16_t offset);
-			- [ ] setHexBit(uint8_t bitmask, bool state);
 			- [ ] unlockHaxCell(uint8_t cellOffset);
 			- [ ] lockHaxCell(uint8_t cellOffset);
 - [ ] Geometry
