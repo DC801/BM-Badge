@@ -59,27 +59,27 @@ all of the old code used as the foundation of this badge.
 #define MAGE_ACTION_ANIMATION_INDEX 2
 
 //this contains the possible options for an entity PrimaryIdType value.
-typedef enum {
+typedef enum MageEntityPrimaryIdType {
 	TILESET = 0,
 	ANIMATION = 1,
 	ENTITY_TYPE = 2,
 	NUM_PRIMARY_ID_TYPES
-} MageEntityPrimaryIdType;
+};
 
 //this is the numerical translation for entity direction.
-typedef enum{
+typedef enum MageEntityAnimationDirection {
 	NORTH = 0,
 	EAST = 1,
 	SOUTH = 2,
 	WEST = 3,
 	NUM_DIRECTIONS
-} MageEntityAnimationDirection;
+};
 
 //this contains all the possible script actions by actionId value.
 //these enum values match the data generated in the binary,
 //so don't change any numbering unless you fix the binary generation as well.
 //don't add more than 255 actions, or it will break the binary file.
-typedef enum{
+typedef enum MageScriptActionTypeId {
 	NULL_ACTION = 0,
 	CHECK_ENTITY_BYTE = 1,
 	CHECK_SAVE_FLAG = 2,
@@ -120,25 +120,25 @@ typedef enum{
 	SET_HEX_EDITOR_DIALOG_MODE = 37,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
-} MageScriptAction;
+};
 
 //this is a structure to hold information about the currently executing scripts so they can be resumed
-typedef struct{
+typedef struct MageScriptState {
 	uint16_t scriptId; //the script Id to resume
 	uint16_t actionId; //the action Id to resume
 	uint32_t timeToNextAction; //the number of millis until the next action in the script is to run;
-} MageScriptState;
+};
 
 //this is a point in 2D space.
-typedef struct {
+typedef struct Point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
 //this is the structure of a MageEntity. All hackable info is contained within.
 //the complete current entity state can be determined with only this info and
 //the MageGame class interpreting the ROM data.
-typedef struct {
+typedef struct MageEntity {
 	char name[16];
 	uint16_t primaryId;
 	uint16_t secondaryId;
@@ -151,25 +151,25 @@ typedef struct {
 	uint8_t direction;
 	uint8_t hackableState;
 	uint8_t padding;
-} MageEntity;
+};
 
 //this is info needed to render entities that can be determined
 //at run time from the MageEntity class info.
-typedef struct {
+typedef struct MageEntityRenderableData{
 	uint16_t currentFrameTicks;
 	uint16_t tilesetId;
 	uint16_t tileId;
 	uint32_t duration;
 	uint16_t frameCount;
 	uint8_t renderFlags;
-} MageEntityRenderableData;
+};
 
 //below here are all the structures for interpreting the MageScriptAction binary data.
 //Each action on the binary has 7 bytes of argument data, and these structs allow you
 //to read all 7 bytes into the struct and get valid named arguments.
 //for arguments larger than uint8_t, endian conversion will be needed at read time.
 
-typedef struct {
+typedef struct ActionNullAction {
 	uint8_t paddingA;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -177,84 +177,84 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionNullAction;
+};
 
-typedef struct {
+typedef struct ActionCheckEntityByte{
 	uint8_t entityId;
 	uint8_t byteOffset;
 	uint8_t expectedValue;
 	uint16_t successScriptId;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckEntityByte;
+};
 
-typedef struct {
+typedef struct ActionCheckSaveFlag{
 	uint8_t saveFlagOffset;
 	bool expectedValue;
 	uint16_t successScriptId;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckSaveFlag;
+};
 
-typedef struct {
+typedef struct ActionCheckifEntityIsInGeometry{
 	uint8_t entityId;
 	uint16_t GeometryId;
 	bool expectedValue;
 	uint16_t successScriptId;
 	uint8_t paddingG;
-} ActionCheckifEntityIsInGeometry;
+};
 
-typedef struct {
+typedef struct ActionCheckForButtonPress{
 	uint8_t buttonId; //KEYBOARD_KEY enum value
 	uint16_t successScriptId;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckForButtonPress;
+};
 
-typedef struct {
+typedef struct ActionCheckForButtonState{
 	uint8_t buttonId; //KEYBOARD_KEY enum value
 	bool expectedValue;
 	uint16_t successScriptId;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckForButtonState;
+};
 
-typedef struct {
+typedef struct ActionCheckDialogResponse{
 	uint16_t dialogId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckDialogResponse;
+};
 
-typedef struct {
+typedef struct ActionCompareEntityName{
 	uint8_t entityId;
 	uint16_t stringId;
 	uint16_t successScriptId;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCompareEntityName;
+};
 
-typedef struct {
+typedef struct ActionDelay{
 	uint32_t delayTime; //in ms
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionDelay;
+};
 
-typedef struct {
+typedef struct ActionNonBlockingDelay{
 	uint32_t delayTime; //in ms
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionNonBlockingDelay;
+};
 
-typedef struct {
+typedef struct ActionSetPauseState{
 	bool pauseState;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -262,9 +262,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetPauseState;
+};
 
-typedef struct {
+typedef struct ActionSetEntityByte{
 	uint8_t entityId;
 	uint8_t byteOffset;
 	uint8_t newValue;
@@ -272,9 +272,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityByte;
+};
 
-typedef struct {
+typedef struct ActionSetSaveFlag{
 	uint8_t saveFlagOffset;
 	bool newValue;
 	uint8_t paddingC;
@@ -282,9 +282,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetSaveFlag;
+};
 
-typedef struct {
+typedef struct ActionSetPlayerControl{
 	bool playerHasControl;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -292,53 +292,53 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetPlayerControl;
+};
 
-typedef struct {
+typedef struct ActionSetEntityInteractScript{
 	uint8_t entityId;
 	uint16_t scriptId;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityInteractScript;
+};
 
-typedef struct {
+typedef struct ActionSetEntityTickScript{
 	uint8_t entityId;
 	uint16_t scriptId;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityTickScript;
+};
 
-typedef struct {
+typedef struct ActionSetMapTickScript{
 	uint16_t scriptId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetMapTickScript;
+};
 
-typedef struct {
+typedef struct ActionSetEntityType{
 	uint8_t entityId;
 	uint16_t primaryId;
 	uint16_t secondaryId;
 	uint8_t primaryIdType;
 	uint8_t paddingG;
-} ActionSetEntityType;
+};
 
-typedef struct {
+typedef struct ActionSetHexCursorLocation{
 	uint16_t byteAddress;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetHexCursorLocation;
+};
 
-typedef struct {
+typedef struct ActionSetHexBit{
 	uint8_t bitmask;
 	bool state;
 	uint8_t paddingC;
@@ -346,9 +346,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetHexBit;
+};
 
-typedef struct {
+typedef struct ActionUnlockHaxCell{
 	uint8_t cellOffset;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -356,9 +356,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionUnlockHaxCell;
+};
 
-typedef struct {
+typedef struct ActionLockHaxCell{
 	uint8_t cellOffset;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -366,46 +366,46 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionLockHaxCell;
+};
 
-typedef struct {
+typedef struct ActionLoadMap{
 	uint16_t mapId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionLoadMap;
+};
 
-typedef struct {
+typedef struct ActionScreenShake{
 	uint8_t amplitude;
 	uint8_t frequency;
 	uint32_t duration; //in ms
 	uint8_t paddingG;
-} ActionScreenShake;
+};
 
-typedef struct {
+typedef struct ActionScreenFadeOut{
 	uint16_t color;
 	uint32_t duration;
 	uint8_t paddingG;
-} ActionScreenFadeOut;
+};
 
-typedef struct {
+typedef struct ActionScreenFadeIn{
 	uint16_t color;
 	uint32_t duration;
 	uint8_t paddingG;
-} ActionScreenFadeIn;
+};
 
-typedef struct {
+typedef struct ActionShowDialog{
 	uint16_t dialogId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionShowDialog;
+};
 
-typedef struct {
+typedef struct ActionSwitchRenderableFont{
 	uint8_t fontId;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -413,51 +413,51 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSwitchRenderableFont;
+};
 
-typedef struct {
+typedef struct ActionMoveEntityToGeometry{
 	uint8_t entityId;
 	uint16_t geometryId;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveEntityToGeometry;
+};
 
-typedef struct {
+typedef struct ActionMoveEntityAlongGeometry{
 	uint8_t entityId;
 	uint16_t geometryId;
 	uint32_t duration; //in ms
-} ActionMoveEntityAlongGeometry;
+};
 
-typedef struct {
+typedef struct ActionLoopEntityAlongGeometry{
 	uint8_t entityId;
 	uint16_t geometryId;
 	uint32_t duration; //in ms
-} ActionLoopEntityAlongGeometry;
+};
 
-typedef struct {
+typedef struct ActionMoveCameraToGeometry{
 	uint16_t geometryId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveCameraToGeometry;
+};
 
-typedef struct {
+typedef struct ActionMoveCameraAlongGeometry{
 	uint16_t geometryId;
 	uint32_t duration; //in ms
 	uint8_t paddingG;
-} ActionMoveCameraAlongGeometry;
+};
 
-typedef struct {
+typedef struct ActionLoopCameraAlongGeometry{
 	uint16_t geometryId;
 	uint32_t duration; //in ms
 	uint8_t paddingG;
-} ActionLoopCameraAlongGeometry;
+};
 
-typedef struct {
+typedef struct ActionSetEntityDirection {
 	uint8_t entityId;
 	uint8_t direction; //MageEntityAnimationDirection enum value
 	uint8_t paddingC;
@@ -465,9 +465,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityDirection;
+};
 
-typedef struct {
+typedef struct ActionSetHexEditorState {
 	bool state;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -475,9 +475,9 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetHexEditorState;
+};
 
-typedef struct {
+typedef struct ActionSetHexEditorDialogMode {
 	bool state;
 	uint8_t paddingB;
 	uint8_t paddingC;
@@ -485,6 +485,6 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetHexEditorDialogMode;
+};
 
 #endif //_MAGE_DEFINES_H
