@@ -68,8 +68,6 @@ void MageHexEditor::applyInputToHexState()
 	if (EngineInput_Activated.bit_4  ) { runHex(0b00000100); }
 	if (EngineInput_Activated.bit_2  ) { runHex(0b00000010); }
 	if (EngineInput_Activated.bit_1  ) { runHex(0b00000001); }
-	//this is activated even when outside the hex dialog. Also, I don't know why a player would need to activate it, so I commented it out. -Tim
-	//if (EngineInput_Activated.ljoy_center) { toggleHexDialog(); }
 }
 
 void MageHexEditor::updateHexLights()

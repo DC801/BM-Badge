@@ -5,9 +5,6 @@
 #include "FrameBuffer.h"
 #include "mage_hex.h"
 
-
-extern uint8_t mageSpeed;
-extern bool isMoving;
 extern Point cameraPosition;
 extern MageHexEditor *MageHex;
 
@@ -69,6 +66,7 @@ MageGameControl::MageGameControl()
 
 	mageSpeed = MAGE_WALKING_SPEED;
 	isMoving = false;
+	playerHasControl = true;
 
 	//load the map
 	LoadMap(currentMapId);
@@ -88,6 +86,7 @@ uint32_t MageGameControl::Size() const
 		sizeof(previousPlayerTilesetId) +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
+		sizeof(playerHasControl) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -275,6 +274,9 @@ void MageGameControl::LoadMap(uint16_t index)
 		}
 	}
 
+	//update playerEntity pointer whenever a new map is loaded:
+	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
+
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//all entities start with 0 frame ticks
@@ -283,11 +285,10 @@ void MageGameControl::LoadMap(uint16_t index)
 		getEntityRenderableData(i);
 	}
 
-	//update playerEntity pointer whenever a new map is loaded:
-	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
-
 	//make sure the tileset Id is updated when the map loads to prevent player yeeting
 	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
+
+	//MageScript::onMapLoad() here -Tim
 }
 
 void MageGameControl::GetPointerToPlayerEntity(std::string name)
@@ -549,7 +550,7 @@ uint16_t MageGameControl::getValidMapId(uint16_t mapId)
 uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
 {
 	//always return a valid primaryId:
-	return primaryIdType % MAGE_NUM_PRIMARY_ID_TYPES;
+	return primaryIdType % MageEntityPrimaryIdType::NUM_PRIMARY_ID_TYPES;
 }
 
 uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
@@ -560,12 +561,10 @@ uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 
 uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
 {
-	if(animationId >= animationHeader.count())
-	{
-		//use failover animation if an invalid animationId is submitted to the function.
-		//There's a good chance if that happens, it will break things.
-		return animationId % animationHeader.count();
-	}
+	//use failover animation if an invalid animationId is submitted to the function.
+	//There's a good chance if that happens, it will break things.
+	animationId = getValidAnimationId(animationId);
+
 	//always return a valid animation frame for the animationId submitted. 
 	return animationFrame % animations[animationId].FrameCount();
 }
@@ -578,12 +577,10 @@ uint16_t MageGameControl::getValidTilesetId(uint16_t tilesetId)
 
 uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
 {
-	if(tilesetId >= tilesetHeader.count())
-	{
-		//use failover animation if an invalid animationId is submitted to the function.
-		//There's a good chance if that happens, it will break things.
-		return tilesetId % tilesetHeader.count();
-	}
+	//use failover animation if an invalid animationId is submitted to the function.
+	//There's a good chance if that happens, it will break things.
+	tilesetId = getValidTilesetId(tilesetId);
+
 	//always return a valid animation frame for the animationId submitted. 
 	return tileId % tilesets[tilesetId].Count();
 }
@@ -598,12 +595,10 @@ uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 
 uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId)
 {
-	if(entityTypeId >= entityTypeHeader.count())
-	{
-		//use failover animation if an invalid animationId is submitted to the function.
-		//There's a good chance if that happens, it will break things.
-		entityTypeId % entityTypeHeader.count();
-	}
+	//use failover animation if an invalid animationId is submitted to the function.
+	//There's a good chance if that happens, it will break things.
+	entityTypeId = entityTypeId % entityTypeHeader.count();
+
 	//always return a valid entity type animation ID for the entityTypeAnimationId submitted. 
 	return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
 }
@@ -612,7 +607,7 @@ uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 {
 	//always return a valid direction. 
 	//Subtract 1 because they are 0-indexed.
-	return direction % MAGE_NUM_DIRECTIONS;
+	return direction % MageEntityAnimationDirection::NUM_DIRECTIONS;
 }
 
 void MageGameControl::getEntityRenderableData(uint32_t index)
@@ -752,6 +747,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
+		//call MageScript::onEntityTick(entities[i].onTickScriptId, i); -Tim
 		//tileset entities are not animated, return if entity is type tileset.
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{

@@ -43,20 +43,18 @@ all of the old code used as the foundation of this badge.
 typedef enum {
     TILESET = 0,
     ANIMATION = 1,
-    ENTITY_TYPE = 2
+    ENTITY_TYPE = 2,
+    NUM_PRIMARY_ID_TYPES
 } MageEntityPrimaryIdType;
-//keep this value up-to-date and matching the enum above for safety checks:
-#define MAGE_NUM_PRIMARY_ID_TYPES 3
 
 //this is the numerical translation for entity direction.
 typedef enum{
     NORTH = 0,
     EAST = 1,
     SOUTH = 2,
-    WEST = 3
+    WEST = 3,
+    NUM_DIRECTIONS
 } MageEntityAnimationDirection;
-//keep this value up-to-date and matching the enum above for safety checks:
-#define MAGE_NUM_DIRECTIONS 4
 
 //this is a point in 2D space.
 typedef struct {

@@ -74,7 +74,7 @@ private:
 	//each entry is an indexed entity type.
 	std::unique_ptr<MageEntityType[]> entityTypes;
 
-	//this is an arrya storing the most current data needed to draw entities
+	//this is an array storing the most current data needed to draw entities
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 
@@ -93,6 +93,9 @@ public:
 	//this is the index value of where the playerEntity is located within
 	//the entities[] array and also the offset to it from hackableDataAddress
 	int32_t playerEntityIndex;
+	
+	//this lets us make it so that inputs stop working for the player
+	bool playerHasControl;
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();

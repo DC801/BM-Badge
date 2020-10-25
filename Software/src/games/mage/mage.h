@@ -5,9 +5,12 @@
 #include "mage_game_control.h"
 #include "FrameBuffer.h"
 
-//this is called in the main game loop, and is responsible for
-//updating the game state based on all inputs.
-void MageGameLoop();
+
+//updates the state of all the things before rendering:
+void GameUpdate();
+
+//This renders the game to the screen based on the loop's updated state.
+void GameRender();
 
 //this runs the actual game, preformining initial setup and then
 //running the game loop indefinitely until the game is exited.
