@@ -314,6 +314,8 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 
 void MageGameControl::applyUniversalInputs()
 {
+	//make sure any button handling in this function can be processed in ANY game mode.
+	//that includes the game mode, hex editor mode, any menus, maps, etc.
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
 	if (EngineInput_Activated.op_xor) { MageHex->setHexOp(HEX_OPS_XOR); }
 	if (EngineInput_Activated.op_add) { MageHex->setHexOp(HEX_OPS_ADD); }
@@ -346,9 +348,9 @@ void MageGameControl::applyGameModeInputs()
 		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
+		bool isActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
 		isMoving = false;
-		bool isActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
 		//set mage speed based on if the right pad down is being pressed:
 		mageSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
@@ -364,13 +366,45 @@ void MageGameControl::applyGameModeInputs()
 			//reset the map:
 			LoadMap(currentMapId);
 		}
-		//if not actioning or resetting, move player:
+		//if not actioning or resetting, handle all remaining inputs:
 		else
 		{
-			if(EngineInput_Buttons.ljoy_left ) { playerEntity->x -= mageSpeed; playerEntity->direction = 3; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_right) { playerEntity->x += mageSpeed; playerEntity->direction = 1; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_up   ) { playerEntity->y -= mageSpeed; playerEntity->direction = 0; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_down ) { playerEntity->y += mageSpeed; playerEntity->direction = 2; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_left )
+				{ playerEntity->x -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::WEST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_right)
+				{ playerEntity->x += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::EAST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_up )
+				{ playerEntity->y -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::NORTH; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_down )
+				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
+			if(EngineInput_Buttons.rjoy_right );
+				//Put the onInteract script handling here -Tim
+			if(EngineInput_Buttons.rjoy_up );
+				//no task assigned to rjoy_up in game mode
+			if(EngineInput_Buttons.ljoy_center );
+				//no task assigned to ljoy_center in game mode
+			if(EngineInput_Buttons.rjoy_center );
+				//no task assigned to rjoy_center in game mode
+			if(EngineInput_Buttons.op_page);
+				//no task assigned to op_page in game mode
+		}
+		
+		//check for memory button presses and set the hex cursor to the memory location
+		if(EngineInput_Activated.mem0)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
+		}
+		if(EngineInput_Activated.mem1)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
+		}
+		if(EngineInput_Activated.mem2)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
+		}
+		if(EngineInput_Activated.mem3)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
 		}
 
 		//handle animation assignment for the player:
@@ -448,24 +482,6 @@ void MageGameControl::applyGameModeInputs()
 		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
-	}
-
-	//check for memory button presses and set the hex cursor to the memory location
-	if(EngineInput_Activated.mem0)
-	{
-		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
-	}
-	if(EngineInput_Activated.mem1)
-	{
-		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
-	}
-	if(EngineInput_Activated.mem2)
-	{
-		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
-	}
-	if(EngineInput_Activated.mem3)
-	{
-		MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
 	}
 }
 
