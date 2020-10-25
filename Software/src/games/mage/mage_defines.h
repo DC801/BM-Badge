@@ -166,3 +166,5 @@ typedef struct {
 	uint16_t frameCount;
 	uint8_t renderFlags;
 } MageEntityRenderableData;
+
+#endif //_MAGE_DEFINES_H
