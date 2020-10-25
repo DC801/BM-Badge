@@ -49,320 +49,367 @@ void MageScriptControl::runAction(uint8_t actionTypeId, uint32_t argumentMemoryA
 	for(int i=0; i<MAGE_NUM_ACTION_ARGS; i++)
 	{ romValues[i] = i*5; }
 
+	//since a bunch of variables below use the same names, and only one switch case will
+	//be using them at a time, declare them all up here and only set them below:
+	bool expectedBoolValue;
+	bool pauseState;
+	bool playerHasControl;
+	bool state;
+	uint8_t paddingA;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+	uint8_t entityId;
+	uint8_t byteOffset;
+	uint8_t expectedByteValue;
+	uint8_t saveFlagOffset;
+	uint8_t buttonId;
+	uint8_t newByteValue;
+	uint8_t primaryIdType;
+	uint8_t byteAddress;
+	uint8_t bitmask;
+	uint8_t cellOffset;
+	uint8_t amplitude;
+	uint8_t frequency;
+	uint8_t color;
+	uint8_t fontId;
+	uint8_t direction;
+	uint16_t successScriptId;
+	uint16_t geometryId;
+	uint16_t dialogId;
+	uint16_t stringId;
+	uint16_t scriptId;
+	uint16_t primaryId;
+	uint16_t secondaryId;
+	uint16_t mapId;
+	uint32_t delayTime;
+	uint32_t duration;
+
+
 	//WARNING: giant switch case for all action types below:
 	//I'm also manually coding the conversion from uint8_ts to uint16_ts 
 	//and uint32_ts, so the endianness fix is hardcoded. Sorry.
 	switch (actionTypeId)
 	{
 		case MageScriptActionTypeId::NULL_ACTION:
+			paddingA = romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 			//don't do anything for NULL_ACTION
 			break;
 		case MageScriptActionTypeId::CHECK_ENTITY_BYTE:
-			uint8_t entityId = romValues[0];
-			uint8_t byteOffset = romValues[1];
-			uint8_t expectedValue = romValues[2];
-			uint16_t successScriptId = romValues[3] + (romValues[4]<<8);
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			byteOffset = romValues[1];
+			expectedByteValue = romValues[2];
+			successScriptId = romValues[3] + (romValues[4]<<8);
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 			//checkEntityByte(entityId, byteOffset, expectedValue, successScriptId);
 			break;
 		case MageScriptActionTypeId::CHECK_SAVE_FLAG:
-			uint8_t saveFlagOffset = romValues[0];
-			bool expectedValue = (bool)romValues[1];
-			uint16_t successScriptId = romValues[2] + (romValues[3]<<8);
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			saveFlagOffset = romValues[0];
+			expectedBoolValue = (bool)romValues[1];
+			successScriptId = romValues[2] + (romValues[3]<<8);
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::CHECK_IF_ENTITY_IS_IN_GEOMETRY:
-			uint8_t entityId = romValues[0];
-			uint16_t GeometryId = romValues[1] + (romValues[2]<<8);
-			bool expectedValue = (bool)romValues[3];
-			uint16_t successScriptId = romValues[4] + (romValues[5]<<8);
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			geometryId = romValues[1] + (romValues[2]<<8);
+			expectedBoolValue = (bool)romValues[3];
+			successScriptId = romValues[4] + (romValues[5]<<8);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::CHECK_FOR_BUTTON_PRESS:
-			uint8_t buttonId = romValues[0]; //KEYBOARD_KEY enum value
-			uint16_t successScriptId = romValues[1] + (romValues[2]<<8);
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			buttonId = romValues[0]; //KEYBOARD_KEY enum value
+			successScriptId = romValues[1] + (romValues[2]<<8);
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE:
-			uint8_t buttonId = romValues[0]; //KEYBOARD_KEY enum value
-			bool expectedValue = (bool)romValues[1];
-			uint16_t successScriptId = romValues[2] + (romValues[3]<<8);
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			buttonId = romValues[0]; //KEYBOARD_KEY enum value
+			expectedBoolValue = (bool)romValues[1];
+			successScriptId = romValues[2] + (romValues[3]<<8);
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::CHECK_DIALOG_RESPONSE:
-			uint16_t dialogId = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			dialogId = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::COMPARE_ENTITY_NAME:
-			uint8_t entityId = romValues[0];
-			uint16_t stringId = romValues[1] + (romValues[2]<<8);
-			uint16_t successScriptId = romValues[3] + (romValues[4]<<8);
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			stringId = romValues[1] + (romValues[2]<<8);
+			successScriptId = romValues[3] + (romValues[4]<<8);
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::DELAY:
-			uint32_t delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::NON_BLOCKING_DELAY:
-			uint32_t delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_PAUSE_STATE:
-			bool pauseState = (bool)romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			pauseState = (bool)romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_ENTITY_BYTE:
-			uint8_t entityId = romValues[0];
-			uint8_t byteOffset = romValues[1];
-			uint8_t newValue = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			byteOffset = romValues[1];
+			newByteValue = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_SAVE_FLAG:
-			uint8_t saveFlagOffset = romValues[0];
-			bool newValue = (bool)romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			saveFlagOffset = romValues[0];
+			newByteValue = (bool)romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_PLAYER_CONTROL:
-			bool playerHasControl = (bool)romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			playerHasControl = (bool)romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT:
-			uint8_t entityId = romValues[0];
-			uint16_t scriptId = romValues[1] + (romValues[2]<<8);
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			scriptId = romValues[1] + (romValues[2]<<8);
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT:
-			uint8_t entityId = romValues[0];
-			uint16_t scriptId = romValues[1] + (romValues[2]<<8);
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			scriptId = romValues[1] + (romValues[2]<<8);
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_MAP_TICK_SCRIPT:
-			uint16_t scriptId = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			scriptId = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_ENTITY_TYPE:
-			uint8_t entityId = romValues[0];
-			uint16_t primaryId = romValues[1] + (romValues[2]<<8);
-			uint16_t secondaryId = romValues[3] + (romValues[4]<<8);
-			uint8_t primaryIdType = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			primaryId = romValues[1] + (romValues[2]<<8);
+			secondaryId = romValues[3] + (romValues[4]<<8);
+			primaryIdType = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION:
-			uint16_t byteAddress = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			byteAddress = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_HEX_BIT:
-			uint8_t bitmask = romValues[0];
-			bool state = (bool)romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			bitmask = romValues[0];
+			state = (bool)romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::UNLOCK_HAX_CELL:
-			uint8_t cellOffset = romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			cellOffset = romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::LOCK_HAX_CELL:
-			uint8_t cellOffset = romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			cellOffset = romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::LOAD_MAP:
-			uint16_t mapId = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			mapId = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SCREEN_SHAKE:
-			uint8_t amplitude = romValues[0];
-			uint8_t frequency = romValues[1];
-			uint32_t duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			uint8_t paddingG = romValues[6];
+			amplitude = romValues[0];
+			frequency = romValues[1];
+			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SCREEN_FADE_OUT:
-			uint16_t color = romValues[0] + (romValues[1]<<8);
-			uint32_t duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			uint8_t paddingG = romValues[6];
+			color = romValues[0] + (romValues[1]<<8);
+			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SCREEN_FADE_IN:
-			uint16_t color = romValues[0] + (romValues[1]<<8);
-			uint32_t duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			uint8_t paddingG = romValues[6];
+			color = romValues[0] + (romValues[1]<<8);
+			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SHOW_DIALOG:
-			uint16_t dialogId = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			dialogId = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_RENDERABLE_FONT:
-			uint8_t fontId = romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			fontId = romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::MOVE_ENTITY_TO_GEOMETRY:
-			uint8_t entityId = romValues[0];
-			uint16_t geometryId = romValues[1] + (romValues[2]<<8);
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			geometryId = romValues[1] + (romValues[2]<<8);
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::MOVE_ENTITY_ALONG_GEOMETRY:
-			uint8_t entityId = romValues[0];
-			uint16_t geometryId = romValues[1] + (romValues[2]<<8);
-			uint32_t duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
+			entityId = romValues[0];
+			geometryId = romValues[1] + (romValues[2]<<8);
+			duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
 
 			break;
 		case MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY:
-			uint8_t entityId = romValues[0];
-			uint16_t geometryId = romValues[1] + (romValues[2]<<8);
-			uint32_t duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
+			entityId = romValues[0];
+			geometryId = romValues[1] + (romValues[2]<<8);
+			duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
 
 			break;
 		case MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY:
-			uint16_t geometryId = romValues[0] + (romValues[1]<<8);
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			geometryId = romValues[0] + (romValues[1]<<8);
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::MOVE_CAMERA_ALONG_GEOMETRY:
-			uint16_t geometryId = romValues[0] + (romValues[1]<<8);
-			uint32_t duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			uint8_t paddingG = romValues[6];
+			geometryId = romValues[0] + (romValues[1]<<8);
+			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY:
-			uint16_t geometryId = romValues[0] + (romValues[1]<<8);
-			uint32_t duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			uint8_t paddingG = romValues[6];
+			geometryId = romValues[0] + (romValues[1]<<8);
+			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_ENTITY_DIRECTION:
-			uint8_t entityId = romValues[0];
-			uint8_t direction = romValues[1]; //MageEntityAnimationDirection enum value
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			entityId = romValues[0];
+			direction = romValues[1]; //MageEntityAnimationDirection enum value
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_HEX_EDITOR_STATE:
-			bool state = (bool)romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			state = (bool)romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		case MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE:
-			bool state = (bool)romValues[0];
-			uint8_t paddingB = romValues[1];
-			uint8_t paddingC = romValues[2];
-			uint8_t paddingD = romValues[3];
-			uint8_t paddingE = romValues[4];
-			uint8_t paddingF = romValues[5];
-			uint8_t paddingG = romValues[6];
+			state = (bool)romValues[0];
+			paddingB = romValues[1];
+			paddingC = romValues[2];
+			paddingD = romValues[3];
+			paddingE = romValues[4];
+			paddingF = romValues[5];
+			paddingG = romValues[6];
 
 			break;
 		//error if actionTypeId is not one of the above types.
