@@ -25,6 +25,10 @@ class MageScriptControl
 		MageScriptControl();
 
 		uint32_t size() const;
+
+		//this will get action arguments from ROM memory and call
+		//a function based on the ActionTypeId 
+		void runAction(uint8_t actionTypeId, uint32_t argumentMemoryAddress);
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H
