@@ -53,23 +53,6 @@ void MageHexEditor::setHexCursorLocation(uint16_t address)
 	hexCursorLocation = address;
 }
 
-void MageHexEditor::applyInputToHexState()
-{
-	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
-	if (EngineInput_Activated.hax) { toggleHexEditor(); }
-	if (EngineInput_Activated.op_xor) { setHexOp(HEX_OPS_XOR); }
-	if (EngineInput_Activated.op_add) { setHexOp(HEX_OPS_ADD); }
-	if (EngineInput_Activated.op_sub) { setHexOp(HEX_OPS_SUB); }
-	if (EngineInput_Activated.bit_128) { runHex(0b10000000); }
-	if (EngineInput_Activated.bit_64 ) { runHex(0b01000000); }
-	if (EngineInput_Activated.bit_32 ) { runHex(0b00100000); }
-	if (EngineInput_Activated.bit_16 ) { runHex(0b00010000); }
-	if (EngineInput_Activated.bit_8  ) { runHex(0b00001000); }
-	if (EngineInput_Activated.bit_4  ) { runHex(0b00000100); }
-	if (EngineInput_Activated.bit_2  ) { runHex(0b00000010); }
-	if (EngineInput_Activated.bit_1  ) { runHex(0b00000001); }
-}
-
 void MageHexEditor::updateHexLights()
 {
 	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hexCursorLocation);
@@ -105,13 +88,17 @@ uint16_t MageHexEditor::getCurrentMemPage()
 
 }
 
-void MageHexEditor::updateHexEditor()
+void MageHexEditor::applyHexModeInputs()
 {
 	static uint8_t hexTickDelay = 0;
 	bytesPerPage = dialogOpen ? 64 : 192;
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
 	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+
+	//exiting the hex editor by pressing the hax button will happen immediately
+	//before any other input is processed:
+	if (EngineInput_Activated.hax) { toggleHexEditor(); }
 
 	//debounce timer check.
 	if (!hexTickDelay)
@@ -229,7 +216,7 @@ void MageHexEditor::updateHexEditor()
 	}
 }
 
-void MageHexEditor::get_hex_string_for_byte (uint8_t byte, char* outputString)
+void MageHexEditor::getHexStringForByte (uint8_t byte, char* outputString)
 {
 	sprintf(outputString,"%02X", byte);
 }
@@ -296,7 +283,7 @@ void MageHexEditor::renderHexEditor()
 		i++
 	)
 	{
-		get_hex_string_for_byte(
+		getHexStringForByte(
 			*(((uint8_t *) hackableDataAddress) + (i + (currentMemPage * bytesPerPage))),
 			currentByteString
 		);

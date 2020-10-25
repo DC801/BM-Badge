@@ -119,9 +119,13 @@ public:
 	//it's entityType matching a specific string
 	void GetPointerToPlayerEntity(std::string name);
 
+	//this handles inputs that apply in ALL game states. That includes when 
+	//the hex editor is open, when it is closed, when in any menus, etc.
+	void applyUniversalInputs();
+
 	//this takes input information and moves the playerEntity around
 	//If there is no playerEntity, it just moves the camera freely.
-	void applyInputToPlayer();
+	void applyGameModeInputs();
 
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;

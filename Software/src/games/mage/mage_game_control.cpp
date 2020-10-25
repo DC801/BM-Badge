@@ -312,10 +312,30 @@ void MageGameControl::GetPointerToPlayerEntity(std::string name)
 	}
 }
 
-void MageGameControl::applyInputToPlayer()
+void MageGameControl::applyUniversalInputs()
+{
+	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
+	if (EngineInput_Activated.op_xor) { MageHex->setHexOp(HEX_OPS_XOR); }
+	if (EngineInput_Activated.op_add) { MageHex->setHexOp(HEX_OPS_ADD); }
+	if (EngineInput_Activated.op_sub) { MageHex->setHexOp(HEX_OPS_SUB); }
+	if (EngineInput_Activated.bit_128) { MageHex->runHex(0b10000000); }
+	if (EngineInput_Activated.bit_64 ) { MageHex->runHex(0b01000000); }
+	if (EngineInput_Activated.bit_32 ) { MageHex->runHex(0b00100000); }
+	if (EngineInput_Activated.bit_16 ) { MageHex->runHex(0b00010000); }
+	if (EngineInput_Activated.bit_8  ) { MageHex->runHex(0b00001000); }
+	if (EngineInput_Activated.bit_4  ) { MageHex->runHex(0b00000100); }
+	if (EngineInput_Activated.bit_2  ) { MageHex->runHex(0b00000010); }
+	if (EngineInput_Activated.bit_1  ) { MageHex->runHex(0b00000001); }
+}
+
+void MageGameControl::applyGameModeInputs()
 {
 	if(playerEntityIndex != NO_PLAYER)
 	{
+		//opening the hex editor is the only button press that will lag actual gameplay by one frame
+		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
+		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
+
 		//update renderable info before proceeding:
 		getEntityRenderableData(playerEntityIndex);
 		
