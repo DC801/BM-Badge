@@ -31,6 +31,7 @@ void GameUpdate()
 	//check to see if player input is allowed:
 	if(MageGame->playerHasControl)
 	{
+		//work out best order for scripting and button handling -Tim
 		//apply inputs that work all the time
 		MageHex->applyInputToHexState();
 
@@ -43,7 +44,6 @@ void GameUpdate()
 		//or be boring and normal:
 		else
 		{
-
 			//first apply input since the previous loop to the game state.
 			//split reasonably into multiple functions - Tim
 			MageGame->applyInputToPlayer();

@@ -100,7 +100,9 @@
 			- [ ] cameraSet(uint16_t, uint16_t);
 			- [ ] cameraPan(uint32_t *geometry, uint16_t duration);
 			- [ ] setHexEditorState(bool state);
+			- [ ] setHexEditorDialogMode(bool state);
 			- [ ] setHexCursor(uint16_t offset);
+			- [ ] setHexBit(uint8_t bitmask, bool state);
 			- [ ] unlockHaxCell(uint8_t cellOffset);
 			- [ ] lockHaxCell(uint8_t cellOffset);
 - [ ] Geometry
@@ -167,6 +169,7 @@
 
 Tutorial synopsis:
 -Script-1
+	-setPlayerMovable(false)
 	-Interact with someone or something to start the tutorial.
 		-Entity OnInteract()
 		-playSound()
@@ -189,11 +192,71 @@ Tutorial synopsis:
 	-Otamatone now waits for player to touch their hat.
 		-clearDialog()
 		-setEntityTickScript(otamatonavi, script-2)
+		-SetPlayerMovable(true)
 
 -Script-2
-	-checkForButtonPress(hax key)
-	-
-		
+	-checkForButtonPress(hax key, Script-3)
+
+-Script 3
+	-setPlayerMovable(false)
+	-sethexEditorState(true)
+	-setHexEditorDialogState(true)
+	-setHexCursor(0)
+	-Otamatonavi speaks:
+		-showDialog() (need to hide portrait)
+			-Excellent work! Now you're able to see the state of all the entities in the world!
+		-showDialog() with response:
+			-Do you want me to explain how the hex editor works?
+				-Yes, Script 4
+				-No, Script 5
+
+Script 4
+	-Otamanavi Speaks:
+		-Alright then, you're free to hack away. If you set byte 0x1d to 170, I'll let you out of this void!
+	-Close dialog, close hack interface, return player control, etc. 
+	setEntityTickScript(Script 7)
+	setEntityOnInteractScript(Script 6)
+
+
+Script 5
+	Otamanavi Speaks:
+			-You may notice that some of the bytes are a different color. 
+			-That's because you are able to sense your own bytes.
+			-Now let me explain the hacking interface.
+			-The cursor will move when you use the directional buttons below, like so.
+	-show cursor moving to hackable box:
+		-setHexCursor(1)
+		-delay(20)
+		...
+		-setHexCursor(28)
+	-Otamanavi Speaks:
+		-showDialog()
+			-You see how these values are easy for you to read? That means you can hack them!
+			-To hack them you just use those bit buttons you've got there.
+			-I'll show you what happens to this byte when I press each button...
+	-Show bit lights blinking for a bit, and how the number changes.
+		-setHexBit(BIT_1, true)
+		-delay(500)
+		...
+		-setHexBit(BIT_8, true)
+		-Delay(500)
+		...
+		-SetHexBit(BIT_128, true)
+	-Otamatonavi speaks:
+		-As you can see, the value of this cell changes based on the state of the lights!
+		-You can change any bit in the current byte using the bit buttons
+		-Now you try it! I'll let you ouf ot this void if you set byte 1d to be 170	.
+	-callScript(Script 4)
+
+Script 6
+	-Otamatonavi Speaks:
+		-If you set byte 0x1d to 170, I'll let you out of this void!
+
+Script 7
+	-checkByte(1d, Script 8, 170)
+
+Script 8
+	-Send the player back to the village...
 
 
 ```js
