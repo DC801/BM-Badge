@@ -1,5 +1,9 @@
 #include "mage_hex.h"
 
+extern FrameBuffer *mage_canvas;
+extern MageGameControl *MageGame;
+extern MageEntity *hackableDataAddress;
+
 bool MageHexEditor::getHexEditorState()
 {
 	return hexEditorState;

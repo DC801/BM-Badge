@@ -38,10 +38,6 @@ enum HEX_OPS {
 	HEX_OPS_SUB
 };
 
-extern FrameBuffer *mage_canvas;
-extern std::unique_ptr<MageGameControl> MageGame;
-extern MageEntity *hackableDataAddress;
-
 //this class handles the hex editor mode, including input and drawing to the screen.
 class MageHexEditor
 {

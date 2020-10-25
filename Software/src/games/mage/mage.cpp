@@ -11,12 +11,14 @@
 #endif
 
 #include "mage_hex.h"
+#include "mage_script_control.h"
 
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
+std::unique_ptr<MageScriptControl> MageScript;
 MageEntity *hackableDataAddress;
-
 FrameBuffer *mage_canvas;
+
 uint32_t lastTime;
 uint32_t now;
 uint32_t deltaTime;
@@ -134,6 +136,9 @@ void MAGE()
 	
 	//construct MageHexEditor object, set hex editor defaults
 	MageHex = std::make_unique<MageHexEditor>();
+
+	//construct MageScriptControl object to handle scripts for the game
+	MageScript = std::make_unique<MageScriptControl>();
 
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
 	hackableDataAddress = MageGame->entities.get();
