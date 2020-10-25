@@ -98,10 +98,10 @@
 			- [ ] screenFadeIn(uint16_6 color, uint32_t duration);
 			- [ ] showDialog(uint16_t dialogId);
 			- [ ] switchRenderableFont(uint8_t fontId);
-			- [ ] moveEntityTo(uint8_t entityId, uint16_t geometryId);
+			- [ ] moveEntityToGeometry(uint8_t entityId, uint16_t geometryId);
 			- [ ] moveEntityAlongGeometry(uint8_t entityId, uint16_t geometryId, uint32_t duration);
 			- [ ] loopEntityAlongGeometry(uint8_t entityId, uint16_t geometryId, uint32_t duration);
-			- [ ] moveCameraTo(uint16_t geometryId);
+			- [ ] moveCameraToGeometry(uint16_t geometryId);
 			- [ ] moveCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
 			- [ ] loopCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
 			- [ ] setEntityDirection(uint8_t entityId, uint8_t direction);
