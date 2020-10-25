@@ -76,50 +76,48 @@ typedef enum{
 } MageEntityAnimationDirection;
 
 //this contains all the possible script actions by actionId value.
-//we've only explicitly defined MageScriptAction 0 as NULL_ACTION, and left the others to self-enumerate.
-//this allows adding new actions later without needing to manually renumber everything.
+//these enum values match the data generated in the binary,
+//so don't change any numbering unless you fix the binary generation as well.
 //don't add more than 255 actions, or it will break the binary file.
 typedef enum{
 	NULL_ACTION = 0,
-	//Logic and Flow Control Actions:
-	CHECK_ENTITY_BYTE,
-	CHECK_SAVE_FLAG,
-	CHECK_IF_ENTITY_IS_IN_GEOMETRY,
-	CHECK_FOR_BUTTON_PRESS,
-	CHECK_FOR_BUTTON_STATE,
-	CHECK_DIALOG_RESPONSE,
-	COMPARE_ENTITY_NAME,
-	DELAY,
-	NON_BLOCKING_DELAY,
-	SET_PAUSE_STATE,
-	//Game State Effecting Actions:
-	SET_ENTITY_BYTE,
-	SET_SAVE_FLAG,
-	SET_PLAYER_CONTROL,
-	SET_ENTITY_INTERACT_SCRIPT,
-	SET_ENTITY_TICK_SCRIPT,
-	SET_MAP_TICK_SCRIPT,
-	SET_ENTITY_TYPE,
-	SET_HEX_CURSOR_LOCATION,
-	SET_HEX_BIT,
-	UNLOCK_HAX_CELL,
-	LOCK_HAX_CELL,
-	//Display effecting Actions:
-	LOAD_MAP,
-	SCREEN_SHAKE,
-	SCREEN_FADE_OUT,
-	SCREEN_FADE_IN,
-	SHOW_DIALOG,
-	SET_RENDERABLE_FONT,
-	MOVE_ENTITY_TO_POINT,
-	MOVE_ENTITY_ALONG_GEOMETRY,
-	LOOP_ENTITY_ALONG_GEOMETRY,
-	MOVE_CAMERA_ALONG_GEOMETRY,
-	LOOP_CAMERA_ALONG_GEOMETRY,
-	SET_ENTITY_DIRECTION,
-	SET_CAMERA_POSITION,
-	SET_HEX_EDITOR_STATE,
-	SET_HEX_EDITOR_DIALOG_MODE,
+	CHECK_ENTITY_BYTE = 1,
+	CHECK_SAVE_FLAG = 2,
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY = 3,
+	CHECK_FOR_BUTTON_PRESS = 4,
+	CHECK_FOR_BUTTON_STATE = 5,
+	CHECK_DIALOG_RESPONSE = 6,
+	COMPARE_ENTITY_NAME = 7,
+	DELAY = 8,
+	NON_BLOCKING_DELAY = 9,
+	SET_PAUSE_STATE = 10,
+	SET_ENTITY_BYTE = 11,
+	SET_SAVE_FLAG = 12,
+	SET_PLAYER_CONTROL = 13,
+	SET_ENTITY_INTERACT_SCRIPT = 14,
+	SET_ENTITY_TICK_SCRIPT = 15,
+	SET_MAP_TICK_SCRIPT = 16,
+	SET_ENTITY_TYPE = 17,
+	SET_HEX_CURSOR_LOCATION = 18,
+	SET_HEX_BIT = 19,
+	UNLOCK_HAX_CELL = 20,
+	LOCK_HAX_CELL = 21,
+	LOAD_MAP = 22,
+	SCREEN_SHAKE = 23,
+	SCREEN_FADE_OUT = 24,
+	SCREEN_FADE_IN = 25,
+	SHOW_DIALOG = 26,
+	SET_RENDERABLE_FONT = 27,
+	MOVE_ENTITY_TO_GEOMETRY = 28,
+	MOVE_ENTITY_ALONG_GEOMETRY = 29,
+	LOOP_ENTITY_ALONG_GEOMETRY = 30,
+	MOVE_CAMERA_TO_GEOMETRY = 31,
+	MOVE_CAMERA_ALONG_GEOMETRY = 32,
+	LOOP_CAMERA_ALONG_GEOMETRY = 33,
+	SET_ENTITY_DIRECTION = 34,
+	SET_CAMERA_POSITION = 35,
+	SET_HEX_EDITOR_STATE = 36,
+	SET_HEX_EDITOR_DIALOG_MODE = 37,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptAction;
@@ -169,7 +167,7 @@ typedef struct {
 //below here are all the structures for interpreting the MageScriptAction binary data.
 //Each action on the binary has 7 bytes of argument data, and these structs allow you
 //to read all 7 bytes into the struct and get valid named arguments.
-//for arguments larger than uint8_t, endian conversion will be needed.
+//for arguments larger than uint8_t, endian conversion will be needed at read time.
 
 typedef struct {
 	uint8_t paddingA;
@@ -424,7 +422,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveEntityTo;
+} ActionMoveEntityToGeometry;
 
 typedef struct {
 	uint8_t entityId;
@@ -445,7 +443,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveCameraTo;
+} ActionMoveCameraToGeometry;
 
 typedef struct {
 	uint16_t geometryId;
