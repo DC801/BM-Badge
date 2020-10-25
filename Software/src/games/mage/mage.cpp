@@ -14,6 +14,7 @@
 
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
+MageEntity *hackableDataAddress;
 
 FrameBuffer *mage_canvas;
 uint32_t lastTime;
@@ -25,26 +26,59 @@ Point cameraPosition = {
 	.y = 0,
 };
 
-MageEntity *hackableDataAddress;
-
-void MageGameLoop()
+void GameUpdate()
 {
+	//check to see if player input is allowed:
+	if(MageGame->playerHasControl)
+	{
+		//apply inputs that work all the time
+		MageHex->applyInputToHexState();
+
+		//either do hax inputs:
+		if (MageHex->getHexEditorState())
+		{
+			MageHex->updateHexEditor();
+		}
+
+		//or be boring and normal:
+		else
+		{
+
+			//first apply input since the previous loop to the game state.
+			//split reasonably into multiple functions - Tim
+			MageGame->applyInputToPlayer();
+			
+			//call MageScript::onMapTick() -Tim
+
+			//update the entities based on the current state of their (hackable) data array.
+			MageGame->UpdateEntities(deltaTime);
+
+			//run interact script on button press before drawing everything:
+			if(EngineInput_Activated.rjoy_right)
+			{ 
+				//need a function to call interact scripts if player is interacting with things -Tim
+				//MageScript::OnEntityInteract()
+			}
+		}
+	}
+}
+
+void GameRender()
+{
+	//make hax do
 	if (MageHex->getHexEditorState())
 	{
 		//run hex editor if appropriate
 		mage_canvas->clearScreen(RGB(0,0,0));
-		MageHex->updateHexEditor();
 		MageHex->renderHexEditor();
 	}
+	//otherwise be boring and normal
 	else
 	{
 		//otherwise run mage game:
 		mage_canvas->clearScreen(RGB(0,0,255));
 
-		//first apply input since the previous loop to the game state.
-		MageGame->applyInputToPlayer();
-
-		//then drawthe map and entities:
+		//then draw the map and entities:
 		uint8_t layerCount = MageGame->Map().LayerCount();
 
 		if (layerCount > 1)
@@ -65,9 +99,6 @@ void MageGameLoop()
 			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
 		}
 
-		//update the entities based on the current state of their (hackable) data array.
-		MageGame->UpdateEntities(deltaTime);
-
 		//now that the entities are updated, draw them to the screen.
 		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
 
@@ -83,10 +114,6 @@ void MageGameLoop()
 
 	//update the screen
 	mage_canvas->blt();
-
-	#ifdef DC801_DESKTOP
-		nrf_delay_ms(5);
-	#endif
 }
 
 void MAGE()
@@ -122,6 +149,10 @@ void MAGE()
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);
 
+	#ifdef DC801_DESKTOP
+		fprintf(stderr, "MageGameControl RAM use: %d bytes.", MageGame->Size());
+	#endif
+
 	//main game loop:
 	while (EngineIsRunning())
 	{
@@ -133,11 +164,16 @@ void MAGE()
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
 
-		//applies input states to the hacking functions
-		MageHex->applyInputToHexState();
+		//updates the state of all the things before rendering:
+		GameUpdate();
 
-		//updates the game based on inputs and hacked state
-		MageGameLoop();
+		//This renders the game to the screen based on the loop's updated state.
+		GameRender();
+
+		//more timing weirdness for desktop.
+		#ifdef DC801_DESKTOP
+			nrf_delay_ms(5);
+		#endif
 	}
 
 	// Close rom and any open files

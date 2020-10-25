@@ -59,25 +59,25 @@
 	- [ ] Scripts
 		- [ ] What is a script?
 			- [ ] It's a length + sequence of Actions
-			- [ ] We'll need a 'script stack' to handle scripts that call other scripts and allow returning to the original script and continuing down the list of actions.
 			- [ ] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
+			- [ ] We'll need entity-based state variables to track pathing and other transient values between ticks.
 		- [ ] Map
-			- [ ] onLoad(uint16_t scriptId); //called once when the map loads
-			- [ ] onTick(uint16_t scriptId); //called every tick
-			- [ ] onInteract(uint16_t scriptId); //called only when the player interacts if no entity is nearby?
+			- [ ] onMapLoad(uint16_t scriptId); //called once when the map loads
+			- [ ] onMapTick(uint16_t scriptId); //called every tick, used for doors, other static events when moving around map.
 		- [ ] Entity
-			- [ ] onTick(uint16_t scriptId); //called every tick
-			- [ ] onInteract(uint16_t scriptId); //called when the player interacts with the entity
+			- [ ] onEntityTick(uint16_t scriptId, uint8_t entityId); //called every tick, entityId is the entity calling that script.
+			- [ ] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions
 		- [ ] Logic and Flow Actions: (We'll need a cap on how many of these deep we can go from a main script to prevent using too much RAM with nested scripts)
-			- [ ] addScriptToStack(uint16_t scriptId, uint8_t currentScriptActionIndex);
 			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint16_t successScriptIndex, uint8_t expectedValue);
 			- [ ] checkSaveFlag(uint8_t saveFlagOffset, uint16_t successScriptIndex, bool expectedValue);
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, uint16_t successScriptIndex);
 			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t successScriptIndex, uint32_t stringAddr);
 			- [ ] runScript(uint16_t scriptId);
-			- [ ] playSkit(uint16_t skitIndex);
 			- [ ] checkDialogResponse(uint16_t dialogId, uint16_t successfulScriptIndex);
+			- [ ] delay(uint32_t ms); //blocking delay for script timing
+			- [ ] nonBlockingDelay(uint32_t ms); //allows game loop to continue and then continues a script
+			- [ ] checkForButtonPress(uint8_t buttonId, uint16_t successScriptIndex); //KEYBOARD_KEY:: enum value
 		- [ ] Game State Effecting Actions:
 			- [ ] setEntityByte(uint8_t entityId, uint8_t offset, uint8_t newValue);
 			- [ ] setSaveFlag(uint8_t saveFlagOffset, bool newValue);
@@ -94,11 +94,13 @@
 			- [ ] showDialog(uint16_t dialogId);
 			- [ ] switchRenderableFont(uint8_t fontId);
 			- [ ] moveEntityTo(uint16_t x, uint16_t y);
-			- [ ] moveEntityAlongPath(uint16_t entityId, uint16_t pathIndex);
+			- [ ] moveEntityAlongGeometry(uint8_t entityId, uint32_t *geometry);
+			- [ ] loopEntityAlongGeometry(uint8_t entityId, uint32_t *geometry);
+			- [ ] setEntityDirection(uint8_t entityId, uint8_t direction);
 			- [ ] cameraSet(uint16_t, uint16_t);
-			- [ ] cameraPan(uint16_t xStart, uint16_t yStart, uint16_t xDest, uint16_t yDest, uint16_t duration);
+			- [ ] cameraPan(uint32_t *geometry, uint16_t duration);
 			- [ ] setHexEditorState(bool state);
-			- [ ] highlightHaxCell(uint16_t offset);
+			- [ ] setHexCursor(uint16_t offset);
 			- [ ] unlockHaxCell(uint8_t cellOffset);
 			- [ ] lockHaxCell(uint8_t cellOffset);
 - [ ] Geometry
@@ -106,26 +108,38 @@
 		- [ ] inside_circle(point, circle) collision detection function
 	- [ ] rect(point, uint16_t width, uint16_t height)
 		- [ ] inside_rect(point, rect) collision detection function
-	- [ ] poly(uint8_t count, x points[count])
+	- [ ] polygon(uint8_t count, x points[count])
 		- [ ] inside_poly(point, poly) collision detection function
+	- [ ] polyline(uint8_t count, x points[count])
 	- [ ] point(uint16_t x, uint16_t y)
 		- no collision, just may be used as an arg?
 - [ ] Dialog Data Type Ideas
-	- [ ] Display Name (we may want to show names like '???' or 'Old Man' until we know who they are. After we know them we can use an entity's name, hacks and all.)
-		- [ ] Can use string substitution to let us know when to use hacked entity name, vs a set name. 
-		- [ ] Something Like %%EntityId.001%% gets replaced with the hacked name, and all other strings display as written. 
-			- [ ] Substitution string needs to be 16 characters long to make sure it won't push other bits of the dialog off the end of a line when putting in haxed names.
-		- [ ] We'd need a way to encode a specific entityId into it when generating the binary file, though. It'd be map dependent as well.
+	- [ ] Display Name - either stringId, or entityId
 	- [ ] The actual text to display, probably with line breaks hard coded in to keep things simple.
-	- [ ] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, etc.).
+	- [ ] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
+		- [ ] flags for position encoding byte:
+			- [ ] Top of Bottom
+			- [ ] Portrait on or off
+			- [ ] portrait left or right
+			- [ ] use local name or entityId
 	- [ ] tilesetId and tileId for the portrait picture.
 	- [ ] display font.
+	- [ ] voice sound Id
+	- [ ] response TypeId:
+		- [ ] NO_RESPONSE = 0
+		- [ ] SELECT_FROM_LIST = 1
+		- [ ] ENTER_NUMBER = 2
+		- [ ] ENTER_ALPHANUMERIC = 3
+		- [ ] etc...
 	- [ ] Player responses to dialog may be desired:
-			- [ ] Assuming pop-up happens while dialog is still active:
-				- [ ] select from a list of options
-				- [ ] enter a numerical code
-				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
+		- [ ] Assuming pop-up happens while dialog is still active:
+			- [ ] select from a list of options
+			- [ ] enter a numerical code
+			- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 		- [ ] new script and/or dialog to call depending on player response
+- [ ] Strings
+	- [ ] uint16_t Length
+	- [ ] char array with null termination Length bytes long
 
 ## Quests on the Village Quest Board
 - [ ] Save Timmy From The well
@@ -149,6 +163,64 @@
 - [ ] "I really hate that statue, please hide it in the lake."
 - [ ] Put the 4 escaped sheep back in the pen
 
+### In which Tim tries to make a Hex editor tutorial script:
+
+Tutorial synopsis:
+-Script-1
+	-Interact with someone or something to start the tutorial.
+		-Entity OnInteract()
+		-playSound()
+	-Player now has ring 0.
+		-SetSaveFlag()
+	-Player spins around and is teleported to a new level of darkness.
+		-playSound()
+		-moveEntityTo()
+		-setEntityDirection()
+		-screenFadeOut()
+		-loadMap()
+	-Otamatonani Appears.
+		-playSound()
+		-moveEntityAlongPath()
+	-Otamatonavi speaks:
+		-showDialog()
+			-'blah blah blah, I'ma teach you how to use the power of ring 0 to change the world around you!'
+		-showDialog()
+			-'First you need to learn how to hax the planet! You just need to grab your hat and concentrate.'
+	-Otamatone now waits for player to touch their hat.
+		-clearDialog()
+		-setEntityTickScript(otamatonavi, script-2)
+
+-Script-2
+	-checkForButtonPress(hax key)
+	-
+		
+
+
+```js
+var scenario = {
+	"scripts": {
+		"hex_tutorial":[
+			{
+				"action": "
+			}
+		]
+	}
+    "dialogs": {
+        "hex_editor_tutorial": [
+            {
+                "name": "Tutorial",
+                "tileset": "MissingNo",
+                "tileId": 5,
+                "avatar_position": "left", // left, right
+                "dialog_position": "top", // top, bottom
+                "text": "You can use your arrows to position the text cursor",
+                "before_display_script": "open_hex_editor_and_highlight_cell_0",
+                "after_display_script": "open_hex_editor_and_highlight_cell_0"
+            }
+        ]
+    }
+}
+'''
 
 ### Some possible pseudo-code on the "Save Timmy From The well" scenario
 ```json
