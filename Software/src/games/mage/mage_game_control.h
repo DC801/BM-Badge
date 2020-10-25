@@ -147,7 +147,7 @@ public:
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
 	void getEntityRenderableData(uint32_t index);
 
-	//this will update the current entities based on the current frame data
+	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
 	//this will draw the entities over the current state of the screen
