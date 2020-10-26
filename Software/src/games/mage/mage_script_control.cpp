@@ -28,6 +28,47 @@ MageScriptControl::MageScriptControl()
 		entityTickResumeStates[i].actionId = 0;
 		entityTickResumeStates[i].timeToNextAction = 0;
 	}
+
+	//this is the array of action functions that will be called by scripts.
+	//the array index corresponds to the enum value of the script that is
+	//stored in the ROM file, so it calls the correct function automatically.
+actionFunctions[MageScriptActionTypeId::NULL_ACTION]                    = &MageScriptControl::nullAction;
+actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_BYTE]              = &MageScriptControl::checkEntityByte;
+actionFunctions[MageScriptActionTypeId::CHECK_SAVE_FLAG]                = &MageScriptControl::checkSaveFlag;
+actionFunctions[MageScriptActionTypeId::CHECK_IF_ENTITY_IS_IN_GEOMETRY] = &MageScriptControl::checkIfEntityIsInGeometry;
+actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_PRESS]         = &MageScriptControl::checkForButtonPress;
+actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE]         = &MageScriptControl::checkForButtonState;
+actionFunctions[MageScriptActionTypeId::CHECK_DIALOG_RESPONSE]          = &MageScriptControl::checkDialogResponse;
+actionFunctions[MageScriptActionTypeId::COMPARE_ENTITY_NAME]            = &MageScriptControl::compareEntityName;
+actionFunctions[MageScriptActionTypeId::DELAY]                          = &MageScriptControl::delay;
+actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY]             = &MageScriptControl::nonBlockingDelay;
+actionFunctions[MageScriptActionTypeId::SET_PAUSE_STATE]                = &MageScriptControl::setPauseState;
+actionFunctions[MageScriptActionTypeId::SET_ENTITY_BYTE]                = &MageScriptControl::setEntityByte;
+actionFunctions[MageScriptActionTypeId::SET_SAVE_FLAG]                  = &MageScriptControl::setSaveFlag;
+actionFunctions[MageScriptActionTypeId::SET_PLAYER_CONTROL]             = &MageScriptControl::setPlayerControl;
+actionFunctions[MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT]     = &MageScriptControl::setEntityInteractScript;
+actionFunctions[MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT]         = &MageScriptControl::setEntityTickScript;
+actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT]            = &MageScriptControl::setMapTickScript;
+actionFunctions[MageScriptActionTypeId::SET_ENTITY_TYPE]                = &MageScriptControl::setEntityType;
+actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION]        = &MageScriptControl::setHexCursorLocation;
+actionFunctions[MageScriptActionTypeId::SET_HEX_BIT]                    = &MageScriptControl::setHexBit;
+actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL]                = &MageScriptControl::unlockHaxCell;
+actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL]                  = &MageScriptControl::lockHaxCell;
+actionFunctions[MageScriptActionTypeId::LOAD_MAP]                       = &MageScriptControl::loadMap;
+actionFunctions[MageScriptActionTypeId::SCREEN_SHAKE]                   = &MageScriptControl::screenShake;
+actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT]                = &MageScriptControl::screenFadeOut;
+actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN]                 = &MageScriptControl::screenFadeIn;
+actionFunctions[MageScriptActionTypeId::SHOW_DIALOG]                    = &MageScriptControl::showDialog;
+actionFunctions[MageScriptActionTypeId::SET_RENDERABLE_FONT]            = &MageScriptControl::setRenderableFont;
+actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_TO_GEOMETRY]        = &MageScriptControl::moveEntityToGeometry;
+actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::moveEntityAlongGeometry;
+actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::loopEntityAlongGeometry;
+actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY]        = &MageScriptControl::moveCameratoGeometry;
+actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::moveCameraAlongGeometry;
+actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::loopCameraAlongGeometry;
+actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]           = &MageScriptControl::setEntityDirection;
+actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE]           = &MageScriptControl::setHexEditorState;
+actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE]     = &MageScriptControl::setHexEditorDialogMode;
 }
 
 uint32_t MageScriptControl::size() const
@@ -40,383 +81,162 @@ uint32_t MageScriptControl::size() const
 	return size;
 }
 
-void MageScriptControl::runAction(uint8_t actionTypeId, uint32_t argumentMemoryAddress)
+void MageScriptControl::runAction(uint32_t actionMemoryAddress)
 {
 	//first read all 7 bytes from ROM
 	uint8_t romValues[MAGE_NUM_ACTION_ARGS];
 	//Will need to read from ROM for valid data once there's data in the ROM file. -Tim
 	//for now just use the following fake data to test for all arguments:
+	uint8_t actionTypeId = romValues[0];
 	for(int i=0; i<MAGE_NUM_ACTION_ARGS; i++)
 	{ romValues[i] = i*5; }
+}
 
-	//since a bunch of variables below use the same names, and only one switch case will
-	//be using them at a time, declare them all up here and only set them below:
-	bool expectedBoolValue;
-	bool pauseState;
-	bool playerHasControl;
-	bool state;
-	uint8_t paddingA;
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-	uint8_t entityId;
-	uint8_t byteOffset;
-	uint8_t expectedByteValue;
-	uint8_t saveFlagOffset;
-	uint8_t buttonId;
-	uint8_t newByteValue;
-	uint8_t primaryIdType;
-	uint8_t byteAddress;
-	uint8_t bitmask;
-	uint8_t cellOffset;
-	uint8_t amplitude;
-	uint8_t frequency;
-	uint8_t color;
-	uint8_t fontId;
-	uint8_t direction;
-	uint16_t successScriptId;
-	uint16_t geometryId;
-	uint16_t dialogId;
-	uint16_t stringId;
-	uint16_t scriptId;
-	uint16_t primaryId;
-	uint16_t secondaryId;
-	uint16_t mapId;
-	uint32_t delayTime;
-	uint32_t duration;
-
-
-	//WARNING: giant switch case for all action types below:
-	//I'm also manually coding the conversion from uint8_ts to uint16_ts 
-	//and uint32_ts, so the endianness fix is hardcoded. Sorry.
-	switch (actionTypeId)
-	{
-		case MageScriptActionTypeId::NULL_ACTION:
-			paddingA = romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-			//don't do anything for NULL_ACTION
-			break;
-		case MageScriptActionTypeId::CHECK_ENTITY_BYTE:
-			entityId = romValues[0];
-			byteOffset = romValues[1];
-			expectedByteValue = romValues[2];
-			successScriptId = romValues[3] + (romValues[4]<<8);
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-			//checkEntityByte(entityId, byteOffset, expectedValue, successScriptId);
-			break;
-		case MageScriptActionTypeId::CHECK_SAVE_FLAG:
-			saveFlagOffset = romValues[0];
-			expectedBoolValue = (bool)romValues[1];
-			successScriptId = romValues[2] + (romValues[3]<<8);
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::CHECK_IF_ENTITY_IS_IN_GEOMETRY:
-			entityId = romValues[0];
-			geometryId = romValues[1] + (romValues[2]<<8);
-			expectedBoolValue = (bool)romValues[3];
-			successScriptId = romValues[4] + (romValues[5]<<8);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::CHECK_FOR_BUTTON_PRESS:
-			buttonId = romValues[0]; //KEYBOARD_KEY enum value
-			successScriptId = romValues[1] + (romValues[2]<<8);
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE:
-			buttonId = romValues[0]; //KEYBOARD_KEY enum value
-			expectedBoolValue = (bool)romValues[1];
-			successScriptId = romValues[2] + (romValues[3]<<8);
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::CHECK_DIALOG_RESPONSE:
-			dialogId = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::COMPARE_ENTITY_NAME:
-			entityId = romValues[0];
-			stringId = romValues[1] + (romValues[2]<<8);
-			successScriptId = romValues[3] + (romValues[4]<<8);
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::DELAY:
-			delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::NON_BLOCKING_DELAY:
-			delayTime = romValues[0] + (romValues[1]<<8) + (romValues[2]<<16) + (romValues[3]<<24);
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_PAUSE_STATE:
-			pauseState = (bool)romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_ENTITY_BYTE:
-			entityId = romValues[0];
-			byteOffset = romValues[1];
-			newByteValue = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_SAVE_FLAG:
-			saveFlagOffset = romValues[0];
-			newByteValue = (bool)romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_PLAYER_CONTROL:
-			playerHasControl = (bool)romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT:
-			entityId = romValues[0];
-			scriptId = romValues[1] + (romValues[2]<<8);
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT:
-			entityId = romValues[0];
-			scriptId = romValues[1] + (romValues[2]<<8);
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_MAP_TICK_SCRIPT:
-			scriptId = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_ENTITY_TYPE:
-			entityId = romValues[0];
-			primaryId = romValues[1] + (romValues[2]<<8);
-			secondaryId = romValues[3] + (romValues[4]<<8);
-			primaryIdType = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION:
-			byteAddress = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_HEX_BIT:
-			bitmask = romValues[0];
-			state = (bool)romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::UNLOCK_HAX_CELL:
-			cellOffset = romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::LOCK_HAX_CELL:
-			cellOffset = romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::LOAD_MAP:
-			mapId = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SCREEN_SHAKE:
-			amplitude = romValues[0];
-			frequency = romValues[1];
-			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SCREEN_FADE_OUT:
-			color = romValues[0] + (romValues[1]<<8);
-			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SCREEN_FADE_IN:
-			color = romValues[0] + (romValues[1]<<8);
-			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SHOW_DIALOG:
-			dialogId = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_RENDERABLE_FONT:
-			fontId = romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::MOVE_ENTITY_TO_GEOMETRY:
-			entityId = romValues[0];
-			geometryId = romValues[1] + (romValues[2]<<8);
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::MOVE_ENTITY_ALONG_GEOMETRY:
-			entityId = romValues[0];
-			geometryId = romValues[1] + (romValues[2]<<8);
-			duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
-
-			break;
-		case MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY:
-			entityId = romValues[0];
-			geometryId = romValues[1] + (romValues[2]<<8);
-			duration = romValues[3] + (romValues[4]<<8) + (romValues[5]<<16) + (romValues[6]<<24);
-
-			break;
-		case MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY:
-			geometryId = romValues[0] + (romValues[1]<<8);
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::MOVE_CAMERA_ALONG_GEOMETRY:
-			geometryId = romValues[0] + (romValues[1]<<8);
-			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY:
-			geometryId = romValues[0] + (romValues[1]<<8);
-			duration = romValues[2] + (romValues[3]<<8) + (romValues[4]<<16) + (romValues[5]<<24);
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_ENTITY_DIRECTION:
-			entityId = romValues[0];
-			direction = romValues[1]; //MageEntityAnimationDirection enum value
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_HEX_EDITOR_STATE:
-			state = (bool)romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		case MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE:
-			state = (bool)romValues[0];
-			paddingB = romValues[1];
-			paddingC = romValues[2];
-			paddingD = romValues[3];
-			paddingE = romValues[4];
-			paddingF = romValues[5];
-			paddingG = romValues[6];
-
-			break;
-		//error if actionTypeId is not one of the above types.
-		default:
-			#ifdef DC801_DESKTOP
-				fprintf(stderr, "Invalid ActionTypeId provided to runAction() function: %d\r\n", actionTypeId);
-			#endif
-			break;
-	}
+void MageScriptControl::nullAction(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkEntityByte(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkSaveFlag(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkForButtonPress(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkForButtonState(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::checkDialogResponse(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::compareEntityName(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::delay(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::nonBlockingDelay(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setPauseState(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setEntityByte(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setSaveFlag(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setPlayerControl(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setEntityInteractScript(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setEntityTickScript(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setMapTickScript(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setEntityType(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setHexCursorLocation(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setHexBit(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::unlockHaxCell(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::lockHaxCell(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::loadMap(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::screenShake(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::screenFadeOut(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::screenFadeIn(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::showDialog(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setRenderableFont(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::moveEntityToGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::moveEntityAlongGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::loopEntityAlongGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::moveCameratoGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::moveCameraAlongGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::loopCameraAlongGeometry(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setEntityDirection(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setHexEditorState(uint8_t * args)
+{
+	return;
+}
+void MageScriptControl::setHexEditorDialogMode(uint8_t * args)
+{
+	return;
 }
