@@ -40,7 +40,7 @@ class MageScriptControl
 		void checkIfEntityIsInGeometry(uint8_t * args);
 		void checkForButtonPress(uint8_t * args);
 		void checkForButtonState(uint8_t * args);
-		void checkDialogResponse(uint8_t * args);
+		void runScript(uint8_t * args);
 		void compareEntityName(uint8_t * args);
 		void delay(uint8_t * args);
 		void nonBlockingDelay(uint8_t * args);

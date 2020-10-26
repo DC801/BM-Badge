@@ -74,7 +74,7 @@
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, bool expectedValue, uint16_t successScriptId);
 			- [ ] checkForButtonPress(uint8_t buttonId, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
 			- [ ] checkForButtonState(uint8_t buttonId, bool expectedValue, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
-			- [ ] checkDialogResponse(uint16_t dialogId); //the dialog data type will need to have scriptId values depending on player input
+			- [ ] runScript(uint16_t scriptId);
 			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t stringId, uint16_t successScriptId);
 			- [ ] delay(uint32_t ms); //blocking delay for script timing
 			- [ ] nonBlockingDelay(uint32_t ms); //allows game loop to continue and then continues a script
@@ -209,8 +209,8 @@ Tutorial synopsis:
 			-Excellent work! Now you're able to see the state of all the entities in the world!
 		-showDialog() with response:
 			-Do you want me to explain how the hex editor works?
-				-Yes, Script 4
-				-No, Script 5
+				-Yes, Script 5
+				-No, Script 4
 
 Script 4
 	-Otamanavi Speaks:
