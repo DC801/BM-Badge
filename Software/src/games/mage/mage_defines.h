@@ -416,7 +416,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSwitchRenderableFont;
+} ActionSetRenderableFont;
 
 typedef struct {
 	uint16_t geometryId;
@@ -425,18 +425,18 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveEntityTo;
+} ActionMoveEntityToGeometry;
 
 typedef struct {
+	uint32_t duration; //in ms
 	uint16_t geometryId;
 	uint8_t entityId;
-	uint32_t duration; //in ms
 } ActionMoveEntityAlongGeometry;
 
 typedef struct {
+	uint32_t duration; //in ms
 	uint16_t geometryId;
 	uint8_t entityId;
-	uint32_t duration; //in ms
 } ActionLoopEntityAlongGeometry;
 
 typedef struct {
@@ -446,17 +446,17 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveCameraTo;
+} ActionMoveCameraToGeometry;
 
 typedef struct {
-	uint16_t geometryId;
 	uint32_t duration; //in ms
+	uint16_t geometryId;
 	uint8_t paddingG;
 } ActionMoveCameraAlongGeometry;
 
 typedef struct {
-	uint16_t geometryId;
 	uint32_t duration; //in ms
+	uint16_t geometryId;
 	uint8_t paddingG;
 } ActionLoopCameraAlongGeometry;
 
@@ -481,7 +481,7 @@ typedef struct {
 } ActionSetHexEditorState;
 
 typedef struct {
-	bool state;
+	uint8_t state;
 	uint8_t paddingB;
 	uint8_t paddingC;
 	uint8_t paddingD;
