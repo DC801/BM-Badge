@@ -90,7 +90,7 @@ typedef enum{
 	CHECK_IF_ENTITY_IS_IN_GEOMETRY = 3,
 	CHECK_FOR_BUTTON_PRESS = 4,
 	CHECK_FOR_BUTTON_STATE = 5,
-	CHECK_DIALOG_RESPONSE = 6,
+	RUN_SCRIPT = 6,
 	COMPARE_ENTITY_NAME = 7,
 	DELAY = 8,
 	NON_BLOCKING_DELAY = 9,
@@ -227,13 +227,13 @@ typedef struct {
 } ActionCheckForButtonState;
 
 typedef struct {
-	uint16_t dialogId;
+	uint16_t scriptId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckDialogResponse;
+} ActionRunScript;
 
 typedef struct {
 	uint16_t stringId;
