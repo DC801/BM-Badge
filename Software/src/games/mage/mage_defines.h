@@ -167,4 +167,327 @@ typedef struct {
 	uint8_t renderFlags;
 } MageEntityRenderableData;
 
+//below here are all the structures for interpreting the MageScriptAction binary data.
+//Each action on the binary has 7 bytes of argument data, and these structs allow you
+//to read all 7 bytes into the struct and get valid named arguments.
+//for arguments larger than uint8_t, endian conversion will be needed.
+
+typedef struct {
+	uint8_t paddingA;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionNullAction;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t entityId;
+	uint8_t byteOffset;
+	uint8_t expectedValue;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckEntityByte;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t saveFlagOffset;
+	uint8_t expectedBoolValue;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckSaveFlag;
+
+typedef struct {
+	uint16_t GeometryId;
+	uint16_t successScriptId;
+	uint8_t entityId;
+	uint8_t expectedBoolValue;
+	uint8_t paddingG;
+} ActionCheckifEntityIsInGeometry;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t buttonId; //KEYBOARD_KEY enum value
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckForButtonPress;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t buttonId; //KEYBOARD_KEY enum value
+	uint8_t expectedBoolValue;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckForButtonState;
+
+typedef struct {
+	uint16_t dialogId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckDialogResponse;
+
+typedef struct {
+	uint16_t stringId;
+	uint16_t successScriptId;
+	uint8_t entityId;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCompareEntityName;
+
+typedef struct {
+	uint32_t delayTime; //in ms
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionDelay;
+
+typedef struct {
+	uint32_t delayTime; //in ms
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionNonBlockingDelay;
+
+typedef struct {
+	uint8_t state;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetPauseState;
+
+typedef struct {
+	uint8_t entityId;
+	uint8_t byteOffset;
+	uint8_t newValue;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityByte;
+
+typedef struct {
+	uint8_t saveFlagOffset;
+	uint8_t newBoolValue;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetSaveFlag;
+
+typedef struct {
+	uint8_t playerHasControl;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetPlayerControl;
+
+typedef struct {
+	uint16_t scriptId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityInteractScript;
+
+typedef struct {
+	uint16_t scriptId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityTickScript;
+
+typedef struct {
+	uint16_t scriptId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetMapTickScript;
+
+typedef struct {
+	uint16_t primaryId;
+	uint16_t secondaryId;
+	uint8_t primaryIdType;
+	uint8_t entityId;
+	uint8_t paddingG;
+} ActionSetEntityType;
+
+typedef struct {
+	uint16_t byteAddress;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexCursorLocation;
+
+typedef struct {
+	uint8_t bitmask;
+	uint8_t state;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexBit;
+
+typedef struct {
+	uint8_t cellOffset;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionUnlockHaxCell;
+
+typedef struct {
+	uint8_t cellOffset;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionLockHaxCell;
+
+typedef struct {
+	uint16_t mapId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionLoadMap;
+
+typedef struct {
+	uint32_t duration; //in ms
+	uint8_t amplitude;
+	uint8_t frequency;
+	uint8_t paddingG;
+} ActionScreenShake;
+
+typedef struct {
+	uint32_t duration;
+	uint16_t color;
+	uint8_t paddingG;
+} ActionScreenFadeOut;
+
+typedef struct {
+	uint32_t duration;
+	uint16_t color;
+	uint8_t paddingG;
+} ActionScreenFadeIn;
+
+typedef struct {
+	uint16_t dialogId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionShowDialog;
+
+typedef struct {
+	uint8_t fontId;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSwitchRenderableFont;
+
+typedef struct {
+	uint16_t geometryId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMoveEntityTo;
+
+typedef struct {
+	uint16_t geometryId;
+	uint8_t entityId;
+	uint32_t duration; //in ms
+} ActionMoveEntityAlongGeometry;
+
+typedef struct {
+	uint16_t geometryId;
+	uint8_t entityId;
+	uint32_t duration; //in ms
+} ActionLoopEntityAlongGeometry;
+
+typedef struct {
+	uint16_t geometryId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMoveCameraTo;
+
+typedef struct {
+	uint16_t geometryId;
+	uint32_t duration; //in ms
+	uint8_t paddingG;
+} ActionMoveCameraAlongGeometry;
+
+typedef struct {
+	uint16_t geometryId;
+	uint32_t duration; //in ms
+	uint8_t paddingG;
+} ActionLoopCameraAlongGeometry;
+
+typedef struct {
+	uint8_t entityId;
+	uint8_t direction; //MageEntityAnimationDirection enum value
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityDirection;
+
+typedef struct {
+	uint8_t state;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexEditorState;
+
+typedef struct {
+	bool state;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexEditorDialogMode;
+
 #endif //_MAGE_DEFINES_H
