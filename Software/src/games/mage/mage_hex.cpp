@@ -9,6 +9,10 @@ bool MageHexEditor::getHexEditorState()
 	return hexEditorState;
 }
 
+bool MageHexEditor::getHexDialogState()
+{
+	return dialogState;
+}
 uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 {
 	if(index < HEXED_NUM_MEM_BUTTONS)
@@ -31,7 +35,7 @@ void MageHexEditor::toggleHexEditor()
 
 void MageHexEditor::toggleHexDialog()
 {
-	dialogOpen = !dialogOpen;
+	dialogState = !dialogState;
 	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
@@ -95,7 +99,7 @@ uint16_t MageHexEditor::getCurrentMemPage()
 void MageHexEditor::applyHexModeInputs()
 {
 	static uint8_t hexTickDelay = 0;
-	bytesPerPage = dialogOpen ? 64 : 192;
+	bytesPerPage = dialogState ? 64 : 192;
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
 	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));

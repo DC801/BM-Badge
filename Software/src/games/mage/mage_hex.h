@@ -53,7 +53,7 @@ private:
 
 	//true if the hex editor screen is reduced in size to allow for a 
 	//dialog window to be displayed.
-	bool dialogOpen;
+	bool dialogState;
 
 	//how many bytes are visible per page. Changes depending on dialogOpen state.
 	uint8_t bytesPerPage;
@@ -87,7 +87,7 @@ public:
 	MageHexEditor() : currentOp{HEX_OPS::HEX_OPS_XOR},
 		hexEditorState{false},
 		anyHexMovement{false},
-		dialogOpen{false},
+		dialogState{false},
 		bytesPerPage{HEXED_DEFAULT_BYTES_PER_PAGE},
 		hexRows{0},
 		memTotal{0},
@@ -101,6 +101,9 @@ public:
 
 	//returns true if hex editor is open.
 	bool getHexEditorState();
+
+	//returns true if hex editor is open.
+	bool getHexDialogState();
 
 	//this returns the byte address stored in the memory button at index
 	uint16_t getMemoryAddress(uint8_t index);
