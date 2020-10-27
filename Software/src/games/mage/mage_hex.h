@@ -29,8 +29,8 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_QUICK_PRESS_TIMEOUT 200
 #define HEXED_TICK_DELAY 200
 #else
-#define HEXED_QUICK_PRESS_TIMEOUT 7
-#define HEXED_TICK_DELAY 7
+#define HEXED_QUICK_PRESS_TIMEOUT 30
+#define HEXED_TICK_DELAY 30
 #endif
 enum HEX_OPS {
 	HEX_OPS_XOR,

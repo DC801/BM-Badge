@@ -65,6 +65,13 @@ all of the old code used as the foundation of this badge.
 //this is the scriptId for a null script. It is used when a script shouldn't do anything.
 #define MAGE_NULL_SCRIPT 0
 
+//this is how many ms must have passed before the main game loop will run again:
+//typical values: 
+//60fps: ~16ms
+//30fps: ~33ms
+//24fps: ~41ms
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 41
+
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
 	TILESET = 0,
