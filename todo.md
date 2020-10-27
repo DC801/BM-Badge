@@ -48,8 +48,8 @@
 	- [x] getValidEntityTypeDirection
 - [ ] In the ROM header, the first u4 should be the length of the header
 	- [ ] In Mage init, Read header up to that length, then parse it
-- [ ] Make a list of some C functions we want scripts to be able to call
-- [ ] Decide on a common script function signature
+- [x] Make a list of some C functions we want scripts to be able to call
+- [x] Decide on a common script function signature
 - [ ] Define an encoding format for scripts
 - [ ] Ability to specify which font is used in a dialog
 	- [ ] There can be a puzzle where changing the font to smaller makes all of a message readable

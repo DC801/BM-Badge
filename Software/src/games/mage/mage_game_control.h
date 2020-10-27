@@ -98,7 +98,7 @@ public:
 
 	//this will set a pointer to the playerEntity based on 
 	//it's entityType matching a specific string
-	void GetPointerToPlayerEntity(std::string name);
+	void updatePointerToPlayerEntity(std::string name);
 
 	//this handles inputs that apply in ALL game states. That includes when 
 	//the hex editor is open, when it is closed, when in any menus, etc.
@@ -126,7 +126,7 @@ public:
 	
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
-	void getEntityRenderableData(uint32_t index);
+	void updateEntityRenderableData(uint32_t index);
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);

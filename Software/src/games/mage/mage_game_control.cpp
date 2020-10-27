@@ -275,14 +275,14 @@ void MageGameControl::LoadMap(uint16_t index)
 	}
 
 	//update playerEntity pointer whenever a new map is loaded:
-	GetPointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
+	updatePointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//all entities start with 0 frame ticks
 		entityRenderableData[i].currentFrameTicks = 0;
 		//other values are filled in when getEntityRenderableData is called:
-		getEntityRenderableData(i);
+		updateEntityRenderableData(i);
 	}
 
 	//make sure the tileset Id is updated when the map loads to prevent player yeeting
@@ -291,7 +291,7 @@ void MageGameControl::LoadMap(uint16_t index)
 	//MageScript::onMapLoad() here -Tim
 }
 
-void MageGameControl::GetPointerToPlayerEntity(std::string name)
+void MageGameControl::updatePointerToPlayerEntity(std::string name)
 {
 
 	for(uint16_t i=0; i<map.EntityCount(); i++)
@@ -339,7 +339,7 @@ void MageGameControl::applyGameModeInputs()
 		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
 
 		//update renderable info before proceeding:
-		getEntityRenderableData(playerEntityIndex);
+		updateEntityRenderableData(playerEntityIndex);
 		
 		MageEntity *playerEntity = &entities[playerEntityIndex];
 		bool hasEntityType = playerEntity->primaryIdType == ENTITY_TYPE;
@@ -647,7 +647,7 @@ uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 	return direction % MageEntityAnimationDirection::NUM_DIRECTIONS;
 }
 
-void MageGameControl::getEntityRenderableData(uint32_t index)
+void MageGameControl::updateEntityRenderableData(uint32_t index)
 {
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
@@ -789,7 +789,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{
 			//Update Entity in case it's been hacked.
-			getEntityRenderableData(i);
+			updateEntityRenderableData(i);
 			continue;
 		}
 		//increment the frame ticks based on the delta_time since the last check:
@@ -802,7 +802,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		#endif
 		
 		//update entity info:
-		getEntityRenderableData(i);
+		updateEntityRenderableData(i);
 
 		//check for frame change and adjust if needed:
 		if(entityRenderableData[i].currentFrameTicks >= entityRenderableData[i].duration)
@@ -817,7 +817,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 				entities[i].currentFrame = 0;
 			}
 			//update the entity info again with the corrected frame index:
-			getEntityRenderableData(i);
+			updateEntityRenderableData(i);
 		}
 	}
 }

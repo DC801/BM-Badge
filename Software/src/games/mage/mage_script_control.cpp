@@ -93,8 +93,8 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress)
 	uint8_t actionTypeId = MageScriptActionTypeId::CHECK_ENTITY_BYTE;
 
 	//get the function for actionTypeId, and feed it the romValues as args:
-	auto func = actionFunctions[actionTypeId];
-	(this->*func)(romValues);
+	void (MageScriptControl::*actionHandlerFunction)(uint8_t * args) = actionFunctions[actionTypeId];
+	(this->*actionHandlerFunction)(romValues);
 }
 
 void MageScriptControl::nullAction(uint8_t * args)
