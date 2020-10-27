@@ -32,6 +32,9 @@ MageGameControl::MageGameControl()
 	entityHeader = MageHeader(offset);
 	offset += entityHeader.size();
 
+	scriptHeader = MageHeader(offset);
+	offset += scriptHeader.size();
+
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
 
@@ -488,12 +491,12 @@ void MageGameControl::applyGameModeInputs()
 
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
 {
-	uint32_t tilesPerLayer = map.Width() * map.Height();
+	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
-		int32_t x = (int32_t)((map.TileWidth() * (i % map.Width())) - camera_x);
-		int32_t y = (int32_t)((map.TileHeight() * (i / map.Width())) - camera_y);
+		int32_t x = (int32_t)((map.TileWidth() * (i % map.Cols())) - camera_x);
+		int32_t y = (int32_t)((map.TileHeight() * (i / map.Cols())) - camera_y);
 
 		if ((x < (-map.TileWidth()) ||
 			(x > WIDTH) ||

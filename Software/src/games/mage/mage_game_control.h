@@ -38,6 +38,7 @@ private:
 	MageHeader animationHeader;
 	MageHeader entityTypeHeader;
 	MageHeader entityHeader;
+	MageHeader scriptHeader;
 	MageHeader imageHeader;
 
 	//this is where the current map data from the ROM is stored.

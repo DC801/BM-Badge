@@ -14,8 +14,10 @@ private:
 	char name[17];
 	uint16_t tileWidth;
 	uint16_t tileHeight;
-	uint16_t width;
-	uint16_t height;
+	uint16_t cols;
+	uint16_t rows;
+	uint16_t onLoad;
+	uint16_t onTick;
 	uint8_t layerCount;
 	uint16_t entityCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
@@ -25,8 +27,10 @@ public:
 	MageMap() : name{0},
 		tileWidth{0},
 		tileHeight{0},
-		width{0},
-		height{0},
+		cols{0},
+		rows{0},
+		onLoad{0},
+		onTick{0},
 		layerCount{0},
 		entityCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
@@ -38,8 +42,10 @@ public:
 	std::string Name() const;
 	uint16_t TileWidth() const;
 	uint16_t TileHeight() const;
-	uint16_t Width() const;
-	uint16_t Height() const;
+	uint16_t Cols() const;
+	uint16_t Rows() const;
+	uint16_t OnLoad() const;
+	uint16_t OnTick() const;
 	uint8_t LayerCount() const;
 	uint16_t EntityCount() const;
 	uint16_t EntityId(uint16_t num) const;
