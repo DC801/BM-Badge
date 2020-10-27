@@ -42,7 +42,7 @@ class MageScriptControl
 		void checkForButtonState(uint8_t * args);
 		void runScript(uint8_t * args);
 		void compareEntityName(uint8_t * args);
-		void delay(uint8_t * args);
+		void blockingDelay(uint8_t * args);
 		void nonBlockingDelay(uint8_t * args);
 		void setPauseState(uint8_t * args);
 		void setEntityByte(uint8_t * args);

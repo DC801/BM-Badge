@@ -40,7 +40,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE]         = &MageScriptControl::checkForButtonState;
 	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT]                     = &MageScriptControl::runScript;
 	actionFunctions[MageScriptActionTypeId::COMPARE_ENTITY_NAME]            = &MageScriptControl::compareEntityName;
-	actionFunctions[MageScriptActionTypeId::DELAY]                          = &MageScriptControl::delay;
+	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY]                 = &MageScriptControl::blockingDelay;
 	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY]             = &MageScriptControl::nonBlockingDelay;
 	actionFunctions[MageScriptActionTypeId::SET_PAUSE_STATE]                = &MageScriptControl::setPauseState;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_BYTE]                = &MageScriptControl::setEntityByte;
@@ -137,9 +137,10 @@ void MageScriptControl::compareEntityName(uint8_t * args)
 	ActionCompareEntityName *argStruct = (ActionCompareEntityName*)args;
 	return;
 }
-void MageScriptControl::delay(uint8_t * args)
+void MageScriptControl::blockingDelay(uint8_t * args)
 {
-	ActionDelay *argStruct = (ActionDelay*)args;
+	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
+	nrf_delay_ms(argStruct->delayTime);
 	return;
 }
 void MageScriptControl::nonBlockingDelay(uint8_t * args)

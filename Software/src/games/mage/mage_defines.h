@@ -92,7 +92,7 @@ typedef enum{
 	CHECK_FOR_BUTTON_STATE = 5,
 	RUN_SCRIPT = 6,
 	COMPARE_ENTITY_NAME = 7,
-	DELAY = 8,
+	BLOCKING_DELAY = 8,
 	NON_BLOCKING_DELAY = 9,
 	SET_PAUSE_STATE = 10,
 	SET_ENTITY_BYTE = 11,
@@ -248,7 +248,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionDelay;
+} ActionBlockingDelay;
 
 typedef struct {
 	uint32_t delayTime; //in ms
