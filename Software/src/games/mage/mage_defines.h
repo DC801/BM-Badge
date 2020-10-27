@@ -62,6 +62,9 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
+//this is the scriptId for a null script. It is used when a script shouldn't do anything.
+#define MAGE_NULL_SCRIPT 0
+
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
 	TILESET = 0,

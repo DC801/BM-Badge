@@ -1,4 +1,6 @@
 #include "mage_script_control.h"
+#include "EngineROM.h"
+#include "EnginePanic.h"
 
 //load in the global variables that the scripts will be operating on:
 extern MageGameControl *MageGame;
@@ -10,6 +12,8 @@ extern Point cameraPosition;
 
 MageScriptControl::MageScriptControl()
 {
+	jumpScript = MAGE_NULL_SCRIPT;
+
 	mapLoadResumeState.scriptId = 0;
 	mapLoadResumeState.actionId = 0;
 	mapLoadResumeState.timeToNextAction = 0;
@@ -81,20 +85,95 @@ uint32_t MageScriptControl::size() const
 	return size;
 }
 
+void MageScriptControl::runScript(uint16_t scriptId)
+{
+	//force the jumpScript to run the called script regardless of its state.
+	jumpScript = scriptId;
+	while(jumpScript != MAGE_NULL_SCRIPT)
+	{
+		processActionQueue(jumpScript);
+	} 
+}
+
+void MageScriptControl::processActionQueue(uint16_t scriptId)
+{
+	//reset jump script once processing begins
+	jumpScript = MAGE_NULL_SCRIPT;
+
+	//get the memory address for the script:
+	uint32_t address = MageGame->getScriptAddress(scriptId);
+
+	//read the action count from ROM:
+	//skip the name of the script, we don't need it in this codebase:
+	address += 16;
+
+	//read the script's action count:
+	uint32_t actionCount = 0;
+	if (EngineROM_Read(address, sizeof(actionCount), (uint8_t *)&actionCount) != sizeof(actionCount))
+	{
+		goto MageScript_Error;
+	}
+
+	actionCount = convert_endian_u4_value(actionCount);
+	address += sizeof(actionCount);
+
+	//now iterate through the actions, calling the appropriate function:
+	for(uint32_t i=0; i<actionCount; i++)
+	{
+		runAction(address);
+		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t
+		address += sizeof(uint64_t);
+		//check to see if the action set a jumpScript value
+		if(jumpScript != MAGE_NULL_SCRIPT){
+			return;
+		}
+	}
+
+	return;
+
+MageScript_Error:
+	ENGINE_PANIC("Failed to read script data.");
+}
+
 void MageScriptControl::runAction(uint32_t actionMemoryAddress)
 {
-	//first read all 7 bytes from ROM
+	//variable to store action type:
+	uint8_t actionTypeId;
+	//array for all 7 bytes of argument data:
 	uint8_t romValues[MAGE_NUM_ACTION_ARGS];
-	//Will need to read from ROM for valid data once there's data in the ROM file. -Tim
-	//for now just use the following fake data to test for all arguments:
-	for(int i=0; i<MAGE_NUM_ACTION_ARGS; i++)
-	{ romValues[i] = i*5; }
-	//this will be the last byte read after the 7 args:
-	uint8_t actionTypeId = MageScriptActionTypeId::CHECK_ENTITY_BYTE;
+	//variable to hold function pointer to action function:
+	void (MageScriptControl::*actionHandlerFunction)(uint8_t * args);
 
+	//get actionTypeId from ROM:
+	if (EngineROM_Read(actionMemoryAddress, sizeof(actionTypeId), (uint8_t *)&actionTypeId) != sizeof(actionTypeId))
+	{
+		goto MageAction_Error;
+	}
+	actionMemoryAddress += sizeof(actionTypeId);
+
+	//validate actionTypeId:
+	if(actionTypeId >= MageScriptActionTypeId::NUM_ACTIONS)
+	{
+		#ifdef DC801_DESKTOP
+			fprintf(stderr, "Error in runAction(): actionTypeId larger than NUM_ACTIONS. Check your scripts.");
+		#endif
+		return;
+	}
+
+	//read remaining 7 bytes of argument data into romValues
+	if (EngineROM_Read(actionMemoryAddress, sizeof(romValues), (uint8_t *)&romValues) != sizeof(romValues))
+	{
+		goto MageAction_Error;
+	}
+	
 	//get the function for actionTypeId, and feed it the romValues as args:
-	void (MageScriptControl::*actionHandlerFunction)(uint8_t * args) = actionFunctions[actionTypeId];
+	actionHandlerFunction = actionFunctions[actionTypeId];
 	(this->*actionHandlerFunction)(romValues);
+
+	return;
+
+MageAction_Error:
+	ENGINE_PANIC("Failed to read action data.");
 }
 
 void MageScriptControl::nullAction(uint8_t * args)
@@ -140,6 +219,7 @@ void MageScriptControl::compareEntityName(uint8_t * args)
 void MageScriptControl::blockingDelay(uint8_t * args)
 {
 	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
+	argStruct->delayTime = convert_endian_u2_value(argStruct->delayTime);
 	nrf_delay_ms(argStruct->delayTime);
 	return;
 }

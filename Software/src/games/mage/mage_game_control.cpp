@@ -4,9 +4,11 @@
 #include "EnginePanic.h"
 #include "FrameBuffer.h"
 #include "mage_hex.h"
+#include "mage_script_control.h"
 
 extern Point cameraPosition;
 extern MageHexEditor *MageHex;
+extern MageScriptControl *MageScript;
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
@@ -72,7 +74,7 @@ MageGameControl::MageGameControl()
 	playerHasControl = true;
 
 	//load the map
-	LoadMap(currentMapId);
+	PopulateMapData(currentMapId);
 }
 
 uint32_t MageGameControl::Size() const
@@ -254,7 +256,7 @@ MageEntity_Error:
 	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
-void MageGameControl::LoadMap(uint16_t index)
+void MageGameControl::PopulateMapData(uint16_t index)
 {
 	currentMapId = index;
 
@@ -290,8 +292,15 @@ void MageGameControl::LoadMap(uint16_t index)
 
 	//make sure the tileset Id is updated when the map loads to prevent player yeeting
 	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
+}
 
-	//MageScript::onMapLoad() here -Tim
+void MageGameControl::LoadMap(uint16_t index)
+{
+	//get the data for the map:
+	PopulateMapData(index);
+
+	//call the map's load script:
+	MageScript->runScript(map.OnLoad());
 }
 
 void MageGameControl::updatePointerToPlayerEntity(std::string name)
@@ -627,10 +636,13 @@ uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
 	
 uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 {
-	//avoid division by 0 error:
-
 	//always return a valid entity type for the entityTypeId submitted. 
 	return entityTypeId % entityTypeHeader.count();
+}
+
+uint16_t MageGameControl::getValidScriptId(uint16_t scriptId)
+{
+	return scriptId % scriptHeader.count();
 }
 
 uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId)
@@ -648,6 +660,15 @@ uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 	//always return a valid direction. 
 	//Subtract 1 because they are 0-indexed.
 	return direction % MageEntityAnimationDirection::NUM_DIRECTIONS;
+}
+
+uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
+{
+	//first validate the scriptId:
+	scriptId = getValidScriptId(scriptId);
+
+	//then return the address offset for thast script from the scriptHeader:
+	return scriptHeader.offset(scriptId);
 }
 
 void MageGameControl::updateEntityRenderableData(uint32_t index)
