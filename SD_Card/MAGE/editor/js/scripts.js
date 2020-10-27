@@ -3,7 +3,27 @@ var actionHandlerMap = {
     CHECK_ENTITY_BYTE: 1,
     CHECK_SAVE_FLAG: 2,
     CHECK_IF_ENTITY_IS_IN_GEOMETRY: 3,
-    CHECK_FOR_BUTTON_PRESS: 4,
+    CHECK_FOR_BUTTON_PRESS: function (action) {
+        var data = initActionData(action);
+        if (!action.successScriptId) {
+            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `successScriptId`');
+        }
+        if (!action.buttonId) {
+            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `buttonId`');
+        }
+        //Admiral: We need to add the successScriptId to the list of serialized scripts
+        data.dataView.setUint16(
+            1,
+            action.successScriptId,
+            false
+        );
+        data.dataView.setUint8(
+            3,
+            action.buttonId,
+            false
+        );
+        return data;
+    },
     CHECK_FOR_BUTTON_STATE: 5,
     RUN_SCRIPT: 6,
     COMPARE_ENTITY_NAME: 7,
@@ -56,7 +76,17 @@ var actionHandlerMap = {
         );
         return data;
     },
-    SET_HEX_EDITOR_DIALOG_MODE: 36,
+    SET_HEX_EDITOR_DIALOG_MODE: function (action) {
+        var data = initActionData(action)
+        if (typeof action.state !== "boolean") {
+            throw new Error('SET_HEX_EDITOR_DIALOG_MODE requires a boolean value for `state`');
+        }
+        data.dataView.setUint8(
+            1,
+            action.state,
+        );
+        return data;
+    },
 };
 var actionNames = Object.keys(actionHandlerMap);
 
