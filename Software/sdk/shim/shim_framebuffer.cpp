@@ -373,7 +373,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	for (int i=0; i<h; ++i)
 	{
-		fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
 		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
 	}
 
@@ -391,7 +391,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	for (int i=0; i<h; ++i)
 	{
-		fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
 		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
 	}
 
