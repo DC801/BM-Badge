@@ -22,6 +22,7 @@ FrameBuffer *mage_canvas;
 uint32_t lastTime;
 uint32_t now;
 uint32_t deltaTime;
+uint32_t lastLoopTime;
 
 Point cameraPosition = {
 	.x = 0,
@@ -148,6 +149,7 @@ void MAGE()
 
 	//note the time the first loop is running
 	lastTime = millis();
+	lastLoopTime = lastTime;
 
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);
@@ -165,6 +167,16 @@ void MAGE()
 		now = millis();
 		deltaTime = now - lastTime;
 		lastTime = now;
+
+		//frame limiter code to keep game running at a specific FPS:
+		//only do this on the real hardware:
+		#ifndef DC801_DESKTOP
+		if( now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
+		{ continue; }
+
+		//code below here will only be run if enough ms have passed since the last frame:
+		lastLoopTime = now;
+		#endif
 
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
