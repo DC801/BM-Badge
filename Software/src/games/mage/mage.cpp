@@ -174,11 +174,6 @@ void MAGE()
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
-
-		//more timing weirdness for desktop.
-		#ifdef DC801_DESKTOP
-			nrf_delay_ms(5);
-		#endif
 	}
 
 	// Close rom and any open files
