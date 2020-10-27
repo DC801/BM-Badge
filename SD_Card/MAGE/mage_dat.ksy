@@ -14,6 +14,8 @@ seq:
     type: count_with_offsets
   - id: entity_offsets
     type: count_with_offsets
+  - id: script_offsets
+    type: count_with_offsets
   - id: image_offsets
     type: count_with_offsets
   - id: maps
@@ -36,6 +38,10 @@ seq:
     type: entity
     repeat: expr
     repeat-expr: entity_offsets.count
+  - id: scripts
+    type: script
+    repeat: expr
+    repeat-expr: script_offsets.count
 instances:
   images:
     type: image(_index)
@@ -71,12 +77,17 @@ types:
       - id: tile_height
         type: u2
         doc: The height of the map tiles in pixels
-      - id: width
+      - id: cols
         type: u2
         doc: The width of the map, in tiles
-      - id: height
+      - id: rows
         type: u2
         doc: The height of the map, in tiles
+        type: u2
+      - id: on_load
+        type: u2
+      - id: on_tick
+        type: u2
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
@@ -96,12 +107,12 @@ types:
         repeat-expr: (entity_count + 4) % 2
         doc: Padding to align things back to uint32_t
       - id: layers
-        type: map_layer(width, height)
+        type: map_layer(cols, rows)
         repeat: expr
         repeat-expr: layer_count
     instances:
       tiles_per_layer:
-        value: 'width * height'
+        value: 'cols * rows'
 
   map_layer:
     params:
@@ -264,6 +275,39 @@ types:
       - id: padding
         type: u1
 
+  script:
+    seq:
+      - id: name
+        type: strz
+        size: 16
+        encoding: UTF8
+      - id: action_count
+        type: u4
+      - id: actions
+        type: action
+        repeat: expr
+        repeat-expr: action_count
+
+  action:
+    seq:
+      - id: action_type
+        type: u1
+        enum: action_type
+      - id: padding_a
+        type: u1
+      - id: padding_b
+        type: u1
+      - id: padding_c
+        type: u1
+      - id: padding_d
+        type: u1
+      - id: padding_e
+        type: u1
+      - id: padding_f
+        type: u1
+      - id: padding_g
+        type: u1
+
   image:
     params:
       - id: index
@@ -298,3 +342,42 @@ enums:
     0: tileset_id
     1: animation_id
     2: entity_type_id
+
+  action_type:
+    0: null_action
+    1: check_entity_byte
+    2: check_save_flag
+    3: check_if_entity_is_in_geometry
+    4: check_for_button_press
+    5: check_for_button_state
+    6: run_script
+    7: compare_entity_name
+    8: blocking_delay
+    9: non_blocking_delay
+    10: set_pause_state
+    11: set_entity_byte
+    12: set_save_flag
+    13: set_player_control
+    14: set_entity_interact_script
+    15: set_entity_tick_script
+    16: set_map_tick_script
+    17: set_entity_type
+    18: set_hex_cursor_location
+    19: set_hex_bit
+    20: unlock_hax_cell
+    21: lock_hax_cell
+    22: load_map
+    23: screen_shake
+    24: screen_fade_out
+    25: screen_fade_in
+    26: show_dialog
+    27: set_renderable_font
+    28: move_entity_to_geometry
+    29: move_entity_along_geometry
+    30: loop_entity_along_geometry
+    31: move_camera_to_geometry
+    32: move_camera_along_geometry
+    33: loop_camera_along_geometry
+    34: set_entity_direction
+    35: set_hex_editor_state
+    36: set_hex_editor_dialog_mode

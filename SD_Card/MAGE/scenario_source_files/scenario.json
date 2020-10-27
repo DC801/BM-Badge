@@ -1,61 +1,13 @@
 {
 	"scripts": {
-		"init": [
+		"my_first_script": [
 			{
-				"name": "loadMap",
-				"value": "town_map"
+				"name": "BLOCKING_DELAY",
+				"delay_time": 5000
 			},
 			{
-				"name": "displayDialog",
-				"value": "hello_town"
-			},
-			{
-				"name": "cameraRumble",
-				"value": [
-					2, 5, 8
-				]
-			}
-		],
-		"enter_forest_from_east": [
-			{
-				"name": "loadMap",
-				"value": "forest_map"
-			},
-			{
-				"name": "set_player_position",
-				"value": [200, 300]
-			},
-			{
-				"name": "check_save_flag",
-				"flag_id": 20,
-				"expected_value": 1,
-				"success_script": "talk_about_mysterious_fog"
-			}
-		],
-		"talk_about_mysterious_fog": [
-			{
-				"name": "displayDialog",
-				"value": "whats_up_with_this_fog"
-			},
-			{
-				"name": "cameraRumble",
-				"value": [
-					2, 5, 8
-				]
-			}
-		],
-		"cyan_lightning_boy_yells_at_you": [
-			{
-				"name": "check_self_byte",
-				"byte": 20,
-				"expected_value": 1,
-				"success_script": "talk_about_mysterious_fog"
-			},
-			{
-				"name": "check_save_byte",
-				"byte": 21,
-				"expected_value": 1,
-				"success_script": "talk_about_mysterious_fog"
+				"name": "SET_HEX_EDITOR_STATE",
+				"state": true
 			}
 		]
 	},
