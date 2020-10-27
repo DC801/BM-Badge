@@ -48,7 +48,8 @@ void GameUpdate()
 			//this handles buttons and state updates based on button presses in game mode:
 			MageGame->applyGameModeInputs();
 			
-			//call MageScript::onMapTick() -Tim
+			//Call the map's onTick script:
+			MageScript->runScript(MageGame->Map().OnTick());
 
 			//update the entities based on the current state of their (hackable) data array.
 			MageGame->UpdateEntities(deltaTime);
@@ -57,7 +58,6 @@ void GameUpdate()
 			if(EngineInput_Activated.rjoy_right)
 			{ 
 				//need a function to call interact scripts if player is interacting with things -Tim
-				//MageScript::OnEntityInteract()
 			}
 		}
 	}
@@ -130,7 +130,7 @@ void MAGE()
 	{
 		ENGINE_PANIC("Failed to match Game Magic");
 	}
-
+	
 	// Construct MageGameControl object, loading all headers
 	MageGame = std::make_unique<MageGameControl>();
 	
@@ -155,6 +155,8 @@ void MAGE()
 	#ifdef DC801_DESKTOP
 		fprintf(stderr, "MageGameControl RAM use: %d bytes.", MageGame->Size());
 	#endif
+
+	MageGame->LoadMap(0);
 
 	//main game loop:
 	while (EngineIsRunning())

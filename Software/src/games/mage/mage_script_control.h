@@ -16,17 +16,34 @@ This class contains all the code related to the hex editor hacking interface.
 class MageScriptControl
 {
 	private:
+		//the jumpScript variable is used by some actions to indicate that a script should
+		//end and immediately begin running a new script.
+		//it should be set to MAGE_NULL_SCRIPT unless a new script should be run immediately.
+		uint16_t jumpScript;
+
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;
 		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
 		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
-	
-		void (MageScriptControl::*actionFunctions[MageScriptActionTypeId::NUM_ACTIONS])(uint8_t * args);
+
+		//typedef for the array of function pointers to script action functions:
+		typedef void(MageScriptControl::*ActionFunctionPointer)(uint8_t * args);
+
+		//the actual array of action functions:
+		ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS];
 	public:
 		MageScriptControl();
 
 		uint32_t size() const;
+
+		//this is used to call a script by script Id
+		void runScript(uint16_t scriptId);
+
+		//this will run through the actions in a script.
+		//if a jumpScript is called by an action, it will return 
+		//without processing any further actions.
+		void processActionQueue(uint16_t scriptId);
 
 		//this will get action arguments from ROM memory and call
 		//a function based on the ActionTypeId 

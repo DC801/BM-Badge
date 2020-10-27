@@ -24,8 +24,8 @@ public:
 	MageHeader(uint32_t address);
 
 	uint32_t count() const;
-	uint32_t offset(uint8_t num) const;
-	uint32_t length(uint8_t num) const;
+	uint32_t offset(uint32_t num) const;
+	uint32_t length(uint32_t num) const;
 	uint32_t size() const;
 	bool valid() const;
 }; //class MageHeader

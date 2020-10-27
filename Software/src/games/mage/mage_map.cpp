@@ -102,7 +102,6 @@ MageMap::MageMap(uint32_t address)
 		address += tilesPerLayer * (sizeof(uint16_t) + (2 * sizeof(uint8_t)));
 	}
 
-	fprintf(stderr, "cols:%d : rows:%d : onLoad:%d : onTick:%d : layerCount:%d : entityCount:%d\r\n", cols, rows, onLoad, onTick, layerCount, entityCount);
 	return;
 
 MageMap_Error:

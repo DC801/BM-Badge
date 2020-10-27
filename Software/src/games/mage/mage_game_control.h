@@ -94,6 +94,9 @@ public:
 	//this will fill in an entity structure's data from ROM
 	MageEntity LoadEntity(uint32_t address);
 
+	//this takes map data by index and fills all the variables in the map object:
+	void PopulateMapData(uint16_t index);
+
 	//this will load a map to be the current map.
 	void LoadMap(uint16_t index);
 
@@ -112,7 +115,7 @@ public:
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
 
-	//the functions below will validate specific entity properties to see if they are valid.
+	//the functions below will validate specific properties to see if they are valid.
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
 	uint16_t getValidEntityId(uint16_t entityId);
 	uint16_t getValidMapId(uint16_t mapId);
@@ -122,8 +125,12 @@ public:
 	uint16_t getValidAnimationId(uint16_t animationId);
 	uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
 	uint16_t getValidEntityTypeId(uint16_t entityTypeId);
+	uint16_t getValidScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
+
+	//this returns the address offset for a specific script Id:
+	uint32_t getScriptAddress(uint32_t scriptId);
 	
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData

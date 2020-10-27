@@ -51,7 +51,7 @@ uint32_t MageHeader::count() const
 	return counts;
 }
 
-uint32_t MageHeader::offset(uint8_t num) const
+uint32_t MageHeader::offset(uint32_t num) const
 {
 	if (!offsets) return 0;
 
@@ -63,7 +63,7 @@ uint32_t MageHeader::offset(uint8_t num) const
 	return 0;
 }
 
-uint32_t MageHeader::length(uint8_t num) const
+uint32_t MageHeader::length(uint32_t num) const
 {
 	if (!lengths) return 0;
 
