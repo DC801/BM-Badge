@@ -149,8 +149,8 @@ typedef struct {
 	uint16_t primaryId;
 	uint16_t secondaryId;
 	uint16_t scriptId;
-	uint16_t x;
-	uint16_t y;
+	int16_t x;
+	int16_t y;
 	uint8_t primaryIdType;
 	uint8_t currentAnimation;
 	uint8_t currentFrame;
