@@ -7,6 +7,6 @@ charset = utf-8
 indent_style = tab
 indent_size = 4
 
-[{package.json,.travis.yml}]
+[{package.json,mage_dat.ksy}]
 indent_style = space
 indent_size = 2

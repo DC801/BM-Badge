@@ -179,6 +179,8 @@ var generateMapHeader = function (map) {
         + 2 // uint16_t tile_height
         + 2 // uint16_t cols
         + 2 // uint16_t rows
+        + 2 // uint16_t on_load
+        + 2 // uint16_t on_tick
         + 1 // uint8_t layer_count
         + 1 // uint8_t padding
         + 2 // uint16_t entity_count
@@ -206,6 +208,10 @@ var generateMapHeader = function (map) {
     offset += 2;
     dataView.setUint16(offset, map.height, false);
     offset += 2;
+    dataView.setUint16(offset, map.on_load || 0, false);
+    offset += 2;
+    dataView.setUint16(offset, map.on_tick || 0, false);
+    offset += 2;
     dataView.setUint8(offset, map.serializedLayers.length);
     offset += 1;
     dataView.setUint8(offset, 0); // padding
@@ -231,6 +237,11 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
         map.scenarioIndex = mapFile.scenarioIndex;
         map.entityIndices = [];
         map.serializedLayers = [];
+        handleMapScripts(
+            map,
+            fileNameMap,
+            scenarioData,
+        );
         scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
         return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
             .then(function () {

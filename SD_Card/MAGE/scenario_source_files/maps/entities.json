@@ -139,6 +139,17 @@
         ]
     },
     {
+        "color": "#ffa0a0a4",
+        "name": "goose",
+        "properties": [
+            {
+                "name": "is_invincible",
+                "type": "bool",
+                "value": true
+            }
+        ]
+    },
+    {
         "color": "#ff0985e3",
         "name": "mage",
         "properties": [

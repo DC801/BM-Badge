@@ -4,6 +4,7 @@ var dataTypes = [
 	'animations',
 	'entityTypes',
 	'entities',
+	'scripts',
 	'images',
 ];
 
@@ -20,6 +21,12 @@ var handleScenarioData = function(fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
+		handleScript(
+			'null_script',
+			{name: 'null'},
+			fileNameMap,
+			scenarioData,
+		);
 		var entitiesFile = fileNameMap['entities.json'];
 		var entitiesPromise = !entitiesFile
 			? Promise.resolve()

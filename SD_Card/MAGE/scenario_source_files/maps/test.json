@@ -16,7 +16,7 @@
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
@@ -28,7 +28,7 @@
          "name":"Tile Layer 2",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
@@ -43,6 +43,12 @@
                  "height":48,
                  "id":2,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"is_invincible",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -85,6 +91,18 @@
                  "width":48,
                  "x":41.4966172520147,
                  "y":86.4368222067456
+                }, 
+                {
+                 "gid":362,
+                 "height":64,
+                 "id":6,
+                 "name":"Bob",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":51,
+                 "y":180
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -99,14 +117,20 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":6,
+ "nextobjectid":7,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"on_load",
+         "type":"string",
+         "value":"my_first_script"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
  "tileheight":32,
@@ -130,6 +154,10 @@
         {
          "firstgid":337,
          "source":"entity-mage.json"
+        }, 
+        {
+         "firstgid":361,
+         "source":"entity-golem.json"
         }],
  "tilewidth":32,
  "type":"map",
