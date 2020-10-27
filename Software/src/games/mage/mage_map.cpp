@@ -32,22 +32,38 @@ MageMap::MageMap(uint32_t address)
 	tileHeight = convert_endian_u2_value(tileHeight);
 	address += sizeof(tileHeight);
 
-	if (EngineROM_Read(address, sizeof(width), (uint8_t *)&width) != sizeof(width))
+	if (EngineROM_Read(address, sizeof(cols), (uint8_t *)&cols) != sizeof(cols))
 	{
 		goto MageMap_Error;
 	}
 
-	width = convert_endian_u2_value(width);
-	address += sizeof(width);
+	cols = convert_endian_u2_value(cols);
+	address += sizeof(cols);
 
-	if (EngineROM_Read(address, sizeof(height), (uint8_t *)&height) != sizeof(height))
+	if (EngineROM_Read(address, sizeof(rows), (uint8_t *)&rows) != sizeof(rows))
 	{
 		goto MageMap_Error;
 	}
 
-	height = convert_endian_u2_value(height);
-	address += sizeof(height);
-	tilesPerLayer = width * height;
+	rows = convert_endian_u2_value(rows);
+	address += sizeof(rows);
+	tilesPerLayer = cols * rows;
+
+	if (EngineROM_Read(address, sizeof(onLoad), (uint8_t *)&onLoad) != sizeof(onLoad))
+	{
+		goto MageMap_Error;
+	}
+
+	onLoad = convert_endian_u2_value(onLoad);
+	address += sizeof(onLoad);
+
+	if (EngineROM_Read(address, sizeof(onTick), (uint8_t *)&onTick) != sizeof(onTick))
+	{
+		goto MageMap_Error;
+	}
+
+	onTick = convert_endian_u2_value(onTick);
+	address += sizeof(onTick);
 
 	if (EngineROM_Read(address, sizeof(layerCount), &layerCount) != sizeof(layerCount))
 	{
@@ -60,7 +76,6 @@ MageMap::MageMap(uint32_t address)
 	{
 		goto MageMap_Error;
 	}
-
 	entityCount = convert_endian_u2_value(entityCount);
 	address += sizeof(entityCount);
 
@@ -87,6 +102,7 @@ MageMap::MageMap(uint32_t address)
 		address += tilesPerLayer * (sizeof(uint16_t) + (2 * sizeof(uint8_t)));
 	}
 
+	fprintf(stderr, "cols:%d : rows:%d : onLoad:%d : onTick:%d : layerCount:%d : entityCount:%d\r\n", cols, rows, onLoad, onTick, layerCount, entityCount);
 	return;
 
 MageMap_Error:
@@ -108,14 +124,24 @@ uint16_t MageMap::TileHeight() const
 	return tileHeight;
 }
 
-uint16_t MageMap::Width() const
+uint16_t MageMap::Cols() const
 {
-	return width;
+	return cols;
 }
 
-uint16_t MageMap::Height() const
+uint16_t MageMap::Rows() const
 {
-	return height;
+	return rows;
+}
+
+uint16_t MageMap::OnLoad() const
+{
+	return onLoad;
+}
+
+uint16_t MageMap::OnTick() const
+{
+	return onTick;
 }
 
 uint8_t MageMap::LayerCount() const
@@ -157,8 +183,10 @@ uint32_t MageMap::Size() const
 	return sizeof(name) +
 		sizeof(tileWidth) +
 		sizeof(tileHeight) +
-		sizeof(width) +
-		sizeof(height) +
+		sizeof(cols) +
+		sizeof(rows) +
+		sizeof(onLoad) +
+		sizeof(onTick) +
 		sizeof(layerCount) +
 		sizeof(entityCount) +
 		(entityCount * sizeof(uint16_t)) +
