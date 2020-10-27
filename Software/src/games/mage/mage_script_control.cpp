@@ -219,7 +219,7 @@ void MageScriptControl::compareEntityName(uint8_t * args)
 void MageScriptControl::blockingDelay(uint8_t * args)
 {
 	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
-	argStruct->delayTime = convert_endian_u2_value(argStruct->delayTime);
+	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
 	nrf_delay_ms(argStruct->delayTime);
 	return;
 }
