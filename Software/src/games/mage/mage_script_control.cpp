@@ -276,10 +276,18 @@ void MageScriptControl::setEntityDirection(uint8_t * args)
 void MageScriptControl::setHexEditorState(uint8_t * args)
 {
 	ActionSetHexEditorState *argStruct = (ActionSetHexEditorState*)args;
+	if(MageHex->getHexEditorState() != argStruct->state)
+	{
+		MageHex->toggleHexEditor();
+	}
 	return;
 }
 void MageScriptControl::setHexEditorDialogMode(uint8_t * args)
 {
 	ActionSetHexEditorDialogMode *argStruct = (ActionSetHexEditorDialogMode*)args;
+	if(MageHex->getHexDialogState() != argStruct->state)
+	{
+		MageHex->toggleHexDialog();
+	}
 	return;
 }
