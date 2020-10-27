@@ -221,7 +221,7 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 		uint8_t read = 0;
 		uint8_t *ptr = &read;
 
-		fread(ptr, sizeof(uint8_t), 1, romfile);
+		size_t size = fread(ptr, sizeof(uint8_t), 1, romfile);
 
 		if (read != *data++)
 		{
