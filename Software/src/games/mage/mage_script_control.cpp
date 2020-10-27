@@ -1,6 +1,7 @@
 #include "mage_script_control.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
+#include "EngineInput.h"
 
 //load in the global variables that the scripts will be operating on:
 extern MageGameControl *MageGame;
@@ -184,41 +185,63 @@ void MageScriptControl::nullAction(uint8_t * args)
 void MageScriptControl::checkEntityByte(uint8_t * args)
 {
 	ActionCheckEntityByte *argStruct = (ActionCheckEntityByte*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::checkSaveFlag(uint8_t * args)
 {
 	ActionCheckSaveFlag *argStruct = (ActionCheckSaveFlag*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args)
 {
 	ActionCheckifEntityIsInGeometry *argStruct = (ActionCheckifEntityIsInGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::checkForButtonPress(uint8_t * args)
 {
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	//get state of button:
+	bool button_activated = (bool)(&EngineInput_Activated+argStruct->buttonId);
+	if(button_activated)
+	{
+		jumpScript = argStruct->successScriptId;
+	}
 	return;
 }
 void MageScriptControl::checkForButtonState(uint8_t * args)
 {
 	ActionCheckForButtonState *argStruct = (ActionCheckForButtonState*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	//get state of button:
+	bool button_state = (bool)(&EngineInput_Buttons+argStruct->buttonId);
+	if(button_state == argStruct->expectedBoolValue)
+	{
+		jumpScript = argStruct->successScriptId;
+	}
 	return;
 }
 void MageScriptControl::runScript(uint8_t * args)
 {
 	ActionRunScript *argStruct = (ActionRunScript*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::compareEntityName(uint8_t * args)
 {
 	ActionCompareEntityName *argStruct = (ActionCompareEntityName*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::blockingDelay(uint8_t * args)
 {
 	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
 	nrf_delay_ms(argStruct->delayTime);
 	return;
@@ -226,131 +249,157 @@ void MageScriptControl::blockingDelay(uint8_t * args)
 void MageScriptControl::nonBlockingDelay(uint8_t * args)
 {
 	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setPauseState(uint8_t * args)
 {
 	ActionSetPauseState *argStruct = (ActionSetPauseState*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setEntityByte(uint8_t * args)
 {
 	ActionSetEntityByte *argStruct = (ActionSetEntityByte*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setSaveFlag(uint8_t * args)
 {
 	ActionSetSaveFlag *argStruct = (ActionSetSaveFlag*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setPlayerControl(uint8_t * args)
 {
 	ActionSetPlayerControl *argStruct = (ActionSetPlayerControl*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setEntityInteractScript(uint8_t * args)
 {
 	ActionSetEntityInteractScript *argStruct = (ActionSetEntityInteractScript*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setEntityTickScript(uint8_t * args)
 {
 	ActionSetEntityTickScript *argStruct = (ActionSetEntityTickScript*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setMapTickScript(uint8_t * args)
 {
 	ActionSetMapTickScript *argStruct = (ActionSetMapTickScript*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setEntityType(uint8_t * args)
 {
 	ActionSetEntityType *argStruct = (ActionSetEntityType*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setHexCursorLocation(uint8_t * args)
 {
 	ActionSetHexCursorLocation *argStruct = (ActionSetHexCursorLocation*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setHexBit(uint8_t * args)
 {
 	ActionSetHexBit *argStruct = (ActionSetHexBit*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::unlockHaxCell(uint8_t * args)
 {
 	ActionUnlockHaxCell *argStruct = (ActionUnlockHaxCell*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::lockHaxCell(uint8_t * args)
 {
 	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::loadMap(uint8_t * args)
 {
 	ActionLoadMap *argStruct = (ActionLoadMap*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::screenShake(uint8_t * args)
 {
 	ActionScreenShake *argStruct = (ActionScreenShake*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::screenFadeOut(uint8_t * args)
 {
 	ActionScreenFadeOut *argStruct = (ActionScreenFadeOut*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::screenFadeIn(uint8_t * args)
 {
 	ActionScreenFadeIn *argStruct = (ActionScreenFadeIn*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::showDialog(uint8_t * args)
 {
 	ActionShowDialog *argStruct = (ActionShowDialog*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setRenderableFont(uint8_t * args)
 {
 	ActionSetRenderableFont *argStruct = (ActionSetRenderableFont*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::moveEntityToGeometry(uint8_t * args)
 {
 	ActionMoveEntityToGeometry *argStruct = (ActionMoveEntityToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::moveEntityAlongGeometry(uint8_t * args)
 {
 	ActionMoveEntityAlongGeometry *argStruct = (ActionMoveEntityAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::loopEntityAlongGeometry(uint8_t * args)
 {
 	ActionLoopEntityAlongGeometry *argStruct = (ActionLoopEntityAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::moveCameratoGeometry(uint8_t * args)
 {
 	ActionMoveCameraToGeometry *argStruct = (ActionMoveCameraToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::moveCameraAlongGeometry(uint8_t * args)
 {
 	ActionMoveCameraAlongGeometry *argStruct = (ActionMoveCameraAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::loopCameraAlongGeometry(uint8_t * args)
 {
 	ActionLoopCameraAlongGeometry *argStruct = (ActionLoopCameraAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setEntityDirection(uint8_t * args)
 {
 	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
+	//endianness conversion for arguments larger than 1 byte:
 	return;
 }
 void MageScriptControl::setHexEditorState(uint8_t * args)
