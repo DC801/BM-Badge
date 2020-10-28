@@ -3,23 +3,33 @@ var actionHandlerMap = {
     CHECK_ENTITY_BYTE: 1,
     CHECK_SAVE_FLAG: 2,
     CHECK_IF_ENTITY_IS_IN_GEOMETRY: 3,
-    CHECK_FOR_BUTTON_PRESS: function (action) {
+    CHECK_FOR_BUTTON_PRESS: function (
+        action,
+        map,
+        fileNameMap,
+        scenarioData,
+    ) {
         var data = initActionData(action);
-        if (!action.successScriptId) {
-            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `successScriptId`');
+        if (!action.success_script) {
+            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `success_script`');
         }
-        if (!action.buttonId) {
-            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `buttonId`');
+        if (!action.button_id) {
+            throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `button_id`');
         }
-        //Admiral: We need to add the successScriptId to the list of serialized scripts
+        var serializedScriptId = handleScript(
+            action.success_script,
+            map,
+            fileNameMap,
+            scenarioData
+        );
         data.dataView.setUint16(
             1,
-            action.successScriptId,
+            serializedScriptId,
             false
         );
         data.dataView.setUint8(
             3,
-            action.buttonId,
+            action.button_id,
             false
         );
         return data;

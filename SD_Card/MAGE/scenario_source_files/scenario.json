@@ -13,8 +13,8 @@
 		"test_tick_script": [
 			{
 				"name": "CHECK_FOR_BUTTON_PRESS",
-				"successScriptId": "button_success_script",
-				"buttonId": 24
+				"success_script": "button_success_script",
+				"button_id": 24
 			}
 		],
 		"button_success_script": [
