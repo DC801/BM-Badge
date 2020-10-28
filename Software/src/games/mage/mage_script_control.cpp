@@ -79,10 +79,12 @@ MageScriptControl::MageScriptControl()
 uint32_t MageScriptControl::size() const
 {
 	uint32_t size =
+		sizeof(jumpScript) +
 		sizeof(MageScriptState) + //mapLoadResumeState
 		sizeof(MageScriptState) + //mapTickResumeState
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityInteractResumeStates
-		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP; //entityTickResumeStates
+		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityTickResumeStates
+		sizeof(ActionFunctionPointer)*MageScriptActionTypeId::NUM_ACTIONS; //function pointer array
 	return size;
 }
 
