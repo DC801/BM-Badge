@@ -72,11 +72,11 @@
 			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint8_t expectedValue, uint16_t successScriptId);
 			- [ ] checkSaveFlag(uint8_t saveFlagOffset, bool expectedValue, uint16_t successScriptId);
 			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, bool expectedValue, uint16_t successScriptId);
-			- [ ] checkForButtonPress(uint8_t buttonId, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
+			- [x] checkForButtonPress(uint8_t buttonId, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
 			- [ ] checkForButtonState(uint8_t buttonId, bool expectedValue, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
 			- [ ] runScript(uint16_t scriptId);
 			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t stringId, uint16_t successScriptId);
-			- [ ] delay(uint32_t ms); //blocking delay for script timing
+			- [x] delay(uint32_t ms); //blocking delay for script timing
 			- [ ] nonBlockingDelay(uint32_t ms); //allows game loop to continue and then continues a script
 			- [ ] setPauseState(bool pauseState); //this will stop the entire MageGameLoop() from happening until set to false
 		- [ ] Game State Effecting Actions:
@@ -105,8 +105,8 @@
 			- [ ] moveCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
 			- [ ] loopCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
 			- [ ] setEntityDirection(uint8_t entityId, uint8_t direction);
-			- [ ] setHexEditorState(bool state);
-			- [ ] setHexEditorDialogMode(bool state);
+			- [x] setHexEditorState(bool state);
+			- [x] setHexEditorDialogMode(bool state);
 - [ ] Geometry
 	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
 		- [ ] inside_circle(point, circle) collision detection function
@@ -166,6 +166,7 @@
 - [ ] Get the Fountain Flowing Again
 - [ ] "I really hate that statue, please hide it in the lake."
 - [ ] Put the 4 escaped sheep back in the pen
+- [ ] Catch the NPC that teleports whenever you try to interact with them. (change their interact script)
 
 ### In which Tim tries to make a Hex editor tutorial script:
 
