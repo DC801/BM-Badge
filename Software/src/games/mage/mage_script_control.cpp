@@ -74,6 +74,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]           = &MageScriptControl::setEntityDirection;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE]           = &MageScriptControl::setHexEditorState;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE]     = &MageScriptControl::setHexEditorDialogMode;
+	actionFunctions[MageScriptActionTypeId::PLAY_SOUND]                     = &MageScriptControl::playSound;
 }
 
 uint32_t MageScriptControl::size() const
@@ -237,6 +238,10 @@ void MageScriptControl::runScript(uint8_t * args)
 	ActionRunScript *argStruct = (ActionRunScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+	//validate script Id
+	argStruct->scriptId = MageGame->getValidScriptId(argStruct->scriptId);
+	//set the jumpScript to the new script
+	jumpScript = argStruct->scriptId;
 	return;
 }
 void MageScriptControl::compareEntityName(uint8_t * args)
@@ -442,5 +447,12 @@ void MageScriptControl::setHexEditorDialogMode(uint8_t * args)
 	{
 		MageHex->toggleHexDialog();
 	}
+	return;
+}
+void MageScriptControl::playSound(uint8_t * args)
+{
+	ActionPlaySound *argStruct = (ActionPlaySound*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->soundId = convert_endian_u2_value(argStruct->soundId);
 	return;
 }
