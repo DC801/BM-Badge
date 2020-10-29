@@ -68,7 +68,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_TO_GEOMETRY]        = &MageScriptControl::moveEntityToGeometry;
 	actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::moveEntityAlongGeometry;
 	actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::loopEntityAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY]        = &MageScriptControl::moveCameratoGeometry;
+	actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY]        = &MageScriptControl::moveCameraToGeometry;
 	actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::moveCameraAlongGeometry;
 	actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::loopCameraAlongGeometry;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]           = &MageScriptControl::setEntityDirection;
@@ -213,7 +213,8 @@ void MageScriptControl::checkForButtonPress(uint8_t * args)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	//get state of button:
-	bool button_activated = (bool)(&EngineInput_Activated+argStruct->buttonId);
+	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
+	bool button_activated = *button_address;
 	if(button_activated)
 	{
 		jumpScript = argStruct->successScriptId;
@@ -226,8 +227,9 @@ void MageScriptControl::checkForButtonState(uint8_t * args)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	//get state of button:
-	bool button_state = (bool)(&EngineInput_Buttons+argStruct->buttonId);
-	if(button_state == argStruct->expectedBoolValue)
+	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
+	bool button_state = *button_address;
+	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		jumpScript = argStruct->successScriptId;
 	}
@@ -403,7 +405,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args)
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 	return;
 }
-void MageScriptControl::moveCameratoGeometry(uint8_t * args)
+void MageScriptControl::moveCameraToGeometry(uint8_t * args)
 {
 	ActionMoveCameraToGeometry *argStruct = (ActionMoveCameraToGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
