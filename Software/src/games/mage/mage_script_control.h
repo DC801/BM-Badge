@@ -82,7 +82,7 @@ class MageScriptControl
 		void moveEntityToGeometry(uint8_t * args);
 		void moveEntityAlongGeometry(uint8_t * args);
 		void loopEntityAlongGeometry(uint8_t * args);
-		void moveCameratoGeometry(uint8_t * args);
+		void moveCameraToGeometry(uint8_t * args);
 		void moveCameraAlongGeometry(uint8_t * args);
 		void loopCameraAlongGeometry(uint8_t * args);
 		void setEntityDirection(uint8_t * args);
