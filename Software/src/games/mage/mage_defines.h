@@ -501,4 +501,13 @@ typedef struct {
 	uint8_t paddingG;
 } ActionSetHexEditorDialogMode;
 
+typedef struct {
+	uint16_t soundId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionPlaySound;
+
 #endif //_MAGE_DEFINES_H
