@@ -131,6 +131,7 @@ typedef enum{
 	SET_ENTITY_DIRECTION = 34,
 	SET_HEX_EDITOR_STATE = 35,
 	SET_HEX_EDITOR_DIALOG_MODE = 36,
+	PLAY_SOUND = 37,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;

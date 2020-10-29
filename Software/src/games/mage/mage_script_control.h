@@ -88,6 +88,7 @@ class MageScriptControl
 		void setEntityDirection(uint8_t * args);
 		void setHexEditorState(uint8_t * args);
 		void setHexEditorDialogMode(uint8_t * args);
+		void playSound(uint8_t * args);
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H
