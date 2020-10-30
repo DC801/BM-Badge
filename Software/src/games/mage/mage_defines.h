@@ -62,8 +62,9 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
-//this is the scriptId for a null script. It is used when a script shouldn't do anything.
+//these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NULL_SCRIPT 0
+#define MAGE_NULL_ACTION 0
 
 //this is how many ms must have passed before the main game loop will run again:
 //typical values: 
