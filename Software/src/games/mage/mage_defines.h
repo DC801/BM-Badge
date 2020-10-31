@@ -137,11 +137,18 @@ typedef enum{
 	NUM_ACTIONS
 } MageScriptActionTypeId;
 
-//this is a structure to hold information about the currently executing scripts so they can be resumed
+//this is a structure to hold information about the currently executing scripts so they can resume
 typedef struct{
-	uint16_t scriptId; //the script Id to resume
-	uint16_t actionId; //the action Id to resume
-	uint32_t timeToNextAction; //the number of millis until the next action in the script is to run;
+	//indicated whether or not an active script is running on this MageScriptState
+	bool scriptIsRunning;
+	//the script Id to resume - this is a global scriptId number value
+	uint16_t scriptId;
+	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
+	uint16_t actionIndex;
+	//the number of millis until the next action in the script is to run
+	uint16_t loopsToNextAction;
+	//the total number of loops from the start of the action until the next action
+	uint16_t totalLoopsToNextAction;
 } MageScriptState;
 
 //this is a point in 2D space.
