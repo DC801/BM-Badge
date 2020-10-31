@@ -96,43 +96,47 @@ typedef enum{
 //don't add more than 255 actions, or it will break the binary file.
 typedef enum{
 	NULL_ACTION = 0,
-	CHECK_ENTITY_BYTE = 1,
-	CHECK_SAVE_FLAG = 2,
-	CHECK_IF_ENTITY_IS_IN_GEOMETRY = 3,
-	CHECK_FOR_BUTTON_PRESS = 4,
-	CHECK_FOR_BUTTON_STATE = 5,
-	RUN_SCRIPT = 6,
-	COMPARE_ENTITY_NAME = 7,
-	BLOCKING_DELAY = 8,
-	NON_BLOCKING_DELAY = 9,
-	SET_PAUSE_STATE = 10,
-	SET_ENTITY_BYTE = 11,
-	SET_SAVE_FLAG = 12,
-	SET_PLAYER_CONTROL = 13,
-	SET_ENTITY_INTERACT_SCRIPT = 14,
-	SET_ENTITY_TICK_SCRIPT = 15,
-	SET_MAP_TICK_SCRIPT = 16,
-	SET_ENTITY_TYPE = 17,
-	SET_HEX_CURSOR_LOCATION = 18,
-	SET_HEX_BIT = 19,
-	UNLOCK_HAX_CELL = 20,
-	LOCK_HAX_CELL = 21,
-	LOAD_MAP = 22,
-	SCREEN_SHAKE = 23,
-	SCREEN_FADE_OUT = 24,
-	SCREEN_FADE_IN = 25,
-	SHOW_DIALOG = 26,
-	SET_RENDERABLE_FONT = 27,
-	MOVE_ENTITY_TO_GEOMETRY = 28,
-	MOVE_ENTITY_ALONG_GEOMETRY = 29,
-	LOOP_ENTITY_ALONG_GEOMETRY = 30,
-	MOVE_CAMERA_TO_GEOMETRY = 31,
-	MOVE_CAMERA_ALONG_GEOMETRY = 32,
-	LOOP_CAMERA_ALONG_GEOMETRY = 33,
-	SET_ENTITY_DIRECTION = 34,
-	SET_HEX_EDITOR_STATE = 35,
-	SET_HEX_EDITOR_DIALOG_MODE = 36,
-	PLAY_SOUND = 37,
+	CHECK_ENTITY_BYTE,
+	CHECK_SAVE_FLAG,
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY,
+	CHECK_FOR_BUTTON_PRESS,
+	CHECK_FOR_BUTTON_STATE,
+	RUN_SCRIPT,
+	COMPARE_ENTITY_NAME,
+	BLOCKING_DELAY,
+	NON_BLOCKING_DELAY,
+	SET_PAUSE_STATE,
+	SET_ENTITY_BYTE,
+	SET_SAVE_FLAG,
+	SET_PLAYER_CONTROL,
+	SET_ENTITY_INTERACT_SCRIPT,
+	SET_ENTITY_TICK_SCRIPT,
+	SET_MAP_TICK_SCRIPT,
+	SET_ENTITY_TYPE,
+	SET_ENTITY_DIRECTION,
+	SET_HEX_CURSOR_LOCATION,
+	SET_HEX_BIT,
+	UNLOCK_HAX_CELL,
+	LOCK_HAX_CELL,
+	SET_HEX_EDITOR_STATE,
+	SET_HEX_EDITOR_DIALOG_MODE,
+	LOAD_MAP,
+	SHOW_DIALOG,
+	SET_RENDERABLE_FONT,
+	TELEPORT_ENTITY_TO_GEOMETRY,
+	WALK_ENTITY_TO_GEOMETRY,
+	WALK_ENTITY_ALONG_GEOMETRY,
+	LOOP_ENTITY_ALONG_GEOMETRY,
+	SET_CAMERA_TO_FOLLOW_ENTITY,
+	TELEPORT_CAMERA_TO_GEOMETRY,
+	PAN_CAMERA_TO_GEOMETRY,
+	PAN_CAMERA_ALONG_GEOMETRY,
+	LOOP_CAMERA_ALONG_GEOMETRY,
+	SET_SCREEN_SHAKE,
+	SCREEN_FADE_OUT,
+	SCREEN_FADE_IN,
+	PLAY_SOUND_CONTINUOUS,
+	PLAY_SOUND_INTERRUPT,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -144,8 +148,8 @@ typedef struct{
 	//the script Id to resume - this is a global scriptId number value
 	uint16_t scriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
-	uint16_t actionIndex;
-	//the number of millis until the next action in the script is to run
+	uint16_t actionOffset;
+	//the number of loops until the next action in the script is to run
 	uint16_t loopsToNextAction;
 	//the total number of loops from the start of the action until the next action
 	uint16_t totalLoopsToNextAction;
@@ -352,6 +356,16 @@ typedef struct {
 } ActionSetEntityType;
 
 typedef struct {
+	uint8_t entityId;
+	uint8_t direction; //MageEntityAnimationDirection enum value
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityDirection;
+
+typedef struct {
 	uint16_t byteAddress;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -391,6 +405,26 @@ typedef struct {
 } ActionLockHaxCell;
 
 typedef struct {
+	uint8_t state;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexEditorState;
+
+typedef struct {
+	uint8_t state;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexEditorDialogMode;
+
+typedef struct {
 	uint16_t mapId;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -398,25 +432,6 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionLoadMap;
-
-typedef struct {
-	uint32_t duration; //in ms
-	uint8_t amplitude;
-	uint8_t frequency;
-	uint8_t paddingG;
-} ActionScreenShake;
-
-typedef struct {
-	uint32_t duration;
-	uint16_t color;
-	uint8_t paddingG;
-} ActionScreenFadeOut;
-
-typedef struct {
-	uint32_t duration;
-	uint16_t color;
-	uint8_t paddingG;
-} ActionScreenFadeIn;
 
 typedef struct {
 	uint16_t dialogId;
@@ -444,13 +459,19 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveEntityToGeometry;
+} ActionTeleportEntityToGeometry;
 
 typedef struct {
 	uint32_t duration; //in ms
 	uint16_t geometryId;
 	uint8_t entityId;
-} ActionMoveEntityAlongGeometry;
+} ActionWalkEntityToGeometry;
+
+typedef struct {
+	uint32_t duration; //in ms
+	uint16_t geometryId;
+	uint8_t entityId;
+} ActionWalkEntityAlongGeometry;
 
 typedef struct {
 	uint32_t duration; //in ms
@@ -459,19 +480,35 @@ typedef struct {
 } ActionLoopEntityAlongGeometry;
 
 typedef struct {
+	uint8_t entityId;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetCameraToFollowEntity;
+
+typedef struct {
 	uint16_t geometryId;
 	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionMoveCameraToGeometry;
+} ActionTeleportCameraToGeometry;
 
 typedef struct {
 	uint32_t duration; //in ms
 	uint16_t geometryId;
 	uint8_t paddingG;
-} ActionMoveCameraAlongGeometry;
+} ActionPanCameraToGeometry;
+
+typedef struct {
+	uint32_t duration; //in ms
+	uint16_t geometryId;
+	uint8_t paddingG;
+} ActionPanCameraAlongGeometry;
 
 typedef struct {
 	uint32_t duration; //in ms
@@ -480,34 +517,23 @@ typedef struct {
 } ActionLoopCameraAlongGeometry;
 
 typedef struct {
-	uint8_t entityId;
-	uint8_t direction; //MageEntityAnimationDirection enum value
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
+	uint32_t duration; //in ms
+	uint8_t amplitude;
+	uint8_t frequency;
 	uint8_t paddingG;
-} ActionSetEntityDirection;
+} ActionSetScreenShake;
 
 typedef struct {
-	uint8_t state;
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
+	uint32_t duration; //in ms
+	uint16_t color;
 	uint8_t paddingG;
-} ActionSetHexEditorState;
+} ActionScreenFadeOut;
 
 typedef struct {
-	uint8_t state;
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
+	uint32_t duration; //in ms
+	uint16_t color;
 	uint8_t paddingG;
-} ActionSetHexEditorDialogMode;
+} ActionScreenFadeIn;
 
 typedef struct {
 	uint16_t soundId;
@@ -516,6 +542,15 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionPlaySound;
+} ActionPlaySoundContinuous;
+
+typedef struct {
+	uint16_t soundId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionPlaySoundInterrupt;
 
 #endif //_MAGE_DEFINES_H

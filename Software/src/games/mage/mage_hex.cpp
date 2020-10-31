@@ -4,6 +4,25 @@ extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 extern MageEntity *hackableDataAddress;
 
+uint32_t MageHexEditor::size() const
+{
+	uint32_t size = 
+		sizeof(currentOp) +
+		sizeof(hexEditorState) +
+		sizeof(anyHexMovement) +
+		sizeof(dialogState) +
+		sizeof(bytesPerPage) +
+		sizeof(hexRows) +
+		sizeof(memTotal) +
+		sizeof(currentMemPage) +
+		sizeof(totalMemPages) +
+		sizeof(hexCursorLocation) +
+		sizeof(previousPageButtonState) +
+		sizeof(lastPageButtonPressTime) +
+		sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS;
+	return size;
+}
+
 bool MageHexEditor::getHexEditorState()
 {
 	return hexEditorState;

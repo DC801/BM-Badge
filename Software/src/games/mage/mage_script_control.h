@@ -57,7 +57,7 @@ class MageScriptControl
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM
 
-		//the following four types of actions describe how the actions will be run within the program:
+		//the following types of actions describe how the actions will be run within the program:
 		//I   = instant, will execute and immediately proceed to the next action
 		//NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
 		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the scriptId is changed
@@ -94,14 +94,16 @@ class MageScriptControl
 		void setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I
 		void setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//I
 		void setEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//I
 		void setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//I
 		void setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
 		void setEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U
+		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
@@ -110,38 +112,44 @@ class MageScriptControl
 		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
 		void lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U (loadMap will stop all other scripts immediately, loading a new map with new scripts)
-		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
-		void screenShake(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
-		void screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
-		void screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct);
-		//B (note showDialog will pause the main game loop and run a dialog Loop until the dialog is concluded. No other actions in the game will occur while a dialog window is active)
-		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
-		void setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
-		void moveEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
-		void moveEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NBC
-		void loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
-		void moveCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
-		void moveCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NBC
-		void loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
-		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
 		void setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//I+U
 		void setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U (loadMap will stop all other scripts immediately, loading a new map with new scripts)
+		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
+		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U
+		void setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U
+		void teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NBC
+		void loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U
+		void setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct);
+		//I+U
+		void teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void panCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NBC
+		void loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void setScreenShake(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB
+		void screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct);
 		//NB (sounds should begin playing when called by an action and continue until the sound file ends)
-		void playSound(uint8_t * args, MageScriptState * resumeStateStruct);
+		void playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct);
+		//NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
+		void playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct);
 	public:
 		MageScriptControl();
 
