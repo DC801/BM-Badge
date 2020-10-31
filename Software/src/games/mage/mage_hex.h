@@ -74,12 +74,12 @@ private:
 	//this is a vairable that stores the byte that is currently selected for hacking.
 	uint16_t hexCursorLocation;
 
-	//this stores the byte addresses for the hex memory buttons:
-	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
-
 	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
 	bool previousPageButtonState; //tracks previous button state
 	uint32_t lastPageButtonPressTime; //tracks time of last press of page button
+
+	//this stores the byte addresses for the hex memory buttons:
+	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
 
 public:
 	//initialize the class with default values.
@@ -94,10 +94,13 @@ public:
 		currentMemPage{0},
 		totalMemPages{0},
 		hexCursorLocation{0},
-		memAddresses{0},
 		previousPageButtonState{false},
-		lastPageButtonPressTime{0}
+		lastPageButtonPressTime{0},
+		memAddresses{0}
 	{};
+
+	//returns the size in RAM of the class variables.
+	uint32_t size() const;
 
 	//returns true if hex editor is open.
 	bool getHexEditorState();

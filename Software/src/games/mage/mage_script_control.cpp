@@ -19,7 +19,7 @@ void MageScriptControl::initScriptState(MageScriptState * resumeStateStruct, uin
 	resumeStateStruct->scriptId = scriptId;
 	//then set default initializer values for the others:
 	//initial action for a new script is always 0:
-	resumeStateStruct->actionIndex = 0;
+	resumeStateStruct->actionOffset = 0;
 	//init to 0, actions will set is it is needed.
 	resumeStateStruct->totalLoopsToNextAction = 0;
 	//init to 0, actions will set is it is needed.
@@ -71,7 +71,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 
 	//now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
 	//note we're using the value in resumeStateStruct directly as our index so it will update automatically as we proceed:
-	for(; resumeStateStruct->actionIndex<actionCount; resumeStateStruct->actionIndex++)
+	for(; resumeStateStruct->actionOffset<actionCount; resumeStateStruct->actionOffset++)
 	{
 		runAction(address, resumeStateStruct);
 		//need to check if the action is type NB, and if it needs to be paused to resume later here -Tim
@@ -268,6 +268,11 @@ void MageScriptControl::setEntityType(uint8_t * args, MageScriptState * resumeSt
 	argStruct->secondaryId = convert_endian_u2_value(argStruct->secondaryId);
 	return;
 }
+void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
+	return;
+}
 void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetHexCursorLocation *argStruct = (ActionSetHexCursorLocation*)args;
@@ -290,6 +295,24 @@ void MageScriptControl::lockHaxCell(uint8_t * args, MageScriptState * resumeStat
 	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
 	return;
 }
+void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetHexEditorState *argStruct = (ActionSetHexEditorState*)args;
+	if(MageHex->getHexEditorState() != argStruct->state)
+	{
+		MageHex->toggleHexEditor();
+	}
+	return;
+}
+void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetHexEditorDialogMode *argStruct = (ActionSetHexEditorDialogMode*)args;
+	if(MageHex->getHexDialogState() != argStruct->state)
+	{
+		MageHex->toggleHexDialog();
+	}
+	return;
+}
 void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionLoadMap *argStruct = (ActionLoadMap*)args;
@@ -297,9 +320,88 @@ void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStr
 	argStruct->mapId = convert_endian_u2_value(argStruct->mapId);
 	return;
 }
-void MageScriptControl::screenShake(uint8_t * args, MageScriptState * resumeStateStruct)
+void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionScreenShake *argStruct = (ActionScreenShake*)args;
+	ActionShowDialog *argStruct = (ActionShowDialog*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->dialogId = convert_endian_u2_value(argStruct->dialogId);
+	return;
+}
+void MageScriptControl::setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetRenderableFont *argStruct = (ActionSetRenderableFont*)args;
+	return;
+}
+void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionTeleportEntityToGeometry *argStruct = (ActionTeleportEntityToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionWalkEntityToGeometry *argStruct = (ActionWalkEntityToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionWalkEntityAlongGeometry *argStruct = (ActionWalkEntityAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionLoopEntityAlongGeometry *argStruct = (ActionLoopEntityAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetCameraToFollowEntity *argStruct = (ActionSetCameraToFollowEntity*)args;
+	return;
+}
+void MageScriptControl::teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionTeleportCameraToGeometry *argStruct = (ActionTeleportCameraToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionPanCameraToGeometry *argStruct = (ActionPanCameraToGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::panCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionPanCameraAlongGeometry *argStruct = (ActionPanCameraAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionLoopCameraAlongGeometry *argStruct = (ActionLoopCameraAlongGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+	return;
+}
+void MageScriptControl::setScreenShake(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetScreenShake *argStruct = (ActionSetScreenShake*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	return;
@@ -320,90 +422,16 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 	argStruct->color = convert_endian_u2_value(argStruct->color);
 	return;
 }
-void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeStateStruct)
+void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionShowDialog *argStruct = (ActionShowDialog*)args;
+	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	argStruct->dialogId = convert_endian_u2_value(argStruct->dialogId);
+	argStruct->soundId = convert_endian_u2_value(argStruct->soundId);
 	return;
 }
-void MageScriptControl::setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct)
+void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionSetRenderableFont *argStruct = (ActionSetRenderableFont*)args;
-	return;
-}
-void MageScriptControl::moveEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionMoveEntityToGeometry *argStruct = (ActionMoveEntityToGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::moveEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionMoveEntityAlongGeometry *argStruct = (ActionMoveEntityAlongGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = convert_endian_u4_value(argStruct->duration);
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionLoopEntityAlongGeometry *argStruct = (ActionLoopEntityAlongGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = convert_endian_u4_value(argStruct->duration);
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::moveCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionMoveCameraToGeometry *argStruct = (ActionMoveCameraToGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::moveCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionMoveCameraAlongGeometry *argStruct = (ActionMoveCameraAlongGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = convert_endian_u4_value(argStruct->duration);
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionLoopCameraAlongGeometry *argStruct = (ActionLoopCameraAlongGeometry*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = convert_endian_u4_value(argStruct->duration);
-	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
-}
-void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
-	return;
-}
-void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetHexEditorState *argStruct = (ActionSetHexEditorState*)args;
-	if(MageHex->getHexEditorState() != argStruct->state)
-	{
-		MageHex->toggleHexEditor();
-	}
-	return;
-}
-void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetHexEditorDialogMode *argStruct = (ActionSetHexEditorDialogMode*)args;
-	if(MageHex->getHexDialogState() != argStruct->state)
-	{
-		MageHex->toggleHexDialog();
-	}
-	return;
-}
-void MageScriptControl::playSound(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPlaySound *argStruct = (ActionPlaySound*)args;
+	ActionPlaySoundInterrupt *argStruct = (ActionPlaySoundInterrupt*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->soundId = convert_endian_u2_value(argStruct->soundId);
 	return;
@@ -445,26 +473,30 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT]         = &MageScriptControl::setEntityTickScript;
 	actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT]            = &MageScriptControl::setMapTickScript;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TYPE]                = &MageScriptControl::setEntityType;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]           = &MageScriptControl::setEntityDirection;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION]        = &MageScriptControl::setHexCursorLocation;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_BIT]                    = &MageScriptControl::setHexBit;
 	actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL]                = &MageScriptControl::unlockHaxCell;
 	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL]                  = &MageScriptControl::lockHaxCell;
-	actionFunctions[MageScriptActionTypeId::LOAD_MAP]                       = &MageScriptControl::loadMap;
-	actionFunctions[MageScriptActionTypeId::SCREEN_SHAKE]                   = &MageScriptControl::screenShake;
-	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT]                = &MageScriptControl::screenFadeOut;
-	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN]                 = &MageScriptControl::screenFadeIn;
-	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG]                    = &MageScriptControl::showDialog;
-	actionFunctions[MageScriptActionTypeId::SET_RENDERABLE_FONT]            = &MageScriptControl::setRenderableFont;
-	actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_TO_GEOMETRY]        = &MageScriptControl::moveEntityToGeometry;
-	actionFunctions[MageScriptActionTypeId::MOVE_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::moveEntityAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::loopEntityAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_TO_GEOMETRY]        = &MageScriptControl::moveCameraToGeometry;
-	actionFunctions[MageScriptActionTypeId::MOVE_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::moveCameraAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::loopCameraAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]           = &MageScriptControl::setEntityDirection;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE]           = &MageScriptControl::setHexEditorState;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE]     = &MageScriptControl::setHexEditorDialogMode;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND]                     = &MageScriptControl::playSound;
+	actionFunctions[MageScriptActionTypeId::LOAD_MAP]                       = &MageScriptControl::loadMap;
+	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG]                    = &MageScriptControl::showDialog;
+	actionFunctions[MageScriptActionTypeId::SET_RENDERABLE_FONT]            = &MageScriptControl::setRenderableFont;
+	actionFunctions[MageScriptActionTypeId::TELEPORT_ENTITY_TO_GEOMETRY]    = &MageScriptControl::teleportEntityToGeometry;
+	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_TO_GEOMETRY]        = &MageScriptControl::walkEntityToGeometry;
+	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::walkEntityAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY]     = &MageScriptControl::loopEntityAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_CAMERA_TO_FOLLOW_ENTITY]    = &MageScriptControl::setCameraToFollowEntity;
+	actionFunctions[MageScriptActionTypeId::TELEPORT_CAMERA_TO_GEOMETRY]    = &MageScriptControl::teleportCameraToGeometry;
+	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_TO_GEOMETRY]         = &MageScriptControl::panCameraToGeometry;
+	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_ALONG_GEOMETRY]      = &MageScriptControl::panCameraAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY]     = &MageScriptControl::loopCameraAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_SCREEN_SHAKE]               = &MageScriptControl::setScreenShake;
+	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT]                = &MageScriptControl::screenFadeOut;
+	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN]                 = &MageScriptControl::screenFadeIn;
+	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS]          = &MageScriptControl::playSoundContinuous;
+	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT]           = &MageScriptControl::playSoundInterrupt;
 }
 
 uint32_t MageScriptControl::size() const
