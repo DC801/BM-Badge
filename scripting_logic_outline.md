@@ -16,10 +16,12 @@ Script handling works as follows:
 	-Check MageScriptState.scriptIsRunning to see if a script is in progress or not
 		-If: a script is not running and you're in hex editor mode, return without running a new script.
 		-else if: a script is not running, init MageScriptState for the appropriate script Id
-		-else: a script is running, so run process the script based on the current state of the MageScriptState struct.
+		-else: a script is running:
+			-if the scriptId for the map or entity matches the MageScriptState scriptId, run processScript() based on the current state of the MageScriptState struct.
+			-if the scriptId for the map or entity does not match, re-init the MageScriptStruct with default values for the appropriate scriptId and then run processScript()
 	-Once the MageScriptState variables are updated, proceed with action processing as indicated in MageScriptState:
 
-	-Once a processScript function is called, all actions will be based soley on the MageScriptState struct passed to it.
+	-Once a processScript() function is called, all actions will be based soley on the MageScriptState struct passed to it.
 	-Note we will be passing the appropriate MageScriptState struct address to all subsequent functions directly, so anything can edit it as we go.
 	-This allows us to use a single action function regardless of which script type called the action and figure out the context from the MageScriptState directly.
 		-the script will process actions in order as quickly as possible starting at MageScriptState.actionIndex
@@ -31,15 +33,15 @@ Script handling works as follows:
 			-Non-Blocking (NB), or
 			-Non-Blocking Continuous (NBC). 
 			-See mage_script_control.h comments above action functions for more info:
-		-if the action is I, process the action and move on as quickly as possible
+		I: process the action and move on as quickly as possible
 			-MageScriptState.actionIndex's value will be used for the for loop index directly, so it automatically increments.
-		-if the action is I+U, process the action as quickly as possible and set the scriptRequiresRender variable to true
+		I+U: process the action as quickly as possible and set the scriptRequiresRender variable to true
 			-MageScriptState.actionIndex's value will be used for the for loop index directly, so it automatically increments.
-		-if the action is I+C, process the action as quickly as possible and set the MageScriptState.scriptId to the new value when appropriate
+		I+C: process the action as quickly as possible and set the MageScriptState.scriptId to the new value when appropriate
 			-if a jumpScript is set, immediately init MageScriptState for the new scriptId and begin running the new scriptId from action 0
-		-if the action is B, check the scriptRequiresRender flag and call a manual update before performing the blocking action
+		B: check the scriptRequiresRender flag and call a manual update before performing the blocking action
 			-MageScriptState.actionIndex's value will be used for the for loop index directly, so it automatically increments.
-		-if the action is NB:
+		NB:
 			-check if MageScriptState.totalLoopsToNextAction is zero
 				-if it is zero, then this is the first loop for this action.
 					-set totalLoopsToNextAction and loopsToNextAction to the action duration
@@ -47,7 +49,7 @@ Script handling works as follows:
 					-decrement loopsToNextAction, and leave totalLoopsToNextAction alone.
 			-then check if MageScriptState.loopsToNextAction is zero
 				-if it is zero, increment MageScriptState.actionIndex so the program may continue.
-		-if the action is NBC:
+		NBC:
 			-check if MageScriptState.totalLoopsToNextAction is zero
 				-if it is zero, then this is the first loop for this action.
 					-set totalLoopsToNextAction and loopsToNextAction to the action duration
