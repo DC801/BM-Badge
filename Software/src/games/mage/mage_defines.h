@@ -62,8 +62,9 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
-//this is the scriptId for a null script. It is used when a script shouldn't do anything.
+//these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NULL_SCRIPT 0
+#define MAGE_NULL_ACTION 0
 
 //this is how many ms must have passed before the main game loop will run again:
 //typical values: 
@@ -131,15 +132,23 @@ typedef enum{
 	SET_ENTITY_DIRECTION = 34,
 	SET_HEX_EDITOR_STATE = 35,
 	SET_HEX_EDITOR_DIALOG_MODE = 36,
+	PLAY_SOUND = 37,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
 
-//this is a structure to hold information about the currently executing scripts so they can be resumed
+//this is a structure to hold information about the currently executing scripts so they can resume
 typedef struct{
-	uint16_t scriptId; //the script Id to resume
-	uint16_t actionId; //the action Id to resume
-	uint32_t timeToNextAction; //the number of millis until the next action in the script is to run;
+	//indicated whether or not an active script is running on this MageScriptState
+	bool scriptIsRunning;
+	//the script Id to resume - this is a global scriptId number value
+	uint16_t scriptId;
+	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
+	uint16_t actionIndex;
+	//the number of millis until the next action in the script is to run
+	uint16_t loopsToNextAction;
+	//the total number of loops from the start of the action until the next action
+	uint16_t totalLoopsToNextAction;
 } MageScriptState;
 
 //this is a point in 2D space.
@@ -499,5 +508,14 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetHexEditorDialogMode;
+
+typedef struct {
+	uint16_t soundId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionPlaySound;
 
 #endif //_MAGE_DEFINES_H
