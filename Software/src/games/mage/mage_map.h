@@ -20,7 +20,9 @@ private:
 	uint16_t onTick;
 	uint8_t layerCount;
 	uint16_t entityCount;
+	uint16_t scriptCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
+	std::unique_ptr<uint16_t[]> scriptGLobalIds;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
 public:
@@ -33,7 +35,9 @@ public:
 		onTick{0},
 		layerCount{0},
 		entityCount{0},
+		scriptCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
+		scriptGLobalIds{std::make_unique<uint16_t[]>(1)},
 		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
 	{ };
 
@@ -48,7 +52,9 @@ public:
 	uint16_t OnTick() const;
 	uint8_t LayerCount() const;
 	uint16_t EntityCount() const;
+	uint16_t ScriptCount() const;
 	uint16_t EntityId(uint16_t num) const;
+	uint16_t ScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
 	uint32_t Size() const;
 }; //class MageMap
