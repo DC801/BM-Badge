@@ -300,7 +300,7 @@ void MageGameControl::LoadMap(uint16_t index)
 	PopulateMapData(index);
 
 	//call the map's load script:
-	MageScript->runScript(map.OnLoad());
+	MageScript->handleMapOnLoadScript();
 }
 
 void MageGameControl::updatePointerToPlayerEntity(std::string name)
@@ -808,7 +808,9 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
-		//call MageScript::onEntityTick(entities[i].onTickScriptId, i); -Tim
+		//handle Entity onTick scripts:
+		MageScript->handleEntityOnTickScript(i);
+
 		//tileset entities are not animated, return if entity is type tileset.
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{
