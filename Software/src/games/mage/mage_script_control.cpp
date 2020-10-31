@@ -57,7 +57,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 
 	//read the action count from ROM:
 	//skip the name of the script, we don't need it in this codebase:
-	address += 16;
+	address += 32;
 
 	//read the script's action count:
 	uint32_t actionCount = 0;
