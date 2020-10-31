@@ -165,18 +165,21 @@ typedef struct {
 //the complete current entity state can be determined with only this info and
 //the MageGame class interpreting the ROM data.
 typedef struct {
-	char name[16];
-	uint16_t primaryId;
-	uint16_t secondaryId;
-	uint16_t scriptId;
-	int16_t x;
-	int16_t y;
-	uint8_t primaryIdType;
-	uint8_t currentAnimation;
-	uint8_t currentFrame;
-	uint8_t direction;
-	uint8_t hackableState;
-	uint8_t padding;
+    char name[12];
+    uint16_t x;
+    uint16_t y;
+    uint16_t onInteractScriptId;
+    uint16_t onTickScriptId;
+    uint16_t primaryId;
+    uint16_t secondaryId;
+    uint8_t primaryIdType;
+    uint8_t currentAnimation;
+    uint8_t currentFrame;
+    uint8_t direction;
+    uint8_t hackableStateA;
+    uint8_t hackableStateB;
+    uint8_t hackableStateC;
+    uint8_t hackableStateD;
 } MageEntity;
 
 //this is info needed to render entities that can be determined

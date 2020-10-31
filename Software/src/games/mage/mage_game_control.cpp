@@ -137,13 +137,61 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	if (EngineROM_Read(address, 16, (uint8_t *)entity.name) != 16)
+	if (EngineROM_Read(address, 12, (uint8_t *)entity.name) != 12)
 	{
 		goto MageEntity_Error;
 	}
 
 	//increment address
-	address += 16;
+	address += 12;
+	
+	// Read entity.x
+	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	entity.x = convert_endian_u2_value(entity.x);
+
+	//increment address
+	address += sizeof(entity.x);
+
+	// Read entity.y
+	if (EngineROM_Read(address, sizeof(entity.y), (uint8_t *)&entity.y) != sizeof(entity.y))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	entity.y = convert_endian_u2_value(entity.y);
+
+	//increment address
+	address += sizeof(entity.y);
+
+	// Read entity.onInteractScriptId
+	if (EngineROM_Read(address, sizeof(entity.onInteractScriptId), (uint8_t *)&entity.onInteractScriptId) != sizeof(entity.onInteractScriptId))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	entity.onInteractScriptId = convert_endian_u2_value(entity.onInteractScriptId);
+
+	//increment address
+	address += sizeof(entity.onInteractScriptId);
+
+	// Read entity.onTickScript
+	if (EngineROM_Read(address, sizeof(entity.onTickScriptId), (uint8_t *)&entity.onTickScriptId) != sizeof(entity.onTickScriptId))
+	{
+		goto MageEntity_Error;
+	}
+
+	// Endianness conversion
+	entity.onTickScriptId = convert_endian_u2_value(entity.onTickScriptId);
+
+	//increment address
+	address += sizeof(entity.onTickScriptId);
 
 	// Read entity.primaryId
 	if (EngineROM_Read(address, sizeof(entity.primaryId), (uint8_t *)&entity.primaryId) != sizeof(entity.primaryId))
@@ -168,42 +216,6 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 
 	//increment address
 	address += sizeof(entity.secondaryId);
-
-	// Read entity.scriptId
-	if (EngineROM_Read(address, sizeof(entity.scriptId), (uint8_t *)&entity.scriptId) != sizeof(entity.scriptId))
-	{
-		goto MageEntity_Error;
-	}
-
-	// Endianness conversion
-	entity.scriptId = convert_endian_u2_value(entity.scriptId);
-
-	//increment address
-	address += sizeof(entity.scriptId);
-
-	// Read entity.x
-	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
-	{
-		goto MageEntity_Error;
-	}
-
-	// Endianness conversion
-	entity.x = convert_endian_u2_value(entity.x);
-
-	//increment address
-	address += sizeof(entity.x);
-
-	// Read entity.y
-	if (EngineROM_Read(address, sizeof(entity.y), (uint8_t *)&entity.y) != sizeof(entity.y))
-	{
-		goto MageEntity_Error;
-	}
-
-	// Endianness conversion
-	entity.y = convert_endian_u2_value(entity.y);
-
-	//increment address
-	address += sizeof(entity.y);
 
 	// Read entity.primaryIdType
 	if (EngineROM_Read(address, sizeof(entity.primaryIdType), (uint8_t *)&entity.primaryIdType) != sizeof(entity.primaryIdType))
@@ -241,14 +253,41 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	//increment address
 	address += sizeof(entity.direction);
 
-	// Read entity.hackableState
-	if (EngineROM_Read(address, sizeof(entity.hackableState), (uint8_t *)&entity.hackableState) != sizeof(entity.hackableState))
+	// Read entity.hackableStateA
+	if (EngineROM_Read(address, sizeof(entity.hackableStateA), (uint8_t *)&entity.hackableStateA) != sizeof(entity.hackableStateA))
 	{
 		goto MageEntity_Error;
 	}
 
-	//set padding to 0
-	entity.padding = 0;
+	//increment address
+	address += sizeof(entity.hackableStateA);
+
+	// Read entity.hackableStateA
+	if (EngineROM_Read(address, sizeof(entity.hackableStateB), (uint8_t *)&entity.hackableStateB) != sizeof(entity.hackableStateB))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.hackableStateB);
+
+	// Read entity.hackableStateA
+	if (EngineROM_Read(address, sizeof(entity.hackableStateC), (uint8_t *)&entity.hackableStateC) != sizeof(entity.hackableStateC))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.hackableStateC);
+
+	// Read entity.hackableStateA
+	if (EngineROM_Read(address, sizeof(entity.hackableStateD), (uint8_t *)&entity.hackableStateD) != sizeof(entity.hackableStateD))
+	{
+		goto MageEntity_Error;
+	}
+
+	//increment address
+	address += sizeof(entity.hackableStateD);
 
 	return entity;
 
