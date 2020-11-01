@@ -115,3 +115,7 @@ var assignToLessFalsy = function () {
 	});
 	return target;
 };
+
+var jsonClone = function (input) {
+	return JSON.parse(JSON.stringify(input));
+};

@@ -97,12 +97,102 @@
                  "height":64,
                  "id":6,
                  "name":"Bob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"entity_on_interact_script"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"entity_on_tick_script"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":64,
                  "x":51,
                  "y":180
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"geometry",
+         "objects":[
+                {
+                 "height":0,
+                 "id":12,
+                 "name":"lake_path",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0.5,
+                         "y":125.5
+                        }, 
+                        {
+                         "x":18.5,
+                         "y":143.5
+                        }, 
+                        {
+                         "x":244.5,
+                         "y":145
+                        }, 
+                        {
+                         "x":261.5,
+                         "y":127.5
+                        }, 
+                        {
+                         "x":262,
+                         "y":-1.5
+                        }, 
+                        {
+                         "x":243.5,
+                         "y":-20
+                        }, 
+                        {
+                         "x":20.5,
+                         "y":-19.5
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":76.5,
+                 "y":96.5
+                }, 
+                {
+                 "ellipse":true,
+                 "height":39.5,
+                 "id":13,
+                 "name":"log_ellipse",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":78,
+                 "x":248.5,
+                 "y":251.75
+                }, 
+                {
+                 "height":0,
+                 "id":14,
+                 "name":"door_point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":207.5,
+                 "y":464
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -122,8 +212,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":7,
+ "nextlayerid":6,
+ "nextobjectid":15,
  "orientation":"orthogonal",
  "properties":[
         {

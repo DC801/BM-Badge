@@ -1,5 +1,3 @@
-
-
 // reference: https://doc.mapeditor.org/en/stable/reference/tmx-map-format/#tile-flipping
 var FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
 var FLIPPED_VERTICALLY_FLAG   = 0x40000000;
@@ -119,8 +117,8 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 			// ])
 			serializeEntity(
 				compositeEntity,
+				fileNameMap,
 				scenarioData,
-				fileNameMap
 			);
 			map.entityIndices.push(
 				compositeEntity.scenarioIndex
@@ -184,22 +182,27 @@ var generateMapHeader = function (map) {
 		+ 1 // uint8_t layer_count
 		+ 1 // uint8_t padding
 		+ 2 // uint16_t entity_count
+		+ 2 // uint16_t script_count
 		+ (
 			2 // uint16_t entity_id
 			* map.entityIndices.length
+		)
+		+ (
+			2 // uint16_t script_id
+			* map.scriptIndices.length
 		)
 	);
 	var result = new ArrayBuffer(
 		getPaddedHeaderLength(headerLength)
 	);
 	var dataView = new DataView(result);
+	var offset = 0;
 	setCharsIntoDataView(
 		dataView,
 		map.name,
 		0,
-		16
+		offset += 16
 	);
-	var offset = 16;
 	dataView.setUint16(offset, map.tilewidth, false);
 	offset += 2;
 	dataView.setUint16(offset, map.tileheight, false);
@@ -218,8 +221,14 @@ var generateMapHeader = function (map) {
 	offset += 1;
 	dataView.setUint16(offset, map.entityIndices.length, false);
 	offset += 2;
+	dataView.setUint16(offset, map.scriptIndices.length, false);
+	offset += 2;
 	map.entityIndices.forEach(function (entityIndex) {
 		dataView.setUint16(offset, entityIndex, false);
+		offset += 2;
+	});
+	map.scriptIndices.forEach(function (scriptIndex) {
+		dataView.setUint16(offset, scriptIndex, false);
 		offset += 2;
 	});
 	return result;
@@ -236,16 +245,17 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;
 		map.entityIndices = [];
+		map.scriptIndices = [];
 		map.serializedLayers = [];
-		handleMapScripts(
-			map,
-			fileNameMap,
-			scenarioData,
-		);
 		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
+				handleMapScripts(
+					map,
+					fileNameMap,
+					scenarioData,
+				);
 				map.serialized = generateMapHeader(map);
 				map.serializedLayers.forEach(function (layer) {
 					map.serialized = combineArrayBuffers(

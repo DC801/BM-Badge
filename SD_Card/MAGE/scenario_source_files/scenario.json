@@ -10,6 +10,52 @@
 				"state": true
 			}
 		],
+		"entity_on_interact_script": [
+			{
+				"notes": "These are documentation notes for humans.",
+				"name": "RUN_SCRIPT",
+				"script": "my_first_script"
+			}
+		],
+		"entity_on_tick_script": [
+			{
+				"notes": "This script should spin an entity around",
+				"name": "NON_BLOCKING_DELAY",
+				"delay_time": 100
+			},
+			{
+				"name": "SET_ENTITY_DIRECTION",
+				"entity": "Bob",
+				"direction": "north"
+			},
+			{
+				"name": "NON_BLOCKING_DELAY",
+				"delay_time": 100
+			},
+			{
+				"name": "SET_ENTITY_DIRECTION",
+				"entity": "Bob",
+				"direction": "east"
+			},
+			{
+				"name": "NON_BLOCKING_DELAY",
+				"delay_time": 100
+			},
+			{
+				"name": "SET_ENTITY_DIRECTION",
+				"entity": "Bob",
+				"direction": "south"
+			},
+			{
+				"name": "NON_BLOCKING_DELAY",
+				"delay_time": 100
+			},
+			{
+				"name": "SET_ENTITY_DIRECTION",
+				"entity": "Bob",
+				"direction": "west"
+			}
+		],
 		"test_tick_script": [
 			{
 				"name": "CHECK_FOR_BUTTON_PRESS",
