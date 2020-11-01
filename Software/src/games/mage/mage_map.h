@@ -43,6 +43,7 @@ public:
 
 	MageMap(uint32_t address);
 
+	uint32_t Size() const;
 	std::string Name() const;
 	uint16_t TileWidth() const;
 	uint16_t TileHeight() const;
@@ -56,7 +57,6 @@ public:
 	uint16_t EntityId(uint16_t num) const;
 	uint16_t ScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
-	uint32_t Size() const;
 }; //class MageMap
 
 #endif //_MAGE_MAP_H

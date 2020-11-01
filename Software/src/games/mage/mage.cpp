@@ -155,10 +155,16 @@ void MAGE()
 	MageHex->setHexOp(HEX_OPS_XOR);
 
 	#ifdef DC801_DESKTOP
-		fprintf(stderr, "MageGameControl RAM use: %d bytes.", MageGame->Size());
+		fprintf(stderr, "MageGameControl RAM use:   %8d bytes.\r\n", MageGame->Size());
+		fprintf(stderr, "MageScriptControl RAM use: %8d bytes.\r\n", MageScript->size());
+		fprintf(stderr, "MageHexControl RAM use:    %8d bytes.\r\n", MageHex->size());
+		fprintf(stderr, "FrameBuffer RAM use:       %8d bytes.\r\n", FRAMEBUFFER_SIZE * sizeof(uint16_t));
+		fprintf(stderr, "-------------------------------------------\r\n");
+		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n", 
+			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
 	#endif
 
-	MageGame->LoadMap(0);
+	MageGame->LoadMap(DEFAULT_MAP);
 
 	//main game loop:
 	while (EngineIsRunning())
