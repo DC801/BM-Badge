@@ -57,9 +57,9 @@ public:
 	uint16_t EntityCount() const;
 	uint16_t ScriptCount() const;
 	//this returns a global entityId from the local entity index
-	uint16_t EntityId(uint16_t num) const;
+	uint16_t getGLobalEntityId(uint16_t num) const;
 	//the returns a global scriptId from the local script index
-	uint16_t ScriptId(uint16_t num) const;
+	uint16_t getGlobalScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
 }; //class MageMap
 

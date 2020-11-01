@@ -315,7 +315,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		if(i < entityHeader.count())
 		{
 			//fill in entity data from ROM:
-			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
+			entities[i] = LoadEntity(entityHeader.offset(map.getGLobalEntityId(i)));
 		}
 	}
 
@@ -680,7 +680,7 @@ uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 	return entityTypeId % entityTypeHeader.count();
 }
 
-uint16_t MageGameControl::getValidScriptId(uint16_t scriptId)
+uint16_t MageGameControl::getValidGlobalScriptId(uint16_t scriptId)
 {
 	return scriptId % scriptHeader.count();
 }
@@ -705,7 +705,7 @@ uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
 {
 	//first validate the scriptId:
-	scriptId = getValidScriptId(scriptId);
+	scriptId = getValidGlobalScriptId(scriptId);
 
 	//then return the address offset for thast script from the scriptHeader:
 	return scriptHeader.offset(scriptId);
@@ -848,9 +848,6 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
-		//handle Entity onTick scripts:
-		MageScript->handleEntityOnTickScript(i);
-
 		//tileset entities are not animated, return if entity is type tileset.
 		if(entities[i].primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{

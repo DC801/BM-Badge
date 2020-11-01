@@ -125,7 +125,7 @@ public:
 	uint16_t getValidAnimationId(uint16_t animationId);
 	uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
 	uint16_t getValidEntityTypeId(uint16_t entityTypeId);
-	uint16_t getValidScriptId(uint16_t scriptId);
+	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
 
