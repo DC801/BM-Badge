@@ -16,12 +16,11 @@ Script handling works as follows:
 	-Check MageScriptState.scriptIsRunning to see if a script is in progress or not
 		-If: a script is not running and you're in hex editor mode, return without running a new script.
 		-else if: a script is not running, init MageScriptState for the appropriate script Id
-		-else: a script is running:
-			-if the scriptId for the map or entity matches the MageScriptState scriptId, run processScript() based on the current state of the MageScriptState struct.
-			-if the scriptId for the map or entity does not match, re-init the MageScriptStruct with default values for the appropriate scriptId and then run processScript()
-	-Once the MageScriptState variables are updated, proceed with action processing as indicated in MageScriptState:
+		-else if: the scriptId for the map or entity does not match the resumeState, re-init the MageScriptStruct with default values for the appropriate scriptId
+		-else: the current script is running, leave MageScriptStruct alone
+		-Once MageScriptStruct is current, run processScript() based on the current state of the MageScriptState struct.
 
-	-Once a processScript() function is called, all actions will be based soley on the MageScriptState struct passed to it.
+	-Once a processScript() function is called, all actions will be based solely on the MageScriptState struct passed to it.
 	-Note we will be passing the appropriate MageScriptState struct address to all subsequent functions directly, so anything can edit it as we go.
 	-This allows us to use a single action function regardless of which script type called the action and figure out the context from the MageScriptState directly.
 		-the script will process actions in order as quickly as possible starting at MageScriptState.actionIndex

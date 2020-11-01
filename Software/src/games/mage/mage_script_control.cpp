@@ -57,7 +57,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 
 	//read the action count from ROM:
 	//skip the name of the script, we don't need it in this codebase:
-	address += 16;
+	address += 32;
 
 	//read the script's action count:
 	uint32_t actionCount = 0;
@@ -109,7 +109,7 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState 
 	if(actionTypeId >= MageScriptActionTypeId::NUM_ACTIONS)
 	{
 		#ifdef DC801_DESKTOP
-			fprintf(stderr, "Error in runAction(): actionTypeId larger than NUM_ACTIONS. Check your scripts.");
+			fprintf(stderr, "Error in runAction(): actionTypeId (%d) larger than NUM_ACTIONS. Check your scripts.\r\n", actionTypeId);
 		#endif
 		return;
 	}
@@ -541,8 +541,13 @@ void MageScriptControl::handleMapOnLoadScript()
 	{
 		return;
 	}
-	//if a script isn't already running, init to run the correct script from the beginning:
-	else if(!scriptIsRunning)
+	//if a script isn't already running, OR
+	//if the mapLoad script Id doesn't match the *ResumeState, 
+	//re-initialize the *ResumeState struct from the scriptId
+	else if(
+		!scriptIsRunning ||
+		mapLoadResumeState.scriptId != (MageGame->Map().OnLoad()) 
+	)
 	{
 		//set the jumpScript to match the desired script:
 		jumpScript = MageGame->Map().OnLoad();
@@ -554,10 +559,10 @@ void MageScriptControl::handleMapOnLoadScript()
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//we only need to set jumpScript to match the *ResumeSatet struct so we can call actions:
+		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = mapLoadResumeState.scriptId;
 	}
-	//now that the *ResumeState struct is correctly configured, process the scripts using it:
+	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapLoadResumeState);
 }
 
@@ -570,11 +575,16 @@ void MageScriptControl::handleMapOnTickScript()
 	{
 		return;
 	}
-	//if a script isn't already running, init to run the correct script from the beginning:
-	else if(!scriptIsRunning)
+	//if a script isn't already running, OR
+	//if the mapLoad script Id doesn't match the *ResumeState, 
+	//re-initialize the *ResumeState struct from the scriptId
+	else if(
+		!scriptIsRunning ||
+		mapTickResumeState.scriptId != (MageGame->Map().OnTick()) 
+	)
 	{
 		//set the jumpScript to match the desired script:
-		jumpScript = MageGame->Map().OnLoad();
+		jumpScript = MageGame->Map().OnTick();
 		//populate the MageScriptState struct with appropriate init data
 		initScriptState(&mapTickResumeState, jumpScript, true);
 	}
@@ -583,19 +593,83 @@ void MageScriptControl::handleMapOnTickScript()
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//we only need to set jumpScript to match the *ResumeSatet struct so we can call actions:
+		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = mapTickResumeState.scriptId;
 	}
-	//now that the *ResumeState struct is correctly configured, process the scripts using it:
+	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapTickResumeState);
 }
 
 void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 {
-	
+	//get a bool to show if a script is already running:
+	bool scriptIsRunning = entityInteractResumeStates[index].scriptIsRunning;
+	//we also need to convert the entity's local ScriptId to the global context:
+	uint16_t globalEntityScriptId = MageGame->Map().ScriptId(MageGame->entities[index].onInteractScriptId);
+
+	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
+	if(MageHex->getHexEditorState() && !scriptIsRunning)
+	{
+		return;
+	}
+	//if a script isn't already running, OR
+	//if the mapLoad script Id doesn't match the *ResumeState, 
+	//re-initialize the *ResumeState struct from the scriptId
+	else if(
+		!scriptIsRunning ||
+		entityInteractResumeStates[index].scriptId != (globalEntityScriptId)
+	)
+	{
+		//set the jumpScript to match the desired script:
+		jumpScript = globalEntityScriptId;
+		//populate the MageScriptState struct with appropriate init data
+		initScriptState(&entityInteractResumeStates[index], jumpScript, true);
+	}
+	//otherwise, a script is running and the resumeStateStruct controls all further actions:
+	else
+	{
+		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
+		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
+		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
+		jumpScript = entityInteractResumeStates[index].scriptId;
+	}
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(&entityInteractResumeStates[index]);
 }
 
 void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 {
-	
+	//get a bool to show if a script is already running:
+	bool scriptIsRunning = entityTickResumeStates[index].scriptIsRunning;
+	//we also need to convert the entity's local ScriptId to the global context:
+	uint16_t globalEntityScriptId = MageGame->Map().ScriptId(MageGame->entities[index].onTickScriptId);
+
+	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
+	if(MageHex->getHexEditorState() && !scriptIsRunning)
+	{
+		return;
+	}
+	//if a script isn't already running, OR
+	//if the mapLoad script Id doesn't match the *ResumeState, 
+	//re-initialize the *ResumeState struct from the scriptId
+	else if(
+		!scriptIsRunning ||
+		entityTickResumeStates[index].scriptId != (globalEntityScriptId)
+	)
+	{
+		//set the jumpScript to match the desired script:
+		jumpScript = globalEntityScriptId;
+		//populate the MageScriptState struct with appropriate init data
+		initScriptState(&entityTickResumeStates[index], jumpScript, true);
+	}
+	//otherwise, a script is running and the resumeStateStruct controls all further actions:
+	else
+	{
+		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
+		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
+		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
+		jumpScript = entityTickResumeStates[index].scriptId;
+	}
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(&entityTickResumeStates[index]);
 }
