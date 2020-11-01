@@ -42,9 +42,6 @@ void MageScriptControl::processScript(MageScriptState * resumeStateStruct)
 			initScriptState(resumeStateStruct, jumpScript, true);
 		}
 	}
-	//if you get here, jumpScript == MAGE_NULL_SCRIPT, so therefore all actions are done
-	//we can now set resumeState.scriptIsRunning to false and end processing the script:
-	resumeStateStruct->scriptIsRunning = false;
 }
 
 void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
@@ -69,12 +66,23 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 	actionCount = convert_endian_u4_value(actionCount);
 	address += sizeof(actionCount);
 
+	//increment the address by the resumeStateStruct->actionOffset*sizeof(uint64_t) to get to the current action:
+	address += resumeStateStruct->actionOffset * sizeof(uint64_t);
+
 	//now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
 	//note we're using the value in resumeStateStruct directly as our index so it will update automatically as we proceed:
 	for(; resumeStateStruct->actionOffset<actionCount; resumeStateStruct->actionOffset++)
 	{
 		runAction(address, resumeStateStruct);
-		//need to check if the action is type NB, and if it needs to be paused to resume later here -Tim
+		//non-blocking action check is based on whether resumeStateStruct->totalLoopsToNextAction is set:
+		if(resumeStateStruct->totalLoopsToNextAction != 0)
+		{
+			//if this value is not 0, we need to stop the action now and return later when the countdown is complete:
+			//note that resumeStateStruct->actionOffset is set to the NB action's offset since we are using it as an index
+			//on the next loop, it should call the same action again. It is up to the action handler function to decide
+			//how to complete its action and track how much time is left using the resumeStateStruct's values.
+			return;
+		}
 		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t
 		address += sizeof(uint64_t);
 		//check to see if the action set a jumpScript value
@@ -82,6 +90,12 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 			//immediately end action processing and return if a jumpScript value was set:
 			return;
 		}
+	}
+	//if you get here, and jumpScript == MAGE_NULL_SCRIPT, all actions in the script are done
+	if(jumpScript == MAGE_NULL_SCRIPT)
+	{
+		//we can now set resumeState.scriptIsRunning to false and end processing the script:
+		resumeStateStruct->scriptIsRunning = false;
 	}
 	return;
 
@@ -135,13 +149,30 @@ void MageScriptControl::nullAction(uint8_t * args, MageScriptState * resumeState
 	//nullAction does nothing.
 	return;
 }
+
+//Needs testing -Tim
 void MageScriptControl::checkEntityByte(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityByte *argStruct = (ActionCheckEntityByte*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	//validate arguments:
+	//make sure the entityId refers to an entity index for this specific map:
+	argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
+	//make sure the offset is within the bounds of a single entity:
+	argStruct->byteOffset = argStruct->byteOffset % sizeof(MageEntity);
+	//convert the successScriptId to the global scope:
+	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
+	//now check the validated data and set jumpScript if appropriate:
+	uint8_t * byteAddress = ((uint8_t*)hackableDataAddress + argStruct->byteOffset);
+	if(argStruct->expectedValue == *byteAddress)
+	{
+		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
+	}
 	return;
 }
+
+//waiting for implementation of Save Flag System to implement -Tim
 void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckSaveFlag *argStruct = (ActionCheckSaveFlag*)args;
@@ -149,6 +180,8 @@ void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeSt
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	return;
 }
+
+//waiting for implementation of geometry to implement -Tim
 void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckifEntityIsInGeometry *argStruct = (ActionCheckifEntityIsInGeometry*)args;
@@ -157,45 +190,54 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	argStruct->GeometryId = convert_endian_u2_value(argStruct->GeometryId);
 	return;
 }
+
 void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	//convert scriptId from local to global scope:
+	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
 	bool button_activated = *button_address;
 	if(button_activated)
 	{
-		jumpScript = argStruct->successScriptId;
+		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
 	}
 	return;
 }
+
 void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckForButtonState *argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	//convert scriptId from local to global scope:
+	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
 	bool button_state = *button_address;
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
-		jumpScript = argStruct->successScriptId;
+		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
 	}
 	return;
 }
+
 void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionRunScript *argStruct = (ActionRunScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
-	//validate script Id
-	argStruct->scriptId = MageGame->getValidScriptId(argStruct->scriptId);
+	//convert scriptId from local to global scope:
+	argStruct->scriptId = MageGame->Map().getGlobalScriptId(argStruct->scriptId);
 	//set the jumpScript to the new script
-	jumpScript = argStruct->scriptId;
+	jumpScript = MageGame->getValidGlobalScriptId(argStruct->scriptId);
 	return;
 }
+
+//waiting for implementation of global strings to implement -Tim
 void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCompareEntityName *argStruct = (ActionCompareEntityName*)args;
@@ -204,6 +246,7 @@ void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resu
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
 	return;
 }
+
 void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
@@ -212,11 +255,35 @@ void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeSt
 	nrf_delay_ms(argStruct->delayTime);
 	return;
 }
+
 void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
+	//If there's already a total number of loops to next action set, a delay is currently in progress:
+	if(resumeStateStruct->totalLoopsToNextAction != 0)
+	{
+		//decrement the number of loops to the end of the delay:
+		resumeStateStruct->loopsToNextAction--;
+		//if we've reached the end:
+		if(resumeStateStruct->loopsToNextAction <= 0)
+		{
+			//reset the variables and return, the delay is complete.
+			resumeStateStruct->totalLoopsToNextAction = 0;
+			resumeStateStruct->loopsToNextAction = 0;
+			return;
+		}
+	}
+	//a delay is not active, so we should start one:
+	else
+	{
+		//convert delay into a number of game loops:
+		uint16_t totalDelayLoops = argStruct->delayTime / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		//now set the resumeStateStruct variables:
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	}
 	return;
 }
 void MageScriptControl::setPauseState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -268,9 +335,17 @@ void MageScriptControl::setEntityType(uint8_t * args, MageScriptState * resumeSt
 	argStruct->secondaryId = convert_endian_u2_value(argStruct->secondaryId);
 	return;
 }
+
 void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
+	//validate arguments:
+	argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
+	argStruct->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
+	//set direction:
+	MageGame->entities[argStruct->entityId].direction = argStruct->direction;
+	//set update flag:
+	scriptRequiresRender = true;
 	return;
 }
 void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -605,7 +680,7 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 	//get a bool to show if a script is already running:
 	bool scriptIsRunning = entityInteractResumeStates[index].scriptIsRunning;
 	//we also need to convert the entity's local ScriptId to the global context:
-	uint16_t globalEntityScriptId = MageGame->Map().ScriptId(MageGame->entities[index].onInteractScriptId);
+	uint16_t globalEntityScriptId = MageGame->Map().getGlobalScriptId(MageGame->entities[index].onInteractScriptId);
 
 	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
 	if(MageHex->getHexEditorState() && !scriptIsRunning)
@@ -642,7 +717,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 	//get a bool to show if a script is already running:
 	bool scriptIsRunning = entityTickResumeStates[index].scriptIsRunning;
 	//we also need to convert the entity's local ScriptId to the global context:
-	uint16_t globalEntityScriptId = MageGame->Map().ScriptId(MageGame->entities[index].onTickScriptId);
+	uint16_t globalEntityScriptId = MageGame->Map().getGlobalScriptId(MageGame->entities[index].onTickScriptId);
 
 	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
 	if(MageHex->getHexEditorState() && !scriptIsRunning)
@@ -654,7 +729,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 	//re-initialize the *ResumeState struct from the scriptId
 	else if(
 		!scriptIsRunning ||
-		entityTickResumeStates[index].scriptId != (globalEntityScriptId)
+		entityTickResumeStates[index].scriptId != MageGame->getValidGlobalScriptId(globalEntityScriptId)
 	)
 	{
 		//set the jumpScript to match the desired script:

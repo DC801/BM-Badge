@@ -181,12 +181,12 @@ uint16_t MageMap::Rows() const
 
 uint16_t MageMap::OnLoad() const
 {
-	return ScriptId(onLoad);
+	return getGlobalScriptId(onLoad);
 }
 
 uint16_t MageMap::OnTick() const
 {
-	return ScriptId(onTick);
+	return getGlobalScriptId(onTick);
 }
 
 uint8_t MageMap::LayerCount() const
@@ -204,7 +204,7 @@ uint16_t MageMap::ScriptCount() const
 	return scriptCount;
 }
 
-uint16_t MageMap::EntityId(uint16_t num) const
+uint16_t MageMap::getGLobalEntityId(uint16_t num) const
 {
 	if (!entityGlobalIds) return 0;
 
@@ -216,7 +216,7 @@ uint16_t MageMap::EntityId(uint16_t num) const
 	return 0;
 }
 
-uint16_t MageMap::ScriptId(uint16_t num) const
+uint16_t MageMap::getGlobalScriptId(uint16_t num) const
 {
 	if (!scriptGLobalIds) return 0;
 
