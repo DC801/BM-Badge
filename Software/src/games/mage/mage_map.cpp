@@ -110,7 +110,7 @@ MageMap::MageMap(uint32_t address)
 	scriptGLobalIds = std::make_unique<uint16_t[]>(scriptCount);
 	size = sizeof(uint16_t) * scriptCount;
 
-	if (EngineROM_Read(address, size, (uint8_t *)entityGlobalIds.get()) != size)
+	if (EngineROM_Read(address, size, (uint8_t *)scriptGLobalIds.get()) != size)
 	{
 		goto MageMap_Error;
 	}
@@ -118,7 +118,7 @@ MageMap::MageMap(uint32_t address)
 	convert_endian_u2_buffer(scriptGLobalIds.get(), scriptCount);
 
 	//padding to align with uint32_t memory spacing:
-	if ((entityCount + scriptCount) % 2)
+	if ( ((entityCount + scriptCount) + 1) % 2)
 	{
 		address += sizeof(uint16_t); // Padding
 	}
