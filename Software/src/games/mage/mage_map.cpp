@@ -181,12 +181,12 @@ uint16_t MageMap::Rows() const
 
 uint16_t MageMap::OnLoad() const
 {
-	return onLoad;
+	return ScriptId(onLoad);
 }
 
 uint16_t MageMap::OnTick() const
 {
-	return onTick;
+	return ScriptId(onTick);
 }
 
 uint8_t MageMap::LayerCount() const

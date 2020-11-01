@@ -314,6 +314,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		//only populate the entities that are on the current map.
 		if(i < entityHeader.count())
 		{
+			//fill in entity data from ROM:
 			entities[i] = LoadEntity(entityHeader.offset(map.EntityId(i)));
 		}
 	}

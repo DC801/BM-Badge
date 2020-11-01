@@ -49,12 +49,16 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
+	//this returns the global script Id, not the local index for it. Just removing a step.
 	uint16_t OnLoad() const;
+	//this returns the global script Id, not the local index for it. Just removing a step.
 	uint16_t OnTick() const;
 	uint8_t LayerCount() const;
 	uint16_t EntityCount() const;
 	uint16_t ScriptCount() const;
+	//this returns a global entityId from the local entity index
 	uint16_t EntityId(uint16_t num) const;
+	//the returns a global scriptId from the local script index
 	uint16_t ScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
 }; //class MageMap
