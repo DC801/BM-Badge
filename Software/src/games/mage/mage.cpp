@@ -51,6 +51,12 @@ void GameUpdate()
 			
 			//Call the map's onTick script:
 			MageScript->handleMapOnTickScript();
+			//then handle all entity onTick scripts:
+			for(uint8_t i = 0; i < MageGame->Map().EntityCount(); i++)
+			{
+				//handle Entity onTick scripts for the local entity at Id 'i':
+				MageScript->handleEntityOnTickScript(i);
+			}
 
 			//update the entities based on the current state of their (hackable) data array.
 			MageGame->UpdateEntities(deltaTime);
