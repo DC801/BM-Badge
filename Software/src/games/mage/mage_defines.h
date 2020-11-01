@@ -71,7 +71,11 @@ all of the old code used as the foundation of this badge.
 //60fps: ~16ms
 //30fps: ~33ms
 //24fps: ~41ms
+#ifndef DC801_DESKTOP
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 41
+#else
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
+#endif
 
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
