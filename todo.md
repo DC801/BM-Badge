@@ -67,46 +67,49 @@
 		- [ ] Entity
 			- [ ] onEntityTick(uint16_t scriptId, uint8_t entityId); //called every tick, entityId is the entity calling that script.
 			- [ ] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
-	- [ ] Actions
-		- [ ] Logic and Flow Actions: (We'll need a cap on how many of these deep we can go from a main script to prevent using too much RAM with nested scripts)
-			- [ ] checkEntityByte(uint8_t entityId, uint8_t offset, uint8_t expectedValue, uint16_t successScriptId);
-			- [ ] checkSaveFlag(uint8_t saveFlagOffset, bool expectedValue, uint16_t successScriptId);
-			- [ ] checkIfEntityIsInGeometry(uint8_t entityId, uint16_t geometryId, bool expectedValue, uint16_t successScriptId);
-			- [x] checkForButtonPress(uint8_t buttonId, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
-			- [ ] checkForButtonState(uint8_t buttonId, bool expectedValue, uint16_t successScriptId); //KEYBOARD_KEY:: enum value
-			- [ ] runScript(uint16_t scriptId);
-			- [ ] compareEntityName(uint8_t targetEntityId, uint16_t stringId, uint16_t successScriptId);
-			- [x] delay(uint32_t ms); //blocking delay for script timing
-			- [ ] nonBlockingDelay(uint32_t ms); //allows game loop to continue and then continues a script
-			- [ ] setPauseState(bool pauseState); //this will stop the entire MageGameLoop() from happening until set to false
-		- [ ] Game State Effecting Actions:
-			- [ ] setEntityByte(uint8_t entityId, uint8_t offset, uint8_t newValue);
-			- [ ] setSaveFlag(uint8_t saveFlagOffset, bool newValue);
-			- [ ] setPlayerControl(bool playerHasControl);
-			- [ ] setEntityInteractScript(uint8_t entityId, uint16_t scriptId);
-			- [ ] setEntityTickScript(uint8_t entityId, uint16_t scriptId);
-			- [ ] setMapTickScript(uint16_t scriptId);
-			- [ ] setEntityType(uint8_t targetEntityId, uint16_t primaryId, uint16_t secondaryId, uint8_t primaryType);
-			- [ ] setHexCursorLocation(uint16_t offset);
-			- [ ] setHexBit(uint8_t bitmask, bool state);
-			- [ ] unlockHaxCell(uint8_t cellOffset);
-			- [ ] lockHaxCell(uint8_t cellOffset);
-		- [ ] Game Display changing actions:
-			- [ ] loadMap(uint16_t mapId);
-			- [ ] screenShake(uint8_t amplitutde, uint8_t freq, uint16_t duration);
-			- [ ] screenFadeOut(uint16_t color, uint32_t duration);
-			- [ ] screenFadeIn(uint16_6 color, uint32_t duration);
-			- [ ] showDialog(uint16_t dialogId);
-			- [ ] switchRenderableFont(uint8_t fontId);
-			- [ ] moveEntityToGeometry(uint8_t entityId, uint16_t geometryId);
-			- [ ] moveEntityAlongGeometry(uint8_t entityId, uint16_t geometryId, uint32_t duration);
-			- [ ] loopEntityAlongGeometry(uint8_t entityId, uint16_t geometryId, uint32_t duration);
-			- [ ] moveCameraToGeometry(uint16_t geometryId);
-			- [ ] moveCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
-			- [ ] loopCameraAlongGeometry(uint16_t geometryId, uint32_t duration);
-			- [ ] setEntityDirection(uint8_t entityId, uint8_t direction);
-			- [x] setHexEditorState(bool state);
-			- [x] setHexEditorDialogMode(bool state);
+	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
+		- [x] NULL_ACTION
+		- [ ] CHECK_ENTITY_BYTE
+		- [ ] CHECK_SAVE_FLAG
+		- [ ] CHECK_IF_ENTITY_IS_IN_GEOMETRY
+		- [x] CHECK_FOR_BUTTON_PRESS
+		- [x] CHECK_FOR_BUTTON_STATE
+		- [ ] RUN_SCRIPT
+		- [ ] COMPARE_ENTITY_NAME
+		- [x] BLOCKING_DELAY
+		- [ ] NON_BLOCKING_DELAY
+		- [ ] SET_PAUSE_STATE
+		- [ ] SET_ENTITY_BYTE
+		- [ ] SET_SAVE_FLAG
+		- [ ] SET_PLAYER_CONTROL
+		- [ ] SET_ENTITY_INTERACT_SCRIPT
+		- [ ] SET_ENTITY_TICK_SCRIPT
+		- [ ] SET_MAP_TICK_SCRIPT
+		- [ ] SET_ENTITY_TYPE
+		- [ ] SET_ENTITY_DIRECTION
+		- [ ] SET_HEX_CURSOR_LOCATION
+		- [ ] SET_HEX_BIT
+		- [ ] UNLOCK_HAX_CELL
+		- [ ] LOCK_HAX_CELL
+		- [x] SET_HEX_EDITOR_STATE
+		- [x] SET_HEX_EDITOR_DIALOG_MODE
+		- [ ] LOAD_MAP
+		- [ ] SHOW_DIALOG
+		- [ ] SET_RENDERABLE_FONT
+		- [ ] TELEPORT_ENTITY_TO_GEOMETRY
+		- [ ] WALK_ENTITY_TO_GEOMETRY
+		- [ ] WALK_ENTITY_ALONG_GEOMETRY
+		- [ ] LOOP_ENTITY_ALONG_GEOMETRY
+		- [ ] SET_CAMERA_TO_FOLLOW_ENTITY
+		- [ ] TELEPORT_CAMERA_TO_GEOMETRY
+		- [ ] PAN_CAMERA_TO_GEOMETRY
+		- [ ] PAN_CAMERA_ALONG_GEOMETRY
+		- [ ] LOOP_CAMERA_ALONG_GEOMETRY
+		- [ ] SET_SCREEN_SHAKE
+		- [ ] SCREEN_FADE_OUT
+		- [ ] SCREEN_FADE_IN
+		- [ ] PLAY_SOUND_CONTINUOUS
+		- [ ] PLAY_SOUND_INTERRUPT
 - [ ] Geometry
 	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
 		- [ ] inside_circle(point, circle) collision detection function

@@ -57,7 +57,7 @@ class MageScriptControl
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM
 
-		//the following types of actions describe how the actions will be run within the program:
+		//each action has an action logic type, depending on how it will need to interact with the rest of the game loop:
 		//I   = instant, will execute and immediately proceed to the next action
 		//NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
 		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the scriptId is changed
@@ -66,89 +66,89 @@ class MageScriptControl
 		//I+C = scripts that may call another scriptId, discarding any actions that occur after them in the current script
 		//I've noted the blocking state of actions below on the line above the action:
 
-		//I
+		//Action Logic Type: I
 		void nullAction(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void checkEntityByte(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void checkSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void checkIfEntityIsInGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void checkForButtonPress(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void checkForButtonState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void runScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+C
+		//Action Logic Type: I+C
 		void compareEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
-		//B
+		//Action Logic Type: B
 		void blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
-		//B (note, setPauseState require a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
+		//Action Logic Type: B (note, setPauseState require a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
 		void setPauseState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setEntityByte(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I
+		//Action Logic Type: I
 		void setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I
+		//Action Logic Type: I
 		void setEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I
+		//Action Logic Type: I
 		void setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I
+		//Action Logic Type: I
 		void setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setHexBit(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U (loadMap will stop all other scripts immediately, loading a new map with new scripts)
+		//Action Logic Type: I+U (loadMap will stop all other scripts immediately, loading a new map with new scripts)
 		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
+		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
 		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NBC
+		//Action Logic Type: NBC
 		void loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct);
-		//I+U
+		//Action Logic Type: I+U
 		void teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void panCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NBC
+		//Action Logic Type: NBC
 		void loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void setScreenShake(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB
+		//Action Logic Type: NB
 		void screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB (sounds should begin playing when called by an action and continue until the sound file ends)
+		//Action Logic Type: NB (sounds should begin playing when called by an action and continue until the sound file ends)
 		void playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct);
-		//NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
+		//Action Logic Type: NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
 		void playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct);
 	public:
 		MageScriptControl();
