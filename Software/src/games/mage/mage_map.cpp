@@ -137,6 +137,23 @@ MageMap_Error:
 	ENGINE_PANIC("Failed to read map data");
 }
 
+uint32_t MageMap::Size() const
+{
+	return sizeof(name) +
+		sizeof(tileWidth) +
+		sizeof(tileHeight) +
+		sizeof(cols) +
+		sizeof(rows) +
+		sizeof(onLoad) +
+		sizeof(onTick) +
+		sizeof(layerCount) +
+		sizeof(entityCount) +
+		sizeof(scriptCount) +
+		(entityCount * sizeof(uint16_t)) +
+		(scriptCount * sizeof(uint16_t)) +
+		(layerCount * sizeof(uint32_t));
+}
+
 std::string MageMap::Name() const
 {
 	return std::string(name);
@@ -182,6 +199,11 @@ uint16_t MageMap::EntityCount() const
 	return entityCount;
 }
 
+uint16_t MageMap::ScriptCount() const
+{
+	return scriptCount;
+}
+
 uint16_t MageMap::EntityId(uint16_t num) const
 {
 	if (!entityGlobalIds) return 0;
@@ -189,6 +211,18 @@ uint16_t MageMap::EntityId(uint16_t num) const
 	if (entityCount > num)
 	{
 		return entityGlobalIds[num];
+	}
+
+	return 0;
+}
+
+uint16_t MageMap::ScriptId(uint16_t num) const
+{
+	if (!scriptGLobalIds) return 0;
+
+	if (scriptCount > num)
+	{
+		return scriptGLobalIds[num];
 	}
 
 	return 0;
@@ -204,19 +238,4 @@ uint32_t MageMap::LayerOffset(uint16_t num) const
 	}
 
 	return 0;
-}
-
-uint32_t MageMap::Size() const
-{
-	return sizeof(name) +
-		sizeof(tileWidth) +
-		sizeof(tileHeight) +
-		sizeof(cols) +
-		sizeof(rows) +
-		sizeof(onLoad) +
-		sizeof(onTick) +
-		sizeof(layerCount) +
-		sizeof(entityCount) +
-		(entityCount * sizeof(uint16_t)) +
-		(layerCount * sizeof(uint32_t));
 }
