@@ -1,8 +1,5 @@
 var actionHandlerMap = {
-	NULL_ACTION: 0,
-	CHECK_ENTITY_BYTE: 1,
-	CHECK_SAVE_FLAG: 2,
-	CHECK_IF_ENTITY_IS_IN_GEOMETRY: 3,
+	NULL_ACTION: null,
 	CHECK_FOR_BUTTON_PRESS: function (
 		action,
 		map,
@@ -11,7 +8,10 @@ var actionHandlerMap = {
 	) {
 		var data = initActionData(action);
 		if (!action.success_script) {
-			throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `success_script`');
+			throw new Error('CHECK_FOR_BUTTON_PRESS requires a string value for `success_script`');
+		}
+		if (!scenarioData.scripts[action.success_script]) {
+			throw new Error(`CHECK_FOR_BUTTON_PRESS was not able to find a script named "${action.success_script}" provided at the value \`success_script\``);
 		}
 		if (!action.button_id) {
 			throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `button_id`');
@@ -34,9 +34,32 @@ var actionHandlerMap = {
 		);
 		return data;
 	},
-	CHECK_FOR_BUTTON_STATE: 5,
-	RUN_SCRIPT: 6,
-	COMPARE_ENTITY_NAME: 7,
+	RUN_SCRIPT: function (
+		action,
+		map,
+		fileNameMap,
+		scenarioData,
+	) {
+		var data = initActionData(action);
+		if (!action.script) {
+			throw new Error('RUN_SCRIPT requires a string value for `script`');
+		}
+		if (!scenarioData.scripts[action.script]) {
+			throw new Error(`RUN_SCRIPT was not able to find a script named "${action.script}" provided at the value \`script\``);
+		}
+		var serializedScriptId = handleScript(
+			action.script,
+			map,
+			fileNameMap,
+			scenarioData
+		);
+		data.dataView.setUint16(
+			1,
+			serializedScriptId,
+			false
+		);
+		return data;
+	},
 	BLOCKING_DELAY: function (action) {
 		var data = initActionData(action);
 		if (!action.delay_time) {
@@ -49,33 +72,66 @@ var actionHandlerMap = {
 		);
 		return data;
 	},
-	NON_BLOCKING_DELAY: 9,
-	SET_PAUSE_STATE: 10,
-	SET_ENTITY_BYTE: 11,
-	SET_SAVE_FLAG: 12,
-	SET_PLAYER_CONTROL: 13,
-	SET_ENTITY_INTERACT_SCRIPT: 14,
-	SET_ENTITY_TICK_SCRIPT: 15,
-	SET_MAP_TICK_SCRIPT: 16,
-	SET_ENTITY_TYPE: 17,
-	SET_HEX_CURSOR_LOCATION: 18,
-	SET_HEX_BIT: 19,
-	UNLOCK_HAX_CELL: 20,
-	LOCK_HAX_CELL: 21,
-	LOAD_MAP: 22,
-	SCREEN_SHAKE: 23,
-	SCREEN_FADE_OUT: 24,
-	SCREEN_FADE_IN: 25,
-	SHOW_DIALOG: 26,
-	SET_RENDERABLE_FONT: 27,
-	MOVE_ENTITY_TO_GEOMETRY: 28,
-	MOVE_ENTITY_ALONG_GEOMETRY: 29,
-	LOOP_ENTITY_ALONG_GEOMETRY: 30,
-	MOVE_CAMERA_TO_GEOMETRY: 31,
-	MOVE_CAMERA_ALONG_GEOMETRY: 32,
-	LOOP_CAMERA_ALONG_GEOMETRY: 33,
-	SET_ENTITY_DIRECTION: 34,
-	SET_HEX_EDITOR_STATE:  function (action) {
+	NON_BLOCKING_DELAY: function (action) {
+		var data = initActionData(action);
+		if (!action.delay_time) {
+			throw new Error('NON_BLOCKING_DELAY requires a non-zero value for `delay_time`');
+		}
+		data.dataView.setUint32(
+			1,
+			action.delay_time,
+			false
+		);
+		return data;
+	},
+	SET_ENTITY_DIRECTION: function (
+		action,
+		map,
+		fileNameMap,
+		scenarioData,
+	) {
+		var data = initActionData(action);
+		if (!action.entity) {
+			throw new Error('SET_ENTITY_DIRECTION requires a string value for `entity`');
+		}
+		if (action.direction === undefined) {
+			throw new Error('SET_ENTITY_DIRECTION requires a value for `direction`');
+		}
+		var directions = {
+			0: 0,
+			1: 1,
+			2: 2,
+			3: 3,
+			"north": 0,
+			"east": 1,
+			"south": 2,
+			"west": 3,
+		};
+		var direction = directions[action.direction];
+		if (direction === undefined) {
+			throw new Error(`SET_ENTITY_DIRECTION requires a valid value for \`direction\`; Possible values:\n${
+				Object.keys(directions)
+			}`);
+		}
+		var entity = getObjectByNameOnMap(
+			action.entity,
+			map,
+		)
+		if (!entity) {
+			throw new Error(`SET_ENTITY_DIRECTION was not able to find entity "${action.entity}" on map "${map.name}"`);
+		}
+		data.dataView.setUint16(
+			1,
+			entity.scenarioIndex,
+			false
+		);
+		data.dataView.setUint8(
+			3,
+			entity.scenarioIndex,
+		);
+		return data;
+	},
+	SET_HEX_EDITOR_STATE: function (action) {
 		var data = initActionData(action)
 		if (typeof action.state !== "boolean") {
 			throw new Error('SET_HEX_EDITOR_STATE requires a boolean value for `state`');
@@ -98,7 +154,67 @@ var actionHandlerMap = {
 		return data;
 	},
 };
-var actionNames = Object.keys(actionHandlerMap);
+var actionNames = [
+	'NULL_ACTION',
+	'CHECK_ENTITY_BYTE',
+	'CHECK_SAVE_FLAG',
+	'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
+	'CHECK_FOR_BUTTON_PRESS',
+	'CHECK_FOR_BUTTON_STATE',
+	'RUN_SCRIPT',
+	'COMPARE_ENTITY_NAME',
+	'BLOCKING_DELAY',
+	'NON_BLOCKING_DELAY',
+	'SET_PAUSE_STATE',
+	'SET_ENTITY_BYTE',
+	'SET_SAVE_FLAG',
+	'SET_PLAYER_CONTROL',
+	'SET_ENTITY_INTERACT_SCRIPT',
+	'SET_ENTITY_TICK_SCRIPT',
+	'SET_MAP_TICK_SCRIPT',
+	'SET_ENTITY_TYPE',
+	'SET_ENTITY_DIRECTION',
+	'SET_HEX_CURSOR_LOCATION',
+	'SET_HEX_BIT',
+	'UNLOCK_HAX_CELL',
+	'LOCK_HAX_CELL',
+	'SET_HEX_EDITOR_STATE',
+	'SET_HEX_EDITOR_DIALOG_MODE',
+	'LOAD_MAP',
+	'SHOW_DIALOG',
+	'SET_RENDERABLE_FONT',
+	'TELEPORT_ENTITY_TO_GEOMETRY',
+	'WALK_ENTITY_TO_GEOMETRY',
+	'WALK_ENTITY_ALONG_GEOMETRY',
+	'LOOP_ENTITY_ALONG_GEOMETRY',
+	'SET_CAMERA_TO_FOLLOW_ENTITY',
+	'TELEPORT_CAMERA_TO_GEOMETRY',
+	'PAN_CAMERA_TO_GEOMETRY',
+	'PAN_CAMERA_ALONG_GEOMETRY',
+	'LOOP_CAMERA_ALONG_GEOMETRY',
+	'SET_SCREEN_SHAKE',
+	'SCREEN_FADE_OUT',
+	'SCREEN_FADE_IN',
+	'PLAY_SOUND_CONTINUOUS',
+	'PLAY_SOUND_INTERRUPT',
+];
+
+var getObjectByNameOnMap = function(entityName, map) {
+	var object;
+	map.layers.find(function (layer) {
+		const isObjectsLayer = layer.type === 'objectgroup';
+		if (isObjectsLayer) {
+			object = layer.objects.find(function (object) {
+				return object.name === entityName;
+			});
+		}
+		return object !== undefined;
+	});
+	if (!object) {
+		throw new Error(`No entity named "${entityName}" could be found on map: "${map.name}"!`);
+	}
+	return object;
+};
 
 var initActionData = function (action) {
 	var buffer = new ArrayBuffer(8);
@@ -123,11 +239,12 @@ var serializeAction = function (
 	fileNameMap,
 	scenarioData,
 ) {
-	var handler = actionHandlerMap[action.name];
-	if (!handler) {
+	var actionIndex = actionNames.indexOf(action.name);
+	if (actionIndex === -1) {
 		throw new Error(`Action: "${action.name}" is not valid! Check the "actionHandlerMap" for valid options!`);
 	}
-	if (typeof handler === 'number') {
+	var handler = actionHandlerMap[action.name];
+	if (!handler) {
 		throw new Error(`Action: "${action.name}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
 	}
 	return handler(
@@ -146,7 +263,7 @@ var serializeScript = function (
 	scenarioData,
 ) {
 	var headerLength = (
-		16 // char[16] name
+		32 // char[32] name
 		+ 4 // uint32_t action_count
 	);
 	var result = new ArrayBuffer(
@@ -158,14 +275,14 @@ var serializeScript = function (
 		dataView,
 		scriptName,
 		0,
-		offset += 16
+		offset += 32
 	);
 	dataView.setUint32(
 		offset,
 		script.length,
 		false
 	);
-	offset += 1;
+	offset += 4;
 	script.forEach(function(action) {
 		result = combineArrayBuffers(
 			result,
@@ -188,11 +305,11 @@ var handleScript = function(
 ) {
 	var script = scriptName === 'null_script'
 		? []
-		: scenarioData.scripts[scriptName];
+		: jsonClone(scenarioData.scripts[scriptName]);
 	if (!script) {
 		throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
 	}
-	if (script && (script.scenarioIndex === undefined)) {
+	if (script.scenarioIndex === undefined) {
 		script.scenarioIndex = scenarioData.parsed.scripts.length;
 		scenarioData.parsed.scripts.push(script);
 		script.serialized = serializeScript(
@@ -206,6 +323,37 @@ var handleScript = function(
 	return script.scenarioIndex;
 };
 
+var possibleEntityScripts = ['on_interact', 'on_tick'];
+
+var handleMapEntityScripts = function (
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	map.entityIndices.forEach(function (globalEntityIndex) {
+		var entity = scenarioData.parsed.entities[globalEntityIndex];
+		possibleEntityScripts.forEach(function (propertyName) {
+			var scriptName = entity[propertyName];
+			if (scriptName) {
+				var mapLocalScriptId = map.scriptIndices.length;
+				map.scriptIndices.push(handleScript(
+					scriptName,
+					map,
+					fileNameMap,
+					scenarioData,
+				));
+				entity.dataView.setUint16(
+					entity.dataView[propertyName + '_offset'], // uint16_t on_${possibleScriptName}_script_id
+					mapLocalScriptId,
+					false
+				);
+			}
+		});
+	});
+};
+
+var possibleMapScripts = ['on_load', 'on_tick'];
+
 var handleMapScripts = function (
 	map,
 	fileNameMap,
@@ -216,21 +364,21 @@ var handleMapScripts = function (
 	//	"type":"string",
 	//	"value":"my_first_script"
 	//  },
+	map.scriptIndices.push(0); // add the global null_script id to the local map scripts
 	(map.properties || []).forEach(function(property) {
-		if (property.name === 'on_load') {
-			map.on_load = handleScript(
+		if (possibleMapScripts.includes(property.name)) {
+			map[property.name] = map.scriptIndices.length;
+			map.scriptIndices.push(handleScript(
 				property.value,
 				map,
 				fileNameMap,
 				scenarioData,
-			);
-		} else if (property.name === 'on_tick') {
-			map.on_tick = handleScript(
-				property.value,
-				map,
-				fileNameMap,
-				scenarioData,
-			);
+			));
 		}
 	});
+	handleMapEntityScripts(
+		map,
+		fileNameMap,
+		scenarioData,
+	);
 };

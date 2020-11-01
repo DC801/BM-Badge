@@ -83,11 +83,12 @@ types:
       - id: rows
         type: u2
         doc: The height of the map, in tiles
-        type: u2
       - id: on_load
         type: u2
+        doc: local index to the map's script list
       - id: on_tick
         type: u2
+        doc: local index to the map's script list
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
@@ -96,15 +97,23 @@ types:
       - id: entity_count
         type: u2
         doc: The number of entities placed on this map
+      - id: script_count
+        type: u2
+        doc: The number of scripts used on this map
       - id: entity_global_ids
         type: u2
         repeat: expr
         repeat-expr: entity_count
-        doc: The global IDs of the tilesets this map's tiles use
+        doc: The global IDs of the entities on this map
+      - id: script_global_ids
+        type: u2
+        repeat: expr
+        repeat-expr: script_count
+        doc: The global IDs of the scripts this map and its entities use
       - id: map_header_padding
         type: u2
         repeat: expr
-        repeat-expr: (entity_count + 4) % 2
+        repeat-expr: ((entity_count + script_count) + 1) % 2
         doc: Padding to align things back to uint32_t
       - id: layers
         type: map_layer(cols, rows)
@@ -247,20 +256,24 @@ types:
     seq:
       - id: name
         type: strz
-        size: 16
+        size: 12
         encoding: UTF8
+      - id: x
+        type: u2
+      - id: y
+        type: u2
+      - id: on_interact_script_id
+        type: u2
+        doc: local index to the map's script list
+      - id: on_tick_script_id
+        type: u2
+        doc: local index to the map's script list
       - id: primary_id
         type: u2
         doc: may be: entity_type_id, animation_id, tileset_id
       - id: secondary_id
         type: u2
         doc: if primary_id_type is tileset_id, this is the tile_id, otherwise 0
-      - id: script_id
-        type: u2
-      - id: x
-        type: u2
-      - id: y
-        type: u2
       - id: primary_id_type
         type: u1
         enum: entity_primary_id_type
@@ -270,16 +283,20 @@ types:
         type: u1
       - id: direction
         type: u1
-      - id: hackable_state
+      - id: hackable_state_a
         type: u1
-      - id: padding
+      - id: hackable_state_b
+        type: u1
+      - id: hackable_state_c
+        type: u1
+      - id: hackable_state_d
         type: u1
 
   script:
     seq:
       - id: name
         type: strz
-        size: 16
+        size: 32
         encoding: UTF8
       - id: action_count
         type: u4
@@ -362,22 +379,27 @@ enums:
     15: set_entity_tick_script
     16: set_map_tick_script
     17: set_entity_type
-    18: set_hex_cursor_location
-    19: set_hex_bit
-    20: unlock_hax_cell
-    21: lock_hax_cell
-    22: load_map
-    23: screen_shake
-    24: screen_fade_out
-    25: screen_fade_in
+    18: set_entity_direction
+    19: set_hex_cursor_location
+    20: set_hex_bit
+    21: unlock_hax_cell
+    22: lock_hax_cell
+    23: set_hex_editor_state
+    24: set_hex_editor_dialog_mode
+    25: load_map
     26: show_dialog
     27: set_renderable_font
-    28: move_entity_to_geometry
-    29: move_entity_along_geometry
-    30: loop_entity_along_geometry
-    31: move_camera_to_geometry
-    32: move_camera_along_geometry
-    33: loop_camera_along_geometry
-    34: set_entity_direction
-    35: set_hex_editor_state
-    36: set_hex_editor_dialog_mode
+    28: teleport_entity_to_geometry
+    29: walk_entity_to_geometry
+    30: walk_entity_along_geometry
+    31: loop_entity_along_geometry
+    32: set_camera_to_follow_entity
+    33: teleport_camera_to_geometry
+    34: pan_camera_to_geometry
+    35: pan_camera_along_geometry
+    36: loop_camera_along_geometry
+    37: set_screen_shake
+    38: screen_fade_out
+    39: screen_fade_in
+    40: play_sound_continuous
+    41: play_sound_interrupt

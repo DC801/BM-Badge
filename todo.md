@@ -144,6 +144,10 @@
 - [ ] Strings
 	- [ ] uint16_t Length
 	- [ ] char array with null termination Length bytes long
+- [ ] Save system with flags
+	- [ ] Player Name (12 bytes, like all other entities)
+	- [ ] On map init, replace player name into PlayerEntity
+	- [ ] Like 256 bits of save state flags
 
 ## Quests on the Village Quest Board
 - [ ] Save Timmy From The well
@@ -166,8 +170,9 @@
 - [ ] Get the Fountain Flowing Again
 - [ ] "I really hate that statue, please hide it in the lake."
 - [ ] Put the 4 escaped sheep back in the pen
-- [ ] Catch the NPC that teleports whenever you try to interact with them. (change their interact script)
-
+- [ ] Catch the NPC that teleports whenever you get close enough to interact with them.
+	- [ ] Their on_tick script watches for player proximity
+	- [ ] The entity sneezes and then teleports
 ### In which Tim tries to make a Hex editor tutorial script:
 
 Tutorial synopsis:
