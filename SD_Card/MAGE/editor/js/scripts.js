@@ -16,21 +16,21 @@ var actionHandlerMap = {
 		if (!action.button_id) {
 			throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `button_id`');
 		}
-		var serializedScriptId = handleScript(
+		var mapLocalScriptId = map.scriptIndices.length;
+		map.scriptIndices.push(handleScript(
 			action.success_script,
 			map,
 			fileNameMap,
 			scenarioData
-		);
+		));
 		data.dataView.setUint16(
 			1,
-			serializedScriptId,
+			mapLocalScriptId,
 			false
 		);
 		data.dataView.setUint8(
 			3,
-			action.button_id,
-			false
+			action.button_id
 		);
 		return data;
 	},
@@ -47,15 +47,16 @@ var actionHandlerMap = {
 		if (!scenarioData.scripts[action.script]) {
 			throw new Error(`RUN_SCRIPT was not able to find a script named "${action.script}" provided at the value \`script\``);
 		}
-		var serializedScriptId = handleScript(
+		var mapLocalScriptId = map.scriptIndices.length;
+		map.scriptIndices.push(handleScript(
 			action.script,
 			map,
 			fileNameMap,
 			scenarioData
-		);
+		));
 		data.dataView.setUint16(
 			1,
-			serializedScriptId,
+			mapLocalScriptId,
 			false
 		);
 		return data;

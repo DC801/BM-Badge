@@ -21,7 +21,7 @@
 			{
 				"notes": "This script should spin an entity around",
 				"name": "NON_BLOCKING_DELAY",
-				"delay_time": 100
+				"delay_time": 500
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
@@ -30,7 +30,7 @@
 			},
 			{
 				"name": "NON_BLOCKING_DELAY",
-				"delay_time": 100
+				"delay_time": 500
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
@@ -39,7 +39,7 @@
 			},
 			{
 				"name": "NON_BLOCKING_DELAY",
-				"delay_time": 100
+				"delay_time": 500
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
@@ -48,7 +48,7 @@
 			},
 			{
 				"name": "NON_BLOCKING_DELAY",
-				"delay_time": 100
+				"delay_time": 500
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
