@@ -76,6 +76,7 @@ var handleTileLayer = function(layer, map) {
 var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 	layer.objects.forEach(function (entity, index, objects) {
 		if (entity.gid) {
+			entity.sourceMap = map.name;
 			var tileData = getMapTileAndOrientationByGID(
 				entity.gid,
 				map
@@ -120,6 +121,7 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 				fileNameMap,
 				scenarioData,
 			);
+			entity.compositeEntity = compositeEntity;
 			map.entityIndices.push(
 				compositeEntity.scenarioIndex
 			);

@@ -120,14 +120,17 @@ var actionHandlerMap = {
 		if (!entity) {
 			throw new Error(`SET_ENTITY_DIRECTION was not able to find entity "${action.entity}" on map "${map.name}"`);
 		}
-		data.dataView.setUint16(
+		var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
+		if(mapLocalEntityIndex === -1) {
+			throw new Error(`SET_ENTITY_DIRECTION fount entity "${action.entity}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
+		}
+		data.dataView.setUint8(
 			1,
-			entity.scenarioIndex,
-			false
+			mapLocalEntityIndex,
 		);
 		data.dataView.setUint8(
-			3,
-			entity.scenarioIndex,
+			2,
+			direction,
 		);
 		return data;
 	},
