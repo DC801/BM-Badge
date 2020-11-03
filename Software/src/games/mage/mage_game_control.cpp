@@ -367,6 +367,11 @@ void MageGameControl::updatePointerToPlayerEntity(std::string name)
 
 void MageGameControl::applyUniversalInputs()
 {
+	//check to see if player input is allowed:
+	if(!playerHasControl)
+	{
+		return;
+	}
 	//make sure any button handling in this function can be processed in ANY game mode.
 	//that includes the game mode, hex editor mode, any menus, maps, etc.
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
@@ -385,6 +390,11 @@ void MageGameControl::applyUniversalInputs()
 
 void MageGameControl::applyGameModeInputs()
 {
+	//check to see if player input is allowed:
+	if(!playerHasControl)
+	{
+		return;
+	}
 	if(playerEntityIndex != NO_PLAYER)
 	{
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
