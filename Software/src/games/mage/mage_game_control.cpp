@@ -340,7 +340,8 @@ void MageGameControl::LoadMap(uint16_t index)
 	PopulateMapData(index);
 
 	//call the map's load script:
-	MageScript->handleMapOnLoadScript();
+	//note all other calls to this function should set the isFirstRun argument to false.
+	MageScript->handleMapOnLoadScript(true);
 }
 
 void MageGameControl::updatePointerToPlayerEntity(std::string name)
@@ -430,8 +431,9 @@ void MageGameControl::applyGameModeInputs()
 			if(EngineInput_Buttons.ljoy_down )
 				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
 			if(EngineInput_Buttons.rjoy_right );
-				//This button is being used for onInteract script handling, and the handler 
-				//was moved into the GameUpdate() function in mage.cpp instead of here
+				//We need a function to determine if an entity is close enough to the player to start an onInteract script.
+				//this function will also need to dicide which entity to trigger, and set up the script to be ready for a fresh run when
+				//the handler is called further down the loop. -Tim
 			if(EngineInput_Buttons.rjoy_up );
 				//no task assigned to rjoy_up in game mode
 			if(EngineInput_Buttons.ljoy_center );

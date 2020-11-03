@@ -5,6 +5,8 @@
 #include "mage_game_control.h"
 #include "FrameBuffer.h"
 
+//consolidates all script handlers into one function:
+void handleScripts();
 
 //updates the state of all the things before rendering:
 void GameUpdate();

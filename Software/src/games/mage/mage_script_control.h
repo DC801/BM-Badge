@@ -163,7 +163,7 @@ class MageScriptControl
 		MageScriptState getEntityTickResumeState(uint8_t index);
 
 		//these functions will call the appropriate script processing for their script type:
-		void handleMapOnLoadScript();
+		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
 		void handleEntityOnInteractScript(uint8_t index);
 		void handleEntityOnTickScript(uint8_t index);

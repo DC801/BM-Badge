@@ -607,29 +607,21 @@ MageScriptState MageScriptControl::getEntityTickResumeState(uint8_t index)
 	return entityTickResumeStates[index];
 }
 
-void MageScriptControl::handleMapOnLoadScript()
+void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 {
-	//get a bool to show if a script is already running:
-	bool scriptIsRunning = mapLoadResumeState.scriptIsRunning;
-	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
-	if(MageHex->getHexEditorState() && !scriptIsRunning)
+	//since this should only run once when a map is loaded, and then proceed through the script once,
+	//we only need to check the isFirstRun argument to see if we should initialize based on the 
+	//map's onLoad scriptId or if we should resume from the state of the mapLoadResumeState struct.
+	if(isFirstRun)
+	{
+		initScriptState(&mapLoadResumeState, MageGame->Map().OnLoad(), true);
+	}
+	//this checks to see if the map onLoad script is complete and returns if it is:
+	else if(!mapLoadResumeState.scriptIsRunning)
 	{
 		return;
 	}
-	//if a script isn't already running, OR
-	//if the mapLoad script Id doesn't match the *ResumeState, 
-	//re-initialize the *ResumeState struct from the scriptId
-	else if(
-		!scriptIsRunning ||
-		mapLoadResumeState.scriptId != (MageGame->Map().OnLoad()) 
-	)
-	{
-		//set the jumpScript to match the desired script:
-		jumpScript = MageGame->Map().OnLoad();
-		//populate the MageScriptState struct with appropriate init data
-		initScriptState(&mapLoadResumeState, jumpScript, true);
-	}
-	//otherwise, a script is running and the resumeStateStruct controls all further actions:
+	//otherwise, the load script is still running and the resumeStateStruct controls all further actions:
 	else
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
@@ -677,30 +669,19 @@ void MageScriptControl::handleMapOnTickScript()
 
 void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 {
-	//get a bool to show if a script is already running:
-	bool scriptIsRunning = entityInteractResumeStates[index].scriptIsRunning;
-	//we also need to convert the entity's local ScriptId to the global context:
-	uint16_t globalEntityScriptId = MageGame->Map().getGlobalScriptId(MageGame->entities[index].onInteractScriptId);
-
-	//if a script isn't already running and you're in hex editor state, don't start any new scripts:
-	if(MageHex->getHexEditorState() && !scriptIsRunning)
+	uint16_t globalEntityOnInteractScriptId = MageGame->Map().getGlobalScriptId(MageGame->entities[index].onInteractScriptId);
+	//if a script is not currently running, do nothing.
+	if(!entityInteractResumeStates[index].scriptIsRunning)
 	{
 		return;
 	}
-	//if a script isn't already running, OR
-	//if the mapLoad script Id doesn't match the *ResumeState, 
-	//re-initialize the *ResumeState struct from the scriptId
-	else if(
-		!scriptIsRunning ||
-		entityInteractResumeStates[index].scriptId != (globalEntityScriptId)
-	)
+	//if the entity scriptId doesn't match what is in the entityInteractResumeStates[index] struct, re-init it
+	//with .scriptIsRunning set to false to stop all current actions.
+	else if(entityInteractResumeStates[index].scriptId != globalEntityOnInteractScriptId)
 	{
-		//set the jumpScript to match the desired script:
-		jumpScript = globalEntityScriptId;
-		//populate the MageScriptState struct with appropriate init data
-		initScriptState(&entityInteractResumeStates[index], jumpScript, true);
+		initScriptState(&entityInteractResumeStates[index], globalEntityOnInteractScriptId, false);
+		return;
 	}
-	//otherwise, a script is running and the resumeStateStruct controls all further actions:
 	else
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
