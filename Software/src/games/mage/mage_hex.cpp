@@ -115,13 +115,17 @@ uint16_t MageHexEditor::getCurrentMemPage()
 
 }
 
-void MageHexEditor::applyHexModeInputs()
+void MageHexEditor::updateHexStateVariables()
 {
-	static uint8_t hexTickDelay = 0;
 	bytesPerPage = dialogState ? 64 : 192;
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
 	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+}
+
+void MageHexEditor::applyHexModeInputs()
+{
+	static uint8_t hexTickDelay = 0;
 	
 	//check to see if player input is allowed:
 	if(!MageGame->playerHasControl)
