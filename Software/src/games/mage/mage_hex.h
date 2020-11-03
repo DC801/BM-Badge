@@ -131,7 +131,10 @@ public:
 	//of the current byte in the hex editor.
 	void updateHexLights();
 
-	//this updates the hex editor to show the current state of memory.
+	//this updates the variables used by the hex editor when applying inputs and rendering.
+	void updateHexStateVariables();
+
+	//this applies inputs to the hex editor state.
 	void applyHexModeInputs();
 
 	//This sets a char array starting at the current byte with any printable characters.

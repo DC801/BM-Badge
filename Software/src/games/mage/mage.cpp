@@ -69,6 +69,9 @@ void GameUpdate()
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
 
+	//update universally used hex editor state variables:
+	MageHex->updateHexStateVariables();
+
 	//either do hax inputs:
 	if (MageHex->getHexEditorState())
 	{
