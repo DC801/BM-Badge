@@ -28,6 +28,17 @@ Point cameraPosition = {
 	.x = 0,
 	.y = 0,
 };
+void handleBLockingDelay()
+{
+	//if a blocking delay was added by any actions, pause before returning to the game loop:
+	if(MageScript->blockingDelayTime)
+	{
+		//delay for the right amount of time
+		nrf_delay_ms(MageScript->blockingDelayTime);
+		//reset delay time when done so we don't do this every loop.
+		MageScript->blockingDelayTime = 0;
+	}
+}
 
 void handleScripts()
 {
@@ -55,34 +66,30 @@ void handleScripts()
 
 void GameUpdate()
 {
-	//check to see if player input is allowed:
-	if(MageGame->playerHasControl)
+	//apply inputs that work all the time
+	MageGame->applyUniversalInputs();
+
+	//either do hax inputs:
+	if (MageHex->getHexEditorState())
 	{
-		//apply inputs that work all the time
-		MageGame->applyUniversalInputs();
+		//apply inputs to the hex editor:
+		MageHex->applyHexModeInputs();
 
-		//either do hax inputs:
-		if (MageHex->getHexEditorState())
-		{
-			//apply inputs to the hex editor:
-			MageHex->applyHexModeInputs();
+		//then handle any still-running scripts:
+		handleScripts();
+	}
 
-			//then handle any still-running scripts:
-			handleScripts();
-		}
+	//or be boring and normal:
+	else
+	{
+		//this handles buttons and state updates based on button presses in game mode:
+		MageGame->applyGameModeInputs();
 
-		//or be boring and normal:
-		else
-		{
-			//this handles buttons and state updates based on button presses in game mode:
-			MageGame->applyGameModeInputs();
+		//handle scripts:
+		handleScripts();
 
-			//handle scripts:
-			handleScripts();
-
-			//update the entities based on the current state of their (hackable) data array.
-			MageGame->UpdateEntities(deltaTime);
-		}
+		//update the entities based on the current state of their (hackable) data array.
+		MageGame->UpdateEntities(deltaTime);
 	}
 }
 
@@ -169,10 +176,6 @@ void MAGE()
 	//initialize the canvas object for the screen buffer.
 	mage_canvas = p_canvas();
 
-	//note the time the first loop is running
-	lastTime = millis();
-	lastLoopTime = lastTime;
-
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);
 
@@ -187,6 +190,10 @@ void MAGE()
 	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
+
+	//note the time the first loop is running
+	lastTime = millis();
+	lastLoopTime = lastTime;
 
 	//main game loop:
 	while (EngineIsRunning())
@@ -214,6 +221,9 @@ void MAGE()
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
+
+		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
+		handleBLockingDelay();
 	}
 
 	// Close rom and any open files

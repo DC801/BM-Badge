@@ -5,6 +5,9 @@
 #include "mage_game_control.h"
 #include "FrameBuffer.h"
 
+//this will handle any blocking delays at the end of the loop
+void handleBlockingDelay();
+
 //consolidates all script handlers into one function:
 void handleScripts();
 

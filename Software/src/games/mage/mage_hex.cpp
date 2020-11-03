@@ -122,6 +122,12 @@ void MageHexEditor::applyHexModeInputs()
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
 	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
+	
+	//check to see if player input is allowed:
+	if(!MageGame->playerHasControl)
+	{
+		return;
+	}
 
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:

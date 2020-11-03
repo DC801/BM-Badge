@@ -249,10 +249,34 @@ void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resu
 
 void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
+	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
-	nrf_delay_ms(argStruct->delayTime);
+	//If there's already a total number of loops to next action set, a delay is currently in progress:
+	if(resumeStateStruct->totalLoopsToNextAction != 0)
+	{
+		//decrement the number of loops to the end of the delay:
+		resumeStateStruct->loopsToNextAction--;
+		//if we've reached the end:
+		if(resumeStateStruct->loopsToNextAction <= 0)
+		{
+			//reset the variables and return, the delay is complete.
+			resumeStateStruct->totalLoopsToNextAction = 0;
+			resumeStateStruct->loopsToNextAction = 0;
+			return;
+		}
+	}
+	//a delay is not active, so we should start one:
+	else
+	{
+		//always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
+		uint16_t totalDelayLoops = 1;
+		//also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->delayTime:
+		blockingDelayTime = (blockingDelayTime < argStruct->delayTime) ? argStruct->delayTime : blockingDelayTime;
+		//now set the resumeStateStruct variables:
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	}
 	return;
 }
 
@@ -518,6 +542,8 @@ MageScriptControl::MageScriptControl()
 
 	scriptRequiresRender = false;
 
+	blockingDelayTime = 0;
+
 	initScriptState(&mapLoadResumeState, MAGE_NULL_SCRIPT, false);
 	initScriptState(&mapTickResumeState, MAGE_NULL_SCRIPT, false);
 
@@ -579,6 +605,7 @@ uint32_t MageScriptControl::size() const
 	uint32_t size =
 		sizeof(jumpScript) +
 		sizeof(scriptRequiresRender) +
+		sizeof(blockingDelayTime) +
 		sizeof(MageScriptState) + //mapLoadResumeState
 		sizeof(MageScriptState) + //mapTickResumeState
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityInteractResumeStates

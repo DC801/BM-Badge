@@ -151,6 +151,10 @@ class MageScriptControl
 		//Action Logic Type: NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
 		void playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct);
 	public:
+		//this is a global that holds the amount of millis that a blocking delay will
+		//prevent the main loop from continuing for. It is set by the blockingDelay() action.
+		uint32_t blockingDelayTime;
+
 		MageScriptControl();
 
 		//returns size in RAM of all reserved class variables.
