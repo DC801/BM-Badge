@@ -23,7 +23,10 @@ var handleScenarioData = function(fileNameMap) {
 		});
 		handleScript(
 			'null_script',
-			{name: 'null_map_only_used_for_null_script'},
+			{
+				name: 'null_map_only_used_for_null_script',
+				scriptIndices: [],
+			},
 			fileNameMap,
 			scenarioData,
 		);
