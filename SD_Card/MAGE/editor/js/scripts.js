@@ -16,13 +16,12 @@ var actionHandlerMap = {
 		if (!action.button_id) {
 			throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `button_id`');
 		}
-		var mapLocalScriptId = map.scriptIndices.length;
-		map.scriptIndices.push(handleScript(
+		var mapLocalScriptId = handleScript(
 			action.success_script,
 			map,
 			fileNameMap,
 			scenarioData
-		));
+		).mapLocalScriptId;
 		data.dataView.setUint16(
 			1,
 			mapLocalScriptId,
@@ -47,13 +46,12 @@ var actionHandlerMap = {
 		if (!scenarioData.scripts[action.script]) {
 			throw new Error(`RUN_SCRIPT was not able to find a script named "${action.script}" provided at the value \`script\``);
 		}
-		var mapLocalScriptId = map.scriptIndices.length;
-		map.scriptIndices.push(handleScript(
+		var mapLocalScriptId = handleScript(
 			action.script,
 			map,
 			fileNameMap,
 			scenarioData
-		));
+		).mapLocalScriptId;
 		data.dataView.setUint16(
 			1,
 			mapLocalScriptId,
@@ -324,7 +322,12 @@ var handleScript = function(
 			scenarioData,
 		);
 	}
-	return script.scenarioIndex;
+	var mapLocalScriptId = map.scriptIndices.length;
+	map.scriptIndices.push(script.scenarioIndex);
+	return {
+		mapLocalScriptId: mapLocalScriptId,
+		globalScriptId: script.scenarioIndex
+	};
 };
 
 var possibleEntityScripts = ['on_interact', 'on_tick'];
@@ -339,13 +342,12 @@ var handleMapEntityScripts = function (
 		possibleEntityScripts.forEach(function (propertyName) {
 			var scriptName = entity[propertyName];
 			if (scriptName) {
-				var mapLocalScriptId = map.scriptIndices.length;
-				map.scriptIndices.push(handleScript(
+				var mapLocalScriptId = handleScript(
 					scriptName,
 					map,
 					fileNameMap,
 					scenarioData,
-				));
+				).mapLocalScriptId;
 				entity.dataView.setUint16(
 					entity.dataView[propertyName + '_offset'], // uint16_t on_${possibleScriptName}_script_id
 					mapLocalScriptId,
@@ -371,13 +373,12 @@ var handleMapScripts = function (
 	map.scriptIndices.push(0); // add the global null_script id to the local map scripts
 	(map.properties || []).forEach(function(property) {
 		if (possibleMapScripts.includes(property.name)) {
-			map[property.name] = map.scriptIndices.length;
-			map.scriptIndices.push(handleScript(
+			map[property.name] = handleScript(
 				property.value,
 				map,
 				fileNameMap,
 				scenarioData,
-			));
+			).mapLocalScriptId;
 		}
 	});
 	handleMapEntityScripts(

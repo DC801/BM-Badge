@@ -60,13 +60,19 @@
                  "gid":335,
                  "height":32,
                  "id":3,
-                 "name":"",
+                 "name":"Miles",
+                 "properties":[
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":20
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":42,
-                 "y":266
+                 "x":52.5,
+                 "y":280
                 }, 
                 {
                  "gid":337,
@@ -77,31 +83,26 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":128,
-                 "y":64
+                 "x":113,
+                 "y":71
                 }, 
                 {
                  "gid":2147483905,
                  "height":48,
                  "id":5,
-                 "name":"",
+                 "name":"Lenny",
                  "properties":[
                         {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"entity_on_interact_script"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"null_script"
+                         "name":"path",
+                         "type":"object",
+                         "value":12
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":31.75,
-                 "y":96
+                 "x":41.4966172520147,
+                 "y":86.4368222067456
                 }, 
                 {
                  "gid":362,
@@ -127,28 +128,58 @@
                  "y":180
                 }, 
                 {
-                 "gid":337,
-                 "height":32,
-                 "id":23,
-                 "name":"",
+                 "gid":373,
+                 "height":48,
+                 "id":21,
+                 "name":"Stuart",
+                 "properties":[
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":17
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":115,
-                 "y":96
+                 "width":48,
+                 "x":301.5,
+                 "y":143.5
                 }, 
                 {
-                 "gid":337,
+                 "gid":409,
+                 "height":48,
+                 "id":22,
+                 "name":"Isabelle",
+                 "properties":[
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":19
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":246.5,
+                 "y":216.5
+                }, 
+                {
+                 "gid":433,
                  "height":32,
-                 "id":27,
-                 "name":"",
+                 "id":23,
+                 "name":"Drake",
+                 "properties":[
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":25
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":141,
-                 "y":95.75
+                 "x":433,
+                 "y":45.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -230,72 +261,117 @@
                  "y":464
                 }, 
                 {
-                 "ellipse":true,
-                 "height":16.625,
+                 "height":117.5,
                  "id":15,
-                 "name":"",
+                 "name":"roof",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16.25,
-                 "x":136.625,
-                 "y":47.25
+                 "width":128.5,
+                 "x":143,
+                 "y":303.5
                 }, 
                 {
-                 "height":17.5,
-                 "id":19,
-                 "name":"",
+                 "height":0,
+                 "id":17,
+                 "name":"path_star",
+                 "polygon":[
+                        {
+                         "x":-12.0692640692641,
+                         "y":-9.79437229437229
+                        }, 
+                        {
+                         "x":-51.487012987013,
+                         "y":84.4220779220779
+                        }, 
+                        {
+                         "x":38.9632034632035,
+                         "y":26.0324675324675
+                        }, 
+                        {
+                         "x":-65.0367965367965,
+                         "y":25.0324675324675
+                        }, 
+                        {
+                         "x":18.0541125541126,
+                         "y":86.7056277056277
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":31.25,
-                 "x":144.75,
-                 "y":46.5
-                }, 
-                {
-                 "height":31.25,
-                 "id":20,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16.25,
-                 "x":136.5,
-                 "y":24
-                }, 
-                {
-                 "height":17.5,
-                 "id":21,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":33.25,
-                 "x":111.75,
-                 "y":46.5
-                }, 
-                {
-                 "height":30.25,
-                 "id":22,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":15.75,
-                 "x":137,
-                 "y":56
+                 "width":0,
+                 "x":284.873955927693,
+                 "y":117.567163629866
                 }, 
                 {
                  "ellipse":true,
-                 "height":16.625,
-                 "id":26,
-                 "name":"",
+                 "height":113,
+                 "id":19,
+                 "name":"lake_circle",
+                 "properties":[
+                        {
+                         "name":"points",
+                         "type":"int",
+                         "value":12
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":16.25,
-                 "x":136.875,
-                 "y":78.1875
+                 "width":113,
+                 "x":214.5,
+                 "y":104
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"exa_jog_loop_path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":32
+                        }, 
+                        {
+                         "x":256,
+                         "y":32
+                        }, 
+                        {
+                         "x":288,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":64,
+                 "y":224
+                }, 
+                {
+                 "height":0,
+                 "id":25,
+                 "name":"a_lonely_road",
+                 "polyline":[
+                        {
+                         "x":28,
+                         "y":-4
+                        }, 
+                        {
+                         "x":28,
+                         "y":444
+                        }, 
+                        {
+                         "x":-388,
+                         "y":444
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":420,
+                 "y":36
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -316,7 +392,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":28,
+ "nextobjectid":26,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -356,6 +432,18 @@
         {
          "firstgid":361,
          "source":"entity-golem.json"
+        }, 
+        {
+         "firstgid":373,
+         "source":"entity-dragon_skull.json"
+        }, 
+        {
+         "firstgid":409,
+         "source":"entity-eye_faerie.json"
+        }, 
+        {
+         "firstgid":433,
+         "source":"entity-village_elder.json"
         }],
  "tilewidth":32,
  "type":"map",
