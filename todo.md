@@ -152,6 +152,38 @@
 	- [ ] On map init, replace player name into PlayerEntity
 	- [ ] Like 256 bits of save state flags
 
+# Assets we need
+- [ ] More villagers
+	- [ ] One of the children's actions should be a sneeze
+- [ ] The other mystical artifacts, which do _not_ pick the mage
+- [ ] Ring Zero, spinning
+- [ ] Chicken
+- [ ] Sparkles that could be overlayed on anything to draw attention
+- [ ] Character Portraits for the Dialog system - Kristen
+	- [ ] Mouth open, closed
+- [x] The Quest Board tiles - Corfid
+- [ ] The 9-slice image for "Quest List" screen - Kristen
+- [ ] The 9-slice image for dialog borders - Kristen
+- [ ] Tiles for the inside of village houses
+- [ ] Set Dressing
+	- [ ] Bed
+	- [ ] Flower Pots
+	- [ ] Windows
+	- [ ] Kitchen table
+	- [ ] Kitchen chairs at table
+	- [ ] Pots
+	- [ ] Interior Doors for all 4 walls
+	- [ ] Fireplace
+	- [ ] Shelves with things on them
+	- [ ] Fruits on table
+	- [ ] Fence Posts to paint, so we need 2 states
+	- [ ] Dancy Flowers
+	- [ ] A rake, for the lake
+- [ ] A knob that has never turned, but must be turned to get the fountain to turn on again
+- [ ] A well, for Timmy to get stuck in
+- [ ] Tiles for village elder's basement/dungeon - Corfid
+- [ ] Bender + shiny metal ass
+
 ## Quests on the Village Quest Board
 - [ ] Save Timmy From The well
 	- Someone should point out that Timmy could always fly, and could have flown himself out of the well.
@@ -173,6 +205,7 @@
 - [ ] Get the Fountain Flowing Again
 - [ ] "I really hate that statue, please hide it in the lake."
 - [ ] Put the 4 escaped sheep back in the pen
+- [ ] Find all of the hidden Chickens
 - [ ] Catch the NPC that teleports whenever you get close enough to interact with them.
 	- [ ] Their on_tick script watches for player proximity
 	- [ ] The entity sneezes and then teleports
