@@ -43,7 +43,7 @@ var actionHandlerMap = {
 		if (!action.script) {
 			throw new Error('RUN_SCRIPT requires a string value for `script`');
 		}
-		if (!scenarioData.scripts[action.script]) {
+		if (!scenarioData.scripts[action.script] && (action.script != 'null_script')) {
 			throw new Error(`RUN_SCRIPT was not able to find a script named "${action.script}" provided at the value \`script\``);
 		}
 		var mapLocalScriptId = handleScript(

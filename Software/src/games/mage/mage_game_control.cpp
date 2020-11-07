@@ -126,7 +126,7 @@ const MageTileset& MageGameControl::Tile(uint32_t index) const
 	return tile;
 }
 
-const MageMap& MageGameControl::Map() const
+MageMap& MageGameControl::Map()
 {
 	return map;
 }

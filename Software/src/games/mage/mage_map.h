@@ -61,6 +61,9 @@ public:
 	//the returns a global scriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
+	//this sets the map's onLoad and onTick script value.
+	void setOnLoad(uint16_t scriptId);
+	void setOnTick(uint16_t scriptId);
 }; //class MageMap
 
 #endif //_MAGE_MAP_H

@@ -26,6 +26,10 @@ class MageScriptControl
 		//most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
 		uint8_t currentEntityId;
 
+		//this tracks which type of script called processScript() so that when a call script
+		//calls a new script, the original entity can be updated to match.
+		uint8_t currentScriptType;
+
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;
@@ -45,7 +49,7 @@ class MageScriptControl
 
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
-		void processScript(MageScriptState * resumeStateStruct);
+		void processScript(MageScriptState * resumeStateStruct, uint8_t entityId, uint8_t scriptType);
 
 		//this will run through the actions in a script from the state stores in resumeState
 		//if a jumpScript is called by an action, it will return without processing any further actions.
@@ -55,6 +59,9 @@ class MageScriptControl
 		//a function based on the ActionTypeId 
 		void runAction(uint32_t argumentMemoryAddress, MageScriptState * resumeStateStruct);
 
+		//this allows an I+C action to set the calling map or entity script to match the new script.
+		void setEntityScript(uint16_t scriptId, uint8_t entityId, uint8_t scriptType);
+
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM
 
@@ -63,7 +70,6 @@ class MageScriptControl
 		//NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
 		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the scriptId is changed
 		//B   = blocking, will pause all game actions until complete.
-		//I+U = Scripts that are applied to the game state instantly but will require a new update and render before the changes take effect
 		//I+C = scripts that may call another scriptId, discarding any actions that occur after them in the current script
 		//I've noted the blocking state of actions below on the line above the action:
 
@@ -89,9 +95,9 @@ class MageScriptControl
 		void nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: B (note, setPauseState require a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
 		void setPauseState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setEntityByte(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -101,29 +107,29 @@ class MageScriptControl
 		void setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setHexBit(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U (loadMap will stop all other scripts immediately, loading a new map with new scripts)
+		//Action Logic Type: I (loadMap will stop all other scripts immediately, loading a new map with new scripts)
 		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
 		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -131,9 +137,9 @@ class MageScriptControl
 		void walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NBC
 		void loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+U
+		//Action Logic Type: I
 		void teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);

@@ -85,6 +85,14 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
 #endif
 
+//these are the types of scripts that can be on a map or entity:
+typedef enum {
+	ON_LOAD = 0,
+	ON_TICK = 1,
+	ON_INTERACT = 2,
+	NUM_SCRIPT_TYPES
+} MageScriptType;
+
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum {
 	TILESET = 0,

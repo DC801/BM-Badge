@@ -89,7 +89,7 @@ public:
 	const MageTileset& Tile(uint32_t index) const;
 
 	//this will return the current map object.
-	const MageMap& Map() const;
+	MageMap& Map();
 
 	//this will fill in an entity structure's data from ROM
 	MageEntity LoadEntity(uint32_t address);

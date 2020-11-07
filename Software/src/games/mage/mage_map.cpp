@@ -239,3 +239,13 @@ uint32_t MageMap::LayerOffset(uint16_t num) const
 
 	return 0;
 }
+
+void MageMap::setOnLoad(uint16_t scriptId)
+{
+	onLoad = scriptId;
+}
+
+void MageMap::setOnTick(uint16_t scriptId)
+{
+	onTick = scriptId;
+}
