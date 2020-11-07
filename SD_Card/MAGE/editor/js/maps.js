@@ -248,6 +248,7 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 		map.scenarioIndex = mapFile.scenarioIndex;
 		map.entityIndices = [];
 		map.scriptIndices = [];
+		map.scriptNameKeys = {};
 		map.serializedLayers = [];
 		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)

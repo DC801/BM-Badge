@@ -118,7 +118,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"entity_on_tick_script"
+                         "value":"spin_self_clockwise"
                         }],
                  "rotation":0,
                  "type":"",
