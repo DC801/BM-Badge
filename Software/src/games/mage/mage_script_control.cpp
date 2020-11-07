@@ -26,8 +26,12 @@ void MageScriptControl::initScriptState(MageScriptState * resumeStateStruct, uin
 	resumeStateStruct->loopsToNextAction = 0;
 }
 
-void MageScriptControl::processScript(MageScriptState * resumeStateStruct)
+void MageScriptControl::processScript(MageScriptState * resumeStateStruct, uint8_t entityId, uint8_t scriptType)
 {
+	//set the current entity to the passed value.
+	currentEntityId = entityId;
+	//set the current script type to the passed value.
+	currentScriptType = scriptType;
 	//All script processing from here relies solely on the state of the resumeStateStruct:
 	//Make sure you've got your script states correct in the resumeStateStruct array before calling this function:
 	while(jumpScript != MAGE_NULL_SCRIPT)
@@ -144,6 +148,31 @@ MageAction_Error:
 	ENGINE_PANIC("Failed to read action data.");
 }
 
+void MageScriptControl::setEntityScript(uint16_t scriptId, uint8_t entityId, uint8_t scriptType)
+{
+	//check for map script first:
+	if(entityId == MAGE_MAP_ENTITY)
+	{
+		if(scriptType == MageScriptType::ON_LOAD)
+		{
+			MageGame->Map().setOnLoad(scriptId);
+		}
+		else if(scriptType == MageScriptType::ON_TICK)
+		{
+			MageGame->Map().setOnTick(scriptId);
+		}
+	}
+	//if it's not a map script, set the appropriate entity's script value:
+	if(scriptType == MageScriptType::ON_INTERACT)
+	{
+		MageGame->entities[entityId].onInteractScriptId = scriptId;
+	}
+	else if(scriptType == MageScriptType::ON_TICK)
+	{
+		MageGame->entities[entityId].onTickScriptId = scriptId;
+	}
+}
+
 void MageScriptControl::nullAction(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	//nullAction does nothing.
@@ -168,6 +197,7 @@ void MageScriptControl::checkEntityByte(uint8_t * args, MageScriptState * resume
 	if(argStruct->expectedValue == *byteAddress)
 	{
 		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
+		setEntityScript(jumpScript, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -203,7 +233,9 @@ void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * re
 	bool button_activated = *button_address;
 	if(button_activated)
 	{
+		//set the jump script and update the script on the calling entity:
 		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
+		setEntityScript(jumpScript, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -221,6 +253,7 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
+		setEntityScript(jumpScript, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -234,6 +267,7 @@ void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateS
 	argStruct->scriptId = MageGame->Map().getGlobalScriptId(argStruct->scriptId);
 	//set the jumpScript to the new script
 	jumpScript = MageGame->getValidGlobalScriptId(argStruct->scriptId);
+	setEntityScript(jumpScript, currentEntityId, currentScriptType);
 	return;
 }
 
@@ -553,7 +587,9 @@ MageScriptControl::MageScriptControl()
 
 	blockingDelayTime = 0;
 
+	//these should never be used in their initialized states, they will always be set when calling processScript()
 	currentEntityId = MAGE_MAP_ENTITY;
+	currentScriptType = ON_LOAD;
 
 	initScriptState(&mapLoadResumeState, MAGE_NULL_SCRIPT, false);
 	initScriptState(&mapTickResumeState, MAGE_NULL_SCRIPT, false);
@@ -617,6 +653,7 @@ uint32_t MageScriptControl::size() const
 		sizeof(jumpScript) +
 		sizeof(blockingDelayTime) +
 		sizeof(currentEntityId) +
+		sizeof(currentScriptType) +
 		sizeof(MageScriptState) + //mapLoadResumeState
 		sizeof(MageScriptState) + //mapTickResumeState
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityInteractResumeStates
@@ -667,10 +704,8 @@ void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = mapLoadResumeState.scriptId;
 	}
-	//set the current entity to the map entity value.
-	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&mapLoadResumeState);
+	processScript(&mapLoadResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
 }
 
 void MageScriptControl::handleMapOnTickScript()
@@ -704,10 +739,9 @@ void MageScriptControl::handleMapOnTickScript()
 		jumpScript = mapTickResumeState.scriptId;
 	}
 	//set the current entity to the map entity value.
-	//this doesn't need to be reset, as it is set every time any script is started or resumed.
 	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&mapTickResumeState);
+	processScript(&mapTickResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
 void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
@@ -735,7 +769,7 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 	//set the current entity to the current entity index value.
 	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&entityInteractResumeStates[index]);
+	processScript(&entityInteractResumeStates[index], index, MageScriptType::ON_INTERACT);
 }
 
 void MageScriptControl::handleEntityOnTickScript(uint8_t index)
@@ -774,5 +808,5 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 	//set the current entity to the current entity index value.
 	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&entityTickResumeStates[index]);
+	processScript(&entityTickResumeStates[index], index, MageScriptType::ON_TICK);
 }
