@@ -80,7 +80,8 @@
 	},
 	"maps": {
 		"test": "maps/test.json",
-		"town_map": "maps/town_map.json"
+		"town_map": "maps/town_map.json",
+		"action_test": "maps/action_testing.json"
 	},
 	"entityTypes": {
 		"mage": {
