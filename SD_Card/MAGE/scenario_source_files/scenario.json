@@ -81,7 +81,8 @@
 	"maps": {
 		"test": "maps/test.json",
 		"town_map": "maps/town_map.json",
-		"action_test": "maps/action_testing.json"
+		"action_test": "maps/action_testing.json",
+		"action_test_2": "maps/action_testing_2.json"
 	},
 	"entityTypes": {
 		"mage": {
