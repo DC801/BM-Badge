@@ -26,6 +26,7 @@ var handleScenarioData = function(fileNameMap) {
 			{
 				name: 'null_map_only_used_for_null_script',
 				scriptIndices: [],
+				scriptNameKeys: {},
 			},
 			fileNameMap,
 			scenarioData,

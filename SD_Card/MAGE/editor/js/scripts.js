@@ -293,6 +293,20 @@ var serializeScript = function (
 		false
 	);
 	offset += 4;
+
+	// in case actions call scripts that call this script again,
+	// put this script into the scriptKeyNames first,
+	// so others can refer to this without infinite looping because
+	// it's already in there.
+	script.scenarioIndex = scenarioData.parsed.scripts.length;
+	scenarioData.parsed.scripts.push(script);
+	var mapLocalScriptId = map.scriptIndices.length;
+	map.scriptIndices.push(script.scenarioIndex);
+	map.scriptNameKeys[scriptName] = {
+		mapLocalScriptId: mapLocalScriptId,
+		globalScriptId: script.scenarioIndex
+	};
+
 	script.forEach(function(action) {
 		result = combineArrayBuffers(
 			result,
@@ -313,35 +327,32 @@ var handleScript = function(
 	fileNameMap,
 	scenarioData,
 ) {
-	var script = scriptName === 'null_script'
-		? []
-		: jsonClone(scenarioData.scripts[scriptName]);
-	if (!script) {
-		throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
+	var result = map.scriptNameKeys[scriptName];
+	if (!result) {
+		var script = scriptName === 'null_script'
+			? []
+			: jsonClone(scenarioData.scripts[scriptName]);
+		if (!script) {
+			throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
+		}
+		if(script.length === 0) {
+			result = {
+				mapLocalScriptId: 0,
+				globalScriptId: 0
+			};
+			map.scriptNameKeys[scriptName] = result;
+		} else {
+			script.serialized = serializeScript(
+				script,
+				scriptName,
+				map,
+				fileNameMap,
+				scenarioData,
+			);
+			result = map.scriptNameKeys[scriptName];
+		}
 	}
-	if(script.length == 0) {
-		return {
-			mapLocalScriptId: 0,
-			globalScriptId: 0
-		};
-	}
-	if (script.scenarioIndex === undefined) {
-		script.scenarioIndex = scenarioData.parsed.scripts.length;
-		scenarioData.parsed.scripts.push(script);
-		script.serialized = serializeScript(
-			script,
-			scriptName,
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	}
-	var mapLocalScriptId = map.scriptIndices.length;
-	map.scriptIndices.push(script.scenarioIndex);
-	return {
-		mapLocalScriptId: mapLocalScriptId,
-		globalScriptId: script.scenarioIndex
-	};
+	return result;
 };
 
 var possibleEntityScripts = ['on_interact', 'on_tick'];
@@ -384,7 +395,12 @@ var handleMapScripts = function (
 	//	"type":"string",
 	//	"value":"my_first_script"
 	//  },
-	map.scriptIndices.push(0); // add the global null_script id to the local map scripts
+	handleScript( // add the global null_script id to the local map scripts
+		'null_script',
+		map,
+		fileNameMap,
+		scenarioData,
+	);
 	(map.properties || []).forEach(function(property) {
 		if (possibleMapScripts.includes(property.name)) {
 			map[property.name] = handleScript(
