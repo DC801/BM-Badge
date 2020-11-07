@@ -33,7 +33,7 @@
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
-				"entity": "Bob",
+				"entity": "%SELF%",
 				"direction": "north"
 			},
 			{
@@ -42,7 +42,7 @@
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
-				"entity": "Bob",
+				"entity": "%SELF%",
 				"direction": "east"
 			},
 			{
@@ -51,7 +51,7 @@
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
-				"entity": "Bob",
+				"entity": "%SELF%",
 				"direction": "south"
 			},
 			{
@@ -60,7 +60,7 @@
 			},
 			{
 				"name": "SET_ENTITY_DIRECTION",
-				"entity": "Bob",
+				"entity": "%SELF%",
 				"direction": "west"
 			}
 		],
@@ -75,6 +75,14 @@
 			{
 				"name": "SET_HEX_EDITOR_DIALOG_MODE",
 				"state": true
+			},
+			{
+				"name": "NON_BLOCKING_DELAY",
+				"delay_time": 5000
+			},
+			{
+				"name": "SET_HEX_EDITOR_DIALOG_MODE",
+				"state": false
 			}
 		]
 	},

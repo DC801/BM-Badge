@@ -25,6 +25,11 @@ class MageScriptControl
 		//and render to be processed before any blocking actions or when the script is completed.
 		bool scriptRequiresRender;
 
+		//this is a variable that tracks which entity called an action. 
+		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
+		//most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
+		uint8_t currentEntityId;
+
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;

@@ -364,7 +364,15 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 {
 	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
 	//validate arguments:
-	argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
+	if(argStruct->entityId == MAGE_ENTITY_SELF)
+	{
+		//set the entityId to be the entity that the script was called from:
+		argStruct->entityId = currentEntityId;
+	}
+	else
+	{
+		argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
+	}
 	argStruct->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
 	//set direction:
 	MageGame->entities[argStruct->entityId].direction = argStruct->direction;
@@ -544,6 +552,8 @@ MageScriptControl::MageScriptControl()
 
 	blockingDelayTime = 0;
 
+	currentEntityId = MAGE_MAP_ENTITY;
+
 	initScriptState(&mapLoadResumeState, MAGE_NULL_SCRIPT, false);
 	initScriptState(&mapTickResumeState, MAGE_NULL_SCRIPT, false);
 
@@ -606,6 +616,7 @@ uint32_t MageScriptControl::size() const
 		sizeof(jumpScript) +
 		sizeof(scriptRequiresRender) +
 		sizeof(blockingDelayTime) +
+		sizeof(currentEntityId) +
 		sizeof(MageScriptState) + //mapLoadResumeState
 		sizeof(MageScriptState) + //mapTickResumeState
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityInteractResumeStates
@@ -656,6 +667,8 @@ void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = mapLoadResumeState.scriptId;
 	}
+	//set the current entity to the map entity value.
+	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapLoadResumeState);
 }
@@ -690,6 +703,9 @@ void MageScriptControl::handleMapOnTickScript()
 		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = mapTickResumeState.scriptId;
 	}
+	//set the current entity to the map entity value.
+	//this doesn't need to be reset, as it is set every time any script is started or resumed.
+	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapTickResumeState);
 }
@@ -716,6 +732,8 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = entityInteractResumeStates[index].scriptId;
 	}
+	//set the current entity to the current entity index value.
+	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&entityInteractResumeStates[index]);
 }
@@ -753,6 +771,8 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 		//we only need to set jumpScript to match the *ResumeState struct so we can call actions:
 		jumpScript = entityTickResumeStates[index].scriptId;
 	}
+	//set the current entity to the current entity index value.
+	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&entityTickResumeStates[index]);
 }
