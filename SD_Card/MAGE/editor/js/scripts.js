@@ -311,6 +311,12 @@ var handleScript = function(
 	if (!script) {
 		throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
 	}
+	if(script.length == 0) {
+		return {
+			mapLocalScriptId: 0,
+			globalScriptId: 0
+		};
+	}
 	if (script.scenarioIndex === undefined) {
 		script.scenarioIndex = scenarioData.parsed.scripts.length;
 		scenarioData.parsed.scripts.push(script);
