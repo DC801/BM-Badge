@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/sprites\/numbered_testing_tileset.png",
+ "imageheight":256,
+ "imagewidth":256,
+ "margin":0,
+ "name":"numbered_testing_tileset",
+ "spacing":0,
+ "tilecount":64,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}
