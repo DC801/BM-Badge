@@ -105,7 +105,7 @@ uint32_t MageGameControl::Size() const
 		size += animations[i].Size();
 	}
 
-	for (uint32_t i = 0; i < entityHeader.count(); i++)
+	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
 	{
 		size += entityTypes[i].Size();
 	}
