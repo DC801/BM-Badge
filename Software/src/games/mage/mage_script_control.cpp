@@ -366,6 +366,11 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 	//validate arguments:
 	if(argStruct->entityId == MAGE_ENTITY_SELF)
 	{
+		//the map doesn't have an entity, so we return if the script is on the map:
+		if(currentEntityId == MAGE_MAP_ENTITY) 
+		{
+			return;
+		}
 		//set the entityId to be the entity that the script was called from:
 		argStruct->entityId = currentEntityId;
 	}
@@ -376,8 +381,6 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 	argStruct->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
 	//set direction:
 	MageGame->entities[argStruct->entityId].direction = argStruct->direction;
-	//set update flag:
-	scriptRequiresRender = true;
 	return;
 }
 void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -548,8 +551,6 @@ MageScriptControl::MageScriptControl()
 {
 	jumpScript = MAGE_NULL_SCRIPT;
 
-	scriptRequiresRender = false;
-
 	blockingDelayTime = 0;
 
 	currentEntityId = MAGE_MAP_ENTITY;
@@ -614,7 +615,6 @@ uint32_t MageScriptControl::size() const
 {
 	uint32_t size =
 		sizeof(jumpScript) +
-		sizeof(scriptRequiresRender) +
 		sizeof(blockingDelayTime) +
 		sizeof(currentEntityId) +
 		sizeof(MageScriptState) + //mapLoadResumeState
