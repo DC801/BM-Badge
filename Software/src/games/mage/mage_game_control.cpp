@@ -305,7 +305,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	#ifdef DC801_DESKTOP
 		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
 		{
-			fprintf(stderr, "Error: Game is attempting to load more than 32 entities on one map.");
+			fprintf(stderr, "Error: Game is attempting to load more than %d entities on one map.", MAX_ENTITIES_PER_MAP);
 		}
 	#endif
 	
