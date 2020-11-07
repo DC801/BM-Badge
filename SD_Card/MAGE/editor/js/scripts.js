@@ -119,7 +119,12 @@ var actionHandlerMap = {
 		if (!entity) {
 			throw new Error(`SET_ENTITY_DIRECTION was not able to find entity "${action.entity}" on map "${map.name}"`);
 		}
-		var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
+		if (entity !== 255) {
+			var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
+		}
+		else {
+			mapLocalEntityIndex = 255;
+		}
 		if(mapLocalEntityIndex === -1) {
 			throw new Error(`SET_ENTITY_DIRECTION fount entity "${action.entity}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
 		}
@@ -202,6 +207,9 @@ var actionNames = [
 ];
 
 var getObjectByNameOnMap = function(entityName, map) {
+	if (entityName === '%SELF%') {
+		return 255;
+	}
 	var object;
 	map.layers.find(function (layer) {
 		const isObjectsLayer = layer.type === 'objectgroup';

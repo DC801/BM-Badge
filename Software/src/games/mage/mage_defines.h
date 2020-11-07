@@ -22,7 +22,7 @@ all of the old code used as the foundation of this badge.
 #define MAX_ENTITIES_PER_MAP 32
 
 //this is the map that will load at the start of the game:
-#define DEFAULT_MAP 3
+#define DEFAULT_MAP 0
 
 //this is the string to match to determine which entity is the player
 //don't make it more than 16 characters long!
@@ -34,6 +34,14 @@ all of the old code used as the foundation of this badge.
 //this is used to note that no player entity was found within the
 //entities loaded into the map
 #define NO_PLAYER -1
+
+//this is a value used in the entityId in actions that refers to the
+//entity the script is running on.
+#define MAGE_ENTITY_SELF 255
+
+//this is a value used to indicate that an action's calling entity was
+//the map, and not actually one of the entities on the map.
+#define MAGE_MAP_ENTITY 255
 
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
