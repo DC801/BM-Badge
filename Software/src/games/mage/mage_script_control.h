@@ -21,10 +21,6 @@ class MageScriptControl
 		//it should be set to MAGE_NULL_SCRIPT unless a new script should be run immediately.
 		uint16_t jumpScript;
 
-		//this tracks whether or not an action has been called that will require an update
-		//and render to be processed before any blocking actions or when the script is completed.
-		bool scriptRequiresRender;
-
 		//this is a variable that tracks which entity called an action. 
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
 		//most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
