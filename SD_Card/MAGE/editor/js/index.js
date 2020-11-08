@@ -4,6 +4,7 @@ var dataTypes = [
 	'animations',
 	'entityTypes',
 	'entities',
+	'geometry',
 	'scripts',
 	'images',
 ];

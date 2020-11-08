@@ -73,57 +73,81 @@ var handleTileLayer = function(layer, map) {
 	map.serializedLayers.push(serializedLayer);
 };
 
+function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioData) {
+	entity.sourceMap = map.name;
+	var tileData = getMapTileAndOrientationByGID(
+		entity.gid,
+		map
+	);
+	entity.flip_x = tileData.flip_x;
+	entity.flip_y = tileData.flip_y;
+	entity.flip_diag = tileData.flip_diag;
+	mergeInProperties(
+		entity,
+		entity.properties,
+		objects
+	);
+	var mergedWithTile = assignToLessFalsy(
+		{},
+		tileData.tile,
+		entity
+	);
+	var entityPrototype = (
+		(
+			fileNameMap['entities.json']
+			&& fileNameMap['entities.json'].parsed[mergedWithTile.type]
+		)
+		|| scenarioData.entityTypes[mergedWithTile.type]
+	);
+	var compositeEntity = assignToLessFalsy(
+		{},
+		entityPrototype || {},
+		mergedWithTile
+	);
+	compositeEntity.renderFlags = tileData.renderFlags;
+	compositeEntity.tileIndex = tileData.tileIndex;
+	compositeEntity.tileset = tileData.tileset
+	// console.table([
+	//  entityPrototype,
+	//  entity.tile,
+	//  entity,
+	//  mergedWithType,
+	//  compositeEntity
+	// ])
+	serializeEntity(
+		compositeEntity,
+		fileNameMap,
+		scenarioData,
+	);
+	entity.compositeEntity = compositeEntity;
+	map.entityIndices.push(
+		compositeEntity.scenarioIndex
+	);
+}
+
 var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
-	layer.objects.forEach(function (entity, index, objects) {
-		if (entity.gid) {
-			entity.sourceMap = map.name;
-			var tileData = getMapTileAndOrientationByGID(
-				entity.gid,
-				map
-			);
-			entity.flip_x = tileData.flip_x;
-			entity.flip_y = tileData.flip_y;
-			entity.flip_diag = tileData.flip_diag;
-			mergeInProperties(
-				entity,
-				entity.properties,
-				objects
-			);
-			var mergedWithTile = assignToLessFalsy(
-				{},
-				tileData.tile,
-				entity
-			);
-			var entityPrototype = (
-				(
-					fileNameMap['entities.json']
-					&& fileNameMap['entities.json'].parsed[mergedWithTile.type]
-				)
-				|| scenarioData.entityTypes[mergedWithTile.type]
-			);
-			var compositeEntity = assignToLessFalsy(
-				{},
-				entityPrototype || {},
-				mergedWithTile
-			);
-			compositeEntity.renderFlags = tileData.renderFlags;
-			compositeEntity.tileIndex = tileData.tileIndex;
-			compositeEntity.tileset = tileData.tileset
-			// console.table([
-			//  entityPrototype,
-			//  entity.tile,
-			//  entity,
-			//  mergedWithType,
-			//  compositeEntity
-			// ])
-			serializeEntity(
-				compositeEntity,
+	layer.objects.forEach(function (tiledObject, index, objects) {
+		if (tiledObject.rotation) {
+			throw new Error(`The Encoder WILL NOT SUPPORT object rotation! Go un-rotate and encode again! Object was found on map: ${
+				map.name
+			};\nOffending object was: ${
+				JSON.stringify(tiledObject, null, '\t')
+			}`);
+		}
+		if (tiledObject.gid) {
+			handleTiledObjectAsEntity(
+				tiledObject,
+				map,
+				objects,
 				fileNameMap,
 				scenarioData,
 			);
-			entity.compositeEntity = compositeEntity;
-			map.entityIndices.push(
-				compositeEntity.scenarioIndex
+		} else {
+			handleTiledObjectAsGeometry(
+				tiledObject,
+				map,
+				fileNameMap,
+				scenarioData,
 			);
 		}
 	});
