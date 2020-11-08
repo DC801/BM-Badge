@@ -74,7 +74,6 @@ MageGameControl::MageGameControl()
 
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
-		fprintf(stderr, "start address: %x, i:%d\r\n", geometryHeader.offset(i),i);
 		geometries[i] = MageGeometry(geometryHeader.offset(i));
 	}
 
