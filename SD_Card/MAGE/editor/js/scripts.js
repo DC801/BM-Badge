@@ -321,6 +321,24 @@ var serializeScript = function (
 	return result;
 };
 
+var serializeNullScript = function(
+	fileNameMap,
+	scenarioData,
+) {
+	var nullScript = [];
+	nullScript.serialized = serializeScript(
+		nullScript,
+		'null_script',
+		{
+			name: 'null_map_only_used_for_null_script',
+			scriptIndices: [],
+			scriptNameKeys: {},
+		},
+		fileNameMap,
+		scenarioData,
+	);
+}
+
 var handleScript = function(
 	scriptName,
 	map,
@@ -329,19 +347,18 @@ var handleScript = function(
 ) {
 	var result = map.scriptNameKeys[scriptName];
 	if (!result) {
-		var script = scriptName === 'null_script'
-			? []
-			: jsonClone(scenarioData.scripts[scriptName]);
-		if (!script) {
-			throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
-		}
-		if(script.length === 0) {
+		if(scriptName === 'null_script') {
 			result = {
 				mapLocalScriptId: 0,
 				globalScriptId: 0
 			};
+			map.scriptIndices.push(0);
 			map.scriptNameKeys[scriptName] = result;
 		} else {
+			var script = jsonClone(scenarioData.scripts[scriptName]);
+			if (!script) {
+				throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
+			}
 			script.serialized = serializeScript(
 				script,
 				scriptName,
@@ -415,5 +432,29 @@ var handleMapScripts = function (
 		map,
 		fileNameMap,
 		scenarioData,
+	);
+};
+
+var mergeScriptDataIntoScenario = function(
+	scenarioData,
+	fileNameMap
+) {
+	var allScripts = {};
+	scenarioData.scripts = allScripts;
+	return Promise.all(
+		scenarioData.scriptPaths.map(function(scriptPath) {
+			var scriptFileName = scriptPath.split('/').pop();
+			var scriptFile = fileNameMap[scriptFileName];
+			return getFileJson(scriptFile)
+				.then(function(scriptFileData) {
+					Object.keys(scriptFileData)
+						.forEach(function(scriptName) {
+							if (allScripts[scriptName]) {
+								throw new Error(`Duplicate script name "${scriptName}" found in ${scriptFileName}!`);
+							}
+							allScripts[scriptName] = scriptFileData[scriptName]
+						})
+				});
+		})
 	);
 };
