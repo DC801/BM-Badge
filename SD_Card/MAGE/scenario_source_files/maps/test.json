@@ -180,6 +180,18 @@
                  "width":32,
                  "x":433,
                  "y":45.5
+                }, 
+                {
+                 "gid":458,
+                 "height":32,
+                 "id":27,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":145.5,
+                 "y":202.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -372,6 +384,22 @@
                  "width":0,
                  "x":420,
                  "y":36
+                }, 
+                {
+                 "height":26,
+                 "id":26,
+                 "name":"Text, don't breathe this",
+                 "rotation":0,
+                 "text":
+                    {
+                     "text":"Don't encode me bro",
+                     "wrap":true
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":179.875,
+                 "x":262.8125,
+                 "y":38
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -392,7 +420,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":26,
+ "nextobjectid":28,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -444,6 +472,10 @@
         {
          "firstgid":433,
          "source":"entity-village_elder.json"
+        }, 
+        {
+         "firstgid":457,
+         "source":"entity-baby_goat.json"
         }],
  "tilewidth":32,
  "type":"map",

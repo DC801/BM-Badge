@@ -14,6 +14,8 @@ seq:
     type: count_with_offsets
   - id: entity_offsets
     type: count_with_offsets
+  - id: geometry_offsets
+    type: count_with_offsets
   - id: script_offsets
     type: count_with_offsets
   - id: image_offsets
@@ -38,6 +40,10 @@ seq:
     type: entity
     repeat: expr
     repeat-expr: entity_offsets.count
+  - id: geometry
+    type: geometry
+    repeat: expr
+    repeat-expr: geometry_offsets.count
   - id: scripts
     type: script
     repeat: expr
@@ -292,6 +298,31 @@ types:
       - id: hackable_state_d
         type: u1
 
+  geometry:
+    seq:
+      - id: name
+        type: strz
+        size: 32
+        encoding: UTF8
+      - id: geometry_type
+        type: u1
+        enum: geometry_type
+      - id: point_count
+        type: u1
+      - id: padding
+        type: u2
+      - id: points
+        type: point
+        repeat: expr
+        repeat-expr: point_count
+
+  point:
+    seq:
+      - id: x
+        type: u2
+      - id: y
+        type: u2
+
   script:
     seq:
       - id: name
@@ -359,6 +390,11 @@ enums:
     0: tileset_id
     1: animation_id
     2: entity_type_id
+
+  geometry_type:
+    0: point
+    1: polyline
+    2: polygon
 
   action_type:
     0: null_action

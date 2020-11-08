@@ -38,6 +38,7 @@ private:
 	MageHeader animationHeader;
 	MageHeader entityTypeHeader;
 	MageHeader entityHeader;
+	MageHeader geometryHeader;
 	MageHeader scriptHeader;
 	MageHeader imageHeader;
 
