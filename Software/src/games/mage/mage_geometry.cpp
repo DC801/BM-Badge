@@ -76,6 +76,60 @@ uint32_t MageGeometry::size()
 
 bool MageGeometry::isPointInGeometry(Point point, MageGeometry geometry)
 {
-	//need to write this, returning false every time for now. -Tim
-	return false;
+	//first check for the case where the geometry is a point:
+	if(geometry.typeId == MageGeometryTypeId::POINT)
+	{
+		if(
+			point.x == geometry.pointArray[0].x &&
+			point.y == geometry.pointArray[0].y
+		)
+		{ return true; }
+		else { return false; }
+	}
+	//if it's a polyline or polygon, do the thing:
+	else if(
+		geometry.typeId == MageGeometryTypeId::POLYLINE ||
+		geometry.typeId == MageGeometryTypeId::POLYGON
+	)
+	{
+		//refactoring stackoverflow code based on point-in-polygon by James Halliday
+		//https://stackoverflow.com/questions/11716268/point-in-polygon-algorithm
+		/*
+		bool PointInPolygon(Point point, Polygon polygon) {
+			vector<Point> points = polygon.getPoints();
+			int i, j, nvert = points.size();
+			bool c = false;
+
+			for(i = 0, j = nvert - 1; i < nvert; j = i++) {
+				if( ( (points[i].y >= point.y ) != (points[j].y >= point.y) ) &&
+					(point.x <= (points[j].x - points[i].x) * (point.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
+				)
+				c = !c;
+			}
+			return c;
+		}
+		*/
+		//Tim's version below:
+		uint8_t i,j;
+		bool c = false;
+		for(i=0, j=geometry.pointCount; i < geometry.pointCount; j = i++)
+		{
+			//get the points for i and j:
+			Point points_i = geometry.pointArray[i];
+			Point points_j = geometry.pointArray[j];
+			//do the fancy check:
+			if(
+				( (points_i.y >= point.y) != (points_j.y >= point.y) ) &&
+				( point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x )
+			)
+			{ c = !c; }
+		}
+		//return the bool, that should be correct:
+		return c;
+	}
+	//otherwise it's not a known geometry type, so always return false.
+	else
+	{
+		return false;
+	}
 }
