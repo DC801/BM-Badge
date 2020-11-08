@@ -7,6 +7,7 @@
 #include "mage_tileset.h"
 #include "mage_animation.h"
 #include "mage_entity_type.h"
+#include "mage_geometry.h"
 
 /*
 The MageGameControl object handles several important tasks. It's basically the
@@ -61,6 +62,9 @@ private:
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 
+	//this is an array of all the geometry objects in the ROM
+	std::unique_ptr<MageGeometry[]> geometries;
+
 	//these two variables store the player's previous tilesetId and tileId
 	//for use in keeping the camera centerd while hacking.
 	uint16_t previousPlayerTilesetId;
@@ -112,6 +116,10 @@ public:
 	//this takes input information and moves the playerEntity around
 	//If there is no playerEntity, it just moves the camera freely.
 	void applyGameModeInputs();
+
+	//this will check in the direction the player entity is facing and start
+	//an on_interact script for an entity if any qualify.
+	void handleEntityInteract();
 
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
