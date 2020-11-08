@@ -1,62 +1,109 @@
 [
     {
+        "color": "#ff644c44",
+        "name": "baby_goat",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ff749995",
+        "name": "dragon_skull",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
         "color": "#ffe27f05",
         "name": "exa",
         "properties": [
             {
-                "name": "detect",
-                "type": "object",
-                "value": 0
-            },
-            {
-                "name": "dialog",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "path",
-                "type": "object",
-                "value": 0
-            },
-            {
-                "name": "script",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "state",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "stateByteAddress",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "testBool",
-                "type": "bool",
-                "value": true
-            },
-            {
-                "name": "testColor",
-                "type": "color",
-                "value": "#ff010203"
-            },
-            {
-                "name": "testFile",
-                "type": "file",
-                "value": "entities.json"
-            },
-            {
-                "name": "testFloat",
-                "type": "float",
-                "value": 22.5
-            },
-            {
-                "name": "testInt",
+                "name": "hackable_state_a",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
             }
         ]
     },
@@ -65,29 +112,34 @@
         "name": "eye_faerie",
         "properties": [
             {
-                "name": "detect",
-                "type": "object",
+                "name": "hackable_state_a",
+                "type": "int",
                 "value": 0
             },
             {
-                "name": "dialog",
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
                 "type": "string",
                 "value": ""
             },
             {
-                "name": "path",
-                "type": "object",
-                "value": 0
-            },
-            {
-                "name": "script",
+                "name": "on_tick",
                 "type": "string",
                 "value": ""
-            },
-            {
-                "name": "state",
-                "type": "string",
-                "value": "flying"
             }
         ]
     },
@@ -96,14 +148,34 @@
         "name": "goat",
         "properties": [
             {
-                "name": "eating",
-                "type": "object",
+                "name": "hackable_state_a",
+                "type": "int",
                 "value": 0
             },
             {
-                "name": "state",
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
                 "type": "string",
-                "value": "idle"
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
             }
         ]
     },
@@ -112,29 +184,34 @@
         "name": "golem",
         "properties": [
             {
-                "name": "detect",
-                "type": "object",
+                "name": "hackable_state_a",
+                "type": "int",
                 "value": 0
             },
             {
-                "name": "dialog",
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
                 "type": "string",
                 "value": ""
             },
             {
-                "name": "path",
-                "type": "object",
-                "value": 0
-            },
-            {
-                "name": "script",
+                "name": "on_tick",
                 "type": "string",
                 "value": ""
-            },
-            {
-                "name": "state",
-                "type": "string",
-                "value": "flying"
             }
         ]
     },
@@ -143,9 +220,70 @@
         "name": "goose",
         "properties": [
             {
-                "name": "is_invincible",
-                "type": "bool",
-                "value": true
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ff3acfb6",
+        "name": "lightning_boy",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
             }
         ]
     },
@@ -154,29 +292,142 @@
         "name": "mage",
         "properties": [
             {
-                "name": "detect",
-                "type": "object",
+                "name": "hackable_state_a",
+                "type": "int",
                 "value": 0
             },
             {
-                "name": "dialog",
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
                 "type": "string",
                 "value": ""
             },
             {
-                "name": "path",
-                "type": "object",
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ffc14e4e",
+        "name": "old_lady",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
                 "value": 0
             },
             {
-                "name": "script",
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
                 "type": "string",
                 "value": ""
             },
             {
-                "name": "state",
+                "name": "on_tick",
                 "type": "string",
-                "value": "dancing"
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ffe1d6c2",
+        "name": "sheep",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ffa74bb9",
+        "name": "village_elder",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
             }
         ]
     }
