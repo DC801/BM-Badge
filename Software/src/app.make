@@ -36,6 +36,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/mage/mage_tileset.cpp \
 	$(SRC_ROOT)/games/mage/mage_animation.cpp \
 	$(SRC_ROOT)/games/mage/mage_entity_type.cpp \
+	$(SRC_ROOT)/games/mage/mage_geometry.cpp \
 	$(SRC_ROOT)/games/mage/mage_game_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
 	$(SRC_ROOT)/games/mage/mage_script_control.cpp \

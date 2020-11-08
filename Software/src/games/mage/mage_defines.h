@@ -161,6 +161,15 @@ typedef enum{
 	NUM_ACTIONS
 } MageScriptActionTypeId;
 
+//these are the types of geometries that can be passed from the geometry data in ROM:
+typedef enum{
+	POINT = 0,
+	POLYLINE = 1,
+	POLYGON = 2,
+	//this tracks how many different geometry types there are:
+	NUM_GEOMETRIES
+} MageGeometryTypeId;
+
 //this is a structure to hold information about the currently executing scripts so they can resume
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
@@ -175,11 +184,6 @@ typedef struct{
 	uint16_t totalLoopsToNextAction;
 } MageScriptState;
 
-//this is a point in 2D space.
-typedef struct {
-	int32_t x;
-	int32_t y;
-} Point;
 
 //this is the structure of a MageEntity. All hackable info is contained within.
 //the complete current entity state can be determined with only this info and

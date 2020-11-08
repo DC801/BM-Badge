@@ -69,6 +69,14 @@ MageGameControl::MageGameControl()
 	playerEntityIndex = NO_PLAYER;
 
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
+	
+	geometries = std::make_unique<MageGeometry[]>(geometryHeader.count());
+
+	for (uint32_t i = 0; i < geometryHeader.count(); i++)
+	{
+		fprintf(stderr, "start address: %x, i:%d\r\n", geometryHeader.offset(i),i);
+		geometries[i] = MageGeometry(geometryHeader.offset(i));
+	}
 
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
 
@@ -113,6 +121,11 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
 	{
 		size += entityTypes[i].Size();
+	}
+
+	for (uint32_t i = 0; i < geometryHeader.count(); i++)
+	{
+		size += geometries[i].size();
 	}
 
 	return size;
@@ -444,10 +457,11 @@ void MageGameControl::applyGameModeInputs()
 				{ playerEntity->y -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::NORTH; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_down )
 				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
-			if(EngineInput_Buttons.rjoy_right );
+			if(EngineInput_Buttons.rjoy_right )
 				//We need a function to determine if an entity is close enough to the player to start an onInteract script.
 				//this function will also need to dicide which entity to trigger, and set up the script to be ready for a fresh run when
 				//the handler is called further down the loop. -Tim
+				{ handleEntityInteract(); }
 			if(EngineInput_Buttons.rjoy_up );
 				//no task assigned to rjoy_up in game mode
 			if(EngineInput_Buttons.ljoy_center );
@@ -552,6 +566,31 @@ void MageGameControl::applyGameModeInputs()
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
 	}
+}
+
+void MageGameControl::handleEntityInteract()
+{
+	//interacting is impossible if there is no player entity, so return.
+	if(playerEntityIndex == NO_PLAYER)
+	{
+		return;
+	}
+	//Just spitballing a likely structure for interaction:
+	/*
+	The player will cast a ray that is a percentage of their tilewidth long, and a certain percentage of their wilewidth wide.
+	It will project towards the direction they are facing, giving a rectangular area of pixels where interaction can occur.
+	We'll call this the 'interactableArea, defined as a geometry with 4 points'
+	
+	We will then need to iterate through all map entities and check to see if their collision areas overlap the interactableArea.
+	This can be done via checking the 4 vertices of the entity collision rectangle to see if any one of them is within the interactableArea.
+	
+	We'll need a way to handle the condition where multiple entities are within the interactableArea. 
+	If we keep a list of all entities that qualify, we can iterate through the list and select the one with the closest x,y 
+	coordinates to the player entity as the one to be interacted with. It may also make sense to select only entities with a 
+	non-zero on_interact script value in this phase regardless of distance.
+
+	Once the entity is selected, we need to initialize the entity's resumeStateStruct so the on_interact script will run with the next handler.
+	*/
 }
 
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
