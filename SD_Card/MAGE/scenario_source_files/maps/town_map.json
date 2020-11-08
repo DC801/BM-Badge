@@ -75,16 +75,22 @@
                  "y":704
                 }, 
                 {
-                 "gid":342,
+                 "gid":2147483990,
                  "height":64,
                  "id":5,
-                 "name":"",
+                 "name":"Bob",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"spin_self_counterclockwise"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":408,
-                 "y":724
+                 "x":408.5,
+                 "y":717
                 }, 
                 {
                  "gid":25,
@@ -239,8 +245,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":421.5,
-                 "y":677
+                 "x":414,
+                 "y":674.5
                 }, 
                 {
                  "gid":427,

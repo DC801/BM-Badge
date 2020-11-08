@@ -21,25 +21,22 @@ var handleScenarioData = function(fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
-		handleScript(
-			'null_script',
-			{
-				name: 'null_map_only_used_for_null_script',
-				scriptIndices: [],
-				scriptNameKeys: {},
-			},
-			fileNameMap,
-			scenarioData,
-		);
 		var entitiesFile = fileNameMap['entities.json'];
 		var entitiesPromise = !entitiesFile
 			? Promise.resolve()
 			: getFileJson(entitiesFile)
 				.then(handleEntitiesData(scenarioData, entitiesFile));
 		return entitiesPromise.then(function () {
-			return handleScenarioMaps(scenarioData, fileNameMap)
+			return mergeScriptDataIntoScenario(scenarioData, fileNameMap)
 				.then(function () {
-					return scenarioData;
+					serializeNullScript(
+						fileNameMap,
+						scenarioData,
+					);
+					return handleScenarioMaps(scenarioData, fileNameMap)
+						.then(function () {
+							return scenarioData;
+						});
 				});
 		});
 	}
