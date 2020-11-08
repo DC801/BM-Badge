@@ -60,7 +60,7 @@ class MageScriptControl
 		void runAction(uint32_t argumentMemoryAddress, MageScriptState * resumeStateStruct);
 
 		//this allows an I+C action to set the calling map or entity script to match the new script.
-		void setEntityScript(uint16_t scriptId, uint8_t entityId, uint8_t scriptType);
+		void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM

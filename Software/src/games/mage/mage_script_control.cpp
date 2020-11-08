@@ -148,28 +148,28 @@ MageAction_Error:
 	ENGINE_PANIC("Failed to read action data.");
 }
 
-void MageScriptControl::setEntityScript(uint16_t scriptId, uint8_t entityId, uint8_t scriptType)
+void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType)
 {
 	//check for map script first:
 	if(entityId == MAGE_MAP_ENTITY)
 	{
 		if(scriptType == MageScriptType::ON_LOAD)
 		{
-			MageGame->Map().setOnLoad(scriptId);
+			MageGame->Map().setOnLoad(mapLocalScriptId);
 		}
 		else if(scriptType == MageScriptType::ON_TICK)
 		{
-			MageGame->Map().setOnTick(scriptId);
+			MageGame->Map().setOnTick(mapLocalScriptId);
 		}
 	}
 	//if it's not a map script, set the appropriate entity's script value:
 	if(scriptType == MageScriptType::ON_INTERACT)
 	{
-		MageGame->entities[entityId].onInteractScriptId = scriptId;
+		MageGame->entities[entityId].onInteractScriptId = mapLocalScriptId;
 	}
 	else if(scriptType == MageScriptType::ON_TICK)
 	{
-		MageGame->entities[entityId].onTickScriptId = scriptId;
+		MageGame->entities[entityId].onTickScriptId = mapLocalScriptId;
 	}
 }
 
@@ -190,14 +190,14 @@ void MageScriptControl::checkEntityByte(uint8_t * args, MageScriptState * resume
 	argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
 	//make sure the offset is within the bounds of a single entity:
 	argStruct->byteOffset = argStruct->byteOffset % sizeof(MageEntity);
-	//convert the successScriptId to the global scope:
-	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 	//now check the validated data and set jumpScript if appropriate:
 	uint8_t * byteAddress = ((uint8_t*)hackableDataAddress + argStruct->byteOffset);
 	if(argStruct->expectedValue == *byteAddress)
 	{
-		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
-		setEntityScript(jumpScript, currentEntityId, currentScriptType);
+		//convert scriptId from local to global scope and assign to jumpScript:
+		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
+		//this requires a local map scriptId.
+		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -226,16 +226,15 @@ void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * re
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	//convert scriptId from local to global scope:
-	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
 	bool button_activated = *button_address;
 	if(button_activated)
 	{
-		//set the jump script and update the script on the calling entity:
-		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
-		setEntityScript(jumpScript, currentEntityId, currentScriptType);
+		//convert scriptId from local to global scope and assign to jumpScript:
+		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
+		//this requires a local map scriptId.
+		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -245,15 +244,15 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	ActionCheckForButtonState *argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	//convert scriptId from local to global scope:
-	argStruct->successScriptId = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
 	bool button_state = *button_address;
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
-		jumpScript = MageGame->getValidGlobalScriptId(argStruct->successScriptId);
-		setEntityScript(jumpScript, currentEntityId, currentScriptType);
+		//convert scriptId from local to global scope and assign to jumpScript:
+		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
+		//this requires a local map scriptId.
+		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -263,11 +262,10 @@ void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateS
 	ActionRunScript *argStruct = (ActionRunScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
-	//convert scriptId from local to global scope:
-	argStruct->scriptId = MageGame->Map().getGlobalScriptId(argStruct->scriptId);
-	//set the jumpScript to the new script
-	jumpScript = MageGame->getValidGlobalScriptId(argStruct->scriptId);
-	setEntityScript(jumpScript, currentEntityId, currentScriptType);
+	//convert scriptId from local to global scope and assign to jumpScript:
+	jumpScript = MageGame->Map().getGlobalScriptId(argStruct->scriptId);
+	//this requires a local map scriptId.
+	setEntityScript(argStruct->scriptId, currentEntityId, currentScriptType);
 	return;
 }
 
