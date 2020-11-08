@@ -1,0 +1,52 @@
+{
+	"my_first_script": [
+		{
+			"name": "NON_BLOCKING_DELAY",
+			"delay_time": 500
+		},
+		{
+			"name": "SET_HEX_EDITOR_STATE",
+			"state": true
+		},
+		{
+			"name": "BLOCKING_DELAY",
+			"delay_time": 5000
+		},
+		{
+			"name": "SET_HEX_EDITOR_STATE",
+			"state": false
+		}
+	],
+	"entity_on_interact_script": [
+		{
+			"notes": "These are documentation notes for humans.",
+			"name": "RUN_SCRIPT",
+			"script": "my_first_script"
+		}
+	],
+	"test_tick_script": [
+		{
+			"name": "CHECK_FOR_BUTTON_PRESS",
+			"success_script": "button_success_script",
+			"button_id": 24
+		}
+	],
+	"button_success_script": [
+		{
+			"name": "SET_HEX_EDITOR_DIALOG_MODE",
+			"state": true
+		},
+		{
+			"name": "NON_BLOCKING_DELAY",
+			"delay_time": 5000
+		},
+		{
+			"name": "SET_HEX_EDITOR_DIALOG_MODE",
+			"state": false
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "test_tick_script"
+		}
+	]
+}

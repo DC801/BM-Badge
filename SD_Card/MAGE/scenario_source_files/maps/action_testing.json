@@ -33,9 +33,14 @@
                  "name":"Mage 01",
                  "properties":[
                         {
+                         "name":"hackable_state_d",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act01_check_entity_byte"
                         }, 
                         {
                          "name":"on_tick",

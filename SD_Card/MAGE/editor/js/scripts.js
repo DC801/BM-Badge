@@ -1,5 +1,70 @@
 var actionHandlerMap = {
 	NULL_ACTION: null,
+	CHECK_ENTITY_BYTE: function (
+		action,
+		map,
+		fileNameMap,
+		scenarioData,
+	) {
+		var data = initActionData(action);
+		//success_script:
+		if (!action.success_script) {
+			throw new Error('CHECK_ENTITY_BYTE requires a string value for `success_script`');
+		}
+		if (!scenarioData.scripts[action.success_script]) {
+			throw new Error(`CHECK_ENTITY_BYTE was not able to find a script named "${action.success_script}" provided at the value \`success_script\``);
+		}
+		var mapLocalScriptId = handleScript(
+			action.success_script,
+			map,
+			fileNameMap,
+			scenarioData
+		).mapLocalScriptId;
+		//entity:
+		if (!action.entity) {
+			throw new Error('CHECK_ENTITY_BYTE requires a string value for `entity`');
+		}
+		var entity = getObjectByNameOnMap(
+			action.entity,
+			map,
+		)
+		if (!entity) {
+			throw new Error(`CHECK_ENTITY_BYTE was not able to find entity "${action.entity}" on map "${map.name}"`);
+		}
+		if (entity !== 255) {
+			var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
+		}
+		else {
+			mapLocalEntityIndex = 255;
+		}
+		//byte_offset:
+		if (typeof action.byte_offset !== "number") {
+			throw new Error('CHECK_ENTITY_BYTE requires a number value for `byte_offset`');
+		}
+		//expected_value:
+		if (typeof action.expected_value !== "number") {
+			throw new Error('CHECK_ENTITY_BYTE requires a number value for `expected_value`');
+		}
+		//fill args:
+		data.dataView.setUint16(
+			1,
+			mapLocalScriptId,
+			false
+		);
+		data.dataView.setUint8(
+			3,
+			entity
+		);
+		data.dataView.setUint8(
+			4,
+			action.byte_offset
+		);
+		data.dataView.setUint8(
+			5,
+			action.expected_value
+		);
+		return data;
+	},
 	CHECK_FOR_BUTTON_PRESS: function (
 		action,
 		map,
