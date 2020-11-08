@@ -346,21 +346,20 @@ void MageGameControl::LoadMap(uint16_t index)
 
 void MageGameControl::updatePointerToPlayerEntity(std::string name)
 {
-
+	std::string currentEntityName;
+	playerEntityIndex = NO_PLAYER;
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
-		if(entities[i].primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
+		currentEntityName = std::string(entities[i].name);
+		if(currentEntityName == name)
 		{
-			if(std::string(entities[i].name) == name)
-			{
-				// printf("Is this entity the player? A: %s; B %s\n", std::string(entities[i].name).c_str(), name.c_str());
-				playerEntityIndex = i;
-			}
-		}
-		else if(i == (map.EntityCount()-1))
-		{
-			//if no valid match for the player is in the map, return NO_PLAYER
-			playerEntityIndex = NO_PLAYER;
+			playerEntityIndex = i;
+			//printf(
+			//	"Is this entity the player? A: %s; B %s; playerEntityIndex: %d\n",
+			//	currentEntityName.c_str(),
+			//	name.c_str(),
+			//	playerEntityIndex
+			//);
 		}
 	}
 }
