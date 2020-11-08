@@ -107,15 +107,15 @@ MageMap::MageMap(uint32_t address)
 	convert_endian_u2_buffer(entityGlobalIds.get(), entityCount);
 
 	//read entityGlobalIds
-	scriptGLobalIds = std::make_unique<uint16_t[]>(scriptCount);
+	scriptGlobalIds = std::make_unique<uint16_t[]>(scriptCount);
 	size = sizeof(uint16_t) * scriptCount;
 
-	if (EngineROM_Read(address, size, (uint8_t *)scriptGLobalIds.get()) != size)
+	if (EngineROM_Read(address, size, (uint8_t *)scriptGlobalIds.get()) != size)
 	{
 		goto MageMap_Error;
 	}
 	address += size;
-	convert_endian_u2_buffer(scriptGLobalIds.get(), scriptCount);
+	convert_endian_u2_buffer(scriptGlobalIds.get(), scriptCount);
 
 	//padding to align with uint32_t memory spacing:
 	if ( ((entityCount + scriptCount) + 1) % 2)
@@ -204,28 +204,16 @@ uint16_t MageMap::ScriptCount() const
 	return scriptCount;
 }
 
-uint16_t MageMap::getGLobalEntityId(uint16_t num) const
+uint16_t MageMap::getGlobalEntityId(uint16_t num) const
 {
 	if (!entityGlobalIds) return 0;
-
-	if (entityCount > num)
-	{
-		return entityGlobalIds[num];
-	}
-
-	return 0;
+	return entityGlobalIds[num % entityCount];
 }
 
 uint16_t MageMap::getGlobalScriptId(uint16_t num) const
 {
-	if (!scriptGLobalIds) return 0;
-
-	if (scriptCount > num)
-	{
-		return scriptGLobalIds[num];
-	}
-
-	return 0;
+	if (!scriptGlobalIds) return 0;
+	return scriptGlobalIds[num % scriptCount];
 }
 
 uint32_t MageMap::LayerOffset(uint16_t num) const
