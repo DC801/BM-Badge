@@ -22,7 +22,7 @@ all of the old code used as the foundation of this badge.
 #define MAX_ENTITIES_PER_MAP 32
 
 //this is the map that will load at the start of the game:
-#define DEFAULT_MAP 0
+#define DEFAULT_MAP 1
 
 //this is the string to match to determine which entity is the player
 //don't make it more than 16 characters long!
