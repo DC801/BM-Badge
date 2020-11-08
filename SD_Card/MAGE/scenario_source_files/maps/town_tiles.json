@@ -202,6 +202,22 @@
          "type":"wall"
         }, 
         {
+         "id":142,
+         "type":"quest_board"
+        }, 
+        {
+         "id":143,
+         "type":"quest_board"
+        }, 
+        {
+         "id":158,
+         "type":"quest_board"
+        }, 
+        {
+         "id":159,
+         "type":"quest_board"
+        }, 
+        {
          "animation":[
                 {
                  "duration":200,

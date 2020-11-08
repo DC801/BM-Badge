@@ -594,6 +594,47 @@
 					}
 				]
 			}
+		},
+		"baby_goat": {
+			"tileset": "entity-baby_goat.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 14,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": true
+					},
+					{
+						"tileid": 13,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": false
+					}
+				]
+			}
 		}
 	}
 }

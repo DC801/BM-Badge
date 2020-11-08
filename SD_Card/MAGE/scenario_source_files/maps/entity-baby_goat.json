@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/baby_goat.png",
  "imageheight":256,
  "imagewidth":96,
@@ -67,7 +75,8 @@
                  "duration":72,
                  "tileid":0
                 }],
-         "id":0
+         "id":0,
+         "type":"baby_goat"
         }, 
         {
          "animation":[
@@ -127,7 +136,8 @@
                  "duration":72,
                  "tileid":7
                 }],
-         "id":1
+         "id":1,
+         "type":"baby_goat"
         }, 
         {
          "animation":[
@@ -187,7 +197,44 @@
                  "duration":72,
                  "tileid":2
                 }],
-         "id":2
+         "id":2,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":3,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":4,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":5,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":6,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":7,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":8,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":9,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":10,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":11,
+         "type":"baby_goat"
         }, 
         {
          "animation":[
@@ -207,7 +254,8 @@
                  "duration":120,
                  "tileid":21
                 }],
-         "id":12
+         "id":12,
+         "type":"baby_goat"
         }, 
         {
          "animation":[
@@ -227,7 +275,8 @@
                  "duration":120,
                  "tileid":22
                 }],
-         "id":13
+         "id":13,
+         "type":"baby_goat"
         }, 
         {
          "animation":[
@@ -247,7 +296,44 @@
                  "duration":120,
                  "tileid":23
                 }],
-         "id":14
+         "id":14,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":15,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":16,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":17,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":18,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":19,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":20,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":21,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":22,
+         "type":"baby_goat"
+        }, 
+        {
+         "id":23,
+         "type":"baby_goat"
         }],
  "tilewidth":32,
  "type":"tileset",
