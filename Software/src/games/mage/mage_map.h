@@ -22,7 +22,7 @@ private:
 	uint16_t entityCount;
 	uint16_t scriptCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
-	std::unique_ptr<uint16_t[]> scriptGLobalIds;
+	std::unique_ptr<uint16_t[]> scriptGlobalIds;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
 public:
@@ -37,7 +37,7 @@ public:
 		entityCount{0},
 		scriptCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
-		scriptGLobalIds{std::make_unique<uint16_t[]>(1)},
+		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
 		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
 	{ };
 
@@ -57,7 +57,7 @@ public:
 	uint16_t EntityCount() const;
 	uint16_t ScriptCount() const;
 	//this returns a global entityId from the local entity index
-	uint16_t getGLobalEntityId(uint16_t num) const;
+	uint16_t getGlobalEntityId(uint16_t num) const;
 	//the returns a global scriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;

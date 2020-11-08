@@ -315,7 +315,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		if(i < entityHeader.count())
 		{
 			//fill in entity data from ROM:
-			entities[i] = LoadEntity(entityHeader.offset(map.getGLobalEntityId(i)));
+			entities[i] = LoadEntity(entityHeader.offset(map.getGlobalEntityId(i)));
 		}
 	}
 
