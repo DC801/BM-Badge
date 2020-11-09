@@ -35,13 +35,17 @@ all of the old code used as the foundation of this badge.
 //entities loaded into the map
 #define NO_PLAYER -1
 
-//this is a value used in the entityId in actions that refers to the
-//entity the script is running on.
-#define MAGE_ENTITY_SELF 255
-
 //this is a value used to indicate that an action's calling entity was
 //the map, and not actually one of the entities on the map.
 #define MAGE_MAP_ENTITY 255
+
+//this is a value used in the entityId in actions that refers to the
+//entity the script is running on.
+#define MAGE_ENTITY_SELF 254
+
+//this is a value used in the entityId in actions that refers to the
+//current playerEntityId for the MageGameControl object.
+#define MAGE_PLAYER_ENTITY 253
 
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
@@ -294,14 +298,14 @@ typedef struct {
 } ActionCompareEntityName;
 
 typedef struct {
-	uint32_t delayTime; //in ms
+	uint32_t duration; //in ms
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionBlockingDelay;
 
 typedef struct {
-	uint32_t delayTime; //in ms
+	uint32_t duration; //in ms
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
