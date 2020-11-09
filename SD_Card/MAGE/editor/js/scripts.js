@@ -349,6 +349,58 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	WALK_ENTITY_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'WALK_ENTITY_ALONG_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	LOOP_ENTITY_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'LOOP_ENTITY_ALONG_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_CAMERA_TO_FOLLOW_ENTITY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_CAMERA_TO_FOLLOW_ENTITY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	TELEPORT_CAMERA_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'geometry', size: 2},
+			],
+			'TELEPORT_CAMERA_TO_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 };
 
 var actionNames = [
