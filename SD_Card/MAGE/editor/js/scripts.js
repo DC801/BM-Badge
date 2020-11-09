@@ -7,7 +7,7 @@ var actionHandlerMap = {
 				{propertyName: 'script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'byte_offset', size: 1},
-				{propertyName: 'expected_byte', size: 1}
+				{propertyName: 'expected_byte', size: 1},
 			],
 			'CHECK_ENTITY_BYTE',
 			map,
@@ -15,14 +15,15 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
-	CHECK_FOR_BUTTON_PRESS: function (action, map, fileNameMap, scenarioData) {
+	CHECK_SAVE_FLAG: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
 			[
 				{propertyName: 'script', size: 2},
-				{propertyName: 'button_id', size: 1}
+				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
-			'CHECK_FOR_BUTTON_PRESS',
+			'CHECK_SAVE_FLAG',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -35,9 +36,36 @@ var actionHandlerMap = {
 				{propertyName: 'geometry', size: 2},
 				{propertyName: 'script', size: 2},
 				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1}
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	CHECK_FOR_BUTTON_PRESS: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'button_id', size: 1},
+			],
+			'CHECK_FOR_BUTTON_PRESS',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	CHECK_FOR_BUTTON_STATE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'button_id', size: 1},
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'CHECK_FOR_BUTTON_STATE',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -79,14 +107,65 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
-	SET_ENTITY_DIRECTION: function (action, map, fileNameMap, scenarioData) {
+	SET_PAUSE_STATE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'state', size: 1},
+			],
+			'SET_PAUSE_STATE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_BYTE: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
 			[
 				{propertyName: 'entity', size: 1},
-				{propertyName: 'direction', size: 1},
+				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'byte_value', size: 1},
 			],
-			'SET_ENTITY_DIRECTION',
+			'SET_ENTITY_BYTE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_SAVE_FLAG: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'bool_value', size: 1},
+			],
+			'SET_SAVE_FLAG',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_PLAYER_CONTROL: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'bool_value', size: 1},
+			],
+			'SET_PLAYER_CONTROL',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_INTERACT_SCRIPT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_INTERACT_SCRIPT',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -100,6 +179,47 @@ var actionHandlerMap = {
 				{propertyName: 'entity', size: 1},
 			],
 			'SET_ENTITY_TICK_SCRIPT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_MAP_TICK_SCRIPT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_MAP_TICK_SCRIPT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_TYPE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'primary_id', size: 2},
+				{propertyName: 'secondary_id', size: 2},
+				{propertyName: 'primary_id_type', size: 1},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_TYPE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_DIRECTION: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'direction', size: 1},
+			],
+			'SET_ENTITY_DIRECTION',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -392,15 +512,22 @@ var initActionData = function (action) {
 };
 
 var actionPropertyNameToHandlerMap = {
+	duration: getNumberFromAction,
+	map: getMapIndexFromAction,
+	entity: getMapLocalEntityIndexFromAction,
 	geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
-	entity: getMapLocalEntityIndexFromAction,
-	duration: getNumberFromAction,
-	direction: getDirectionFromAction,
+	primary_id: getTwoBytesFromAction,
+	secondary_id: getTwoBytesFromAction,
+	primary_id_type: getByteFromAction,
 	button_id: getByteFromAction,
 	byte_offset: getByteFromAction,
+	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
+	direction: getDirectionFromAction,
+	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
+	state: getBoolFromAction,
 };
 
 var sizeHandlerMap = [
