@@ -225,6 +225,55 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	SET_HEX_CURSOR_LOCATION: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'address', size: 2},
+			],
+			'SET_HEX_CURSOR_LOCATION',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_HEX_BIT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'bitmask', size: 1},
+				{propertyName: 'bool_value', size: 1},
+			],
+			'SET_HEX_BIT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	UNLOCK_HAX_CELL: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'address', size: 2},
+			],
+			'UNLOCK_HAX_CELL',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	LOCK_HAX_CELL: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'address', size: 2},
+			],
+			'LOCK_HAX_CELL',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	SET_HEX_EDITOR_STATE: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -244,6 +293,43 @@ var actionHandlerMap = {
 				{propertyName: 'expected_bool', size: 1},
 			],
 			'SET_HEX_EDITOR_DIALOG_MODE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	LOAD_MAP: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'map', size: 2},
+			],
+			'LOAD_MAP',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_RENDERABLE_FONT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'font_id', size: 1},
+			],
+			'SET_RENDERABLE_FONT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	TELEPORT_ENTITY_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'TELEPORT_ENTITY_TO_GEOMETRY',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -517,13 +603,16 @@ var actionPropertyNameToHandlerMap = {
 	entity: getMapLocalEntityIndexFromAction,
 	geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
+	address: getTwoBytesFromAction,
 	primary_id: getTwoBytesFromAction,
 	secondary_id: getTwoBytesFromAction,
 	primary_id_type: getByteFromAction,
+	bitmask: getByteFromAction,
 	button_id: getByteFromAction,
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
+	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
