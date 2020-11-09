@@ -442,7 +442,7 @@
         {
          "name":"on_tick",
          "type":"string",
-         "value":"test_tick_script"
+         "value":"test_map-on_tick"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
