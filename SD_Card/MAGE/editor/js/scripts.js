@@ -758,6 +758,7 @@ var actionPropertyNameToHandlerMap = {
 	geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
 	address: getTwoBytesFromAction,
+	color: getTwoBytesFromAction,
 	primary_id: getTwoBytesFromAction,
 	secondary_id: getTwoBytesFromAction,
 	primary_id_type: getByteFromAction,
