@@ -2,10 +2,10 @@
 	"act01_check_entity_byte": [
 		{
 			"name": "CHECK_ENTITY_BYTE",
-			"success_script": "act01_success_script",
+			"script": "act01_success_script",
 			"entity": "Mage 01",
 			"byte_offset": 16,
-			"expected_value": 2
+			"expected_byte": 2
 		}
 	],
 	"act01_success_script": [

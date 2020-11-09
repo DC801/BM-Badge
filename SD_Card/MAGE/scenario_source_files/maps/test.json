@@ -152,9 +152,14 @@
                  "name":"Isabelle",
                  "properties":[
                         {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
                          "name":"path",
                          "type":"object",
-                         "value":19
+                         "value":14
                         }],
                  "rotation":0,
                  "type":"",
@@ -186,6 +191,12 @@
                  "height":32,
                  "id":27,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
