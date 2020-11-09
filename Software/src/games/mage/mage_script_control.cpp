@@ -284,7 +284,7 @@ void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeSt
 {
 	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	//If there's already a total number of loops to next action set, a delay is currently in progress:
 	if(resumeStateStruct->totalLoopsToNextAction != 0)
 	{
@@ -304,8 +304,8 @@ void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeSt
 	{
 		//always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
 		uint16_t totalDelayLoops = 1;
-		//also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->delayTime:
-		blockingDelayTime = (blockingDelayTime < argStruct->delayTime) ? argStruct->delayTime : blockingDelayTime;
+		//also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->duration:
+		blockingDelayTime = (blockingDelayTime < argStruct->duration) ? argStruct->duration : blockingDelayTime;
 		//now set the resumeStateStruct variables:
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
@@ -317,7 +317,7 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 {
 	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	argStruct->delayTime = convert_endian_u4_value(argStruct->delayTime);
+	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	//If there's already a total number of loops to next action set, a delay is currently in progress:
 	if(resumeStateStruct->totalLoopsToNextAction != 0)
 	{
@@ -336,7 +336,7 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 	else
 	{
 		//convert delay into a number of game loops:
-		uint16_t totalDelayLoops = argStruct->delayTime / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
 		//now set the resumeStateStruct variables:
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
@@ -406,6 +406,18 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 		}
 		//set the entityId to be the entity that the script was called from:
 		argStruct->entityId = currentEntityId;
+	}
+	else if (argStruct->entityId == MAGE_PLAYER_ENTITY)
+	{
+		//set the entityId to the player, if there is one:
+		if(MageGame->playerEntityIndex == NO_PLAYER)
+		{ 
+			return; 
+		}
+		else
+		{
+			argStruct->entityId = MageGame->playerEntityIndex;
+		}
 	}
 	else
 	{
