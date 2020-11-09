@@ -1,0 +1,23 @@
+{
+	"check_if_player_is_at_log": [
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "log_ellipse",
+			"script": "walk_isabelle_to_door",
+			"expected_bool": true
+		}
+	],
+	"walk_isabelle_to_door": [
+		{
+			"name": "WALK_ENTITY_TO_GEOMETRY",
+			"duration": 5000,
+			"entity": "Isabelle",
+			"geometry": "door_point"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "spin_self_clockwise"
+		}
+	]
+}

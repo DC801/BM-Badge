@@ -2,19 +2,19 @@
 	"my_first_script": [
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"delay_time": 500
+			"duration": 500
 		},
 		{
 			"name": "SET_HEX_EDITOR_STATE",
-			"state": true
+			"expected_bool": true
 		},
 		{
 			"name": "BLOCKING_DELAY",
-			"delay_time": 5000
+			"duration": 5000
 		},
 		{
 			"name": "SET_HEX_EDITOR_STATE",
-			"state": false
+			"expected_bool": false
 		}
 	],
 	"entity_on_interact_script": [
@@ -27,22 +27,22 @@
 	"test_tick_script": [
 		{
 			"name": "CHECK_FOR_BUTTON_PRESS",
-			"success_script": "button_success_script",
+			"script": "button_success_script",
 			"button_id": 24
 		}
 	],
 	"button_success_script": [
 		{
 			"name": "SET_HEX_EDITOR_DIALOG_MODE",
-			"state": true
+			"expected_bool": true
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"delay_time": 5000
+			"duration": 5000
 		},
 		{
 			"name": "SET_HEX_EDITOR_DIALOG_MODE",
-			"state": false
+			"expected_bool": false
 		},
 		{
 			"name": "RUN_SCRIPT",
