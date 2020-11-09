@@ -275,6 +275,7 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 		map.scriptNameKeys = {};
 		map.serializedLayers = [];
 		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
+		scenarioData.mapsByName[map.name] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);

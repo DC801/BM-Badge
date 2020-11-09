@@ -451,6 +451,26 @@ var getMapLocalEntityIndexFromAction = function (
 	return mapLocalEntityIndex;
 };
 
+var getMapIndexFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (!value) {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+	}
+	var lookedUpMap = scenarioData.mapsByName[value];
+	var mapIndex = lookedUpMap && lookedUpMap.scenarioIndex;
+	if(mapIndex === undefined) {
+		throw new Error(`${actionName} was unable to find map "${value}"!`);
+	}
+	return mapIndex;
+};
+
 var getGeometryIndexFromAction = function (
 	propertyName,
 	action,

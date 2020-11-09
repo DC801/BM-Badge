@@ -19,5 +19,20 @@
 			"name": "RUN_SCRIPT",
 			"script": "spin_self_clockwise"
 		}
+	],
+	"test_map-on_tick": [
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "path_star",
+			"script": "load_map-town",
+			"expected_bool": true
+		}
+	],
+	"load_map-town": [
+		{
+			"name": "LOAD_MAP",
+			"map": "town_map"
+		}
 	]
 }
