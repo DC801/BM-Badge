@@ -1,231 +1,150 @@
 var actionHandlerMap = {
 	NULL_ACTION: null,
-	CHECK_ENTITY_BYTE: function (
-		action,
-		map,
-		fileNameMap,
-		scenarioData,
-	) {
-		var data = initActionData(action);
-		//success_script:
-		if (!action.success_script) {
-			throw new Error('CHECK_ENTITY_BYTE requires a string value for `success_script`');
-		}
-		if (!scenarioData.scripts[action.success_script]) {
-			throw new Error(`CHECK_ENTITY_BYTE was not able to find a script named "${action.success_script}" provided at the value \`success_script\``);
-		}
-		var mapLocalScriptId = handleScript(
-			action.success_script,
+	CHECK_ENTITY_BYTE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'expected_byte', size: 1}
+			],
+			'CHECK_ENTITY_BYTE',
 			map,
 			fileNameMap,
-			scenarioData
-		).mapLocalScriptId;
-		//entity:
-		if (!action.entity) {
-			throw new Error('CHECK_ENTITY_BYTE requires a string value for `entity`');
-		}
-		var entity = getObjectByNameOnMap(
-			action.entity,
-			map,
-		)
-		if (!entity) {
-			throw new Error(`CHECK_ENTITY_BYTE was not able to find entity "${action.entity}" on map "${map.name}"`);
-		}
-		if (entity !== 255) {
-			var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
-		}
-		else {
-			mapLocalEntityIndex = 255;
-		}
-		//byte_offset:
-		if (typeof action.byte_offset !== "number") {
-			throw new Error('CHECK_ENTITY_BYTE requires a number value for `byte_offset`');
-		}
-		//expected_value:
-		if (typeof action.expected_value !== "number") {
-			throw new Error('CHECK_ENTITY_BYTE requires a number value for `expected_value`');
-		}
-		//fill args:
-		data.dataView.setUint16(
-			1,
-			mapLocalScriptId,
-			false
+			scenarioData,
 		);
-		data.dataView.setUint8(
-			3,
-			entity
-		);
-		data.dataView.setUint8(
-			4,
-			action.byte_offset
-		);
-		data.dataView.setUint8(
-			5,
-			action.expected_value
-		);
-		return data;
 	},
-	CHECK_FOR_BUTTON_PRESS: function (
-		action,
-		map,
-		fileNameMap,
-		scenarioData,
-	) {
-		var data = initActionData(action);
-		if (!action.success_script) {
-			throw new Error('CHECK_FOR_BUTTON_PRESS requires a string value for `success_script`');
-		}
-		if (!scenarioData.scripts[action.success_script]) {
-			throw new Error(`CHECK_FOR_BUTTON_PRESS was not able to find a script named "${action.success_script}" provided at the value \`success_script\``);
-		}
-		if (!action.button_id) {
-			throw new Error('CHECK_FOR_BUTTON_PRESS requires a non-zero value for `button_id`');
-		}
-		var mapLocalScriptId = handleScript(
-			action.success_script,
+	CHECK_FOR_BUTTON_PRESS: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'button_id', size: 1}
+			],
+			'CHECK_FOR_BUTTON_PRESS',
 			map,
 			fileNameMap,
-			scenarioData
-		).mapLocalScriptId;
-		data.dataView.setUint16(
-			1,
-			mapLocalScriptId,
-			false
+			scenarioData,
 		);
-		data.dataView.setUint8(
-			3,
-			action.button_id
-		);
-		return data;
 	},
-	RUN_SCRIPT: function (
-		action,
-		map,
-		fileNameMap,
-		scenarioData,
-	) {
-		var data = initActionData(action);
-		if (!action.script) {
-			throw new Error('RUN_SCRIPT requires a string value for `script`');
-		}
-		if (!scenarioData.scripts[action.script] && (action.script != 'null_script')) {
-			throw new Error(`RUN_SCRIPT was not able to find a script named "${action.script}" provided at the value \`script\``);
-		}
-		var mapLocalScriptId = handleScript(
-			action.script,
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1}
+			],
+			'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
 			map,
 			fileNameMap,
-			scenarioData
-		).mapLocalScriptId;
-		data.dataView.setUint16(
-			1,
-			mapLocalScriptId,
-			false
+			scenarioData,
 		);
-		return data;
 	},
-	BLOCKING_DELAY: function (action) {
-		var data = initActionData(action);
-		if (!action.delay_time) {
-			throw new Error('BLOCKING_DELAY requires a non-zero value for `delay_time`');
-		}
-		data.dataView.setUint32(
-			1,
-			action.delay_time,
-			false
-		);
-		return data;
-	},
-	NON_BLOCKING_DELAY: function (action) {
-		var data = initActionData(action);
-		if (!action.delay_time) {
-			throw new Error('NON_BLOCKING_DELAY requires a non-zero value for `delay_time`');
-		}
-		data.dataView.setUint32(
-			1,
-			action.delay_time,
-			false
-		);
-		return data;
-	},
-	SET_ENTITY_DIRECTION: function (
-		action,
-		map,
-		fileNameMap,
-		scenarioData,
-	) {
-		var data = initActionData(action);
-		if (!action.entity) {
-			throw new Error('SET_ENTITY_DIRECTION requires a string value for `entity`');
-		}
-		if (action.direction === undefined) {
-			throw new Error('SET_ENTITY_DIRECTION requires a value for `direction`');
-		}
-		var directions = {
-			0: 0,
-			1: 1,
-			2: 2,
-			3: 3,
-			"north": 0,
-			"east": 1,
-			"south": 2,
-			"west": 3,
-		};
-		var direction = directions[action.direction];
-		if (direction === undefined) {
-			throw new Error(`SET_ENTITY_DIRECTION requires a valid value for \`direction\`; Possible values:\n${
-				Object.keys(directions)
-			}`);
-		}
-		var entity = getObjectByNameOnMap(
-			action.entity,
+	RUN_SCRIPT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+			],
+			'RUN_SCRIPT',
 			map,
-		)
-		if (!entity) {
-			throw new Error(`SET_ENTITY_DIRECTION was not able to find entity "${action.entity}" on map "${map.name}"`);
-		}
-		if (entity !== 255) {
-			var mapLocalEntityIndex = map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex);
-		}
-		else {
-			mapLocalEntityIndex = 255;
-		}
-		if(mapLocalEntityIndex === -1) {
-			throw new Error(`SET_ENTITY_DIRECTION fount entity "${action.entity}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
-		}
-		data.dataView.setUint8(
-			1,
-			mapLocalEntityIndex,
+			fileNameMap,
+			scenarioData,
 		);
-		data.dataView.setUint8(
-			2,
-			direction,
-		);
-		return data;
 	},
-	SET_HEX_EDITOR_STATE: function (action) {
-		var data = initActionData(action)
-		if (typeof action.state !== "boolean") {
-			throw new Error('SET_HEX_EDITOR_STATE requires a boolean value for `state`');
-		}
-		data.dataView.setUint8(
-			1,
-			action.state,
+	BLOCKING_DELAY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+			],
+			'BLOCKING_DELAY',
+			map,
+			fileNameMap,
+			scenarioData,
 		);
-		return data;
 	},
-	SET_HEX_EDITOR_DIALOG_MODE: function (action) {
-		var data = initActionData(action)
-		if (typeof action.state !== "boolean") {
-			throw new Error('SET_HEX_EDITOR_DIALOG_MODE requires a boolean value for `state`');
-		}
-		data.dataView.setUint8(
-			1,
-			action.state,
+	NON_BLOCKING_DELAY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+			],
+			'NON_BLOCKING_DELAY',
+			map,
+			fileNameMap,
+			scenarioData,
 		);
-		return data;
+	},
+	SET_ENTITY_DIRECTION: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'direction', size: 1},
+			],
+			'SET_ENTITY_DIRECTION',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_TICK_SCRIPT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_TICK_SCRIPT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_HEX_EDITOR_STATE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'SET_HEX_EDITOR_STATE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_HEX_EDITOR_DIALOG_MODE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'SET_HEX_EDITOR_DIALOG_MODE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	WALK_ENTITY_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'WALK_ENTITY_TO_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
 	},
 };
+
 var actionNames = [
 	'NULL_ACTION',
 	'CHECK_ENTITY_BYTE',
@@ -271,24 +190,188 @@ var actionNames = [
 	'PLAY_SOUND_INTERRUPT',
 ];
 
-var getObjectByNameOnMap = function(entityName, map) {
-	if (entityName === '%SELF%') {
-		return 255;
-	}
+var specialKeywordsEnum = {
+	'%MAP%': 255,
+	'%SELF%': 254,
+	'%PLAYER%': 253,
+}
+
+var getObjectByNameOnMap = function(name, map, actionName) {
+	var specialIndex = specialKeywordsEnum[name];
 	var object;
-	map.layers.find(function (layer) {
-		const isObjectsLayer = layer.type === 'objectgroup';
-		if (isObjectsLayer) {
-			object = layer.objects.find(function (object) {
-				return object.name === entityName;
-			});
-		}
-		return object !== undefined;
-	});
+	if (specialIndex) {
+		object = { specialIndex: specialIndex };
+	} else {
+		map.layers.find(function (layer) {
+			const isObjectsLayer = layer.type === 'objectgroup';
+			if (isObjectsLayer) {
+				object = layer.objects.find(function (object) {
+					return object.name === name;
+				});
+			}
+			return object !== undefined;
+		});
+	}
 	if (!object) {
-		throw new Error(`No entity named "${entityName}" could be found on map: "${map.name}"!`);
+		throw new Error(`${actionName} No object named "${name}" could be found on map: "${map.name}"!`);
 	}
 	return object;
+};
+
+var getMapLocalEntityIndexFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (!value) {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+	}
+	var entity = getObjectByNameOnMap(
+		value,
+		map,
+		actionName,
+	);
+	var mapLocalEntityIndex = (
+		entity.specialIndex
+		|| map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex)
+	)
+	if(mapLocalEntityIndex === -1) {
+		throw new Error(`${actionName} found entity "${value}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
+	}
+	return mapLocalEntityIndex;
+};
+
+var getGeometryIndexFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (!value) {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+	}
+	var geometry = getObjectByNameOnMap(value, map, actionName);
+	if (
+		!geometry
+		|| !geometry.path
+	) {
+		throw new Error(`${actionName} was not able to find geometry named "${value}" on the map named "${map.name}"`);
+	}
+	return geometry.scenarioIndex;
+};
+
+var getDirectionFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${actionName} requires a value for "${propertyName}"`);
+	}
+	var directions = {
+		0: 0,
+		1: 1,
+		2: 2,
+		3: 3,
+		"north": 0,
+		"east": 1,
+		"south": 2,
+		"west": 3,
+	};
+	var direction = directions[value];
+	if (direction === undefined) {
+		throw new Error(`${actionName} requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(directions)
+		}`);
+	}
+	return direction;
+};
+
+var getNumberFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'number') {
+		throw new Error(`${actionName} requires a value for "${propertyName}"!`);
+	}
+	value = parseInt(value, 10);
+	if (value < 0) {
+		throw new Error(`${actionName} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
+	}
+	return value;
+};
+
+var getByteFromAction = function (propertyName, action, map, actionName) {
+	var value = getNumberFromAction(propertyName, action, map, actionName);
+	var maxSize = 255;
+	if (value > maxSize) {
+		throw new Error(`${actionName} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
+	}
+	return value;
+};
+
+var getTwoBytesFromAction = function (propertyName, action, map, actionName) {
+	var value = getNumberFromAction(propertyName, action, map, actionName);
+	var maxSize = 65535;
+	if (value > maxSize) {
+		throw new Error(`${actionName} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
+	}
+	return value;
+};
+
+var getBoolFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'boolean') {
+		throw new Error(`${actionName} requires a (true | false) value for "${propertyName}"!`);
+	}
+	return value;
+};
+
+var getMapLocalScriptIdFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (!value) {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+	}
+	if (!scenarioData.scripts[value]) {
+		throw new Error(`${actionName} was not able to find a script named "${value}" provided at the property "${propertyName}"`);
+	}
+	var mapLocalScriptId = handleScript(
+		value,
+		map,
+		fileNameMap,
+		scenarioData
+	).mapLocalScriptId;
+	return mapLocalScriptId;
 };
 
 var initActionData = function (action) {
@@ -306,6 +389,61 @@ var initActionData = function (action) {
 		buffer: buffer,
 		dataView: dataView,
 	}
+};
+
+var actionPropertyNameToHandlerMap = {
+	geometry: getGeometryIndexFromAction,
+	script: getMapLocalScriptIdFromAction,
+	entity: getMapLocalEntityIndexFromAction,
+	duration: getNumberFromAction,
+	direction: getDirectionFromAction,
+	button_id: getByteFromAction,
+	byte_offset: getByteFromAction,
+	expected_byte: getByteFromAction,
+	expected_bool: getBoolFromAction,
+};
+
+var sizeHandlerMap = [
+	'BAD_SIZE_ERROR',
+	'setUint8',
+	'setUint16',
+	'BAD_SIZE_ERROR',
+	'setUint32',
+	'BAD_SIZE_ERROR',
+	'BAD_SIZE_ERROR',
+	'BAD_SIZE_ERROR',
+	'BAD_SIZE_ERROR',
+];
+
+var handleActionWithFields = function(
+	action,
+	fields,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var data = initActionData(action);
+	var offset = 1; // always start at 1 because that's the actionId
+	fields.forEach(function (field) {
+		var handler = actionPropertyNameToHandlerMap[field.propertyName];
+		var value = handler(
+			field.propertyName,
+			action,
+			actionName,
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+		var dataViewMethodName = sizeHandlerMap[field.size];
+		data.dataView[dataViewMethodName](
+			offset,
+			value,
+			false
+		);
+		offset += field.size;
+	})
+	return data;
 };
 
 var serializeAction = function (

@@ -2,7 +2,8 @@
 	"scriptPaths": [
 		"scripts/script-generic_entity_scripts.json",
 		"scripts/script-test_scripts.json",
-		"scripts/script-action_testing.json"
+		"scripts/script-action_testing.json",
+		"scripts/script-test_map_script.json"
 	],
 	"maps": {
 		"test": "maps/test.json",
