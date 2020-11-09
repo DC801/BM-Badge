@@ -401,6 +401,88 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	PAN_CAMERA_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'PAN_CAMERA_TO_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	PAN_CAMERA_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'PAN_CAMERA_ALONG_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	LOOP_CAMERA_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'LOOP_CAMERA_ALONG_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_SCREEN_SHAKE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'amplitude', size: 1},
+				{propertyName: 'frequency', size: 1},
+			],
+			'LOOP_CAMERA_ALONG_GEOMETRY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SCREEN_FADE_IN: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'color', size: 2},
+			],
+			'SCREEN_FADE_IN',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SCREEN_FADE_OUT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'duration', size: 4},
+				{propertyName: 'color', size: 2},
+			],
+			'SCREEN_FADE_OUT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 };
 
 var actionNames = [
@@ -679,11 +761,13 @@ var actionPropertyNameToHandlerMap = {
 	primary_id: getTwoBytesFromAction,
 	secondary_id: getTwoBytesFromAction,
 	primary_id_type: getByteFromAction,
+	amplitude: getByteFromAction,
 	bitmask: getByteFromAction,
 	button_id: getByteFromAction,
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
+	frequency: getByteFromAction,
 	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
 	bool_value: getBoolFromAction,
