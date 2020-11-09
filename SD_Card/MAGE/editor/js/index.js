@@ -18,6 +18,7 @@ var handleScenarioData = function(fileNameMap) {
 		Object.keys(scenarioData.entityTypes).forEach(function (key) {
 			scenarioData.entityTypes[key].type = key;
 		})
+		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
