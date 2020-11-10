@@ -50,6 +50,24 @@
 						"tileid": 8,
 						"flip_x": false
 					}
+				],
+				"action": [
+					{
+						"tileid": 30,
+						"flip_x": false
+					},
+					{
+						"tileid": 31,
+						"flip_x": false
+					},
+					{
+						"tileid": 29,
+						"flip_x": false
+					},
+					{
+						"tileid": 28,
+						"flip_x": false
+					}
 				]
 			}
 		},
