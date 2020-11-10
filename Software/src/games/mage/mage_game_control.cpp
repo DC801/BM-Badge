@@ -421,8 +421,8 @@ void MageGameControl::applyGameModeInputs()
 		updateEntityRenderableData(playerEntityIndex);
 		
 		MageEntity *playerEntity = &entities[playerEntityIndex];
-		bool hasEntityType = playerEntity->primaryIdType == ENTITY_TYPE;
-		MageEntityType *entityType = hasEntityType ? &entityTypes[playerEntity->primaryId] : nullptr;
+		bool hasEntityType = getValidPrimaryIdType(playerEntity->primaryIdType) == ENTITY_TYPE;
+		MageEntityType *entityType = hasEntityType ? &entityTypes[getValidEntityTypeId(playerEntity->primaryId)] : nullptr;
 		uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
 		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
