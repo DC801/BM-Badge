@@ -8,12 +8,12 @@
         }
     },
  "image":"..\/sprites\/blackmage.png",
- "imageheight":192,
+ "imageheight":384,
  "imagewidth":128,
  "margin":0,
  "name":"blackmage",
  "spacing":0,
- "tilecount":24,
+ "tilecount":48,
  "tiledversion":"1.4.2",
  "tileheight":32,
  "tiles":[
@@ -119,7 +119,7 @@
                 {
                  "duration":1000,
                  "tileid":2
-                },
+                }, 
                 {
                  "duration":100,
                  "tileid":6
@@ -287,6 +287,118 @@
         {
          "id":23,
          "type":"mage"
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":125,
+                 "tileid":24
+                }, 
+                {
+                 "duration":125,
+                 "tileid":28
+                }, 
+                {
+                 "duration":125,
+                 "tileid":32
+                }, 
+                {
+                 "duration":125,
+                 "tileid":36
+                }, 
+                {
+                 "duration":125,
+                 "tileid":40
+                }, 
+                {
+                 "duration":200,
+                 "tileid":44
+                }],
+         "id":28
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":125,
+                 "tileid":25
+                }, 
+                {
+                 "duration":125,
+                 "tileid":29
+                }, 
+                {
+                 "duration":125,
+                 "tileid":33
+                }, 
+                {
+                 "duration":125,
+                 "tileid":37
+                }, 
+                {
+                 "duration":125,
+                 "tileid":41
+                }, 
+                {
+                 "duration":200,
+                 "tileid":45
+                }],
+         "id":29
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":125,
+                 "tileid":26
+                }, 
+                {
+                 "duration":125,
+                 "tileid":30
+                }, 
+                {
+                 "duration":125,
+                 "tileid":34
+                }, 
+                {
+                 "duration":125,
+                 "tileid":38
+                }, 
+                {
+                 "duration":125,
+                 "tileid":42
+                }, 
+                {
+                 "duration":200,
+                 "tileid":46
+                }],
+         "id":30
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":125,
+                 "tileid":27
+                }, 
+                {
+                 "duration":125,
+                 "tileid":31
+                }, 
+                {
+                 "duration":125,
+                 "tileid":35
+                }, 
+                {
+                 "duration":125,
+                 "tileid":39
+                }, 
+                {
+                 "duration":125,
+                 "tileid":43
+                }, 
+                {
+                 "duration":200,
+                 "tileid":47
+                }],
+         "id":31
         }],
  "tilewidth":32,
  "type":"tileset",
