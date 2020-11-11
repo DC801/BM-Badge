@@ -40,6 +40,9 @@ MageGameControl::MageGameControl()
 	scriptHeader = MageHeader(offset);
 	offset += scriptHeader.size();
 
+	stringHeader = MageHeader(offset);
+	offset += stringHeader.size();
+
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
 
@@ -97,6 +100,7 @@ uint32_t MageGameControl::Size() const
 		entityHeader.size() +
 		geometryHeader.size() +
 		scriptHeader.size() +
+		stringHeader.size() +
 		imageHeader.size() +
 		map.Size() +
 		sizeof(playerEntityIndex) +

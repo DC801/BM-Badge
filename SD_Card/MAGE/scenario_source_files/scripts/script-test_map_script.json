@@ -8,6 +8,24 @@
 			"expected_bool": true
 		}
 	],
+	"check_if_player_is_named_bob": [
+		{
+			"name": "COMPARE_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Bob",
+			"expected_bool": true,
+			"script": "spin_self_clockwise"
+		}
+	],
+	"check_if_player_is_named_pat": [
+		{
+			"name": "COMPARE_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Pat",
+			"expected_bool": true,
+			"script": "spin_self_clockwise"
+		}
+	],
 	"walk_isabelle_to_door": [
 		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",

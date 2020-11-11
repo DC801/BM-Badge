@@ -83,6 +83,21 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	COMPARE_ENTITY_NAME: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'string', size: 2},
+				{propertyName: 'script', size: 2},
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'COMPARE_ENTITY_NAME',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	BLOCKING_DELAY: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -710,6 +725,25 @@ var getBoolFromAction = function (
 	return value;
 };
 
+var getStringIdFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+	}
+	return serializeString(
+		value,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
 var getMapLocalScriptIdFromAction = function (
 	propertyName,
 	action,
@@ -757,6 +791,7 @@ var actionPropertyNameToHandlerMap = {
 	entity: getMapLocalEntityIndexFromAction,
 	geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
+	string: getStringIdFromAction,
 	address: getTwoBytesFromAction,
 	color: getTwoBytesFromAction,
 	primary_id: getTwoBytesFromAction,

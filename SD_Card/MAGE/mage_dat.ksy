@@ -18,6 +18,8 @@ seq:
     type: count_with_offsets
   - id: script_offsets
     type: count_with_offsets
+  - id: string_offsets
+    type: count_with_offsets
   - id: image_offsets
     type: count_with_offsets
   - id: maps
@@ -49,6 +51,10 @@ seq:
     repeat: expr
     repeat-expr: script_offsets.count
 instances:
+  strings:
+    type: string(_index)
+    repeat: expr
+    repeat-expr: string_offsets.count
   images:
     type: image(_index)
     repeat: expr
@@ -355,6 +361,20 @@ types:
         type: u1
       - id: padding_g
         type: u1
+
+  string:
+    params:
+      - id: index
+        type: u4
+    instances:
+      offset:
+        value: '_parent.string_offsets.offsets[index]'
+      char_count:
+        value: '_parent.string_offsets.lengths[index]'
+      name:
+        type: strz
+        size: char_count
+        encoding: UTF8
 
   image:
     params:
