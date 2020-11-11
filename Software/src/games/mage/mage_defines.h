@@ -293,7 +293,7 @@ typedef struct {
 	uint16_t stringId;
 	uint16_t successScriptId;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBoolValue;
 	uint8_t paddingG;
 } ActionCompareEntityName;
 

@@ -79,6 +79,12 @@
                  "height":32,
                  "id":4,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_named_pat"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -93,6 +99,11 @@
                  "name":"Lenny",
                  "properties":[
                         {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_named_bob"
+                        }, 
+                        {
                          "name":"path",
                          "type":"object",
                          "value":12
@@ -105,7 +116,7 @@
                  "y":86.4368222067456
                 }, 
                 {
-                 "gid":362,
+                 "gid":386,
                  "height":64,
                  "id":6,
                  "name":"Bob",
@@ -128,7 +139,7 @@
                  "y":180
                 }, 
                 {
-                 "gid":373,
+                 "gid":397,
                  "height":48,
                  "id":21,
                  "name":"Stuart",
@@ -146,7 +157,7 @@
                  "y":143.5
                 }, 
                 {
-                 "gid":409,
+                 "gid":433,
                  "height":48,
                  "id":22,
                  "name":"Isabelle",
@@ -169,7 +180,7 @@
                  "y":216.5
                 }, 
                 {
-                 "gid":433,
+                 "gid":457,
                  "height":32,
                  "id":23,
                  "name":"Drake",
@@ -187,7 +198,7 @@
                  "y":45.5
                 }, 
                 {
-                 "gid":458,
+                 "gid":482,
                  "height":32,
                  "id":27,
                  "name":"",
@@ -469,23 +480,23 @@
          "source":"entity-mage.json"
         }, 
         {
-         "firstgid":361,
+         "firstgid":385,
          "source":"entity-golem.json"
         }, 
         {
-         "firstgid":373,
+         "firstgid":397,
          "source":"entity-dragon_skull.json"
         }, 
         {
-         "firstgid":409,
+         "firstgid":433,
          "source":"entity-eye_faerie.json"
         }, 
         {
-         "firstgid":433,
+         "firstgid":457,
          "source":"entity-village_elder.json"
         }, 
         {
-         "firstgid":457,
+         "firstgid":481,
          "source":"entity-baby_goat.json"
         }],
  "tilewidth":32,

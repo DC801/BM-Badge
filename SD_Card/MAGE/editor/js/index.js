@@ -6,6 +6,7 @@ var dataTypes = [
 	'entities',
 	'geometry',
 	'scripts',
+	'strings',
 	'images',
 ];
 
@@ -20,6 +21,7 @@ var handleScenarioData = function(fileNameMap) {
 		})
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
+		scenarioData.uniqueStringMap = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
