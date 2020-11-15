@@ -60,7 +60,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 			x >= 0
 			&& x <= WIDTH
 			&& dest >= 0
-			&& dest <= FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest]=color;
 		}
@@ -78,7 +78,7 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 			y >= 0
 			&& y <= HEIGHT
 			&& dest >= 0
-			&& dest <= FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest] = color;
 		}

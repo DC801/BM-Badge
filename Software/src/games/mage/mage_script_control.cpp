@@ -673,24 +673,24 @@ uint32_t MageScriptControl::size() const
 	return size;
 }
 
-MageScriptState MageScriptControl::getMapLoadResumeState()
+MageScriptState* MageScriptControl::getMapLoadResumeState()
 {
-	return mapLoadResumeState;
+	return &mapLoadResumeState;
 }
 
-MageScriptState MageScriptControl::getMapTickResumeState()
+MageScriptState* MageScriptControl::getMapTickResumeState()
 {
-	return mapTickResumeState;
+	return &mapTickResumeState;
 }
 
-MageScriptState MageScriptControl::getEntityInteractResumeState(uint8_t index)
+MageScriptState* MageScriptControl::getEntityInteractResumeState(uint8_t index)
 {
-	return entityInteractResumeStates[index];
+	return &entityInteractResumeStates[index];
 }
 
-MageScriptState MageScriptControl::getEntityTickResumeState(uint8_t index)
+MageScriptState* MageScriptControl::getEntityTickResumeState(uint8_t index)
 {
-	return entityTickResumeStates[index];
+	return &entityTickResumeStates[index];
 }
 
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
