@@ -25,24 +25,12 @@ void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 
 void keyboard_init(void)
 {
-	if (NRFX_SUCCESS != nrfx_gpiote_init())
-	{
-		return;
-	}
-
-	const nrfx_gpiote_in_config_t in_config =
-	{
-		.sense = NRF_GPIOTE_POLARITY_HITOLO,	// High to low transition
-		.pull = NRF_GPIO_PIN_PULLUP,			// Pull up enabled
-		.is_watcher = false,					// Not tracking an output pin
-		.hi_accuracy = true,					// Use an IN_EVENT
-		.skip_gpio_setup = false				// Configure GPIO
-	};
-
-	if (NRFX_SUCCESS != nrfx_gpiote_in_init(INTERRUPT_PIN, &in_config, keyboard_handler))
-	{
-		return;
-	}
+	// Setup the keyboard interrupt pin
+	#ifdef DC801_EMBEDDED
+	nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
+	#else
+	//don't need IO setup for non-embedded builds
+	#endif
 }
 
 #endif

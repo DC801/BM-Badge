@@ -922,11 +922,11 @@ void handleGodMode(BADGE_ADV badge, int *scoreModifier){
                 break;
             case gm_command_beep:
                 for(int i = 0; i < 50; i++){
-                    beep(25, 600 + (i * 10));
+                    //beep(25, 600 + (i * 10));
                 }
 
                 for(int i = 50; i > 0; i--){
-                    beep(25, 600 + (i * 10));
+                    //beep(25, 600 + (i * 10));
                 }
                 break;
             default:
