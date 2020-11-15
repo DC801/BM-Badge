@@ -611,11 +611,14 @@ void MageGameControl::handleEntityInteract()
 		playerRenderableData->interactBox.x -= interactLength;
 		playerRenderableData->interactBox.w = interactLength;
 	}
-	playerRenderableData->isInteracting = false;
+	for(uint8_t i = 0; i < map.EntityCount(); i++) {
+		// reset all interact states first
+		targetRenderableData = &entityRenderableData[i];
+		targetRenderableData->isInteracting = false;
+	}
 	for(uint8_t i = 0; i < map.EntityCount(); i++) {
 		if(i != playerEntityIndex) {
 			targetRenderableData = &entityRenderableData[i];
-			targetRenderableData->isInteracting = false;
 			targetEntity = &entities[i];
 			bool colliding = MageGeometry::doRectsOverlap(
 				targetRenderableData->hitBox,
