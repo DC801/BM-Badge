@@ -1071,7 +1071,7 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 					? COLOR_RED
 					: COLOR_GREEN
 			);
-			if(i == playerEntityIndex) {
+			if(entityIndex == playerEntityIndex) {
 				canvas.drawRect(
 					renderableData->interactBox.x - cameraX,
 					renderableData->interactBox.y - cameraY,
