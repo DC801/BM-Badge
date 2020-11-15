@@ -25,7 +25,7 @@
             ]
         },
         {
-            "name": "Debug (Linux)",
+            "name": "Debug (Physical Badge)",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
