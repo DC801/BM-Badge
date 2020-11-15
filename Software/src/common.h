@@ -30,6 +30,13 @@ extern "C" {
 #endif
 	#include "config/sdk_config.h"
 
+	//this will fix nordik syntax highlighting in vscode when using compiledb and compiling for embedded:
+	#ifdef DC801_EMBEDDED
+		#undef _WIN32
+		#undef __unix
+		#undef __APPLE__
+	#endif
+
 	// Nordic headers
 	#include "nordic_common.h"
 	#include "nrf.h"
