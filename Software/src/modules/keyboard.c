@@ -8,14 +8,11 @@ keyboard_evt_handler_t keyboard_evt_handler = NULL;
 #include "nrfx_gpiote.h"
 #include "app_error.h"
 
-#define KEYBOARD_ADDR 0x23
-#define INTERRUPT_PIN 18
-
 void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
 	uint8_t *ptr = (uint8_t *)&keyboard_mask;
 
-	i2cMasterRead(KEYBOARD_ADDR, ptr, sizeof(uint32_t));
+	i2cMasterRead(KEYBOARD_ADDRESS, ptr, sizeof(uint32_t));
 
 	if (keyboard_evt_handler != NULL)
 	{
@@ -23,44 +20,32 @@ void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 	}
 }
 
-void keyboard_init(void)
-{
-	// Setup the keyboard interrupt pin
-	#ifdef DC801_EMBEDDED
-	nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
-	#else
-	//don't need IO setup for non-embedded builds
-	#endif
+/**
+ * Initialize the keyboard interface
+ */
+void keyboard_init(void){
+	//setup keyboard interrupt pin
+    nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
+	//set handler function for 
+}
+
+/**
+ * Determine if an interrupt is occuring
+ */
+bool is_keyboard_interrupt(void){
+    return nrf_gpio_pin_read(KEYBOARD_INT_PIN) == 0;
 }
 
 #endif
 
-#ifdef DC801_DESKTOP
-
-void keyboard_init(void)
+uint32_t get_keyboard_mask(void)
 {
-	// TODO: SDL stuff here
-}
-
-#endif
-
-int keyboard_key_is_down(KEYBOARD_KEY key)
-{
-	uint32_t mask = 0x01 << (uint32_t)key;
-
-	if ((keyboard_mask & mask) != 0x00)
+	if(is_keyboard_interrupt())
 	{
-		return 1;
+		uint8_t *ptr = (uint8_t *)&keyboard_mask;
+		i2cMasterRead(KEYBOARD_ADDRESS, ptr, sizeof(uint32_t));
 	}
-	else
-	{
-		return 0;
-	}
-}
-
-void keyboard_get_mask(uint32_t *mask)
-{
-	*mask = keyboard_mask;
+	return keyboard_mask;
 }
 
 void keyboard_register_callback(keyboard_evt_handler_t handler)

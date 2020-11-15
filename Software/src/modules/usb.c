@@ -187,8 +187,8 @@ void usb_serial_init() {
     APP_ERROR_CHECK(app_usbd_class_append(class_cdc_acm));
     nrf_drv_clock_lfclk_request(NULL);
     APP_ERROR_CHECK(app_usbd_power_events_enable());
-    //app_usbd_enable();
-    //app_usbd_start();
+    app_usbd_enable();
+    app_usbd_start();
     tx_ready = true;
     peer_connected = false;
     idx = 0;
