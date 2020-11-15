@@ -37,7 +37,6 @@ static void drawMenu(MENU *menu, GFXfont font, uint16_t color, uint16_t startY, 
  * @param timeout should we give up after a certain time?
  * @param updateTemplate Should we keep the top bar updated?
  * @return
- */
 int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numRows, uint16_t timeout, bool updateTemplate){
 
     uint8_t oldBatteryPercent = 0;
@@ -149,6 +148,7 @@ int getMenuSelection(MENU *menu, uint16_t startY, uint8_t numItems, uint8_t numR
     }
 
 }
+*/
 
 
 /**

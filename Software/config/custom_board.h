@@ -19,111 +19,24 @@ extern "C" {
 // LEDs definitions
 
 // Low is active
-#define LEDS_ACTIVE_STATE 0
+#define LEDS_ACTIVE_STATE    0
+#define VOLTAGE_SENSE        4
+// Defines for the SDK
 
-#define VOLTAGE_SENSE		4
+#define BUTTONS_NUMBER       0
+#define BUTTONS_ACTIVE_STATE NRF_GPIO_PIN_SENSE_LOW
+#define USER_BUTTON_NONE     0	
 
-// LED Pins
+// Keyboard config
+#define KEYBOARD_ADDRESS    0x23
+#define KEYBOARD_INT_PIN    18
 
-#define LED_LEVEL_UP_0     	32
-#define LED_LEVEL_UP_1     	32
-#define LED_LEVEL_UP_2     	32
-#define LED_LEVEL_UP_3		32
+#define RX_PIN_NUMBER       8
+#define TX_PIN_NUMBER       6
+#define CTS_PIN_NUMBER      NRF_UART_PSEL_DISCONNECTED
+#define RTS_PIN_NUMBER      NRF_UART_PSEL_DISCONNECTED
+#define HWFC                false
 
-#define LED_POWER_UP_0  	32
-#define LED_POWER_UP_1      	32
-#define LED_POWER_UP_2      	32
-#define LED_POWER_UP_3		32
-
-// Arrays to make iteration easy
-// The Nordic SDK uses LEDS_LIST internally
-#define LEDS_LIST { \
-		LED_LEVEL_UP_0, 	\
-		LED_LEVEL_UP_1, 	\
-		LED_LEVEL_UP_2,	\
-		LED_LEVEL_UP_3,	\
-		LED_POWER_UP_0,	\
-		LED_POWER_UP_1,	\
-		LED_POWER_UP_2,	\
-		LED_POWER_UP_3	}
-
-#define LEDS_NUMBER    		8
-
-//static const uint32_t led_list[LEDS_NUMBER] = LEDS_LIST;
-
-#define LEVEL_UP_LEDS_LIST { \
-		LED_LEVEL_UP_0, 	\
-		LED_LEVEL_UP_1, 	\
-		LED_LEVEL_UP_2,	\
-		LED_LEVEL_UP_3	}
-
-#define LEVEL_UP_LEDS_NUMBER    		4
-
-static const uint32_t level_up_led_list[LEVEL_UP_LEDS_NUMBER] = LEVEL_UP_LEDS_LIST;
-
-#define POWER_UP_LEDS_LIST { \
-		LED_POWER_UP_0, 	\
-		LED_POWER_UP_1, 	\
-		LED_POWER_UP_2,	\
-		LED_POWER_UP_3	}
-
-#define POWER_UP_LEDS_NUMBER    		4
-
-static const uint32_t power_up_led_list[POWER_UP_LEDS_NUMBER] = POWER_UP_LEDS_LIST;
-
-// Push buttons
-
-#define BUTTONS_NUMBER 6
-
-
-#define USER_BUTTON_NONE     0
-#define USER_BUTTON_UP       31
-#define USER_BUTTON_DOWN     2
-#define USER_BUTTON_LEFT     9+32
-#define USER_BUTTON_RIGHT    1
-#define USER_BUTTON_A        25
-#define USER_BUTTON_B        6+32
-
-#define LONG_PRESS_MASK      0x8000
-
-#define USER_BUTTON_UP_LONG    	(17  | LONG_PRESS_MASK)
-#define USER_BUTTON_DOWN_LONG   (19  | LONG_PRESS_MASK)
-#define USER_BUTTON_LEFT_LONG   (20 | LONG_PRESS_MASK)
-#define USER_BUTTON_RIGHT_LONG  (18 | LONG_PRESS_MASK)
-#define USER_BUTTON_A_LONG		(27  | LONG_PRESS_MASK)
-#define USER_BUTTON_B_LONG		(26 | LONG_PRESS_MASK)
-
-#define BUTTONS_LIST { \
-    USER_BUTTON_UP, \
-    USER_BUTTON_DOWN, \
-    USER_BUTTON_LEFT, \
-    USER_BUTTON_RIGHT, \
-    USER_BUTTON_A, \
-    USER_BUTTON_B \
-}
-
-// Low is active
-#define BUTTONS_ACTIVE_STATE	0
-// Don't need a pull up
-#define BUTTON_PULL				0
-
-#define BSP_BUTTON_0   USER_BUTTON_UP
-#define BSP_BUTTON_1   USER_BUTTON_DOWN
-#define BSP_BUTTON_2   USER_BUTTON_LEFT
-#define BSP_BUTTON_3   USER_BUTTON_RIGHT
-
-#define RX_PIN_NUMBER  8
-#define TX_PIN_NUMBER  6
-#define CTS_PIN_NUMBER NRF_UART_PSEL_DISCONNECTED
-#define RTS_PIN_NUMBER NRF_UART_PSEL_DISCONNECTED
-#define HWFC           false
-
-#define BUTTON_PRESSED 	0
-
-// Just one speaker
-#define SPEAKER		0
-
-// LCD
 // LCD
 #define LCD_SPIM_INSTANCE   3
 

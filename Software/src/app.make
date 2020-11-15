@@ -4,7 +4,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/menu.c \
 	$(SRC_ROOT)/user.c \
 	$(SRC_ROOT)/nearby.c \
-	$(SRC_ROOT)/extras.c \
 	$(SRC_ROOT)/godmode.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
 	$(SRC_ROOT)/modules/drv_ili9341.c \
@@ -26,11 +25,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/engine/EnginePanic.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
 	$(SRC_ROOT)/engine/FrameBuffer.cpp \
-	$(SRC_ROOT)/games/Space_Invaders.cpp \
-	$(SRC_ROOT)/games/Snake.c \
-	$(SRC_ROOT)/games/PipsTheET.c \
-	$(SRC_ROOT)/games/Tic-Tac-Toe.c \
-	$(SRC_ROOT)/games/Wargames.c \
 	$(SRC_ROOT)/games/mage/mage_header.cpp \
 	$(SRC_ROOT)/games/mage/mage_map.cpp \
 	$(SRC_ROOT)/games/mage/mage_tileset.cpp \
