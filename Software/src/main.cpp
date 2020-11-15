@@ -77,7 +77,7 @@ static void log_init(void){
  * @param p_data
  */
 static void bootCallback(uint8_t frame, void *p_data){
-	ledOn((LEDID) (frame % ISSI_LED_COUNT));
+	ledOn((LEDID) (frame % LED_COUNT));
 }
 
 /**
@@ -107,7 +107,7 @@ MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
 void test_screen(){
 	FrameBuffer *test_canvas;
 	test_canvas = p_canvas();
-	test_canvas->clearScreen(RGB(0,0,0));
+	test_canvas->clearScreen(COLOR_GREEN);
 	for(int i=0; i<20; i++){
 		test_canvas->blt();
 	}
@@ -116,8 +116,8 @@ void test_screen(){
 //this will blink the LED next to a button, or turn off all LEDs when a joystick button is held down.
 void test_keyboard(){
 	ledsOff();
-	bool led_brightness[ISSI_LED_COUNT];
-	for(int i=0; i<ISSI_LED_COUNT; i++) {led_brightness[i] = false;}
+	bool led_brightness[LED_COUNT];
+	for(int i=0; i<LED_COUNT; i++) {led_brightness[i] = false;}
 	//need to keep updating in a loop for it to work:
 	while(1){
 		//get an updated key mask every loop:
@@ -142,22 +142,6 @@ void test_keyboard(){
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * @brief Main app
  * @return Not used
@@ -172,25 +156,24 @@ int main(void){
 
 	// Setup the system
 	log_init();
-	keyboard_init();
 	speaker_init();
-
 
 	// Timers
 	app_timer_init();
+
+#ifdef DC801_EMBEDDED
 	usb_serial_init();
+	keyboard_init();
 
 	// BLE
 	//gap_params_init();
 	ble_stack_init();
 	scan_start();
 
-#ifdef DC801_EMBEDDED
 	// Init the display
 	ili9341_init();
 	ili9341_start();
 	util_gfx_init();
-#endif
 
 	// Init the random number generator
 	nrf_drv_rng_init(NULL);
@@ -204,6 +187,14 @@ int main(void){
 
 	// Setup I2C
 	twi_master_init();
+
+	EEpwm_init();
+
+	const char* ble_name = "TaSheep801"; // must be 10char
+	printf("advertising user: %s\n", ble_name);
+	advertising_setUser(ble_name);
+	ble_adv_start();
+#endif
 
 	// Setup LEDs
 	ledInit();
@@ -221,18 +212,12 @@ int main(void){
 	printf("Booted!\n");
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
-	EEpwm_init();
 
 	// Configure the systick
 	sysTickStart();
 
 	// Setup a timer for shutting down animations in standby
 	app_timer_create(&standby_animation_timer_id, APP_TIMER_MODE_SINGLE_SHOT, standby_animation_timeout_handler);
-
-	const char* ble_name = "TaSheep801"; // must be 10char
-	printf("advertising user: %s\n", ble_name);
-	advertising_setUser(ble_name);
-	ble_adv_start();
 
 	//this just prints the screen black for a bit before continuing.
 	//Feel free to delete the function once everything is working -Tim

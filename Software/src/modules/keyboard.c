@@ -25,9 +25,10 @@ void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
  * Initialize the keyboard interface
  */
 void keyboard_init(void){
+	#ifdef DC801_EMBEDDED
 	//setup keyboard interrupt pin
     nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
-	//set handler function for 
+	#endif
 }
 
 /**

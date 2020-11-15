@@ -5,6 +5,8 @@
 #ifndef I2C_H
 #define I2C_H
 
+#ifdef DC801_EMBEDDED
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -15,6 +17,8 @@ void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif //I2C_H
