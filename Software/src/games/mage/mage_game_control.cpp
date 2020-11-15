@@ -716,11 +716,6 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			TRANSPARENCY_COLOR,
 			flags
 		);
-
-		// if (led_states[LED_MEM0])
-		// {
-		// 	canvas.blt();
-		// }
 	}
 }
 

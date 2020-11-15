@@ -89,7 +89,7 @@ extern "C" {
 #endif
 
 typedef enum {
-        LED_XOR,
+        LED_XOR = 0,
         LED_ADD,
         LED_SUB,
         LED_PAGE,
