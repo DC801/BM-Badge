@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define KEYBOARD_DEBOUNCE_TIME 15
+
 // 27 keys
 // Bit position of the key within the key state array
 typedef enum
