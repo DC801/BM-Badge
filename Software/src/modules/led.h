@@ -32,13 +32,6 @@
 
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
-#include "common.h"
-#include "i2c.h"
-#include <string.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define ISSI_I2C_ADDR		0x50
 #define ISSI_REG_MAX		0xBE
@@ -79,50 +72,52 @@ extern "C" {
 #define ISSI_REG_CONFIG_B_EN	0x02
 #define ISSI_REG_CONFIG_OSD	0x04
 
-#define ISSI_LED_COUNT		36
-
 #define ISSI_TIMEOUT		1000
 
 /* Set intensity to half PWM duty cycle */
 
-#define LED_INTENSITY		0x30
+#define LED_INTENSITY		0x80
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
-    LED_MEM0 = 0,
-    LED_MEM1,
-    LED_MEM2,
-    LED_MEM3,
-    LED_BIT128,
-    LED_BIT64,
-    LED_BIT32,
-    LED_BIT16,
-    LED_BIT8,
-    LED_BIT4,
-    LED_BIT2,
-    LED_BIT1,
-    LED_XOR,
-    LED_ADD,
-    LED_SUB,
-    LED_PAGE,
-    LED_HAX,
-    LED_COUNT
+        LED_XOR,
+        LED_ADD,
+        LED_SUB,
+        LED_PAGE,
+        LED_BIT128,
+        LED_BIT64,
+        LED_BIT32,
+        LED_BIT16,
+        LED_BIT8,
+        LED_BIT4,
+        LED_BIT2,
+        LED_BIT1,
+        LED_MEM3,
+        LED_MEM2,
+        LED_MEM1,
+        LED_MEM0,
+        LED_USB,
+        LED_HAX,
+        LED_SD,
+        ISSI_LED_COUNT
 } LEDID;
 
-extern uint8_t led_states[LED_COUNT];
-
+void ledSet (uint8_t, uint8_t);
+void ledPageSet (uint8_t);
+void ledRegSet (uint8_t, uint8_t);
+void ledRegGet (uint8_t);
 extern void ledInit(void);
 extern void ledsOn(void);
 extern void ledsOff(void);
-extern void ledSet(LEDID index, uint8_t intensity);
 extern void ledOn(LEDID id);
 extern void ledOff(LEDID id);
 extern void ledPulse(LEDID id);
 extern void ledPulseFast(LEDID id);
 extern void ledPwm(LEDID id, uint8_t val);
 extern void ledShow();
-
-extern void ledGunsShoot(uint32_t ms);
-extern void ledThrusterFire(uint32_t ms);
 
 #ifdef __cplusplus
 }

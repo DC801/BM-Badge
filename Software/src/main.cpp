@@ -77,8 +77,7 @@ static void log_init(void){
  * @param p_data
  */
 static void bootCallback(uint8_t frame, void *p_data){
-	ledOn((LEDID) (frame % LED_COUNT));
-	ledShow();
+	ledOn((LEDID) (frame % ISSI_LED_COUNT));
 }
 
 /**
@@ -155,7 +154,7 @@ int main(void){
 	ledInit();
 	ledsOn();
 
-	morseInit();
+	//morseInit();
 
 	/*
 	if(!util_sd_init()){
