@@ -198,7 +198,7 @@ int main(void){
 
 	// Setup LEDs
 	ledInit();
-	ledsOn();
+	ledsOff();
 
 	//morseInit();
 
@@ -221,12 +221,12 @@ int main(void){
 
 	//this just prints the screen black for a bit before continuing.
 	//Feel free to delete the function once everything is working -Tim
-	test_screen();
+	//test_screen();
 
 	//this tests button inputs by blinking LEDs. 
 	//it's blocking, so comment it out when not actively testing.
 	//Feel free to delete the function once everything is working -Tim
-	test_keyboard();
+	//test_keyboard();
 
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();

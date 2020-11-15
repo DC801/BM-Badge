@@ -170,10 +170,6 @@ void ledSet (uint8_t index, uint8_t intensity){
     ledPageSet(ISSI_PAGE_BREATH);
     
     ledRegSet(led_address[index] , 0);
-    
-
-    //led_memory[led_address[index] + 1] = intensity;
-    //led_breath[led_address[index] + 1] = 0;
 
     return;
 }
