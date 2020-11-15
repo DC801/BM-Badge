@@ -84,6 +84,7 @@ MageGameControl::MageGameControl()
 
 	mageSpeed = MAGE_WALKING_SPEED;
 	isMoving = false;
+	isCollisionDebugOn = false;
 	playerHasControl = true;
 
 	//load the map
@@ -107,6 +108,7 @@ uint32_t MageGameControl::Size() const
 		sizeof(previousPlayerTilesetId) +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
+		sizeof(isCollisionDebugOn) +
 		sizeof(playerHasControl) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
@@ -406,6 +408,10 @@ void MageGameControl::applyUniversalInputs()
 	if (EngineInput_Activated.bit_4  ) { MageHex->runHex(0b00000100); }
 	if (EngineInput_Activated.bit_2  ) { MageHex->runHex(0b00000010); }
 	if (EngineInput_Activated.bit_1  ) { MageHex->runHex(0b00000001); }
+	if (
+		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem0) ||
+		(EngineInput_Activated.mem0 && EngineInput_Buttons.op_xor)
+	) { isCollisionDebugOn = !isCollisionDebugOn; }
 }
 
 void MageGameControl::applyGameModeInputs()
@@ -460,11 +466,9 @@ void MageGameControl::applyGameModeInputs()
 				{ playerEntity->y -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::NORTH; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_down )
 				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
-			if(EngineInput_Buttons.rjoy_right )
-				//We need a function to determine if an entity is close enough to the player to start an onInteract script.
-				//this function will also need to dicide which entity to trigger, and set up the script to be ready for a fresh run when
-				//the handler is called further down the loop. -Tim
-				{ handleEntityInteract(); }
+			if(EngineInput_Buttons.rjoy_right ) {
+				handleEntityInteract();
+			}
 			if(EngineInput_Buttons.rjoy_up );
 				//no task assigned to rjoy_up in game mode
 			if(EngineInput_Buttons.ljoy_center );
@@ -556,6 +560,10 @@ void MageGameControl::applyGameModeInputs()
 			previousPlayerTilesetId = renderableData->tilesetId;
 		}
 
+		if(isMoving)
+		{
+			updateEntityRenderableData(playerEntityIndex);
+		}
 		//set camera to center of player tile.
 		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
 		cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((tilesetHeight) / 2);
@@ -578,22 +586,55 @@ void MageGameControl::handleEntityInteract()
 	{
 		return;
 	}
-	//Just spitballing a likely structure for interaction:
-	/*
-	The player will cast a ray that is a percentage of their tilewidth long, and a certain percentage of their wilewidth wide.
-	It will project towards the direction they are facing, giving a rectangular area of pixels where interaction can occur.
-	We'll call this the 'interactableArea, defined as a geometry with 4 points'
-	
-	We will then need to iterate through all map entities and check to see if their collision areas overlap the interactableArea.
-	This can be done via checking the 4 vertices of the entity collision rectangle to see if any one of them is within the interactableArea.
-	
-	We'll need a way to handle the condition where multiple entities are within the interactableArea. 
-	If we keep a list of all entities that qualify, we can iterate through the list and select the one with the closest x,y 
-	coordinates to the player entity as the one to be interacted with. It may also make sense to select only entities with a 
-	non-zero on_interact script value in this phase regardless of distance.
-
-	Once the entity is selected, we need to initialize the entity's resumeStateStruct so the on_interact script will run with the next handler.
-	*/
+	MageEntityRenderableData *playerRenderableData = &entityRenderableData[playerEntityIndex];
+	MageEntityRenderableData *targetRenderableData;
+	MageEntity *playerEntity = &entities[playerEntityIndex];
+	MageEntity *targetEntity;
+	playerRenderableData->interactBox.x = playerRenderableData->hitBox.x;
+	playerRenderableData->interactBox.y = playerRenderableData->hitBox.y;
+	playerRenderableData->interactBox.w = playerRenderableData->hitBox.w;
+	playerRenderableData->interactBox.h = playerRenderableData->hitBox.h;
+	uint8_t interactLength = 32;
+	if(playerEntity->direction == NORTH) {
+		playerRenderableData->interactBox.y -= interactLength;
+		playerRenderableData->interactBox.h = interactLength;
+	}
+	if(playerEntity->direction == EAST) {
+		playerRenderableData->interactBox.x += playerRenderableData->interactBox.w;
+		playerRenderableData->interactBox.w = interactLength;
+	}
+	if(playerEntity->direction == SOUTH) {
+		playerRenderableData->interactBox.y += playerRenderableData->interactBox.h;
+		playerRenderableData->interactBox.h = interactLength;
+	}
+	if(playerEntity->direction == WEST) {
+		playerRenderableData->interactBox.x -= interactLength;
+		playerRenderableData->interactBox.w = interactLength;
+	}
+	playerRenderableData->isInteracting = false;
+	for(uint8_t i = 0; i < map.EntityCount(); i++) {
+		if(i != playerEntityIndex) {
+			targetRenderableData = &entityRenderableData[i];
+			targetRenderableData->isInteracting = false;
+			targetEntity = &entities[i];
+			bool colliding = MageGeometry::doRectsOverlap(
+				targetRenderableData->hitBox,
+				playerRenderableData->interactBox
+			);
+			if (colliding) {
+				playerRenderableData->isInteracting = true;
+				targetRenderableData->isInteracting = true;
+				if (targetEntity->onInteractScriptId) {
+					MageScript->initScriptState(
+						MageScript->getEntityInteractResumeState(i),
+						targetEntity->onInteractScriptId,
+						true
+					);
+				}
+				break;
+			}
+		}
+	}
 }
 
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
@@ -773,13 +814,14 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 {
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
+	MageEntityRenderableData *data = &entityRenderableData[index];
 	if(index >= map.EntityCount())
 	{
-		entityRenderableData[index].tilesetId = MAGE_TILESET_FAILOVER_ID;
-		entityRenderableData[index].tileId = MAGE_TILE_FAILOVER_ID;
-		entityRenderableData[index].duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
-		entityRenderableData[index].frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
-		entityRenderableData[index].renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
+		data->tilesetId = MAGE_TILESET_FAILOVER_ID;
+		data->tileId = MAGE_TILE_FAILOVER_ID;
+		data->duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
+		data->frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
+		data->renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
 		return;
 	}
 	else
@@ -796,11 +838,11 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 		if(entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
 		{
 			//ensure the tilesetId (in this scenario, the entity's primaryId) is valid.
-			entityRenderableData[index].tilesetId = getValidTilesetId(entity.primaryId);
-			entityRenderableData[index].tileId = getValidTileId(entity.secondaryId, entityRenderableData[index].tilesetId);
-			entityRenderableData[index].duration = 0; //unused
-			entityRenderableData[index].frameCount = 0; //unused
-			entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+			data->tilesetId = getValidTilesetId(entity.primaryId);
+			data->tileId = getValidTileId(entity.secondaryId, data->tilesetId);
+			data->duration = 0; //unused
+			data->frameCount = 0; //unused
+			data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
 		}
 
 
@@ -810,11 +852,11 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			//ensure the animationId (in this scenario, the entity's primaryId) is valid.
 			uint16_t animationId = getValidAnimationId(entity.primaryId);
 			uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
-			entityRenderableData[index].tilesetId = getValidTilesetId(animations[animationId].TilesetId());
-			entityRenderableData[index].tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), entityRenderableData[index].tilesetId);
-			entityRenderableData[index].duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
-			entityRenderableData[index].frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
-			entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+			data->tilesetId = getValidTilesetId(animations[animationId].TilesetId());
+			data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), data->tilesetId);
+			data->duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+			data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+			data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
 		}
 
 
@@ -831,11 +873,11 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 				#ifdef DC801_DESKTOP
 					fprintf(stderr, "An entityType entity with no animations exists. Using fallback values.");
 				#endif
-				entityRenderableData[index].tilesetId = MAGE_TILESET_FAILOVER_ID;
-				entityRenderableData[index].tileId = MAGE_TILE_FAILOVER_ID;
-				entityRenderableData[index].duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
-				entityRenderableData[index].frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
-				entityRenderableData[index].renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
+				data->tilesetId = MAGE_TILESET_FAILOVER_ID;
+				data->tileId = MAGE_TILE_FAILOVER_ID;
+				data->duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
+				data->frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
+				data->renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
 			}
 
 			//get a valid entity type animation ID:
@@ -873,23 +915,32 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			{
 				uint16_t animationId = getValidAnimationId(directedAnimation.TypeId());
 				uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
-				entityRenderableData[index].tilesetId = animations[animationId].TilesetId();
-				entityRenderableData[index].tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), entityRenderableData[index].tilesetId);
-				entityRenderableData[index].duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
-				entityRenderableData[index].frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
-				entityRenderableData[index].renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
+				data->tilesetId = animations[animationId].TilesetId();
+				data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), data->tilesetId);
+				data->duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+				data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+				data->renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
 			}
 			//Test whether or not the 0-index stuff is working:
 			//Scenario B: Type is not 0, so TypeId is a tileset, and Type is the tileId (you will need to subtract 1 to get it 0-indexed).
 			else
 			{
-				entityRenderableData[index].tilesetId = directedAnimation.TypeId();
-				entityRenderableData[index].tileId = directedAnimation.TypeId()-1;
-				entityRenderableData[index].duration = 0; //does not animate;
-				entityRenderableData[index].frameCount = 0; //does not animate
-				entityRenderableData[index].renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
+				data->tilesetId = directedAnimation.TypeId();
+				data->tileId = directedAnimation.TypeId()-1;
+				data->duration = 0; //does not animate;
+				data->frameCount = 0; //does not animate
+				data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
 			}
 		}
+		MageTileset *tileset = &tilesets[getValidTilesetId(data->tilesetId)];
+		uint16_t width = tileset->TileWidth();
+		uint16_t height = tileset->TileHeight();
+		uint16_t halfWidth = width / 2;
+		uint16_t halfHeight = height / 2;
+		data->hitBox.x = entity.x + (halfWidth / 2);
+		data->hitBox.y = entity.y + (halfHeight) - height;
+		data->hitBox.w = halfWidth;
+		data->hitBox.h = halfHeight;
 	}
 
 }
@@ -979,29 +1030,58 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
 		uint16_t entityIndex = entitySortOrder[i];
-		uint32_t imageId = tilesets[entityRenderableData[entityIndex].tilesetId].ImageId();
-		uint32_t tileWidth = tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth();
-		uint32_t tileHeight = tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight();
-		uint32_t cols = tilesets[entityRenderableData[entityIndex].tilesetId].Cols();
-		uint32_t tileId = entityRenderableData[entityIndex].tileId;
+		MageEntityRenderableData *renderableData = &entityRenderableData[entityIndex];
+		MageTileset *tileset = &tilesets[renderableData->tilesetId];
+		uint16_t imageId = tileset->ImageId();
+		uint16_t tileWidth = tileset->TileWidth();
+		uint16_t tileHeight = tileset->TileHeight();
+		uint16_t cols = tileset->Cols();
+		uint16_t tileId = entityRenderableData[entityIndex].tileId;
 		uint32_t address = imageHeader.offset(imageId);
-
-		int32_t source_x = (tileId % cols) * tileWidth;
-		int32_t source_y = (tileId / cols) * tileHeight;
-
+		uint16_t source_x = (tileId % cols) * tileWidth;
+		uint16_t source_y = (tileId / cols) * tileHeight;
 		int32_t x = entities[entityIndex].x - cameraX;
 		int32_t y = entities[entityIndex].y - cameraY - tileHeight;
 		canvas.drawChunkWithFlags(
 			address,
 			x,
 			y,
-			tilesets[entityRenderableData[entityIndex].tilesetId].TileWidth(),
-			tilesets[entityRenderableData[entityIndex].tilesetId].TileHeight(),
+			tileWidth,
+			tileHeight,
 			source_x,
 			source_y,
-			tilesets[entityRenderableData[entityIndex].tilesetId].ImageWidth(),
+			tileset->ImageWidth(),
 			TRANSPARENCY_COLOR,
-			entityRenderableData[entityIndex].renderFlags
+			renderableData->renderFlags
 		);
+		if (isCollisionDebugOn) {
+			canvas.drawRect(
+				x,
+				y,
+				tileWidth,
+				tileHeight,
+				COLOR_LIGHTGREY
+			);
+			canvas.drawRect(
+				renderableData->hitBox.x - cameraX,
+				renderableData->hitBox.y - cameraY,
+				renderableData->hitBox.w,
+				renderableData->hitBox.h,
+				renderableData->isInteracting
+					? COLOR_RED
+					: COLOR_GREEN
+			);
+			if(i == playerEntityIndex) {
+				canvas.drawRect(
+					renderableData->interactBox.x - cameraX,
+					renderableData->interactBox.y - cameraY,
+					renderableData->interactBox.w,
+					renderableData->interactBox.h,
+					renderableData->isInteracting
+						? COLOR_BLUE
+						: COLOR_YELLOW
+				);
+			}
+		}
 	}
 }

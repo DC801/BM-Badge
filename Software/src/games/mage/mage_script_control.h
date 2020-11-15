@@ -42,11 +42,6 @@ class MageScriptControl
 		//the actual array of action functions:
 		ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS];
 
-		//this resets the values of a MageScriptState struct to default values.
-		//you need to provide a scriptId, and the state of the scriptIsRunning variable
-		//the actionId, and duration variables are always reset to 0 on an init.
-		void initScriptState(MageScriptState * resumeStateStruct, uint16_t scriptId, bool scriptIsRunning);
-
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
 		void processScript(MageScriptState * resumeStateStruct, uint8_t entityId, uint8_t scriptType);
@@ -167,11 +162,16 @@ class MageScriptControl
 		//returns size in RAM of all reserved class variables.
 		uint32_t size() const;
 
+		//this resets the values of a MageScriptState struct to default values.
+		//you need to provide a scriptId, and the state of the scriptIsRunning variable
+		//the actionId, and duration variables are always reset to 0 on an init.
+		void initScriptState(MageScriptState * resumeStateStruct, uint16_t scriptId, bool scriptIsRunning);
+
 		//these functions return the specified MageScriptState struct:
-		MageScriptState getMapLoadResumeState();
-		MageScriptState getMapTickResumeState();
-		MageScriptState getEntityInteractResumeState(uint8_t index);
-		MageScriptState getEntityTickResumeState(uint8_t index);
+		MageScriptState* getMapLoadResumeState();
+		MageScriptState* getMapTickResumeState();
+		MageScriptState* getEntityInteractResumeState(uint8_t index);
+		MageScriptState* getEntityTickResumeState(uint8_t index);
 
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);

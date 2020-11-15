@@ -133,3 +133,14 @@ bool MageGeometry::isPointInGeometry(Point point, MageGeometry geometry)
 		return false;
 	}
 }
+
+
+bool MageGeometry::doRectsOverlap(Rect a, Rect b)
+{
+	return !(
+		a.x > (b.x + b.w) ||
+		a.y > (b.y + b.h) ||
+		b.x > (a.x + a.w) ||
+		b.y > (a.y + a.h)
+	);
+}
