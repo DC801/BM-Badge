@@ -38,21 +38,6 @@ extern "C" {
 	}
 }
 
-uint16_t uint16Native = 0xFF00;
-uint8_t *uint16TopBit = (uint8_t *)&uint16Native;
-bool needsBigToLittleConversion = *uint16TopBit == 0x00;
-
-void bigE16BufferToHost (uint16_t *buf, size_t bufferSize) {
-	if (needsBigToLittleConversion) {
-		// printf("Buffer wrong endian, correcting\n");
-		for (size_t i = 0; i < bufferSize; i++) {
-			buf[i] = __builtin_bswap16(buf[i]);
-		}
-	} else {
-		// printf("Buffer already correct format, skipping\n");
-	}
-}
-
 FrameBuffer::FrameBuffer() {}
 FrameBuffer::~FrameBuffer() {}
 
@@ -70,7 +55,7 @@ void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	int s1 = min(x1, x2);
 	int s2 = max(x1, x2);
-	if (y < 0 || y >= HEIGHT) { return; }
+	if (y < 0 || y > HEIGHT) { return; }
 	for (int x=s1; x <= s2; ++x)
 	{
 		int32_t dest = y * WIDTH + x;
@@ -88,7 +73,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
-	if (x < 0 || x >= WIDTH) { return; }
+	if (x < 0 || x > WIDTH) { return; }
 	for (int y=s1; y <= s2; ++y)
 	{
 		int32_t dest = y * WIDTH + x;
@@ -392,7 +377,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	}
 
 	fclose(fd);
-	bigE16BufferToHost(buf, bufferSize);
+	convert_endian_u2_buffer(buf, bufferSize);
 	drawImage(x, y, w, h, buf);
 }
 
@@ -411,7 +396,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	fclose(fd);
 
-	bigE16BufferToHost(buf, bufferSize);
+	convert_endian_u2_buffer(buf, bufferSize);
 	drawImage(x, y, w, h, buf, transparent_color);
 }
 
@@ -479,7 +464,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		bigE16BufferToHost(buf, bufferSize);
+		convert_endian_u2_buffer(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -495,7 +480,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
-	bigE16BufferToHost(buf, bufferSize);
+	convert_endian_u2_buffer(buf, bufferSize);
 	canvas.drawImage(x, y, w, h, buf);
 	canvas.blt();
 	return;
@@ -565,7 +550,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		bigE16BufferToHost(buf, bufferSize);
+		convert_endian_u2_buffer(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -670,7 +655,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			bigE16BufferToHost(buf, bufferSize);
+			convert_endian_u2_buffer(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -788,7 +773,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			bigE16BufferToHost(buf, bufferSize);
+			convert_endian_u2_buffer(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -1006,7 +991,7 @@ static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 				yyy = y + yo + yy;
 				if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye) {
 					//util_gfx_set_pixel(x + xo + xx, y + yo + yy, color);
-					canvas.drawPixel(	x + xo + xx, y + yo + yy, color);
+					canvas.drawPixel(    x + xo + xx, y + yo + yy, color);
 				}
 			}
 			bits <<= 1;

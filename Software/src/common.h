@@ -117,6 +117,7 @@ extern "C" {
 #include "modules/uart.h"
 #include "modules/i2c.h"
 #include "modules/led.h"
+#include "modules/keyboard.h"
 #include "modules/usb.h"
 #include "adafruit/gfxfont.h"
 

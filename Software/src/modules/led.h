@@ -30,6 +30,12 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "common.h"
+
+#ifndef DC801_EMBEDDED
+#include "i2c.h"
+#endif
+
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
 
@@ -102,8 +108,10 @@ typedef enum {
         LED_USB,
         LED_HAX,
         LED_SD,
-        ISSI_LED_COUNT
+        LED_COUNT
 } LEDID;
+
+extern uint8_t led_states[LED_COUNT];
 
 void ledSet (uint8_t, uint8_t);
 void ledPageSet (uint8_t);

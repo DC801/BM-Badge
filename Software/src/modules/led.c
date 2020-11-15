@@ -42,12 +42,15 @@
  * the firmware update succeeds we set them all green.
  */
 #include "common.h"
-#include "i2c.h"
 #include "led.h"
 
-#include "nrf_delay.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-static const uint8_t led_address[ISSI_LED_COUNT] = {
+uint8_t led_states[LED_COUNT] = { 0 };
+
+static const uint8_t led_address[LED_COUNT] = {
         0x70,   // LED_XOR
         0x72,   // LED_ADD
         0x74,   // LED_SUB
@@ -67,9 +70,7 @@ static const uint8_t led_address[ISSI_LED_COUNT] = {
         0x40,   // LED_USB
         0x42,   // LED_HAX
         0x44    // LED_SD
-
 };
-
 
 void ledInit (void){
     int i;
@@ -156,10 +157,12 @@ void ledRegSet (uint8_t reg, uint8_t val){
 }
 
 void ledSet (uint8_t index, uint8_t intensity){
-    if (index > ISSI_LED_COUNT) {
+    if (index > LED_COUNT) {
         return;
     }
-    
+
+    led_states[index] = intensity;
+
     ledPageSet(ISSI_PAGE_PWM);
     
     ledRegSet(led_address[index] , intensity);
@@ -178,7 +181,7 @@ void ledSet (uint8_t index, uint8_t intensity){
 
 void ledsOff (void){
     int i;
-    for (i = 0; i < ISSI_LED_COUNT; i++){
+    for (i = 0; i < LED_COUNT; i++){
         ledSet(i, 0);
     }
     return;
@@ -186,7 +189,7 @@ void ledsOff (void){
 
 void ledsOn (void){
     int i;
-    for (i = 0; i < ISSI_LED_COUNT; i++){
+    for (i = 0; i < LED_COUNT; i++){
         ledSet(i, 0xff);
     }
     return;
@@ -202,7 +205,7 @@ void ledOff(LEDID id) {
 
 
 void ledPulse(LEDID id) {
-    if (id > ISSI_LED_COUNT) {
+    if (id > LED_COUNT) {
         return;
     }
     
@@ -212,7 +215,7 @@ void ledPulse(LEDID id) {
 }
 
 void ledPulseFast(LEDID id) {
-    if (id > ISSI_LED_COUNT) {
+    if (id > LED_COUNT) {
         return;
     }
     
@@ -226,4 +229,6 @@ void ledPwm(LEDID id, uint8_t val) {
     ledSet(id, val);
 }
 
-
+#ifdef __cplusplus
+}
+#endif

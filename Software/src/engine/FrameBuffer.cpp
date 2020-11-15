@@ -1,11 +1,18 @@
-#ifdef DC801_EMBEDDED
-
+#include "main.h"
+#include "utility.h"
 #include "FrameBuffer.h"
-#include <cmath>
-#include <cstring>
-#include <fcntl.h>
+#include "modules/sd.h"
+#include "config/custom_board.h"
+#include "EnginePanic.h"
+#include "EngineROM.h"
 
-#include "common.h"
+#include "adafruit/gfxfont.h"
+
+#ifdef DC801_DESKTOP
+	#include "shim_timer.h"
+	#include "EngineWindowFrame.h"
+	#include <SDL.h>
+#endif
 
 #ifndef min
 #define min(a,b) ((a)<(b)?(a):(b))
@@ -15,7 +22,6 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
-
 //Cursor coordinates
 static int16_t m_cursor_x = 0;
 static int16_t m_cursor_y = 0;
@@ -24,12 +30,11 @@ static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
 
-
 uint16_t frame[FRAMEBUFFER_SIZE];
 FrameBuffer canvas;
 
 extern "C" {
-	FrameBuffer *p_canvas(void)
+	FrameBuffer *p_canvas()
 	{
 		return &canvas;
 	}
@@ -46,7 +51,7 @@ void FrameBuffer::clearScreen(uint16_t color) {
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
-	frame[y*WIDTH+x] = color;
+	frame[y * WIDTH + x] = color;
 }
 
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
@@ -58,9 +63,9 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 		int32_t dest = y * WIDTH + x;
 		if (
 			x >= 0
-			&& x <= WIDTH
+			&& x < WIDTH
 			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest]=color;
 		}
@@ -76,152 +81,179 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 		int32_t dest = y * WIDTH + x;
 		if (
 			y >= 0
-			&& y <= HEIGHT
+			&& y < HEIGHT
 			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest] = color;
 		}
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data) {
-	int idx=0;
-    for (int j = y; j<y+h; ++j)
-		for (int i=x; i<x+w; ++i)
-			frame[j*WIDTH+i] = data[idx++];
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
+{
+	int idx = 0;
+
+	for (int j = y; j < (y + h); ++j)
+	{
+		for (int i = x; i < (x + w); ++i)
+		{
+			frame[j * WIDTH + i] = data[idx++];
+		}
+	}
+
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color) {
-	int idx=0;
-    for (int j = y; j<y+h; ++j)
-		for (int i=x; i<x+w; ++i) {
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color)
+{
+	int idx = 0;
+
+	for (int j = y; j < (y + h); ++j)
+	{
+		for (int i=x; i < (x + w); ++i)
+		{
 			uint16_t c = data[idx++];
+
 			if (c != transparent_color)
-				frame[j*WIDTH+i] = c;
-		}
-
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data) {
-	int idx=0;
-    for (int j = y; j<y+h; ++j) {
-		for (int i=x; i<x+w; ++i) {
-			uint8_t d1 = data[idx++];
-			uint8_t d2 = data[idx++];
-			frame[j*WIDTH+i] = ((uint16_t) d1 << 8) | d2;
-		}
-    }
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color) {
-	int idx=0;
-    for (int j = y; j<y+h; ++j){
-		for (int i=x; i<x+w; ++i) {
-			uint8_t d1 = data[idx++];
-			uint8_t d2 = data[idx++];
-			uint16_t c = ((uint16_t) d1 << 8) | d2;
-			if (c != transparent_color){
+			{
 				frame[j*WIDTH+i] = c;
 			}
 		}
-    }
+	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch) {
-    for (int i=0, idx = pitch*fy+fx; i<h; ++i, idx+=pitch) {
-        memcpy(&frame[(y+i)*WIDTH + x], &data[idx], sizeof(uint16_t) * w);
-    }
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
+{
+	int idx = 0;
+
+	for (int j = y; j < (y + h); ++j)
+	{
+		for (int i = x; i < (x + w); ++i)
+		{
+			uint8_t d1 = data[idx++];
+			uint8_t d2 = data[idx++];
+
+			frame[j * WIDTH + i] = ((uint16_t) d1 << 8) | d2;
+		}
+	}
+}
+
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color)
+{
+	int idx = 0;
+
+	for (int j = y; j < (y + h); ++j)
+	{
+		for (int i = x; i < (x + w); ++i)
+		{
+			uint8_t d1 = data[idx++];
+			uint8_t d2 = data[idx++];
+			uint16_t c = ((uint16_t) d1 << 8) | d2;
+
+			if (c != transparent_color)
+			{
+				frame[j * WIDTH + i] = c;
+			}
+		}
+	}
+}
+
+void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch)
+{
+	for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
+	{
+		memcpy(&frame[(y + i) * WIDTH + x], &data[idx], sizeof(uint16_t) * w);
+	}
 }
 
 void FrameBuffer::drawImage(
-    int x,
-    int y,
-    int w,
-    int h,
-    const uint16_t *data,
-    int fx,
-    int fy,
-    int pitch,
-    uint16_t transparent_color
+	int x,
+	int y,
+	int w,
+	int h,
+	const uint16_t *data,
+	int fx,
+	int fy,
+	int pitch,
+	uint16_t transparent_color
 ) {
-    int32_t current_x = 0;
-    int32_t current_y = 0;
-    for (int offsetY = 0; (offsetY < h) && (current_y < HEIGHT); ++offsetY)
-    {
-        current_y = offsetY + y;
-        current_x = 0;
-        for (int offsetX = 0; (offsetX < w) && (current_x < WIDTH); ++offsetX)
-        {
-            current_x = offsetX + x;
-            if (
-                current_x >= 0
-                && current_x < WIDTH
-                && current_y >= 0
-                && current_y < HEIGHT
-            )
-            {
-                uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-                if (color != transparent_color)
-                {
-                    frame[(current_y * WIDTH) + current_x] = color;
-                }
-            }
-        }
-    }
+	int32_t current_x = 0;
+	int32_t current_y = 0;
+	for (int offsetY = 0; (offsetY < h) && (current_y < HEIGHT); ++offsetY)
+	{
+		current_y = offsetY + y;
+		current_x = 0;
+		for (int offsetX = 0; (offsetX < w) && (current_x < WIDTH); ++offsetX)
+		{
+			current_x = offsetX + x;
+			if (
+				current_x >= 0
+				&& current_x < WIDTH
+				&& current_y >= 0
+				&& current_y < HEIGHT
+			)
+			{
+				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
+				if (color != transparent_color)
+				{
+					frame[(current_y * WIDTH) + current_x] = color;
+				}
+			}
+		}
+	}
 }
 
 void FrameBuffer::drawImageWithFlags(
-    int x,
-    int y,
-    int w,
-    int h,
-    const uint16_t *data,
-    int fx,
-    int fy,
-    int pitch,
-    uint16_t transparent_color,
-    uint8_t flags
+	int x,
+	int y,
+	int w,
+	int h,
+	const uint16_t *data,
+	int fx,
+	int fy,
+	int pitch,
+	uint16_t transparent_color,
+	uint8_t flags
 ) {
-    int32_t current_x = 0;
-    int32_t current_y = 0;
-    uint32_t sprite_x = 0;
-    uint32_t sprite_y = 0;
-    uint32_t source_x = 0;
-    uint32_t source_y = 0;
-    bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
-    bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
-    bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
-    for (int offset_y = 0; (offset_y < h) && (current_y < HEIGHT); ++offset_y)
-    {
-        current_y = offset_y + y;
-        current_x = 0;
-        for (int offset_x = 0; (offset_x < w) && (current_x < WIDTH); ++offset_x)
-        {
-            current_x = offset_x + x;
-            if (
-                current_x >= 0
-                && current_x < WIDTH
-                && current_y >= 0
-                && current_y < HEIGHT
-            )
-            {
-                source_x = flip_diag ? offset_y : offset_x;
-                source_y = flip_diag ? offset_x : offset_y;
-                sprite_x = flip_x
-                    ? fx + (w - source_x - 1)
-                    : fx + source_x;
-                sprite_y = flip_y
-                    ? fy + (h - source_y - 1)
-                    : fy + source_y;
-                uint16_t color = data[(pitch * sprite_y) + sprite_x];
-                if (color != transparent_color)
-                {
-                    frame[(current_y * WIDTH) + current_x] = color;
-                }
-            }
-        }
-    }
+	int32_t current_x = 0;
+	int32_t current_y = 0;
+	uint32_t sprite_x = 0;
+	uint32_t sprite_y = 0;
+	uint32_t source_x = 0;
+	uint32_t source_y = 0;
+	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
+	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
+	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
+	for (int offset_y = 0; (offset_y < h) && (current_y < HEIGHT); ++offset_y)
+	{
+		current_y = offset_y + y;
+		current_x = 0;
+		for (int offset_x = 0; (offset_x < w) && (current_x < WIDTH); ++offset_x)
+		{
+			current_x = offset_x + x;
+			if (
+				current_x >= 0
+				&& current_x < WIDTH
+				&& current_y >= 0
+				&& current_y < HEIGHT
+			)
+			{
+				source_x = flip_diag ? offset_y : offset_x;
+				source_y = flip_diag ? offset_x : offset_y;
+				sprite_x = flip_x
+					? fx + (w - source_x - 1)
+					: fx + source_x;
+				sprite_y = flip_y
+					? fy + (h - source_y - 1)
+					: fy + source_y;
+				uint16_t color = data[(pitch * sprite_y) + sprite_x];
+				if (color != transparent_color)
+				{
+					frame[(current_y * WIDTH) + current_x] = color;
+				}
+			}
+		}
+	}
 }
 
 #define MAX_RUN 128
@@ -335,151 +367,194 @@ void FrameBuffer::drawChunkWithFlags(
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-    FIL file;
+	for (int i=0; i<h; ++i)
+	{
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
+	}
 
-    FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
-    if (result != FR_OK) {
-        printf("Can't load file %s\n", filename);
-        return;
-    }
-
-    f_lseek(&file, (pitch*fy+fx)*sizeof(uint16_t));
-    for (int i=0; i<h; ++i) {
-        UINT bytesread=0;
-        f_read(&file, &frame[(y+i)*WIDTH + x], sizeof(uint16_t) * w, &bytesread);
-        FSIZE_t at = f_tell(&file);
-        f_lseek(&file, at + ((pitch-w)*sizeof(uint16_t)));
-    }
-    f_close(&file);
-
-    /*
-    FILE *fd = fopen(filename, "rb");
-    fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
-    for (int i=0; i<h; ++i) {
-        fread(&frame[(y+i)*WIDTH + x], sizeof(uint16_t), w, fd);
-        fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
-    }
-    fclose(fd);*/
+	fclose(fd);
+	convert_endian_u2_buffer(buf, bufferSize);
+	drawImage(x, y, w, h, buf);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
-    uint16_t buf[w*h];
+	size_t bufferSize = w*h;
+	uint16_t buf[bufferSize];
 
-    FIL file;
+	FILE *fd = fopen(filename, "rb");
+	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
-    FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
-    if (result != FR_OK) {
-        printf("Can't load file %s\n", filename);
-        return;
-    }
+	for (int i=0; i<h; ++i)
+	{
+		size_t size = fread(&buf[i*w], sizeof(uint16_t), w, fd);
+		fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
+	}
 
-    f_lseek(&file, (pitch*fy+fx)*sizeof(uint16_t));
-    for (int i=0; i<h; ++i) {
-        UINT bytesread=0;
-        f_read(&file, &buf[i*w], sizeof(uint16_t) * w, &bytesread);
-        FSIZE_t at = f_tell(&file);
-        f_lseek(&file, at + ((pitch-w)*sizeof(uint16_t)));
-    }
-    f_close(&file);
-    /*
-    FILE *fd = fopen(filename, "rb");
-    fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
-    for (int i=0; i<h; ++i) {
-        fread(&buf[i*w], sizeof(uint16_t), w, fd);
-        fseek(fd, (pitch-w)*sizeof(uint16_t), SEEK_CUR);
-    }
-    fclose(fd);*/
+	fclose(fd);
 
-    drawImage(x, y, w, h, buf, transparent_color);
+	convert_endian_u2_buffer(buf, bufferSize);
+	drawImage(x, y, w, h, buf, transparent_color);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	uint16_t buf[w*h];
-
-	FIL file;
-
-	uint32_t size = util_sd_file_size(filename);
-	// Limit size to assumed size
-	size = min(size, sizeof(uint16_t) * (w*h));
-
-	if (size == 0)
-	{
-		printf("Could not stat %s.\n", filename);
-		return;
-	}
-
-	FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
-
-	if (result != FR_OK)
-	{
-		printf("Can't load file %s\n", filename);
-		return;
-	}
-
-	unsigned int read = 0;
-	result = f_read(&file, buf, size, &read);
-
-	if (result != FR_OK)
-	{
-		printf("Failed to read file %s\n", filename);
-		f_close(&file);
-		return;
-	}
-
-	f_close(&file);
-
-	drawImage(x, y, w, h, buf);
-}
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
-{
-	uint16_t buf[w * h];
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
+	uint32_t offset = 0;
 	m_stop = false;
 
-	FIL file;
+	FILE *file;
 
-	uint32_t size = util_sd_file_size(filename);
-	size = min(size, sizeof(uint16_t) * w * h);
+	file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Can't load file %s\n", filename);
+		return;
+	}
+
+	int retval = fseek(file, 0, SEEK_END);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	long tell_size = ftell(file);
+
+	if (tell_size == -1)
+	{
+		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
 
 	if (size == 0)
 	{
 		printf("Could not stat %s.\n", filename);
-		return;
-	}
-
-	uint16_t frames = MAX(size / w / h / 2, 1);
-	FRESULT result = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
-
-	if (result != FR_OK)
-	{
-		printf("Can't load file %s\n", filename);
 		return;
 	}
 
 	for (uint16_t i = 0; i < frames; i++)
 	{
-		result = f_lseek(&file, 0);
+		retval = fseek(file, offset, SEEK_SET);
 
-		if (result != FR_OK)
+		if (retval != 0)
 		{
 			printf("Failed to seek the file %s\n", filename);
-			f_close(&file);
+			fclose(file);
 			return;
 		}
 
-		unsigned int read = 0;
-		result = f_read(&file, buf, size, &read);
+		size_t read = fread(buf, sizeof(uint8_t), size, file);
 
-		if (result != FR_OK)
+		if (read != size)
 		{
 			printf("Failed to read file %s\n", filename);
-			f_close(&file);
+			fclose(file);
 			return;
 		}
 
+		convert_endian_u2_buffer(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
+		canvas.blt();
+
+		uint8_t retVal = getButton(false);
+		if (retVal != USER_BUTTON_NONE || m_stop)
+		{
+			break;
+		}
+
+		offset += size;
+		nrf_delay_us(7500);
+	}
+
+	fclose(file);
+
+	convert_endian_u2_buffer(buf, bufferSize);
+	canvas.drawImage(x, y, w, h, buf);
+	canvas.blt();
+	return;
+}
+
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
+{
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
+	uint32_t offset = 0;
+	m_stop = false;
+
+	FILE *file;
+
+	file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Can't load file %s\n", filename);
+		return;
+	}
+
+	int retval = fseek(file, 0, SEEK_END);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	long tell_size = ftell(file);
+
+	if (tell_size == -1)
+	{
+		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		fclose(file);
+		return;
+	}
+
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
+
+	if (size == 0)
+	{
+		printf("Could not stat %s.\n", filename);
+		return;
+	}
+
+	for (uint16_t i = 0; i < frames; i++)
+	{
+		retval = fseek(file, offset, SEEK_SET);
+
+		if (retval != 0)
+		{
+			printf("Failed to seek the file %s\n", filename);
+			fclose(file);
+			return;
+		}
+
+		size_t read = fread(buf, sizeof(uint8_t), size, file);
+
+		if (read != size)
+		{
+			printf("Failed to read file %s\n", filename);
+			fclose(file);
+			return;
+		}
+
+		convert_endian_u2_buffer(buf, bufferSize);
+		canvas.drawImage(x, y, w, h, buf);
+		canvas.blt();
 
 		if (p_callback != NULL)
 		{
@@ -491,19 +566,110 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 		{
 			break;
 		}
+
+		offset += size;
+		nrf_delay_us(7500);
 	}
 
-	f_close(&file);
+	fclose(file);
 }
 
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename)
 {
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
+	FILE *file;
+
+	file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Can't load file %s\n", filename);
+		return 0;
+	}
+
+	int retval = fseek(file, 0, SEEK_END);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	long tell_size = ftell(file);
+
+	if (tell_size == -1)
+	{
+		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
+
+	if (size == 0)
+	{
+		printf("Could not stat %s.\n", filename);
+		return 0;
+	}
+
+	retval = fseek(file, 0, SEEK_SET);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek start) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	if (size == 0)
+	{
+		printf("Could not stat %s.\n", filename);
+		return 0;
+	}
+
 	do
 	{
-		drawImageFromFile(x, y, w, h, filename);
+		uint32_t offset = 0;
+
+		for (uint16_t i = 0; i < frames; i++)
+		{
+			retval = fseek(file, offset, SEEK_SET);
+
+			if (retval != 0)
+			{
+				printf("Failed to seek the file %s\n", filename);
+				fclose(file);
+				return 0;
+			}
+
+			size_t read = fread(buf, sizeof(uint8_t), size, file);
+
+			if (read != size)
+			{
+				printf("Failed to read file %s\n", filename);
+				fclose(file);
+				return 0;
+			}
+
+			convert_endian_u2_buffer(buf, bufferSize);
+			canvas.drawImage(x, y, w, h, buf);
+			canvas.blt();
+
+			uint8_t retVal = getButton(false);
+			if (retVal != USER_BUTTON_NONE || m_stop)
+			{
+				break;
+			}
+
+			offset += size;
+			nrf_delay_us(7500);
+		}
 
 		//if we're looping give them a way out
 		retVal = getButton(false);
@@ -511,19 +677,122 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 		{
 			break;
 		}
+
+	#ifdef DC801_DESKTOP
+		if (application_quit != 0)
+		{
+			break;
+		}
+	#endif
+
+		nrf_delay_ms(10);
 	} while (m_stop == false);
 
+	fclose(file);
 	return retVal;
 }
 
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
+	size_t bufferSize = w * h;
+	uint16_t buf[bufferSize];
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
+	FILE *file;
+
+	file = fopen(filename, "rb");
+
+	if (file == NULL)
+	{
+		printf("Can't load file %s\n", filename);
+		return 0;
+	}
+
+	int retval = fseek(file, 0, SEEK_END);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	long tell_size = ftell(file);
+
+	if (tell_size == -1)
+	{
+		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
+	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
+
+	if (size == 0)
+	{
+		printf("Could not stat %s.\n", filename);
+		return 0;
+	}
+
+	retval = fseek(file, 0, SEEK_SET);
+
+	if (retval != 0)
+	{
+		printf("Failed to get file size: (seek start) on file: %s\n", filename);
+		fclose(file);
+		return 0;
+	}
+
+	if (size == 0)
+	{
+		printf("Could not stat %s.\n", filename);
+		return 0;
+	}
+
 	do
 	{
-		drawImageFromFile(x, y, w, h, filename, p_callback, data);
+		uint32_t offset = 0;
+
+		for (uint16_t i = 0; i < frames; i++)
+		{
+			retval = fseek(file, offset, SEEK_SET);
+
+			if (retval != 0)
+			{
+				printf("Failed to seek the file %s\n", filename);
+				fclose(file);
+				return 0;
+			}
+
+			size_t read = fread(buf, sizeof(uint8_t), size, file);
+
+			if (read != size)
+			{
+				printf("Failed to read file %s\n", filename);
+				fclose(file);
+				return 0;
+			}
+
+			convert_endian_u2_buffer(buf, bufferSize);
+			canvas.drawImage(x, y, w, h, buf);
+			canvas.blt();
+
+			if (p_callback != NULL)
+			{
+				p_callback(i, data);
+			}
+
+			uint8_t retVal = getButton(false);
+			if (retVal != USER_BUTTON_NONE || m_stop)
+			{
+				break;
+			}
+
+			offset += size;
+			nrf_delay_us(7500);
+		}
 
 		//if we're looping give them a way out
 		retVal = getButton(false);
@@ -531,8 +800,18 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 		{
 			break;
 		}
+
+	#ifdef DC801_DESKTOP
+		if (application_quit != 0)
+		{
+			break;
+		}
+	#endif
+
+		nrf_delay_ms(10);
 	} while (m_stop == false);
 
+	fclose(file);
 	return retVal;
 }
 
@@ -541,190 +820,42 @@ void FrameBuffer::drawStop()
 	m_stop = true;
 }
 
-void FrameBuffer::drawBitmapFromFile(const char *filename)
+void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 {
-	FIL bmp_file;
-	int32_t width, height;	   	// W+H in pixels
-	uint8_t depth;				// Bit depth (currently must be 24)
-	uint32_t bmp_image_offset;        // Start of image data in file
-	uint32_t rowSize;               // Not always = bmpWidth; may have padding
-	uint8_t sdbuffer[3 * 128]; // pixel buffer (R+G+B per pixel)
-	uint32_t buffidx = sizeof(sdbuffer); // Current position in sdbuffer
-	bool flip = true;        // BMP is stored bottom-to-top
-	int w, h, row, col;
-	uint8_t r, g, b;
-	FSIZE_t pos = 0;
-
-    uint32_t fsize = util_sd_file_size(filename);
-
-	if (fsize == 0)
+	if ((x >= WIDTH) || (y >= HEIGHT))
 	{
-        NRF_LOG_INFO("Can't stat %s", filename);
-    }
-
-	// Open requested file on SD card
-	FRESULT result = f_open(&bmp_file, filename, FA_READ | FA_OPEN_EXISTING);
-
-	if (result != FR_OK)
-	{
-	    NRF_LOG_INFO("Open %s failed", filename);
+		printf("Rectangle off the screen\n");
 		return;
 	}
 
-	// Parse BMP header
-	uint16_t magic = util_sd_read_16(&bmp_file);
-
-	if (magic == 0x4D42) // BMP signature
+	// Clip to screen
+	if ((x + w) > WIDTH)
 	{
-		util_sd_read_32(&bmp_file); // Read & ignore file size
-		util_sd_read_32(&bmp_file); // Read & ignore creator bytes
-		bmp_image_offset = util_sd_read_32(&bmp_file); // Start of image data
-		util_sd_read_32(&bmp_file); // Read & ignore DIB header size
-
-		// Read DIB header
-		width = util_sd_read_32(&bmp_file);
-		height = util_sd_read_32(&bmp_file);
-		uint8_t planes = util_sd_read_16(&bmp_file);
-
-		if (planes == 1) // # planes -- must be '1'
-		{
-			depth = util_sd_read_16(&bmp_file); // bits per pixel
-			util_sd_read_32(&bmp_file); //Ignore compression, YOLO!
-
-			// If bmpHeight is negative, image is in top-down order.
-			// This is not canon but has been observed in the wild.
-			if (height < 0)
-			{
-				height = -height;
-				flip = false;
-			}
-
-			// Crop area to be loaded
-			w = width;
-			h = height;
-
-			if ((w - 1) >= WIDTH)
-			{
-				w = WIDTH;
-			}
-
-			if ((h - 1) >= HEIGHT)
-			{
-				h = HEIGHT;
-			}
-
-			// Set TFT address window to clipped image bounds
-			ili9341_set_addr(0, 0, w - 1, h - 1);
-
-			//Handle 16-bit 565 bmp
-			if (depth == 16)
-			{
-				// BMP rows are padded (if needed) to 4-byte boundary
-				rowSize = (width * 2 + 3) & ~3;
-
-				for (row = 0; row < h; row++) // For each scanline...
-				{
-					// Seek to start of scan line.  It might seem labor-
-					// intensive to be doing this on every line, but this
-					// method covers a lot of gritty details like cropping
-					// and scanline padding.  Also, the seek only takes
-					// place if the file position actually needs to change
-					// (avoids a lot of cluster math in SD library).
-					if (flip) // Bitmap is stored bottom-to-top order (normal BMP)
-					{
-						pos = bmp_image_offset + (height - 1 - row) * rowSize;
-					}
-					else
-					{
-						// Bitmap is stored top-to-bottom
-						pos = bmp_image_offset + row * rowSize;
-					}
-
-					if (f_tell(&bmp_file) != pos) { // Need seek?
-						f_lseek(&bmp_file, pos);
-						buffidx = sizeof(sdbuffer); // Force buffer reload
-					}
-
-					//Populate the row buffer
-					UINT count;
-					f_read(&bmp_file, sdbuffer, rowSize, &count);
-					buffidx = 0; // Set index to beginning
-
-					for (uint16_t i = 0; i < rowSize; i += 2)
-					{
-						uint16_t temp = sdbuffer[i];
-						sdbuffer[i] = sdbuffer[i + 1];
-						sdbuffer[i + 1] = temp;
-					}
-
-					ili9341_push_colors(sdbuffer, rowSize);
-				} // end scanline
-			}
-			//Handle 24-bit RGB bmp
-			else if (depth == 24) // 0 = uncompressed
-			{
-				// BMP rows are padded (if needed) to 4-byte boundary
-				rowSize = (width * 3 + 3) & ~3;
-
-				for (row = 0; row < h; row++) // For each scanline...
-				{
-					// Seek to start of scan line.  It might seem labor-
-					// intensive to be doing this on every line, but this
-					// method covers a lot of gritty details like cropping
-					// and scanline padding.  Also, the seek only takes
-					// place if the file position actually needs to change
-					// (avoids a lot of cluster math in SD library).
-					if (flip) // Bitmap is stored bottom-to-top order (normal BMP)
-					{
-						pos = bmp_image_offset + (height - 1 - row) * rowSize;
-					}
-					else
-					{
-						// Bitmap is stored top-to-bottom
-						pos = bmp_image_offset + row * rowSize;
-					}
-
-					if (f_tell(&bmp_file) != pos) // Need seek?
-					{
-						f_lseek(&bmp_file, pos);
-						buffidx = sizeof(sdbuffer); // Force buffer reload
-					}
-
-					for (col = 0; col < w; col++) // For each pixel...
-					{
-						// Time to read more pixel data?
-						if (buffidx >= sizeof(sdbuffer)) // Indeed
-						{
-							UINT count;
-							f_read(&bmp_file, sdbuffer, sizeof(sdbuffer), &count);
-							buffidx = 0; // Set index to beginning
-						}
-
-						// Convert pixel from BMP to TFT format, push to display
-						b = sdbuffer[buffidx++];
-						g = sdbuffer[buffidx++];
-						r = sdbuffer[buffidx++];
-						ili9341_push_color(ili9341_color565(r, g, b));
-					} // end pixel
-				} // end scanline
-			} // end goodBmp
-		}
+		w = WIDTH - x;
 	}
 
-	f_close(&bmp_file);
-}
+	if ((y + h) > HEIGHT)
+	{
+		h = HEIGHT - y;
+	}
 
-void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color){
-	for (int j = y; j<y+h; ++j)
-		for (int i=x; i<x+w; ++i)
-			frame[j*WIDTH+i] = color;
+	// X
+	for (int i = x; i < (x + w); i++)
+	{
+		// Y
+		for (int j = y; j < (y + h); j++)
+		{
+			int index = i + (WIDTH * j);
+			frame[index] = color;
+		}
+	}
 }
 
 void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
-	drawHorizontalLine(x,y+h,x+w,color);
-	drawHorizontalLine(x,y+h,x+w,color);
-    drawVerticalLine(x,y,y+h,color);
-    drawVerticalLine(x+w,y,y+h,color);
+	drawHorizontalLine(x, y, x + w, color);
+	drawHorizontalLine(x, y + h, x + w, color);
+	drawVerticalLine(x, y, y + h, color);
+	drawVerticalLine(x + w, y, y + h, color);
 }
 
 void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
@@ -735,57 +866,86 @@ void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
 }
 
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
-	int dx=x2-x1;
-	int dy=y2-y1;
-	int y=y1;
-	int p=2*dy-dx;
+	int dx = x2 - x1;
+	int dy = y2 - y1;
+	int y = y1;
+	int p =2 * dy - dx;
 
-	for(int x=x1; x<x2; ++x) {
-		frame[x+y*WIDTH]=color;
-		if(p>=0) {
+	for(int x = x1; x < x2; ++x)
+	{
+		frame[x + y * WIDTH] = color;
+
+		if(p>=0)
+		{
 			y++;
-			p+=2*dy-2*dx;
+			p += 2 * dy - 2 * dx;
 		}
-		else {
-			p+=2*dy;
+		else
+		{
+			p += 2 * dy;
 		}
 	}
 }
 
 void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
-	int rad2=radius*radius;
-	for (int j=y-radius;j<=y+radius; ++j) {
-		int yd = fabs(y-j);
-		int radx2 = rad2 - yd*yd;
-		for (int i=x-radius;i<=x+radius; ++i) {
-			int xd = fabs(x-i);
-			int dist2 = xd*xd;
-			if (dist2<=radx2)
-				frame[i+j*WIDTH] = color;
+	int rad2 = radius * radius;
+
+	for (int j = (y - radius);j <= (y + radius); ++j)
+	{
+		int yd = fabs(y - j);
+		int radx2 = rad2 - yd * yd;
+
+		for (int i = (x - radius);i <= (x + radius); ++i)
+		{
+			int xd = fabs(x - i);
+			int dist2 = xd * xd;
+
+			if (dist2 <= radx2)
+			{
+				frame[i + j * WIDTH] = color;
+			}
 		}
 	}
-
 }
 
-void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3) {
-    int minx=px-rad3, maxx=px+rad3;
-    int miny=py-rad3, maxy=py+rad3;
-    for (int y=0; y<HEIGHT; ++y)
-        for (int x=0; x<WIDTH; ++x) {
-            if ((x<minx) || (x>maxx) || (y<miny) || (y>maxy))
-                frame[x+y*WIDTH] = 0;
-            else {
-                int dx = abs(x-px);
-                int dy = abs(y-py);
-                int dist = dx*dx+dy*dy;
-                if (dist > rad3*rad3)
-                    frame[x+y*WIDTH] = 0;
-                else if (dist > rad2*rad2)
-                    frame[x+y*WIDTH] = (frame[x+y*WIDTH] >> 2) & 0xF9E7;
-                else if (dist > rad1*rad1)
-                    frame[x+y*WIDTH] = (frame[x+y*WIDTH] >> 1) & 0xFBEF;
-            }
-        }
+void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
+{
+	int minx = px - rad3;
+	int maxx = px + rad3;
+
+	int miny = py - rad3;
+	int maxy = py + rad3;
+
+	for (int y = 0; y < HEIGHT; ++y)
+	{
+		for (int x = 0; x < WIDTH; ++x)
+		{
+			if ((x < minx) || (x > maxx) || (y < miny) || (y > maxy))
+			{
+				frame[x + y * WIDTH] = 0;
+			}
+			else
+			{
+				int dx = abs(x - px);
+				int dy = abs(y - py);
+
+				int dist = (dx * dx) + (dy * dy);
+
+				if (dist > (rad3 * rad3))
+				{
+					frame[x + y * WIDTH] = 0;
+				}
+				else if (dist > (rad2 * rad2))
+				{
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & 0xF9E7;
+				}
+				else if (dist > (rad1 * rad1))
+				{
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & 0xFBEF;
+				}
+			}
+		}
+	}
 }
 
 static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
@@ -875,7 +1035,8 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 	}
 }
 
-void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y) {
+void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y)
+{
 	m_color = color;
 	m_cursor_area.xs = x;
 	m_cursor_x = m_cursor_area.xs;
@@ -886,6 +1047,12 @@ void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, i
 		write_char(text[i], font);
 	}
 	m_cursor_area.xs = 0;
+}
+
+void FrameBuffer::getCursorPosition(cursor_t *cursor)
+{
+	cursor->x = m_cursor_x;
+	cursor->y = m_cursor_y;
 }
 
 void FrameBuffer::setTextArea(area_t *area)
@@ -910,7 +1077,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 
 	GFXglyph glyph;
 
-	uint8_t c = *text;
+	uint8_t c;
 	uint8_t first = font.first;
 	uint8_t last = font.last;
 
@@ -926,10 +1093,8 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 	int16_t gx1, gy1, gx2, gy2;
 	int16_t ya = font.yAdvance;
 
-	c = *text++;
-
 	// Walk the string
-	do
+	while ((c = *text++))
 	{
 		if ((c != '\n') && (c != '\r'))
 		{
@@ -985,10 +1150,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 			x = 0;
 			y += ya;
 		}
-
-		c = *text++;
 	}
-	while (c);
 
 	if (maxx >= minx)
 	{
@@ -1004,17 +1166,6 @@ void FrameBuffer::getTextBounds(GFXfont font, const char *text, int16_t x, int16
 uint8_t FrameBuffer::getFontHeight(GFXfont font)
 {
 	return font.yAdvance;
-}
-
-uint8_t FrameBuffer::getFontWidth(GFXfont font)
-{
-	return font.glyph[0].xAdvance;
-}
-
-void FrameBuffer::getCursorPosition(cursor_t *cursor)
-{
-	cursor->x = m_cursor_x;
-	cursor->y = m_cursor_y;
 }
 
 void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_raw)
@@ -1036,14 +1187,17 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
     //don't wait for it to finish
 }
 
-void FrameBuffer::blt() {
+void FrameBuffer::blt()
+{
+	#ifdef DC801_DESKTOP
+		EngineWindowFrameGameBlt(frame);
+	#endif
+	#ifdef DC801_EMBEDDED
+		for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
+		{
+			frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
+		}
 
-	for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
-	{
-		frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
-	}
-
-	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
+		draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
+	#endif
 }
-
-#endif
