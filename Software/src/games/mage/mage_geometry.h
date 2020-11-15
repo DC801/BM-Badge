@@ -43,6 +43,8 @@ class MageGeometry{
 
 		//this checks to see if a given point is inside the boundaries of a given geometry:
 		bool isPointInGeometry(Point point, MageGeometry geometry);
+
+		static bool doRectsOverlap(Rect a, Rect b);
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H
