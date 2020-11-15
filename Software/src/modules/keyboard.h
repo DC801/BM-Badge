@@ -42,8 +42,8 @@ typedef enum
 typedef void (*keyboard_evt_handler_t)(uint32_t keyboard_mask);
 
 void keyboard_init(void);
-int keyboard_key_is_down(KEYBOARD_KEY key);
-void keyboard_get_mask(uint32_t *mask);
+bool is_keyboard_interrupt(void);
+uint32_t get_keyboard_mask(void);
 void keyboard_register_callback(keyboard_evt_handler_t handler);
 
 #ifdef __cplusplus

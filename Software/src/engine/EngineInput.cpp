@@ -118,12 +118,7 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 
 void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 {
-	uint32_t oneBit = 0x80000000;
-
-	if(needs_endian_correction)
-	{
-		oneBit = 0x00000001;
-	}
+	uint32_t oneBit = 0x00000001;
 
 	memcpy(&EngineInput_Activated, &EngineInput_Buttons, sizeof(ButtonStates));
 
@@ -194,9 +189,8 @@ void EngineHandleInput ()
 
 #ifdef DC801_EMBEDDED
 	app_usbd_event_queue_process();
-	keyboard_get_mask(&keyboardBitmask);
+	keyboardBitmask = get_keyboard_mask();
 #endif
-
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 }
 

@@ -23,11 +23,18 @@ void twi_master_init(void){
 
 }
 
-
-void i2cMasterTransmit(uint16_t addr, uint8_t const * pdata, size_t size){
-
+void i2cMasterTransmit(uint16_t addr, uint8_t const *pdata, size_t size)
+{
+    //badge_mutex_lock(&i2c_mutex);
     nrf_drv_twi_tx(&m_twi_master, addr, pdata, size, false);
+    //badge_mutex_unlock(&i2c_mutex);
+}
 
+void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size)
+{
+    //badge_mutex_lock(&i2c_mutex);
+    nrf_drv_twi_rx(&m_twi_master, addr, pdata, size);
+    //badge_mutex_unlock(&i2c_mutex);
 }
 
 

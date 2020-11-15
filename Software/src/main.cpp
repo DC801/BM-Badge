@@ -103,6 +103,43 @@ MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
 		{ item_credits, "Credits" },
 };
 
+//this lets me test if the framebuffer is working:
+void test_screen(){
+	FrameBuffer *test_canvas;
+	test_canvas = p_canvas();
+	test_canvas->clearScreen(RGB(0,0,0));
+	for(int i=0; i<20; i++){
+		test_canvas->blt();
+	}
+}
+
+//this will blink the LED next to a button, or turn off all LEDs when a joystick button is held down.
+void test_keyboard(){
+	//need to keep updating in a loop for it to work:
+	ledsOff();
+	while(1){
+		//get an updated key mask every loop:
+		EngineHandleInput();
+		if(EngineInput_Buttons.mem0)   { ledOn(LED_MEM0);   }
+		if(EngineInput_Buttons.mem1)   { ledOn(LED_MEM1);   }
+		if(EngineInput_Buttons.mem2)   { ledOn(LED_MEM2);   }
+		if(EngineInput_Buttons.mem3)   { ledOn(LED_MEM3);   }
+		if(EngineInput_Buttons.bit_128){ ledOn(LED_BIT128); }
+		if(EngineInput_Buttons.bit_64) { ledOn(LED_BIT64);  }
+		if(EngineInput_Buttons.bit_32) { ledOn(LED_BIT32);  }
+		if(EngineInput_Buttons.bit_16) { ledOn(LED_BIT16);  }
+		if(EngineInput_Buttons.bit_8)  { ledOn(LED_BIT8);   }
+		if(EngineInput_Buttons.bit_4)  { ledOn(LED_BIT4);   }
+		if(EngineInput_Buttons.bit_2)  { ledOn(LED_BIT2);   }
+		if(EngineInput_Buttons.bit_1)  { ledOn(LED_BIT1);   }
+		if(EngineInput_Buttons.op_xor) { ledOn(LED_XOR);    }
+		if(EngineInput_Buttons.op_add) { ledOn(LED_ADD);    }
+		if(EngineInput_Buttons.op_sub) { ledOn(LED_SUB);    }
+		if(EngineInput_Buttons.op_page){ ledOn(LED_PAGE);   }
+		if(EngineInput_Buttons.hax)    { ledOn(LED_HAX);    }
+	}
+}
+
 /**
  * @brief Main app
  * @return Not used
@@ -178,6 +215,15 @@ int main(void){
 	printf("advertising user: %s\n", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
+
+	//this just prints the screen black for a bit before continuing.
+	//Feel free to delete the function once everything is working -Tim
+	test_screen();
+
+	//this tests button inputs by blinking LEDs. 
+	//it's blocking, so comment it out when not actively testing.
+	//Feel free to delete the function once everything is working -Tim
+	test_keyboard();
 
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
