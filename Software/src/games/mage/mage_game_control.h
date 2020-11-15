@@ -73,6 +73,7 @@ private:
 	//a couple of state variables for tracking player movement:
 	uint8_t mageSpeed;
 	bool isMoving;
+	bool isCollisionDebugOn;
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.

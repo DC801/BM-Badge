@@ -54,7 +54,7 @@ public:
 	//this returns the global script Id, not the local index for it. Just removing a step.
 	uint16_t OnTick() const;
 	uint8_t LayerCount() const;
-	uint16_t EntityCount() const;
+	uint8_t EntityCount() const;
 	uint16_t ScriptCount() const;
 	//this returns a global entityId from the local entity index
 	uint16_t getGlobalEntityId(uint16_t num) const;

@@ -70,15 +70,15 @@ void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	int s1 = min(x1, x2);
 	int s2 = max(x1, x2);
-	if (y < 0 || y > HEIGHT) { return; }
+	if (y < 0 || y >= HEIGHT) { return; }
 	for (int x=s1; x <= s2; ++x)
 	{
 		int32_t dest = y * WIDTH + x;
 		if (
 			x >= 0
-			&& x <= WIDTH
+			&& x < WIDTH
 			&& dest >= 0
-			&& dest <= FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest]=color;
 		}
@@ -88,15 +88,15 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
-	if (x < 0 || x > WIDTH) { return; }
+	if (x < 0 || x >= WIDTH) { return; }
 	for (int y=s1; y <= s2; ++y)
 	{
 		int32_t dest = y * WIDTH + x;
 		if (
 			y >= 0
-			&& y <= HEIGHT
+			&& y < HEIGHT
 			&& dest >= 0
-			&& dest <= FRAMEBUFFER_SIZE
+			&& dest < FRAMEBUFFER_SIZE
 		) {
 			frame[dest] = color;
 		}

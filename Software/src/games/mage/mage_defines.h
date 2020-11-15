@@ -210,15 +210,25 @@ typedef struct {
     uint8_t hackableStateD;
 } MageEntity;
 
+typedef struct {
+	int32_t x;
+	int32_t y;
+	int32_t w;
+	int32_t h;
+} Rect;
+
 //this is info needed to render entities that can be determined
 //at run time from the MageEntity class info.
 typedef struct {
+	Rect hitBox;
+	Rect interactBox;
 	uint16_t currentFrameTicks;
 	uint16_t tilesetId;
 	uint16_t tileId;
 	uint32_t duration;
 	uint16_t frameCount;
 	uint8_t renderFlags;
+	bool isInteracting;
 } MageEntityRenderableData;
 
 //below here are all the structures for interpreting the MageScriptAction binary data.

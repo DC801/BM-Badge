@@ -194,7 +194,7 @@ uint8_t MageMap::LayerCount() const
 	return layerCount;
 }
 
-uint16_t MageMap::EntityCount() const
+uint8_t MageMap::EntityCount() const
 {
 	return entityCount;
 }
