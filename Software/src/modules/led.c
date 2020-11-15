@@ -41,68 +41,35 @@
  * flashing progress. For an error we illuminate all LEDs red, and if
  * the firmware update succeeds we set them all green.
  */
-
+#include "common.h"
+#include "i2c.h"
 #include "led.h"
 
-uint8_t led_states[LED_COUNT] = { 0 };
-
-//static void ledShow (void);
-void ledSet (LEDID, uint8_t);
-static void ledPageSet (uint8_t);
-static void ledRegSet (uint8_t, uint8_t);
-static void ledRegGet (uint8_t);
+#include "nrf_delay.h"
 
 static const uint8_t led_address[ISSI_LED_COUNT] = {
-        0x80,   // D11
-        0x70,   // D4
-        0x60,   // D5
-        0x50,   // D6
-        0x40,   // D7
-        0x30,   // D8
-        0x20,   // D9
-        0x10,   // D10
-        0x72,   // D12
-        0x62,   // D13
-        0x52,   // D14
-        0x42,   // D15
-        0x32,   // D16
-        0x22,   // D17
-        0x74,   // D20
-        0x64,   // D21
-        0x54,   // D22
-        0x44,   // D23
-        0x34,   // D24
-        0x24,   // D25
-        0x86,   // D35
-        0x76,   // D28
-        0x66,   // D29
-        0x56,   // D30
-        0x46,   // D31
-        0x36,   // D32
-        0x26,   // D33
-        0x16,   // D34
-        0x88,   // D36
-        0x78,   // D19
-        0x68,   // D26
-        0x58,   // D27
-        0x28,   // R
-        0x48,   // G
-        0x38,   // B
-        0x18    // D18
+        0x70,   // LED_XOR
+        0x72,   // LED_ADD
+        0x74,   // LED_SUB
+        0x76,   // LED_PAGE
+        0x60,   // LED_BIT128
+        0x62,   // LED_BIT64
+        0x64,   // LED_BIT32
+        0x66,   // LED_BIT16
+        0x50,   // LED_BIT8
+        0x52,   // LED_BIT4
+        0x54,   // LED_BIT2
+        0x56,   // LED_BIT1
+        0x36,   // LED_MEM3
+        0x34,   // LED_MEM2
+        0x32,   // LED_MEM1
+        0x30,   // LED_MEM0
+        0x40,   // LED_USB
+        0x42,   // LED_HAX
+        0x44    // LED_SD
+
 };
 
-
-APP_TIMER_DEF(m_single_shot_timer_id);
-
-static void single_shot_timer_handler(void * p_context)
-{
-    ledPageSet(ISSI_PAGE_PWM);
-    
-    ledRegSet(led_address[LED_MEM0] , 0);
-    ledRegSet(led_address[LED_MEM1] , 0);
-    ledRegSet(led_address[LED_XOR] , 0);
-    ledRegSet(led_address[LED_ADD] , 0);
-}
 
 void ledInit (void){
     int i;
@@ -152,11 +119,10 @@ void ledInit (void){
 
     ledPageSet (ISSI_PAGE_PWM);
     
-    APP_ERROR_CHECK(app_timer_create(&m_single_shot_timer_id, APP_TIMER_MODE_SINGLE_SHOT, single_shot_timer_handler));
     return;
 }
 
-static void ledPageSet (uint8_t page){
+void ledPageSet (uint8_t page){
     /* Unlock command register */
 
     ledRegSet (ISSI_REG_COMMAND_UNLOCK, ISSI_CMDUNLOCK_ENABLE);
@@ -168,7 +134,7 @@ static void ledPageSet (uint8_t page){
     return;
 }
 
-static void ledRegGet (uint8_t reg){
+void ledRegGet (uint8_t reg){
     uint8_t rxbuf = 0;
     uint8_t txbuf;
 
@@ -178,7 +144,7 @@ static void ledRegGet (uint8_t reg){
 
 }
 
-static void ledRegSet (uint8_t reg, uint8_t val){
+void ledRegSet (uint8_t reg, uint8_t val){
     uint8_t txbuf[2];
 
     txbuf[0] = reg;
@@ -189,36 +155,11 @@ static void ledRegSet (uint8_t reg, uint8_t val){
     return;
 }
 
-void ledShow (void){
-    //old function no longer needed
-    /*
-     * Assume that we're still on the PWM control page.
-     * Write the whole LED "frame buffer" in one transaction.
-     * Note: the first element in the led_memory[] array is
-     * the offset of the first LED PWM duty cycle register,
-     * which happens to be 0. After that's set, the rest
-     * of the buffer is written to the PWM duty cycle
-     * registers in sequence using the autoincrement feature.
-     */
-
-    /*i2cMasterTransmit(ISSI_I2C_ADDR, led_memory, sizeof(led_memory));
-    
-    ledPageSet(ISSI_PAGE_BREATH);
-    
-    i2cMasterTransmit(ISSI_I2C_ADDR, led_breath, sizeof(led_breath));
-    
-    ledPageSet(ISSI_PAGE_PWM);*/
-
-    return;
-}
-
-void ledSet (LEDID index, uint8_t intensity){
+void ledSet (uint8_t index, uint8_t intensity){
     if (index > ISSI_LED_COUNT) {
         return;
     }
-
-    led_states[index] = intensity;
-
+    
     ledPageSet(ISSI_PAGE_PWM);
     
     ledRegSet(led_address[index] , intensity);
@@ -240,7 +181,6 @@ void ledsOff (void){
     for (i = 0; i < ISSI_LED_COUNT; i++){
         ledSet(i, 0);
     }
-    ledShow();
     return;
 }
 
@@ -249,7 +189,6 @@ void ledsOn (void){
     for (i = 0; i < ISSI_LED_COUNT; i++){
         ledSet(i, 0xff);
     }
-    ledShow();
     return;
 }
 
@@ -287,25 +226,4 @@ void ledPwm(LEDID id, uint8_t val) {
     ledSet(id, val);
 }
 
-void ledGunsShoot(uint32_t ms) {
-    
-    ledPageSet(ISSI_PAGE_PWM);
-
-    ledSet(LED_MEM0 , 0xff);
-    ledSet(LED_MEM1 , 0xff);
-    ledSet(LED_XOR , 0xff);
-    ledSet(LED_ADD , 0xff);
-    
-    APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
-}
-
-void ledThrusterFire(uint32_t ms) {
-
-    ledPageSet(ISSI_PAGE_PWM);
-
-    ledSet(LED_MEM3 , 30);
-    ledSet(LED_PAGE , 30);
-
-    APP_ERROR_CHECK(app_timer_start(m_single_shot_timer_id, APP_TIMER_TICKS(ms), NULL));
-}
 
