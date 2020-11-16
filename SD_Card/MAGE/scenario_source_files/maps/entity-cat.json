@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/cat.png",
  "imageheight":1056,
  "imagewidth":96,
@@ -28,7 +36,7 @@
                  "tileid":12
                 }],
          "id":0,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -49,7 +57,7 @@
                  "tileid":10
                 }],
          "id":1,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -70,43 +78,43 @@
                  "tileid":11
                 }],
          "id":2,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":3,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":4,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":5,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":6,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":7,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":8,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":9,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":10,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":11,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -203,7 +211,7 @@
                  "tileid":78
                 }],
          "id":12,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -300,7 +308,7 @@
                  "tileid":79
                 }],
          "id":13,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -397,259 +405,259 @@
                  "tileid":80
                 }],
          "id":14,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":15,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":16,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":17,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":18,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":19,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":20,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":21,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":22,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":23,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":24,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":25,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":26,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":27,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":28,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":29,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":30,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":31,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":32,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":33,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":34,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":35,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":36,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":37,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":38,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":39,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":40,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":41,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":42,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":43,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":44,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":45,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":46,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":47,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":48,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":49,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":50,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":51,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":52,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":53,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":54,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":55,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":56,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":57,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":58,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":59,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":60,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":61,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":62,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":63,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":64,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":65,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":66,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":67,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":68,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":69,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":70,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":71,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":72,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":73,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":74,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":75,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":76,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":77,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -682,7 +690,7 @@
                  "tileid":96
                 }],
          "id":78,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -715,7 +723,7 @@
                  "tileid":97
                 }],
          "id":79,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "animation":[
@@ -748,79 +756,79 @@
                  "tileid":98
                 }],
          "id":80,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":81,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":82,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":83,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":84,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":85,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":86,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":87,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":88,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":89,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":90,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":91,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":92,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":93,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":94,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":95,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":96,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":97,
-         "type":"entity-cat"
+         "type":"pipscat"
         }, 
         {
          "id":98,
-         "type":"entity-cat"
+         "type":"pipscat"
         }],
  "tilewidth":32,
  "type":"tileset",

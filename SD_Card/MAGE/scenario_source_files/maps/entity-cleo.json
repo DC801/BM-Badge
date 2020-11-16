@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/cleo.png",
  "imageheight":256,
  "imagewidth":96,
@@ -28,7 +36,7 @@
                  "tileid":9
                 }],
          "id":0,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "animation":[
@@ -49,7 +57,7 @@
                  "tileid":10
                 }],
          "id":1,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "animation":[
@@ -70,43 +78,43 @@
                  "tileid":11
                 }],
          "id":2,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":3,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":4,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":5,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":6,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":7,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":8,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":9,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":10,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":11,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "animation":[
@@ -127,7 +135,7 @@
                  "tileid":21
                 }],
          "id":12,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "animation":[
@@ -148,7 +156,7 @@
                  "tileid":22
                 }],
          "id":13,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "animation":[
@@ -169,43 +177,43 @@
                  "tileid":23
                 }],
          "id":14,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":15,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":16,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":17,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":18,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":19,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":20,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":21,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":22,
-         "type":"entity-cleo"
+         "type":"cleo"
         }, 
         {
          "id":23,
-         "type":"entity-cleo"
+         "type":"cleo"
         }],
  "tilewidth":32,
  "type":"tileset",

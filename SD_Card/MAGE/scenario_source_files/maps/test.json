@@ -214,6 +214,54 @@
                  "width":32,
                  "x":145.5,
                  "y":202.5
+                }, 
+                {
+                 "gid":506,
+                 "height":40,
+                 "id":28,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":196,
+                 "y":205.5
+                }, 
+                {
+                 "gid":536,
+                 "height":32,
+                 "id":29,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":50,
+                 "y":342.5
+                }, 
+                {
+                 "gid":560,
+                 "height":32,
+                 "id":30,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":84,
+                 "y":342.5
+                }, 
+                {
+                 "gid":583,
+                 "height":32,
+                 "id":31,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":272.5,
+                 "y":271.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -425,7 +473,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -436,13 +484,13 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":28,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -498,6 +546,22 @@
         {
          "firstgid":481,
          "source":"entity-baby_goat.json"
+        }, 
+        {
+         "firstgid":505,
+         "source":"entity-alfonso.json"
+        }, 
+        {
+         "firstgid":523,
+         "source":"entity-cleo.json"
+        }, 
+        {
+         "firstgid":547,
+         "source":"entity-verthandi.json"
+        }, 
+        {
+         "firstgid":571,
+         "source":"entity-cat.json"
         }],
  "tilewidth":32,
  "type":"map",
