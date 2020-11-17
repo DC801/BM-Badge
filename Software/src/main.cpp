@@ -107,10 +107,9 @@ MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
 void test_screen(){
 	FrameBuffer *test_canvas;
 	test_canvas = p_canvas();
-	test_canvas->clearScreen(COLOR_GREEN);
-	for(int i=0; i<20; i++){
-		test_canvas->blt();
-	}
+	test_canvas->clearScreen(COLOR_PURPLE);
+	test_canvas->blt();
+	nrf_delay_ms(5000);
 }
 
 //this will blink the LED next to a button, or turn off all LEDs when a joystick button is held down.
@@ -162,7 +161,10 @@ int main(void){
 	app_timer_init();
 
 #ifdef DC801_EMBEDDED
+	//USB serial
 	usb_serial_init();
+
+	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
 
 	// BLE
@@ -188,9 +190,13 @@ int main(void){
 	// Setup I2C
 	twi_master_init();
 
+	if(!util_sd_init()){
+		util_sd_error();
+	}
+
 	EEpwm_init();
 
-	const char* ble_name = "TaSheep801"; // must be 10char
+	const char* ble_name = "TheMage801"; // must be 10char
 	printf("advertising user: %s\n", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
@@ -198,20 +204,10 @@ int main(void){
 
 	// Setup LEDs
 	ledInit();
-	ledsOff();
+	ledsOn();
 
+	//morse isn't used on this badge yet...
 	//morseInit();
-
-	/*
-	if(!util_sd_init()){
-		util_sd_error();
-	}
-	*/
-
-	// Boot! Boot! Boot!
-	printf("Booted!\n");
-	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
-
 
 	// Configure the systick
 	sysTickStart();
@@ -219,14 +215,20 @@ int main(void){
 	// Setup a timer for shutting down animations in standby
 	app_timer_create(&standby_animation_timer_id, APP_TIMER_MODE_SINGLE_SHOT, standby_animation_timeout_handler);
 
+	// Boot! Boot! Boot!
+	printf("Booted!\n");
+	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
+
 	//this just prints the screen black for a bit before continuing.
 	//Feel free to delete the function once everything is working -Tim
-	//test_screen();
+	test_screen();
 
 	//this tests button inputs by blinking LEDs. 
 	//it's blocking, so comment it out when not actively testing.
 	//Feel free to delete the function once everything is working -Tim
-	//test_keyboard();
+	test_keyboard();
+
+
 
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
