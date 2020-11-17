@@ -162,7 +162,7 @@ int main(void){
 #ifdef DC801_EMBEDDED
 
 	//USB serial
-	//usb_serial_init();
+	usb_serial_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
@@ -187,18 +187,18 @@ int main(void){
 	nrf_drv_rng_init(NULL);
 
 	// Setup the battery monitor
-	//adc_configure();
-	//adc_start();
+	adc_configure();
+	adc_start();
 
 	// Setup the UART
-	//uart_init();
+	uart_init();
 
 	// Setup I2C
 	twi_master_init();
 
 	EEpwm_init();
 
-	char* ble_name = "TheMage801"; // must be 10char
+	const char* ble_name = "TheMage801"; // must be 10char
 	printf("advertising user: %s\n", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();

@@ -65,6 +65,7 @@ extern "C" {
 	#include "nrf_spim.h"
 	#include "nrf_drv_spi.h"
 	#include "nrf_drv_twi.h"
+	#include "ff.h"
 	#include "nrf_block_dev_sdc.h"
 	#include "nrf_block_dev.h"
 	#include "diskio.h"
@@ -84,7 +85,6 @@ extern "C" {
 	#include "nrf_log_ctrl.h"
 	#include "nrf_log_default_backends.h"
 
-	#include "ff.h"
 #ifdef __cplusplus
 }
 #endif
