@@ -3,8 +3,6 @@ SRC_ROOT := $(PRJ_ROOT)/src
 APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/menu.c \
 	$(SRC_ROOT)/user.c \
-	$(SRC_ROOT)/nearby.c \
-	$(SRC_ROOT)/godmode.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
 	$(SRC_ROOT)/modules/drv_ili9341.c \
 	$(SRC_ROOT)/modules/drv_nau8810.c \

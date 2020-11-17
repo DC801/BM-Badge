@@ -17,15 +17,6 @@ extern "C" {
 
 #define DATA_SAVE_LEN 16
 
-typedef enum{
-    gm_command_none,
-    gm_command_addscoremodifier,
-    gm_command_addscore,
-    gm_command_party,
-    gm_command_sheep,
-    gm_command_beep
-} GODMODE_COMMAND;
-
 typedef struct{
 	uint16_t appearance;
 	uint16_t manu;
@@ -40,6 +31,8 @@ typedef enum {
     badgeYear_25    = 0x19DC,
     badgeYear_26    = 0x26DC,
 	badgeYear_27    = 0x27DC,
+    badgeYear_28    = 0x28DC,
+    badgeYear_29    = 0x29DC,
     NUM_BADGE_YEARS
 } BADGE_YEAR;
 
@@ -67,7 +60,7 @@ typedef enum {
 } BADGE_GROUP;
 
 #define FIRST_BADGE_GROUP   badge_andnxor
-#define LAST_BADGE_GROUP    badge_pirates
+#define LAST_BADGE_GROUP    NUM_BADGE_GROUPS - 1
 
 typedef struct {
     BADGE_YEAR year;
@@ -82,9 +75,9 @@ typedef struct {
 typedef struct {
 	BADGE_GROUP group;
 	uint16_t appearance;
-	const char *name;
-	const char *icon;
-	const char *contact;
+	char *name;
+	char *icon;
+	char *contact;
 } BADGE_INFO;
 
 extern const BADGE_INFO badgeInfo[NUM_BADGE_GROUPS - 1];
@@ -95,10 +88,7 @@ void ble_stack_init(void);
 void gap_params_init(void);
 void scan_start(void);
 
-void advertising_setUser(const char *user);
-void advertising_setClan(uint8_t clan);
-void advertising_setScore(uint32_t score);
-void advertising_setGodCommand(GODMODE_COMMAND command, uint32_t data);
+void advertising_setUser(char *user);
 
 bool parseAdvertisementData(uint8_t *data, uint8_t len, ADVERTISEMENT *adv);
 
@@ -107,18 +97,14 @@ uint8_t getBadges(BADGE_ADV *badges);
 bool getBadge(uint8_t index, BADGE_ADV *badge);
 uint8_t getBadgeNum(void);
 uint8_t getBadgeYear(BADGE_YEAR year);
-const char* getBadgeGroupName(BADGE_GROUP group);
-const char* getBadgeIconFile(BADGE_GROUP group);
-const char* getBadgeContact(BADGE_GROUP group);
+char* getBadgeGroupName(BADGE_GROUP group);
+char* getBadgeIconFile(BADGE_GROUP group);
+char* getBadgeContact(BADGE_GROUP group);
 uint16_t getBadgeAppearance(BADGE_GROUP group);
 BADGE_GROUP getBadgeGroupFromAppearance(uint16_t appearance);
 
-bool checkForRabies(BADGE_ADV badge);
-void handleGodMode(BADGE_ADV badge, int *modifier);
-
 
 #define APP_COMPANY_IDENTIFIER_DC801    0x0801
-#define APP_APPEARANCE_TYPE_DC27        0x27DC
 
 #define BLOCK_TYPE_APPEARANCE	0x19
 #define BLOCK_TYPE_MANU_INFO	0xFF
@@ -144,9 +130,6 @@ void handleGodMode(BADGE_ADV badge, int *modifier);
 #define DEFCON_BADGE_SCAN_INTERVAL		APP_TIMER_TICKS(15000)
 
 #define NUM_BADGES_TO_STORE             16
-
-#define FURRY_HAS_RABIES                0x35
-#define COMMAND_SEND_EMOTE              0xb2
 
 #ifdef __cplusplus
 }
