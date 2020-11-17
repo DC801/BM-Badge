@@ -46,9 +46,13 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	const int x = 45;
 	int y = 0;
 
+#ifdef DC801_DESKTOP
 	// Print Banner, File Name, Line Number
 	std::filesystem::path path = filename;
 	const char *file = path.filename().c_str();
+#else
+	const char *file = "There is no file...";
+#endif
 
 	const char *header = "\n"
 						 "---------- DC801 Badge Panic ----------\n"
