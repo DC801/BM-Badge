@@ -16,7 +16,6 @@
 
 #include <stdint.h>
 #include "common.h"
-#include "user.h"
 
 #ifdef DC801_DESKTOP
 #include <signal.h>
@@ -24,25 +23,9 @@
 extern volatile sig_atomic_t application_quit;
 #endif
 
-extern volatile bool shoutsAllowed;
-extern volatile bool menuDisplayed;
+static void speaker_init(void);
+static void log_init(void);
 
-APP_TIMER_DEF(gameTimerID);
-void timeout_handler(void * p_context);
-
-extern volatile uint16_t timerCounter;
-extern volatile bool partyMode;
-extern volatile bool sheepMode;
-
-void showStandby(void);
-void drawStandby(void);
-void firstSetup(void);
-
-void games(void);
-void extras(void);
-void nearby(void);
-void settings(void);
-void credits(void);
-void menu(void);
+int main(void);
 
 #endif /* BOOT_H_ */

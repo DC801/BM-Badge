@@ -37,7 +37,6 @@
 #include "common.h"
 
 #include "sd.h"
-#include "gfx.h"
 
 #ifdef DC801_EMBEDDED
 
