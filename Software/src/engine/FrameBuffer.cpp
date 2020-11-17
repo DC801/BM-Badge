@@ -65,7 +65,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 			x >= 0
 			&& x < WIDTH
 			&& dest >= 0
-			&& dest < FRAMEBUFFER_SIZE
+			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
 			frame[dest]=color;
 		}
@@ -83,7 +83,7 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 			y >= 0
 			&& y < HEIGHT
 			&& dest >= 0
-			&& dest < FRAMEBUFFER_SIZE
+			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
 			frame[dest] = color;
 		}
@@ -1183,7 +1183,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
     }
 
     ili9341_set_addr(x, y, x + w - 1, y + h - 1);
-    ili9341_push_colors_fast((uint8_t*)p_raw, (w * h * 2));
+    ili9341_push_colors((uint8_t*)p_raw, (w * h * 2));
     //don't wait for it to finish
 }
 

@@ -281,4 +281,6 @@ void util_gfx_init()
 	p_canvas()->setTextArea(&area);
 
 	p_canvas()->clearScreen(COLOR_BLACK);
+
+    p_canvas()->blt();
 }
