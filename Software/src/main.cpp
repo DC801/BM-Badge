@@ -155,17 +155,19 @@ int main(void){
 
 	// Setup the system
 	log_init();
-	speaker_init();
 
 	// Timers
 	app_timer_init();
 
 #ifdef DC801_EMBEDDED
+
 	//USB serial
-	usb_serial_init();
+	//usb_serial_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
+
+	speaker_init();
 
 	// BLE
 	//gap_params_init();
@@ -177,26 +179,26 @@ int main(void){
 	ili9341_start();
 	util_gfx_init();
 
-	// Init the random number generator
-	nrf_drv_rng_init(NULL);
-
-	// Setup the battery monitor
-	adc_configure();
-	adc_start();
-
-	// Setup the UART
-	uart_init();
-
-	// Setup I2C
-	twi_master_init();
-
 	if(!util_sd_init()){
 		util_sd_error();
 	}
 
+	// Init the random number generator
+	nrf_drv_rng_init(NULL);
+
+	// Setup the battery monitor
+	//adc_configure();
+	//adc_start();
+
+	// Setup the UART
+	//uart_init();
+
+	// Setup I2C
+	twi_master_init();
+
 	EEpwm_init();
 
-	const char* ble_name = "TheMage801"; // must be 10char
+	char* ble_name = "TheMage801"; // must be 10char
 	printf("advertising user: %s\n", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();

@@ -100,52 +100,12 @@ static void ble_scan_timeout_handler(void *p_context) {
         int modifier = 0;
 
         for (uint8_t i = 0; i < badgeAdvNum; i++) {
-            // Check if this was a dc801 badge in god mode sending a command
             if (badgeAdv[i].group == badge_dc801) {
-
                 for(uint8_t j = 0; j < 7; j++){
                     printf("%d - %02X\n", j, badgeAdv[i].data[j]);
                 }
-
-// Badges in godmode don't react to other godmode commands
-#ifndef GODMODE
-                handleGodMode(badgeAdv[i], &modifier);
-#endif
-                // Get a boost for being around DC801 badges
-                modifier += 10;
-
-                // Re-assemble the score bytes
-                uint32_t score =
-                                 (badgeAdv[i].data[2] << 24) |
-                                 (badgeAdv[i].data[4] << 16) |
-                                 (badgeAdv[i].data[6] << 8) |
-                                 (badgeAdv[i].data[0]);
-
-            } else {
-                // Smaller boost if any other badges are present
-                modifier += 5;
             }
-
-            // Check if it's a furry with rabies
-            if (badgeAdv[i].group == badge_dcfurs) {
-                if(checkForRabies(badgeAdv[i])){
-                    uint8_t rand;
-                    nrf_drv_rng_rand(&rand, 1);
-
-                    // 20% chance of oh no
-                    if (rand > 204) {
-                        // Oh no
-                        modifier -= 500;
-                    } else {
-                        // Nice!
-                        modifier += 100;
-                    }
-                }
-            }
-
         }
-
-        setTempScoreModifier(modifier);
 
     }
 
@@ -223,6 +183,7 @@ uint8_t getBadges(BADGE_ADV *badges){
     return retVal;
 }
 
+
 /**
  * Get a single badge
  * @param index of the badge we want
@@ -269,6 +230,10 @@ uint8_t getBadgeYear(BADGE_YEAR year){
 		return 26;
 	else if (year == badgeYear_27 || year == SWAP(badgeYear_27))
 		return 27;
+    else if (year == badgeYear_28 || year == SWAP(badgeYear_28))
+            return 28;
+    else if (year == badgeYear_29 || year == SWAP(badgeYear_29))
+            return 29;
 	else
 		return 0;
 }
@@ -413,8 +378,8 @@ void gap_params_init(void){
     // The app will probably override this pretty quickly
     sd_ble_gap_device_name_set(&sec_mode, (const uint8_t *)DEVICE_NAME, strlen(DEVICE_NAME));
 
-    // Set our appearance as a DC27 badge
-    sd_ble_gap_appearance_set(APP_APPEARANCE_TYPE_DC27);
+    // Set our appearance as a DC29 badge
+    sd_ble_gap_appearance_set(badgeYear_29);
 
     // Finally, setup the gap parameters for broadcast interval
     memset(&gap_conn_params, 0, sizeof(gap_conn_params));
@@ -599,7 +564,7 @@ bool parseAdvertisementData(uint8_t *data, uint8_t len, ADVERTISEMENT *adv){
 /**
  * @brief Update the advertised long name
  */
-void advertising_setUser(const char *user){
+void advertising_setUser(char *user){
 
     ble_gap_conn_sec_mode_t sec_mode;
 
@@ -609,7 +574,7 @@ void advertising_setUser(const char *user){
     printf("Setting BLE name to: '%s'\n", user)
 #endif
     // User name is always 10 chars
-    sd_ble_gap_appearance_set(APP_APPEARANCE_TYPE_DC27);
+    sd_ble_gap_appearance_set(badgeYear_29);
     sd_ble_gap_device_name_set(&sec_mode, (const uint8_t *)user, 10);
     ble_adv_init();
     ble_adv_start();
@@ -617,154 +582,13 @@ void advertising_setUser(const char *user){
 }
 
 
-/**
- * @brief Update the clan
- */
-void advertising_setClan(uint8_t clan){
-
-    m_dc801_beacon_info[7] = clan;
-    ble_adv_init();
-    ble_adv_start();
-
-}
-
-
-/**
- * @brief Update the score
- */
-void advertising_setScore(uint32_t score){
-
-    uint8_t rand;
-
-    nrf_drv_rng_rand(&rand, 1);
-
-    uint8_t scoreBytes[4];
-    scoreBytes[0] = (uint8_t)(score & 0xFF);
-    scoreBytes[1] = (uint8_t)((score >> 8) & 0xFF);
-    scoreBytes[2] = (uint8_t)((score >> 16) & 0xFF);
-    scoreBytes[3] = (uint8_t)((score >> 24) & 0xFF);
-    uint16_t crc = calcCRC(scoreBytes, 4, CRC_SEED_DC27); // Send DC27 CRC score
-
-    if(rand > 230){
-        m_dc801_beacon_info[0] = 0x35;
-    }
-    else{
-        m_dc801_beacon_info[0] = 0x00;
-    }
-
-    m_dc801_beacon_info[1] = scoreBytes[0];
-    m_dc801_beacon_info[2] = scoreBytes[3];
-    m_dc801_beacon_info[3] = (uint8_t)((crc >> 8) & 0xFF);
-    m_dc801_beacon_info[4] = scoreBytes[2];
-    m_dc801_beacon_info[5] = (uint8_t)(crc & 0xFF);
-    m_dc801_beacon_info[6] = scoreBytes[1];
-
-
-    ble_adv_init();
-    ble_adv_start();
-
-}
-
-/**
- * Set the god mode command
- * @param command
- * @param data
- */
-void advertising_setGodCommand(GODMODE_COMMAND command, uint32_t data){
-
-    uint8_t rand;
-
-    nrf_drv_rng_rand(&rand, 1);
-
-    switch(command) {
-        case gm_command_none:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = 0;
-            m_dc801_beacon_info[2] = 0;
-            m_dc801_beacon_info[3] = 0;
-            m_dc801_beacon_info[4] = 0;
-            m_dc801_beacon_info[5] = 0;
-            m_dc801_beacon_info[6] = 0;
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        case gm_command_addscoremodifier:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = MAX(1, rand);
-            m_dc801_beacon_info[2] = 0x45;
-            m_dc801_beacon_info[3] = (uint8_t)((data >> 0) & 0xFF);
-            m_dc801_beacon_info[4] = (uint8_t)((data >> 8) & 0xFF);
-            m_dc801_beacon_info[5] = (uint8_t)((data >> 16) & 0xFF);
-            m_dc801_beacon_info[6] = (uint8_t)((data >> 24) & 0xFF);
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        case gm_command_addscore:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = MAX(1, rand);
-            m_dc801_beacon_info[2] = 0x54;
-            m_dc801_beacon_info[3] = (uint8_t)((data >> 0) & 0xFF);
-            m_dc801_beacon_info[4] = (uint8_t)((data >> 8) & 0xFF);
-            m_dc801_beacon_info[5] = (uint8_t)((data >> 16) & 0xFF);
-            m_dc801_beacon_info[6] = (uint8_t)((data >> 24) & 0xFF);
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        case gm_command_party:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = MAX(1, rand);
-            m_dc801_beacon_info[2] = 0x25;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[3] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[4] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[5] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[6] = rand;
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        case gm_command_sheep:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = MAX(1, rand);
-            m_dc801_beacon_info[2] = 0x55;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[3] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[4] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[5] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[6] = rand;
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        case gm_command_beep:
-            m_dc801_beacon_info[0] = 0x23;
-            m_dc801_beacon_info[1] = MAX(1, rand);
-            m_dc801_beacon_info[2] = 0xFE;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[3] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[4] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[5] = rand;
-            nrf_drv_rng_rand(&rand, 1);
-            m_dc801_beacon_info[6] = rand;
-            m_dc801_beacon_info[7] = CLAN_ADMIN;
-            break;
-        default:
-            break;
-    }
-
-    ble_adv_init();
-    ble_adv_start();
-
-}
-
 #endif
 
 /**
  * @param group we want info on
  * @return string, group name
  */
-const char* getBadgeGroupName(BADGE_GROUP group){
+char* getBadgeGroupName(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || SWAP(badgeInfo[i].group) == group){
@@ -776,12 +600,13 @@ const char* getBadgeGroupName(BADGE_GROUP group){
 
 }
 
+
 /**
  * Get the icon file for a given group
  * @param group badge group we want
  * @return a string that is the file name
  */
-const char* getBadgeIconFile(BADGE_GROUP group){
+char* getBadgeIconFile(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || badgeInfo[i].group == SWAP(group)){
@@ -793,12 +618,13 @@ const char* getBadgeIconFile(BADGE_GROUP group){
 
 }
 
+
 /**
  * Get the contact info for a given group
  * @param group badge group we want
  * @return a string that is the contact info
  */
-const char* getBadgeContact(BADGE_GROUP group){
+char* getBadgeContact(BADGE_GROUP group){
 
     for(int i = 0; i < NUM_BADGE_GROUPS; i++){
         if(badgeInfo[i].group == group || badgeInfo[i].group == SWAP(group)){
@@ -843,98 +669,6 @@ BADGE_GROUP getBadgeGroupFromAppearance(uint16_t appearance) {
     }
 
     return badge_none;
-
-}
-
-/**
- * Check if a dcfurs badge has rabies
- * @param badge
- * @return
- */
-bool checkForRabies(BADGE_ADV badge){
-
-    if(badge.data[0] == 0x35){
-        // User has rabies
-        return true;
-    }
-
-    return false;
-}
-
-
-/**
- * Handle a badge in god mode
- * @param badge
- * @param scoreModifier
- */
-void handleGodMode(BADGE_ADV badge, int *scoreModifier){
-
-    static GODMODE_COMMAND oldCommand = gm_command_none;
-
-    if(!isInGodMode(badge)){
-        printf("801 not in god mode\n");
-        return;
-    }
-
-//    printf("801 in god mode\n");
-
-    GODMODE_COMMAND newCommand = getGodModeCommand(badge);
-
-//    printf("Old %d, new %d\n", oldCommand, newCommand);
-
-    // Add the score modifier all the time, since it gets cleared each loop
-    if(newCommand == gm_command_addscoremodifier){
-        // Modify their score modifier
-        *scoreModifier = getGodModeModifier(badge);
-        printf("Score modifier %d\n", getGodModeModifier(badge));
-    }
-
-    // If the command is different than the old command, do something with it
-    if(oldCommand != newCommand) {
-
-        switch (getGodModeCommand(badge)) {
-            case gm_command_none:
-                break;
-            case gm_command_addscoremodifier:
-                // Handled above
-                break;
-            case gm_command_addscore: {
-                // Add to their score
-                int modifier = getGodModeModifier(badge);
-
-                printf("Score plus %d\n", getGodModeModifier(badge));
-                // Don't underflow and wrap around
-                if(modifier + user.score < 0){
-                    user.score = 0;
-                }
-                else {
-                    user.score += modifier;
-                }
-            }
-                break;
-            case gm_command_party:
-                // Display party stuff on badge in idle screen
-                partyMode = true;
-                break;
-            case gm_command_sheep:
-                // ONLY display sheep on badge
-                sheepMode = true;
-                break;
-            case gm_command_beep:
-                for(int i = 0; i < 50; i++){
-                    //beep(25, 600 + (i * 10));
-                }
-
-                for(int i = 50; i > 0; i--){
-                    //beep(25, 600 + (i * 10));
-                }
-                break;
-            default:
-                break;
-        }
-
-        oldCommand = newCommand;
-    }
 
 }
 
