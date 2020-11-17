@@ -102,14 +102,11 @@ extern "C" {
 
 
 // Includes for our app
-#include "utility.h"
 #include "main.h"
-#include "menu.h"
-#include "user.h"
+#include "utility.h"
 #include "modules/ble.h"
 #include "modules/drv_ili9341.h"
 #include "modules/drv_nau8810.h"
-#include "modules/gfx.h"
 #include "modules/sd.h"
 #include "modules/adc.h"
 #include "modules/uart.h"

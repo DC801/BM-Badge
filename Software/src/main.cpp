@@ -40,24 +40,11 @@ void sig_handler(int signo)
 #pragma message ("NRFX_TIMER1_ENABLED=" VAL(NRFX_TIMER1_ENABLED))
 */
 
-
-volatile bool partyMode = false;
-volatile bool sheepMode = false;
-
-APP_TIMER_DEF(standby_animation_timer_id);
-
-static void standby_animation_timeout_handler(void *p_context) {
-	UNUSED_PARAMETER(p_context);
-
-	canvas.drawStop();
-	// util_gfx_draw_raw_file_stop();
-}
-
 /**
  * Initialize the speaker
  */
 static void speaker_init(void){
-	// Setup the beeper later -Tim
+	// Setup the nau8810 later -Tim
 	//nrf_gpio_cfg_output(SPEAKER);
 }
 
@@ -71,38 +58,6 @@ static void log_init(void){
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
 }
 
-/**
- * Handler to show the LEDs during bootup animation
- * @param frame
- * @param p_data
- */
-static void bootCallback(uint8_t frame, void *p_data){
-	ledOn((LEDID) (frame % LED_COUNT));
-}
-
-/**
- * Handler to show the LED blink during party mode
- * @param frame
- * @param p_data
- */
-static void partyCallback(uint8_t frame, void *p_data){
-
-}
-
-typedef enum {
-	item_games,
-	item_extras,
-	item_credits,
-	NUM_MENU_MAIN_ITEMS
-} MENU_MAIN;
-
-
-MENU mainMenu[NUM_MENU_MAIN_ITEMS] = {
-		{ item_games, "Games" },
-		{ item_extras, "Extras"},
-		{ item_credits, "Credits" },
-};
-
 //this lets me test if the framebuffer is working:
 void test_screen(){
 	FrameBuffer *test_canvas;
@@ -115,29 +70,27 @@ void test_screen(){
 //this will blink the LED next to a button, or turn off all LEDs when a joystick button is held down.
 void test_keyboard(){
 	ledsOff();
-	bool led_brightness[LED_COUNT];
-	for(int i=0; i<LED_COUNT; i++) {led_brightness[i] = false;}
 	//need to keep updating in a loop for it to work:
 	while(1){
 		//get an updated key mask every loop:
 		EngineHandleInput();
-		if(EngineInput_Activated.mem0)   { ledSet(LED_MEM0,   (led_brightness[LED_MEM0]  = !led_brightness[LED_MEM0]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.mem1)   { ledSet(LED_MEM1,   (led_brightness[LED_MEM1]  = !led_brightness[LED_MEM1]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.mem2)   { ledSet(LED_MEM2,   (led_brightness[LED_MEM2]  = !led_brightness[LED_MEM2]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.mem3)   { ledSet(LED_MEM3,   (led_brightness[LED_MEM3]  = !led_brightness[LED_MEM3]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_128){ ledSet(LED_BIT128, (led_brightness[LED_BIT128]= !led_brightness[LED_BIT128] )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_64) { ledSet(LED_BIT64,  (led_brightness[LED_BIT64] = !led_brightness[LED_BIT64]  )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_32) { ledSet(LED_BIT32,  (led_brightness[LED_BIT32] = !led_brightness[LED_BIT32]  )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_16) { ledSet(LED_BIT16,  (led_brightness[LED_BIT16] = !led_brightness[LED_BIT16]  )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_8)  { ledSet(LED_BIT8,   (led_brightness[LED_BIT8]  = !led_brightness[LED_BIT8]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_4)  { ledSet(LED_BIT4,   (led_brightness[LED_BIT4]  = !led_brightness[LED_BIT4]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_2)  { ledSet(LED_BIT2,   (led_brightness[LED_BIT2]  = !led_brightness[LED_BIT2]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.bit_1)  { ledSet(LED_BIT1,   (led_brightness[LED_BIT1]  = !led_brightness[LED_BIT1]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.op_xor) { ledSet(LED_XOR,    (led_brightness[LED_XOR]   = !led_brightness[LED_XOR]    )? 0xff : 0x00);}
-		if(EngineInput_Activated.op_add) { ledSet(LED_ADD,    (led_brightness[LED_ADD]   = !led_brightness[LED_ADD]    )? 0xff : 0x00);}
-		if(EngineInput_Activated.op_sub) { ledSet(LED_SUB,    (led_brightness[LED_SUB]   = !led_brightness[LED_SUB]    )? 0xff : 0x00);}
-		if(EngineInput_Activated.op_page){ ledSet(LED_PAGE,   (led_brightness[LED_PAGE]  = !led_brightness[LED_PAGE]   )? 0xff : 0x00);}
-		if(EngineInput_Activated.hax)    { ledSet(LED_HAX,    (led_brightness[LED_HAX]   = !led_brightness[LED_HAX]    )? 0xff : 0x00);}
+		ledSet(LED_MEM0,   EngineInput_Buttons.mem0    ? 0xff : 0x00);
+		ledSet(LED_MEM1,   EngineInput_Buttons.mem1    ? 0xff : 0x00);
+		ledSet(LED_MEM2,   EngineInput_Buttons.mem2    ? 0xff : 0x00);
+		ledSet(LED_MEM3,   EngineInput_Buttons.mem3    ? 0xff : 0x00);
+		ledSet(LED_BIT128, EngineInput_Buttons.bit_128 ? 0xff : 0x00);
+		ledSet(LED_BIT64,  EngineInput_Buttons.bit_64  ? 0xff : 0x00);
+		ledSet(LED_BIT32,  EngineInput_Buttons.bit_32  ? 0xff : 0x00);
+		ledSet(LED_BIT16,  EngineInput_Buttons.bit_16  ? 0xff : 0x00);
+		ledSet(LED_BIT8,   EngineInput_Buttons.bit_8   ? 0xff : 0x00);
+		ledSet(LED_BIT4,   EngineInput_Buttons.bit_4   ? 0xff : 0x00);
+		ledSet(LED_BIT2,   EngineInput_Buttons.bit_2   ? 0xff : 0x00);
+		ledSet(LED_BIT1,   EngineInput_Buttons.bit_1   ? 0xff : 0x00);
+		ledSet(LED_XOR,    EngineInput_Buttons.op_xor  ? 0xff : 0x00);
+		ledSet(LED_ADD,    EngineInput_Buttons.op_add  ? 0xff : 0x00);
+		ledSet(LED_SUB,    EngineInput_Buttons.op_sub  ? 0xff : 0x00);
+		ledSet(LED_PAGE,   EngineInput_Buttons.op_page ? 0xff : 0x00);
+		ledSet(LED_HAX,    EngineInput_Buttons.hax     ? 0xff : 0x00);
 	}
 }
 
@@ -167,6 +120,7 @@ int main(void){
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
 
+	//this function will set up the NAU8810 chip to play sounds
 	speaker_init();
 
 	// BLE
@@ -213,9 +167,6 @@ int main(void){
 
 	// Configure the systick
 	sysTickStart();
-
-	// Setup a timer for shutting down animations in standby
-	app_timer_create(&standby_animation_timer_id, APP_TIMER_MODE_SINGLE_SHOT, standby_animation_timeout_handler);
 
 	// Boot! Boot! Boot!
 	printf("Booted!\n");

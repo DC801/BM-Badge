@@ -16,13 +16,10 @@
 extern "C" {
 #endif
 
-// LEDs definitions
-
 // Low is active
 #define LEDS_ACTIVE_STATE    0
-#define VOLTAGE_SENSE        4
-// Defines for the SDK
 
+// Defines for preventing unused framebuffer functions from blowing up the compiler:
 #define BUTTONS_NUMBER       0
 #define BUTTONS_ACTIVE_STATE NRF_GPIO_PIN_SENSE_LOW
 #define USER_BUTTON_NONE     0	
@@ -31,6 +28,7 @@ extern "C" {
 #define KEYBOARD_ADDRESS    0x23
 #define KEYBOARD_INT_PIN    18
 
+//UART config:
 #define RX_PIN_NUMBER       8
 #define TX_PIN_NUMBER       6
 #define CTS_PIN_NUMBER      NRF_UART_PSEL_DISCONNECTED
@@ -45,7 +43,7 @@ extern "C" {
 #define ILI9341_PIN_CS		31
 #define ILI9341_PIN_DC		29
 #define ILI9341_PIN_LED		0
-#define ILI9341_PIN_RESET	10+32
+#define ILI9341_PIN_RESET	32+10
 
 #define LCD_WIDTH  			320
 #define LCD_HEIGHT 			240
@@ -61,11 +59,11 @@ extern "C" {
 //I2S configuration
 #define I2S_TWI_INST		1
 #define I2S_SCL_M			3
-#define I2S_SDA_M			45
+#define I2S_SDA_M			32+13
 
 #define I2S_SCK_M			5
-#define I2S_LRCK_M			47
-#define I2S_MCK_M			46
+#define I2S_LRCK_M			32+15
+#define I2S_MCK_M			32+14
 #define I2S_SDOUT_M			7
 
 // SD card interface
@@ -73,6 +71,14 @@ extern "C" {
 #define SDC_MOSI_PIN        21
 #define SDC_MISO_PIN        16
 #define SDC_CS_PIN          19
+
+//QSPI Configuration
+#define MEM_CS              2
+#define MEM_SCK             12
+#define MEM_IO0             13
+#define MEM_IO1             32+12
+#define MEM_IO2             14
+#define MEM_IO3             1
 
 // Clock
 // Low frequency clock source to be used by the SoftDevice
