@@ -58,6 +58,16 @@ extern "C" {
 #define I2C_SCL_PIN         23
 #define I2C_SDA_PIN         22
 
+//I2S configuration
+#define I2S_TWI_INST		1
+#define I2S_SCL_M			3
+#define I2S_SDA_M			45
+
+#define I2S_SCK_M			5
+#define I2S_LRCK_M			47
+#define I2S_MCK_M			46
+#define I2S_SDOUT_M			7
+
 // SD card interface
 #define SDC_SCK_PIN         17
 #define SDC_MOSI_PIN        21

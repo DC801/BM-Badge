@@ -68,9 +68,6 @@ K						= (2^24)(0.144)
 
 #ifdef DC801_EMBEDDED
 
-#define MASTER_TWI_INST		1
-#define TWI_SCL_M			21
-#define TWI_SDA_M			17
 
 #define NAU8810_ADDRESS		0x34
 
@@ -79,10 +76,6 @@ K						= (2^24)(0.144)
 #define NAU8810_PLLK1		0x006E
 #define NAU8810_PLLK2		0x012F
 
-#define I2S_SCK_M			20
-#define I2S_LRCK_M			22
-#define I2S_MCK_M			19
-#define I2S_SDOUT_M			23
 #define I2S_SDIN_M			NRFX_I2S_PIN_NOT_USED
 #define I2S_PRIORITY_M		NRFX_I2S_CONFIG_IRQ_PRIORITY
 #define I2S_MODE_M			NRF_I2S_MODE_MASTER
@@ -93,14 +86,14 @@ K						= (2^24)(0.144)
 #define I2S_MCKSETUP_M		NRF_I2S_MCK_32MDIV8				// 16MHz Master clock
 #define I2S_RATIO_M			NRF_I2S_RATIO_128X				// 31.25kHz LRCLK
 
-static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(MASTER_TWI_INST);
+static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
 void nau8810_twi_init(void)
 {
 	const nrf_drv_twi_config_t config =
 	{
-		.scl				= TWI_SCL_M,
-		.sda				= TWI_SDA_M,
+		.scl				= I2S_SCL_M,
+		.sda				= I2S_SDA_M,
 		.frequency			= NRF_DRV_TWI_FREQ_400K,
 		.interrupt_priority = APP_IRQ_PRIORITY_HIGH,
 		.clear_bus_init		= false
