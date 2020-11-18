@@ -44,10 +44,6 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define COLOR_BSOD			0x03DA
 
 typedef struct {
-    int16_t xs, ys, xe, ye;
-} area_t;
-
-typedef struct {
     int16_t width;
     int16_t height;
 } bounds_t;
