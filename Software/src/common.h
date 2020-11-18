@@ -22,6 +22,11 @@
 #include <string.h>
 #include <sys/time.h>
 
+typedef struct {
+	int16_t xs, ys, xe, ye;
+} area_t;
+
+
 #include "config/custom_board.h"
 
 #ifdef DC801_EMBEDDED
@@ -108,6 +113,7 @@ extern "C" {
 #include "modules/drv_ili9341.h"
 #include "modules/drv_nau8810.h"
 #include "modules/sd.h"
+#include "modules/gfx.h"
 #include "modules/adc.h"
 #include "modules/uart.h"
 #include "modules/i2c.h"

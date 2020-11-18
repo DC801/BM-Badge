@@ -283,7 +283,6 @@ nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
 	/*m_large_tx = true;
 	p_large_tx_data = p_colors + count;
 	m_large_tx_size = size - count;*/
-
 }
 
 /**

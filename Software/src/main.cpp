@@ -63,6 +63,7 @@ void test_screen(){
 	FrameBuffer *test_canvas;
 	test_canvas = p_canvas();
 	test_canvas->clearScreen(COLOR_PURPLE);
+	//util_gfx_draw_raw_file("hcrn/display.raw", 0, 0, 128, 128, NULL, true, NULL);
 	test_canvas->blt();
 	nrf_delay_ms(5000);
 }
