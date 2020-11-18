@@ -42,18 +42,10 @@ bool is_keyboard_interrupt(void){
 
 uint32_t get_keyboard_mask(void)
 {
-	uint32_t now = millis();
 	//need to wait at least KEYBOARD_DEBOUNCE_TIME ms before we try to update again:
-	if(
-		is_keyboard_interrupt() &&
-		(now - last_keyboard_interrupt_time) > KEYBOARD_DEBOUNCE_TIME
-	)
-	{
-		uint8_t *ptr = (uint8_t *)&keyboard_mask;
-		i2cMasterRead(KEYBOARD_ADDRESS, ptr, sizeof(uint32_t));
-		last_keyboard_interrupt_time = now;
-	}
-	return keyboard_mask;
+	uint32_t state = 0x0;
+	i2cMasterRead(KEYBOARD_ADDRESS, (uint8_t *)&state, sizeof(uint32_t));
+	return state;
 }
 
 void keyboard_register_callback(keyboard_evt_handler_t handler)
