@@ -87,6 +87,14 @@ MageMap::MageMap(uint32_t address)
 	entityCount = convert_endian_u2_value(entityCount);
 	address += sizeof(entityCount);
 
+	//read geometryCount
+	if (EngineROM_Read(address, sizeof(geometryCount), (uint8_t *)&geometryCount) != sizeof(geometryCount))
+	{
+		goto MageMap_Error;
+	}
+	geometryCount = convert_endian_u2_value(geometryCount);
+	address += sizeof(geometryCount);
+
 	//read scriptCount
 	if (EngineROM_Read(address, sizeof(scriptCount), (uint8_t *)&scriptCount) != sizeof(scriptCount))
 	{
@@ -106,6 +114,17 @@ MageMap::MageMap(uint32_t address)
 	address += size;
 	convert_endian_u2_buffer(entityGlobalIds.get(), entityCount);
 
+	//read geometryGlobalIds
+	geometryGlobalIds = std::make_unique<uint16_t[]>(geometryCount);
+	size = sizeof(uint16_t) * geometryCount;
+
+	if (EngineROM_Read(address, size, (uint8_t *)geometryGlobalIds.get()) != size)
+	{
+		goto MageMap_Error;
+	}
+	address += size;
+	convert_endian_u2_buffer(geometryGlobalIds.get(), geometryCount);
+
 	//read entityGlobalIds
 	scriptGlobalIds = std::make_unique<uint16_t[]>(scriptCount);
 	size = sizeof(uint16_t) * scriptCount;
@@ -118,7 +137,7 @@ MageMap::MageMap(uint32_t address)
 	convert_endian_u2_buffer(scriptGlobalIds.get(), scriptCount);
 
 	//padding to align with uint32_t memory spacing:
-	if ( ((entityCount + scriptCount) + 1) % 2)
+	if ( (entityCount + geometryCount + scriptCount) % 2)
 	{
 		address += sizeof(uint16_t); // Padding
 	}
@@ -148,8 +167,10 @@ uint32_t MageMap::Size() const
 		sizeof(onTick) +
 		sizeof(layerCount) +
 		sizeof(entityCount) +
+		sizeof(geometryCount) +
 		sizeof(scriptCount) +
 		(entityCount * sizeof(uint16_t)) +
+		(geometryCount * sizeof(uint16_t)) +
 		(scriptCount * sizeof(uint16_t)) +
 		(layerCount * sizeof(uint32_t));
 }
@@ -199,6 +220,11 @@ uint8_t MageMap::EntityCount() const
 	return entityCount;
 }
 
+uint16_t MageMap::GeometryCount() const
+{
+	return geometryCount;
+}
+
 uint16_t MageMap::ScriptCount() const
 {
 	return scriptCount;
@@ -208,6 +234,12 @@ uint16_t MageMap::getGlobalEntityId(uint16_t num) const
 {
 	if (!entityGlobalIds) return 0;
 	return entityGlobalIds[num % entityCount];
+}
+
+uint16_t MageMap::getGlobalGeometryId(uint16_t num) const
+{
+	if (!geometryGlobalIds) return 0;
+	return geometryGlobalIds[num % geometryCount];
 }
 
 uint16_t MageMap::getGlobalScriptId(uint16_t num) const

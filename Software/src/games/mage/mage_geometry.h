@@ -7,13 +7,7 @@ in a more accessible way.
 #define _MAGE_GEOMETRY_H
 
 #include "mage_defines.h"
-
-
-//this is a point in 2D space.
-typedef struct {
-	int32_t x;
-	int32_t y;
-} Point;
+#include "FrameBuffer.h"
 
 class MageGeometry{
 	private:
@@ -42,9 +36,11 @@ class MageGeometry{
 		uint32_t size();
 
 		//this checks to see if a given point is inside the boundaries of a given geometry:
-		bool isPointInGeometry(Point point, MageGeometry geometry);
+		bool isPointInGeometry(Point point);
 
 		static bool doRectsOverlap(Rect a, Rect b);
+
+		void draw(int32_t cameraX, int32_t cameraY, uint16_t color);
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H

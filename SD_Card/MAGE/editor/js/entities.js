@@ -122,7 +122,7 @@ var serializeEntity = function (
 	offset += 1;
 	dataView.setUint8(
 		offset, // uint8_t currentFrame
-		0
+		entity.current_frame || 0
 	);
 	offset += 1;
 	dataView.setUint8(

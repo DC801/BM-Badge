@@ -208,10 +208,15 @@ var generateMapHeader = function (map) {
 		+ 1 // uint8_t layer_count
 		+ 1 // uint8_t padding
 		+ 2 // uint16_t entity_count
+		+ 2 // uint16_t geometry_count
 		+ 2 // uint16_t script_count
 		+ (
 			2 // uint16_t entity_id
 			* map.entityIndices.length
+		)
+		+ (
+			2 // uint16_t geometry_id
+			* map.geometryIndices.length
 		)
 		+ (
 			2 // uint16_t script_id
@@ -247,10 +252,16 @@ var generateMapHeader = function (map) {
 	offset += 1;
 	dataView.setUint16(offset, map.entityIndices.length, false);
 	offset += 2;
+	dataView.setUint16(offset, map.geometryIndices.length, false);
+	offset += 2;
 	dataView.setUint16(offset, map.scriptIndices.length, false);
 	offset += 2;
 	map.entityIndices.forEach(function (entityIndex) {
 		dataView.setUint16(offset, entityIndex, false);
+		offset += 2;
+	});
+	map.geometryIndices.forEach(function (geometryIndex) {
+		dataView.setUint16(offset, geometryIndex, false);
 		offset += 2;
 	});
 	map.scriptIndices.forEach(function (scriptIndex) {
@@ -271,6 +282,7 @@ var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;
 		map.entityIndices = [];
+		map.geometryIndices = [];
 		map.scriptIndices = [];
 		map.scriptNameKeys = {};
 		map.serializedLayers = [];
