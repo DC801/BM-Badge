@@ -15,4 +15,5 @@
   (lib (name SC189)(type Legacy)(uri ${KIPRJMOD}/../common/common_sch/SC189.lib)(options "")(descr ""))
   (lib (name ST11S008V4HR2000)(type Legacy)(uri ${KIPRJMOD}/../common/common_sch/ST11S008V4HR2000.lib)(options "")(descr ""))
   (lib (name 105450-0101)(type Legacy)(uri ${KIPRJMOD}/../common/common_sch/105450-0101.lib)(options "")(descr ""))
+  (lib (name purplewizard-rescue)(type Legacy)(uri ${KIPRJMOD}/purplewizard-rescue.lib)(options "")(descr ""))
 )

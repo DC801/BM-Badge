@@ -1,4 +1,4 @@
-update=8/11/2020 11:00:32 PM
+update=11/22/2020 3:35:10 PM
 version=1
 last_client=kicad
 [general]
@@ -250,10 +250,10 @@ dPairViaGap=0.25
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
-PlotDirectoryName=outputs/
+PlotDirectoryName=outputs/Final/
 SubpartIdSeparator=0
 SubpartFirstId=65
 NetFmtName=Pcbnew
 SpiceAjustPassiveValues=0
-LabSize=50
+LabSize=43
 ERC_TestSimilarLabels=1
