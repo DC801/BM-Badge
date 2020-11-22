@@ -109,6 +109,9 @@ types:
       - id: entity_count
         type: u2
         doc: The number of entities placed on this map
+      - id: geometry_count
+        type: u2
+        doc: The number of geometry placed on this map
       - id: script_count
         type: u2
         doc: The number of scripts used on this map
@@ -117,6 +120,11 @@ types:
         repeat: expr
         repeat-expr: entity_count
         doc: The global IDs of the entities on this map
+      - id: geometry_global_ids
+        type: u2
+        repeat: expr
+        repeat-expr: geometry_count
+        doc: The global IDs of the geometry on this map
       - id: script_global_ids
         type: u2
         repeat: expr
@@ -125,7 +133,7 @@ types:
       - id: map_header_padding
         type: u2
         repeat: expr
-        repeat-expr: ((entity_count + script_count) + 1) % 2
+        repeat-expr: (entity_count + geometry_count + script_count) % 2
         doc: Padding to align things back to uint32_t
       - id: layers
         type: map_layer(cols, rows)

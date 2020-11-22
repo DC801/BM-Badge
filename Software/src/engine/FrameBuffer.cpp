@@ -865,26 +865,49 @@ void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
 	drawLine(x2, y2, x0, y0, color);
 }
 
+float FrameBuffer::lerp(float a, float b, float progress) {
+	return ((b - a) * progress) + a;
+}
+
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
-	int y = y1;
-	int p =2 * dy - dx;
-
-	for(int x = x1; x < x2; ++x)
+	uint length = ceil(sqrtf((float) ((dx * dx) + (dy * dy))));
+	int x;
+	int y;
+	float progress;
+	for(uint i = 0; i <= length; i++)
 	{
-		frame[x + y * WIDTH] = color;
-
-		if(p>=0)
-		{
-			y++;
-			p += 2 * dy - 2 * dx;
-		}
-		else
-		{
-			p += 2 * dy;
+		progress = ((float) i) / length;
+		x = round(lerp((float) x1, (float) x2, progress));
+		y = round(lerp((float) y1, (float) y2, progress));
+		if ( // crop to screen bounds
+			x > 0
+			&& x < WIDTH
+			&& y > 0
+			&& y < HEIGHT
+		) {
+			frame[x + (y * WIDTH)] = color;
 		}
 	}
+}
+
+
+void FrameBuffer::drawPoint(int x, int y, uint8_t size, uint16_t color) {
+	drawLine(
+		x - size,
+		y - size,
+		x + size,
+		y + size,
+		color
+	);
+	drawLine(
+		x - size,
+		y + size,
+		x + size,
+		y - size,
+		color
+	);
 }
 
 void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){

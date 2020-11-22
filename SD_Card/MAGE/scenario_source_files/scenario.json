@@ -703,6 +703,211 @@
 					}
 				]
 			}
+		},
+		"blacksmith": {
+			"tileset": "entity-blacksmith.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 5,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": true
+					},
+					{
+						"tileid": 4,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"old_man": {
+			"tileset": "entity-old_man.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 11,
+						"flip_x": false
+					},
+					{
+						"tileid": 9,
+						"flip_x": true
+					},
+					{
+						"tileid": 10,
+						"flip_x": false
+					},
+					{
+						"tileid": 9,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"bert": {
+			"tileset": "entity-bert.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"sports_kid": {
+			"tileset": "entity-sports_kid.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 14,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": true
+					},
+					{
+						"tileid": 13,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"ssen": {
+			"tileset": "entity-ssen.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
 		}
 	}
 }
