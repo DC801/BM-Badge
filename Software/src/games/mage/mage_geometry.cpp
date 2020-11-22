@@ -1,6 +1,9 @@
 #include "mage_geometry.h"
+#include "FrameBuffer.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
+
+extern FrameBuffer *mage_canvas;
 
 MageGeometry::MageGeometry(uint32_t address)
 {
@@ -74,22 +77,20 @@ uint32_t MageGeometry::size()
 	return size;
 }
 
-bool MageGeometry::isPointInGeometry(Point point, MageGeometry geometry)
+bool MageGeometry::isPointInGeometry(Point point)
 {
 	//first check for the case where the geometry is a point:
-	if(geometry.typeId == MageGeometryTypeId::POINT)
+	if(typeId == MageGeometryTypeId::POINT)
 	{
-		if(
-			point.x == geometry.pointArray[0].x &&
-			point.y == geometry.pointArray[0].y
-		)
-		{ return true; }
-		else { return false; }
+		return (
+			point.x == pointArray[0].x &&
+			point.y == pointArray[0].y
+		);
 	}
 	//if it's a polyline or polygon, do the thing:
 	else if(
-		geometry.typeId == MageGeometryTypeId::POLYLINE ||
-		geometry.typeId == MageGeometryTypeId::POLYGON
+		typeId == MageGeometryTypeId::POLYLINE ||
+		typeId == MageGeometryTypeId::POLYGON
 	)
 	{
 		//refactoring stackoverflow code based on point-in-polygon by James Halliday
@@ -112,11 +113,11 @@ bool MageGeometry::isPointInGeometry(Point point, MageGeometry geometry)
 		//Tim's version below:
 		uint8_t i,j;
 		bool c = false;
-		for(i=0, j=geometry.pointCount; i < geometry.pointCount; j = i++)
+		for(i=0, j=pointCount - 1; i < pointCount; j = i++)
 		{
 			//get the points for i and j:
-			Point points_i = geometry.pointArray[i];
-			Point points_j = geometry.pointArray[j];
+			Point points_i = pointArray[i];
+			Point points_j = pointArray[j];
 			//do the fancy check:
 			if(
 				( (points_i.y >= point.y) != (points_j.y >= point.y) ) &&
@@ -143,4 +144,43 @@ bool MageGeometry::doRectsOverlap(Rect a, Rect b)
 		b.x > (a.x + a.w) ||
 		b.y > (a.y + a.h)
 	);
+}
+
+
+void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
+{
+	Point *pointA;
+	Point *pointB;
+	if(typeId == POINT) {
+		mage_canvas->drawPoint(
+			pointArray[0].x - cameraX,
+			pointArray[0].y - cameraY,
+			4,
+			color
+		);
+	} else {
+		for (int i = 1; i < pointCount; ++i) {
+			pointA = &pointArray[i - 1];
+			pointB = &pointArray[i];
+			mage_canvas->drawLine(
+				pointA->x - cameraX,
+				pointA->y - cameraY,
+				pointB->x - cameraX,
+				pointB->y - cameraY,
+				color
+			);
+		}
+	}
+	if(typeId == POLYGON) {
+		// draw the closing line from point N-1 to 0
+		pointA = &pointArray[pointCount - 1];
+		pointB = &pointArray[0];
+		mage_canvas->drawLine(
+			pointA->x - cameraX,
+			pointA->y - cameraY,
+			pointB->x - cameraX,
+			pointB->y - cameraY,
+			color
+		);
+	}
 }

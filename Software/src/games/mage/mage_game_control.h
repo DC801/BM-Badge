@@ -73,7 +73,6 @@ private:
 	//a couple of state variables for tracking player movement:
 	uint8_t mageSpeed;
 	bool isMoving;
-	bool isCollisionDebugOn;
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.
@@ -85,6 +84,7 @@ public:
 	
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
+	bool isCollisionDebugOn;
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
@@ -152,6 +152,9 @@ public:
 
 	//this will draw the entities over the current state of the screen
 	void DrawEntities(int32_t cameraX, int32_t cameraY);
+
+	//this will draw the current map's geometry over the current state of the screen
+	void DrawGeometry(int32_t cameraX, int32_t cameraY);
 
 }; //class MageGameControl
 

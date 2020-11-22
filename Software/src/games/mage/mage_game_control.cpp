@@ -10,6 +10,8 @@ extern Point cameraPosition;
 extern MageHexEditor *MageHex;
 extern MageScriptControl *MageScript;
 
+extern FrameBuffer *mage_canvas;
+
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
@@ -52,14 +54,14 @@ MageGameControl::MageGameControl()
 	{
 		tilesets[i] = MageTileset(tilesetHeader.offset(i));
 	}
-	
+
 	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
 
 	for (uint32_t i = 0; i < animationHeader.count(); i++)
 	{
 		animations[i] = MageAnimation(animationHeader.offset(i));
 	}
-	
+
 	entityTypes = std::make_unique<MageEntityType[]>(entityTypeHeader.count());
 
 	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
@@ -68,11 +70,11 @@ MageGameControl::MageGameControl()
 	}
 
 	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
-	
+
 	playerEntityIndex = NO_PLAYER;
 
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
-	
+
 	geometries = std::make_unique<MageGeometry[]>(geometryHeader.count());
 
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
@@ -1028,6 +1030,7 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{
 		uint16_t entityIndex = entitySortOrder[i];
+		MageEntity *entity = &entities[entityIndex];
 		MageEntityRenderableData *renderableData = &entityRenderableData[entityIndex];
 		MageTileset *tileset = &tilesets[renderableData->tilesetId];
 		uint16_t imageId = tileset->ImageId();
@@ -1038,8 +1041,8 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 		uint32_t address = imageHeader.offset(imageId);
 		uint16_t source_x = (tileId % cols) * tileWidth;
 		uint16_t source_y = (tileId / cols) * tileHeight;
-		int32_t x = entities[entityIndex].x - cameraX;
-		int32_t y = entities[entityIndex].y - cameraY - tileHeight;
+		int32_t x = entity->x - cameraX;
+		int32_t y = entity->y - cameraY - tileHeight;
 		canvas.drawChunkWithFlags(
 			address,
 			x,
@@ -1081,5 +1084,40 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 				);
 			}
 		}
+	}
+}
+
+void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
+{
+	Point playerPosition;
+	bool isColliding = false;
+	bool isPlayerPresent = playerEntityIndex != NO_PLAYER;
+	if(isPlayerPresent) {
+		MageEntityRenderableData *renderable = &entityRenderableData[playerEntityIndex];
+		playerPosition = {
+			.x = renderable->hitBox.x + (renderable->hitBox.w / 2),
+			.y = renderable->hitBox.y + (renderable->hitBox.h / 2),
+		};
+		mage_canvas->drawPoint(
+			playerPosition.x - cameraX,
+			playerPosition.y - cameraY,
+			4,
+			COLOR_RED
+		);
+	} else {
+		playerPosition = {0};
+	}
+	for (uint16_t i = 0; i < map.GeometryCount() - 1; i++) {
+		MageGeometry *geometry = &geometries[i];
+		if (isPlayerPresent) {
+			isColliding = geometry->isPointInGeometry(playerPosition);
+		}
+		geometry->draw(
+			cameraX,
+			cameraY,
+			isColliding
+				? COLOR_RED
+				: COLOR_GREEN
+		);
 	}
 }

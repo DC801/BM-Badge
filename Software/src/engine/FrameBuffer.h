@@ -57,6 +57,12 @@ typedef struct {
     int16_t y;
 } cursor_t;
 
+//this is a point in 2D space.
+typedef struct {
+	int32_t x;
+	int32_t y;
+} Point;
+
 class Rectangle
 {
 public:
@@ -94,7 +100,9 @@ public:
 
     void drawPixel(int x, int y, uint16_t color);
 
+    static float lerp(float a, float b, float progress);
     void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
+    void drawPoint(int x, int y, uint8_t size, uint16_t color);
     void drawHorizontalLine(int x1, int y, int x2, uint16_t color);
     void drawVerticalLine(int x, int y1, int y2, uint16_t color);
 

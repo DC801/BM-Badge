@@ -20,8 +20,10 @@ private:
 	uint16_t onTick;
 	uint8_t layerCount;
 	uint16_t entityCount;
+	uint16_t geometryCount;
 	uint16_t scriptCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
+	std::unique_ptr<uint16_t[]> geometryGlobalIds;
 	std::unique_ptr<uint16_t[]> scriptGlobalIds;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
@@ -35,8 +37,10 @@ public:
 		onTick{0},
 		layerCount{0},
 		entityCount{0},
+		geometryCount{0},
 		scriptCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
+		geometryGlobalIds{std::make_unique<uint16_t[]>(1)},
 		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
 		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
 	{ };
@@ -55,9 +59,12 @@ public:
 	uint16_t OnTick() const;
 	uint8_t LayerCount() const;
 	uint8_t EntityCount() const;
+	uint16_t GeometryCount() const;
 	uint16_t ScriptCount() const;
 	//this returns a global entityId from the local entity index
 	uint16_t getGlobalEntityId(uint16_t num) const;
+	//this returns a global geometryId from the local geometry index
+	uint16_t getGlobalGeometryId(uint16_t num) const;
 	//the returns a global scriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
