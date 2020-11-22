@@ -140,6 +140,10 @@ void GameRender()
 			//draw the final layer above the entities.
 			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
 		}
+
+		if (MageGame->isCollisionDebugOn) {
+			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
+		}
 	}
 
 	//update the state of the LEDs

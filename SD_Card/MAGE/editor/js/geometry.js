@@ -175,11 +175,14 @@ var handleTiledObjectAsGeometry = function (
 	mergeInProperties(tiledObject, tiledObject.properties);
 	var path = getPathFromGeometry(tiledObject);
 	if (path) {
-		serializeGeometry(
+		var geometry = serializeGeometry(
 			tiledObject,
 			map,
 			fileNameMap,
 			scenarioData,
+		);
+		map.geometryIndices.push(
+			geometry.scenarioIndex
 		);
 	}
 };
