@@ -822,7 +822,6 @@ F 3 "~" H 11915 3895 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 NoConn ~ 9180 4390
-NoConn ~ 9180 4490
 NoConn ~ 10380 3690
 Wire Wire Line
 	7105 3410 7320 3410
@@ -859,4 +858,44 @@ F 3 "~" H 10645 3790 50  0001 C CNN
 	1    10645 3790
 	0    1    1    0   
 $EndComp
+Text HLabel 9060 4490 0    50   Input ~ 10
+KEY_INT
+Wire Wire Line
+	9060 4490 9180 4490
+Text Notes 6935 2745 0    50   ~ 0
+Left Joystick
+Text Notes 6935 4130 0    50   ~ 0
+Right Joystick
+Text Notes 2120 2805 0    50   ~ 0
+MEM0
+Text Notes 2120 3315 0    50   ~ 0
+MEM1
+Text Notes 2120 3820 0    50   ~ 0
+MEM2
+Text Notes 2120 4405 0    50   ~ 0
+MEM3
+Text Notes 4610 2810 0    50   ~ 0
+XOR
+Text Notes 4610 3320 0    50   ~ 0
+ADD
+Text Notes 4610 3825 0    50   ~ 0
+SUB
+Text Notes 4610 4410 0    50   ~ 0
+PAGE
+Text Notes 2960 2805 0    50   ~ 0
+BIT128
+Text Notes 2960 3315 0    50   ~ 0
+BIT64
+Text Notes 2960 3820 0    50   ~ 0
+BIT32
+Text Notes 2960 4405 0    50   ~ 0
+BIT16
+Text Notes 3775 2805 0    50   ~ 0
+BIT8
+Text Notes 3775 3315 0    50   ~ 0
+BIT4
+Text Notes 3775 3820 0    50   ~ 0
+BIT2
+Text Notes 3775 4405 0    50   ~ 0
+BIT1
 $EndSCHEMATC
