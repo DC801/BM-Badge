@@ -1189,7 +1189,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 			APP_ERROR_CHECK(sd_app_evt_wait());
 		}
 
-		APP_ERROR_CHECK(ili9341_push_colors_fast((uint8_t*)p_raw, count));
+		ili9341_push_colors_fast((uint8_t*)p_raw, count);
 
 		p_raw += count / 2; //convert to uint16_t count
 		bytecount -= count;
