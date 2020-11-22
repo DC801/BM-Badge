@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/blacksmith.png",
  "imageheight":192,
  "imagewidth":96,
@@ -6,9 +14,21 @@
  "name":"entity-blacksmith",
  "spacing":0,
  "tilecount":18,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
+        {
+         "id":0,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":1,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":2,
+         "type":"blacksmith"
+        }, 
         {
          "animation":[
                 {
@@ -19,7 +39,8 @@
                  "duration":100,
                  "tileid":0
                 }],
-         "id":3
+         "id":3,
+         "type":"blacksmith"
         }, 
         {
          "animation":[
@@ -31,7 +52,8 @@
                  "duration":100,
                  "tileid":1
                 }],
-         "id":4
+         "id":4,
+         "type":"blacksmith"
         }, 
         {
          "animation":[
@@ -43,7 +65,8 @@
                  "duration":100,
                  "tileid":2
                 }],
-         "id":5
+         "id":5,
+         "type":"blacksmith"
         }, 
         {
          "animation":[
@@ -63,7 +86,8 @@
                  "duration":160,
                  "tileid":15
                 }],
-         "id":6
+         "id":6,
+         "type":"blacksmith"
         }, 
         {
          "animation":[
@@ -83,7 +107,8 @@
                  "duration":160,
                  "tileid":16
                 }],
-         "id":7
+         "id":7,
+         "type":"blacksmith"
         }, 
         {
          "animation":[
@@ -103,7 +128,44 @@
                  "duration":160,
                  "tileid":17
                 }],
-         "id":8
+         "id":8,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":9,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":10,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":11,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":12,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":13,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":14,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":15,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":16,
+         "type":"blacksmith"
+        }, 
+        {
+         "id":17,
+         "type":"blacksmith"
         }],
  "tilewidth":32,
  "type":"tileset",

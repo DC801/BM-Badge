@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/bert.png",
  "imageheight":240,
  "imagewidth":120,
@@ -6,7 +14,7 @@
  "name":"entity-bert",
  "spacing":0,
  "tilecount":18,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":40,
  "tiles":[
         {
@@ -20,7 +28,7 @@
                  "tileid":3
                 }],
          "id":0,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "animation":[
@@ -33,7 +41,7 @@
                  "tileid":4
                 }],
          "id":1,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "animation":[
@@ -46,19 +54,19 @@
                  "tileid":5
                 }],
          "id":2,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":3,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":4,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":5,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "animation":[
@@ -79,7 +87,7 @@
                  "tileid":15
                 }],
          "id":6,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "animation":[
@@ -100,7 +108,7 @@
                  "tileid":16
                 }],
          "id":7,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "animation":[
@@ -121,43 +129,43 @@
                  "tileid":17
                 }],
          "id":8,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":9,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":10,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":11,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":12,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":13,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":14,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":15,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":16,
-         "type":"entity-bert"
+         "type":"bert"
         }, 
         {
          "id":17,
-         "type":"entity-bert"
+         "type":"bert"
         }],
  "tilewidth":40,
  "type":"tileset",

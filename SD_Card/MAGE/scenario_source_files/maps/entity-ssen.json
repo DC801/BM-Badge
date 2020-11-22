@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/ssen.png",
  "imageheight":192,
  "imagewidth":96,
@@ -6,7 +14,7 @@
  "name":"entity-ssen",
  "spacing":0,
  "tilecount":18,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -20,7 +28,7 @@
                  "tileid":3
                 }],
          "id":0,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "animation":[
@@ -33,7 +41,7 @@
                  "tileid":4
                 }],
          "id":1,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "animation":[
@@ -46,19 +54,19 @@
                  "tileid":5
                 }],
          "id":2,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":3,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":4,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":5,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "animation":[
@@ -79,7 +87,7 @@
                  "tileid":15
                 }],
          "id":6,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "animation":[
@@ -100,7 +108,7 @@
                  "tileid":16
                 }],
          "id":7,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "animation":[
@@ -121,43 +129,43 @@
                  "tileid":17
                 }],
          "id":8,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":9,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":10,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":11,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":12,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":13,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":14,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":15,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":16,
-         "type":"entity-ssen"
+         "type":"ssen"
         }, 
         {
          "id":17,
-         "type":"entity-ssen"
+         "type":"ssen"
         }],
  "tilewidth":32,
  "type":"tileset",
