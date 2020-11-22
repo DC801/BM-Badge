@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/sprites\/old_man.png",
  "imageheight":224,
  "imagewidth":96,
@@ -6,7 +14,7 @@
  "name":"entity-old_man",
  "spacing":0,
  "tilecount":21,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -27,7 +35,8 @@
                  "duration":200,
                  "tileid":3
                 }],
-         "id":0
+         "id":0,
+         "type":"old_man"
         }, 
         {
          "animation":[
@@ -47,7 +56,8 @@
                  "duration":200,
                  "tileid":4
                 }],
-         "id":1
+         "id":1,
+         "type":"old_man"
         }, 
         {
          "animation":[
@@ -67,7 +77,32 @@
                  "duration":200,
                  "tileid":5
                 }],
-         "id":2
+         "id":2,
+         "type":"old_man"
+        }, 
+        {
+         "id":3,
+         "type":"old_man"
+        }, 
+        {
+         "id":4,
+         "type":"old_man"
+        }, 
+        {
+         "id":5,
+         "type":"old_man"
+        }, 
+        {
+         "id":6,
+         "type":"old_man"
+        }, 
+        {
+         "id":7,
+         "type":"old_man"
+        }, 
+        {
+         "id":8,
+         "type":"old_man"
         }, 
         {
          "animation":[
@@ -87,7 +122,8 @@
                  "duration":200,
                  "tileid":18
                 }],
-         "id":9
+         "id":9,
+         "type":"old_man"
         }, 
         {
          "animation":[
@@ -107,7 +143,8 @@
                  "duration":200,
                  "tileid":19
                 }],
-         "id":10
+         "id":10,
+         "type":"old_man"
         }, 
         {
          "animation":[
@@ -127,7 +164,44 @@
                  "duration":200,
                  "tileid":20
                 }],
-         "id":11
+         "id":11,
+         "type":"old_man"
+        }, 
+        {
+         "id":12,
+         "type":"old_man"
+        }, 
+        {
+         "id":13,
+         "type":"old_man"
+        }, 
+        {
+         "id":14,
+         "type":"old_man"
+        }, 
+        {
+         "id":15,
+         "type":"old_man"
+        }, 
+        {
+         "id":16,
+         "type":"old_man"
+        }, 
+        {
+         "id":17,
+         "type":"old_man"
+        }, 
+        {
+         "id":18,
+         "type":"old_man"
+        }, 
+        {
+         "id":19,
+         "type":"old_man"
+        }, 
+        {
+         "id":20,
+         "type":"old_man"
         }],
  "tilewidth":32,
  "type":"tileset",

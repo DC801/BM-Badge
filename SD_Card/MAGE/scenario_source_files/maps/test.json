@@ -236,20 +236,26 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":50,
-                 "y":342.5
+                 "x":192,
+                 "y":64
                 }, 
                 {
                  "gid":560,
                  "height":32,
                  "id":30,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":3
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":84,
-                 "y":342.5
+                 "x":224,
+                 "y":64
                 }, 
                 {
                  "gid":583,
@@ -262,6 +268,66 @@
                  "width":32,
                  "x":272.5,
                  "y":271.5
+                }, 
+                {
+                 "gid":674,
+                 "height":32,
+                 "id":32,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":64
+                }, 
+                {
+                 "gid":689,
+                 "height":32,
+                 "id":33,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":64
+                }, 
+                {
+                 "gid":716,
+                 "height":40,
+                 "id":34,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":320,
+                 "y":64
+                }, 
+                {
+                 "gid":734,
+                 "height":32,
+                 "id":35,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":64
+                }, 
+                {
+                 "gid":758,
+                 "height":32,
+                 "id":36,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -473,7 +539,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -484,13 +550,13 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":16,
          "x":0,
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":32,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -562,6 +628,26 @@
         {
          "firstgid":571,
          "source":"entity-cat.json"
+        }, 
+        {
+         "firstgid":670,
+         "source":"entity-blacksmith.json"
+        }, 
+        {
+         "firstgid":688,
+         "source":"entity-old_man.json"
+        }, 
+        {
+         "firstgid":709,
+         "source":"entity-bert.json"
+        }, 
+        {
+         "firstgid":727,
+         "source":"entity-ssen.json"
+        }, 
+        {
+         "firstgid":745,
+         "source":"entity-sports_kid.json"
         }],
  "tilewidth":32,
  "type":"map",
