@@ -810,7 +810,7 @@ uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
 	return scriptHeader.offset(scriptId);
 }
 
-void MageGameControl::updateEntityRenderableData(uint32_t index)
+void MageGameControl::updateEntityRenderableData(uint8_t index)
 {
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
@@ -1072,6 +1072,12 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 					? COLOR_RED
 					: COLOR_GREEN
 			);
+			mage_canvas->drawPoint(
+				renderableData->center.x - cameraX,
+				renderableData->center.y - cameraY,
+				5,
+				COLOR_BLUE
+			);
 			if(entityIndex == playerEntityIndex) {
 				canvas.drawRect(
 					renderableData->interactBox.x - cameraX,
@@ -1095,12 +1101,6 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	if(isPlayerPresent) {
 		MageEntityRenderableData *renderable = &entityRenderableData[playerEntityIndex];
 		playerPosition = &renderable->center;
-		mage_canvas->drawPoint(
-			playerPosition->x - cameraX,
-			playerPosition->y - cameraY,
-			4,
-			COLOR_RED
-		);
 	} else {
 		playerPosition = {0};
 	}
@@ -1119,10 +1119,18 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-MageGeometry *MageGameControl::getValidGeometry(uint16_t geometryId) {
+MageGeometry* MageGameControl::getValidGeometry(uint16_t geometryId) {
 	return &geometries[geometryId % geometryHeader.count()];
 }
 
-MageEntityRenderableData *MageGameControl::getValidEntityRenderableData(uint8_t entityId) {
+MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t entityId) {
 	return &entityRenderableData[entityId % entityHeader.count()];
+}
+
+MageEntity* MageGameControl::getValidEntity(int8_t entityId) {
+	return &entities[entityId % entityHeader.count()];
+}
+
+MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
+	return &tilesets[tilesetId % tilesetHeader.count()];
 }

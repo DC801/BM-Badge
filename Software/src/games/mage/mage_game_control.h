@@ -147,7 +147,7 @@ public:
 	
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
-	void updateEntityRenderableData(uint32_t index);
+	void updateEntityRenderableData(uint8_t index);
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
@@ -158,6 +158,9 @@ public:
 	//this will draw the current map's geometry over the current state of the screen
 	void DrawGeometry(int32_t cameraX, int32_t cameraY);
 
+	MageEntity* getValidEntity(int8_t entityId);
+
+	MageTileset* getValidTileset(uint16_t tilesetId);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
