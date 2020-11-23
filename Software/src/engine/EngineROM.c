@@ -8,14 +8,12 @@ extern "C" {
 
 #ifdef DC801_EMBEDDED
 
-#include "nrfx_qspi.h"
+//this is the path to the game.dat file on the SD card.
+//if an SD card is inserted with game.dat in this location, it will automatically be loaded.
+//this should be offloaded once we move form the sd card to the ROM -Tim
+#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define QSPI_SCK NRF_GPIO_PIN_MAP(0, 12)
-#define QSPI_CSN NRF_GPIO_PIN_MAP(0, 2)
-#define QSPI_IO0 NRF_GPIO_PIN_MAP(0, 13)
-#define QSPI_IO1 NRF_GPIO_PIN_MAP(1, 12)
-#define QSPI_IO2 NRF_GPIO_PIN_MAP(0, 14)
-#define QSPI_IO3 NRF_GPIO_PIN_MAP(0, 1)
+#include "nrfx_qspi.h"
 
 void EngineROM_Init(void)
 {
@@ -24,12 +22,12 @@ void EngineROM_Init(void)
 		.xip_offset = 0,
 		.pins =
 		{
-			.sck_pin = QSPI_SCK,
-			.csn_pin = QSPI_CSN,
-			.io0_pin = QSPI_IO0,
-			.io1_pin = QSPI_IO1,
-			.io2_pin = QSPI_IO2,
-			.io3_pin = QSPI_IO3,
+			.sck_pin = MEM_SCK,
+			.csn_pin = MEM_CS,
+			.io0_pin = MEM_IO0,
+			.io1_pin = MEM_IO1,
+			.io2_pin = MEM_IO2,
+			.io3_pin = MEM_IO3,
 		},
 		.prot_if =
 		{
@@ -89,6 +87,7 @@ void EngineROM_Deinit(void) { }
 
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
+	/* Old Dovid code deprecated until we get the ROM chip working: -Tim
 	if (data == NULL)
 	{
 		ENGINE_PANIC("EngineROM_Read: Null pointer");
@@ -98,7 +97,27 @@ uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 	{
 		ENGINE_PANIC("Failed to QSPI read");
 	}
+	*/
 
+	char * filename = MAGE_GAME_DAT_PATH;
+	FIL raw_file;
+	FRESULT result;
+	UINT count;
+	
+	// Open magegame.dat file on SD card
+	result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
+	if (result != FR_OK) {
+		return 0;
+	}
+
+	//seek to address:
+	result = f_lseek(&raw_file, address);
+	if (result != FR_OK) {
+		return 0;
+	}
+
+	//read from the file into the *data buffer:
+	result = f_read(&raw_file, data, length, &count);
 	return length;
 }
 
