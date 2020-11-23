@@ -28,8 +28,7 @@
 	],
 	"walk_isabelle_to_door": [
 		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"duration": 5000,
+			"name": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Isabelle",
 			"geometry": "door_point"
 		},
