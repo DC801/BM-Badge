@@ -824,19 +824,17 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 		data->renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
 		return;
 	}
-	else
-	{
+	else {
 		//make a local copy of the entity so the hacked values remain unchanged:
 		MageEntity entity = entities[index];
-		
+
 		//ensure the primaryIdType is valid
 		entity.primaryIdType = getValidPrimaryIdType(entity.primaryIdType);
 
 
 		//then get valid tileset data based on primaryId type:
 		//Scenario 1: Entity primaryId is of type TILESET:
-		if(entity.primaryIdType == MageEntityPrimaryIdType::TILESET)
-		{
+		if (entity.primaryIdType == MageEntityPrimaryIdType::TILESET) {
 			//ensure the tilesetId (in this scenario, the entity's primaryId) is valid.
 			data->tilesetId = getValidTilesetId(entity.primaryId);
 			data->tileId = getValidTileId(entity.secondaryId, data->tilesetId);
@@ -853,8 +851,13 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			uint16_t animationId = getValidAnimationId(entity.primaryId);
 			uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
 			data->tilesetId = getValidTilesetId(animations[animationId].TilesetId());
-			data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), data->tilesetId);
-			data->duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+			data->tileId = getValidTileId(
+				animations[animationId].AnimationFrame(currentFrame).TileId(),
+				data->tilesetId
+			);
+			data->duration = animations[animationId].AnimationFrame(
+				currentFrame
+			).Duration(); //no need to check, it shouldn't cause a crash.
 			data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
 			data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
 		}
@@ -867,11 +870,11 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			uint16_t entityTypeId = getValidEntityTypeId(entity.primaryId);
 
 			//If the entity has no animations defined, return default:
-			if(( entityTypes[entityTypeId].AnimationCount() ) == 0)
+			if ((entityTypes[entityTypeId].AnimationCount()) == 0)
 			{
 				//the entity has no animations, so return default values and give up.
 				#ifdef DC801_DESKTOP
-					fprintf(stderr, "An entityType entity with no animations exists. Using fallback values.");
+				fprintf(stderr, "An entityType entity with no animations exists. Using fallback values.");
 				#endif
 				data->tilesetId = MAGE_TILESET_FAILOVER_ID;
 				data->tileId = MAGE_TILE_FAILOVER_ID;
@@ -885,39 +888,35 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			uint8_t entityTypeAnimationId = getValidEntityTypeAnimationId(entity.currentAnimation, entityTypeId);
 
 			//make a local copy of the current entity type animation:
-			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(entityTypeAnimationId);
+			MageEntityTypeAnimation currentAnimation = entityTypes[entityTypeId].EntityTypeAnimation(
+				entityTypeAnimationId
+			);
 
 			//get a valid direction for the animation:
 			uint8_t direction = getValidEntityTypeDirection(entity.direction);
 
 			//create a directedAnimation entity based on entity.direction:
-			MageEntityTypeAnimationDirection directedAnimation; 
-			if(entity.direction == MageEntityAnimationDirection::NORTH)
-			{
+			MageEntityTypeAnimationDirection directedAnimation;
+			if (entity.direction == MageEntityAnimationDirection::NORTH) {
 				directedAnimation = currentAnimation.North();
-			}
-			else if(entity.direction == MageEntityAnimationDirection::EAST)
-			{
+			} else if (entity.direction == MageEntityAnimationDirection::EAST) {
 				directedAnimation = currentAnimation.East();
-			}
-			else if(entity.direction == MageEntityAnimationDirection::SOUTH)
-			{
+			} else if (entity.direction == MageEntityAnimationDirection::SOUTH) {
 				directedAnimation = currentAnimation.South();
-			}
-			else if(entity.direction == MageEntityAnimationDirection::WEST)
-			{
+			} else if (entity.direction == MageEntityAnimationDirection::WEST) {
 				directedAnimation = currentAnimation.West();
 			}
 
 			//based on directedAnimation.Type(), you can get two different outcomes:
 			//Scenario A: Type is 0, TypeID is an animation ID:
-			if(directedAnimation.Type() == 0)
-			{
+			if (directedAnimation.Type() == 0) {
 				uint16_t animationId = getValidAnimationId(directedAnimation.TypeId());
 				uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
 				data->tilesetId = animations[animationId].TilesetId();
-				data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(), data->tilesetId);
-				data->duration = animations[animationId].AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+				data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(),
+											  data->tilesetId);
+				data->duration = animations[animationId].AnimationFrame(
+					currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
 				data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
 				data->renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
 			}
@@ -926,7 +925,7 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 			else
 			{
 				data->tilesetId = directedAnimation.TypeId();
-				data->tileId = directedAnimation.TypeId()-1;
+				data->tileId = directedAnimation.TypeId() - 1;
 				data->duration = 0; //does not animate;
 				data->frameCount = 0; //does not animate
 				data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
@@ -941,8 +940,9 @@ void MageGameControl::updateEntityRenderableData(uint32_t index)
 		data->hitBox.y = entity.y + (halfHeight) - height;
 		data->hitBox.w = halfWidth;
 		data->hitBox.h = halfHeight;
+		data->center.x = data->hitBox.x + (data->hitBox.w / 2);
+		data->center.y = data->hitBox.y + (data->hitBox.h / 2);
 	}
-
 }
 
 void MageGameControl::UpdateEntities(uint32_t deltaTime)
@@ -1089,18 +1089,15 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 
 void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 {
-	Point playerPosition;
+	Point *playerPosition;
 	bool isColliding = false;
 	bool isPlayerPresent = playerEntityIndex != NO_PLAYER;
 	if(isPlayerPresent) {
 		MageEntityRenderableData *renderable = &entityRenderableData[playerEntityIndex];
-		playerPosition = {
-			.x = renderable->hitBox.x + (renderable->hitBox.w / 2),
-			.y = renderable->hitBox.y + (renderable->hitBox.h / 2),
-		};
+		playerPosition = &renderable->center;
 		mage_canvas->drawPoint(
-			playerPosition.x - cameraX,
-			playerPosition.y - cameraY,
+			playerPosition->x - cameraX,
+			playerPosition->y - cameraY,
 			4,
 			COLOR_RED
 		);
@@ -1110,7 +1107,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	for (uint16_t i = 0; i < map.GeometryCount() - 1; i++) {
 		MageGeometry *geometry = &geometries[i];
 		if (isPlayerPresent) {
-			isColliding = geometry->isPointInGeometry(playerPosition);
+			isColliding = geometry->isPointInGeometry(*playerPosition);
 		}
 		geometry->draw(
 			cameraX,
@@ -1120,4 +1117,12 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 				: COLOR_GREEN
 		);
 	}
+}
+
+MageGeometry *MageGameControl::getValidGeometry(uint16_t geometryId) {
+	return &geometries[geometryId % geometryHeader.count()];
+}
+
+MageEntityRenderableData *MageGameControl::getValidEntityRenderableData(uint8_t entityId) {
+	return &entityRenderableData[entityId % entityHeader.count()];
 }

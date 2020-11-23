@@ -139,6 +139,8 @@ public:
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
+	MageGeometry* getValidGeometry(uint16_t geometryId);
+	MageEntityRenderableData* getValidEntityRenderableData(uint8_t entityId);
 
 	//this returns the address offset for a specific script Id:
 	uint32_t getScriptAddress(uint32_t scriptId);
