@@ -219,7 +219,26 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->GeometryId = convert_endian_u2_value(argStruct->GeometryId);
-	return;
+
+	int16_t entityIndex = argStruct->entityId;
+	if(entityIndex == MAGE_ENTITY_SELF) {
+		entityIndex = currentEntityId;
+	} else if (
+		entityIndex == MAGE_ENTITY_PLAYER
+	) {
+		entityIndex = MageGame->playerEntityIndex;
+	}
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->GeometryId);
+		bool colliding = geometry->isPointInGeometry(renderable->center);
+		if(colliding) {
+			//convert scriptId from local to global scope and assign to jumpScript:
+			jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
+			//this requires a local map scriptId.
+			setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
+		}
+	}
 }
 
 void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -407,7 +426,7 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 		//set the entityId to be the entity that the script was called from:
 		argStruct->entityId = currentEntityId;
 	}
-	else if (argStruct->entityId == MAGE_PLAYER_ENTITY)
+	else if (argStruct->entityId == MAGE_ENTITY_PLAYER)
 	{
 		//set the entityId to the player, if there is one:
 		if(MageGame->playerEntityIndex == NO_PLAYER)
