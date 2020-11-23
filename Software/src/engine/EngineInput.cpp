@@ -1,4 +1,10 @@
 #include "EngineInput.h"
+#include "FrameBuffer.h"
+#include "fonts/Monaco9.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 bool running = true;
 
@@ -181,7 +187,7 @@ void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 
 void EngineHandleInput ()
 {
-	uint32_t keyboardBitmask = 0x00000000;
+	static uint32_t keyboardBitmask = 0x00000000;
 
 #ifdef DC801_DESKTOP
 	EngineGetDesktopInputState(&keyboardBitmask);
@@ -192,9 +198,69 @@ void EngineHandleInput ()
 	keyboardBitmask = get_keyboard_mask();
 #endif
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
+
+	//screen logging:
+	char mask_string[128];
+	uint8_t length = 0;
+	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
+		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
+	}
+	p_canvas()->clearScreen(COLOR_DARKBLUE);
+	p_canvas()->printMessage(
+		mask_string,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+	//p_canvas()->blt();
+
+	//nrf_delay_ms(500);
+
+	//screen logging:
+	mask_string[128];
+	length = 0;
+	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
+		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
+	}
+	//p_canvas()->clearScreen(COLOR_RED);
+	p_canvas()->printMessage(
+		mask_string,
+		Monaco9,
+		COLOR_RED,
+		32,
+		32
+	);
+	p_canvas()->blt();
+
+	nrf_delay_ms(500);
+
+	/*
+	//screen logging:
+	mask_string[128];
+	length = 0;
+	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
+		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
+	}
+	p_canvas()->clearScreen(COLOR_DARKGREEN);
+	p_canvas()->printMessage(
+		mask_string,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+	p_canvas()->blt();
+	*/
+
+	nrf_delay_ms(500);
 }
 
 bool EngineIsRunning()
 {
 	return running;
 }
+
+#ifdef __cplusplus
+}
+#endif

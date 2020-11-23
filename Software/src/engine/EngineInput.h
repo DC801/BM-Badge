@@ -3,6 +3,10 @@
 #include "common.h"
 #include "modules/keyboard.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
 	bool mem0;
 	bool mem1;
@@ -39,5 +43,9 @@ extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
 void EngineHandleInput();
 bool EngineIsRunning();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
