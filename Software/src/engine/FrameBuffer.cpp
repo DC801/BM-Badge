@@ -872,11 +872,11 @@ float FrameBuffer::lerp(float a, float b, float progress) {
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
-	uint length = ceil(sqrtf((float) ((dx * dx) + (dy * dy))));
+	uint32_t length = ceil(sqrtf((float) ((dx * dx) + (dy * dy))));
 	int x;
 	int y;
 	float progress;
-	for(uint i = 0; i <= length; i++)
+	for(uint32_t i = 0; i <= length; i++)
 	{
 		progress = ((float) i) / length;
 		x = round(lerp((float) x1, (float) x2, progress));
