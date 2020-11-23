@@ -14,6 +14,7 @@ all of the old code used as the foundation of this badge.
 #define _MAGE_DEFINES_H
 
 #include "common.h"
+#include "FrameBuffer.h"
 #include <memory>
 #include <utility>
 #include <string>
@@ -45,7 +46,7 @@ all of the old code used as the foundation of this badge.
 
 //this is a value used in the entityId in actions that refers to the
 //current playerEntityId for the MageGameControl object.
-#define MAGE_PLAYER_ENTITY 253
+#define MAGE_ENTITY_PLAYER 253
 
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
@@ -222,6 +223,7 @@ typedef struct {
 typedef struct {
 	Rect hitBox;
 	Rect interactBox;
+	Point center;
 	uint16_t currentFrameTicks;
 	uint16_t tilesetId;
 	uint16_t tileId;
