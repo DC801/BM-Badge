@@ -174,6 +174,19 @@ void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entit
 	}
 }
 
+int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(uint8_t entityId)
+{
+	int16_t entityIndex = entityId;
+	if(entityIndex == MAGE_ENTITY_SELF) {
+		entityIndex = currentEntityId;
+	} else if (
+		entityIndex == MAGE_ENTITY_PLAYER
+		) {
+		entityIndex = MageGame->playerEntityIndex;
+	}
+	return entityIndex;
+}
+
 void MageScriptControl::nullAction(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	//nullAction does nothing.
@@ -212,27 +225,19 @@ void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeSt
 	return;
 }
 
-//waiting for implementation of geometry to implement -Tim
 void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckifEntityIsInGeometry *argStruct = (ActionCheckifEntityIsInGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	argStruct->GeometryId = convert_endian_u2_value(argStruct->GeometryId);
+	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = argStruct->entityId;
-	if(entityIndex == MAGE_ENTITY_SELF) {
-		entityIndex = currentEntityId;
-	} else if (
-		entityIndex == MAGE_ENTITY_PLAYER
-	) {
-		entityIndex = MageGame->playerEntityIndex;
-	}
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
-		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->GeometryId);
+		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
 		bool colliding = geometry->isPointInGeometry(renderable->center);
-		if(colliding) {
+		if(colliding == argStruct->expectedBoolValue) {
 			//convert scriptId from local to global scope and assign to jumpScript:
 			jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
 			//this requires a local map scriptId.
@@ -511,8 +516,19 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 	ActionTeleportEntityToGeometry *argStruct = (ActionTeleportEntityToGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
+		Point *geometryFirstPoint = &geometry->pointArray[0];
+		entity->x = geometryFirstPoint->x - (renderable->center.x - entity->x);
+		entity->y = geometryFirstPoint->y - (renderable->center.y - entity->y);
+		MageGame->updateEntityRenderableData(entityIndex);
+	}
 }
+
 void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionWalkEntityToGeometry *argStruct = (ActionWalkEntityToGeometry*)args;
