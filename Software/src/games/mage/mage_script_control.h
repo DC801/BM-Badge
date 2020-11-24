@@ -57,6 +57,8 @@ class MageScriptControl
 		//this allows an I+C action to set the calling map or entity script to match the new script.
 		void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
+		int16_t getUsefulEntityIndexFromActionEntityId(uint8_t entityId);
+
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM
 

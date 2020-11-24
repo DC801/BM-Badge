@@ -267,7 +267,7 @@ typedef struct {
 } ActionCheckSaveFlag;
 
 typedef struct {
-	uint16_t GeometryId;
+	uint16_t geometryId;
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedBoolValue;

@@ -11,13 +11,14 @@ in a more accessible way.
 
 class MageGeometry{
 	private:
+	public:
 		//can be any MageGeometryTypeId:
 		uint8_t typeId;
 		//how many points will be in the pointArray:
 		uint8_t pointCount;
 		//the array of the actual coordinate points that make up the geometry:
 		std::unique_ptr<Point[]> pointArray;
-	public:
+
 		//default constructor returns a point with coordinates 0,0:
 		MageGeometry() : 
 			typeId{},
