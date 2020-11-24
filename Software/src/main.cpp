@@ -119,18 +119,18 @@ int main(void){
 #ifdef DC801_EMBEDDED
 
 	//USB serial
-	usb_serial_init();
+	//usb_serial_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
 
 	//this function will set up the NAU8810 chip to play sounds
-	speaker_init();
+	//speaker_init();
 
 	// BLE
 	//gap_params_init();
-	ble_stack_init();
-	scan_start();
+	//ble_stack_init();
+	//scan_start();
 
 	// Init the display
 	ili9341_init();
@@ -142,24 +142,24 @@ int main(void){
 	}
 
 	// Init the random number generator
-	nrf_drv_rng_init(NULL);
+	//nrf_drv_rng_init(NULL);
 
 	// Setup the battery monitor
-	adc_configure();
-	adc_start();
+	//adc_configure();
+	//adc_start();
 
 	// Setup the UART
-	uart_init();
+	//uart_init();
 
 	// Setup I2C
 	twi_master_init();
 
-	EEpwm_init();
+	//EEpwm_init();
 
-	const char* ble_name = "TheMage801"; // must be 10char
-	printf("advertising user: %s\n", ble_name);
-	advertising_setUser(ble_name);
-	ble_adv_start();
+	//const char* ble_name = "TheMage801"; // must be 10char
+	//printf("advertising user: %s\n", ble_name);
+	//advertising_setUser(ble_name);
+	//ble_adv_start();
 #endif
 
 	// Setup LEDs
@@ -170,7 +170,7 @@ int main(void){
 	//morseInit();
 
 	// Configure the systick
-	sysTickStart();
+	//sysTickStart();
 
 	// Boot! Boot! Boot!
 	printf("Booted!\n");

@@ -1391,39 +1391,39 @@
 // <e> I2S_ENABLED - nrf_drv_i2s - I2S peripheral driver - legacy layer
 //==========================================================
 #ifndef I2S_ENABLED
-#define I2S_ENABLED 1
+#define I2S_ENABLED 0
 #endif
 // <o> I2S_CONFIG_SCK_PIN - SCK pin  <0-31>
 
 
 #ifndef I2S_CONFIG_SCK_PIN
-#define I2S_CONFIG_SCK_PIN 31
+#define I2S_CONFIG_SCK_PIN I2S_SCK_M
 #endif
 
 // <o> I2S_CONFIG_LRCK_PIN - LRCK pin  <1-31>
 
 
 #ifndef I2S_CONFIG_LRCK_PIN
-#define I2S_CONFIG_LRCK_PIN 30
+#define I2S_CONFIG_LRCK_PIN I2S_LRCK_M
 #endif
 
 // <o> I2S_CONFIG_MCK_PIN - MCK pin
 #ifndef I2S_CONFIG_MCK_PIN
-#define I2S_CONFIG_MCK_PIN 255
+#define I2S_CONFIG_MCK_PIN I2S_MCK_M
 #endif
 
 // <o> I2S_CONFIG_SDOUT_PIN - SDOUT pin  <0-31>
 
 
 #ifndef I2S_CONFIG_SDOUT_PIN
-#define I2S_CONFIG_SDOUT_PIN 29
+#define I2S_CONFIG_SDOUT_PIN I2S_SDOUT_M
 #endif
 
 // <o> I2S_CONFIG_SDIN_PIN - SDIN pin  <0-31>
 
 
 #ifndef I2S_CONFIG_SDIN_PIN
-#define I2S_CONFIG_SDIN_PIN 28
+#define I2S_CONFIG_SDIN_PIN 255
 #endif
 
 // <o> I2S_CONFIG_MASTER  - Mode
@@ -1968,39 +1968,39 @@
 // <e> NRFX_I2S_ENABLED - nrfx_i2s - I2S peripheral driver
 //==========================================================
 #ifndef NRFX_I2S_ENABLED
-#define NRFX_I2S_ENABLED 1
+#define NRFX_I2S_ENABLED 0
 #endif
 // <o> NRFX_I2S_CONFIG_SCK_PIN - SCK pin  <0-31>
 
 
 #ifndef NRFX_I2S_CONFIG_SCK_PIN
-#define NRFX_I2S_CONFIG_SCK_PIN 31
+#define NRFX_I2S_CONFIG_SCK_PIN I2S_SCK_M
 #endif
 
 // <o> NRFX_I2S_CONFIG_LRCK_PIN - LRCK pin  <1-31>
 
 
 #ifndef NRFX_I2S_CONFIG_LRCK_PIN
-#define NRFX_I2S_CONFIG_LRCK_PIN 30
+#define NRFX_I2S_CONFIG_LRCK_PIN I2S_LRCK_M
 #endif
 
 // <o> NRFX_I2S_CONFIG_MCK_PIN - MCK pin
 #ifndef NRFX_I2S_CONFIG_MCK_PIN
-#define NRFX_I2S_CONFIG_MCK_PIN 255
+#define NRFX_I2S_CONFIG_MCK_PIN I2S_MCK_M
 #endif
 
 // <o> NRFX_I2S_CONFIG_SDOUT_PIN - SDOUT pin  <0-31>
 
 
 #ifndef NRFX_I2S_CONFIG_SDOUT_PIN
-#define NRFX_I2S_CONFIG_SDOUT_PIN 29
+#define NRFX_I2S_CONFIG_SDOUT_PIN I2S_SDOUT_M
 #endif
 
 // <o> NRFX_I2S_CONFIG_SDIN_PIN - SDIN pin  <0-31>
 
 
 #ifndef NRFX_I2S_CONFIG_SDIN_PIN
-#define NRFX_I2S_CONFIG_SDIN_PIN 28
+#define NRFX_I2S_CONFIG_SDIN_PIN 255
 #endif
 
 // <o> NRFX_I2S_CONFIG_MASTER  - Mode
@@ -3973,20 +3973,20 @@
 // <e> NRFX_TWIM_ENABLED - nrfx_twim - TWIM peripheral driver
 //==========================================================
 #ifndef NRFX_TWIM_ENABLED
-#define NRFX_TWIM_ENABLED 1
+#define NRFX_TWIM_ENABLED 0
 #endif
 // <q> NRFX_TWIM0_ENABLED  - Enable TWIM0 instance
 
 
 #ifndef NRFX_TWIM0_ENABLED
-#define NRFX_TWIM0_ENABLED 1
+#define NRFX_TWIM0_ENABLED 0
 #endif
 
 // <q> NRFX_TWIM1_ENABLED  - Enable TWIM1 instance
 
 
 #ifndef NRFX_TWIM1_ENABLED
-#define NRFX_TWIM1_ENABLED 1
+#define NRFX_TWIM1_ENABLED 0
 #endif
 
 // <o> NRFX_TWIM_DEFAULT_CONFIG_FREQUENCY  - Frequency
@@ -4225,20 +4225,20 @@
 // <e> NRFX_TWI_ENABLED - nrfx_twi - TWI peripheral driver
 //==========================================================
 #ifndef NRFX_TWI_ENABLED
-#define NRFX_TWI_ENABLED 1
+#define NRFX_TWI_ENABLED 0
 #endif
 // <q> NRFX_TWI0_ENABLED  - Enable TWI0 instance
 
 
 #ifndef NRFX_TWI0_ENABLED
-#define NRFX_TWI0_ENABLED 1
+#define NRFX_TWI0_ENABLED 0
 #endif
 
 // <q> NRFX_TWI1_ENABLED  - Enable TWI1 instance
 
 
 #ifndef NRFX_TWI1_ENABLED
-#define NRFX_TWI1_ENABLED 1
+#define NRFX_TWI1_ENABLED 0
 #endif
 
 // <o> NRFX_TWI_DEFAULT_CONFIG_FREQUENCY  - Frequency
@@ -5570,7 +5570,7 @@
 #endif
 
 
-// <e> SPI3_ENABLED - Enable SPI2 instance
+// <e> SPI3_ENABLED - Enable SPI3 instance
 //==========================================================
 #ifndef SPI3_ENABLED
 #define SPI3_ENABLED 1
@@ -5837,7 +5837,7 @@
 
 
 #ifndef TWI0_USE_EASY_DMA
-#define TWI0_USE_EASY_DMA 0
+#define TWI0_USE_EASY_DMA 1
 #endif
 
 // </e>
@@ -6748,7 +6748,7 @@
 // <e> HARDFAULT_HANDLER_ENABLED - hardfault_default - HardFault default handler for debugging and release
 //==========================================================
 #ifndef HARDFAULT_HANDLER_ENABLED
-#define HARDFAULT_HANDLER_ENABLED 0
+#define HARDFAULT_HANDLER_ENABLED 1
 #endif
 // <q> HARDFAULT_HANDLER_GDB_PSP_BACKTRACE  - Bypass the GDB problem with multiple stack pointers backtrace
 

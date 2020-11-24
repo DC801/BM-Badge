@@ -249,7 +249,7 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
 
         //Don't start next transfer until previous is complete
         while (m_busy) {
-            APP_ERROR_CHECK(sd_app_evt_wait());
+            //APP_ERROR_CHECK(sd_app_evt_wait());
         }
         m_busy = true;
 
@@ -259,30 +259,27 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
         p_colors += count;      //advance the pointer
         size -= count;
     }
-    //Function will return even while transfer is occuring
-
 }
 
 /**
  * Push many colors to the display very fast
  */
 nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
-	//uint8_t count = 0;
-
 	//Don't start next transfer until previous is complete
 	while (m_busy) {
-		APP_ERROR_CHECK(sd_app_evt_wait());
+		//APP_ERROR_CHECK(sd_app_evt_wait());
 	}
 
 	m_busy = true;
-	//count = MIN(254, size);
+	if(size > 254){
+		m_large_tx = true;
+		p_large_tx_data = p_colors;
+		m_large_tx_size = size;
+	}
 
 	nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_colors, size);
 	return nrfx_spim_xfer(&lcd_spim, &xfer_desc, 0);
-
-	/*m_large_tx = true;
-	p_large_tx_data = p_colors + count;
-	m_large_tx_size = size - count;*/
+    //Function will return even while transfer is occuring
 }
 
 /**
