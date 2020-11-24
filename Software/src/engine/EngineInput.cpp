@@ -199,7 +199,8 @@ void EngineHandleInput ()
 #endif
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 
-	//screen logging:
+	/*
+	//screen logging, prints button states to screen:
 	char mask_string[128];
 	uint8_t length = 0;
 	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
@@ -218,7 +219,6 @@ void EngineHandleInput ()
 	//nrf_delay_ms(500);
 
 	//screen logging:
-	mask_string[128];
 	length = 0;
 	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
 		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
@@ -234,26 +234,7 @@ void EngineHandleInput ()
 	p_canvas()->blt();
 
 	nrf_delay_ms(500);
-
-	/*
-	//screen logging:
-	mask_string[128];
-	length = 0;
-	for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
-		length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
-	}
-	p_canvas()->clearScreen(COLOR_DARKGREEN);
-	p_canvas()->printMessage(
-		mask_string,
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		32
-	);
-	p_canvas()->blt();
 	*/
-
-	nrf_delay_ms(500);
 }
 
 bool EngineIsRunning()

@@ -3,7 +3,6 @@ SRC_ROOT := $(PRJ_ROOT)/src
 APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
 	$(SRC_ROOT)/modules/drv_ili9341.c \
-	$(SRC_ROOT)/modules/drv_nau8810.c \
 	$(SRC_ROOT)/modules/sd.c \
 	$(SRC_ROOT)/modules/gfx.c \
 	$(SRC_ROOT)/modules/ble.c \
@@ -15,7 +14,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/keyboard.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/usb.c \
-	$(SRC_ROOT)/engine/EngineAudio.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
 	$(SRC_ROOT)/engine/EngineROM.c \
 	$(SRC_ROOT)/engine/EnginePanic.cpp \

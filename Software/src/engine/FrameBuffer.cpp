@@ -1200,18 +1200,21 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
     }
     ili9341_set_addr(x, y, x + w - 1, y + h - 1);
 	uint32_t bytecount = w * h * 2;
+	ili9341_push_colors((uint8_t*)p_raw, bytecount);
 
+	/*
 	//Blast data to TFT
 	while (bytecount > 0) {
 		
 		uint32_t count = MIN(320*80*2, bytecount);
 
-		ili9341_push_colors_fast((uint8_t*)p_raw, count);
+		ili9341_push_colors((uint8_t*)p_raw, count);
 
 		p_raw += count / 2; //convert to uint16_t count
 		bytecount -= count;
 	}
     //don't wait for it to finish
+	*/
 }
 
 void FrameBuffer::blt()

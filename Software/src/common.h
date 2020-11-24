@@ -111,7 +111,6 @@ extern "C" {
 #include "utility.h"
 #include "modules/ble.h"
 #include "modules/drv_ili9341.h"
-#include "modules/drv_nau8810.h"
 #include "modules/sd.h"
 #include "modules/gfx.h"
 #include "modules/adc.h"
