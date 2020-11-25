@@ -4,6 +4,9 @@
 #include "common.h"
 #include "drv_ili9341.h"
 
+//size of chunk to transfer each interrupt
+#define ILI_TRANSFER_CHUNK_SIZE (254)
+
 // Register defines
 #define ILI9341_CASET    		(0x2A)
 #define ILI9341_RASET    		(0x2B)
@@ -20,7 +23,7 @@ static nrfx_spim_t lcd_spim = NRFX_SPIM_INSTANCE(LCD_SPIM_INSTANCE);
 static volatile bool m_busy = false;
 
 static bool m_large_tx = false;
-static uint16_t m_large_tx_size = 0;
+static uint32_t m_large_tx_size = 0;
 static uint8_t *p_large_tx_data = NULL;
 
 /**
@@ -35,7 +38,7 @@ static void __spim_event_handler(nrfx_spim_evt_t const * p_event, void * context
 		}
 
 		uint8_t rx = 0;
-		uint8_t count = MIN(254, m_large_tx_size);
+		uint8_t count = MIN(ILI_TRANSFER_CHUNK_SIZE, m_large_tx_size);
 		nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_large_tx_data, count);
 		nrfx_spim_xfer(&lcd_spim, &xfer_desc, 0);
 
@@ -184,7 +187,7 @@ void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colo
 	}
 
 	while (m_busy) {
-		APP_ERROR_CHECK(sd_app_evt_wait());
+		//wait for previous transfer to complete before starting a new one
 	}
 }
 
@@ -245,11 +248,11 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
     uint8_t count = 0;
 
     while (size > 0) {
-        count = MIN(254, size);
+        count = MIN(ILI_TRANSFER_CHUNK_SIZE, size);
 
         //Don't start next transfer until previous is complete
         while (m_busy) {
-            //APP_ERROR_CHECK(sd_app_evt_wait());
+			//wait for previous transfer to complete before starting a new one
         }
         m_busy = true;
 
@@ -267,14 +270,15 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
 nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
 	//Don't start next transfer until previous is complete
 	while (m_busy) {
-		//APP_ERROR_CHECK(sd_app_evt_wait());
+		//wait for previous transfer to complete before starting a new one
 	}
 
 	m_busy = true;
-	if(size > 254){
+	if(size > ILI_TRANSFER_CHUNK_SIZE){
 		m_large_tx = true;
 		p_large_tx_data = p_colors;
 		m_large_tx_size = size;
+		size = MIN(ILI_TRANSFER_CHUNK_SIZE, size);
 	}
 
 	nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_colors, size);

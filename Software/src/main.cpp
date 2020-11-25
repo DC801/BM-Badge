@@ -65,7 +65,16 @@ void test_screen(){
 	test_canvas->clearScreen(COLOR_PURPLE);
 	//util_gfx_draw_raw_file("hcrn/display.raw", 0, 0, 128, 128, NULL, true, NULL);
 	test_canvas->blt();
-	nrf_delay_ms(5000);
+	nrf_delay_ms(1000);
+	test_canvas->clearScreen(COLOR_DARKBLUE);
+	test_canvas->blt();
+	nrf_delay_ms(16);
+	test_canvas->clearScreen(0x18e5);
+	test_canvas->blt();
+	nrf_delay_ms(16);
+	test_canvas->clearScreen(COLOR_DARKBLUE);
+	test_canvas->blt();
+	nrf_delay_ms(16);
 }
 
 //this will blink the LED next to a button, or turn off all LEDs when a joystick button is held down.
