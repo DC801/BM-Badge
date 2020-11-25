@@ -104,6 +104,10 @@ void test_keyboard(){
 		if(EngineInput_Activated.op_page){ ledSet(LED_PAGE,   (led_brightness[LED_PAGE]  = !led_brightness[LED_PAGE]   )? 0xff : 0x00);}
 		if(EngineInput_Activated.hax)    { ledSet(LED_HAX,    (led_brightness[LED_HAX]   = !led_brightness[LED_HAX]    )? 0xff : 0x00);}
 		nrf_delay_ms(16);
+		//escape by holding xor and pressing mem0:
+		if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem0){
+			break;
+		}
 	}
 }
 
