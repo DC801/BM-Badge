@@ -1198,6 +1198,9 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 	{
         return;
     }
+	while(ili9341_is_busy()){
+		//wait for previous transfer to complete before starting a new one
+	}
     ili9341_set_addr(x, y, x + w - 1, y + h - 1);
 	uint32_t bytecount = w * h * 2;
 	ili9341_push_colors((uint8_t*)p_raw, bytecount);
