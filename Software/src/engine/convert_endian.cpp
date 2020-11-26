@@ -42,7 +42,33 @@ uint32_t convert_endian_u4_value (uint32_t value)
 	{
 		return value;
 	}
-	
+}
+
+float reverseFloat(const float in)
+{
+	float retVal;
+	uint8_t *floatToConvert = (uint8_t *) &in;
+	uint8_t *returnFloat = (uint8_t *) &retVal;
+
+	// swap the bytes into a temporary buffer
+	returnFloat[0] = floatToConvert[3];
+	returnFloat[1] = floatToConvert[2];
+	returnFloat[2] = floatToConvert[1];
+	returnFloat[3] = floatToConvert[0];
+
+	return retVal;
+}
+
+float convert_endian_f4_value (float value)
+{
+	if (needs_endian_correction)
+	{
+		return reverseFloat(value);
+	}
+	else
+	{
+		return value;
+	}
 }
 
 void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize)
@@ -52,6 +78,17 @@ void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize)
 		for (size_t i = 0; i < bufferSize; i++)
 		{
 			buf[i] = __builtin_bswap32(buf[i]);
+		}
+	}
+}
+
+void convert_endian_f4_buffer (float *buf, size_t bufferSize)
+{
+	if (needs_endian_correction)
+	{
+		for (size_t i = 0; i < bufferSize; i++)
+		{
+			buf[i] = reverseFloat(buf[i]);
 		}
 	}
 }

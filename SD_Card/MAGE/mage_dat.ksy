@@ -323,12 +323,20 @@ types:
         enum: geometry_type
       - id: point_count
         type: u1
+      - id: segment_count
+        type: u1
       - id: padding
-        type: u2
+        type: u1
+      - id: path_length
+        type: f4
       - id: points
         type: point
         repeat: expr
         repeat-expr: point_count
+      - id: segment_lengths
+        type: f4
+        repeat: expr
+        repeat-expr: segment_count
 
   point:
     seq:

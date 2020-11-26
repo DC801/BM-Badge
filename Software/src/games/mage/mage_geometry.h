@@ -16,14 +16,20 @@ class MageGeometry{
 		uint8_t typeId;
 		//how many points will be in the pointArray:
 		uint8_t pointCount;
+		//how many points will be in the segmentLengths:
+		uint8_t segmentCount;
+		//total length of all segments in the geometry
+		float pathLength;
 		//the array of the actual coordinate points that make up the geometry:
-		std::unique_ptr<Point[]> pointArray;
+		std::unique_ptr<Point[]> points;
+		//the array of segment lengths:
+		std::unique_ptr<float[]> segmentLengths;
 
 		//default constructor returns a point with coordinates 0,0:
-		MageGeometry() : 
+		MageGeometry() :
 			typeId{},
 			pointCount{1},
-			pointArray{std::make_unique<Point[]>(pointCount)}
+			points{std::make_unique<Point[]>(pointCount)}
 		{}
 
 		//this constructor allows you to make a geometry of a known type and pointCount.
