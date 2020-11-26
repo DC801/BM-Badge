@@ -28,9 +28,10 @@
 	],
 	"walk_isabelle_to_door": [
 		{
-			"name": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Isabelle",
-			"geometry": "door_point"
+			"geometry": "door_point",
+			"duration": 5000
 		},
 		{
 			"name": "RUN_SCRIPT",

@@ -187,6 +187,10 @@ typedef struct{
 	uint16_t loopsToNextAction;
 	//the total number of loops from the start of the action until the next action
 	uint16_t totalLoopsToNextAction;
+	//used to store state various geometry things
+	Point pointA;
+	Point pointB;
+	uint16_t length;
 } MageScriptState;
 
 

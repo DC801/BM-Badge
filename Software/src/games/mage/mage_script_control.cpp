@@ -306,7 +306,7 @@ void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resu
 
 void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
+	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	//If there's already a total number of loops to next action set, a delay is currently in progress:
@@ -522,7 +522,7 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
-		Point *geometryFirstPoint = &geometry->pointArray[0];
+		Point *geometryFirstPoint = &geometry->points[0];
 		entity->x = geometryFirstPoint->x - (renderable->center.x - entity->x);
 		entity->y = geometryFirstPoint->y - (renderable->center.y - entity->y);
 		MageGame->updateEntityRenderableData(entityIndex);
@@ -535,7 +535,46 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
-	return;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
+		Point *geometryFirstPoint = &geometry->points[0];
+
+		if(resumeStateStruct->totalLoopsToNextAction == 0) {
+			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+			//now set the resumeStateStruct variables:
+			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+			resumeStateStruct->loopsToNextAction = totalDelayLoops;
+
+			//this is the points we're interpolating between
+			resumeStateStruct->pointA = {
+				.x = entity->x,
+				.y = entity->y,
+			};
+			resumeStateStruct->pointB = {
+				.x = geometryFirstPoint->x - (renderable->center.x - entity->x),
+				.y = geometryFirstPoint->y - (renderable->center.y - entity->y),
+			};
+		}
+		resumeStateStruct->loopsToNextAction--;
+		Point betweenPoint = FrameBuffer::lerpPoints(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB,
+			1.0f - (
+				(float)resumeStateStruct->loopsToNextAction
+				/ (float)resumeStateStruct->totalLoopsToNextAction
+			)
+		);
+		entity->x = betweenPoint.x;
+		entity->y = betweenPoint.y;
+		MageGame->updateEntityRenderableData(entityIndex);
+		if(resumeStateStruct->loopsToNextAction == 0) {
+			resumeStateStruct->totalLoopsToNextAction = 0;
+		}
+	}
 }
 void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
 {
