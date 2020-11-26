@@ -328,10 +328,22 @@
                  "width":32,
                  "x":128,
                  "y":64
+                }, 
+                {
+                 "gid":781,
+                 "height":32,
+                 "id":37,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":85,
+                 "y":80
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -539,7 +551,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -556,7 +568,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -648,6 +660,10 @@
         {
          "firstgid":745,
          "source":"entity-sports_kid.json"
+        }, 
+        {
+         "firstgid":769,
+         "source":"entity-marta.json"
         }],
  "tilewidth":32,
  "type":"map",

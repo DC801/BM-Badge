@@ -32,4 +32,7 @@ void convert_endian_u2_buffer (uint16_t *buf, size_t bufferSize);
 uint32_t convert_endian_u4_value (uint32_t value);
 void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize);
 
+float convert_endian_f4_value (float value);
+void convert_endian_f4_buffer (float *buf, size_t bufferSize);
+
 #endif

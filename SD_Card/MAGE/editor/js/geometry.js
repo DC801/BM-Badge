@@ -10,17 +10,29 @@ var serializeGeometry = function (
 	fileNameMap,
 	scenarioData,
 ) {
+	var segments = geometry.path.length;
+	if (geometry.geometryType === 'polyline') {
+		segments--;
+	} else if (geometry.geometryType === 'point') {
+		segments = 0;
+	}
 	var headerLength = (
 		32 // char[32] name
 		+ 1 // uint8_t type
 		+ 1 // uint8_t point_count
-		+ 2 // uint16_t padding
+		+ 1 // uint8_t segment_count
+		+ 1 // uint8_t padding
+		+ 4 // float path_length
 		+ (
 			geometry.path.length
 			* (
 				+ 2 // uint16_t x
 				+ 2 // uint16_t y
 			)
+		)
+		+ (
+			segments
+			* 4 // float segment_length
 		)
 	);
 	var arrayBuffer = new ArrayBuffer(
@@ -44,7 +56,14 @@ var serializeGeometry = function (
 		geometry.path.length,
 	);
 	offset += 1;
-	offset += 2; // uint16_t padding
+	dataView.setUint8(
+		offset, // uint8_t segment_count
+		segments,
+	);
+	offset += 1;
+	offset += 1; // uint8_t padding
+	var addressOfTotalLength = offset;
+	offset += 4; // float total_length
 	geometry.path.forEach(function (point) {
 		dataView.setUint16(
 			offset, // uint16_t x
@@ -59,6 +78,32 @@ var serializeGeometry = function (
 		);
 		offset += 2;
 	});
+	var totalLength = 0;
+	if (geometry.path.length > 1) {
+		geometry.path.slice(0, segments).forEach(function (pointA, index) {
+			var pointB = geometry.path[(index + 1) % geometry.path.length];
+			var diff = {
+				x: pointB.x - pointA.x,
+				y: pointB.y - pointA.y,
+			};
+			var segmentLength = Math.sqrt(
+				(diff.x * diff.x)
+				+ (diff.y * diff.y)
+			);
+			totalLength += segmentLength;
+			dataView.setFloat32(
+				offset, // float segment_length
+				segmentLength,
+				false
+			);
+			offset += 4;
+		});
+	}
+	dataView.setFloat32(
+		addressOfTotalLength, // float total_length
+		totalLength,
+		false
+	);
 	geometry.serialized = arrayBuffer;
 	geometry.scenarioIndex = scenarioData.parsed.geometry.length;
 	scenarioData.parsed.geometry.push(geometry);
