@@ -101,6 +101,7 @@ public:
     void drawPixel(int x, int y, uint16_t color);
 
     static float lerp(float a, float b, float progress);
+    static Point lerpPoints(Point a, Point b, float progress);
     void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
     void drawPoint(int x, int y, uint8_t size, uint16_t color);
     void drawHorizontalLine(int x1, int y, int x2, uint16_t color);

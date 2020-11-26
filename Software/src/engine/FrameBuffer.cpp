@@ -869,6 +869,14 @@ float FrameBuffer::lerp(float a, float b, float progress) {
 	return ((b - a) * progress) + a;
 }
 
+Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
+	Point point = {
+		.x = (int32_t)lerp((float)a.x, (float)b.x, progress),
+		.y = (int32_t)lerp((float)a.y, (float)b.y, progress),
+	};
+	return point;
+}
+
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
