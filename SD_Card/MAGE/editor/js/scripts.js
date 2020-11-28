@@ -549,6 +549,7 @@ var specialKeywordsEnum = {
 	'%MAP%': 255,
 	'%SELF%': 254,
 	'%PLAYER%': 253,
+	'%ENTITY_PATH%': 65535,
 }
 
 var getObjectByNameOnMap = function(name, map, actionName) {
@@ -633,13 +634,10 @@ var getGeometryIndexFromAction = function (
 		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
 	}
 	var geometry = getObjectByNameOnMap(value, map, actionName);
-	if (
-		!geometry
-		|| !geometry.path
-	) {
+	if (!geometry) {
 		throw new Error(`${actionName} was not able to find geometry named "${value}" on the map named "${map.name}"`);
 	}
-	return geometry.scenarioIndex;
+	return geometry.specialIndex || geometry.scenarioIndex;
 };
 
 var getDirectionFromAction = function (

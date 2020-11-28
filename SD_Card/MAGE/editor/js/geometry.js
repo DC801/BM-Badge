@@ -226,6 +226,7 @@ var handleTiledObjectAsGeometry = function (
 			fileNameMap,
 			scenarioData,
 		);
+		geometry.mapIndex = map.geometryIndices.length;
 		map.geometryIndices.push(
 			geometry.scenarioIndex
 		);

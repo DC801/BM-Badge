@@ -48,6 +48,10 @@ all of the old code used as the foundation of this badge.
 //current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PLAYER 253
 
+//this is a value used in the entityId in actions that refers to the
+//current playerEntityId for the MageGameControl object.
+#define MAGE_ENTITY_PATH 65535
+
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
 #define DESKTOP_TIME_FUDGE_FACTOR 50

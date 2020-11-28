@@ -72,11 +72,11 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
 		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
 		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
-		console.log(
-			'Tileset:',
-			tilesetFile.name,
-			tilesetData
-		);
+		// console.log(
+		// 	'Tileset:',
+		// 	tilesetFile.name,
+		// 	tilesetData
+		// );
 		tilesetData.serializedTiles = new ArrayBuffer(
 			getPaddedHeaderLength(tilesetData.tilecount)
 		);
