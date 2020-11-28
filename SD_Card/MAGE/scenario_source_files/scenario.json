@@ -908,6 +908,147 @@
 					}
 				]
 			}
+		},
+		"baker": {
+			"tileset": "entity-baker.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 5,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": true
+					},
+					{
+						"tileid": 4,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"marta": {
+			"tileset": "entity-marta.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 14,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": true
+					},
+					{
+						"tileid": 13,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"tailor": {
+			"tileset": "entity-tailor.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 20,
+						"flip_x": false
+					},
+					{
+						"tileid": 18,
+						"flip_x": true
+					},
+					{
+						"tileid": 19,
+						"flip_x": false
+					},
+					{
+						"tileid": 18,
+						"flip_x": false
+					}
+				],
+				"action": [
+					{
+						"tileid": 17,
+						"flip_x": false
+					},
+					{
+						"tileid": 15,
+						"flip_x": true
+					},
+					{
+						"tileid": 16,
+						"flip_x": false
+					},
+					{
+						"tileid": 15,
+						"flip_x": false
+					}
+				]
+			}
 		}
 	}
 }

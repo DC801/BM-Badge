@@ -187,6 +187,20 @@ int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(uint8_t entity
 	return entityIndex;
 }
 
+uint16_t MageScriptControl::getUsefulGeometryIndexFromActionGeometryId(
+	uint16_t geometryId,
+	MageEntity *entity
+)
+{
+	uint16_t geometryIndex = geometryId;
+	if(geometryIndex == MAGE_ENTITY_PATH) {
+		geometryIndex = convert_endian_u2_value(
+			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
+		);
+	}
+	return geometryIndex;
+}
+
 void MageScriptControl::nullAction(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	//nullAction does nothing.
@@ -540,7 +554,8 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
+		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
 		Point *geometryFirstPoint = &geometry->points[0];
 
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
@@ -558,6 +573,24 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 				.x = geometryFirstPoint->x - (renderable->center.x - entity->x),
 				.y = geometryFirstPoint->y - (renderable->center.y - entity->y),
 			};
+			float angle = atan2f32(
+				resumeStateStruct->pointB.y - resumeStateStruct->pointA.y,
+				resumeStateStruct->pointB.x - resumeStateStruct->pointA.x
+			);
+			float absoluteAngle = abs(angle);
+			printf(
+				"What relative angle is it moving? %.6f\n",
+				angle
+			);
+			if(absoluteAngle > 2.356194) {
+				entity->direction = 3;
+			} else if(absoluteAngle < 0.785398) {
+				entity->direction = 1;
+			} else if (angle < 0) {
+				entity->direction = 0;
+			} else if (angle > 0) {
+				entity->direction = 2;
+			}
 		}
 		resumeStateStruct->loopsToNextAction--;
 		Point betweenPoint = FrameBuffer::lerpPoints(

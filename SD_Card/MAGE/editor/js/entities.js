@@ -130,6 +130,7 @@ var serializeEntity = function (
 		directionOrRenderFlags
 	);
 	offset += 1;
+	var hackableStateAOffset = offset;
 	dataView.setUint8(
 		offset, // uint8_t hackable_state_a
 		entity.hackable_state_a || 0
@@ -149,6 +150,14 @@ var serializeEntity = function (
 		offset, // uint8_t hackable_state_d
 		entity.hackable_state_d || 0
 	);
+	if(entity.path) {
+		console.log('This entity has a path!', entity.path);
+		dataView.setUint16(
+			hackableStateAOffset,
+			entity.path.mapIndex,
+			false
+		);
+	}
 	offset += 1;
 	entity.serialized = arrayBuffer;
 	entity.dataView = dataView;

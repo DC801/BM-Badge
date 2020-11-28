@@ -58,6 +58,7 @@ class MageScriptControl
 		void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
 		int16_t getUsefulEntityIndexFromActionEntityId(uint8_t entityId);
+		uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity *entity);
 
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM

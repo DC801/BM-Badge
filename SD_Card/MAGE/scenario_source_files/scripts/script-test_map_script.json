@@ -4,7 +4,7 @@
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "log_ellipse",
-			"script": "walk_isabelle_to_door",
+			"script": "walk_self_to_path",
 			"expected_bool": true
 		}
 	],
@@ -26,16 +26,18 @@
 			"script": "spin_self_clockwise"
 		}
 	],
-	"walk_isabelle_to_door": [
+	"walk_self_to_path": [
 		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "Isabelle",
-			"geometry": "door_point",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
 			"duration": 5000
 		},
 		{
-			"name": "RUN_SCRIPT",
-			"script": "spin_self_clockwise"
+			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 10000
 		}
 	],
 	"test_map-on_tick": [

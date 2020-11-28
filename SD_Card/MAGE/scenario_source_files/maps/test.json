@@ -48,13 +48,23 @@
                          "name":"is_invincible",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":17
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":149,
-                 "y":164
+                 "x":141,
+                 "y":168
                 }, 
                 {
                  "gid":335,
@@ -62,6 +72,11 @@
                  "id":3,
                  "name":"Miles",
                  "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
                         {
                          "name":"path",
                          "type":"object",
@@ -83,7 +98,12 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_named_pat"
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":17
                         }],
                  "rotation":0,
                  "type":"",
@@ -101,7 +121,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_named_bob"
+                         "value":"check_if_player_is_at_log"
                         }, 
                         {
                          "name":"path",
@@ -145,6 +165,11 @@
                  "name":"Stuart",
                  "properties":[
                         {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
                          "name":"path",
                          "type":"object",
                          "value":17
@@ -153,8 +178,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":301.5,
-                 "y":143.5
+                 "x":390,
+                 "y":157
                 }, 
                 {
                  "gid":433,
@@ -186,6 +211,11 @@
                  "name":"Drake",
                  "properties":[
                         {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
                          "name":"path",
                          "type":"object",
                          "value":25
@@ -202,12 +232,6 @@
                  "height":32,
                  "id":27,
                  "name":"",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"check_if_player_is_at_log"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -220,6 +244,22 @@
                  "height":40,
                  "id":28,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"check_if_player_is_named_bob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":17
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -232,6 +272,17 @@
                  "height":32,
                  "id":29,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":25
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -249,6 +300,16 @@
                          "name":"current_frame",
                          "type":"int",
                          "value":3
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":25
                         }],
                  "rotation":0,
                  "type":"",
@@ -274,6 +335,17 @@
                  "height":32,
                  "id":32,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":19
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -286,6 +358,17 @@
                  "height":32,
                  "id":33,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":15
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -298,6 +381,17 @@
                  "height":40,
                  "id":34,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":13
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -310,6 +404,17 @@
                  "height":32,
                  "id":35,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":12
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -322,6 +427,17 @@
                  "height":32,
                  "id":36,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":20
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -334,12 +450,46 @@
                  "height":32,
                  "id":37,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":12
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
                  "x":85,
                  "y":80
+                }, 
+                {
+                 "gid":800,
+                 "height":32,
+                 "id":39,
+                 "name":"Max Swagger",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_at_log"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":17
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":257,
+                 "y":330
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -568,7 +718,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":38,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -664,6 +814,10 @@
         {
          "firstgid":769,
          "source":"entity-marta.json"
+        }, 
+        {
+         "firstgid":793,
+         "source":"entity-tailor.json"
         }],
  "tilewidth":32,
  "type":"map",
