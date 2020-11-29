@@ -82,6 +82,22 @@ MageGameControl::MageGameControl()
 		geometries[i] = MageGeometry(geometryHeader.offset(i));
 	}
 
+	strings = std::make_unique<std::string[]>(stringHeader.count());
+
+	for (uint32_t i = 0; i < stringHeader.count(); i++)
+	{
+		uint32_t start = stringHeader.offset(i);
+		uint32_t length = stringHeader.length(i);
+		std::string romString(length, '\0');
+		uint8_t *romStringPointer = (uint8_t *)&romString[0];
+		if (EngineROM_Read(start, length, romStringPointer) != length)
+		{
+			ENGINE_PANIC("Failed to load string data.");
+			return;
+		}
+		strings[i] = romString;
+	}
+
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
 
 	mageSpeed = MAGE_WALKING_SPEED;
@@ -133,6 +149,11 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		size += geometries[i].size();
+	}
+
+	for (uint32_t i = 0; i < stringHeader.count(); i++)
+	{
+		size += strings[i].size();
 	}
 
 	return size;
@@ -1133,4 +1154,8 @@ MageEntity* MageGameControl::getValidEntity(int8_t entityId) {
 
 MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
 	return &tilesets[tilesetId % tilesetHeader.count()];
+}
+
+std::string* MageGameControl::getString(uint16_t stringId) {
+	return &strings[stringId % stringHeader.count()];
 }

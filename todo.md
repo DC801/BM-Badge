@@ -55,27 +55,27 @@
 	- [ ] There can be a puzzle where changing the font to smaller makes all of a message readable
 - [ ] Music/SFX encoding in the binary asset encoder
 - [ ] Script system
-	- [ ] Binary Encoder parts
-	- [ ] Scripts
-		- [ ] What is a script?
-			- [ ] It's a length + sequence of Actions
-			- [ ] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
-			- [ ] We'll need entity-based state variables to track pathing and other transient values between ticks.
-		- [ ] Map
-			- [ ] onMapLoad(uint16_t scriptId); //called once when the map loads
-			- [ ] onMapTick(uint16_t scriptId); //called every tick, used for doors, other static events when moving around map.
-		- [ ] Entity
-			- [ ] onEntityTick(uint16_t scriptId, uint8_t entityId); //called every tick, entityId is the entity calling that script.
-			- [ ] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
+	- [x] Binary Encoder parts
+	- [x] Scripts
+		- [x] What is a script?
+			- [x] It's a length + sequence of Actions
+			- [?] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
+			- [x] We'll need entity-based state variables to track pathing and other transient values between ticks.
+		- [x] Map
+			- [x] onMapLoad(uint16_t scriptId); //called once when the map loads
+			- [x] onMapTick(uint16_t scriptId); //called every tick, used for doors, other static events when moving around map.
+		- [x] Entity
+			- [x] onEntityTick(uint16_t scriptId, uint8_t entityId); //called every tick, entityId is the entity calling that script.
+			- [x] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
 		- [e] CHECK_ENTITY_BYTE
 		- [e] CHECK_SAVE_FLAG
-		- [e] CHECK_IF_ENTITY_IS_IN_GEOMETRY
+		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
 		- [e] CHECK_FOR_BUTTON_STATE
-		- [e] RUN_SCRIPT
-		- [ ] COMPARE_ENTITY_NAME
+		- [x] RUN_SCRIPT
+		- [x] COMPARE_ENTITY_NAME
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
 		- [e] SET_PAUSE_STATE
@@ -96,10 +96,10 @@
 		- [e] LOAD_MAP
 		- [ ] SHOW_DIALOG
 		- [e] SET_RENDERABLE_FONT
-		- [e] TELEPORT_ENTITY_TO_GEOMETRY
-		- [e] WALK_ENTITY_TO_GEOMETRY
-		- [e] WALK_ENTITY_ALONG_GEOMETRY
-		- [e] LOOP_ENTITY_ALONG_GEOMETRY
+		- [x] TELEPORT_ENTITY_TO_GEOMETRY
+		- [x] WALK_ENTITY_TO_GEOMETRY
+		- [x] WALK_ENTITY_ALONG_GEOMETRY
+		- [x] LOOP_ENTITY_ALONG_GEOMETRY
 		- [e] SET_CAMERA_TO_FOLLOW_ENTITY
 		- [e] TELEPORT_CAMERA_TO_GEOMETRY
 		- [e] PAN_CAMERA_TO_GEOMETRY
@@ -110,16 +110,12 @@
 		- [e] SCREEN_FADE_IN
 		- [ ] PLAY_SOUND_CONTINUOUS
 		- [ ] PLAY_SOUND_INTERRUPT
-- [ ] Geometry
-	- [ ] circle(uint16_t x, uint16_t y, uint8_t radius)
-		- [ ] inside_circle(point, circle) collision detection function
-	- [ ] rect(point, uint16_t width, uint16_t height)
-		- [ ] inside_rect(point, rect) collision detection function
-	- [ ] polygon(uint8_t count, x points[count])
-		- [ ] inside_poly(point, poly) collision detection function
-	- [ ] polyline(uint8_t count, x points[count])
-	- [ ] point(uint16_t x, uint16_t y)
-		- no collision, just may be used as an arg?
+- [x] Geometry
+	- [x] polygon(uint8_t count, x points[count])
+	- [x] polyline(uint8_t count, x points[count])
+	- [x] point(uint16_t x, uint16_t y)
+    - [x] Geometry::inside_poly(point) collision detection function
+    - [x] draw() renders geometry to screen
 - [ ] Dialog Data Type Ideas
 	- [ ] Display Name - either stringId, or entityId
 	- [ ] The actual text to display, probably with line breaks hard coded in to keep things simple.
@@ -145,9 +141,9 @@
 			- [ ] enter a numerical code
 			- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 		- [ ] new script and/or dialog to call depending on player response
-- [ ] Strings
-	- [ ] uint16_t Length
-	- [ ] char array with null termination Length bytes long
+- [x] Strings
+	- [x] uint16_t Length
+	- [x] char array with null termination Length bytes long
 - [ ] Save system with flags
 	- [ ] Player Name (12 bytes, like all other entities)
 	- [ ] On map init, replace player name into PlayerEntity

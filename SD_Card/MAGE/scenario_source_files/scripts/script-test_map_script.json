@@ -15,6 +15,13 @@
 			"string": "Bob",
 			"expected_bool": true,
 			"script": "spin_self_clockwise"
+		},
+		{
+			"name": "COMPARE_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "baby_",
+			"expected_bool": true,
+			"script": "spin_self_clockwise"
 		}
 	],
 	"check_if_player_is_named_pat": [
