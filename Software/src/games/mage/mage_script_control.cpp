@@ -770,7 +770,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			/ (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
 		);
 		if(progressBetweenPoints > 1) {
-			//this is the points we're interpolating between
+			progressBetweenPoints = 0;
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
