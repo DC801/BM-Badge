@@ -749,6 +749,10 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
 			entity->currentAnimation = 1;
 		}
+		if(resumeStateStruct->loopsToNextAction == 0) {
+			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
+			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
+		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometryPointIndex(
 			geometry,
@@ -792,10 +796,6 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			progressBetweenPoints
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
-		if(resumeStateStruct->loopsToNextAction == 0) {
-			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
-		}
 		MageGame->updateEntityRenderableData(entityIndex);
 	}
 	return;
