@@ -175,13 +175,44 @@ class MageScriptControl
 		MageScriptState* getMapTickResumeState();
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
+		Point offsetPointRelativeToEntityCenter(
+			const MageEntityRenderableData *renderable,
+			const MageEntity *entity,
+			const Point *geometryPoint
+		) const;
+		MageEntityAnimationDirection getRelativeDirection(
+			const Point &pointA,
+			const Point &pointB
+		) const;
+		void setEntityPositionToPoint(
+			MageEntity *entity,
+			const Point &point
+		) const;
+		float getProgressOfAction(const MageScriptState *resumeStateStruct) const;
+		uint16_t getLoopableGeometryPointIndex(
+			MageGeometry *geometry,
+			uint8_t index
+		);
+		void setResumeStatePointsAndEntityDirection(
+			MageScriptState *resumeStateStruct,
+			MageEntityRenderableData *renderable,
+			MageEntity *entity,
+			MageGeometry *geometry,
+			uint16_t pointAIndex,
+			uint16_t pointBIndex
+		) const;
+		void initializeEntityGeometryLoop(
+			MageScriptState *resumeStateStruct,
+			MageEntityRenderableData *renderable,
+			MageEntity *entity,
+			MageGeometry *geometry
+		);
 
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
 		void handleEntityOnInteractScript(uint8_t index);
 		void handleEntityOnTickScript(uint8_t index);
-
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H
