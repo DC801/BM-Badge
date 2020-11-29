@@ -328,6 +328,12 @@
                  "height":32,
                  "id":31,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"check_if_player_is_named_bob"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

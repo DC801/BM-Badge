@@ -306,6 +306,19 @@ void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resu
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		std::string romString = *MageGame->getString(argStruct->stringId);
+		std::string entityName(13, '\0');
+		entityName.assign(entity->name, 12);
+		int compare = strcmp(entityName.c_str(), romString.c_str());
+		bool identical = compare == 0;
+		if(identical == argStruct->expectedBoolValue) {
+			jumpScript = argStruct->successScriptId;
+		}
+	}
 	return;
 }
 
@@ -761,7 +774,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			entity->currentAnimation = 1;
 		}
 		resumeStateStruct->loopsToNextAction--;
-		volatile uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
+		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
 			geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
@@ -869,7 +882,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
 		}
 		resumeStateStruct->loopsToNextAction--;
-		volatile uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
+		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
 			geometry,
 			resumeStateStruct->currentSegmentIndex
 		);

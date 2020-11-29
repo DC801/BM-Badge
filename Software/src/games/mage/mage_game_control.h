@@ -66,6 +66,9 @@ private:
 	//this is an array of all the geometry objects in the ROM
 	std::unique_ptr<MageGeometry[]> geometries;
 
+	//this is an array of all the strings in the ROM
+	std::unique_ptr<std::string[]> strings;
+
 	//these two variables store the player's previous tilesetId and tileId
 	//for use in keeping the camera centerd while hacking.
 	uint16_t previousPlayerTilesetId;
@@ -141,6 +144,7 @@ public:
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
 	MageGeometry* getValidGeometry(uint16_t geometryId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t entityId);
+	std::string* getString(uint16_t stringId);
 
 	//this returns the address offset for a specific script Id:
 	uint32_t getScriptAddress(uint32_t scriptId);
