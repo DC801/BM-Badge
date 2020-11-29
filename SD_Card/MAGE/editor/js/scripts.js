@@ -946,6 +946,7 @@ var serializeNullScript = function(
 		fileNameMap,
 		scenarioData,
 	);
+	scenarioData.scripts['null_script'] = nullScript;
 }
 
 var handleScript = function(
