@@ -80,7 +80,10 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 	{
 		runAction(address, resumeStateStruct);
 		//non-blocking action check is based on whether resumeStateStruct->totalLoopsToNextAction is set:
-		if(resumeStateStruct->totalLoopsToNextAction != 0)
+		if(
+			resumeStateStruct->totalLoopsToNextAction != 0
+			|| !resumeStateStruct->scriptIsRunning
+		)
 		{
 			//if this value is not 0, we need to stop the action now and return later when the countdown is complete:
 			//note that resumeStateStruct->actionOffset is set to the NB action's offset since we are using it as an index
@@ -90,6 +93,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		}
 		//check to see if the action set a jumpScript value
 		if(jumpScript != MAGE_NULL_SCRIPT){
+			setEntityScript(jumpScript, currentEntityId, currentScriptType);
 			//immediately end action processing and return if a jumpScript value was set:
 			return;
 		}
@@ -224,8 +228,6 @@ void MageScriptControl::checkEntityByte(uint8_t * args, MageScriptState * resume
 	{
 		//convert scriptId from local to global scope and assign to jumpScript:
 		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
-		//this requires a local map scriptId.
-		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -254,8 +256,6 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 		if(colliding == argStruct->expectedBoolValue) {
 			//convert scriptId from local to global scope and assign to jumpScript:
 			jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
-			//this requires a local map scriptId.
-			setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 		}
 	}
 }
@@ -272,8 +272,6 @@ void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * re
 	{
 		//convert scriptId from local to global scope and assign to jumpScript:
 		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
-		//this requires a local map scriptId.
-		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -290,8 +288,6 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	{
 		//convert scriptId from local to global scope and assign to jumpScript:
 		jumpScript = MageGame->Map().getGlobalScriptId(argStruct->successScriptId);
-		//this requires a local map scriptId.
-		setEntityScript(argStruct->successScriptId, currentEntityId, currentScriptType);
 	}
 	return;
 }
@@ -303,8 +299,6 @@ void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateS
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
 	//convert scriptId from local to global scope and assign to jumpScript:
 	jumpScript = MageGame->Map().getGlobalScriptId(argStruct->scriptId);
-	//this requires a local map scriptId.
-	setEntityScript(argStruct->scriptId, currentEntityId, currentScriptType);
 	return;
 }
 
@@ -583,14 +577,15 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 				angle
 			);
 			if(absoluteAngle > 2.356194) {
-				entity->direction = 3;
+				entity->direction = WEST;
 			} else if(absoluteAngle < 0.785398) {
-				entity->direction = 1;
+				entity->direction = EAST;
 			} else if (angle < 0) {
-				entity->direction = 0;
+				entity->direction = NORTH;
 			} else if (angle > 0) {
-				entity->direction = 2;
+				entity->direction = SOUTH;
 			}
+			entity->currentAnimation = 1;
 		}
 		resumeStateStruct->loopsToNextAction--;
 		Point betweenPoint = FrameBuffer::lerpPoints(
@@ -603,10 +598,12 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 		);
 		entity->x = betweenPoint.x;
 		entity->y = betweenPoint.y;
-		MageGame->updateEntityRenderableData(entityIndex);
 		if(resumeStateStruct->loopsToNextAction == 0) {
+			entity->currentAnimation = 0;
+			entity->currentFrame = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
 		}
+		MageGame->updateEntityRenderableData(entityIndex);
 	}
 }
 void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -623,6 +620,8 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
+	setEntityScript(MAGE_NULL_SCRIPT, currentEntityId, currentScriptType);
 	return;
 }
 void MageScriptControl::setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct)
