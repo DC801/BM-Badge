@@ -643,10 +643,31 @@ uint16_t MageScriptControl::getLoopableGeometryPointIndex(
 	} else if (geometry->typeId == POLYGON) {
 		result = pointIndex % geometry->pointCount;
 	} else if (geometry->typeId == POLYLINE) {
+		// haunted, do not touch
 		pointIndex %= (geometry->segmentCount * 2);
 		result = (pointIndex < geometry->pointCount)
 				? pointIndex
 				: geometry->segmentCount + (geometry->segmentCount - pointIndex);
+	}
+	return result;
+}
+
+uint16_t MageScriptControl::getLoopableGeometrySegmentIndex(
+	MageGeometry *geometry,
+	uint8_t segmentIndex
+) {
+	uint16_t result = 0;
+	if(geometry->pointCount == 1) {
+		// handle the derp who made a poly* with 1 point
+	} else if (geometry->typeId == POLYGON) {
+		result = segmentIndex % geometry->segmentCount;
+	} else if (geometry->typeId == POLYLINE) {
+		// haunted, do not touch
+		segmentIndex %= (geometry->segmentCount * 2);
+		uint16_t zeroIndexedSegmentCount = geometry->segmentCount - 1;
+		result = (segmentIndex < geometry->segmentCount)
+				? segmentIndex
+				: zeroIndexedSegmentCount + (zeroIndexedSegmentCount - segmentIndex) + 1;
 	}
 	return result;
 }
@@ -754,7 +775,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
 		}
 		resumeStateStruct->loopsToNextAction--;
-		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometryPointIndex(
+		volatile uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
 			geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
@@ -770,7 +791,6 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			/ (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
 		);
 		if(progressBetweenPoints > 1) {
-			progressBetweenPoints = 0;
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
@@ -780,6 +800,19 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			uint16_t pointBIndex = getLoopableGeometryPointIndex(
 				geometry,
 				resumeStateStruct->currentSegmentIndex + 1
+			);
+			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
+				geometry,
+				resumeStateStruct->currentSegmentIndex
+			);
+			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			lengthAtEndOfCurrentSegment = (
+				resumeStateStruct->lengthOfPreviousSegments
+				+ currentSegmentLength
+			);
+			progressBetweenPoints = (
+				(currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+				/ (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
 			);
 			setResumeStatePointsAndEntityDirection(
 				resumeStateStruct,

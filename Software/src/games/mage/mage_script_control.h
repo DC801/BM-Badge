@@ -193,6 +193,10 @@ class MageScriptControl
 			MageGeometry *geometry,
 			uint8_t index
 		);
+		uint16_t getLoopableGeometrySegmentIndex(
+			MageGeometry *geometry,
+			uint8_t segmentIndex
+		);
 		void setResumeStatePointsAndEntityDirection(
 			MageScriptState *resumeStateStruct,
 			MageEntityRenderableData *renderable,
