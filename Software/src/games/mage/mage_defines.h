@@ -194,7 +194,9 @@ typedef struct{
 	//used to store state various geometry things
 	Point pointA;
 	Point pointB;
-	uint16_t length;
+	float length;
+	float lengthOfPreviousSegments;
+	uint8_t currentSegmentIndex;
 } MageScriptState;
 
 
