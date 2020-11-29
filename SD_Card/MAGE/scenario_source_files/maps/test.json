@@ -126,7 +126,7 @@
                         {
                          "name":"path",
                          "type":"object",
-                         "value":12
+                         "value":25
                         }],
                  "rotation":0,
                  "type":"",
@@ -490,6 +490,34 @@
                  "width":32,
                  "x":257,
                  "y":330
+                }, 
+                {
+                 "gid":827,
+                 "height":32,
+                 "id":40,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"walk_self_to_path"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":296,
+                 "y":280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -718,7 +746,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":40,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -818,6 +846,10 @@
         {
          "firstgid":793,
          "source":"entity-tailor.json"
+        }, 
+        {
+         "firstgid":823,
+         "source":"entity-baker.json"
         }],
  "tilewidth":32,
  "type":"map",
