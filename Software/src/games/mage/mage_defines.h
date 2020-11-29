@@ -80,6 +80,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_NUM_ACTION_ARGS 7
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
+#define MAGE_NO_SCRIPT (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 

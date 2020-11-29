@@ -165,9 +165,14 @@
                  "name":"Stuart",
                  "properties":[
                         {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"walk_self_to_path_and_loop"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_at_log"
+                         "value":""
                         }, 
                         {
                          "name":"path",
@@ -500,7 +505,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"walk_self_to_path"
+                         "value":"walk_self_to_path_and_loop"
                         }, 
                         {
                          "name":"on_tick",

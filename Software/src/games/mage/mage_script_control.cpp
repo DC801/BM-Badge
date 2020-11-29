@@ -35,11 +35,11 @@ void MageScriptControl::processScript(MageScriptState * resumeStateStruct, uint8
 	//All script processing from here relies solely on the state of the resumeStateStruct:
 	//Make sure you've got your script states correct in the resumeStateStruct array before calling this function:
 	jumpScript = resumeStateStruct->scriptId;
-	while(jumpScript != MAGE_NULL_SCRIPT)
+	while(jumpScript != MAGE_NO_SCRIPT)
 	{
 		processActionQueue(resumeStateStruct);
 		//if no new jumpScript was set, we can exit the loop immediately.
-		if(jumpScript == MAGE_NULL_SCRIPT)
+		if(jumpScript == MAGE_NO_SCRIPT)
 		{ break; }
 		//otherwise, we want to re-init the resumeState to run the new jumpScript from the beginning:
 		else
@@ -52,7 +52,7 @@ void MageScriptControl::processScript(MageScriptState * resumeStateStruct, uint8
 void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 {
 	//reset jump script once processing begins
-	jumpScript = MAGE_NULL_SCRIPT;
+	jumpScript = MAGE_NO_SCRIPT;
 
 	//get the memory address for the script:
 	uint32_t address = MageGame->getScriptAddress(resumeStateStruct->scriptId);
@@ -89,7 +89,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 			return;
 		}
 		//check to see if the action set a jumpScript value
-		if(jumpScript != MAGE_NULL_SCRIPT){
+		if(jumpScript != MAGE_NO_SCRIPT){
 			setEntityScript(jumpScript, currentEntityId, currentScriptType);
 			//immediately end action processing and return if a jumpScript value was set:
 			return;
@@ -97,8 +97,8 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t
 		address += sizeof(uint64_t);
 	}
-	//if you get here, and jumpScript == MAGE_NULL_SCRIPT, all actions in the script are done
-	if(jumpScript == MAGE_NULL_SCRIPT)
+	//if you get here, and jumpScript == MAGE_NO_SCRIPT, all actions in the script are done
+	if(jumpScript == MAGE_NO_SCRIPT)
 	{
 		//we can now set resumeState.scriptIsRunning to false and end processing the script:
 		resumeStateStruct->scriptIsRunning = false;
@@ -672,7 +672,7 @@ uint16_t MageScriptControl::getLoopableGeometrySegmentIndex(
 	return result;
 }
 
-void MageScriptControl::initializeEntityGeometryLoop(
+void MageScriptControl::initializeEntityGeometryPath(
 	MageScriptState *resumeStateStruct,
 	MageEntityRenderableData *renderable,
 	MageEntity *entity,
@@ -728,6 +728,100 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+
+		// handle single point geometries
+		if(geometry->pointCount == 1) {
+			resumeStateStruct->totalLoopsToNextAction = 1;
+			setEntityPositionToPoint(
+				entity,
+				offsetPointRelativeToEntityCenter(
+					renderable,
+					entity,
+					&geometry->points[0]
+				)
+			);
+			MageGame->updateEntityRenderableData(entityIndex);
+			return;
+		}
+		// and for everything else...
+		if(resumeStateStruct->totalLoopsToNextAction == 0) {
+			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+			//now set the resumeStateStruct variables:
+			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+			resumeStateStruct->loopsToNextAction = totalDelayLoops;
+			resumeStateStruct->length = geometry->pathLength;
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			entity->currentAnimation = 1;
+		}
+		resumeStateStruct->loopsToNextAction--;
+		volatile uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
+			geometry,
+			resumeStateStruct->currentSegmentIndex
+		);
+		float totalProgress = getProgressOfAction(resumeStateStruct);
+		float currentProgressLength = resumeStateStruct->length * totalProgress;
+		float currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+		float lengthAtEndOfCurrentSegment = (
+			resumeStateStruct->lengthOfPreviousSegments
+			+ currentSegmentLength
+		);
+		float progressBetweenPoints = (
+			(currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+			/ (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
+		);
+		if(progressBetweenPoints > 1) {
+			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
+			resumeStateStruct->currentSegmentIndex++;
+			uint16_t pointAIndex = getLoopableGeometryPointIndex(
+				geometry,
+				resumeStateStruct->currentSegmentIndex
+			);
+			uint16_t pointBIndex = getLoopableGeometryPointIndex(
+				geometry,
+				resumeStateStruct->currentSegmentIndex + 1
+			);
+			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
+				geometry,
+				resumeStateStruct->currentSegmentIndex
+			);
+			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			lengthAtEndOfCurrentSegment = (
+				resumeStateStruct->lengthOfPreviousSegments
+				+ currentSegmentLength
+			);
+			progressBetweenPoints = (
+				(currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+				/ (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
+			);
+			setResumeStatePointsAndEntityDirection(
+				resumeStateStruct,
+				renderable,
+				entity,
+				geometry,
+				pointAIndex,
+				pointBIndex
+			);
+		}
+		Point betweenPoint = FrameBuffer::lerpPoints(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB,
+			progressBetweenPoints
+		);
+		setEntityPositionToPoint(entity, betweenPoint);
+		if(resumeStateStruct->loopsToNextAction == 0) {
+			resumeStateStruct->totalLoopsToNextAction = 0;
+			entity->currentAnimation = 0;
+			entity->currentFrame = 0;
+		}
+		MageGame->updateEntityRenderableData(entityIndex);
+	}
 	return;
 }
 void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -767,12 +861,12 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->length = (geometry->typeId == POLYLINE)
 				? geometry->pathLength * 2
 				: geometry->pathLength;
-			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
 			entity->currentAnimation = 1;
 		}
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-			initializeEntityGeometryLoop(resumeStateStruct, renderable, entity, geometry);
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
 		}
 		resumeStateStruct->loopsToNextAction--;
 		volatile uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
@@ -910,7 +1004,7 @@ void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * res
 
 MageScriptControl::MageScriptControl()
 {
-	jumpScript = MAGE_NULL_SCRIPT;
+	jumpScript = MAGE_NO_SCRIPT;
 
 	blockingDelayTime = 0;
 

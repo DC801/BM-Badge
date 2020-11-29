@@ -18,8 +18,8 @@ class MageScriptControl
 	private:
 		//the jumpScript variable is used by some actions to indicate that a script should
 		//end and immediately begin running a new script.
-		//it should be set to MAGE_NULL_SCRIPT unless a new script should be run immediately.
-		uint16_t jumpScript;
+		//it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
+		int32_t jumpScript;
 
 		//this is a variable that tracks which entity called an action. 
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
@@ -205,7 +205,7 @@ class MageScriptControl
 			uint16_t pointAIndex,
 			uint16_t pointBIndex
 		) const;
-		void initializeEntityGeometryLoop(
+		void initializeEntityGeometryPath(
 			MageScriptState *resumeStateStruct,
 			MageEntityRenderableData *renderable,
 			MageEntity *entity,
