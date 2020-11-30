@@ -25,7 +25,7 @@ var handleScenarioData = function(fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
-		var entitiesFile = fileNameMap['entities.json'];
+		var entitiesFile = fileNameMap['object_types.json'];
 		var entitiesPromise = !entitiesFile
 			? Promise.resolve()
 			: getFileJson(entitiesFile)

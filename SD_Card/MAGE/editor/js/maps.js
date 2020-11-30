@@ -94,8 +94,8 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 	);
 	var entityPrototype = (
 		(
-			fileNameMap['entities.json']
-			&& fileNameMap['entities.json'].parsed[mergedWithTile.type]
+			fileNameMap['object_types.json']
+			&& fileNameMap['object_types.json'].parsed[mergedWithTile.type]
 		)
 		|| scenarioData.entityTypes[mergedWithTile.type]
 	);
