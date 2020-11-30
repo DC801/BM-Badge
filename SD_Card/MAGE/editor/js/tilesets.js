@@ -91,8 +91,8 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 			);
 			var entityPrototype = (
 				(
-					fileNameMap['entities.json']
-					&& fileNameMap['entities.json'].parsed[tile.type]
+					fileNameMap['object_types.json']
+					&& fileNameMap['object_types.json'].parsed[tile.type]
 				)
 				|| {}
 			);
