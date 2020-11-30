@@ -77,7 +77,7 @@
 	"load_map-town": [
 		{
 			"name": "LOAD_MAP",
-			"map": "town_map"
+			"map": "map-town"
 		}
 	]
 }

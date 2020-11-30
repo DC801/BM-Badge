@@ -6,10 +6,10 @@
 		"scripts/script-test_map_script.json"
 	],
 	"maps": {
-		"test": "maps/test.json",
-		"town_map": "maps/town_map.json",
-		"action_test": "maps/action_testing.json",
-		"action_test_2": "maps/action_testing_2.json"
+		"test": "maps/map-test.json",
+		"town": "maps/map-town.json",
+		"action_test": "maps/map-action_testing.json",
+		"action_test_2": "maps/map-action_testing_2.json"
 	},
 	"entityTypes": {
 		"mage": {
@@ -646,7 +646,7 @@
 			}
 		},
 		"pipscat": {
-			"tileset": "entity-cat.json",
+			"tileset": "entity-pipscat.json",
 			"animations": {
 				"idle": [
 					{
