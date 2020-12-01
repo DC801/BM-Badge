@@ -35,59 +35,58 @@
 		"dialog-baby_goat-hello_world": [
 			{
 				"notes": "This is Jen's comments",
-				"v_position": "top",
-				"h_position": "left",
+				"alignment": "TOP_LEFT",
 				"portrait": "baby_goat",
 				"name": "%baby_goat%",
-				"text": [
+				"messages": [
 					"Oh, hello there.",
 					"We don't normally get visitors here in HAUNTED PLACE",
 					"Not that I mind - visitors are delicious.",
 					"What are you here to do?"
 				],
 				"response_type": "SELECT_FROM_SHORT_LIST",
-				"responses_text": [
+				"responses": [
 					{
-						"response_text": "Pet The Goat",
+						"message": "Pet The Goat",
 						"script": "response-pet_the_goat"
 					},
 					{
-						"response_text": "Feed The Goat",
+						"message": "Feed The Goat",
 						"script": "response-feed_the_goat"
 					},
 					{
-						"response_text": "Give the Goat a Sugar Cube",
+						"message": "Give the Goat a Sugar Cube",
 						"script": "response-give_goat_sugar_cube"
+					},
+					{
+						"message": "Cancel"
 					}
 				]
 			}
 		],
 		"thanks_for_the_sugar_cube": [
 			{
-				"v_position": "top",
-				"h_position": "left",
+				"alignment": "BOTTOM_LEFT",
 				"portrait": "baby_goat",
 				"name": "%baby_goat%",
-				"text": [
+				"messages": [
 					"Thanks for the Sugar Cube[TM]!"
 				]
 			},
 			{
-				"v_position": "top",
-				"h_position": "left",
+				"alignment": "BOTTOM_LEFT",
 				"portrait": "lightning_boy",
 				"name": "%Lenny%",
-				"text": [
+				"messages": [
 					"WHAT HAVE YOU DONE??",
 					"FEEDING THE GOAT A SUGAR CUBE ACTIVATES HIS TRAP CARD!!"
 				]
 			},
 			{
-				"v_position": "top",
-				"h_position": "left",
+				"alignment": "BOTTOM_LEFT",
 				"portrait": "baby_goat",
 				"name": "%baby_goat%",
-				"text": [
+				"messages": [
 					"MUWAHAHA!",
 					"Now I can fly! BRB"
 				]

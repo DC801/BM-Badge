@@ -5,14 +5,15 @@ var serializeString = function (
 ) {
 	var scenarioIndex = scenarioData.uniqueStringMap[string];
 	if (scenarioIndex === undefined) {
-		var paddedLength = getPaddedHeaderLength(string.length);
+		// allow for explicit null char at the end
+		var paddedLength = getPaddedHeaderLength(string.length + 1);
 		var buffer = new ArrayBuffer(paddedLength);
 		var dataView = new DataView(buffer);
 		setCharsIntoDataView(
 			dataView,
 			string,
 			0,
-			paddedLength,
+			paddedLength - 1,
 		);
 		var encodedString = {
 			name: string,

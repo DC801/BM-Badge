@@ -94,8 +94,8 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 	);
 	var entityPrototype = (
 		(
-			fileNameMap['entities.json']
-			&& fileNameMap['entities.json'].parsed[mergedWithTile.type]
+			fileNameMap['object_types.json']
+			&& fileNameMap['object_types.json'].parsed[mergedWithTile.type]
 		)
 		|| scenarioData.entityTypes[mergedWithTile.type]
 	);
@@ -125,8 +125,32 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 	);
 }
 
-var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
-	layer.objects.forEach(function (tiledObject, index, objects) {
+var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
+	return Promise.all(mapTilesets.map(function (mapTilesetItem) {
+		return loadTilesetByName(
+			mapTilesetItem.source,
+			fileNameMap,
+			scenarioData,
+		).then(function (tilesetParsed) {
+			mapTilesetItem.parsed = tilesetParsed;
+		});
+	}));
+};
+
+var handleMapLayers = function (map, scenarioData, fileNameMap) {
+	map.layers.filter(function (layer) {
+		return layer.type === 'tilelayer';
+	}).forEach(function (tileLayer) {
+		handleTileLayer(tileLayer, map);
+	})
+	var allObjectsOnAllObjectLayers = [];
+	map.layers.filter(function (layer) {
+		return layer.type === 'objectgroup';
+	}).forEach(function (objectLayer) {
+		allObjectsOnAllObjectLayers = allObjectsOnAllObjectLayers
+			.concat(objectLayer.objects);
+	});
+	allObjectsOnAllObjectLayers.forEach(function (tiledObject) {
 		if (tiledObject.rotation) {
 			throw new Error(`The Encoder WILL NOT SUPPORT object rotation! Go un-rotate and encode again! Object was found on map: ${
 				map.name
@@ -134,64 +158,29 @@ var handleObjectLayer = function (layer, map, fileNameMap, scenarioData) {
 				JSON.stringify(tiledObject, null, '\t')
 			}`);
 		}
-		if (tiledObject.gid) {
-			handleTiledObjectAsEntity(
-				tiledObject,
-				map,
-				objects,
-				fileNameMap,
-				scenarioData,
-			);
-		} else {
-			handleTiledObjectAsGeometry(
-				tiledObject,
-				map,
-				fileNameMap,
-				scenarioData,
-			);
-		}
 	});
-};
-
-var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
-	return Promise.all(mapTilesets.map(function (mapTilesetItem) {
-		var tilesetFileName = mapTilesetItem.source.split('/').pop();
-		var tilesetFile = fileNameMap[tilesetFileName];
-		if (!tilesetFile) {
-			throw new Error(
-				'Tileset `' + tilesetFileName + '` could not be found in folder!'
-			);
-		} else {
-			if (tilesetFile.scenarioIndex === undefined) {
-				tilesetFile.scenarioIndex = scenarioData.parsed.tilesets.length;
-				scenarioData.parsed.tilesets.push({
-					name: 'temporary - awaiting parse',
-					scenarioIndex: tilesetFile.scenarioIndex,
-				});
-			}
-			return (
-				tilesetFile.parsed
-					? Promise.resolve(tilesetFile.parsed)
-					: getFileJson(tilesetFile)
-						.then(handleTilesetData(tilesetFile, scenarioData, fileNameMap))
-			).then(function (tilesetParsed) {
-				mapTilesetItem.parsed = tilesetParsed;
-			})
-		}
-	}));
-};
-
-var handleMapLayers = function (map, scenarioData, fileNameMap) {
-	map.layers.forEach(function (layer) {
-		console.log(
-			'Layer:',
-			layer
-		)
-		if (layer.type === 'tilelayer') {
-			handleTileLayer(layer, map);
-		} else if (layer.type === 'objectgroup') {
-			handleObjectLayer(layer, map, fileNameMap, scenarioData);
-		}
+	map.entityObjects = allObjectsOnAllObjectLayers.filter(function(object) {
+		return object.gid !== undefined;
+	});
+	map.geometryObjects = allObjectsOnAllObjectLayers.filter(function(object) {
+		return object.gid === undefined;
+	});
+	map.geometryObjects.forEach(function (tiledObject) {
+		handleTiledObjectAsGeometry(
+			tiledObject,
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	});
+	map.entityObjects.forEach(function (tiledObject) {
+		handleTiledObjectAsEntity(
+			tiledObject,
+			map,
+			map.geometryObjects,
+			fileNameMap,
+			scenarioData,
+		);
 	});
 	return map;
 };
@@ -273,11 +262,11 @@ var generateMapHeader = function (map) {
 
 var handleMapData = function (mapFile, fileNameMap, scenarioData) {
 	return function (map) {
-		console.log(
-			'Map:',
-			mapFile.name,
-			map
-		);
+		// console.log(
+		// 	'Map:',
+		// 	mapFile.name,
+		// 	map
+		// );
 		map.name = mapFile.name.split('.')[0];
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;

@@ -38,10 +38,10 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 		})
 			.then(function (result) {
 				URL.revokeObjectURL(blobUrl);
-				console.log(
-					file.name,
-					result
-				);
+				// console.log(
+				// 	file.name,
+				// 	result
+				// );
 				var width = result.shape[0];
 				var height = result.shape[1];
 				var hasAlpha = result.shape[2] === 4;

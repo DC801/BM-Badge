@@ -5,11 +5,17 @@
 		"scripts/script-action_testing.json",
 		"scripts/script-test_map_script.json"
 	],
+	"dialogPaths": [
+		"dialog/dialog-test_map.json"
+	],
 	"maps": {
-		"test": "maps/test.json",
-		"town_map": "maps/town_map.json",
-		"action_test": "maps/action_testing.json",
-		"action_test_2": "maps/action_testing_2.json"
+		"test": "maps/map-test.json",
+		"town": "maps/map-town.json",
+		"action_test": "maps/map-action_testing.json",
+		"action_test_2": "maps/map-action_testing_2.json"
+	},
+	"dialogSkins": {
+		"default": "tilesets/tileset-dialog_moon.json"
 	},
 	"entityTypes": {
 		"mage": {
@@ -646,7 +652,7 @@
 			}
 		},
 		"pipscat": {
-			"tileset": "entity-cat.json",
+			"tileset": "entity-pipscat.json",
 			"animations": {
 				"idle": [
 					{
@@ -904,6 +910,147 @@
 					},
 					{
 						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"baker": {
+			"tileset": "entity-baker.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 5,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": true
+					},
+					{
+						"tileid": 4,
+						"flip_x": false
+					},
+					{
+						"tileid": 3,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"marta": {
+			"tileset": "entity-marta.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 14,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": true
+					},
+					{
+						"tileid": 13,
+						"flip_x": false
+					},
+					{
+						"tileid": 12,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 2,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": true
+					},
+					{
+						"tileid": 1,
+						"flip_x": false
+					},
+					{
+						"tileid": 0,
+						"flip_x": false
+					}
+				]
+			}
+		},
+		"tailor": {
+			"tileset": "entity-tailor.json",
+			"animations": {
+				"idle": [
+					{
+						"tileid": 8,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": true
+					},
+					{
+						"tileid": 7,
+						"flip_x": false
+					},
+					{
+						"tileid": 6,
+						"flip_x": false
+					}
+				],
+				"walk": [
+					{
+						"tileid": 20,
+						"flip_x": false
+					},
+					{
+						"tileid": 18,
+						"flip_x": true
+					},
+					{
+						"tileid": 19,
+						"flip_x": false
+					},
+					{
+						"tileid": 18,
+						"flip_x": false
+					}
+				],
+				"action": [
+					{
+						"tileid": 17,
+						"flip_x": false
+					},
+					{
+						"tileid": 15,
+						"flip_x": true
+					},
+					{
+						"tileid": 16,
+						"flip_x": false
+					},
+					{
+						"tileid": 15,
 						"flip_x": false
 					}
 				]

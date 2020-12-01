@@ -72,11 +72,11 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
 		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
 		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
-		console.log(
-			'Tileset:',
-			tilesetFile.name,
-			tilesetData
-		);
+		// console.log(
+		// 	'Tileset:',
+		// 	tilesetFile.name,
+		// 	tilesetData
+		// );
 		tilesetData.serializedTiles = new ArrayBuffer(
 			getPaddedHeaderLength(tilesetData.tilecount)
 		);
@@ -91,8 +91,8 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 			);
 			var entityPrototype = (
 				(
-					fileNameMap['entities.json']
-					&& fileNameMap['entities.json'].parsed[tile.type]
+					fileNameMap['object_types.json']
+					&& fileNameMap['object_types.json'].parsed[tile.type]
 				)
 				|| {}
 			);
@@ -125,4 +125,47 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		tilesetFile.parsed = tilesetData;
 		return filePromise
 	};
+};
+
+var loadTilesetByName = function(
+	tilesetFileName,
+	fileNameMap,
+	scenarioData,
+) {
+	var tilesetFileNameSplit = tilesetFileName.split('/').pop();
+	var tilesetFile = fileNameMap[tilesetFileNameSplit];
+	if (!tilesetFile) {
+		throw new Error(
+			'Tileset `' + tilesetFileNameSplit + '` could not be found in folder!'
+		);
+	} else {
+		if (tilesetFile.scenarioIndex === undefined) {
+			tilesetFile.scenarioIndex = scenarioData.parsed.tilesets.length;
+			scenarioData.parsed.tilesets.push({
+				name: `temporary - ${tilesetFileNameSplit} - awaiting parse`,
+				scenarioIndex: tilesetFile.scenarioIndex
+			});
+		}
+		return (
+			tilesetFile.parsed
+				? Promise.resolve(tilesetFile.parsed)
+				: getFileJson(tilesetFile)
+					.then(handleTilesetData(tilesetFile, scenarioData, fileNameMap))
+		)
+	}
+};
+
+var getPreloadedTilesetByName = function(
+	tilesetFileName,
+	fileNameMap,
+	scenarioData,
+) {
+	var tilesetFileNameSplit = tilesetFileName.split('/').pop();
+	var tilesetFile = fileNameMap[tilesetFileNameSplit];
+	if (!tilesetFile.parsed) {
+		throw new Error(
+			'Tileset `' + tilesetFileNameSplit + '` was not loaded at the time it was requested!'
+		);
+	}
+	return tilesetFile.parsed;
 };

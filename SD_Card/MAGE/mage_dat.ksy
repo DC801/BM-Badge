@@ -18,6 +18,8 @@ seq:
     type: count_with_offsets
   - id: script_offsets
     type: count_with_offsets
+  - id: dialog_offsets
+    type: count_with_offsets
   - id: string_offsets
     type: count_with_offsets
   - id: image_offsets
@@ -50,6 +52,10 @@ seq:
     type: script
     repeat: expr
     repeat-expr: script_offsets.count
+  - id: dialogs
+    type: dialog
+    repeat: expr
+    repeat-expr: dialog_offsets.count
 instances:
   strings:
     type: string(_index)
@@ -323,12 +329,20 @@ types:
         enum: geometry_type
       - id: point_count
         type: u1
+      - id: segment_count
+        type: u1
       - id: padding
-        type: u2
+        type: u1
+      - id: path_length
+        type: f4
       - id: points
         type: point
         repeat: expr
         repeat-expr: point_count
+      - id: segment_lengths
+        type: f4
+        repeat: expr
+        repeat-expr: segment_count
 
   point:
     seq:
@@ -369,6 +383,45 @@ types:
         type: u1
       - id: padding_g
         type: u1
+
+  dialog:
+    seq:
+      - id: name
+        type: strz
+        size: 32
+        encoding: UTF8
+      - id: screen_count
+        type: u4
+      - id: dialog_screens
+        type: dialog_screen
+        repeat: expr
+        repeat-expr: screen_count
+
+  dialog_screen:
+    seq:
+      - id: name_index
+        type: u2
+      - id: border_tileset_index
+        type: u2
+      - id: name_type
+        type: u1
+        enum: dialog_screen_name_type
+      - id: alignment
+        type: u1
+        enum: dialog_screen_alignment_type
+      - id: font_index
+        type: u1
+      - id: message_count
+        type: u1
+      - id: messages
+        type: u2
+        repeat: expr
+        repeat-expr: message_count
+      - id: dialog_screen_padding
+        type: u2
+        repeat: expr
+        repeat-expr: (message_count) % 2
+        doc: Padding to align things back to uint32_t
 
   string:
     params:
@@ -467,3 +520,17 @@ enums:
     39: screen_fade_in
     40: play_sound_continuous
     41: play_sound_interrupt
+
+  dialog_screen_alignment_type:
+    0: bottom_left
+    1: bottom_right
+    2: top_left
+    3: top_right
+    4: bottom_left_with_name
+    5: bottom_right_with_name
+    6: top_left_with_name
+    7: top_right_with_name
+
+  dialog_screen_name_type:
+    0: rom_string
+    1: entity_lookup

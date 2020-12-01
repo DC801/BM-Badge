@@ -313,6 +313,18 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	SHOW_DIALOG: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'dialog', size: 2},
+			],
+			'SHOW_DIALOG',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	LOAD_MAP: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -549,6 +561,7 @@ var specialKeywordsEnum = {
 	'%MAP%': 255,
 	'%SELF%': 254,
 	'%PLAYER%': 253,
+	'%ENTITY_PATH%': 65535,
 }
 
 var getObjectByNameOnMap = function(name, map, actionName) {
@@ -633,13 +646,10 @@ var getGeometryIndexFromAction = function (
 		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
 	}
 	var geometry = getObjectByNameOnMap(value, map, actionName);
-	if (
-		!geometry
-		|| !geometry.path
-	) {
+	if (!geometry) {
 		throw new Error(`${actionName} was not able to find geometry named "${value}" on the map named "${map.name}"`);
 	}
-	return geometry.scenarioIndex;
+	return geometry.specialIndex || geometry.scenarioIndex;
 };
 
 var getDirectionFromAction = function (
@@ -744,6 +754,30 @@ var getStringIdFromAction = function (
 	);
 };
 
+var getDialogIdFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+	}
+	var dialog = scenarioData.dialogs[value];
+	if (!dialog) {
+		throw new Error(`${actionName} was unable to find a dialog named "${value}"!`);
+	}
+	return serializeDialog(
+		dialog,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
 var getMapLocalScriptIdFromAction = function (
 	propertyName,
 	action,
@@ -792,6 +826,7 @@ var actionPropertyNameToHandlerMap = {
 	geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
 	string: getStringIdFromAction,
+	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
 	color: getTwoBytesFromAction,
 	primary_id: getTwoBytesFromAction,
@@ -948,6 +983,7 @@ var serializeNullScript = function(
 		fileNameMap,
 		scenarioData,
 	);
+	scenarioData.scripts['null_script'] = nullScript;
 }
 
 var handleScript = function(
@@ -1047,8 +1083,8 @@ var handleMapScripts = function (
 };
 
 var mergeScriptDataIntoScenario = function(
+	fileNameMap,
 	scenarioData,
-	fileNameMap
 ) {
 	var allScripts = {};
 	scenarioData.scripts = allScripts;
