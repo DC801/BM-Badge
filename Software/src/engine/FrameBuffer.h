@@ -5,6 +5,7 @@
 #include <cstdint>
 #endif
 
+#include "common.h"
 #include "adafruit/gfxfont.h"
 
 #define WIDTH		320

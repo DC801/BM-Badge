@@ -34,12 +34,16 @@
 #include <string.h>
 #include <common.h>
 
+#ifdef DC801_EMBEDDED
+
 #include "nordic_common.h"
 #include "ff.h"
 #include "nrf_block_dev_sdc.h"
 #include "nrf_block_dev.h"
 #include "diskio.h"
 #include "nrf_soc.h"
+
+#endif
 
 #include "gfx.h"
 #include "drv_ili9341.h"

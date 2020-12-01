@@ -112,7 +112,6 @@ extern "C" {
 #include "modules/ble.h"
 #include "modules/drv_ili9341.h"
 #include "modules/sd.h"
-#include "modules/gfx.h"
 #include "modules/adc.h"
 #include "modules/uart.h"
 #include "modules/i2c.h"
