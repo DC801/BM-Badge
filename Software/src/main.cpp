@@ -183,7 +183,7 @@ int main(void){
 	//morseInit();
 
 	// Configure the systick
-	//sysTickStart();
+	sysTickStart();
 
 	// Boot! Boot! Boot!
 	printf("Booted!\n");
