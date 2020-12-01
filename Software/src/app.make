@@ -4,7 +4,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/cmixer/cmixer.c \
 	$(SRC_ROOT)/modules/drv_ili9341.c \
 	$(SRC_ROOT)/modules/sd.c \
-	$(SRC_ROOT)/modules/gfx.c \
 	$(SRC_ROOT)/modules/ble.c \
 	$(SRC_ROOT)/modules/adc.c \
 	$(SRC_ROOT)/modules/uart.c \
