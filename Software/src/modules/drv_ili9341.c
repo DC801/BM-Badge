@@ -327,25 +327,30 @@ void ili9341_start() {
 	nrf_spim_event_clear(SPIM(LCD_SPIM_INSTANCE), NRF_SPIM_EVENT_ENDTX);
 
 	CRITICAL_REGION_ENTER();
+		//Sleep OUT:
         __writeCommand(0x11);
         nrf_delay_ms(120);
 
+		//Power Control B:
         __writeCommand(0xCF);
         __writeData(0x00);
         __writeData(0xc1);
         __writeData(0X30);
 
+		//Power On Sequence Control
         __writeCommand(0xED);
         __writeData(0x64);
         __writeData(0x03);
         __writeData(0X12);
         __writeData(0X81);
 
+		//Driver Timing Control A
         __writeCommand(0xE8);
         __writeData(0x85);
         __writeData(0x00);
         __writeData(0x78);
 
+		//Power Control A
         __writeCommand(0xCB);
         __writeData(0x39);
         __writeData(0x2C);
@@ -353,9 +358,11 @@ void ili9341_start() {
         __writeData(0x34);
         __writeData(0x02);
 
+		//Pump Ratio Control
         __writeCommand(0xF7);
         __writeData(0x20);
 
+		//Driver Timing Control B
         __writeCommand(0xEA);
         __writeData(0x00);
         __writeData(0x00);
@@ -378,12 +385,14 @@ void ili9341_start() {
         __writeCommand(0x36);    // Memory Access Control (rotation)
         __writeData(0x28);
 
+		//Pixel Format Set (16 bits per pixel)
         __writeCommand(0x3A);
         __writeData(0x55);
 
+		//Frame Control: 
         __writeCommand(0xB1);
-        __writeData(0x00);
-        __writeData(0x18);
+        __writeData(0x00); //DIVA = 0: division ratio for processor
+        __writeData(0x18); //
 
         __writeCommand(0xB6);    // Display Function Control
         __writeData(0x08);
