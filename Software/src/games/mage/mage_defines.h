@@ -48,6 +48,10 @@ all of the old code used as the foundation of this badge.
 //current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PLAYER 253
 
+//this is a value used in the entityId in actions that refers to the
+//current playerEntityId for the MageGameControl object.
+#define MAGE_ENTITY_PATH 65535
+
 //this is a fudge factor to make animations look better on the desktop
 //it's added to animation ticks every loop:
 #define DESKTOP_TIME_FUDGE_FACTOR 50
@@ -76,6 +80,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_NUM_ACTION_ARGS 7
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
+#define MAGE_NO_SCRIPT (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 
@@ -187,6 +192,12 @@ typedef struct{
 	uint16_t loopsToNextAction;
 	//the total number of loops from the start of the action until the next action
 	uint16_t totalLoopsToNextAction;
+	//used to store state various geometry things
+	Point pointA;
+	Point pointB;
+	float length;
+	float lengthOfPreviousSegments;
+	uint8_t currentSegmentIndex;
 } MageScriptState;
 
 

@@ -7,6 +7,7 @@ extern FrameBuffer *mage_canvas;
 
 MageGeometry::MageGeometry(uint32_t address)
 {
+	size_t segmentLengthsSize;
 	//skip over name:
 	address += 32;
 	//read typeId:
@@ -22,10 +23,26 @@ MageGeometry::MageGeometry(uint32_t address)
 		goto MageGeometry_Error;
 	}
 	address += sizeof(pointCount);
-	address += 2; //padding
+
+	//read segmentCount:
+	if (EngineROM_Read(address, sizeof(segmentCount), (uint8_t *)&segmentCount) != sizeof(segmentCount))
+	{
+		goto MageGeometry_Error;
+	}
+	address += sizeof(segmentCount);
+
+	address += 1; //padding
+
+	//read pathLength:
+	if (EngineROM_Read(address, sizeof(pathLength), (uint8_t *)&pathLength) != sizeof(pathLength))
+	{
+		goto MageGeometry_Error;
+	}
+	pathLength = convert_endian_f4_value(pathLength);
+	address += sizeof(pathLength);
 
 	//generate appropriately sized point array:
-	pointArray = std::make_unique<Point[]>(pointCount);
+	points = std::make_unique<Point[]>(pointCount);
 
 	//fill array one point at a time:
 	for(int i=0; i<pointCount; i++){
@@ -46,9 +63,22 @@ MageGeometry::MageGeometry(uint32_t address)
 		y = convert_endian_u2_value(y);
 		address += sizeof(y);
 		//assign values:
-		pointArray[i].x = x;
-		pointArray[i].y = y;
+		points[i].x = x;
+		points[i].y = y;
 	}
+
+	//generate appropriately sized array:
+	segmentLengths = std::make_unique<float[]>(segmentCount);
+	segmentLengthsSize = sizeof(float) * segmentCount;
+
+	if (EngineROM_Read(
+		address,
+		segmentLengthsSize,
+		(uint8_t *)segmentLengths.get() // <- fuck this little `.get()` shit right here HOW ABOUT YOU GIVE ME A REAL POINTER
+	) != segmentLengthsSize) {
+		goto MageGeometry_Error;
+	}
+	convert_endian_f4_buffer(segmentLengths.get(), segmentCount);
 
 	return;
 
@@ -60,11 +90,11 @@ MageGeometry::MageGeometry(uint8_t type, uint8_t numPoints)
 {
 	typeId = type;
 	pointCount = numPoints;
-	pointArray = std::make_unique<Point[]>(pointCount);
+	points = std::make_unique<Point[]>(pointCount);
 	for(uint8_t i=0; i<pointCount; i++)
 	{
-		pointArray[i].x = 0;
-		pointArray[i].y = 0;
+		points[i].x = 0;
+		points[i].y = 0;
 	}
 }
 
@@ -83,8 +113,8 @@ bool MageGeometry::isPointInGeometry(Point point)
 	if(typeId == MageGeometryTypeId::POINT)
 	{
 		return (
-			point.x == pointArray[0].x &&
-			point.y == pointArray[0].y
+			point.x == points[0].x &&
+			point.y == points[0].y
 		);
 	}
 	//if it's a polyline or polygon, do the thing:
@@ -116,8 +146,8 @@ bool MageGeometry::isPointInGeometry(Point point)
 		for(i=0, j=pointCount - 1; i < pointCount; j = i++)
 		{
 			//get the points for i and j:
-			Point points_i = pointArray[i];
-			Point points_j = pointArray[j];
+			Point points_i = points[i];
+			Point points_j = points[j];
 			//do the fancy check:
 			if(
 				( (points_i.y >= point.y) != (points_j.y >= point.y) ) &&
@@ -153,15 +183,15 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 	Point *pointB;
 	if(typeId == POINT) {
 		mage_canvas->drawPoint(
-			pointArray[0].x - cameraX,
-			pointArray[0].y - cameraY,
+			points[0].x - cameraX,
+			points[0].y - cameraY,
 			4,
 			color
 		);
 	} else {
 		for (int i = 1; i < pointCount; ++i) {
-			pointA = &pointArray[i - 1];
-			pointB = &pointArray[i];
+			pointA = &points[i - 1];
+			pointB = &points[i];
 			mage_canvas->drawLine(
 				pointA->x - cameraX,
 				pointA->y - cameraY,
@@ -173,8 +203,8 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 	}
 	if(typeId == POLYGON) {
 		// draw the closing line from point N-1 to 0
-		pointA = &pointArray[pointCount - 1];
-		pointB = &pointArray[0];
+		pointA = &points[pointCount - 1];
+		pointB = &points[0];
 		mage_canvas->drawLine(
 			pointA->x - cameraX,
 			pointA->y - cameraY,

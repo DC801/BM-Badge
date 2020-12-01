@@ -11,10 +11,12 @@
 #endif
 
 #include "mage_hex.h"
+#include "mage_dialog_control.h"
 #include "mage_script_control.h"
 
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
+std::unique_ptr<MageDialogControl> MageDialog;
 std::unique_ptr<MageScriptControl> MageScript;
 MageEntity *hackableDataAddress;
 FrameBuffer *mage_canvas;
@@ -144,6 +146,9 @@ void GameRender()
 		if (MageGame->isCollisionDebugOn) {
 			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
 		}
+		if(MageDialog->isOpen) {
+			MageDialog->draw();
+		}
 	}
 
 	//update the state of the LEDs
@@ -173,6 +178,9 @@ void MAGE()
 	
 	//construct MageHexEditor object, set hex editor defaults
 	MageHex = std::make_unique<MageHexEditor>();
+
+	//construct MageHexEditor object, set hex editor defaults
+	MageDialog = std::make_unique<MageDialogControl>();
 
 	//construct MageScriptControl object to handle scripts for the game
 	MageScript = std::make_unique<MageScriptControl>();

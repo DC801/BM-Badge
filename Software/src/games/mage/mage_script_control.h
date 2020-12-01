@@ -18,8 +18,8 @@ class MageScriptControl
 	private:
 		//the jumpScript variable is used by some actions to indicate that a script should
 		//end and immediately begin running a new script.
-		//it should be set to MAGE_NULL_SCRIPT unless a new script should be run immediately.
-		uint16_t jumpScript;
+		//it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
+		int32_t jumpScript;
 
 		//this is a variable that tracks which entity called an action. 
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
@@ -58,6 +58,7 @@ class MageScriptControl
 		void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
 		int16_t getUsefulEntityIndexFromActionEntityId(uint8_t entityId);
+		uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity *entity);
 
 		//the functions below here are the action functions. These are going to be
 		//called directly by scripts, and preform their actions based on arguments read from ROM
@@ -174,13 +175,48 @@ class MageScriptControl
 		MageScriptState* getMapTickResumeState();
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
+		Point offsetPointRelativeToEntityCenter(
+			const MageEntityRenderableData *renderable,
+			const MageEntity *entity,
+			const Point *geometryPoint
+		) const;
+		MageEntityAnimationDirection getRelativeDirection(
+			const Point &pointA,
+			const Point &pointB
+		) const;
+		void setEntityPositionToPoint(
+			MageEntity *entity,
+			const Point &point
+		) const;
+		float getProgressOfAction(const MageScriptState *resumeStateStruct) const;
+		uint16_t getLoopableGeometryPointIndex(
+			MageGeometry *geometry,
+			uint8_t index
+		);
+		uint16_t getLoopableGeometrySegmentIndex(
+			MageGeometry *geometry,
+			uint8_t segmentIndex
+		);
+		void setResumeStatePointsAndEntityDirection(
+			MageScriptState *resumeStateStruct,
+			MageEntityRenderableData *renderable,
+			MageEntity *entity,
+			MageGeometry *geometry,
+			uint16_t pointAIndex,
+			uint16_t pointBIndex
+		) const;
+		void initializeEntityGeometryPath(
+			MageScriptState *resumeStateStruct,
+			MageEntityRenderableData *renderable,
+			MageEntity *entity,
+			MageGeometry *geometry
+		);
 
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
 		void handleEntityOnInteractScript(uint8_t index);
 		void handleEntityOnTickScript(uint8_t index);
-
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H

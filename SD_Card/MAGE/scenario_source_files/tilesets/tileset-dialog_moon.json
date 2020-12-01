@@ -1,0 +1,14 @@
+{ "columns":4,
+ "image":"tileset-dialog_moon.png",
+ "imageheight":64,
+ "imagewidth":64,
+ "margin":0,
+ "name":"tileset-dialog_moon",
+ "spacing":0,
+ "tilecount":16,
+ "tiledversion":"1.4.3",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}

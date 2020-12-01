@@ -41,6 +41,7 @@ private:
 	MageHeader entityHeader;
 	MageHeader geometryHeader;
 	MageHeader scriptHeader;
+	MageHeader dialogHeader;
 	MageHeader stringHeader;
 	MageHeader imageHeader;
 
@@ -141,6 +142,9 @@ public:
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
 	MageGeometry* getValidGeometry(uint16_t geometryId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t entityId);
+	std::string getString(uint16_t stringId);
+	uint32_t getImageAddress(uint16_t imageId);
+	uint32_t getDialogAddress(uint16_t dialogId);
 
 	//this returns the address offset for a specific script Id:
 	uint32_t getScriptAddress(uint32_t scriptId);
