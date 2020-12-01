@@ -10,6 +10,7 @@
 #include "shim_timer.h"
 #include "shim_rng.h"
 #include "shim_serial.h"
+#include "shim_i2c.h"
 #include "shim_adc.h"
 #include "shim_ble.h"
 #include "shim_filesystem.h"
@@ -57,6 +58,8 @@ bool app_usbd_event_queue_process(void);
 uint32_t sd_app_evt_wait(void);
 
 void NVIC_SystemReset(void);
+
+
 
 #ifdef __cplusplus
 }
