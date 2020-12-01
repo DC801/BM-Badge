@@ -34,6 +34,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/mage/mage_game_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
 	$(SRC_ROOT)/games/mage/mage_script_control.cpp \
+	$(SRC_ROOT)/games/mage/mage_dialog_control.cpp \
 	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c

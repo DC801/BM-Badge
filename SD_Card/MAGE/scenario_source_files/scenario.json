@@ -5,11 +5,17 @@
 		"scripts/script-action_testing.json",
 		"scripts/script-test_map_script.json"
 	],
+	"dialogPaths": [
+		"dialog/dialog-test_map.json"
+	],
 	"maps": {
 		"test": "maps/map-test.json",
 		"town": "maps/map-town.json",
 		"action_test": "maps/map-action_testing.json",
 		"action_test_2": "maps/map-action_testing_2.json"
+	},
+	"dialogSkins": {
+		"default": "tilesets/tileset-dialog_moon.json"
 	},
 	"entityTypes": {
 		"mage": {

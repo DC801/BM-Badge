@@ -6,6 +6,7 @@ var dataTypes = [
 	'entities',
 	'geometry',
 	'scripts',
+	'dialogs',
 	'strings',
 	'images',
 ];
@@ -22,6 +23,7 @@ var handleScenarioData = function(fileNameMap) {
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
 		scenarioData.uniqueStringMap = {};
+		scenarioData.uniqueDialogMap = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
@@ -29,20 +31,23 @@ var handleScenarioData = function(fileNameMap) {
 		var entitiesPromise = !entitiesFile
 			? Promise.resolve()
 			: getFileJson(entitiesFile)
-				.then(handleEntitiesData(scenarioData, entitiesFile));
-		return entitiesPromise.then(function () {
-			return mergeScriptDataIntoScenario(scenarioData, fileNameMap)
-				.then(function () {
-					serializeNullScript(
-						fileNameMap,
-						scenarioData,
-					);
-					return handleScenarioMaps(scenarioData, fileNameMap)
-						.then(function () {
-							return scenarioData;
-						});
-				});
-		});
+				.then(handleEntitiesData(entitiesFile, scenarioData));
+		return Promise.all([
+			entitiesPromise,
+			preloadAllDialogSkins(fileNameMap, scenarioData),
+			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
+			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+		])
+			.then(function () {
+				serializeNullScript(
+					fileNameMap,
+					scenarioData,
+				);
+				return handleScenarioMaps(scenarioData, fileNameMap)
+					.then(function () {
+						return scenarioData;
+					});
+			});
 	}
 };
 

@@ -114,8 +114,8 @@
 	- [x] polygon(uint8_t count, x points[count])
 	- [x] polyline(uint8_t count, x points[count])
 	- [x] point(uint16_t x, uint16_t y)
-    - [x] Geometry::inside_poly(point) collision detection function
-    - [x] draw() renders geometry to screen
+	- [x] Geometry::inside_poly(point) collision detection function
+	- [x] draw() renders geometry to screen
 - [ ] Dialog Data Type Ideas
 	- [ ] Display Name - either stringId, or entityId
 	- [ ] The actual text to display, probably with line breaks hard coded in to keep things simple.

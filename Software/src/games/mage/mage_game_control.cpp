@@ -5,9 +5,11 @@
 #include "FrameBuffer.h"
 #include "mage_hex.h"
 #include "mage_script_control.h"
+#include "mage_dialog_control.h"
 
 extern Point cameraPosition;
 extern MageHexEditor *MageHex;
+extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
 
 extern FrameBuffer *mage_canvas;
@@ -41,6 +43,9 @@ MageGameControl::MageGameControl()
 
 	scriptHeader = MageHeader(offset);
 	offset += scriptHeader.size();
+
+	dialogHeader = MageHeader(offset);
+	offset += dialogHeader.size();
 
 	stringHeader = MageHeader(offset);
 	offset += stringHeader.size();
@@ -80,22 +85,6 @@ MageGameControl::MageGameControl()
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		geometries[i] = MageGeometry(geometryHeader.offset(i));
-	}
-
-	strings = std::make_unique<std::string[]>(stringHeader.count());
-
-	for (uint32_t i = 0; i < stringHeader.count(); i++)
-	{
-		uint32_t start = stringHeader.offset(i);
-		uint32_t length = stringHeader.length(i);
-		std::string romString(length, '\0');
-		uint8_t *romStringPointer = (uint8_t *)&romString[0];
-		if (EngineROM_Read(start, length, romStringPointer) != length)
-		{
-			ENGINE_PANIC("Failed to load string data.");
-			return;
-		}
-		strings[i] = romString;
 	}
 
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
@@ -149,11 +138,6 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		size += geometries[i].size();
-	}
-
-	for (uint32_t i = 0; i < stringHeader.count(); i++)
-	{
-		size += strings[i].size();
 	}
 
 	return size;
@@ -1156,6 +1140,23 @@ MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
 	return &tilesets[tilesetId % tilesetHeader.count()];
 }
 
-std::string* MageGameControl::getString(uint16_t stringId) {
-	return &strings[stringId % stringHeader.count()];
+std::string MageGameControl::getString(uint16_t stringId) {
+	uint16_t sanitizedIndex = stringId % stringHeader.count();
+	uint32_t start = stringHeader.offset(sanitizedIndex);
+	uint32_t length = stringHeader.length(sanitizedIndex);
+	std::string romString(length, '\0');
+	uint8_t *romStringPointer = (uint8_t *)&romString[0];
+	if (EngineROM_Read(start, length, romStringPointer) != length)
+	{
+		ENGINE_PANIC("Failed to load string data.");
+	}
+	return romString;
+}
+
+uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
+	return imageHeader.offset(imageId % imageHeader.count());
+}
+
+uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
+	return dialogHeader.offset(dialogId % dialogHeader.count());
 }
