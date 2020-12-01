@@ -1,0 +1,57 @@
+{
+	"dialog-wisdom": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%alfonso%",
+			"messages": [
+				"Ah, hello little Goat.\nHave you come to me seeking wisdom?"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "baby_goat",
+			"name": "%baby_goat%",
+			"messages": [
+				":: goat noises ::"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%alfonso%",
+			"messages": [
+				"If you are the smartest person in the room,\nthen you are in the wrong room",
+				"You cannot cross the sea merely by standing\nand staring at the water.",
+				"Your assumptions are your windows on the\nworld. Scrub them off every once in a\nwhile, or the light won't come in.",
+				"Before you criticize someone,\nyou should walk a mile in their shoes.\nThat way, when you criticize them, you’re\na mile away and you have their shoes."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "baby_goat",
+			"name": "%baby_goat%",
+			"messages": [
+				":: goat noises intensify ::"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%alfonso%",
+			"messages": [
+				"...",
+				"Ah, I see that you are seeking only\nmy strongest wisdom.",
+				"When you see a variable prefixed with an\nampersand, think:\n\"that is the `And`ress (address)\"\nof the data in question."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "baby_goat",
+			"name": "%baby_goat%",
+			"messages": [
+				":: happy goat noises ::"
+			]
+		}
+	]
+}

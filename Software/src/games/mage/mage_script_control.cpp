@@ -1,4 +1,5 @@
 #include "mage_script_control.h"
+#include "mage_dialog_control.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "EngineInput.h"
@@ -6,6 +7,7 @@
 //load in the global variables that the scripts will be operating on:
 extern MageGameControl *MageGame;
 extern MageHexEditor *MageHex;
+extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
@@ -310,7 +312,7 @@ void MageScriptControl::compareEntityName(uint8_t * args, MageScriptState * resu
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		std::string romString = *MageGame->getString(argStruct->stringId);
+		std::string romString = MageGame->getString(argStruct->stringId);
 		std::string entityName(13, '\0');
 		entityName.assign(entity->name, 12);
 		int compare = strcmp(entityName.c_str(), romString.c_str());
@@ -522,6 +524,13 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 	ActionShowDialog *argStruct = (ActionShowDialog*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->dialogId = convert_endian_u2_value(argStruct->dialogId);
+
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		printf("Opening dialog %d\n", argStruct->dialogId);
+		MageGame->playerHasControl = false;
+		MageDialog->load(argStruct->dialogId);
+		resumeStateStruct->totalLoopsToNextAction = 1;
+	}
 	return;
 }
 void MageScriptControl::setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -622,7 +631,7 @@ MageEntityAnimationDirection MageScriptControl::getRelativeDirection(
 		pointB.x - pointA.x
 	);
 	float absoluteAngle = abs(angle);
-	MageEntityAnimationDirection direction;
+	MageEntityAnimationDirection direction = SOUTH;
 	if(absoluteAngle > 2.356194) {
 		direction = WEST;
 	} else if(absoluteAngle < 0.785398) {

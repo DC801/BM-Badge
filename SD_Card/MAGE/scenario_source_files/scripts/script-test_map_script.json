@@ -1,4 +1,10 @@
 {
+	"show_dialog_about_wisdom": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-wisdom"
+		}
+	],
 	"check_if_player_is_at_log": [
 		{
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",

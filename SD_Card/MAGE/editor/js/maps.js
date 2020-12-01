@@ -127,29 +127,13 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 
 var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
 	return Promise.all(mapTilesets.map(function (mapTilesetItem) {
-		var tilesetFileName = mapTilesetItem.source.split('/').pop();
-		var tilesetFile = fileNameMap[tilesetFileName];
-		if (!tilesetFile) {
-			throw new Error(
-				'Tileset `' + tilesetFileName + '` could not be found in folder!'
-			);
-		} else {
-			if (tilesetFile.scenarioIndex === undefined) {
-				tilesetFile.scenarioIndex = scenarioData.parsed.tilesets.length;
-				scenarioData.parsed.tilesets.push({
-					name: 'temporary - awaiting parse',
-					scenarioIndex: tilesetFile.scenarioIndex,
-				});
-			}
-			return (
-				tilesetFile.parsed
-					? Promise.resolve(tilesetFile.parsed)
-					: getFileJson(tilesetFile)
-						.then(handleTilesetData(tilesetFile, scenarioData, fileNameMap))
-			).then(function (tilesetParsed) {
-				mapTilesetItem.parsed = tilesetParsed;
-			})
-		}
+		return loadTilesetByName(
+			mapTilesetItem.source,
+			fileNameMap,
+			scenarioData,
+		).then(function (tilesetParsed) {
+			mapTilesetItem.parsed = tilesetParsed;
+		});
 	}));
 };
 

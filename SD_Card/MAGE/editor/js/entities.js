@@ -166,7 +166,10 @@ var serializeEntity = function (
 	return entity;
 };
 
-var handleEntitiesData = function (scenarioData, entitiesFile) {
+var handleEntitiesData = function (
+	entitiesFile,
+	scenarioData,
+) {
 	return function (entitiesData) {
 		console.log(
 			'object_types.json',
