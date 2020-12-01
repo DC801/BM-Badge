@@ -19,7 +19,7 @@ extern FrameBuffer *mage_canvas;
 //   Each header is constructed with offsets from the previous
 MageGameControl::MageGameControl()
 {
-	uint32_t offset = 8;
+	uint32_t offset = 8; //skip 'MAGEGAME' string at front of .dat file
 
 	currentMapId = DEFAULT_MAP;
 
