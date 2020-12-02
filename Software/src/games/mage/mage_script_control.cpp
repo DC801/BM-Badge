@@ -626,10 +626,17 @@ MageEntityAnimationDirection MageScriptControl::getRelativeDirection(
 	const Point &pointA,
 	const Point &pointB
 ) const {
+	#ifdef DESKTOP
 	float angle = atan2f32(
 		pointB.y - pointA.y,
 		pointB.x - pointA.x
 	);
+	#else
+	float angle = atan2f(
+		pointB.y - pointA.y,
+		pointB.x - pointA.x
+	);
+	#endif
 	float absoluteAngle = abs(angle);
 	MageEntityAnimationDirection direction = SOUTH;
 	if(absoluteAngle > 2.356194) {
