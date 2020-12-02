@@ -2,16 +2,13 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 
+extern FIL * raw_file;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifdef DC801_EMBEDDED
-
-//this is the path to the game.dat file on the SD card.
-//if an SD card is inserted with game.dat in this location, it will automatically be loaded.
-//this should be offloaded once we move form the sd card to the ROM -Tim
-#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
 #include "nrfx_qspi.h"
 
@@ -99,16 +96,8 @@ uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 	}
 	*/
 
-	char * filename = MAGE_GAME_DAT_PATH;
-	FIL raw_file;
 	FRESULT result;
 	UINT count;
-	
-	// Open magegame.dat file on SD card
-	result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
-	if (result != FR_OK) {
-		return 0;
-	}
 
 	//seek to address:
 	result = f_lseek(&raw_file, address);
@@ -118,7 +107,9 @@ uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 
 	//read from the file into the *data buffer:
 	result = f_read(&raw_file, data, length, &count);
+
 	return length;
+
 }
 
 uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)

@@ -35,6 +35,7 @@
 #include <sys/time.h>
 
 #include "common.h"
+#include "EnginePanic.h"
 
 #include "sd.h"
 
@@ -77,6 +78,7 @@ bool util_sd_init() {
 
 	if (disk_state) {
 		printf("Can't init\n");
+		ENGINE_PANIC("Can't Init SD Card");
 		return false;
 	}
 
@@ -87,6 +89,7 @@ bool util_sd_init() {
 	ff_result = f_mount(&m_fs, "", 1);
 	if (ff_result) {
 		printf("Can't mount\n");
+		ENGINE_PANIC("Can't Mount SD Card");
 		return false;
 	}
 
@@ -95,6 +98,7 @@ bool util_sd_init() {
 	FRESULT result = util_sd_load_file("VERSION", (uint8_t *) version_data, 32);
 	if (result != FR_OK) {
 		printf("No version\n");
+		ENGINE_PANIC("Can't Get SD Card Version");
 		return false;
 	}
 	uint32_t version_number = strtol(version_data + 8, NULL, 10);

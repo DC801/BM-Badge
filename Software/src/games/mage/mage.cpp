@@ -30,6 +30,15 @@ Point cameraPosition = {
 	.x = 0,
 	.y = 0,
 };
+
+//temporary globals to make SD reads faster:
+
+//this is the path to the game.dat file on the SD card.
+//if an SD card is inserted with game.dat in this location, it will automatically be loaded.
+#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
+char * filename = MAGE_GAME_DAT_PATH;
+FIL raw_file;
+
 void handleBLockingDelay()
 {
 	//if a blocking delay was added by any actions, pause before returning to the game loop:
@@ -163,9 +172,21 @@ void MAGE()
 #ifdef DC801_DESKTOP
 	EngineWindowFrameInit();
 #endif
+	//turn off LEDs
+	ledsOff();
 
 	// Initialize ROM and drivers
 	EngineROM_Init();
+
+	//Temporary: Open the game.dat file so we don't need to do it every read:
+	// Remove this once we're using the ROM chip. -Tim
+		
+	FRESULT result;
+	// Open magegame.dat file on SD card
+	result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
+	if (result != FR_OK) {
+		ENGINE_PANIC("Unable to Open MAGE/game.dat on SD Card");
+	}
 
 	// Verify magic
 	if (EngineROM_Magic((const uint8_t*)"MAGEGAME", 8) != true)
@@ -243,6 +264,9 @@ void MAGE()
 
 	// Close rom and any open files
 	EngineROM_Deinit();
+
+	//close game.dat file:
+	result = f_close(&raw_file);
 
 	#ifdef DC801_DESKTOP
 		// Clean up
