@@ -178,16 +178,16 @@ void MAGE()
 	// Initialize ROM and drivers
 	EngineROM_Init();
 
-	//Temporary: Open the game.dat file so we don't need to do it every read:
-	// Remove this once we're using the ROM chip. -Tim
-		
-	FRESULT result;
-	// Open magegame.dat file on SD card
-	result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
-	if (result != FR_OK) {
-		ENGINE_PANIC("Unable to Open MAGE/game.dat on SD Card");
-	}
-
+	#ifdef DC801_EMBEDDED
+		//Temporary: Open the game.dat file so we don't need to do it every read:
+		// Remove this once we're using the ROM chip. -Tim
+		FRESULT result;
+		// Open magegame.dat file on SD card
+		result = f_open(&raw_file, filename, FA_READ | FA_OPEN_EXISTING);
+		if (result != FR_OK) {
+			ENGINE_PANIC("Unable to Open MAGE/game.dat on SD Card");
+		}
+	#endif
 	// Verify magic
 	if (EngineROM_Magic((const uint8_t*)"MAGEGAME", 8) != true)
 	{
@@ -265,9 +265,10 @@ void MAGE()
 	// Close rom and any open files
 	EngineROM_Deinit();
 
-	//close game.dat file:
-	result = f_close(&raw_file);
-
+	#ifdef DC801_EMBEDDED
+		//close game.dat file:
+		result = f_close(&raw_file);
+	#endif
 	#ifdef DC801_DESKTOP
 		// Clean up
 		EngineWindowFrameDestroy();
