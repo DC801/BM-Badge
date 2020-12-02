@@ -423,6 +423,15 @@ void MageGameControl::applyUniversalInputs()
 
 void MageGameControl::applyGameModeInputs()
 {
+	if(MageDialog->isOpen) {
+		if(
+			EngineInput_Activated.rjoy_down
+			||EngineInput_Activated.rjoy_left
+			||EngineInput_Activated.rjoy_right
+		) {
+			MageDialog->advanceMessage();
+		}
+	}
 	//check to see if player input is allowed:
 	if(!playerHasControl)
 	{
@@ -473,7 +482,7 @@ void MageGameControl::applyGameModeInputs()
 				{ playerEntity->y -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::NORTH; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_down )
 				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
-			if(EngineInput_Buttons.rjoy_right ) {
+			if(EngineInput_Activated.rjoy_right ) {
 				handleEntityInteract();
 			}
 			if(EngineInput_Buttons.rjoy_up );

@@ -37,13 +37,13 @@ enum MageDialogStringType : uint8_t {
 	ENTITY_LOOKUP = 1,
 };
 
+
 typedef struct {
 	// TODO: portraits, after we have some graphics for them
 	uint16_t nameIndex;
+	uint16_t borderTilesetIndex;
 	MageDialogStringType nameType;
-	uint8_t showName;
 	MageDialogScreenAlignment alignment;
-	uint8_t borderIndex;
 	uint8_t fontIndex;
 	uint8_t messageCount;
 } MageDialogScreen;
@@ -56,7 +56,6 @@ class MageDialogControl {
 	private:
 		// char dialogName[32];
 		MageTileset *currentFrameTileset;
-		uint8_t screenCount;
 		int32_t currentDialogIndex;
 		uint32_t currentDialogAddress;
 		uint32_t currentDialogScreenCount;
