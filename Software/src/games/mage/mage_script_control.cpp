@@ -530,6 +530,9 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 		MageGame->playerHasControl = false;
 		MageDialog->load(argStruct->dialogId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
+	} else if (!MageDialog->isOpen) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+		MageGame->playerHasControl = true;
 	}
 	return;
 }

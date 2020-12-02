@@ -13,6 +13,13 @@ MageDialogAlignmentCoords bottomLeft = {
 
 MageDialogControl::MageDialogControl() {
 	isOpen = false;
+	currentDialogIndex = 0;
+	currentDialogAddress = 0;
+	currentDialogScreenCount = 0;
+	currentScreenIndex = 0;
+	currentMessageIndex = 0;
+	currentImageAddress = 0;
+	messageIds = std::make_unique<uint16_t[]>(0);
 	currentScreen = {0};
 }
 
@@ -20,7 +27,6 @@ uint32_t MageDialogControl::size() {
 	return (
 		0
 		+ sizeof(currentFrameTileset)
-		+ sizeof(screenCount)
 		+ sizeof(currentDialogIndex)
 		+ sizeof(currentDialogAddress)
 		+ sizeof(currentScreenIndex)
@@ -35,7 +41,6 @@ uint32_t MageDialogControl::size() {
 void MageDialogControl::load(uint16_t dialogId) {
 	currentDialogIndex = dialogId;
 	currentScreenIndex = 0;
-	currentMessageIndex = 0;
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
@@ -48,6 +53,7 @@ void MageDialogControl::load(uint16_t dialogId) {
 		ENGINE_PANIC("Failed to load dialog data.");
 	}
 	currentDialogScreenCount = convert_endian_u4_value(currentDialogScreenCount);
+	currentDialogAddress += sizeof(currentDialogScreenCount);
 
 	loadNextScreen();
 
@@ -55,40 +61,52 @@ void MageDialogControl::load(uint16_t dialogId) {
 }
 
 void MageDialogControl::loadNextScreen() {
-	// TODO: Figure out why we get different & random DialogScreens/messages at each launch?!??
+	currentMessageIndex = 0;
+	if(currentScreenIndex >= currentDialogScreenCount) {
+		isOpen = false;
+		return;
+	}
+	uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
 	if (EngineROM_Read(
 		currentDialogAddress,
-		sizeof(currentScreen),
+		sizeOfDialogScreenStruct,
 		(uint8_t *)&currentScreen
-	) != sizeof(currentScreen))
+	) != sizeOfDialogScreenStruct)
 	{
 		ENGINE_PANIC("Failed to load dialog data.");
 	}
 	currentScreen.nameIndex = convert_endian_u2_value(currentScreen.nameIndex);
-	currentDialogAddress += sizeof(currentScreen);
+	currentScreen.borderTilesetIndex = convert_endian_u2_value(currentScreen.borderTilesetIndex);
+	currentDialogAddress += sizeOfDialogScreenStruct;
 
-	uint32_t messageSize = sizeof(uint16_t) * currentScreen.messageCount;
+	uint8_t sizeOfMessageIndex = sizeof(uint16_t);
+	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
 	messageIds.reset();
 	messageIds = std::make_unique<uint16_t[]>(currentScreen.messageCount);
 	if (EngineROM_Read(
 		currentDialogAddress,
-		messageSize,
+		sizeOfScreenMessageIds,
 		(uint8_t *)messageIds.get()
-	) != messageSize)
+	) != sizeOfScreenMessageIds)
 	{
 		ENGINE_PANIC("Failed to load dialog data.");
 	}
 	convert_endian_u2_buffer(messageIds.get(), currentScreen.messageCount);
-	currentDialogAddress += messageSize;
+	currentDialogAddress += sizeOfScreenMessageIds;
+	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
 
-	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderIndex);
+	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageAddress = MageGame->getImageAddress(
 		currentFrameTileset->ImageId()
 	);
+	currentScreenIndex++;
 }
 
 void MageDialogControl::advanceMessage() {
-
+	currentMessageIndex++;
+	if (currentMessageIndex >= currentScreen.messageCount) {
+		loadNextScreen();
+	}
 }
 
 void MageDialogControl::draw() {
