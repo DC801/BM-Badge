@@ -2,12 +2,62 @@
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 
-MageDialogAlignmentCoords bottomLeft = {
-	.box = {
-		.x = 0,
-		.y = 8,
-		.w = 19,
-		.h = 6,
+MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
+	{ // BOTTOM_LEFT
+		.text = {
+			.x = 0,
+			.y = 8,
+			.w = 19,
+			.h = 6,
+		},
+		.label = {
+			.x = 0,
+			.y = 5,
+			.w = 8,
+			.h = 3,
+		}
+	},
+	{ // BOTTOM_RIGHT
+		.text = {
+			.x = 0,
+			.y = 8,
+			.w = 19,
+			.h = 6,
+		},
+		.label = {
+			.x = 11,
+			.y = 5,
+			.w = 8,
+			.h = 3,
+		}
+	},
+	{ // TOP_LEFT
+		.text = {
+			.x = 0,
+			.y = 0,
+			.w = 19,
+			.h = 6,
+		},
+		.label = {
+			.x = 0,
+			.y = 6,
+			.w = 8,
+			.h = 3,
+		}
+	},
+	{ // TOP_RIGHT
+		.text = {
+			.x = 0,
+			.y = 0,
+			.w = 19,
+			.h = 6,
+		},
+		.label = {
+			.x = 11,
+			.y = 6,
+			.w = 8,
+			.h = 3,
+		}
 	}
 };
 
@@ -36,7 +86,6 @@ uint32_t MageDialogControl::size() {
 		+ sizeof(isOpen)
 	);
 }
-
 
 void MageDialogControl::load(uint16_t dialogId) {
 	currentDialogIndex = dialogId;
@@ -110,23 +159,30 @@ void MageDialogControl::advanceMessage() {
 }
 
 void MageDialogControl::draw() {
-	uint16_t tileWidth = currentFrameTileset->TileWidth();
-	uint16_t tileHeight = currentFrameTileset->TileHeight();
-	uint16_t tilesetColumns = currentFrameTileset->Cols();
-	uint16_t imageWidth = currentFrameTileset->ImageWidth();
-	uint16_t offsetX = (bottomLeft.box.x * tileWidth) + (tileWidth / 2);
-	uint16_t offsetY = (bottomLeft.box.y * tileHeight) + (tileHeight / 2);
-	uint16_t x;
-	uint16_t y;
-	uint8_t tileId;
+	std::string currentEntityName = MageGame->getString(currentScreen.nameIndex);
 	std::string currentMessage = MageGame->getString(
 		messageIds[currentMessageIndex]
 	);
-	for (uint8_t i = 0; i < bottomLeft.box.w; ++i) {
-		for (uint8_t j = 0; j < bottomLeft.box.h; ++j) {
+	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
+	drawDialogBox(currentMessage, coords.text);
+	drawDialogBox(currentEntityName, coords.label);
+}
+
+void MageDialogControl::drawDialogBox(const std::string &string, Rect box) {
+	uint16_t tileWidth = currentFrameTileset->TileWidth();
+	uint16_t tileHeight = currentFrameTileset->TileHeight();
+	uint16_t offsetX = (box.x * tileWidth) + (tileWidth / 2);
+	uint16_t offsetY = (box.y * tileHeight) + (tileHeight / 2);
+	uint16_t tilesetColumns = currentFrameTileset->Cols();
+	uint16_t imageWidth = currentFrameTileset->ImageWidth();
+	uint16_t x;
+	uint16_t y;
+	uint8_t tileId;
+	for (uint8_t i = 0; i < box.w; ++i) {
+		for (uint8_t j = 0; j < box.h; ++j) {
 			x = offsetX + (i * tileWidth);
 			y = offsetY + (j * tileHeight);
-			tileId = getTileIdFromXY(i, j, bottomLeft.box);
+			tileId = getTileIdFromXY(i, j, box);
 			canvas.drawChunkWithFlags(
 				currentImageAddress,
 				x,
@@ -142,11 +198,11 @@ void MageDialogControl::draw() {
 		}
 	}
 	mage_canvas->printMessage(
-		currentMessage.c_str(),
+		string.c_str(),
 		Monaco9,
 		0xffff,
-		offsetX + tileWidth,
-		offsetY + tileHeight
+		offsetX + tileWidth + 8,
+		offsetY + tileHeight - 2
 	);
 }
 

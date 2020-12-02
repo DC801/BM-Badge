@@ -46,7 +46,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_LEFT",
 			"portrait": "baby_goat",
 			"name": "%baby_goat%",
 			"messages": [

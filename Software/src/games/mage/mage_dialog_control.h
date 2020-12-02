@@ -31,6 +31,7 @@ enum MageDialogScreenAlignment : uint8_t {
 	BOTTOM_RIGHT = 1,
 	TOP_LEFT = 2,
 	TOP_RIGHT = 3,
+	ALIGNMENT_COUNT
 };
 enum MageDialogStringType : uint8_t {
 	ROM_STRING = 0,
@@ -49,7 +50,8 @@ typedef struct {
 } MageDialogScreen;
 
 typedef struct {
-	Rect box;
+	Rect text;
+	Rect label;
 } MageDialogAlignmentCoords;
 
 class MageDialogControl {
@@ -64,10 +66,13 @@ class MageDialogControl {
 		uint32_t currentImageAddress;
 		MageDialogScreen currentScreen;
 		std::unique_ptr<uint16_t[]>messageIds;
-
 		uint8_t getTileIdFromXY(
 			uint8_t x,
 			uint8_t y,
+			Rect box
+		);
+		void drawDialogBox(
+			const std::string &string,
 			Rect box
 		);
 
@@ -79,6 +84,7 @@ class MageDialogControl {
 		void loadNextScreen();
 		void advanceMessage();
 		void draw();
+
 };
 
 #endif //MAGE_DIALOG_CONTROL_H
