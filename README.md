@@ -46,13 +46,16 @@ Project owner
  - [@nemus](https://twitter.com/Nemus801)
 
 Software Team
- - [@professor__plum](https://twitter.com/professor__plum)
- - [@_bashNinja](https://twitter.com/_bashNinja)
+  - [@_bashNinja](https://twitter.com/_bashNinja)
+  - [@admiral_potato](https://twitter.com/admiral_potato)
+  - [@corfidbizna](https://twitter.com/corfidbizna)
+  - [@kiyoshigawa](https://twitter.com/kiyoshigawa)
+  - [@newzie1](https://twitter.com/newzie1)
+  - [@tazmodius](https://twitter.com/tazmodius)
 
 Hardware Team
  - [@dvdfreitag](https://twitter.com/dvdfreitag)
  - [@hamster](https://twitter.com/hamster)
 
 Honorable Mention
- - [@SirGed](https://twitter.com/SirGed)
-
+ - [@pips801](https://twitter.com/pips801)
