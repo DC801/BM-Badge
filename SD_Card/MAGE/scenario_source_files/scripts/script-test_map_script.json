@@ -1,8 +1,26 @@
 {
-	"show_dialog_about_wisdom": [
+	"show_dialog-wisdom": [
 		{
 			"name": "SHOW_DIALOG",
 			"dialog": "dialog-wisdom"
+		}
+	],
+	"show_dialog-strong_bad": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-strong_bad"
+		}
+	],
+	"show_dialog-bender": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-bender"
+		}
+	],
+	"show_dialog-trekkie": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie"
 		}
 	],
 	"check_if_player_is_at_log": [
@@ -10,7 +28,7 @@
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "log_ellipse",
-			"script": "walk_self_to_path_and_walk",
+			"script": "walk_self_to_path_and_loop",
 			"expected_bool": true
 		}
 	],

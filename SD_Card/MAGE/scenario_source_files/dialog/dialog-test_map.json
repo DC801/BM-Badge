@@ -3,7 +3,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "alfonso",
-			"name": "%alfonso%",
+			"name": "Zen Master",
 			"messages": [
 				"Ah, hello little Goat.\nHave you come to me seeking wisdom?"
 			]
@@ -11,7 +11,7 @@
 		{
 			"alignment": "TOP_RIGHT",
 			"portrait": "baby_goat",
-			"name": "%baby_goat%",
+			"name": "Player",
 			"messages": [
 				":: goat noises ::"
 			]
@@ -19,7 +19,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "alfonso",
-			"name": "%alfonso%",
+			"name": "Zen Master",
 			"messages": [
 				"If you are the smartest person in the room,\nthen you are in the wrong room",
 				"You cannot cross the sea merely by standing\nand staring at the water.",
@@ -30,7 +30,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "baby_goat",
-			"name": "%baby_goat%",
+			"name": "Player",
 			"messages": [
 				":: goat noises intensify ::"
 			]
@@ -38,7 +38,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "alfonso",
-			"name": "%alfonso%",
+			"name": "Zen Master",
 			"messages": [
 				"...",
 				"Ah, I see that you are seeking only\nmy strongest wisdom.",
@@ -48,9 +48,106 @@
 		{
 			"alignment": "TOP_LEFT",
 			"portrait": "baby_goat",
-			"name": "%baby_goat%",
+			"name": "Player",
 			"messages": [
 				":: happy goat noises ::"
+			]
+		}
+	],
+	"dialog-strong_bad": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "strong_bad",
+			"name": "Strong Bad",
+			"messages": [
+				"I was told that Fhqwhgads would be here.\nHave you seen him?\nI don't know who it is,\nbut it probably is Fhqwhgads."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Player",
+			"messages": [
+				"Sounds kinda sketchy.\nAnd I'm into it.\nI'll keep an eye out."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "strong_bad",
+			"name": "Strong Bad",
+			"messages": [
+				"Yeah, you BETTER keep an eye out.",
+				"You don't wanna know what could happen...",
+				"to someone who doesn't keep an eye out."
+			]
+		}
+	],
+	"dialog-bender": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Player",
+			"messages": [
+				"Hey, robot, could you make me a smoothie?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "bender",
+			"name": "Bender",
+			"messages": [
+				"PFFFFT NO, make your own smoothie!\nWho do I look like to you?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Player",
+			"messages": [
+				"I don't know, I thought your name was\nlike... Blender or something?"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "strong_bad",
+			"name": "Strong Bad",
+			"messages": [
+				"BWAHAHAHA!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "bender",
+			"name": "Bender",
+			"messages": [
+				"HEY, CAN IT BOXING-MASK FOR FACE!",
+				"For your information, PLAYER,\nmy name is BENDER! Don't wear it out!"
+			]
+		}
+	],
+	"dialog-trekkie": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "trekkie",
+			"name": "Farmer Trekkie",
+			"messages": [
+				"Oh no! All me AOL free trial hours\nhave expired! Me need to get back on\nINTERNET!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Player",
+			"messages": [
+				"Wait, what?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "trekkie",
+			"name": "Farmer Trekkie",
+			"messages": [
+				"Me being left behind in Yahoo Chat Rooms!"
 			]
 		}
 	]
