@@ -1,6 +1,6 @@
 # todo:
 
-#Game Engine:
+## Game Engine:
 - [x] Add tile flipping to render function
 - [x] Entities
 	- [x] Determine which entity should be player character on map load
@@ -147,7 +147,7 @@
 	- [ ] On map init, replace player name into PlayerEntity
 	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
 
-##Hardware TODO:
+## Hardware TODO:
 
 - [x] Get keyboard chip working and reliably updating button states
 - [x] Get LED control chip working and update LED control functions
@@ -157,7 +157,7 @@
 - [ ] Verify function of all desktop testing build features are working correctly on badge hardware
 - [ ] Fix audio driver and initialize communication with audio chip
 
-#MAJOR GAMEPLAY AND QUEST SPOILERS BELOW!
+# MAJOR GAMEPLAY AND QUEST SPOILERS BELOW!
 
 ## Assets we need
 - [ ] More villagers
@@ -188,31 +188,5 @@
 	- [ ] A rake, for the lake
 - [ ] A knob that has never turned, but must be turned to get the fountain to turn on again
 - [ ] A well, for Timmy to get stuck in
-- [ ] Tiles for village elder's basement/dungeon - Corfid
-- [ ] Bender + shiny metal ass
-
-## Quests on the Village Quest Board
-- [ ] Save Timmy From The well
-	- Someone should point out that Timmy could always fly, and could have flown himself out of the well.
-	- Perhaps he is an Eye Faerie.
-- [ ] Village Elder wants you to paint a fence
-	- Change the hackable bytes on 5 fence entities watching for value change
-- [ ] Wax on, Wax off
-	- ???
-- [ ] Fix Bender's shiny metal ass
-	- There's a Bender with a chunk taken our of his shiny metal ass
-- [ ] Bring Milk to the door of the Serial Dungeon, it gets soggy and you can get in
-- [ ] Un-hack the old lady's husband
-	- [ ] Starts as a sheep, then un-hacked to be a person
-	- [ ] When un-hacked, triggers a secondary quest available on next map load:
-	- [ ] Turn the old lady's husband back into a sheep, she liked him better that way
-- [ ] Unravel the Ethernet Tumbleweed
-	- [ ] Follow up with Yagoth on the details for this
-- [ ] Rake in the Lake
-- [ ] Get the Fountain Flowing Again
-- [ ] "I really hate that statue, please hide it in the lake."
-- [ ] Put the 4 escaped sheep back in the pen
-- [ ] Find all of the hidden Chickens
-- [ ] Catch the NPC that teleports whenever you get close enough to interact with them.
-	- [ ] Their on_tick script watches for player proximity
-	- [ ] The entity sneezes and then teleports
+- [ ] Tiles for village elder's basement/dungeon
+- [X] Bender + shiny metal ass
