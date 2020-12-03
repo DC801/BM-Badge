@@ -1,5 +1,6 @@
 # todo:
 
+#Game Engine:
 - [x] Add tile flipping to render function
 - [x] Entities
 	- [x] Determine which entity should be player character on map load
@@ -46,13 +47,10 @@
 	- [x] getValidEntityTypeId
 	- [x] getValidEntityTypeAnimationId
 	- [x] getValidEntityTypeDirection
-- [ ] In the ROM header, the first u4 should be the length of the header
-	- [ ] In Mage init, Read header up to that length, then parse it
+- [x] In the ROM header, add a timestamp so we know if the game.dat should be replaced with SD card versions.
 - [x] Make a list of some C functions we want scripts to be able to call
 - [x] Decide on a common script function signature
-- [ ] Define an encoding format for scripts
-- [ ] Ability to specify which font is used in a dialog
-	- [ ] There can be a puzzle where changing the font to smaller makes all of a message readable
+- [x] Define an encoding format for scripts
 - [ ] Music/SFX encoding in the binary asset encoder
 - [ ] Script system
 	- [x] Binary Encoder parts
@@ -69,45 +67,45 @@
 			- [x] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
-		- [e] CHECK_ENTITY_BYTE
-		- [e] CHECK_SAVE_FLAG
+		- [ ] CHECK_ENTITY_BYTE
+		- [ ] CHECK_SAVE_FLAG
 		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
-		- [e] CHECK_FOR_BUTTON_STATE
+		- [x] CHECK_FOR_BUTTON_STATE
 		- [x] RUN_SCRIPT
 		- [x] COMPARE_ENTITY_NAME
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
-		- [e] SET_PAUSE_STATE
-		- [e] SET_ENTITY_BYTE
-		- [e] SET_SAVE_FLAG
-		- [e] SET_PLAYER_CONTROL
-		- [e] SET_ENTITY_INTERACT_SCRIPT
-		- [e] SET_ENTITY_TICK_SCRIPT
-		- [e] SET_MAP_TICK_SCRIPT
-		- [e] SET_ENTITY_TYPE
+		- [ ] SET_PAUSE_STATE
+		- [ ] SET_ENTITY_BYTE
+		- [ ] SET_SAVE_FLAG
+		- [ ] SET_PLAYER_CONTROL
+		- [ ] SET_ENTITY_INTERACT_SCRIPT
+		- [ ] SET_ENTITY_TICK_SCRIPT
+		- [ ] SET_MAP_TICK_SCRIPT
+		- [ ] SET_ENTITY_TYPE
 		- [x] SET_ENTITY_DIRECTION
-		- [e] SET_HEX_CURSOR_LOCATION
-		- [e] SET_HEX_BIT
-		- [e] UNLOCK_HAX_CELL
-		- [e] LOCK_HAX_CELL
+		- [ ] SET_HEX_CURSOR_LOCATION
+		- [ ] SET_HEX_BIT
+		- [ ] UNLOCK_HAX_CELL
+		- [ ] LOCK_HAX_CELL
 		- [x] SET_HEX_EDITOR_STATE
 		- [x] SET_HEX_EDITOR_DIALOG_MODE
-		- [e] LOAD_MAP
-		- [ ] SHOW_DIALOG
-		- [e] SET_RENDERABLE_FONT
+		- [ ] LOAD_MAP
+		- [x] SHOW_DIALOG
+		- [ ] SET_RENDERABLE_FONT
 		- [x] TELEPORT_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_ALONG_GEOMETRY
 		- [x] LOOP_ENTITY_ALONG_GEOMETRY
-		- [e] SET_CAMERA_TO_FOLLOW_ENTITY
-		- [e] TELEPORT_CAMERA_TO_GEOMETRY
-		- [e] PAN_CAMERA_TO_GEOMETRY
-		- [e] PAN_CAMERA_ALONG_GEOMETRY
-		- [e] LOOP_CAMERA_ALONG_GEOMETRY
-		- [e] SET_SCREEN_SHAKE
-		- [e] SCREEN_FADE_OUT
-		- [e] SCREEN_FADE_IN
+		- [ ] SET_CAMERA_TO_FOLLOW_ENTITY
+		- [ ] TELEPORT_CAMERA_TO_GEOMETRY
+		- [ ] PAN_CAMERA_TO_GEOMETRY
+		- [ ] PAN_CAMERA_ALONG_GEOMETRY
+		- [ ] LOOP_CAMERA_ALONG_GEOMETRY
+		- [ ] SET_SCREEN_SHAKE
+		- [ ] SCREEN_FADE_OUT
+		- [ ] SCREEN_FADE_IN
 		- [ ] PLAY_SOUND_CONTINUOUS
 		- [ ] PLAY_SOUND_INTERRUPT
 - [x] Geometry
@@ -116,51 +114,63 @@
 	- [x] point(uint16_t x, uint16_t y)
 	- [x] Geometry::inside_poly(point) collision detection function
 	- [x] draw() renders geometry to screen
-- [ ] Dialog Data Type Ideas
+- [ ] Dialog Data Type Implementation:
 	- [ ] Display Name - either stringId, or entityId
-	- [ ] The actual text to display, probably with line breaks hard coded in to keep things simple.
-	- [ ] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
-		- [ ] flags for position encoding byte:
-			- [ ] Top or Bottom
-			- [ ] Portrait on or off
-			- [ ] portrait left or right
-			- [ ] use local name or entityId
-	- [ ] tilesetId and tileId for the portrait picture.
-	- [ ] display font.
+	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.
+	- [x] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
+		- [x] flags for position encoding byte:
+			- [x] Top or Bottom
+			- [x] Portrait on or off
+			- [x] portrait left or right
+	- [x] tilesetId and tileId for the portrait picture.
+	- [ ] display font
 	- [ ] voice sound Id
-	- [ ] response TypeId:
-		- [ ] NO_RESPONSE = 0
-		- [ ] SELECT_FROM_SHORT_LIST = 1
-		- [ ] SELECT_FROM_LONG_LIST = 2
-		- [ ] ENTER_NUMBER = 2
-		- [ ] ENTER_ALPHANUMERIC = 3
-		- [ ] etc...
-	- [ ] Player responses to dialog may be desired:
-		- [ ] Assuming pop-up happens while dialog is still active:
-			- [ ] select from a list of options
-			- [ ] enter a numerical code
-			- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
-		- [ ] new script and/or dialog to call depending on player response
+	- [ ] Dialog Responses:
+		- [ ] response TypeId:
+			- [ ] NO_RESPONSE = 0
+			- [ ] SELECT_FROM_SHORT_LIST = 1
+			- [ ] SELECT_FROM_LONG_LIST = 2
+			- [ ] ENTER_NUMBER = 2
+			- [ ] ENTER_ALPHANUMERIC = 3
+			- [ ] etc...
+		- [ ] Player responses to dialog may be desired:
+			- [ ] Assuming pop-up happens while dialog is still active:
+				- [ ] select from a list of options
+				- [ ] enter a numerical code
+				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
+			- [ ] new script and/or dialog to call depending on player response
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long
 - [ ] Save system with flags
 	- [ ] Player Name (12 bytes, like all other entities)
 	- [ ] On map init, replace player name into PlayerEntity
-	- [ ] Like 256 bits of save state flags
+	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
 
-# Assets we need
+##Hardware TODO:
+
+- [x] Get keyboard chip working and reliably updating button states
+- [x] Get LED control chip working and update LED control functions
+- [x] Update FrameBuffer.h to work with the new larger screen
+- [x] Use SD card for testing game until ROM chip is functional
+- [ ] Get ROM chip read/write working reliably
+- [ ] Verify function of all desktop testing build features are working correctly on badge hardware
+- [ ] Fix audio driver and initialize communication with audio chip
+
+#MAJOR GAMEPLAY AND QUEST SPOILERS BELOW!
+
+## Assets we need
 - [ ] More villagers
 	- [ ] One of the children's actions should be a sneeze
 - [ ] The other mystical artifacts, which do _not_ pick the mage
 - [ ] Ring Zero, spinning
 - [ ] Chicken
 - [ ] Sparkles that could be overlayed on anything to draw attention
-- [ ] Character Portraits for the Dialog system - Kristen
+- [ ] Character Portraits for the Dialog system
 	- [ ] Mouth open, closed
-- [x] The Quest Board tiles - Corfid
-- [ ] The 9-slice image for "Quest List" screen - Kristen
-- [ ] The 9-slice image for dialog borders - Kristen
+- [x] The Quest Board tiles
+- [X] The 9-slice image for "Quest List" screen
+- [X] The 9-slice image for dialog borders
 - [ ] Tiles for the inside of village houses
 - [ ] Set Dressing
 	- [ ] Bed
@@ -206,95 +216,3 @@
 - [ ] Catch the NPC that teleports whenever you get close enough to interact with them.
 	- [ ] Their on_tick script watches for player proximity
 	- [ ] The entity sneezes and then teleports
-### In which Tim tries to make a Hex editor tutorial script:
-
-Tutorial synopsis:
--Script-1
-	-setPlayerMovable(false)
-	-Interact with someone or something to start the tutorial.
-		-Entity OnInteract()
-		-playSound()
-	-Player now has ring 0.
-		-SetSaveFlag()
-	-Player spins around and is teleported to a new level of darkness.
-		-playSound()
-		-moveEntityTo()
-		-setEntityDirection()
-		-screenFadeOut()
-		-loadMap()
-	-Otamatonani Appears.
-		-playSound()
-		-moveEntityAlongPath()
-	-Otamatonavi speaks:
-		-showDialog()
-			-'blah blah blah, I'ma teach you how to use the power of ring 0 to change the world around you!'
-		-showDialog()
-			-'First you need to learn how to hax the planet! You just need to grab your hat and concentrate.'
-	-Otamatone now waits for player to touch their hat.
-		-clearDialog()
-		-setEntityTickScript(otamatonavi, script-2)
-		-SetPlayerMovable(true)
-
--Script-2
-	-checkForButtonPress(hax key, Script-3)
-
--Script 3
-	-setPlayerMovable(false)
-	-sethexEditorState(true)
-	-setHexEditorDialogState(true)
-	-setHexCursor(0)
-	-Otamatonavi speaks:
-		-showDialog() (need to hide portrait)
-			-Excellent work! Now you're able to see the state of all the entities in the world!
-		-showDialog() with response:
-			-Do you want me to explain how the hex editor works?
-				-Yes, Script 5
-				-No, Script 4
-
-Script 4
-	-Otamanavi Speaks:
-		-Alright then, you're free to hack away. If you set byte 0x1d to 170, I'll let you out of this void!
-	-Close dialog, close hack interface, return player control, etc. 
-	setEntityTickScript(Script 7)
-	setEntityOnInteractScript(Script 6)
-
-
-Script 5
-	Otamanavi Speaks:
-			-You may notice that some of the bytes are a different color. 
-			-That's because you are able to sense your own bytes.
-			-Now let me explain the hacking interface.
-			-The cursor will move when you use the directional buttons below, like so.
-	-show cursor moving to hackable box:
-		-setHexCursor(1)
-		-delay(20)
-		...
-		-setHexCursor(28)
-	-Otamanavi Speaks:
-		-showDialog()
-			-You see how these values are easy for you to read? That means you can hack them!
-			-To hack them you just use those bit buttons you've got there.
-			-I'll show you what happens to this byte when I press each button...
-	-Show bit lights blinking for a bit, and how the number changes.
-		-setHexBit(BIT_1, true)
-		-delay(500)
-		...
-		-setHexBit(BIT_8, true)
-		-Delay(500)
-		...
-		-SetHexBit(BIT_128, true)
-	-Otamatonavi speaks:
-		-As you can see, the value of this cell changes based on the state of the lights!
-		-You can change any bit in the current byte using the bit buttons
-		-Now you try it! I'll let you ouf ot this void if you set byte 1d to be 170	.
-	-callScript(Script 4)
-
-Script 6
-	-Otamatonavi Speaks:
-		-If you set byte 0x1d to 170, I'll let you out of this void!
-
-Script 7
-	-checkByte(1d, Script 8, 170)
-
-Script 8
-	-Send the player back to the village...
