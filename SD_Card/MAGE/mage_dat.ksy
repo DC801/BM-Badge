@@ -4,6 +4,10 @@ meta:
 seq:
   - id: identifier
     contents: MAGEGAME
+  - id: timestamp
+    type: strz
+    size: 24
+    encoding: UTF8
   - id: map_offsets
     type: count_with_offsets
   - id: tileset_offsets

@@ -20,6 +20,7 @@ extern FrameBuffer *mage_canvas;
 MageGameControl::MageGameControl()
 {
 	uint32_t offset = 8; //skip 'MAGEGAME' string at front of .dat file
+	offset += 24; //skip timestamp string at front of .dat file
 
 	currentMapId = DEFAULT_MAP;
 
