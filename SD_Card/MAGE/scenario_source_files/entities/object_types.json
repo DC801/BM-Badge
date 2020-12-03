@@ -124,6 +124,47 @@
     },
     {
         "color": "#ffa74bb9",
+        "name": "bender",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            }
+        ]
+    },
+    {
+        "color": "#ffa74bb9",
         "name": "bert",
         "properties": [
             {
@@ -861,8 +902,90 @@
         ]
     },
     {
+        "color": "#ffa74bb9",
+        "name": "strong_bad",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            }
+        ]
+    },
+    {
         "color": "#ff9d8fd7",
         "name": "tailor",
+        "properties": [
+            {
+                "name": "hackable_state_a",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_b",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_c",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "hackable_state_d",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "on_interact",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "path",
+                "type": "object",
+                "value": 0
+            }
+        ]
+    },
+    {
+        "color": "#ffa74bb9",
+        "name": "trekkie",
         "properties": [
             {
                 "name": "hackable_state_a",

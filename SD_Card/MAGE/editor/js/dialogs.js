@@ -148,7 +148,7 @@ var serializeDialogScreen = function (
 			stringId, // TODO: do a lookup for the entity ID
 			false
 		);
-		offset += 2
+		offset += 2;
 	});
 	return result;
 };

@@ -109,8 +109,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":113,
-                 "y":71
+                 "x":0,
+                 "y":128
                 }, 
                 {
                  "gid":2147483905,
@@ -126,7 +126,7 @@
                         {
                          "name":"path",
                          "type":"object",
-                         "value":25
+                         "value":46
                         }],
                  "rotation":0,
                  "type":"",
@@ -177,7 +177,7 @@
                         {
                          "name":"path",
                          "type":"object",
-                         "value":17
+                         "value":47
                         }],
                  "rotation":0,
                  "type":"",
@@ -253,7 +253,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog_about_wisdom"
+                         "value":"show_dialog-wisdom"
                         }, 
                         {
                          "name":"on_tick",
@@ -476,8 +476,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":85,
-                 "y":80
+                 "x":96,
+                 "y":64
                 }, 
                 {
                  "gid":800,
@@ -529,6 +529,60 @@
                  "width":32,
                  "x":296,
                  "y":280
+                }, 
+                {
+                 "gid":858,
+                 "height":48,
+                 "id":48,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bender"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":11,
+                 "y":188
+                }, 
+                {
+                 "gid":1027,
+                 "height":40,
+                 "id":49,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-strong_bad"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":24,
+                 "y":352
+                }, 
+                {
+                 "gid":1049,
+                 "height":32,
+                 "id":50,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-trekkie"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":480
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -547,43 +601,43 @@
                  "name":"lake_path",
                  "polygon":[
                         {
-                         "x":0,
+                         "x":-12,
                          "y":0
                         }, 
                         {
-                         "x":0.5,
-                         "y":125.5
+                         "x":-12,
+                         "y":128
                         }, 
                         {
-                         "x":18.5,
-                         "y":143.5
+                         "x":20,
+                         "y":160
                         }, 
                         {
-                         "x":244.5,
-                         "y":145
+                         "x":244,
+                         "y":160
                         }, 
                         {
-                         "x":261.5,
-                         "y":127.5
+                         "x":276,
+                         "y":128
                         }, 
                         {
-                         "x":262,
-                         "y":-1.5
+                         "x":276,
+                         "y":0
                         }, 
                         {
-                         "x":243.5,
-                         "y":-20
+                         "x":244,
+                         "y":-32
                         }, 
                         {
-                         "x":20.5,
-                         "y":-19.5
+                         "x":20,
+                         "y":-32
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":76.5,
-                 "y":96.5
+                 "x":76,
+                 "y":96
                 }, 
                 {
                  "ellipse":true,
@@ -676,19 +730,19 @@
                  "name":"exa_jog_loop_path",
                  "polyline":[
                         {
-                         "x":0,
+                         "x":-32,
                          "y":0
                         }, 
                         {
                          "x":32,
-                         "y":32
+                         "y":64
                         }, 
                         {
                          "x":256,
-                         "y":32
+                         "y":64
                         }, 
                         {
-                         "x":288,
+                         "x":320,
                          "y":0
                         }],
                  "rotation":0,
@@ -740,7 +794,94 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"more_geometry",
+         "objects":[
+                {
+                 "height":0,
+                 "id":46,
+                 "name":"ziggy_path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":224,
+                         "y":32
+                        }, 
+                        {
+                         "x":0,
+                         "y":64
+                        }, 
+                        {
+                         "x":224,
+                         "y":96
+                        }, 
+                        {
+                         "x":0,
+                         "y":128
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":96
+                }, 
+                {
+                 "height":0,
+                 "id":47,
+                 "name":"zaggy_path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":-128
+                        }, 
+                        {
+                         "x":64,
+                         "y":0
+                        }, 
+                        {
+                         "x":96,
+                         "y":-128
+                        }, 
+                        {
+                         "x":128,
+                         "y":0
+                        }, 
+                        {
+                         "x":160,
+                         "y":-128
+                        }, 
+                        {
+                         "x":192,
+                         "y":0
+                        }, 
+                        {
+                         "x":224,
+                         "y":-128
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -751,13 +892,13 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":16,
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":41,
+ "nextlayerid":7,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -861,6 +1002,18 @@
         {
          "firstgid":823,
          "source":"..\/entities\/entity-baker.json"
+        }, 
+        {
+         "firstgid":841,
+         "source":"..\/entities\/entity-bender.json"
+        }, 
+        {
+         "firstgid":1021,
+         "source":"..\/entities\/entity-strong_bad.json"
+        }, 
+        {
+         "firstgid":1048,
+         "source":"..\/entities\/entity-trekkie.json"
         }],
  "tilewidth":32,
  "type":"map",
