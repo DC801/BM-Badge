@@ -16,10 +16,10 @@ This class contains all the code related to the hex editor hacking interface.
 class MageScriptControl
 {
 	private:
-		//the jumpScript variable is used by some actions to indicate that a script should
+		//the mapLocalJumpScript variable is used by some actions to indicate that a script should
 		//end and immediately begin running a new script.
 		//it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
-		int32_t jumpScript;
+		int32_t mapLocalJumpScript;
 
 		//this is a variable that tracks which entity called an action. 
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
@@ -28,7 +28,7 @@ class MageScriptControl
 
 		//this tracks which type of script called processScript() so that when a call script
 		//calls a new script, the original entity can be updated to match.
-		uint8_t currentScriptType;
+		MageScriptType currentScriptType;
 
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
@@ -44,10 +44,10 @@ class MageScriptControl
 
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
-		void processScript(MageScriptState * resumeStateStruct, uint8_t entityId, uint8_t scriptType);
+		void processScript(MageScriptState * resumeStateStruct, uint8_t entityId, MageScriptType scriptType);
 
 		//this will run through the actions in a script from the state stores in resumeState
-		//if a jumpScript is called by an action, it will return without processing any further actions.
+		//if a mapLocalJumpScript is called by an action, it will return without processing any further actions.
 		void processActionQueue(MageScriptState * resumeStateStruct);
 
 		//this will get action arguments from ROM memory and call
@@ -66,9 +66,9 @@ class MageScriptControl
 		//each action has an action logic type, depending on how it will need to interact with the rest of the game loop:
 		//I   = instant, will execute and immediately proceed to the next action
 		//NB  = non-blocking, will use loopsToNextAction and totalLoopsToNextAction to run the action until it is completed
-		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the scriptId is changed
+		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the mapLocalScriptId is changed
 		//B   = blocking, will pause all game actions until complete.
-		//I+C = scripts that may call another scriptId, discarding any actions that occur after them in the current script
+		//I+C = scripts that may call another mapLocalScriptId, discarding any actions that occur after them in the current script
 		//I've noted the blocking state of actions below on the line above the action:
 
 		//Action Logic Type: I
@@ -166,9 +166,9 @@ class MageScriptControl
 		uint32_t size() const;
 
 		//this resets the values of a MageScriptState struct to default values.
-		//you need to provide a scriptId, and the state of the scriptIsRunning variable
+		//you need to provide a mapLocalScriptId, and the state of the scriptIsRunning variable
 		//the actionId, and duration variables are always reset to 0 on an init.
-		void initScriptState(MageScriptState * resumeStateStruct, uint16_t scriptId, bool scriptIsRunning);
+		void initScriptState(MageScriptState * resumeStateStruct, uint16_t mapLocalScriptId, bool scriptIsRunning);
 
 		//these functions return the specified MageScriptState struct:
 		MageScriptState* getMapLoadResumeState();
