@@ -57,7 +57,7 @@
 	- [x] Scripts
 		- [x] What is a script?
 			- [x] It's a length + sequence of Actions
-			- [?] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
+			- [x] Scripts shouldn't be able to be called when the player has opened the hex editor, but scripts should be able to open the hex editor when called from elsewhere.
 			- [x] We'll need entity-based state variables to track pathing and other transient values between ticks.
 		- [x] Map
 			- [x] onMapLoad(uint16_t scriptId); //called once when the map loads
