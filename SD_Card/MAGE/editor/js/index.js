@@ -90,11 +90,11 @@ var generateIndexAndComposite = function (scenarioData) {
 		'generateIndexAndComposite:scenarioData',
 		scenarioData
 	);
-	var signature = new ArrayBuffer(8);
+	var signature = new ArrayBuffer(32);
 	var signatureDataView = new DataView(signature);
 	setCharsIntoDataView(
 		signatureDataView,
-		'MAGEGAME',
+		'MAGEGAME' + new Date().toJSON(),
 		0
 	);
 	var headerSize = 0;
