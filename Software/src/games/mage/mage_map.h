@@ -65,7 +65,7 @@ public:
 	uint16_t getGlobalEntityId(uint16_t num) const;
 	//this returns a global geometryId from the local geometry index
 	uint16_t getGlobalGeometryId(uint16_t num) const;
-	//the returns a global scriptId from the local script index
+	//the returns a global mapLocalScriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t num) const;
 	uint32_t LayerOffset(uint16_t num) const;
 	//this sets the map's onLoad and onTick script value.

@@ -817,7 +817,7 @@ uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 
 uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
 {
-	//first validate the scriptId:
+	//first validate the mapLocalScriptId:
 	scriptId = getValidGlobalScriptId(scriptId);
 
 	//then return the address offset for thast script from the scriptHeader:

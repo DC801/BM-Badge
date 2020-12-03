@@ -96,7 +96,7 @@ all of the old code used as the foundation of this badge.
 #endif
 
 //these are the types of scripts that can be on a map or entity:
-typedef enum {
+typedef enum : uint8_t {
 	ON_LOAD = 0,
 	ON_TICK = 1,
 	ON_INTERACT = 2,
@@ -104,7 +104,7 @@ typedef enum {
 } MageScriptType;
 
 //this contains the possible options for an entity PrimaryIdType value.
-typedef enum {
+typedef enum : uint8_t {
 	TILESET = 0,
 	ANIMATION = 1,
 	ENTITY_TYPE = 2,
@@ -184,8 +184,8 @@ typedef enum{
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
-	//the script Id to resume - this is a global scriptId number value
-	uint16_t scriptId;
+	//the script Id to resume - this is a global mapLocalScriptId number value
+	uint16_t mapLocalScriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
 	uint16_t actionOffset;
 	//the number of loops until the next action in the script is to run
