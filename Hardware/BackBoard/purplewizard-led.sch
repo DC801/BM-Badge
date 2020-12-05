@@ -1,0 +1,893 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr USLegal 14000 8500
+encoding utf-8
+Sheet 2 3
+Title "DC801 Badge - BM - Defcon CANCELED"
+Date "2020-06-01"
+Rev "1.0"
+Comp "DC801"
+Comment1 "codename purplewizard"
+Comment2 ""
+Comment3 ""
+Comment4 "@hamster and the dc801 badge team"
+$EndDescr
+Text Notes 3000 4240 0    50   ~ 10
+Black Mage Back - Front Board
+Text HLabel 4640 3890 0    50   Input ~ 10
+LED_RESET
+Connection ~ 5035 3890
+Wire Wire Line
+	5035 3890 4640 3890
+Wire Wire Line
+	5035 3890 5035 3995
+Connection ~ 4590 4090
+Wire Wire Line
+	4590 3995 4590 4090
+Wire Wire Line
+	4735 3995 4590 3995
+Wire Wire Line
+	4705 3190 4070 3190
+Connection ~ 4705 3190
+Connection ~ 4705 3290
+Wire Wire Line
+	4705 3290 4705 3190
+Connection ~ 10325 3555
+Wire Wire Line
+	9605 3285 9605 3555
+Wire Wire Line
+	8885 3285 8885 3555
+$Comp
+L Device:C_Small C18
+U 1 1 5F2C7CE9
+P 3825 3345
+F 0 "C18" V 3940 3450 50  0000 R CNN
+F 1 "0.47uF" V 3945 3240 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3825 3345 50  0001 C CNN
+F 3 "~" H 3825 3345 50  0001 C CNN
+	1    3825 3345
+	0    -1   1    0   
+$EndComp
+$Comp
+L Device:C_Small C21
+U 1 1 5F2C7CDF
+P 3840 2720
+F 0 "C21" V 3955 2825 50  0000 R CNN
+F 1 "0.47uF" V 3955 2630 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3840 2720 50  0001 C CNN
+F 3 "~" H 3840 2720 50  0001 C CNN
+	1    3840 2720
+	0    -1   1    0   
+$EndComp
+$Comp
+L Device:C_Small C16
+U 1 1 5F2C7CD5
+P 3045 3145
+F 0 "C16" V 3160 3250 50  0000 R CNN
+F 1 "0.47uF" V 3160 3035 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3045 3145 50  0001 C CNN
+F 3 "~" H 3045 3145 50  0001 C CNN
+	1    3045 3145
+	0    -1   1    0   
+$EndComp
+$Comp
+L Device:C_Small C22
+U 1 1 5F2C7CCB
+P 4705 3415
+F 0 "C22" H 5060 3445 50  0000 R CNN
+F 1 "0.47uF" H 5060 3370 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4705 3415 50  0001 C CNN
+F 3 "~" H 4705 3415 50  0001 C CNN
+	1    4705 3415
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	7765 3555 7645 3555
+Wire Wire Line
+	7645 3555 7645 3365
+Wire Wire Line
+	7645 3365 8350 3365
+Wire Wire Line
+	8180 3555 8065 3555
+Wire Wire Line
+	8065 3830 8180 3830
+Wire Wire Line
+	8180 3830 8180 3555
+Connection ~ 8180 3555
+Wire Wire Line
+	8065 4105 8180 4105
+Wire Wire Line
+	8180 4105 8180 3830
+Connection ~ 8180 3830
+Wire Wire Line
+	8065 4380 8180 4380
+Wire Wire Line
+	8180 4380 8180 4105
+Connection ~ 8180 4105
+Wire Wire Line
+	8065 4655 8180 4655
+Wire Wire Line
+	8180 4655 8180 4380
+Connection ~ 8180 4380
+Wire Wire Line
+	7765 3830 7645 3830
+Wire Wire Line
+	7645 3830 7645 3670
+Wire Wire Line
+	7645 3670 8350 3670
+Wire Wire Line
+	7765 4105 7645 4105
+Wire Wire Line
+	7645 4105 7645 3945
+Wire Wire Line
+	7645 3945 8350 3945
+Wire Wire Line
+	7765 4380 7645 4380
+Wire Wire Line
+	7645 4380 7645 4220
+Wire Wire Line
+	7645 4220 8350 4220
+Wire Wire Line
+	7765 4655 7645 4655
+Wire Wire Line
+	7645 4655 7645 4495
+Wire Wire Line
+	7645 4495 8350 4495
+$Comp
+L Device:LED D10
+U 1 1 5F2C7C7E
+P 8620 3555
+F 0 "D10" H 8495 3670 50  0000 C CNN
+F 1 "ADD" H 8680 3670 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8620 3555 50  0001 C CNN
+F 3 "~" H 8620 3555 50  0001 C CNN
+	1    8620 3555
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8470 3555 8350 3555
+Wire Wire Line
+	8350 3555 8350 3365
+Wire Wire Line
+	8885 3555 8770 3555
+$Comp
+L Device:LED D11
+U 1 1 5F2C7C71
+P 8620 3830
+F 0 "D11" H 8495 3945 50  0000 C CNN
+F 1 "MEM1" H 8680 3945 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8620 3830 50  0001 C CNN
+F 3 "~" H 8620 3830 50  0001 C CNN
+	1    8620 3830
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8770 3830 8885 3830
+Wire Wire Line
+	8885 3830 8885 3555
+Connection ~ 8885 3555
+$Comp
+L Device:LED D12
+U 1 1 5F2C7C64
+P 8620 4105
+F 0 "D12" H 8495 4220 50  0000 C CNN
+F 1 "BIT64" H 8680 4220 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8620 4105 50  0001 C CNN
+F 3 "~" H 8620 4105 50  0001 C CNN
+	1    8620 4105
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8770 4105 8885 4105
+Wire Wire Line
+	8885 4105 8885 3830
+Connection ~ 8885 3830
+$Comp
+L Device:LED D13
+U 1 1 5F2C7C57
+P 8620 4380
+F 0 "D13" H 8495 4495 50  0000 C CNN
+F 1 "BIT4" H 8680 4495 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8620 4380 50  0001 C CNN
+F 3 "~" H 8620 4380 50  0001 C CNN
+	1    8620 4380
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8770 4380 8885 4380
+Wire Wire Line
+	8885 4380 8885 4105
+Connection ~ 8885 4105
+$Comp
+L Device:LED D14
+U 1 1 5F2C7C4A
+P 8620 4655
+F 0 "D14" H 8495 4770 50  0000 C CNN
+F 1 "HAX" H 8680 4770 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 8620 4655 50  0001 C CNN
+F 3 "~" H 8620 4655 50  0001 C CNN
+	1    8620 4655
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8770 4655 8885 4655
+Wire Wire Line
+	8885 4655 8885 4380
+Connection ~ 8885 4380
+Wire Wire Line
+	8470 3830 8350 3830
+Wire Wire Line
+	8350 3830 8350 3670
+Wire Wire Line
+	8470 4105 8350 4105
+Wire Wire Line
+	8350 4105 8350 3945
+Wire Wire Line
+	8470 4380 8350 4380
+Wire Wire Line
+	8350 4380 8350 4220
+Wire Wire Line
+	8470 4655 8350 4655
+Wire Wire Line
+	8350 4655 8350 4495
+Connection ~ 8350 3365
+Wire Wire Line
+	8350 3365 9070 3365
+Connection ~ 8350 3670
+Wire Wire Line
+	8350 3670 9070 3670
+Connection ~ 8350 3945
+Wire Wire Line
+	8350 3945 9070 3945
+Connection ~ 8350 4220
+Wire Wire Line
+	8350 4220 9070 4220
+Connection ~ 8350 4495
+Wire Wire Line
+	8350 4495 9070 4495
+$Comp
+L Device:LED D15
+U 1 1 5F2C7C1A
+P 9340 3555
+F 0 "D15" H 9215 3670 50  0000 C CNN
+F 1 "SUB" H 9400 3670 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9340 3555 50  0001 C CNN
+F 3 "~" H 9340 3555 50  0001 C CNN
+	1    9340 3555
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9190 3555 9070 3555
+Wire Wire Line
+	9070 3555 9070 3365
+Wire Wire Line
+	9605 3555 9490 3555
+$Comp
+L Device:LED D16
+U 1 1 5F2C7C0D
+P 9340 3830
+F 0 "D16" H 9215 3945 50  0000 C CNN
+F 1 "MEM2" H 9400 3945 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9340 3830 50  0001 C CNN
+F 3 "~" H 9340 3830 50  0001 C CNN
+	1    9340 3830
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9490 3830 9605 3830
+Wire Wire Line
+	9605 3830 9605 3555
+Connection ~ 9605 3555
+$Comp
+L Device:LED D17
+U 1 1 5F2C7C00
+P 9340 4105
+F 0 "D17" H 9215 4220 50  0000 C CNN
+F 1 "BIT32" H 9400 4220 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9340 4105 50  0001 C CNN
+F 3 "~" H 9340 4105 50  0001 C CNN
+	1    9340 4105
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9490 4105 9605 4105
+Wire Wire Line
+	9605 4105 9605 3830
+Connection ~ 9605 3830
+$Comp
+L Device:LED D18
+U 1 1 5F2C7BF3
+P 9340 4380
+F 0 "D18" H 9215 4495 50  0000 C CNN
+F 1 "BIT2" H 9400 4495 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9340 4380 50  0001 C CNN
+F 3 "~" H 9340 4380 50  0001 C CNN
+	1    9340 4380
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9490 4380 9605 4380
+Wire Wire Line
+	9605 4380 9605 4105
+Connection ~ 9605 4105
+$Comp
+L Device:LED D19
+U 1 1 5F2C7BE6
+P 9340 4655
+F 0 "D19" H 9215 4770 50  0000 C CNN
+F 1 "SD" H 9400 4770 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 9340 4655 50  0001 C CNN
+F 3 "~" H 9340 4655 50  0001 C CNN
+	1    9340 4655
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9490 4655 9605 4655
+Wire Wire Line
+	9605 4655 9605 4380
+Connection ~ 9605 4380
+Wire Wire Line
+	9190 3830 9070 3830
+Wire Wire Line
+	9070 3830 9070 3670
+Wire Wire Line
+	9190 4105 9070 4105
+Wire Wire Line
+	9070 4105 9070 3945
+Wire Wire Line
+	9190 4380 9070 4380
+Wire Wire Line
+	9070 4380 9070 4220
+Wire Wire Line
+	9190 4655 9070 4655
+Wire Wire Line
+	9070 4655 9070 4495
+Connection ~ 9070 3365
+Wire Wire Line
+	9070 3365 9790 3365
+Connection ~ 9070 3670
+Wire Wire Line
+	9070 3670 9790 3670
+Connection ~ 9070 3945
+Wire Wire Line
+	9070 3945 9790 3945
+Connection ~ 9070 4220
+Wire Wire Line
+	9070 4220 9790 4220
+$Comp
+L Device:LED D20
+U 1 1 5F2C7BB6
+P 10060 3555
+F 0 "D20" H 9935 3670 50  0000 C CNN
+F 1 "PAGE" H 10120 3670 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 10060 3555 50  0001 C CNN
+F 3 "~" H 10060 3555 50  0001 C CNN
+	1    10060 3555
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9910 3555 9790 3555
+Wire Wire Line
+	9790 3555 9790 3365
+Wire Wire Line
+	10325 3555 10210 3555
+$Comp
+L Device:LED D21
+U 1 1 5F2C7BA9
+P 10060 3830
+F 0 "D21" H 9935 3945 50  0000 C CNN
+F 1 "MEM3" H 10120 3945 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 10060 3830 50  0001 C CNN
+F 3 "~" H 10060 3830 50  0001 C CNN
+	1    10060 3830
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10210 3830 10325 3830
+Wire Wire Line
+	10325 3830 10325 3555
+$Comp
+L Device:LED D22
+U 1 1 5F2C7B9D
+P 10060 4105
+F 0 "D22" H 9935 4220 50  0000 C CNN
+F 1 "BIT16" H 10120 4220 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 10060 4105 50  0001 C CNN
+F 3 "~" H 10060 4105 50  0001 C CNN
+	1    10060 4105
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10210 4105 10325 4105
+Wire Wire Line
+	10325 4105 10325 3830
+Connection ~ 10325 3830
+$Comp
+L Device:LED D23
+U 1 1 5F2C7B90
+P 10060 4380
+F 0 "D23" H 9935 4495 50  0000 C CNN
+F 1 "BIT1" H 10120 4495 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 10060 4380 50  0001 C CNN
+F 3 "~" H 10060 4380 50  0001 C CNN
+	1    10060 4380
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10210 4380 10325 4380
+Wire Wire Line
+	10325 4380 10325 4105
+Connection ~ 10325 4105
+Wire Wire Line
+	9910 3830 9790 3830
+Wire Wire Line
+	9790 3830 9790 3670
+Wire Wire Line
+	9910 4105 9790 4105
+Wire Wire Line
+	9790 4105 9790 3945
+Wire Wire Line
+	9910 4380 9790 4380
+Wire Wire Line
+	9790 4380 9790 4220
+$Comp
+L Device:LED D9
+U 1 1 5F2C7B39
+P 7915 4655
+F 0 "D9" H 7790 4770 50  0000 C CNN
+F 1 "USB" H 7975 4770 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 7915 4655 50  0001 C CNN
+F 3 "~" H 7915 4655 50  0001 C CNN
+	1    7915 4655
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D8
+U 1 1 5F2C7B2F
+P 7915 4380
+F 0 "D8" H 7790 4495 50  0000 C CNN
+F 1 "BIT8" H 7975 4495 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 7915 4380 50  0001 C CNN
+F 3 "~" H 7915 4380 50  0001 C CNN
+	1    7915 4380
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D7
+U 1 1 5F2C7B25
+P 7915 4105
+F 0 "D7" H 7790 4220 50  0000 C CNN
+F 1 "BIT128" H 7975 4220 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 7915 4105 50  0001 C CNN
+F 3 "~" H 7915 4105 50  0001 C CNN
+	1    7915 4105
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D6
+U 1 1 5F2C7B1B
+P 7915 3830
+F 0 "D6" H 7790 3945 50  0000 C CNN
+F 1 "MEM0" H 7975 3945 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 7915 3830 50  0001 C CNN
+F 3 "~" H 7915 3830 50  0001 C CNN
+	1    7915 3830
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D5
+U 1 1 5F2C7B11
+P 7915 3555
+F 0 "D5" H 7790 3670 50  0000 C CNN
+F 1 "XOR" H 7975 3670 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 7915 3555 50  0001 C CNN
+F 3 "~" H 7915 3555 50  0001 C CNN
+	1    7915 3555
+	1    0    0    -1  
+$EndComp
+Text Notes 3000 4330 0    50   ~ 10
+I2C Address 0xA0/0xA1
+$Comp
+L power:+3.3V #PWR072
+U 1 1 5F2C7AEF
+P 4695 3790
+F 0 "#PWR072" H 4695 3640 50  0001 C CNN
+F 1 "+3.3V" V 4690 3910 50  0000 L CNN
+F 2 "" H 4695 3790 50  0001 C CNN
+F 3 "" H 4695 3790 50  0001 C CNN
+	1    4695 3790
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	4695 3790 5165 3790
+Connection ~ 4085 2565
+Wire Wire Line
+	4085 2325 4085 2565
+Wire Wire Line
+	3940 2325 4085 2325
+Connection ~ 3600 2565
+Wire Wire Line
+	3600 2325 3600 2565
+Wire Wire Line
+	3740 2325 3600 2325
+$Comp
+L Device:C_Small C19
+U 1 1 5F2C7ADE
+P 3840 2325
+F 0 "C19" V 3945 2300 50  0000 R CNN
+F 1 "22uF" V 3945 2565 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3840 2325 50  0001 C CNN
+F 3 "~" H 3840 2325 50  0001 C CNN
+	1    3840 2325
+	0    1    -1   0   
+$EndComp
+Connection ~ 5020 3090
+Wire Wire Line
+	5020 2990 5020 3090
+Wire Wire Line
+	5020 2990 5165 2990
+Connection ~ 5020 2990
+Connection ~ 5020 2890
+Wire Wire Line
+	5020 2890 5020 2990
+Connection ~ 5020 2720
+Wire Wire Line
+	5020 2610 5020 2720
+Connection ~ 4085 2720
+Wire Wire Line
+	5020 2890 5165 2890
+Wire Wire Line
+	5020 2720 5020 2890
+Wire Wire Line
+	4085 2720 5020 2720
+Wire Wire Line
+	3940 2565 4085 2565
+Wire Wire Line
+	4085 2720 4085 2565
+Wire Wire Line
+	3940 2720 4085 2720
+Connection ~ 3600 2720
+Wire Wire Line
+	3600 2565 3600 2720
+Wire Wire Line
+	3740 2565 3600 2565
+Wire Wire Line
+	3740 2720 3600 2720
+$Comp
+L Device:C_Small C20
+U 1 1 5F2C7AC1
+P 3840 2565
+F 0 "C20" V 3945 2535 50  0000 R CNN
+F 1 "0.1uF" V 3945 2805 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3840 2565 50  0001 C CNN
+F 3 "~" H 3840 2565 50  0001 C CNN
+	1    3840 2565
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:GND #PWR071
+U 1 1 5F2C7AB7
+P 3600 2720
+F 0 "#PWR071" H 3600 2470 50  0001 C CNN
+F 1 "GND" H 3605 2547 50  0000 C CNN
+F 2 "" H 3600 2720 50  0001 C CNN
+F 3 "" H 3600 2720 50  0001 C CNN
+	1    3600 2720
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3290 2990 5020 2990
+Wire Wire Line
+	3290 2990 3145 2990
+Connection ~ 3290 2990
+Wire Wire Line
+	3290 3145 3290 2990
+Wire Wire Line
+	3145 3145 3290 3145
+Connection ~ 2805 3145
+Wire Wire Line
+	2805 2990 2805 3145
+Wire Wire Line
+	2945 2990 2805 2990
+Wire Wire Line
+	2945 3145 2805 3145
+$Comp
+L Device:C_Small C15
+U 1 1 5F2C7AA4
+P 3045 2990
+F 0 "C15" V 3150 2990 50  0000 R CNN
+F 1 "0.1uF" V 3150 3250 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3045 2990 50  0001 C CNN
+F 3 "~" H 3045 2990 50  0001 C CNN
+	1    3045 2990
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:GND #PWR069
+U 1 1 5F2C7A9A
+P 2805 3145
+F 0 "#PWR069" H 2805 2895 50  0001 C CNN
+F 1 "GND" H 2810 2972 50  0000 C CNN
+F 2 "" H 2805 3145 50  0001 C CNN
+F 3 "" H 2805 3145 50  0001 C CNN
+	1    2805 3145
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4705 3290 5165 3290
+Wire Wire Line
+	4705 3315 4705 3290
+Wire Wire Line
+	4070 3190 3925 3190
+Connection ~ 4070 3190
+Wire Wire Line
+	4070 3345 4070 3190
+Wire Wire Line
+	3925 3345 4070 3345
+Connection ~ 3585 3345
+Wire Wire Line
+	3585 3190 3585 3345
+Wire Wire Line
+	3725 3190 3585 3190
+Connection ~ 5020 3190
+Wire Wire Line
+	5020 3190 4705 3190
+Wire Wire Line
+	3725 3345 3585 3345
+$Comp
+L Device:C_Small C17
+U 1 1 5F2C7A84
+P 3825 3190
+F 0 "C17" V 3930 3190 50  0000 R CNN
+F 1 "0.1uF" V 3930 3450 50  0000 R CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 3825 3190 50  0001 C CNN
+F 3 "~" H 3825 3190 50  0001 C CNN
+	1    3825 3190
+	0    1    -1   0   
+$EndComp
+$Comp
+L power:GND #PWR070
+U 1 1 5F2C7A7A
+P 3585 3345
+F 0 "#PWR070" H 3585 3095 50  0001 C CNN
+F 1 "GND" H 3590 3172 50  0000 C CNN
+F 2 "" H 3585 3345 50  0001 C CNN
+F 3 "" H 3585 3345 50  0001 C CNN
+	1    3585 3345
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5020 3090 5165 3090
+Wire Wire Line
+	5020 3190 5020 3090
+Wire Wire Line
+	5165 3190 5020 3190
+$Comp
+L power:GND #PWR073
+U 1 1 5F2C7A6D
+P 4705 3515
+F 0 "#PWR073" H 4705 3265 50  0001 C CNN
+F 1 "GND" H 4710 3342 50  0000 C CNN
+F 2 "" H 4705 3515 50  0001 C CNN
+F 3 "" H 4705 3515 50  0001 C CNN
+	1    4705 3515
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR074
+U 1 1 5F2C7A63
+P 5020 2610
+F 0 "#PWR074" H 5020 2460 50  0001 C CNN
+F 1 "+3.3V" H 5035 2783 50  0000 C CNN
+F 2 "" H 5020 2610 50  0001 C CNN
+F 3 "" H 5020 2610 50  0001 C CNN
+	1    5020 2610
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5195 5145 4590 5145
+Connection ~ 5195 5145
+$Comp
+L power:GND #PWR075
+U 1 1 5F2C7A57
+P 5195 5145
+F 0 "#PWR075" H 5195 4895 50  0001 C CNN
+F 1 "GND" H 5200 4972 50  0000 C CNN
+F 2 "" H 5195 5145 50  0001 C CNN
+F 3 "" H 5195 5145 50  0001 C CNN
+	1    5195 5145
+	1    0    0    -1  
+$EndComp
+Connection ~ 4590 4790
+Wire Wire Line
+	4590 5145 4590 4790
+Connection ~ 4590 4690
+Wire Wire Line
+	4590 4790 4590 4690
+Wire Wire Line
+	5165 4790 4590 4790
+Connection ~ 4590 4590
+Wire Wire Line
+	4590 4690 4590 4590
+Wire Wire Line
+	5165 4690 4590 4690
+Connection ~ 4590 4490
+Wire Wire Line
+	4590 4590 4590 4490
+Wire Wire Line
+	5165 4590 4590 4590
+Connection ~ 4590 4290
+Wire Wire Line
+	4590 4490 4590 4290
+Wire Wire Line
+	5165 4490 4590 4490
+Connection ~ 4590 4190
+Wire Wire Line
+	4590 4290 4590 4190
+Wire Wire Line
+	5165 4290 4590 4290
+Wire Wire Line
+	4590 4090 4590 4190
+Wire Wire Line
+	5165 4190 4590 4190
+Wire Wire Line
+	4590 4090 4735 4090
+Wire Wire Line
+	5035 4090 5165 4090
+$Comp
+L Device:R R15
+U 1 1 5F2C7A36
+P 4885 4090
+F 0 "R15" V 4830 3820 50  0000 L CNN
+F 1 "20k" V 4880 4020 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4815 4090 50  0001 C CNN
+F 3 "~" H 4885 4090 50  0001 C CNN
+	1    4885 4090
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5035 3890 5165 3890
+NoConn ~ 5165 3690
+NoConn ~ 5165 3990
+$Comp
+L Device:R R14
+U 1 1 5F2C7A29
+P 4885 3995
+F 0 "R14" V 4825 3725 50  0000 L CNN
+F 1 "100k" V 4880 3900 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 4815 3995 50  0001 C CNN
+F 3 "~" H 4885 3995 50  0001 C CNN
+	1    4885 3995
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5070 3590 5165 3590
+Text HLabel 5070 3590 0    50   Input ~ 10
+SCL
+Wire Wire Line
+	5070 3490 5165 3490
+Text HLabel 5070 3490 0    50   Input ~ 10
+SDA
+$Comp
+L is31fl3736:IS31FL3736 U6
+U 1 1 5F2C7A1B
+P 5765 3840
+F 0 "U6" H 5765 5037 60  0000 C CNN
+F 1 "IS31FL3736" H 5765 4931 60  0000 C CNN
+F 2 "lib_fp:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm_LargerThermalVias" H 5765 3940 60  0001 C CNN
+F 3 "" H 5765 3940 60  0001 C CNN
+	1    5765 3840
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5765 5040 5765 5145
+Wire Wire Line
+	5765 5145 5195 5145
+Wire Wire Line
+	10325 3285 10325 3555
+Wire Wire Line
+	8180 3285 8180 3555
+Text Notes 3310 4480 0    50   ~ 10
+19 LEDs
+NoConn ~ 6365 2890
+NoConn ~ 6365 2990
+NoConn ~ 6365 3090
+NoConn ~ 6365 3190
+NoConn ~ 6365 3690
+NoConn ~ 6365 3790
+NoConn ~ 6365 3890
+NoConn ~ 6365 3990
+Text GLabel 6365 3590 2    50   Input ~ 0
+LC0
+Text GLabel 6365 3490 2    50   Input ~ 0
+LC1
+Text GLabel 6365 3390 2    50   Input ~ 0
+LC2
+Text GLabel 6365 3290 2    50   Input ~ 0
+LC3
+Text GLabel 8180 3285 1    50   Input ~ 0
+LC0
+Text GLabel 8885 3285 1    50   Input ~ 0
+LC1
+Text GLabel 9605 3285 1    50   Input ~ 0
+LC2
+Text GLabel 10325 3285 1    50   Input ~ 0
+LC3
+Text GLabel 6365 4090 2    50   Input ~ 0
+LR0
+Text GLabel 6365 4490 2    50   Input ~ 0
+LR1
+Text GLabel 6365 4190 2    50   Input ~ 0
+LR2
+Text GLabel 6365 4290 2    50   Input ~ 0
+LR3
+Text GLabel 6365 4390 2    50   Input ~ 0
+LR4
+Text GLabel 7580 3365 0    50   Input ~ 0
+LR0
+Text GLabel 7580 3670 0    50   Input ~ 0
+LR1
+Text GLabel 7575 3945 0    50   Input ~ 0
+LR2
+Text GLabel 7575 4220 0    50   Input ~ 0
+LR3
+Text GLabel 7575 4495 0    50   Input ~ 0
+LR4
+Wire Wire Line
+	7580 3365 7645 3365
+Connection ~ 7645 3365
+Wire Wire Line
+	7575 4495 7645 4495
+Connection ~ 7645 4495
+Wire Wire Line
+	7575 4220 7645 4220
+Connection ~ 7645 4220
+Wire Wire Line
+	7575 3945 7645 3945
+Connection ~ 7645 3945
+Wire Wire Line
+	7580 3670 7645 3670
+Connection ~ 7645 3670
+NoConn ~ 6365 4590
+NoConn ~ 6365 4690
+NoConn ~ 6365 4790
+Text Notes 7970 3555 0    39   ~ 0
+0x70
+Text Notes 7970 3830 0    39   ~ 0
+0x30
+Text Notes 10115 3555 0    39   ~ 0
+0x76
+Text Notes 7970 4105 0    39   ~ 0
+0x60
+Text Notes 7970 4380 0    39   ~ 0
+0x50
+Text Notes 7970 4655 0    39   ~ 0
+0x40
+Text Notes 8675 3830 0    39   ~ 0
+0x32
+Text Notes 8675 3550 0    39   ~ 0
+0x72
+Text Notes 8675 4105 0    39   ~ 0
+0x62
+Text Notes 8675 4380 0    39   ~ 0
+0x52
+Text Notes 8675 4655 0    39   ~ 0
+0x42
+Text Notes 9395 4655 0    39   ~ 0
+0x44
+Text Notes 9395 3555 0    39   ~ 0
+0x74
+Text Notes 9395 3830 0    39   ~ 0
+0x34
+Text Notes 9395 4105 0    39   ~ 0
+0x64
+Text Notes 9395 4380 0    39   ~ 0
+0x54
+Text Notes 10115 4380 0    39   ~ 0
+0x56
+Text Notes 10115 4105 0    39   ~ 0
+0x66
+Text Notes 10115 3830 0    39   ~ 0
+0x36
+$EndSCHEMATC

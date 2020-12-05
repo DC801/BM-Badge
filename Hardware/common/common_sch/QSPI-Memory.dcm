@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP S25FL256S
+D Quad SPI 256MB memory
+F https://www.cypress.com/file/448601/download
+$ENDCMP
+#
+#End Doc Library
