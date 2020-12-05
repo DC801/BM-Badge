@@ -114,6 +114,9 @@
 	- [x] point(uint16_t x, uint16_t y)
 	- [x] Geometry::inside_poly(point) collision detection function
 	- [x] draw() renders geometry to screen
+- [ ] Collision System
+	- [ ] For Tiles
+	- [ ] For Entities
 - [ ] Dialog Data Type Implementation:
 	- [ ] Display Name - either stringId, or entityId
 	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.

@@ -42,19 +42,19 @@ This year's badge game engine allows for you to run custom games from binary fil
 # DC28 dev team
 
 Project owner
- - [@nemus](https://twitter.com/Nemus801)
+- [@nemus](https://twitter.com/Nemus801)
 
 Software Team
-  - [@_bashNinja](https://twitter.com/_bashNinja)
-  - [@admiral_potato](https://twitter.com/admiral_potato)
-  - [@corfidbizna](https://twitter.com/corfidbizna)
-  - [@kiyoshigawa](https://twitter.com/kiyoshigawa)
-  - [@newzie1](https://twitter.com/newzie1)
-  - [@tazmodius](https://twitter.com/tazmodius)
+- [@_bashNinja](https://twitter.com/_bashNinja)
+- [@admiral_potato](https://twitter.com/admiral_potato)
+- [@corfidbizna](https://twitter.com/corfidbizna)
+- [kiyoshigawa](https://twa.ninja/)
+- [@newzie1](https://twitter.com/newzie1)
+- [@tazmodius](https://twitter.com/tazmodius)
 
 Hardware Team
- - [@dvdfreitag](https://twitter.com/dvdfreitag)
- - [@hamster](https://twitter.com/hamster)
+- [@dvdfreitag](https://twitter.com/dvdfreitag)
+- [@hamster](https://twitter.com/hamster)
 
 Honorable Mention
- - [@pips801](https://twitter.com/pips801)
+- [@pips801](https://twitter.com/pips801)
