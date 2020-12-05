@@ -195,7 +195,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 2000
+			"duration": 4000
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -204,7 +204,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 2000
+			"duration": 4000
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -277,7 +277,7 @@
 			"expected_bool": true
 		},
 		{
-			"name": "SET_ENTITY_ON_TICK_SCRIPT",
+			"name": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
 			"script": "check_if_player_is_goat_low"
 		}
@@ -291,22 +291,40 @@
 			"expected_bool": true
 		},
 		{
-			"name": "SET_ENTITY_ON_TICK_SCRIPT",
+			"name": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
 			"script": "check_if_player_is_goat_high"
 		}
 	],
 	"move_goats_to_low": [
 		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "goat1",
+			"script": "move_goat1_to_low"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "goat2",
+			"script": "move_goat2_to_low"
+		}
+	],
+	"move_goats_to_high": [
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "goat1",
+			"script": "move_goat1_to_high"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "goat2",
+			"script": "move_goat2_to_high"
+		}
+	],
+	"move_goat1_to_low": [
+		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat1",
 			"geometry": "low1",
-			"duration": 1000
-		},
-		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "low2",
 			"duration": 1000
 		},
 		{
@@ -314,6 +332,14 @@
 			"entity": "goat1",
 			"geometry": "low1",
 			"duration": 3000
+		}
+	],
+	"move_goat2_to_low": [
+		{
+			"name": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "goat2",
+			"geometry": "low2",
+			"duration": 1000
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -322,17 +348,11 @@
 			"duration": 3000
 		}
 	],
-	"move_goats_to_high": [
+	"move_goat1_to_high": [
 		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat1",
 			"geometry": "high1",
-			"duration": 1000
-		},
-		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "high2",
 			"duration": 1000
 		},
 		{
@@ -340,6 +360,14 @@
 			"entity": "goat1",
 			"geometry": "high1",
 			"duration": 3000
+		}
+	],
+	"move_goat2_to_high": [
+		{
+			"name": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "goat2",
+			"geometry": "high2",
+			"duration": 1000
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -372,12 +400,12 @@
 			"duration": 3000
 		}
 	],
-	"walk_on_path_5s": [
+	"walk_on_path_10s": [
 		{
 			"name": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
-			"duration": 5000
+			"duration": 20000
 		},
 		{
 			"name": "RUN_SCRIPT",
