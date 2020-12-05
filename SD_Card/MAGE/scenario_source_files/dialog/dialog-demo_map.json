@@ -1,0 +1,541 @@
+{
+	"dialog-bob1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Name's Bob.",
+				"Stone Cold Bob Austin.",
+				"Right, what's yours, then?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"You don't know who I am?\nWe've both lived here for years!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Don't know nobody. All I know is,\ngotta keep everyone out.",
+				"You know, unless their name is Bob."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Bob?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Bob. Camel case.\nNice and plain.\nTraditional.",
+				"'Cause this club is Bobs-only.\nYou know, the Bobs-Only Club."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Why is it Bobs only?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Why?\nWhy is it Bobs only?",
+				"Why, it wouldn't be the Bobs-Only Club\nif I just let anyone in!"
+			]
+		}
+	],
+	"dialog-bob2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"So, what's your name then?"
+			]
+		}
+	],
+	"dialog-bob3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Um.... it's not Bob."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Sorry, can't unlock the door for ya.\nBobs only."
+			]
+		}
+	],
+	"dialog-bob4": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Why, what luck!\nMy name happens to be Bob!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Nice. Great name.\nI'll unlock the door."
+			]
+		}
+	],
+	"dialog-bob5": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"There you go. It's open."
+			]
+		}
+	],
+	"dialog-bob6": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Hey, what gives?\nI still can't get in."
+			]
+		}
+	],
+	"dialog-bob7": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Oh, it's unlocked."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Then why won't it open?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Oh. The door's not implemented yet."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"...."
+				"You could've said that from the start!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Not my job. My only job is to\nkeep everyone out who's\nnotnamed Bob."
+			]
+		}
+	],
+	"dialog-bob8": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"So, what's your name, then?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"The door doesn't work!\nWhat does it matter what\nmy name is?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "Bob",
+			"messages": [
+				"Not my job.\nMy only job is to keep everyone out\nwho's not named Bob."
+			]
+		}
+	],
+	"dialog-max1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Ah, a citizen!"
+				"I wondered if you could help me!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"What do you need?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"My name's Swagger!\nMax Swagger!",
+				"I was doing a bit of reconnoissance,\nlooking for a place where I can\nopen my new fashion shop.",
+				"The board here says there's space\navailable, but I can't seem to find\nthe building it's talking about.",
+				"The only thing actually here is\nthe Bobs-Only Club!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Well, the town isn't fully implemented\nyet, so... you might have to wait\na few more weeks for the rest of\nthe buildings to return."
+			]
+		}
+	],
+	"dialog-max2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Not fully implemented?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Sorry."
+				"But I can personally guarantee\nyou can have a building all to yourself\nwhen the time comes."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Oh! That's good news! All to myself?",
+				"I'm picturing two stories... no, three!",
+				"Lush woven carpets... vaulted ceilings...\nbeautiful oak doors...\nhand-carved decorative moulding...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Um, well....\nYou'll definitely get a building."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Excellent! Then I shall return\nwhen the time comes!",
+				"Until that glorious day, farewell!"
+			]
+		}
+	],
+	"dialog-max3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Not much of a market for fashion here,\nI would've thought.",
+				"Best of luck, Max Swagger!"
+			]
+		}
+	],
+	"dialog-timmy": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "Timmy",
+			"messages": [
+				"I'm practicing for my triathlon!",
+				"Running is my weakest event, so I'm\nworking hard to improve my time!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Don't you need legs to run?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "Timmy",
+			"messages": [
+				"...?",
+				"No?"
+			]
+		}
+	],
+	"dialog-goose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goose",
+			"name": "Goose",
+			"messages": [
+				"Honk!"
+			]
+		}
+	],
+	"dialog-beatrice1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "Beatrice",
+			"messages": [
+				"Back when he was a young man,\nmy husband Delmar hand-carved\n all the statues on the fountains\naround town.",
+				"Such a shame that this one isn't working.\nI wonder if something is clogging\n the pump."
+			]
+		}
+	],
+	"dialog-beatrice2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "Beatrice",
+			"messages": [
+				"Between you and me....\nI think the goose has something\nto do with it."
+			]
+		}
+	],
+	"dialog-trekkie": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "Trekkie",
+			"messages": [
+				"Me heard you will soon have a birthday!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"That's right! I'll be turning 16,\nand I'll get to be an official\nvillage mage!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "Trekkie",
+			"messages": [
+				"Me hope you have happy birthday!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Thanks very much, Trekkie!"
+			]
+		}
+	],
+	"dialog-verthandi": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "Verthandi",
+			"messages": [
+				"I'm so glad the goats made up\nand are friends again!"
+			]
+		}
+	],
+	"dialog-goat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goat",
+			"name": "Goat",
+			"messages": [
+				"Baaahhh!"
+			]
+		}
+	],
+	"dialog-cleo2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowwowow."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"That's what I've been saying\nthis whole time!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowwrrrr!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Oh, I know!"
+			]
+		}
+	],
+	"dialog-cleo1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowrrow."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Oh, you don't say!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meow!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"He didn't!"
+			]
+		}
+	],
+	"dialog-cat": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Hey there, cat!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"....."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Excuse me, but we were in the middle\nof a conversation."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Oh, sorry. Carry on."
+			]
+		}
+	],
+	"dialog-smith": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "Mr. Smith",
+			"messages": [
+				"I came here on a blacksmithing\nscholarship, but there's not much\nblacksmithing to do at the moment.",
+				"I think I'll stick around anyway.\nSee what happens."
+			]
+		}
+	],
+	"dialog-sheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Sheep",
+			"messages": [
+				"...."
+			]
+		}
+	],
+	"dialog-dsheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Delmar",
+			"messages": [
+				"...?"
+			]
+		}
+	]
+}
