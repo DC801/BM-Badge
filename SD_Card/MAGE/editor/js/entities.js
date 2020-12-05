@@ -151,7 +151,7 @@ var serializeEntity = function (
 		entity.hackable_state_d || 0
 	);
 	if(entity.path) {
-		console.log('This entity has a path!', entity.path);
+		// console.log('This entity has a path!', entity.path);
 		dataView.setUint16(
 			hackableStateAOffset,
 			entity.path.mapIndex,

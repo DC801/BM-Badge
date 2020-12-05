@@ -275,11 +275,6 @@
 			"geometry": "high",
 			"script": "move_goats_to_low",
 			"expected_bool": true
-		},
-		{
-			"name": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "check_if_player_is_goat_low"
 		}
 	],
 	"check_if_player_is_goat_low": [
@@ -289,11 +284,6 @@
 			"geometry": "low",
 			"script": "move_goats_to_high",
 			"expected_bool": true
-		},
-		{
-			"name": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "check_if_player_is_goat_high"
 		}
 	],
 	"move_goats_to_low": [
@@ -306,6 +296,11 @@
 			"name": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "goat2",
 			"script": "move_goat2_to_low"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "check_if_player_is_goat_low"
 		}
 	],
 	"move_goats_to_high": [
@@ -318,6 +313,11 @@
 			"name": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "goat2",
 			"script": "move_goat2_to_high"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "check_if_player_is_goat_high"
 		}
 	],
 	"move_goat1_to_low": [
