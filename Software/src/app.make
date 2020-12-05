@@ -29,7 +29,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/mage/mage_script_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_dialog_control.cpp \
 	$(SRC_ROOT)/games/mage/mage.cpp \
-	$(SRC_ROOT)/games/serial.c \
 	$(SRC_ROOT)/main.c
 
 APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
