@@ -10,6 +10,7 @@ Badge year (appearance value)
  - Defcon 25 - 0xDC19
  - Defcon 26 - 0xDC26
  - Defcon 27 - 0xDC27
+ - Defcon 28 - 0xDC28
 
 Here's a visual of a packet that my DC801 badge broadcasted:
 

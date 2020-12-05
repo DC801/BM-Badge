@@ -6,7 +6,7 @@ The DC801 Badge Platform for DC28+
 
 
 ## Hardware
-The DC801 BM-Badge brings you an expandable iteration of our robust platfomer
+The DC801 BM-Badge brings you an expandable iteration of our robust platfom.
 
  - Core CPU is the Nordic nRF52840 SoC, on the u-blox BMD-340 module
    - [https://www.u-blox.com/en/product/bmd-34-series-open-cpu](https://www.u-blox.com/en/product/bmd-34-series-open-cpu)

@@ -1,21 +1,16 @@
 # DC801 Badge Software
 
-We hope you enjoyed the badge this year.  We're very excited this year to have worked with our friends in #badgelife to develop a cross-badge communications platform.
+We hope you enjoyed the badge this year.  We're including the same BLE broadcast software that we've used on the DC27PartyBadge so you can still interact with the other defcon badges.
 
-The badge this year had these software features:
+Here are some of this year's badge features:
 
- - A UF2 capable USB bootloader - See [Bootloader](Bootloader.md)
- - Adventure game
- - Many, many puzzles
- - USB and hardware UART interaction
+ - A Custom Game with its own engine that can load new scenarios from an SD card.
+ - Awesome gameplay involving live hacking of the RAM in the running game scenario.
+ - Tons of awesome, custom artwork.
  - BLE broadcasts
 
 ## Useful links
 
-To get started programming the badge, check out [EnvironmentSetup](EnvironmentSetup.md)
+To get started programming the badge , check out [EnvironmentSetup](../EnvironmentSetup.md)
 
 To learn about the bluetooth protocol, see [Bluetooth](Bluetooth.md)
-
-To learn more about the bootloader, see [Bootloader](Bootloader.md)
-
-
