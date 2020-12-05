@@ -158,7 +158,7 @@
 			"portrait": "mage",
 			"name": "Black Mage",
 			"messages": [
-				"...."
+				"....",
 				"You could've said that from the start!"
 			]
 		},
@@ -203,7 +203,7 @@
 			"portrait": "max",
 			"name": "Max Swagger",
 			"messages": [
-				"Ah, a citizen!"
+				"Ah, a citizen!",
 				"I wondered if you could help me!"
 			]
 		},
@@ -249,7 +249,7 @@
 			"portrait": "mage",
 			"name": "Black Mage",
 			"messages": [
-				"Sorry."
+				"Sorry.",
 				"But I can personally guarantee\nyou can have a building all to yourself\nwhen the time comes."
 			]
 		},
@@ -320,6 +320,16 @@
 			]
 		}
 	],
+	"dialog-kid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sports_kid",
+			"name": "Sports Kid",
+			"messages": [
+				"I’m gonna be a Blitzball when I grow up!"
+			]
+		}
+	],
 	"dialog-goose": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -351,7 +361,7 @@
 			]
 		}
 	],
-	"dialog-trekkie": [
+	"dialog-trekkie_demo": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "trekkie",

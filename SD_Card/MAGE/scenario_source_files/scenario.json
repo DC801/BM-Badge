@@ -3,12 +3,15 @@
 		"scripts/script-generic_entity_scripts.json",
 		"scripts/script-test_scripts.json",
 		"scripts/script-action_testing.json",
-		"scripts/script-test_map_script.json"
+		"scripts/script-test_map_script.json",
+		"scripts/script-demo_map.json"
 	],
 	"dialogPaths": [
-		"dialog/dialog-test_map.json"
+		"dialog/dialog-test_map.json",
+		"dialog/dialog-demo_map.json"
 	],
 	"maps": {
+		"demo": "maps/map-demo.json",
 		"test": "maps/map-test.json",
 		"town": "maps/map-town.json",
 		"action_test": "maps/map-action_testing.json",
