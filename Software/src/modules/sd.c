@@ -93,17 +93,6 @@ bool util_sd_init() {
 		return false;
 	}
 
-	//Check version metadata
-	char version_data[32];
-	FRESULT result = util_sd_load_file("VERSION", (uint8_t *) version_data, 32);
-	if (result != FR_OK) {
-		printf("No version\n");
-		ENGINE_PANIC("Can't Get SD Card Version");
-		return false;
-	}
-	uint32_t version_number = strtol(version_data + 8, NULL, 10);
-
-
 	m_sd_available = true;
 	printf("SD init OK\n");
 	return true;
