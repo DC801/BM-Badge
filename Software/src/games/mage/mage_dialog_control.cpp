@@ -13,7 +13,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 		.label = {
 			.x = 0,
 			.y = 5,
-			.w = 8,
+			.w = 7,
 			.h = 3,
 		}
 	},
@@ -25,9 +25,9 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.h = 6,
 		},
 		.label = {
-			.x = 11,
+			.x = 12,
 			.y = 5,
-			.w = 8,
+			.w = 7,
 			.h = 3,
 		}
 	},
@@ -41,7 +41,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 		.label = {
 			.x = 0,
 			.y = 6,
-			.w = 8,
+			.w = 7,
 			.h = 3,
 		}
 	},
@@ -53,9 +53,9 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.h = 6,
 		},
 		.label = {
-			.x = 11,
+			.x = 12,
 			.y = 6,
-			.w = 8,
+			.w = 7,
 			.h = 3,
 		}
 	}

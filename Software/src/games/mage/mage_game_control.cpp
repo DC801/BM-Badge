@@ -1120,7 +1120,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 		playerPosition = {0};
 	}
 	for (uint16_t i = 0; i < map.GeometryCount() - 1; i++) {
-		MageGeometry *geometry = &geometries[i];
+		MageGeometry *geometry = getValidGeometry(i);
 		if (isPlayerPresent) {
 			isColliding = geometry->isPointInGeometry(*playerPosition);
 		}
@@ -1134,8 +1134,8 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-MageGeometry* MageGameControl::getValidGeometry(uint16_t geometryId) {
-	return &geometries[geometryId % geometryHeader.count()];
+MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
+	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId % geometryHeader.count())];
 }
 
 MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t entityId) {
