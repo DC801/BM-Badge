@@ -1002,10 +1002,11 @@ var handleScript = function(
 			map.scriptIndices.push(0);
 			map.scriptNameKeys[scriptName] = result;
 		} else {
-			var script = jsonClone(scenarioData.scripts[scriptName]);
-			if (!script) {
+			var sourceScript = scenarioData.scripts[scriptName];
+			if (!sourceScript) {
 				throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
 			}
+			var script = jsonClone(sourceScript);
 			script.serialized = serializeScript(
 				script,
 				scriptName,

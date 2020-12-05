@@ -5,7 +5,7 @@
 			"dialog": "dialog-bob1"
 		},
 		{
-			"name": "SET_ENTITY_ON_INTERACT_SCRIPT",
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "bob",
 			"script": "show_dialog-bob-bounce"
 		}
@@ -70,7 +70,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 1000,
+			"duration": 1000
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -96,7 +96,7 @@
 			"direction": "south"
 		},
 		{
-			"name": "SET_ENTITY_ON_INTERACT_SCRIPT",
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "bob",
 			"script": "show_dialog-bob-job"
 		}
@@ -105,6 +105,18 @@
 		{
 			"name": "SHOW_DIALOG",
 			"dialog": "dialog-bob8"
+		}
+	],
+	"show_dialog-sheep": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-sheep"
+		}
+	],
+	"show_dialog-dsheep": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-dsheep"
 		}
 	],
 	"show_dialog-max": [
@@ -124,7 +136,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 500,
+			"duration": 500
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -133,7 +145,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 500,
+			"duration": 500
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -183,7 +195,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 300,
+			"duration": 300
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -192,7 +204,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 300,
+			"duration": 300
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -204,10 +216,10 @@
 			"dialog": "dialog-beatrice2"
 		}
 	],
-	"show_dialog-trekkie": [
+	"show_dialog-trekkie_demo": [
 		{
 			"name": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie"
+			"dialog": "dialog-trekkie_demo"
 		}
 	],
 	"show_dialog-verthandi": [
@@ -228,7 +240,7 @@
 			"dialog": "dialog-cleo1"
 		},
 		{
-			"name": "SET_ENTITY_ON_INTERACT_SCRIPT",
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "cleo",
 			"script": "show_dialog-cleo2"
 		}
@@ -239,7 +251,7 @@
 			"dialog": "dialog-cleo2"
 		},
 		{
-			"name": "SET_ENTITY_ON_INTERACT_SCRIPT",
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "cleo",
 			"script": "show_dialog-cleo1"
 		}
@@ -348,53 +360,6 @@
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
 			"duration": 3000
-		}
-	],
-	"walk_self_to_path_and_loop": [
-		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%",
-			"duration": 5000
-		},
-		{
-			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%",
-			"duration": 10000
-		}
-	],
-	"walk_self_to_path_and_walk": [
-		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%",
-			"duration": 5000
-		},
-		{
-			"name": "WALK_ENTITY_ALONG_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%",
-			"duration": 10000
-		},
-		{
-			"name": "RUN_SCRIPT",
-			"script": "null_script"
-		}
-	],
-	"test_map-on_tick": [
-		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "path_star",
-			"script": "load_map-town",
-			"expected_bool": true
-		}
-	],
-	"load_map-town": [
-		{
-			"name": "LOAD_MAP",
-			"map": "map-town"
 		}
 	]
 }

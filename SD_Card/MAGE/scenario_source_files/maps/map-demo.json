@@ -318,7 +318,7 @@
                 {
                  "height":0,
                  "id":47,
-                 "name":"bob",
+                 "name":"bob_point",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -371,7 +371,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-goose"
+                         "value":"show_dialog-goose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -389,7 +389,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-bob-first"
+                         "value":"show_dialog-bob-first"
                         }, 
                         {
                          "name":"path",
@@ -412,7 +412,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-verthandi"
+                         "value":"show_dialog-verthandi"
                         }],
                  "rotation":0,
                  "type":"",
@@ -430,7 +430,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-cat"
+                         "value":"show_dialog-cat"
                         }],
                  "rotation":0,
                  "type":"",
@@ -440,7 +440,7 @@
                  "y":525
                 }, 
                 {
-                 "gid":1073742282,
+                 "gid":2147484106,
                  "height":32,
                  "id":11,
                  "name":"smith",
@@ -448,17 +448,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-smith"
+                         "value":"show_dialog-smith"
                         }],
-                 "rotation":180,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":433,
-                 "y":332
+                 "x":416,
+                 "y":384
                 }, 
                 {
-                 "gid":1073742297,
+                 "gid":2147484121,
                  "height":32,
                  "id":12,
                  "name":"goat1",
@@ -471,19 +471,19 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-goat"
+                         "value":"show_dialog-goat"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
                          "value":"loop_on_path_3s"
                         }],
-                 "rotation":180,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":705.833333333333,
-                 "y":522.5
+                 "x":672,
+                 "y":555
                 }, 
                 {
                  "gid":473,
@@ -494,7 +494,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-goat"
+                         "value":"show_dialog-goat"
                         }, 
                         {
                          "name":"on_tick",
@@ -522,7 +522,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-beatrice"
+                         "value":"show_dialog-beatrice"
                         }],
                  "rotation":0,
                  "type":"",
@@ -540,7 +540,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-trekkie"
+                         "value":"show_dialog-trekkie_demo"
                         }],
                  "rotation":0,
                  "type":"",
@@ -558,7 +558,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-dsheep"
+                         "value":"show_dialog-dsheep"
                         }],
                  "rotation":0,
                  "type":"",
@@ -568,7 +568,7 @@
                  "y":193.5
                 }, 
                 {
-                 "gid":1073742417,
+                 "gid":2147484241,
                  "height":32,
                  "id":18,
                  "name":"cleo",
@@ -576,17 +576,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-cleo1"
+                         "value":"show_dialog-cleo1"
                         }],
-                 "rotation":180,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":772.5,
-                 "y":504.5
+                 "x":740.5,
+                 "y":536.5
                 }, 
                 {
-                 "gid":1073742357,
+                 "gid":2147484181,
                  "height":32,
                  "id":19,
                  "name":"sheep2",
@@ -594,14 +594,14 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-sheep"
+                         "value":"show_dialog-sheep"
                         }],
-                 "rotation":180,
+                 "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":245,
-                 "y":137
+                 "x":213,
+                 "y":169
                 }, 
                 {
                  "gid":533,
@@ -612,7 +612,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-sheep"
+                         "value":"show_dialog-sheep"
                         }],
                  "rotation":0,
                  "type":"",
@@ -630,7 +630,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-sheep"
+                         "value":"show_dialog-sheep"
                         }],
                  "rotation":0,
                  "type":"",
@@ -648,7 +648,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-kid"
+                         "value":"show_dialog-kid"
                         }, 
                         {
                          "name":"on_tick",
@@ -676,7 +676,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-max"
+                         "value":"show_dialog-max"
                         }, 
                         {
                          "name":"path",
@@ -699,7 +699,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialogue-timmy"
+                         "value":"show_dialog-timmy"
                         }, 
                         {
                          "name":"on_tick",
