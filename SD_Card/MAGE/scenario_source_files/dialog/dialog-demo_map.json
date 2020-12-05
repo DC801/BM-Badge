@@ -167,7 +167,7 @@
 			"portrait": "bob",
 			"name": "Bob",
 			"messages": [
-				"Not my job. My only job is to\nkeep everyone out who's\nnotnamed Bob."
+				"Not my job. My only job is to\nkeep everyone out who's\nnot named Bob."
 			]
 		}
 	],
@@ -326,7 +326,7 @@
 			"portrait": "sports_kid",
 			"name": "Sports Kid",
 			"messages": [
-				"I’m gonna be a Blitzball when I grow up!"
+				"I'm gonna be a Blitzball when I grow up!"
 			]
 		}
 	],
@@ -346,8 +346,8 @@
 			"portrait": "beatrice",
 			"name": "Beatrice",
 			"messages": [
-				"Back when he was a young man,\nmy husband Delmar hand-carved\n all the statues on the fountains\naround town.",
-				"Such a shame that this one isn't working.\nI wonder if something is clogging\n the pump."
+				"Back when he was a young man,\nmy husband Delmar hand-carved\nall the statues on the fountains\naround town.",
+				"Such a shame that this one isn't working.\nI wonder if something is clogging\nthe pump."
 			]
 		}
 	],
@@ -497,7 +497,7 @@
 			"portrait": "cat",
 			"name": "Cat",
 			"messages": [
-				"....."
+				"...."
 			]
 		},
 		{

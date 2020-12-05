@@ -300,8 +300,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":271.75,
-                 "y":355.5
+                 "x":272.25,
+                 "y":368
                 }, 
                 {
                  "height":0,
@@ -312,8 +312,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":271.75,
-                 "y":356.5
+                 "x":272.25,
+                 "y":369.5
                 }, 
                 {
                  "height":0,
@@ -458,7 +458,7 @@
                  "y":384
                 }, 
                 {
-                 "gid":2147484121,
+                 "gid":473,
                  "height":32,
                  "id":12,
                  "name":"goat1",
@@ -723,6 +723,12 @@
                  "height":32,
                  "id":48,
                  "name":"mage",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_goat_high"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
