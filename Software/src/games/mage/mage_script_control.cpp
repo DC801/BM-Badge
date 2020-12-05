@@ -420,6 +420,11 @@ void MageScriptControl::setEntityInteractScript(uint8_t * args, MageScriptState 
 	ActionSetEntityInteractScript *argStruct = (ActionSetEntityInteractScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+	setEntityScript(
+		argStruct->scriptId,
+		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
+		ON_INTERACT
+	);
 	return;
 }
 void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -427,6 +432,11 @@ void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * re
 	ActionSetEntityTickScript *argStruct = (ActionSetEntityTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+	setEntityScript(
+		argStruct->scriptId,
+		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
+		ON_TICK
+	);
 	return;
 }
 void MageScriptControl::setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct)
