@@ -58,13 +58,13 @@
 		},
 		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "mage",
+			"entity": "Bub",
 			"geometry": "predoor",
 			"duration": 1000
 		},
 		{
 			"name": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "mage",
+			"entity": "Bub",
 			"geometry": "door",
 			"duration": 2000
 		},
@@ -74,7 +74,7 @@
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
-			"entity": "mage",
+			"entity": "Bub",
 			"direction": "east"
 		},
 		{
