@@ -1,5 +1,8 @@
 # DC801 DC28 Party Badge
-Party badge and BLE hardware board in SAFEMODE
+Party badge and custom game hardware and software in SAFEMODE
+
+<p><a href="https://vimeo.com/487527877" target="_blank"><img src="https://i.vimeocdn.com/video/1008891350" alt="DC28 DC801 SAFEMODE badge, 2020-12-04 development update" /></a></p>
+<p><a href="https://vimeo.com/487527877" target="_blank">Watch almost 6 minutes of 100% in-engine gameplay in our 2020-12-04 development update video!</a></p>
 
 # Hardware
 The DC801 SAFEMODE badge brings you an expandable iteration of our robust platform. Yeah, you read that right. If you thought last year’s badge was cool, this one really whips the llama’s ass.
