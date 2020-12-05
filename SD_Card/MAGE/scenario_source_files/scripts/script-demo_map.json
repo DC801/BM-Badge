@@ -136,7 +136,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 1200
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -145,7 +145,7 @@
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 1200
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
@@ -190,25 +190,25 @@
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "beatrice",
 			"direction": "east"
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 4000
+			"duration": 1200
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "beatrice",
 			"direction": "west"
 		},
 		{
 			"name": "NON_BLOCKING_DELAY",
-			"duration": 4000
+			"duration": 1200
 		},
 		{
 			"name": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "beatrice",
 			"direction": "south"
 		},
 		{
@@ -325,7 +325,7 @@
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat1",
 			"geometry": "low1",
-			"duration": 1000
+			"duration": 900
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -339,13 +339,13 @@
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat2",
 			"geometry": "low2",
-			"duration": 1000
+			"duration": 1100
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
 			"entity": "goat2",
 			"geometry": "low2",
-			"duration": 3000
+			"duration": 3400
 		}
 	],
 	"move_goat1_to_high": [
@@ -353,7 +353,7 @@
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat1",
 			"geometry": "high1",
-			"duration": 1000
+			"duration": 900
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -367,13 +367,13 @@
 			"name": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat2",
 			"geometry": "high2",
-			"duration": 1000
+			"duration": 1100
 		},
 		{
 			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
 			"entity": "goat2",
 			"geometry": "high2",
-			"duration": 3000
+			"duration": 3400
 		}
 	],
 	"loop_on_path_30s": [
