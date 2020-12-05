@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP SC189ZSKTRT
+D 2.5Mhz, 1.5A Synchronous Step Down Regulator
+K Voltage regulator switching buck fixed output analog
+F https://semtech.my.salesforce.com/sfc/p/#E0000000JelG/a/44000000MDZF/Kz5ycNi9I5Dzzg5AzBOB4W0TtqtKUtMf03CWPRt6CLQ
+$ENDCMP
+#
+#End Doc Library
