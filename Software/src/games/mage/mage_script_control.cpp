@@ -279,12 +279,12 @@ void MageScriptControl::checkEntityInteractScript(uint8_t * args, MageScriptStat
 	ActionCheckEntityInteractScript *argStruct = (ActionCheckEntityInteractScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
+	argStruct->expectedScript = convert_endian_u2_value(argStruct->expectedScript);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		if(entity->onInteractScriptId == argStruct->expectedValue) {
+		if(entity->onInteractScriptId == argStruct->expectedScript) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -296,12 +296,12 @@ void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * 
 	ActionCheckEntityTickScript *argStruct = (ActionCheckEntityTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
+	argStruct->expectedScript = convert_endian_u2_value(argStruct->expectedScript);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		if(entity->onTickScriptId == argStruct->expectedValue) {
+		if(entity->onTickScriptId == argStruct->expectedScript) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}

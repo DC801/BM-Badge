@@ -27,7 +27,7 @@
 	"test_tick_script": [
 		{
 			"name": "CHECK_FOR_BUTTON_PRESS",
-			"script": "button_success_script",
+			"success_script": "button_success_script",
 			"button_id": 24
 		}
 	],
