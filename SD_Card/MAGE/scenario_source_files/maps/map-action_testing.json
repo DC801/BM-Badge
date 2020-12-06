@@ -63,7 +63,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act02_check_save_flag"
                         }, 
                         {
                          "name":"on_tick",
@@ -86,7 +86,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act03_check_if_entity_is_in_geometry"
                         }, 
                         {
                          "name":"on_tick",
@@ -109,7 +109,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act04_check_for_button_press"
                         }, 
                         {
                          "name":"on_tick",
@@ -132,7 +132,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act05_check_for_button_state"
                         }, 
                         {
                          "name":"on_tick",
@@ -155,7 +155,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act06_run_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -745,14 +745,14 @@
                  "y":672
                 }, 
                 {
-                 "gid":345,
-                 "height":48,
-                 "id":66,
-                 "name":"",
+                 "gid":321,
+                 "height":32,
+                 "id":67,
+                 "name":"Bub",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":48,
+                 "width":32,
                  "x":96,
                  "y":160
                 }],
@@ -761,9 +761,52 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":4,
+         "name":"Geometries",
+         "objects":[
+                {
+                 "height":0,
+                 "id":69,
+                 "name":"act03_test_geometry",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":32
+                        }, 
+                        {
+                         "x":0,
+                         "y":32
+                        }, 
+                        {
+                         "x":0,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":448,
+                 "y":64
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":67,
+ "nextlayerid":5,
+ "nextobjectid":70,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -786,14 +829,14 @@
         }, 
         {
          "firstgid":257,
-         "source":"../tilesets/tileset-numbered_testing.json"
+         "source":"..\/tilesets\/tileset-numbered_testing.json"
         }, 
         {
          "firstgid":321,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":345,
+         "firstgid":369,
          "source":"..\/entities\/entity-goose.json"
         }],
  "tilewidth":32,

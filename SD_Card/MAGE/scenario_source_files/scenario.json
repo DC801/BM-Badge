@@ -8,7 +8,8 @@
 	],
 	"dialogPaths": [
 		"dialog/dialog-test_map.json",
-		"dialog/dialog-demo_map.json"
+		"dialog/dialog-demo_map.json",
+		"dialog/dialog-action_testing.json"
 	],
 	"maps": {
 		"demo": "maps/map-demo.json",
