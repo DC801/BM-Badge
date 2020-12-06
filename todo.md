@@ -51,6 +51,7 @@
 - [x] Make a list of some C functions we want scripts to be able to call
 - [x] Decide on a common script function signature
 - [x] Define an encoding format for scripts
+- [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
 - [ ] Music/SFX encoding in the binary asset encoder
 - [ ] Script system
 	- [x] Binary Encoder parts
@@ -67,24 +68,57 @@
 			- [x] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
-		- [ ] CHECK_ENTITY_BYTE
+		- [ ] CHECK_ENTITY_NAME
+		- [ ] CHECK_ENTITY_X
+		- [ ] CHECK_ENTITY_Y
+		- [ ] CHECK_ENTITY_INTERACT_SCRIPT
+		- [ ] CHECK_ENTITY_TICK_SCRIPT
+		- [ ] CHECK_ENTITY_PRIMARY_ID
+		- [ ] CHECK_ENTITY_SECONDARY_ID
+		- [ ] CHECK_ENTITY_PRIMARY_ID_TYPE
+		- [ ] CHECK_ENTITY_CURRENT_ANIMATION
+		- [ ] CHECK_ENTITY_CURRENT_FRAME
+		- [ ] CHECK_ENTITY_DIRECTION
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_A
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_B
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_C
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_D
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U2
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_B_U2
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_C_U2
+		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U4
+		- [ ] CHECK_ENTITY_PATH (specific hackable state check by name)
 		- [ ] CHECK_SAVE_FLAG
 		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
 		- [x] CHECK_FOR_BUTTON_STATE
 		- [x] RUN_SCRIPT
-		- [x] COMPARE_ENTITY_NAME
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
 		- [ ] SET_PAUSE_STATE
-		- [ ] SET_ENTITY_BYTE
-		- [ ] SET_SAVE_FLAG
-		- [ ] SET_PLAYER_CONTROL
+		- [ ] SET_ENTITY_NAME
+		- [ ] SET_ENTITY_X
+		- [ ] SET_ENTITY_Y
 		- [ ] SET_ENTITY_INTERACT_SCRIPT
 		- [ ] SET_ENTITY_TICK_SCRIPT
+		- [ ] SET_ENTITY_PRIMARY_ID
+		- [ ] SET_ENTITY_SECONDARY_ID
+		- [ ] SET_ENTITY_PRIMARY_ID_TYPE
+		- [ ] SET_ENTITY_CURRENT_ANIMATION
+		- [ ] SET_ENTITY_CURRENT_FRAME
+		- [ ] SET_ENTITY_DIRECTION
+		- [ ] SET_ENTITY_HACKABLE_STATE_A
+		- [ ] SET_ENTITY_HACKABLE_STATE_B
+		- [ ] SET_ENTITY_HACKABLE_STATE_C
+		- [ ] SET_ENTITY_HACKABLE_STATE_D
+		- [ ] SET_ENTITY_HACKABLE_STATE_A_U2
+		- [ ] SET_ENTITY_HACKABLE_STATE_B_U2
+		- [ ] SET_ENTITY_HACKABLE_STATE_C_U2
+		- [ ] SET_ENTITY_HACKABLE_STATE_A_U4
+		- [ ] SET_ENTITY_PATH (specific hackable state check by name)
+		- [ ] SET_SAVE_FLAG
+		- [ ] SET_PLAYER_CONTROL
 		- [ ] SET_MAP_TICK_SCRIPT
-		- [ ] SET_ENTITY_TYPE
-		- [x] SET_ENTITY_DIRECTION
 		- [ ] SET_HEX_CURSOR_LOCATION
 		- [ ] SET_HEX_BIT
 		- [ ] UNLOCK_HAX_CELL
@@ -93,13 +127,13 @@
 		- [x] SET_HEX_EDITOR_DIALOG_MODE
 		- [ ] LOAD_MAP
 		- [x] SHOW_DIALOG
-		- [ ] SET_RENDERABLE_FONT
 		- [x] TELEPORT_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_ALONG_GEOMETRY
 		- [x] LOOP_ENTITY_ALONG_GEOMETRY
 		- [ ] SET_CAMERA_TO_FOLLOW_ENTITY
 		- [ ] TELEPORT_CAMERA_TO_GEOMETRY
+		- [ ] PAN_CAMERA_TO_ENTITY
 		- [ ] PAN_CAMERA_TO_GEOMETRY
 		- [ ] PAN_CAMERA_ALONG_GEOMETRY
 		- [ ] LOOP_CAMERA_ALONG_GEOMETRY

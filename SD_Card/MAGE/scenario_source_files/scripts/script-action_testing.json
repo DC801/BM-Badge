@@ -5,8 +5,8 @@
 			"dialog": "dialog-act01"
 		},
 		{
-			"name": "CHECK_ENTITY_BYTE",
-			"script": "spin_self_clockwise",
+			"name": "CHECK_ENTITY_HACKABLE_STATE_A",
+			"success_script": "spin_self_clockwise",
 			"entity": "Mage 01",
 			"byte_offset": 15,
 			"expected_byte": 2
@@ -19,7 +19,7 @@
 		},
 		{
 			"name": "CHECK_SAVE_FLAG",
-			"script": "spin_self_clockwise",
+			"success_script": "spin_self_clockwise",
 			"entity": "Mage 02",
 			"byte_offset": 0,
 			"expected_bool": true
@@ -33,7 +33,7 @@
 		{
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"geometry": "act03_test_geometry",
-			"script": "spin_self_clockwise",
+			"success_script": "spin_self_clockwise",
 			"entity": "Mage 03",
 			"expected_bool": true
 		}
@@ -45,7 +45,7 @@
 		},
 		{
 			"name": "CHECK_FOR_BUTTON_PRESS",
-			"script": "spin_self_clockwise",
+			"success_script": "spin_self_clockwise",
 			"button_id": 24
 		}
 	],
@@ -60,7 +60,7 @@
 		},
 		{
 			"name": "CHECK_FOR_BUTTON_STATE",
-			"script": "spin_self_clockwise",
+			"success_script": "spin_self_clockwise",
 			"button_id": 0,
 			"expected_bool": true
 		}

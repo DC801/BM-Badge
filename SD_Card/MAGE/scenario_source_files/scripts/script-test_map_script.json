@@ -28,33 +28,33 @@
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "log_ellipse",
-			"script": "walk_self_to_path_and_loop",
+			"success_script": "walk_self_to_path_and_loop",
 			"expected_bool": true
 		}
 	],
 	"check_if_player_is_named_bob": [
 		{
-			"name": "COMPARE_ENTITY_NAME",
+			"name": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "Bob",
 			"expected_bool": true,
-			"script": "spin_self_clockwise"
+			"success_script": "spin_self_clockwise"
 		},
 		{
-			"name": "COMPARE_ENTITY_NAME",
+			"name": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "baby_",
 			"expected_bool": true,
-			"script": "spin_self_clockwise"
+			"success_script": "spin_self_clockwise"
 		}
 	],
 	"check_if_player_is_named_pat": [
 		{
-			"name": "COMPARE_ENTITY_NAME",
+			"name": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "Pat",
 			"expected_bool": true,
-			"script": "spin_self_clockwise"
+			"success_script": "spin_self_clockwise"
 		}
 	],
 	"walk_self_to_path_and_loop": [
@@ -94,7 +94,7 @@
 			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "path_star",
-			"script": "load_map-town",
+			"success_script": "load_map-town",
 			"expected_bool": true
 		}
 	],
