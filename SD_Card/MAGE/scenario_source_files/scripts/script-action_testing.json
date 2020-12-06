@@ -1,18 +1,78 @@
 {
 	"act01_check_entity_byte": [
 		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act01"
+		},
+		{
 			"name": "CHECK_ENTITY_BYTE",
-			"script": "act01_success_script",
+			"script": "spin_self_clockwise",
 			"entity": "Mage 01",
-			"byte_offset": 16,
+			"byte_offset": 15,
 			"expected_byte": 2
 		}
 	],
-	"act01_success_script": [
+	"act02_check_save_flag": [
 		{
-			"name": "SET_ENTITY_DIRECTION",
-			"entity": "Mage 01",
-			"direction": "north"
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act02"
+		},
+		{
+			"name": "CHECK_SAVE_FLAG",
+			"script": "spin_self_clockwise",
+			"entity": "Mage 02",
+			"byte_offset": 0,
+			"expected_bool": true
+		}
+	],
+	"act03_check_if_entity_is_in_geometry": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act03"
+		},
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"geometry": "act03_test_geometry",
+			"script": "spin_self_clockwise",
+			"entity": "Mage 03",
+			"expected_bool": true
+		}
+	],
+	"act04_check_for_button_press": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act04"
+		},
+		{
+			"name": "CHECK_FOR_BUTTON_PRESS",
+			"script": "spin_self_clockwise",
+			"button_id": 24
+		}
+	],
+	"act05_check_for_button_state": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act05"
+		},
+		{
+			"name": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"name": "CHECK_FOR_BUTTON_STATE",
+			"script": "spin_self_clockwise",
+			"button_id": 0,
+			"expected_bool": true
+		}
+	],
+	"act06_run_script": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-act06"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "spin_self_clockwise"
 		}
 	]
 }
