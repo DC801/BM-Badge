@@ -168,13 +168,13 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	if (EngineROM_Read(address, 12, (uint8_t *)entity.name) != 12)
+	if (EngineROM_Read(address, MAGE_ENTITY_NAME_LENGTH, (uint8_t *)entity.name) != MAGE_ENTITY_NAME_LENGTH)
 	{
 		goto MageEntity_Error;
 	}
 
 	//increment address
-	address += 12;
+	address += MAGE_ENTITY_NAME_LENGTH;
 	
 	// Read entity.x
 	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
@@ -792,6 +792,11 @@ uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 {
 	//always return a valid entity type for the entityTypeId submitted. 
 	return entityTypeId % entityTypeHeader.count();
+}
+
+uint16_t MageGameControl::getValidMapLocalScriptId(uint16_t scriptId)
+{
+	return scriptId %  map.ScriptCount();
 }
 
 uint16_t MageGameControl::getValidGlobalScriptId(uint16_t scriptId)
