@@ -482,26 +482,9 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t u2_value = entity->hackableStateB | (entity->hackableStateA << 8);
-		if( u2_value == argStruct->expectedValue) {
-			mapLocalJumpScript = argStruct->successScriptId;
-		}
-	}
-	return;
-}
-
-//Need to verify encoding of u2_value variable works correctly -Tim
-void MageScriptControl::checkEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionCheckEntityHackableStateBU2 *argStruct = (ActionCheckEntityHackableStateBU2*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
-	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t u2_value = entity->hackableStateC | (entity->hackableStateB << 8);
+		uint16_t u2_value = convert_endian_u2_value(
+			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
+		);
 		if( u2_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -520,7 +503,9 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t u2_value = entity->hackableStateD | (entity->hackableStateC << 8);
+		uint16_t u2_value = convert_endian_u2_value(
+			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
+		);
 		if( u2_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -539,11 +524,9 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint32_t u4_value = 
-			entity->hackableStateA
-			| (entity->hackableStateB << 8)
-			| (entity->hackableStateC << 16)
-			| (entity->hackableStateD << 24);
+		uint32_t u4_value = convert_endian_u4_value(
+			*(uint32_t *)((uint8_t *)&entity->hackableStateA)
+		);
 		if( u4_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -562,7 +545,9 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t pathId = entity->hackableStateB | (entity->hackableStateA << 8);
+		uint16_t pathId = convert_endian_u2_value(
+			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
+		);
 		if( pathId == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -603,6 +588,7 @@ void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * re
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
 	bool button_activated = *button_address;
@@ -619,6 +605,7 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	ActionCheckForButtonState *argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+
 	//get state of button:
 	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
 	bool button_state = *button_address;
@@ -635,6 +622,7 @@ void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateS
 	ActionRunScript *argStruct = (ActionRunScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+
 	//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 	mapLocalJumpScript = argStruct->scriptId;
 	return;
@@ -645,6 +633,7 @@ void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeSt
 	ActionBlockingDelay *argStruct = (ActionBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+
 	//If there's already a total number of loops to next action set, a delay is currently in progress:
 	if(resumeStateStruct->totalLoopsToNextAction != 0)
 	{
@@ -678,6 +667,7 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 	ActionNonBlockingDelay *argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+
 	//If there's already a total number of loops to next action set, a delay is currently in progress:
 	if(resumeStateStruct->totalLoopsToNextAction != 0)
 	{
@@ -716,6 +706,7 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 	ActionSetEntityName *argStruct = (ActionSetEntityName*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
+
 	return;
 }
 
@@ -752,6 +743,7 @@ void MageScriptControl::setEntityInteractScript(uint8_t * args, MageScriptState 
 	ActionSetEntityInteractScript *argStruct = (ActionSetEntityInteractScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+
 	setEntityScript(
 		argStruct->scriptId,
 		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
@@ -765,6 +757,7 @@ void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * re
 	ActionSetEntityTickScript *argStruct = (ActionSetEntityTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
+
 	setEntityScript(
 		argStruct->scriptId,
 		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
@@ -813,7 +806,6 @@ void MageScriptControl::setEntityPrimaryIdType(uint8_t * args, MageScriptState *
 	return;
 }
 
-//Needs adjustment to make sure when setting an action type animation, it will also set isActioning in MageGameControl::applyGameModeInputs(). -Tim
 void MageScriptControl::setEntityCurrentAnimation(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityCurrentAnimation *argStruct = (ActionSetEntityCurrentAnimation*)args;
@@ -926,26 +918,13 @@ void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState 
 void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU2 *argStruct = (ActionSetEntityHackableStateAU2*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->hackableStateA = (argStruct->newValue | 0xFF00) << 8;
-		entity->hackableStateB = (argStruct->newValue | 0x00FF) << 0;
-	}
-	return;
-}
-
-//need to verify that u2 values are set correctly in the struct. -Tim
-void MageScriptControl::setEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetEntityHackableStateBU2 *argStruct = (ActionSetEntityHackableStateBU2*)args;
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->hackableStateB = (argStruct->newValue | 0xFF00) << 8;
-		entity->hackableStateC = (argStruct->newValue | 0x00FF) << 0;
+		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
 	return;
 }
@@ -954,12 +933,13 @@ void MageScriptControl::setEntityHackableStateBU2(uint8_t * args, MageScriptStat
 void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateCU2 *argStruct = (ActionSetEntityHackableStateCU2*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->hackableStateC = (argStruct->newValue | 0xFF00) << 8;
-		entity->hackableStateD = (argStruct->newValue | 0x00FF) << 0;
+		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
 	}
 	return;
 }
@@ -968,14 +948,13 @@ void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptStat
 void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU4 *argStruct = (ActionSetEntityHackableStateAU4*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->newValue = convert_endian_u4_value(argStruct->newValue);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->hackableStateA = (argStruct->newValue | 0xFF000000) << 24;
-		entity->hackableStateB = (argStruct->newValue | 0x00FF0000) << 16;
-		entity->hackableStateC = (argStruct->newValue | 0x0000FF00) << 8;
-		entity->hackableStateD = (argStruct->newValue | 0x000000FF) << 0;
+		*(uint32_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
 	return;
 }
@@ -984,12 +963,13 @@ void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptStat
 void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityPath *argStruct = (ActionSetEntityPath*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->hackableStateA = (argStruct->newValue | 0xFF00) << 8;
-		entity->hackableStateB = (argStruct->newValue | 0x00FF) << 0;
+		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
 	}
 	return;
 }
@@ -1013,7 +993,8 @@ void MageScriptControl::setMapTickScript(uint8_t * args, MageScriptState * resum
 	ActionSetMapTickScript *argStruct = (ActionSetMapTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = convert_endian_u2_value(argStruct->scriptId);
-		setEntityScript(
+
+	setEntityScript(
 		argStruct->scriptId,
 		MAGE_MAP_ENTITY,
 		ON_TICK
@@ -1026,6 +1007,7 @@ void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * r
 	ActionSetHexCursorLocation *argStruct = (ActionSetHexCursorLocation*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->byteAddress = convert_endian_u2_value(argStruct->byteAddress);
+
 	MageHex->setHexCursorLocation(argStruct->byteAddress);
 	return;
 }
@@ -1034,6 +1016,7 @@ void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * r
 void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetHexBits *argStruct = (ActionSetHexBits*)args;
+
 	return;
 }
 
@@ -1041,6 +1024,7 @@ void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeState
 void MageScriptControl::unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionUnlockHaxCell *argStruct = (ActionUnlockHaxCell*)args;
+
 	return;
 }
 
@@ -1048,12 +1032,14 @@ void MageScriptControl::unlockHaxCell(uint8_t * args, MageScriptState * resumeSt
 void MageScriptControl::lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
+
 	return;
 }
 
 void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetHexEditorState *argStruct = (ActionSetHexEditorState*)args;
+
 	if(MageHex->getHexEditorState() != argStruct->state)
 	{
 		MageHex->toggleHexEditor();
@@ -1064,6 +1050,7 @@ void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resu
 void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetHexEditorDialogMode *argStruct = (ActionSetHexEditorDialogMode*)args;
+
 	if(MageHex->getHexDialogState() != argStruct->state)
 	{
 		MageHex->toggleHexDialog();
@@ -1077,6 +1064,7 @@ void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStr
 	ActionLoadMap *argStruct = (ActionLoadMap*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->mapId = convert_endian_u2_value(argStruct->mapId);
+
 	return;
 }
 
@@ -1087,7 +1075,7 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 	argStruct->dialogId = convert_endian_u2_value(argStruct->dialogId);
 
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
-		printf("Opening dialog %d\n", argStruct->dialogId);
+		//printf("Opening dialog %d\n", argStruct->dialogId);
 		MageGame->playerHasControl = false;
 		MageDialog->load(argStruct->dialogId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
@@ -1382,6 +1370,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 void MageScriptControl::setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetCameraToFollowEntity *argStruct = (ActionSetCameraToFollowEntity*)args;
+
 	return;
 }
 
@@ -1390,6 +1379,8 @@ void MageScriptControl::teleportCameraToGeometry(uint8_t * args, MageScriptState
 	ActionTeleportCameraToGeometry *argStruct = (ActionTeleportCameraToGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
+
 	return;
 }
 
@@ -1398,6 +1389,7 @@ void MageScriptControl::panCameraToEntity(uint8_t * args, MageScriptState * resu
 	ActionPanCameraToEntity *argStruct = (ActionPanCameraToEntity*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+
 	return;
 }
 
@@ -1407,6 +1399,7 @@ void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * re
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
 	return;
 }
 
@@ -1416,6 +1409,7 @@ void MageScriptControl::panCameraAlongGeometry(uint8_t * args, MageScriptState *
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
 	return;
 }
 
@@ -1425,6 +1419,7 @@ void MageScriptControl::loopCameraAlongGeometry(uint8_t * args, MageScriptState 
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
+
 	return;
 }
 
@@ -1433,6 +1428,7 @@ void MageScriptControl::setScreenShake(uint8_t * args, MageScriptState * resumeS
 	ActionSetScreenShake *argStruct = (ActionSetScreenShake*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
+
 	return;
 }
 void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1441,6 +1437,7 @@ void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->color = convert_endian_u2_value(argStruct->color);
+
 	return;
 }
 void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1449,6 +1446,7 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->color = convert_endian_u2_value(argStruct->color);
+
 	return;
 }
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1456,6 +1454,7 @@ void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * re
 	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->soundId = convert_endian_u2_value(argStruct->soundId);
+
 	return;
 }
 void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1463,6 +1462,7 @@ void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * res
 	ActionPlaySoundInterrupt *argStruct = (ActionPlaySoundInterrupt*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->soundId = convert_endian_u2_value(argStruct->soundId);
+	
 	return;
 }
 
@@ -1505,7 +1505,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C]    = &MageScriptControl::checkEntityHackableStateC;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_D]    = &MageScriptControl::checkEntityHackableStateD;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A_U2] = &MageScriptControl::checkEntityHackableStateAU2;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_B_U2] = &MageScriptControl::checkEntityHackableStateBU2;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C_U2] = &MageScriptControl::checkEntityHackableStateCU2;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A_U4] = &MageScriptControl::checkEntityHackableStateAU4;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PATH]                = &MageScriptControl::checkEntityPath;
@@ -1530,7 +1529,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C]      = &MageScriptControl::setEntityHackableStateC;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_D]      = &MageScriptControl::setEntityHackableStateD;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U2]   = &MageScriptControl::setEntityHackableStateAU2;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B_U2]   = &MageScriptControl::setEntityHackableStateBU2;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C_U2]   = &MageScriptControl::setEntityHackableStateCU2;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U4]   = &MageScriptControl::setEntityHackableStateAU4;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PATH]                  = &MageScriptControl::setEntityPath;

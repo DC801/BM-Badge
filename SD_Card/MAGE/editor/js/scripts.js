@@ -225,20 +225,6 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
-	CHECK_ENTITY_HACKABLE_STATE_B_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_B_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
 	CHECK_ENTITY_HACKABLE_STATE_C_U2: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -588,19 +574,6 @@ var actionHandlerMap = {
 				{propertyName: 'entity', size: 1},
 			],
 			'SET_ENTITY_HACKABLE_STATE_A_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_B_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_B_U2',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -976,7 +949,6 @@ var actionNames = [
 	'CHECK_ENTITY_HACKABLE_STATE_C',
 	'CHECK_ENTITY_HACKABLE_STATE_D',
 	'CHECK_ENTITY_HACKABLE_STATE_A_U2',
-	'CHECK_ENTITY_HACKABLE_STATE_B_U2',
 	'CHECK_ENTITY_HACKABLE_STATE_C_U2',
 	'CHECK_ENTITY_HACKABLE_STATE_A_U4',
 	'CHECK_ENTITY_PATH',
@@ -1004,7 +976,6 @@ var actionNames = [
 	'SET_ENTITY_HACKABLE_STATE_C',
 	'SET_ENTITY_HACKABLE_STATE_D',
 	'SET_ENTITY_HACKABLE_STATE_A_U2',
-	'SET_ENTITY_HACKABLE_STATE_B_U2',
 	'SET_ENTITY_HACKABLE_STATE_C_U2',
 	'SET_ENTITY_HACKABLE_STATE_A_U4',
 	'SET_ENTITY_PATH',
