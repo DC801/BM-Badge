@@ -106,8 +106,6 @@ class MageScriptControl
 		//Action Logic Type: I+C
 		void checkEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
-		void checkEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+C
 		void checkEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -161,8 +159,6 @@ class MageScriptControl
 		void setEntityHackableStateD(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
-		void setEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I

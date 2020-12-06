@@ -145,7 +145,6 @@ typedef enum : uint8_t{
 	CHECK_ENTITY_HACKABLE_STATE_C,
 	CHECK_ENTITY_HACKABLE_STATE_D,
 	CHECK_ENTITY_HACKABLE_STATE_A_U2,
-	CHECK_ENTITY_HACKABLE_STATE_B_U2,
 	CHECK_ENTITY_HACKABLE_STATE_C_U2,
 	CHECK_ENTITY_HACKABLE_STATE_A_U4,
 	CHECK_ENTITY_PATH,
@@ -173,7 +172,6 @@ typedef enum : uint8_t{
 	SET_ENTITY_HACKABLE_STATE_C,
 	SET_ENTITY_HACKABLE_STATE_D,
 	SET_ENTITY_HACKABLE_STATE_A_U2,
-	SET_ENTITY_HACKABLE_STATE_B_U2,
 	SET_ENTITY_HACKABLE_STATE_C_U2,
 	SET_ENTITY_HACKABLE_STATE_A_U4,
 	SET_ENTITY_PATH,
@@ -429,14 +427,6 @@ typedef struct {
 	uint8_t entityId;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionCheckEntityHackableStateBU2;
-
-typedef struct {
-	uint16_t successScriptId;
-	uint16_t expectedValue;
-	uint8_t entityId;
-	uint8_t paddingF;
-	uint8_t paddingG;
 } ActionCheckEntityHackableStateCU2;
 
 typedef struct {
@@ -680,15 +670,6 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityHackableStateBU2;
-
-typedef struct {
-	uint16_t newValue;
-	uint8_t entityId;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
 } ActionSetEntityHackableStateCU2;
 
 typedef struct {
@@ -756,7 +737,7 @@ typedef struct {
 } ActionSetHexBits;
 
 typedef struct {
-	uint8_t cellOffset;
+	uint8_t fieldType; //needs enum lookup
 	uint8_t paddingB;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -766,7 +747,7 @@ typedef struct {
 } ActionUnlockHaxCell;
 
 typedef struct {
-	uint8_t cellOffset;
+	uint8_t fieldType; //needs enum lookup
 	uint8_t paddingB;
 	uint8_t paddingC;
 	uint8_t paddingD;
