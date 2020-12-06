@@ -74,7 +74,45 @@ class MageScriptControl
 		//Action Logic Type: I
 		void nullAction(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
-		void checkEntityByte(uint8_t * args, MageScriptState * resumeStateStruct);
+		void checkEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityX(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityY(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntitySecondaryId(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityPrimaryIdType(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityCurrentAnimation(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityCurrentFrame(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateC(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateD(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkEntityPath(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
@@ -85,34 +123,62 @@ class MageScriptControl
 		void checkForButtonState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void runScript(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I+C
-		void compareEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: B
 		void blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: B (note, setPauseState require a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
+		//Action Logic Type: B (note, setPauseState requires a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
 		void setPauseState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setEntityByte(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntityX(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntityY(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntitySecondaryId(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityPrimaryIdType(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityCurrentAnimation(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityCurrentFrame(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
+		void setEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateC(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateD(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateBU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityPath(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setHexBit(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setHexBits(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -126,8 +192,6 @@ class MageScriptControl
 		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
 		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setRenderableFont(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
 		void teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void walkEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -139,6 +203,8 @@ class MageScriptControl
 		void setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB
+		void panCameraToEntity(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
@@ -175,6 +241,7 @@ class MageScriptControl
 		MageScriptState* getMapTickResumeState();
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
+		
 		Point offsetPointRelativeToEntityCenter(
 			const MageEntityRenderableData *renderable,
 			const MageEntity *entity,
