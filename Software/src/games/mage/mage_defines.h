@@ -23,11 +23,11 @@ all of the old code used as the foundation of this badge.
 #define MAX_ENTITIES_PER_MAP 32
 
 //this is the map that will load at the start of the game:
-#define DEFAULT_MAP 3
+#define DEFAULT_MAP 1
 
 //this is the string to match to determine which entity is the player
 //don't make it more than 12 characters long!
-#define PLAYER_CHARACTER_NAME_STRING "Bub"
+#define PLAYER_CHARACTER_NAME_STRING "baby_goat"
 
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR 0x0020
@@ -321,7 +321,7 @@ typedef struct {
 
 typedef struct {
 	uint16_t successScriptId;
-	uint16_t expectedValue;
+	uint16_t expectedScript;
 	uint8_t entityId;
 	uint8_t paddingF;
 	uint8_t paddingG;
@@ -329,7 +329,7 @@ typedef struct {
 
 typedef struct {
 	uint16_t successScriptId;
-	uint16_t expectedValue;
+	uint16_t expectedScript;
 	uint8_t entityId;
 	uint8_t paddingF;
 	uint8_t paddingG;
@@ -463,8 +463,8 @@ typedef struct {
 } ActionCheckSaveFlag;
 
 typedef struct {
-	uint16_t geometryId;
 	uint16_t successScriptId;
+	uint16_t geometryId;
 	uint8_t entityId;
 	uint8_t expectedBoolValue;
 	uint8_t paddingG;
