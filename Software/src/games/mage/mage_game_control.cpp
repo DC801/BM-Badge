@@ -328,7 +328,7 @@ MageEntity_Error:
 
 void MageGameControl::PopulateMapData(uint16_t index)
 {
-	currentMapId = index;
+	currentMapId = getValidMapId(index);
 
 	//load new map:
 	map = MageMap(mapHeader.offset(currentMapId));
@@ -361,18 +361,33 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		updateEntityRenderableData(i);
 	}
 
-	//make sure the tileset Id is updated when the map loads to prevent player yeeting
+	//make sure the tileset Id is updated when the map loads to prevent camera jumping when switching entity types
 	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
+}
+
+void MageGameControl::initializeScriptsOnMapLoad()
+{
+	//initialize the script ResumeStateStructs:
+	MageScript->initScriptState(MageScript->getMapLoadResumeState(), map.OnLoad() , false);
+	MageScript->initScriptState(MageScript->getMapTickResumeState(), map.OnTick() , false);
+	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+	{
+		//Initialize the script ResumeStateStructs to default values for this map.
+		MageScript->initScriptState(MageScript->getEntityTickResumeState(i), entities[i].onTickScriptId, false);
+		MageScript->initScriptState(MageScript->getEntityInteractResumeState(i), entities[i].onInteractScriptId, false);
+	}
+
+	//call the map's load script:
+	//note all other calls to this function should set the isFirstRun argument to false.
+	MageScript->handleMapOnLoadScript(true);
 }
 
 void MageGameControl::LoadMap(uint16_t index)
 {
 	//get the data for the map:
 	PopulateMapData(index);
+	initializeScriptsOnMapLoad();
 
-	//call the map's load script:
-	//note all other calls to this function should set the isFirstRun argument to false.
-	MageScript->handleMapOnLoadScript(true);
 }
 
 void MageGameControl::updatePointerToPlayerEntity(std::string name)
@@ -1140,7 +1155,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 }
 
 MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
-	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId % geometryHeader.count())];
+	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
 }
 
 MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t entityId) {

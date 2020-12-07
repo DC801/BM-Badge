@@ -230,22 +230,22 @@ uint16_t MageMap::ScriptCount() const
 	return scriptCount;
 }
 
-uint16_t MageMap::getGlobalEntityId(uint16_t num) const
+uint16_t MageMap::getGlobalEntityId(uint16_t mapLocalEntityId) const
 {
 	if (!entityGlobalIds) return 0;
-	return entityGlobalIds[num % entityCount];
+	return entityGlobalIds[mapLocalEntityId % entityCount];
 }
 
-uint16_t MageMap::getGlobalGeometryId(uint16_t num) const
+uint16_t MageMap::getGlobalGeometryId(uint16_t mapLocalGeometryId) const
 {
 	if (!geometryGlobalIds) return 0;
-	return geometryGlobalIds[num % geometryCount];
+	return geometryGlobalIds[mapLocalGeometryId % geometryCount];
 }
 
-uint16_t MageMap::getGlobalScriptId(uint16_t num) const
+uint16_t MageMap::getGlobalScriptId(uint16_t mapLocalScriptId) const
 {
 	if (!scriptGlobalIds) return 0;
-	return scriptGlobalIds[num % scriptCount];
+	return scriptGlobalIds[mapLocalScriptId % scriptCount];
 }
 
 uint32_t MageMap::LayerOffset(uint16_t num) const

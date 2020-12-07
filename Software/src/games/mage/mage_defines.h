@@ -23,11 +23,11 @@ all of the old code used as the foundation of this badge.
 #define MAX_ENTITIES_PER_MAP 32
 
 //this is the map that will load at the start of the game:
-#define DEFAULT_MAP 1
+#define DEFAULT_MAP 0
 
 //this is the string to match to determine which entity is the player
 //don't make it more than 12 characters long!
-#define PLAYER_CHARACTER_NAME_STRING "baby_goat"
+#define PLAYER_CHARACTER_NAME_STRING "Bub"
 
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR 0x0020
@@ -84,6 +84,7 @@ all of the old code used as the foundation of this badge.
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT (-1)
+#define MAGE_NO_MAP (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 

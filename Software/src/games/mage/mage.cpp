@@ -102,6 +102,9 @@ void GameUpdate()
 		//handle scripts:
 		handleScripts();
 
+		//check for loadMap:
+		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
+
 		//update the entities based on the current state of their (hackable) data array.
 		MageGame->UpdateEntities(deltaTime);
 	}
@@ -254,6 +257,16 @@ void MAGE()
 
 		//updates the state of all the things before rendering:
 		GameUpdate();
+
+		//If the loadMap() action has set a new map, we will load it before we render this frame.
+		if(MageScript->mapLoadId != MAGE_NO_MAP) {
+			//load the new map data into MageGame
+			MageGame->LoadMap(MageScript->mapLoadId);
+			//Update the game for the new map
+			GameUpdate();
+			//clear the mapLoadId to prevent infinite reloads
+			MageScript->mapLoadId = MAGE_NO_MAP;
+		}
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();

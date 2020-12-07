@@ -44,6 +44,9 @@ void MageScriptControl::processScript(MageScriptState * resumeStateStruct, uint8
 	while(mapLocalJumpScript != MAGE_NO_SCRIPT)
 	{
 		processActionQueue(resumeStateStruct);
+		//check for loadMap:
+		if(mapLoadId != MAGE_NO_MAP) { return; }
+
 		//if no new mapLocalJumpScript was set, we can exit the loop immediately.
 		if(mapLocalJumpScript == MAGE_NO_SCRIPT)
 		{ break; }
@@ -89,6 +92,9 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 	for(; resumeStateStruct->actionOffset<actionCount; resumeStateStruct->actionOffset++)
 	{
 		runAction(address, resumeStateStruct);
+		//check for loadMap:
+		if(mapLoadId != MAGE_NO_MAP) { return; }
+
 		//non-blocking action check is based on whether resumeStateStruct->totalLoopsToNextAction is set:
 		if(resumeStateStruct->totalLoopsToNextAction != 0)
 		{
@@ -574,7 +580,9 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
-		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
 		bool colliding = geometry->isPointInGeometry(renderable->center);
 		if(colliding == argStruct->expectedBoolValue) {
 			//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -1065,6 +1073,7 @@ void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStr
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->mapId = convert_endian_u2_value(argStruct->mapId);
 
+	mapLoadId = MageGame->getValidMapId(argStruct->mapId);
 	return;
 }
 
@@ -1096,7 +1105,8 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		MageGeometry *geometry = MageGame->getValidGeometry(argStruct->geometryId);
+		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
@@ -1472,6 +1482,8 @@ MageScriptControl::MageScriptControl()
 
 	blockingDelayTime = 0;
 
+	mapLoadId = MAGE_NO_MAP;
+
 	//these should never be used in their initialized states, they will always be set when calling processScript()
 	currentEntityId = MAGE_MAP_ENTITY;
 	currentScriptType = ON_LOAD;
@@ -1564,6 +1576,7 @@ uint32_t MageScriptControl::size() const
 	uint32_t size =
 		sizeof(mapLocalJumpScript) +
 		sizeof(blockingDelayTime) +
+		sizeof(mapLoadId) +
 		sizeof(currentEntityId) +
 		sizeof(currentScriptType) +
 		sizeof(MageScriptState) + //mapLoadResumeState
@@ -1592,31 +1605,6 @@ MageScriptState* MageScriptControl::getEntityInteractResumeState(uint8_t index)
 MageScriptState* MageScriptControl::getEntityTickResumeState(uint8_t index)
 {
 	return &entityTickResumeStates[index];
-}
-
-void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
-{
-	//since this should only run once when a map is loaded, and then proceed through the script once,
-	//we only need to check the isFirstRun argument to see if we should initialize based on the 
-	//map's onLoad mapLocalScriptId or if we should resume from the state of the mapLoadResumeState struct.
-	if(isFirstRun)
-	{
-		initScriptState(&mapLoadResumeState, MageGame->Map().OnLoad(), true);
-	}
-	//this checks to see if the map onLoad script is complete and returns if it is:
-	if(!mapLoadResumeState.scriptIsRunning)
-	{
-		return;
-	}
-	//otherwise, the load script is still running and the resumeStateStruct controls all further actions:
-	else
-	{
-		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
-		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the mapLocalScriptId is contained within the *ResumeState struct so we can call actions:
-	}
-	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&mapLoadResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
 }
 
 float MageScriptControl::getProgressOfAction(
@@ -1757,6 +1745,31 @@ void MageScriptControl::setEntityPositionToPoint(
 	entity->y = point.y;
 }
 
+void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
+{
+	//since this should only run once when a map is loaded, and then proceed through the script once,
+	//we only need to check the isFirstRun argument to see if we should initialize based on the 
+	//map's onLoad mapLocalScriptId or if we should resume from the state of the mapLoadResumeState struct.
+	if(isFirstRun)
+	{
+		initScriptState(&mapLoadResumeState, MageGame->Map().OnLoad(), true);
+	}
+	//this checks to see if the map onLoad script is complete and returns if it is:
+	if(!mapLoadResumeState.scriptIsRunning)
+	{
+		return;
+	}
+	//otherwise, the load script is still running and the resumeStateStruct controls all further actions:
+	else
+	{
+		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
+		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
+		//the mapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+	}
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(&mapLoadResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
+}
+
 void MageScriptControl::handleMapOnTickScript()
 {
 	//get a bool to show if a script is already running:
@@ -1788,37 +1801,6 @@ void MageScriptControl::handleMapOnTickScript()
 	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapTickResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
-}
-
-void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
-{
-	uint16_t mapLocalScriptId = MageGame->entities[index].onInteractScriptId;
-	//if a script is not currently running, do nothing.
-	if(!entityInteractResumeStates[index].scriptIsRunning)
-	{
-		return;
-	}
-	//if the entity mapLocalScriptId doesn't match what is in the entityInteractResumeStates[index] struct, re-init it
-	//with .scriptIsRunning set to false to stop all current actions.
-	else if(entityInteractResumeStates[index].mapLocalScriptId != mapLocalScriptId)
-	{
-		initScriptState(
-			&entityInteractResumeStates[index],
-			mapLocalScriptId,
-			false
-		);
-		return;
-	}
-	else
-	{
-		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
-		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the mapLocalScriptId is contained within the *ResumeState struct so we can call actions:
-	}
-	//set the current entity to the current entity index value.
-	currentEntityId = index;
-	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(&entityInteractResumeStates[index], index, MageScriptType::ON_INTERACT);
 }
 
 void MageScriptControl::handleEntityOnTickScript(uint8_t index)
@@ -1855,4 +1837,35 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t index)
 	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&entityTickResumeStates[index], index, MageScriptType::ON_TICK);
+}
+
+void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
+{
+	uint16_t mapLocalScriptId = MageGame->entities[index].onInteractScriptId;
+	//if a script is not currently running, do nothing.
+	if(!entityInteractResumeStates[index].scriptIsRunning)
+	{
+		return;
+	}
+	//if the entity mapLocalScriptId doesn't match what is in the entityInteractResumeStates[index] struct, re-init it
+	//with .scriptIsRunning set to false to stop all current actions.
+	else if(entityInteractResumeStates[index].mapLocalScriptId != mapLocalScriptId)
+	{
+		initScriptState(
+			&entityInteractResumeStates[index],
+			mapLocalScriptId,
+			false
+		);
+		return;
+	}
+	else
+	{
+		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the 
+		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
+		//the mapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+	}
+	//set the current entity to the current entity index value.
+	currentEntityId = index;
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(&entityInteractResumeStates[index], index, MageScriptType::ON_INTERACT);
 }
