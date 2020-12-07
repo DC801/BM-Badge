@@ -88,20 +88,5 @@
 			"name": "RUN_SCRIPT",
 			"script": "null_script"
 		}
-	],
-	"test_map-on_tick": [
-		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "path_star",
-			"success_script": "load_map-town",
-			"expected_bool": true
-		}
-	],
-	"load_map-town": [
-		{
-			"name": "LOAD_MAP",
-			"map": "map-town"
-		}
 	]
 }

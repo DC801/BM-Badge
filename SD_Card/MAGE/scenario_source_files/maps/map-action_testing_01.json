@@ -10,7 +10,7 @@
  "infinite":false,
  "layers":[
         {
-         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 288, 1, 1, 289, 1, 1, 290, 1, 1, 291, 1, 1, 292, 1, 1, 293, 1, 1, 294, 1, 1, 295, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 296, 1, 1, 297, 1, 1, 298, 1, 1, 299, 1, 1, 300, 1, 1, 301, 1, 1, 302, 1, 1, 303, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 304, 1, 1, 305, 1, 1, 306, 1, 1, 307, 1, 1, 308, 1, 1, 309, 1, 1, 310, 1, 1, 311, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 312, 1, 1, 313, 1, 1, 314, 1, 1, 315, 1, 1, 316, 1, 1, 317, 1, 1, 318, 1, 1, 319, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 257, 1, 1, 258, 1, 1, 259, 1, 1, 260, 1, 1, 261, 1, 1, 262, 1, 1, 263, 1, 1, 264, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 265, 1, 1, 266, 1, 1, 267, 1, 1, 268, 1, 1, 269, 1, 1, 270, 1, 1, 271, 1, 1, 272, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 273, 1, 1, 274, 1, 1, 275, 1, 1, 276, 1, 1, 277, 1, 1, 278, 1, 1, 279, 1, 1, 280, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 281, 1, 1, 282, 1, 1, 283, 1, 1, 284, 1, 1, 285, 1, 1, 286, 1, 1, 287, 1, 1, 288, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
          "height":14,
          "id":1,
          "name":"Background",
@@ -30,12 +30,17 @@
                  "gid":321,
                  "height":32,
                  "id":2,
-                 "name":"Mage 32",
+                 "name":"Mage 01",
                  "properties":[
+                        {
+                         "name":"hackable_state_d",
+                         "type":"int",
+                         "value":1
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act01_check_entity_byte"
                         }, 
                         {
                          "name":"on_tick",
@@ -53,12 +58,12 @@
                  "gid":321,
                  "height":32,
                  "id":3,
-                 "name":"Mage 33",
+                 "name":"Mage 02",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act02_check_save_flag"
                         }, 
                         {
                          "name":"on_tick",
@@ -76,12 +81,12 @@
                  "gid":321,
                  "height":32,
                  "id":4,
-                 "name":"Mage 34",
+                 "name":"Mage 03",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act03_check_if_entity_is_in_geometry"
                         }, 
                         {
                          "name":"on_tick",
@@ -99,12 +104,12 @@
                  "gid":321,
                  "height":32,
                  "id":5,
-                 "name":"Mage 35",
+                 "name":"Mage 04",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act04_check_for_button_press"
                         }, 
                         {
                          "name":"on_tick",
@@ -122,12 +127,12 @@
                  "gid":321,
                  "height":32,
                  "id":6,
-                 "name":"Mage 36",
+                 "name":"Mage 05",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act05_check_for_button_state"
                         }, 
                         {
                          "name":"on_tick",
@@ -145,12 +150,12 @@
                  "gid":321,
                  "height":32,
                  "id":7,
-                 "name":"Mage 37",
+                 "name":"Mage 06",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"act06_run_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -168,7 +173,7 @@
                  "gid":321,
                  "height":32,
                  "id":8,
-                 "name":"Mage 38",
+                 "name":"Mage 07",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -191,7 +196,7 @@
                  "gid":321,
                  "height":32,
                  "id":9,
-                 "name":"Mage 39",
+                 "name":"Mage 08",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -214,7 +219,7 @@
                  "gid":321,
                  "height":32,
                  "id":10,
-                 "name":"Mage 40",
+                 "name":"Mage 09",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -237,7 +242,7 @@
                  "gid":321,
                  "height":32,
                  "id":11,
-                 "name":"Mage 41",
+                 "name":"Mage 10",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -260,7 +265,7 @@
                  "gid":321,
                  "height":32,
                  "id":12,
-                 "name":"Mage 42",
+                 "name":"Mage 11",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -283,7 +288,7 @@
                  "gid":321,
                  "height":32,
                  "id":13,
-                 "name":"Mage 43",
+                 "name":"Mage 12",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -306,7 +311,7 @@
                  "gid":321,
                  "height":32,
                  "id":14,
-                 "name":"Mage 44",
+                 "name":"Mage 13",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -329,7 +334,7 @@
                  "gid":321,
                  "height":32,
                  "id":15,
-                 "name":"Mage 45",
+                 "name":"Mage 14",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -352,7 +357,7 @@
                  "gid":321,
                  "height":32,
                  "id":16,
-                 "name":"Mage 46",
+                 "name":"Mage 15",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -375,7 +380,7 @@
                  "gid":321,
                  "height":32,
                  "id":17,
-                 "name":"Mage 47",
+                 "name":"Mage 16",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -398,7 +403,7 @@
                  "gid":321,
                  "height":32,
                  "id":18,
-                 "name":"Mage 48",
+                 "name":"Mage 17",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -421,7 +426,7 @@
                  "gid":321,
                  "height":32,
                  "id":19,
-                 "name":"Mage 49",
+                 "name":"Mage 18",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -444,7 +449,7 @@
                  "gid":321,
                  "height":32,
                  "id":20,
-                 "name":"Mage 50",
+                 "name":"Mage 19",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -467,7 +472,7 @@
                  "gid":321,
                  "height":32,
                  "id":21,
-                 "name":"Mage 51",
+                 "name":"Mage 20",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -490,7 +495,7 @@
                  "gid":321,
                  "height":32,
                  "id":22,
-                 "name":"Mage 52",
+                 "name":"Mage 21",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -513,7 +518,7 @@
                  "gid":321,
                  "height":32,
                  "id":23,
-                 "name":"Mage 53",
+                 "name":"Mage 22",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -536,7 +541,7 @@
                  "gid":321,
                  "height":32,
                  "id":24,
-                 "name":"Mage 54",
+                 "name":"Mage 23",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -559,7 +564,7 @@
                  "gid":321,
                  "height":32,
                  "id":25,
-                 "name":"Mage 55",
+                 "name":"Mage 24",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -582,7 +587,7 @@
                  "gid":321,
                  "height":32,
                  "id":26,
-                 "name":"Mage 56",
+                 "name":"Mage 25",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -605,7 +610,7 @@
                  "gid":321,
                  "height":32,
                  "id":27,
-                 "name":"Mage 57",
+                 "name":"Mage 26",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -628,7 +633,7 @@
                  "gid":321,
                  "height":32,
                  "id":28,
-                 "name":"Mage 58",
+                 "name":"Mage 27",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -651,7 +656,7 @@
                  "gid":321,
                  "height":32,
                  "id":29,
-                 "name":"Mage 59",
+                 "name":"Mage 28",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -674,7 +679,7 @@
                  "gid":321,
                  "height":32,
                  "id":30,
-                 "name":"Mage 60",
+                 "name":"Mage 29",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -697,7 +702,7 @@
                  "gid":321,
                  "height":32,
                  "id":31,
-                 "name":"Mage 61",
+                 "name":"Mage 30",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -720,7 +725,7 @@
                  "gid":321,
                  "height":32,
                  "id":32,
-                 "name":"Mage 62",
+                 "name":"Mage 31",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -740,14 +745,20 @@
                  "y":384
                 }, 
                 {
-                 "gid":369,
-                 "height":48,
-                 "id":66,
-                 "name":"",
+                 "gid":321,
+                 "height":32,
+                 "id":67,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":48,
+                 "width":32,
                  "x":96,
                  "y":160
                 }],
@@ -756,20 +767,159 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":4,
+         "name":"Geometries",
+         "objects":[
+                {
+                 "height":0,
+                 "id":69,
+                 "name":"act03_test_geometry",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":0
+                        }, 
+                        {
+                         "x":32,
+                         "y":32
+                        }, 
+                        {
+                         "x":0,
+                         "y":32
+                        }, 
+                        {
+                         "x":0,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":448,
+                 "y":64
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Doors",
+         "objects":[
+                {
+                 "height":32,
+                 "id":70,
+                 "name":"door-demo",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":32,
+                 "y":416
+                }, 
+                {
+                 "height":32,
+                 "id":71,
+                 "name":"door-test",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":96,
+                 "y":416
+                }, 
+                {
+                 "height":32,
+                 "id":72,
+                 "name":"door-town",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":416
+                }, 
+                {
+                 "height":32,
+                 "id":73,
+                 "name":"door-action_testing_01",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":416
+                }, 
+                {
+                 "height":32,
+                 "id":74,
+                 "name":"door-action_testing_02",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":288,
+                 "y":416
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":67,
+ "nextlayerid":6,
+ "nextobjectid":75,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"on_load",
          "type":"string",
-         "value":"null_script"
+         "value":""
         }, 
         {
          "name":"on_tick",
          "type":"string",
-         "value":"null_script"
+         "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",

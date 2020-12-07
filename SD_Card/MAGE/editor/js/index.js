@@ -153,6 +153,8 @@ window.Vue.component(
 window.vueApp = new window.Vue({
 	el: '#app',
 	data: {
+		uniqueEncodeAttempt: Math.random(),
+		isLoading: false,
 		error: null,
 		jsonValue: '',
 		downloadData: null
@@ -161,6 +163,10 @@ window.vueApp = new window.Vue({
 		console.log('Created');
 	},
 	methods: {
+		closeError: function () {
+			this.uniqueEncodeAttempt = Math.random();
+			this.error = false;
+		},
 		prepareDownload: function (data, name) {
 			var blob = new Blob(data, {type: 'octet/stream'});
 			var url = window.URL.createObjectURL(blob);
@@ -181,6 +187,7 @@ window.vueApp = new window.Vue({
 			var fileNameMap = {};
 			var vm = this;
 			var filesArray = Array.prototype.slice.call(event.target.files);
+			vm.isLoading = true;
 			filesArray.forEach(function (file) {
 				fileNameMap[file.name] = file;
 			});
@@ -194,10 +201,16 @@ window.vueApp = new window.Vue({
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
 							vm.prepareDownload([compositeArray], 'game.dat');
+							vm.isLoading = false;
+						})
+						.catch(function (error) {
+							vm.error = error.message;
+							vm.isLoading = false;
 						});
 				}
 			} catch (error) {
 				vm.error = error.message;
+				vm.isLoading = false;
 			}
 		}
 	}

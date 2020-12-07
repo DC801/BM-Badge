@@ -301,6 +301,12 @@
                  "height":48,
                  "id":27,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -361,10 +367,112 @@
          "width":48,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"Doors",
+         "objects":[
+                {
+                 "height":32,
+                 "id":31,
+                 "name":"door-demo",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":352,
+                 "y":544
+                }, 
+                {
+                 "height":32,
+                 "id":32,
+                 "name":"door-test",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":544
+                }, 
+                {
+                 "height":32,
+                 "id":33,
+                 "name":"door-town",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":544
+                }, 
+                {
+                 "height":32,
+                 "id":34,
+                 "name":"door-action_testing_01",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":544,
+                 "y":544
+                }, 
+                {
+                 "height":32,
+                 "id":35,
+                 "name":"door-action_testing_02",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"map_on_tick-doors"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":608,
+                 "y":544
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":31,
+ "nextlayerid":8,
+ "nextobjectid":36,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"on_tick",
+         "type":"string",
+         "value":"map_on_tick-doors"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":32,

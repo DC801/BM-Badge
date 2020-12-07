@@ -125,7 +125,7 @@
 		- [ ] LOCK_HAX_CELL
 		- [x] SET_HEX_EDITOR_STATE
 		- [x] SET_HEX_EDITOR_DIALOG_MODE
-		- [ ] LOAD_MAP
+		- [x] LOAD_MAP
 		- [x] SHOW_DIALOG
 		- [x] TELEPORT_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_TO_GEOMETRY
@@ -185,8 +185,9 @@
 	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
 
 ## Encoder TODO:
-- [ ] Throw error on maps with no entities.
-- [ ] Fix bug where empty string for script on map or entity does not encode as null_script
+- [x] Throw error when > 1 entities have `is_player`
+- [ ] Build a test map with no entities and make sure it does not crash
+- [x] Fix bug where empty string for script on map or entity does not encode as null_script
 - [ ] Action Argument Getters:
 	- [ ] color
 	- [ ] button_id (need enum lookup)

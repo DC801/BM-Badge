@@ -350,8 +350,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		}
 	}
 
-	//update playerEntity pointer whenever a new map is loaded:
-	updatePointerToPlayerEntity(std::string(PLAYER_CHARACTER_NAME_STRING));
+	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
@@ -388,26 +387,6 @@ void MageGameControl::LoadMap(uint16_t index)
 	PopulateMapData(index);
 	initializeScriptsOnMapLoad();
 
-}
-
-void MageGameControl::updatePointerToPlayerEntity(std::string name)
-{
-	std::string currentEntityName;
-	playerEntityIndex = NO_PLAYER;
-	for(uint16_t i=0; i<map.EntityCount(); i++)
-	{
-		currentEntityName = std::string(entities[i].name);
-		if(currentEntityName == name)
-		{
-			playerEntityIndex = i;
-			//printf(
-			//	"Is this entity the player? A: %s; B %s; playerEntityIndex: %d\n",
-			//	currentEntityName.c_str(),
-			//	name.c_str(),
-			//	playerEntityIndex
-			//);
-		}
-	}
 }
 
 void MageGameControl::applyUniversalInputs()
@@ -469,7 +448,7 @@ void MageGameControl::applyGameModeInputs()
 		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
-		bool isActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+		bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
 		isMoving = false;
 
@@ -477,9 +456,9 @@ void MageGameControl::applyGameModeInputs()
 		mageSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
 
 		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
-		if(isActioning || EngineInput_Buttons.rjoy_left)
+		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
 		{
-			isActioning = true;
+			playerIsActioning = true;
 		}
 		//check to see if both pads are being pressed at once, triggering map reload:
 		else if(EngineInput_Buttons.ljoy_center && EngineInput_Buttons.rjoy_center)
@@ -532,7 +511,7 @@ void MageGameControl::applyGameModeInputs()
 		//handle animation assignment for the player:
 		//Scenario 1 - preform action:
 		if(
-			isActioning &&
+			playerIsActioning &&
 			hasEntityType &&
 			entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX
 		)

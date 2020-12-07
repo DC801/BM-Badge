@@ -77,7 +77,15 @@ MageMap::MageMap(uint32_t address)
 		goto MageMap_Error;
 	}
 
-	address += sizeof(layerCount) + sizeof(uint8_t); // Padding
+	address += sizeof(layerCount);
+
+	//read playerEntityIndex
+	if (EngineROM_Read(address, sizeof(playerEntityIndex), &playerEntityIndex) != sizeof(playerEntityIndex))
+	{
+		goto MageMap_Error;
+	}
+
+	address += sizeof(playerEntityIndex);
 
 	//read entityCount
 	if (EngineROM_Read(address, sizeof(entityCount), (uint8_t *)&entityCount) != sizeof(entityCount))
@@ -268,4 +276,8 @@ void MageMap::setOnLoad(uint16_t scriptId)
 void MageMap::setOnTick(uint16_t scriptId)
 {
 	onTick = scriptId;
+}
+
+uint8_t MageMap::getMapLocalPlayerEntityIndex() {
+	return playerEntityIndex;
 }

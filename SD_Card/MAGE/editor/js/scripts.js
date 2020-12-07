@@ -1519,7 +1519,10 @@ var handleMapScripts = function (
 		scenarioData,
 	);
 	(map.properties || []).forEach(function(property) {
-		if (possibleMapScripts.includes(property.name)) {
+		if (
+			property.value // because if it's empty, don't bother
+			&& possibleMapScripts.includes(property.name)
+		) {
 			map[property.name] = handleScript(
 				property.value,
 				map,

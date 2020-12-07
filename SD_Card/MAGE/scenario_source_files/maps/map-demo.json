@@ -745,6 +745,11 @@
                  "name":"Bub",
                  "properties":[
                         {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"check_if_player_is_goat_high"
@@ -843,12 +848,84 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"Doors",
+         "objects":[
+                {
+                 "height":32,
+                 "id":60,
+                 "name":"door-demo",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":61,
+                 "name":"door-test",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":128,
+                 "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":62,
+                 "name":"door-town",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":192,
+                 "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":63,
+                 "name":"door-action_testing_01",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":256,
+                 "y":64
+                }, 
+                {
+                 "height":32,
+                 "id":64,
+                 "name":"door-action_testing_02",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":64
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":57,
+ "nextlayerid":8,
+ "nextobjectid":65,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"on_tick",
+         "type":"string",
+         "value":"map_on_tick-doors"
+        }],
  "renderorder":"right-down",
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tilesets":[
         {

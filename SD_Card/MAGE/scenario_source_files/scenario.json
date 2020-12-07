@@ -15,8 +15,8 @@
 		"demo": "maps/map-demo.json",
 		"test": "maps/map-test.json",
 		"town": "maps/map-town.json",
-		"action_test": "maps/map-action_testing.json",
-		"action_test_2": "maps/map-action_testing_2.json"
+		"action_testing_01": "maps/map-action_testing_01.json",
+		"action_testing_02": "maps/map-action_testing_02.json"
 	},
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json"

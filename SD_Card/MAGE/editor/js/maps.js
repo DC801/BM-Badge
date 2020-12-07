@@ -120,9 +120,21 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 		scenarioData,
 	);
 	entity.compositeEntity = compositeEntity;
+
+	entity.mapIndex = map.entityIndices.length;
 	map.entityIndices.push(
 		compositeEntity.scenarioIndex
 	);
+	if (entity.compositeEntity.is_player) {
+		if (map.playerEntityId !== specialKeywordsEnum['%MAP%']) {
+			var entityALabel = entity.compositeEntity.name || entity.compositeEntity.type;
+			var entityB = map.entityObjects[map.playerEntityId];
+			var entityBLabel = entityB.compositeEntity.name || entityB.compositeEntity.type;
+			throw new Error(`More than one entity on map "${map.name}" has \`is_player\` checked, this is not allowed!\nCompeting entities: "${entityALabel}", "${entityBLabel}"`);
+		} else {
+			map.playerEntityId = entity.mapIndex;
+		}
+	}
 }
 
 var handleMapTilesets = function (mapTilesets, scenarioData, fileNameMap) {
@@ -173,6 +185,7 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 			scenarioData,
 		);
 	});
+	map.playerEntityId = specialKeywordsEnum['%MAP%'];
 	map.entityObjects.forEach(function (tiledObject) {
 		handleTiledObjectAsEntity(
 			tiledObject,
@@ -195,7 +208,7 @@ var generateMapHeader = function (map) {
 		+ 2 // uint16_t on_load
 		+ 2 // uint16_t on_tick
 		+ 1 // uint8_t layer_count
-		+ 1 // uint8_t padding
+		+ 1 // uint8_t player_entity_id
 		+ 2 // uint16_t entity_count
 		+ 2 // uint16_t geometry_count
 		+ 2 // uint16_t script_count
@@ -237,7 +250,7 @@ var generateMapHeader = function (map) {
 	offset += 2;
 	dataView.setUint8(offset, map.serializedLayers.length);
 	offset += 1;
-	dataView.setUint8(offset, 0); // padding
+	dataView.setUint8(offset, map.playerEntityId); // padding
 	offset += 1;
 	dataView.setUint16(offset, map.entityIndices.length, false);
 	offset += 2;
