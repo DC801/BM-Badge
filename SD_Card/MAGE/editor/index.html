@@ -26,6 +26,7 @@
 							>
 								<label>Drag your <code>scenario_source_files</code> to this button!
 									<input
+										:key="uniqueEncodeAttempt"
 										id="drag_target"
 										class="
 											btn
@@ -45,6 +46,13 @@
 								</label>
 							</div>
 							<div
+								v-if="isLoading"
+								class="alert alert-dismissible alert-secondary"
+							>
+								<h2>Loafing</h2>
+								<p>THINKING SO HARD ABOUT ENCODING THE BINARY</p>
+							</div>
+							<div
 								v-if="error"
 								class="alert alert-dismissible alert-danger"
 							>
@@ -52,9 +60,12 @@
 									type="button"
 									class="close"
 									data-dismiss="alert"
+									@click="closeError"
 								>×</button>
 								<h2>Oh bother.</h2>
-								<p>{{error}}</p>
+								<pre
+									style="white-space: pre-wrap;"
+								>{{error}}</pre>
 								<p>Change a few things up and try dragging your <strong>scenario_source_files</strong> folder in again.</p>
 							</div>
 							<div>

@@ -111,10 +111,6 @@ public:
 	//this will load a map to be the current map.
 	void LoadMap(uint16_t index);
 
-	//this will set a pointer to the playerEntity based on 
-	//it's entityType matching a specific string
-	void updatePointerToPlayerEntity(std::string name);
-
 	//this handles inputs that apply in ALL game states. That includes when 
 	//the hex editor is open, when it is closed, when in any menus, etc.
 	void applyUniversalInputs();

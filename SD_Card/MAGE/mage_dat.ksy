@@ -114,8 +114,9 @@ types:
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
-      - id: padding
+      - id: player_entity_id
         type: u1
+        doc: local index to the map's entity list
       - id: entity_count
         type: u2
         doc: The number of entities placed on this map

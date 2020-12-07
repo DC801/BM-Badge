@@ -68,6 +68,11 @@
                  "name":"Player",
                  "properties":[
                         {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"state",
                          "type":"string",
                          "value":"mancing"
@@ -115,7 +120,7 @@
                  "y":171.666666666667
                 }, 
                 {
-                 "gid":282,
+                 "gid":306,
                  "height":128,
                  "id":5,
                  "name":"",
@@ -127,7 +132,7 @@
                  "y":275.666666666667
                 }, 
                 {
-                 "gid":2147483934,
+                 "gid":2147483958,
                  "height":128,
                  "id":6,
                  "name":"",
@@ -226,7 +231,7 @@
  "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.4.1",
+ "tiledversion":"1.4.3",
  "tileheight":16,
  "tilesets":[
         {
@@ -242,7 +247,7 @@
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":274,
+         "firstgid":298,
          "source":"..\/entities\/entity-goat.json"
         }],
  "tilewidth":16,

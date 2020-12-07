@@ -84,5 +84,72 @@
 			"name": "RUN_SCRIPT",
 			"script": "spin_self_clockwise"
 		}
+	],
+	"map_on_tick-doors": [
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-demo",
+			"success_script": "load_map-demo",
+			"expected_bool": true
+		},
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-test",
+			"success_script": "load_map-test",
+			"expected_bool": true
+		},
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-town",
+			"success_script": "load_map-town",
+			"expected_bool": true
+		},
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-action_testing_01",
+			"success_script": "load_map-action_testing_01",
+			"expected_bool": true
+		},
+		{
+			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-action_testing_02",
+			"success_script": "load_map-action_testing_02",
+			"expected_bool": true
+		}
+	],
+	"load_map-demo": [
+		{
+			"name": "LOAD_MAP",
+			"map": "map-demo"
+		}
+	],
+	"load_map-test": [
+		{
+			"name": "LOAD_MAP",
+			"map": "map-test"
+		}
+	],
+	"load_map-town": [
+		{
+			"name": "LOAD_MAP",
+			"map": "map-town"
+		}
+	],
+	"load_map-action_testing_01": [
+		{
+			"name": "LOAD_MAP",
+			"map": "map-action_testing_01"
+		}
+	],
+	"load_map-action_testing_02": [
+		{
+			"name": "LOAD_MAP",
+			"map": "map-action_testing_02"
+		}
 	]
 }

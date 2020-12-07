@@ -6,5 +6,5 @@
     "folders": [
         "."
     ],
-    "objectTypesFile": ""
+    "objectTypesFile": "entities/object_types.json"
 }
