@@ -145,7 +145,7 @@ public:
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
 	MageGeometry* getValidGeometry(uint16_t mapLocalGeometryId);
-	MageEntityRenderableData* getValidEntityRenderableData(uint8_t entityId);
+	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
 	std::string getString(uint16_t stringId);
 	uint32_t getImageAddress(uint16_t imageId);
 	uint32_t getDialogAddress(uint16_t dialogId);

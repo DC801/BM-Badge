@@ -200,14 +200,14 @@ uint16_t MageMap::Rows() const
 	return rows;
 }
 
-uint16_t MageMap::OnLoad() const
+uint16_t MageMap::getMapLocalMapOnLoadScriptId() const
 {
-	return getGlobalScriptId(onLoad);
+	return onLoad;
 }
 
-uint16_t MageMap::OnTick() const
+uint16_t MageMap::getMapLocalMapOnTickScriptId() const
 {
-	return getGlobalScriptId(onTick);
+	return onTick;
 }
 
 uint8_t MageMap::LayerCount() const

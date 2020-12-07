@@ -368,8 +368,8 @@ void MageGameControl::PopulateMapData(uint16_t index)
 void MageGameControl::initializeScriptsOnMapLoad()
 {
 	//initialize the script ResumeStateStructs:
-	MageScript->initScriptState(MageScript->getMapLoadResumeState(), map.OnLoad() , false);
-	MageScript->initScriptState(MageScript->getMapTickResumeState(), map.OnTick() , false);
+	MageScript->initScriptState(MageScript->getMapLoadResumeState(), map.getMapLocalMapOnLoadScriptId() , false);
+	MageScript->initScriptState(MageScript->getMapTickResumeState(), map.getMapLocalMapOnTickScriptId() , false);
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//Initialize the script ResumeStateStructs to default values for this map.
@@ -1139,7 +1139,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	} else {
 		playerPosition = {0};
 	}
-	for (uint16_t i = 0; i < map.GeometryCount() - 1; i++) {
+	for (uint16_t i = 0; i < map.GeometryCount(); i++) {
 		MageGeometry *geometry = getValidGeometry(i);
 		if (isPlayerPresent) {
 			isColliding = geometry->isPointInGeometry(*playerPosition);
@@ -1158,8 +1158,8 @@ MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
 	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
 }
 
-MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t entityId) {
-	return &entityRenderableData[entityId % entityHeader.count()];
+MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t mapLocalEntityId) {
+	return &entityRenderableData[mapLocalEntityId % map.EntityCount()];
 }
 
 MageEntity* MageGameControl::getValidEntity(int8_t entityId) {

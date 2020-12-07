@@ -186,6 +186,7 @@
 
 ## Encoder TODO:
 - [ ] Throw error on maps with no entities.
+- [ ] Fix bug where empty string for script on map or entity does not encode as null_script
 - [ ] Action Argument Getters:
 	- [ ] color
 	- [ ] button_id (need enum lookup)
