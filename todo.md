@@ -52,7 +52,7 @@
 - [x] Decide on a common script function signature
 - [x] Define an encoding format for scripts
 - [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
-- [ ] Music/SFX encoding in the binary asset encoder
+- [ ] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
 - [ ] Script system
 	- [x] Binary Encoder parts
 	- [x] Scripts
@@ -183,6 +183,15 @@
 	- [ ] Player Name (12 bytes, like all other entities)
 	- [ ] On map init, replace player name into PlayerEntity
 	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
+
+## Encoder TODO:
+- [ ] Throw error on maps with no entities.
+- [ ] Action Argument Getters:
+	- [ ] color
+	- [ ] button_id (need enum lookup)
+	- [ ] entity hex cells
+	- [ ] sound id lookup for scripts and dialogs
+- [ ] Music/SFX encoding in the binary asset encoder
 
 ## Hardware TODO:
 

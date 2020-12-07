@@ -222,6 +222,11 @@ class MageScriptControl
 		//prevent the main loop from continuing for. It is set by the blockingDelay() action.
 		uint32_t blockingDelayTime;
 
+		//this is used by the loadMap action to indicate when a new map needs to be loaded.
+		//when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
+		//the new map will be loaded at the beginning of the next tick
+		int32_t mapLoadId;
+
 		MageScriptControl();
 
 		//returns size in RAM of all reserved class variables.
@@ -278,8 +283,8 @@ class MageScriptControl
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
-		void handleEntityOnInteractScript(uint8_t index);
 		void handleEntityOnTickScript(uint8_t index);
+		void handleEntityOnInteractScript(uint8_t index);
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H

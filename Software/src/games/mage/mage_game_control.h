@@ -74,6 +74,9 @@ private:
 	//a couple of state variables for tracking player movement:
 	uint8_t mageSpeed;
 	bool isMoving;
+
+	//this handles script initialization when loading a new map
+	void initializeScriptsOnMapLoad();
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.

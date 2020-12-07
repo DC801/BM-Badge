@@ -62,11 +62,11 @@ public:
 	uint16_t GeometryCount() const;
 	uint16_t ScriptCount() const;
 	//this returns a global entityId from the local entity index
-	uint16_t getGlobalEntityId(uint16_t num) const;
+	uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const;
 	//this returns a global geometryId from the local geometry index
-	uint16_t getGlobalGeometryId(uint16_t num) const;
+	uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
 	//the returns a global mapLocalScriptId from the local script index
-	uint16_t getGlobalScriptId(uint16_t num) const;
+	uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
 	uint32_t LayerOffset(uint16_t num) const;
 	//this sets the map's onLoad and onTick script value.
 	void setOnLoad(uint16_t scriptId);
