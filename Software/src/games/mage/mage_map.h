@@ -53,10 +53,8 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
-	//this returns the global script Id, not the local index for it. Just removing a step.
-	uint16_t OnLoad() const;
-	//this returns the global script Id, not the local index for it. Just removing a step.
-	uint16_t OnTick() const;
+	uint16_t getMapLocalMapOnLoadScriptId() const;
+	uint16_t getMapLocalMapOnTickScriptId() const;
 	uint8_t LayerCount() const;
 	uint8_t EntityCount() const;
 	uint16_t GeometryCount() const;

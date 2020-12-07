@@ -1752,7 +1752,7 @@ void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 	//map's onLoad mapLocalScriptId or if we should resume from the state of the mapLoadResumeState struct.
 	if(isFirstRun)
 	{
-		initScriptState(&mapLoadResumeState, MageGame->Map().OnLoad(), true);
+		initScriptState(&mapLoadResumeState, MageGame->Map().getMapLocalMapOnLoadScriptId(), true);
 	}
 	//this checks to see if the map onLoad script is complete and returns if it is:
 	if(!mapLoadResumeState.scriptIsRunning)
@@ -1784,11 +1784,11 @@ void MageScriptControl::handleMapOnTickScript()
 	//re-initialize the *ResumeState struct from the mapLocalScriptId
 	else if(
 		!scriptIsRunning ||
-		mapTickResumeState.mapLocalScriptId != (MageGame->Map().OnTick())
+		mapTickResumeState.mapLocalScriptId != (MageGame->Map().getMapLocalMapOnTickScriptId())
 	)
 	{
 		//populate the MageScriptState struct with appropriate init data
-		initScriptState(&mapTickResumeState, MageGame->Map().OnTick(), true);
+		initScriptState(&mapTickResumeState, MageGame->Map().getMapLocalMapOnTickScriptId(), true);
 	}
 	//otherwise, a script is running and the resumeStateStruct controls all further actions:
 	else
