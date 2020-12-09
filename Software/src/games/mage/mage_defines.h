@@ -81,6 +81,7 @@ all of the old code used as the foundation of this badge.
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT (-1)
 #define MAGE_NO_MAP (-1)
+#define MAGE_NO_WARP_STATE (-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 
@@ -124,7 +125,16 @@ typedef enum : uint8_t{
 //these enum values match the data generated in the binary,
 //so don't change any numbering unless you fix the binary generation as well.
 //don't add more than 255 actions, or it will break the binary file.
-typedef enum : uint8_t{
+//!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!
+//IF YOU WANT TO ADD ACTIONS, YOU MUST UPDATE THE FOLLOWING FILES AS WELL!!
+//	add enum for the MageScriptActionTypeId, right here in this file
+//	add struct for the action arguments, lower in this file
+//	add entry in `actionFunctions` the constructor of `Software/src/games/mage/mage_script_control.cpp`
+//	add action handler function in `Software/src/games/mage/mage_script_control.(cpp/h)`
+//	add action encoder function in `SD_Card/MAGE/editor/js/scripts.js`
+//	add entry in actionNames array in `SD_Card/MAGE/editor/js/scripts.js`
+//	add action_type enum in `SD_Card/MAGE/mage_dat.ksy`
+typedef enum : uint8_t {
 	NULL_ACTION = 0,
 	CHECK_ENTITY_NAME,
 	CHECK_ENTITY_X,
@@ -149,6 +159,7 @@ typedef enum : uint8_t{
 	CHECK_IF_ENTITY_IS_IN_GEOMETRY,
 	CHECK_FOR_BUTTON_PRESS,
 	CHECK_FOR_BUTTON_STATE,
+	CHECK_WARP_STATE,
 	RUN_SCRIPT,
 	BLOCKING_DELAY,
 	NON_BLOCKING_DELAY,
@@ -177,6 +188,7 @@ typedef enum : uint8_t{
 	SET_MAP_TICK_SCRIPT,
 	SET_HEX_CURSOR_LOCATION,
 	SET_HEX_BITS,
+	SET_WARP_STATE,
 	UNLOCK_HAX_CELL,
 	LOCK_HAX_CELL,
 	SET_HEX_EDITOR_STATE,
@@ -476,6 +488,14 @@ typedef struct {
 } ActionCheckForButtonState;
 
 typedef struct {
+	uint16_t successScriptId;
+	uint16_t stringId;
+	uint8_t expectedBoolValue;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckWarpState;
+
+typedef struct {
 	uint16_t scriptId;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -732,6 +752,15 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetHexBits;
+
+typedef struct {
+	uint16_t stringId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetWarpState;
 
 typedef struct {
 	uint8_t fieldType; //needs enum lookup

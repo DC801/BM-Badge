@@ -457,6 +457,92 @@
                  "width":32,
                  "x":608,
                  "y":544
+                }, 
+                {
+                 "height":160,
+                 "id":42,
+                 "name":"door_to-demo-west",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":1344,
+                 "y":640
+                }, 
+                {
+                 "height":160,
+                 "id":43,
+                 "name":"door_to-demo-east",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":224,
+                 "x":0,
+                 "y":640
+                }, 
+                {
+                 "height":0,
+                 "id":44,
+                 "name":"enter_from-west",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":64,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":230,
+                 "y":720
+                }, 
+                {
+                 "height":0,
+                 "id":45,
+                 "name":"enter_from-east",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-64,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1339,
+                 "y":720
+                }, 
+                {
+                 "height":0,
+                 "id":46,
+                 "name":"exit_to-west",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":16,
+                 "y":721
+                }, 
+                {
+                 "height":0,
+                 "id":47,
+                 "name":"exit_to-east",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1520,
+                 "y":722
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -465,13 +551,18 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":36,
+ "nextobjectid":48,
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"on_load",
+         "type":"string",
+         "value":"on_load-east_west"
+        }, 
+        {
          "name":"on_tick",
          "type":"string",
-         "value":"map_on_tick-doors"
+         "value":"on_tick-town"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",

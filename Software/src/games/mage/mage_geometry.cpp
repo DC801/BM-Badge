@@ -132,7 +132,7 @@ bool MageGeometry::isPointInGeometry(Point point)
 			bool c = false;
 
 			for(i = 0, j = nvert - 1; i < nvert; j = i++) {
-				if( ( (points[i].y >= point.y ) != (points[j].y >= point.y) ) &&
+				if(( (points[i].y >= point.y ) != (points[j].y >= point.y) ) &&
 					(point.x <= (points[j].x - points[i].x) * (point.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
 				)
 				c = !c;

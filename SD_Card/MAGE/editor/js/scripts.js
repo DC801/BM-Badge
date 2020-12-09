@@ -323,6 +323,20 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	CHECK_WARP_STATE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'success_script', size: 2},
+				{propertyName: 'string', size: 2},
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'CHECK_WARP_STATE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	RUN_SCRIPT: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -680,6 +694,18 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	SET_WARP_STATE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'string', size: 2}
+			],
+			'SET_WARP_STATE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	UNLOCK_HAX_CELL: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -956,6 +982,7 @@ var actionNames = [
 	'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
 	'CHECK_FOR_BUTTON_PRESS',
 	'CHECK_FOR_BUTTON_STATE',
+	'CHECK_WARP_STATE',
 	'RUN_SCRIPT',
 	'BLOCKING_DELAY',
 	'NON_BLOCKING_DELAY',
@@ -984,6 +1011,7 @@ var actionNames = [
 	'SET_MAP_TICK_SCRIPT',
 	'SET_HEX_CURSOR_LOCATION',
 	'SET_HEX_BITS',
+	'SET_WARP_STATE',
 	'UNLOCK_HAX_CELL',
 	'LOCK_HAX_CELL',
 	'SET_HEX_EDITOR_STATE',

@@ -245,7 +245,7 @@ void MAGE()
 		//frame limiter code to keep game running at a specific FPS:
 		//only do this on the real hardware:
 		#ifdef DC801_EMBEDDED
-		// if( now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
+		// if(now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
 		// { continue; }
 
 		// //code below here will only be run if enough ms have passed since the last frame:
