@@ -491,7 +491,7 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 		uint16_t u2_value = convert_endian_u2_value(
 			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
 		);
-		if( u2_value == argStruct->expectedValue) {
+		if(u2_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -512,7 +512,7 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 		uint16_t u2_value = convert_endian_u2_value(
 			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
 		);
-		if( u2_value == argStruct->expectedValue) {
+		if(u2_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -533,7 +533,7 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 		uint32_t u4_value = convert_endian_u4_value(
 			*(uint32_t *)((uint8_t *)&entity->hackableStateA)
 		);
-		if( u4_value == argStruct->expectedValue) {
+		if(u4_value == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -554,7 +554,7 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 		uint16_t pathId = convert_endian_u2_value(
 			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
 		);
-		if( pathId == argStruct->expectedValue) {
+		if(pathId == argStruct->expectedValue) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -618,6 +618,22 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
 	bool button_state = *button_address;
 	if(button_state == (bool)(argStruct->expectedBoolValue))
+	{
+		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
+	return;
+}
+
+void MageScriptControl::checkWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckWarpState *argStruct = (ActionCheckWarpState*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
+
+	bool doesWarpStateMatch = MageGame->warpState == argStruct->stringId;
+	if(doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 		mapLocalJumpScript = argStruct->successScriptId;
@@ -1025,6 +1041,16 @@ void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeState
 {
 	ActionSetHexBits *argStruct = (ActionSetHexBits*)args;
 
+	return;
+}
+
+void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetWarpState *argStruct = (ActionSetWarpState*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
+
+	MageGame->warpState = argStruct->stringId;
 	return;
 }
 
@@ -1500,75 +1526,82 @@ MageScriptControl::MageScriptControl()
 	//this is the array of action functions that will be called by scripts.
 	//the array index corresponds to the enum value of the script that is
 	//stored in the ROM file, so it calls the correct function automatically.
-	actionFunctions[MageScriptActionTypeId::NULL_ACTION]                      = &MageScriptControl::nullAction;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_NAME]                = &MageScriptControl::checkEntityName;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_X]                   = &MageScriptControl::checkEntityX;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_Y]                   = &MageScriptControl::checkEntityY;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_INTERACT_SCRIPT]     = &MageScriptControl::checkEntityInteractScript;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_TICK_SCRIPT]         = &MageScriptControl::checkEntityTickScript;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID]          = &MageScriptControl::checkEntityPrimaryId;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_SECONDARY_ID]        = &MageScriptControl::checkEntitySecondaryId;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID_TYPE]     = &MageScriptControl::checkEntityPrimaryIdType;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_ANIMATION]   = &MageScriptControl::checkEntityCurrentAnimation;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_FRAME]       = &MageScriptControl::checkEntityCurrentFrame;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_DIRECTION]           = &MageScriptControl::checkEntityDirection;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A]    = &MageScriptControl::checkEntityHackableStateA;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_B]    = &MageScriptControl::checkEntityHackableStateB;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C]    = &MageScriptControl::checkEntityHackableStateC;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_D]    = &MageScriptControl::checkEntityHackableStateD;
+	actionFunctions[MageScriptActionTypeId::NULL_ACTION] = &MageScriptControl::nullAction;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_NAME] = &MageScriptControl::checkEntityName;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_X] = &MageScriptControl::checkEntityX;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_Y] = &MageScriptControl::checkEntityY;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_INTERACT_SCRIPT] = &MageScriptControl::checkEntityInteractScript;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_TICK_SCRIPT] = &MageScriptControl::checkEntityTickScript;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID] = &MageScriptControl::checkEntityPrimaryId;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_SECONDARY_ID] = &MageScriptControl::checkEntitySecondaryId;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID_TYPE] = &MageScriptControl::checkEntityPrimaryIdType;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_ANIMATION] = &MageScriptControl::checkEntityCurrentAnimation;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_FRAME] = &MageScriptControl::checkEntityCurrentFrame;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_DIRECTION] = &MageScriptControl::checkEntityDirection;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::checkEntityHackableStateA;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::checkEntityHackableStateB;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::checkEntityHackableStateC;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_D] = &MageScriptControl::checkEntityHackableStateD;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A_U2] = &MageScriptControl::checkEntityHackableStateAU2;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C_U2] = &MageScriptControl::checkEntityHackableStateCU2;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A_U4] = &MageScriptControl::checkEntityHackableStateAU4;
-	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PATH]                = &MageScriptControl::checkEntityPath;
-	actionFunctions[MageScriptActionTypeId::CHECK_SAVE_FLAG]                  = &MageScriptControl::checkSaveFlag;
-	actionFunctions[MageScriptActionTypeId::CHECK_IF_ENTITY_IS_IN_GEOMETRY]   = &MageScriptControl::checkIfEntityIsInGeometry;
-	actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_PRESS]           = &MageScriptControl::checkForButtonPress;
-	actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE]           = &MageScriptControl::checkForButtonState;
-	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT]                       = &MageScriptControl::runScript;
-	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY]                   = &MageScriptControl::blockingDelay;
-	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY]               = &MageScriptControl::nonBlockingDelay;
-	actionFunctions[MageScriptActionTypeId::SET_PAUSE_STATE]                  = &MageScriptControl::setPauseState;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT]       = &MageScriptControl::setEntityInteractScript;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT]           = &MageScriptControl::setEntityTickScript;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID]            = &MageScriptControl::setEntityPrimaryId;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_SECONDARY_ID]          = &MageScriptControl::setEntitySecondaryId;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID_TYPE]       = &MageScriptControl::setEntityPrimaryIdType;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_ANIMATION]     = &MageScriptControl::setEntityCurrentAnimation;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_FRAME]         = &MageScriptControl::setEntityCurrentFrame;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION]             = &MageScriptControl::setEntityDirection;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A]      = &MageScriptControl::setEntityHackableStateA;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B]      = &MageScriptControl::setEntityHackableStateB;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C]      = &MageScriptControl::setEntityHackableStateC;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_D]      = &MageScriptControl::setEntityHackableStateD;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U2]   = &MageScriptControl::setEntityHackableStateAU2;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C_U2]   = &MageScriptControl::setEntityHackableStateCU2;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U4]   = &MageScriptControl::setEntityHackableStateAU4;
-	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PATH]                  = &MageScriptControl::setEntityPath;
-	actionFunctions[MageScriptActionTypeId::SET_SAVE_FLAG]                    = &MageScriptControl::setSaveFlag;
-	actionFunctions[MageScriptActionTypeId::SET_PLAYER_CONTROL]               = &MageScriptControl::setPlayerControl;
-	actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT]              = &MageScriptControl::setMapTickScript;
-	actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION]          = &MageScriptControl::setHexCursorLocation;
-	actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL]                  = &MageScriptControl::unlockHaxCell;
-	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL]                    = &MageScriptControl::lockHaxCell;
-	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE]             = &MageScriptControl::setHexEditorState;
-	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE]       = &MageScriptControl::setHexEditorDialogMode;
-	actionFunctions[MageScriptActionTypeId::LOAD_MAP]                         = &MageScriptControl::loadMap;
-	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG]                      = &MageScriptControl::showDialog;
-	actionFunctions[MageScriptActionTypeId::TELEPORT_ENTITY_TO_GEOMETRY]      = &MageScriptControl::teleportEntityToGeometry;
-	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_TO_GEOMETRY]          = &MageScriptControl::walkEntityToGeometry;
-	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_ALONG_GEOMETRY]       = &MageScriptControl::walkEntityAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY]       = &MageScriptControl::loopEntityAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::SET_CAMERA_TO_FOLLOW_ENTITY]      = &MageScriptControl::setCameraToFollowEntity;
-	actionFunctions[MageScriptActionTypeId::TELEPORT_CAMERA_TO_GEOMETRY]      = &MageScriptControl::teleportCameraToGeometry;
-	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_TO_ENTITY]             = &MageScriptControl::panCameraToEntity;
-	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_TO_GEOMETRY]           = &MageScriptControl::panCameraToGeometry;
-	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_ALONG_GEOMETRY]        = &MageScriptControl::panCameraAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY]       = &MageScriptControl::loopCameraAlongGeometry;
-	actionFunctions[MageScriptActionTypeId::SET_SCREEN_SHAKE]                 = &MageScriptControl::setScreenShake;
-	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT]                  = &MageScriptControl::screenFadeOut;
-	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN]                   = &MageScriptControl::screenFadeIn;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS]            = &MageScriptControl::playSoundContinuous;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT]             = &MageScriptControl::playSoundInterrupt;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PATH] = &MageScriptControl::checkEntityPath;
+	actionFunctions[MageScriptActionTypeId::CHECK_SAVE_FLAG] = &MageScriptControl::checkSaveFlag;
+	actionFunctions[MageScriptActionTypeId::CHECK_IF_ENTITY_IS_IN_GEOMETRY] = &MageScriptControl::checkIfEntityIsInGeometry;
+	actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_PRESS] = &MageScriptControl::checkForButtonPress;
+	actionFunctions[MageScriptActionTypeId::CHECK_FOR_BUTTON_STATE] = &MageScriptControl::checkForButtonState;
+	actionFunctions[MageScriptActionTypeId::CHECK_WARP_STATE] = &MageScriptControl::checkWarpState;
+	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT] = &MageScriptControl::runScript;
+	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY] = &MageScriptControl::blockingDelay;
+	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY] = &MageScriptControl::nonBlockingDelay;
+	actionFunctions[MageScriptActionTypeId::SET_PAUSE_STATE] = &MageScriptControl::setPauseState;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_NAME] = &MageScriptControl::setEntityName;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_X] = &MageScriptControl::setEntityX;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_Y] = &MageScriptControl::setEntityY;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT] = &MageScriptControl::setEntityInteractScript;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT] = &MageScriptControl::setEntityTickScript;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID] = &MageScriptControl::setEntityPrimaryId;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_SECONDARY_ID] = &MageScriptControl::setEntitySecondaryId;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID_TYPE] = &MageScriptControl::setEntityPrimaryIdType;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_ANIMATION] = &MageScriptControl::setEntityCurrentAnimation;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_FRAME] = &MageScriptControl::setEntityCurrentFrame;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION] = &MageScriptControl::setEntityDirection;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::setEntityHackableStateA;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::setEntityHackableStateB;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::setEntityHackableStateC;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_D] = &MageScriptControl::setEntityHackableStateD;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U2] = &MageScriptControl::setEntityHackableStateAU2;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C_U2] = &MageScriptControl::setEntityHackableStateCU2;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A_U4] = &MageScriptControl::setEntityHackableStateAU4;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PATH] = &MageScriptControl::setEntityPath;
+	actionFunctions[MageScriptActionTypeId::SET_SAVE_FLAG] = &MageScriptControl::setSaveFlag;
+	actionFunctions[MageScriptActionTypeId::SET_PLAYER_CONTROL] = &MageScriptControl::setPlayerControl;
+	actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT] = &MageScriptControl::setMapTickScript;
+	actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION] = &MageScriptControl::setHexCursorLocation;
+	actionFunctions[MageScriptActionTypeId::SET_HEX_BITS] = &MageScriptControl::setHexBits;
+	actionFunctions[MageScriptActionTypeId::SET_WARP_STATE] = &MageScriptControl::setWarpState;
+	actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL] = &MageScriptControl::unlockHaxCell;
+	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL] = &MageScriptControl::lockHaxCell;
+	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE] = &MageScriptControl::setHexEditorState;
+	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE] = &MageScriptControl::setHexEditorDialogMode;
+	actionFunctions[MageScriptActionTypeId::LOAD_MAP] = &MageScriptControl::loadMap;
+	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG] = &MageScriptControl::showDialog;
+	actionFunctions[MageScriptActionTypeId::TELEPORT_ENTITY_TO_GEOMETRY] = &MageScriptControl::teleportEntityToGeometry;
+	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_TO_GEOMETRY] = &MageScriptControl::walkEntityToGeometry;
+	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_ALONG_GEOMETRY] = &MageScriptControl::walkEntityAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::LOOP_ENTITY_ALONG_GEOMETRY] = &MageScriptControl::loopEntityAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_CAMERA_TO_FOLLOW_ENTITY] = &MageScriptControl::setCameraToFollowEntity;
+	actionFunctions[MageScriptActionTypeId::TELEPORT_CAMERA_TO_GEOMETRY] = &MageScriptControl::teleportCameraToGeometry;
+	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_TO_ENTITY] = &MageScriptControl::panCameraToEntity;
+	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_TO_GEOMETRY] = &MageScriptControl::panCameraToGeometry;
+	actionFunctions[MageScriptActionTypeId::PAN_CAMERA_ALONG_GEOMETRY] = &MageScriptControl::panCameraAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::LOOP_CAMERA_ALONG_GEOMETRY] = &MageScriptControl::loopCameraAlongGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_SCREEN_SHAKE] = &MageScriptControl::setScreenShake;
+	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT] = &MageScriptControl::screenFadeOut;
+	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN] = &MageScriptControl::screenFadeIn;
+	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS] = &MageScriptControl::playSoundContinuous;
+	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT] = &MageScriptControl::playSoundInterrupt;
+
 }
 
 uint32_t MageScriptControl::size() const

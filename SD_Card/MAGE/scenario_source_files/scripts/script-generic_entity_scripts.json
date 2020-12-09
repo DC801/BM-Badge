@@ -140,6 +140,92 @@
 			"map": "map-town"
 		}
 	],
+	"load_map-demo-enter_from-east": [
+		{
+			"name": "SET_WARP_STATE",
+			"string": "enter_from-east"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "load_map-demo"
+		}
+	],
+	"load_map-demo-enter_from-west": [
+		{
+			"name": "SET_WARP_STATE",
+			"string": "enter_from-west"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "load_map-demo"
+		}
+	],
+	"load_map-town-enter_from-east": [
+		{
+			"name": "SET_WARP_STATE",
+			"string": "enter_from-east"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "load_map-town"
+		}
+	],
+	"load_map-town-enter_from-west": [
+		{
+			"name": "SET_WARP_STATE",
+			"string": "enter_from-west"
+		},
+		{
+			"name": "RUN_SCRIPT",
+			"script": "load_map-town"
+		}
+	],
+	"on_load-east_west": [
+		{
+			"name": "CHECK_WARP_STATE",
+			"string": "enter_from-east",
+			"success_script": "enter_from-east",
+			"expected_bool": true
+		},
+		{
+			"name": "CHECK_WARP_STATE",
+			"string": "enter_from-west",
+			"success_script": "enter_from-west",
+			"expected_bool": true
+		}
+	],
+	"enter_from-east": [
+		{
+			"name": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"name": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-east",
+			"entity": "%PLAYER%",
+			"duration": 1000
+		},
+		{
+			"name": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-west": [
+		{
+			"name": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"name": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-west",
+			"entity": "%PLAYER%",
+			"duration": 1000
+		},
+		{
+			"name": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
 	"load_map-action_testing_01": [
 		{
 			"name": "LOAD_MAP",

@@ -85,7 +85,10 @@ public:
 	//this is the index value of where the playerEntity is located within
 	//the entities[] array and also the offset to it from hackableDataAddress
 	int32_t playerEntityIndex;
-	
+
+	//used to store a stringId which `CHECK_WARP_STATE` action compares against
+	int32_t warpState;
+
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
 	bool isCollisionDebugOn;

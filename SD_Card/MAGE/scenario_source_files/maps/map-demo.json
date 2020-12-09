@@ -277,12 +277,8 @@
                          "y":-208
                         }, 
                         {
-                         "x":-391.333333333333,
-                         "y":-206.666666666667
-                        }, 
-                        {
-                         "x":-526,
-                         "y":-212
+                         "x":-463,
+                         "y":-206.333333333333
                         }],
                  "rotation":0,
                  "type":"",
@@ -840,8 +836,8 @@
                  "type":"",
                  "visible":true,
                  "width":320,
-                 "x":-0.666666666666742,
-                 "y":501.666666666666
+                 "x":32,
+                 "y":512
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -908,6 +904,92 @@
                  "width":32,
                  "x":320,
                  "y":64
+                }, 
+                {
+                 "height":160,
+                 "id":65,
+                 "name":"door_to-town-west",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":832,
+                 "y":384
+                }, 
+                {
+                 "height":160,
+                 "id":66,
+                 "name":"door_to-town-east",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":224,
+                 "x":0,
+                 "y":384
+                }, 
+                {
+                 "height":0,
+                 "id":67,
+                 "name":"enter_from-west",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":64,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":228,
+                 "y":463
+                }, 
+                {
+                 "height":0,
+                 "id":68,
+                 "name":"enter_from-east",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-64,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":828,
+                 "y":464
+                }, 
+                {
+                 "height":0,
+                 "id":69,
+                 "name":"exit_to-west",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":16,
+                 "y":465
+                }, 
+                {
+                 "height":0,
+                 "id":70,
+                 "name":"exit_to-east",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1008,
+                 "y":466
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -916,13 +998,18 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":65,
+ "nextobjectid":71,
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"on_load",
+         "type":"string",
+         "value":"on_load-east_west"
+        }, 
+        {
          "name":"on_tick",
          "type":"string",
-         "value":"map_on_tick-doors"
+         "value":"on_tick-demo"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",

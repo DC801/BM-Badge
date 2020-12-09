@@ -22,6 +22,8 @@ MageGameControl::MageGameControl()
 	uint32_t offset = 8; //skip 'MAGEGAME' string at front of .dat file
 	offset += 24; //skip timestamp string at front of .dat file
 
+	warpState = MAGE_NO_WARP_STATE;
+
 	currentMapId = DEFAULT_MAP;
 
 	mapHeader = MageHeader(offset);
@@ -428,8 +430,13 @@ void MageGameControl::applyGameModeInputs()
 		}
 	}
 	//check to see if player input is allowed:
+	updateEntityRenderableData(playerEntityIndex);
+	MageEntity *playerEntity = &entities[playerEntityIndex];
+	MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
 	if(!playerHasControl)
 	{
+		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
+		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 		return;
 	}
 	if(playerEntityIndex != NO_PLAYER)
@@ -439,13 +446,9 @@ void MageGameControl::applyGameModeInputs()
 		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
 
 		//update renderable info before proceeding:
-		updateEntityRenderableData(playerEntityIndex);
-		
-		MageEntity *playerEntity = &entities[playerEntityIndex];
 		bool hasEntityType = getValidPrimaryIdType(playerEntity->primaryIdType) == ENTITY_TYPE;
 		MageEntityType *entityType = hasEntityType ? &entityTypes[getValidEntityTypeId(playerEntity->primaryId)] : nullptr;
 		uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
-		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
 		bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
@@ -576,9 +579,8 @@ void MageGameControl::applyGameModeInputs()
 			updateEntityRenderableData(playerEntityIndex);
 		}
 		//set camera to center of player tile.
-		cameraPosition.x = playerEntity->x - HALF_WIDTH + ((tilesetWidth) / 2);
-		cameraPosition.y = playerEntity->y - HALF_HEIGHT - ((tilesetHeight) / 2);
-		
+		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
+		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 	}
 	else //no player on map
 	{

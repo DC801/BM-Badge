@@ -120,6 +120,8 @@ class MageScriptControl
 		//Action Logic Type: I+C
 		void checkForButtonState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
+		void checkWarpState(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
 		void runScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: B
 		void blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -175,6 +177,8 @@ class MageScriptControl
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setHexBits(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setWarpState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
