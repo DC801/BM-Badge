@@ -40,7 +40,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act01_check_entity_byte"
+                         "value":"mage01_check_entity_name"
                         }, 
                         {
                          "name":"on_tick",
@@ -63,7 +63,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act02_check_save_flag"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -86,7 +86,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act03_check_if_entity_is_in_geometry"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -109,7 +109,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act04_check_for_button_press"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -132,7 +132,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act05_check_for_button_state"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -155,7 +155,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act06_run_script"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -922,7 +922,7 @@
          "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.4.2",
  "tileheight":32,
  "tilesets":[
         {

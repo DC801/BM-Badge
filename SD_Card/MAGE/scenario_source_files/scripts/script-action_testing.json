@@ -1,78 +1,31 @@
 {
-	"act01_check_entity_byte": [
+	"mage01_check_entity_name": [
 		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act01"
-		},
-		{
-			"name": "CHECK_ENTITY_HACKABLE_STATE_A",
-			"success_script": "spin_self_clockwise",
+			"name": "CHECK_ENTITY_NAME",
+			"success_script": "mage01_set_entity_name",
 			"entity": "Mage 01",
-			"byte_offset": 15,
-			"expected_byte": 2
-		}
-	],
-	"act02_check_save_flag": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act02"
-		},
-		{
-			"name": "CHECK_SAVE_FLAG",
-			"success_script": "spin_self_clockwise",
-			"entity": "Mage 02",
-			"byte_offset": 0,
+			"string": "Mage 00",
 			"expected_bool": true
-		}
-	],
-	"act03_check_if_entity_is_in_geometry": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act03"
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"geometry": "act03_test_geometry",
-			"success_script": "spin_self_clockwise",
-			"entity": "Mage 03",
-			"expected_bool": true
+			"name": "SHOW_DIALOG",
+			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
+			"dialog": "dialog-mage01-1"
 		}
 	],
-	"act04_check_for_button_press": [
+	"mage01_set_entity_name": [
 		{
 			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act04"
+			"dialog": "dialog-mage01-2"
 		},
 		{
-			"name": "CHECK_FOR_BUTTON_PRESS",
-			"success_script": "spin_self_clockwise",
-			"button_id": 24
-		}
-	],
-	"act05_check_for_button_state": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act05"
-		},
-		{
-			"name": "NON_BLOCKING_DELAY",
-			"duration": 1000
-		},
-		{
-			"name": "CHECK_FOR_BUTTON_STATE",
-			"success_script": "spin_self_clockwise",
-			"button_id": 0,
-			"expected_bool": true
-		}
-	],
-	"act06_run_script": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act06"
+			"name": "SET_ENTITY_NAME",
+			"entity": "Mage 01",
+			"string": "Mage 01"
 		},
 		{
 			"name": "RUN_SCRIPT",
-			"script": "spin_self_clockwise"
+			"script": "mage01_check_entity_name"
 		}
 	]
 }

@@ -1,61 +1,21 @@
 {
-	"dialog-act01": [
+	"dialog-mage01-1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
 			"name": "Mage 01",
 			"messages": [
-				"I test the action CHECK_ENTITY_BYTE.\nPlease Set my 15th Byte to '2'\nand I should begin spinning."
+				"I test the CHECK_ENTITY_NAME and\nSET_ENTITY_NAME actions.\nSet my name to 'Mage 00'\nand then talk to me again."
 			]
 		}
 	],
-	"dialog-act02": [
+	"dialog-mage01-2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "Mage 00",
 			"messages": [
-				"I test the action CHECK_SAVE_FLAG.\nThis system still needs to be implemented."
-			]
-		}
-	],
-	"dialog-act03": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "Mage 03",
-			"messages": [
-				"I test the action CHECK_IF_ENTITY_IS_IN_GEOMETRY.\nIf you stand in the tile labeled '03'\nI should begin spinning."
-			]
-		}
-	],
-	"dialog-act04": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "Mage 04",
-			"messages": [
-				"I test the action CHECK_FOR_BUTTON_PRESS.\nIf you press up on the right joystick\nI should begin spinning."
-			]
-		}
-	],
-	"dialog-act05": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "Mage 05",
-			"messages": [
-				"I test the action CHECK_FOR_BUTTON_STATE.\nHold down MEM0 about 1 second\nafter this dialog window closes\nand I should begin spinning."
-			]
-		}
-	],
-	"dialog-act06": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "Mage 06",
-			"messages": [
-				"I test the action RUN_SCRIPT.\nAs soon as you close this dialog\nI should begin spinning."
+				"Good work, you set my name to 'Mage 00'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
 			]
 		}
 	]

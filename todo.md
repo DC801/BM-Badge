@@ -52,7 +52,8 @@
 - [x] Decide on a common script function signature
 - [x] Define an encoding format for scripts
 - [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
-- [ ] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
+- [x] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
+- [ ] Change map reset keybind to be XOR+MEM4
 - [ ] Script system
 	- [x] Binary Encoder parts
 	- [x] Scripts
@@ -68,7 +69,7 @@
 			- [x] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
-		- [ ] CHECK_ENTITY_NAME
+		- [x] CHECK_ENTITY_NAME
 		- [ ] CHECK_ENTITY_X
 		- [ ] CHECK_ENTITY_Y
 		- [ ] CHECK_ENTITY_INTERACT_SCRIPT
@@ -96,7 +97,7 @@
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
 		- [ ] SET_PAUSE_STATE
-		- [ ] SET_ENTITY_NAME
+		- [x] SET_ENTITY_NAME
 		- [ ] SET_ENTITY_X
 		- [ ] SET_ENTITY_Y
 		- [ ] SET_ENTITY_INTERACT_SCRIPT
