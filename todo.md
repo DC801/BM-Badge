@@ -70,8 +70,8 @@
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
 		- [x] CHECK_ENTITY_NAME
-		- [ ] CHECK_ENTITY_X
-		- [ ] CHECK_ENTITY_Y
+		- [x] CHECK_ENTITY_X
+		- [x] CHECK_ENTITY_Y
 		- [ ] CHECK_ENTITY_INTERACT_SCRIPT
 		- [ ] CHECK_ENTITY_TICK_SCRIPT
 		- [ ] CHECK_ENTITY_PRIMARY_ID
@@ -98,8 +98,8 @@
 		- [x] NON_BLOCKING_DELAY
 		- [ ] SET_PAUSE_STATE
 		- [x] SET_ENTITY_NAME
-		- [ ] SET_ENTITY_X
-		- [ ] SET_ENTITY_Y
+		- [x] SET_ENTITY_X
+		- [x] SET_ENTITY_Y
 		- [ ] SET_ENTITY_INTERACT_SCRIPT
 		- [ ] SET_ENTITY_TICK_SCRIPT
 		- [ ] SET_ENTITY_PRIMARY_ID

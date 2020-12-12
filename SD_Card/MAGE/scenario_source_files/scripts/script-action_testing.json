@@ -1,22 +1,22 @@
 {
-	"mage01_check_entity_name": [
+	"mage01-check_entity_name": [
 		{
+			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
 			"name": "CHECK_ENTITY_NAME",
-			"success_script": "mage01_set_entity_name",
+			"success_script": "mage01-set_entity_name",
 			"entity": "Mage 01",
 			"string": "Mage 00",
 			"expected_bool": true
 		},
 		{
 			"name": "SHOW_DIALOG",
-			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
-			"dialog": "dialog-mage01-1"
+			"dialog": "dialog-mage01_1"
 		}
 	],
-	"mage01_set_entity_name": [
+	"mage01-set_entity_name": [
 		{
 			"name": "SHOW_DIALOG",
-			"dialog": "dialog-mage01-2"
+			"dialog": "dialog-mage01_2"
 		},
 		{
 			"name": "SET_ENTITY_NAME",
@@ -24,8 +24,55 @@
 			"string": "Mage 01"
 		},
 		{
-			"name": "RUN_SCRIPT",
-			"script": "mage01_check_entity_name"
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 01",
+			"script": "mage01-check_entity_name"
+		}
+	],
+	"mage02-check_entity_x": [
+		{
+			"doc": "Mage 02 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
+			"name": "CHECK_ENTITY_X",
+			"success_script": "mage02-check_entity_y",
+			"entity": "Mage 02",
+			"expected_u2": 193
+		},
+		{
+		"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_1"
+		}
+	],
+	"mage02-check_entity_y": [
+		{
+			"name": "CHECK_ENTITY_Y",
+			"success_script": "mage02-set_entity_xy",
+			"entity": "Mage 02",
+			"expected_u2": 97
+		},
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_1"
+		}
+	],
+	"mage02-set_entity_xy": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_2"
+		},
+		{
+			"name": "SET_ENTITY_X",
+			"entity": "Mage 02",
+			"u2_value": 192
+		},
+		{
+			"name": "SET_ENTITY_Y",
+			"entity": "Mage 02",
+			"u2_value": 96
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 02",
+			"script": "mage02-check_entity_x"
 		}
 	]
 }

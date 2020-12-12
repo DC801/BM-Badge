@@ -40,7 +40,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"mage01_check_entity_name"
+                         "value":"mage01-check_entity_name"
                         }, 
                         {
                          "name":"on_tick",
@@ -63,7 +63,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage02-check_entity_x"
                         }, 
                         {
                          "name":"on_tick",
