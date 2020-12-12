@@ -731,6 +731,18 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
 
+	//get the string from the stringId:
+	std::string romString = MageGame->getString(argStruct->stringId);
+	//Get the entity:
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		//simple loop to set the name:
+		//Note: this will stop at the first null character and leave any data after it in place.
+		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
+			entity->name[i] = romString[i];
+		}
+	}
 	return;
 }
 
