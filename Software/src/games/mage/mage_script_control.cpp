@@ -1104,7 +1104,6 @@ void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState *
 	return;
 }
 
-//Need to implement -Tim
 void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionLoadMap *argStruct = (ActionLoadMap*)args;
