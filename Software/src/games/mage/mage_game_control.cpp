@@ -387,12 +387,24 @@ void MageGameControl::LoadMap(uint16_t index)
 {
 	//get the data for the map:
 	PopulateMapData(index);
-	initializeScriptsOnMapLoad();
 
+	initializeScriptsOnMapLoad();
+	
+	//close hex editor if open:
+	if(MageHex->getHexEditorState()) {
+		MageHex->toggleHexEditor();
+	}
+	
+	//close any open dialogs and return player control as well:
+	MageDialog->closeDialog();
+	playerHasControl = true;
 }
 
 void MageGameControl::applyUniversalInputs()
 {
+	//make map reload global regardless of player control state:
+	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3)
+	{ MageScript->mapLoadId = currentMapId; }
 	//check to see if player input is allowed:
 	if(!playerHasControl)
 	{
@@ -423,22 +435,25 @@ void MageGameControl::applyGameModeInputs()
 	if(MageDialog->isOpen) {
 		if(
 			EngineInput_Activated.rjoy_down
-			||EngineInput_Activated.rjoy_left
-			||EngineInput_Activated.rjoy_right
+			|| EngineInput_Activated.rjoy_left
+			|| EngineInput_Activated.rjoy_right
+			|| (MageScript->mapLoadId != MAGE_NO_MAP)
 		) {
 			MageDialog->advanceMessage();
 		}
 	}
-	//check to see if player input is allowed:
+	//get useful variables for below:
 	updateEntityRenderableData(playerEntityIndex);
 	MageEntity *playerEntity = &entities[playerEntityIndex];
 	MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
+	//update camera even if player does not have control:
 	if(!playerHasControl)
 	{
 		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
 		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 		return;
 	}
+	//otherwise do all the normal things:
 	if(playerEntityIndex != NO_PLAYER)
 	{
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
@@ -462,12 +477,6 @@ void MageGameControl::applyGameModeInputs()
 		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
 		{
 			playerIsActioning = true;
-		}
-		//check to see if both pads are being pressed at once, triggering map reload:
-		else if(EngineInput_Buttons.ljoy_center && EngineInput_Buttons.rjoy_center)
-		{
-			//reset the map:
-			LoadMap(currentMapId);
 		}
 		//if not actioning or resetting, handle all remaining inputs:
 		else

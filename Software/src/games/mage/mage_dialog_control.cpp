@@ -158,6 +158,13 @@ void MageDialogControl::advanceMessage() {
 	}
 }
 
+void MageDialogControl::closeDialog() {
+	//set the dialog to the last screen
+	currentScreenIndex == currentDialogScreenCount;
+	//tell it to load so it will unload
+	loadNextScreen();
+}
+
 void MageDialogControl::draw() {
 	std::string currentEntityName = MageGame->getString(currentScreen.nameIndex);
 	std::string currentMessage = MageGame->getString(

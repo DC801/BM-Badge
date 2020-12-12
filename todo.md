@@ -53,7 +53,7 @@
 - [x] Define an encoding format for scripts
 - [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
 - [x] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
-- [ ] Change map reset keybind to be XOR+MEM4
+- [x] Change map reset keybind to be XOR+MEM3 and make it work even in dialogs and the hex editor
 - [ ] Script system
 	- [x] Binary Encoder parts
 	- [x] Scripts

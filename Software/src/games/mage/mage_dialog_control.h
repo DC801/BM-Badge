@@ -83,6 +83,7 @@ class MageDialogControl {
 		void load(uint16_t dialogId);
 		void loadNextScreen();
 		void advanceMessage();
+		void closeDialog();
 		void draw();
 
 };

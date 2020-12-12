@@ -80,6 +80,9 @@ void GameUpdate()
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
 
+	//check for loadMap:
+	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
+
 	//update universally used hex editor state variables:
 	MageHex->updateHexStateVariables();
 
@@ -262,10 +265,10 @@ void MAGE()
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
 			//load the new map data into MageGame
 			MageGame->LoadMap(MageScript->mapLoadId);
-			//Update the game for the new map
-			GameUpdate();
 			//clear the mapLoadId to prevent infinite reloads
 			MageScript->mapLoadId = MAGE_NO_MAP;
+			//Update the game for the new map
+			GameUpdate();
 		}
 
 		//This renders the game to the screen based on the loop's updated state.
