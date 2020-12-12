@@ -1,5 +1,5 @@
 {
-	"dialog-mage01-1": [
+	"dialog-mage01_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
@@ -9,13 +9,33 @@
 			]
 		}
 	],
-	"dialog-mage01-2": [
+	"dialog-mage01_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
 			"name": "Mage 00",
 			"messages": [
 				"Good work, you set my name to 'Mage 00'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
+			]
+		}
+	],
+	"dialog-mage02_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Mage 02",
+			"messages": [
+				"I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."
+			]
+		}
+	],
+	"dialog-mage02_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Mage 02",
+			"messages": [
+				"Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
 			]
 		}
 	]
