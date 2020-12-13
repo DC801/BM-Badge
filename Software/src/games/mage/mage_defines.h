@@ -314,7 +314,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityX;
 
@@ -322,7 +322,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityY;
 
@@ -346,7 +346,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityPrimaryId;
 
@@ -354,7 +354,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntitySecondaryId;
 
@@ -362,7 +362,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityPrimaryIdType;
 
@@ -370,7 +370,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityCurrentAnimation;
 
@@ -378,7 +378,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityCurrentFrame;
 
@@ -386,7 +386,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityDirection;
 
@@ -394,7 +394,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityHackableStateA;
 
@@ -402,7 +402,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityHackableStateB;
 
@@ -410,7 +410,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityHackableStateC;
 
@@ -418,7 +418,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint8_t entityId;
 	uint8_t expectedValue;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityHackableStateD;
 
@@ -426,16 +426,14 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
-	uint8_t paddingG;
+	uint8_t expectedBool;
 } ActionCheckEntityHackableStateAU2;
 
 typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
-	uint8_t paddingG;
+	uint8_t expectedBool;
 } ActionCheckEntityHackableStateCU2;
 
 typedef struct {
@@ -448,8 +446,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedValue;
 	uint8_t entityId;
-	uint8_t paddingF;
-	uint8_t paddingG;
+	uint8_t expectedBool;
 } ActionCheckEntityPath;
 
 typedef struct {

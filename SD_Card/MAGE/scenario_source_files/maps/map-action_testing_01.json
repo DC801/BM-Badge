@@ -109,7 +109,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage04-check_entity_primary_id"
                         }, 
                         {
                          "name":"on_tick",

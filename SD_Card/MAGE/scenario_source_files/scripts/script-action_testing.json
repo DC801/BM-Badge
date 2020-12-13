@@ -35,7 +35,8 @@
 			"name": "CHECK_ENTITY_X",
 			"success_script": "mage02-check_entity_y",
 			"entity": "Mage 02",
-			"expected_u2": 193
+			"expected_u2": 193,
+			"expected_bool": true
 		},
 		{
 		"name": "SHOW_DIALOG",
@@ -47,7 +48,8 @@
 			"name": "CHECK_ENTITY_Y",
 			"success_script": "mage02-set_entity_xy",
 			"entity": "Mage 02",
-			"expected_u2": 97
+			"expected_u2": 97,
+			"expected_bool": true
 		},
 		{
 			"name": "SHOW_DIALOG",
@@ -129,6 +131,72 @@
 			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 03",
 			"script": "mage03-initial_prompt"
+		}
+	],
+	"mage04-check_entity_primary_id": [
+		{
+			"doc": "Mage 04 tests CHECK_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) and then SET_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) after a successful check to reset itself.",
+			"name": "CHECK_ENTITY_PRIMARY_ID",
+			"success_script": "mage04-check_entity_secondary_id",
+			"entity": "Mage 04",
+			"expected_u2": 12,
+			"expected_bool": true
+		},
+		{
+		"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	],
+	"mage04-check_entity_secondary_id": [
+		{
+			"name": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "mage04-check_entity_primary_id_type",
+			"entity": "Mage 04",
+			"expected_u2": 1,
+			"expected_bool": true
+		},
+		{
+		"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	],
+	"mage04-check_entity_primary_id_type": [
+		{
+			"name": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+			"success_script": "mage04-success_set_ids",
+			"entity": "Mage 04",
+			"expected_byte": 3,
+			"expected_bool": true
+		},
+		{
+		"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	],
+	"mage04-success_set_ids": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_2"
+		},
+		{
+			"name": "SET_ENTITY_PRIMARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 13
+		},
+		{
+			"name": "SET_ENTITY_SECONDARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 0
+		},
+		{
+			"name": "SET_ENTITY_PRIMARY_ID_TYPE",
+			"entity": "Mage 04",
+			"byte_value": 2
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 04",
+			"script": "mage04-check_entity_primary_id"
 		}
 	]
 }
