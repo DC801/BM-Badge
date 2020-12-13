@@ -195,6 +195,7 @@
 	- [ ] entity hex cells
 	- [ ] sound id lookup for scripts and dialogs
 - [ ] Music/SFX encoding in the binary asset encoder
+- [ ] Consider adding lookup encoding for setting primary ID, secondary ID, and primary ID type. The numbers seem to be unreliable when you change things in a map (i.e. a mage entity primary id is 3, then after changing something unrelated and re-encoding it jumped to 13), so being able to do a lookup to make sure an entity gets their type set to a specific thing would be useful.
 
 ## Hardware TODO:
 
