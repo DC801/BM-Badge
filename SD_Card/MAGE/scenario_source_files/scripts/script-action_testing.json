@@ -31,7 +31,7 @@
 	],
 	"mage02-check_entity_x": [
 		{
-			"doc": "Mage 02 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
+			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
 			"name": "CHECK_ENTITY_X",
 			"success_script": "mage02-check_entity_y",
 			"entity": "Mage 02",
@@ -73,6 +73,62 @@
 			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 02",
 			"script": "mage02-check_entity_x"
+		}
+	],
+	"mage03-check_entity_scripts": [
+		{
+			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
+			"name": "CHECK_ENTITY_INTERACT_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "Bub",
+			"expected_script": "null_script",
+			"expected_bool": false
+		},
+		{
+			"name": "CHECK_ENTITY_TICK_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "Bub",
+			"expected_script": "null_script",
+			"expected_bool": false
+		}
+	],
+	"mage03-success_script": [
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity":"Mage 03",
+			"script": "mage03-success_prompt"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity":"Bub",
+			"script": "null_script"
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity":"Bub",
+			"script": "null_script"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity":"Mage 03",
+			"script": "mage03-check_entity_scripts"
+		}
+	],
+	"mage03-initial_prompt": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage03_1"
+		}
+	],
+	"mage03-success_prompt": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage03_2"
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 03",
+			"script": "mage03-initial_prompt"
 		}
 	]
 }

@@ -330,7 +330,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedScript;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityInteractScript;
 
@@ -338,7 +338,7 @@ typedef struct {
 	uint16_t successScriptId;
 	uint16_t expectedScript;
 	uint8_t entityId;
-	uint8_t paddingF;
+	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityTickScript;
 

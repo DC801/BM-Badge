@@ -86,12 +86,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage03-initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage03-check_entity_scripts"
                         }],
                  "rotation":0,
                  "type":"",
