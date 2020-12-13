@@ -38,5 +38,26 @@
 				"Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
 			]
 		}
+	],
+	"dialog-mage03_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Mage 03",
+			"messages": [
+				"I test the CHECK_ENTITY_INTERACT_SCRIPT and\nCHECK_ENTITY_TICK_SCRIPT actions. Set the\ntick or interact scripts for yourself to\nanything other than their current value.",
+				"When you talk to me again, I should know\nif you changed them and will say\nsomething new."
+			]
+		}
+	],
+	"dialog-mage03_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Mage 03",
+			"messages": [
+				"Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
+			]
+		}
 	]
 }

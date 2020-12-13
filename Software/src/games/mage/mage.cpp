@@ -64,14 +64,14 @@ void handleScripts()
 	MageScript->handleMapOnTickScript();
 	for(uint8_t i = 0; i < MageGame->Map().EntityCount(); i++)
 	{
-		//handle Entity onTick scripts for the local entity at Id 'i':
-		//these scripts will run every tick, starting from the beginning as they complete.
-		MageScript->handleEntityOnTickScript(i);
 		//this script will not initiate any new onInteract scripts. It will simply run an
 		//onInteract script based on the state of the entityInteractResumeStates[i] struct
 		//the struct is initialized in MageGame->applyUniversalInputs() when the interact
 		//button is pressed.
 		MageScript->handleEntityOnInteractScript(i);
+		//handle Entity onTick scripts for the local entity at Id 'i':
+		//these scripts will run every tick, starting from the beginning as they complete.
+		MageScript->handleEntityOnTickScript(i);
 	}
 }
 

@@ -290,7 +290,8 @@ void MageScriptControl::checkEntityInteractScript(uint8_t * args, MageScriptStat
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		if(entity->onInteractScriptId == argStruct->expectedScript) {
+		bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
+		if(identical == argStruct->expectedBool) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
@@ -307,7 +308,8 @@ void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		if(entity->onTickScriptId == argStruct->expectedScript) {
+		bool identical = (entity->onTickScriptId == argStruct->expectedScript);
+		if(identical == argStruct->expectedBool) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
