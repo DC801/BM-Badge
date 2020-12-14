@@ -58,6 +58,7 @@ var serializeDialog = function (
 				result,
 				serializeDialogScreen(
 					dialogScreen,
+					map,
 					fileNameMap,
 					scenarioData,
 				),
@@ -77,16 +78,17 @@ var serializeDialog = function (
 
 var serializeDialogScreen = function (
 	dialogScreen,
+	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var headerLength = getPaddedHeaderLength(
 		2 // uint16_t name_index
 		+ 2 // uint16_t border_tileset_index
-		+ 1 // uint8_t name_type
 		+ 1 // uint8_t alignment
 		+ 1 // uint8_t font_index
 		+ 1 // uint8_t message_count
+		+ 1 // uint8_t padding
 		+ (2 * dialogScreen.messages.length) // uint16_t messages[message_count]
 	);
 	var result = new ArrayBuffer(
@@ -96,12 +98,13 @@ var serializeDialogScreen = function (
 	var offset = 0;
 	var nameStringId = serializeString(
 		dialogScreen.name,
+		map,
 		fileNameMap,
 		scenarioData,
 	);
 	dataView.setUint16(
 		offset, // uint16_t name_index
-		nameStringId, // TODO: do a lookup for the entity ID
+		nameStringId,
 		false
 	);
 	offset += 2;
@@ -118,11 +121,6 @@ var serializeDialogScreen = function (
 	);
 	offset += 2;
 	dataView.setUint8(
-		offset, // uint8_t name_type
-		0, // TODO: Make use of ksy enum `dialog_screen_name_type`
-	);
-	offset += 1;
-	dataView.setUint8(
 		offset, // uint8_t alignment
 		dialogAlignmentEnum[dialogScreen.alignment] || 0, // TODO: Make MORE use of ksy enum `dialog_screen_alignment_type`
 	);
@@ -137,15 +135,21 @@ var serializeDialogScreen = function (
 		dialogScreen.messages.length,
 	);
 	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t padding
+		0,
+	);
+	offset += 1;
 	dialogScreen.messages.forEach(function (message) {
 		var stringId = serializeString(
 			message,
+			map,
 			fileNameMap,
 			scenarioData,
 		);
 		dataView.setUint16(
 			offset, // uint16_t string_id
-			stringId, // TODO: do a lookup for the entity ID
+			stringId,
 			false
 		);
 		offset += 2;

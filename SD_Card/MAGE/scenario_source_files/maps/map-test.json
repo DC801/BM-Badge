@@ -236,7 +236,7 @@
                  "gid":482,
                  "height":32,
                  "id":27,
-                 "name":"",
+                 "name":"Best Goat",
                  "properties":[
                         {
                          "name":"is_player",
@@ -254,7 +254,7 @@
                  "gid":506,
                  "height":40,
                  "id":28,
-                 "name":"",
+                 "name":"Zen Dude",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -333,12 +333,12 @@
                  "gid":583,
                  "height":32,
                  "id":31,
-                 "name":"",
+                 "name":"Pips",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"check_if_player_is_named_bob"
+                         "value":"show_dialog-pipscat"
                         }],
                  "rotation":0,
                  "type":"",
@@ -540,7 +540,7 @@
                  "gid":858,
                  "height":48,
                  "id":48,
-                 "name":"",
+                 "name":"Bender",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -558,7 +558,7 @@
                  "gid":1027,
                  "height":40,
                  "id":49,
-                 "name":"",
+                 "name":"Strong Bad",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -800,7 +800,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -887,7 +887,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 

@@ -145,7 +145,10 @@ public:
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
 	MageGeometry* getValidGeometry(uint16_t mapLocalGeometryId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
-	std::string getString(uint16_t stringId);
+	std::string getString(
+		uint16_t stringId,
+		int16_t currentEntityId
+	);
 	uint32_t getImageAddress(uint16_t imageId);
 	uint32_t getDialogAddress(uint16_t dialogId);
 
@@ -168,6 +171,8 @@ public:
 	MageEntity* getValidEntity(int8_t entityId);
 
 	MageTileset* getValidTileset(uint16_t tilesetId);
+
+	std::string getEntityNameStringById(int16_t entityId);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
