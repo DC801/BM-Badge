@@ -1160,7 +1160,10 @@ MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
 	return &tilesets[tilesetId % tilesetHeader.count()];
 }
 
-std::string MageGameControl::getString(uint16_t stringId) {
+std::string MageGameControl::getString(
+	uint16_t stringId,
+	int16_t currentEntityId
+) {
 	uint16_t sanitizedIndex = stringId % stringHeader.count();
 	uint32_t start = stringHeader.offset(sanitizedIndex);
 	uint32_t length = stringHeader.length(sanitizedIndex);
@@ -1170,7 +1173,46 @@ std::string MageGameControl::getString(uint16_t stringId) {
 	{
 		ENGINE_PANIC("Failed to load string data.");
 	}
-	return romString;
+	std::string outputString(0, '\0');
+	volatile size_t cursor = 0;
+	volatile size_t variableStartPosition = 0;
+	volatile size_t variableEndPosition = 0;
+	volatile size_t replaceCount = 0;
+	while ((variableStartPosition = romString.find("%%", variableStartPosition)) != std::string::npos) {
+		outputString.append(romString.substr(
+			cursor,
+			(variableStartPosition - cursor)
+		));
+		variableEndPosition = romString.find("%%", variableStartPosition + 1) + 1;
+		std::string variableHolder = romString.substr(
+			variableStartPosition + 2,
+			variableStartPosition - (variableEndPosition - 2)
+		);
+		int parsedEntityIndex = std::stoi(variableHolder);
+		int16_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+			parsedEntityIndex,
+			currentEntityId
+		);
+		if(entityIndex != NO_PLAYER) {
+			std::string entityName = getEntityNameStringById(entityIndex);
+			outputString.append(entityName.c_str());
+		} else {
+			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
+			sprintf(
+				"MISSING: %d",
+				missingError,
+				parsedEntityIndex
+			);
+			outputString.append(missingError);
+		}
+		variableStartPosition = variableEndPosition + 1;
+		cursor = variableStartPosition;
+		replaceCount++;
+	}
+	if (replaceCount) {
+		outputString.append(romString.substr(cursor, romString.length() - 1));
+	}
+	return replaceCount ? outputString : romString;
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
@@ -1179,4 +1221,11 @@ uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
 	return dialogHeader.offset(dialogId % dialogHeader.count());
+}
+
+std::string MageGameControl::getEntityNameStringById(int16_t entityId) {
+	MageEntity *entity = getValidEntity(entityId);
+	std::string entityName(MAGE_ENTITY_NAME_LENGTH + 1, '\0');
+	entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
+	return entityName;
 }

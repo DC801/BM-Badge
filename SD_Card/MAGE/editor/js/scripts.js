@@ -1076,7 +1076,7 @@ var getObjectByNameOnMap = function(name, map, actionName) {
 		});
 	}
 	if (!object) {
-		throw new Error(`${actionName} No object named "${name}" could be found on map: "${map.name}"!`);
+		throw new Error(`"${actionName}" No object named "${name}" could be found on map: "${map.name}"!`);
 	}
 	return object;
 };
@@ -1244,6 +1244,7 @@ var getStringIdFromAction = function (
 	}
 	return serializeString(
 		value,
+		map,
 		fileNameMap,
 		scenarioData,
 	);
@@ -1528,6 +1529,7 @@ var handleMapEntityScripts = function (
 		var entity = scenarioData.parsed.entities[globalEntityIndex];
 		possibleEntityScripts.forEach(function (propertyName) {
 			var scriptName = entity[propertyName];
+			map.currentEntityMapIndex = entity.mapIndex;
 			if (scriptName) {
 				var mapLocalScriptId = handleScript(
 					scriptName,
@@ -1542,6 +1544,7 @@ var handleMapEntityScripts = function (
 				);
 			}
 		});
+		map.currentEntityMapIndex = undefined;
 	});
 };
 

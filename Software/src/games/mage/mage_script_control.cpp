@@ -191,19 +191,6 @@ void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entit
 	}
 }
 
-int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(uint8_t entityId)
-{
-	int16_t entityIndex = entityId;
-	if(entityIndex == MAGE_ENTITY_SELF) {
-		entityIndex = currentEntityId;
-	} else if (
-		entityIndex == MAGE_ENTITY_PLAYER
-		) {
-		entityIndex = MageGame->playerEntityIndex;
-	}
-	return entityIndex;
-}
-
 uint16_t MageScriptControl::getUsefulGeometryIndexFromActionGeometryId(
 	uint16_t geometryId,
 	MageEntity *entity
@@ -231,12 +218,10 @@ void MageScriptControl::checkEntityName(uint8_t * args, MageScriptState * resume
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		std::string romString = MageGame->getString(argStruct->stringId);
-		std::string entityName(MAGE_ENTITY_NAME_LENGTH + 1, '\0');
-		entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
+		std::string romString = MageGame->getString(argStruct->stringId, currentEntityId);
+		std::string entityName = MageGame->getEntityNameStringById(entityIndex);
 		int compare = strcmp(entityName.c_str(), romString.c_str());
 		bool identical = compare == 0;
 		if(identical == argStruct->expectedBoolValue) {
@@ -253,7 +238,7 @@ void MageScriptControl::checkEntityX(uint8_t * args, MageScriptState * resumeSta
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->x == argStruct->expectedValue);
@@ -271,7 +256,7 @@ void MageScriptControl::checkEntityY(uint8_t * args, MageScriptState * resumeSta
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->y == argStruct->expectedValue);
@@ -289,7 +274,7 @@ void MageScriptControl::checkEntityInteractScript(uint8_t * args, MageScriptStat
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedScript = convert_endian_u2_value(argStruct->expectedScript);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
@@ -307,7 +292,7 @@ void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * 
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedScript = convert_endian_u2_value(argStruct->expectedScript);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->onTickScriptId == argStruct->expectedScript);
@@ -325,7 +310,7 @@ void MageScriptControl::checkEntityPrimaryId(uint8_t * args, MageScriptState * r
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->primaryId == argStruct->expectedValue);
@@ -343,7 +328,7 @@ void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState *
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->secondaryId == argStruct->expectedValue);
@@ -360,7 +345,7 @@ void MageScriptControl::checkEntityPrimaryIdType(uint8_t * args, MageScriptState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->primaryIdType == argStruct->expectedValue);
@@ -377,7 +362,7 @@ void MageScriptControl::checkEntityCurrentAnimation(uint8_t * args, MageScriptSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->currentAnimation == argStruct->expectedValue);
@@ -394,7 +379,7 @@ void MageScriptControl::checkEntityCurrentFrame(uint8_t * args, MageScriptState 
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->currentFrame == argStruct->expectedValue);
@@ -412,7 +397,7 @@ void MageScriptControl::checkEntityDirection(uint8_t * args, MageScriptState * r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->direction == argStruct->expectedValue);
@@ -429,7 +414,7 @@ void MageScriptControl::checkEntityHackableStateA(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->hackableStateA == argStruct->expectedValue);
@@ -446,7 +431,7 @@ void MageScriptControl::checkEntityHackableStateB(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->hackableStateB == argStruct->expectedValue);
@@ -463,7 +448,7 @@ void MageScriptControl::checkEntityHackableStateC(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->hackableStateC == argStruct->expectedValue);
@@ -480,7 +465,7 @@ void MageScriptControl::checkEntityHackableStateD(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		bool identical = (entity->hackableStateD == argStruct->expectedValue);
@@ -499,7 +484,7 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t u2_value = convert_endian_u2_value(
@@ -521,7 +506,7 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t u2_value = convert_endian_u2_value(
@@ -543,7 +528,7 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 	argStruct->expectedValue = convert_endian_u4_value(argStruct->expectedValue);
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint32_t u4_value = convert_endian_u4_value(
@@ -564,7 +549,7 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->expectedValue = convert_endian_u2_value(argStruct->expectedValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t pathId = convert_endian_u2_value(
@@ -594,7 +579,7 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
@@ -749,9 +734,9 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 	argStruct->stringId = convert_endian_u2_value(argStruct->stringId);
 
 	//get the string from the stringId:
-	std::string romString = MageGame->getString(argStruct->stringId);
+	std::string romString = MageGame->getString(argStruct->stringId, currentEntityId);
 	//Get the entity:
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		//simple loop to set the name:
@@ -769,7 +754,7 @@ void MageScriptControl::setEntityX(uint8_t * args, MageScriptState * resumeState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->x = argStruct->newValue;
@@ -783,7 +768,7 @@ void MageScriptControl::setEntityY(uint8_t * args, MageScriptState * resumeState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->y = argStruct->newValue;
@@ -799,7 +784,7 @@ void MageScriptControl::setEntityInteractScript(uint8_t * args, MageScriptState 
 
 	setEntityScript(
 		argStruct->scriptId,
-		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
+		getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId),
 		ON_INTERACT
 	);
 	return;
@@ -813,7 +798,7 @@ void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * re
 
 	setEntityScript(
 		argStruct->scriptId,
-		getUsefulEntityIndexFromActionEntityId(argStruct->entityId),
+		getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId),
 		ON_TICK
 	);
 	return;
@@ -825,7 +810,7 @@ void MageScriptControl::setEntityPrimaryId(uint8_t * args, MageScriptState * res
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->primaryId = argStruct->newValue;
@@ -839,7 +824,7 @@ void MageScriptControl::setEntitySecondaryId(uint8_t * args, MageScriptState * r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->secondaryId = argStruct->newValue;
@@ -851,7 +836,7 @@ void MageScriptControl::setEntityPrimaryIdType(uint8_t * args, MageScriptState *
 {
 	ActionSetEntityPrimaryIdType *argStruct = (ActionSetEntityPrimaryIdType*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->primaryIdType = argStruct->newValue;
@@ -863,7 +848,7 @@ void MageScriptControl::setEntityCurrentAnimation(uint8_t * args, MageScriptStat
 {
 	ActionSetEntityCurrentAnimation *argStruct = (ActionSetEntityCurrentAnimation*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->currentAnimation = argStruct->newValue;
@@ -875,7 +860,7 @@ void MageScriptControl::setEntityCurrentFrame(uint8_t * args, MageScriptState * 
 {
 	ActionSetEntityCurrentFrame *argStruct = (ActionSetEntityCurrentFrame*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->currentFrame = argStruct->newValue;
@@ -923,7 +908,7 @@ void MageScriptControl::setEntityHackableStateA(uint8_t * args, MageScriptState 
 {
 	ActionSetEntityHackableStateA *argStruct = (ActionSetEntityHackableStateA*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateA = argStruct->newValue;
@@ -935,7 +920,7 @@ void MageScriptControl::setEntityHackableStateB(uint8_t * args, MageScriptState 
 {
 	ActionSetEntityHackableStateB *argStruct = (ActionSetEntityHackableStateB*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateB = argStruct->newValue;
@@ -947,7 +932,7 @@ void MageScriptControl::setEntityHackableStateC(uint8_t * args, MageScriptState 
 {
 	ActionSetEntityHackableStateC *argStruct = (ActionSetEntityHackableStateC*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateC = argStruct->newValue;
@@ -959,7 +944,7 @@ void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState 
 {
 	ActionSetEntityHackableStateD *argStruct = (ActionSetEntityHackableStateD*)args;
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateD = argStruct->newValue;
@@ -974,7 +959,7 @@ void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
@@ -989,7 +974,7 @@ void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
@@ -1004,7 +989,7 @@ void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u4_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint32_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
@@ -1019,7 +1004,7 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = convert_endian_u2_value(argStruct->newValue);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
@@ -1140,7 +1125,7 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		//printf("Opening dialog %d\n", argStruct->dialogId);
 		MageGame->playerHasControl = false;
-		MageDialog->load(argStruct->dialogId);
+		MageDialog->load(argStruct->dialogId, currentEntityId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	} else if (!MageDialog->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
@@ -1155,7 +1140,7 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
@@ -1180,7 +1165,7 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
@@ -1232,7 +1217,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
@@ -1334,7 +1319,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 	argStruct->duration = convert_endian_u4_value(argStruct->duration);
 	argStruct->geometryId = convert_endian_u2_value(argStruct->geometryId);
 
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
@@ -1929,4 +1914,20 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t index)
 	currentEntityId = index;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&entityInteractResumeStates[index], index, MageScriptType::ON_INTERACT);
+}
+
+int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(
+	uint8_t entityId,
+	int16_t callingEntityId
+)
+{
+	int16_t entityIndex = entityId;
+	if(entityIndex == MAGE_ENTITY_SELF) {
+		entityIndex = callingEntityId;
+	} else if (
+		entityIndex == MAGE_ENTITY_PLAYER
+		) {
+		entityIndex = MageGame->playerEntityIndex;
+	}
+	return entityIndex;
 }

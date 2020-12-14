@@ -177,6 +177,7 @@
 				- [ ] enter a numerical code
 				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 			- [ ] new script and/or dialog to call depending on player response
+		- [ ] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long

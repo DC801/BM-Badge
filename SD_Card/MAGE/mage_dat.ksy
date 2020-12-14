@@ -5,9 +5,9 @@ seq:
   - id: identifier
     contents: MAGEGAME
   - id: timestamp
-    type: strz
+    type: str
     size: 24
-    encoding: UTF8
+    encoding: ASCII
   - id: map_offsets
     type: count_with_offsets
   - id: tileset_offsets
@@ -90,9 +90,9 @@ types:
   map:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 16
-        encoding: UTF8
+        encoding: ASCII
       - id: tile_width
         type: u2
         doc: The width of the map tiles in pixels
@@ -193,9 +193,9 @@ types:
   tileset:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 16
-        encoding: UTF8
+        encoding: ASCII
       - id: image_id
         type: u2
       - id: image_width
@@ -246,9 +246,9 @@ types:
   entity_type:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 16
-        encoding: UTF8
+        encoding: ASCII
       - id: padding_a
         type: u1
       - id: padding_b
@@ -286,9 +286,9 @@ types:
   entity:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 12
-        encoding: UTF8
+        encoding: ASCII
       - id: x
         type: u2
       - id: y
@@ -326,9 +326,9 @@ types:
   geometry:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 32
-        encoding: UTF8
+        encoding: ASCII
       - id: geometry_type
         type: u1
         enum: geometry_type
@@ -359,9 +359,9 @@ types:
   script:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 32
-        encoding: UTF8
+        encoding: ASCII
       - id: action_count
         type: u4
       - id: actions
@@ -392,9 +392,9 @@ types:
   dialog:
     seq:
       - id: name
-        type: strz
+        type: str
         size: 32
-        encoding: UTF8
+        encoding: ASCII
       - id: screen_count
         type: u4
       - id: dialog_screens
@@ -408,15 +408,14 @@ types:
         type: u2
       - id: border_tileset_index
         type: u2
-      - id: name_type
-        type: u1
-        enum: dialog_screen_name_type
       - id: alignment
         type: u1
         enum: dialog_screen_alignment_type
       - id: font_index
         type: u1
       - id: message_count
+        type: u1
+      - id: padding
         type: u1
       - id: messages
         type: u2
@@ -440,7 +439,7 @@ types:
       name:
         type: strz
         size: char_count
-        encoding: UTF8
+        encoding: ASCII
 
   image:
     params:
@@ -568,7 +567,3 @@ enums:
     5: bottom_right_with_name
     6: top_left_with_name
     7: top_right_with_name
-
-  dialog_screen_name_type:
-    0: rom_string
-    1: entity_lookup
