@@ -3,7 +3,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 01",
+			"name": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_NAME and\nSET_ENTITY_NAME actions.\nSet my name to 'Mage 00'\nand then talk to me again."
 			]
@@ -13,9 +13,9 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 00",
+			"name": "%SELF%",
 			"messages": [
-				"Good work, you set my name to 'Mage 00'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
+				"Good work, you set my name to '%SELF%'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
 			]
 		}
 	],
@@ -23,7 +23,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."
 			]
@@ -33,7 +33,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "%SELF%",
 			"messages": [
 				"Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
 			]
@@ -43,7 +43,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 03",
+			"name": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_INTERACT_SCRIPT and\nCHECK_ENTITY_TICK_SCRIPT actions. Set the\ntick or interact scripts for yourself to\nanything other than their current value.",
 				"When you talk to me again, I should know\nif you changed them and will say\nsomething new."
@@ -54,7 +54,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 03",
+			"name": "%SELF%",
 			"messages": [
 				"Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
 			]
@@ -64,7 +64,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_PRIMARY_ID,\nCHECK_ENTITY_SECONDARY_ID, and\nCHECK_ENTITY_PRIMARY_ID_TYPE actions.",
 				"Set my primary ID to 12,\nmy secondary ID to 1,\n and my primary ID type to 3\nand then talk to me again."
@@ -75,7 +75,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "%SELF%",
 			"messages": [
 				"Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
 			]
