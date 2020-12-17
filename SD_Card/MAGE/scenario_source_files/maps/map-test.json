@@ -42,7 +42,7 @@
                  "gid":293,
                  "height":48,
                  "id":2,
-                 "name":"",
+                 "name":"PYRO GOOSE",
                  "properties":[
                         {
                          "name":"is_invincible",
@@ -50,9 +50,9 @@
                          "value":true
                         }, 
                         {
-                         "name":"on_tick",
+                         "name":"on_interact",
                          "type":"string",
-                         "value":"check_if_player_is_at_log"
+                         "value":"set_save_flag-bobs_not_on_fire"
                         }, 
                         {
                          "name":"path",
@@ -492,21 +492,16 @@
                  "name":"Max Swagger",
                  "properties":[
                         {
-                         "name":"on_tick",
+                         "name":"on_interact",
                          "type":"string",
-                         "value":"check_if_player_is_at_log"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":17
+                         "value":"check_save_flag-bobs_not_on_fire"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":257,
-                 "y":330
+                 "x":155,
+                 "y":245
                 }, 
                 {
                  "gid":827,

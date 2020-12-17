@@ -159,5 +159,61 @@
 				"You know, %Strong Bad% and %Bender%\nare having a feud. It would be more awesome\nif they teamed up -\n%Bender% is some kinda robot."
 			]
 		}
+	],
+	"dialog-please_set_bob_on_fire": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "max_swagger",
+			"name": "%SELF%",
+			"messages": [
+				"%Bob%, AKA \"Stone Cold %Bob% Austin\"\nis cold. Would you please warm him up?"
+			]
+		}
+	],
+	"dialog-bob_has_been_set_on_fire": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "goose",
+			"name": "%SELF%",
+			"messages": [
+				"I AM %SELF%!\nI HAVE SET %Bob% ON FIRE!!"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "bob",
+			"name": "%Bob%",
+			"messages": [
+				"Oh yeah! I am so hot right now!"
+			]
+		}
+	],
+	"dialog-bob_has_been_set_off_fire": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "goose",
+			"name": "%SELF%",
+			"messages": [
+				"I AM MERCIFUL %SELF%!\nI HAVE SET %Bob% OFF FIRE!!"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "bob",
+			"name": "%Bob%",
+			"messages": [
+				"Aww man, I was just getting toasty!"
+			]
+		}
+	],
+	"dialog-thanks_for_setting_bob_on_fire": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "max_swagger",
+			"name": "%SELF%",
+			"messages": [
+				"Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
+			]
+		}
 	]
 }

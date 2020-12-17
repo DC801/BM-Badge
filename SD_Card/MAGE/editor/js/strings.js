@@ -4,8 +4,37 @@ var serializeString = function (
 	fileNameMap,
 	scenarioData,
 ) {
+	return serializeSomethingLikeAString(
+		string,
+		map,
+		fileNameMap,
+		scenarioData,
+		'strings'
+	);
+};
+var serializeSaveFlag = function (
+	string,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	return serializeSomethingLikeAString(
+		string,
+		map,
+		fileNameMap,
+		scenarioData,
+		'save_flags'
+	);
+};
+var serializeSomethingLikeAString = function (
+	string,
+	map,
+	fileNameMap,
+	scenarioData,
+	destinationPropertyName,
+) {
 	var parsedString = templatizeString(string, map);
-	var scenarioIndex = scenarioData.uniqueStringMap[parsedString];
+	var scenarioIndex = scenarioData.uniqueStringLikeMaps[destinationPropertyName][parsedString];
 	if (scenarioIndex === undefined) {
 		// allow for explicit null char at the end
 		var paddedLength = getPaddedHeaderLength(parsedString.length + 1);
@@ -20,11 +49,11 @@ var serializeString = function (
 		var encodedString = {
 			name: parsedString,
 			serialized: buffer,
-			scenarioIndex: scenarioData.parsed.strings.length,
+			scenarioIndex: scenarioData.parsed[destinationPropertyName].length,
 		};
-		scenarioData.parsed.strings.push(encodedString);
+		scenarioData.parsed[destinationPropertyName].push(encodedString);
 		scenarioIndex = encodedString.scenarioIndex;
-		scenarioData.uniqueStringMap[parsedString] = scenarioIndex;
+		scenarioData.uniqueStringLikeMaps[destinationPropertyName][parsedString] = scenarioIndex;
 	}
 	return scenarioIndex;
 };
@@ -49,4 +78,4 @@ var templatizeString = function (templateString, map) {
 		variableRegex,
 		replaceFunction
 	)
-}
+};

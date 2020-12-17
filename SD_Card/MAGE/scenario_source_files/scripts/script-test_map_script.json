@@ -94,5 +94,61 @@
 			"name": "RUN_SCRIPT",
 			"script": "null_script"
 		}
+	],
+	"check_save_flag-bobs_not_on_fire": [
+		{
+			"name": "CHECK_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"expected_bool": true,
+			"success_script": "show_dialog-thanks_for_setting_bob_on_fire"
+		},
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-please_set_bob_on_fire"
+		}
+	],
+	"show_dialog-thanks_for_setting_bob_on_fire": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-thanks_for_setting_bob_on_fire"
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "check_save_flag-bobs_not_on_fire"
+		}
+	],
+	"set_save_flag-bobs_not_on_fire": [
+		{
+			"name": "CHECK_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"expected_bool": true,
+			"success_script": "set_save_flag-bobs_on_fire"
+		},
+		{
+			"name": "SET_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"bool_value": true
+		},
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-bob_has_been_set_on_fire"
+		}
+	],
+	"set_save_flag-bobs_on_fire": [
+		{
+			"name": "SET_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"bool_value": false
+		},
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-bob_has_been_set_off_fire"
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "set_save_flag-bobs_not_on_fire"
+		}
 	]
 }

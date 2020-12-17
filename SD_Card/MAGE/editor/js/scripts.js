@@ -289,7 +289,7 @@ var actionHandlerMap = {
 			action,
 			[
 				{propertyName: 'success_script', size: 2},
-				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'save_flag', size: 2},
 				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_SAVE_FLAG',
@@ -653,7 +653,7 @@ var actionHandlerMap = {
 		return handleActionWithFields(
 			action,
 			[
-				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'save_flag', size: 2},
 				{propertyName: 'bool_value', size: 1},
 			],
 			'SET_SAVE_FLAG',
@@ -1250,6 +1250,26 @@ var getStringIdFromAction = function (
 	);
 };
 
+var getSaveFlagIdFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+	}
+	return serializeSaveFlag(
+		value,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
 var getDialogIdFromAction = function (
 	propertyName,
 	action,
@@ -1325,6 +1345,7 @@ var actionPropertyNameToHandlerMap = {
 	success_script: getMapLocalScriptIdFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
 	string: getStringIdFromAction,
+	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
 	color: getTwoBytesFromAction,
