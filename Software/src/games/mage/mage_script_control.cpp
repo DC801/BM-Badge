@@ -569,6 +569,15 @@ void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeSt
 	ActionCheckSaveFlag *argStruct = (ActionCheckSaveFlag*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	argStruct->saveFlagOffset = convert_endian_u2_value(argStruct->saveFlagOffset);
+	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
+	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
+	uint8_t currentByteValue = saveFlags[byteOffset];
+	bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
+
+	if(bitValue == argStruct->expectedBoolValue) {
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
 	return;
 }
 
@@ -1016,6 +1025,18 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetSaveFlag *argStruct = (ActionSetSaveFlag*)args;
+	argStruct->saveFlagOffset = convert_endian_u2_value(argStruct->saveFlagOffset);
+	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
+	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
+	uint8_t currentByteValue = saveFlags[byteOffset];
+
+	if(argStruct->newBoolValue) {
+		currentByteValue |= 0x01u << bitOffset;
+	} else {
+		// tilde operator inverts all the bits on a byte; Bitwise NOT
+		currentByteValue &= ~(0x01u << bitOffset);
+	}
+	saveFlags[byteOffset] = currentByteValue;
 	return;
 }
 

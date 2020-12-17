@@ -26,6 +26,8 @@ seq:
     type: count_with_offsets
   - id: string_offsets
     type: count_with_offsets
+  - id: save_flags_offsets
+    type: count_with_offsets
   - id: image_offsets
     type: count_with_offsets
   - id: maps
@@ -65,6 +67,10 @@ instances:
     type: string(_index)
     repeat: expr
     repeat-expr: string_offsets.count
+  save_flags:
+    type: string(_index)
+    repeat: expr
+    repeat-expr: save_flags_offsets.count
   images:
     type: image(_index)
     repeat: expr

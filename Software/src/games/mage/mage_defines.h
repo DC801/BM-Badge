@@ -78,6 +78,12 @@ all of the old code used as the foundation of this badge.
 //this is the number of chars that are used in the entity struct as part of the entity name
 #define MAGE_ENTITY_NAME_LENGTH 12
 
+// When saving the state of the game back to the ROM chip,
+// it can write only whole PAGES of bytes at a time.
+// This is the number of bytes that you can write save flags into.
+// Hamster says this is configurable to 256 OR 512.
+#define MAGE_SAVE_FLAG_PAGE_SIZE 256
+
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT (-1)
 #define MAGE_NO_MAP (-1)
@@ -451,9 +457,8 @@ typedef struct {
 
 typedef struct {
 	uint16_t successScriptId;
-	uint8_t saveFlagOffset;
+	uint16_t saveFlagOffset;
 	uint8_t expectedBoolValue;
-	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionCheckSaveFlag;
@@ -703,9 +708,8 @@ typedef struct {
 } ActionSetEntityPath;
 
 typedef struct {
-	uint8_t saveFlagOffset;
+	uint16_t saveFlagOffset;
 	uint8_t newBoolValue;
-	uint8_t paddingC;
 	uint8_t paddingD;
 	uint8_t paddingE;
 	uint8_t paddingF;

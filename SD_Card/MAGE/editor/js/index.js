@@ -8,6 +8,7 @@ var dataTypes = [
 	'scripts',
 	'dialogs',
 	'strings',
+	'save_flags',
 	'images',
 ];
 
@@ -22,7 +23,10 @@ var handleScenarioData = function(fileNameMap) {
 		})
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
-		scenarioData.uniqueStringMap = {};
+		scenarioData.uniqueStringLikeMaps = {
+			strings: {},
+			save_flags: {},
+		};
 		scenarioData.uniqueDialogMap = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];

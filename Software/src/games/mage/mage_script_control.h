@@ -30,6 +30,8 @@ class MageScriptControl
 		//calls a new script, the original entity can be updated to match.
 		MageScriptType currentScriptType;
 
+		uint8_t saveFlags[MAGE_SAVE_FLAG_PAGE_SIZE] = {0};
+
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;
