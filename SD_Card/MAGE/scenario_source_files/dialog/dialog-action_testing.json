@@ -80,5 +80,26 @@
 				"Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
 			]
 		}
+	],
+	"dialog-mage05_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_CURRENT_ANIMATION\nand CHECK_ENTITY_CURRENT_FRAME.\nUse your action by pressing RJOY_LEFT,\nand I should update my message."
+			]
+		}
+	],
+	"dialog-mage05_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Good work, you used your action, and I\nwas able to verify that it happened.",
+				"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
+			]
+		}
 	]
 }
