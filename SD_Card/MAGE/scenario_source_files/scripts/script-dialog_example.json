@@ -2,31 +2,31 @@
 	"scripts": {
 		"talk_with_baby_goat": [
 			{
-				"name": "SHOW_DIALOG",
+				"action": "SHOW_DIALOG",
 				"dialog": "dialog-baby_goat-hello_world"
 			}
 		],
 		"response-give_goat_sugar_cube": [
 			{
-				"name": "SHOW_DIALOG",
+				"action": "SHOW_DIALOG",
 				"dialog": "thanks_for_the_sugar_cube"
 			},
 			{
-				"name": "SET_PLAYER_CONTROL",
+				"action": "SET_PLAYER_CONTROL",
 				"expected_bool": false
 			},
 			{
-				"name": "WALK_ENTITY_ALONG_GEOMETRY",
+				"action": "WALK_ENTITY_ALONG_GEOMETRY",
 				"geometry": "goat_flight_path",
 				"duration": 9000,
 				"entity": "baby_goat"
 			},
 			{
-				"name": "SHOW_DIALOG",
+				"action": "SHOW_DIALOG",
 				"dialog": "heres_the_thing_i_got_for_you_because_i_can_fly"
 			},
 			{
-				"name": "SET_PLAYER_CONTROL",
+				"action": "SET_PLAYER_CONTROL",
 				"expected_bool": true
 			}
 		]
@@ -37,7 +37,7 @@
 				"notes": "This is Jen's comments",
 				"alignment": "TOP_LEFT",
 				"portrait": "baby_goat",
-				"name": "%baby_goat%",
+				"action": "%baby_goat%",
 				"messages": [
 					"Oh, hello there.",
 					"We don't normally get visitors here in HAUNTED PLACE",
@@ -68,7 +68,7 @@
 			{
 				"alignment": "BOTTOM_LEFT",
 				"portrait": "baby_goat",
-				"name": "%baby_goat%",
+				"action": "%baby_goat%",
 				"messages": [
 					"Thanks for the Sugar Cube[TM]!"
 				]
@@ -76,7 +76,7 @@
 			{
 				"alignment": "BOTTOM_LEFT",
 				"portrait": "lightning_boy",
-				"name": "%Lenny%",
+				"action": "%Lenny%",
 				"messages": [
 					"WHAT HAVE YOU DONE??",
 					"FEEDING THE GOAT A SUGAR CUBE ACTIVATES HIS TRAP CARD!!"
@@ -85,7 +85,7 @@
 			{
 				"alignment": "BOTTOM_LEFT",
 				"portrait": "baby_goat",
-				"name": "%baby_goat%",
+				"action": "%baby_goat%",
 				"messages": [
 					"MUWAHAHA!",
 					"Now I can fly! BRB"
