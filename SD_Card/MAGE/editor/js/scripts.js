@@ -1321,9 +1321,9 @@ var getMapLocalScriptIdFromAction = function (
 var initActionData = function (action) {
 	var buffer = new ArrayBuffer(8);
 	var dataView = new DataView(buffer);
-	var actionIndex = actionNames.indexOf(action.name);
+	var actionIndex = actionNames.indexOf(action.action);
 	if (actionIndex === -1) {
-		throw new Error(`Invalid Action: ${action.name}`);
+		throw new Error(`Invalid Action: ${action.action}`);
 	}
 	dataView.setUint8(
 		0, // action index
@@ -1414,13 +1414,13 @@ var serializeAction = function (
 	fileNameMap,
 	scenarioData,
 ) {
-	var actionIndex = actionNames.indexOf(action.name);
+	var actionIndex = actionNames.indexOf(action.action);
 	if (actionIndex === -1) {
-		throw new Error(`Action: "${action.name}" is not valid! Check the "actionHandlerMap" for valid options!`);
+		throw new Error(`Action: "${action.action}" is not valid! Check the "actionHandlerMap" for valid options!`);
 	}
-	var handler = actionHandlerMap[action.name];
+	var handler = actionHandlerMap[action.action];
 	if (!handler) {
-		throw new Error(`Action: "${action.name}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
+		throw new Error(`Action: "${action.action}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
 	}
 	return handler(
 		action,
