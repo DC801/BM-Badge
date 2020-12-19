@@ -82,14 +82,14 @@
 			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
 			"name": "CHECK_ENTITY_INTERACT_SCRIPT",
 			"success_script": "mage03-success_script",
-			"entity": "Bub",
+			"entity": "%PLAYER%",
 			"expected_script": "null_script",
 			"expected_bool": false
 		},
 		{
 			"name": "CHECK_ENTITY_TICK_SCRIPT",
 			"success_script": "mage03-success_script",
-			"entity": "Bub",
+			"entity": "%PLAYER%",
 			"expected_script": "null_script",
 			"expected_bool": false
 		}
@@ -102,12 +102,12 @@
 		},
 		{
 			"name": "SET_ENTITY_TICK_SCRIPT",
-			"entity":"Bub",
+			"entity":"%PLAYER%",
 			"script": "null_script"
 		},
 		{
 			"name": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity":"Bub",
+			"entity":"%PLAYER%",
 			"script": "null_script"
 		},
 		{
@@ -197,6 +197,64 @@
 			"name": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 04",
 			"script": "mage04-check_entity_primary_id"
+		}
+	],
+	"mage05-check_player_current_animation": [
+		{
+			"doc": "Mage 05 checks to see if the player animation is their action (3), and then checks to see if it reaches the last frame (5). If so, they will update their dialog.",
+			"name": "CHECK_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"expected_byte": 2,
+			"expected_bool": true,
+			"success_script": "mage05-check_player_current_frame"
+		}
+	],
+	"mage05-check_player_current_frame": [
+		{
+			"name": "CHECK_ENTITY_CURRENT_FRAME",
+			"entity": "%PLAYER%",
+			"expected_byte": 4,
+			"expected_bool": true,
+			"success_script": "mage05-set_success_dialog"
+		}
+	],
+	"mage05-set_success_dialog": [
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-success_prompt"
+		},
+		{
+			"name": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-check_player_current_animation"
+		}
+	],
+	"mage05-initial_prompt": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage05_1"
+		}
+	],
+	"mage05-success_prompt": [
+		{
+			"name": "SHOW_DIALOG",
+			"dialog": "dialog-mage05_2"
+		},
+		{
+			"name": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"name": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"name": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-initial_prompt"
 		}
 	]
 }

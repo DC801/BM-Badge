@@ -132,12 +132,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage05-initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage05-check_player_current_animation"
                         }],
                  "rotation":0,
                  "type":"",
@@ -802,7 +802,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":448,
+                 "x":736,
                  "y":64
                 }],
          "opacity":1,
