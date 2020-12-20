@@ -160,7 +160,9 @@ window.vueApp = new window.Vue({
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
 		error: null,
-		downloadData: null
+		downloadData: null,
+		scenarioData: null,
+		fileNameMap: null,
 	},
 	created: function () {
 		console.log('Created');
@@ -204,7 +206,12 @@ window.vueApp = new window.Vue({
 					vm.error = 'No `scenario.json` file detected in folder, no where to start!';
 				} else {
 					getFileJson(scenarioFile)
-						.then(handleScenarioData(fileNameMap))
+						.then(handleScenarioData(fileNameMap, vm))
+						.then(function (scenarioData) {
+							vm.fileNameMap = fileNameMap;
+							vm.scenarioData = scenarioData;
+							return scenarioData;
+						})
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
 							vm.prepareDownload([compositeArray], 'game.dat');

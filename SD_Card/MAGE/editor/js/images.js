@@ -20,12 +20,12 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 				+ supportedImageTypes.join()
 			);
 		}
-		var blobUrl = URL.createObjectURL(file);
+		file.blobUrl = URL.createObjectURL(file);
 		file.scenarioIndex = scenarioData.parsed.images.length;
 		scenarioData.parsed.images.push(file);
 		result = new Promise(function (resolve) {
 			window.getPixels(
-				blobUrl,
+				file.blobUrl,
 				file.type,
 				function (error, result) {
 					if(error){
@@ -37,7 +37,7 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 			);
 		})
 			.then(function (result) {
-				URL.revokeObjectURL(blobUrl);
+				// URL.revokeObjectURL(blobUrl);
 				// console.log(
 				// 	file.name,
 				// 	result

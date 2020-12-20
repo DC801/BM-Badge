@@ -97,8 +97,141 @@
 					</div>
 				</div>
 			</div>
+			<entity-type-editor
+				v-if="scenarioData"
+				:file-name-map="fileNameMap"
+				:scenario-data="scenarioData"
+			></entity-type-editor>
 		</div>
 	</div>
+	<script
+		type="text/x-template"
+		id="template-tiled-tile"
+	>
+		<span
+			class="tiled-tile"
+			:style="outerStyle"
+			:title="`tileid: ${tileid}`"
+		>
+			<span
+				:style="innerStyle"
+			></span>
+		</span>
+	</script>
+	<script
+		type="text/x-template"
+		id="template-entity-type-editor"
+	>
+		<div class="entity-type-editor row">
+			<div class="col-12">
+				<div class="form-group">
+					<label for="currentEntityTypeId">Entity Types:</label>
+					<select
+						class="form-control"
+						id="currentEntityTypeId"
+						v-model="currentEntityTypeId"
+					>
+						<option
+							value=""
+						>Select an entityType</option>
+						<option
+							v-for="entityType of entityTypes"
+							:key="entityType.type"
+							:value="entityType.type"
+						>{{ entityType.type }}</option>
+					</select>
+				</div>
+			</div>
+			<div
+				v-if="currentEntityType"
+				class="col-12"
+				:key="currentEntityTypeId"
+			>
+				<div
+					class="
+						card
+						text-white
+						bg-secondary
+						mb-3
+					"
+				>
+					<div class="card-header">Current EntityType: {{ currentEntityType.type }}</div>
+					<div class="card-body">
+						<div class="row">
+							<div
+								class="animations col-6"
+							>
+								<div
+									v-for="(animation, name) of currentEntityType.animations"
+									:key="name"
+								>
+									<h5>Animation: {{ name }}</h5>
+									<table class="text-center">
+										<thead>
+											<tr>
+												<th
+													v-for="direction in $options.directions"
+												>{{ direction }}</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td
+													v-for="(direction, index) in animation"
+												>
+													<div>
+														<tiled-tile
+															:key="direction.tileid"
+															:tileset="tileset"
+															:tileid="direction.tileid"
+															:style="{
+																transform: `scale(${direction.flip_x?'-':''}1, ${direction.flip_y?'-':''}1)`
+															}"
+														></tiled-tile>
+													</div>
+													<div>
+														<span
+															class="badge"
+															:class="direction.flip_x ? 'badge-success' : 'badge-dark'"
+														>⬌</span>
+														<span
+															class="badge"
+															:class="direction.flip_y ? 'badge-success' : 'badge-dark'"
+														>⬍</span>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="tileset col-6">
+								<h5>Tileset: {{ currentEntityType.tileset }}</h5>
+								<table
+									style="line-height: 0;"
+								>
+									<tbody>
+									<tr
+										v-for="(badY, y) in Math.floor(tileset.tilecount / tileset.columns)"
+									>
+										<td
+											v-for="(badX, x) in tileset.columns"
+										>
+											<tiled-tile
+												:tileset="tileset"
+												:tileid="(y * tileset.columns) + x"
+											></tiled-tile>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
 	<script
 		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
 		src="./dependencies/vue.js"
@@ -107,6 +240,7 @@
 		data-original-src="https://wzrd.in/debug-standalone/get-pixels@3.3.2/"
 		src="./dependencies/get-pixels.js"
 	></script>
+	<script src="js/editor-entity.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
