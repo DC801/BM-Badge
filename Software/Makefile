@@ -23,7 +23,7 @@ endif
 SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk15.3.0
 BUILD_DIR ?= $(PRJ_ROOT)/build
 OUTPUT_DIR ?= $(PRJ_ROOT)/output
-TARGET := $(OUTPUT_DIR)/dc28_badge
+TARGET := $(OUTPUT_DIR)/bm_badge
 
 UF2CONV :=$(PRJ_ROOT)/tools/uf2conv.py
 
