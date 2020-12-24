@@ -73,12 +73,13 @@ extern "C" {
 #define SDC_CS_PIN          19
 
 //QSPI Configuration
-#define MEM_CS              2
-#define MEM_SCK             12
-#define MEM_IO0             13
-#define MEM_IO1             32+12
-#define MEM_IO2             14
-#define MEM_IO3             1
+#define BSP_QSPI_SCK_PIN   12
+#define BSP_QSPI_CSN_PIN   2
+#define BSP_QSPI_IO0_PIN   13
+#define BSP_QSPI_IO1_PIN   12+32
+#define BSP_QSPI_IO2_PIN   14
+#define BSP_QSPI_IO3_PIN   1
+
 
 // Clock
 // Low frequency clock source to be used by the SoftDevice

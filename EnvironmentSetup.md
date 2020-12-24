@@ -60,10 +60,10 @@ mkdir -p ~/dev/installer
 
 ```shell script
 cd ~/dev/
-git clone https://github.com/DC801/DC28PartyBadge/
+git clone https://github.com/DC801/BM-Badge/
 ```
 
-This clones the badge source code from git and saves it out to `~/dev/DC28PartyBadge`.
+This clones the badge source code from git and saves it out to `~/dev/BM-Badge`.
 
 ### Install VSCode, if you don't already have it
 We're going to be using VSCode and GCC to do our development. There are other options out there like VIM or nice tools like CLion, but sticking with an open source stack means no pesky license fees and more flexibility.
@@ -76,7 +76,7 @@ sudo snap install --classic code
 
 ### Compiling and running the Desktop Build:
 
-- From within VSCode, select (`File` -> `Open Folder...`) and select the `~/dev/DC28PartyBadge` folder.
+- From within VSCode, select (`File` -> `Open Folder...`) and select the `~/dev/BM-Badge` folder.
 - Open a terminal (`Terminal` -> `New Terminal`) or use `Ctrl+backtick`
 - From within the terminal that appears, run the following (replace `8` with the number of cores your machine has, or the number of cores you have allocated to your VM):
 ```shell script
@@ -85,12 +85,12 @@ compiledb make cleanall
 compiledb make DESKTOP=1 -j8
 ```
 
-You should now have everything compiled in the `~/dev/DC28PartyBadge/Software/output` folder. Since we compiled the desktop build above, let's test running it.
+You should now have everything compiled in the `~/dev/BM-Badge/Software/output` folder. Since we compiled the desktop build above, let's test running it.
 
 From within the VSCode Terminal:
 ```shell script
-cd ~/dev/DC28PartyBadge/Software/output
-./dc28_badge.out
+cd ~/dev/BM-Badge/Software/output
+./bm_badge.out
 ```
 
 You should now have the badge running on your desktop computer screen!
@@ -128,8 +128,8 @@ You can now run `tiled` in the command line to start Tiled.
 
 ### Hardware required
 
-- J-Link Segger - $70 edu version works fine:  [Segger](https://www.segger.com/j-link-edu.html), [Adafruit](https://www.adafruit.com/product/1369)
-- Adapter for badge JTAG - ~$8 [Adafruit - cable](https://www.adafruit.com/product/1675) and [adapter](https://www.adafruit.com/product/2094)
+- J-Link Segger - $20 edu version works fine:  [Segger](https://www.segger.com/j-link-edu.html), [Adafruit](https://www.adafruit.com/product/3571)
+- Header - $1.40: [Mouser](https://www.mouser.com/ProductDetail/Wurth-Elektronik/62201021121/?qs=PhR8RmCirEZWrjKrFMt0Bg%3D%3D)
 - A badge!
 
 If you have the bootloader pre-installed, we also support upload of new images via USB, which means that unless you want to change out the badge code you won't need a JTAG programmer. JTAG is useful for debugging, however, and future badges will continue to make use of it, so we recommend that you pick one up.
@@ -142,19 +142,9 @@ If the link in the wget below doesn't work, you can grab the latest from [ARM's 
 If you're using a distro other than ubuntu, you'll need to figure out how to install the equivalent paths below.
 
 ```shell script
-cd ~/dev/
-wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-tar -xvf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-sudo mv gcc-arm-none-eabi-9-2020-q2-update /usr/share/
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gcc /usr/bin/arm-none-eabi-gcc
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-g++ /usr/bin/arm-none-eabi-g++
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-gdb /usr/bin/arm-none-eabi-gdb
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-size /usr/bin/arm-none-eabi-size
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-ar /usr/bin/arm-none-eabi-ar
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-objcopy /usr/bin/arm-none-eabi-objcopy
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-objdump /usr/bin/arm-none-eabi-objdump
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-nm /usr/bin/arm-none-eabi-nm
-sudo ln -s /usr/share/gcc-arm-none-eabi-9-2020-q2-update/bin/arm-none-eabi-strip /usr/bin/arm-none-eabi-strip
+sudo tar xjf gcc-arm-none-eabi-<version>.bz2 -C /usr/share/
+sudo ln -s /usr/share/gcc-arm-none-eabi-<version>/bin/arm-none-eabi-* /usr/bin
+
 ```
 
 Make sure it works:
@@ -164,16 +154,7 @@ arm-none-eabi-gcc --version
 ```
 You should see:
 ```shell script
-arm-none-eabi-gcc (GNU Arm Embedded Toolchain 9-2020-q2-update) 9.3.1 20200408 (release)
-```
-
-Next, run:
-```shell script
-arm-none-eabi-gdb --version
-```
-You should see:
-```shell script
-GNU gdb (GNU Arm Embedded Toolchain 9-2020-q2-update) 8.3.1.20191211-git
+arm-none-eabi-gcc (GNU Arm Embedded Toolchain 10-2020-q4-major) 10.2.1 20201103 (release)
 ```
 
 If you see the above, you've got it right.
@@ -198,7 +179,7 @@ Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefike.posix`
 It should read:
 ```shell script
 GNU_INSTALL_ROOT ?= /usr/bin
-GNU_VERSION ?= 9.3.1
+GNU_VERSION ?= <arm gcc version from above>
 GNU_PREFIX ?= arm-none-eabi
 ```
 
@@ -246,15 +227,13 @@ If you see that, your toolchain is working, and you can generate binaries with t
 
 ### Install NRF Command Line Tools
 
-If the link in the wget below doesn't work, head to [J-Link](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) and download the latest nRF Command Line Tools for Linux. To do that, click the Downloads tab, switch the platform to Linux64, and download the tar.gz file provided. The one that's currently available is named `nRF-Command-Line-Tools_10_10_0_Linux-amd64.tar.gz`. Move it to your installer directory.
+If the link in the wget below doesn't work, head to [J-Link](https://www.nordicsemi.com/Software-and-tools/Development-Tools/nRF-Command-Line-Tools/Download#infotabs) and download the latest nRF Command Line Tools for Linux. To do that, click the Downloads tab, switch the platform to Linux64, and download the tar.gz file provided. The one that's currently available is named `nRF-Command-Line-Tools_10_12_1_Linux-amd64.tar.gz`. Move it to your installer directory.
 
 ```shell script
 cd ~/dev/installer
-wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-10-0-v2/nRFCommandLineTools10100Linuxamd64tar.gz
-mv nRFCommandLineTools10100Linuxamd64tar.gz nRFCommandLineTools10100Linuxamd64.tar.gz
-tar -xvf nRFCommandLineTools10100Linuxamd64.tar.gz
-sudo dpkg -i JLink_Linux_V684a_x86_64.deb
-sudo dpkg -i nRF-Command-Line-Tools_10_10_0_Linux-amd64.deb
+wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-1/nRFCommandLineTools10121Linuxamd64tar.gz
+tar -xvf nRFCommandLineTools10121Linuxamd64.tar.gz
+sudo dpkg -i *.deb
 ```
 
 Let's verify that it installed correctly:
@@ -263,7 +242,7 @@ Let's verify that it installed correctly:
 JLinkExe version
 ```
 
-You should see:
+You should see, depending on version:
 ```shell script
 SEGGER J-Link Commander V6.84a (Compiled Sep	7 2020 18:28:09)
 DLL version V6.84a, compiled Sep	7 2020 18:27:57
@@ -276,9 +255,9 @@ Next, run:
 nrfjprog --version
 ```
 
-You should see:
+You should see, depending on version:
 ```shell script
-nrfjprog version: 10.10.0
+nrfjprog version: 10.12.1
 JLinkARM.dll version: 6.84a
 ```
 
@@ -293,7 +272,7 @@ ext install marus25.cortex-debug
 ext install ms-vscode.cpptools
 ```
 
-Now let's open our badge code in VSCode. `File` -> `Open Folder` -> `Navigate to ~/dev` -> `Highlight DC28PartyBadge` -> `Ok`
+Now let's open our badge code in VSCode. `File` -> `Open Folder` -> `Navigate to ~/dev` -> `Highlight BM-Badge` -> `Ok`
 
 At this point, you should be able to build, clean, flash, and even debug with the Segger. Hurray!
 
@@ -312,7 +291,7 @@ compiledb make cleanall
 compiledb make EMBEDDED=1 -j8
 ```
 
-You should now have everything compiled in the `~/dev/DC28PartyBadge/Software/output` folder.
+You should now have everything compiled in the `~/dev/BM-Badge/Software/output` folder.
 
 Let's flash it. Make sure you connect your badge to the J-Link Programmer and power on your badge.
 

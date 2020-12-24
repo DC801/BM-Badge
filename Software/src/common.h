@@ -70,6 +70,7 @@ extern "C" {
 	#include "nrf_spim.h"
 	#include "nrf_drv_spi.h"
 	#include "nrf_drv_twi.h"
+	#include "nrf_drv_qspi.h"
 	#include "ff.h"
 	#include "nrf_block_dev_sdc.h"
 	#include "nrf_block_dev.h"
