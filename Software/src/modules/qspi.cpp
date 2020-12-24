@@ -147,6 +147,7 @@ bool QSPI::chipErase(){
 	}
 
 	if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
+		ready = false;
 		return true;
 	}
 
@@ -165,10 +166,10 @@ bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
+	while(!ready){
+		// Wait for any current actions to complete
+	}
 	if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
-		while(!ready){
-			// Wait for write to complete
-		}
 		ready = false;
 		return true;
 	}
@@ -187,10 +188,10 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
+	while(!ready){
+		// Wait for any current actions to complete
+	}
 	if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
-		while(!ready){
-			// Wait for read to complete
-		}
 		ready = false;
 		return true;
 	}
