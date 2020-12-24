@@ -584,6 +584,18 @@
                  "width":32,
                  "x":224,
                  "y":480
+                }, 
+                {
+                 "gid":1073742900,
+                 "height":40,
+                 "id":58,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":70,
+                 "y":416
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -995,7 +1007,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":58,
+ "nextobjectid":59,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1111,6 +1123,10 @@
         {
          "firstgid":1048,
          "source":"..\/entities\/entity-trekkie.json"
+        }, 
+        {
+         "firstgid":1069,
+         "source":"..\/entities\/entity-bob.json"
         }],
  "tilewidth":32,
  "type":"map",

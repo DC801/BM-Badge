@@ -22,6 +22,9 @@ Vue.component(
 		data: function () {
 			return {
 				currentEntityTypeId: '',
+				newEntityTypeId: '',
+				currentAnimationName: '',
+				currentAnimationDirection: -1,
 			}
 		},
 		computed: {
@@ -35,11 +38,88 @@ Vue.component(
 				return this.entityTypes[this.currentEntityTypeId];
 			},
 			tileset: function () {
-				return this.fileNameMap[this.currentEntityType.tileset].parsed;
+				var tilesetFile = this.fileNameMap[this.currentEntityType.tileset];
+				return tilesetFile
+					? tilesetFile.parsed
+					: undefined;
+			},
+			allTilesets: function () {
+				return this.scenarioData.parsed.tilesets.slice().sort()
 			},
 			tilesetImage: function () {
 				return this.tileset.imageFile.blobUrl;
 			},
+			currentDirection: function () {
+				var currentAnimation = this.currentEntityType.animations[this.currentAnimationName];
+				return (
+					currentAnimation
+					&& (this.currentAnimationDirection !== -1)
+				)
+					? currentAnimation[this.currentAnimationDirection]
+					: undefined;
+			},
+			currentTileId: function () {
+				return this.currentDirection
+					? this.currentDirection.tileid
+					: undefined;
+			},
+		},
+		methods: {
+			addEntityType: function () {
+				var name = this.newEntityTypeId
+					.trim()
+					.toLocaleLowerCase()
+					.replace(/[^a-z0-9]/gm, '_');
+				Vue.set(
+					this.scenarioData.entityTypes,
+					name,
+					{
+						type: name,
+						tileset: '',
+						animations: {
+							idle: [
+								{
+									"tileid": 0,
+									"flip_x": false
+								},
+								{
+									"tileid": 0,
+									"flip_x": false
+								},
+								{
+									"tileid": 0,
+									"flip_x": false
+								},
+								{
+									"tileid": 0,
+									"flip_x": false
+								}
+							]
+						}
+					},
+				);
+				this.currentEntityTypeId = name;
+			},
+			clickDirection: function (animationName, directionIndex) {
+				this.currentAnimationName = animationName;
+				this.currentAnimationDirection = directionIndex;
+			},
+			clickTile: function (tileid) {
+				if(this.currentDirection) {
+					this.currentDirection.tileid = tileid;
+				}
+			},
+			flip: function (animationName, directionIndex, propertyName) {
+				this.currentAnimationName = animationName;
+				this.currentAnimationDirection = directionIndex;
+				if(this.currentDirection) {
+					Vue.set(
+						this.currentDirection,
+						propertyName,
+						!this.currentDirection[propertyName]
+					);
+				}
+			}
 		}
 	}
 );
