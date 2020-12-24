@@ -7,7 +7,7 @@
          "target":"."
         }
     },
- "image":"DC28PartyBadge\/SD_Card\/MAGE\/scenario_source_files\/entities\/entity-bob.png",
+ "image":"entity-bob.png",
  "imageheight":240,
  "imagewidth":120,
  "margin":0,
