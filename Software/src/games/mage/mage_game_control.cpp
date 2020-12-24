@@ -53,6 +53,9 @@ MageGameControl::MageGameControl()
 	stringHeader = MageHeader(offset);
 	offset += stringHeader.size();
 
+	saveFlagHeader = MageHeader(offset);
+	offset += saveFlagHeader.size();
+
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
 
@@ -112,6 +115,7 @@ uint32_t MageGameControl::Size() const
 		geometryHeader.size() +
 		scriptHeader.size() +
 		stringHeader.size() +
+		saveFlagHeader.size() +
 		imageHeader.size() +
 		map.Size() +
 		sizeof(playerEntityIndex) +
@@ -387,12 +391,24 @@ void MageGameControl::LoadMap(uint16_t index)
 {
 	//get the data for the map:
 	PopulateMapData(index);
-	initializeScriptsOnMapLoad();
 
+	initializeScriptsOnMapLoad();
+	
+	//close hex editor if open:
+	if(MageHex->getHexEditorState()) {
+		MageHex->toggleHexEditor();
+	}
+	
+	//close any open dialogs and return player control as well:
+	MageDialog->closeDialog();
+	playerHasControl = true;
 }
 
 void MageGameControl::applyUniversalInputs()
 {
+	//make map reload global regardless of player control state:
+	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3)
+	{ MageScript->mapLoadId = currentMapId; }
 	//check to see if player input is allowed:
 	if(!playerHasControl)
 	{
@@ -423,22 +439,25 @@ void MageGameControl::applyGameModeInputs()
 	if(MageDialog->isOpen) {
 		if(
 			EngineInput_Activated.rjoy_down
-			||EngineInput_Activated.rjoy_left
-			||EngineInput_Activated.rjoy_right
+			|| EngineInput_Activated.rjoy_left
+			|| EngineInput_Activated.rjoy_right
+			|| (MageScript->mapLoadId != MAGE_NO_MAP)
 		) {
 			MageDialog->advanceMessage();
 		}
 	}
-	//check to see if player input is allowed:
+	//get useful variables for below:
 	updateEntityRenderableData(playerEntityIndex);
 	MageEntity *playerEntity = &entities[playerEntityIndex];
 	MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
+	//update camera even if player does not have control:
 	if(!playerHasControl)
 	{
 		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
 		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 		return;
 	}
+	//otherwise do all the normal things:
 	if(playerEntityIndex != NO_PLAYER)
 	{
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
@@ -462,12 +481,6 @@ void MageGameControl::applyGameModeInputs()
 		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
 		{
 			playerIsActioning = true;
-		}
-		//check to see if both pads are being pressed at once, triggering map reload:
-		else if(EngineInput_Buttons.ljoy_center && EngineInput_Buttons.rjoy_center)
-		{
-			//reset the map:
-			LoadMap(currentMapId);
 		}
 		//if not actioning or resetting, handle all remaining inputs:
 		else
@@ -1151,7 +1164,10 @@ MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
 	return &tilesets[tilesetId % tilesetHeader.count()];
 }
 
-std::string MageGameControl::getString(uint16_t stringId) {
+std::string MageGameControl::getString(
+	uint16_t stringId,
+	int16_t currentEntityId
+) {
 	uint16_t sanitizedIndex = stringId % stringHeader.count();
 	uint32_t start = stringHeader.offset(sanitizedIndex);
 	uint32_t length = stringHeader.length(sanitizedIndex);
@@ -1161,7 +1177,46 @@ std::string MageGameControl::getString(uint16_t stringId) {
 	{
 		ENGINE_PANIC("Failed to load string data.");
 	}
-	return romString;
+	std::string outputString(0, '\0');
+	volatile size_t cursor = 0;
+	volatile size_t variableStartPosition = 0;
+	volatile size_t variableEndPosition = 0;
+	volatile size_t replaceCount = 0;
+	while ((variableStartPosition = romString.find("%%", variableStartPosition)) != std::string::npos) {
+		outputString.append(romString.substr(
+			cursor,
+			(variableStartPosition - cursor)
+		));
+		variableEndPosition = romString.find("%%", variableStartPosition + 1) + 1;
+		std::string variableHolder = romString.substr(
+			variableStartPosition + 2,
+			variableStartPosition - (variableEndPosition - 2)
+		);
+		int parsedEntityIndex = std::stoi(variableHolder);
+		int16_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+			parsedEntityIndex,
+			currentEntityId
+		);
+		if(entityIndex != NO_PLAYER) {
+			std::string entityName = getEntityNameStringById(entityIndex);
+			outputString.append(entityName.c_str());
+		} else {
+			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
+			sprintf(
+				"MISSING: %d",
+				missingError,
+				parsedEntityIndex
+			);
+			outputString.append(missingError);
+		}
+		variableStartPosition = variableEndPosition + 1;
+		cursor = variableStartPosition;
+		replaceCount++;
+	}
+	if (replaceCount) {
+		outputString.append(romString.substr(cursor, romString.length() - 1));
+	}
+	return replaceCount ? outputString : romString;
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
@@ -1170,4 +1225,11 @@ uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
 	return dialogHeader.offset(dialogId % dialogHeader.count());
+}
+
+std::string MageGameControl::getEntityNameStringById(int16_t entityId) {
+	MageEntity *entity = getValidEntity(entityId);
+	std::string entityName(MAGE_ENTITY_NAME_LENGTH + 1, '\0');
+	entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
+	return entityName;
 }

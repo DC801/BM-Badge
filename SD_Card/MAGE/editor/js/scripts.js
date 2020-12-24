@@ -22,6 +22,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_X',
 			map,
@@ -36,6 +37,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_Y',
 			map,
@@ -50,6 +52,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_script', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_INTERACT_SCRIPT',
 			map,
@@ -64,6 +67,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_script', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_TICK_SCRIPT',
 			map,
@@ -78,6 +82,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_PRIMARY_ID',
 			map,
@@ -92,6 +97,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_SECONDARY_ID',
 			map,
@@ -106,6 +112,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_PRIMARY_ID_TYPE',
 			map,
@@ -120,6 +127,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_CURRENT_ANIMATION',
 			map,
@@ -134,6 +142,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_CURRENT_FRAME',
 			map,
@@ -148,6 +157,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'direction', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_DIRECTION',
 			map,
@@ -162,6 +172,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_A',
 			map,
@@ -176,6 +187,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_B',
 			map,
@@ -190,6 +202,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_C',
 			map,
@@ -204,6 +217,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'entity', size: 1},
 				{propertyName: 'expected_byte', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_D',
 			map,
@@ -218,6 +232,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_A_U2',
 			map,
@@ -232,6 +247,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_HACKABLE_STATE_C_U2',
 			map,
@@ -260,6 +276,7 @@ var actionHandlerMap = {
 				{propertyName: 'success_script', size: 2},
 				{propertyName: 'expected_u2', size: 2},
 				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_ENTITY_PATH',
 			map,
@@ -272,7 +289,7 @@ var actionHandlerMap = {
 			action,
 			[
 				{propertyName: 'success_script', size: 2},
-				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'save_flag', size: 2},
 				{propertyName: 'expected_bool', size: 1},
 			],
 			'CHECK_SAVE_FLAG',
@@ -636,7 +653,7 @@ var actionHandlerMap = {
 		return handleActionWithFields(
 			action,
 			[
-				{propertyName: 'byte_offset', size: 1},
+				{propertyName: 'save_flag', size: 2},
 				{propertyName: 'bool_value', size: 1},
 			],
 			'SET_SAVE_FLAG',
@@ -1059,7 +1076,7 @@ var getObjectByNameOnMap = function(name, map, actionName) {
 		});
 	}
 	if (!object) {
-		throw new Error(`${actionName} No object named "${name}" could be found on map: "${map.name}"!`);
+		throw new Error(`"${actionName}" No object named "${name}" could be found on map: "${map.name}"!`);
 	}
 	return object;
 };
@@ -1227,6 +1244,27 @@ var getStringIdFromAction = function (
 	}
 	return serializeString(
 		value,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getSaveFlagIdFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+	}
+	return serializeSaveFlag(
+		value,
+		map,
 		fileNameMap,
 		scenarioData,
 	);
@@ -1283,9 +1321,9 @@ var getMapLocalScriptIdFromAction = function (
 var initActionData = function (action) {
 	var buffer = new ArrayBuffer(8);
 	var dataView = new DataView(buffer);
-	var actionIndex = actionNames.indexOf(action.name);
+	var actionIndex = actionNames.indexOf(action.action);
 	if (actionIndex === -1) {
-		throw new Error(`Invalid Action: ${action.name}`);
+		throw new Error(`Invalid Action: ${action.action}`);
 	}
 	dataView.setUint8(
 		0, // action index
@@ -1307,6 +1345,7 @@ var actionPropertyNameToHandlerMap = {
 	success_script: getMapLocalScriptIdFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
 	string: getStringIdFromAction,
+	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
 	color: getTwoBytesFromAction,
@@ -1375,13 +1414,13 @@ var serializeAction = function (
 	fileNameMap,
 	scenarioData,
 ) {
-	var actionIndex = actionNames.indexOf(action.name);
+	var actionIndex = actionNames.indexOf(action.action);
 	if (actionIndex === -1) {
-		throw new Error(`Action: "${action.name}" is not valid! Check the "actionHandlerMap" for valid options!`);
+		throw new Error(`Action: "${action.action}" is not valid! Check the "actionHandlerMap" for valid options!`);
 	}
-	var handler = actionHandlerMap[action.name];
+	var handler = actionHandlerMap[action.action];
 	if (!handler) {
-		throw new Error(`Action: "${action.name}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
+		throw new Error(`Action: "${action.action}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
 	}
 	return handler(
 		action,
@@ -1511,6 +1550,7 @@ var handleMapEntityScripts = function (
 		var entity = scenarioData.parsed.entities[globalEntityIndex];
 		possibleEntityScripts.forEach(function (propertyName) {
 			var scriptName = entity[propertyName];
+			map.currentEntityMapIndex = entity.mapIndex;
 			if (scriptName) {
 				var mapLocalScriptId = handleScript(
 					scriptName,
@@ -1525,6 +1565,7 @@ var handleMapEntityScripts = function (
 				);
 			}
 		});
+		map.currentEntityMapIndex = undefined;
 	});
 };
 

@@ -33,20 +33,16 @@ enum MageDialogScreenAlignment : uint8_t {
 	TOP_RIGHT = 3,
 	ALIGNMENT_COUNT
 };
-enum MageDialogStringType : uint8_t {
-	ROM_STRING = 0,
-	ENTITY_LOOKUP = 1,
-};
 
 
 typedef struct {
 	// TODO: portraits, after we have some graphics for them
-	uint16_t nameIndex;
+	uint16_t nameStringIndex;
 	uint16_t borderTilesetIndex;
-	MageDialogStringType nameType;
 	MageDialogScreenAlignment alignment;
 	uint8_t fontIndex;
 	uint8_t messageCount;
+	uint8_t padding;
 } MageDialogScreen;
 
 typedef struct {
@@ -58,6 +54,7 @@ class MageDialogControl {
 	private:
 		// char dialogName[32];
 		MageTileset *currentFrameTileset;
+		int16_t triggeringEntityId;
 		int32_t currentDialogIndex;
 		uint32_t currentDialogAddress;
 		uint32_t currentDialogScreenCount;
@@ -66,6 +63,8 @@ class MageDialogControl {
 		uint32_t currentImageAddress;
 		MageDialogScreen currentScreen;
 		std::unique_ptr<uint16_t[]>messageIds;
+		std::string currentEntityName;
+		std::string currentMessage;
 		uint8_t getTileIdFromXY(
 			uint8_t x,
 			uint8_t y,
@@ -80,9 +79,13 @@ class MageDialogControl {
 		bool isOpen;
 		MageDialogControl();
 		uint32_t size();
-		void load(uint16_t dialogId);
+		void load(
+			uint16_t dialogId,
+			int16_t currentEntityId
+		);
 		void loadNextScreen();
 		void advanceMessage();
+		void closeDialog();
 		void draw();
 
 };

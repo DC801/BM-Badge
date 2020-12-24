@@ -52,7 +52,8 @@
 - [x] Decide on a common script function signature
 - [x] Define an encoding format for scripts
 - [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
-- [ ] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
+- [x] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
+- [x] Change map reset keybind to be XOR+MEM3 and make it work even in dialogs and the hex editor
 - [ ] Script system
 	- [x] Binary Encoder parts
 	- [x] Scripts
@@ -68,23 +69,22 @@
 			- [x] onEntityInteract(uint16_t scriptId); //called when the player interacts with the entity
 	- [ ] Actions (see mage_defines.h for structs detailing arguments for each action type below:)
 		- [x] NULL_ACTION
-		- [ ] CHECK_ENTITY_NAME
-		- [ ] CHECK_ENTITY_X
-		- [ ] CHECK_ENTITY_Y
-		- [ ] CHECK_ENTITY_INTERACT_SCRIPT
-		- [ ] CHECK_ENTITY_TICK_SCRIPT
-		- [ ] CHECK_ENTITY_PRIMARY_ID
-		- [ ] CHECK_ENTITY_SECONDARY_ID
-		- [ ] CHECK_ENTITY_PRIMARY_ID_TYPE
-		- [ ] CHECK_ENTITY_CURRENT_ANIMATION
-		- [ ] CHECK_ENTITY_CURRENT_FRAME
+		- [x] CHECK_ENTITY_NAME
+		- [x] CHECK_ENTITY_X
+		- [x] CHECK_ENTITY_Y
+		- [x] CHECK_ENTITY_INTERACT_SCRIPT
+		- [x] CHECK_ENTITY_TICK_SCRIPT
+		- [x] CHECK_ENTITY_PRIMARY_ID
+		- [x] CHECK_ENTITY_SECONDARY_ID
+		- [x] CHECK_ENTITY_PRIMARY_ID_TYPE
+		- [x] CHECK_ENTITY_CURRENT_ANIMATION
+		- [x] CHECK_ENTITY_CURRENT_FRAME
 		- [ ] CHECK_ENTITY_DIRECTION
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_B
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_C
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_D
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U2
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_B_U2
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_C_U2
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U4
 		- [ ] CHECK_ENTITY_PATH (specific hackable state check by name)
@@ -96,23 +96,22 @@
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
 		- [ ] SET_PAUSE_STATE
-		- [ ] SET_ENTITY_NAME
-		- [ ] SET_ENTITY_X
-		- [ ] SET_ENTITY_Y
-		- [ ] SET_ENTITY_INTERACT_SCRIPT
-		- [ ] SET_ENTITY_TICK_SCRIPT
-		- [ ] SET_ENTITY_PRIMARY_ID
-		- [ ] SET_ENTITY_SECONDARY_ID
-		- [ ] SET_ENTITY_PRIMARY_ID_TYPE
-		- [ ] SET_ENTITY_CURRENT_ANIMATION
-		- [ ] SET_ENTITY_CURRENT_FRAME
+		- [x] SET_ENTITY_NAME
+		- [x] SET_ENTITY_X
+		- [x] SET_ENTITY_Y
+		- [x] SET_ENTITY_INTERACT_SCRIPT
+		- [x] SET_ENTITY_TICK_SCRIPT
+		- [x] SET_ENTITY_PRIMARY_ID
+		- [x] SET_ENTITY_SECONDARY_ID
+		- [x] SET_ENTITY_PRIMARY_ID_TYPE
+		- [x] SET_ENTITY_CURRENT_ANIMATION
+		- [x] SET_ENTITY_CURRENT_FRAME
 		- [ ] SET_ENTITY_DIRECTION
 		- [ ] SET_ENTITY_HACKABLE_STATE_A
 		- [ ] SET_ENTITY_HACKABLE_STATE_B
 		- [ ] SET_ENTITY_HACKABLE_STATE_C
 		- [ ] SET_ENTITY_HACKABLE_STATE_D
 		- [ ] SET_ENTITY_HACKABLE_STATE_A_U2
-		- [ ] SET_ENTITY_HACKABLE_STATE_B_U2
 		- [ ] SET_ENTITY_HACKABLE_STATE_C_U2
 		- [ ] SET_ENTITY_HACKABLE_STATE_A_U4
 		- [ ] SET_ENTITY_PATH (specific hackable state check by name)
@@ -176,6 +175,7 @@
 				- [ ] enter a numerical code
 				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 			- [ ] new script and/or dialog to call depending on player response
+		- [ ] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long
@@ -194,6 +194,7 @@
 	- [ ] entity hex cells
 	- [ ] sound id lookup for scripts and dialogs
 - [ ] Music/SFX encoding in the binary asset encoder
+- [ ] Consider adding lookup encoding for setting primary ID, secondary ID, and primary ID type. The numbers seem to be unreliable when you change things in a map (i.e. a mage entity primary id is 3, then after changing something unrelated and re-encoding it jumped to 13), so being able to do a lookup to make sure an entity gets their type set to a specific thing would be useful.
 
 ## Hardware TODO:
 

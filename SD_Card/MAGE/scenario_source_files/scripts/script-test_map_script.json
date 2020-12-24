@@ -1,31 +1,37 @@
 {
 	"show_dialog-wisdom": [
 		{
-			"name": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-wisdom"
 		}
 	],
 	"show_dialog-strong_bad": [
 		{
-			"name": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-strong_bad"
 		}
 	],
 	"show_dialog-bender": [
 		{
-			"name": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bender"
 		}
 	],
 	"show_dialog-trekkie": [
 		{
-			"name": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-trekkie"
+		}
+	],
+	"show_dialog-pipscat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-pipscat"
 		}
 	],
 	"check_if_player_is_at_log": [
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "log_ellipse",
 			"success_script": "walk_self_to_path_and_loop",
@@ -34,14 +40,14 @@
 	],
 	"check_if_player_is_named_bob": [
 		{
-			"name": "CHECK_ENTITY_NAME",
+			"action": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "Bob",
 			"expected_bool": true,
 			"success_script": "spin_self_clockwise"
 		},
 		{
-			"name": "CHECK_ENTITY_NAME",
+			"action": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "baby_",
 			"expected_bool": true,
@@ -50,7 +56,7 @@
 	],
 	"check_if_player_is_named_pat": [
 		{
-			"name": "CHECK_ENTITY_NAME",
+			"action": "CHECK_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "Pat",
 			"expected_bool": true,
@@ -59,13 +65,13 @@
 	],
 	"walk_self_to_path_and_loop": [
 		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
+			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
 			"duration": 5000
 		},
 		{
-			"name": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
 			"duration": 10000
@@ -73,20 +79,76 @@
 	],
 	"walk_self_to_path_and_walk": [
 		{
-			"name": "WALK_ENTITY_TO_GEOMETRY",
+			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
 			"duration": 5000
 		},
 		{
-			"name": "WALK_ENTITY_ALONG_GEOMETRY",
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%",
 			"duration": 10000
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "null_script"
+		}
+	],
+	"check_save_flag-bobs_not_on_fire": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"expected_bool": true,
+			"success_script": "show_dialog-thanks_for_setting_bob_on_fire"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-please_set_bob_on_fire"
+		}
+	],
+	"show_dialog-thanks_for_setting_bob_on_fire": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-thanks_for_setting_bob_on_fire"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "check_save_flag-bobs_not_on_fire"
+		}
+	],
+	"set_save_flag-bobs_not_on_fire": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"expected_bool": true,
+			"success_script": "set_save_flag-bobs_on_fire"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bob_has_been_set_on_fire"
+		}
+	],
+	"set_save_flag-bobs_on_fire": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "No two Bobs are not on fire",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bob_has_been_set_off_fire"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "set_save_flag-bobs_not_on_fire"
 		}
 	]
 }
