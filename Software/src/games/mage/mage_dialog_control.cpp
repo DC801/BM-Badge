@@ -63,6 +63,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 MageDialogControl::MageDialogControl() {
 	isOpen = false;
+	triggeringEntityId = 0;
 	currentDialogIndex = 0;
 	currentDialogAddress = 0;
 	currentDialogScreenCount = 0;
@@ -87,7 +88,11 @@ uint32_t MageDialogControl::size() {
 	);
 }
 
-void MageDialogControl::load(uint16_t dialogId) {
+void MageDialogControl::load(
+	uint16_t dialogId,
+	int16_t currentEntityId
+) {
+	triggeringEntityId = currentEntityId;
 	currentDialogIndex = dialogId;
 	currentScreenIndex = 0;
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
@@ -124,9 +129,10 @@ void MageDialogControl::loadNextScreen() {
 	{
 		ENGINE_PANIC("Failed to load dialog data.");
 	}
-	currentScreen.nameIndex = convert_endian_u2_value(currentScreen.nameIndex);
+	currentScreen.nameStringIndex = convert_endian_u2_value(currentScreen.nameStringIndex);
 	currentScreen.borderTilesetIndex = convert_endian_u2_value(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
+	currentEntityName = MageGame->getString(currentScreen.nameStringIndex, triggeringEntityId);
 
 	uint8_t sizeOfMessageIndex = sizeof(uint16_t);
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
@@ -143,6 +149,10 @@ void MageDialogControl::loadNextScreen() {
 	convert_endian_u2_buffer(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
 	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
+	currentMessage = MageGame->getString(
+		messageIds[currentMessageIndex],
+		triggeringEntityId
+	);
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageAddress = MageGame->getImageAddress(
@@ -155,14 +165,19 @@ void MageDialogControl::advanceMessage() {
 	currentMessageIndex++;
 	if (currentMessageIndex >= currentScreen.messageCount) {
 		loadNextScreen();
+	} else {
+		currentMessage = MageGame->getString(
+			messageIds[currentMessageIndex],
+			triggeringEntityId
+		);
 	}
 }
 
+void MageDialogControl::closeDialog() {
+	isOpen = false;
+}
+
 void MageDialogControl::draw() {
-	std::string currentEntityName = MageGame->getString(currentScreen.nameIndex);
-	std::string currentMessage = MageGame->getString(
-		messageIds[currentMessageIndex]
-	);
 	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
 	drawDialogBox(currentMessage, coords.text);
 	drawDialogBox(currentEntityName, coords.label);

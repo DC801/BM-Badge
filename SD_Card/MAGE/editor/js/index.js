@@ -8,6 +8,7 @@ var dataTypes = [
 	'scripts',
 	'dialogs',
 	'strings',
+	'save_flags',
 	'images',
 ];
 
@@ -22,7 +23,10 @@ var handleScenarioData = function(fileNameMap) {
 		})
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
-		scenarioData.uniqueStringMap = {};
+		scenarioData.uniqueStringLikeMaps = {
+			strings: {},
+			save_flags: {},
+		};
 		scenarioData.uniqueDialogMap = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
@@ -156,7 +160,6 @@ window.vueApp = new window.Vue({
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
 		error: null,
-		jsonValue: '',
 		downloadData: null
 	},
 	created: function () {
@@ -166,6 +169,10 @@ window.vueApp = new window.Vue({
 		closeError: function () {
 			this.uniqueEncodeAttempt = Math.random();
 			this.error = false;
+		},
+		closeSuccess: function () {
+			this.uniqueEncodeAttempt = Math.random();
+			this.downloadData = null;
 		},
 		prepareDownload: function (data, name) {
 			var blob = new Blob(data, {type: 'octet/stream'});

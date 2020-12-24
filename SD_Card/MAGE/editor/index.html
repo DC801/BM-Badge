@@ -54,7 +54,7 @@
 							</div>
 							<div
 								v-if="error"
-								class="alert alert-dismissible alert-danger"
+								class="alert alert-danger"
 							>
 								<button
 									type="button"
@@ -68,17 +68,30 @@
 								>{{error}}</pre>
 								<p>Change a few things up and try dragging your <strong>scenario_source_files</strong> folder in again.</p>
 							</div>
-							<div>
-								<a
-									v-if="downloadData"
-									v-bind="downloadData"
-									class="
-										btn
-										btn-lg
-										btn-success
-										btn-block
-									"
-								>Download <code>game.dat</code></a>
+							<div
+								v-if="downloadData"
+								class="alert alert-secondary"
+							>
+								<button
+									type="button"
+									class="close"
+									data-dismiss="alert"
+									@click="closeSuccess"
+								>×</button>
+								<h2>Success!</h2>
+								<p>Your scenario files were successfully build into a binary asset file that should be able to run in the game.</p>
+								<div>
+									<a
+										v-bind="downloadData"
+										class="
+											btn
+											btn-lg
+											btn-success
+											btn-block
+											w-100
+										"
+									>Download <code>game.dat</code></a>
+								</div>
 							</div>
 						</div>
 					</div>

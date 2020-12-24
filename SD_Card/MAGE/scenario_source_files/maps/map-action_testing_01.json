@@ -40,7 +40,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act01_check_entity_byte"
+                         "value":"mage01-check_entity_name"
                         }, 
                         {
                          "name":"on_tick",
@@ -63,7 +63,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act02_check_save_flag"
+                         "value":"mage02-check_entity_x"
                         }, 
                         {
                          "name":"on_tick",
@@ -86,12 +86,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act03_check_if_entity_is_in_geometry"
+                         "value":"mage03-initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage03-check_entity_scripts"
                         }],
                  "rotation":0,
                  "type":"",
@@ -109,7 +109,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act04_check_for_button_press"
+                         "value":"mage04-check_entity_primary_id"
                         }, 
                         {
                          "name":"on_tick",
@@ -132,12 +132,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act05_check_for_button_state"
+                         "value":"mage05-initial_prompt"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage05-check_player_current_animation"
                         }],
                  "rotation":0,
                  "type":"",
@@ -155,7 +155,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"act06_run_script"
+                         "value":"null_script"
                         }, 
                         {
                          "name":"on_tick",
@@ -802,7 +802,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":448,
+                 "x":736,
                  "y":64
                 }],
          "opacity":1,
@@ -922,7 +922,7 @@
          "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.4.2",
  "tileheight":32,
  "tilesets":[
         {

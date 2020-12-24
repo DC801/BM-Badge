@@ -1,61 +1,104 @@
 {
-	"dialog-act01": [
+	"dialog-mage01_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 01",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action CHECK_ENTITY_BYTE.\nPlease Set my 15th Byte to '2'\nand I should begin spinning."
+				"I test the CHECK_ENTITY_NAME and\nSET_ENTITY_NAME actions.\nSet my name to 'Mage 00'\nand then talk to me again."
 			]
 		}
 	],
-	"dialog-act02": [
+	"dialog-mage01_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 02",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action CHECK_SAVE_FLAG.\nThis system still needs to be implemented."
+				"Good work, you set my name to '%SELF%'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
 			]
 		}
 	],
-	"dialog-act03": [
+	"dialog-mage02_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 03",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action CHECK_IF_ENTITY_IS_IN_GEOMETRY.\nIf you stand in the tile labeled '03'\nI should begin spinning."
+				"I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."
 			]
 		}
 	],
-	"dialog-act04": [
+	"dialog-mage02_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 04",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action CHECK_FOR_BUTTON_PRESS.\nIf you press up on the right joystick\nI should begin spinning."
+				"Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
 			]
 		}
 	],
-	"dialog-act05": [
+	"dialog-mage03_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 05",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action CHECK_FOR_BUTTON_STATE.\nHold down MEM0 about 1 second\nafter this dialog window closes\nand I should begin spinning."
+				"I test the CHECK_ENTITY_INTERACT_SCRIPT and\nCHECK_ENTITY_TICK_SCRIPT actions. Set the\ntick or interact scripts for yourself to\nanything other than their current value.",
+				"When you talk to me again, I should know\nif you changed them and will say\nsomething new."
 			]
 		}
 	],
-	"dialog-act06": [
+	"dialog-mage03_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "mage",
-			"name": "Mage 06",
+			"name": "%SELF%",
 			"messages": [
-				"I test the action RUN_SCRIPT.\nAs soon as you close this dialog\nI should begin spinning."
+				"Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
+			]
+		}
+	],
+	"dialog-mage04_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the CHECK_ENTITY_PRIMARY_ID,\nCHECK_ENTITY_SECONDARY_ID, and\nCHECK_ENTITY_PRIMARY_ID_TYPE actions.",
+				"Set my primary ID to 12,\nmy secondary ID to 1,\n and my primary ID type to 3\nand then talk to me again."
+			]
+		}
+	],
+	"dialog-mage04_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
+			]
+		}
+	],
+	"dialog-mage05_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_CURRENT_ANIMATION\nand CHECK_ENTITY_CURRENT_FRAME.\nUse your action by pressing RJOY_LEFT,\nand I should update my message."
+			]
+		}
+	],
+	"dialog-mage05_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Good work, you used your action, and I\nwas able to verify that it happened.",
+				"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
 			]
 		}
 	]

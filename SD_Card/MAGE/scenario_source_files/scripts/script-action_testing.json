@@ -1,78 +1,260 @@
 {
-	"act01_check_entity_byte": [
+	"mage01-check_entity_name": [
 		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act01"
-		},
-		{
-			"name": "CHECK_ENTITY_HACKABLE_STATE_A",
-			"success_script": "spin_self_clockwise",
+			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
+			"action": "CHECK_ENTITY_NAME",
+			"success_script": "mage01-set_entity_name",
 			"entity": "Mage 01",
-			"byte_offset": 15,
-			"expected_byte": 2
-		}
-	],
-	"act02_check_save_flag": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act02"
+			"string": "Mage 00",
+			"expected_bool": true
 		},
 		{
-			"name": "CHECK_SAVE_FLAG",
-			"success_script": "spin_self_clockwise",
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage01_1"
+		}
+	],
+	"mage01-set_entity_name": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage01_2"
+		},
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "Mage 01",
+			"string": "Mage 01"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 01",
+			"script": "mage01-check_entity_name"
+		}
+	],
+	"mage02-check_entity_x": [
+		{
+			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
+			"action": "CHECK_ENTITY_X",
+			"success_script": "mage02-check_entity_y",
 			"entity": "Mage 02",
-			"byte_offset": 0,
+			"expected_u2": 193,
 			"expected_bool": true
-		}
-	],
-	"act03_check_if_entity_is_in_geometry": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act03"
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"geometry": "act03_test_geometry",
-			"success_script": "spin_self_clockwise",
+		"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_1"
+		}
+	],
+	"mage02-check_entity_y": [
+		{
+			"action": "CHECK_ENTITY_Y",
+			"success_script": "mage02-set_entity_xy",
+			"entity": "Mage 02",
+			"expected_u2": 97,
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_1"
+		}
+	],
+	"mage02-set_entity_xy": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage02_2"
+		},
+		{
+			"action": "SET_ENTITY_X",
+			"entity": "Mage 02",
+			"u2_value": 192
+		},
+		{
+			"action": "SET_ENTITY_Y",
+			"entity": "Mage 02",
+			"u2_value": 96
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 02",
+			"script": "mage02-check_entity_x"
+		}
+	],
+	"mage03-check_entity_scripts": [
+		{
+			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
+			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "%PLAYER%",
+			"expected_script": "null_script",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_ENTITY_TICK_SCRIPT",
+			"success_script": "mage03-success_script",
+			"entity": "%PLAYER%",
+			"expected_script": "null_script",
+			"expected_bool": false
+		}
+	],
+	"mage03-success_script": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity":"Mage 03",
+			"script": "mage03-success_prompt"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity":"%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity":"%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity":"Mage 03",
+			"script": "mage03-check_entity_scripts"
+		}
+	],
+	"mage03-initial_prompt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage03_1"
+		}
+	],
+	"mage03-success_prompt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage03_2"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mage 03",
+			"script": "mage03-initial_prompt"
+		}
+	],
+	"mage04-check_entity_primary_id": [
+		{
+			"doc": "Mage 04 tests CHECK_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) and then SET_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) after a successful check to reset itself.",
+			"action": "CHECK_ENTITY_PRIMARY_ID",
+			"success_script": "mage04-check_entity_secondary_id",
+			"entity": "Mage 04",
+			"expected_u2": 12,
 			"expected_bool": true
+		},
+		{
+		"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
 		}
 	],
-	"act04_check_for_button_press": [
+	"mage04-check_entity_secondary_id": [
 		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act04"
-		},
-		{
-			"name": "CHECK_FOR_BUTTON_PRESS",
-			"success_script": "spin_self_clockwise",
-			"button_id": 24
-		}
-	],
-	"act05_check_for_button_state": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act05"
-		},
-		{
-			"name": "NON_BLOCKING_DELAY",
-			"duration": 1000
-		},
-		{
-			"name": "CHECK_FOR_BUTTON_STATE",
-			"success_script": "spin_self_clockwise",
-			"button_id": 0,
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "mage04-check_entity_primary_id_type",
+			"entity": "Mage 04",
+			"expected_u2": 1,
 			"expected_bool": true
-		}
-	],
-	"act06_run_script": [
-		{
-			"name": "SHOW_DIALOG",
-			"dialog": "dialog-act06"
 		},
 		{
-			"name": "RUN_SCRIPT",
-			"script": "spin_self_clockwise"
+		"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	],
+	"mage04-check_entity_primary_id_type": [
+		{
+			"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+			"success_script": "mage04-success_set_ids",
+			"entity": "Mage 04",
+			"expected_byte": 3,
+			"expected_bool": true
+		},
+		{
+		"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_1"
+		}
+	],
+	"mage04-success_set_ids": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage04_2"
+		},
+		{
+			"action": "SET_ENTITY_PRIMARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 13
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "Mage 04",
+			"u2_value": 0
+		},
+		{
+			"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+			"entity": "Mage 04",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 04",
+			"script": "mage04-check_entity_primary_id"
+		}
+	],
+	"mage05-check_player_current_animation": [
+		{
+			"doc": "Mage 05 checks to see if the player animation is their action (3), and then checks to see if it reaches the last frame (5). If so, they will update their dialog.",
+			"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"expected_byte": 2,
+			"expected_bool": true,
+			"success_script": "mage05-check_player_current_frame"
+		}
+	],
+	"mage05-check_player_current_frame": [
+		{
+			"action": "CHECK_ENTITY_CURRENT_FRAME",
+			"entity": "%PLAYER%",
+			"expected_byte": 4,
+			"expected_bool": true,
+			"success_script": "mage05-set_success_dialog"
+		}
+	],
+	"mage05-set_success_dialog": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-success_prompt"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-check_player_current_animation"
+		}
+	],
+	"mage05-initial_prompt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage05_1"
+		}
+	],
+	"mage05-success_prompt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage05_2"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Mage 05",
+			"byte_value": 2
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 05",
+			"script": "mage05-initial_prompt"
 		}
 	]
 }

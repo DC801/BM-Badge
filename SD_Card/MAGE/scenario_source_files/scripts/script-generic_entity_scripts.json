@@ -2,120 +2,120 @@
 	"spin_self_clockwise": [
 		{
 			"notes": "This script should spin an entity around",
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "north"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "east"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "south"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "spin_self_counterclockwise"
 		}
 	],
 	"spin_self_counterclockwise": [
 		{
 			"notes": "This script should spin an entity around",
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "north"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "south"
 		},
 		{
-			"name": "NON_BLOCKING_DELAY",
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
-			"name": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "east"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "spin_self_clockwise"
 		}
 	],
 	"map_on_tick-doors": [
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-demo",
 			"success_script": "load_map-demo",
 			"expected_bool": true
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-test",
 			"success_script": "load_map-test",
 			"expected_bool": true
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-town",
 			"success_script": "load_map-town",
 			"expected_bool": true
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-action_testing_01",
 			"success_script": "load_map-action_testing_01",
 			"expected_bool": true
 		},
 		{
-			"name": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-action_testing_02",
 			"success_script": "load_map-action_testing_02",
@@ -124,71 +124,71 @@
 	],
 	"load_map-demo": [
 		{
-			"name": "LOAD_MAP",
+			"action": "LOAD_MAP",
 			"map": "map-demo"
 		}
 	],
 	"load_map-test": [
 		{
-			"name": "LOAD_MAP",
+			"action": "LOAD_MAP",
 			"map": "map-test"
 		}
 	],
 	"load_map-town": [
 		{
-			"name": "LOAD_MAP",
+			"action": "LOAD_MAP",
 			"map": "map-town"
 		}
 	],
 	"load_map-demo-enter_from-east": [
 		{
-			"name": "SET_WARP_STATE",
+			"action": "SET_WARP_STATE",
 			"string": "enter_from-east"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "load_map-demo"
 		}
 	],
 	"load_map-demo-enter_from-west": [
 		{
-			"name": "SET_WARP_STATE",
+			"action": "SET_WARP_STATE",
 			"string": "enter_from-west"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "load_map-demo"
 		}
 	],
 	"load_map-town-enter_from-east": [
 		{
-			"name": "SET_WARP_STATE",
+			"action": "SET_WARP_STATE",
 			"string": "enter_from-east"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "load_map-town"
 		}
 	],
 	"load_map-town-enter_from-west": [
 		{
-			"name": "SET_WARP_STATE",
+			"action": "SET_WARP_STATE",
 			"string": "enter_from-west"
 		},
 		{
-			"name": "RUN_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "load_map-town"
 		}
 	],
 	"on_load-east_west": [
 		{
-			"name": "CHECK_WARP_STATE",
+			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-east",
 			"success_script": "enter_from-east",
 			"expected_bool": true
 		},
 		{
-			"name": "CHECK_WARP_STATE",
+			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-west",
 			"success_script": "enter_from-west",
 			"expected_bool": true
@@ -196,45 +196,45 @@
 	],
 	"enter_from-east": [
 		{
-			"name": "SET_PLAYER_CONTROL",
+			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},
 		{
-			"name": "WALK_ENTITY_ALONG_GEOMETRY",
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-east",
 			"entity": "%PLAYER%",
 			"duration": 1000
 		},
 		{
-			"name": "SET_PLAYER_CONTROL",
+			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
 		}
 	],
 	"enter_from-west": [
 		{
-			"name": "SET_PLAYER_CONTROL",
+			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},
 		{
-			"name": "WALK_ENTITY_ALONG_GEOMETRY",
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-west",
 			"entity": "%PLAYER%",
 			"duration": 1000
 		},
 		{
-			"name": "SET_PLAYER_CONTROL",
+			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
 		}
 	],
 	"load_map-action_testing_01": [
 		{
-			"name": "LOAD_MAP",
+			"action": "LOAD_MAP",
 			"map": "map-action_testing_01"
 		}
 	],
 	"load_map-action_testing_02": [
 		{
-			"name": "LOAD_MAP",
+			"action": "LOAD_MAP",
 			"map": "map-action_testing_02"
 		}
 	]
