@@ -2,94 +2,29 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 
-extern FIL * raw_file;
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+extern FIL raw_file;
 
 #ifdef DC801_EMBEDDED
-
-#include "nrfx_qspi.h"
+#include "qspi.h"
+//extern QSPI qspiControl;
 
 void EngineROM_Init(void)
 {
-	nrfx_qspi_config_t qspi_config =
-	{
-		.xip_offset = 0,
-		.pins =
-		{
-			.sck_pin = MEM_SCK,
-			.csn_pin = MEM_CS,
-			.io0_pin = MEM_IO0,
-			.io1_pin = MEM_IO1,
-			.io2_pin = MEM_IO2,
-			.io3_pin = MEM_IO3,
-		},
-		.prot_if =
-		{
-			.readoc = NRF_QSPI_READOC_READ4IO,
-			.writeoc = NRF_QSPI_WRITEOC_PP4IO,
-			.addrmode = NRF_QSPI_ADDRMODE_32BIT,
-			.dpmconfig = false,
-		},
-		.phy_if =
-		{
-			.sck_freq = NRF_QSPI_FREQ_32MDIV1,
-			.sck_delay = 1,
-			.spi_mode = NRF_QSPI_MODE_0,
-			.dpmen = false,
-		},
-		.irq_priority = QSPI_CONFIG_IRQ_PRIORITY,
-	};
-
-	if (NRFX_SUCCESS != nrfx_qspi_init(&qspi_config, NULL, NULL))
-	{
-		ENGINE_PANIC("Failed to initialize QSPI");
-	}
-
-	nrf_qspi_cinstr_conf_t cinstr_conf =
-	{
-		.opcode = 0xF0,				// Software reset
-		.length = NRF_QSPI_CINSTR_LEN_1B,
-		.io2_level = true,
-		.io3_level = true,
-		.wipwait = false,
-		.wren = false
-	};
-
-	// Software reset memory chip
-	if (NRFX_SUCCESS != nrfx_qspi_cinstr_xfer(&cinstr_conf, NULL, NULL))
-	{
-		ENGINE_PANIC("Failed to Software Reset via QSPI");
-	}
-
-	// Switch to QSPI mode
-	cinstr_conf.opcode = 0x01;	// Write configuration registers
-	cinstr_conf.length = NRF_QSPI_CINSTR_LEN_3B;
-	cinstr_conf.wren = true;
-	uint8_t buffer[] =
-	{
-		0x02,		// Enable quad mode
-		0x00,
-	};
-
-	if (NRFX_SUCCESS != nrfx_qspi_cinstr_xfer(&cinstr_conf, buffer, NULL))
-	{
-		ENGINE_PANIC("Failed to enable QSPI quad mode");
-	}
+	//the QSPI object was alreayd initialized in main.cpp
+	//this just needs to check the SD card and see if the ROM
+	//should be updated:
 }
 
 void EngineROM_Deinit(void) { }
 
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
-	/* Old Dovid code deprecated until we get the ROM chip working: -Tim
 	if (data == NULL)
 	{
 		ENGINE_PANIC("EngineROM_Read: Null pointer");
 	}
 
+	/* Old Dovid code deprecated until we get the ROM chip working: -Tim
 	if (NRFX_SUCCESS != nrfx_qspi_read(data, length, address))
 	{
 		ENGINE_PANIC("Failed to QSPI read");
@@ -119,7 +54,8 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 		ENGINE_PANIC("EngineROM_Write: Null pointer");
 	}
 
-	if (NRFX_SUCCESS != nrfx_qspi_write(data, length, address))
+	//this needs to be updated to use the new qspi driver -Tim
+	if (0)
 	{
 		ENGINE_PANIC("Failed to QSPI write");
 	}
@@ -265,7 +201,3 @@ bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
 
 	return true;
 }
-
-#ifdef __cplusplus
-}
-#endif

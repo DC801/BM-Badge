@@ -12,6 +12,13 @@
 #include "main.h"
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
+#include "EnginePanic.h"
+
+#ifdef DC801_EMBEDDED
+//only init QSPI if we're in embedded mode:
+#include "qspi.h"
+QSPI qspiControl;
+#endif
 
 #include "test.h"
 
@@ -56,6 +63,13 @@ static void log_init(void){
 	APP_ERROR_CHECK(err_code);
 
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
+}
+
+/**
+ * Initialize the QSPI ROM object
+ */
+static void rom_init(void){
+	qspiControl.init();
 }
 
 //this lets me test if the framebuffer is working:
@@ -111,6 +125,16 @@ void test_keyboard(){
 	}
 }
 
+//this tests reading and writing to the ROM chip using QSPI.
+void test_rom(){
+	char test_array[8] {0};
+	if(qspiControl.read(test_array, 8, 0)){
+		ENGINE_PANIC(test_array);
+	} else {
+		ENGINE_PANIC("QSPI READ FAILED");
+	}
+}
+
 /**
  * @brief Main app
  * @return Not used
@@ -150,12 +174,16 @@ int main(void){
 	ili9341_start();
 	util_gfx_init();
 
+	//Init the SD Card
 	if(!util_sd_init()){
 		util_sd_error();
 	}
 
+	//QSPI ROM Chip
+	rom_init();
+
 	// Init the random number generator
-	//nrf_drv_rng_init(NULL);
+	nrf_drv_rng_init(NULL);
 
 	// Setup the battery monitor
 	//adc_configure();
@@ -169,10 +197,10 @@ int main(void){
 
 	//EEpwm_init();
 
-	//const char* ble_name = "TheMage801"; // must be 10char
-	//printf("advertising user: %s\n", ble_name);
-	//advertising_setUser(ble_name);
-	//ble_adv_start();
+	const char* ble_name = "TheMage801"; // must be 10char
+	printf("advertising user: %s\n", ble_name);
+	advertising_setUser(ble_name);
+	ble_adv_start();
 #endif
 
 	// Setup LEDs
@@ -197,7 +225,11 @@ int main(void){
 	//this tests button inputs by blinking LEDs. 
 	//it's blocking, so comment it out when not actively testing.
 	//Feel free to delete the function once everything is working -Tim
-	test_keyboard();
+	//test_keyboard();
+
+	//this tests reading and writing to the ROM chip using QSPI.
+	//Feel free to delete the function once everything is working -Tim
+	//test_rom();
 #endif
 
 #if defined(TEST) || defined(TEST_ALL)

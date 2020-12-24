@@ -17,15 +17,15 @@
  * Handler for the qspi interrupt
  */
 void QSPI::qspi_handler(nrf_drv_qspi_evt_t event, void * p_context){
-    ready = true;
+	ready = true;
 }
 
 /**
  * Constructor for the QSPI driver class
  */
 QSPI::QSPI(){
-    ready = false;
-    this->initialized = false;
+	ready = false;
+	this->initialized = false;
 }
 
 
@@ -39,65 +39,65 @@ QSPI::QSPI(){
  */
 bool QSPI::init(){
 
-    nrfx_err_t errCode;
-    nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG;
+	nrfx_err_t errCode;
+	nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG;
 
-    errCode = nrfx_qspi_init(&config, QSPI::qspi_handler, NULL);
-    if(errCode != NRFX_SUCCESS){
-        return false;
-    }
+	errCode = nrfx_qspi_init(&config, QSPI::qspi_handler, NULL);
+	if(errCode != NRFX_SUCCESS){
+		return false;
+	}
 
-    nrf_qspi_cinstr_conf_t cinstr_cfg = {
-        .opcode    = 0xF0,
-        .length    = NRF_QSPI_CINSTR_LEN_1B,
-        .io2_level = true,
-        .io3_level = true,
-        .wipwait   = true,
-        .wren      = true
-    };
+	nrf_qspi_cinstr_conf_t cinstr_cfg = {
+		.opcode    = 0xF0,
+		.length    = NRF_QSPI_CINSTR_LEN_1B,
+		.io2_level = true,
+		.io3_level = true,
+		.wipwait   = true,
+		.wren      = true
+	};
 
-    // Send reset to chip
-    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
-    if(errCode != NRFX_SUCCESS){
-        return false;
-    }
+	// Send reset to chip
+	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
+	if(errCode != NRFX_SUCCESS){
+		return false;
+	}
 
-    // Set chip to qspi mode
-    uint8_t conf_buf[2] = {0, 2};
-    cinstr_cfg.opcode = 0x01;
-    cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_3B;
-    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
-    if(errCode != NRFX_SUCCESS){
-        return false;
-    }
+	// Set chip to qspi mode
+	uint8_t conf_buf[2] = {0, 2};
+	cinstr_cfg.opcode = 0x01;
+	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_3B;
+	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
+	if(errCode != NRFX_SUCCESS){
+		return false;
+	}
 
-    // Enable extended addressing
-    cinstr_cfg.opcode = 0x17;
-    cinstr_cfg.wren = false;
-    cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_2B;
-    uint8_t extadd = 0x80;
-    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
-    if(errCode != NRFX_SUCCESS){
-        return false;
-    }
+	// Enable extended addressing
+	cinstr_cfg.opcode = 0x17;
+	cinstr_cfg.wren = false;
+	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_2B;
+	uint8_t extadd = 0x80;
+	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
+	if(errCode != NRFX_SUCCESS){
+		return false;
+	}
 
-    // Looking good
-    this->initialized = true;
-    return true;
+	// Looking good
+	this->initialized = true;
+	return true;
 }
 
 /**
  * De-initialize the qspi interface
  */
 void QSPI::uninit(){
-    nrfx_qspi_uninit();
+	nrfx_qspi_uninit();
 }
 
 /**
  * @return true if the qspi device is idle
  */
 bool QSPI::isBusy(){
-    return ready;
+	return ready;
 }
 
 /**
@@ -108,31 +108,31 @@ bool QSPI::isBusy(){
  */
 bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 
-    nrfx_err_t errCode;
+	nrfx_err_t errCode;
 
-    if(!this->initialized){
-        return false;
-    }
+	if(!this->initialized){
+		return false;
+	}
 
-    switch(blockSize){
-        case BLOCK_SIZE_4K:
-            errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
-            break;
-        case BLOCK_SIZE_64K:
-            errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
-            break;
-        case BLOCK_SIZE_ALL:
-            errCode = nrfx_qspi_chip_erase();
-            break;
-        default:
-            return false;
-    }
+	switch(blockSize){
+		case BLOCK_SIZE_4K:
+			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
+			break;
+		case BLOCK_SIZE_64K:
+			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
+			break;
+		case BLOCK_SIZE_ALL:
+			errCode = nrfx_qspi_chip_erase();
+			break;
+		default:
+			return false;
+	}
 
-    if(errCode == NRFX_SUCCESS){
-        return true;
-    }
+	if(errCode == NRFX_SUCCESS){
+		return true;
+	}
 
-    return false;
+	return false;
 
 }
 
@@ -142,15 +142,15 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
  */
 bool QSPI::chipErase(){
 
-    if(!this->initialized){
-        return false;
-    }
+	if(!this->initialized){
+		return false;
+	}
 
-    if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
-        return true;
-    }
+	if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
+		return true;
+	}
 
-    return false;
+	return false;
 
 }
 
@@ -161,19 +161,19 @@ bool QSPI::chipErase(){
  */
 bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 
-    if(!this->initialized){
-        return false;
-    }
+	if(!this->initialized){
+		return false;
+	}
 
-    if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
-        while(!ready){
-            // Wait for write to complete
-        }
-        ready = false;
-        return true;
-    }
+	if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
+		while(!ready){
+			// Wait for write to complete
+		}
+		ready = false;
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -183,19 +183,19 @@ bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
  */
 bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 
-    if(!this->initialized){
-        return false;
-    }
+	if(!this->initialized){
+		return false;
+	}
 
-    if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
-        while(!ready){
-            // Wait for read to complete
-        }
-        ready = false;
-        return true;
-    }
+	if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
+		while(!ready){
+			// Wait for read to complete
+		}
+		ready = false;
+		return true;
+	}
 
-    return false;
+	return false;
 }
 
 
