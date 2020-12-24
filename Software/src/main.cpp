@@ -69,7 +69,9 @@ static void log_init(void){
  * Initialize the QSPI ROM object
  */
 static void rom_init(void){
+	#ifdef DC801_EMBEDDED
 	qspiControl.init();
+	#endif
 }
 
 //this lets me test if the framebuffer is working:
@@ -127,12 +129,14 @@ void test_keyboard(){
 
 //this tests reading and writing to the ROM chip using QSPI.
 void test_rom(){
+	#ifdef DC801_EMBEDDED
 	char test_array[8] {0};
 	if(qspiControl.read(test_array, 8, 0)){
 		ENGINE_PANIC(test_array);
 	} else {
 		ENGINE_PANIC("QSPI READ FAILED");
 	}
+	#endif
 }
 
 /**
