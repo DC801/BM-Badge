@@ -13,6 +13,7 @@
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
+#include "fonts/Monaco9.h"
 
 #ifdef DC801_EMBEDDED
 //only init QSPI if we're in embedded mode:
@@ -70,7 +71,9 @@ static void log_init(void){
  */
 static void rom_init(void){
 	#ifdef DC801_EMBEDDED
-	qspiControl.init();
+	if(!qspiControl.init()){
+		ENGINE_PANIC("Failed to init qspiControl.");
+	}
 	#endif
 }
 
@@ -130,11 +133,25 @@ void test_keyboard(){
 //this tests reading and writing to the ROM chip using QSPI.
 void test_rom(){
 	#ifdef DC801_EMBEDDED
-	char test_array[8] {0};
-	if(qspiControl.read(test_array, 8, 0)){
-		ENGINE_PANIC(test_array);
+	char test_array[9] = "MAGEGAME";
+	char test_rx_array[8] {0};
+	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_4K, 0)){
+		ENGINE_PANIC("Failed to erase ROM Chip.");
+	}
+	if(!qspiControl.write((uint8_t *)&test_array, 8, 0)){
+		ENGINE_PANIC("Failed to write to ROM with qspiControl.");
+	}
+	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
+		p_canvas()->printMessage(
+			test_array,
+			Monaco9,
+			COLOR_WHITE,
+			32,
+			32
+		);
+		p_canvas()->blt();
 	} else {
-		ENGINE_PANIC("QSPI READ FAILED");
+		ENGINE_PANIC("QSPI read failed");
 	}
 	#endif
 }
@@ -233,7 +250,7 @@ int main(void){
 
 	//this tests reading and writing to the ROM chip using QSPI.
 	//Feel free to delete the function once everything is working -Tim
-	//test_rom();
+	test_rom();
 #endif
 
 #if defined(TEST) || defined(TEST_ALL)

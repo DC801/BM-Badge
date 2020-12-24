@@ -65,7 +65,7 @@ class QSPI
 
 		bool initialized;
 
-		inline static bool ready = false;
+		inline static volatile bool ready = false;
 		static void qspi_handler(nrfx_qspi_evt_t event, void * p_context);
 };
 
