@@ -66,6 +66,7 @@ bool QSPI::init(){
 	uint8_t conf_buf[2] = {0, 2};
 	cinstr_cfg.opcode = 0x01;
 	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_3B;
+	ready = false;
 	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
 	if(errCode != NRFX_SUCCESS){
 		return false;
@@ -76,6 +77,7 @@ bool QSPI::init(){
 	cinstr_cfg.wren = false;
 	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_2B;
 	uint8_t extadd = 0x80;
+	ready = false;
 	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
 	if(errCode != NRFX_SUCCESS){
 		return false;
@@ -116,10 +118,18 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 
 	switch(blockSize){
 		case BLOCK_SIZE_4K:
+			ready = false;
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
+			while(!ready){
+				// Wait for any current actions to complete
+			}
 			break;
 		case BLOCK_SIZE_64K:
+			ready = false;
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
+			while(!ready){
+				// Wait for any current actions to complete
+			}
 			break;
 		case BLOCK_SIZE_ALL:
 			errCode = nrfx_qspi_chip_erase();
@@ -146,8 +156,11 @@ bool QSPI::chipErase(){
 		return false;
 	}
 
+	ready = false;
 	if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
-		ready = false;
+		while(!ready){
+			// Wait for any current actions to complete
+		}
 		return true;
 	}
 
@@ -166,11 +179,11 @@ bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
-	while(!ready){
-		// Wait for any current actions to complete
-	}
+	ready = false;
 	if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
-		ready = false;
+		while(!ready){
+			// Wait for any current actions to complete
+		}
 		return true;
 	}
 
@@ -188,11 +201,11 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
-	while(!ready){
-		// Wait for any current actions to complete
-	}
+	ready = false;
 	if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
-		ready = false;
+		while(!ready){
+			// Wait for any current actions to complete
+		}
 		return true;
 	}
 

@@ -2,7 +2,7 @@
 #define ENGINE_ROM_H_
 
 //size of chunk to be read/written when writing game.dat to ROM
-#define ENGINE_ROM_SD_CHUNK_READ_SIZE 512
+#define ENGINE_ROM_SD_CHUNK_READ_SIZE 4096
 
 //this is the 'magic string' that will appear at the start of game.dat.
 //it is used to verify that the binary file is formatted correctly.

@@ -135,13 +135,15 @@ void test_rom(){
 	#ifdef DC801_EMBEDDED
 	char test_array[9] = "MAGEGAME";
 	char test_rx_array[9] {0};
-	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_4K, 0)){
+	/* disabling erase and write unless specifically needed for testing.
+	if(!qspiControl.chipErase()){
 		ENGINE_PANIC("Failed to erase ROM Chip.");
 	}
 	if(!qspiControl.write((uint8_t *)&test_array, 8, 0)){
 		ENGINE_PANIC("Failed to write to ROM with qspiControl.");
 	}
-	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
+	*/
+	if(qspiControl.read((uint8_t *)&test_rx_array, 32, 0)){
 		p_canvas()->printMessage(
 			test_rx_array,
 			Monaco9,
@@ -187,8 +189,8 @@ int main(void){
 
 	// BLE
 	//gap_params_init();
-	//ble_stack_init();
-	//scan_start();
+	ble_stack_init();
+	scan_start();
 
 	// Init the display
 	ili9341_init();
