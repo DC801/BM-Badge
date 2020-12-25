@@ -1,3 +1,13 @@
+var possibleNameList = [
+	'idle',
+	'walk',
+	'action',
+	'special',
+	'extra_special',
+	'really_extra_special',
+	'why_do_you_have_this_many_animations',
+];
+
 Vue.component(
 	'entity-type-editor',
 	{
@@ -119,6 +129,47 @@ Vue.component(
 						!this.currentDirection[propertyName]
 					);
 				}
+			},
+			addAnimation() {
+				var propertyName = possibleNameList[
+					Object.keys(this.currentEntityType.animations).length
+				];
+				Vue.set(
+					this.currentEntityType.animations,
+					propertyName,
+					[
+						{
+							"tileid": 0,
+							"flip_x": false
+						},
+						{
+							"tileid": 0,
+							"flip_x": false
+						},
+						{
+							"tileid": 0,
+							"flip_x": false
+						},
+						{
+							"tileid": 0,
+							"flip_x": false
+						}
+					]
+				)
+			},
+			deleteAnimation: function (animationName) {
+				var animations = this.currentEntityType.animations;
+				var newValues = {};
+				var currentCount = 0;
+				Object.entries(animations).forEach(function (pair) {
+					var name = pair[0];
+					var animation = pair[1];
+					if (name !== animationName) {
+						newValues[possibleNameList[currentCount]] = animation;
+						currentCount += 1;
+					}
+				});
+				this.currentEntityType.animations = newValues;
 			}
 		}
 	}
