@@ -146,7 +146,7 @@
 							value=""
 						>Select an entityType</option>
 						<option
-							v-for="entityType of entityTypes"
+							v-for="entityType in entityTypes"
 							:key="entityType.type"
 							:value="entityType.type"
 						>{{ entityType.type }}</option>
@@ -202,60 +202,80 @@
 								>
 									<thead>
 										<tr>
-											<th>Name</th>
 											<th
 												v-for="direction in $options.directions"
 											>{{ direction }}</th>
+											<th>❌</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr
-											v-for="(animation, animationName) of currentEntityType.animations"
-											:key="animationName"
+										<template
+											v-for="(animation, animationName) in currentEntityType.animations"
 										>
-											<th>{{ animationName }}</th>
-											<td
-												v-for="(direction, directionIndex) in animation"
-												:key="directionIndex"
-											>
-												<div>
+											<tr>
+												<th colspan="4">{{ animationName }}</th>
+												<td>
 													<button
-														class="tile-link d-inline-flex"
-														:class="(
+														class="badge btn btn-block btn-outline-danger"
+														@click="deleteAnimation(animationName)"
+													>❌</button>
+												</td>
+											</tr>
+											<tr
+												:key="animationName"
+											>
+												<td
+													v-for="(direction, directionIndex) in animation"
+													:key="directionIndex"
+												>
+													<div>
+														<button
+															class="tile-link d-inline-flex"
+															:class="(
 																(currentAnimationName === animationName)
 																&& (currentAnimationDirection === directionIndex)
 															)
-															? 'border-success'
-															: 'border-secondary'
-														"
-														@click="clickDirection(animationName, directionIndex)"
-													>
-														<tiled-tile
-															:key="direction.tileid"
-															:tileset="tileset"
-															:tileid="direction.tileid"
-															:style="{
-																transform: `scale(${direction.flip_x?'-':''}1, ${direction.flip_y?'-':''}1)`
-															}"
-														></tiled-tile>
-													</button>
-													<div>
-														<button
-															class="btn badge"
-															:class="direction.flip_x ? 'badge-success' : 'badge-secondary'"
-															@click="flip(animationName, directionIndex, 'flip_x')"
-														>⬌</button>
-														<button
-															class="btn badge"
-															:class="direction.flip_y ? 'badge-success' : 'badge-secondary'"
-															@click="flip(animationName, directionIndex, 'flip_y')"
-														>⬍</button>
+																? 'border-success'
+																: 'border-secondary'
+															"
+															@click="clickDirection(animationName, directionIndex)"
+														>
+															<tiled-tile
+																:key="direction.tileid"
+																:tileset="tileset"
+																:tileid="direction.tileid"
+																:style="{
+																	transform: `scale(${direction.flip_x?'-':''}1, ${direction.flip_y?'-':''}1)`
+																}"
+															></tiled-tile>
+														</button>
+														<div>
+															<button
+																class="btn badge"
+																:class="direction.flip_x ? 'badge-success' : 'badge-secondary'"
+																@click="flip(animationName, directionIndex, 'flip_x')"
+															>⬌</button>
+															<button
+																class="btn badge"
+																:class="direction.flip_y ? 'badge-success' : 'badge-secondary'"
+																@click="flip(animationName, directionIndex, 'flip_y')"
+															>⬍</button>
+														</div>
 													</div>
-												</div>
-											</td>
-										</tr>
+												</td>
+											</tr>
+										</template>
 									</tbody>
 								</table>
+								<div
+									v-if="Object.keys(currentEntityType.animations).length < 7"
+									class="pt-3"
+								>
+									<button
+										class="btn btn-block btn-outline-success"
+										@click="addAnimation"
+									>Add Animation</button>
+								</div>
 							</div>
 							<div class="tileset col-12 col-lg-6">
 								<h5>Tileset: {{ currentEntityType.tileset }}</h5>
