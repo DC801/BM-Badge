@@ -8,11 +8,12 @@ extern FIL raw_file;
 #include "qspi.h"
 //extern QSPI qspiControl;
 
-void EngineROM_Init(void)
+bool EngineROM_Init(void)
 {
 	//the QSPI object was alreayd initialized in main.cpp
 	//this just needs to check the SD card and see if the ROM
 	//should be updated:
+	return true;
 }
 
 void EngineROM_Deinit(void) { }
@@ -63,7 +64,7 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 	return length;
 }
 
-uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
+bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 {
 	if (data == NULL)
 	{
@@ -79,11 +80,11 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 
 		if (read != *data++)
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	return 1;
+	return true;
 }
 #endif
 
@@ -93,7 +94,7 @@ FILE *romfile = NULL;
 #include <errno.h>
 #include <string.h>
 
-void EngineROM_Init(void)
+bool EngineROM_Init(void)
 {
 	romfile = fopen("MAGE/game.dat", "r+b");
 
@@ -103,6 +104,7 @@ void EngineROM_Init(void)
 		fprintf(stderr, "Error: %s\n", strerror(error));
 		ENGINE_PANIC("Failed to load Game Data");
 	}
+	return true;
 }
 
 void EngineROM_Deinit(void)
@@ -150,7 +152,7 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 	return fwrite(data, sizeof(uint8_t), length, romfile);
 }
 
-uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
+bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 {
 	if (romfile == NULL || data == NULL)
 	{
@@ -171,11 +173,11 @@ uint32_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data
 
 		if (read != *data++)
 		{
-			return 0;
+			return false;
 		}
 	}
 
-	return 1;
+	return true;
 }
 #endif
 

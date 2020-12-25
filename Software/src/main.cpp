@@ -134,7 +134,7 @@ void test_keyboard(){
 void test_rom(){
 	#ifdef DC801_EMBEDDED
 	char test_array[9] = "MAGEGAME";
-	char test_rx_array[8] {0};
+	char test_rx_array[9] {0};
 	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_4K, 0)){
 		ENGINE_PANIC("Failed to erase ROM Chip.");
 	}
@@ -143,7 +143,7 @@ void test_rom(){
 	}
 	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
 		p_canvas()->printMessage(
-			test_array,
+			test_rx_array,
 			Monaco9,
 			COLOR_WHITE,
 			32,

@@ -25,7 +25,7 @@ namespace DC801_Test
 
 	bool TestMemory()
 	{
-		const uint8_t magic[] = "MAGEGAME";
+		const uint8_t magic[] = ENGINE_ROM_MAGIC_STRING;
 		const int magicLen = 8;
 		bool failed = false;
 

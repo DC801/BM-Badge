@@ -19,6 +19,12 @@ all of the old code used as the foundation of this badge.
 #include <utility>
 #include <string>
 
+//this is the path to the game.dat file on the SD card.
+//if an SD card is inserted with game.dat in this location
+//and its timestamp is different from the one in the ROM chip
+//it will automatically be loaded.
+#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
+
 //this is the most unique entities that can be in any map.
 #define MAX_ENTITIES_PER_MAP 32
 

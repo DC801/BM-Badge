@@ -11,6 +11,7 @@
 #include "utility.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
+#include "fonts/Monaco9.h"
 
 #define EE_R1 3900
 #define EE_R2 10000
@@ -30,16 +31,16 @@ bool morse_running = false;
  * @param time
  */
 void sysTickStart(void){
-    systick = 0;
-    app_timer_create(&sysTickID, APP_TIMER_MODE_REPEATED, sysTickHandler);
-    app_timer_start(sysTickID, APP_TIMER_TICKS(1000), NULL);
+	systick = 0;
+	app_timer_create(&sysTickID, APP_TIMER_MODE_REPEATED, sysTickHandler);
+	app_timer_start(sysTickID, APP_TIMER_TICKS(1000), NULL);
 }
 
 /**
  * @return number of seconds since we started counting time
  */
 uint32_t getSystick(void){
-    return systick;
+	return systick;
 }
 
 /**
@@ -47,7 +48,7 @@ uint32_t getSystick(void){
  * @param p_context
  */
 void sysTickHandler(void * p_context){
-    systick++;
+	systick++;
 }
 
 
@@ -58,34 +59,34 @@ uint16_t morseIdx =0;
 
 uint8_t ls;
 void morseTickHandler(void * p_context) {
-    uint8_t s = morseMessage[morseIdx];
+	uint8_t s = morseMessage[morseIdx];
 
-    if (s != ls){
-        if (s)
-            ledOn(LED_HAX);
-        else
-            ledOff(LED_HAX);
-    }
-    ls=s;
+	if (s != ls){
+		if (s)
+			ledOn(LED_HAX);
+		else
+			ledOff(LED_HAX);
+	}
+	ls=s;
 
-    morseIdx = ((morseIdx+1) % sizeof(morseMessage));
+	morseIdx = ((morseIdx+1) % sizeof(morseMessage));
 }
 
 void morseInit(void ) {
-    app_timer_create(&morseID, APP_TIMER_MODE_REPEATED, morseTickHandler);
+	app_timer_create(&morseID, APP_TIMER_MODE_REPEATED, morseTickHandler);
 }
 
 void morseStart(void) {
-    morseIdx=0;
-    ls = 2;
-    app_timer_start(morseID, APP_TIMER_TICKS(80), NULL);  //15WPM
-    morse_running = true;
+	morseIdx=0;
+	ls = 2;
+	app_timer_start(morseID, APP_TIMER_TICKS(80), NULL);  //15WPM
+	morse_running = true;
 }
 
 void morseStop(void) {
-    app_timer_stop(morseID);
-    ledOff(LED_HAX);
-    morse_running = false;
+	app_timer_stop(morseID);
+	ledOff(LED_HAX);
+	morse_running = false;
 }
 
 bool morseGetRunning(void){
@@ -102,36 +103,36 @@ bool morseGetRunning(void){
  */
 uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
 
-    FRESULT ff_result;
-    DIR dir;
-    FILINFO fno;
+	FRESULT ff_result;
+	DIR dir;
+	FILINFO fno;
 
-    ff_result = f_opendir(&dir, path);
-    if (ff_result) {
-        printf("Can't open extras\n");
-        return 0;
-    }
+	ff_result = f_opendir(&dir, path);
+	if (ff_result) {
+		printf("Can't open extras\n");
+		return 0;
+	}
 
-    uint8_t counter = 0;
-    for (uint8_t i = 0; i < fileMax; i++) {
-        ff_result = f_readdir(&dir, &fno);                   /* Read a directory item */
-        if (ff_result != FR_OK || fno.fname[0] == 0) {
-            break;  /* Break on error or end of dir */
-        }
-        if ((fno.fattrib & AM_DIR)) {
-            // Ignore subdirs
-        }
-        else{
-            char *ext = strrchr(fno.fname, '.') + 1;
-            if (strcmp(ext, "RAW") == 0){
-                // Add the file
-                memcpy(&files[counter++], fno.fname, ext - fno.fname - 1);
-            }
-        }
-    }
-    f_closedir(&dir);
+	uint8_t counter = 0;
+	for (uint8_t i = 0; i < fileMax; i++) {
+		ff_result = f_readdir(&dir, &fno);                   /* Read a directory item */
+		if (ff_result != FR_OK || fno.fname[0] == 0) {
+			break;  /* Break on error or end of dir */
+		}
+		if ((fno.fattrib & AM_DIR)) {
+			// Ignore subdirs
+		}
+		else{
+			char *ext = strrchr(fno.fname, '.') + 1;
+			if (strcmp(ext, "RAW") == 0){
+				// Add the file
+				memcpy(&files[counter++], fno.fname, ext - fno.fname - 1);
+			}
+		}
+	}
+	f_closedir(&dir);
 
-    return counter;
+	return counter;
 }
 #endif
 
@@ -148,36 +149,36 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
 {
-    FRESULT ff_result;
-    DIR *dir;
-    FILINFO *fno;
+	FRESULT ff_result;
+	DIR *dir;
+	FILINFO *fno;
 
-    ff_result = f_opendir(&dir, path);
-    if (ff_result) {
-        printf("Can't open extras\n");
-        return 0;
-    }
+	ff_result = f_opendir(&dir, path);
+	if (ff_result) {
+		printf("Can't open extras\n");
+		return 0;
+	}
 
-    uint8_t counter = 0;
-    for (uint8_t i = 0; i < fileMax; i++) {
-        ff_result = f_readdir(dir, fno);                   /* Read a directory item */
-        if (ff_result != FR_OK || fno->fname[0] == 0) {
-            break;  /* Break on error or end of dir */
-        }
-        if ((fno->fattrib & AM_DIR)) {
-            // Ignore subdirs
-        }
-        else{
-            char *ext = strrchr(fno->fname, '.') + 1;
-            if (strcmp(ext, "RAW") == 0){
-                // Add the file
-                memcpy(&files[counter++], fno->fname, ext - fno->fname - 1);
-            }
-        }
-    }
-    f_closedir(dir);
+	uint8_t counter = 0;
+	for (uint8_t i = 0; i < fileMax; i++) {
+		ff_result = f_readdir(dir, fno);                   /* Read a directory item */
+		if (ff_result != FR_OK || fno->fname[0] == 0) {
+			break;  /* Break on error or end of dir */
+		}
+		if ((fno->fattrib & AM_DIR)) {
+			// Ignore subdirs
+		}
+		else{
+			char *ext = strrchr(fno->fname, '.') + 1;
+			if (strcmp(ext, "RAW") == 0){
+				// Add the file
+				memcpy(&files[counter++], fno->fname, ext - fno->fname - 1);
+			}
+		}
+	}
+	f_closedir(dir);
 
-    return counter;
+	return counter;
 }
 #pragma GCC diagnostic pop
 #endif
@@ -189,17 +190,17 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
  * @return
  */
 uint16_t calcCRC(uint8_t *data, uint8_t len, const uint16_t POLYNOM){
-    uint16_t crc;
-    uint8_t aux = 0;
+	uint16_t crc;
+	uint8_t aux = 0;
 
-    crc = 0x0000;
+	crc = 0x0000;
 
-    while (aux < len){
-        crc = crc16(crc, data[aux], POLYNOM);
-        aux++;
-    }
+	while (aux < len){
+		crc = crc16(crc, data[aux], POLYNOM);
+		aux++;
+	}
 
-    return (crc);
+	return (crc);
 }
 
 /**
@@ -209,70 +210,83 @@ uint16_t calcCRC(uint8_t *data, uint8_t len, const uint16_t POLYNOM){
  * @return
  */
 uint16_t crc16(uint16_t crcValue, uint8_t newByte, const uint16_t POLYNOM){
-    uint8_t i;
+	uint8_t i;
 
-    for (i = 0; i < 8; i++) {
+	for (i = 0; i < 8; i++) {
 
-        if (((crcValue & 0x8000) >> 8) ^ (newByte & 0x80)){
-            crcValue = (crcValue << 1)  ^ POLYNOM;
-        }else{
-            crcValue = (crcValue << 1);
-        }
+		if (((crcValue & 0x8000) >> 8) ^ (newByte & 0x80)){
+			crcValue = (crcValue << 1)  ^ POLYNOM;
+		}else{
+			crcValue = (crcValue << 1);
+		}
 
-        newByte <<= 1;
-    }
+		newByte <<= 1;
+	}
 
-    return crcValue;
+	return crcValue;
 }
 
 #define OVERFLOW ((uint32_t)(0xFFFFFFFF/32.768))
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 {
-    if(currentMillis <= previousMillis)
-    {
-        return 0;
-    }
+	if(currentMillis <= previousMillis)
+	{
+		return 0;
+	}
 
-    return(currentMillis - previousMillis);
+	return(currentMillis - previousMillis);
 }
 
 uint32_t millis(void)
 {
-    return(app_timer_cnt_get() / 32.768);
+	return(app_timer_cnt_get() / 32.768);
 }
 
 void EEpwm_init() {
-    app_pwm_config_t pwm1_cfg = APP_PWM_DEFAULT_CONFIG_1CH(5000L, 11);
-    APP_ERROR_CHECK(app_pwm_init(&PWM1,&pwm1_cfg,NULL));
-    app_pwm_enable(&PWM1);
+	app_pwm_config_t pwm1_cfg = APP_PWM_DEFAULT_CONFIG_1CH(5000L, 11);
+	APP_ERROR_CHECK(app_pwm_init(&PWM1,&pwm1_cfg,NULL));
+	app_pwm_enable(&PWM1);
 }
 
 
 void EEpwm_set(int r)
 {
-    r = r%101;
-    app_pwm_channel_duty_set(&PWM1, 0, 100-r);
+	r = r%101;
+	app_pwm_channel_duty_set(&PWM1, 0, 100-r);
 }
 
 void EEget_milliVolts(int r, int *v1, int *v2, int *v3) {
-    *v1 = EE_VOLT(EE_R4) * r / 100;
-    *v2 = EE_VOLT(EE_R3 +EE_R4) * r / 100;
-    *v3 = EE_VOLT(EE_R2 + EE_R3 + EE_R4) * r / 100;
+	*v1 = EE_VOLT(EE_R4) * r / 100;
+	*v2 = EE_VOLT(EE_R3 +EE_R4) * r / 100;
+	*v3 = EE_VOLT(EE_R2 + EE_R3 + EE_R4) * r / 100;
 }
 
 //Turns hex 0x2305 to 2305
 uint32_t hex2dec(uint32_t v) {
-    uint32_t val = 0;
-    const int tens[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
-    for (int i=0; i<8; ++i)
-        val += ((v >> (i*4)) & 0xF) * tens[i];
-    return val;
+	uint32_t val = 0;
+	const int tens[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
+	for (int i=0; i<8; ++i)
+		val += ((v >> (i*4)) & 0xF) * tens[i];
+	return val;
 }
 
 void util_sd_error()
 {
-	ENGINE_PANIC("SD Card Error\nCheck card and reboot");
+	//ENGINE_PANIC("SD Card Error\nCheck card and reboot");
+	p_canvas()->clearScreen(COLOR_BLUE);
+	p_canvas()->printMessage(
+		"SD Card did not initialize properly.\n\
+		Check Card and Reboot if you\n\
+		want to use the SD Card to reflash\n\
+		the ROM chip with a new mage.dat file.",
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+	p_canvas()->blt();
+	nrf_delay_ms(5000);
 }
 
 void util_gfx_init()
@@ -282,5 +296,5 @@ void util_gfx_init()
 
 	p_canvas()->clearScreen(COLOR_BLACK);
 
-    p_canvas()->blt();
+	p_canvas()->blt();
 }
