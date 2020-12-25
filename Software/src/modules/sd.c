@@ -77,8 +77,7 @@ bool util_sd_init() {
 	}
 
 	if (disk_state) {
-		printf("Can't init\n");
-		ENGINE_PANIC("Can't Init SD Card");
+		printf("Can't init SD Card\n");
 		return false;
 	}
 
@@ -88,8 +87,7 @@ bool util_sd_init() {
 
 	ff_result = f_mount(&m_fs, "", 1);
 	if (ff_result) {
-		printf("Can't mount\n");
-		ENGINE_PANIC("Can't Mount SD Card");
+		printf("Can't mount SD Card\n");
 		return false;
 	}
 

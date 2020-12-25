@@ -116,7 +116,7 @@ void MageDialogControl::load(
 
 void MageDialogControl::loadNextScreen() {
 	currentMessageIndex = 0;
-	if(currentScreenIndex >= currentDialogScreenCount) {
+	if((uint32_t)currentScreenIndex >= currentDialogScreenCount) {
 		isOpen = false;
 		return;
 	}
