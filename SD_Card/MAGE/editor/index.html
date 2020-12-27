@@ -254,11 +254,13 @@
 																class="btn badge"
 																:class="direction.flip_x ? 'badge-success' : 'badge-secondary'"
 																@click="flip(animationName, directionIndex, 'flip_x')"
+																title="Flip X"
 															>⬌</button>
 															<button
 																class="btn badge"
 																:class="direction.flip_y ? 'badge-success' : 'badge-secondary'"
 																@click="flip(animationName, directionIndex, 'flip_y')"
+																title="Flip Y"
 															>⬍</button>
 														</div>
 													</div>
@@ -329,6 +331,10 @@
 					</div>
 				</div>
 			</div>
+			<div class="col-12"><textarea
+				cols="80"
+				rows="16"
+			>{{ jsonOutput }}</textarea></div>
 		</div>
 	</script>
 	<script
@@ -339,12 +345,12 @@
 		data-original-src="https://wzrd.in/debug-standalone/get-pixels@3.3.2/"
 		src="./dependencies/get-pixels.js"
 	></script>
-	<script src="js/editor-entity.js"></script>
+	<script src="js/editor-entity_types.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
-	<script src="js/entityTypes.js"></script>
+	<script src="js/entity_types.js"></script>
 	<script src="js/entities.js"></script>
 	<script src="js/geometry.js"></script>
 	<script src="js/strings.js"></script>

@@ -165,30 +165,3 @@ var serializeEntity = function (
 	scenarioData.parsed.entities.push(entity);
 	return entity;
 };
-
-var handleEntitiesData = function (
-	entitiesFile,
-	scenarioData,
-) {
-	return function (entitiesData) {
-		console.log(
-			'object_types.json',
-			entitiesData
-		);
-		var result = {};
-		entitiesData.forEach(function (entityItem) {
-			var item = assignToLessFalsy(
-				{
-					type: entityItem.name
-				},
-				scenarioData.entityTypes[entityItem.name]
-			);
-			mergeInProperties(
-				item,
-				entityItem.properties
-			);
-			result[entityItem.name] = item;
-		});
-		entitiesFile.parsed = result;
-	};
-};
