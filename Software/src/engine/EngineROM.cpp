@@ -18,8 +18,8 @@ bool EngineROM_Init(void)
 	FIL raw_file;
 	FRESULT result;
 	UINT count;
-	char gameDatTimestampSD[ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
-	char gameDatTimestampROM[ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
+	char gameDatTimestampSD[ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
+	char gameDatTimestampROM[ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
 	uint32_t gameDatFilesize = 0;
 
 	//get the game.dat filesize:
@@ -46,22 +46,22 @@ bool EngineROM_Init(void)
 	}
 
 	//get the gameDatTimestampSD from the SD card game.dat:
-	result = f_lseek(&raw_file, ENGINE_ROM_MAGIC_STRING_LENGTH);
+	result = f_lseek(&raw_file, 0);
 	if (result != FR_OK) {
 		return false;
 	}
 	//read from the file into the gameDatTimestampSD buffer:
-	result = f_read(&raw_file, (uint8_t *)gameDatTimestampSD, ENGINE_ROM_TIMESTAMP_LENGTH, &count);
+	result = f_read(&raw_file, (uint8_t *)gameDatTimestampSD, ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH, &count);
 	if (result != FR_OK) {
 		return false;
 	}
 
 	//get the gameDatTimestampROM from the ROM chip:
 	if(EngineROM_Read(
-		ENGINE_ROM_MAGIC_STRING_LENGTH, 
-		ENGINE_ROM_TIMESTAMP_LENGTH, 
+		0, 
+		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH, 
 		(uint8_t *)gameDatTimestampROM
-	) != ENGINE_ROM_TIMESTAMP_LENGTH) {
+	) != ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH) {
 		ENGINE_PANIC("Failed to read timestamp from ROM");
 	}
 
@@ -71,15 +71,30 @@ bool EngineROM_Init(void)
 	if(timestampsMatch != 0){
 		//we need a prompt to see if they want to erase the chip: -Tim
 
-		//start by erasing the whole ROM chip:
-		if(!qspiControl.chipErase()){
-			ENGINE_PANIC("Failed to erase ROM Chip.");
-		}
+		p_canvas()->fillRect(
+			0,
+			96,
+			WIDTH,
+			96,
+			0x0000
+		);
+		p_canvas()->printMessage(
+			"Erasing ROM chip",
+			Monaco9,
+			0xffff,
+			16,
+			96
+		);
+		p_canvas()->blt();
 		//then write the entire SD card game.dat file to the ROM chip MAGE_SD_CHUNK_READ_SIZE bytes at a time.
 		uint32_t currentAddress = 0;
 		uint8_t strBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE] {0};
 		while(currentAddress < gameDatFilesize){
 			uint32_t chunkSize = MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (gameDatFilesize - currentAddress));
+			//start by erasing the sector we are about to write:
+			if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_64K, currentAddress)){
+				ENGINE_PANIC("Failed to erase ROM Chip.");
+			}
 			//seek to the currentAddress on the SD card:
 			result = f_lseek(&raw_file, currentAddress);
 			if (result != FR_OK) {
@@ -94,6 +109,14 @@ bool EngineROM_Init(void)
 			);
 			if (result != FR_OK) {
 				ENGINE_PANIC("Error reading game.dat from SD card\nduring ROM erase procedure.");
+			}
+			//write the buffer to the ROM chip:
+			if(EngineROM_Write(
+				currentAddress, 
+				chunkSize, 
+				strBuffer
+			) != chunkSize ) {
+				ENGINE_PANIC("Failed to write buffer to ROM chip\nduring ROM erase procedure.");
 			}
 			sprintf(
 				debugString,
@@ -116,16 +139,24 @@ bool EngineROM_Init(void)
 				96
 			);
 			p_canvas()->blt();
-			//write the buffer to the ROM chip:
-			if(EngineROM_Write(
-				currentAddress, 
-				chunkSize, 
-				strBuffer
-			) != chunkSize ) {
-				ENGINE_PANIC("Failed to write buffer to ROM chip\nduring ROM erase procedure.");
-			}
 			currentAddress += chunkSize;
 		}
+
+		p_canvas()->fillRect(
+			0,
+			96,
+			WIDTH,
+			96,
+			0x0000
+		);
+		p_canvas()->printMessage(
+			"SD -> ROM chip copy success",
+			Monaco9,
+			0xffff,
+			16,
+			96
+		);
+		p_canvas()->blt();
 	}
 
 	// Verify magic string is on ROM when we're done:
@@ -169,29 +200,6 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 	}
 
 	return length;
-}
-
-bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
-{
-	if (data == NULL)
-	{
-		ENGINE_PANIC("EngineROM_Verify: Null pointer");
-	}
-
-	for (uint32_t i = 0; i < length; i++)
-	{
-		uint8_t read = 0;
-		uint8_t *ptr = &read;
-
-		EngineROM_Read(address + i, sizeof(uint8_t), ptr);
-
-		if (read != *data++)
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 #endif
 
@@ -258,17 +266,13 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 
 	return fwrite(data, sizeof(uint8_t), length, romfile);
 }
+#endif
 
 bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 {
-	if (romfile == NULL || data == NULL)
+	if (data == NULL)
 	{
-		ENGINE_PANIC("Game Data file is not open");
-	}
-
-	if (fseek(romfile, address, SEEK_SET) != 0)
-	{
-		ENGINE_PANIC("Failed to seek into Game Data");
+		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 
 	for (uint32_t i = 0; i < length; i++)
@@ -276,7 +280,7 @@ bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 		uint8_t read = 0;
 		uint8_t *ptr = &read;
 
-		size_t size = fread(ptr, sizeof(uint8_t), 1, romfile);
+		EngineROM_Read(address + i, sizeof(uint8_t), ptr);
 
 		if (read != *data++)
 		{
@@ -286,7 +290,6 @@ bool EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 
 	return true;
 }
-#endif
 
 bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
 {

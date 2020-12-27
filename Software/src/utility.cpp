@@ -109,7 +109,7 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
 
 	ff_result = f_opendir(&dir, path);
 	if (ff_result) {
-		printf("Can't open extras\n");
+		debug_print("Can't open extras\n");
 		return 0;
 	}
 
@@ -155,7 +155,7 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
 
 	ff_result = f_opendir(&dir, path);
 	if (ff_result) {
-		printf("Can't open extras\n");
+		debug_print("Can't open extras\n");
 		return 0;
 	}
 

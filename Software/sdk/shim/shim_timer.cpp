@@ -58,7 +58,6 @@ void timer_manager::worker()
         std::unique_lock<std::recursive_mutex> lock(timers_mutex);
 
         // Do stuff
-        printf("butt stuff\n");
 
         lock.unlock();
         std::cout << "Unlocked worker" << std::endl;
@@ -98,7 +97,6 @@ void timer_manager::add_timer(app_timer_t *timer)
 
 void timer_manager::kill()
 {
-    printf("Killing timer thread...");
     running = false;
 
     try
@@ -110,7 +108,6 @@ void timer_manager::kill()
     }
     catch(const std::system_error&) { }
 
-    printf("Done\n");
 }
 
 timer_manager manager;

@@ -102,6 +102,11 @@ extern "C" {
 	#include <SDL.h>
 
 	#define NRF_LOG_RAW_INFO printf
+	#define debug_print(...)   printf(__VA_ARGS__)
+#endif
+
+#ifdef DC801_EMBEDDED
+	#define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
 #endif
 
 #define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)

@@ -19,19 +19,19 @@
 //only init QSPI if we're in embedded mode:
 #include "qspi.h"
 QSPI qspiControl;
+
 #endif
 
 #include "test.h"
 
 #ifdef DC801_DESKTOP
-
 volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
 {
 	if (signo == SIGINT)
 	{
-		printf("received SIGINT\n");
+		debug_print("received SIGINT\n");
 		application_quit = 1;
 	}
 }
@@ -62,8 +62,8 @@ static void speaker_init(void){
 static void log_init(void){
 	ret_code_t err_code = NRF_LOG_INIT(NULL);
 	APP_ERROR_CHECK(err_code);
-
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
+	NRF_LOG_INFO("Serial Logging Initialized...");
 }
 
 /**
@@ -133,23 +133,40 @@ void test_keyboard(){
 //this tests reading and writing to the ROM chip using QSPI.
 void test_rom(){
 	#ifdef DC801_EMBEDDED
-	char test_array[9] = "MAGEGAME";
+	char test_array[9] = "DIFFWORD";
 	char test_rx_array[9] {0};
 	/* disabling erase and write unless specifically needed for testing.
 	if(!qspiControl.chipErase()){
 		ENGINE_PANIC("Failed to erase ROM Chip.");
 	}
+	p_canvas()->clearScreen(COLOR_BLACK);
+	p_canvas()->printMessage(
+		"ERASING CHIP",
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		16
+	);
+	p_canvas()->blt();
 	if(!qspiControl.write((uint8_t *)&test_array, 8, 0)){
 		ENGINE_PANIC("Failed to write to ROM with qspiControl.");
 	}
+	p_canvas()->printMessage(
+		test_array,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+	p_canvas()->blt();
 	*/
-	if(qspiControl.read((uint8_t *)&test_rx_array, 32, 0)){
+	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
 		p_canvas()->printMessage(
 			test_rx_array,
 			Monaco9,
 			COLOR_WHITE,
 			32,
-			32
+			48
 		);
 		p_canvas()->blt();
 	} else {
@@ -221,7 +238,7 @@ int main(void){
 	//EEpwm_init();
 
 	const char* ble_name = "TheMage801"; // must be 10char
-	printf("advertising user: %s\n", ble_name);
+	debug_print("advertising user: %s\n", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
 #endif
@@ -237,7 +254,7 @@ int main(void){
 	sysTickStart();
 
 	// Boot! Boot! Boot!
-	printf("Booted!\n");
+	debug_print("Booted!\n");
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
 #ifdef DC801_EMBEDDED
@@ -263,7 +280,7 @@ int main(void){
 #endif
 
 #ifdef DC801_DESKTOP
-	printf("Exiting gracefully...\n");
+	debug_print("Exiting gracefully...\n");
 	return 0;
 #endif
 
