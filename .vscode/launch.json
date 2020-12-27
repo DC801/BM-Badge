@@ -25,7 +25,7 @@
             ]
         },
         {
-            "name": "Debug (Physical Badge)",
+            "name": "Debug Launch (Physical Badge)",
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
@@ -33,6 +33,19 @@
             "armToolchainPath": "/usr/bin",
             "executable": "${workspaceRoot}/Software/output/bm_badge.out",
             "runToMain": true,
+            "cwd": "${workspaceRoot}",
+            "device": "NRF52840_XXAA",
+            "interface": "swd",
+            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+        },
+        {
+            "name": "Debug Attach (Physical Badge)",
+            "type": "cortex-debug",
+            "request": "attach",
+            "servertype": "jlink",
+            "serverpath": "/usr/bin/JLinkGDBServer",
+            "armToolchainPath": "/usr/bin",
+            "executable": "${workspaceRoot}/Software/output/bm_badge.out",
             "cwd": "${workspaceRoot}",
             "device": "NRF52840_XXAA",
             "interface": "swd",
