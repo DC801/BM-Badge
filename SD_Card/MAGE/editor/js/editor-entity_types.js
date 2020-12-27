@@ -41,6 +41,17 @@ Vue.component(
 			entityTypes: function () {
 				return this.scenarioData.entityTypes;
 			},
+			jsonOutput: function () {
+				var result = {};
+				Object.values(this.scenarioData.entityTypes)
+					.forEach(function (entityType) {
+						result[entityType.type] = {
+							tileset: entityType.tileset,
+							animations: entityType.animations
+						};
+					});
+				return JSON.stringify(result, null, '\t') + '\n';
+			},
 			entityTypeList: function () {
 				return Object.values(this.entityTypes);
 			},
