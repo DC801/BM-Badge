@@ -228,14 +228,4 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 	return false;
 }
 
-/**
- * Gets SR1 Register byte from ROM and returns bit 0
- * When bit 0 is high, there is still a write in progress
- * and the ROM chip is busy. We should not begin a new write
- * or erase until this bit reads 0
- */
-bool QSPI::isWriteInProgress(void){
-	
-}
-
 #endif
