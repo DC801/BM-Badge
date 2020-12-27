@@ -42,8 +42,9 @@ bool QSPI::init(){
 	nrfx_err_t errCode;
 	nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG;
 
-	errCode = nrfx_qspi_init(&config, QSPI::qspi_handler, NULL);
+	errCode = nrfx_qspi_init(&config, NULL, NULL);
 	if(errCode != NRFX_SUCCESS){
+		debug_print("Failure at nefx_qspi_init() call.");
 		return false;
 	}
 
@@ -59,6 +60,7 @@ bool QSPI::init(){
 	// Send reset to chip
 	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
 	if(errCode != NRFX_SUCCESS){
+		debug_print("Failure at QSPI chip reset command.");
 		return false;
 	}
 
@@ -66,9 +68,9 @@ bool QSPI::init(){
 	uint8_t conf_buf[2] = {0, 2};
 	cinstr_cfg.opcode = 0x01;
 	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_3B;
-	ready = false;
 	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
 	if(errCode != NRFX_SUCCESS){
+		debug_print("Failure at QSPI qspi mode set command.");
 		return false;
 	}
 
@@ -77,9 +79,9 @@ bool QSPI::init(){
 	cinstr_cfg.wren = false;
 	cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_2B;
 	uint8_t extadd = 0x80;
-	ready = false;
 	errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
 	if(errCode != NRFX_SUCCESS){
+		debug_print("Failure at QSPI extended addressing set command.");
 		return false;
 	}
 
@@ -118,25 +120,11 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 
 	switch(blockSize){
 		case BLOCK_SIZE_4K:
-			ready = false;
-			while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
-				//wait for chip to stop being busy
-			}
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
-			while(!ready){
-				// Wait for any current actions to complete
-			}
 			break;
 		case BLOCK_SIZE_64K:
-			ready = false;
-			while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
-				//wait for chip to stop being busy
-			}
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
-			while(!ready){
-				// Wait for any current actions to complete
-			}
-			break;
+		break;
 		case BLOCK_SIZE_ALL:
 			errCode = nrfx_qspi_chip_erase();
 			break;
@@ -162,15 +150,7 @@ bool QSPI::chipErase(){
 		return false;
 	}
 
-	ready = false;
-
-	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
-		//wait for chip to stop being busy
-	}
 	if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
-		while(!ready){
-			// Wait for any current actions to complete
-		}
 		return true;
 	}
 
@@ -189,14 +169,7 @@ bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
-	ready = false;
-	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
-		//wait for chip to stop being busy
-	}
 	if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
-		while(!ready){
-			// Wait for any current actions to complete
-		}
 		return true;
 	}
 
@@ -214,14 +187,7 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 		return false;
 	}
 
-	ready = false;
-	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
-		//wait for chip to stop being busy
-	}
 	if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
-		while(!ready){
-			// Wait for any current actions to complete
-		}
 		return true;
 	}
 

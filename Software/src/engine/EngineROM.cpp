@@ -288,7 +288,6 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 }
 #endif
 
-//returns the address where the first failure 
 int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 {
 	if (data == NULL)
@@ -301,10 +300,13 @@ int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 		uint8_t read = 0;
 		uint8_t *ptr = &read;
 
-		EngineROM_Read(address + i, sizeof(uint8_t), ptr);
+		if(EngineROM_Read(address + i, sizeof(uint8_t), ptr) != sizeof(uint8_t)){
+			ENGINE_PANIC("ROM read failed during verification test.");
+		}
 
 		if (read != *data++)
 		{
+			debug_print("Verification error at address %d.\n%d read, %d expected", i+address, read, *(data-1));
 			return i+address;
 		}
 	}

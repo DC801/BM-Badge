@@ -63,7 +63,9 @@ static void log_init(void){
 	ret_code_t err_code = NRF_LOG_INIT(NULL);
 	APP_ERROR_CHECK(err_code);
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
-	NRF_LOG_INFO("Serial Logging Initialized...");
+	NRF_LOG_INFO("--------------SYSTEM REBOOTED--------------");
+	NRF_LOG_ERROR("Error Logging to hardware UART enabled.");
+	NRF_LOG_INFO("Debug Logging to hardware UART enabled.");
 }
 
 /**
@@ -133,40 +135,36 @@ void test_keyboard(){
 //this tests reading and writing to the ROM chip using QSPI.
 void test_rom(){
 	#ifdef DC801_EMBEDDED
+	uint8_t erased_array[9] {255, 255, 255, 255, 255, 255, 255, 255, 0};
 	char test_array[9] = "DIFFWORD";
 	char test_rx_array[9] {0};
-	/* disabling erase and write unless specifically needed for testing.
-	if(!qspiControl.chipErase()){
-		ENGINE_PANIC("Failed to erase ROM Chip.");
-	}
 	p_canvas()->clearScreen(COLOR_BLACK);
-	p_canvas()->printMessage(
-		"ERASING CHIP",
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		16
-	);
 	p_canvas()->blt();
+	/* disabling erase and write unless specifically needed for testing.
+	*/
+	debug_print("Erasing first 64k of ROM Chip memory...");
+	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_64K, 0)){
+		ENGINE_PANIC("Failed to send erase comand.");
+	}
+	debug_print("Verifying Erase...");
+	if(EngineROM_Verify(0, 8, erased_array) != ENGINE_ROM_VERIFY_SUCCESS){
+		ENGINE_PANIC("Verification of erase failed.");
+	}
+	debug_print("Writing %s to ROM chip...", test_array);
 	if(!qspiControl.write((uint8_t *)&test_array, 8, 0)){
 		ENGINE_PANIC("Failed to write to ROM with qspiControl.");
 	}
-	p_canvas()->printMessage(
-		test_array,
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		32
-	);
-	p_canvas()->blt();
-	*/
+	debug_print("Verifying Write...");
+	if(EngineROM_Verify(0, 8, (uint8_t *)test_array) != ENGINE_ROM_VERIFY_SUCCESS){
+		ENGINE_PANIC("Verification of write failed.");
+	}
 	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
 		p_canvas()->printMessage(
 			test_rx_array,
 			Monaco9,
 			COLOR_WHITE,
 			32,
-			48
+			32
 		);
 		p_canvas()->blt();
 	} else {
@@ -238,7 +236,7 @@ int main(void){
 	//EEpwm_init();
 
 	const char* ble_name = "TheMage801"; // must be 10char
-	debug_print("advertising user: %s\n", ble_name);
+	debug_print("advertising user: %s", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
 #endif

@@ -77,7 +77,7 @@ bool util_sd_init() {
 	}
 
 	if (disk_state) {
-		debug_print("Can't init SD Card\n");
+		debug_print("Can't init SD Card");
 		return false;
 	}
 
@@ -87,12 +87,12 @@ bool util_sd_init() {
 
 	ff_result = f_mount(&m_fs, "", 1);
 	if (ff_result) {
-		debug_print("Can't mount SD Card\n");
+		debug_print("Can't mount SD Card");
 		return false;
 	}
 
 	m_sd_available = true;
-	debug_print("SD init OK\n");
+	debug_print("SD init OK");
 	return true;
 }
 
