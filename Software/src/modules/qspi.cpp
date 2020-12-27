@@ -119,6 +119,9 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 	switch(blockSize){
 		case BLOCK_SIZE_4K:
 			ready = false;
+			while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
+				//wait for chip to stop being busy
+			}
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
 			while(!ready){
 				// Wait for any current actions to complete
@@ -126,6 +129,9 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 			break;
 		case BLOCK_SIZE_64K:
 			ready = false;
+			while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
+				//wait for chip to stop being busy
+			}
 			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
 			while(!ready){
 				// Wait for any current actions to complete
@@ -157,6 +163,10 @@ bool QSPI::chipErase(){
 	}
 
 	ready = false;
+
+	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
+		//wait for chip to stop being busy
+	}
 	if(nrfx_qspi_chip_erase() == NRFX_SUCCESS){
 		while(!ready){
 			// Wait for any current actions to complete
@@ -180,6 +190,9 @@ bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 	}
 
 	ready = false;
+	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
+		//wait for chip to stop being busy
+	}
 	if(nrfx_qspi_write(data, len, startAddress) == NRFX_SUCCESS){
 		while(!ready){
 			// Wait for any current actions to complete
@@ -202,6 +215,9 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 	}
 
 	ready = false;
+	while(nrfx_qspi_mem_busy_check() != NRF_SUCCESS){
+		//wait for chip to stop being busy
+	}
 	if(nrfx_qspi_read(data, len, startAddress) == NRFX_SUCCESS){
 		while(!ready){
 			// Wait for any current actions to complete
@@ -212,5 +228,14 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 	return false;
 }
 
+/**
+ * Gets SR1 Register byte from ROM and returns bit 0
+ * When bit 0 is high, there is still a write in progress
+ * and the ROM chip is busy. We should not begin a new write
+ * or erase until this bit reads 0
+ */
+bool QSPI::isWriteInProgress(void){
+	
+}
 
 #endif

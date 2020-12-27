@@ -77,7 +77,7 @@ bool util_sd_init() {
 	}
 
 	if (disk_state) {
-		printf("Can't init SD Card\n");
+		debug_print("Can't init SD Card\n");
 		return false;
 	}
 
@@ -87,12 +87,12 @@ bool util_sd_init() {
 
 	ff_result = f_mount(&m_fs, "", 1);
 	if (ff_result) {
-		printf("Can't mount SD Card\n");
+		debug_print("Can't mount SD Card\n");
 		return false;
 	}
 
 	m_sd_available = true;
-	printf("SD init OK\n");
+	debug_print("SD init OK\n");
 	return true;
 }
 
@@ -122,11 +122,11 @@ uint32_t util_sd_file_size(const char *path) {
 FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 	FIL file;
 
-    printf("Try to load %s\n", path);
+    debug_print("Try to load %s\n", path);
 
 	FRESULT result = f_open(&file, path, FA_READ | FA_OPEN_EXISTING);
 	if (result != FR_OK) {
-		printf("Can't load file %s\n", path);
+		debug_print("Can't load file %s\n", path);
 		return result;
 	}
 
@@ -142,11 +142,11 @@ FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 	FIL *file;
 
-    printf("Try to load %s\n", path);
+    debug_print("Try to load %s\n", path);
 
 	FRESULT result = f_open(&file, path, FA_READ | FA_OPEN_EXISTING);
 	if (result != FR_OK) {
-		printf("Can't load file %s\n", path);
+		debug_print("Can't load file %s\n", path);
 		return result;
 	}
 

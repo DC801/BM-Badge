@@ -1144,7 +1144,7 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 	argStruct->dialogId = convert_endian_u2_value(argStruct->dialogId);
 
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
-		//printf("Opening dialog %d\n", argStruct->dialogId);
+		//debug_print("Opening dialog %d\n", argStruct->dialogId);
 		MageGame->playerHasControl = false;
 		MageDialog->load(argStruct->dialogId, currentEntityId);
 		resumeStateStruct->totalLoopsToNextAction = 1;

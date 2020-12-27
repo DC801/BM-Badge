@@ -19,7 +19,7 @@ namespace DC801_Test
 		canvas.blt();
 
 	#ifdef DC801_DESKTOP
-		printf("%s\n", message);
+		debug_print("%s\n", message);
 	#endif
 	}
 

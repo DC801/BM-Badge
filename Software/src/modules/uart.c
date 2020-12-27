@@ -45,7 +45,7 @@ void uart_event_handle(app_uart_evt_t *p_event) {
             break;
 
         default:
-            //printf("Evt: %d\n", p_event->evt_type);
+            //debug_print("Evt: %d\n", p_event->evt_type);
             break;
     }
 }

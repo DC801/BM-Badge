@@ -332,7 +332,7 @@ void FrameBuffer::drawChunkWithFlags(
 		bytes_to_read = pixels_to_read_per_run * sizeof(uint16_t);
 		if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
 		{
-			printf("Failed to read pixel data\n");
+			debug_print("Failed to read pixel data\n");
 			return;
 		}
 		convert_endian_u2_buffer(colors, pixels_to_read_per_run);
@@ -347,7 +347,7 @@ void FrameBuffer::drawChunkWithFlags(
 				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
 				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
 				{
-					printf("Failed to read pixel data\n");
+					debug_print("Failed to read pixel data\n");
 					return;
 				}
 				convert_endian_u2_buffer(colors, pixels_to_read_now);
@@ -415,7 +415,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (file == NULL)
 	{
-		printf("Can't load file %s\n", filename);
+		debug_print("Can't load file %s\n", filename);
 		return;
 	}
 
@@ -423,7 +423,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
 		fclose(file);
 		return;
 	}
@@ -432,7 +432,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (tell_size == -1)
 	{
-		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
 		fclose(file);
 		return;
 	}
@@ -442,7 +442,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return;
 	}
 
@@ -452,7 +452,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		if (retval != 0)
 		{
-			printf("Failed to seek the file %s\n", filename);
+			debug_print("Failed to seek the file %s\n", filename);
 			fclose(file);
 			return;
 		}
@@ -461,7 +461,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		if (read != size)
 		{
-			printf("Failed to read file %s\n", filename);
+			debug_print("Failed to read file %s\n", filename);
 			fclose(file);
 			return;
 		}
@@ -501,7 +501,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (file == NULL)
 	{
-		printf("Can't load file %s\n", filename);
+		debug_print("Can't load file %s\n", filename);
 		return;
 	}
 
@@ -509,7 +509,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
 		fclose(file);
 		return;
 	}
@@ -518,7 +518,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (tell_size == -1)
 	{
-		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
 		fclose(file);
 		return;
 	}
@@ -528,7 +528,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return;
 	}
 
@@ -538,7 +538,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		if (retval != 0)
 		{
-			printf("Failed to seek the file %s\n", filename);
+			debug_print("Failed to seek the file %s\n", filename);
 			fclose(file);
 			return;
 		}
@@ -547,7 +547,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 		if (read != size)
 		{
-			printf("Failed to read file %s\n", filename);
+			debug_print("Failed to read file %s\n", filename);
 			fclose(file);
 			return;
 		}
@@ -587,7 +587,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (file == NULL)
 	{
-		printf("Can't load file %s\n", filename);
+		debug_print("Can't load file %s\n", filename);
 		return 0;
 	}
 
@@ -595,7 +595,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
@@ -604,7 +604,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (tell_size == -1)
 	{
-		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
@@ -614,7 +614,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return 0;
 	}
 
@@ -622,14 +622,14 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek start) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek start) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return 0;
 	}
 
@@ -643,7 +643,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			if (retval != 0)
 			{
-				printf("Failed to seek the file %s\n", filename);
+				debug_print("Failed to seek the file %s\n", filename);
 				fclose(file);
 				return 0;
 			}
@@ -652,7 +652,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			if (read != size)
 			{
-				printf("Failed to read file %s\n", filename);
+				debug_print("Failed to read file %s\n", filename);
 				fclose(file);
 				return 0;
 			}
@@ -705,7 +705,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (file == NULL)
 	{
-		printf("Can't load file %s\n", filename);
+		debug_print("Can't load file %s\n", filename);
 		return 0;
 	}
 
@@ -713,7 +713,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek end) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
@@ -722,7 +722,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (tell_size == -1)
 	{
-		printf("Failed to get file size: (ftell) on file: %s\n", filename);
+		debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
@@ -732,7 +732,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return 0;
 	}
 
@@ -740,14 +740,14 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 	if (retval != 0)
 	{
-		printf("Failed to get file size: (seek start) on file: %s\n", filename);
+		debug_print("Failed to get file size: (seek start) on file: %s\n", filename);
 		fclose(file);
 		return 0;
 	}
 
 	if (size == 0)
 	{
-		printf("Could not stat %s.\n", filename);
+		debug_print("Could not stat %s.\n", filename);
 		return 0;
 	}
 
@@ -761,7 +761,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			if (retval != 0)
 			{
-				printf("Failed to seek the file %s\n", filename);
+				debug_print("Failed to seek the file %s\n", filename);
 				fclose(file);
 				return 0;
 			}
@@ -770,7 +770,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 
 			if (read != size)
 			{
-				printf("Failed to read file %s\n", filename);
+				debug_print("Failed to read file %s\n", filename);
 				fclose(file);
 				return 0;
 			}
@@ -824,7 +824,7 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 {
 	if ((x >= WIDTH) || (y >= HEIGHT))
 	{
-		printf("Rectangle off the screen\n");
+		debug_print("Rectangle off the screen\n");
 		return;
 	}
 

@@ -92,7 +92,7 @@ APP_TIMER_DEF(ble_scan_timer);
 static void ble_scan_timeout_handler(void *p_context) {
     UNUSED_PARAMETER(p_context);
 
-    printf("Rescan %d badges...\n", badgeAdvNum);
+    //debug_print("Rescan %d badges...\n", badgeAdvNum);
 
     // Check for special modes if we can see any badges
     if(badgeAdvNum > 0) {
@@ -102,7 +102,7 @@ static void ble_scan_timeout_handler(void *p_context) {
         for (uint8_t i = 0; i < badgeAdvNum; i++) {
             if (badgeAdv[i].group == badge_dc801) {
                 for(uint8_t j = 0; j < 7; j++){
-                    printf("%d - %02X\n", j, badgeAdv[i].data[j]);
+                    debug_print("%d - %02X\n", j, badgeAdv[i].data[j]);
                 }
             }
         }
@@ -318,7 +318,7 @@ static void ble_evt_handler(ble_evt_t const *p_ble_evt, void *p_context) {
 
                 if(parseAdvertisementData(data, p_gap_evt->params.adv_report.data.len, &adv)) {
 
-                    //printf("App %04X\n", adv.appearance);
+                    //debug_print("App %04X\n", adv.appearance);
 
                     // Parsed OK
                     // Is this a defcon badge?
@@ -525,7 +525,7 @@ bool parseAdvertisementData(uint8_t *data, uint8_t len, ADVERTISEMENT *adv){
 				uint16_t id;
 				id = ((uint16_t)block_data[1] << 8) | block_data[0];
 				adv->appearance = id;
-				//printf("Appearance %04X\n", adv->appearance);
+				//debug_print("Appearance %04X\n", adv->appearance);
 				break;
 			}
 			case BLOCK_TYPE_MANU_INFO:
@@ -534,21 +534,21 @@ bool parseAdvertisementData(uint8_t *data, uint8_t len, ADVERTISEMENT *adv){
 				adv->manu = id;
                 memset(adv->manu_data, 0, DATA_SAVE_LEN);
 				memcpy(adv->manu_data, &block_data[2], MIN(13, block_size));
-				//printf("Manu %04X\n", adv->manu);
+				//debug_print("Manu %04X\n", adv->manu);
 				break;
 			}
 			case BLOCK_TYPE_LONG_NAME:
 			{
 				adv->long_name = (char *)block_data;
 				adv->long_name_len = block_size;
-				//printf("Long name %s\n", adv->long_name);
+				//debug_print("Long name %s\n", adv->long_name);
 				break;
 			}
 			case BLOCK_TYPE_SHORT_NAME:
 			{
 				adv->short_name = (char *)block_data;
 				adv->short_name_len = block_size;
-                //printf("Short name %s\n", adv->short_name);
+                //debug_print("Short name %s\n", adv->short_name);
 				break;
 			}
 		    default:
@@ -571,7 +571,7 @@ void advertising_setUser(const char *user){
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
 
 #ifdef DEBUGMODE
-    printf("Setting BLE name to: '%s'\n", user)
+    debug_print("Setting BLE name to: '%s'\n", user)
 #endif
     // User name is always 10 chars
     sd_ble_gap_appearance_set(badgeYear_29);
