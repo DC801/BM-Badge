@@ -301,7 +301,7 @@ int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 		uint8_t *ptr = &read;
 
 		if(EngineROM_Read(address + i, sizeof(uint8_t), ptr) != sizeof(uint8_t)){
-			ENGINE_PANIC("ROM read failed during verification test.");
+			ENGINE_PANIC("ROM read command failed during verification test.");
 		}
 
 		if (read != *data++)
