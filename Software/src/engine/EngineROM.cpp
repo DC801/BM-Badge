@@ -226,6 +226,7 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 #ifdef DC801_DESKTOP
 
 FILE *romfile = NULL;
+uint8_t *romDataInDesktopRam = NULL;
 #include <errno.h>
 #include <string.h>
 
@@ -237,7 +238,26 @@ bool EngineROM_Init(void)
 	{
 		int error = errno;
 		fprintf(stderr, "Error: %s\n", strerror(error));
-		ENGINE_PANIC("Failed to load Game Data");
+		ENGINE_PANIC("Desktop build: ROM file missing");
+	}
+
+	fseek(romfile, 0, SEEK_END);
+	size_t romFileSize = ftell(romfile);
+	rewind(romfile);
+
+	romDataInDesktopRam = (uint8_t *) calloc(1, romFileSize);
+	if (!romDataInDesktopRam)
+	{
+		fclose(romfile);
+		ENGINE_PANIC("Desktop build: ROM->RAM memory alloc failed");
+	}
+
+	/* copy the file into the buffer */
+	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
+	{
+		fclose(romfile);
+		free(romDataInDesktopRam);
+		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 	return true;
 }
@@ -255,21 +275,15 @@ void EngineROM_Deinit(void)
 	}
 
 	romfile = NULL;
+
+	free(romDataInDesktopRam);
+	romDataInDesktopRam = NULL;
 }
 
 uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 {
-	if (romfile == NULL || data == NULL)
-	{
-		ENGINE_PANIC("Game Data file is not open");
-	}
-
-	if (fseek(romfile, address, SEEK_SET) != 0)
-	{
-		ENGINE_PANIC("Failed to seek into Game Data");
-	}
-
-	return fread(data, sizeof(uint8_t), length, romfile);
+	memcpy(data, romDataInDesktopRam + address, length);
+	return length;
 }
 
 uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
