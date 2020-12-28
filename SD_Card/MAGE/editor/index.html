@@ -35,7 +35,12 @@
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-12">
-					<div class="card">
+					<div
+						class="
+							card
+							mb-3
+						"
+					>
 						<div class="card-header">
 							Drag your `scenario_source_files` folder to the button
 						</div>
@@ -133,8 +138,48 @@
 		type="text/x-template"
 		id="template-entity-type-editor"
 	>
-		<div class="entity-type-editor row">
-			<div class="col-12">
+		<div
+			class="
+				entity-type-editor
+				card
+				text-white
+				mb-3
+			"
+		>
+			<div class="card-header">Entity Type Editor</div>
+			<div class="card-body">
+				<div
+					v-if="needsSave"
+					class="
+						alert
+						alert-danger
+						alert-dismissible
+						fade
+						show
+					"
+					role="alert"
+				>
+					<strong>Unsaved changes!</strong>
+					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
+					<button
+						type="button"
+						class="close"
+						title="Copy"
+						@click="copyState"
+					>
+						<span aria-hidden="true">📋</span>
+					</button>
+					<textarea
+						cols="80"
+						rows="16"
+						class="position-absolute"
+						style="
+							font-size: 0;
+							opacity: 0;
+						"
+						ref="copyStateTextArea"
+					>{{ jsonOutput }}</textarea>
+				</div>
 				<div class="form-group">
 					<label for="currentEntityTypeId">Entity Types:</label>
 					<select
@@ -170,13 +215,9 @@
 						>Create</button>
 					</div>
 				</div>
-			</div>
-			<div
-				v-if="currentEntityType"
-				class="col-12"
-				:key="currentEntityTypeId"
-			>
 				<div
+					v-if="currentEntityType"
+					:key="currentEntityTypeId"
 					class="
 						card
 						text-white
@@ -331,10 +372,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-12"><textarea
-				cols="80"
-				rows="16"
-			>{{ jsonOutput }}</textarea></div>
 		</div>
 	</script>
 	<script

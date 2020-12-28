@@ -35,7 +35,11 @@ Vue.component(
 				newEntityTypeId: '',
 				currentAnimationName: '',
 				currentAnimationDirection: -1,
+				initJsonState: '',
 			}
+		},
+		created: function () {
+			this.initJsonState = this.jsonOutput;
 		},
 		computed: {
 			entityTypes: function () {
@@ -51,6 +55,9 @@ Vue.component(
 						};
 					});
 				return JSON.stringify(result, null, '\t') + '\n';
+			},
+			needsSave: function () {
+				return this.initJsonState !== this.jsonOutput;
 			},
 			entityTypeList: function () {
 				return Object.values(this.entityTypes);
@@ -100,20 +107,24 @@ Vue.component(
 						animations: {
 							idle: [
 								{
-									"tileid": 0,
-									"flip_x": false
+									tileid: 0,
+									flip_x: false,
+									flip_y: false,
 								},
 								{
-									"tileid": 0,
-									"flip_x": false
+									tileid: 0,
+									flip_x: false,
+									flip_y: false,
 								},
 								{
-									"tileid": 0,
-									"flip_x": false
+									tileid: 0,
+									flip_x: false,
+									flip_y: false,
 								},
 								{
-									"tileid": 0,
-									"flip_x": false
+									tileid: 0,
+									flip_x: false,
+									flip_y: false,
 								}
 							]
 						}
@@ -181,6 +192,10 @@ Vue.component(
 					}
 				});
 				this.currentEntityType.animations = newValues;
+			},
+			copyState: function () {
+				this.$refs.copyStateTextArea.select();
+				document.execCommand("copy");
 			}
 		}
 	}
