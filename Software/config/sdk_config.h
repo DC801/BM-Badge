@@ -4997,7 +4997,7 @@
 
 
 #ifndef QSPI_CONFIG_SCK_DELAY
-#define QSPI_CONFIG_SCK_DELAY 32
+#define QSPI_CONFIG_SCK_DELAY 8
 #endif
 
 // <o> QSPI_CONFIG_XIP_OFFSET - Address offset in the external memory for Execute in Place operation.

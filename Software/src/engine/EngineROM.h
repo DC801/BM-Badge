@@ -1,8 +1,13 @@
 #ifndef ENGINE_ROM_H_
 #define ENGINE_ROM_H_
 
-//size of chunk to be read/written when writing game.dat to ROM
+//size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
+
+//size of largest single EngineROM_Write data that can be sent at one time:
+//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this 
+//or you'll lose data.
+#define ENGINE_ROM_WRITE_PAGE_SIZE 512
 
 //this is the 'magic string' that will appear at the start of game.dat.
 //it is used to verify that the binary file is formatted correctly.
