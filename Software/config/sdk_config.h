@@ -5066,7 +5066,7 @@
 // <15=> 32MHz/16
 
 #ifndef QSPI_CONFIG_FREQUENCY
-#define QSPI_CONFIG_FREQUENCY 1
+#define QSPI_CONFIG_FREQUENCY 0
 #endif
 
 // <s> QSPI_PIN_SCK - SCK pin value.
