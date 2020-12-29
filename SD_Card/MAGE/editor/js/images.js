@@ -5,10 +5,11 @@ var rgbaToC565 = function (r, g, b, a) {
 };
 
 var supportedImageTypes = ['png', 'gif'];
-var handleImage = function(imageFileName, scenarioData, fileNameMap) {
+var handleImage = function(tileset, scenarioData, fileNameMap) {
+	var imageFileName = tileset.image;
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
-	if (!file.serialized) {
+	if (file.scenarioIndex === undefined) {
 		var mimeTypeSuffix = file.type.split('/').pop();
 		if (supportedImageTypes.indexOf(mimeTypeSuffix) === -1) {
 			throw new Error(
@@ -42,16 +43,28 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 				// 	file.name,
 				// 	result
 				// );
-				var width = result.shape[0];
-				var height = result.shape[1];
+				var sourceWidth = result.shape[0];
+				var sourceHeight = result.shape[1];
+				var pixelsPerTile = tileset.tilewidth * tileset.tileheight;
 				var hasAlpha = result.shape[2] === 4;
-				var dataLength = width * height;
+				var dataLength = sourceWidth * sourceHeight;
 				var dataSize = 2;
 				var data = new ArrayBuffer(dataLength * dataSize);
 				var dataView = new DataView(data);
-				var offset = 0;
-				while (offset < dataLength) {
-					var readOffset = offset * result.shape[2];
+				var pixelIndex = 0;
+				while (pixelIndex < dataLength) {
+					var readOffset = pixelIndex * result.shape[2];
+					var sourceX = pixelIndex % sourceWidth;
+					var sourceY = Math.floor(pixelIndex / sourceWidth);
+					var tileX = sourceX % tileset.tilewidth;
+					var tileY = sourceY % tileset.tileheight;
+					var column = Math.floor(sourceX / tileset.tilewidth);
+					var row = Math.floor(sourceY / tileset.tileheight);
+					var writeOffset = (
+						tileX
+						+ (tileY * tileset.tilewidth)
+						+ (((row * tileset.columns) + column) * pixelsPerTile)
+					);
 					var color = rgbaToC565(
 						result.data[readOffset],
 						result.data[readOffset + 1],
@@ -62,11 +75,11 @@ var handleImage = function(imageFileName, scenarioData, fileNameMap) {
 					);
 					// fix endianness of output, little -> big
 					dataView.setUint16(
-						offset * dataSize,
+						writeOffset * dataSize,
 						color,
 						false
 					);
-					offset += 1;
+					pixelIndex += 1;
 				}
 				file.serialized = data;
 				return file;
