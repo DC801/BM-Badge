@@ -25,14 +25,14 @@ typedef struct {
 	bool op_sub;
 	bool op_page;
 	bool ljoy_center;
-	bool ljoy_left;
-	bool ljoy_down;
 	bool ljoy_up;
+	bool ljoy_down;
+	bool ljoy_left;
 	bool ljoy_right;
 	bool rjoy_center;
-	bool rjoy_left;
-	bool rjoy_down;
 	bool rjoy_up;
+	bool rjoy_down;
+	bool rjoy_left;
 	bool rjoy_right;
 	bool hax;
 } ButtonStates;
