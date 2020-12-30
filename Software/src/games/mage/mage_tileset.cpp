@@ -128,7 +128,7 @@ uint16_t MageTileset::Count() const
 	return rows*cols;
 }
 
-uint8_t MageTileset::Tile(uint32_t index) const
+uint8_t MageTileset::Tileset(uint32_t index) const
 {
 	if (!tiles) return 0;
 
