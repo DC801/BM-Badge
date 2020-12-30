@@ -93,27 +93,27 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_F3] << KEYBOARD_KEY_SUB;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_F4] << KEYBOARD_KEY_PAGE;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_E] << KEYBOARD_KEY_LJOY_CENTER;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_A] << KEYBOARD_KEY_LJOY_LEFT;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_S] << KEYBOARD_KEY_LJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_W] << KEYBOARD_KEY_LJOY_UP;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_S] << KEYBOARD_KEY_LJOY_DOWN;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_A] << KEYBOARD_KEY_LJOY_LEFT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_D] << KEYBOARD_KEY_LJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_5] << KEYBOARD_KEY_RJOY_CENTER;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_4] << KEYBOARD_KEY_RJOY_LEFT;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_2] << KEYBOARD_KEY_RJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_8] << KEYBOARD_KEY_RJOY_UP;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_2] << KEYBOARD_KEY_RJOY_DOWN;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_4] << KEYBOARD_KEY_RJOY_LEFT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_KP_6] << KEYBOARD_KEY_RJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_TAB] << KEYBOARD_KEY_HAX;
 	//secondary bindings that duplicate values above:
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_LSHIFT] << KEYBOARD_KEY_RJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_LCTRL] << KEYBOARD_KEY_PAGE;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_LEFT] << KEYBOARD_KEY_LJOY_LEFT;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_DOWN] << KEYBOARD_KEY_LJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_UP] << KEYBOARD_KEY_LJOY_UP;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_DOWN] << KEYBOARD_KEY_LJOY_DOWN;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_LEFT] << KEYBOARD_KEY_LJOY_LEFT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_RIGHT] << KEYBOARD_KEY_LJOY_RIGHT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_O] << KEYBOARD_KEY_RJOY_CENTER;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_J] << KEYBOARD_KEY_RJOY_LEFT;
-	newValue ^= (uint32_t) keys[SDL_SCANCODE_K] << KEYBOARD_KEY_RJOY_DOWN;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_I] << KEYBOARD_KEY_RJOY_UP;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_K] << KEYBOARD_KEY_RJOY_DOWN;
+	newValue ^= (uint32_t) keys[SDL_SCANCODE_J] << KEYBOARD_KEY_RJOY_LEFT;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_L] << KEYBOARD_KEY_RJOY_RIGHT;
 
 	*keyboardBitmask = newValue;
@@ -145,14 +145,14 @@ void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 	EngineInput_Buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
 	EngineInput_Buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
 	EngineInput_Buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
-	EngineInput_Buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
 	EngineInput_Buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
+	EngineInput_Buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
 	EngineInput_Buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
 	EngineInput_Buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
-	EngineInput_Buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
 	EngineInput_Buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
+	EngineInput_Buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
 	EngineInput_Buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
 	EngineInput_Buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
 
@@ -173,14 +173,14 @@ void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 	EngineInput_Activated.op_sub = !EngineInput_Activated.op_sub && EngineInput_Buttons.op_sub;
 	EngineInput_Activated.op_page = !EngineInput_Activated.op_page && EngineInput_Buttons.op_page;
 	EngineInput_Activated.ljoy_center = !EngineInput_Activated.ljoy_center && EngineInput_Buttons.ljoy_center;
-	EngineInput_Activated.ljoy_left = !EngineInput_Activated.ljoy_left && EngineInput_Buttons.ljoy_left;
-	EngineInput_Activated.ljoy_down = !EngineInput_Activated.ljoy_down && EngineInput_Buttons.ljoy_down;
 	EngineInput_Activated.ljoy_up = !EngineInput_Activated.ljoy_up && EngineInput_Buttons.ljoy_up;
+	EngineInput_Activated.ljoy_down = !EngineInput_Activated.ljoy_down && EngineInput_Buttons.ljoy_down;
+	EngineInput_Activated.ljoy_left = !EngineInput_Activated.ljoy_left && EngineInput_Buttons.ljoy_left;
 	EngineInput_Activated.ljoy_right = !EngineInput_Activated.ljoy_right && EngineInput_Buttons.ljoy_right;
 	EngineInput_Activated.rjoy_center = !EngineInput_Activated.rjoy_center && EngineInput_Buttons.rjoy_center;
-	EngineInput_Activated.rjoy_left = !EngineInput_Activated.rjoy_left && EngineInput_Buttons.rjoy_left;
-	EngineInput_Activated.rjoy_down = !EngineInput_Activated.rjoy_down && EngineInput_Buttons.rjoy_down;
 	EngineInput_Activated.rjoy_up = !EngineInput_Activated.rjoy_up && EngineInput_Buttons.rjoy_up;
+	EngineInput_Activated.rjoy_down = !EngineInput_Activated.rjoy_down && EngineInput_Buttons.rjoy_down;
+	EngineInput_Activated.rjoy_left = !EngineInput_Activated.rjoy_left && EngineInput_Buttons.rjoy_left;
 	EngineInput_Activated.rjoy_right = !EngineInput_Activated.rjoy_right && EngineInput_Buttons.rjoy_right;
 	EngineInput_Activated.hax = !EngineInput_Activated.hax && EngineInput_Buttons.hax;
 }
