@@ -6,6 +6,9 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 
+//uncomment to print main game loop timing debug info to terminal or over serial
+//#define TIMING_DEBUG
+
 #ifdef DC801_DESKTOP
 #include "EngineWindowFrame.h"
 #endif
@@ -219,7 +222,9 @@ void MAGE()
 		//update timing information at the start of every game loop
 		now = millis();
 		deltaTime = now - lastTime;
-		//debug_print("Current Loop Time: %d",now);
+		#ifdef TIMING_DEBUG
+			debug_print("Current Loop Time: %d",now);
+		#endif
 		lastTime = now;
 
 		//frame limiter code to keep game running at a specific FPS:
@@ -256,11 +261,12 @@ void MAGE()
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
 		handleBLockingDelay();
-/*
-		debug_print("After Input: %d", afterInput);
-		debug_print("After Update: %d", afterUpdate);
-		debug_print("After Render: %d", afterRender);
-		 */
+
+		#ifdef TIMING_DEBUG
+			debug_print("After Input: %d", afterInput);
+			debug_print("After Update: %d", afterUpdate);
+			debug_print("After Render: %d", afterRender);
+		#endif
 	}
 
 	// Close rom and any open files
