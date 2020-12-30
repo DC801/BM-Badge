@@ -28,13 +28,13 @@ var serializeTileset = function (tilesetData, image) {
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageWidth
-		tilesetData.imagewidth,
+		tilesetData.tilewidth, // used to be tilesetData.imagewidth,
 		false
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageHeight
-		tilesetData.imageheight,
+		tilesetData.rows * tilesetData.columns * tilesetData.tileheight, // used to be tilesetData.imageheight
 		false
 	);
 	offset += 2
@@ -52,13 +52,13 @@ var serializeTileset = function (tilesetData, image) {
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t cols
-		tilesetData.columns,
+		1, // used to be tilesetData.columns,
 		false
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t rows
-		Math.floor(tilesetData.imageheight / tilesetData.tileheight),
+		tilesetData.rows * tilesetData.columns,
 		false
 	);
 	var result = combineArrayBuffers(
@@ -84,6 +84,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		// forget about the built-in name, using file name instead.
 		tilesetData.name = tilesetFile.name.split('.')[0];
 		// already has columns, add the missing pair
+		tilesetData.rows = Math.floor(tilesetData.imageheight / tilesetData.tileheight);
 		(tilesetData.tiles || []).forEach(function (tile) {
 			mergeInProperties(
 				tile,
@@ -114,7 +115,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 				serializeAnimationData(tile, tilesetData, scenarioData);
 			}
 		});
-		var filePromise = handleImage(tilesetData.image, scenarioData, fileNameMap)
+		var filePromise = handleImage(tilesetData, scenarioData, fileNameMap)
 			.then(function () {
 				return tilesetData;
 			});

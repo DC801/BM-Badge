@@ -142,9 +142,10 @@ If the link in the wget below doesn't work, you can grab the latest from [ARM's 
 If you're using a distro other than ubuntu, you'll need to figure out how to install the equivalent paths below.
 
 ```shell script
-sudo tar xjf gcc-arm-none-eabi-<version>.bz2 -C /usr/share/
-sudo ln -s /usr/share/gcc-arm-none-eabi-<version>/bin/arm-none-eabi-* /usr/bin
-
+wget https://armkeil.blob.core.windows.net/developer/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+export EABI_VERSION=10-2020-q4-major
+sudo tar xjf gcc-arm-none-eabi-$EABI_VERSION-x86_64-linux.tar.bz2 -C /usr/share/
+sudo ln -s /usr/share/gcc-arm-none-eabi-$EABI_VERSION/bin/arm-none-eabi-* /usr/bin
 ```
 
 Make sure it works:

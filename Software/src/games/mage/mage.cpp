@@ -47,8 +47,8 @@ void handleScripts()
 {
 	//Note: all script handlers check for hex editor mode internally and will only continue
 	//scripts that have already started and are not yet complete when in hex editor mode.
-	
-	//the map's onLoad script is called with a false isFirstRun flag. This allows it to 
+
+	//the map's onLoad script is called with a false isFirstRun flag. This allows it to
 	//complete any non-blocking actions that were called when the map was first loaded,
 	//but it will not allow it to run the script again once it is completed.
 	MageScript->handleMapOnLoadScript(false);
@@ -145,7 +145,7 @@ void GameRender()
 		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
 
 		if (layerCount > 1)
-		{	
+		{
 			//draw the final layer above the entities.
 			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
 		}
@@ -175,10 +175,10 @@ void MAGE()
 
 	// Initialize ROM and reload game.dat if a different version is on the SD card.
 	EngineROM_Init();
-	
+
 	// Construct MageGameControl object, loading all headers
 	MageGame = std::make_unique<MageGameControl>();
-	
+
 	//construct MageHexEditor object, set hex editor defaults
 	MageHex = std::make_unique<MageHexEditor>();
 
@@ -203,7 +203,7 @@ void MAGE()
 		fprintf(stderr, "MageHexControl RAM use:    %8d bytes.\r\n", MageHex->size());
 		fprintf(stderr, "FrameBuffer RAM use:       %8d bytes.\r\n", FRAMEBUFFER_SIZE * sizeof(uint16_t));
 		fprintf(stderr, "-------------------------------------------\r\n");
-		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n", 
+		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n",
 			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
 	#endif
 
@@ -219,6 +219,7 @@ void MAGE()
 		//update timing information at the start of every game loop
 		now = millis();
 		deltaTime = now - lastTime;
+		//debug_print("Current Loop Time: %d",now);
 		lastTime = now;
 
 		//frame limiter code to keep game running at a specific FPS:
@@ -233,9 +234,11 @@ void MAGE()
 
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
+		uint32_t afterInput = millis() - lastTime;
 
 		//updates the state of all the things before rendering:
 		GameUpdate();
+		uint32_t afterUpdate = millis() - lastTime;
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -249,9 +252,15 @@ void MAGE()
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
+		uint32_t afterRender = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
 		handleBLockingDelay();
+/*
+		debug_print("After Input: %d", afterInput);
+		debug_print("After Update: %d", afterUpdate);
+		debug_print("After Render: %d", afterRender);
+		 */
 	}
 
 	// Close rom and any open files

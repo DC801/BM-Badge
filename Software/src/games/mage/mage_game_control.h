@@ -101,7 +101,7 @@ public:
 	uint32_t Size() const;
 
 	//this will return a specific MageTileset object by index.
-	const MageTileset& Tile(uint32_t index) const;
+	const MageTileset& Tileset(uint32_t index) const;
 
 	//this will return the current map object.
 	MageMap& Map();
@@ -115,7 +115,7 @@ public:
 	//this will load a map to be the current map.
 	void LoadMap(uint16_t index);
 
-	//this handles inputs that apply in ALL game states. That includes when 
+	//this handles inputs that apply in ALL game states. That includes when
 	//the hex editor is open, when it is closed, when in any menus, etc.
 	void applyUniversalInputs();
 
@@ -155,7 +155,7 @@ public:
 
 	//this returns the address offset for a specific script Id:
 	uint32_t getScriptAddress(uint32_t scriptId);
-	
+
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
 	void updateEntityRenderableData(uint8_t index);

@@ -136,12 +136,11 @@ void test_keyboard(){
 void test_rom(){
 	#ifdef DC801_EMBEDDED
 	uint8_t erased_array[9] {255, 255, 255, 255, 255, 255, 255, 255, 0};
-	char test_array[9] = "DIFFWORD";
-	char test_rx_array[9] {0};
+	char test_array[9] = "GOATBOAT";
+	char test_rx_array[9] {'X','X','X','X','X','X','X','X',0};
 	p_canvas()->clearScreen(COLOR_BLACK);
 	p_canvas()->blt();
 	/* disabling erase and write unless specifically needed for testing.
-	*/
 	debug_print("Erasing first 64k of ROM Chip memory...");
 	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_64K, 0)){
 		ENGINE_PANIC("Failed to send erase comand.");
@@ -151,14 +150,13 @@ void test_rom(){
 		ENGINE_PANIC("Verification of erase failed.");
 	}
 	debug_print("Writing %s to ROM chip...", test_array);
-	if(!qspiControl.write((uint8_t *)&test_array, 8, 0)){
-		ENGINE_PANIC("Failed to write to ROM with qspiControl.");
+	if(EngineROM_Write(0, 8, (uint8_t *)test_array) != 8){
+		ENGINE_PANIC("Failed to write to ROM.");
 	}
-	debug_print("Verifying Write...");
-	if(EngineROM_Verify(0, 8, (uint8_t *)test_array) != ENGINE_ROM_VERIFY_SUCCESS){
-		ENGINE_PANIC("Verification of write failed.");
-	}
-	if(qspiControl.read((uint8_t *)&test_rx_array, 8, 0)){
+	*/
+	if(EngineROM_Read(0, 8, (uint8_t *)test_rx_array) != 8){
+		ENGINE_PANIC("QSPI read failed.");
+	} else {
 		p_canvas()->printMessage(
 			test_rx_array,
 			Monaco9,
@@ -167,8 +165,6 @@ void test_rom(){
 			32
 		);
 		p_canvas()->blt();
-	} else {
-		ENGINE_PANIC("QSPI read failed");
 	}
 	#endif
 }
@@ -260,7 +256,7 @@ int main(void){
 	//Feel free to delete the function once everything is working -Tim
 	test_screen();
 
-	//this tests button inputs by blinking LEDs. 
+	//this tests button inputs by blinking LEDs.
 	//it's blocking, so comment it out when not actively testing.
 	//Feel free to delete the function once everything is working -Tim
 	//test_keyboard();

@@ -58,31 +58,33 @@ bool EngineROM_Init(void)
 
 	//get the gameDatTimestampROM from the ROM chip:
 	if(EngineROM_Read(
-		0, 
-		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH, 
+		0,
+		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
 		(uint8_t *)gameDatTimestampROM
 	) != ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH) {
 		ENGINE_PANIC("Failed to read timestamp from ROM");
 	}
 
 	//compare the two timestamps:
-	int32_t timestampsMatch = strcmp(gameDatTimestampSD, gameDatTimestampROM);
+	bool timestampsMatch = (strcmp(gameDatTimestampSD, gameDatTimestampROM) == 0);
 
-	if(timestampsMatch != 0){
+	if(!timestampsMatch){
 		//we need a prompt to see if they want to erase the chip: -Tim
 		if(!EngineROM_SD_Copy(gameDatFilesize, gameDat)){
 			ENGINE_PANIC("SD Copy Operation was not successful.");
 		}
 	}
-
+/*
 	// Verify magic string is on ROM when we're done:
 	if (EngineROM_Magic((const uint8_t*)ENGINE_ROM_MAGIC_STRING, ENGINE_ROM_MAGIC_STRING_LENGTH) != true)
 	{
 		ENGINE_PANIC("Failed to match Game Magic");
-	}
+	} */
 
 	//close game.dat file when done:
 	result = f_close(&gameDat);
+
+	return true;
 }
 
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
@@ -111,12 +113,12 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 	//then write the entire SD card game.dat file to the ROM chip MAGE_SD_CHUNK_READ_SIZE bytes at a time.
 	uint32_t currentAddress = 0;
 	uint8_t strBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE] {0};
+	//start by erasing the whole chip:
+	if(!qspiControl.chipErase()){
+		ENGINE_PANIC("Failed to erase ROM Chip.");
+	}
 	while(currentAddress < gameDatFilesize){
 		uint32_t chunkSize = MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (gameDatFilesize - currentAddress));
-		//start by erasing the sector we are about to write:
-		if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_64K, currentAddress)){
-			ENGINE_PANIC("Failed to erase ROM Chip.");
-		}
 		//seek to the currentAddress on the SD card:
 		result = f_lseek(&gameDat, currentAddress);
 		if (result != FR_OK) {
@@ -133,12 +135,40 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 			ENGINE_PANIC("Error reading game.dat from SD card\nduring ROM erase procedure.");
 		}
 		//write the buffer to the ROM chip:
-		if(EngineROM_Write(
-			currentAddress, 
-			chunkSize, 
-			strBuffer
-		) != chunkSize ) {
-			ENGINE_PANIC("Failed to write buffer to ROM chip\nduring ROM erase procedure.");
+		uint32_t romPagesToWrite = chunkSize / ENGINE_ROM_WRITE_PAGE_SIZE;
+		uint32_t partialPageBytesLeftOver = chunkSize % ENGINE_ROM_WRITE_PAGE_SIZE;
+		if(partialPageBytesLeftOver){
+			romPagesToWrite += 1;
+		}
+		for(uint32_t i=0; i<romPagesToWrite; i++)
+		{
+			//debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
+			uint32_t romPageOffset = i*ENGINE_ROM_WRITE_PAGE_SIZE;
+			bool shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
+			uint32_t writeSize = shouldUsePartialBytes
+				? partialPageBytesLeftOver
+				: ENGINE_ROM_WRITE_PAGE_SIZE;
+
+			if(i == (romPagesToWrite - 1)){
+				debug_print("Write Size at %d is %d", i, writeSize);
+			}
+			if(EngineROM_Write(
+				currentAddress + romPageOffset,
+				writeSize,
+				strBuffer + romPageOffset
+			) != writeSize ) {
+				ENGINE_PANIC("Failed to write buffer to ROM chip\nduring ROM erase procedure.");
+			}
+			//verify that the data was correctly written or return false.
+			int64_t verifyResult = EngineROM_Verify(
+				currentAddress + romPageOffset,
+				writeSize,
+				strBuffer + romPageOffset
+			);
+			if(verifyResult != ENGINE_ROM_VERIFY_SUCCESS){
+				debug_print("EngineROM_Verify failed at address %d", verifyResult);
+				return false;
+			}
 		}
 		//Debug Print:
 		sprintf(
@@ -162,12 +192,6 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 			96
 		);
 		p_canvas()->blt();
-		//verify that the data was correctly written or return false.
-		int64_t verify_result = EngineROM_Verify(currentAddress, chunkSize, strBuffer);
-		if(verify_result != ENGINE_ROM_VERIFY_SUCCESS){
-			debug_print("EngineROM_Verify failed at address %d", verify_result);
-			return false;
-		}
 		currentAddress += chunkSize;
 	}
 	//print success message:
@@ -198,13 +222,29 @@ uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
 		ENGINE_PANIC("EngineROM_Read: Null pointer");
 	}
 
-	if(!qspiControl.read(data, length, address))
+	//figure out values for handling unaligned bytes.
+	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t)) * sizeof(uint32_t);
+	//read in all but the last word if aligned data
+	if(!qspiControl.read(data, truncatedAlignedLength, address))
 	{
 		ENGINE_PANIC("Failed to QSPI Read.");
 	}
-
+	uint32_t numUnalignedBytes = length - truncatedAlignedLength;
+	if(numUnalignedBytes)
+	{
+		address += truncatedAlignedLength;
+		uint8_t lastWord[sizeof(uint32_t)] = {0, 0, 0, 0};
+		//read in the last word of aligned data to its own variable:
+		if(!qspiControl.read(lastWord, sizeof(uint32_t), address))
+		{
+			ENGINE_PANIC("Failed to QSPI Read.");
+		}
+		//fill in the unaligned bytes only and ignore the rest:
+		for(uint8_t i=0; i<numUnalignedBytes; i++){
+			data[truncatedAlignedLength+i] = lastWord[i];
+		}
+	}
 	return length;
-
 }
 
 uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
@@ -212,6 +252,10 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 	if (data == NULL)
 	{
 		ENGINE_PANIC("EngineROM_Write: Null pointer");
+	}
+
+	if(length % sizeof(uint32_t)){
+		ENGINE_PANIC("Length of write is not aligned to uint32_t\nYou can't do this, fix whatever is\nsending an unaligned write.");
 	}
 
 	if(!qspiControl.write(data, length, address))
@@ -309,19 +353,16 @@ int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 
-	for (uint32_t i = 0; i < length; i++)
-	{
-		uint8_t read = 0;
-		uint8_t *ptr = &read;
+	uint8_t readBuffer[length];
+	if(EngineROM_Read(address, length, readBuffer) != length){
+		ENGINE_PANIC("Failed to read from Rom in EngineROM_Verify");
+	}
 
-		if(EngineROM_Read(address + i, sizeof(uint8_t), ptr) != sizeof(uint8_t)){
-			ENGINE_PANIC("ROM read command failed during verification test.");
-		}
-
-		if (read != *data++)
-		{
-			debug_print("Verification error at address %d.\n%d read, %d expected", i+address, read, *(data-1));
-			return i+address;
+	for(uint32_t i=0; i<length; i++){
+		if(data[i] != readBuffer[i]){
+			debug_print("Address:%d:%d:%d",i,data[i],readBuffer[i]);
+			//return address in ROM where memory does not match
+			return address+i;
 		}
 	}
 
@@ -333,10 +374,10 @@ bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
 	uint8_t buffer[length];
 	uint8_t *ptr = buffer;
 
-	uint32_t read = EngineROM_Read(0, length, buffer);
-
+	uint32_t read = EngineROM_Verify(0, length, buffer);
 	if (read != length)
 	{
+		//let out the magic smoke
 		ENGINE_PANIC("Failed to match Game Data magic");
 	}
 
