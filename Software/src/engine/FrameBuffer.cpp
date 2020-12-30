@@ -22,6 +22,8 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
+#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 128
+
 //Cursor coordinates
 static int16_t m_cursor_x = 0;
 static int16_t m_cursor_y = 0;
@@ -256,7 +258,6 @@ void FrameBuffer::drawImageWithFlags(
 	}
 }
 
-#define MAX_RUN 128
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
 	int x,
@@ -276,7 +277,7 @@ void FrameBuffer::drawChunkWithFlags(
 	uint16_t write_y = 0;
 	int16_t dest_x = 0;
 	int16_t dest_y = 0;
-	uint16_t colors[MAX_RUN] = {};
+	uint16_t colors[MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH] = {};
 	uint32_t location = 0;
 	uint32_t bytes_to_read = 0;
 
@@ -321,7 +322,7 @@ void FrameBuffer::drawChunkWithFlags(
 		transposed_height
 	);
 
-	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_RUN);
+	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
 	uint16_t remaining_pixels_this_row = readRect.width;
 	uint16_t pixels_to_read_now = 0;
 	uint16_t color = 0;
@@ -343,7 +344,7 @@ void FrameBuffer::drawChunkWithFlags(
 			{
 				remaining_pixels_this_row = readRect.width - tile_x;
 				location = address + ((((readRect.y + tile_y) * pitch) + readRect.x + tile_x) * sizeof(uint16_t));
-				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_RUN);
+				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
 				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
 				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
 				{
@@ -1216,7 +1217,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 	/*
 	//Blast data to TFT
 	while (bytecount > 0) {
-		
+
 		uint32_t count = MIN(320*80*2, bytecount);
 
 		ili9341_push_colors((uint8_t*)p_raw, count);
