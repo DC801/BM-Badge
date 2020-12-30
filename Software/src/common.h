@@ -102,7 +102,7 @@ extern "C" {
 	#include <SDL.h>
 
 	#define NRF_LOG_RAW_INFO printf
-	#define debug_print(...)   printf(__VA_ARGS__)
+	#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
 #endif
 
 #ifdef DC801_EMBEDDED

@@ -150,17 +150,17 @@ uint32_t MageGameControl::Size() const
 	return size;
 }
 
-const MageTileset& MageGameControl::Tile(uint32_t index) const
+const MageTileset& MageGameControl::Tileset(uint32_t index) const
 {
-	static MageTileset tile;
-	if (!tilesets) return tile;
+	static MageTileset tileset;
+	if (!tilesets) return tileset;
 
 	if (tilesetHeader.count() > index)
 	{
 		return tilesets[index];
 	}
 
-	return tile;
+	return tileset;
 }
 
 MageMap& MageGameControl::Map()
@@ -181,7 +181,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 
 	//increment address
 	address += MAGE_ENTITY_NAME_LENGTH;
-	
+
 	// Read entity.x
 	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
 	{
@@ -345,7 +345,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 			fprintf(stderr, "Error: Game is attempting to load more than %d entities on one map.", MAX_ENTITIES_PER_MAP);
 		}
 	#endif
-	
+
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
 		//only populate the entities that are on the current map.
@@ -393,12 +393,12 @@ void MageGameControl::LoadMap(uint16_t index)
 	PopulateMapData(index);
 
 	initializeScriptsOnMapLoad();
-	
+
 	//close hex editor if open:
 	if(MageHex->getHexEditorState()) {
 		MageHex->toggleHexEditor();
 	}
-	
+
 	//close any open dialogs and return player control as well:
 	MageDialog->closeDialog();
 	playerHasControl = true;
@@ -505,7 +505,7 @@ void MageGameControl::applyGameModeInputs()
 			if(EngineInput_Buttons.op_page);
 				//no task assigned to op_page in game mode
 		}
-		
+
 		//check for memory button presses and set the hex cursor to the memory location
 		if(EngineInput_Activated.mem0)
 		{
@@ -577,7 +577,7 @@ void MageGameControl::applyGameModeInputs()
 			uint16_t oldTileHeight = tilesets[previousPlayerTilesetId].TileHeight();
 			uint16_t newTileWidth = tilesets[renderableData->tilesetId].TileWidth();
 			uint16_t newTileHeight = tilesets[renderableData->tilesetId].TileHeight();
-			//the offset to maintain camera centered on the player is equal to half the difference in size 
+			//the offset to maintain camera centered on the player is equal to half the difference in size
 			int32_t xOffset = (oldTileHeight - newTileWidth)/2;
 			int32_t yOffset = (oldTileHeight - newTileHeight)/2;
 			//adjust player position so that the camera centring will not change from the previous tileset to the new tileset.
@@ -670,6 +670,19 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 {
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 
+
+	uint32_t layerAddress = map.LayerOffset(layer);
+	if(layerAddress == 0)
+	{
+		return;
+	}
+	uint32_t address = layerAddress;
+
+		struct MageMapTile {
+			uint16_t tileId = 0;
+			uint8_t tilesetId = 0;
+			uint8_t flags = 0;
+		} currentTile;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
 		int32_t x = (int32_t)((map.TileWidth() * (i % map.Cols())) - camera_x);
@@ -682,68 +695,42 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		{
 			continue;
 		}
+		address = layerAddress + (i * sizeof(currentTile));
 
-		uint32_t address = map.LayerOffset(layer);
+		if (EngineROM_Read(address, sizeof(currentTile), (uint8_t *)&currentTile) != sizeof(currentTile))
+		{
+			ENGINE_PANIC("Failed to fetch map layer tile info");
+		}
 
-		if (address == 0)
+
+		currentTile.tileId = convert_endian_u2_value(currentTile.tileId);
+
+		if (currentTile.tileId == 0)
 		{
 			continue;
 		}
 
+		currentTile.tileId -= 1;
 
-		uint16_t tileId = 0;
-		uint8_t tilesetId = 0;
-		uint8_t flags = 0;
+		const MageTileset &tileset = Tileset(currentTile.tilesetId);
 
-		address += i * (sizeof(tileId) + sizeof(tilesetId) + sizeof(flags));
-
-		if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
-		{
-			ENGINE_PANIC("Failed to fetch map layer tile info");
-		}
-
-		tileId = convert_endian_u2_value(tileId);
-		address += sizeof(tileId);
-
-		if (tileId == 0)
-		{
-			continue;
-		}
-
-		tileId -= 1;
-
-		if (EngineROM_Read(address, sizeof(tilesetId), &tilesetId) != sizeof(tilesetId))
-		{
-			ENGINE_PANIC("Failed to fetch map layer tile info");
-		}
-
-		address += sizeof(tilesetId);
-
-		if (EngineROM_Read(address, sizeof(flags), &flags) != sizeof(flags))
-		{
-			ENGINE_PANIC("Failed to fetch map layer tile info");
-		}
-
-		const MageTileset &tileset = Tile(tilesetId);
-
-		if (tileset.Valid() != true)
+		if (!tileset.Valid())
 		{
 			continue;
 		}
 
 		address = imageHeader.offset(tileset.ImageId());
-
-		canvas.drawChunkWithFlags(
+ 		canvas.drawChunkWithFlags(
 			address,
 			x,
 			y,
 			tileset.TileWidth(),
 			tileset.TileHeight(),
-			(tileId % tileset.Cols()) * tileset.TileWidth(),
-			(tileId / tileset.Cols()) * tileset.TileHeight(),
+			(currentTile.tileId % tileset.Cols()) * tileset.TileWidth(),
+			(currentTile.tileId / tileset.Cols()) * tileset.TileHeight(),
 			tileset.ImageWidth(),
 			TRANSPARENCY_COLOR,
-			flags
+			currentTile.flags
 		);
 	}
 }
@@ -767,7 +754,7 @@ uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
 
 uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 {
-	//always return a valid animation ID. 
+	//always return a valid animation ID.
 	return animationId % (animationHeader.count());
 }
 
@@ -777,13 +764,13 @@ uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16
 	//There's a good chance if that happens, it will break things.
 	animationId = getValidAnimationId(animationId);
 
-	//always return a valid animation frame for the animationId submitted. 
+	//always return a valid animation frame for the animationId submitted.
 	return animationFrame % animations[animationId].FrameCount();
 }
 
 uint16_t MageGameControl::getValidTilesetId(uint16_t tilesetId)
 {
-	//always return a valid tileset ID. 
+	//always return a valid tileset ID.
 	return tilesetId % tilesetHeader.count();
 }
 
@@ -793,13 +780,13 @@ uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
 	//There's a good chance if that happens, it will break things.
 	tilesetId = getValidTilesetId(tilesetId);
 
-	//always return a valid animation frame for the animationId submitted. 
+	//always return a valid animation frame for the animationId submitted.
 	return tileId % tilesets[tilesetId].Count();
 }
-	
+
 uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 {
-	//always return a valid entity type for the entityTypeId submitted. 
+	//always return a valid entity type for the entityTypeId submitted.
 	return entityTypeId % entityTypeHeader.count();
 }
 
@@ -819,13 +806,13 @@ uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimati
 	//There's a good chance if that happens, it will break things.
 	entityTypeId = entityTypeId % entityTypeHeader.count();
 
-	//always return a valid entity type animation ID for the entityTypeAnimationId submitted. 
+	//always return a valid entity type animation ID for the entityTypeAnimationId submitted.
 	return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
 }
 
 uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
 {
-	//always return a valid direction. 
+	//always return a valid direction.
 	//Subtract 1 because they are 0-indexed.
 	return direction % MageEntityAnimationDirection::NUM_DIRECTIONS;
 }
@@ -997,11 +984,11 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		entityRenderableData[i].currentFrameTicks += deltaTime;
 
 		#ifdef DC801_DESKTOP
-		//add fudge factor for desktop version to make animations 
+		//add fudge factor for desktop version to make animations
 		//look better on slow-running emulation machine
 		entityRenderableData[i].currentFrameTicks += DESKTOP_TIME_FUDGE_FACTOR;
 		#endif
-		
+
 		//update entity info:
 		updateEntityRenderableData(i);
 
@@ -1054,7 +1041,7 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 		entitySortOrder[i] = temp;
 	}
 
-	//now that we've got a sorted array with the lowest y values first, 
+	//now that we've got a sorted array with the lowest y values first,
 	//iterate through it and draw the entities one by one:
 	for(uint16_t i=0; i<map.EntityCount(); i++)
 	{

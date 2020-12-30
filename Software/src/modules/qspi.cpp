@@ -1,7 +1,7 @@
 /**
- * 
+ *
  * QSPI driver for the DC801 badge
- * 
+ *
  * @author @hamster
  * @date 12/24/2020
  *
@@ -31,16 +31,22 @@ QSPI::QSPI(){
 
 /**
  * Initialize the qspi interface
- * 
- * Datasheet for the S25FL256S is located at 
+ *
+ * Datasheet for the S25FL256S is located at
  * https://www.cypress.com/file/448601/download
- * 
+ *
  * @return true on success, false if not successful
  */
 bool QSPI::init(){
 
 	nrfx_err_t errCode;
 	nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG;
+
+	errCode = nrfx_qspi_init(&config, NULL, NULL);
+	if(errCode != NRFX_SUCCESS){
+		debug_print("Failure at nrfx_qspi_init() call.");
+		return false;
+	}
 
 	//Add High Drive mode to QSPI pin config:
 	nrf_gpio_cfg(
@@ -91,12 +97,6 @@ bool QSPI::init(){
 		NRF_GPIO_PIN_H0H1,
 		NRF_GPIO_PIN_NOSENSE
 	);
-
-	errCode = nrfx_qspi_init(&config, NULL, NULL);
-	if(errCode != NRFX_SUCCESS){
-		debug_print("Failure at nefx_qspi_init() call.");
-		return false;
-	}
 
 	nrf_qspi_cinstr_conf_t cinstr_cfg = {
 		.opcode    = 0xF0,
@@ -211,7 +211,7 @@ bool QSPI::chipErase(){
 /**
  * Write some data out to the qspi device
  * @param data A pointer to an array of data to write out
- * @param len Number of bytes to send
+ * @param len Number of bytes to send, must be uint32_t aligned
  */
 bool QSPI::write(void const *data, size_t len, uint32_t startAddress){
 
