@@ -219,7 +219,7 @@ void MAGE()
 		//update timing information at the start of every game loop
 		now = millis();
 		deltaTime = now - lastTime;
-		debug_print("Current Loop Time: %d",now);
+		//debug_print("Current Loop Time: %d",now);
 		lastTime = now;
 
 		//frame limiter code to keep game running at a specific FPS:
@@ -256,9 +256,11 @@ void MAGE()
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
 		handleBLockingDelay();
+/*
 		debug_print("After Input: %d", afterInput);
 		debug_print("After Update: %d", afterUpdate);
 		debug_print("After Render: %d", afterRender);
+		 */
 	}
 
 	// Close rom and any open files
