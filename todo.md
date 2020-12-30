@@ -183,6 +183,11 @@
 	- [ ] Player Name (12 bytes, like all other entities)
 	- [ ] On map init, replace player name into PlayerEntity
 	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
+- [ ] Allow upload of game.dat to ROM chip using nrfjprog
+	- [ ] Convert game.daty into a game.hex file that writes data to address 0x12000000 and up on the ROM chip.
+	- [ ] Use qcustominit.ini file added with this commit and the following command to upload:
+		- `nrfjprog -f nrf52 --qspiini qcustominit.ini --program <filename>`
+		- More info on nrfjprog: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf_cltools%2FUG%2Fcltools%2Fnrf_nrfjprogexe_reference.html
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
