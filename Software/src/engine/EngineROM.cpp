@@ -352,7 +352,7 @@ int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 	{
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
-
+	char debugString[128];
 	uint8_t readBuffer[length];
 	if(EngineROM_Read(address, length, readBuffer) != length){
 		ENGINE_PANIC("Failed to read from Rom in EngineROM_Verify");
@@ -360,7 +360,15 @@ int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
 
 	for(uint32_t i=0; i<length; i++){
 		if(data[i] != readBuffer[i]){
-			debug_print("Address:%d:%d:%d",i,data[i],readBuffer[i]);
+			sprintf(
+				debugString,
+				"EngineROM_Verify failed at address %d\nSD: %d\nROM: %d",
+				address + i,
+				data[i],
+				readBuffer[i]
+			);
+			debug_print(debugString);
+			ENGINE_PANIC(debugString);
 			//return address in ROM where memory does not match
 			return address+i;
 		}

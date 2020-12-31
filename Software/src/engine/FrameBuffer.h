@@ -3,6 +3,8 @@
 
 #ifdef __cplusplus
 #include <cstdint>
+#include "games/mage/mage_color_palette.h"
+
 #endif
 
 #include "common.h"
@@ -128,16 +130,17 @@ public:
     );
 
 	void drawChunkWithFlags(
-        uint32_t address, //address of first pixel of image in ROM
-        int x, //x coordinate of destination pixel on screen
-        int y, //y coordinate of destination pixel on screen
-        uint16_t tile_width, //width of tile being drawn
-        uint16_t tile_height, //height of tile being drawn
-        uint16_t source_x, //coordinates in source image
-        uint16_t source_y, //coordinates in source image
-        int16_t pitch, //width of source image
-        uint16_t transparent_color, //565 encoded color value
-        uint8_t flags //render flags
+		uint32_t address, //address of first pixel of image in ROM
+		MageColorPalette *colorPalette, //color palette to lookup image colors from
+		int x, //x coordinate of destination pixel on screen
+		int y, //y coordinate of destination pixel on screen
+		uint16_t tile_width, //width of tile being drawn
+		uint16_t tile_height, //height of tile being drawn
+		uint16_t source_x, //coordinates in source image
+		uint16_t source_y, //coordinates in source image
+		int16_t pitch, //width of source image
+		uint16_t transparent_color, //565 encoded color value
+		uint8_t flags //render flags
 	);
 
     void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);

@@ -24,6 +24,8 @@ seq:
     type: count_with_offsets
   - id: dialog_offsets
     type: count_with_offsets
+  - id: image_color_palette_offsets
+    type: count_with_offsets
   - id: string_offsets
     type: count_with_offsets
   - id: save_flags_offsets
@@ -62,6 +64,10 @@ seq:
     type: dialog
     repeat: expr
     repeat-expr: dialog_offsets.count
+  - id: image_color_palettes
+    type: image_color_palette
+    repeat: expr
+    repeat-expr: image_color_palette_offsets.count
 instances:
   strings:
     type: string(_index)
@@ -447,6 +453,27 @@ types:
         size: char_count
         encoding: ASCII
 
+  image_color_palette:
+    seq:
+     - id: name
+       type: str
+       size: 32
+       encoding: ASCII
+     - id: color_count
+       type: u1
+     - id: padding
+       type: u1
+       doc: Padding to align things back to uint16_t
+     - id: colors
+       type: image_color
+       repeat: expr
+       repeat-expr: color_count
+     - id: colors_padding
+       type: u2
+       repeat: expr
+       repeat-expr: (color_count + 1) % 2
+       doc: Padding to align things back to uint32_t
+
   image:
     params:
       - id: index
@@ -458,7 +485,7 @@ types:
         value: '_parent.image_offsets.lengths[index] / 2'
       colors:
         pos: offset
-        type: image_color
+        type: u1
         repeat: expr
         repeat-expr: pixel_count
 

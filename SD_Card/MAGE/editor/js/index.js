@@ -7,6 +7,7 @@ var dataTypes = [
 	'geometry',
 	'scripts',
 	'dialogs',
+	'imageColorPalettes',
 	'strings',
 	'save_flags',
 	'images',

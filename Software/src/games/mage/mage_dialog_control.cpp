@@ -155,8 +155,9 @@ void MageDialogControl::loadNextScreen() {
 	);
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
+	currentImageIndex = currentFrameTileset->ImageId();
 	currentImageAddress = MageGame->getImageAddress(
-		currentFrameTileset->ImageId()
+		currentImageIndex
 	);
 	currentScreenIndex++;
 }
@@ -200,6 +201,7 @@ void MageDialogControl::drawDialogBox(const std::string &string, Rect box) {
 			tileId = getTileIdFromXY(i, j, box);
 			canvas.drawChunkWithFlags(
 				currentImageAddress,
+				MageGame->getValidColorPalette(currentImageIndex),
 				x,
 				y,
 				tileWidth,
