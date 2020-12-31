@@ -60,6 +60,7 @@ class MageDialogControl {
 		uint32_t currentDialogScreenCount;
 		int32_t currentScreenIndex;
 		int32_t currentMessageIndex;
+		uint16_t currentImageIndex;
 		uint32_t currentImageAddress;
 		MageDialogScreen currentScreen;
 		std::unique_ptr<uint16_t[]>messageIds;

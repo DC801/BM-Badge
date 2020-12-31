@@ -260,6 +260,7 @@ void FrameBuffer::drawImageWithFlags(
 
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
+	MageColorPalette *colorPalette,
 	int x,
 	int y,
 	uint16_t tile_width,
@@ -277,9 +278,8 @@ void FrameBuffer::drawChunkWithFlags(
 	uint16_t write_y = 0;
 	int16_t dest_x = 0;
 	int16_t dest_y = 0;
-	uint16_t colors[MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH] = {};
+	uint8_t colorIndices[MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH] = {};
 	uint32_t location = 0;
-	uint32_t bytes_to_read = 0;
 
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
@@ -329,35 +329,32 @@ void FrameBuffer::drawChunkWithFlags(
 	// These loops represent source coordinate space, not destination space
 	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
 	{
-		location = address + ((((readRect.y + tile_y) * pitch) + readRect.x) * sizeof(uint16_t));
-		bytes_to_read = pixels_to_read_per_run * sizeof(uint16_t);
-		if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
+		location = address + (((readRect.y + tile_y) * pitch) + readRect.x);
+		if (EngineROM_Read(location, pixels_to_read_per_run, (uint8_t *)&colorIndices) != pixels_to_read_per_run)
 		{
 			debug_print("Failed to read pixel data\n");
 			return;
 		}
-		convert_endian_u2_buffer(colors, pixels_to_read_per_run);
 		tile_x = 0;
 		while (tile_x < readRect.width)
 		{
 			if(tile_x > pixels_to_read_per_run)
 			{
 				remaining_pixels_this_row = readRect.width - tile_x;
-				location = address + ((((readRect.y + tile_y) * pitch) + readRect.x + tile_x) * sizeof(uint16_t));
+				location = address + (((readRect.y + tile_y) * pitch) + readRect.x + tile_x);
 				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
-				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
+				if (EngineROM_Read(location, pixels_to_read_now, (uint8_t *)&colorIndices) != pixels_to_read_now)
 				{
 					debug_print("Failed to read pixel data\n");
 					return;
 				}
-				convert_endian_u2_buffer(colors, pixels_to_read_now);
 			}
 			write_x = ((flip_diag) ? (tile_y) : (tile_x));
 			write_y = ((flip_diag) ? (tile_x) : (tile_y));
 			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
 			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
-			color = colors[tile_x % pixels_to_read_per_run];
+			uint8_t colorIndex = colorIndices[tile_x % pixels_to_read_per_run];
+			color = colorPalette->colors[colorIndex];
 			if (color != transparent_color)
 			{
 				frame[(dest_y * WIDTH) + dest_x] = color;

@@ -50,6 +50,9 @@ MageGameControl::MageGameControl()
 	dialogHeader = MageHeader(offset);
 	offset += dialogHeader.size();
 
+	colorPaletteHeader = MageHeader(offset);
+	offset += colorPaletteHeader.size();
+
 	stringHeader = MageHeader(offset);
 	offset += stringHeader.size();
 
@@ -91,6 +94,13 @@ MageGameControl::MageGameControl()
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		geometries[i] = MageGeometry(geometryHeader.offset(i));
+	}
+
+	colorPalettes = std::make_unique<MageColorPalette[]>(colorPaletteHeader.count());
+
+	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	{
+		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
 	}
 
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
@@ -145,6 +155,11 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		size += geometries[i].size();
+	}
+
+	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	{
+		size += colorPalettes[i].size();
 	}
 
 	return size;
@@ -666,7 +681,7 @@ void MageGameControl::handleEntityInteract()
 	}
 }
 
-void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
+void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 {
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 
@@ -678,11 +693,11 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 	}
 	uint32_t address = layerAddress;
 
-		struct MageMapTile {
-			uint16_t tileId = 0;
-			uint8_t tilesetId = 0;
-			uint8_t flags = 0;
-		} currentTile;
+	struct MageMapTile {
+		uint16_t tileId = 0;
+		uint8_t tilesetId = 0;
+		uint8_t flags = 0;
+	} currentTile;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
 		int32_t x = (int32_t)((map.TileWidth() * (i % map.Cols())) - camera_x);
@@ -719,9 +734,11 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			continue;
 		}
 
+		MageColorPalette *colorPalette = getValidColorPalette(tileset.ImageId());
 		address = imageHeader.offset(tileset.ImageId());
- 		canvas.drawChunkWithFlags(
+		canvas.drawChunkWithFlags(
 			address,
+			colorPalette,
 			x,
 			y,
 			tileset.TileWidth(),
@@ -1061,6 +1078,7 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 		int32_t y = entity->y - cameraY - tileHeight;
 		canvas.drawChunkWithFlags(
 			address,
+			getValidColorPalette(imageId),
 			x,
 			y,
 			tileWidth,
@@ -1139,6 +1157,10 @@ MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
 	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
 }
 
+MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {
+	return &colorPalettes[colorPaletteId % colorPaletteHeader.count()];
+}
+
 MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t mapLocalEntityId) {
 	return &entityRenderableData[mapLocalEntityId % map.EntityCount()];
 }
@@ -1190,8 +1212,8 @@ std::string MageGameControl::getString(
 		} else {
 			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
 			sprintf(
-				"MISSING: %d",
 				missingError,
+				"MISSING: %d",
 				parsedEntityIndex
 			);
 			outputString.append(missingError);
