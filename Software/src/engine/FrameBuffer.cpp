@@ -330,11 +330,12 @@ void FrameBuffer::drawChunkWithFlags(
 	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
 	{
 		location = address + (((readRect.y + tile_y) * pitch) + readRect.x);
-		if (EngineROM_Read(location, pixels_to_read_per_run, (uint8_t *)&colorIndices) != pixels_to_read_per_run)
-		{
-			debug_print("Failed to read pixel data\n");
-			return;
-		}
+		EngineROM_Read(
+			location,
+			pixels_to_read_per_run,
+			(uint8_t *)&colorIndices,
+			"Failed to read pixel data"
+		);
 		tile_x = 0;
 		while (tile_x < readRect.width)
 		{
@@ -343,11 +344,12 @@ void FrameBuffer::drawChunkWithFlags(
 				remaining_pixels_this_row = readRect.width - tile_x;
 				location = address + (((readRect.y + tile_y) * pitch) + readRect.x + tile_x);
 				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-				if (EngineROM_Read(location, pixels_to_read_now, (uint8_t *)&colorIndices) != pixels_to_read_now)
-				{
-					debug_print("Failed to read pixel data\n");
-					return;
-				}
+				EngineROM_Read(
+					location,
+					pixels_to_read_now,
+					(uint8_t *)&colorIndices,
+					"Failed to read pixel data"
+				);
 			}
 			write_x = ((flip_diag) ? (tile_y) : (tile_x));
 			write_y = ((flip_diag) ? (tile_x) : (tile_y));

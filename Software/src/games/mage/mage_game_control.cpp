@@ -189,19 +189,23 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	if (EngineROM_Read(address, MAGE_ENTITY_NAME_LENGTH, (uint8_t *)entity.name) != MAGE_ENTITY_NAME_LENGTH)
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		MAGE_ENTITY_NAME_LENGTH,
+		(uint8_t *)entity.name,
+		"Failed to read Entity property 'name'"
+	);
 
 	//increment address
 	address += MAGE_ENTITY_NAME_LENGTH;
 
 	// Read entity.x
-	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.x),
+		(uint8_t *)&entity.x,
+		"Failed to read Entity property 'x'"
+	);
 
 	// Endianness conversion
 	entity.x = convert_endian_u2_value(entity.x);
@@ -210,10 +214,12 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.x);
 
 	// Read entity.y
-	if (EngineROM_Read(address, sizeof(entity.y), (uint8_t *)&entity.y) != sizeof(entity.y))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.y),
+		(uint8_t *)&entity.y,
+		"Failed to read Entity property 'y'"
+	);
 
 	// Endianness conversion
 	entity.y = convert_endian_u2_value(entity.y);
@@ -222,10 +228,12 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.y);
 
 	// Read entity.onInteractScriptId
-	if (EngineROM_Read(address, sizeof(entity.onInteractScriptId), (uint8_t *)&entity.onInteractScriptId) != sizeof(entity.onInteractScriptId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.onInteractScriptId),
+		(uint8_t *)&entity.onInteractScriptId,
+		"Failed to read Entity property 'onInteractScriptId'"
+	);
 
 	// Endianness conversion
 	entity.onInteractScriptId = convert_endian_u2_value(entity.onInteractScriptId);
@@ -234,10 +242,12 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onInteractScriptId);
 
 	// Read entity.onTickScript
-	if (EngineROM_Read(address, sizeof(entity.onTickScriptId), (uint8_t *)&entity.onTickScriptId) != sizeof(entity.onTickScriptId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.onTickScriptId),
+		(uint8_t *)&entity.onTickScriptId,
+		"Failed to read Entity property 'onTickScriptId'"
+	);
 
 	// Endianness conversion
 	entity.onTickScriptId = convert_endian_u2_value(entity.onTickScriptId);
@@ -246,10 +256,12 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onTickScriptId);
 
 	// Read entity.primaryId
-	if (EngineROM_Read(address, sizeof(entity.primaryId), (uint8_t *)&entity.primaryId) != sizeof(entity.primaryId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.primaryId),
+		(uint8_t *)&entity.primaryId,
+		"Failed to read Entity property 'primaryId'"
+	);
 
 	// Endianness conversion
 	entity.primaryId = convert_endian_u2_value(entity.primaryId);
@@ -258,10 +270,12 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.primaryId);
 
 	// Read entity.secondaryId
-	if (EngineROM_Read(address, sizeof(entity.secondaryId), (uint8_t *)&entity.secondaryId) != sizeof(entity.secondaryId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.secondaryId),
+		(uint8_t *)&entity.secondaryId,
+		"Failed to read Entity property 'secondaryId'"
+	);
 
 	// Endianness conversion
 	entity.secondaryId = convert_endian_u2_value(entity.secondaryId);
@@ -270,81 +284,90 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.secondaryId);
 
 	// Read entity.primaryIdType
-	if (EngineROM_Read(address, sizeof(entity.primaryIdType), (uint8_t *)&entity.primaryIdType) != sizeof(entity.primaryIdType))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.primaryIdType),
+		(uint8_t *)&entity.primaryIdType,
+		"Failed to read Entity property 'primaryIdType'"
+	);
 
 	//increment address
 	address += sizeof(entity.primaryIdType);
 
 	// Read entity.currentAnimation
-	if (EngineROM_Read(address, sizeof(entity.currentAnimation), (uint8_t *)&entity.currentAnimation) != sizeof(entity.currentAnimation))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.currentAnimation),
+		(uint8_t *)&entity.currentAnimation,
+		"Failed to read Entity property 'currentAnimation'"
+	);
 
 	//increment address
 	address += sizeof(entity.currentAnimation);
 
 	// Read entity.currentFrame
-	if (EngineROM_Read(address, sizeof(entity.currentFrame), (uint8_t *)&entity.currentFrame) != sizeof(entity.currentFrame))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.currentFrame),
+		(uint8_t *)&entity.currentFrame,
+		"Failed to read Entity property 'currentFrame'"
+	);
 
 	//increment address
 	address += sizeof(entity.currentFrame);
 
 	// Read entity.direction
-	if (EngineROM_Read(address, sizeof(entity.direction), (uint8_t *)&entity.direction) != sizeof(entity.direction))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.direction),
+		(uint8_t *)&entity.direction,
+		"Failed to read Entity property 'direction'"
+	);
 
 	//increment address
 	address += sizeof(entity.direction);
 
 	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateA), (uint8_t *)&entity.hackableStateA) != sizeof(entity.hackableStateA))
-	{
-		goto MageEntity_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateA),
+		(uint8_t *)&entity.hackableStateA,
+		"Failed to read Entity property 'hackableStateA'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateA);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateB), (uint8_t *)&entity.hackableStateB) != sizeof(entity.hackableStateB))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateB
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateB),
+		(uint8_t *)&entity.hackableStateB,
+		"Failed to read Entity property 'hackableStateB'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateB);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateC), (uint8_t *)&entity.hackableStateC) != sizeof(entity.hackableStateC))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateC
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateC),
+		(uint8_t *)&entity.hackableStateC,
+		"Failed to read Entity property 'hackableStateC'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateC);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateD), (uint8_t *)&entity.hackableStateD) != sizeof(entity.hackableStateD))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateD
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateD),
+		(uint8_t *)&entity.hackableStateD,
+		"Failed to read Entity property 'hackableStateD'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateD);
 
 	return entity;
-
-MageEntity_Error:
-	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
 void MageGameControl::PopulateMapData(uint16_t index)
@@ -712,10 +735,12 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		}
 		address = layerAddress + (i * sizeof(currentTile));
 
-		if (EngineROM_Read(address, sizeof(currentTile), (uint8_t *)&currentTile) != sizeof(currentTile))
-		{
-			ENGINE_PANIC("Failed to fetch map layer tile info");
-		}
+		EngineROM_Read(
+			address,
+			sizeof(currentTile),
+			(uint8_t *)&currentTile,
+			"DrawMap Failed to read property 'currentTile'"
+		);
 
 
 		currentTile.tileId = convert_endian_u2_value(currentTile.tileId);
@@ -1182,10 +1207,12 @@ std::string MageGameControl::getString(
 	uint32_t length = stringHeader.length(sanitizedIndex);
 	std::string romString(length, '\0');
 	uint8_t *romStringPointer = (uint8_t *)&romString[0];
-	if (EngineROM_Read(start, length, romStringPointer) != length)
-	{
-		ENGINE_PANIC("Failed to load string data.");
-	}
+	EngineROM_Read(
+		start,
+		length,
+		romStringPointer,
+		"Failed to load string data."
+	);
 	std::string outputString(0, '\0');
 	volatile size_t cursor = 0;
 	volatile size_t variableStartPosition = 0;

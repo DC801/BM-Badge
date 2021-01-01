@@ -6,81 +6,90 @@ MageTileset::MageTileset(uint32_t address)
 {
 	uint32_t tileCount = 0;
 
-	if (EngineROM_Read(address, 16, (uint8_t *)name) != 16)
-	{
-		goto MageTileset_Error;
-	}
+	EngineROM_Read(
+		address,
+		16,
+		(uint8_t *)name,
+		"Failed to load MageTileset property 'name'"
+	);
 
 	name[16] = 0; // Null terminate
 	address += 16;
 
-	if (EngineROM_Read(address, sizeof(imageId), (uint8_t *)&imageId) != sizeof(imageId))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(imageId),
+		(uint8_t *)&imageId,
+		"Failed to load MageTileset property 'imageId'"
+	);
 	imageId = convert_endian_u2_value(imageId);
 	address += sizeof(imageId);
 
-	if (EngineROM_Read(address, sizeof(imageWidth), (uint8_t *)&imageWidth) != sizeof(imageWidth))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(imageWidth),
+		(uint8_t *)&imageWidth,
+		"Failed to load MageTileset property 'imageWidth'"
+	);
 	imageWidth = convert_endian_u2_value(imageWidth);
 	address += sizeof(imageWidth);
 
-	if (EngineROM_Read(address, sizeof(imageHeight), (uint8_t *)&imageHeight) != sizeof(imageHeight))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(imageHeight),
+		(uint8_t *)&imageHeight,
+		"Failed to load MageTileset property 'imageHeight'"
+	);
 	imageHeight = convert_endian_u2_value(imageHeight);
 	address += sizeof(imageHeight);
 
-	if (EngineROM_Read(address, sizeof(tileWidth), (uint8_t *)&tileWidth) != sizeof(tileWidth))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(tileWidth),
+		(uint8_t *)&tileWidth,
+		"Failed to load MageTileset property 'tileWidth'"
+	);
 	tileWidth = convert_endian_u2_value(tileWidth);
 	address += sizeof(tileWidth);
 
-	if (EngineROM_Read(address, sizeof(tileHeight), (uint8_t *)&tileHeight) != sizeof(tileHeight))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(tileHeight),
+		(uint8_t *)&tileHeight,
+		"Failed to load MageTileset property 'tileHeight'"
+	);
 	tileHeight = convert_endian_u2_value(tileHeight);
 	address += sizeof(tileHeight);
 
-	if (EngineROM_Read(address, sizeof(cols), (uint8_t *)&cols) != sizeof(cols))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(cols),
+		(uint8_t *)&cols,
+		"Failed to load MageTileset property 'cols'"
+	);
 	cols = convert_endian_u2_value(cols);
 	address += sizeof(cols);
 
-	if (EngineROM_Read(address, sizeof(rows), (uint8_t *)&rows) != sizeof(rows))
-	{
-		goto MageTileset_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(rows),
+		(uint8_t *)&rows,
+		"Failed to load MageTileset property 'rows'"
+	);
 	rows = convert_endian_u2_value(rows);
 	address += sizeof(rows);
+
 	tileCount = rows * cols;
 	tiles = std::make_unique<uint8_t[]>(tileCount);
 
-	if (EngineROM_Read(address, tileCount, (uint8_t *)tiles.get()) != tileCount)
-	{
-		goto MageTileset_Error;
-	}
+	EngineROM_Read(
+		address,
+		tileCount,
+		(uint8_t *)tiles.get(),
+		"Failed to load MageTileset property 'tiles'"
+	);
 
 	return;
-
-MageTileset_Error:
-	ENGINE_PANIC("Failed to load tileset data");
 }
 
 std::string MageTileset::Name() const

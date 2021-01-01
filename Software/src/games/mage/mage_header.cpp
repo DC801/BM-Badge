@@ -7,10 +7,12 @@ MageHeader::MageHeader(uint32_t address)
 	uint32_t size = 0;
 
 	// Read count
-	if (EngineROM_Read(address, sizeof(counts), (uint8_t *)&counts) != sizeof(counts))
-	{
-		goto MageHeader_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(counts),
+		(uint8_t *)&counts,
+		"Failed to load Header property 'counts'"
+	);
 
 	// Endianness conversion
 	counts = convert_endian_u4_value(counts);
@@ -26,24 +28,25 @@ MageHeader::MageHeader(uint32_t address)
 	size = counts * sizeof(uint32_t);
 
 	// Read arrays
-	if (EngineROM_Read(address, size, (uint8_t *)offsets.get()) != size)
-	{
-		goto MageHeader_Error;
-	}
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)offsets.get(),
+		"Failed to load Header property 'offsets'"
+	);
 
 	convert_endian_u4_buffer(offsets.get(), counts);
 	address += counts * sizeof(uint32_t);
 
-	if (EngineROM_Read(address, size, (uint8_t *)lengths.get()) != size)
-	{
-		goto MageHeader_Error;
-	}
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)lengths.get(),
+		"Failed to load Header property 'lengths'"
+	);
 
 	convert_endian_u4_buffer(lengths.get(), counts);
 	return;
-
-MageHeader_Error:
-	ENGINE_PANIC("Failed to read header data");
 }
 
 uint32_t MageHeader::count() const

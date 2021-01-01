@@ -76,10 +76,12 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 
 	//read the script's action count:
 	uint32_t actionCount = 0;
-	if (EngineROM_Read(address, sizeof(actionCount), (uint8_t *)&actionCount) != sizeof(actionCount))
-	{
-		goto MageScript_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(actionCount),
+		(uint8_t *)&actionCount,
+		"MageScriptControl::processActionQueue\nFailed to load property 'actionCount'"
+	);
 
 	actionCount = convert_endian_u4_value(actionCount);
 	address += sizeof(actionCount);
@@ -120,9 +122,6 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		resumeStateStruct->scriptIsRunning = false;
 	}
 	return;
-
-MageScript_Error:
-	ENGINE_PANIC("Failed to read script data.");
 }
 
 void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState * resumeStateStruct)
@@ -135,10 +134,12 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState 
 	ActionFunctionPointer actionHandlerFunction;
 
 	//get actionTypeId from ROM:
-	if (EngineROM_Read(actionMemoryAddress, sizeof(actionTypeId), (uint8_t *)&actionTypeId) != sizeof(actionTypeId))
-	{
-		goto MageAction_Error;
-	}
+	EngineROM_Read(
+		actionMemoryAddress,
+		sizeof(actionTypeId),
+		(uint8_t *)&actionTypeId,
+		"MageScriptControl::runAction\nFailed to load property 'actionTypeId'"
+	);
 	actionMemoryAddress += sizeof(actionTypeId);
 
 	//validate actionTypeId:
@@ -151,19 +152,18 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState 
 	}
 
 	//read remaining 7 bytes of argument data into romValues
-	if (EngineROM_Read(actionMemoryAddress, sizeof(romValues), (uint8_t *)&romValues) != sizeof(romValues))
-	{
-		goto MageAction_Error;
-	}
+	EngineROM_Read(
+		actionMemoryAddress,
+		sizeof(romValues),
+		(uint8_t *)&romValues,
+		"MageScriptControl::runAction\nFailed to load property 'romValues'"
+	);
 	
 	//get the function for actionTypeId, and feed it the romValues as args:
 	actionHandlerFunction = actionFunctions[actionTypeId];
 	(this->*actionHandlerFunction)(romValues, resumeStateStruct);
 
 	return;
-
-MageAction_Error:
-	ENGINE_PANIC("Failed to read action data.");
 }
 
 void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType)
