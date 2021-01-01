@@ -110,18 +110,39 @@ void GameUpdate()
 
 void GameRender()
 {
+	#ifdef TIMING_DEBUG
+	uint32_t now = millis();
+	uint32_t diff = 0;
+	#endif
 	//make hax do
 	if (MageHex->getHexEditorState())
 	{
 		//run hex editor if appropriate
 		mage_canvas->clearScreen(RGB(0,0,0));
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("screen clear time: %d",diff);
+			now = millis();
+		#endif
 		MageHex->renderHexEditor();
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("hex render time: %d",diff);
+		#endif
 	}
+
 	//otherwise be boring and normal
 	else
 	{
+
+
 		//otherwise run mage game:
 		mage_canvas->clearScreen(RGB(0,0,255));
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("screen clear time: %d",diff);
+			now = millis();
+		#endif
 
 		//then draw the map and entities:
 		uint8_t layerCount = MageGame->Map().LayerCount();
@@ -159,13 +180,21 @@ void GameRender()
 		if(MageDialog->isOpen) {
 			MageDialog->draw();
 		}
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("game render time: %d",diff);
+			now = millis();
+		#endif
 	}
-
 	//update the state of the LEDs
 	MageHex->updateHexLights();
 
 	//update the screen
 	mage_canvas->blt();
+	#ifdef TIMING_DEBUG
+		diff = millis() - now;
+		debug_print("blt time: %d",diff);
+	#endif
 }
 
 void MAGE()
@@ -239,11 +268,9 @@ void MAGE()
 
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
-		uint32_t afterInput = millis() - lastTime;
 
 		//updates the state of all the things before rendering:
 		GameUpdate();
-		uint32_t afterUpdate = millis() - lastTime;
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -257,15 +284,14 @@ void MAGE()
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
-		uint32_t afterRender = millis() - lastTime;
+		uint32_t fullLoopTime = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
 		handleBLockingDelay();
 
 		#ifdef TIMING_DEBUG
-			debug_print("After Input: %d", afterInput);
-			debug_print("After Update: %d", afterUpdate);
-			debug_print("After Render: %d", afterRender);
+			debug_print("End of Loop Total: %d", fullLoopTime);
+			debug_print("----------------------------------------");
 		#endif
 	}
 
