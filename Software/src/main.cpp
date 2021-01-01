@@ -154,18 +154,20 @@ void test_rom(){
 		ENGINE_PANIC("Failed to write to ROM.");
 	}
 	*/
-	if(EngineROM_Read(0, 8, (uint8_t *)test_rx_array) != 8){
-		ENGINE_PANIC("QSPI read failed.");
-	} else {
-		p_canvas()->printMessage(
-			test_rx_array,
-			Monaco9,
-			COLOR_WHITE,
-			32,
-			32
-		);
-		p_canvas()->blt();
-	}
+	EngineROM_Read(
+		0,
+		8,
+		(uint8_t *)test_rx_array,
+		"QSPI read failed."
+	);
+	p_canvas()->printMessage(
+		test_rx_array,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+	p_canvas()->blt();
 	#endif
 }
 

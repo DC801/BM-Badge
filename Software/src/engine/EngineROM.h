@@ -37,9 +37,23 @@ bool EngineROM_Init(void);
 void EngineROM_Deinit(void);
 bool EngineROM_Magic(const uint8_t *magic, uint8_t length);
 
-uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data);
-uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data);
-int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data);
+bool EngineROM_Read(
+	uint32_t address,
+	uint32_t length,
+	uint8_t *data,
+	const char *errorString
+);
+bool EngineROM_Write(
+	uint32_t address,
+	uint32_t length,
+	uint8_t *data,
+	const char *errorString
+);
+bool EngineROM_Verify(
+	uint32_t address,
+	uint32_t length,
+	const uint8_t *data
+);
 bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat);
 
 #endif

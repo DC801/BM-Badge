@@ -98,14 +98,12 @@ void MageDialogControl::load(
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeof(currentDialogScreenCount),
-		(uint8_t *)&currentDialogScreenCount
-	) != sizeof(currentDialogScreenCount))
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
+		(uint8_t *)&currentDialogScreenCount,
+		"Failed to read Dialog property 'currentDialogScreenCount'"
+	);
 	currentDialogScreenCount = convert_endian_u4_value(currentDialogScreenCount);
 	currentDialogAddress += sizeof(currentDialogScreenCount);
 
@@ -121,14 +119,12 @@ void MageDialogControl::loadNextScreen() {
 		return;
 	}
 	uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeOfDialogScreenStruct,
-		(uint8_t *)&currentScreen
-	) != sizeOfDialogScreenStruct)
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
+		(uint8_t *)&currentScreen,
+		"Failed to read Dialog property 'currentScreen'"
+	);
 	currentScreen.nameStringIndex = convert_endian_u2_value(currentScreen.nameStringIndex);
 	currentScreen.borderTilesetIndex = convert_endian_u2_value(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
@@ -138,14 +134,12 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
 	messageIds.reset();
 	messageIds = std::make_unique<uint16_t[]>(currentScreen.messageCount);
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeOfScreenMessageIds,
-		(uint8_t *)messageIds.get()
-	) != sizeOfScreenMessageIds)
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
+		(uint8_t *)messageIds.get(),
+		"Failed to read Dialog property 'messageIds'"
+	);
 	convert_endian_u2_buffer(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
 	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
