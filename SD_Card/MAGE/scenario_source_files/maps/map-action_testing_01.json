@@ -155,7 +155,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage06-check_player_entity_type"
                         }, 
                         {
                          "name":"on_tick",
@@ -178,12 +178,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage07-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage07-point_at_player"
                         }],
                  "rotation":0,
                  "type":"",
@@ -201,12 +201,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage08-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage08-point_away_from_player"
                         }],
                  "rotation":0,
                  "type":"",
@@ -922,7 +922,7 @@
          "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tilesets":[
         {
