@@ -85,6 +85,8 @@ class MageScriptControl
 		//Action Logic Type: I+C
 		void checkEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
+		void checkEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
 		void checkEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkEntitySecondaryId(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -128,8 +130,10 @@ class MageScriptControl
 		void blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: B (note, setPauseState requires a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
-		void setPauseState(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: B (note, pauseGame requires a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
+		void pauseGame(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -140,6 +144,8 @@ class MageScriptControl
 		void setEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityType(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -152,6 +158,12 @@ class MageScriptControl
 		void setEntityCurrentFrame(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityDirectionRelative(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityDirectionTargetEntity(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityDirectionTargetGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -192,6 +204,8 @@ class MageScriptControl
 		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
 		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB
+		void playEntityAnimation(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB

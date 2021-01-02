@@ -303,6 +303,28 @@ void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * 
 	return;
 }
 
+void MageScriptControl::checkEntityType(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckEntityType *argStruct = (ActionCheckEntityType*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = convert_endian_u2_value(argStruct->successScriptId);
+	argStruct->entityTypeId = convert_endian_u2_value(argStruct->entityTypeId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		uint16_t sanitizedCurrentEntityTypeId = MageGame->getValidEntityTypeId(entity->primaryId);
+		bool identical = (
+			sanitizedCurrentEntityTypeId == argStruct->entityTypeId &&
+			entity->primaryIdType == ENTITY_TYPE
+		);
+		if(identical == argStruct->expectedBool) {
+			mapLocalJumpScript = argStruct->successScriptId;
+		}
+	}
+	return;
+}
+
 void MageScriptControl::checkEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityPrimaryId *argStruct = (ActionCheckEntityPrimaryId*)args;
@@ -729,13 +751,27 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 	return;
 }
 
-void MageScriptControl::setPauseState(uint8_t * args, MageScriptState * resumeStateStruct)
+//Need to implement -Tim
+void MageScriptControl::pauseGame(uint8_t * args, MageScriptState * resumeStateStruct)
 {
-	ActionSetPauseState *argStruct = (ActionSetPauseState*)args;
+	ActionPauseGame *argStruct = (ActionPauseGame*)args;
 	return;
 }
 
-//Need to implement -Tim
+void MageScriptControl::pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionPauseEntityScript *argStruct = (ActionPauseEntityScript*)args;
+
+	//Get the entity:
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		// TODO: Get the target scriptType resumeStateStruct
+		// TODO: Add `resumeStateStruct.isPaused` and toggle it
+	}
+	return;
+}
+
 void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityName *argStruct = (ActionSetEntityName*)args;
@@ -813,6 +849,21 @@ void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * re
 	return;
 }
 
+void MageScriptControl::setEntityType(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityType *argStruct = (ActionSetEntityType*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->entityTypeId = convert_endian_u2_value(argStruct->entityTypeId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->primaryId = argStruct->entityTypeId;
+		entity->primaryIdType = ENTITY_TYPE;
+	}
+	return;
+}
+
 void MageScriptControl::setEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityPrimaryId *argStruct = (ActionSetEntityPrimaryId*)args;
@@ -880,36 +931,67 @@ void MageScriptControl::setEntityCurrentFrame(uint8_t * args, MageScriptState * 
 void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityDirection *argStruct = (ActionSetEntityDirection*)args;
-	//validate arguments:
-	if(argStruct->entityId == MAGE_ENTITY_SELF)
-	{
-		//the map doesn't have an entity, so we return if the script is on the map:
-		if(currentEntityId == MAGE_MAP_ENTITY) 
-		{
-			return;
-		}
-		//set the entityId to be the entity that the script was called from:
-		argStruct->entityId = currentEntityId;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
 	}
-	else if (argStruct->entityId == MAGE_ENTITY_PLAYER)
-	{
-		//set the entityId to the player, if there is one:
-		if(MageGame->playerEntityIndex == NO_PLAYER)
-		{ 
-			return; 
-		}
-		else
-		{
-			argStruct->entityId = MageGame->playerEntityIndex;
-		}
+	return;
+}
+
+void MageScriptControl::setEntityDirectionRelative(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityDirectionRelative *argStruct = (ActionSetEntityDirectionRelative*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->direction = (
+			entity->direction + NUM_DIRECTIONS + argStruct->relativeDirection
+		) % NUM_DIRECTIONS;
 	}
-	else
-	{
-		argStruct->entityId = MageGame->getValidEntityId(argStruct->entityId);
+	return;
+}
+
+void MageScriptControl::setEntityDirectionTargetEntity(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityDirectionTargetEntity *argStruct = (ActionSetEntityDirectionTargetEntity*)args;
+
+	int16_t targetEntityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->targetEntityId, currentEntityId);
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(
+		entityIndex != NO_PLAYER
+		&& targetEntityIndex != NO_PLAYER
+	) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageEntityRenderableData *targetRenderable = MageGame->getValidEntityRenderableData(targetEntityIndex);
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		entity->direction = getRelativeDirection(
+			renderable->center,
+			targetRenderable->center
+		);
 	}
-	argStruct->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
-	//set direction:
-	MageGame->entities[argStruct->entityId].direction = argStruct->direction;
+	return;
+}
+
+void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityDirectionTargetGeometry *argStruct = (ActionSetEntityDirectionTargetGeometry*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->targetGeometryId = convert_endian_u2_value(argStruct->targetGeometryId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
+		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		entity->direction = getRelativeDirection(
+			renderable->center,
+			geometry->points[0]
+		);
+	}
 	return;
 }
 
@@ -1153,6 +1235,18 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 		MageGame->playerHasControl = true;
 	}
 	return;
+}
+
+void MageScriptControl::playEntityAnimation(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionPlayEntityAnimation *argStruct = (ActionPlayEntityAnimation*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->currentAnimation = argStruct->animationId;
+		// TODO: Implement the non-blocking `argStruct->playCount` part
+	}
 }
 
 void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1566,6 +1660,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_Y] = &MageScriptControl::checkEntityY;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_INTERACT_SCRIPT] = &MageScriptControl::checkEntityInteractScript;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_TICK_SCRIPT] = &MageScriptControl::checkEntityTickScript;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_TYPE] = &MageScriptControl::checkEntityType;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID] = &MageScriptControl::checkEntityPrimaryId;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_SECONDARY_ID] = &MageScriptControl::checkEntitySecondaryId;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_PRIMARY_ID_TYPE] = &MageScriptControl::checkEntityPrimaryIdType;
@@ -1588,18 +1683,23 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT] = &MageScriptControl::runScript;
 	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY] = &MageScriptControl::blockingDelay;
 	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY] = &MageScriptControl::nonBlockingDelay;
-	actionFunctions[MageScriptActionTypeId::SET_PAUSE_STATE] = &MageScriptControl::setPauseState;
+	actionFunctions[MageScriptActionTypeId::PAUSE_GAME] = &MageScriptControl::pauseGame;
+	actionFunctions[MageScriptActionTypeId::PAUSE_ENTITY_SCRIPT] = &MageScriptControl::pauseEntityScript;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_NAME] = &MageScriptControl::setEntityName;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_X] = &MageScriptControl::setEntityX;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_Y] = &MageScriptControl::setEntityY;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_INTERACT_SCRIPT] = &MageScriptControl::setEntityInteractScript;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TICK_SCRIPT] = &MageScriptControl::setEntityTickScript;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_TYPE] = &MageScriptControl::setEntityType;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID] = &MageScriptControl::setEntityPrimaryId;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_SECONDARY_ID] = &MageScriptControl::setEntitySecondaryId;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_PRIMARY_ID_TYPE] = &MageScriptControl::setEntityPrimaryIdType;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_ANIMATION] = &MageScriptControl::setEntityCurrentAnimation;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_CURRENT_FRAME] = &MageScriptControl::setEntityCurrentFrame;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION] = &MageScriptControl::setEntityDirection;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_RELATIVE] = &MageScriptControl::setEntityDirectionRelative;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_ENTITY] = &MageScriptControl::setEntityDirectionTargetEntity;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_GEOMETRY] = &MageScriptControl::setEntityDirectionTargetGeometry;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::setEntityHackableStateA;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::setEntityHackableStateB;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::setEntityHackableStateC;
@@ -1620,6 +1720,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE] = &MageScriptControl::setHexEditorDialogMode;
 	actionFunctions[MageScriptActionTypeId::LOAD_MAP] = &MageScriptControl::loadMap;
 	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG] = &MageScriptControl::showDialog;
+	actionFunctions[MageScriptActionTypeId::PLAY_ENTITY_ANIMATION] = &MageScriptControl::playEntityAnimation;
 	actionFunctions[MageScriptActionTypeId::TELEPORT_ENTITY_TO_GEOMETRY] = &MageScriptControl::teleportEntityToGeometry;
 	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_TO_GEOMETRY] = &MageScriptControl::walkEntityToGeometry;
 	actionFunctions[MageScriptActionTypeId::WALK_ENTITY_ALONG_GEOMETRY] = &MageScriptControl::walkEntityAlongGeometry;
@@ -1943,12 +2044,13 @@ int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(
 )
 {
 	int16_t entityIndex = entityId;
-	if(entityIndex == MAGE_ENTITY_SELF) {
+	if (entityIndex == MAGE_ENTITY_SELF) {
 		entityIndex = callingEntityId;
-	} else if (
-		entityIndex == MAGE_ENTITY_PLAYER
-		) {
+	} else if (entityIndex == MAGE_ENTITY_PLAYER) {
 		entityIndex = MageGame->playerEntityIndex;
+	} else if (entityIndex == MAGE_MAP_ENTITY) {
+		//the map doesn't have an entity, so we return if the script is on the map:
+		entityIndex = NO_PLAYER;
 	}
 	return entityIndex;
 }
