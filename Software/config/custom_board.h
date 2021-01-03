@@ -16,13 +16,16 @@
 extern "C" {
 #endif
 
+//Start address of ROM memoryu addressing
+#define ROM_START_ADDRESS (0x12000000)
+
 // Low is active
 #define LEDS_ACTIVE_STATE    0
 
 // Defines for preventing unused framebuffer functions from blowing up the compiler:
 #define BUTTONS_NUMBER       0
 #define BUTTONS_ACTIVE_STATE NRF_GPIO_PIN_SENSE_LOW
-#define USER_BUTTON_NONE     0	
+#define USER_BUTTON_NONE     0
 
 // Keyboard config
 #define KEYBOARD_ADDRESS    0x23

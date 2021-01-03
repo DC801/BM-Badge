@@ -67,8 +67,14 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
+#ifdef DC801_DESKTOP
 #define MAGE_RUNNING_SPEED 5
 #define MAGE_WALKING_SPEED 1
+#endif
+#ifdef DC801_EMBEDDED
+#define MAGE_RUNNING_SPEED 10
+#define MAGE_WALKING_SPEED 5
+#endif
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
@@ -98,14 +104,15 @@ all of the old code used as the foundation of this badge.
 #define MAGE_NULL_ACTION 0
 
 //this is how many ms must have passed before the main game loop will run again:
-//typical values: 
+//typical values:
 //60fps: ~16ms
 //30fps: ~33ms
 //24fps: ~41ms
-#ifndef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 41
-#else
+#ifdef DC801_DESKTOP
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
+#endif
+#ifdef DC801_EMBEDDED
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 200
 #endif
 
 //these are the types of scripts that can be on a map or entity:
