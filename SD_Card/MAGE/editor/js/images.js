@@ -56,7 +56,7 @@ var handleImage = function(tileset, scenarioData, fileNameMap) {
 				+ supportedImageTypes.join()
 			);
 		}
-		var blobUrl = URL.createObjectURL(file);
+		file.blobUrl = URL.createObjectURL(file);
 		file.scenarioIndex = scenarioData.parsed.images.length;
 		scenarioData.parsed.images.push(file);
 		var colorPalette = {
@@ -68,7 +68,7 @@ var handleImage = function(tileset, scenarioData, fileNameMap) {
 		scenarioData.parsed.imageColorPalettes.push(colorPalette);
 		result = new Promise(function (resolve) {
 			window.getPixels(
-				blobUrl,
+				file.blobUrl,
 				file.type,
 				function (error, result) {
 					if(error){
@@ -80,7 +80,7 @@ var handleImage = function(tileset, scenarioData, fileNameMap) {
 			);
 		})
 			.then(function (result) {
-				URL.revokeObjectURL(blobUrl);
+				// URL.revokeObjectURL(blobUrl);
 				var getPaletteIndexForColor = function (color) {
 					var colorIndex = colorPalette.colorArray.indexOf(color);
 					if (colorIndex === -1) {

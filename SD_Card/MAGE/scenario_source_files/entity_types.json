@@ -1,0 +1,1240 @@
+{
+	"mage": {
+		"tileset": "entity-mage.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 30,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				},
+				{
+					"tileid": 29,
+					"flip_x": false
+				},
+				{
+					"tileid": 28,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"exa": {
+		"tileset": "entity-exa.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				}
+			]
+		}
+	},
+	"eye_faerie": {
+		"tileset": "entity-eye_faerie.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"dragon_skull": {
+		"tileset": "entity-dragon_skull.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"golem": {
+		"tileset": "entity-golem.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"lightning_boy": {
+		"tileset": "entity-lightning_boy.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"goat": {
+		"tileset": "entity-goat.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"goose": {
+		"tileset": "entity-goose.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"sheep": {
+		"tileset": "entity-sheep.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 38,
+					"flip_x": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": true
+				},
+				{
+					"tileid": 37,
+					"flip_x": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"village_elder": {
+		"tileset": "entity-village_elder.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"old_lady": {
+		"tileset": "entity-old_lady.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"baby_goat": {
+		"tileset": "entity-baby_goat.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"alfonso": {
+		"tileset": "entity-alfonso.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"cleo": {
+		"tileset": "entity-cleo.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"verthandi": {
+		"tileset": "entity-verthandi.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"pipscat": {
+		"tileset": "entity-pipscat.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 80,
+					"flip_x": false
+				},
+				{
+					"tileid": 78,
+					"flip_x": true
+				},
+				{
+					"tileid": 79,
+					"flip_x": false
+				},
+				{
+					"tileid": 78,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"blacksmith": {
+		"tileset": "entity-blacksmith.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"old_man": {
+		"tileset": "entity-old_man.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true
+				},
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"bert": {
+		"tileset": "entity-bert.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"sports_kid": {
+		"tileset": "entity-sports_kid.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"ssen": {
+		"tileset": "entity-ssen.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"baker": {
+		"tileset": "entity-baker.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"marta": {
+		"tileset": "entity-marta.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"tailor": {
+		"tileset": "entity-tailor.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"bender": {
+		"tileset": "entity-bender.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 18,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": true
+				},
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 20,
+					"flip_x": true
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				},
+				{
+					"tileid": 20,
+					"flip_x": false
+				}
+			],
+			"bite_my_shiny_metal_ass": [
+				{
+					"tileid": 94,
+					"flip_x": false
+				},
+				{
+					"tileid": 95,
+					"flip_x": false
+				},
+				{
+					"tileid": 93,
+					"flip_x": false
+				},
+				{
+					"tileid": 92,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"strong_bad": {
+		"tileset": "entity-strong_bad.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": true
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": true
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"trekkie": {
+		"tileset": "entity-trekkie.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true
+				},
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"bob": {
+		"tileset": "entity-bob.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	}
+}

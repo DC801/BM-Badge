@@ -1,3 +1,44 @@
+var handleEntitityTypesData = function (scenarioData, fileNameMap) {
+	return function (entityTypesData) {
+		scenarioData.entityTypes = entityTypesData;
+		Object.keys(scenarioData.entityTypes).forEach(function (key) {
+			scenarioData.entityTypes[key].type = key;
+		});
+		var objectTypesFile = fileNameMap['object_types.json'];
+		return !objectTypesFile
+			? Promise.resolve()
+			: getFileJson(objectTypesFile)
+				.then(handleObjectTypesData(objectTypesFile, scenarioData));
+	};
+};
+
+var handleObjectTypesData = function (
+	entitiesFile,
+	scenarioData,
+) {
+	return function (entitiesData) {
+		console.log(
+			'object_types.json',
+			entitiesData
+		);
+		var result = {};
+		entitiesData.forEach(function (entityItem) {
+			var item = assignToLessFalsy(
+				{
+					type: entityItem.name
+				},
+				scenarioData.entityTypes[entityItem.name]
+			);
+			mergeInProperties(
+				item,
+				entityItem.properties
+			);
+			result[entityItem.name] = item;
+		});
+		entitiesFile.parsed = result;
+	};
+};
+
 var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
 	var animations = Object.values(entityType.animations);
 	var headerLength = (
