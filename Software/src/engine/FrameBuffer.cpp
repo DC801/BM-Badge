@@ -22,7 +22,7 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
-#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 128
+#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
 
 //Cursor coordinates
 static int16_t m_cursor_x = 0;

@@ -280,26 +280,27 @@ bool EngineROM_Read(
 		ENGINE_PANIC("EngineROM_Read: Null pointer");
 	}
 
-	//figure out values for handling unaligned bytes.
-	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t)) * sizeof(uint32_t);
+	//this is the number of whole words to read from the starting adddress:
+	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
 	//read in all but the last word if aligned data
-	if(!qspiControl.read(data, truncatedAlignedLength, address))
-	{
-		ENGINE_PANIC(errorString);
+	uint32_t *dataU32 = (uint32_t *)data;
+	//get word-aligned pointers to the ROM:
+	volatile uint32_t *romDataU32 = (volatile uint32_t *)(ROM_START_ADDRESS + address);
+	for(uint32_t i=0; i<truncatedAlignedLength; i++){
+		dataU32[i] = romDataU32[i];
 	}
+	//now we need to convert the word-aligned number of reads back to a uint8_t aligned
+	//value where we will start reading the remaining bytes.
+	truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
 	uint32_t numUnalignedBytes = length - truncatedAlignedLength;
 	if(numUnalignedBytes)
 	{
 		address += truncatedAlignedLength;
-		uint8_t lastWord[sizeof(uint32_t)] = {0, 0, 0, 0};
-		//read in the last word of aligned data to its own variable:
-		if(!qspiControl.read(lastWord, sizeof(uint32_t), address))
-		{
-			ENGINE_PANIC(errorString);
-		}
+		//get byte-aligned rom data at the new address:
+		volatile uint8_t *romDataU8 = (volatile uint8_t *)(ROM_START_ADDRESS + address);
 		//fill in the unaligned bytes only and ignore the rest:
 		for(uint8_t i=0; i<numUnalignedBytes; i++){
-			data[truncatedAlignedLength+i] = lastWord[i];
+			data[truncatedAlignedLength+i] = romDataU8[i];
 		}
 	}
 #endif // DC801_EMBEDDED
