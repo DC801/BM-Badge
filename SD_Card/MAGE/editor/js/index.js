@@ -19,9 +19,6 @@ var handleScenarioData = function(fileNameMap) {
 			'scenario.json',
 			scenarioData
 		);
-		Object.keys(scenarioData.entityTypes).forEach(function (key) {
-			scenarioData.entityTypes[key].type = key;
-		})
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
 		scenarioData.uniqueStringLikeMaps = {
@@ -32,13 +29,11 @@ var handleScenarioData = function(fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
-		var entitiesFile = fileNameMap['object_types.json'];
-		var entitiesPromise = !entitiesFile
-			? Promise.resolve()
-			: getFileJson(entitiesFile)
-				.then(handleEntitiesData(entitiesFile, scenarioData));
+		var entityTypesFile = fileNameMap['entity_types.json'];
+		var entityTypesPromise = getFileJson(entityTypesFile)
+			.then(handleEntitityTypesData(scenarioData, fileNameMap));
 		return Promise.all([
-			entitiesPromise,
+			entityTypesPromise,
 			preloadAllDialogSkins(fileNameMap, scenarioData),
 			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
 			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
@@ -161,7 +156,9 @@ window.vueApp = new window.Vue({
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
 		error: null,
-		downloadData: null
+		downloadData: null,
+		scenarioData: null,
+		fileNameMap: null,
 	},
 	created: function () {
 		console.log('Created');
@@ -202,16 +199,22 @@ window.vueApp = new window.Vue({
 			var scenarioFile = fileNameMap['scenario.json'];
 			try {
 				if (!scenarioFile) {
-					vm.error = 'No `scenario.json` file detected in folder, no where to start!';
+					vm.error = 'No `scenario.json` file detected in folder, nowhere to start!';
 				} else {
 					getFileJson(scenarioFile)
-						.then(handleScenarioData(fileNameMap))
+						.then(handleScenarioData(fileNameMap, vm))
+						.then(function (scenarioData) {
+							vm.fileNameMap = fileNameMap;
+							vm.scenarioData = scenarioData;
+							return scenarioData;
+						})
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
 							vm.prepareDownload([compositeArray], 'game.dat');
 							vm.isLoading = false;
 						})
 						.catch(function (error) {
+							console.error(error);
 							vm.error = error.message;
 							vm.isLoading = false;
 						});

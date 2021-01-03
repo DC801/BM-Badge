@@ -70,6 +70,7 @@ var serializeTileset = function (tilesetData, image) {
 
 var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
+		tilesetData.filename = tilesetFile.name;
 		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
 		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
 		// console.log(
