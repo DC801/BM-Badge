@@ -1,110 +1,34 @@
-{
-	"show_dialog-bob-first": [
+{	
+	"on_load-map-main": [
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob1"
+			"action": "CHECK_WARP_STATE",
+			"string": "enter_from-east",
+			"success_script": "enter_from-east",
+			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "bob",
-			"script": "show_dialog-bob-bounce"
-		}
-	],
-	"show_dialog-bob-bounce": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob2"
+			"action": "CHECK_WARP_STATE",
+			"string": "enter_from-west",
+			"success_script": "enter_from-west",
+			"expected_bool": true
 		},
 		{
-			"action": "CHECK_ENTITY_NAME",
-			"entity": "%PLAYER%",
-			"string": "Bob",
-			"expected_bool": true,
-			"success_script": "show_dialog-bob-yesbob"
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-bobsclub",
+			"success_script": "enter_from-bobsclub",
+			"expected_bool": true
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob3"
-		}
-	],
-	"show_dialog-bob-yesbob": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob4"
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-bakery",
+			"success_script": "enter_from-bakery",
+			"expected_bool": true
 		},
 		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "bob",
-			"geometry": "%ENTITY_PATH%",
-			"duration": 1000
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "bob",
-			"direction": "west"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "bob",
-			"direction": "south"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob5"
-		},
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "Bub",
-			"geometry": "predoor",
-			"duration": 1000
-		},
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "Bub",
-			"geometry": "door",
-			"duration": 2000
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Bub",
-			"direction": "east"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob6"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "bob",
-			"direction": "west"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob7"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "bob",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "bob",
-			"script": "show_dialog-bob-job"
-		}
-	],
-	"show_dialog-bob-job": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bob8"
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-oldcouplehouse",
+			"success_script": "enter_from-oldcouplehouse",
+			"expected_bool": true
 		}
 	],
 	"show_dialog-sheep": [
@@ -185,10 +109,6 @@
 	],
 	"show_dialog-beatrice": [
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice1"
 		},
@@ -218,10 +138,6 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice2"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
 		}
 	],
 	"show_dialog-trekkie_demo": [
@@ -283,6 +199,13 @@
 			"geometry": "high",
 			"success_script": "move_goats_to_low",
 			"expected_bool": true
+		}
+	],
+	"watch-player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
 		}
 	],
 	"check_if_player_is_goat_low": [
@@ -424,8 +347,15 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
-			"geometry": "door-main",
-			"success_script": "load_map-main",
+			"geometry": "door-bakery-entrance",
+			"success_script": "load_map-bakery",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-oldcouplehouse-entrance",
+			"success_script": "load_map-oldcouplehouse",
 			"expected_bool": true
 		},
 		{
@@ -476,6 +406,66 @@
 			"geometry": "door_to-town-west",
 			"success_script": "load_map-town-enter_from-west",
 			"expected_bool": true
+		}
+	],
+	"load_map-bakery": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-bakery"
+		}
+	],
+	"load_map-oldcouplehouse": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-oldcouplehouse"
+		}
+	],
+	"enter_from-bobsclub": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-bobsclub",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-oldcouplehouse": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-oldcouplehouse",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-bakery": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-bakery",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	]
 }

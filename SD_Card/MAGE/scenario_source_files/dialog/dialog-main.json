@@ -1,0 +1,332 @@
+{
+	"dialog-max1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Ah, a citizen!",
+				"I wondered if you could help me!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"What do you need?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"My name's Swagger!\nMax Swagger!",
+				"I was doing a bit of reconnoissance,\nlooking for a place where I can\nopen my new fashion shop.",
+				"The board here says there's space\navailable, but I can't seem to find\nthe building it's talking about.",
+				"The only thing actually here is\nthe Bobs-Only Club!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Well, the town isn't fully implemented\nyet, so... you might have to wait\na few more weeks for the rest of\nthe buildings to return."
+			]
+		}
+	],
+	"dialog-max2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Not fully implemented?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Sorry.",
+				"But I can personally guarantee\nyou can have a building all to yourself\nwhen the time comes."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Oh! That's good news! All to myself?",
+				"I'm picturing two stories... no, three!",
+				"Lush woven carpets... vaulted ceilings...\nbeautiful oak doors...\nhand-carved decorative moulding...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Um, well....\nYou'll definitely get a building."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "Max Swagger",
+			"messages": [
+				"Excellent! Then I shall return\nwhen the time comes!",
+				"Until that glorious day, farewell!"
+			]
+		}
+	],
+	"dialog-max3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Not much of a market for fashion here,\nI would've thought.",
+				"Best of luck, Max Swagger!"
+			]
+		}
+	],
+	"dialog-timmy": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "Timmy",
+			"messages": [
+				"I'm practicing for my triathlon!",
+				"Running is my weakest event, so I'm\nworking hard to improve my time!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Don't you need legs to run?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "Timmy",
+			"messages": [
+				"...?",
+				"No?"
+			]
+		}
+	],
+	"dialog-kid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sports_kid",
+			"name": "Sports Kid",
+			"messages": [
+				"I'm gonna be a Blitzball when I grow up!"
+			]
+		}
+	],
+	"dialog-goose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goose",
+			"name": "Goose",
+			"messages": [
+				"Honk!"
+			]
+		}
+	],
+	"dialog-trekkie_demo": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "Trekkie",
+			"messages": [
+				"Me heard you will soon have a birthday!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"That's right! I'll be turning 16,\nand I'll get to be an official\nvillage mage!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "Trekkie",
+			"messages": [
+				"Me hope you have happy birthday!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Thanks very much, Trekkie!"
+			]
+		}
+	],
+	"dialog-verthandi": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "Verthandi",
+			"messages": [
+				"I'm so glad the goats made up\nand are friends again!"
+			]
+		}
+	],
+	"dialog-goat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goat",
+			"name": "Goat",
+			"messages": [
+				"Baaahhh!"
+			]
+		}
+	],
+	"dialog-cleo2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowwowow."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"That's what I've been saying\nthis whole time!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowwrrrr!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Oh, I know!"
+			]
+		}
+	],
+	"dialog-cleo1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meowrrow."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Oh, you don't say!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"Meow!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"He didn't!"
+			]
+		}
+	],
+	"dialog-cat": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Hey there, cat!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "Cat",
+			"messages": [
+				"...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "Cleo",
+			"messages": [
+				"Excuse me, but we were in the middle\nof a conversation."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "Black Mage",
+			"messages": [
+				"Oh, sorry. Carry on."
+			]
+		}
+	],
+	"dialog-smith": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "Mr. Smith",
+			"messages": [
+				"I came here on a blacksmithing\nscholarship, but there's not much\nblacksmithing to do at the moment.",
+				"I think I'll stick around anyway.\nSee what happens."
+			]
+		}
+	],
+	"dialog-sheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Sheep",
+			"messages": [
+				"...."
+			]
+		}
+	],
+	"dialog-dsheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Delmar",
+			"messages": [
+				"...?"
+			]
+		}
+	]
+}
