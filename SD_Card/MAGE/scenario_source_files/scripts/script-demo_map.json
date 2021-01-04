@@ -185,6 +185,10 @@
 	],
 	"show_dialog-beatrice": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice1"
 		},
@@ -214,6 +218,10 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice2"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	],
 	"show_dialog-trekkie_demo": [
