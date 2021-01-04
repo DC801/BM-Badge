@@ -448,8 +448,10 @@ void MageGameControl::applyUniversalInputs()
 	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3)
 	{ MageScript->mapLoadId = currentMapId; }
 	//check to see if player input is allowed:
-	if(!playerHasControl)
-	{
+	if(
+		MageDialog->isOpen
+		|| !playerHasControl
+	) {
 		return;
 	}
 	//make sure any button handling in this function can be processed in ANY game mode.
@@ -482,22 +484,28 @@ void MageGameControl::applyGameModeInputs()
 			|| (MageScript->mapLoadId != MAGE_NO_MAP)
 		) {
 			MageDialog->advanceMessage();
+			// If interacting with the dialog this tick has closed the dialog,
+			// return early before the same "advance button press triggers an on_interact below
+			if(!MageDialog->isOpen) {
+				return;
+			}
 		}
 	}
-	//get useful variables for below:
-	updateEntityRenderableData(playerEntityIndex);
-	MageEntity *playerEntity = &entities[playerEntityIndex];
-	MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
-	//update camera even if player does not have control:
-	if(!playerHasControl)
-	{
-		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
-		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
-		return;
-	}
-	//otherwise do all the normal things:
-	if(playerEntityIndex != NO_PLAYER)
-	{
+	if(playerEntityIndex != NO_PLAYER) {
+		//get useful variables for below:
+		updateEntityRenderableData(playerEntityIndex);
+		MageEntity *playerEntity = &entities[playerEntityIndex];
+		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
+		//update camera even if player does not have control:
+		if(
+			MageDialog->isOpen
+			|| !playerHasControl
+		) {
+			cameraPosition.x = renderableData->center.x - HALF_WIDTH;
+			cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
+			return;
+		}
+
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
 		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
 		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
@@ -635,11 +643,14 @@ void MageGameControl::applyGameModeInputs()
 	}
 	else //no player on map
 	{
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+		if (!playerHasControl) {
+			return;
+		}
+		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; }
 	}
 }
 

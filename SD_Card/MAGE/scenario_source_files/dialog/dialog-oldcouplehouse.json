@@ -1,0 +1,274 @@
+{
+	"dialog-delmar-huh": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "%Delmar%",
+			"messages": [
+				"...?"
+			]
+		}
+	],
+	"dialog-delmar-blab": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "delmar",
+			"name": "%Delmar%",
+			"messages": [
+				"...Which was the style at the time."
+			]
+		}
+	],
+	"dialog-delmar-catchup": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "delmar",
+			"name": "%Delmar%",
+			"messages": [
+				"Huh? What's goin' on?\nWhat'd I miss?"
+			]
+		}
+	],
+	"dialog-bea-start1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Forty years ago, things were sure different.",
+				"I was a lot younger then, and my husband,\n%Delmar%...."
+			]
+		}
+	],
+	"dialog-bea-start2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"My husband was a real man!\nNot a farm animal!"
+			]
+		}
+	],
+	"dialog-bea-start3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"That ghastly hacker ruffian hacked him\ninto a sheep on a whim!\n%Delmar% didn't even\ndo anything to him!",
+				"...Other than insult his character,\nand that of his mother.",
+				"...And eat his lunch.",
+				"...And cut his brake line.",
+				"The point is, child, that\n%Delmar%'s been\nstuck as a sheep ever since!",
+				"But you, now that you have Ring Zero....",
+				"You can make things right again, \ncan't you?",
+				"I miss my %Delmar%!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Make things right?\nWell, I can change what he looks like,\nanyway."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"That works for me!"
+			]
+		}
+	],
+	"dialog-bea-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, %Delmar%...\nwe'll fix you up real soon!"
+			]
+		}
+	],
+	"dialog-bea-mandud1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, %Delmar%!\nYou're... oh...."
+			]
+		}
+	],
+	"dialog-bea-mandud2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, goodness.\nWell, this isn't my %Delmar%,\nbut I suppose it's nice he's not a sheep\nanymore, at least.",
+				"He's been a sheep for so long...\nwell, I suppose it's been forty years."
+			]
+		}
+	],
+	"dialog-bea-mandud-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, %Delmar%!\nwe'll make you your normal self soon!"
+			]
+		}
+	],
+	"dialog-bea-happy": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, %Delmar%, it's you!\nYou're a man again! At last!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "delmar",
+			"name": "%Delmar%",
+			"messages": [
+				"Whazzat, %Beatrice%?\nSomething seems different."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, it's my %Delmar%!\nThank you, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-bea-trick": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh! That's a nasty trick, %PLAYER%! How could you?",
+				"Although... I sort of get the feeling he'll be back to normal in a few minutes."
+			]
+		}
+	],
+	"dialog-bea-confused": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, %Delmar%, you're... uh...."
+			]
+		}
+	],
+	"dialog-bea-end-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Thank you, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-bea-regret1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"....",
+				"You know, I appreciate what you did, %PLAYER%. I really do."
+			]
+		}
+	],
+	"dialog-bea-regret2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"...."
+			]
+		}
+	],
+	"dialog-bea-regret3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"But now I find myself longing for quiet.",
+				"It was so peaceful, before. Me and %Delmar% used to get along so well.",
+				"And it's so difficult to fall asleep recently.",
+				"I hate to ask it, child, but....",
+				"I can't hear myself think! Please change him back!"
+			]
+		}
+	],
+	"dialog-bea-regret-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"I'm sure he won't mind being a sheep again. In fact, I'm not sure he'll notice.",
+				"But I sure will! I won't have peace otherwise!"
+			]
+		}
+	],
+	"dialog-bea-relief": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Thank you, child!",
+				"...And, erm, we need not mention this to anyone! You understand?"
+			]
+		}
+	],
+	"dialog-bea-relief-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Peace at last!"
+			]
+		}
+	],
+	"dialog-bea-coincidence": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh! And I was just thinking how I wanted him to become a sheep again!",
+				"So gentle... and so quiet!",
+				"Thank you, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-bea-deja": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"....",
+				"I suddenly have the strangest feeling of deja vu."
+			]
+		}
+	]
+}

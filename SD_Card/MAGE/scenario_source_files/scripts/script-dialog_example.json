@@ -13,7 +13,7 @@
 			},
 			{
 				"action": "SET_PLAYER_CONTROL",
-				"expected_bool": false
+				"bool_value": false
 			},
 			{
 				"action": "WALK_ENTITY_ALONG_GEOMETRY",
@@ -27,7 +27,7 @@
 			},
 			{
 				"action": "SET_PLAYER_CONTROL",
-				"expected_bool": true
+				"bool_value": true
 			}
 		]
 	},

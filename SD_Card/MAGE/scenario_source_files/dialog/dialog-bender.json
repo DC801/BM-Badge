@@ -1,0 +1,194 @@
+{
+	"dialog-bender-start1": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Oh! You look friendly!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Well, I'm not!"
+			]
+		}
+	],
+	"dialog-bender-start2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Aww, man... I forgot!\nSomeone bit my shiny metal ass!",
+				"Why would someone do such a horrible thing\nto an innocent robot?!",
+				"Life's not the same without my ass!\nHow else am I supposed to taunt\neveryone stupid-looking?"
+
+			]
+		}
+	],
+	"dialog-bender-start3a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hey, you, kid!\nYou're the one with the magic whatsit!",
+				"Can't you fix this with your\nwhatever powers?",
+				"I'll give you a great reward!\nJust get my ass back!"
+			]
+		}
+	],
+	"dialog-bender-start3a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hey, you, strangely-handsome-looking kid!\nYou're the one with the magic whatsit!",
+				"Can't you fix this with your\nwhatever powers?",
+				"I'll give you a great reward!\nJust get my ass back!"
+			]
+		}
+	],
+	"dialog-bender-eval-bad": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"That doesn't look anything like me,\nhalf-assed or full-assed."
+			]
+		}
+	],
+	"dialog-bender-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"...Oh, right. My ass.\nSomeone bit it off.",
+				"So what's the holdup?\nI know you can fix it!",
+				"I'll reward you!\nJust hurry it up!"
+			]
+		}
+	],
+	"dialog-bender-end1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hey, you did it!\nMy ass is back!"
+			]
+		}
+	],
+	"dialog-bender-end2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hee hee hee!",
+				"Hey, everyone! Bender's ass is back!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Well?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Well, what?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"You said you'd give me a reward!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"I did!\nYou got a front row seat to me, Bender,\nshowing off my shiny metal ass!",
+				"That's the greatest reward there is!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"I don't know why I assumed you'd be friendly."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Well, you know what they say\nabout assumptions.",
+				"They make a shiny ass...\nand they give it to me, Bender."
+			]
+		}
+	],
+	"dialog-bender-comedian": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Yeah, yeah, you're a real comedian, kid.\nNow turn me back!"
+			]
+		}
+	],
+	"dialog-bender-satisfied": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Ooh, yeah!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"It's shiny.\nI'll give you that."
+			]
+		}
+	]
+}
