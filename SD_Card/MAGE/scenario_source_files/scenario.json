@@ -8,7 +8,8 @@
 		"scripts/script-map-main.json",
 		"scripts/script-shepherd.json",
 		"scripts/script-bobsclub.json",
-		"scripts/script-oldcouplehouse.json"
+		"scripts/script-oldcouplehouse.json",
+		"scripts/script-bender.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-test_map.json",
@@ -16,7 +17,8 @@
 		"dialog/dialog-shepherd.json",
 		"dialog/dialog-bobsclub.json",
 		"dialog/dialog-oldcouplehouse.json",
-		"dialog/dialog-main.json"
+		"dialog/dialog-main.json",
+		"dialog/dialog-bender.json"
 	],
 	"maps": {
 		"main": "maps/map-main.json",

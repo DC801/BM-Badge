@@ -353,6 +353,65 @@
                  "width":0,
                  "x":399.5,
                  "y":618
+                }, 
+                {
+                 "height":281.333,
+                 "id":85,
+                 "name":"sheep-pen",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":230.667,
+                 "x":139.6665,
+                 "y":275.8335
+                }, 
+                {
+                 "height":0,
+                 "id":86,
+                 "name":"baa_point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":327.5,
+                 "y":401
+                }, 
+                {
+                 "height":0,
+                 "id":87,
+                 "name":"ram_point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":293,
+                 "y":442
+                }, 
+                {
+                 "height":0,
+                 "id":88,
+                 "name":"ewe_point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":203,
+                 "y":370
+                }, 
+                {
+                 "height":0,
+                 "id":89,
+                 "name":"helga_point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":197.5,
+                 "y":517
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -795,17 +854,6 @@
                  "y":832
                 }, 
                 {
-                 "height":281.333333333333,
-                 "id":71,
-                 "name":"sheep-pen",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":230.666666666667,
-                 "x":140,
-                 "y":272.666666666667
-                }, 
-                {
                  "height":32,
                  "id":73,
                  "name":"door-main",
@@ -888,6 +936,42 @@
                  "width":30,
                  "x":384,
                  "y":590.666666666667
+                }, 
+                {
+                 "gid":2147484432,
+                 "height":48,
+                 "id":91,
+                 "name":"Bender",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bender-start"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":581.5,
+                 "y":606
+                }, 
+                {
+                 "gid":968,
+                 "height":32,
+                 "id":92,
+                 "name":"Elder",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":590.5,
+                 "y":649
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1078,7 +1162,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":85,
+ "nextobjectid":93,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1162,6 +1246,14 @@
         {
          "firstgid":731,
          "source":"..\/entities\/entity-dragon_skull.json"
+        }, 
+        {
+         "firstgid":767,
+         "source":"..\/entities\/entity-bender_sadbutt.json"
+        }, 
+        {
+         "firstgid":955,
+         "source":"..\/entities\/entity-village_elder.json"
         }],
  "tilewidth":32,
  "type":"map",

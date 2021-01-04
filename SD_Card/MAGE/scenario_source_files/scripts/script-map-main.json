@@ -1,6 +1,12 @@
 {	
 	"on_load-map-main": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "shepherd2",
+			"expected_bool": true,
+			"success_script": "sheep-in-pen"
+		},
+		{
 			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-east",
 			"success_script": "enter_from-east",
@@ -31,16 +37,32 @@
 			"expected_bool": true
 		}
 	],
+	"sheep-in-pen": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Baa",
+			"geometry": "baa_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ram",
+			"geometry": "ram_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ewe",
+			"geometry": "ewe_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Helga",
+			"geometry": "helga_point"
+		}
+	],
 	"show_dialog-sheep": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-sheep"
-		}
-	],
-	"show_dialog-dsheep": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-dsheep"
 		}
 	],
 	"show_dialog-max": [

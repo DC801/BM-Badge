@@ -64,12 +64,33 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-delmar-blab"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Delmar",
+			"script": "show_dialog-delmar"
 		}
 	],
 	"show_dialog-delmar-catchup": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-delmar-catchup"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Delmar",
+			"script": "show_dialog-delmar"
+		}
+	],
+	"show_dialog-dsheep": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-dsheep"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Delmar",
+			"script": "show_dialog-delmar"
 		}
 	],
 	"show_dialog-bea-start": [
@@ -169,6 +190,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-mandud-branch": [
@@ -233,12 +259,22 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Beatrice",
 			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-mandud-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-mandud-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-happy-branch": [
@@ -275,6 +311,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-happy",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-happy-aftermath-branch": [
@@ -295,18 +336,33 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-trick"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-confused": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-confused"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-end-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-end-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-sequel-branch": [
@@ -385,12 +441,22 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-regret",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-regret-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-regret-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-sheepening-branch": [
@@ -414,12 +480,22 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-relief",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-relief-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-relief-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-alldone": [
@@ -445,12 +521,22 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-relief",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-deja": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-deja"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	],
 	"show_dialog-bea-coincidence": [
@@ -462,6 +548,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-relief",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
 		}
 	]
 }
