@@ -34,6 +34,7 @@ _build/
 *.tiled-session
 *.code-workspace
 .DS_Store
+Thumbs.db
 
 # Ignore Cortex-Debug files
 .cortex-debug.peripherals.state.json

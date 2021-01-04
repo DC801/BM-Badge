@@ -89,8 +89,8 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
-			"geometry": "door-demo",
-			"success_script": "load_map-demo",
+			"geometry": "door-main",
+			"success_script": "load_map-main",
 			"expected_bool": true
 		},
 		{
@@ -122,10 +122,10 @@
 			"expected_bool": true
 		}
 	],
-	"load_map-demo": [
+	"load_map-main": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-demo"
+			"map": "map-main"
 		}
 	],
 	"load_map-test": [
@@ -140,24 +140,24 @@
 			"map": "map-town"
 		}
 	],
-	"load_map-demo-enter_from-east": [
+	"load_map-main-enter_from-east": [
 		{
 			"action": "SET_WARP_STATE",
 			"string": "enter_from-east"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load_map-demo"
+			"script": "load_map-main"
 		}
 	],
-	"load_map-demo-enter_from-west": [
+	"load_map-main-enter_from-west": [
 		{
 			"action": "SET_WARP_STATE",
 			"string": "enter_from-west"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load_map-demo"
+			"script": "load_map-main"
 		}
 	],
 	"load_map-town-enter_from-east": [
