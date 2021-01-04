@@ -1094,7 +1094,84 @@
 					"flip_x": false
 				}
 			],
-			"bite_my_shiny_metal_ass": [
+			"bite": [
+				{
+					"tileid": 94,
+					"flip_x": false
+				},
+				{
+					"tileid": 95,
+					"flip_x": false
+				},
+				{
+					"tileid": 93,
+					"flip_x": false
+				},
+				{
+					"tileid": 92,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"bender_sadbutt": {
+		"tileset": "entity-bender_sadbutt.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 18,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": true
+				},
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 20,
+					"flip_x": true
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				},
+				{
+					"tileid": 20,
+					"flip_x": false
+				}
+			],
+			"bite": [
 				{
 					"tileid": 94,
 					"flip_x": false
@@ -1150,6 +1227,78 @@
 				},
 				{
 					"tileid": 16,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 41,
+					"flip_x": false
+				},
+				{
+					"tileid": 40,
+					"flip_x": true
+				},
+				{
+					"tileid": 39,
+					"flip_x": false
+				},
+				{
+					"tileid": 40,
+					"flip_x": false
+				}
+			],
+			"raise": [
+				{
+					"tileid": 29,
+					"flip_x": false
+				},
+				{
+					"tileid": 28,
+					"flip_x": true
+				},
+				{
+					"tileid": 30,
+					"flip_x": false
+				},
+				{
+					"tileid": 28,
+					"flip_x": false
+				}
+			],
+			"lower": [
+				{
+					"tileid": 32,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": true
+				},
+				{
+					"tileid": 30,
+					"flip_x": false
+				},
+				{
+					"tileid": 31,
+					"flip_x": false
+				}
+			],
+			"flail": [
+				{
+					"tileid": 38,
+					"flip_x": false
+				},
+				{
+					"tileid": 37,
+					"flip_x": true
+				},
+				{
+					"tileid": 36,
+					"flip_x": false
+				},
+				{
+					"tileid": 37,
 					"flip_x": false
 				}
 			]

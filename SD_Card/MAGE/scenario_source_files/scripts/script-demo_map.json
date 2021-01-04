@@ -113,12 +113,6 @@
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-dsheep": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-dsheep"
-		}
-	],
 	"show_dialog-max": [
 		{
 			"action": "SET_ENTITY_DIRECTION",
