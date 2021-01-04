@@ -150,6 +150,20 @@ window.Vue.component(
 	}
 );
 
+window.Vue.component(
+	'download-link',
+	{
+		name: 'download-link',
+		template: '#template-download-link',
+		props: {
+			link: {
+				type: Object,
+				required: true,
+			}
+		},
+	}
+);
+
 window.vueApp = new window.Vue({
 	el: '#app',
 	data: {
@@ -157,6 +171,7 @@ window.vueApp = new window.Vue({
 		isLoading: false,
 		error: null,
 		downloadData: null,
+		downloadZip: null,
 		scenarioData: null,
 		fileNameMap: null,
 	},
@@ -168,25 +183,84 @@ window.vueApp = new window.Vue({
 			this.uniqueEncodeAttempt = Math.random();
 			this.error = false;
 		},
-		closeSuccess: function () {
+		closeSuccess: function (propertyName) {
 			this.uniqueEncodeAttempt = Math.random();
-			this.downloadData = null;
+			this[propertyName] = null;
 		},
-		prepareDownload: function (data, name) {
+		prepareDownload: function (data, name, targetPropertyName) {
 			var blob = new Blob(data, {type: 'octet/stream'});
 			var url = window.URL.createObjectURL(blob);
-			if(this.downloadData) {
-				window.URL.revokeObjectURL(this.downloadData.url);
+			if(this[targetPropertyName]) {
+				window.URL.revokeObjectURL(this[targetPropertyName].url);
 			}
 			window.Vue.set(
 				this,
-				'downloadData',
+				targetPropertyName,
 				{
 					href: url,
 					target: '_blank',
 					download: name
 				}
 			);
+		},
+		getPathByDataTypeName: function (item, dataTypeName) {
+			var nameTypeMap = {
+				sdfsd: function () {return `${aaaaaaaaa}`},
+			};
+		},
+		prepZipDataByDataTypeName: function (item, dataTypeName) {
+			var filterMap = {
+				
+			};
+			return {
+				fileName: 'scenario_source_files/' + this.getPathByDataTypeName(
+					item,
+					dataTypeName
+				),
+				data: JSON.stringify(
+					item,
+					filterMap[dataTypeName],
+					'\t',
+				)
+			}
+		},
+		makeZip: function (scenarioData) {
+			var vm = this;
+			var zip = jszip();
+
+			/*
+			Enforcing strict hierarchy and naming conventions
+			/scenario.json           <- managed in this editor
+			/entity_types.json       <- ^
+			/scripts/script-*.json   <- ^
+			/dialog/dialog-*.json    <- ^
+			/entities/entity-*.json  <- managed by Tiled
+			/tilesets/tileset-*.json <- ^
+			/maps/map-*.json         <- ^
+			 */
+			scenarioData.parsed.scripts
+
+			Object.keys(scenarioData.parsed).forEach(function (dataTypeName) {
+				var dataType = scenarioData.parsed[dataTypeName];
+				dataType.forEach(function (item) {
+					var zipData = this.prepZipDataByDataTypeName(
+						item,
+						dataTypeName
+					);
+					zip.file(
+						zipData.filename,
+						zipData.data,
+					);
+				})
+			});
+			zip.generateAsync({type: "uint8array"})
+				.then(function (data) {
+					vm.prepareDownload(
+						[data],
+						'scenario_source_files.zip',
+						'downloadZip'
+					);
+				});
 		},
 		handleChange: function (event) {
 			var fileNameMap = {};
@@ -210,7 +284,11 @@ window.vueApp = new window.Vue({
 						})
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
-							vm.prepareDownload([compositeArray], 'game.dat');
+							vm.prepareDownload(
+								[compositeArray],
+								'game.dat',
+								'downloadData'
+							);
 							vm.isLoading = false;
 						})
 						.catch(function (error) {

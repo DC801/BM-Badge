@@ -84,31 +84,20 @@
 								>{{error}}</pre>
 								<p>Change a few things up and try dragging your <strong>scenario_source_files</strong> folder in again.</p>
 							</div>
-							<div
+							<download-link
 								v-if="downloadData"
-								class="alert alert-secondary"
+								:link="downloadData"
+								@close="closeSuccess('downloadData')"
 							>
-								<button
-									type="button"
-									class="close"
-									data-dismiss="alert"
-									@click="closeSuccess"
-								>×</button>
-								<h2>Success!</h2>
 								<p>Your scenario files were successfully build into a binary asset file that should be able to run in the game.</p>
-								<div>
-									<a
-										v-bind="downloadData"
-										class="
-											btn
-											btn-lg
-											btn-success
-											btn-block
-											w-100
-										"
-									>Download <code>game.dat</code></a>
-								</div>
-							</div>
+							</download-link>
+							<download-link
+								v-if="downloadZip"
+								:link="downloadZip"
+								@close="closeSuccess('downloadZip')"
+							>
+								<p>Here's your <strong>tar</strong> file.</p>
+							</download-link>
 						</div>
 					</div>
 				</div>
@@ -120,6 +109,39 @@
 			></entity-type-editor>
 		</div>
 	</div>
+	<script
+		type="text/x-template"
+		id="template-download-link"
+	>
+		<div
+			class="
+				download-link
+				alert
+				alert-secondary
+			"
+		>
+			<button
+				type="button"
+				class="close"
+				data-dismiss="alert"
+				@click="$emit('close')"
+			>×</button>
+			<h2>Success!</h2>
+			<slot></slot>
+			<div>
+				<a
+					v-bind="link"
+					class="
+						btn
+						btn-lg
+						btn-success
+						btn-block
+						w-100
+					"
+				>Download <code>{{ link.download }}</code></a>
+			</div>
+		</div>
+	</script>
 	<script
 		type="text/x-template"
 		id="template-tiled-tile"
@@ -379,8 +401,12 @@
 		src="./dependencies/vue.js"
 	></script>
 	<script
-		data-original-src="https://wzrd.in/debug-standalone/get-pixels@3.3.2/"
+		data-original-src="https://wzrd.in/standalone/get-pixels@3.3.2/"
 		src="./dependencies/get-pixels.js"
+	></script>
+	<script
+		data-original-src="https://wzrd.in/standalone/jszip@3.5.0/"
+		src="./dependencies/jszip.js"
 	></script>
 	<script src="js/editor-entity_types.js"></script>
 	<script src="js/common.js"></script>
