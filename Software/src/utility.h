@@ -85,6 +85,8 @@ bool morseGetRunning(void);
 
 void util_gfx_init(void);
 
+void check_ram_usage(void);
+
 #ifdef __cplusplus
 }
 #endif

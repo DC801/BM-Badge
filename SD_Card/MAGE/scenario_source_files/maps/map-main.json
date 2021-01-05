@@ -964,7 +964,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-reset"
                         }],
                  "rotation":0,
                  "type":"",
@@ -1162,7 +1162,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":93,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":[
         {

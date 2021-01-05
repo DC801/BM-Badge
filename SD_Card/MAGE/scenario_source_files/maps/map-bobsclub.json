@@ -57,7 +57,7 @@
                  "y":163.333333333333
                 }, 
                 {
-                 "gid":157,
+                 "gid":172,
                  "height":40,
                  "id":2,
                  "name":"Guardian Bob",
@@ -84,28 +84,12 @@
                          "y":-18
                         }, 
                         {
-                         "x":2.66666666666663,
-                         "y":-64.6666666666667
+                         "x":2.99999999999989,
+                         "y":-104
                         }, 
                         {
-                         "x":-7.33333333333337,
-                         "y":-90.6666666666667
-                        }, 
-                        {
-                         "x":-34,
-                         "y":-105.333333333333
-                        }, 
-                        {
-                         "x":-84,
-                         "y":-109.333333333333
-                        }, 
-                        {
-                         "x":-134,
-                         "y":-120
-                        }, 
-                        {
-                         "x":-150.666666666667,
-                         "y":-154
+                         "x":-151.333333333334,
+                         "y":-104
                         }, 
                         {
                          "x":-152,
@@ -130,7 +114,7 @@
                  "y":471.833333333333
                 }, 
                 {
-                 "gid":180,
+                 "gid":195,
                  "height":32,
                  "id":7,
                  "name":"Bob",
@@ -145,7 +129,7 @@
                  "visible":true,
                  "width":32,
                  "x":799.5,
-                 "y":470.5
+                 "y":466
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -170,6 +154,11 @@
  "orientation":"orthogonal",
  "properties":[
         {
+         "name":"on_load",
+         "type":"string",
+         "value":"show_dialog-bobsclub"
+        }, 
+        {
          "name":"on_tick",
          "type":"string",
          "value":"on_tick-bobsclub"
@@ -187,11 +176,11 @@
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":156,
+         "firstgid":171,
          "source":"..\/entities\/entity-bob.json"
         }, 
         {
-         "firstgid":174,
+         "firstgid":189,
          "source":"..\/entities\/entity-mage.json"
         }],
  "tilewidth":32,

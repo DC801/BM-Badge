@@ -285,7 +285,7 @@
 				"Nuh-uh!",
 				"What about Bob... rietta? Bob... velyn?",
 				"Barbara? I mean, Bob-ara?",
-				"They're still gonna come to the party, aren't they?"
+				"They're still gonna come to the party,\naren't they?"
 			]
 		},
 		{
@@ -293,7 +293,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Sorry, dude!\n Not if the party's canceled.",
+				"Sorry, dude!\nNot if the party's canceled.",
 				"...Also not if none of them are named Bob."
 			]
 		},
@@ -443,7 +443,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"We've been through all this before, you know."
+				"We've been through all this before,\nyou know."
 			]
 		},
 		{
@@ -530,8 +530,8 @@
 			"portrait": "baker",
 			"name": "%Baker%",
 			"messages": [
-				"Great. Just great.\nJust as I was putting everything in the oven.\nNot gonna pay me either, are they?",
-				"Well, thanks for finding out for me.\nNow I need to find a way to move\nfour dozen B-shaped donuts."
+				"Great. Just great. Just as I was putting\neverything in the oven. Not gonna pay me\neither, are they?",
+				"Well, thanks for finding out for me.\nNow I need to find a way to move four\ndozen B-shaped donuts."
 			]
 		}
 	],
