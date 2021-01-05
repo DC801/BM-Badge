@@ -309,4 +309,6 @@ void check_ram_usage(void)
 	debug_print("Stack Memory Address: 0x%x",&stack);
 	debug_print("Heap Memory Address:  0x%x",heap);
 	debug_print("Free Memory: %d",(int64_t)((size_t)&stack - (size_t)heap));
+	//to prevent memory leaks:
+	free(heap);
 }
