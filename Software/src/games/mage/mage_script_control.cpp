@@ -1227,12 +1227,10 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		MageGame->playerHasControl = false;
 		MageDialog->load(argStruct->dialogId, currentEntityId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	} else if (!MageDialog->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
-		MageGame->playerHasControl = true;
 	}
 	return;
 }

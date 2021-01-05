@@ -1,0 +1,148 @@
+{
+	"show_dialog-bender-start": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender1",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-eval"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start1"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start2"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "bender_sadbutt",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-start-alt"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "bender",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-start-alt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start3a"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender1",
+			"bool_value": true
+		}
+	],
+	"show_dialog-bender-start-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start3a"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender1",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	],
+	"show_dialog-bender-eval": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Bender",
+			"entity_type": "bender_sadbutt",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-start-s"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Bender",
+			"entity_type": "bender",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-end"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-eval-bad"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	],
+	"show_dialog-bender-start-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	],
+	"show_dialog-bender-end": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender2",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-end-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-end1"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-end2"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender2",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	],
+	"show_dialog-bender-end-s": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Bender",
+			"entity_type": "bender",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-satisfied"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-comedian"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	],
+	"show_dialog-bender-satisfied": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-satisfied"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bender",
+			"script": "show_dialog-bender-start"
+		}
+	]
+}

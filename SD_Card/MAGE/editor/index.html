@@ -10,6 +10,24 @@
 		data-original-href="https://bootswatch.com/4/darkly/bootstrap.min.css"
 		href="./dependencies/bootstrap-darkly.css"
 	/>
+	<style>
+		body .custom-file-label::after {
+			top: -1px;
+			bottom: -1px;
+			right: -1px;
+			height: auto;
+			border: inherit;
+		}
+		.tile-link {
+			border-style: solid;
+			border-width: 4px;
+			appearance: none;
+			background-color: transparent;
+			border-radius: 0;
+			padding: 0;
+			line-height: 0;
+		}
+	</style>
 	<title>MAGE GAME DATA TOOL</title>
 </head>
 <body>
@@ -17,33 +35,31 @@
 		<div class="container pt-5">
 			<div class="row">
 				<div class="col-12">
-					<div class="card">
+					<div
+						class="
+							card
+							mb-3
+						"
+					>
 						<div class="card-header">
 							Drag your `scenario_source_files` folder to the button
 						</div>
 						<div class="card-body">
-							<div
-							>
-								<label>Drag your <code>scenario_source_files</code> to this button!
+							<p>Drag your <code>scenario_source_files</code> to this button!</p>
+							<div class="form-group">
+								<div class="custom-file">
 									<input
-										:key="uniqueEncodeAttempt"
-										id="drag_target"
-										class="
-											btn
-											btn-block
-											btn-primary
-											btn-lg
-											p-5
-										"
-										type="file"
-										name=""
-										content="Hello"
-										multiple
-										directory
-										webkitdirectory
-										@input="handleChange"
+											type="file"
+											:key="uniqueEncodeAttempt"
+											id="drag_target"
+											class="custom-file-input"
+											multiple
+											directory
+											webkitdirectory
+											@input="handleChange"
 									/>
-								</label>
+									<label class="custom-file-label" for="drag_target">Choose file</label>
+								</div>
 							</div>
 							<div
 								v-if="isLoading"
@@ -97,8 +113,267 @@
 					</div>
 				</div>
 			</div>
+			<entity-type-editor
+				v-if="scenarioData"
+				:file-name-map="fileNameMap"
+				:scenario-data="scenarioData"
+			></entity-type-editor>
 		</div>
 	</div>
+	<script
+		type="text/x-template"
+		id="template-tiled-tile"
+	>
+		<span
+			class="tiled-tile"
+			:style="outerStyle"
+			:title="`tileid: ${tileid}`"
+		>
+			<span
+				:style="innerStyle"
+			></span>
+		</span>
+	</script>
+	<script
+		type="text/x-template"
+		id="template-entity-type-editor"
+	>
+		<div
+			class="
+				entity-type-editor
+				card
+				text-white
+				mb-3
+			"
+		>
+			<div class="card-header">Entity Type Editor</div>
+			<div class="card-body">
+				<div
+					v-if="needsSave"
+					class="
+						alert
+						alert-danger
+						alert-dismissible
+						fade
+						show
+					"
+					role="alert"
+				>
+					<strong>Unsaved changes!</strong>
+					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
+					<button
+						type="button"
+						class="close"
+						title="Copy"
+						@click="copyState"
+					>
+						<span aria-hidden="true">📋</span>
+					</button>
+					<textarea
+						cols="80"
+						rows="16"
+						class="position-absolute"
+						style="
+							font-size: 0;
+							opacity: 0;
+						"
+						ref="copyStateTextArea"
+					>{{ jsonOutput }}</textarea>
+				</div>
+				<div class="form-group">
+					<label for="currentEntityTypeId">Entity Types:</label>
+					<select
+						class="form-control"
+						id="currentEntityTypeId"
+						v-model="currentEntityTypeId"
+					>
+						<option
+							value=""
+						>Select an entityType</option>
+						<option
+							v-for="entityType in entityTypes"
+							:key="entityType.type"
+							:value="entityType.type"
+						>{{ entityType.type }}</option>
+					</select>
+				</div>
+				<div class="input-group mb-3">
+					<input
+						type="text"
+						class="form-control"
+						placeholder="Create new entityType"
+						aria-label="Create new entityType"
+						aria-describedby="add-entity-type"
+						v-model="newEntityTypeId"
+					>
+					<div class="input-group-append">
+						<button
+							class="btn btn-primary"
+							type="button"
+							id="add-entity-type"
+							@click="addEntityType"
+						>Create</button>
+					</div>
+				</div>
+				<div
+					v-if="currentEntityType"
+					:key="currentEntityTypeId"
+					class="
+						card
+						text-white
+						bg-secondary
+						mb-3
+					"
+				>
+					<div class="card-header">Current EntityType: {{ currentEntityType.type }}</div>
+					<div class="card-body">
+						<div class="row">
+							<div
+								v-if="tileset"
+								:key="tileset.filename"
+								class="animations col-12 col-lg-6"
+							>
+								<h5>Animations</h5>
+								<table
+									class="
+										text-center
+										table-bordered
+										table-dark
+									"
+								>
+									<thead>
+										<tr>
+											<th
+												v-for="direction in $options.directions"
+											>{{ direction }}</th>
+											<th>❌</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template
+											v-for="(animation, animationName) in currentEntityType.animations"
+										>
+											<tr>
+												<th colspan="4">{{ animationName }}</th>
+												<td>
+													<button
+														class="badge btn btn-block btn-outline-danger"
+														@click="deleteAnimation(animationName)"
+													>❌</button>
+												</td>
+											</tr>
+											<tr
+												:key="animationName"
+											>
+												<td
+													v-for="(direction, directionIndex) in animation"
+													:key="directionIndex"
+												>
+													<div>
+														<button
+															class="tile-link d-inline-flex"
+															:class="(
+																(currentAnimationName === animationName)
+																&& (currentAnimationDirection === directionIndex)
+															)
+																? 'border-success'
+																: 'border-secondary'
+															"
+															@click="clickDirection(animationName, directionIndex)"
+														>
+															<tiled-tile
+																:key="direction.tileid"
+																:tileset="tileset"
+																:tileid="direction.tileid"
+																:style="{
+																	transform: `scale(${direction.flip_x?'-':''}1, ${direction.flip_y?'-':''}1)`
+																}"
+															></tiled-tile>
+														</button>
+														<div>
+															<button
+																class="btn badge"
+																:class="direction.flip_x ? 'badge-success' : 'badge-secondary'"
+																@click="flip(animationName, directionIndex, 'flip_x')"
+																title="Flip X"
+															>⬌</button>
+															<button
+																class="btn badge"
+																:class="direction.flip_y ? 'badge-success' : 'badge-secondary'"
+																@click="flip(animationName, directionIndex, 'flip_y')"
+																title="Flip Y"
+															>⬍</button>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+								<div
+									v-if="Object.keys(currentEntityType.animations).length < 7"
+									class="pt-3"
+								>
+									<button
+										class="btn btn-block btn-outline-success"
+										@click="addAnimation"
+									>Add Animation</button>
+								</div>
+							</div>
+							<div class="tileset col-12 col-lg-6">
+								<h5>Tileset: {{ currentEntityType.tileset }}</h5>
+								<div class="form-group">
+									<label for="currentTileset">Tileset:</label>
+									<select
+										class="form-control"
+										id="currentTileset"
+										v-model="currentEntityType.tileset"
+									>
+										<option
+											value=""
+										>Select a tileset</option>
+										<option
+											v-for="tileset in allTilesets"
+											:key="tileset.filename"
+											:value="tileset.filename"
+										>{{ tileset.filename }}</option>
+									</select>
+								</div>
+								<table
+									v-if="tileset"
+									:key="tileset.filename"
+									class="table-dark table-bordered"
+									style="line-height: 0;"
+								>
+									<tbody>
+									<tr
+										v-for="(badY, y) in Math.floor(tileset.tilecount / tileset.columns)"
+									>
+										<td
+											v-for="(badX, x) in tileset.columns"
+										>
+											<button
+												class="tile-link d-inline-flex"
+												:class="(currentTileId === ((y * tileset.columns) + x))
+													? 'border-success'
+													: 'border-secondary'
+												"
+												@click="clickTile((y * tileset.columns) + x)"
+											><tiled-tile
+												:tileset="tileset"
+												:tileid="(y * tileset.columns) + x"
+											></tiled-tile></button>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
 	<script
 		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
 		src="./dependencies/vue.js"
@@ -107,11 +382,12 @@
 		data-original-src="https://wzrd.in/debug-standalone/get-pixels@3.3.2/"
 		src="./dependencies/get-pixels.js"
 	></script>
+	<script src="js/editor-entity_types.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
-	<script src="js/entityTypes.js"></script>
+	<script src="js/entity_types.js"></script>
 	<script src="js/entities.js"></script>
 	<script src="js/geometry.js"></script>
 	<script src="js/strings.js"></script>
