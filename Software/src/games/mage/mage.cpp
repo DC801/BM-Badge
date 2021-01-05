@@ -7,7 +7,7 @@
 #include "EnginePanic.h"
 
 //uncomment to print main game loop timing debug info to terminal or over serial
-#define TIMING_DEBUG
+//#define TIMING_DEBUG
 
 #ifdef DC801_DESKTOP
 #include "EngineWindowFrame.h"

@@ -308,5 +308,5 @@ void check_ram_usage(void)
 	void * heap = malloc(1);
 	debug_print("Stack Memory Address: 0x%x",&stack);
 	debug_print("Heap Memory Address:  0x%x",heap);
-	debug_print("Free Memory: %d",(int64_t)((uint32_t)&stack - (uint32_t)heap));
+	debug_print("Free Memory: %d",(int64_t)((size_t)&stack - (size_t)heap));
 }
