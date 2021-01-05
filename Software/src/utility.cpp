@@ -298,3 +298,15 @@ void util_gfx_init()
 
 	p_canvas()->blt();
 }
+
+//this creates one heap variable and one stack variable, and subtracts them
+//to find the free ram where the function was called.
+//it uses debug_print for output.
+void check_ram_usage(void)
+{
+	uint8_t stack = 0;
+	void * heap = malloc(1);
+	debug_print("Stack Memory Address: 0x%x",&stack);
+	debug_print("Heap Memory Address:  0x%x",heap);
+	debug_print("Free Memory: %d",(int64_t)((size_t)&stack - (size_t)heap));
+}
