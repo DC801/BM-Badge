@@ -172,12 +172,12 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Bob Austin",
 			"geometry": "%ENTITY_PATH%",
-			"duration": 1000
+			"duration": 400
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
 			"entity": "Bob Austin",
-			"direction": "west"
+			"target_geometry": "door-bobsclub-entrance"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -187,20 +187,31 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Bob Austin",
 			"direction": "south"
-		}
-	],
-	"walk_to_bobsclub_door": [
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobrock-yesbob2"
+		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "predoor-bobsclub",
-			"duration": 1000
+			"duration": 500
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "door-bobsclub-entrance",
-			"duration": 2000
+			"duration": 500
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-bobsclub"
 		}
 	],
 	"show_dialog-baker-start": [
@@ -230,6 +241,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Baker",
+			"script": "show_dialog-baker-start"
 		}
 	],
 	"show_dialog-bobrock-gottago": [
@@ -253,12 +269,27 @@
 			"geometry": "bob_point"
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Bob Austin",
+			"direction": "south"
+		},
+		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 1000,
 			"color": 0
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
 		}
 	],
 	"show_dialog-bobrock-start": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bob Austin",
+			"target_entity": "%PLAYER%"
+		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Bob Austin",
@@ -286,6 +317,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bobrock",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
 		}
 	],
 "show_dialog-bobrock-start2": [
@@ -297,6 +333,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bobrock",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
 		}
 	],
 "show_dialog-bobrock-bounce": [
@@ -320,6 +361,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-nobob"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
 		}
 	],
 "show_dialog-bobrock-yesbob": [
@@ -330,18 +376,6 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "unlock_door"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobrock-yesbob2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "walk_to_bobsclub_door"
-		},
-		{
-			"action": "LOAD_MAP",
-			"map": "map-bobsclub"
 		}
 	],
 "show_dialog-bobsclub": [
@@ -359,7 +393,11 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "bob_path",
-			"duration": "100"
+			"duration": 500
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -369,7 +407,21 @@
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "bob_path",
-			"duration": "5000"
+			"duration": 5000
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Guardian Bob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Guardian Bob",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -377,7 +429,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 600
+			"duration": 1000
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -386,12 +438,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 100
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Guardian Bob",
 			"target_entity": "Strong Bad"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -422,6 +478,16 @@
 			"success_script": "null_script"
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Guardian Bob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Guardian Bob",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub6"
 		},
@@ -449,7 +515,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "strongbob",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobsclub-strongbob-s"
 		},
@@ -467,6 +533,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub-strongbob-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Strong Bad",
+			"script": "show_dialog-bobsclub-strongbob"
 		}
 	],
 "show_dialog-bobsclub-wall": [
@@ -494,6 +565,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-nobob-rehash"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bob Austin",
+			"script": "show_dialog-bobrock-start"
 		}
 	],
 "show_dialog-bobrock-yesbob-rehash": [
@@ -504,16 +580,7 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "unlock_door"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "walk_to_bobsclub_door"
-		},
-		{
-			"action": "LOAD_MAP",
-			"map": "map-bobsclub"
 		}
-
 	],
 "show_dialog-baker-end": [
 		{
@@ -530,12 +597,22 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker2",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Baker",
+			"script": "show_dialog-baker-start"
 		}
 	],
 "show_dialog-baker-end-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-end-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Baker",
+			"script": "show_dialog-baker-start"
 		}
 	],
 "on_tick-bobsclub": [

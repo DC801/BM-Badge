@@ -293,7 +293,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Sorry, dude!\n Not if the party's canceled.",
+				"Sorry, dude!\nNot if the party's canceled.",
 				"...Also not if none of them are named Bob."
 			]
 		},
