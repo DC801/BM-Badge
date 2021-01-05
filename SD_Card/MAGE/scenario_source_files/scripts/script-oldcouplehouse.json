@@ -8,6 +8,45 @@
 			"expected_bool": true
 		}
 	],
+	"on_load-oldcouplehouse": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea-sequel",
+			"expected_bool": true,
+			"success_script": "make-delmar-man"
+		}
+	],
+	"make-delmar-man": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea-relief",
+			"expected_bool": true,
+			"success_script": "make-delmar-sheep"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man"
+		}
+	],
+	"make-delmar-sheep": [
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "sheep"
+		}
+	],
+	"set_flag-bea-sequel": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-sequel",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-sequel"
+		}
+	],
 	"leave-oldcouplehouse": [
 		{
 			"action": "SET_WARP_STATE",
@@ -278,10 +317,6 @@
 		}
 	],
 	"show_dialog-bea-happy-branch": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-mandud-s"
-		},
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false

@@ -421,7 +421,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 300
 		},
 		{
 			"action": "SHOW_DIALOG",
