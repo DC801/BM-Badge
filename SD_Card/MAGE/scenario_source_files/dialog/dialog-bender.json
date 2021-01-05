@@ -42,7 +42,7 @@
 			]
 		}
 	],
-	"dialog-bender-start3a": [
+	"dialog-bender-start3b": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bender",
@@ -150,7 +150,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"I don't know why I assumed you'd be friendly."
+				"I don't know why I assumed you'd be\nfriendly."
 			]
 		},
 		{
@@ -158,7 +158,7 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"Well, you know what they say\nabout assumptions.",
+				"Well, you know what they say about\nassumptions.",
 				"They make a shiny ass...\nand they give it to me, Bender."
 			]
 		}
