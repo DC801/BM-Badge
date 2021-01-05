@@ -261,107 +261,74 @@ void FrameBuffer::drawImageWithFlags(
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
 	MageColorPalette *colorPalette,
-	int x,
-	int y,
+	int x, // top-left corner of screen coordinates to draw at
+	int y, // top-left corner of screen coordinates to draw at
 	uint16_t tile_width,
 	uint16_t tile_height,
-	uint16_t source_x,
-	uint16_t source_y,
-	int16_t pitch,
+	uint16_t source_x, // top-left corner of source image coordinates to READ FROM
+	uint16_t source_y, // top-left corner of source image coordinates to READ FROM
+	int16_t pitch, // The width of the source image in pixels
 	uint16_t transparent_color,
 	uint8_t flags
 )
 {
-	uint16_t tile_x = 0;
-	uint16_t tile_y = 0;
-	uint16_t write_x = 0;
-	uint16_t write_y = 0;
-	int16_t dest_x = 0;
-	int16_t dest_y = 0;
-	uint8_t colorIndices[MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH] = {};
+	int32_t current_x = 0;
+	int32_t current_y = 0;
+	uint32_t sprite_x = 0;
+	uint32_t sprite_y = 0;
+	uint32_t tile_x = 0;
+	uint32_t tile_y = 0;
 	uint32_t location = 0;
+	uint16_t color = 0;
+	uint8_t colorIndex = 0;
 
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
-	if (
-		(x > WIDTH) ||
-		(y > HEIGHT) ||
-		((x + tile_width) < 0) ||
-		((y + tile_height) < 0) ||
-		((tile_width != tile_height) && flip_diag) // can't transpose non-squares
-	)
-	{
-		return;
-	}
 
-	Rectangle writeRect = Rectangle(
-		MAX(x, 0),
-		MAX(y, 0),
-		MIN(tile_width, MIN(tile_width + x, WIDTH - x)),
-		MIN(tile_height, MIN(tile_height + y, HEIGHT - y))
+	uint8_t colorIndexes[tile_width * tile_height];
+
+	EngineROM_Read(
+		address + ((source_y * pitch) + source_x),
+		tile_width * tile_height,
+		(uint8_t *)&colorIndexes,
+		"Failed to read pixel data"
 	);
 
-	// FOR ALL OF THE SCENARIOS WHERE THE READ COORDINATE STARTS ON-SCREEN,
-	// THE READ COORDINATES -MUST NOT- TO BE SHIFTED!!!
-
-	// EXTREMELY CURSED BOOLEAN ALGEBRA
-	// - Do not touch
-	uint16_t transposed_width = flip_diag ? writeRect.height : writeRect.width;
-	uint16_t transposed_height = flip_diag ? writeRect.width : writeRect.height;
-	uint16_t offset_x = MAX(-x, 0);
-	uint16_t offset_y = MAX(-y, 0);
-	uint16_t transposed_offset_x = flip_diag ? offset_y : offset_x;
-	uint16_t transposed_offset_y = flip_diag ? offset_x : offset_y;
-	int32_t inverse_transposed_offset_x = tile_width - transposed_width - transposed_offset_x;
-	int32_t inverse_transposed_offset_y = tile_height - transposed_height - transposed_offset_y;
-	Rectangle readRect = Rectangle(
-		source_x + (((!flip_x && flip_y && flip_diag) || (flip_x && !flip_diag)|| (flip_x && flip_y && flip_diag)) ? inverse_transposed_offset_x : transposed_offset_x),
-		source_y + (((!flip_y && flip_x && flip_diag) || (flip_y && !flip_diag)|| (flip_y && flip_x && flip_diag)) ? inverse_transposed_offset_y : transposed_offset_y),
-		transposed_width,
-		transposed_height
-	);
-
-	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-	uint16_t remaining_pixels_this_row = readRect.width;
-	uint16_t pixels_to_read_now = 0;
-	uint16_t color = 0;
-	// These loops represent source coordinate space, not destination space
-	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
+	for (int offset_y = 0; (offset_y < tile_height) && (current_y < HEIGHT); ++offset_y)
 	{
-		location = address + (((readRect.y + tile_y) * pitch) + readRect.x);
-		EngineROM_Read(
-			location,
-			pixels_to_read_per_run,
-			(uint8_t *)&colorIndices,
-			"Failed to read pixel data"
-		);
-		tile_x = 0;
-		while (tile_x < readRect.width)
+		current_y = offset_y + y;
+		current_x = 0;
+
+		for (int offset_x = 0; (offset_x < tile_width) && (current_x < WIDTH); ++offset_x)
 		{
-			if(tile_x > pixels_to_read_per_run)
+			current_x = offset_x + x;
+
+			if (current_x < 0		||
+				current_x >= WIDTH	||
+				current_y < 0		||
+				current_y >= HEIGHT)
 			{
-				remaining_pixels_this_row = readRect.width - tile_x;
-				location = address + (((readRect.y + tile_y) * pitch) + readRect.x + tile_x);
-				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-				EngineROM_Read(
-					location,
-					pixels_to_read_now,
-					(uint8_t *)&colorIndices,
-					"Failed to read pixel data"
-				);
+				continue;
 			}
-			write_x = ((flip_diag) ? (tile_y) : (tile_x));
-			write_y = ((flip_diag) ? (tile_x) : (tile_y));
-			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
-			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
-			uint8_t colorIndex = colorIndices[tile_x % pixels_to_read_per_run];
+
+			tile_x = ((flip_diag) ? (offset_y) : (offset_x));
+			tile_y = ((flip_diag) ? (offset_x) : (offset_y));
+
+			sprite_x = flip_x
+				? (tile_width - tile_x - 1)
+				: tile_x;
+
+			sprite_y = flip_y
+				? (tile_height - tile_y - 1)
+				: tile_y;
+
+			colorIndex = colorIndexes[(pitch * sprite_y) + sprite_x];
 			color = colorPalette->colors[colorIndex];
 			if (color != transparent_color)
 			{
-				frame[(dest_y * WIDTH) + dest_x] = color;
+				frame[(current_y * WIDTH) + current_x] = color;
 			}
-			tile_x++;
 		}
 	}
 }
