@@ -35,7 +35,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Forty years ago, things were sure different.",
+				"Forty years ago, things were sure\ndifferent.",
 				"I was a lot younger then, and my husband,\n%Delmar%...."
 			]
 		}
@@ -56,11 +56,12 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"That ghastly hacker ruffian hacked him\ninto a sheep on a whim!\n%Delmar% didn't even\ndo anything to him!",
+				"That ghastly hacker ruffian hacked him\ninto a sheep on a whim!",
+				"%Delmar% didn't even\ndo anything to him!",
 				"...Other than insult his character,\nand that of his mother.",
 				"...And eat his lunch.",
 				"...And cut his brake line.",
-				"The point is, child, that\n%Delmar%'s been\nstuck as a sheep ever since!",
+				"The point is, child, that %Delmar%'s\nbeen stuck as a sheep ever since!",
 				"But you, now that you have Ring Zero....",
 				"You can make things right again, \ncan't you?",
 				"I miss my %Delmar%!"
@@ -71,7 +72,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Make things right?\nWell, I can change what he looks like,\nanyway."
+				"Make things right? Well, I can change\nwhat he looks like, anyway."
 			]
 		},
 		{
@@ -156,8 +157,9 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh! That's a nasty trick, %PLAYER%! How could you?",
-				"Although... I sort of get the feeling he'll be back to normal in a few minutes."
+				"Oh! That's a nasty trick,\n%PLAYER%!",
+				"How could you?",
+				"Although...\nI sort of get the feeling he'll be back\nto normal in a few minutes."
 			]
 		}
 	],
@@ -167,7 +169,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, %Delmar%, you're... uh...."
+				"Oh, %Delmar%,\nyou're... uh...."
 			]
 		}
 	],
@@ -188,7 +190,7 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"....",
-				"You know, I appreciate what you did, %PLAYER%. I really do."
+				"You know, I appreciate what you did,\n%PLAYER%. I really do."
 			]
 		}
 	],
@@ -209,10 +211,10 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"But now I find myself longing for quiet.",
-				"It was so peaceful, before. Me and %Delmar% used to get along so well.",
-				"And it's so difficult to fall asleep recently.",
+				"It was so peaceful, before.\nMe and %Delmar% used to\nget along so well.",
+				"And it's so difficult to fall asleep\nrecently.",
 				"I hate to ask it, child, but....",
-				"I can't hear myself think! Please change him back!"
+				"I can't hear myself think!\nPlease change him back!"
 			]
 		}
 	],
@@ -222,8 +224,8 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"I'm sure he won't mind being a sheep again. In fact, I'm not sure he'll notice.",
-				"But I sure will! I won't have peace otherwise!"
+				"I'm sure he won't mind being a sheep\nagain. In fact, I'm not sure he'll notice.",
+				"But I sure will!\nI won't have peace otherwise!"
 			]
 		}
 	],
@@ -234,7 +236,7 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"Thank you, child!",
-				"...And, erm, we need not mention this to anyone! You understand?"
+				"...And, erm, we need not mention this to\nanyone! You understand?"
 			]
 		}
 	],
@@ -254,7 +256,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh! And I was just thinking how I wanted him to become a sheep again!",
+				"Oh! And I was just thinking how I wanted\nhim to become a sheep again!",
 				"So gentle... and so quiet!",
 				"Thank you, %PLAYER%!"
 			]
@@ -267,7 +269,17 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"....",
-				"I suddenly have the strangest feeling of deja vu."
+				"I suddenly have the strangest feeling of\ndeja vu."
+			]
+		}
+	],
+	"dialog-debug-sequel": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "Debug Man",
+			"messages": [
+				"Sequal branch activated."
 			]
 		}
 	]

@@ -2,6 +2,12 @@
 	"show_dialog-bender-start": [
 		{
 			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender2",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-end-s"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bender1",
 			"expected_bool": true,
 			"success_script": "show_dialog-bender-eval"
@@ -41,7 +47,7 @@
 	"show_dialog-bender-start-alt": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start3a"
+			"dialog": "dialog-bender-start3b"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -91,12 +97,6 @@
 		}
 	],
 	"show_dialog-bender-end": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bender2",
-			"expected_bool": true,
-			"success_script": "show_dialog-bender-end-s"
-		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bender-end1"
