@@ -964,7 +964,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-reset"
                         }],
                  "rotation":0,
                  "type":"",
@@ -972,6 +972,18 @@
                  "width":32,
                  "x":590.5,
                  "y":649
+                }, 
+                {
+                 "gid":968,
+                 "height":32,
+                 "id":93,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":854.5,
+                 "y":528.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1162,7 +1174,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":93,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":[
         {

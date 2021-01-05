@@ -328,5 +328,15 @@
 				"...?"
 			]
 		}
+	],
+	"dialog-reset": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "V. Elder",
+			"messages": [
+				"All flags reset."
+			]
+		}
 	]
 }
