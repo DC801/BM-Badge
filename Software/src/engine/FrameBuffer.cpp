@@ -327,7 +327,7 @@ void FrameBuffer::drawChunkWithFlags(
 	uint16_t pixels_to_read_now = 0;
 	uint16_t color = 0;
 	// These loops represent source coordinate space, not destination space
-	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
+	for (tile_y = 0; tile_y < readRect.height; tile_y++)
 	{
 		location = address + (((readRect.y + tile_y) * pitch) + readRect.x);
 		EngineROM_Read(
