@@ -7,7 +7,7 @@
 #include "EnginePanic.h"
 
 //uncomment to print main game loop timing debug info to terminal or over serial
-//#define TIMING_DEBUG
+#define TIMING_DEBUG
 
 #ifdef DC801_DESKTOP
 #include "EngineWindowFrame.h"
@@ -157,34 +157,59 @@ void GameRender()
 			{
 				//draw all map layers except the last one before drawing entities.
 				MageGame->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+				#ifdef TIMING_DEBUG
+					diff = millis() - now;
+					debug_print("Layer Time: %d",diff);
+					now = millis();
+				#endif
 			}
 		}
 		else
 		{
 			//if there is only one map layer, it will always be drawn before the entities.
 			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Layer Time: %d",diff);
+				now = millis();
+			#endif
 		}
 
 		//now that the entities are updated, draw them to the screen.
 		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("Entity Time: %d",diff);
+			now = millis();
+		#endif
 
 		if (layerCount > 1)
 		{
 			//draw the final layer above the entities.
 			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Layer n Time: %d",diff);
+				now = millis();
+			#endif
 		}
 
 		if (MageGame->isCollisionDebugOn) {
 			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Geometry Time: %d",diff);
+				now = millis();
+			#endif
 		}
 		if(MageDialog->isOpen) {
 			MageDialog->draw();
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Dialog Time: %d",diff);
+				now = millis();
+			#endif
 		}
-		#ifdef TIMING_DEBUG
-			diff = millis() - now;
-			debug_print("game render time: %d",diff);
-			now = millis();
-		#endif
 	}
 	//update the state of the LEDs
 	MageHex->updateHexLights();
