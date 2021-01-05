@@ -396,8 +396,8 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":280,
-                 "y":376.5
+                 "x":283.5,
+                 "y":379.75
                 }, 
                 {
                  "gid":324,
@@ -853,7 +853,7 @@
                 {
                  "height":32,
                  "id":60,
-                 "name":"door-demo",
+                 "name":"door-main",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1009,7 +1009,7 @@
         {
          "name":"on_tick",
          "type":"string",
-         "value":"on_tick-demo"
+         "value":"on_tick-main"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
