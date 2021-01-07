@@ -719,8 +719,8 @@ void FrameBuffer::tileToBufferNoXNoYYesZ(
 				((screen_y_start + row) * WIDTH) //y
 			);
 			tile_index = (
-				(a.x + col) + //x
-				((a.y + row) * tile_width) //y
+				(a.y + row) + //transposed x
+				((a.x + col) * tile_width) //transposed y
 			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
@@ -751,16 +751,16 @@ void FrameBuffer::tileToBufferYesXNoYYesZ(
 	Point a = { .x = 0, .y = 0 };
 	Point d = { .x = 0, .y = 0 };
 	if(screen_x < 0){
-		a.x = -screen_x;
-		d.x = tile_width;
+		a.x = screen_x + tile_width;
+		d.x = 0;
 		screen_x_start = 0;
 	} else if (screen_x+tile_width >= WIDTH) {
-		a.x = 0;
-		d.x = WIDTH - screen_x;
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
 	} else {
-		a.x = 0;
-		d.x = tile_width;
+		a.x = tile_width;
+		d.x = 0;
 		screen_x_start = screen_x;
 	}
 	if(screen_y < 0){
@@ -777,7 +777,7 @@ void FrameBuffer::tileToBufferYesXNoYYesZ(
 		screen_y_start = screen_y;
 	}
 	uint16_t num_rows = d.y - a.y;
-	uint16_t num_cols = d.x - a.x;
+	uint16_t num_cols = a.x - d.x;
 	for (uint16_t row = 0; row< num_rows; row++){
 		for(uint16_t col = 0; col < num_cols; col++) {
 			screen_index =(
@@ -785,8 +785,8 @@ void FrameBuffer::tileToBufferYesXNoYYesZ(
 				((screen_y_start + row) * WIDTH) //y
 			);
 			tile_index = (
-				(a.x + col) + //x
-				((a.y + row) * tile_width) //y
+				(a.y + row) + //transposed x
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
 			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
@@ -830,19 +830,19 @@ void FrameBuffer::tileToBufferNoXYesYYesZ(
 		screen_x_start = screen_x;
 	}
 	if(screen_y < 0){
-		a.y = -screen_y;
-		d.y= tile_height;
+		a.y = screen_y + tile_height;
+		d.y = 0;
 		screen_y_start = 0;
 	} else if (screen_y+tile_height >= HEIGHT) {
-		a.y = 0;
-		d.y = HEIGHT - screen_y;
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
 	} else {
-		a.y = 0;
-		d.y = tile_height;
+		a.y = tile_height;
+		d.y = 0;
 		screen_y_start = screen_y;
 	}
-	uint16_t num_rows = d.y - a.y;
+	uint16_t num_rows = a.y - d.y;
 	uint16_t num_cols = d.x - a.x;
 	for (uint16_t row = 0; row< num_rows; row++){
 		for(uint16_t col = 0; col < num_cols; col++) {
@@ -851,8 +851,8 @@ void FrameBuffer::tileToBufferNoXYesYYesZ(
 				((screen_y_start + row) * WIDTH) //y
 			);
 			tile_index = (
-				(a.x + col) + //x
-				((a.y + row) * tile_width) //y
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
+				((a.x + col) * tile_width) //transposed y
 			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
@@ -883,33 +883,33 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 	Point a = { .x = 0, .y = 0 };
 	Point d = { .x = 0, .y = 0 };
 	if(screen_x < 0){
-		a.x = -screen_x;
-		d.x = tile_width;
+		a.x = screen_x + tile_width;
+		d.x = 0;
 		screen_x_start = 0;
 	} else if (screen_x+tile_width >= WIDTH) {
-		a.x = 0;
-		d.x = WIDTH - screen_x;
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
 		screen_x_start = screen_x;
 	} else {
-		a.x = 0;
-		d.x = tile_width;
+		a.x = tile_width;
+		d.x = 0;
 		screen_x_start = screen_x;
 	}
 	if(screen_y < 0){
-		a.y = -screen_y;
-		d.y= tile_height;
+		a.y = screen_y + tile_height;
+		d.y = 0;
 		screen_y_start = 0;
 	} else if (screen_y+tile_height >= HEIGHT) {
-		a.y = 0;
-		d.y = HEIGHT - screen_y;
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
 		screen_y_start = screen_y;
 	} else {
-		a.y = 0;
-		d.y = tile_height;
+		a.y = tile_height;
+		d.y = 0;
 		screen_y_start = screen_y;
 	}
-	uint16_t num_rows = d.y - a.y;
-	uint16_t num_cols = d.x - a.x;
+	uint16_t num_rows = a.y - d.y;
+	uint16_t num_cols = a.x - d.x;
 	for (uint16_t row = 0; row< num_rows; row++){
 		for(uint16_t col = 0; col < num_cols; col++) {
 			screen_index =(
@@ -917,8 +917,8 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 				((screen_y_start + row) * WIDTH) //y
 			);
 			tile_index = (
-				(a.x + col) + //x
-				((a.y + row) * tile_width) //y
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
 			);
 			uint8_t color_index = pixels[tile_index];
 			color = colorPalette->colors[color_index];
