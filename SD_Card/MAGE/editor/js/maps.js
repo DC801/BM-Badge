@@ -93,10 +93,7 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 		entity
 	);
 	var entityPrototype = (
-		(
-			fileNameMap['object_types.json']
-			&& fileNameMap['object_types.json'].parsed[mergedWithTile.type]
-		)
+		scenarioData.entityTypesPlusProperties[mergedWithTile.type]
 		|| scenarioData.entityTypes[mergedWithTile.type]
 	);
 	var compositeEntity = assignToLessFalsy(

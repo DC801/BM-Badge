@@ -1,45 +1,65 @@
-var handleEntitityTypesData = function (scenarioData, fileNameMap) {
+var handleEntityTypesData = function (scenarioData, fileNameMap) {
 	return function (entityTypesData) {
 		scenarioData.entityTypes = entityTypesData;
-		Object.keys(scenarioData.entityTypes).forEach(function (key) {
-			scenarioData.entityTypes[key].type = key;
-		});
+		scenarioData.entityTypesPlusProperties = {};
 		var objectTypesFile = fileNameMap['object_types.json'];
 		return !objectTypesFile
-			? Promise.resolve()
+			? Promise.resolve([])
 			: getFileJson(objectTypesFile)
-				.then(handleObjectTypesData(objectTypesFile, scenarioData));
+				.then(handleObjectTypesData(
+					fileNameMap,
+					scenarioData,
+				));
 	};
 };
 
 var handleObjectTypesData = function (
-	entitiesFile,
+	fileNameMap,
 	scenarioData,
 ) {
-	return function (entitiesData) {
+	return function (objectTypesData) {
 		console.log(
 			'object_types.json',
-			entitiesData
+			objectTypesData
 		);
-		var result = {};
-		entitiesData.forEach(function (entityItem) {
-			var item = assignToLessFalsy(
-				{
-					type: entityItem.name
-				},
-				scenarioData.entityTypes[entityItem.name]
-			);
-			mergeInProperties(
-				item,
-				entityItem.properties
-			);
-			result[entityItem.name] = item;
+		var entityTilesetsPromiseArray = Object.keys(scenarioData.entityTypes).map(function (key) {
+			var entityType = scenarioData.entityTypes[key];
+			entityType.type = key;
+			entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
+			scenarioData.parsed.entityTypes.push(entityType);
+			var entityTypePlusProperties = jsonClone(entityType);
+			var objectProperties = objectTypesData.find(function (properties) {
+				return properties.name === key;
+			});
+			if (objectProperties) {
+				mergeInProperties(
+					entityTypePlusProperties,
+					objectProperties.properties
+				);
+				scenarioData.entityTypesPlusProperties[key] = entityTypePlusProperties;
+			}
+			return loadTilesetByName(
+				entityType.tileset,
+				fileNameMap,
+				scenarioData,
+			)
+				.then(function () {
+					entityType.serialized = serializeEntityType(
+						entityTypePlusProperties,
+						fileNameMap,
+						scenarioData,
+					);
+				});
 		});
-		entitiesFile.parsed = result;
+		return Promise.all(entityTilesetsPromiseArray);
 	};
 };
 
-var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
+var serializeEntityType = function (
+	entityType,
+	fileNameMap,
+	scenarioData,
+) {
 	var animations = Object.values(entityType.animations);
 	var headerLength = (
 		16 // char[16] name

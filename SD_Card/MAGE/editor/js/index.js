@@ -31,7 +31,7 @@ var handleScenarioData = function(fileNameMap) {
 		});
 		var entityTypesFile = fileNameMap['entity_types.json'];
 		var entityTypesPromise = getFileJson(entityTypesFile)
-			.then(handleEntitityTypesData(scenarioData, fileNameMap));
+			.then(handleEntityTypesData(scenarioData, fileNameMap));
 		return Promise.all([
 			entityTypesPromise,
 			preloadAllDialogSkins(fileNameMap, scenarioData),
