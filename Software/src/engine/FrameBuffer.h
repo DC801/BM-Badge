@@ -47,13 +47,13 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define COLOR_BSOD			0x03DA
 
 typedef struct {
-    int16_t width;
-    int16_t height;
+	int16_t width;
+	int16_t height;
 } bounds_t;
 
 typedef struct {
-    int16_t x;
-    int16_t y;
+	int16_t x;
+	int16_t y;
 } cursor_t;
 
 //this is a point in 2D space.
@@ -90,90 +90,187 @@ public:
 
 #ifdef __cplusplus
 class FrameBuffer {
+private:
+	void tileToBufferNoXNoYNoZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXNoYNoZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXYesYNoZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXYesYNoZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXNoYYesZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXNoYYesZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXYesYYesZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXYesYYesZ(
+		uint8_t * pixels,
+		MageColorPalette * colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
 public:
-    FrameBuffer();
-    ~FrameBuffer();
+	FrameBuffer();
+	~FrameBuffer();
 
 
-    void clearScreen(uint16_t color);
+	void clearScreen(uint16_t color);
 
-    void drawPixel(int x, int y, uint16_t color);
+	void drawPixel(int x, int y, uint16_t color);
 
-    static float lerp(float a, float b, float progress);
-    static Point lerpPoints(Point a, Point b, float progress);
-    void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
-    void drawPoint(int x, int y, uint8_t size, uint16_t color);
-    void drawHorizontalLine(int x1, int y, int x2, uint16_t color);
-    void drawVerticalLine(int x, int y1, int y2, uint16_t color);
+	static float lerp(float a, float b, float progress);
+	static Point lerpPoints(Point a, Point b, float progress);
+	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
+	void drawPoint(int x, int y, uint8_t size, uint16_t color);
+	void drawHorizontalLine(int x1, int y, int x2, uint16_t color);
+	void drawVerticalLine(int x, int y1, int y2, uint16_t color);
 
-    void drawImage(int x, int y, int w, int h, const uint16_t *data);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color);
-    void drawImage(int x, int y, int w, int h, const uint8_t *data);
-    void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
-    void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
+	void drawImage(int x, int y, int w, int h, const uint16_t *data);
+	void drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color);
+	void drawImage(int x, int y, int w, int h, const uint8_t *data);
+	void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
+	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
+	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
 
 #define FLIPPED_HORIZONTALLY_FLAG 0x04
 #define FLIPPED_VERTICALLY_FLAG   0x02
 #define FLIPPED_DIAGONALLY_FLAG   0x01
-    void drawImageWithFlags(
-        int x,
-        int y,
-        int w,
-        int h,
-        const uint16_t *data,
-        int fx,
-        int fy,
-        int pitch,
-        uint16_t transparent_color,
-        uint8_t flags
-    );
+	void drawImageWithFlags(
+		int x,
+		int y,
+		int w,
+		int h,
+		const uint16_t *data,
+		int fx,
+		int fy,
+		int pitch,
+		uint16_t transparent_color,
+		uint8_t flags
+	);
 
 	void drawChunkWithFlags(
 		uint32_t address, //address of first pixel of image in ROM
 		MageColorPalette *colorPalette, //color palette to lookup image colors from
-		int x, //x coordinate of destination pixel on screen
-		int y, //y coordinate of destination pixel on screen
+		int32_t x, //x coordinate of destination pixel on screen
+		int32_t y, //y coordinate of destination pixel on screen
 		uint16_t tile_width, //width of tile being drawn
 		uint16_t tile_height, //height of tile being drawn
 		uint16_t source_x, //coordinates in source image
 		uint16_t source_y, //coordinates in source image
-		int16_t pitch, //width of source image
+		uint16_t pitch, //width of source image
 		uint16_t transparent_color, //565 encoded color value
 		uint8_t flags //render flags
 	);
 
-    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);
-    void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color);
+	void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch);
+	void drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color);
 
-    void drawImageFromFile(int x, int y, int w, int h, const char *filename);
-    void drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
-    uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename);
-    uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
-    void drawStop();
+	void drawImageFromFile(int x, int y, int w, int h, const char *filename);
+	void drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
+	uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename);
+	uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
+	void drawStop();
 
-    void drawBitmapFromFile(const char *filename);
-    void drawBitmapFromFile(int x, int y, int w, int h, const char *filename);
+	void drawBitmapFromFile(const char *filename);
+	void drawBitmapFromFile(int x, int y, int w, int h, const char *filename);
 
-    void fillCircle(int x, int y, int radius, uint16_t color);
+	void fillCircle(int x, int y, int radius, uint16_t color);
 
-    void fillRect(int x, int y, int w, int h, uint16_t color);
-    void drawRect(int x, int y, int w, int h, uint16_t color);
+	void fillRect(int x, int y, int w, int h, uint16_t color);
+	void drawRect(int x, int y, int w, int h, uint16_t color);
 
-    void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
+	void drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color);
 
-    void mask(int px, int py, int rad1, int rad2, int rad3);
-    void write_char(uint8_t c, GFXfont font);
-    void printMessage(const char *text, GFXfont font, uint16_t color, int x, int y);
+	void mask(int px, int py, int rad1, int rad2, int rad3);
+	void write_char(uint8_t c, GFXfont font);
+	void printMessage(const char *text, GFXfont font, uint16_t color, int x, int y);
 
-    void setTextArea(area_t *area);
-    void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
-    void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
-    uint8_t getFontHeight(GFXfont font);
-    uint8_t getFontWidth(GFXfont font);
-    void getCursorPosition(cursor_t *cursor);
+	void setTextArea(area_t *area);
+	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
+	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
+	uint8_t getFontHeight(GFXfont font);
+	uint8_t getFontWidth(GFXfont font);
+	void getCursorPosition(cursor_t *cursor);
 
-    void blt();
+	void blt();
 
 };
 

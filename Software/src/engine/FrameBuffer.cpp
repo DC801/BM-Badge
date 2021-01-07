@@ -261,73 +261,669 @@ void FrameBuffer::drawImageWithFlags(
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
 	MageColorPalette *colorPalette,
-	int x, // top-left corner of screen coordinates to draw at
-	int y, // top-left corner of screen coordinates to draw at
+	int32_t screen_x, // top-left corner of screen coordinates to draw at
+	int32_t screen_y, // top-left corner of screen coordinates to draw at
 	uint16_t tile_width,
 	uint16_t tile_height,
 	uint16_t source_x, // top-left corner of source image coordinates to READ FROM
 	uint16_t source_y, // top-left corner of source image coordinates to READ FROM
-	int16_t pitch, // The width of the source image in pixels
+	uint16_t pitch, // The width of the source image in pixels
 	uint16_t transparent_color,
 	uint8_t flags
 )
 {
-	int32_t current_x = 0;
-	int32_t current_y = 0;
-	uint32_t sprite_x = 0;
-	uint32_t sprite_y = 0;
-	uint32_t tile_x = 0;
-	uint32_t tile_y = 0;
-	uint32_t location = 0;
-	uint16_t color = 0;
-	uint8_t colorIndex = 0;
-
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
 
-	uint8_t colorIndexes[tile_width * tile_height];
+	if (
+		screen_x + tile_width < 0	||
+		screen_x >= WIDTH			||
+		screen_y + tile_width < 0	||
+		screen_y >= HEIGHT
+	) {
+		return;
+	}
+
+	uint8_t pixels[tile_width * tile_height];
 
 	EngineROM_Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
-		(uint8_t *)&colorIndexes,
+		(uint8_t *)&pixels,
 		"Failed to read pixel data"
 	);
 
-	for (int offset_y = 0; (offset_y < tile_height) && (current_y < HEIGHT); ++offset_y)
-	{
-		current_y = offset_y + y;
-		current_x = 0;
+	if(flip_x == false && flip_y == false && flip_diag == false) {
+		tileToBufferNoXNoYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == false && flip_diag == false) {
+		tileToBufferYesXNoYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == false && flip_y == true && flip_diag == false) {
+		tileToBufferNoXYesYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == true && flip_diag == false) {
+		tileToBufferYesXYesYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if(flip_x == false && flip_y == false && flip_diag == true) {
+		tileToBufferNoXNoYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == false && flip_diag == true) {
+		tileToBufferYesXNoYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == false && flip_y == true && flip_diag == true) {
+		tileToBufferNoXYesYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == true && flip_diag == true) {
+		tileToBufferYesXYesYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	}
+}
 
-		for (int offset_x = 0; (offset_x < tile_width) && (current_x < WIDTH); ++offset_x)
-		{
-			current_x = offset_x + x;
-
-			if (current_x < 0		||
-				current_x >= WIDTH	||
-				current_y < 0		||
-				current_y >= HEIGHT)
-			{
-				continue;
+void FrameBuffer::tileToBufferNoXNoYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
 			}
+		}
+	}
+}
 
-			tile_x = ((flip_diag) ? (offset_y) : (offset_x));
-			tile_y = ((flip_diag) ? (offset_x) : (offset_y));
+void FrameBuffer::tileToBufferYesXNoYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = screen_x + tile_width;
+		d.x = 0;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
+		screen_x_start = screen_x;
+	} else {
+		a.x = tile_width;
+		d.x = 0;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = a.x - d.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x - (col+1)) + //x (+1 to get back to zero-index)
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
 
-			sprite_x = flip_x
-				? (tile_width - tile_x - 1)
-				: tile_x;
+void FrameBuffer::tileToBufferNoXYesYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
 
-			sprite_y = flip_y
-				? (tile_height - tile_y - 1)
-				: tile_y;
+void FrameBuffer::tileToBufferYesXYesYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
 
-			colorIndex = colorIndexes[(pitch * sprite_y) + sprite_x];
-			color = colorPalette->colors[colorIndex];
-			if (color != transparent_color)
-			{
-				frame[(current_y * WIDTH) + current_x] = color;
+void FrameBuffer::tileToBufferNoXNoYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferYesXNoYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferNoXYesYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferYesXYesYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
 			}
 		}
 	}
