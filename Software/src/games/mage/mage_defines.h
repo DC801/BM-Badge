@@ -112,7 +112,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
 #endif
 #ifdef DC801_EMBEDDED
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 200
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
 #endif
 
 //these are the types of scripts that can be on a map or entity:
