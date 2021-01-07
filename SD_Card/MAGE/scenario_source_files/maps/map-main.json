@@ -443,7 +443,7 @@
                  "y":917
                 }, 
                 {
-                 "gid":2147483948,
+                 "gid":300,
                  "height":64,
                  "id":7,
                  "name":"Bob Austin",
@@ -462,8 +462,8 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":491.833333333334,
-                 "y":376.75
+                 "x":492,
+                 "y":376
                 }, 
                 {
                  "gid":324,
@@ -854,6 +854,60 @@
                  "y":832
                 }, 
                 {
+                 "gid":731,
+                 "height":48,
+                 "id":78,
+                 "name":"Shepherd",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-shepherd-start"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":416,
+                 "y":417
+                }, 
+                {
+                 "gid":2147484432,
+                 "height":48,
+                 "id":91,
+                 "name":"Bender",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bender-start"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":581.5,
+                 "y":606
+                }, 
+                {
+                 "gid":968,
+                 "height":32,
+                 "id":92,
+                 "name":"Elder",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-reset"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":590.5,
+                 "y":649
+                }, 
+                {
                  "height":32,
                  "id":73,
                  "name":"door-main",
@@ -909,24 +963,6 @@
                  "y":105.333333333333
                 }, 
                 {
-                 "gid":731,
-                 "height":48,
-                 "id":78,
-                 "name":"Shepherd",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-shepherd-start"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":416,
-                 "y":417
-                }, 
-                {
                  "height":23.1666666666666,
                  "id":79,
                  "name":"door-oldcouplehouse-entrance",
@@ -936,42 +972,6 @@
                  "width":30,
                  "x":384,
                  "y":590.666666666667
-                }, 
-                {
-                 "gid":2147484432,
-                 "height":48,
-                 "id":91,
-                 "name":"Bender",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bender-start"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":48,
-                 "x":581.5,
-                 "y":606
-                }, 
-                {
-                 "gid":968,
-                 "height":32,
-                 "id":92,
-                 "name":"Elder",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-reset"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":590.5,
-                 "y":649
                 }],
          "opacity":1,
          "type":"objectgroup",
