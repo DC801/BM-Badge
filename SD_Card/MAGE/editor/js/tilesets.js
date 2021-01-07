@@ -92,10 +92,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 				tile.properties
 			);
 			var entityPrototype = (
-				(
-					fileNameMap['object_types.json']
-					&& fileNameMap['object_types.json'].parsed[tile.type]
-				)
+				scenarioData.entityTypesPlusProperties[tile.type]
 				|| {}
 			);
 			Object.assign(

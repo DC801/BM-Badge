@@ -250,19 +250,55 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 0,
-					"flip_x": true
+					"tileid": 3,
+					"flip_x": false
 				},
 				{
-					"tileid": 0,
-					"flip_x": true
+					"tileid": 15,
+					"flip_x": false
 				},
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				}
+			],
+			"walk": [
 				{
 					"tileid": 0,
 					"flip_x": false
 				},
 				{
-					"tileid": 0,
+					"tileid": 12,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 28,
+					"flip_x": false
+				},
+				{
+					"tileid": 24,
+					"flip_x": false
+				},
+				{
+					"tileid": 20,
 					"flip_x": false
 				}
 			]

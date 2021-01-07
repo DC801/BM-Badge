@@ -313,9 +313,9 @@ void MageScriptControl::checkEntityType(uint8_t * args, MageScriptState * resume
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t sanitizedCurrentEntityTypeId = MageGame->getValidEntityTypeId(entity->primaryId);
+		uint16_t sanitizedEntityTypeId = MageGame->getValidEntityTypeId(entity->primaryId);
 		bool identical = (
-			sanitizedCurrentEntityTypeId == argStruct->entityTypeId &&
+			sanitizedEntityTypeId == argStruct->entityTypeId &&
 			entity->primaryIdType == ENTITY_TYPE
 		);
 		if(identical == argStruct->expectedBool) {

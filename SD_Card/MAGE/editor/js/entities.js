@@ -58,15 +58,6 @@ var serializeEntity = function (
 	);
 	offset += 2;
 	var entityType = scenarioData.entityTypes[entity.type];
-	if (entityType && (entityType.scenarioIndex === undefined)) {
-		entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
-		scenarioData.parsed.entityTypes.push(entityType);
-		entityType.serialized = serializeEntityType(
-			entityType,
-			scenarioData,
-			fileNameMap
-		);
-	}
 	var primaryIndexType = 0; // tileset_id
 	var primaryIndex;
 	var secondaryIndex = 0;
