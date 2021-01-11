@@ -94,7 +94,7 @@ var serializeGeometry = function (
 			dataView.setFloat32(
 				offset, // float segment_length
 				segmentLength,
-				false
+				IS_LITTLE_ENDIAN
 			);
 			offset += 4;
 		});
@@ -102,7 +102,7 @@ var serializeGeometry = function (
 	dataView.setFloat32(
 		addressOfTotalLength, // float total_length
 		totalLength,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	geometry.serialized = arrayBuffer;
 	geometry.scenarioIndex = scenarioData.parsed.geometry.length;

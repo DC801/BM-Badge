@@ -1550,7 +1550,7 @@ var handleActionWithFields = function(
 		data.dataView[dataViewMethodName](
 			offset,
 			value,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += field.size;
 	})
