@@ -20,26 +20,26 @@ var serializeAnimationData = function (tile, tilesetData, scenarioData) {
 	dataView.setUint16(
 		offset,
 		tilesetData.scenarioIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint16(
 		offset,
 		tile.animation.length,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	tile.animation.forEach(function (frame) {
 		dataView.setUint16(
 			offset,
 			frame.tileid,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 		dataView.setUint16(
 			offset,
 			frame.duration,
-			false,
+			IS_LITTLE_ENDIAN,
 		);
 		offset += 2;
 	});

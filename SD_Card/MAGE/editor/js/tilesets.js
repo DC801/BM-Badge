@@ -23,43 +23,43 @@ var serializeTileset = function (tilesetData, image) {
 	dataView.setUint16(
 		offset, // uint16_t imageIndex
 		image.scenarioIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageWidth
 		tilesetData.tilewidth, // used to be tilesetData.imagewidth,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageHeight
 		tilesetData.rows * tilesetData.columns * tilesetData.tileheight, // used to be tilesetData.imageheight
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t tileWidth
 		tilesetData.tilewidth,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t tileHeight
 		tilesetData.tileheight,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t cols
 		1, // used to be tilesetData.columns,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t rows
 		tilesetData.rows * tilesetData.columns,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	var result = combineArrayBuffers(
 		header,

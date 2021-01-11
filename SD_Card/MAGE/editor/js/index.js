@@ -13,6 +13,8 @@ var dataTypes = [
 	'images',
 ];
 
+var IS_LITTLE_ENDIAN = true;
+
 var handleScenarioData = function(fileNameMap) {
 	return function (scenarioData) {
 		console.log(
@@ -59,7 +61,7 @@ var addParsedTypeToHeadersAndChunks = function (
 	indicesDataView.setUint32(
 		indicesDataView.headerOffset,
 		parsedItems.length,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	indicesDataView.headerOffset += 4;
 	parsedItems.forEach(function(item, index, list) {
@@ -72,14 +74,14 @@ var addParsedTypeToHeadersAndChunks = function (
 		indicesDataView.setUint32(
 			headerOffsetOffset,
 			indicesDataView.fileOffset,
-			false
-		)
+			IS_LITTLE_ENDIAN
+		);
 		chunks.push(item.serialized);
 		totalSize += item.serialized.byteLength;
 		indicesDataView.setUint32(
 			headerLengthOffset,
 			totalSize,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		indicesDataView.fileOffset += totalSize;
 	});

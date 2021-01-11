@@ -110,7 +110,7 @@ var serializeEntityType = function (
 				animation
 					? animation.scenarioIndex
 					: direction.tileid,
-				false
+				IS_LITTLE_ENDIAN
 			);
 			offset += 2;
 			dataView.setUint8(

@@ -34,27 +34,27 @@ var serializeEntity = function (
 	dataView.setUint16(
 		offset, // uint16_t x
 		Math.round(entity.x),
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint16(
 		offset, // uint16_t y
 		Math.round(entity.y),
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.on_interact_offset = offset;
 	dataView.setUint16(
 		offset, // uint16_t on_interact_script_id
 		0, // set in another loop later
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.on_tick_offset = offset;
 	dataView.setUint16(
 		offset, // uint16_t on_tick_script_id
 		0, // set in another loop later
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	var entityType = scenarioData.entityTypes[entity.type];
@@ -92,13 +92,13 @@ var serializeEntity = function (
 	dataView.setUint16(
 		offset, // primary_id // may be: entity_type_id, animation_id, tileset_id
 		primaryIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint16(
 		offset, // secondary_id // if primary_id_type is tileset_id, this is the tile_id, otherwise 0
 		secondaryIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint8(
@@ -146,7 +146,7 @@ var serializeEntity = function (
 		dataView.setUint16(
 			hackableStateAOffset,
 			entity.path.mapIndex,
-			false
+			IS_LITTLE_ENDIAN
 		);
 	}
 	offset += 1;

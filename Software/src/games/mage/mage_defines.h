@@ -31,9 +31,6 @@ all of the old code used as the foundation of this badge.
 //this is the map that will load at the start of the game:
 #define DEFAULT_MAP 0
 
-//this is the color that will appear transparent when drawing tiles:
-#define TRANSPARENCY_COLOR 0x0020
-
 //this is used to note that no player entity was found within the
 //entities loaded into the map
 #define NO_PLAYER -1
