@@ -15,7 +15,7 @@ MageHeader::MageHeader(uint32_t address)
 	);
 
 	// Endianness conversion
-	counts = convert_endian_u4_value(counts);
+	counts = ENDIAN_U4_VALUE(counts);
 
 	// Increment offset
 	address += sizeof(counts);
@@ -35,7 +35,7 @@ MageHeader::MageHeader(uint32_t address)
 		"Failed to load Header property 'offsets'"
 	);
 
-	convert_endian_u4_buffer(offsets.get(), counts);
+	ENDIAN_U4_BUFFER(offsets.get(), counts);
 	address += counts * sizeof(uint32_t);
 
 	EngineROM_Read(
@@ -45,7 +45,7 @@ MageHeader::MageHeader(uint32_t address)
 		"Failed to load Header property 'lengths'"
 	);
 
-	convert_endian_u4_buffer(lengths.get(), counts);
+	ENDIAN_U4_BUFFER(lengths.get(), counts);
 	return;
 }
 

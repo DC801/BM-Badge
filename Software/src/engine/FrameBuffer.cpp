@@ -942,7 +942,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	}
 
 	fclose(fd);
-	convert_endian_u2_buffer(buf, bufferSize);
+	ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf);
 }
 
@@ -961,7 +961,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	fclose(fd);
 
-	convert_endian_u2_buffer(buf, bufferSize);
+	ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf, transparent_color);
 }
 
@@ -1029,7 +1029,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		convert_endian_u2_buffer(buf, bufferSize);
+		ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -1045,7 +1045,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
-	convert_endian_u2_buffer(buf, bufferSize);
+	ENDIAN_U2_BUFFER(buf, bufferSize);
 	canvas.drawImage(x, y, w, h, buf);
 	canvas.blt();
 	return;
@@ -1115,7 +1115,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		convert_endian_u2_buffer(buf, bufferSize);
+		ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -1220,7 +1220,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			convert_endian_u2_buffer(buf, bufferSize);
+			ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -1338,7 +1338,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			convert_endian_u2_buffer(buf, bufferSize);
+			ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -1797,10 +1797,12 @@ void FrameBuffer::blt()
 		EngineWindowFrameGameBlt(frame);
 	#endif
 	#ifdef DC801_EMBEDDED
-		for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
-		{
-			frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
-		}
+		#ifdef IS_BIG_ENDIAN
+			for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
+			{
+				frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
+			}
+		#endif
 
 		draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 	#endif

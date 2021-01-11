@@ -68,13 +68,13 @@ var serializeGeometry = function (
 		dataView.setUint16(
 			offset, // uint16_t x
 			Math.round(point.x),
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 		dataView.setUint16(
 			offset, // uint16_t y
 			Math.round(point.y),
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 	});

@@ -208,7 +208,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.x = convert_endian_u2_value(entity.x);
+	entity.x = ENDIAN_U2_VALUE(entity.x);
 
 	//increment address
 	address += sizeof(entity.x);
@@ -222,7 +222,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.y = convert_endian_u2_value(entity.y);
+	entity.y = ENDIAN_U2_VALUE(entity.y);
 
 	//increment address
 	address += sizeof(entity.y);
@@ -236,7 +236,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.onInteractScriptId = convert_endian_u2_value(entity.onInteractScriptId);
+	entity.onInteractScriptId = ENDIAN_U2_VALUE(entity.onInteractScriptId);
 
 	//increment address
 	address += sizeof(entity.onInteractScriptId);
@@ -250,7 +250,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.onTickScriptId = convert_endian_u2_value(entity.onTickScriptId);
+	entity.onTickScriptId = ENDIAN_U2_VALUE(entity.onTickScriptId);
 
 	//increment address
 	address += sizeof(entity.onTickScriptId);
@@ -264,7 +264,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.primaryId = convert_endian_u2_value(entity.primaryId);
+	entity.primaryId = ENDIAN_U2_VALUE(entity.primaryId);
 
 	//increment address
 	address += sizeof(entity.primaryId);
@@ -278,7 +278,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	);
 
 	// Endianness conversion
-	entity.secondaryId = convert_endian_u2_value(entity.secondaryId);
+	entity.secondaryId = ENDIAN_U2_VALUE(entity.secondaryId);
 
 	//increment address
 	address += sizeof(entity.secondaryId);
@@ -754,7 +754,7 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		);
 
 
-		currentTile.tileId = convert_endian_u2_value(currentTile.tileId);
+		currentTile.tileId = ENDIAN_U2_VALUE(currentTile.tileId);
 
 		if (currentTile.tileId == 0)
 		{

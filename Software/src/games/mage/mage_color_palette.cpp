@@ -29,7 +29,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 		(uint8_t *)colors.get(),
 		"Failed to read ColorPalette property 'colors'"
 	);
-	convert_endian_u2_buffer(colors.get(), colorCount);
+	ENDIAN_U2_BUFFER(colors.get(), colorCount);
 
 	return;
 }

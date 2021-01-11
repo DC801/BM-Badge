@@ -13,7 +13,7 @@ MageAnimationFrame::MageAnimationFrame(uint32_t address)
 	);
 
 	// Endianness conversion
-	tileId = convert_endian_u2_value(tileId);
+	tileId = ENDIAN_U2_VALUE(tileId);
 
 	// Increment offset
 	address += sizeof(tileId);
@@ -27,7 +27,7 @@ MageAnimationFrame::MageAnimationFrame(uint32_t address)
 	);
 
 	// Endianness conversion
-	duration = convert_endian_u2_value(duration);
+	duration = ENDIAN_U2_VALUE(duration);
 
 	return;
 }
@@ -52,7 +52,7 @@ uint32_t MageAnimationFrame::Size() const
 
 MageAnimation::MageAnimation(uint32_t address)
 {
-	uint32_t size = 0; 
+	uint32_t size = 0;
 	//read tilesetId
 	EngineROM_Read(
 		address,
@@ -62,7 +62,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	);
 
 	// Endianness conversion
-	tilesetId = convert_endian_u2_value(tilesetId);
+	tilesetId = ENDIAN_U2_VALUE(tilesetId);
 
 	// Increment offset
 	address += sizeof(tilesetId);
@@ -76,7 +76,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	);
 
 	// Endianness conversion
-	frameCount = convert_endian_u2_value(frameCount);
+	frameCount = ENDIAN_U2_VALUE(frameCount);
 
 	// Increment offset
 	address += sizeof(frameCount);

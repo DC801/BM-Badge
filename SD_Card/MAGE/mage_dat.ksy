@@ -1,6 +1,6 @@
 meta:
   id: mage_dat
-  endian: be
+  endian: le
 seq:
   - id: identifier
     contents: MAGEGAME

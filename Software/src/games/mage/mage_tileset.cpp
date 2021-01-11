@@ -22,7 +22,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&imageId,
 		"Failed to load MageTileset property 'imageId'"
 	);
-	imageId = convert_endian_u2_value(imageId);
+	imageId = ENDIAN_U2_VALUE(imageId);
 	address += sizeof(imageId);
 
 	EngineROM_Read(
@@ -31,7 +31,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&imageWidth,
 		"Failed to load MageTileset property 'imageWidth'"
 	);
-	imageWidth = convert_endian_u2_value(imageWidth);
+	imageWidth = ENDIAN_U2_VALUE(imageWidth);
 	address += sizeof(imageWidth);
 
 	EngineROM_Read(
@@ -40,7 +40,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&imageHeight,
 		"Failed to load MageTileset property 'imageHeight'"
 	);
-	imageHeight = convert_endian_u2_value(imageHeight);
+	imageHeight = ENDIAN_U2_VALUE(imageHeight);
 	address += sizeof(imageHeight);
 
 	EngineROM_Read(
@@ -49,7 +49,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&tileWidth,
 		"Failed to load MageTileset property 'tileWidth'"
 	);
-	tileWidth = convert_endian_u2_value(tileWidth);
+	tileWidth = ENDIAN_U2_VALUE(tileWidth);
 	address += sizeof(tileWidth);
 
 	EngineROM_Read(
@@ -58,7 +58,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&tileHeight,
 		"Failed to load MageTileset property 'tileHeight'"
 	);
-	tileHeight = convert_endian_u2_value(tileHeight);
+	tileHeight = ENDIAN_U2_VALUE(tileHeight);
 	address += sizeof(tileHeight);
 
 	EngineROM_Read(
@@ -67,7 +67,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&cols,
 		"Failed to load MageTileset property 'cols'"
 	);
-	cols = convert_endian_u2_value(cols);
+	cols = ENDIAN_U2_VALUE(cols);
 	address += sizeof(cols);
 
 	EngineROM_Read(
@@ -76,7 +76,7 @@ MageTileset::MageTileset(uint32_t address)
 		(uint8_t *)&rows,
 		"Failed to load MageTileset property 'rows'"
 	);
-	rows = convert_endian_u2_value(rows);
+	rows = ENDIAN_U2_VALUE(rows);
 	address += sizeof(rows);
 
 	tileCount = rows * cols;

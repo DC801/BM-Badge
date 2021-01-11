@@ -32,7 +32,7 @@ var serializeColorPalette = function (colorPalette) {
 		dataView.setUint16(
 			offset, // uint16_t color
 			parseInt(color, 10),
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 	});

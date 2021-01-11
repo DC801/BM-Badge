@@ -1604,7 +1604,7 @@ var serializeScript = function (
 	dataView.setUint32(
 		offset,
 		script.length,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 4;
 
@@ -1710,7 +1710,7 @@ var handleMapEntityScripts = function (
 				entity.dataView.setUint16(
 					entity.dataView[propertyName + '_offset'], // uint16_t on_${possibleScriptName}_script_id
 					mapLocalScriptId,
-					false
+					IS_LITTLE_ENDIAN
 				);
 			}
 		});

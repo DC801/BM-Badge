@@ -104,7 +104,7 @@ void MageDialogControl::load(
 		(uint8_t *)&currentDialogScreenCount,
 		"Failed to read Dialog property 'currentDialogScreenCount'"
 	);
-	currentDialogScreenCount = convert_endian_u4_value(currentDialogScreenCount);
+	currentDialogScreenCount = ENDIAN_U4_VALUE(currentDialogScreenCount);
 	currentDialogAddress += sizeof(currentDialogScreenCount);
 
 	loadNextScreen();
@@ -125,8 +125,8 @@ void MageDialogControl::loadNextScreen() {
 		(uint8_t *)&currentScreen,
 		"Failed to read Dialog property 'currentScreen'"
 	);
-	currentScreen.nameStringIndex = convert_endian_u2_value(currentScreen.nameStringIndex);
-	currentScreen.borderTilesetIndex = convert_endian_u2_value(currentScreen.borderTilesetIndex);
+	currentScreen.nameStringIndex = ENDIAN_U2_VALUE(currentScreen.nameStringIndex);
+	currentScreen.borderTilesetIndex = ENDIAN_U2_VALUE(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
 	currentEntityName = MageGame->getString(currentScreen.nameStringIndex, triggeringEntityId);
 
@@ -140,7 +140,7 @@ void MageDialogControl::loadNextScreen() {
 		(uint8_t *)messageIds.get(),
 		"Failed to read Dialog property 'messageIds'"
 	);
-	convert_endian_u2_buffer(messageIds.get(), currentScreen.messageCount);
+	ENDIAN_U2_BUFFER(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
 	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
 	currentMessage = MageGame->getString(
