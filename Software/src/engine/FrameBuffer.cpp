@@ -48,12 +48,12 @@ FrameBuffer::~FrameBuffer() {}
 void FrameBuffer::clearScreen(uint16_t color) {
 	for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
 	{
-		frame[i] = color;
+		frame[i] = SCREEN_ENDIAN_U2_VALUE(color);
 	}
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
-	frame[y * WIDTH + x] = color;
+	frame[y * WIDTH + x] = SCREEN_ENDIAN_U2_VALUE(color);
 }
 
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
@@ -69,7 +69,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 			&& dest >= 0
 			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest]=color;
+			frame[dest]=SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -87,7 +87,7 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 			&& dest >= 0
 			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest] = color;
+			frame[dest] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -116,7 +116,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, ui
 		{
 			uint16_t c = data[idx++];
 
-			if (c != transparent_color)
+			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
 				frame[j*WIDTH+i] = c;
 			}
@@ -152,7 +152,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uin
 			uint8_t d2 = data[idx++];
 			uint16_t c = ((uint16_t) d1 << 8) | d2;
 
-			if (c != transparent_color)
+			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
 				frame[j * WIDTH + i] = c;
 			}
@@ -196,7 +196,7 @@ void FrameBuffer::drawImage(
 			)
 			{
 				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-				if (color != transparent_color)
+				if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -249,7 +249,7 @@ void FrameBuffer::drawImageWithFlags(
 					? fy + (h - source_y - 1)
 					: fy + source_y;
 				uint16_t color = data[(pitch * sprite_y) + sprite_x];
-				if (color != transparent_color)
+				if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -275,7 +275,7 @@ void FrameBuffer::drawChunkWithFlags(
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
-
+	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||
@@ -942,7 +942,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	}
 
 	fclose(fd);
-	ENDIAN_U2_BUFFER(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf);
 }
 
@@ -961,7 +961,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	fclose(fd);
 
-	ENDIAN_U2_BUFFER(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf, transparent_color);
 }
 
@@ -1029,7 +1029,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		ENDIAN_U2_BUFFER(buf, bufferSize);
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -1045,7 +1045,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
-	ENDIAN_U2_BUFFER(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	canvas.drawImage(x, y, w, h, buf);
 	canvas.blt();
 	return;
@@ -1115,7 +1115,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		ENDIAN_U2_BUFFER(buf, bufferSize);
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -1220,7 +1220,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ENDIAN_U2_BUFFER(buf, bufferSize);
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -1338,7 +1338,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ENDIAN_U2_BUFFER(buf, bufferSize);
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -1409,7 +1409,7 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 		for (int j = y; j < (y + h); j++)
 		{
 			int index = i + (WIDTH * j);
-			frame[index] = color;
+			frame[index] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -1423,6 +1423,7 @@ void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
 
 void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
+	color = SCREEN_ENDIAN_U2_VALUE(color);
 	drawLine(x0, y0, x1, y1, color);
 	drawLine(x1, y1, x2, y2, color);
 	drawLine(x2, y2, x0, y0, color);
@@ -1458,7 +1459,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 			&& y > 0
 			&& y < HEIGHT
 		) {
-			frame[x + (y * WIDTH)] = color;
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -1496,7 +1497,7 @@ void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
 
 			if (dist2 <= radx2)
 			{
-				frame[i + j * WIDTH] = color;
+				frame[i + j * WIDTH] = SCREEN_ENDIAN_U2_VALUE(color);
 			}
 		}
 	}
@@ -1531,19 +1532,25 @@ void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
 				}
 				else if (dist > (rad2 * rad2))
 				{
-					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & 0xF9E7;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & SCREEN_ENDIAN_U2_VALUE(0xF9E7); // ???
 				}
 				else if (dist > (rad1 * rad1))
 				{
-					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & 0xFBEF;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & SCREEN_ENDIAN_U2_VALUE(0xFBEF); // ???
 				}
 			}
 		}
 	}
 }
 
-static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
-		uint16_t bg, GFXfont font) {
+static void __draw_char(
+	int16_t x,
+	int16_t y,
+	unsigned char c,
+	uint16_t color,
+	uint16_t bg,
+	GFXfont font
+) {
 
 	// Character is assumed previously filtered by write() to eliminate
 	// newlines, returns, non-printable characters, etc.  Calling drawChar()
@@ -1586,8 +1593,7 @@ static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 			if (bits & 0x80) {
 				yyy = y + yo + yy;
 				if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye) {
-					//util_gfx_set_pixel(x + xo + xx, y + yo + yy, color);
-					canvas.drawPixel(    x + xo + xx, y + yo + yy, color);
+					canvas.drawPixel(x + xo + xx, y + yo + yy, SCREEN_ENDIAN_U2_VALUE(color));
 				}
 			}
 			bits <<= 1;
@@ -1631,7 +1637,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 
 void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y)
 {
-	m_color = color;
+	m_color = SCREEN_ENDIAN_U2_VALUE(color);
 	m_cursor_area.xs = x;
 	m_cursor_x = m_cursor_area.xs;
 	m_cursor_y = y + (font.yAdvance / 2);
@@ -1797,13 +1803,6 @@ void FrameBuffer::blt()
 		EngineWindowFrameGameBlt(frame);
 	#endif
 	#ifdef DC801_EMBEDDED
-		#ifdef IS_BIG_ENDIAN
-			for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
-			{
-				frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
-			}
-		#endif
-
 		draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 	#endif
 }

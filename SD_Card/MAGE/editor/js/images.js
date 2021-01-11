@@ -29,10 +29,13 @@ var serializeColorPalette = function (colorPalette) {
 	offset += 1;
 	offset += 1; // uint8_t padding
 	colors.forEach(function (color) {
+		// DO NOT USE `IS_LITTLE_ENDIAN` HERE!
+		// The screen _hardware_ is Big Endian,
+		// and converting the whole framebuffer each tick would cost us 20ms
 		dataView.setUint16(
 			offset, // uint16_t color
 			parseInt(color, 10),
-			IS_LITTLE_ENDIAN
+			IS_SCREEN_LITTLE_ENDIAN
 		);
 		offset += 2;
 	});

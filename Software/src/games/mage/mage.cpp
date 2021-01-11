@@ -134,8 +134,6 @@ void GameRender()
 	//otherwise be boring and normal
 	else
 	{
-
-
 		//otherwise run mage game:
 		mage_canvas->clearScreen(RGB(0,0,255));
 		#ifdef TIMING_DEBUG

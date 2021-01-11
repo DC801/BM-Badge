@@ -23,13 +23,14 @@ MageColorPalette::MageColorPalette(uint32_t address)
 	colors = std::make_unique<uint16_t[]>(colorCount);
 	// Read colors
 	colorsSize = colorCount * sizeof(uint16_t);
+	// The encoder writes these colors BigEndian because the Screen's
+	// data format is also BigEndian, so just don't convert these.
 	EngineROM_Read(
 		address,
 		colorsSize,
 		(uint8_t *)colors.get(),
 		"Failed to read ColorPalette property 'colors'"
 	);
-	ENDIAN_U2_BUFFER(colors.get(), colorCount);
 
 	return;
 }

@@ -13,7 +13,7 @@ MageAnimationFrame::MageAnimationFrame(uint32_t address)
 	);
 
 	// Endianness conversion
-	tileId = ENDIAN_U2_VALUE(tileId);
+	tileId = ROM_ENDIAN_U2_VALUE(tileId);
 
 	// Increment offset
 	address += sizeof(tileId);
@@ -27,7 +27,7 @@ MageAnimationFrame::MageAnimationFrame(uint32_t address)
 	);
 
 	// Endianness conversion
-	duration = ENDIAN_U2_VALUE(duration);
+	duration = ROM_ENDIAN_U2_VALUE(duration);
 
 	return;
 }
@@ -62,7 +62,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	);
 
 	// Endianness conversion
-	tilesetId = ENDIAN_U2_VALUE(tilesetId);
+	tilesetId = ROM_ENDIAN_U2_VALUE(tilesetId);
 
 	// Increment offset
 	address += sizeof(tilesetId);
@@ -76,7 +76,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	);
 
 	// Endianness conversion
-	frameCount = ENDIAN_U2_VALUE(frameCount);
+	frameCount = ROM_ENDIAN_U2_VALUE(frameCount);
 
 	// Increment offset
 	address += sizeof(frameCount);

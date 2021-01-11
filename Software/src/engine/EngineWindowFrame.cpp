@@ -196,9 +196,19 @@ void EngineWindowFrameGameBlt(uint16_t *frame)
 	if (frame == nullptr) {
 		return;
 	}
-
+	uint16_t correctEndianScreenBuffer[FRAMEBUFFER_SIZE] = {0};
+	memcpy(correctEndianScreenBuffer, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
+	// Sorry for this monster;
+	// The game.dat stores the image buffer data in BigEndian
+	// SDL reads FrameBuffers in Platform Native Endian,
+	// so we need to convert if Desktop is LittleEndian
+	#ifndef IS_SCREEN_BIG_ENDIAN
+		#ifdef IS_LITTLE_ENDIAN
+			convert_endian_u2_buffer(correctEndianScreenBuffer, FRAMEBUFFER_SIZE);
+		#endif
+	#endif
 	SDL_LockTexture(gameViewportTexture, nullptr, &pixels, &pitch);
-	memcpy(pixels, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
+	memcpy(pixels, correctEndianScreenBuffer, FRAMEBUFFER_SIZE * sizeof(uint16_t));
 	SDL_UnlockTexture(gameViewportTexture);
 
 	SDL_RenderCopy(
