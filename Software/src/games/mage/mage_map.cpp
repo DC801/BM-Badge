@@ -24,7 +24,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&tileWidth,
 		"Failed to read Map property 'tileWidth'"
 	);
-	tileWidth = ENDIAN_U2_VALUE(tileWidth);
+	tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
 	address += sizeof(tileWidth);
 
 	//read tileHeight
@@ -34,7 +34,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&tileHeight,
 		"Failed to read Map property 'tileHeight'"
 	);
-	tileHeight = ENDIAN_U2_VALUE(tileHeight);
+	tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
 	address += sizeof(tileHeight);
 
 	//read cols
@@ -44,7 +44,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&cols,
 		"Failed to read Map property 'cols'"
 	);
-	cols = ENDIAN_U2_VALUE(cols);
+	cols = ROM_ENDIAN_U2_VALUE(cols);
 	address += sizeof(cols);
 
 	//read rows
@@ -54,7 +54,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&rows,
 		"Failed to read Map property 'rows'"
 	);
-	rows = ENDIAN_U2_VALUE(rows);
+	rows = ROM_ENDIAN_U2_VALUE(rows);
 	address += sizeof(rows);
 	tilesPerLayer = cols * rows;
 
@@ -65,7 +65,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&onLoad,
 		"Failed to read Map property 'onLoad'"
 	);
-	onLoad = ENDIAN_U2_VALUE(onLoad);
+	onLoad = ROM_ENDIAN_U2_VALUE(onLoad);
 	address += sizeof(onLoad);
 
 	//read onTick
@@ -75,7 +75,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&onTick,
 		"Failed to read Map property 'onLoad'"
 	);
-	onTick = ENDIAN_U2_VALUE(onTick);
+	onTick = ROM_ENDIAN_U2_VALUE(onTick);
 	address += sizeof(onTick);
 
 	//read layerCount
@@ -103,7 +103,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&entityCount,
 		"Failed to read Map property 'entityCount'"
 	);
-	entityCount = ENDIAN_U2_VALUE(entityCount);
+	entityCount = ROM_ENDIAN_U2_VALUE(entityCount);
 	address += sizeof(entityCount);
 
 	//read geometryCount
@@ -113,7 +113,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&geometryCount,
 		"Failed to read Map property 'geometryCount'"
 	);
-	geometryCount = ENDIAN_U2_VALUE(geometryCount);
+	geometryCount = ROM_ENDIAN_U2_VALUE(geometryCount);
 	address += sizeof(geometryCount);
 
 	//read scriptCount
@@ -123,7 +123,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)&scriptCount,
 		"Failed to read Map property 'scriptCount'"
 	);
-	scriptCount = ENDIAN_U2_VALUE(scriptCount);
+	scriptCount = ROM_ENDIAN_U2_VALUE(scriptCount);
 	address += sizeof(scriptCount);
 
 	//read entityGlobalIds
@@ -135,7 +135,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)entityGlobalIds.get(),
 		"Failed to read Map property 'entityGlobalIds'"
 	);
-	ENDIAN_U2_BUFFER(entityGlobalIds.get(), entityCount);
+	ROM_ENDIAN_U2_BUFFER(entityGlobalIds.get(), entityCount);
 	address += size;
 
 	//read geometryGlobalIds
@@ -147,7 +147,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)geometryGlobalIds.get(),
 		"Failed to read Map property 'geometryGlobalIds'"
 	);
-	ENDIAN_U2_BUFFER(geometryGlobalIds.get(), geometryCount);
+	ROM_ENDIAN_U2_BUFFER(geometryGlobalIds.get(), geometryCount);
 	address += size;
 
 	//read entityGlobalIds
@@ -159,7 +159,7 @@ MageMap::MageMap(uint32_t address)
 		(uint8_t *)scriptGlobalIds.get(),
 		"Failed to read Map property 'scriptGlobalIds'"
 	);
-	ENDIAN_U2_BUFFER(scriptGlobalIds.get(), scriptCount);
+	ROM_ENDIAN_U2_BUFFER(scriptGlobalIds.get(), scriptCount);
 	address += size;
 
 	//padding to align with uint32_t memory spacing:

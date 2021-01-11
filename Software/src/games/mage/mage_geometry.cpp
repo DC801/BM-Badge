@@ -46,7 +46,7 @@ MageGeometry::MageGeometry(uint32_t address)
 		(uint8_t *)&pathLength,
 		"Failed to load Geometry property 'pathLength'"
 	);
-	pathLength = ENDIAN_F4_VALUE(pathLength);
+	pathLength = ROM_ENDIAN_F4_VALUE(pathLength);
 	address += sizeof(pathLength);
 
 	//generate appropriately sized point array:
@@ -63,7 +63,7 @@ MageGeometry::MageGeometry(uint32_t address)
 			(uint8_t *)&x,
 			"Failed to load Geometry property 'x'"
 		);
-		x = ENDIAN_U2_VALUE(x);
+		x = ROM_ENDIAN_U2_VALUE(x);
 		address += sizeof(x);
 		//get y value:
 		EngineROM_Read(
@@ -72,7 +72,7 @@ MageGeometry::MageGeometry(uint32_t address)
 			(uint8_t *)&y,
 			"Failed to load Geometry property 'x'"
 		);
-		y = ENDIAN_U2_VALUE(y);
+		y = ROM_ENDIAN_U2_VALUE(y);
 		address += sizeof(y);
 		//assign values:
 		points[i].x = x;
@@ -89,7 +89,7 @@ MageGeometry::MageGeometry(uint32_t address)
 		(uint8_t *)segmentLengths.get(),
 		"Failed to load Geometry property 'x'"
 	);
-	ENDIAN_F4_BUFFER(segmentLengths.get(), segmentCount);
+	ROM_ENDIAN_F4_BUFFER(segmentLengths.get(), segmentCount);
 
 	return;
 }

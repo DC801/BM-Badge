@@ -12,7 +12,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t addr
 		"Failed to read EntityTypeAnimationDirection property 'typeId'"
 	);
 	// Endianness conversion
-	typeId = ENDIAN_U2_VALUE(typeId);
+	typeId = ROM_ENDIAN_U2_VALUE(typeId);
 
 	// Increment offset
 	address += sizeof(typeId);

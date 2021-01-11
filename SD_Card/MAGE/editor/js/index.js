@@ -14,6 +14,7 @@ var dataTypes = [
 ];
 
 var IS_LITTLE_ENDIAN = true;
+var IS_SCREEN_LITTLE_ENDIAN = false;
 
 var handleScenarioData = function(fileNameMap) {
 	return function (scenarioData) {

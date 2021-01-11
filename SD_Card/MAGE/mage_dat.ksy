@@ -492,7 +492,7 @@ types:
   image_color:
     seq:
       - id: color_565
-        type: u2
+        type: u2be
     instances:
       r:
         value: '(color_565 & 0b1111100000000000) >> 11'
