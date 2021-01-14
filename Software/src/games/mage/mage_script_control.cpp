@@ -615,7 +615,7 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		bool colliding = geometry->isPointInGeometry(renderable->center);
 		if(colliding == argStruct->expectedBoolValue) {
 			//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -986,7 +986,7 @@ void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScr
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		entity->direction = getRelativeDirection(
 			renderable->center,
 			geometry->points[0]
@@ -1258,7 +1258,7 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
@@ -1283,7 +1283,7 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
 			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
@@ -1335,7 +1335,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if(geometry->pointCount == 1) {
@@ -1437,7 +1437,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getValidGeometry(geometryIndex);
+		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if(geometry->pointCount == 1) {

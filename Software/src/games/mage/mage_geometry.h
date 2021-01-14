@@ -47,7 +47,13 @@ class MageGeometry{
 
 		static bool doRectsOverlap(Rect a, Rect b);
 
-		void draw(int32_t cameraX, int32_t cameraY, uint16_t color);
+		void draw(
+			int32_t cameraX,
+			int32_t cameraY,
+			uint16_t color,
+			int32_t offset_x = 0,
+			int32_t offset_y = 0
+		);
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H

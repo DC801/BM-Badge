@@ -726,6 +726,12 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		return;
 	}
 	uint32_t address = layerAddress;
+	int32_t tile_x = 0;
+	int32_t tile_y = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	uint16_t geometryId = 0;
+	MageGeometry *geometry;
 
 	struct MageMapTile {
 		uint16_t tileId = 0;
@@ -734,8 +740,10 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 	} currentTile;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
-		int32_t x = (int32_t)((map.TileWidth() * (i % map.Cols())) - camera_x);
-		int32_t y = (int32_t)((map.TileHeight() * (i / map.Cols())) - camera_y);
+		tile_x = (int32_t)(map.TileWidth() * (i % map.Cols()));
+		tile_y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+		x = tile_x - camera_x;
+		y = tile_y - camera_y;
 
 		if ((x < (-map.TileWidth()) ||
 			(x > WIDTH) ||
@@ -785,6 +793,21 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			TRANSPARENCY_COLOR,
 			currentTile.flags
 		);
+
+		if (isCollisionDebugOn) {
+			geometryId = tileset.globalGeometryIds[currentTile.tileId];
+			if (geometryId) {
+				geometryId -= 1;
+				geometry = getGeometryFromGlobalId(geometryId);
+				geometry->draw(
+					camera_x,
+					camera_y,
+					COLOR_RED,
+					tile_x,
+					tile_y
+				);
+			}
+		}
 	}
 }
 
@@ -1175,7 +1198,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 		playerPosition = {0};
 	}
 	for (uint16_t i = 0; i < map.GeometryCount(); i++) {
-		MageGeometry *geometry = getValidGeometry(i);
+		MageGeometry *geometry = getGeometryFromMapLocalId(i);
 		if (isPlayerPresent) {
 			isColliding = geometry->isPointInGeometry(*playerPosition);
 		}
@@ -1189,8 +1212,12 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
+MageGeometry* MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
 	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
+}
+
+MageGeometry* MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
+	return &geometries[globalGeometryId % geometryHeader.count()];
 }
 
 MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {

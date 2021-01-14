@@ -224,14 +224,14 @@ types:
         type: u2
       - id: padding
         type: u2
-      - id: tiles
-        type: u1
+      - id: tile_global_geometry_ids
+        type: u2
         repeat: expr
         repeat-expr: tile_count
       - id: tileset_footer_padding
-        type: u1
+        type: u2
         repeat: expr
-        repeat-expr: (4 - (tile_count % 4)) % 4
+        repeat-expr: tile_count % 2
         doc: Padding bytes to get things back to uint32_t alignment
     instances:
       tile_count:

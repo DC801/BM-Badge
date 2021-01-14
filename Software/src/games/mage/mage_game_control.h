@@ -149,7 +149,8 @@ public:
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
-	MageGeometry* getValidGeometry(uint16_t mapLocalGeometryId);
+	MageGeometry* getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
+	MageGeometry* getGeometryFromGlobalId(uint16_t globalGeometryId);
 	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
 	std::string getString(

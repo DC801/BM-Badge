@@ -79,7 +79,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		// 	tilesetData
 		// );
 		tilesetData.serializedTiles = new ArrayBuffer(
-			getPaddedHeaderLength(tilesetData.tilecount)
+			getPaddedHeaderLength(tilesetData.tilecount * 2)
 		);
 		var tileDataView = new DataView(tilesetData.serializedTiles);
 		// forget about the built-in name, using file name instead.
@@ -103,11 +103,26 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 					tile
 				)
 			);
-			if (tile.type) {
-				tileDataView.setUint8(
-					tile.id,
-					tile.type.charCodeAt(0)
+			if (
+				tile.objectgroup
+				&& tile.objectgroup.objects
+			) {
+				// we probably have tile geometry!
+				if (tile.objectgroup.objects.length > 1) {
+					throw new Error(`${tilesetData.name} has more than one geometry on a single tile!`);
+				}
+				var geometry = handleTiledObjectAsGeometry(
+					tile.objectgroup.objects[0],
+					fileNameMap,
+					scenarioData,
 				);
+				if (geometry) {
+					tileDataView.setUint16(
+						tile.id * 2,
+						geometry.scenarioIndex + 1, // because if it's 0, we shouldn't have to
+						IS_LITTLE_ENDIAN,
+					);
+				}
 			}
 			if (tile.animation) {
 				serializeAnimationData(tile, tilesetData, scenarioData);

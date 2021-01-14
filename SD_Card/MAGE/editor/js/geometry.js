@@ -213,22 +213,26 @@ var getPathFromGeometry = function (geometry) {
 
 var handleTiledObjectAsGeometry = function (
 	tiledObject,
-	map,
 	fileNameMap,
 	scenarioData,
+	map,
 ) {
+	var geometry;
 	mergeInProperties(tiledObject, tiledObject.properties);
 	var path = getPathFromGeometry(tiledObject);
 	if (path) {
-		var geometry = serializeGeometry(
+		geometry = serializeGeometry(
 			tiledObject,
 			map,
 			fileNameMap,
 			scenarioData,
 		);
-		geometry.mapIndex = map.geometryIndices.length;
-		map.geometryIndices.push(
-			geometry.scenarioIndex
-		);
+		if (map) {
+			geometry.mapIndex = map.geometryIndices.length;
+			map.geometryIndices.push(
+				geometry.scenarioIndex
+			);
+		}
 	}
+	return geometry;
 };
