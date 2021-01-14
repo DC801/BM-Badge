@@ -177,9 +177,9 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 	map.geometryObjects.forEach(function (tiledObject) {
 		handleTiledObjectAsGeometry(
 			tiledObject,
-			map,
 			fileNameMap,
 			scenarioData,
+			map,
 		);
 	});
 	map.playerEntityId = specialKeywordsEnum['%MAP%'];

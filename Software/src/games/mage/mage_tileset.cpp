@@ -79,14 +79,16 @@ MageTileset::MageTileset(uint32_t address)
 	rows = ROM_ENDIAN_U2_VALUE(rows);
 	address += sizeof(rows);
 
+	address += sizeof(padding);
+
 	tileCount = rows * cols;
-	tiles = std::make_unique<uint8_t[]>(tileCount);
+	globalGeometryIds = std::make_unique<uint16_t[]>(tileCount);
 
 	EngineROM_Read(
 		address,
-		tileCount,
-		(uint8_t *)tiles.get(),
-		"Failed to load MageTileset property 'tiles'"
+		tileCount * sizeof(uint16_t),
+		(uint8_t *)globalGeometryIds.get(),
+		"Failed to load MageTileset property 'globalGeometryIds'"
 	);
 
 	return;
@@ -139,13 +141,13 @@ uint16_t MageTileset::Count() const
 
 uint8_t MageTileset::Tileset(uint32_t index) const
 {
-	if (!tiles) return 0;
+	if (!globalGeometryIds) return 0;
 
 	uint32_t tileCount = rows * cols;
 
 	if (tileCount > index)
 	{
-		return tiles[index];
+		return globalGeometryIds[index];
 	}
 
 	return 0;

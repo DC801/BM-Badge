@@ -185,14 +185,20 @@ bool MageGeometry::doRectsOverlap(Rect a, Rect b)
 }
 
 
-void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
+void MageGeometry::draw(
+	int32_t cameraX,
+	int32_t cameraY,
+	uint16_t color,
+	int32_t offset_x,
+	int32_t offset_y
+)
 {
 	Point *pointA;
 	Point *pointB;
 	if(typeId == POINT) {
 		mage_canvas->drawPoint(
-			points[0].x - cameraX,
-			points[0].y - cameraY,
+			points[0].x + offset_x - cameraX,
+			points[0].y + offset_y - cameraY,
 			4,
 			color
 		);
@@ -201,10 +207,10 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 			pointA = &points[i - 1];
 			pointB = &points[i];
 			mage_canvas->drawLine(
-				pointA->x - cameraX,
-				pointA->y - cameraY,
-				pointB->x - cameraX,
-				pointB->y - cameraY,
+				pointA->x + offset_x - cameraX,
+				pointA->y + offset_y - cameraY,
+				pointB->x + offset_x - cameraX,
+				pointB->y + offset_y - cameraY,
 				color
 			);
 		}
@@ -214,10 +220,10 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 		pointA = &points[pointCount - 1];
 		pointB = &points[0];
 		mage_canvas->drawLine(
-			pointA->x - cameraX,
-			pointA->y - cameraY,
-			pointB->x - cameraX,
-			pointB->y - cameraY,
+			pointA->x + offset_x - cameraX,
+			pointA->y + offset_y - cameraY,
+			pointB->x + offset_x - cameraX,
+			pointB->y + offset_y - cameraY,
 			color
 		);
 	}
