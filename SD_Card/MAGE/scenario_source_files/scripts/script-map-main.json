@@ -35,6 +35,12 @@
 			"string": "exit_from-oldcouplehouse",
 			"success_script": "enter_from-oldcouplehouse",
 			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-family",
+			"success_script": "enter_from-family",
+			"expected_bool": true
 		}
 	],
 	"sheep-in-pen": [
@@ -68,7 +74,7 @@
 	"show_dialog-max": [
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "Max Swagger",
 			"direction": "west"
 		},
 		{
@@ -77,7 +83,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "Max Swagger",
 			"direction": "east"
 		},
 		{
@@ -86,7 +92,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "Max Swagger",
 			"direction": "south"
 		},
 		{
@@ -95,7 +101,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "max",
+			"entity": "Max Swagger",
 			"direction": "west"
 		},
 		{
@@ -115,12 +121,6 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-timmy"
-		}
-	],
-	"show_dialog-kid": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-kid"
 		}
 	],
 	"show_dialog-goose": [
@@ -376,6 +376,13 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
+			"geometry": "door-family-entrance",
+			"success_script": "load_map-family",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
 			"geometry": "door-oldcouplehouse-entrance",
 			"success_script": "load_map-oldcouplehouse",
 			"expected_bool": true
@@ -442,6 +449,12 @@
 			"map": "map-oldcouplehouse"
 		}
 	],
+	"load_map-family": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-family"
+		}
+	],
 	"enter_from-bobsclub": [
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -466,6 +479,22 @@
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-oldcouplehouse",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-family": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-family",
 			"entity": "%PLAYER%",
 			"duration": 200
 		},
@@ -559,6 +588,11 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "shepherd2",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ball",
 			"bool_value": false
 		},
 		{

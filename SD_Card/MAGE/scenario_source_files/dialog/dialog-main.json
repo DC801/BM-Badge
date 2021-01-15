@@ -122,16 +122,6 @@
 			]
 		}
 	],
-	"dialog-kid": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "sports_kid",
-			"name": "Sports Kid",
-			"messages": [
-				"I'm gonna be a Blitzball when I grow up!"
-			]
-		}
-	],
 	"dialog-goose": [
 		{
 			"alignment": "BOTTOM_LEFT",

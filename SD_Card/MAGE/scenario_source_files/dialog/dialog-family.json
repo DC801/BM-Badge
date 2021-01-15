@@ -1,0 +1,22 @@
+{
+	"dialog-kid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sports_kid",
+			"name": "%Kid%",
+			"messages": [
+				"I'm gonna be a Blitzball when I grow up!"
+			]
+		}
+	],
+	"dialog-kid-ball": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "blitzball",
+			"name": "%Kid%",
+			"messages": [
+				"Wheeeee!"
+			]
+		}
+	]
+}

@@ -9,7 +9,8 @@
 		"scripts/script-shepherd.json",
 		"scripts/script-bobsclub.json",
 		"scripts/script-oldcouplehouse.json",
-		"scripts/script-bender.json"
+		"scripts/script-bender.json",
+		"scripts/script-family.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-test_map.json",
@@ -18,7 +19,8 @@
 		"dialog/dialog-bobsclub.json",
 		"dialog/dialog-oldcouplehouse.json",
 		"dialog/dialog-main.json",
-		"dialog/dialog-bender.json"
+		"dialog/dialog-bender.json",
+		"dialog/dialog-family.json"
 	],
 	"maps": {
 		"main": "maps/map-main.json",
@@ -27,6 +29,7 @@
 		"town": "maps/map-town.json",
 		"oldcouplehouse": "maps/map-oldcouplehouse.json",
 		"bakery": "maps/map-bakery.json",
+		"family": "maps/map-family.json",
 		"action_testing_01": "maps/map-action_testing_01.json",
 		"action_testing_02": "maps/map-action_testing_02.json"
 	},
