@@ -169,6 +169,10 @@
 	],
 	"unlock_door": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Bob Austin",
 			"geometry": "%ENTITY_PATH%",
@@ -208,6 +212,10 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bob Austin",
 			"script": "show_dialog-bobrock-start"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		},
 		{
 			"action": "LOAD_MAP",
@@ -429,7 +437,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -447,7 +455,11 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 400
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -463,13 +475,18 @@
 			"dialog": "dialog-bobsclub4"
 		},
 		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Strong Bad",
+			"byte_value": 5
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub5"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobsclub",
-			"bool_value": true
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Strong Bad",
+			"byte_value": 0
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -490,10 +507,6 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub6"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
 		}
 	],
 "show_dialog-bobsclub-bob": [
@@ -653,6 +666,5 @@
 			"action": "LOAD_MAP",
 			"map": "map-main"
 		}
-
 	]
 }
