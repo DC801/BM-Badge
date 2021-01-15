@@ -106,6 +106,24 @@
                  "width":32,
                  "x":182.039215686275,
                  "y":181.549019607843
+                }, 
+                {
+                 "gid":2147483939,
+                 "height":32,
+                 "id":10,
+                 "name":"smith",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-smith"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":292.823529411765,
+                 "y":140.862745098039
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -126,7 +144,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":10,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -166,6 +184,10 @@
         {
          "firstgid":264,
          "source":"..\/entities\/entity-sports_kid.json"
+        }, 
+        {
+         "firstgid":288,
+         "source":"..\/entities\/entity-blacksmith.json"
         }],
  "tilewidth":32,
  "type":"map",

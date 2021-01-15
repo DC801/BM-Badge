@@ -126,7 +126,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "goose",
-			"name": "Goose",
+			"name": "%Goose%",
 			"messages": [
 				"Honk!"
 			]
@@ -170,7 +170,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "verthandi",
-			"name": "Verthandi",
+			"name": "%Verthandi%",
 			"messages": [
 				"I'm so glad the goats made up\nand are friends again!"
 			]
@@ -190,7 +190,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
-			"name": "Cat",
+			"name": "%Cat%",
 			"messages": [
 				"Meowwowow."
 			]
@@ -198,7 +198,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cleo",
-			"name": "Cleo",
+			"name": "%Cleo%",
 			"messages": [
 				"That's what I've been saying\nthis whole time!"
 			]
@@ -206,7 +206,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
-			"name": "Cat",
+			"name": "%Cat%",
 			"messages": [
 				"Meowwrrrr!"
 			]
@@ -214,7 +214,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cleo",
-			"name": "Cleo",
+			"name": "%Cleo%",
 			"messages": [
 				"Oh, I know!"
 			]
@@ -224,7 +224,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
-			"name": "Cat",
+			"name": "%Cat%",
 			"messages": [
 				"Meowrrow."
 			]
@@ -232,7 +232,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cleo",
-			"name": "Cleo",
+			"name": "%Cleo%",
 			"messages": [
 				"Oh, you don't say!"
 			]
@@ -240,7 +240,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
-			"name": "Cat",
+			"name": "%Cat%",
 			"messages": [
 				"Meow!"
 			]
@@ -248,25 +248,27 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cleo",
-			"name": "Cleo",
+			"name": "%Cleo%",
 			"messages": [
 				"He didn't!"
 			]
 		}
 	],
-	"dialog-cat": [
+	"dialog-cat1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Hey there, cat!"
 			]
-		},
+		}
+	],
+	"dialog-cat2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
-			"name": "Cat",
+			"name": "%Cat%",
 			"messages": [
 				"...."
 			]
@@ -274,7 +276,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cleo",
-			"name": "Cleo",
+			"name": "%Cleo%",
 			"messages": [
 				"Excuse me, but we were in the middle\nof a conversation."
 			]
@@ -282,7 +284,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Oh, sorry. Carry on."
 			]
