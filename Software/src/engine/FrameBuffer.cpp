@@ -22,7 +22,7 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #endif
 
-#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 128
+#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
 
 //Cursor coordinates
 static int16_t m_cursor_x = 0;
@@ -48,12 +48,12 @@ FrameBuffer::~FrameBuffer() {}
 void FrameBuffer::clearScreen(uint16_t color) {
 	for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
 	{
-		frame[i] = color;
+		frame[i] = SCREEN_ENDIAN_U2_VALUE(color);
 	}
 }
 
 void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
-	frame[y * WIDTH + x] = color;
+	frame[y * WIDTH + x] = SCREEN_ENDIAN_U2_VALUE(color);
 }
 
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
@@ -69,7 +69,7 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 			&& dest >= 0
 			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest]=color;
+			frame[dest]=SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -87,7 +87,7 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 			&& dest >= 0
 			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest] = color;
+			frame[dest] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -116,7 +116,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, ui
 		{
 			uint16_t c = data[idx++];
 
-			if (c != transparent_color)
+			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
 				frame[j*WIDTH+i] = c;
 			}
@@ -152,7 +152,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uin
 			uint8_t d2 = data[idx++];
 			uint16_t c = ((uint16_t) d1 << 8) | d2;
 
-			if (c != transparent_color)
+			if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 			{
 				frame[j * WIDTH + i] = c;
 			}
@@ -196,7 +196,7 @@ void FrameBuffer::drawImage(
 			)
 			{
 				uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-				if (color != transparent_color)
+				if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -249,7 +249,7 @@ void FrameBuffer::drawImageWithFlags(
 					? fy + (h - source_y - 1)
 					: fy + source_y;
 				uint16_t color = data[(pitch * sprite_y) + sprite_x];
-				if (color != transparent_color)
+				if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
 				{
 					frame[(current_y * WIDTH) + current_x] = color;
 				}
@@ -260,109 +260,671 @@ void FrameBuffer::drawImageWithFlags(
 
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
-	int x,
-	int y,
+	MageColorPalette *colorPalette,
+	int32_t screen_x, // top-left corner of screen coordinates to draw at
+	int32_t screen_y, // top-left corner of screen coordinates to draw at
 	uint16_t tile_width,
 	uint16_t tile_height,
-	uint16_t source_x,
-	uint16_t source_y,
-	int16_t pitch,
+	uint16_t source_x, // top-left corner of source image coordinates to READ FROM
+	uint16_t source_y, // top-left corner of source image coordinates to READ FROM
+	uint16_t pitch, // The width of the source image in pixels
 	uint16_t transparent_color,
 	uint8_t flags
 )
 {
-	uint16_t tile_x = 0;
-	uint16_t tile_y = 0;
-	uint16_t write_x = 0;
-	uint16_t write_y = 0;
-	int16_t dest_x = 0;
-	int16_t dest_y = 0;
-	uint16_t colors[MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH] = {};
-	uint32_t location = 0;
-	uint32_t bytes_to_read = 0;
-
 	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
 	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
 	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
+	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
 	if (
-		(x > WIDTH) ||
-		(y > HEIGHT) ||
-		((x + tile_width) < 0) ||
-		((y + tile_height) < 0) ||
-		((tile_width != tile_height) && flip_diag) // can't transpose non-squares
-	)
-	{
+		screen_x + tile_width < 0	||
+		screen_x >= WIDTH			||
+		screen_y + tile_width < 0	||
+		screen_y >= HEIGHT
+	) {
 		return;
 	}
 
-	Rectangle writeRect = Rectangle(
-		MAX(x, 0),
-		MAX(y, 0),
-		MIN(tile_width, MIN(tile_width + x, WIDTH - x)),
-		MIN(tile_height, MIN(tile_height + y, HEIGHT - y))
+	uint8_t pixels[tile_width * tile_height];
+
+	EngineROM_Read(
+		address + ((source_y * pitch) + source_x),
+		tile_width * tile_height,
+		(uint8_t *)&pixels,
+		"Failed to read pixel data"
 	);
 
-	// FOR ALL OF THE SCENARIOS WHERE THE READ COORDINATE STARTS ON-SCREEN,
-	// THE READ COORDINATES -MUST NOT- TO BE SHIFTED!!!
+	if(flip_x == false && flip_y == false && flip_diag == false) {
+		tileToBufferNoXNoYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == false && flip_diag == false) {
+		tileToBufferYesXNoYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == false && flip_y == true && flip_diag == false) {
+		tileToBufferNoXYesYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == true && flip_diag == false) {
+		tileToBufferYesXYesYNoZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if(flip_x == false && flip_y == false && flip_diag == true) {
+		tileToBufferNoXNoYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == false && flip_diag == true) {
+		tileToBufferYesXNoYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == false && flip_y == true && flip_diag == true) {
+		tileToBufferNoXYesYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	} else if (flip_x == true && flip_y == true && flip_diag == true) {
+		tileToBufferYesXYesYYesZ(
+			pixels,
+			colorPalette,
+			screen_x,
+			screen_y,
+			tile_width,
+			tile_height,
+			source_x,
+			source_y,
+			pitch,
+			transparent_color
+		);
+	}
+}
 
-	// EXTREMELY CURSED BOOLEAN ALGEBRA
-	// - Do not touch
-	uint16_t transposed_width = flip_diag ? writeRect.height : writeRect.width;
-	uint16_t transposed_height = flip_diag ? writeRect.width : writeRect.height;
-	uint16_t offset_x = MAX(-x, 0);
-	uint16_t offset_y = MAX(-y, 0);
-	uint16_t transposed_offset_x = flip_diag ? offset_y : offset_x;
-	uint16_t transposed_offset_y = flip_diag ? offset_x : offset_y;
-	int32_t inverse_transposed_offset_x = tile_width - transposed_width - transposed_offset_x;
-	int32_t inverse_transposed_offset_y = tile_height - transposed_height - transposed_offset_y;
-	Rectangle readRect = Rectangle(
-		source_x + (((!flip_x && flip_y && flip_diag) || (flip_x && !flip_diag)|| (flip_x && flip_y && flip_diag)) ? inverse_transposed_offset_x : transposed_offset_x),
-		source_y + (((!flip_y && flip_x && flip_diag) || (flip_y && !flip_diag)|| (flip_y && flip_x && flip_diag)) ? inverse_transposed_offset_y : transposed_offset_y),
-		transposed_width,
-		transposed_height
-	);
-
-	uint16_t pixels_to_read_per_run = MIN(readRect.width, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-	uint16_t remaining_pixels_this_row = readRect.width;
-	uint16_t pixels_to_read_now = 0;
-	uint16_t color = 0;
-	// These loops represent source coordinate space, not destination space
-	for (tile_y = 0; tile_y < readRect.height; ++tile_y)
-	{
-		location = address + ((((readRect.y + tile_y) * pitch) + readRect.x) * sizeof(uint16_t));
-		bytes_to_read = pixels_to_read_per_run * sizeof(uint16_t);
-		if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
-		{
-			debug_print("Failed to read pixel data\n");
-			return;
+void FrameBuffer::tileToBufferNoXNoYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
 		}
-		convert_endian_u2_buffer(colors, pixels_to_read_per_run);
-		tile_x = 0;
-		while (tile_x < readRect.width)
-		{
-			if(tile_x > pixels_to_read_per_run)
-			{
-				remaining_pixels_this_row = readRect.width - tile_x;
-				location = address + ((((readRect.y + tile_y) * pitch) + readRect.x + tile_x) * sizeof(uint16_t));
-				pixels_to_read_now = MIN(remaining_pixels_this_row, MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH);
-				bytes_to_read = pixels_to_read_now * sizeof(uint16_t);
-				if (EngineROM_Read(location, bytes_to_read, (uint8_t *)&colors) != bytes_to_read)
-				{
-					debug_print("Failed to read pixel data\n");
-					return;
-				}
-				convert_endian_u2_buffer(colors, pixels_to_read_now);
+	}
+}
+
+void FrameBuffer::tileToBufferYesXNoYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = screen_x + tile_width;
+		d.x = 0;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
+		screen_x_start = screen_x;
+	} else {
+		a.x = tile_width;
+		d.x = 0;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = a.x - d.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x - (col+1)) + //x (+1 to get back to zero-index)
+				((a.y + row) * tile_width) //y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
 			}
-			write_x = ((flip_diag) ? (tile_y) : (tile_x));
-			write_y = ((flip_diag) ? (tile_x) : (tile_y));
-			dest_x = writeRect.x + (flip_x ? (writeRect.width - 1) - write_x : write_x);
-			dest_y = writeRect.y + (flip_y ? (writeRect.height - 1) - write_y : write_y);
-			color = colors[tile_x % pixels_to_read_per_run];
-			if (color != transparent_color)
-			{
-				frame[(dest_y * WIDTH) + dest_x] = color;
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferNoXYesYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = screen_y + tile_height;
+		d.y = 0;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
+		screen_y_start = screen_y;
+	} else {
+		a.y = tile_height;
+		d.y = 0;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = a.y - d.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x + col) + //x
+				((a.y - (row + 1)) * tile_width) //y (+1 to get back to zero-index)
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
 			}
-			tile_x++;
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferYesXYesYNoZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = screen_x + tile_width;
+		d.x = 0;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
+		screen_x_start = screen_x;
+	} else {
+		a.x = tile_width;
+		d.x = 0;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = screen_y + tile_height;
+		d.y = 0;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
+		screen_y_start = screen_y;
+	} else {
+		a.y = tile_height;
+		d.y = 0;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = a.y - d.y;
+	uint16_t num_cols = a.x - d.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.x - (col+1)) + //x (+1 to get back to zero-index)
+				((a.y - (row+1)) * tile_width) //y (+1 to get back to zero-index)
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferNoXNoYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.y + row) + //transposed x
+				((a.x + col) * tile_width) //transposed y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferYesXNoYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = screen_x + tile_width;
+		d.x = 0;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
+		screen_x_start = screen_x;
+	} else {
+		a.x = tile_width;
+		d.x = 0;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = -screen_y;
+		d.y= tile_height;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = 0;
+		d.y = HEIGHT - screen_y;
+		screen_y_start = screen_y;
+	} else {
+		a.y = 0;
+		d.y = tile_height;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = d.y - a.y;
+	uint16_t num_cols = a.x - d.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.y + row) + //transposed x
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferNoXYesYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = -screen_x;
+		d.x = tile_width;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = 0;
+		d.x = WIDTH - screen_x;
+		screen_x_start = screen_x;
+	} else {
+		a.x = 0;
+		d.x = tile_width;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = screen_y + tile_height;
+		d.y = 0;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
+		screen_y_start = screen_y;
+	} else {
+		a.y = tile_height;
+		d.y = 0;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = a.y - d.y;
+	uint16_t num_cols = d.x - a.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
+				((a.x + col) * tile_width) //transposed y
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
+		}
+	}
+}
+
+void FrameBuffer::tileToBufferYesXYesYYesZ(
+	uint8_t * pixels,
+	MageColorPalette * colorPalette,
+	int32_t screen_x,
+	int32_t screen_y,
+	uint16_t tile_width,
+	uint16_t tile_height,
+	uint16_t source_x,
+	uint16_t source_y,
+	uint16_t pitch,
+	uint16_t transparent_color
+) {
+	uint16_t color = transparent_color;
+	int32_t screen_x_start = 0;
+	int32_t screen_y_start = 0;
+	uint32_t screen_index = 0;
+	uint32_t tile_index = 0;
+	Point a = { .x = 0, .y = 0 };
+	Point d = { .x = 0, .y = 0 };
+	if(screen_x < 0){
+		a.x = screen_x + tile_width;
+		d.x = 0;
+		screen_x_start = 0;
+	} else if (screen_x+tile_width >= WIDTH) {
+		a.x = tile_width;
+		d.x = (screen_x + tile_width) - WIDTH;
+		screen_x_start = screen_x;
+	} else {
+		a.x = tile_width;
+		d.x = 0;
+		screen_x_start = screen_x;
+	}
+	if(screen_y < 0){
+		a.y = screen_y + tile_height;
+		d.y = 0;
+		screen_y_start = 0;
+	} else if (screen_y+tile_height >= HEIGHT) {
+		a.y = tile_height;
+		d.y = (screen_y + tile_height) - HEIGHT;
+		screen_y_start = screen_y;
+	} else {
+		a.y = tile_height;
+		d.y = 0;
+		screen_y_start = screen_y;
+	}
+	uint16_t num_rows = a.y - d.y;
+	uint16_t num_cols = a.x - d.x;
+	for (uint16_t row = 0; row< num_rows; row++){
+		for(uint16_t col = 0; col < num_cols; col++) {
+			screen_index =(
+				(screen_x_start + col) + //x
+				((screen_y_start + row) * WIDTH) //y
+			);
+			tile_index = (
+				(a.y - (row+1)) + //transposed x (+1 to get back to zero-index)
+				((a.x - (col+1)) * tile_width) //transposed y (+1 to get back to zero-index)
+			);
+			uint8_t color_index = pixels[tile_index];
+			color = colorPalette->colors[color_index];
+			if (color != transparent_color) {
+				frame[screen_index] = color;
+			}
 		}
 	}
 }
@@ -380,7 +942,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	}
 
 	fclose(fd);
-	convert_endian_u2_buffer(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf);
 }
 
@@ -399,7 +961,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	fclose(fd);
 
-	convert_endian_u2_buffer(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	drawImage(x, y, w, h, buf, transparent_color);
 }
 
@@ -467,7 +1029,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		convert_endian_u2_buffer(buf, bufferSize);
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -483,7 +1045,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
-	convert_endian_u2_buffer(buf, bufferSize);
+	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 	canvas.drawImage(x, y, w, h, buf);
 	canvas.blt();
 	return;
@@ -553,7 +1115,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		convert_endian_u2_buffer(buf, bufferSize);
+		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 		canvas.drawImage(x, y, w, h, buf);
 		canvas.blt();
 
@@ -658,7 +1220,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			convert_endian_u2_buffer(buf, bufferSize);
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -776,7 +1338,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			convert_endian_u2_buffer(buf, bufferSize);
+			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
 			canvas.drawImage(x, y, w, h, buf);
 			canvas.blt();
 
@@ -847,7 +1409,7 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 		for (int j = y; j < (y + h); j++)
 		{
 			int index = i + (WIDTH * j);
-			frame[index] = color;
+			frame[index] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -861,6 +1423,7 @@ void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
 
 void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
 {
+	color = SCREEN_ENDIAN_U2_VALUE(color);
 	drawLine(x0, y0, x1, y1, color);
 	drawLine(x1, y1, x2, y2, color);
 	drawLine(x2, y2, x0, y0, color);
@@ -896,7 +1459,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 			&& y > 0
 			&& y < HEIGHT
 		) {
-			frame[x + (y * WIDTH)] = color;
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -934,7 +1497,7 @@ void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color){
 
 			if (dist2 <= radx2)
 			{
-				frame[i + j * WIDTH] = color;
+				frame[i + j * WIDTH] = SCREEN_ENDIAN_U2_VALUE(color);
 			}
 		}
 	}
@@ -969,19 +1532,25 @@ void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
 				}
 				else if (dist > (rad2 * rad2))
 				{
-					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & 0xF9E7;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & SCREEN_ENDIAN_U2_VALUE(0xF9E7); // ???
 				}
 				else if (dist > (rad1 * rad1))
 				{
-					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & 0xFBEF;
+					frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & SCREEN_ENDIAN_U2_VALUE(0xFBEF); // ???
 				}
 			}
 		}
 	}
 }
 
-static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
-		uint16_t bg, GFXfont font) {
+static void __draw_char(
+	int16_t x,
+	int16_t y,
+	unsigned char c,
+	uint16_t color,
+	uint16_t bg,
+	GFXfont font
+) {
 
 	// Character is assumed previously filtered by write() to eliminate
 	// newlines, returns, non-printable characters, etc.  Calling drawChar()
@@ -1024,8 +1593,7 @@ static void __draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color,
 			if (bits & 0x80) {
 				yyy = y + yo + yy;
 				if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye) {
-					//util_gfx_set_pixel(x + xo + xx, y + yo + yy, color);
-					canvas.drawPixel(    x + xo + xx, y + yo + yy, color);
+					canvas.drawPixel(x + xo + xx, y + yo + yy, SCREEN_ENDIAN_U2_VALUE(color));
 				}
 			}
 			bits <<= 1;
@@ -1069,7 +1637,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font) {
 
 void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, int x, int y)
 {
-	m_color = color;
+	m_color = SCREEN_ENDIAN_U2_VALUE(color);
 	m_cursor_area.xs = x;
 	m_cursor_x = m_cursor_area.xs;
 	m_cursor_y = y + (font.yAdvance / 2);
@@ -1235,11 +1803,6 @@ void FrameBuffer::blt()
 		EngineWindowFrameGameBlt(frame);
 	#endif
 	#ifdef DC801_EMBEDDED
-		for (uint32_t i=0; i< FRAMEBUFFER_SIZE; ++i)
-		{
-			frame[i] = ((frame[i] >> 8) & 0xff) | ((frame[i] & 0xff) << 8);
-		}
-
 		draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 	#endif
 }

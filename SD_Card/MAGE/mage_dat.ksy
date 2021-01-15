@@ -1,6 +1,6 @@
 meta:
   id: mage_dat
-  endian: be
+  endian: le
 seq:
   - id: identifier
     contents: MAGEGAME
@@ -23,6 +23,8 @@ seq:
   - id: script_offsets
     type: count_with_offsets
   - id: dialog_offsets
+    type: count_with_offsets
+  - id: image_color_palette_offsets
     type: count_with_offsets
   - id: string_offsets
     type: count_with_offsets
@@ -62,6 +64,10 @@ seq:
     type: dialog
     repeat: expr
     repeat-expr: dialog_offsets.count
+  - id: image_color_palettes
+    type: image_color_palette
+    repeat: expr
+    repeat-expr: image_color_palette_offsets.count
 instances:
   strings:
     type: string(_index)
@@ -218,14 +224,14 @@ types:
         type: u2
       - id: padding
         type: u2
-      - id: tiles
-        type: u1
+      - id: tile_global_geometry_ids
+        type: u2
         repeat: expr
         repeat-expr: tile_count
       - id: tileset_footer_padding
-        type: u1
+        type: u2
         repeat: expr
-        repeat-expr: (4 - (tile_count % 4)) % 4
+        repeat-expr: tile_count % 2
         doc: Padding bytes to get things back to uint32_t alignment
     instances:
       tile_count:
@@ -447,6 +453,27 @@ types:
         size: char_count
         encoding: ASCII
 
+  image_color_palette:
+    seq:
+     - id: name
+       type: str
+       size: 32
+       encoding: ASCII
+     - id: color_count
+       type: u1
+     - id: padding
+       type: u1
+       doc: Padding to align things back to uint16_t
+     - id: colors
+       type: image_color
+       repeat: expr
+       repeat-expr: color_count
+     - id: colors_padding
+       type: u2
+       repeat: expr
+       repeat-expr: (color_count + 1) % 2
+       doc: Padding to align things back to uint32_t
+
   image:
     params:
       - id: index
@@ -458,14 +485,14 @@ types:
         value: '_parent.image_offsets.lengths[index] / 2'
       colors:
         pos: offset
-        type: image_color
+        type: u1
         repeat: expr
         repeat-expr: pixel_count
 
   image_color:
     seq:
       - id: color_565
-        type: u2
+        type: u2be
     instances:
       r:
         value: '(color_565 & 0b1111100000000000) >> 11'
@@ -488,81 +515,88 @@ enums:
     2: polygon
 
   action_type:
-    0: null_action
-    1: check_entity_name
-    2: check_entity_x
-    3: check_entity_y
-    4: check_entity_interact_script
-    5: check_entity_tick_script
-    6: check_entity_primary_id
-    7: check_entity_secondary_id
-    8: check_entity_primary_id_type
-    9: check_entity_current_animation
-    10: check_entity_current_frame
-    11: check_entity_direction
-    12: check_entity_hackable_state_a
-    13: check_entity_hackable_state_b
-    14: check_entity_hackable_state_c
-    15: check_entity_hackable_state_d
-    16: check_entity_hackable_state_a_u2
-    17: check_entity_hackable_state_c_u2
-    18: check_entity_hackable_state_a_u4
-    19: check_entity_path
-    20: check_save_flag
-    21: check_if_entity_is_in_geometry
-    22: check_for_button_press
-    23: check_for_button_state
-    24: check_warp_state
-    25: run_script
-    26: blocking_delay
-    27: non_blocking_delay
-    28: set_pause_state
-    29: set_entity_name
-    30: set_entity_x
-    31: set_entity_y
-    32: set_entity_interact_script
-    33: set_entity_tick_script
-    34: set_entity_primary_id
-    35: set_entity_secondary_id
-    36: set_entity_primary_id_type
-    37: set_entity_current_animation
-    38: set_entity_current_frame
-    39: set_entity_direction
-    40: set_entity_hackable_state_a
-    41: set_entity_hackable_state_b
-    42: set_entity_hackable_state_c
-    43: set_entity_hackable_state_d
-    44: set_entity_hackable_state_a_u2
-    45: set_entity_hackable_state_c_u2
-    46: set_entity_hackable_state_a_u4
-    47: set_entity_path
-    48: set_save_flag
-    49: set_player_control
-    50: set_map_tick_script
-    51: set_hex_cursor_location
-    52: set_hex_bits
-    53: set_warp_state
-    54: unlock_hax_cell
-    55: lock_hax_cell
-    56: set_hex_editor_state
-    57: set_hex_editor_dialog_mode
-    58: load_map
-    59: show_dialog
-    60: teleport_entity_to_geometry
-    61: walk_entity_to_geometry
-    62: walk_entity_along_geometry
-    63: loop_entity_along_geometry
-    64: set_camera_to_follow_entity
-    65: teleport_camera_to_geometry
-    66: pan_camera_to_entity
-    67: pan_camera_to_geometry
-    68: pan_camera_along_geometry
-    69: loop_camera_along_geometry
-    70: set_screen_shake
-    71: screen_fade_out
-    72: screen_fade_in
-    73: play_sound_continuous
-    74: play_sound_interrupt
+    00: null_action
+    01: check_entity_name
+    02: check_entity_x
+    03: check_entity_y
+    04: check_entity_interact_script
+    05: check_entity_tick_script
+    06: check_entity_type
+    07: check_entity_primary_id
+    08: check_entity_secondary_id
+    09: check_entity_primary_id_type
+    10: check_entity_current_animation
+    11: check_entity_current_frame
+    12: check_entity_direction
+    13: check_entity_hackable_state_a
+    14: check_entity_hackable_state_b
+    15: check_entity_hackable_state_c
+    16: check_entity_hackable_state_d
+    17: check_entity_hackable_state_a_u2
+    18: check_entity_hackable_state_c_u2
+    19: check_entity_hackable_state_a_u4
+    20: check_entity_path
+    21: check_save_flag
+    22: check_if_entity_is_in_geometry
+    23: check_for_button_press
+    24: check_for_button_state
+    25: check_warp_state
+    26: run_script
+    27: blocking_delay
+    28: non_blocking_delay
+    29: pause_game
+    30: pause_entity_script
+    31: set_entity_name
+    32: set_entity_x
+    33: set_entity_y
+    34: set_entity_interact_script
+    35: set_entity_tick_script
+    36: set_entity_type
+    37: set_entity_primary_id
+    38: set_entity_secondary_id
+    39: set_entity_primary_id_type
+    40: set_entity_current_animation
+    41: set_entity_current_frame
+    42: set_entity_direction
+    43: set_entity_direction_relative
+    44: set_entity_direction_target_entity
+    45: set_entity_direction_target_geometry
+    46: set_entity_hackable_state_a
+    47: set_entity_hackable_state_b
+    48: set_entity_hackable_state_c
+    49: set_entity_hackable_state_d
+    50: set_entity_hackable_state_a_u2
+    51: set_entity_hackable_state_c_u2
+    52: set_entity_hackable_state_a_u4
+    53: set_entity_path
+    54: set_save_flag
+    55: set_player_control
+    56: set_map_tick_script
+    57: set_hex_cursor_location
+    58: set_hex_bits
+    59: set_warp_state
+    60: unlock_hax_cell
+    61: lock_hax_cell
+    62: set_hex_editor_state
+    63: set_hex_editor_dialog_mode
+    64: load_map
+    65: show_dialog
+    66: play_entity_animation
+    67: teleport_entity_to_geometry
+    68: walk_entity_to_geometry
+    69: walk_entity_along_geometry
+    70: loop_entity_along_geometry
+    71: set_camera_to_follow_entity
+    72: teleport_camera_to_geometry
+    73: pan_camera_to_entity
+    74: pan_camera_to_geometry
+    75: pan_camera_along_geometry
+    76: loop_camera_along_geometry
+    77: set_screen_shake
+    78: screen_fade_out
+    79: screen_fade_in
+    80: play_sound_continuous
+    81: play_sound_interrupt
 
   dialog_screen_alignment_type:
     0: bottom_left

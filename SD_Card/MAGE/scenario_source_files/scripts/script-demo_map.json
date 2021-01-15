@@ -113,12 +113,6 @@
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-dsheep": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-dsheep"
-		}
-	],
 	"show_dialog-max": [
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -185,6 +179,10 @@
 	],
 	"show_dialog-beatrice": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice1"
 		},
@@ -214,6 +212,10 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice2"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	],
 	"show_dialog-trekkie_demo": [
@@ -412,12 +414,12 @@
 			"script": "null_script"
 		}
 	],
-	"on_tick-demo": [
+	"on_tick-main": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
-			"geometry": "door-demo",
-			"success_script": "load_map-demo",
+			"geometry": "door-main",
+			"success_script": "load_map-main",
 			"expected_bool": true
 		},
 		{

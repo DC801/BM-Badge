@@ -98,15 +98,13 @@ void MageDialogControl::load(
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeof(currentDialogScreenCount),
-		(uint8_t *)&currentDialogScreenCount
-	) != sizeof(currentDialogScreenCount))
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
-	currentDialogScreenCount = convert_endian_u4_value(currentDialogScreenCount);
+		(uint8_t *)&currentDialogScreenCount,
+		"Failed to read Dialog property 'currentDialogScreenCount'"
+	);
+	currentDialogScreenCount = ROM_ENDIAN_U4_VALUE(currentDialogScreenCount);
 	currentDialogAddress += sizeof(currentDialogScreenCount);
 
 	loadNextScreen();
@@ -121,16 +119,14 @@ void MageDialogControl::loadNextScreen() {
 		return;
 	}
 	uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeOfDialogScreenStruct,
-		(uint8_t *)&currentScreen
-	) != sizeOfDialogScreenStruct)
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
-	currentScreen.nameStringIndex = convert_endian_u2_value(currentScreen.nameStringIndex);
-	currentScreen.borderTilesetIndex = convert_endian_u2_value(currentScreen.borderTilesetIndex);
+		(uint8_t *)&currentScreen,
+		"Failed to read Dialog property 'currentScreen'"
+	);
+	currentScreen.nameStringIndex = ROM_ENDIAN_U2_VALUE(currentScreen.nameStringIndex);
+	currentScreen.borderTilesetIndex = ROM_ENDIAN_U2_VALUE(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
 	currentEntityName = MageGame->getString(currentScreen.nameStringIndex, triggeringEntityId);
 
@@ -138,15 +134,13 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
 	messageIds.reset();
 	messageIds = std::make_unique<uint16_t[]>(currentScreen.messageCount);
-	if (EngineROM_Read(
+	EngineROM_Read(
 		currentDialogAddress,
 		sizeOfScreenMessageIds,
-		(uint8_t *)messageIds.get()
-	) != sizeOfScreenMessageIds)
-	{
-		ENGINE_PANIC("Failed to load dialog data.");
-	}
-	convert_endian_u2_buffer(messageIds.get(), currentScreen.messageCount);
+		(uint8_t *)messageIds.get(),
+		"Failed to read Dialog property 'messageIds'"
+	);
+	ROM_ENDIAN_U2_BUFFER(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
 	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
 	currentMessage = MageGame->getString(
@@ -155,8 +149,9 @@ void MageDialogControl::loadNextScreen() {
 	);
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
+	currentImageIndex = currentFrameTileset->ImageId();
 	currentImageAddress = MageGame->getImageAddress(
-		currentFrameTileset->ImageId()
+		currentImageIndex
 	);
 	currentScreenIndex++;
 }
@@ -200,6 +195,7 @@ void MageDialogControl::drawDialogBox(const std::string &string, Rect box) {
 			tileId = getTileIdFromXY(i, j, box);
 			canvas.drawChunkWithFlags(
 				currentImageAddress,
+				MageGame->getValidColorPalette(currentImageIndex),
 				x,
 				y,
 				tileWidth,

@@ -5,39 +5,38 @@
 
 MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t address)
 {
-	uint32_t size = 0;
-
-	// Read count
-	if (EngineROM_Read(address, sizeof(typeId), (uint8_t *)&typeId) != sizeof(typeId))
-	{
-		goto MageEntityTypeAnimationDirection_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(typeId),
+		(uint8_t *)&typeId,
+		"Failed to read EntityTypeAnimationDirection property 'typeId'"
+	);
 	// Endianness conversion
-	typeId = convert_endian_u2_value(typeId);
+	typeId = ROM_ENDIAN_U2_VALUE(typeId);
 
 	// Increment offset
 	address += sizeof(typeId);
 
 	// Read count
-	if (EngineROM_Read(address, sizeof(type), (uint8_t *)&type) != sizeof(type))
-	{
-		goto MageEntityTypeAnimationDirection_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(type),
+		(uint8_t *)&type,
+		"Failed to read EntityTypeAnimationDirection property 'type'"
+	);
 
 	// Increment offset
 	address += sizeof(type);
 
 	// Read count
-	if (EngineROM_Read(address, sizeof(renderFlags), (uint8_t *)&renderFlags) != sizeof(renderFlags))
-	{
-		goto MageEntityTypeAnimationDirection_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(renderFlags),
+		(uint8_t *)&renderFlags,
+		"Failed to read EntityTypeAnimationDirection property 'typeId'"
+	);
 
 	return;
-
-MageEntityTypeAnimationDirection_Error:
-	ENGINE_PANIC("Failed to read entity type animation direction data");
 }
 
 uint16_t MageEntityTypeAnimationDirection::TypeId() const
@@ -127,20 +126,24 @@ MageEntityType::MageEntityType(uint32_t address)
 	uint32_t size = 0;
 
 	// Read name
-	if (EngineROM_Read(address, 16, (uint8_t *)name) != 16)
-	{
-		goto MageEntityType_Error;
-	}
+	EngineROM_Read(
+		address,
+		16,
+		(uint8_t *)name,
+		"Failed to read EntityType property 'name'"
+	);
 
 	name[16] = 0; // Null terminate
 	//increment address
 	address += 16 + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t); //padding
 
 	// Read animationCount
-	if (EngineROM_Read(address, sizeof(animationCount), (uint8_t *)&animationCount) != sizeof(animationCount))
-	{
-		goto MageEntityType_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(animationCount),
+		(uint8_t *)&animationCount,
+		"Failed to read EntityType property 'name'"
+	);
 
 	//increment address
 	address += sizeof(animationCount);
@@ -156,9 +159,6 @@ MageEntityType::MageEntityType(uint32_t address)
 	}
 
 	return;
-
-MageEntityType_Error:
-	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
 std::string MageEntityType::Name() const

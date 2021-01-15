@@ -1,0 +1,548 @@
+{
+	"dialog-baker-start": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Hey, I'm pretty swamped.\nCan you run an errand for me?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"What do you need?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"The Bobs-Only Club placed a huge order for\nB-shaped donuts, due tonight, but I can't\nget anyone to confirm the order.",
+				"They haven't paid yet, either.",
+				"I went over there this morning, but they\nwouldn't let me in! And Bob wouldn't tell\nme anything!",
+				"I just want to know whether or not they\nstill want these donuts. I'm running out\nof time to get everything ready by\ntonight.",
+				"Can you find out for me? Get some answers\nfrom Bob? Any Bob?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Sure, I can swing past that way. See what\nI can find out."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Thanks.",
+				"Oh, and happy birthday."
+			]
+		}
+	],
+	"dialog-baker-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Hear anything from the Bobs-Only Club yet?"
+			]
+		}
+	],
+	"dialog-bobrock-gottago": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Goin' back to work."
+			]
+		}
+	],
+	"dialog-bobrock-start1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Name's Bob.",
+				"Stone Cold %Bob Austin%.",
+				"....",
+				"Right, what's yours, then?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"You don't know who I am? We've both lived\nhere for years!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Don't know nobody. All I know is, gotta\nkeep everyone out.",
+				"You know, unless their name is Bob."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Bob?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Bob. Camel case.\nNice and plain.\nTraditional.",
+				"'Cause this club is Bobs-only.\nYou know, the Bobs-Only Club."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Why is it Bobs only?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Why?\nWhy is it Bobs only?",
+				"Why, it wouldn't be the Bobs-Only Club if\nI just let anyone in!"
+			]
+		}
+	],
+	"dialog-bobrock-start2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Well, the baker needs to know whether\nthe club still needs a bunch of\nB-shaped donuts for tonight.",
+				"Do you know if the Bobs still want them?\nThere's gonna be a party tonight, right?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"That's for Bobs to know.",
+				"Only Bobs.",
+				"Bobs only."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"I think the baker needs to know, too!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Well, if his name was Bob,\nI would've let him in!"
+			]
+		}
+	],
+	"dialog-bobrock-bounce": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"So, what's your name then?"
+			]
+		}
+	],
+	"dialog-bobrock-nobob": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Um....\nit's %PLAYER%."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Sorry, can't unlock the door for ya.\nBobs only."
+			]
+		}
+	],
+	"dialog-bobrock-yesbob1": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Why, what luck!\nMy name happens to be Bob!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Nice. Great name.\nI'll open it on up."
+			]
+		}
+	],
+	"dialog-bobrock-yesbob2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Head inside quick, now."
+			]
+		}
+	],
+	"dialog-bobsclub1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Oh, hello.\nYou must be here for the annual\nBobs-Only Party, right?"
+			]
+		}
+	],
+	"dialog-bobsclub2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Well I hate to tell you this,\nbut it's canceled this year."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"What? Canceled?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Yeah. This time, for real.",
+				"I mean, every year they SAY its canceled,\nbut this time it's actually genuinely\ncanceled."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Wait, canceled?!\nBut what about all the ladies?!"
+			]
+		}
+	],
+	"dialog-bobsclub3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Ladies?\nI'm pretty sure Bob is a masculine name,\ntraditionally."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Nuh-uh!",
+				"What about Bob... rietta? Bob... velyn?",
+				"Barbara? I mean, Bob-ara?",
+				"They're still gonna come to the party,\naren't they?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Sorry, dude!\nNot if the party's canceled.",
+				"...Also not if none of them are named Bob."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Sure, they'll come!\nI just gotta wait a little more!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"I think you came to the wrong party."
+			]
+		}
+	],
+	"dialog-bobsclub4": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Well, this place should be full of Bobs...\nnext year."
+			]
+		}
+	],
+	"dialog-bobsclub5": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
+			]
+		}
+	],
+	"dialog-bobsclub6": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"So I guess I can tell the baker\nto cancel the donut order then, huh?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Guess so. Sorry about this."
+			]
+		}
+	],
+	"dialog-bobsclub-bob": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"They could've told me the party was\nactually canceled before I made\nthe trip out here.",
+				"*sigh*\nOh, well."
+			]
+		}
+	],
+	"dialog-bobsclub-strongbob": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Why, hello there, fellow Bob!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Your name is Bob?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Why, it sure is!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"You look an awful lot like Strong Bad to me."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Wha-what? STRONG BAD?\nNever heard of him....\nThough he sounds like quite the\nrugged and handsome gentleman.",
+				"The name's Strong BOB!\nJust lookee here at my fake--\nI mean real--ID!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(This ID clearly belongs to \"Bob Newhart,\"\nbut the word Newhart is crossed out.)",
+				"(I guess Bob out front\ndoesn't have very good eyes.)"
+			]
+		}
+	],
+	"dialog-bobsclub-strongbob-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Yessirree!\nStrong Bob's the name,\nand partyin's the game!"
+			]
+		}
+	],
+	"dialog-bobsclub-wall": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"The Wall of Bobs.",
+				"Robert Parr (superhero),\nSpongebob (fry cook),\nBob Kelso (physician)....",
+				"There sure are a lot of Bobs in the world."
+			]
+		}
+	],
+	"dialog-bobrock-bounce-rehash": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"We've been through all this before,\nyou know."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Doesn't matter.\nIt's just the rules.\nBobs only."
+			]
+		}
+	],
+	"dialog-bobrock-nobob-rehash": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"....",
+				"Fine.\nI guess I'm not getting in, then."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Damn straight."
+			]
+		}
+	],
+	"dialog-bobrock-yesbob-rehash": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Well, my name is Bob! Happy?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bob",
+			"name": "%Bob Austin%",
+			"messages": [
+				"Cool. Great name."
+			]
+		}
+	],
+	"dialog-baker-end": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Canceled?\nThey're really sure it's all canceled?\nFor real?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"That's what Bob said."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Bob?\nStone Cold Bob Austin?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Uh... well, it was someone\nnamed Bob."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Great. Just great. Just as I was putting\neverything in the oven. Not gonna pay me\neither, are they?",
+				"Well, thanks for finding out for me.\nNow I need to find a way to move four\ndozen B-shaped donuts."
+			]
+		}
+	],
+	"dialog-baker-end-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Say, you wouldn't want a B-shaped donut,\nwould you? On the house."
+			]
+		}
+	]
+}

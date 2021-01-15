@@ -11,34 +11,42 @@ MageGeometry::MageGeometry(uint32_t address)
 	//skip over name:
 	address += 32;
 	//read typeId:
-	if (EngineROM_Read(address, sizeof(typeId), (uint8_t *)&typeId) != sizeof(typeId))
-	{
-		goto MageGeometry_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(typeId),
+		(uint8_t *)&typeId,
+		"Failed to load Geometry property 'typeId'"
+	);
 	address += sizeof(typeId);
 
 	//read pointCount:
-	if (EngineROM_Read(address, sizeof(pointCount), (uint8_t *)&pointCount) != sizeof(pointCount))
-	{
-		goto MageGeometry_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(pointCount),
+		(uint8_t *)&pointCount,
+		"Failed to load Geometry property 'pointCount'"
+	);
 	address += sizeof(pointCount);
 
 	//read segmentCount:
-	if (EngineROM_Read(address, sizeof(segmentCount), (uint8_t *)&segmentCount) != sizeof(segmentCount))
-	{
-		goto MageGeometry_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(segmentCount),
+		(uint8_t *)&segmentCount,
+		"Failed to load Geometry property 'segmentCount'"
+	);
 	address += sizeof(segmentCount);
 
 	address += 1; //padding
 
 	//read pathLength:
-	if (EngineROM_Read(address, sizeof(pathLength), (uint8_t *)&pathLength) != sizeof(pathLength))
-	{
-		goto MageGeometry_Error;
-	}
-	pathLength = convert_endian_f4_value(pathLength);
+	EngineROM_Read(
+		address,
+		sizeof(pathLength),
+		(uint8_t *)&pathLength,
+		"Failed to load Geometry property 'pathLength'"
+	);
+	pathLength = ROM_ENDIAN_F4_VALUE(pathLength);
 	address += sizeof(pathLength);
 
 	//generate appropriately sized point array:
@@ -49,18 +57,22 @@ MageGeometry::MageGeometry(uint32_t address)
 		uint16_t x;
 		uint16_t y;
 		//get x value:
-		if (EngineROM_Read(address, sizeof(x), (uint8_t *)&x) != sizeof(x))
-		{
-			goto MageGeometry_Error;
-		}
-		x = convert_endian_u2_value(x);
+		EngineROM_Read(
+			address,
+			sizeof(x),
+			(uint8_t *)&x,
+			"Failed to load Geometry property 'x'"
+		);
+		x = ROM_ENDIAN_U2_VALUE(x);
 		address += sizeof(x);
 		//get y value:
-		if (EngineROM_Read(address, sizeof(y), (uint8_t *)&y) != sizeof(y))
-		{
-			goto MageGeometry_Error;
-		}
-		y = convert_endian_u2_value(y);
+		EngineROM_Read(
+			address,
+			sizeof(y),
+			(uint8_t *)&y,
+			"Failed to load Geometry property 'x'"
+		);
+		y = ROM_ENDIAN_U2_VALUE(y);
 		address += sizeof(y);
 		//assign values:
 		points[i].x = x;
@@ -71,19 +83,15 @@ MageGeometry::MageGeometry(uint32_t address)
 	segmentLengths = std::make_unique<float[]>(segmentCount);
 	segmentLengthsSize = sizeof(float) * segmentCount;
 
-	if (EngineROM_Read(
+	EngineROM_Read(
 		address,
 		segmentLengthsSize,
-		(uint8_t *)segmentLengths.get() // <- fuck this little `.get()` shit right here HOW ABOUT YOU GIVE ME A REAL POINTER
-	) != segmentLengthsSize) {
-		goto MageGeometry_Error;
-	}
-	convert_endian_f4_buffer(segmentLengths.get(), segmentCount);
+		(uint8_t *)segmentLengths.get(),
+		"Failed to load Geometry property 'x'"
+	);
+	ROM_ENDIAN_F4_BUFFER(segmentLengths.get(), segmentCount);
 
 	return;
-
-MageGeometry_Error:
-	ENGINE_PANIC("Failed to load geometry data.");
 }
 
 MageGeometry::MageGeometry(uint8_t type, uint8_t numPoints)
@@ -103,7 +111,10 @@ uint32_t MageGeometry::size()
 	uint32_t size =
 		sizeof(typeId) +
 		sizeof(pointCount) +
-		sizeof(Point) * pointCount;
+		sizeof(segmentCount) +
+		sizeof(pathLength) +
+		(sizeof(Point) * pointCount) +
+		(sizeof(float) * segmentCount);
 	return size;
 }
 
@@ -177,14 +188,20 @@ bool MageGeometry::doRectsOverlap(Rect a, Rect b)
 }
 
 
-void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
+void MageGeometry::draw(
+	int32_t cameraX,
+	int32_t cameraY,
+	uint16_t color,
+	int32_t offset_x,
+	int32_t offset_y
+)
 {
 	Point *pointA;
 	Point *pointB;
 	if(typeId == POINT) {
 		mage_canvas->drawPoint(
-			points[0].x - cameraX,
-			points[0].y - cameraY,
+			points[0].x + offset_x - cameraX,
+			points[0].y + offset_y - cameraY,
 			4,
 			color
 		);
@@ -193,10 +210,10 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 			pointA = &points[i - 1];
 			pointB = &points[i];
 			mage_canvas->drawLine(
-				pointA->x - cameraX,
-				pointA->y - cameraY,
-				pointB->x - cameraX,
-				pointB->y - cameraY,
+				pointA->x + offset_x - cameraX,
+				pointA->y + offset_y - cameraY,
+				pointB->x + offset_x - cameraX,
+				pointB->y + offset_y - cameraY,
 				color
 			);
 		}
@@ -206,10 +223,10 @@ void MageGeometry::draw(int32_t cameraX, int32_t cameraY, uint16_t color)
 		pointA = &points[pointCount - 1];
 		pointB = &points[0];
 		mage_canvas->drawLine(
-			pointA->x - cameraX,
-			pointA->y - cameraY,
-			pointB->x - cameraX,
-			pointB->y - cameraY,
+			pointA->x + offset_x - cameraX,
+			pointA->y + offset_y - cameraY,
+			pointB->x + offset_x - cameraX,
+			pointB->y + offset_y - cameraY,
 			color
 		);
 	}

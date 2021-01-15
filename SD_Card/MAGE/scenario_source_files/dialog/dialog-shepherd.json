@@ -1,0 +1,92 @@
+{
+	"dialog-shepherd-start1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"....",
+				"I messed up."
+			]
+		}
+	],
+	"dialog-shepherd-start2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"I was supposed to be watching the sheep,\nbut I took a quick nap, and the next thing\nI know… they were all over the place."
+
+			]
+		}
+	],
+	"dialog-shepherd-start3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"How did they get out?\nThe fence looks fine."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"I don't even know.\nMaybe they were, you know, hacked out.\nBy the big bad."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"But the big bad hasn't been around\nfor years. Just how long was this nap?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"It was the shortest nap.\nSuper quick. It was a long blink, really.",
+				"A super, tiny, microscopic nap.",
+				"....",
+				"I really need this job, man.\nMy last trip to Pigeon-Con, I spent all my\nrent money on merch.",
+				"Can you just help me out?\nGet them back inside somehow?"
+			]
+		}
+	],
+	"dialog-shepherd-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Can you help a dude out?\nPut all four sheep back inside the fence?"
+			]
+		}
+	],
+	"dialog-shepherd-sheepcheer": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Awesome! Don't stop, now!"
+			]
+		}
+	],
+	"dialog-shepherd-end": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Thanks a million! I owe you one!"
+			]
+		}
+	]
+}

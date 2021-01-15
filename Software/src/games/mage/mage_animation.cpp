@@ -4,32 +4,32 @@
 
 MageAnimationFrame::MageAnimationFrame(uint32_t address)
 {
-	uint32_t size = 0; 
 	//read tileindex
-	if (EngineROM_Read(address, sizeof(tileId), (uint8_t *)&tileId) != sizeof(tileId))
-	{
-		goto MageAnimationFrame_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(tileId),
+		(uint8_t *)&tileId,
+		"Failed to read AnimationFrame property 'tileId'"
+	);
 
 	// Endianness conversion
-	tileId = convert_endian_u2_value(tileId);
+	tileId = ROM_ENDIAN_U2_VALUE(tileId);
 
 	// Increment offset
 	address += sizeof(tileId);
 
 	//read duration
-	if (EngineROM_Read(address, sizeof(duration), (uint8_t *)&duration) != sizeof(duration))
-	{
-		goto MageAnimationFrame_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(duration),
+		(uint8_t *)&duration,
+		"Failed to read AnimationFrame property 'duration'"
+	);
 
 	// Endianness conversion
-	duration = convert_endian_u2_value(duration);
+	duration = ROM_ENDIAN_U2_VALUE(duration);
 
 	return;
-
-MageAnimationFrame_Error:
-	ENGINE_PANIC("Failed to read animation frame data");
 }
 
 uint16_t MageAnimationFrame::TileId() const
@@ -52,27 +52,31 @@ uint32_t MageAnimationFrame::Size() const
 
 MageAnimation::MageAnimation(uint32_t address)
 {
-	uint32_t size = 0; 
+	uint32_t size = 0;
 	//read tilesetId
-	if (EngineROM_Read(address, sizeof(tilesetId), (uint8_t *)&tilesetId) != sizeof(tilesetId))
-	{
-		goto MageAnimation_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(tilesetId),
+		(uint8_t *)&tilesetId,
+		"Failed to read Animation property 'tilesetId'"
+	);
 
 	// Endianness conversion
-	tilesetId = convert_endian_u2_value(tilesetId);
+	tilesetId = ROM_ENDIAN_U2_VALUE(tilesetId);
 
 	// Increment offset
 	address += sizeof(tilesetId);
 
 	//read frameCount
-	if (EngineROM_Read(address, sizeof(frameCount), (uint8_t *)&frameCount) != sizeof(frameCount))
-	{
-		goto MageAnimation_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(frameCount),
+		(uint8_t *)&frameCount,
+		"Failed to read Animation property 'frameCount'"
+	);
 
 	// Endianness conversion
-	frameCount = convert_endian_u2_value(frameCount);
+	frameCount = ROM_ENDIAN_U2_VALUE(frameCount);
 
 	// Increment offset
 	address += sizeof(frameCount);
@@ -88,9 +92,6 @@ MageAnimation::MageAnimation(uint32_t address)
 	}
 
 	return;
-
-MageAnimation_Error:
-	ENGINE_PANIC("Failed to read animation data");
 }
 
 uint16_t MageAnimation::TilesetId() const

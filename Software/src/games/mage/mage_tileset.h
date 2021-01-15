@@ -19,10 +19,13 @@ private:
 	uint16_t tileHeight;
 	uint16_t cols;
 	uint16_t rows;
-	std::unique_ptr<uint8_t[]> tiles;
+	uint16_t padding;
 
 public:
-	MageTileset() : name{""},
+	std::unique_ptr<uint16_t[]> globalGeometryIds;
+
+	MageTileset() :
+		name{""},
 		imageId{0},
 		imageWidth{0},
 		imageHeight{0},
@@ -30,7 +33,8 @@ public:
 		tileHeight{0},
 		cols{0},
 		rows{0},
-		tiles{std::make_unique<uint8_t[]>(1)}
+		padding{0},
+		globalGeometryIds{std::make_unique<uint16_t[]>(1)}
 	{ };
 
 	MageTileset(uint32_t address);

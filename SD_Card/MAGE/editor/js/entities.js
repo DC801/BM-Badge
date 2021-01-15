@@ -34,39 +34,30 @@ var serializeEntity = function (
 	dataView.setUint16(
 		offset, // uint16_t x
 		Math.round(entity.x),
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint16(
 		offset, // uint16_t y
 		Math.round(entity.y),
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.on_interact_offset = offset;
 	dataView.setUint16(
 		offset, // uint16_t on_interact_script_id
 		0, // set in another loop later
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.on_tick_offset = offset;
 	dataView.setUint16(
 		offset, // uint16_t on_tick_script_id
 		0, // set in another loop later
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	var entityType = scenarioData.entityTypes[entity.type];
-	if (entityType && (entityType.scenarioIndex === undefined)) {
-		entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
-		scenarioData.parsed.entityTypes.push(entityType);
-		entityType.serialized = serializeEntityType(
-			entityType,
-			scenarioData,
-			fileNameMap
-		);
-	}
 	var primaryIndexType = 0; // tileset_id
 	var primaryIndex;
 	var secondaryIndex = 0;
@@ -101,13 +92,13 @@ var serializeEntity = function (
 	dataView.setUint16(
 		offset, // primary_id // may be: entity_type_id, animation_id, tileset_id
 		primaryIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint16(
 		offset, // secondary_id // if primary_id_type is tileset_id, this is the tile_id, otherwise 0
 		secondaryIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint8(
@@ -155,7 +146,7 @@ var serializeEntity = function (
 		dataView.setUint16(
 			hackableStateAOffset,
 			entity.path.mapIndex,
-			false
+			IS_LITTLE_ENDIAN
 		);
 	}
 	offset += 1;
@@ -164,31 +155,4 @@ var serializeEntity = function (
 	entity.scenarioIndex = scenarioData.parsed.entities.length;
 	scenarioData.parsed.entities.push(entity);
 	return entity;
-};
-
-var handleEntitiesData = function (
-	entitiesFile,
-	scenarioData,
-) {
-	return function (entitiesData) {
-		console.log(
-			'object_types.json',
-			entitiesData
-		);
-		var result = {};
-		entitiesData.forEach(function (entityItem) {
-			var item = assignToLessFalsy(
-				{
-					type: entityItem.name
-				},
-				scenarioData.entityTypes[entityItem.name]
-			);
-			mergeInProperties(
-				item,
-				entityItem.properties
-			);
-			result[entityItem.name] = item;
-		});
-		entitiesFile.parsed = result;
-	};
 };

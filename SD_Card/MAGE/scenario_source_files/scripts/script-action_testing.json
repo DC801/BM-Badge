@@ -256,5 +256,66 @@
 			"entity": "Mage 05",
 			"script": "mage05-initial_prompt"
 		}
+	],
+	"mage06-check_player_entity_type": [
+		{
+			"doc": "Mage 06 checks to see if the player EntityType is 'baby_goat'. If so, Mage 06 will update their dialog.",
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "baby_goat",
+			"expected_bool": true,
+			"success_script": "mage06-success_prompt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage06_1"
+		}
+	],
+	"mage06-success_prompt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage06_2"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "mage"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mage 06",
+			"script": "mage06-check_player_entity_type"
+		}
+	],
+	"mage07-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage07"
+		}
+	],
+	"mage07-point_at_player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	],
+	"mage08-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage08"
+		}
+	],
+	"mage08-point_away_from_player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_RELATIVE",
+			"entity": "%SELF%",
+			"relative_direction": 2
+		}
 	]
 }

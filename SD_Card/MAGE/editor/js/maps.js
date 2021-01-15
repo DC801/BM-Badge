@@ -57,7 +57,7 @@ var handleTileLayer = function(layer, map) {
 			dataView.setUint16(
 				(offset * bytesPerTile),
 				tileData.tileIndex + 1, // because 0 must mean "empty"
-				false // fix endianness of output, little -> big
+				IS_LITTLE_ENDIAN
 			);
 			dataView.setUint8(
 				(offset * bytesPerTile) + 2,
@@ -93,10 +93,7 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 		entity
 	);
 	var entityPrototype = (
-		(
-			fileNameMap['object_types.json']
-			&& fileNameMap['object_types.json'].parsed[mergedWithTile.type]
-		)
+		scenarioData.entityTypesPlusProperties[mergedWithTile.type]
 		|| scenarioData.entityTypes[mergedWithTile.type]
 	);
 	var compositeEntity = assignToLessFalsy(
@@ -180,9 +177,9 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 	map.geometryObjects.forEach(function (tiledObject) {
 		handleTiledObjectAsGeometry(
 			tiledObject,
-			map,
 			fileNameMap,
 			scenarioData,
+			map,
 		);
 	});
 	map.playerEntityId = specialKeywordsEnum['%MAP%'];
@@ -236,38 +233,92 @@ var generateMapHeader = function (map) {
 		0,
 		offset += 16
 	);
-	dataView.setUint16(offset, map.tilewidth, false);
+	dataView.setUint16(
+		offset,
+		map.tilewidth,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.tileheight, false);
+	dataView.setUint16(
+		offset,
+		map.tileheight,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.width, false);
+	dataView.setUint16(
+		offset,
+		map.width,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.height, false);
+	dataView.setUint16(
+		offset,
+		map.height,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.on_load || 0, false);
+	dataView.setUint16(
+		offset,
+		map.on_load || 0,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.on_tick || 0, false);
+	dataView.setUint16(
+		offset,
+		map.on_tick || 0,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint8(offset, map.serializedLayers.length);
+	dataView.setUint8(
+		offset,
+		map.serializedLayers.length
+	);
 	offset += 1;
-	dataView.setUint8(offset, map.playerEntityId); // padding
+	dataView.setUint8(
+		offset,
+		map.playerEntityId
+	);
 	offset += 1;
-	dataView.setUint16(offset, map.entityIndices.length, false);
+	dataView.setUint16(
+		offset,
+		map.entityIndices.length,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.geometryIndices.length, false);
+	dataView.setUint16(
+		offset,
+		map.geometryIndices.length,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
-	dataView.setUint16(offset, map.scriptIndices.length, false);
+	dataView.setUint16(
+		offset,
+		map.scriptIndices.length,
+		IS_LITTLE_ENDIAN
+	);
 	offset += 2;
 	map.entityIndices.forEach(function (entityIndex) {
-		dataView.setUint16(offset, entityIndex, false);
+		dataView.setUint16(
+			offset,
+			entityIndex,
+			IS_LITTLE_ENDIAN
+		);
 		offset += 2;
 	});
 	map.geometryIndices.forEach(function (geometryIndex) {
-		dataView.setUint16(offset, geometryIndex, false);
+		dataView.setUint16(
+			offset,
+			geometryIndex,
+			IS_LITTLE_ENDIAN
+		);
 		offset += 2;
 	});
 	map.scriptIndices.forEach(function (scriptIndex) {
-		dataView.setUint16(offset, scriptIndex, false);
+		dataView.setUint16(
+			offset,
+			scriptIndex,
+			IS_LITTLE_ENDIAN
+		);
 		offset += 2;
 	});
 	return result;

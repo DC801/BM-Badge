@@ -8,144 +8,162 @@ MageMap::MageMap(uint32_t address)
 	uint32_t tilesPerLayer = 0;
 
 	// Read name
-	if (EngineROM_Read(address, 16, (uint8_t *)name) != 16)
-	{
-		goto MageMap_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		16,
+		(uint8_t *)name,
+		"Failed to read Map property 'name'"
+	);
 	name[16] = 0; // Null terminate
 	address += 16;
 
 	//read tileWidth
-	if (EngineROM_Read(address, sizeof(tileWidth), (uint8_t *)&tileWidth) != sizeof(tileWidth))
-	{
-		goto MageMap_Error;
-	}
-
-	tileWidth = convert_endian_u2_value(tileWidth);
+	EngineROM_Read(
+		address,
+		sizeof(tileWidth),
+		(uint8_t *)&tileWidth,
+		"Failed to read Map property 'tileWidth'"
+	);
+	tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
 	address += sizeof(tileWidth);
 
 	//read tileHeight
-	if (EngineROM_Read(address, sizeof(tileHeight), (uint8_t *)&tileHeight) != sizeof(tileHeight))
-	{
-		goto MageMap_Error;
-	}
-
-	tileHeight = convert_endian_u2_value(tileHeight);
+	EngineROM_Read(
+		address,
+		sizeof(tileHeight),
+		(uint8_t *)&tileHeight,
+		"Failed to read Map property 'tileHeight'"
+	);
+	tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
 	address += sizeof(tileHeight);
 
 	//read cols
-	if (EngineROM_Read(address, sizeof(cols), (uint8_t *)&cols) != sizeof(cols))
-	{
-		goto MageMap_Error;
-	}
-
-	cols = convert_endian_u2_value(cols);
+	EngineROM_Read(
+		address,
+		sizeof(cols),
+		(uint8_t *)&cols,
+		"Failed to read Map property 'cols'"
+	);
+	cols = ROM_ENDIAN_U2_VALUE(cols);
 	address += sizeof(cols);
 
 	//read rows
-	if (EngineROM_Read(address, sizeof(rows), (uint8_t *)&rows) != sizeof(rows))
-	{
-		goto MageMap_Error;
-	}
-
-	rows = convert_endian_u2_value(rows);
+	EngineROM_Read(
+		address,
+		sizeof(rows),
+		(uint8_t *)&rows,
+		"Failed to read Map property 'rows'"
+	);
+	rows = ROM_ENDIAN_U2_VALUE(rows);
 	address += sizeof(rows);
 	tilesPerLayer = cols * rows;
 
 	//read onLoad
-	if (EngineROM_Read(address, sizeof(onLoad), (uint8_t *)&onLoad) != sizeof(onLoad))
-	{
-		goto MageMap_Error;
-	}
-
-	onLoad = convert_endian_u2_value(onLoad);
+	EngineROM_Read(
+		address,
+		sizeof(onLoad),
+		(uint8_t *)&onLoad,
+		"Failed to read Map property 'onLoad'"
+	);
+	onLoad = ROM_ENDIAN_U2_VALUE(onLoad);
 	address += sizeof(onLoad);
 
 	//read onTick
-	if (EngineROM_Read(address, sizeof(onTick), (uint8_t *)&onTick) != sizeof(onTick))
-	{
-		goto MageMap_Error;
-	}
-
-	onTick = convert_endian_u2_value(onTick);
+	EngineROM_Read(
+		address,
+		sizeof(onTick),
+		(uint8_t *)&onTick,
+		"Failed to read Map property 'onLoad'"
+	);
+	onTick = ROM_ENDIAN_U2_VALUE(onTick);
 	address += sizeof(onTick);
 
 	//read layerCount
-	if (EngineROM_Read(address, sizeof(layerCount), &layerCount) != sizeof(layerCount))
-	{
-		goto MageMap_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(layerCount),
+		&layerCount,
+		"Failed to read Map property 'layerCount'"
+	);
 	address += sizeof(layerCount);
 
 	//read playerEntityIndex
-	if (EngineROM_Read(address, sizeof(playerEntityIndex), &playerEntityIndex) != sizeof(playerEntityIndex))
-	{
-		goto MageMap_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(playerEntityIndex),
+		&playerEntityIndex,
+		"Failed to read Map property 'playerEntityIndex'"
+	);
 	address += sizeof(playerEntityIndex);
 
 	//read entityCount
-	if (EngineROM_Read(address, sizeof(entityCount), (uint8_t *)&entityCount) != sizeof(entityCount))
-	{
-		goto MageMap_Error;
-	}
-	entityCount = convert_endian_u2_value(entityCount);
+	EngineROM_Read(
+		address,
+		sizeof(entityCount),
+		(uint8_t *)&entityCount,
+		"Failed to read Map property 'entityCount'"
+	);
+	entityCount = ROM_ENDIAN_U2_VALUE(entityCount);
 	address += sizeof(entityCount);
 
 	//read geometryCount
-	if (EngineROM_Read(address, sizeof(geometryCount), (uint8_t *)&geometryCount) != sizeof(geometryCount))
-	{
-		goto MageMap_Error;
-	}
-	geometryCount = convert_endian_u2_value(geometryCount);
+	EngineROM_Read(
+		address,
+		sizeof(geometryCount),
+		(uint8_t *)&geometryCount,
+		"Failed to read Map property 'geometryCount'"
+	);
+	geometryCount = ROM_ENDIAN_U2_VALUE(geometryCount);
 	address += sizeof(geometryCount);
 
 	//read scriptCount
-	if (EngineROM_Read(address, sizeof(scriptCount), (uint8_t *)&scriptCount) != sizeof(scriptCount))
-	{
-		goto MageMap_Error;
-	}
-	scriptCount = convert_endian_u2_value(scriptCount);
+	EngineROM_Read(
+		address,
+		sizeof(scriptCount),
+		(uint8_t *)&scriptCount,
+		"Failed to read Map property 'scriptCount'"
+	);
+	scriptCount = ROM_ENDIAN_U2_VALUE(scriptCount);
 	address += sizeof(scriptCount);
 
 	//read entityGlobalIds
 	entityGlobalIds = std::make_unique<uint16_t[]>(entityCount);
 	size = sizeof(uint16_t) * entityCount;
-
-	if (EngineROM_Read(address, size, (uint8_t *)entityGlobalIds.get()) != size)
-	{
-		goto MageMap_Error;
-	}
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)entityGlobalIds.get(),
+		"Failed to read Map property 'entityGlobalIds'"
+	);
+	ROM_ENDIAN_U2_BUFFER(entityGlobalIds.get(), entityCount);
 	address += size;
-	convert_endian_u2_buffer(entityGlobalIds.get(), entityCount);
 
 	//read geometryGlobalIds
 	geometryGlobalIds = std::make_unique<uint16_t[]>(geometryCount);
 	size = sizeof(uint16_t) * geometryCount;
-
-	if (EngineROM_Read(address, size, (uint8_t *)geometryGlobalIds.get()) != size)
-	{
-		goto MageMap_Error;
-	}
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)geometryGlobalIds.get(),
+		"Failed to read Map property 'geometryGlobalIds'"
+	);
+	ROM_ENDIAN_U2_BUFFER(geometryGlobalIds.get(), geometryCount);
 	address += size;
-	convert_endian_u2_buffer(geometryGlobalIds.get(), geometryCount);
 
 	//read entityGlobalIds
 	scriptGlobalIds = std::make_unique<uint16_t[]>(scriptCount);
 	size = sizeof(uint16_t) * scriptCount;
-
-	if (EngineROM_Read(address, size, (uint8_t *)scriptGlobalIds.get()) != size)
-	{
-		goto MageMap_Error;
-	}
+	EngineROM_Read(
+		address,
+		size,
+		(uint8_t *)scriptGlobalIds.get(),
+		"Failed to read Map property 'scriptGlobalIds'"
+	);
+	ROM_ENDIAN_U2_BUFFER(scriptGlobalIds.get(), scriptCount);
 	address += size;
-	convert_endian_u2_buffer(scriptGlobalIds.get(), scriptCount);
 
 	//padding to align with uint32_t memory spacing:
-	if ( (entityCount + geometryCount + scriptCount) % 2)
+	if ((entityCount + geometryCount + scriptCount) % 2)
 	{
 		address += sizeof(uint16_t); // Padding
 	}
@@ -159,9 +177,6 @@ MageMap::MageMap(uint32_t address)
 	}
 
 	return;
-
-MageMap_Error:
-	ENGINE_PANIC("Failed to read map data");
 }
 
 uint32_t MageMap::Size() const

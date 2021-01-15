@@ -50,6 +50,9 @@ MageGameControl::MageGameControl()
 	dialogHeader = MageHeader(offset);
 	offset += dialogHeader.size();
 
+	colorPaletteHeader = MageHeader(offset);
+	offset += colorPaletteHeader.size();
+
 	stringHeader = MageHeader(offset);
 	offset += stringHeader.size();
 
@@ -93,6 +96,13 @@ MageGameControl::MageGameControl()
 		geometries[i] = MageGeometry(geometryHeader.offset(i));
 	}
 
+	colorPalettes = std::make_unique<MageColorPalette[]>(colorPaletteHeader.count());
+
+	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	{
+		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
+	}
+
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
 
 	mageSpeed = MAGE_WALKING_SPEED;
@@ -114,16 +124,20 @@ uint32_t MageGameControl::Size() const
 		entityHeader.size() +
 		geometryHeader.size() +
 		scriptHeader.size() +
+		dialogHeader.size() +
+		colorPaletteHeader.size() +
 		stringHeader.size() +
 		saveFlagHeader.size() +
 		imageHeader.size() +
 		map.Size() +
-		sizeof(playerEntityIndex) +
 		sizeof(previousPlayerTilesetId) +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
-		sizeof(isCollisionDebugOn) +
+		sizeof(playerEntityIndex) +
+		sizeof(warpState) +
+		(sizeof(char) * MAGE_ENTITY_NAME_LENGTH) + //playerName
 		sizeof(playerHasControl) +
+		sizeof(isCollisionDebugOn) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -145,6 +159,11 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < geometryHeader.count(); i++)
 	{
 		size += geometries[i].size();
+	}
+
+	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	{
+		size += colorPalettes[i].size();
 	}
 
 	return size;
@@ -174,162 +193,185 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	if (EngineROM_Read(address, MAGE_ENTITY_NAME_LENGTH, (uint8_t *)entity.name) != MAGE_ENTITY_NAME_LENGTH)
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		MAGE_ENTITY_NAME_LENGTH,
+		(uint8_t *)entity.name,
+		"Failed to read Entity property 'name'"
+	);
 
 	//increment address
 	address += MAGE_ENTITY_NAME_LENGTH;
 
 	// Read entity.x
-	if (EngineROM_Read(address, sizeof(entity.x), (uint8_t *)&entity.x) != sizeof(entity.x))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.x),
+		(uint8_t *)&entity.x,
+		"Failed to read Entity property 'x'"
+	);
 
 	// Endianness conversion
-	entity.x = convert_endian_u2_value(entity.x);
+	entity.x = ROM_ENDIAN_U2_VALUE(entity.x);
 
 	//increment address
 	address += sizeof(entity.x);
 
 	// Read entity.y
-	if (EngineROM_Read(address, sizeof(entity.y), (uint8_t *)&entity.y) != sizeof(entity.y))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.y),
+		(uint8_t *)&entity.y,
+		"Failed to read Entity property 'y'"
+	);
 
 	// Endianness conversion
-	entity.y = convert_endian_u2_value(entity.y);
+	entity.y = ROM_ENDIAN_U2_VALUE(entity.y);
 
 	//increment address
 	address += sizeof(entity.y);
 
 	// Read entity.onInteractScriptId
-	if (EngineROM_Read(address, sizeof(entity.onInteractScriptId), (uint8_t *)&entity.onInteractScriptId) != sizeof(entity.onInteractScriptId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.onInteractScriptId),
+		(uint8_t *)&entity.onInteractScriptId,
+		"Failed to read Entity property 'onInteractScriptId'"
+	);
 
 	// Endianness conversion
-	entity.onInteractScriptId = convert_endian_u2_value(entity.onInteractScriptId);
+	entity.onInteractScriptId = ROM_ENDIAN_U2_VALUE(entity.onInteractScriptId);
 
 	//increment address
 	address += sizeof(entity.onInteractScriptId);
 
 	// Read entity.onTickScript
-	if (EngineROM_Read(address, sizeof(entity.onTickScriptId), (uint8_t *)&entity.onTickScriptId) != sizeof(entity.onTickScriptId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.onTickScriptId),
+		(uint8_t *)&entity.onTickScriptId,
+		"Failed to read Entity property 'onTickScriptId'"
+	);
 
 	// Endianness conversion
-	entity.onTickScriptId = convert_endian_u2_value(entity.onTickScriptId);
+	entity.onTickScriptId = ROM_ENDIAN_U2_VALUE(entity.onTickScriptId);
 
 	//increment address
 	address += sizeof(entity.onTickScriptId);
 
 	// Read entity.primaryId
-	if (EngineROM_Read(address, sizeof(entity.primaryId), (uint8_t *)&entity.primaryId) != sizeof(entity.primaryId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.primaryId),
+		(uint8_t *)&entity.primaryId,
+		"Failed to read Entity property 'primaryId'"
+	);
 
 	// Endianness conversion
-	entity.primaryId = convert_endian_u2_value(entity.primaryId);
+	entity.primaryId = ROM_ENDIAN_U2_VALUE(entity.primaryId);
 
 	//increment address
 	address += sizeof(entity.primaryId);
 
 	// Read entity.secondaryId
-	if (EngineROM_Read(address, sizeof(entity.secondaryId), (uint8_t *)&entity.secondaryId) != sizeof(entity.secondaryId))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.secondaryId),
+		(uint8_t *)&entity.secondaryId,
+		"Failed to read Entity property 'secondaryId'"
+	);
 
 	// Endianness conversion
-	entity.secondaryId = convert_endian_u2_value(entity.secondaryId);
+	entity.secondaryId = ROM_ENDIAN_U2_VALUE(entity.secondaryId);
 
 	//increment address
 	address += sizeof(entity.secondaryId);
 
 	// Read entity.primaryIdType
-	if (EngineROM_Read(address, sizeof(entity.primaryIdType), (uint8_t *)&entity.primaryIdType) != sizeof(entity.primaryIdType))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.primaryIdType),
+		(uint8_t *)&entity.primaryIdType,
+		"Failed to read Entity property 'primaryIdType'"
+	);
 
 	//increment address
 	address += sizeof(entity.primaryIdType);
 
 	// Read entity.currentAnimation
-	if (EngineROM_Read(address, sizeof(entity.currentAnimation), (uint8_t *)&entity.currentAnimation) != sizeof(entity.currentAnimation))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.currentAnimation),
+		(uint8_t *)&entity.currentAnimation,
+		"Failed to read Entity property 'currentAnimation'"
+	);
 
 	//increment address
 	address += sizeof(entity.currentAnimation);
 
 	// Read entity.currentFrame
-	if (EngineROM_Read(address, sizeof(entity.currentFrame), (uint8_t *)&entity.currentFrame) != sizeof(entity.currentFrame))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.currentFrame),
+		(uint8_t *)&entity.currentFrame,
+		"Failed to read Entity property 'currentFrame'"
+	);
 
 	//increment address
 	address += sizeof(entity.currentFrame);
 
 	// Read entity.direction
-	if (EngineROM_Read(address, sizeof(entity.direction), (uint8_t *)&entity.direction) != sizeof(entity.direction))
-	{
-		goto MageEntity_Error;
-	}
+	EngineROM_Read(
+		address,
+		sizeof(entity.direction),
+		(uint8_t *)&entity.direction,
+		"Failed to read Entity property 'direction'"
+	);
 
 	//increment address
 	address += sizeof(entity.direction);
 
 	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateA), (uint8_t *)&entity.hackableStateA) != sizeof(entity.hackableStateA))
-	{
-		goto MageEntity_Error;
-	}
-
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateA),
+		(uint8_t *)&entity.hackableStateA,
+		"Failed to read Entity property 'hackableStateA'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateA);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateB), (uint8_t *)&entity.hackableStateB) != sizeof(entity.hackableStateB))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateB
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateB),
+		(uint8_t *)&entity.hackableStateB,
+		"Failed to read Entity property 'hackableStateB'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateB);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateC), (uint8_t *)&entity.hackableStateC) != sizeof(entity.hackableStateC))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateC
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateC),
+		(uint8_t *)&entity.hackableStateC,
+		"Failed to read Entity property 'hackableStateC'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateC);
 
-	// Read entity.hackableStateA
-	if (EngineROM_Read(address, sizeof(entity.hackableStateD), (uint8_t *)&entity.hackableStateD) != sizeof(entity.hackableStateD))
-	{
-		goto MageEntity_Error;
-	}
-
+	// Read entity.hackableStateD
+	EngineROM_Read(
+		address,
+		sizeof(entity.hackableStateD),
+		(uint8_t *)&entity.hackableStateD,
+		"Failed to read Entity property 'hackableStateD'"
+	);
 	//increment address
 	address += sizeof(entity.hackableStateD);
 
 	return entity;
-
-MageEntity_Error:
-	ENGINE_PANIC("Failed to read entity type direction data");
 }
 
 void MageGameControl::PopulateMapData(uint16_t index)
@@ -357,6 +399,11 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	}
 
 	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
+	if(playerEntityIndex != NO_PLAYER) {
+		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
+			entities[playerEntityIndex].name[i] = playerName[i];
+		}
+	}
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
@@ -389,6 +436,11 @@ void MageGameControl::initializeScriptsOnMapLoad()
 
 void MageGameControl::LoadMap(uint16_t index)
 {
+	if(playerEntityIndex != NO_PLAYER) {
+		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
+			playerName[i] = entities[playerEntityIndex].name[i];
+		}
+	}
 	//get the data for the map:
 	PopulateMapData(index);
 
@@ -410,8 +462,10 @@ void MageGameControl::applyUniversalInputs()
 	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3)
 	{ MageScript->mapLoadId = currentMapId; }
 	//check to see if player input is allowed:
-	if(!playerHasControl)
-	{
+	if(
+		MageDialog->isOpen
+		|| !playerHasControl
+	) {
 		return;
 	}
 	//make sure any button handling in this function can be processed in ANY game mode.
@@ -444,22 +498,28 @@ void MageGameControl::applyGameModeInputs()
 			|| (MageScript->mapLoadId != MAGE_NO_MAP)
 		) {
 			MageDialog->advanceMessage();
+			// If interacting with the dialog this tick has closed the dialog,
+			// return early before the same "advance button press triggers an on_interact below
+			if(!MageDialog->isOpen) {
+				return;
+			}
 		}
 	}
-	//get useful variables for below:
-	updateEntityRenderableData(playerEntityIndex);
-	MageEntity *playerEntity = &entities[playerEntityIndex];
-	MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
-	//update camera even if player does not have control:
-	if(!playerHasControl)
-	{
-		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
-		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
-		return;
-	}
-	//otherwise do all the normal things:
-	if(playerEntityIndex != NO_PLAYER)
-	{
+	if(playerEntityIndex != NO_PLAYER) {
+		//get useful variables for below:
+		updateEntityRenderableData(playerEntityIndex);
+		MageEntity *playerEntity = &entities[playerEntityIndex];
+		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
+		//update camera even if player does not have control:
+		if(
+			MageDialog->isOpen
+			|| !playerHasControl
+		) {
+			cameraPosition.x = renderableData->center.x - HALF_WIDTH;
+			cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
+			return;
+		}
+
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
 		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
 		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
@@ -597,11 +657,14 @@ void MageGameControl::applyGameModeInputs()
 	}
 	else //no player on map
 	{
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? 5 : 1;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; isMoving = true; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; isMoving = true; }
+		if (!playerHasControl) {
+			return;
+		}
+		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; }
 	}
 }
 
@@ -666,7 +729,7 @@ void MageGameControl::handleEntityInteract()
 	}
 }
 
-void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const
+void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 {
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 
@@ -677,16 +740,24 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		return;
 	}
 	uint32_t address = layerAddress;
+	int32_t tile_x = 0;
+	int32_t tile_y = 0;
+	int32_t x = 0;
+	int32_t y = 0;
+	uint16_t geometryId = 0;
+	MageGeometry *geometry;
 
-		struct MageMapTile {
-			uint16_t tileId = 0;
-			uint8_t tilesetId = 0;
-			uint8_t flags = 0;
-		} currentTile;
+	struct MageMapTile {
+		uint16_t tileId = 0;
+		uint8_t tilesetId = 0;
+		uint8_t flags = 0;
+	} currentTile;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
-		int32_t x = (int32_t)((map.TileWidth() * (i % map.Cols())) - camera_x);
-		int32_t y = (int32_t)((map.TileHeight() * (i / map.Cols())) - camera_y);
+		tile_x = (int32_t)(map.TileWidth() * (i % map.Cols()));
+		tile_y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+		x = tile_x - camera_x;
+		y = tile_y - camera_y;
 
 		if ((x < (-map.TileWidth()) ||
 			(x > WIDTH) ||
@@ -697,13 +768,15 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		}
 		address = layerAddress + (i * sizeof(currentTile));
 
-		if (EngineROM_Read(address, sizeof(currentTile), (uint8_t *)&currentTile) != sizeof(currentTile))
-		{
-			ENGINE_PANIC("Failed to fetch map layer tile info");
-		}
+		EngineROM_Read(
+			address,
+			sizeof(currentTile),
+			(uint8_t *)&currentTile,
+			"DrawMap Failed to read property 'currentTile'"
+		);
 
 
-		currentTile.tileId = convert_endian_u2_value(currentTile.tileId);
+		currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
 
 		if (currentTile.tileId == 0)
 		{
@@ -719,9 +792,11 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			continue;
 		}
 
+		MageColorPalette *colorPalette = getValidColorPalette(tileset.ImageId());
 		address = imageHeader.offset(tileset.ImageId());
- 		canvas.drawChunkWithFlags(
+		canvas.drawChunkWithFlags(
 			address,
+			colorPalette,
 			x,
 			y,
 			tileset.TileWidth(),
@@ -732,6 +807,21 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			TRANSPARENCY_COLOR,
 			currentTile.flags
 		);
+
+		if (isCollisionDebugOn) {
+			geometryId = tileset.globalGeometryIds[currentTile.tileId];
+			if (geometryId) {
+				geometryId -= 1;
+				geometry = getGeometryFromGlobalId(geometryId);
+				geometry->draw(
+					camera_x,
+					camera_y,
+					COLOR_RED,
+					tile_x,
+					tile_y
+				);
+			}
+		}
 	}
 }
 
@@ -1061,6 +1151,7 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 		int32_t y = entity->y - cameraY - tileHeight;
 		canvas.drawChunkWithFlags(
 			address,
+			getValidColorPalette(imageId),
 			x,
 			y,
 			tileWidth,
@@ -1121,7 +1212,7 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 		playerPosition = {0};
 	}
 	for (uint16_t i = 0; i < map.GeometryCount(); i++) {
-		MageGeometry *geometry = getValidGeometry(i);
+		MageGeometry *geometry = getGeometryFromMapLocalId(i);
 		if (isPlayerPresent) {
 			isColliding = geometry->isPointInGeometry(*playerPosition);
 		}
@@ -1135,8 +1226,16 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-MageGeometry* MageGameControl::getValidGeometry(uint16_t mapLocalGeometryId) {
+MageGeometry* MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
 	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
+}
+
+MageGeometry* MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
+	return &geometries[globalGeometryId % geometryHeader.count()];
+}
+
+MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {
+	return &colorPalettes[colorPaletteId % colorPaletteHeader.count()];
 }
 
 MageEntityRenderableData* MageGameControl::getValidEntityRenderableData(uint8_t mapLocalEntityId) {
@@ -1160,10 +1259,12 @@ std::string MageGameControl::getString(
 	uint32_t length = stringHeader.length(sanitizedIndex);
 	std::string romString(length, '\0');
 	uint8_t *romStringPointer = (uint8_t *)&romString[0];
-	if (EngineROM_Read(start, length, romStringPointer) != length)
-	{
-		ENGINE_PANIC("Failed to load string data.");
-	}
+	EngineROM_Read(
+		start,
+		length,
+		romStringPointer,
+		"Failed to load string data."
+	);
 	std::string outputString(0, '\0');
 	volatile size_t cursor = 0;
 	volatile size_t variableStartPosition = 0;
@@ -1190,8 +1291,8 @@ std::string MageGameControl::getString(
 		} else {
 			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
 			sprintf(
-				"MISSING: %d",
 				missingError,
+				"MISSING: %d",
 				parsedEntityIndex
 			);
 			outputString.append(missingError);

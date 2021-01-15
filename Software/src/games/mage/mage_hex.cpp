@@ -2,6 +2,7 @@
 
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
+extern MageDialogControl *MageDialog;
 extern MageEntity *hackableDataAddress;
 
 uint32_t MageHexEditor::size() const
@@ -128,8 +129,10 @@ void MageHexEditor::applyHexModeInputs()
 	static uint8_t hexTickDelay = 0;
 	
 	//check to see if player input is allowed:
-	if(!MageGame->playerHasControl)
-	{
+	if(
+		MageDialog->isOpen ||
+		!MageGame->playerHasControl
+	) {
 		return;
 	}
 

@@ -75,6 +75,21 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	CHECK_ENTITY_TYPE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'success_script', size: 2},
+				{propertyName: 'entity_type', size: 2},
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'expected_bool', size: 1},
+			],
+			'CHECK_ENTITY_PRIMARY_ID',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	CHECK_ENTITY_PRIMARY_ID: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -390,13 +405,27 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
-	SET_PAUSE_STATE: function (action, map, fileNameMap, scenarioData) {
+	PAUSE_GAME: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
 			[
 				{propertyName: 'state', size: 1},
 			],
-			'SET_PAUSE_STATE',
+			'PAUSE_GAME',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	PAUSE_ENTITY_SCRIPT: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'script_type', size: 1},
+				{propertyName: 'state', size: 1},
+			],
+			'PAUSE_ENTITY_SCRIPT',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -462,6 +491,19 @@ var actionHandlerMap = {
 				{propertyName: 'entity', size: 1},
 			],
 			'SET_ENTITY_TICK_SCRIPT',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_TYPE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity_type', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_TYPE',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -540,6 +582,45 @@ var actionHandlerMap = {
 				{propertyName: 'entity', size: 1},
 			],
 			'SET_ENTITY_DIRECTION',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_DIRECTION_RELATIVE: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'relative_direction', size: 1},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_DIRECTION_RELATIVE',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_DIRECTION_TARGET_ENTITY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'target_entity', size: 1},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_DIRECTION_TARGET_ENTITY',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
+	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'target_geometry', size: 2},
+				{propertyName: 'entity', size: 1},
+			],
+			'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
 			map,
 			fileNameMap,
 			scenarioData,
@@ -795,6 +876,20 @@ var actionHandlerMap = {
 			scenarioData,
 		);
 	},
+	PLAY_ENTITY_ANIMATION: function (action, map, fileNameMap, scenarioData) {
+		return handleActionWithFields(
+			action,
+			[
+				{propertyName: 'entity', size: 1},
+				{propertyName: 'animation', size: 1},
+				{propertyName: 'play_count', size: 1},
+			],
+			'PLAY_ENTITY_ANIMATION',
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+	},
 	TELEPORT_ENTITY_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
 		return handleActionWithFields(
 			action,
@@ -981,6 +1076,7 @@ var actionNames = [
 	'CHECK_ENTITY_Y',
 	'CHECK_ENTITY_INTERACT_SCRIPT',
 	'CHECK_ENTITY_TICK_SCRIPT',
+	'CHECK_ENTITY_TYPE',
 	'CHECK_ENTITY_PRIMARY_ID',
 	'CHECK_ENTITY_SECONDARY_ID',
 	'CHECK_ENTITY_PRIMARY_ID_TYPE',
@@ -1003,18 +1099,23 @@ var actionNames = [
 	'RUN_SCRIPT',
 	'BLOCKING_DELAY',
 	'NON_BLOCKING_DELAY',
-	'SET_PAUSE_STATE',
+	'PAUSE_GAME',
+	'PAUSE_ENTITY_SCRIPT',
 	'SET_ENTITY_NAME',
 	'SET_ENTITY_X',
 	'SET_ENTITY_Y',
 	'SET_ENTITY_INTERACT_SCRIPT',
 	'SET_ENTITY_TICK_SCRIPT',
+	'SET_ENTITY_TYPE',
 	'SET_ENTITY_PRIMARY_ID',
 	'SET_ENTITY_SECONDARY_ID',
 	'SET_ENTITY_PRIMARY_ID_TYPE',
 	'SET_ENTITY_CURRENT_ANIMATION',
 	'SET_ENTITY_CURRENT_FRAME',
 	'SET_ENTITY_DIRECTION',
+	'SET_ENTITY_DIRECTION_RELATIVE',
+	'SET_ENTITY_DIRECTION_TARGET_ENTITY',
+	'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
 	'SET_ENTITY_HACKABLE_STATE_A',
 	'SET_ENTITY_HACKABLE_STATE_B',
 	'SET_ENTITY_HACKABLE_STATE_C',
@@ -1035,6 +1136,7 @@ var actionNames = [
 	'SET_HEX_EDITOR_DIALOG_MODE',
 	'LOAD_MAP',
 	'SHOW_DIALOG',
+	'PLAY_ENTITY_ANIMATION',
 	'TELEPORT_ENTITY_TO_GEOMETRY',
 	'WALK_ENTITY_TO_GEOMETRY',
 	'WALK_ENTITY_ALONG_GEOMETRY',
@@ -1108,6 +1210,25 @@ var getMapLocalEntityIndexFromAction = function (
 	return mapLocalEntityIndex;
 };
 
+var getEntityTypeScenarioIndex = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (!value) {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+	}
+	var entityType = scenarioData.entityTypes[value];
+	if(!entityType) {
+		throw new Error(`${actionName} requires a valid value for "${propertyName}"; "${value}" was not found in ScenarioData!`);
+	}
+	return entityType.scenarioIndex;
+};
+
 var getMapIndexFromAction = function (
 	propertyName,
 	action,
@@ -1176,6 +1297,27 @@ var getDirectionFromAction = function (
 		}`);
 	}
 	return direction;
+};
+
+var getRelativeDirectionFromAction = function (
+	propertyName,
+	action,
+	actionName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${actionName} requires a value for "${propertyName}"`);
+	}
+	if (
+		!Number.isInteger(value)
+		|| (Math.abs(value) > 3)
+	) {
+		throw new Error(`${actionName} requires a valid value for "${propertyName}"; Value must be an integer from -3 to +3`);
+	}
+	return value;
 };
 
 var getNumberFromAction = function (
@@ -1340,7 +1482,10 @@ var actionPropertyNameToHandlerMap = {
 	expected_u4: getNumberFromAction,
 	map: getMapIndexFromAction,
 	entity: getMapLocalEntityIndexFromAction,
+	target_entity: getMapLocalEntityIndexFromAction,
+	entity_type: getEntityTypeScenarioIndex,
 	geometry: getGeometryIndexFromAction,
+	target_geometry: getGeometryIndexFromAction,
 	script: getMapLocalScriptIdFromAction,
 	success_script: getMapLocalScriptIdFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
@@ -1360,6 +1505,7 @@ var actionPropertyNameToHandlerMap = {
 	frequency: getByteFromAction,
 	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
+	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
 	state: getBoolFromAction,
@@ -1389,6 +1535,9 @@ var handleActionWithFields = function(
 	var offset = 1; // always start at 1 because that's the actionId
 	fields.forEach(function (field) {
 		var handler = actionPropertyNameToHandlerMap[field.propertyName];
+		if (!handler) {
+			throw new Error(`No action filed handler for property "${field.propertyName}"!`)
+		}
 		var value = handler(
 			field.propertyName,
 			action,
@@ -1401,7 +1550,7 @@ var handleActionWithFields = function(
 		data.dataView[dataViewMethodName](
 			offset,
 			value,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += field.size;
 	})
@@ -1455,7 +1604,7 @@ var serializeScript = function (
 	dataView.setUint32(
 		offset,
 		script.length,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 4;
 
@@ -1561,7 +1710,7 @@ var handleMapEntityScripts = function (
 				entity.dataView.setUint16(
 					entity.dataView[propertyName + '_offset'], // uint16_t on_${possibleScriptName}_script_id
 					mapLocalScriptId,
-					false
+					IS_LITTLE_ENDIAN
 				);
 			}
 		});
