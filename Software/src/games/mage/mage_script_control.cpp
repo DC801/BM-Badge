@@ -1601,8 +1601,46 @@ void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeSt
 	ActionScreenFadeOut *argStruct = (ActionScreenFadeOut*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
-	argStruct->color = ROM_ENDIAN_U2_VALUE(argStruct->color);
+	argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
+	//If there's already a total number of loops to next action set, a delay is currently in progress:
+	if(resumeStateStruct->totalLoopsToNextAction != 0)
+	{
+		//decrement the number of loops to the end of the delay:
+		resumeStateStruct->loopsToNextAction--;
+		mage_canvas->fadeFraction = 1.0f - (
+			(float)resumeStateStruct->loopsToNextAction
+			/ (float)resumeStateStruct->totalLoopsToNextAction
+		);
+		//if we've reached the end:
+		if(resumeStateStruct->loopsToNextAction <= 0)
+		{
+			//reset the variables and return, the delay is complete.
+			resumeStateStruct->totalLoopsToNextAction = 0;
+			resumeStateStruct->loopsToNextAction = 0;
+			mage_canvas->fadeFraction = 1;
+			//mage_canvas->isFading = false; // no, stay faded out until manual fade in
+			return;
+		}
+		mage_canvas->fadeColor = argStruct->color;
+	}
+	//a delay is not active, so we should start one:
+	else
+	{
+		//convert delay into a number of game loops:
+		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		//now set the resumeStateStruct variables:
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+		mage_canvas->isFading = true;
+		mage_canvas->fadeFraction = 0;
+	}
+	printf(
+		"screenFadeOut: fadeFraction: %f; loops: %04d; total: %04d\n",
+		mage_canvas->fadeFraction,
+		resumeStateStruct->loopsToNextAction,
+		resumeStateStruct->totalLoopsToNextAction
+	);
 	return;
 }
 void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1610,8 +1648,46 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 	ActionScreenFadeIn *argStruct = (ActionScreenFadeIn*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
-	argStruct->color = ROM_ENDIAN_U2_VALUE(argStruct->color);
+	argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
+	//If there's already a total number of loops to next action set, a delay is currently in progress:
+	if(resumeStateStruct->totalLoopsToNextAction != 0)
+	{
+		//decrement the number of loops to the end of the delay:
+		resumeStateStruct->loopsToNextAction--;
+		mage_canvas->fadeFraction = (
+			(float)resumeStateStruct->loopsToNextAction
+			/ (float)resumeStateStruct->totalLoopsToNextAction
+		);
+		//if we've reached the end:
+		if(resumeStateStruct->loopsToNextAction <= 0)
+		{
+			//reset the variables and return, the delay is complete.
+			resumeStateStruct->totalLoopsToNextAction = 0;
+			resumeStateStruct->loopsToNextAction = 0;
+			mage_canvas->fadeFraction = 0;
+			mage_canvas->isFading = false;
+			return;
+		}
+		mage_canvas->fadeColor = argStruct->color;
+	}
+	//a delay is not active, so we should start one:
+	else
+	{
+		//convert delay into a number of game loops:
+		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		//now set the resumeStateStruct variables:
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+		mage_canvas->isFading = true;
+		mage_canvas->fadeFraction = 1;
+	}
+	printf(
+		"screenFadeIn: fadeFraction: %f; loops: %04d; total: %04d\n",
+		mage_canvas->fadeFraction,
+		resumeStateStruct->loopsToNextAction,
+		resumeStateStruct->totalLoopsToNextAction
+	);
 	return;
 }
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
