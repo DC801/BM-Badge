@@ -31,6 +31,8 @@ all of the old code used as the foundation of this badge.
 //this is the map that will load at the start of the game:
 #define DEFAULT_MAP 0
 
+#define DEFAULT_PLAYER_NAME "Player"
+
 //this is used to note that no player entity was found within the
 //entities loaded into the map
 #define NO_PLAYER -1

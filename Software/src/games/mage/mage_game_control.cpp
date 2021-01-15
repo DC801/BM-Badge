@@ -124,16 +124,20 @@ uint32_t MageGameControl::Size() const
 		entityHeader.size() +
 		geometryHeader.size() +
 		scriptHeader.size() +
+		dialogHeader.size() +
+		colorPaletteHeader.size() +
 		stringHeader.size() +
 		saveFlagHeader.size() +
 		imageHeader.size() +
 		map.Size() +
-		sizeof(playerEntityIndex) +
 		sizeof(previousPlayerTilesetId) +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
-		sizeof(isCollisionDebugOn) +
+		sizeof(playerEntityIndex) +
+		sizeof(warpState) +
+		(sizeof(char) * MAGE_ENTITY_NAME_LENGTH) + //playerName
 		sizeof(playerHasControl) +
+		sizeof(isCollisionDebugOn) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -395,6 +399,11 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	}
 
 	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
+	if(playerEntityIndex != NO_PLAYER) {
+		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
+			entities[playerEntityIndex].name[i] = playerName[i];
+		}
+	}
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
@@ -427,6 +436,11 @@ void MageGameControl::initializeScriptsOnMapLoad()
 
 void MageGameControl::LoadMap(uint16_t index)
 {
+	if(playerEntityIndex != NO_PLAYER) {
+		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
+			playerName[i] = entities[playerEntityIndex].name[i];
+		}
+	}
 	//get the data for the map:
 	PopulateMapData(index);
 
