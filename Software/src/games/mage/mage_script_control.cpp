@@ -1635,12 +1635,12 @@ void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeSt
 		mage_canvas->isFading = true;
 		mage_canvas->fadeFraction = 0;
 	}
-	printf(
-		"screenFadeOut: fadeFraction: %f; loops: %04d; total: %04d\n",
-		mage_canvas->fadeFraction,
-		resumeStateStruct->loopsToNextAction,
-		resumeStateStruct->totalLoopsToNextAction
-	);
+	// printf(
+	// 	"screenFadeOut: fadeFraction: %f; loops: %04d; total: %04d\n",
+	// 	mage_canvas->fadeFraction,
+	// 	resumeStateStruct->loopsToNextAction,
+	// 	resumeStateStruct->totalLoopsToNextAction
+	// );
 	return;
 }
 void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1682,12 +1682,12 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 		mage_canvas->isFading = true;
 		mage_canvas->fadeFraction = 1;
 	}
-	printf(
-		"screenFadeIn: fadeFraction: %f; loops: %04d; total: %04d\n",
-		mage_canvas->fadeFraction,
-		resumeStateStruct->loopsToNextAction,
-		resumeStateStruct->totalLoopsToNextAction
-	);
+	// printf(
+	// 	"screenFadeIn: fadeFraction: %f; loops: %04d; total: %04d\n",
+	// 	mage_canvas->fadeFraction,
+	// 	resumeStateStruct->loopsToNextAction,
+	// 	resumeStateStruct->totalLoopsToNextAction
+	// );
 	return;
 }
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
