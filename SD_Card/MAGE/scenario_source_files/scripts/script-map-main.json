@@ -170,8 +170,18 @@
 	],
 	"show_dialog-verthandi": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Verthandi",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-verthandi"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Verthandi",
+			"target_entity": "goat1"
 		}
 	],
 	"show_dialog-goat": [
@@ -182,36 +192,90 @@
 	],
 	"show_dialog-cleo1": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-cleo1"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "cleo",
+			"entity": "Cleo",
 			"script": "show_dialog-cleo2"
 		}
 	],
 	"show_dialog-cleo2": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-cleo2"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "cleo",
+			"entity": "Cleo",
 			"script": "show_dialog-cleo1"
 		}
 	],
 	"show_dialog-cat": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-cat"
-		}
-	],
-	"show_dialog-smith": [
+			"dialog": "dialog-cat1"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cat",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-smith"
+			"dialog": "dialog-cat2"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cat",
+			"target_entity": "Cleo"
 		}
 	],
 	"check_if_player_is_goat_high": [
@@ -327,6 +391,48 @@
 			"entity": "goat2",
 			"geometry": "high2",
 			"duration": 3400
+		}
+	],
+	"goose-mission": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point1",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point2",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
 		}
 	],
 	"loop_on_path_30s": [

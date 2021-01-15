@@ -56,5 +56,21 @@
 			"save_flag": "ball",
 			"bool_value": true
 		}
+	],
+	"show_dialog-smith": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "smith",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "smith",
+			"direction": "east"
+		}
 	]
 }

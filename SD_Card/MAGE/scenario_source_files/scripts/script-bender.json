@@ -1,6 +1,11 @@
 {
 	"show_dialog-bender-start": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bender",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bender2",
 			"expected_bool": true,
