@@ -111,7 +111,10 @@ uint32_t MageGeometry::size()
 	uint32_t size =
 		sizeof(typeId) +
 		sizeof(pointCount) +
-		sizeof(Point) * pointCount;
+		sizeof(segmentCount) +
+		sizeof(pathLength) +
+		(sizeof(Point) * pointCount) +
+		(sizeof(float) * segmentCount);
 	return size;
 }
 
