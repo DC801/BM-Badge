@@ -3,26 +3,50 @@
 
 #include "common.h"
 
-extern const bool needs_endian_correction;
+#ifdef DC801_EMBEDDED
+//If ever our hardware screen takes data in Little Endian, comment out this line
+#define IS_SCREEN_BIG_ENDIAN
+#endif
+
+
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define IS_BIG_ENDIAN
+#endif
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#define IS_LITTLE_ENDIAN
+#endif
 extern const char endian_label[];
 
-#ifdef DC801_DESKTOP
+//our data file is little endian, so we only convert if the CPU is big-endian
+#ifdef IS_BIG_ENDIAN
 
-#define ENDIAN_U2_VALUE(value)				(convert_endian_u2_value(value))
-#define ENDIAN_U2_BUFFER(bufer, count)		(convert_endian_u2_buffer(buffer, count))
+#define ROM_ENDIAN_U2_VALUE(value)				(convert_ROM_ENDIAN_U2_VALUE(value))
+#define ROM_ENDIAN_U2_BUFFER(buffer, count)		(convert_ROM_ENDIAN_U2_BUFFER(buffer, count))
 
-#define ENDIAN_U4_VALUE(value)				(convert_endian_u4_value(value))
-#define ENDIAN_U4_BUFFER(buffer, count)		(convert_endian_u4_buffer(buffer, count))
+#define ROM_ENDIAN_U4_VALUE(value)				(convert_ROM_ENDIAN_U4_VALUE(value))
+#define ROM_ENDIAN_U4_BUFFER(buffer, count)		(convert_ROM_ENDIAN_U4_BUFFER(buffer, count))
+
+#define ROM_ENDIAN_F4_VALUE(value)				(convert_ROM_ENDIAN_F4_VALUE(value))
+#define ROM_ENDIAN_F4_BUFFER(buffer, count)		(convert_ROM_ENDIAN_F4_BUFFER(buffer, count))
+
+#define SCREEN_ENDIAN_U2_VALUE(value)				(value)
+#define SCREEN_ENDIAN_U2_BUFFER(buffer, count)		((void *)buffer)
 
 #endif
 
-#ifdef DC801_EMBEDDED
+#ifdef IS_LITTLE_ENDIAN
 
-#define ENDIAN_U2_VALUE(value)				(value)
-#define ENDIAN_U2_BUFFER(bufer, count)		((void *)buffer)
+#define ROM_ENDIAN_U2_VALUE(value)				(value)
+#define ROM_ENDIAN_U2_BUFFER(buffer, count)		((void *)buffer)
 
-#define ENDIAN_U4_VALUE(value)				(value)
-#define ENDIAN_U4_BUFFER(buffer, count)		((void *)buffer)
+#define ROM_ENDIAN_U4_VALUE(value)				(value)
+#define ROM_ENDIAN_U4_BUFFER(buffer, count)		((void *)buffer)
+
+#define ROM_ENDIAN_F4_VALUE(value)				((value))
+#define ROM_ENDIAN_F4_BUFFER(buffer, count)		((void *)buffer)
+
+#define SCREEN_ENDIAN_U2_VALUE(value)				(convert_endian_u2_value(value))
+#define SCREEN_ENDIAN_U2_BUFFER(buffer, count)		(convert_endian_u2_buffer(buffer, count))
 
 #endif
 

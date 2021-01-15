@@ -376,13 +376,7 @@
                 {
                  "height":32,
                  "id":31,
-                 "name":"door-demo",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
+                 "name":"door-main",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -394,12 +388,6 @@
                  "height":32,
                  "id":32,
                  "name":"door-test",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -411,12 +399,6 @@
                  "height":32,
                  "id":33,
                  "name":"door-town",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -428,12 +410,6 @@
                  "height":32,
                  "id":34,
                  "name":"door-action_testing_01",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -445,12 +421,6 @@
                  "height":32,
                  "id":35,
                  "name":"door-action_testing_02",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -461,7 +431,7 @@
                 {
                  "height":160,
                  "id":42,
-                 "name":"door_to-demo-west",
+                 "name":"door_to-main-west",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -472,7 +442,7 @@
                 {
                  "height":160,
                  "id":43,
-                 "name":"door_to-demo-east",
+                 "name":"door_to-main-east",
                  "rotation":0,
                  "type":"",
                  "visible":true,

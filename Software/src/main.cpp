@@ -137,7 +137,7 @@ void test_rom(){
 	#ifdef DC801_EMBEDDED
 	uint8_t erased_array[9] {255, 255, 255, 255, 255, 255, 255, 255, 0};
 	char test_array[9] = "GOATBOAT";
-	char test_rx_array[9] {'X','X','X','X','X','X','X','X',0};
+	char test_rx_array[36] {'X','X','X','X','X','X','X','X',0};
 	p_canvas()->clearScreen(COLOR_BLACK);
 	p_canvas()->blt();
 	/* disabling erase and write unless specifically needed for testing.
@@ -150,22 +150,30 @@ void test_rom(){
 		ENGINE_PANIC("Verification of erase failed.");
 	}
 	debug_print("Writing %s to ROM chip...", test_array);
-	if(EngineROM_Write(0, 8, (uint8_t *)test_array) != 8){
-		ENGINE_PANIC("Failed to write to ROM.");
-	}
+	EngineROM_Write(
+		0,
+		8,
+		(uint8_t *)test_array,
+		"Failed to write to ROM."
+	);
 	*/
-	if(EngineROM_Read(0, 8, (uint8_t *)test_rx_array) != 8){
-		ENGINE_PANIC("QSPI read failed.");
-	} else {
-		p_canvas()->printMessage(
-			test_rx_array,
-			Monaco9,
-			COLOR_WHITE,
-			32,
-			32
-		);
-		p_canvas()->blt();
-	}
+
+	EngineROM_Read(
+		0,
+		8,
+		(uint8_t *)test_rx_array,
+		"QSPI read failed."
+	);
+
+	p_canvas()->printMessage(
+		test_rx_array,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		32
+	);
+
+	p_canvas()->blt();
 	#endif
 }
 

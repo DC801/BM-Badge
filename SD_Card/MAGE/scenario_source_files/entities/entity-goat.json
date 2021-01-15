@@ -14,10 +14,27 @@
  "name":"goat",
  "spacing":0,
  "tilecount":32,
- "tiledversion":"1.4.1",
+ "tiledversion":"1.4.3",
  "tileheight":128,
  "tiles":[
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":0
+                }, 
+                {
+                 "duration":100,
+                 "tileid":1
+                }, 
+                {
+                 "duration":100,
+                 "tileid":2
+                }, 
+                {
+                 "duration":100,
+                 "tileid":3
+                }],
          "id":0,
          "type":"goat"
         }, 
@@ -30,10 +47,36 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":800,
+                 "tileid":3
+                }, 
+                {
+                 "duration":600,
+                 "tileid":2
+                }],
          "id":3,
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":7
+                }, 
+                {
+                 "duration":100,
+                 "tileid":6
+                }, 
+                {
+                 "duration":100,
+                 "tileid":5
+                }, 
+                {
+                 "duration":100,
+                 "tileid":4
+                }],
          "id":4,
          "type":"goat"
         }, 
@@ -46,10 +89,36 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":800,
+                 "tileid":7
+                }, 
+                {
+                 "duration":600,
+                 "tileid":6
+                }],
          "id":7,
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":11
+                }, 
+                {
+                 "duration":100,
+                 "tileid":10
+                }, 
+                {
+                 "duration":100,
+                 "tileid":9
+                }, 
+                {
+                 "duration":100,
+                 "tileid":8
+                }],
          "id":8,
          "properties":[
                 {
@@ -68,25 +137,34 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":800,
+                 "tileid":11
+                }, 
+                {
+                 "duration":600,
+                 "tileid":10
+                }],
          "id":11,
          "type":"goat"
         }, 
         {
          "animation":[
                 {
-                 "duration":400,
+                 "duration":100,
                  "tileid":13
                 }, 
                 {
-                 "duration":400,
+                 "duration":100,
                  "tileid":12
                 }, 
                 {
-                 "duration":400,
+                 "duration":100,
                  "tileid":15
                 }, 
                 {
-                 "duration":400,
+                 "duration":100,
                  "tileid":14
                 }],
          "id":12,
@@ -107,10 +185,48 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":800,
+                 "tileid":15
+                }, 
+                {
+                 "duration":600,
+                 "tileid":14
+                }],
          "id":15,
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":16
+                }, 
+                {
+                 "duration":200,
+                 "tileid":17
+                }, 
+                {
+                 "duration":200,
+                 "tileid":18
+                }, 
+                {
+                 "duration":200,
+                 "tileid":19
+                }, 
+                {
+                 "duration":200,
+                 "tileid":18
+                }, 
+                {
+                 "duration":200,
+                 "tileid":17
+                }, 
+                {
+                 "duration":200,
+                 "tileid":16
+                }],
          "id":16,
          "type":"goat"
         }, 
@@ -127,6 +243,35 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":20
+                }, 
+                {
+                 "duration":200,
+                 "tileid":21
+                }, 
+                {
+                 "duration":200,
+                 "tileid":22
+                }, 
+                {
+                 "duration":200,
+                 "tileid":23
+                }, 
+                {
+                 "duration":200,
+                 "tileid":22
+                }, 
+                {
+                 "duration":200,
+                 "tileid":21
+                }, 
+                {
+                 "duration":200,
+                 "tileid":20
+                }],
          "id":20,
          "type":"goat"
         }, 
@@ -143,6 +288,35 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":24
+                }, 
+                {
+                 "duration":200,
+                 "tileid":25
+                }, 
+                {
+                 "duration":200,
+                 "tileid":26
+                }, 
+                {
+                 "duration":200,
+                 "tileid":27
+                }, 
+                {
+                 "duration":200,
+                 "tileid":26
+                }, 
+                {
+                 "duration":200,
+                 "tileid":25
+                }, 
+                {
+                 "duration":200,
+                 "tileid":24
+                }],
          "id":24,
          "type":"goat"
         }, 
@@ -159,6 +333,35 @@
          "type":"goat"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":28
+                }, 
+                {
+                 "duration":200,
+                 "tileid":29
+                }, 
+                {
+                 "duration":200,
+                 "tileid":30
+                }, 
+                {
+                 "duration":200,
+                 "tileid":31
+                }, 
+                {
+                 "duration":200,
+                 "tileid":30
+                }, 
+                {
+                 "duration":200,
+                 "tileid":29
+                }, 
+                {
+                 "duration":200,
+                 "tileid":28
+                }],
          "id":28,
          "type":"goat"
         }, 

@@ -31,8 +31,7 @@ all of the old code used as the foundation of this badge.
 //this is the map that will load at the start of the game:
 #define DEFAULT_MAP 0
 
-//this is the color that will appear transparent when drawing tiles:
-#define TRANSPARENCY_COLOR 0x0020
+#define DEFAULT_PLAYER_NAME "Player"
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
@@ -67,8 +66,14 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
+#ifdef DC801_DESKTOP
 #define MAGE_RUNNING_SPEED 5
 #define MAGE_WALKING_SPEED 1
+#endif
+#ifdef DC801_EMBEDDED
+#define MAGE_RUNNING_SPEED 10
+#define MAGE_WALKING_SPEED 5
+#endif
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
@@ -98,14 +103,15 @@ all of the old code used as the foundation of this badge.
 #define MAGE_NULL_ACTION 0
 
 //this is how many ms must have passed before the main game loop will run again:
-//typical values: 
+//typical values:
 //60fps: ~16ms
 //30fps: ~33ms
 //24fps: ~41ms
-#ifndef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 41
-#else
+#ifdef DC801_DESKTOP
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
+#endif
+#ifdef DC801_EMBEDDED
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
 #endif
 
 //these are the types of scripts that can be on a map or entity:
@@ -153,6 +159,7 @@ typedef enum : uint8_t {
 	CHECK_ENTITY_Y,
 	CHECK_ENTITY_INTERACT_SCRIPT,
 	CHECK_ENTITY_TICK_SCRIPT,
+	CHECK_ENTITY_TYPE,
 	CHECK_ENTITY_PRIMARY_ID,
 	CHECK_ENTITY_SECONDARY_ID,
 	CHECK_ENTITY_PRIMARY_ID_TYPE,
@@ -175,18 +182,23 @@ typedef enum : uint8_t {
 	RUN_SCRIPT,
 	BLOCKING_DELAY,
 	NON_BLOCKING_DELAY,
-	SET_PAUSE_STATE,
+	PAUSE_GAME,
+	PAUSE_ENTITY_SCRIPT,
 	SET_ENTITY_NAME,
 	SET_ENTITY_X,
 	SET_ENTITY_Y,
 	SET_ENTITY_INTERACT_SCRIPT,
 	SET_ENTITY_TICK_SCRIPT,
+	SET_ENTITY_TYPE,
 	SET_ENTITY_PRIMARY_ID,
 	SET_ENTITY_SECONDARY_ID,
 	SET_ENTITY_PRIMARY_ID_TYPE,
 	SET_ENTITY_CURRENT_ANIMATION,
 	SET_ENTITY_CURRENT_FRAME,
 	SET_ENTITY_DIRECTION,
+	SET_ENTITY_DIRECTION_RELATIVE,
+	SET_ENTITY_DIRECTION_TARGET_ENTITY,
+	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
 	SET_ENTITY_HACKABLE_STATE_A,
 	SET_ENTITY_HACKABLE_STATE_B,
 	SET_ENTITY_HACKABLE_STATE_C,
@@ -207,6 +219,7 @@ typedef enum : uint8_t {
 	SET_HEX_EDITOR_DIALOG_MODE,
 	LOAD_MAP,
 	SHOW_DIALOG,
+	PLAY_ENTITY_ANIMATION,
 	TELEPORT_ENTITY_TO_GEOMETRY,
 	WALK_ENTITY_TO_GEOMETRY,
 	WALK_ENTITY_ALONG_GEOMETRY,
@@ -361,6 +374,14 @@ typedef struct {
 	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityPrimaryId;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint16_t entityTypeId;
+	uint8_t entityId;
+	uint8_t expectedBool;
+	uint8_t paddingG;
+} ActionCheckEntityType;
 
 typedef struct {
 	uint16_t successScriptId;
@@ -534,7 +555,17 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetPauseState;
+} ActionPauseGame;
+
+typedef struct {
+	uint8_t entityId;
+	MageScriptType scriptType;
+	uint8_t state;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionPauseEntityScript;
 
 typedef struct {
 	uint16_t stringId;
@@ -580,6 +611,15 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetEntityTickScript;
+
+typedef struct {
+	uint16_t entityTypeId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityType;
 
 typedef struct {
 	uint16_t newValue;
@@ -630,7 +670,7 @@ typedef struct {
 } ActionSetEntityCurrentFrame;
 
 typedef struct {
-	uint8_t direction; //MageEntityAnimationDirection enum value
+	MageEntityAnimationDirection direction;
 	uint8_t entityId;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -638,6 +678,35 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetEntityDirection;
+
+typedef struct {
+	int8_t relativeDirection;
+	uint8_t entityId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityDirectionRelative;
+
+typedef struct {
+	uint8_t targetEntityId;
+	uint8_t entityId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityDirectionTargetEntity;
+
+typedef struct {
+	uint16_t targetGeometryId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityDirectionTargetGeometry;
 
 typedef struct {
 	uint8_t newValue;
@@ -826,6 +895,16 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionShowDialog;
+
+typedef struct {
+	uint8_t entityId;
+	uint8_t animationId;
+	uint8_t playCount;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionPlayEntityAnimation;
 
 typedef struct {
 	uint16_t geometryId;

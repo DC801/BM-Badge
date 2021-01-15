@@ -5,14 +5,24 @@
 #include "fonts/Monaco9.h"
 #include "games/mage/mage_defines.h"
 
+#ifdef DC801_DESKTOP
+#include <errno.h>
+#include <string.h>
 
+FILE *romfile = NULL;
+uint8_t *romDataInDesktopRam = NULL;
+#endif //DC801_DESKTOP
 
 #ifdef DC801_EMBEDDED
 #include "qspi.h"
 extern QSPI qspiControl;
 
+#endif //DC801_EMBEDDED
+
 bool EngineROM_Init(void)
 {
+#ifdef DC801_EMBEDDED
+
 	//first check the SD card to see if it has a game.dat to check against the ROM chip:
 	const char filename[] = MAGE_GAME_DAT_PATH;
 	FIL gameDat;
@@ -57,13 +67,12 @@ bool EngineROM_Init(void)
 	}
 
 	//get the gameDatTimestampROM from the ROM chip:
-	if(EngineROM_Read(
+	EngineROM_Read(
 		0,
 		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
-		(uint8_t *)gameDatTimestampROM
-	) != ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH) {
-		ENGINE_PANIC("Failed to read timestamp from ROM");
-	}
+		(uint8_t *)gameDatTimestampROM,
+		"Failed to read timestamp from ROM"
+	);
 
 	//compare the two timestamps:
 	bool timestampsMatch = (strcmp(gameDatTimestampSD, gameDatTimestampROM) == 0);
@@ -83,12 +92,42 @@ bool EngineROM_Init(void)
 
 	//close game.dat file when done:
 	result = f_close(&gameDat);
+#endif //DC801_EMBEDDED
+#ifdef DC801_DESKTOP
+	romfile = fopen("MAGE/game.dat", "r+b");
 
+	if (romfile == NULL)
+	{
+		int error = errno;
+		fprintf(stderr, "Error: %s\n", strerror(error));
+		ENGINE_PANIC("Desktop build: ROM file missing");
+	}
+
+	fseek(romfile, 0, SEEK_END);
+	size_t romFileSize = ftell(romfile);
+	rewind(romfile);
+
+	romDataInDesktopRam = (uint8_t *) calloc(1, romFileSize);
+	if (!romDataInDesktopRam)
+	{
+		fclose(romfile);
+		ENGINE_PANIC("Desktop build: ROM->RAM memory alloc failed");
+	}
+
+	/* copy the file into the buffer */
+	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
+	{
+		fclose(romfile);
+		free(romDataInDesktopRam);
+		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
+	}
+#endif //DC801_DESKTOP
 	return true;
 }
 
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
 bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
+#ifdef DC801_EMBEDDED
 	if(gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE){
 		ENGINE_PANIC("Your game.dat is larger than 33550336 bytes.\nYou will need to reduce its size to use it\non this board.");
 	}
@@ -152,23 +191,18 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 			if(i == (romPagesToWrite - 1)){
 				debug_print("Write Size at %d is %d", i, writeSize);
 			}
-			if(EngineROM_Write(
+			EngineROM_Write(
 				currentAddress + romPageOffset,
 				writeSize,
-				strBuffer + romPageOffset
-			) != writeSize ) {
-				ENGINE_PANIC("Failed to write buffer to ROM chip\nduring ROM erase procedure.");
-			}
-			//verify that the data was correctly written or return false.
-			int64_t verifyResult = EngineROM_Verify(
-				currentAddress + romPageOffset,
-				writeSize,
-				strBuffer + romPageOffset
+				(uint8_t *)(strBuffer + romPageOffset),
+				"Failed to write buffer to ROM chip\nduring ROM erase procedure."
 			);
-			if(verifyResult != ENGINE_ROM_VERIFY_SUCCESS){
-				debug_print("EngineROM_Verify failed at address %d", verifyResult);
-				return false;
-			}
+			//verify that the data was correctly written or return false.
+			EngineROM_Verify(
+				currentAddress + romPageOffset,
+				writeSize,
+				(uint8_t *)(strBuffer + romPageOffset)
+			);
 		}
 		//Debug Print:
 		sprintf(
@@ -210,104 +244,12 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		96
 	);
 	p_canvas()->blt();
+#endif //DC801_EMBEDDED
 	return true;
 }
 
-void EngineROM_Deinit(void) { }
-
-uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
-{
-	if (data == NULL)
-	{
-		ENGINE_PANIC("EngineROM_Read: Null pointer");
-	}
-
-	//figure out values for handling unaligned bytes.
-	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t)) * sizeof(uint32_t);
-	//read in all but the last word if aligned data
-	if(!qspiControl.read(data, truncatedAlignedLength, address))
-	{
-		ENGINE_PANIC("Failed to QSPI Read.");
-	}
-	uint32_t numUnalignedBytes = length - truncatedAlignedLength;
-	if(numUnalignedBytes)
-	{
-		address += truncatedAlignedLength;
-		uint8_t lastWord[sizeof(uint32_t)] = {0, 0, 0, 0};
-		//read in the last word of aligned data to its own variable:
-		if(!qspiControl.read(lastWord, sizeof(uint32_t), address))
-		{
-			ENGINE_PANIC("Failed to QSPI Read.");
-		}
-		//fill in the unaligned bytes only and ignore the rest:
-		for(uint8_t i=0; i<numUnalignedBytes; i++){
-			data[truncatedAlignedLength+i] = lastWord[i];
-		}
-	}
-	return length;
-}
-
-uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
-{
-	if (data == NULL)
-	{
-		ENGINE_PANIC("EngineROM_Write: Null pointer");
-	}
-
-	if(length % sizeof(uint32_t)){
-		ENGINE_PANIC("Length of write is not aligned to uint32_t\nYou can't do this, fix whatever is\nsending an unaligned write.");
-	}
-
-	if(!qspiControl.write(data, length, address))
-	{
-		ENGINE_PANIC("Failed to QSPI write");
-	}
-
-	return length;
-}
-#endif
-
+void EngineROM_Deinit(void) {
 #ifdef DC801_DESKTOP
-
-FILE *romfile = NULL;
-uint8_t *romDataInDesktopRam = NULL;
-#include <errno.h>
-#include <string.h>
-
-bool EngineROM_Init(void)
-{
-	romfile = fopen("MAGE/game.dat", "r+b");
-
-	if (romfile == NULL)
-	{
-		int error = errno;
-		fprintf(stderr, "Error: %s\n", strerror(error));
-		ENGINE_PANIC("Desktop build: ROM file missing");
-	}
-
-	fseek(romfile, 0, SEEK_END);
-	size_t romFileSize = ftell(romfile);
-	rewind(romfile);
-
-	romDataInDesktopRam = (uint8_t *) calloc(1, romFileSize);
-	if (!romDataInDesktopRam)
-	{
-		fclose(romfile);
-		ENGINE_PANIC("Desktop build: ROM->RAM memory alloc failed");
-	}
-
-	/* copy the file into the buffer */
-	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
-	{
-		fclose(romfile);
-		free(romDataInDesktopRam);
-		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
-	}
-	return true;
-}
-
-void EngineROM_Deinit(void)
-{
 	if (romfile == NULL)
 	{
 		ENGINE_PANIC("Game Data file is not open");
@@ -322,16 +264,80 @@ void EngineROM_Deinit(void)
 
 	free(romDataInDesktopRam);
 	romDataInDesktopRam = NULL;
+#endif // DC801_DESKTOP
 }
 
-uint32_t EngineROM_Read(uint32_t address, uint32_t length, uint8_t *data)
+bool EngineROM_Read(
+	uint32_t address,
+	uint32_t length,
+	uint8_t *data,
+	const char *errorString
+)
 {
+#ifdef DC801_EMBEDDED
+	if (data == NULL)
+	{
+		ENGINE_PANIC("EngineROM_Read: Null pointer");
+	}
+
+	//this is the number of whole words to read from the starting adddress:
+	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
+	//read in all but the last word if aligned data
+	uint32_t *dataU32 = (uint32_t *)data;
+	//get word-aligned pointers to the ROM:
+	volatile uint32_t *romDataU32 = (volatile uint32_t *)(ROM_START_ADDRESS + address);
+	for(uint32_t i=0; i<truncatedAlignedLength; i++){
+		dataU32[i] = romDataU32[i];
+	}
+	//now we need to convert the word-aligned number of reads back to a uint8_t aligned
+	//value where we will start reading the remaining bytes.
+	truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
+	uint32_t numUnalignedBytes = length - truncatedAlignedLength;
+	if(numUnalignedBytes)
+	{
+		address += truncatedAlignedLength;
+		//get byte-aligned rom data at the new address:
+		volatile uint8_t *romDataU8 = (volatile uint8_t *)(ROM_START_ADDRESS + address);
+		//fill in the unaligned bytes only and ignore the rest:
+		for(uint8_t i=0; i<numUnalignedBytes; i++){
+			data[truncatedAlignedLength+i] = romDataU8[i];
+		}
+	}
+#endif // DC801_EMBEDDED
+#ifdef DC801_DESKTOP
 	memcpy(data, romDataInDesktopRam + address, length);
-	return length;
+#endif // DC801_DESKTOP
+	return true;
 }
 
-uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
+bool EngineROM_Write(
+	uint32_t address,
+	uint32_t length,
+	uint8_t *data,
+	const char *errorString
+)
 {
+#ifdef DC801_EMBEDDED
+	if (data == NULL)
+	{
+		ENGINE_PANIC("EngineROM_Write: Null pointer");
+	}
+
+	if(length % sizeof(uint32_t)){
+		ENGINE_PANIC(
+			"Length of write is not aligned to uint32_t\n"
+			"You can't do this, fix whatever is\n"
+			"sending an unaligned write."
+		);
+	}
+
+	if(!qspiControl.write(data, length, address))
+	{
+		ENGINE_PANIC(errorString);
+	}
+	return true;
+#endif // DC801_EMBEDDED
+#ifdef DC801_DESKTOP
 	if (romfile == NULL || data == NULL)
 	{
 		ENGINE_PANIC("Game Data file is not open");
@@ -342,31 +348,47 @@ uint32_t EngineROM_Write(uint32_t address, uint32_t length, const uint8_t *data)
 		ENGINE_PANIC("Failed to seek into Game Data");
 	}
 
-	return fwrite(data, sizeof(uint8_t), length, romfile);
+	return fwrite(data, sizeof(uint8_t), length, romfile) == length;
+#endif // DC801_DESKTOP
 }
-#endif
 
-int64_t EngineROM_Verify(uint32_t address, uint32_t length, const uint8_t *data)
+bool EngineROM_Verify(
+	uint32_t address,
+	uint32_t length,
+	const uint8_t *data
+)
 {
+#ifdef DC801_EMBEDDED
 	if (data == NULL)
 	{
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
-
+	char debugString[128];
 	uint8_t readBuffer[length];
-	if(EngineROM_Read(address, length, readBuffer) != length){
-		ENGINE_PANIC("Failed to read from Rom in EngineROM_Verify");
-	}
+	EngineROM_Read(
+		address,
+		length,
+		readBuffer,
+		"Failed to read from Rom in EngineROM_Verify"
+	);
 
 	for(uint32_t i=0; i<length; i++){
 		if(data[i] != readBuffer[i]){
-			debug_print("Address:%d:%d:%d",i,data[i],readBuffer[i]);
+			sprintf(
+				debugString,
+				"EngineROM_Verify failed at address %d\nSD: %d\nROM: %d",
+				address + i,
+				data[i],
+				readBuffer[i]
+			);
+			debug_print(debugString);
+			ENGINE_PANIC(debugString);
 			//return address in ROM where memory does not match
 			return address+i;
 		}
 	}
-
-	return ENGINE_ROM_VERIFY_SUCCESS;
+#endif // DC801_EMBEDDED
+	return true;
 }
 
 bool EngineROM_Magic(const uint8_t *magic, uint8_t length)

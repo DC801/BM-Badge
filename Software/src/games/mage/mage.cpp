@@ -110,18 +110,37 @@ void GameUpdate()
 
 void GameRender()
 {
+	#ifdef TIMING_DEBUG
+	uint32_t now = millis();
+	uint32_t diff = 0;
+	#endif
 	//make hax do
 	if (MageHex->getHexEditorState())
 	{
 		//run hex editor if appropriate
 		mage_canvas->clearScreen(RGB(0,0,0));
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("screen clear time: %d",diff);
+			now = millis();
+		#endif
 		MageHex->renderHexEditor();
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("hex render time: %d",diff);
+		#endif
 	}
+
 	//otherwise be boring and normal
 	else
 	{
 		//otherwise run mage game:
 		mage_canvas->clearScreen(RGB(0,0,255));
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("screen clear time: %d",diff);
+			now = millis();
+		#endif
 
 		//then draw the map and entities:
 		uint8_t layerCount = MageGame->Map().LayerCount();
@@ -136,36 +155,69 @@ void GameRender()
 			{
 				//draw all map layers except the last one before drawing entities.
 				MageGame->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+				#ifdef TIMING_DEBUG
+					diff = millis() - now;
+					debug_print("Layer Time: %d",diff);
+					now = millis();
+				#endif
 			}
 		}
 		else
 		{
 			//if there is only one map layer, it will always be drawn before the entities.
 			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Layer Time: %d",diff);
+				now = millis();
+			#endif
 		}
 
 		//now that the entities are updated, draw them to the screen.
 		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
+		#ifdef TIMING_DEBUG
+			diff = millis() - now;
+			debug_print("Entity Time: %d",diff);
+			now = millis();
+		#endif
 
 		if (layerCount > 1)
 		{
 			//draw the final layer above the entities.
 			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Layer n Time: %d",diff);
+				now = millis();
+			#endif
 		}
 
 		if (MageGame->isCollisionDebugOn) {
 			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Geometry Time: %d",diff);
+				now = millis();
+			#endif
 		}
 		if(MageDialog->isOpen) {
 			MageDialog->draw();
+			#ifdef TIMING_DEBUG
+				diff = millis() - now;
+				debug_print("Dialog Time: %d",diff);
+				now = millis();
+			#endif
 		}
 	}
-
 	//update the state of the LEDs
 	MageHex->updateHexLights();
 
 	//update the screen
 	mage_canvas->blt();
+	#ifdef TIMING_DEBUG
+		diff = millis() - now;
+		debug_print("blt time: %d",diff);
+	#endif
 }
 
 void MAGE()
@@ -209,6 +261,9 @@ void MAGE()
 		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n",
 			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
 	#endif
+	#ifdef DC801_EMBEDDED
+		check_ram_usage();
+	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
 
@@ -239,11 +294,9 @@ void MAGE()
 
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
-		uint32_t afterInput = millis() - lastTime;
 
 		//updates the state of all the things before rendering:
 		GameUpdate();
-		uint32_t afterUpdate = millis() - lastTime;
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -257,15 +310,14 @@ void MAGE()
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
-		uint32_t afterRender = millis() - lastTime;
+		uint32_t fullLoopTime = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
 		handleBLockingDelay();
 
 		#ifdef TIMING_DEBUG
-			debug_print("After Input: %d", afterInput);
-			debug_print("After Update: %d", afterUpdate);
-			debug_print("After Render: %d", afterRender);
+			debug_print("End of Loop Total: %d", fullLoopTime);
+			debug_print("----------------------------------------");
 		#endif
 	}
 

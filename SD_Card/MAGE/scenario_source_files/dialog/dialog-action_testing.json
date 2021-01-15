@@ -101,5 +101,46 @@
 				"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
 			]
 		}
+	],
+	"dialog-mage06_1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_TYPE.\nSet your EntityType to `baby_goat`,\nand I should update my message."
+			]
+		}
+	],
+	"dialog-mage06_2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Good work, you became `baby_goat`, and I\nwas able to verify that it happened.",
+				"Now I will set your EntityType to `mage`\nvia SET_ENTITY_TYPE."
+			]
+		}
+	],
+	"dialog-mage07": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test `SET_ENTITY_DIRECTION_TARGET_ENTITY`\nWalk around me, I should point at you,\nno matter your position!"
+			]
+		}
+	],
+	"dialog-mage08": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test `SET_ENTITY_DIRECTION_RELATIVE`\nWalk around me, I should point away from\nyou, no matter your position!"
+			]
+		}
 	]
 }

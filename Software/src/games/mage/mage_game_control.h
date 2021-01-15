@@ -8,6 +8,7 @@
 #include "mage_animation.h"
 #include "mage_entity_type.h"
 #include "mage_geometry.h"
+#include "mage_color_palette.h"
 
 /*
 The MageGameControl object handles several important tasks. It's basically the
@@ -42,6 +43,7 @@ private:
 	MageHeader geometryHeader;
 	MageHeader scriptHeader;
 	MageHeader dialogHeader;
+	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
 	MageHeader saveFlagHeader;
 	MageHeader imageHeader;
@@ -68,8 +70,11 @@ private:
 	//this is an array of all the geometry objects in the ROM
 	std::unique_ptr<MageGeometry[]> geometries;
 
+	//this is an array of all the colorPalettes objects in the ROM
+	std::unique_ptr<MageColorPalette[]> colorPalettes;
+
 	//these two variables store the player's previous tilesetId and tileId
-	//for use in keeping the camera centerd while hacking.
+	//for use in keeping the camera centered while hacking.
 	uint16_t previousPlayerTilesetId;
 
 	//a couple of state variables for tracking player movement:
@@ -89,6 +94,8 @@ public:
 
 	//used to store a stringId which `CHECK_WARP_STATE` action compares against
 	int32_t warpState;
+
+	char playerName[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
 
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
@@ -128,7 +135,7 @@ public:
 	void handleEntityInteract();
 
 	//this will render the map onto the screen.
-	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y) const;
+	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y);
 
 	//the functions below will validate specific properties to see if they are valid.
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
@@ -144,7 +151,9 @@ public:
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
-	MageGeometry* getValidGeometry(uint16_t mapLocalGeometryId);
+	MageGeometry* getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
+	MageGeometry* getGeometryFromGlobalId(uint16_t globalGeometryId);
+	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
 	std::string getString(
 		uint16_t stringId,

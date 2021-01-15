@@ -23,43 +23,43 @@ var serializeTileset = function (tilesetData, image) {
 	dataView.setUint16(
 		offset, // uint16_t imageIndex
 		image.scenarioIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageWidth
 		tilesetData.tilewidth, // used to be tilesetData.imagewidth,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t imageHeight
 		tilesetData.rows * tilesetData.columns * tilesetData.tileheight, // used to be tilesetData.imageheight
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t tileWidth
 		tilesetData.tilewidth,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t tileHeight
 		tilesetData.tileheight,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t cols
 		1, // used to be tilesetData.columns,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2
 	dataView.setUint16(
 		offset, // uint16_t rows
 		tilesetData.rows * tilesetData.columns,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	var result = combineArrayBuffers(
 		header,
@@ -70,6 +70,7 @@ var serializeTileset = function (tilesetData, image) {
 
 var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 	return function (tilesetData) {
+		tilesetData.filename = tilesetFile.name;
 		tilesetData.scenarioIndex = tilesetFile.scenarioIndex;
 		scenarioData.parsed.tilesets[tilesetData.scenarioIndex] = tilesetData;
 		// console.log(
@@ -78,7 +79,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 		// 	tilesetData
 		// );
 		tilesetData.serializedTiles = new ArrayBuffer(
-			getPaddedHeaderLength(tilesetData.tilecount)
+			getPaddedHeaderLength(tilesetData.tilecount * 2)
 		);
 		var tileDataView = new DataView(tilesetData.serializedTiles);
 		// forget about the built-in name, using file name instead.
@@ -91,10 +92,7 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 				tile.properties
 			);
 			var entityPrototype = (
-				(
-					fileNameMap['object_types.json']
-					&& fileNameMap['object_types.json'].parsed[tile.type]
-				)
+				scenarioData.entityTypesPlusProperties[tile.type]
 				|| {}
 			);
 			Object.assign(
@@ -105,11 +103,26 @@ var handleTilesetData = function (tilesetFile, scenarioData, fileNameMap) {
 					tile
 				)
 			);
-			if (tile.type) {
-				tileDataView.setUint8(
-					tile.id,
-					tile.type.charCodeAt(0)
+			if (
+				tile.objectgroup
+				&& tile.objectgroup.objects
+			) {
+				// we probably have tile geometry!
+				if (tile.objectgroup.objects.length > 1) {
+					throw new Error(`${tilesetData.name} has more than one geometry on a single tile!`);
+				}
+				var geometry = handleTiledObjectAsGeometry(
+					tile.objectgroup.objects[0],
+					fileNameMap,
+					scenarioData,
 				);
+				if (geometry) {
+					tileDataView.setUint16(
+						tile.id * 2,
+						geometry.scenarioIndex + 1, // because if it's 0, we shouldn't have to
+						IS_LITTLE_ENDIAN,
+					);
+				}
 			}
 			if (tile.animation) {
 				serializeAnimationData(tile, tilesetData, scenarioData);

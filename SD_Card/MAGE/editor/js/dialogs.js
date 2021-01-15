@@ -50,7 +50,7 @@ var serializeDialog = function (
 		dataView.setUint32(
 			offset, // uint32_t screen_count
 			dialog.length,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 4;
 		dialog.forEach(function (dialogScreen) {
@@ -105,7 +105,7 @@ var serializeDialogScreen = function (
 	dataView.setUint16(
 		offset, // uint16_t name_index
 		nameStringId,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	var dialogTilesetFilePath = scenarioData.dialogSkins[dialogScreen.border_tileset || 'default'];
@@ -117,7 +117,7 @@ var serializeDialogScreen = function (
 	dataView.setUint16(
 		offset, // uint16_t border_tileset_index
 		borderTileset.scenarioIndex,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
 	dataView.setUint8(
@@ -150,7 +150,7 @@ var serializeDialogScreen = function (
 		dataView.setUint16(
 			offset, // uint16_t string_id
 			stringId,
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 	});

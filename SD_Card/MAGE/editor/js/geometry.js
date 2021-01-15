@@ -68,13 +68,13 @@ var serializeGeometry = function (
 		dataView.setUint16(
 			offset, // uint16_t x
 			Math.round(point.x),
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 		dataView.setUint16(
 			offset, // uint16_t y
 			Math.round(point.y),
-			false
+			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
 	});
@@ -94,7 +94,7 @@ var serializeGeometry = function (
 			dataView.setFloat32(
 				offset, // float segment_length
 				segmentLength,
-				false
+				IS_LITTLE_ENDIAN
 			);
 			offset += 4;
 		});
@@ -102,7 +102,7 @@ var serializeGeometry = function (
 	dataView.setFloat32(
 		addressOfTotalLength, // float total_length
 		totalLength,
-		false
+		IS_LITTLE_ENDIAN
 	);
 	geometry.serialized = arrayBuffer;
 	geometry.scenarioIndex = scenarioData.parsed.geometry.length;
@@ -213,22 +213,26 @@ var getPathFromGeometry = function (geometry) {
 
 var handleTiledObjectAsGeometry = function (
 	tiledObject,
-	map,
 	fileNameMap,
 	scenarioData,
+	map,
 ) {
+	var geometry;
 	mergeInProperties(tiledObject, tiledObject.properties);
 	var path = getPathFromGeometry(tiledObject);
 	if (path) {
-		var geometry = serializeGeometry(
+		geometry = serializeGeometry(
 			tiledObject,
 			map,
 			fileNameMap,
 			scenarioData,
 		);
-		geometry.mapIndex = map.geometryIndices.length;
-		map.geometryIndices.push(
-			geometry.scenarioIndex
-		);
+		if (map) {
+			geometry.mapIndex = map.geometryIndices.length;
+			map.geometryIndices.push(
+				geometry.scenarioIndex
+			);
+		}
 	}
+	return geometry;
 };

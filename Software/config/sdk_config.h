@@ -5014,7 +5014,7 @@
 // <4=> Read4IO
 
 #ifndef QSPI_CONFIG_READOC
-#define QSPI_CONFIG_READOC 3
+#define QSPI_CONFIG_READOC 4
 #endif
 
 // <o> QSPI_CONFIG_WRITEOC  - Number of data lines and opcode used for writing.
@@ -5066,7 +5066,7 @@
 // <15=> 32MHz/16
 
 #ifndef QSPI_CONFIG_FREQUENCY
-#define QSPI_CONFIG_FREQUENCY 0
+#define QSPI_CONFIG_FREQUENCY 1
 #endif
 
 // <s> QSPI_PIN_SCK - SCK pin value.

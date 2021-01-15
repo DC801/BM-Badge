@@ -1,4 +1,65 @@
-var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
+var handleEntityTypesData = function (scenarioData, fileNameMap) {
+	return function (entityTypesData) {
+		scenarioData.entityTypes = entityTypesData;
+		scenarioData.entityTypesPlusProperties = {};
+		var objectTypesFile = fileNameMap['object_types.json'];
+		return !objectTypesFile
+			? Promise.resolve([])
+			: getFileJson(objectTypesFile)
+				.then(handleObjectTypesData(
+					fileNameMap,
+					scenarioData,
+				));
+	};
+};
+
+var handleObjectTypesData = function (
+	fileNameMap,
+	scenarioData,
+) {
+	return function (objectTypesData) {
+		console.log(
+			'object_types.json',
+			objectTypesData
+		);
+		var entityTilesetsPromiseArray = Object.keys(scenarioData.entityTypes).map(function (key) {
+			var entityType = scenarioData.entityTypes[key];
+			entityType.type = key;
+			entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
+			scenarioData.parsed.entityTypes.push(entityType);
+			var entityTypePlusProperties = jsonClone(entityType);
+			var objectProperties = objectTypesData.find(function (properties) {
+				return properties.name === key;
+			});
+			if (objectProperties) {
+				mergeInProperties(
+					entityTypePlusProperties,
+					objectProperties.properties
+				);
+				scenarioData.entityTypesPlusProperties[key] = entityTypePlusProperties;
+			}
+			return loadTilesetByName(
+				entityType.tileset,
+				fileNameMap,
+				scenarioData,
+			)
+				.then(function () {
+					entityType.serialized = serializeEntityType(
+						entityTypePlusProperties,
+						fileNameMap,
+						scenarioData,
+					);
+				});
+		});
+		return Promise.all(entityTilesetsPromiseArray);
+	};
+};
+
+var serializeEntityType = function (
+	entityType,
+	fileNameMap,
+	scenarioData,
+) {
 	var animations = Object.values(entityType.animations);
 	var headerLength = (
 		16 // char[16] name
@@ -49,7 +110,7 @@ var serializeEntityType = function (entityType, scenarioData, fileNameMap) {
 				animation
 					? animation.scenarioIndex
 					: direction.tileid,
-				false
+				IS_LITTLE_ENDIAN
 			);
 			offset += 2;
 			dataView.setUint8(

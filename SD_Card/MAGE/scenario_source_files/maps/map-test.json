@@ -568,7 +568,7 @@
                  "y":352
                 }, 
                 {
-                 "gid":1049,
+                 "gid":1064,
                  "height":32,
                  "id":50,
                  "name":"",
@@ -584,6 +584,30 @@
                  "width":32,
                  "x":224,
                  "y":480
+                }, 
+                {
+                 "gid":1073742915,
+                 "height":40,
+                 "id":58,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":70,
+                 "y":416
+                }, 
+                {
+                 "gid":1120,
+                 "height":48,
+                 "id":60,
+                 "name":"Bender2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":122,
+                 "y":305.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -906,13 +930,7 @@
                 {
                  "height":32,
                  "id":51,
-                 "name":"door-demo",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
+                 "name":"door-main",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -924,12 +942,6 @@
                  "height":32,
                  "id":52,
                  "name":"door-test",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -941,12 +953,6 @@
                  "height":32,
                  "id":53,
                  "name":"door-town",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -958,12 +964,6 @@
                  "height":32,
                  "id":54,
                  "name":"door-action_testing_01",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -975,12 +975,6 @@
                  "height":32,
                  "id":55,
                  "name":"door-action_testing_02",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -995,7 +989,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":58,
+ "nextobjectid":61,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1109,8 +1103,16 @@
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":1048,
+         "firstgid":1063,
          "source":"..\/entities\/entity-trekkie.json"
+        }, 
+        {
+         "firstgid":1084,
+         "source":"..\/entities\/entity-bob.json"
+        }, 
+        {
+         "firstgid":1102,
+         "source":"..\/entities\/entity-bender_sadbutt.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -7,6 +7,7 @@ This class contains all the code related to the hex editor hacking interface.
 #include "mage_defines.h"
 #include "mage.h"
 #include "mage_game_control.h"
+#include "mage_dialog_control.h"
 #include "modules/led.h"
 #include "fonts/Monaco9.h"
 #include "fonts/DeterminationMono.h"
@@ -25,12 +26,13 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_NUM_MEM_BUTTONS 4
 
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
-#ifndef DC801_DESKTOP
-#define HEXED_QUICK_PRESS_TIMEOUT 10
-#define HEXED_TICK_DELAY 10
-#else
+#ifdef DC801_DESKTOP
 #define HEXED_QUICK_PRESS_TIMEOUT 50
 #define HEXED_TICK_DELAY 10
+#endif
+#ifdef DC801_EMBEDDED
+#define HEXED_QUICK_PRESS_TIMEOUT 500
+#define HEXED_TICK_DELAY 1
 #endif
 enum HEX_OPS {
 	HEX_OPS_XOR,
@@ -51,7 +53,7 @@ private:
 	//true if there has been any button presses that change the cursor position.
 	bool anyHexMovement;
 
-	//true if the hex editor screen is reduced in size to allow for a 
+	//true if the hex editor screen is reduced in size to allow for a
 	//dialog window to be displayed.
 	bool dialogState;
 
@@ -127,7 +129,7 @@ public:
 	//this calculates which memory page the hexCursorLocation appears on.
 	uint16_t getCurrentMemPage();
 
-	//this updates the lights on the badge to match the bit state 
+	//this updates the lights on the badge to match the bit state
 	//of the current byte in the hex editor.
 	void updateHexLights();
 

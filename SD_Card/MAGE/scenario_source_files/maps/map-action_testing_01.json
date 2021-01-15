@@ -155,7 +155,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage06-check_player_entity_type"
                         }, 
                         {
                          "name":"on_tick",
@@ -178,12 +178,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage07-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage07-point_at_player"
                         }],
                  "rotation":0,
                  "type":"",
@@ -201,12 +201,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage08-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage08-point_away_from_player"
                         }],
                  "rotation":0,
                  "type":"",
@@ -819,13 +819,7 @@
                 {
                  "height":32,
                  "id":70,
-                 "name":"door-demo",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
+                 "name":"door-main",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -837,12 +831,6 @@
                  "height":32,
                  "id":71,
                  "name":"door-test",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -854,12 +842,6 @@
                  "height":32,
                  "id":72,
                  "name":"door-town",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -871,12 +853,6 @@
                  "height":32,
                  "id":73,
                  "name":"door-action_testing_01",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -888,12 +864,6 @@
                  "height":32,
                  "id":74,
                  "name":"door-action_testing_02",
-                 "properties":[
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"map_on_tick-doors"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -922,7 +892,7 @@
          "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tilesets":[
         {
