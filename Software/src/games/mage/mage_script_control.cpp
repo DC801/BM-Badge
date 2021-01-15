@@ -788,6 +788,9 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 		//Note: this will stop at the first null character and leave any data after it in place.
 		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
 			entity->name[i] = romString[i];
+			if(romString[i] == 00) {
+				break;
+			}
 		}
 	}
 	return;

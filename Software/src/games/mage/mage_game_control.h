@@ -95,6 +95,8 @@ public:
 	//used to store a stringId which `CHECK_WARP_STATE` action compares against
 	int32_t warpState;
 
+	char playerName[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
+
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
 	bool isCollisionDebugOn;
