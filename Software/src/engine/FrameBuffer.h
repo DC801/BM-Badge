@@ -18,6 +18,30 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
+#pragma pack(push, 1) // exact fit - no padding
+#ifdef IS_LITTLE_ENDIAN
+struct Color_565 {
+	uint8_t b:5;
+	uint8_t alpha:1;
+	uint8_t g:5;
+	uint8_t r:5;
+};
+#endif
+#ifdef IS_BIG_ENDIAN
+struct Color_565 {
+	uint8_t r:5;
+	uint8_t g:5;
+	uint8_t alpha:1;
+	uint8_t b:5;
+};
+#endif
+union ColorUnion
+{
+	Color_565 c;
+	uint16_t i;
+};
+#pragma pack(pop) //back to whatever the previous packing mode was
+
 // Color definitions
 #define COLOR_BLACK			0x0000	/*   0,   0,   0 */
 #define COLOR_BROWN			0x9B26
@@ -190,6 +214,11 @@ private:
 		uint16_t transparent_color
 	);
 public:
+	//variables used for screen fading
+	float fadeFraction;
+	bool isFading;
+	uint16_t fadeColor;
+
 	FrameBuffer();
 	~FrameBuffer();
 
@@ -199,6 +228,7 @@ public:
 	void drawPixel(int x, int y, uint16_t color);
 
 	static float lerp(float a, float b, float progress);
+	static uint8_t lerp(uint8_t a, uint8_t b, float progress);
 	static Point lerpPoints(Point a, Point b, float progress);
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 	void drawPoint(int x, int y, uint8_t size, uint16_t color);
