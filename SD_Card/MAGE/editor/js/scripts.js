@@ -1044,7 +1044,7 @@ var actionHandlerMap = {
 			action,
 			[
 				{propertyName: 'duration', size: 4},
-				{propertyName: 'color', size: 2},
+				{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
 			],
 			'SCREEN_FADE_OUT',
 			map,
@@ -1057,7 +1057,7 @@ var actionHandlerMap = {
 			action,
 			[
 				{propertyName: 'duration', size: 4},
-				{propertyName: 'color', size: 2},
+				{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
 			],
 			'SCREEN_FADE_IN',
 			map,
@@ -1348,6 +1348,35 @@ var getByteFromAction = function (propertyName, action, map, actionName) {
 	return value;
 };
 
+var rgbRegex = /#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/;
+var rgbaRegex = /#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/;
+var getColor = function (propertyName, action, map, actionName) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+	}
+	var match = (
+		rgbaRegex.exec(value)
+		|| rgbRegex.exec(value)
+	);
+	if (!match) {
+		throw new Error(`${actionName} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
+	}
+	match.shift();
+	match[0] = parseInt(match[0], 16);
+	match[1] = parseInt(match[1], 16);
+	match[2] = parseInt(match[2], 16);
+	match[3] = match[3] === undefined
+		? 255
+		: parseInt(match[3], 16);
+	return rgbaToC565(
+		match[0],
+		match[1],
+		match[2],
+		match[3],
+	);
+};
+
 var getTwoBytesFromAction = function (propertyName, action, map, actionName) {
 	var value = getNumberFromAction(propertyName, action, map, actionName);
 	var maxSize = 65535;
@@ -1493,7 +1522,7 @@ var actionPropertyNameToHandlerMap = {
 	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
-	color: getTwoBytesFromAction,
+	color: getColor,
 	expected_u2: getTwoBytesFromAction,
 	u2_value: getTwoBytesFromAction,
 	amplitude: getByteFromAction,
@@ -1550,7 +1579,9 @@ var handleActionWithFields = function(
 		data.dataView[dataViewMethodName](
 			offset,
 			value,
-			IS_LITTLE_ENDIAN
+			field.endian === undefined
+				? IS_LITTLE_ENDIAN
+				: field.endian,
 		);
 		offset += field.size;
 	})

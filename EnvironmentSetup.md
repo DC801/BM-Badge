@@ -81,7 +81,7 @@ sudo snap install --classic code
 - From within the terminal that appears, run the following (replace `8` with the number of cores your machine has, or the number of cores you have allocated to your VM):
 ```shell script
 cd Software/
-compiledb make cleanall
+make cleanall
 compiledb make DESKTOP=1 -j8
 ```
 

@@ -42,7 +42,11 @@ extern "C" {
 	}
 }
 
-FrameBuffer::FrameBuffer() {}
+FrameBuffer::FrameBuffer() {
+	fadeFraction = 0.0f;
+	isFading = false;
+	fadeColor = 0x0000;
+}
 FrameBuffer::~FrameBuffer() {}
 
 void FrameBuffer::clearScreen(uint16_t color) {
@@ -1433,6 +1437,10 @@ float FrameBuffer::lerp(float a, float b, float progress) {
 	return ((b - a) * progress) + a;
 }
 
+uint8_t FrameBuffer::lerp(uint8_t a, uint8_t b, float progress) {
+	return ((b - a) * progress) + a;
+}
+
 Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 	Point point = {
 		.x = (int32_t)lerp((float)a.x, (float)b.x, progress),
@@ -1799,6 +1807,31 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 
 void FrameBuffer::blt()
 {
+	if(
+		isFading
+		&& fadeFraction == 1.0f
+	) {
+		clearScreen(fadeColor);
+	} else if (
+		isFading
+		&& fadeFraction != 0.0f
+	) {
+		ColorUnion color;
+		color.i = fadeColor;
+		uint8_t fade_r = color.c.r;
+		uint8_t fade_g = color.c.g;
+		uint8_t fade_b = color.c.b;
+		uint8_t fade_a = color.c.alpha;
+		for(uint32_t i = 0; i < FRAMEBUFFER_SIZE; i++) {
+			color.i = SCREEN_ENDIAN_U2_VALUE(frame[i]);
+			color.c.r = lerp(color.c.r, fade_r, fadeFraction);
+			color.c.g = lerp(color.c.g, fade_g, fadeFraction);
+			color.c.alpha = lerp(color.c.alpha, fade_a, fadeFraction);
+			color.c.b = lerp(color.c.b, fade_b, fadeFraction);
+			frame[i] = SCREEN_ENDIAN_U2_VALUE(color.i);
+		}
+	}
+
 	#ifdef DC801_DESKTOP
 		EngineWindowFrameGameBlt(frame);
 	#endif

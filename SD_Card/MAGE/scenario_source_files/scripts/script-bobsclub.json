@@ -258,8 +258,12 @@
 	],
 	"show_dialog-bobrock-gottago": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "Bob Austin",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -268,8 +272,8 @@
 		},
 		{
 			"action": "SCREEN_FADE_OUT",
-			"duration": 1000,
-			"color": 0
+			"duration": 500,
+			"color": "#000000"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -283,13 +287,17 @@
 		},
 		{
 			"action": "SCREEN_FADE_IN",
-			"duration": 1000,
-			"color": 0
+			"duration": 500,
+			"color": "#000000"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bob Austin",
 			"script": "show_dialog-bobrock-start"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bobrock-start": [
