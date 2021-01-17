@@ -1472,7 +1472,7 @@ F 1 "3.3V" H 10854 3631 50  0000 L CNN
 F 2 "TestPoint:TestPoint_Pad_1.5x1.5mm" H 10775 3680 50  0001 C CNN
 F 3 "~" H 10775 3680 50  0001 C CNN
 	1    10775 3680
-	-1   0    0    1   
+	-1   0    0    -1  
 $EndComp
 Wire Notes Line
 	8860 610  8860 2120
@@ -2914,12 +2914,6 @@ F 3 "~" H 11125 5570 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	10975 5710 10975 5570
-Wire Notes Line
-	9925 6210 11825 6210
-Wire Notes Line
-	9925 610  9925 6210
-Wire Notes Line
-	11825 610  11825 6210
 Wire Wire Line
 	5485 5310 5640 5310
 $Comp
@@ -3110,4 +3104,49 @@ F 3 "~" H 1445 5505 50  0001 C CNN
 	1    1445 5505
 	-1   0    0    1   
 $EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J35
+U 1 1 600647D1
+P 10775 6385
+F 0 "J35" H 10855 6427 50  0000 L CNN
+F 1 "SWO" H 10855 6336 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.5x1.5mm" H 10775 6385 50  0001 C CNN
+F 3 "~" H 10775 6385 50  0001 C CNN
+	1    10775 6385
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J34
+U 1 1 600647DB
+P 10775 6215
+F 0 "J34" H 10854 6257 50  0000 L CNN
+F 1 "SWCLK" H 10854 6166 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.5x1.5mm" H 10775 6215 50  0001 C CNN
+F 3 "~" H 10775 6215 50  0001 C CNN
+	1    10775 6215
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x01 J33
+U 1 1 600647E5
+P 10775 6050
+F 0 "J33" H 10854 6092 50  0000 L CNN
+F 1 "SWDIO" H 10854 6001 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.5x1.5mm" H 10775 6050 50  0001 C CNN
+F 3 "~" H 10775 6050 50  0001 C CNN
+	1    10775 6050
+	-1   0    0    -1  
+$EndComp
+Text GLabel 10975 6215 2    50   Input ~ 10
+SWCLK
+Text GLabel 10975 6050 2    50   Input ~ 10
+SWDIO
+Text GLabel 10975 6385 2    50   Input ~ 10
+SW0
+Wire Notes Line
+	9925 6600 11825 6600
+Wire Notes Line
+	9925 610  9925 6600
+Wire Notes Line
+	11825 610  11825 6600
 $EndSCHEMATC
