@@ -16,6 +16,10 @@
 #define HALF_HEIGHT	120
 const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
+#define FLIPPED_DIAGONALLY_FLAG   0x01
+#define FLIPPED_VERTICALLY_FLAG   0x02
+#define FLIPPED_HORIZONTALLY_FLAG 0x04
+
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
 #pragma pack(push, 1) // exact fit - no padding
@@ -39,6 +43,16 @@ union ColorUnion
 {
 	Color_565 c;
 	uint16_t i;
+};
+struct RenderFlags {
+	bool diagonal:1;
+	bool vertical:1;
+	bool horizontal:1;
+	uint8_t padding:5;
+};
+union RenderFlagsUnion {
+	RenderFlags f;
+	uint8_t i;
 };
 #pragma pack(pop) //back to whatever the previous packing mode was
 
@@ -242,9 +256,6 @@ public:
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
 
-#define FLIPPED_HORIZONTALLY_FLAG 0x04
-#define FLIPPED_VERTICALLY_FLAG   0x02
-#define FLIPPED_DIAGONALLY_FLAG   0x01
 	void drawImageWithFlags(
 		int x,
 		int y,

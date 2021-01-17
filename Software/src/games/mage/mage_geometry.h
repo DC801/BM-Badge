@@ -43,16 +43,32 @@ class MageGeometry{
 		uint32_t size();
 
 		//this checks to see if a given point is inside the boundaries of a given geometry:
-		bool isPointInGeometry(Point point);
+		bool isPointInGeometry(
+			Point point,
+			uint8_t flags = 0,
+			uint16_t width = 0,
+			uint16_t height = 0
+		);
 
 		static bool doRectsOverlap(Rect a, Rect b);
+
+		Point flipPointByFlags(
+			uint16_t x,
+			uint16_t y,
+			uint8_t flags,
+			uint16_t width,
+			uint16_t height
+		);
 
 		void draw(
 			int32_t cameraX,
 			int32_t cameraY,
 			uint16_t color,
 			int32_t offset_x = 0,
-			int32_t offset_y = 0
+			int32_t offset_y = 0,
+			uint8_t flags = 0,
+			uint16_t width = 0,
+			uint16_t height = 0
 		);
 }; //class MageGeometry
 
