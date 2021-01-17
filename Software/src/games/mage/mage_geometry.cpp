@@ -257,9 +257,11 @@ void MageGeometry::draw(
 			color
 		);
 	} else {
-		for (int i = 1; i < pointCount; ++i) {
-			pointA = points[i - 1];
-			pointB = points[i];
+		// POLYLINE segmentCount is pointCount - 1
+		// POLYGON segmentCount is same as pointCount
+		for (int i = 0; i < segmentCount; i++) {
+			pointA = points[i];
+			pointB = points[(i + 1) % pointCount];
 			pointA = flipPointByFlags(
 				pointA.x,
 				pointA.y,
@@ -282,31 +284,5 @@ void MageGeometry::draw(
 				color
 			);
 		}
-	}
-	if(typeId == POLYGON) {
-		// draw the closing line from point N-1 to 0
-		pointA = points[pointCount - 1];
-		pointB = points[0];
-		pointA = flipPointByFlags(
-			pointA.x,
-			pointA.y,
-			flags,
-			width,
-			height
-		);
-		pointB = flipPointByFlags(
-			pointB.x,
-			pointB.y,
-			flags,
-			width,
-			height
-		);
-		mage_canvas->drawLine(
-			pointA.x + offset_x - cameraX,
-			pointA.y + offset_y - cameraY,
-			pointB.x + offset_x - cameraX,
-			pointB.y + offset_y - cameraY,
-			color
-		);
 	}
 }
