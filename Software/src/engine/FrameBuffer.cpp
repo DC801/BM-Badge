@@ -276,9 +276,11 @@ void FrameBuffer::drawChunkWithFlags(
 	uint8_t flags
 )
 {
-	bool flip_x    = flags & FLIPPED_HORIZONTALLY_FLAG;
-	bool flip_y    = flags & FLIPPED_VERTICALLY_FLAG;
-	bool flip_diag = flags & FLIPPED_DIAGONALLY_FLAG;
+	RenderFlagsUnion flagSplit;
+	flagSplit.i = flags;
+	bool flip_x    = flagSplit.f.horizontal;
+	bool flip_y    = flagSplit.f.vertical;
+	bool flip_diag = flagSplit.f.diagonal;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
 	if (
 		screen_x + tile_width < 0	||
@@ -1826,8 +1828,8 @@ void FrameBuffer::blt()
 			color.i = SCREEN_ENDIAN_U2_VALUE(frame[i]);
 			color.c.r = lerp(color.c.r, fade_r, fadeFraction);
 			color.c.g = lerp(color.c.g, fade_g, fadeFraction);
-			color.c.alpha = lerp(color.c.alpha, fade_a, fadeFraction);
 			color.c.b = lerp(color.c.b, fade_b, fadeFraction);
+			color.c.alpha = lerp(color.c.alpha, fade_a, fadeFraction);
 			frame[i] = SCREEN_ENDIAN_U2_VALUE(color.i);
 		}
 	}
