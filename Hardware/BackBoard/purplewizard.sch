@@ -1724,7 +1724,7 @@ MEM_IO3
 Wire Wire Line
 	3455 3210 3685 3210
 $Comp
-L Connector:USB_C_Receptacle_USB2.0 J15
+L purplewizard-rescue:USB_C_Receptacle_USB2.0-Connector J15
 U 1 1 5EE85D2B
 P 8700 3110
 F 0 "J15" H 9105 3955 50  0000 R CNN
