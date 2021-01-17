@@ -118,8 +118,20 @@ uint32_t MageGeometry::size()
 	return size;
 }
 
-bool MageGeometry::isPointInGeometry(Point point)
+bool MageGeometry::isPointInGeometry(
+	Point unFlippedPoint,
+	uint8_t flags,
+	uint16_t width,
+	uint16_t height
+)
 {
+	Point point = flipPointByFlags(
+		unFlippedPoint.x,
+		unFlippedPoint.y,
+		flags,
+		width,
+		height
+	);
 	//first check for the case where the geometry is a point:
 	if(typeId == MageGeometryTypeId::POINT)
 	{
@@ -188,45 +200,112 @@ bool MageGeometry::doRectsOverlap(Rect a, Rect b)
 }
 
 
+Point MageGeometry::flipPointByFlags(
+	uint16_t x,
+	uint16_t y,
+	uint8_t flags,
+	uint16_t width,
+	uint16_t height
+) {
+	Point point = {
+		.x= x,
+		.y= y,
+	};
+	if (flags) {
+		RenderFlagsUnion flagsUnion = {};
+		flagsUnion.i = flags;
+		if (flagsUnion.f.diagonal) {
+			point.x = y;
+			point.y = x;
+		}
+		if (flagsUnion.f.horizontal) {
+			point.x = -point.x + width;
+		}
+		if (flagsUnion.f.vertical) {
+			point.y = -point.y + height;
+		}
+	}
+	return point;
+};
+
 void MageGeometry::draw(
 	int32_t cameraX,
 	int32_t cameraY,
 	uint16_t color,
 	int32_t offset_x,
-	int32_t offset_y
+	int32_t offset_y,
+	uint8_t flags,
+	uint16_t width,
+	uint16_t height
 )
 {
-	Point *pointA;
-	Point *pointB;
+	Point pointA;
+	Point pointB;
 	if(typeId == POINT) {
+		pointA = points[0];
+		pointA = flipPointByFlags(
+			pointA.x,
+			pointA.y,
+			flags,
+			width,
+			height
+		);
 		mage_canvas->drawPoint(
-			points[0].x + offset_x - cameraX,
-			points[0].y + offset_y - cameraY,
+			pointA.x + offset_x - cameraX,
+			pointA.y + offset_y - cameraY,
 			4,
 			color
 		);
 	} else {
 		for (int i = 1; i < pointCount; ++i) {
-			pointA = &points[i - 1];
-			pointB = &points[i];
+			pointA = points[i - 1];
+			pointB = points[i];
+			pointA = flipPointByFlags(
+				pointA.x,
+				pointA.y,
+				flags,
+				width,
+				height
+			);
+			pointB = flipPointByFlags(
+				pointB.x,
+				pointB.y,
+				flags,
+				width,
+				height
+			);
 			mage_canvas->drawLine(
-				pointA->x + offset_x - cameraX,
-				pointA->y + offset_y - cameraY,
-				pointB->x + offset_x - cameraX,
-				pointB->y + offset_y - cameraY,
+				pointA.x + offset_x - cameraX,
+				pointA.y + offset_y - cameraY,
+				pointB.x + offset_x - cameraX,
+				pointB.y + offset_y - cameraY,
 				color
 			);
 		}
 	}
 	if(typeId == POLYGON) {
 		// draw the closing line from point N-1 to 0
-		pointA = &points[pointCount - 1];
-		pointB = &points[0];
+		pointA = points[pointCount - 1];
+		pointB = points[0];
+		pointA = flipPointByFlags(
+			pointA.x,
+			pointA.y,
+			flags,
+			width,
+			height
+		);
+		pointB = flipPointByFlags(
+			pointB.x,
+			pointB.y,
+			flags,
+			width,
+			height
+		);
 		mage_canvas->drawLine(
-			pointA->x + offset_x - cameraX,
-			pointA->y + offset_y - cameraY,
-			pointB->x + offset_x - cameraX,
-			pointB->y + offset_y - cameraY,
+			pointA.x + offset_x - cameraX,
+			pointA.y + offset_y - cameraY,
+			pointB.x + offset_x - cameraX,
+			pointB.y + offset_y - cameraY,
 			color
 		);
 	}
