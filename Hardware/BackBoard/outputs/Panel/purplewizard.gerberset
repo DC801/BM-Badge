@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GerberLayoutSet xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <LoadedOutlines>
-    <string>C:\Users\hamster\Documents\Development\dc801\BM-Badge\HW\BackBoard\outputs\Final</string>
+    <string>C:\Users\hamster\Documents\Development\dc801\BM-Badge\Hardware\BackBoard\outputs\Final</string>
   </LoadedOutlines>
   <Instances>
     <GerberInstance>
@@ -10,7 +10,7 @@
         <Y>10</Y>
       </Center>
       <Angle>0</Angle>
-      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\HW\BackBoard\outputs\Final</GerberPath>
+      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\Hardware\BackBoard\outputs\Final</GerberPath>
       <Generated>false</Generated>
       <IgnoreOutline>false</IgnoreOutline>
     </GerberInstance>
@@ -20,7 +20,7 @@
         <Y>10</Y>
       </Center>
       <Angle>0</Angle>
-      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\HW\BackBoard\outputs\Final</GerberPath>
+      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\Hardware\BackBoard\outputs\Final</GerberPath>
       <Generated>false</Generated>
       <IgnoreOutline>false</IgnoreOutline>
     </GerberInstance>
@@ -30,7 +30,7 @@
         <Y>10</Y>
       </Center>
       <Angle>0</Angle>
-      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\HW\BackBoard\outputs\Final</GerberPath>
+      <GerberPath>C:\Users\hamster\Documents\Development\dc801\BM-Badge\Hardware\BackBoard\outputs\Final</GerberPath>
       <Generated>false</Generated>
       <IgnoreOutline>false</IgnoreOutline>
     </GerberInstance>
@@ -181,7 +181,7 @@
   <Smoothing>1</Smoothing>
   <ExtraTabDrillDistance>0</ExtraTabDrillDistance>
   <ClipToOutlines>false</ClipToOutlines>
-  <LastExportFolder>C:\Users\hamster\Documents\Development\dc801\BM-Badge\HW\BackBoard\outputs\Panel</LastExportFolder>
+  <LastExportFolder>C:\Users\hamster\Documents\Development\dc801\BM-Badge\Hardware\BackBoard\outputs\Panel</LastExportFolder>
   <DoNotGenerateMouseBites>false</DoNotGenerateMouseBites>
   <MergeFileTypes>false</MergeFileTypes>
   <CopyOutlineToTopSilkscreen>false</CopyOutlineToTopSilkscreen>
