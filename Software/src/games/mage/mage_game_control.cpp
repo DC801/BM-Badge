@@ -752,6 +752,8 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 		uint8_t tilesetId = 0;
 		uint8_t flags = 0;
 	} currentTile;
+
+	Point playerPoint = getValidEntityRenderableData(playerEntityIndex)->center;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
 		tile_x = (int32_t)(map.TileWidth() * (i % map.Cols()));
@@ -813,12 +815,36 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			if (geometryId) {
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
+				bool isMageInGeometry = false;
+				if (
+					playerEntityIndex != NO_PLAYER
+					&& playerPoint.x >= tile_x
+					&& playerPoint.x <= tile_x + tileset.TileWidth()
+					&& playerPoint.y >= tile_y
+					&& playerPoint.y <= tile_y + tileset.TileHeight()
+				) {
+					Point offsetPoint = {
+						.x= playerPoint.x - tile_x,
+						.y= playerPoint.y - tile_y,
+					};
+					isMageInGeometry = geometry->isPointInGeometry(
+						offsetPoint,
+						currentTile.flags,
+						tileset.TileWidth(),
+						tileset.TileHeight()
+					);
+				}
 				geometry->draw(
 					camera_x,
 					camera_y,
-					COLOR_RED,
+					isMageInGeometry
+						? COLOR_RED
+						: COLOR_GREEN,
 					tile_x,
-					tile_y
+					tile_y,
+					currentTile.flags,
+					tileset.TileWidth(),
+					tileset.TileHeight()
 				);
 			}
 		}
