@@ -66,14 +66,8 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
-#ifdef DC801_DESKTOP
-#define MAGE_RUNNING_SPEED 5
-#define MAGE_WALKING_SPEED 1
-#endif
-#ifdef DC801_EMBEDDED
-#define MAGE_RUNNING_SPEED 10
-#define MAGE_WALKING_SPEED 5
-#endif
+#define MAGE_RUNNING_SPEED 250
+#define MAGE_WALKING_SPEED 125
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
@@ -108,7 +102,7 @@ all of the old code used as the foundation of this badge.
 //30fps: ~33ms
 //24fps: ~41ms
 #ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
@@ -273,17 +267,17 @@ typedef struct{
 //the complete current entity state can be determined with only this info and
 //the MageGame class interpreting the ROM data.
 typedef struct {
-    char name[MAGE_ENTITY_NAME_LENGTH];
-    uint16_t x;
+    char name[MAGE_ENTITY_NAME_LENGTH]; // bob's club
+    uint16_t x; // put the sheep back in the pen, rake in the lake
     uint16_t y;
     uint16_t onInteractScriptId;
     uint16_t onTickScriptId;
-    uint16_t primaryId;
-    uint16_t secondaryId;
+    uint16_t primaryId; // Bender's shiny metal ass, old man -> sheep, blitzball
+    uint16_t secondaryId; // ethernettles
     uint8_t primaryIdType;
-    uint8_t currentAnimation;
+    uint8_t currentAnimation; // Impersonate PipsCat and "action" to give approval to start work on X
     uint8_t currentFrame;
-    uint8_t direction;
+    uint8_t direction; // Some trees are upside-down, and you need to right them
     uint8_t hackableStateA;
     uint8_t hackableStateB;
     uint8_t hackableStateC;

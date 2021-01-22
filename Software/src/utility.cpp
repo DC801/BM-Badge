@@ -240,7 +240,12 @@ uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 
 uint32_t millis(void)
 {
+	#ifdef DC801_DESKTOP
+	return SDL_GetTicks();
+	#endif
+	#ifdef DC801_EMBEDDED
 	return(app_timer_cnt_get() / 32.768);
+	#endif
 }
 
 void EEpwm_init() {

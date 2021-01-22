@@ -34,7 +34,7 @@ Point cameraPosition = {
 	.y = 0,
 };
 
-void handleBLockingDelay()
+void handleBlockingDelay()
 {
 	//if a blocking delay was added by any actions, pause before returning to the game loop:
 	if(MageScript->blockingDelayTime)
@@ -70,7 +70,7 @@ void handleScripts()
 	}
 }
 
-void GameUpdate()
+void GameUpdate(uint32_t deltaTime)
 {
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
@@ -95,7 +95,7 @@ void GameUpdate()
 	else
 	{
 		//this handles buttons and state updates based on button presses in game mode:
-		MageGame->applyGameModeInputs();
+		MageGame->applyGameModeInputs(deltaTime);
 
 		//handle scripts:
 		handleScripts();
@@ -296,7 +296,7 @@ void MAGE()
 		EngineHandleInput();
 
 		//updates the state of all the things before rendering:
-		GameUpdate();
+		GameUpdate(deltaTime);
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -305,7 +305,7 @@ void MAGE()
 			//clear the mapLoadId to prevent infinite reloads
 			MageScript->mapLoadId = MAGE_NO_MAP;
 			//Update the game for the new map
-			GameUpdate();
+			GameUpdate(deltaTime);
 		}
 
 		//This renders the game to the screen based on the loop's updated state.
@@ -313,11 +313,18 @@ void MAGE()
 		uint32_t fullLoopTime = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
-		handleBLockingDelay();
+		handleBlockingDelay();
+
+		uint32_t updateAndRenderTime = millis() - lastTime;
 
 		#ifdef TIMING_DEBUG
 			debug_print("End of Loop Total: %d", fullLoopTime);
 			debug_print("----------------------------------------");
+		#endif
+		#ifdef DC801_DESKTOP
+			if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) {
+				SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
+			}
 		#endif
 	}
 
