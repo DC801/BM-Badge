@@ -14,6 +14,8 @@ extern MageScriptControl *MageScript;
 
 extern FrameBuffer *mage_canvas;
 
+MageGeometry *magePointBasedRect = new MageGeometry(POLYGON, 4);
+
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
@@ -105,7 +107,7 @@ MageGameControl::MageGameControl()
 
 	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
 
-	mageSpeed = MAGE_WALKING_SPEED;
+	mageSpeed = 0;
 	isMoving = false;
 	isCollisionDebugOn = false;
 	playerHasControl = true;
@@ -488,7 +490,7 @@ void MageGameControl::applyUniversalInputs()
 	) { isCollisionDebugOn = !isCollisionDebugOn; }
 }
 
-void MageGameControl::applyGameModeInputs()
+void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 {
 	if(MageDialog->isOpen) {
 		if(
@@ -535,7 +537,10 @@ void MageGameControl::applyGameModeInputs()
 		isMoving = false;
 
 		//set mage speed based on if the right pad down is being pressed:
-		mageSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+		float moveType = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+		float howManyMsPerSecond = 1000.0;
+		float whatFractionOfSpeed = moveType / howManyMsPerSecond;
+		mageSpeed = whatFractionOfSpeed * deltaTime;
 
 		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
 		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
@@ -545,14 +550,46 @@ void MageGameControl::applyGameModeInputs()
 		//if not actioning or resetting, handle all remaining inputs:
 		else
 		{
-			if(EngineInput_Buttons.ljoy_left )
-				{ playerEntity->x -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::WEST; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_right)
-				{ playerEntity->x += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::EAST; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_up )
-				{ playerEntity->y -= mageSpeed; playerEntity->direction = MageEntityAnimationDirection::NORTH; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_down )
-				{ playerEntity->y += mageSpeed; playerEntity->direction = MageEntityAnimationDirection::SOUTH; isMoving = true; }
+			Point testPoint = {
+				.x= playerEntity->x,
+				.y= playerEntity->y
+			};
+			Point pushback = {
+				.x= 0,
+				.y= 0
+			};
+			uint8_t direction = playerEntity->direction;
+			if(EngineInput_Buttons.ljoy_left ) { testPoint.x -= mageSpeed; direction = WEST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_right) { testPoint.x += mageSpeed; direction = EAST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_up   ) { testPoint.y -= mageSpeed; direction = NORTH; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_down ) { testPoint.y += mageSpeed; direction = SOUTH; isMoving = true; }
+			if(isMoving) {
+				playerEntity->direction = direction;
+				// get the geometry for where the player is
+				int32_t x0 = renderableData->hitBox.x + testPoint.x;
+				int32_t x1 = renderableData->hitBox.x + testPoint.x + renderableData->hitBox.w;
+				int32_t y0 = renderableData->hitBox.y + testPoint.y;
+				int32_t y1 = renderableData->hitBox.y + testPoint.y + renderableData->hitBox.w;
+				magePointBasedRect->points[0].x = x0;
+				magePointBasedRect->points[0].y = y0;
+				magePointBasedRect->points[1].x = x1;
+				magePointBasedRect->points[1].y = y0;
+				magePointBasedRect->points[2].x = x1;
+				magePointBasedRect->points[2].y = y1;
+				magePointBasedRect->points[3].x = x0;
+				magePointBasedRect->points[3].y = y1;
+				magePointBasedRect->draw(
+					cameraPosition.x,
+					cameraPosition.y,
+					COLOR_BSOD
+				);
+				uint8_t layerCount = map.LayerCount();
+				for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
+
+				}
+				playerEntity->x = testPoint.x;
+				playerEntity->y = testPoint.y;
+			}
 			if(EngineInput_Activated.rjoy_right ) {
 				handleEntityInteract();
 			}
@@ -1102,7 +1139,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		#ifdef DC801_DESKTOP
 		//add fudge factor for desktop version to make animations
 		//look better on slow-running emulation machine
-		entityRenderableData[i].currentFrameTicks += DESKTOP_TIME_FUDGE_FACTOR;
+		//entityRenderableData[i].currentFrameTicks += DESKTOP_TIME_FUDGE_FACTOR;
 		#endif
 
 		//update entity info:

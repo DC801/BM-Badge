@@ -78,7 +78,7 @@ private:
 	uint16_t previousPlayerTilesetId;
 
 	//a couple of state variables for tracking player movement:
-	uint8_t mageSpeed;
+	float mageSpeed;
 	bool isMoving;
 
 	//this handles script initialization when loading a new map
@@ -128,7 +128,7 @@ public:
 
 	//this takes input information and moves the playerEntity around
 	//If there is no playerEntity, it just moves the camera freely.
-	void applyGameModeInputs();
+	void applyGameModeInputs(uint32_t deltaTime);
 
 	//this will check in the direction the player entity is facing and start
 	//an on_interact script for an entity if any qualify.
