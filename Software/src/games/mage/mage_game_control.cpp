@@ -14,7 +14,6 @@ extern MageScriptControl *MageScript;
 
 extern FrameBuffer *mage_canvas;
 
-MageGeometry *magePointBasedRect = new MageGeometry(POLYGON, 4);
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
@@ -565,28 +564,6 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			if(EngineInput_Buttons.ljoy_down ) { testPoint.y += mageSpeed; direction = SOUTH; isMoving = true; }
 			if(isMoving) {
 				playerEntity->direction = direction;
-				// get the geometry for where the player is
-				int32_t x0 = renderableData->hitBox.x + testPoint.x;
-				int32_t x1 = renderableData->hitBox.x + testPoint.x + renderableData->hitBox.w;
-				int32_t y0 = renderableData->hitBox.y + testPoint.y;
-				int32_t y1 = renderableData->hitBox.y + testPoint.y + renderableData->hitBox.w;
-				magePointBasedRect->points[0].x = x0;
-				magePointBasedRect->points[0].y = y0;
-				magePointBasedRect->points[1].x = x1;
-				magePointBasedRect->points[1].y = y0;
-				magePointBasedRect->points[2].x = x1;
-				magePointBasedRect->points[2].y = y1;
-				magePointBasedRect->points[3].x = x0;
-				magePointBasedRect->points[3].y = y1;
-				magePointBasedRect->draw(
-					cameraPosition.x,
-					cameraPosition.y,
-					COLOR_BSOD
-				);
-				uint8_t layerCount = map.LayerCount();
-				for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
-
-				}
 				playerEntity->x = testPoint.x;
 				playerEntity->y = testPoint.y;
 			}
