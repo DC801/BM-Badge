@@ -1,0 +1,374 @@
+{
+	"show_dialog-max-start": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "show_dialog-max-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"expected_bool": true,
+			"success_script": "show_dialog-max-start-s"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start1"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "Felix"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start2"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start3"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "Felix"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start4"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start5"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"bool_value": true
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"show_dialog-max-start-s": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Max Swagger",
+			"script": "show_dialog-max-start"
+		}
+	],
+	"show_dialog-max-end": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-end"
+		}
+	],
+	"show_dialog-felix": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Felix",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-felix"
+		}
+	],
+	"show_dialog-deut": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Deuteronomy",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-deut"
+		}
+	],
+	"show_dialog-maru": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Maru",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maru"
+		}
+	],
+	"show_dialog-bmurray": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "B. Murray",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bmurray"
+		}
+	],
+	"on_tick-max-neutral": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "null_script"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "on_tick-max-catwatch"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Felix",
+			"script": "felix-loiter"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Maru",
+			"script": "maru-loiter"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "B. Murray",
+			"script": "bmurray-loiter"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Deuteronomy",
+			"script": "deut-loiter"
+		}
+	],
+	"on_tick-max-catwatch": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": false,
+			"success_script": "on_tick-max-neutral"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Felix",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Maru",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "B. Murray",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Deuteronomy",
+			"script": "watch-player"
+		}
+	],
+	"felix-loiter": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		}
+	],
+	"deut-loiter": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
+		}
+	],
+	"bmurray-loiter": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 60000
+		}
+	],
+	"maru-loiter": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		}
+	]
+}
