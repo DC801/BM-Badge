@@ -10,7 +10,8 @@
 		"scripts/script-bobsclub.json",
 		"scripts/script-oldcouplehouse.json",
 		"scripts/script-bender.json",
-		"scripts/script-family.json"
+		"scripts/script-family.json",
+		"scripts/script-max.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-test_map.json",
@@ -20,7 +21,8 @@
 		"dialog/dialog-oldcouplehouse.json",
 		"dialog/dialog-main.json",
 		"dialog/dialog-bender.json",
-		"dialog/dialog-family.json"
+		"dialog/dialog-family.json",
+		"dialog/dialog-max.json"
 	],
 	"maps": {
 		"main": "maps/map-main.json",

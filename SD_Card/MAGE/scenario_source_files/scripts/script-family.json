@@ -60,7 +60,7 @@
 	"show_dialog-smith": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "smith",
+			"entity": "Smith",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -69,7 +69,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "smith",
+			"entity": "Smith",
 			"direction": "east"
 		}
 	]
