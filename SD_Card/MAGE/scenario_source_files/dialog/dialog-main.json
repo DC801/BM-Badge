@@ -1,96 +1,72 @@
 {
-	"dialog-max1": [
+	"dialog-max": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",
-			"name": "Max Swagger",
+			"name": "%Max Swagger%",
 			"messages": [
-				"Ah, a citizen!",
-				"I wondered if you could help me!"
+				"Ah, yes! I know you!",
+				"You're the birthday mage!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
-				"What do you need?"
+				"I guess you could say that."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",
-			"name": "Max Swagger",
+			"name": "%Max Swagger%",
 			"messages": [
-				"My name's Swagger!\nMax Swagger!",
-				"I was doing a bit of reconnoissance,\nlooking for a place where I can\nopen my new fashion shop.",
-				"The board here says there's space\navailable, but I can't seem to find\nthe building it's talking about.",
-				"The only thing actually here is\nthe Bobs-Only Club!"
+				"Yes, yes!",
+				"Well, you're invited to the grand opening\nof my new fashion shop!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
-				"Well, the town isn't fully implemented\nyet, so... you might have to wait\na few more weeks for the rest of\nthe buildings to return."
-			]
-		}
-	],
-	"dialog-max2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"Not fully implemented?"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"Sorry.",
-				"But I can personally guarantee\nyou can have a building all to yourself\nwhen the time comes."
+				"Oh, neat!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",
-			"name": "Max Swagger",
+			"name": "%Max Swagger%",
 			"messages": [
-				"Oh! That's good news! All to myself?",
-				"I'm picturing two stories... no, three!",
-				"Lush woven carpets... vaulted ceilings...\nbeautiful oak doors...\nhand-carved decorative moulding...."
+				"...Next year!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
-				"Um, well....\nYou'll definitely get a building."
+				"What? Next year? Your shop isn't ready\nyet?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",
-			"name": "Max Swagger",
+			"name": "%Max Swagger%",
 			"messages": [
-				"Excellent! Then I shall return\nwhen the time comes!",
-				"Until that glorious day, farewell!"
+				"Oh, good heavens, no! Not yet!",
+				"There's much more to do... so much more!",
+				"The interior must be wallpapered and\npainted, and the new carpet cut and\nlayed....",
+				"The new furniture must be brought in\nfrom Copenhagen, and that could take\nweeks alone!"
 			]
-		}
-	],
-	"dialog-max3": [
+		},
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
-				"Not much of a market for fashion here,\nI would've thought.",
-				"Best of luck, Max Swagger!"
+				"I see. Well, good luck!"
 			]
 		}
 	],
@@ -98,7 +74,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "timmy",
-			"name": "Timmy",
+			"name": "%Timmy%",
 			"messages": [
 				"I'm practicing for my triathlon!",
 				"Running is my weakest event, so I'm\nworking hard to improve my time!"
@@ -107,7 +83,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Don't you need legs to run?"
 			]
@@ -115,7 +91,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "timmy",
-			"name": "Timmy",
+			"name": "%Timmy%",
 			"messages": [
 				"...?",
 				"No?"
@@ -136,7 +112,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "trekkie",
-			"name": "Trekkie",
+			"name": "%Trekkie%",
 			"messages": [
 				"Me heard you will soon have a birthday!"
 			]
@@ -144,7 +120,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"That's right! I'll be turning 16,\nand I'll get to be an official\nvillage mage!"
 			]
@@ -152,7 +128,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "trekkie",
-			"name": "Trekkie",
+			"name": "%Trekkie%",
 			"messages": [
 				"Me hope you have happy birthday!"
 			]
@@ -160,7 +136,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Thanks very much, Trekkie!"
 			]
@@ -294,7 +270,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "smith",
-			"name": "Mr. Smith",
+			"name": "%Smith%",
 			"messages": [
 				"I came here on a blacksmithing\nscholarship, but there's not much\nblacksmithing to do at the moment.",
 				"I think I'll stick around anyway.\nSee what happens."
@@ -315,7 +291,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "sheep",
-			"name": "Delmar",
+			"name": "%Delmar%",
 			"messages": [
 				"...?"
 			]
@@ -325,7 +301,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
-			"name": "V. Elder",
+			"name": "Debug Man",
 			"messages": [
 				"All flags reset."
 			]
