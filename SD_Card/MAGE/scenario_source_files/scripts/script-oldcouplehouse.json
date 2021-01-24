@@ -54,7 +54,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-happy",
 			"expected_bool": true,
 			"success_script": "leave-happytrue"
 		},
