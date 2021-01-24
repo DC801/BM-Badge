@@ -81,6 +81,9 @@ private:
 	float mageSpeed;
 	bool isMoving;
 
+	MageGeometry magePointBasedRect;
+	Point playerVelocity;
+
 	//this handles script initialization when loading a new map
 	void initializeScriptsOnMapLoad();
 public:
@@ -183,6 +186,9 @@ public:
 	MageTileset* getValidTileset(uint16_t tilesetId);
 
 	std::string getEntityNameStringById(int16_t entityId);
+
+	Point getPushBackFromTilesThatCollideWithPlayerRect();
+
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
