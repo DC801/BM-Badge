@@ -13,7 +13,7 @@ class MageGeometry{
 	private:
 	public:
 		//can be any MageGeometryTypeId:
-		uint8_t typeId;
+		MageGeometryTypeId typeId;
 		//how many points will be in the pointArray:
 		uint8_t pointCount;
 		//how many points will be in the segmentLengths:
@@ -27,20 +27,25 @@ class MageGeometry{
 
 		//default constructor returns a point with coordinates 0,0:
 		MageGeometry() :
-			typeId{},
+			typeId{MageGeometryTypeId::POINT},
 			pointCount{1},
-			points{std::make_unique<Point[]>(pointCount)}
+			segmentCount{0},
+			points{std::make_unique<Point[]>(pointCount)},
+			segmentLengths{std::make_unique<float[]>(segmentCount)}
 		{}
 
 		//this constructor allows you to make a geometry of a known type and pointCount.
 		//you'll need to manually fill in the points, though. They all default to 0,0.
-		MageGeometry(uint8_t type, uint8_t numPoints);
+		MageGeometry(
+			MageGeometryTypeId type,
+			uint8_t numPoints
+		);
 
 		//this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
 		MageGeometry(uint32_t address);
 
 		//returns the size in RAM of a MageGeometry object.
-		uint32_t size();
+		uint32_t size() const;
 
 		//this checks to see if a given point is inside the boundaries of a given geometry:
 		bool isPointInGeometry(

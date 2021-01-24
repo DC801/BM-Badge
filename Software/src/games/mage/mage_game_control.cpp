@@ -111,6 +111,13 @@ MageGameControl::MageGameControl()
 	isCollisionDebugOn = false;
 	playerHasControl = true;
 
+	magePointBasedRect = MageGeometry(POLYGON, 4);
+
+	playerVelocity = {
+		.x= 0,
+		.y= 0
+	};
+
 	//load the map
 	PopulateMapData(currentMapId);
 }
@@ -139,6 +146,8 @@ uint32_t MageGameControl::Size() const
 		(sizeof(char) * MAGE_ENTITY_NAME_LENGTH) + //playerName
 		sizeof(playerHasControl) +
 		sizeof(isCollisionDebugOn) +
+		magePointBasedRect.size() +
+		sizeof(playerVelocity) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -549,23 +558,20 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		//if not actioning or resetting, handle all remaining inputs:
 		else
 		{
-			Point testPoint = {
-				.x= playerEntity->x,
-				.y= playerEntity->y
-			};
-			Point pushback = {
+			playerVelocity = {
 				.x= 0,
 				.y= 0
 			};
 			uint8_t direction = playerEntity->direction;
-			if(EngineInput_Buttons.ljoy_left ) { testPoint.x -= mageSpeed; direction = WEST; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_right) { testPoint.x += mageSpeed; direction = EAST; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_up   ) { testPoint.y -= mageSpeed; direction = NORTH; isMoving = true; }
-			if(EngineInput_Buttons.ljoy_down ) { testPoint.y += mageSpeed; direction = SOUTH; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_left ) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_right) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_up   ) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
+			if(EngineInput_Buttons.ljoy_down ) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
 			if(isMoving) {
 				playerEntity->direction = direction;
-				playerEntity->x = testPoint.x;
-				playerEntity->y = testPoint.y;
+				Point pushback = getPushBackFromTilesThatCollideWithPlayerRect();
+				playerEntity->x += playerVelocity.x + pushback.x;
+				playerEntity->y += playerVelocity.y + pushback.y;
 			}
 			if(EngineInput_Activated.rjoy_right ) {
 				handleEntityInteract();
@@ -746,8 +752,6 @@ void MageGameControl::handleEntityInteract()
 void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 {
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
-
-
 	uint32_t layerAddress = map.LayerOffset(layer);
 	if(layerAddress == 0)
 	{
@@ -863,6 +867,134 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 			}
 		}
 	}
+}
+
+Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
+{
+	MageEntityRenderableData *playerRenderableData = getValidEntityRenderableData(
+		playerEntityIndex
+	);
+	uint32_t tilesPerLayer = map.Cols() * map.Rows();
+	uint32_t layerAddress = 0;
+	uint32_t address = 0;
+	Rect playerRect = {
+		.x= playerRenderableData->hitBox.x + playerVelocity.x,
+		.y= playerRenderableData->hitBox.y + playerVelocity.y,
+		.w= playerRenderableData->hitBox.w,
+		.h= playerRenderableData->hitBox.h,
+	};
+	Rect tileRect = {
+		.x= 0,
+		.y= 0,
+		.w= 0,
+		.h= 0
+	};
+	int32_t x = 0;
+	int32_t y = 0;
+	uint16_t geometryId = 0;
+	MageGeometry *geometry;
+	Point pushback = {
+		.x= 0,
+		.y= 0,
+	};
+	struct MageMapTile {
+		uint16_t tileId = 0;
+		uint8_t tilesetId = 0;
+		uint8_t flags = 0;
+	} currentTile;
+	Point playerPoint = playerRenderableData->center;
+	// get the geometry for where the player is
+	int32_t x0 = playerRect.x;
+	int32_t x1 = x0 + playerRect.w;
+	int32_t y0 = playerRect.y;
+	int32_t y1 = y0 + playerRect.h;
+	magePointBasedRect.points[0].x = x0;
+	magePointBasedRect.points[0].y = y0;
+	magePointBasedRect.points[1].x = x1;
+	magePointBasedRect.points[1].y = y0;
+	magePointBasedRect.points[2].x = x1;
+	magePointBasedRect.points[2].y = y1;
+	magePointBasedRect.points[3].x = x0;
+	magePointBasedRect.points[3].y = y1;
+	magePointBasedRect.draw(
+		cameraPosition.x,
+		cameraPosition.y,
+		COLOR_PURPLE
+	);
+	uint8_t layerCount = map.LayerCount();
+	for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
+		layerAddress = map.LayerOffset(layerIndex);
+		for (uint32_t i = 0; i < tilesPerLayer; i++) {
+			tileRect.x = (int32_t)(map.TileWidth() * (i % map.Cols()));
+			tileRect.y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+			x = tileRect.x - x0;
+			y = tileRect.y - y0;
+			if (
+				(x < -map.TileWidth() ||
+				(x > playerRect.w) ||
+				(y < -map.TileHeight()) ||
+				(y > playerRect.h))
+			) {
+				continue;
+			}
+			address = layerAddress + (i * sizeof(currentTile));
+
+			EngineROM_Read(
+				address,
+				sizeof(currentTile),
+				(uint8_t *)&currentTile,
+				"getPushBackFromTilesThatCollideWithPlayerRect Failed to read property 'currentTile'"
+			);
+
+			currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
+
+			if (currentTile.tileId == 0)
+			{
+				continue;
+			}
+
+			currentTile.tileId -= 1;
+
+			const MageTileset &tileset = Tileset(currentTile.tilesetId);
+
+			if (!tileset.Valid())
+			{
+				continue;
+			}
+			geometryId = tileset.globalGeometryIds[currentTile.tileId];
+			if (geometryId) {
+				geometryId -= 1;
+				geometry = getGeometryFromGlobalId(geometryId);
+				bool isMageInGeometry = false;
+				Point offsetPoint = {
+					.x= playerPoint.x - tileRect.x,
+					.y= playerPoint.y - tileRect.y,
+				};
+				isMageInGeometry = geometry->isPointInGeometry(
+					offsetPoint,
+					currentTile.flags,
+					tileset.TileWidth(),
+					tileset.TileHeight()
+				);
+				if (isCollisionDebugOn) {
+					geometry->draw(
+						cameraPosition.x,
+						cameraPosition.y,
+						isMageInGeometry
+							? COLOR_RED
+							: COLOR_YELLOW,
+						tileRect.x,
+						tileRect.y,
+						currentTile.flags,
+						tileset.TileWidth(),
+						tileset.TileHeight()
+					);
+				}
+			}
+		}
+	}
+	mage_canvas->blt();
+	return pushback;
 }
 
 uint16_t MageGameControl::getValidEntityId(uint16_t entityId)

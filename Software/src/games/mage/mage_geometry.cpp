@@ -94,19 +94,25 @@ MageGeometry::MageGeometry(uint32_t address)
 	return;
 }
 
-MageGeometry::MageGeometry(uint8_t type, uint8_t numPoints)
-{
+MageGeometry::MageGeometry(
+	MageGeometryTypeId type,
+	uint8_t numPoints
+) {
 	typeId = type;
 	pointCount = numPoints;
 	points = std::make_unique<Point[]>(pointCount);
+	segmentCount = typeId == MageGeometryTypeId::POLYGON
+		? numPoints
+		: numPoints - 1;
 	for(uint8_t i=0; i<pointCount; i++)
 	{
 		points[i].x = 0;
 		points[i].y = 0;
 	}
+	segmentLengths = std::make_unique<float[]>(segmentCount);
 }
 
-uint32_t MageGeometry::size()
+uint32_t MageGeometry::size() const
 {
 	uint32_t size =
 		sizeof(typeId) +
