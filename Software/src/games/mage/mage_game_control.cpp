@@ -993,7 +993,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 			}
 		}
 	}
-	mage_canvas->blt();
 	return pushback;
 }
 
