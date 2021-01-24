@@ -1466,5 +1466,185 @@
 				}
 			]
 		}
+	},
+	"maru": {
+		"tileset": "entity-maru.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 8,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true
+				},
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"bmurray": {
+		"tileset": "entity-bmurray.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 5,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"felix": {
+		"tileset": "entity-felix.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 5,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"deut": {
+		"tileset": "entity-deut.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 8,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 11,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true
+				},
+				{
+					"tileid": 10,
+					"flip_x": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

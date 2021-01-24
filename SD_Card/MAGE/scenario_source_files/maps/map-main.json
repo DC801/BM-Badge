@@ -450,98 +450,6 @@
                  "y":891.25
                 }, 
                 {
-                 "gid":594,
-                 "height":32,
-                 "id":110,
-                 "name":"B. Murray",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bmurray"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"bmurray-loiter"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":730.666666666667,
-                 "y":373
-                }, 
-                {
-                 "gid":594,
-                 "height":32,
-                 "id":111,
-                 "name":"Maru",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-maru"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"maru-loiter"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":822.333333333333,
-                 "y":405.666666666667
-                }, 
-                {
-                 "gid":594,
-                 "height":32,
-                 "id":112,
-                 "name":"Deuteronomy",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-deut"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"deut-loiter"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":761,
-                 "y":405.666666666667
-                }, 
-                {
-                 "gid":594,
-                 "height":32,
-                 "id":113,
-                 "name":"Felix",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-felix"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"felix-loiter"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":844.666666666667,
-                 "y":364
-                }, 
-                {
                  "height":80.3333333333333,
                  "id":114,
                  "name":"catwatch-zone",
@@ -1380,6 +1288,98 @@
                  "width":0,
                  "x":822.5,
                  "y":992.5
+                }, 
+                {
+                 "gid":1007,
+                 "height":32,
+                 "id":125,
+                 "name":"Felix",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-felix"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"felix-loiter"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":845.5,
+                 "y":366.5
+                }, 
+                {
+                 "gid":1028,
+                 "height":32,
+                 "id":126,
+                 "name":"Maru",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-maru"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"maru-loiter"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":820.5,
+                 "y":407
+                }, 
+                {
+                 "gid":1046,
+                 "height":32,
+                 "id":127,
+                 "name":"B. Murray",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bmurray"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"bmurray-loiter"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":730.5,
+                 "y":376.5
+                }, 
+                {
+                 "gid":1067,
+                 "height":32,
+                 "id":128,
+                 "name":"Deuteronomy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-deut"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"deut-loiter"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":762,
+                 "y":406.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1570,7 +1570,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":125,
+ "nextobjectid":129,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1666,6 +1666,22 @@
         {
          "firstgid":979,
          "source":"..\/entities\/entity-blitzball.json"
+        }, 
+        {
+         "firstgid":1003,
+         "source":"..\/entities\/entity-felix.json"
+        }, 
+        {
+         "firstgid":1021,
+         "source":"..\/entities\/entity-maru.json"
+        }, 
+        {
+         "firstgid":1042,
+         "source":"..\/entities\/entity-bmurray.json"
+        }, 
+        {
+         "firstgid":1060,
+         "source":"..\/entities\/entity-deut.json"
         }],
  "tilewidth":32,
  "type":"map",
