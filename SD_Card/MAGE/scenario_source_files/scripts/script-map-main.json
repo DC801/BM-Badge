@@ -71,52 +71,6 @@
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-max": [
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "west"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max1"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "east"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "south"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "west"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "walk_on_path_20s"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max3"
-		}
-	],
 	"show_dialog-timmy": [
 		{
 			"action": "SHOW_DIALOG",
@@ -127,39 +81,6 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goose"
-		}
-	],
-	"show_dialog-beatrice": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-beatrice1"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "east"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "west"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "south"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-beatrice2"
 		}
 	],
 	"show_dialog-trekkie_demo": [
@@ -699,6 +620,16 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "ball",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork",
 			"bool_value": false
 		},
 		{

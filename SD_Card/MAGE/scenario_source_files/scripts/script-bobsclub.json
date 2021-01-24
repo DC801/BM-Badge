@@ -497,6 +497,11 @@
 			"byte_value": 0
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobsclub",
+			"bool_value": true
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "baker1",
 			"expected_bool": false,
