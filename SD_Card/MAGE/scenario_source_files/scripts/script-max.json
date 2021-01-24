@@ -1,6 +1,13 @@
 {
 	"show_dialog-max-start": [
 		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-max-catbosshere"
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "catwork",
 			"expected_bool": true,
@@ -127,6 +134,22 @@
 			"script": "show_dialog-max-start"
 		}
 	],
+	"show_dialog-max-catbosshere": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-catbosshere"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"bool_value": true
+		}
+	],
 	"show_dialog-max-end": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -244,9 +267,157 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Deuteronomy",
 			"script": "watch-player"
+		},
+		{
+			"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"expected_byte": 2,
+			"expected_bool": true,
+			"success_script": "on_tick-max-thumbwatch"
+		}
+	],
+	"on_tick-max-thumbwatch": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "catwatch-zone",
+			"success_script": "send-cats-to-work",
+			"expected_bool": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-max-catwatch"
+		}
+	],
+	"send-cats-to-work": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Felix",
+			"geometry": "felix-spot",
+			"success_script": "show_dialog-max-crewmissing",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Deuteronomy",
+			"geometry": "deut-spot",
+			"success_script": "show_dialog-max-crewmissing",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Maru",
+			"geometry": "maru-spot",
+			"success_script": "show_dialog-max-crewmissing",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "B. Murray",
+			"geometry": "bmurray-spot",
+			"success_script": "show_dialog-max-crewmissing",
+			"expected_bool": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-crew-success1"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Felix",
+			"script": "cat-walking-to-work"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Deuteronomy",
+			"script": "cat-walking-to-work"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Maru",
+			"script": "cat-walking-to-work"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "B. Murray",
+			"script": "cat-walking-to-work"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-crew-success2"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"cat-walking-to-work": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "catwalk-spot",
+			"duration": 800
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "catwalk-door",
+			"duration": 400
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "hiding-cat"
 		}
 	],
 	"felix-loiter": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "hiding-cat"
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
@@ -277,6 +448,12 @@
 	],
 	"deut-loiter": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "hiding-cat"
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
@@ -306,6 +483,12 @@
 	],
 	"bmurray-loiter": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "hiding-cat"
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "south"
@@ -330,10 +513,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 60000
+			"duration": 1000
 		}
 	],
 	"maru-loiter": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "hiding-cat"
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
@@ -369,6 +558,28 @@
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 400
+		}
+	],
+	"show_dialog-max-crewmissing": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-crewmissing"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Max Swagger",
+			"script": "on_tick-max-neutral"
+		}
+	],
+	"hiding-cat": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	]
 }

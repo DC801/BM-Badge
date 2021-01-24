@@ -71,22 +71,6 @@
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-max": [
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "south"
-		}
-	],
 	"show_dialog-timmy": [
 		{
 			"action": "SHOW_DIALOG",
@@ -636,6 +620,16 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "ball",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork",
 			"bool_value": false
 		},
 		{
