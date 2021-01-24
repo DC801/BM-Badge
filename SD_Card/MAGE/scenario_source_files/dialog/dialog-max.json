@@ -164,6 +164,17 @@
 			]
 		}
 	],
+	"dialog-max-catbosshere": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Oh! The cat boss!",
+				"Oh, at last! Come tell your crew that you\napprove of the construction plans!"
+			]
+		}
+	],
 	"dialog-max-end": [
 		{
 			"alignment": "BOTTOM_LEFT",

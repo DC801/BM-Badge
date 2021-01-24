@@ -459,6 +459,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-bmurray"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"bmurray-loiter"
                         }],
                  "rotation":0,
                  "type":"",
@@ -477,6 +482,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-maru"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"maru-loiter"
                         }],
                  "rotation":0,
                  "type":"",
@@ -495,6 +505,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-deut"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"deut-loiter"
                         }],
                  "rotation":0,
                  "type":"",
@@ -513,6 +528,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-felix"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"felix-loiter"
                         }],
                  "rotation":0,
                  "type":"",
@@ -541,8 +561,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":815,
-                 "y":231.333333333333
+                 "x":-84.3333333333333,
+                 "y":-94.6666666666672
                 }, 
                 {
                  "height":34.6666666666667,
