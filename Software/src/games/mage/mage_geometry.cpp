@@ -7,7 +7,6 @@ extern FrameBuffer *mage_canvas;
 
 MageGeometry::MageGeometry(uint32_t address)
 {
-	size_t segmentLengthsSize;
 	//skip over name:
 	address += 32;
 	//read typeId:
@@ -81,11 +80,10 @@ MageGeometry::MageGeometry(uint32_t address)
 
 	//generate appropriately sized array:
 	segmentLengths = std::make_unique<float[]>(segmentCount);
-	segmentLengthsSize = sizeof(float) * segmentCount;
 
 	EngineROM_Read(
 		address,
-		segmentLengthsSize,
+		sizeof(float) * segmentCount,
 		(uint8_t *)segmentLengths.get(),
 		"Failed to load Geometry property 'x'"
 	);
