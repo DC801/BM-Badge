@@ -1,17 +1,17 @@
 {
 	"show_dialog-max-start": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": true,
+			"success_script": "show_dialog-max-end"
+		},
+		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "%PLAYER%",
 			"entity_type": "pipscat",
 			"expected_bool": true,
 			"success_script": "show_dialog-max-catbosshere"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
-			"expected_bool": true,
-			"success_script": "show_dialog-max-end"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -279,10 +279,14 @@
 	"on_tick-max-thumbwatch": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%SELF%",
+			"entity": "%PLAYER%",
 			"geometry": "catwatch-zone",
 			"success_script": "send-cats-to-work",
 			"expected_bool": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
 		},
 		{
 			"action": "RUN_SCRIPT",
