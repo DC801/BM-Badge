@@ -159,14 +159,9 @@
  "orientation":"orthogonal",
  "properties":[
         {
-         "name":"on_load",
-         "type":"string",
-         "value":"on_load-family"
-        }, 
-        {
          "name":"on_tick",
          "type":"string",
-         "value":"on_tick-family"
+         "value":"on_tick-magehouse"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
