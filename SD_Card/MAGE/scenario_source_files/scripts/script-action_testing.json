@@ -317,5 +317,41 @@
 			"entity": "%SELF%",
 			"relative_direction": 2
 		}
+	],
+	"mage09-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage09"
+		}
+	],
+	"mage09-copy_script": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage07-point_at_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage08-point_away_from_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		}
+	],
+	"mage09-copy_script_deeper": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_delay"
+		}
+	],
+	"mage09-copy_script_delay": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		}
 	]
 }
