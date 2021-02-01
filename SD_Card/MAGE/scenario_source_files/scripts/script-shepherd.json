@@ -1,6 +1,11 @@
 {
 	"show_dialog-shepherd-start": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "shepherd2",
 			"expected_bool": true,
@@ -112,6 +117,11 @@
 	],
 	"show_dialog-shepherd-start-s": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Baa",
 			"geometry": "sheep-pen",
@@ -150,6 +160,11 @@
 		}
 	],
 	"show_dialog-shepherd-sheepcheck": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Baa",
@@ -195,6 +210,11 @@
 	],
 	"show_dialog-shepherd-sheepcheer": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-sheepcheer"
 		},
@@ -205,6 +225,11 @@
 		}
 	],
 	"show_dialog-shepherd-end": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-end"

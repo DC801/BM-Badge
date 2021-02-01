@@ -1,0 +1,34 @@
+{
+	"dialog-tuesday-intro1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Come on in, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-tuesday-intro2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"We'll be right here."
+
+			]
+		}
+	],
+	"dialog-tuesday-intro3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Go ahead. You'll do great!"
+
+			]
+		}
+	]
+}

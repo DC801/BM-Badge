@@ -1646,5 +1646,104 @@
 				}
 			]
 		}
+	},
+	"modem": {
+		"tileset": "entity-modem.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 5,
+					"flip_x": false
+				}
+			],
+			"extra_special": [
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

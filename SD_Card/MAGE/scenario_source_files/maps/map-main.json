@@ -360,7 +360,7 @@
                 {
                  "height":0,
                  "id":99,
-                 "name":"enter_from-home",
+                 "name":"enter_from-magehouse",
                  "polyline":[
                         {
                          "x":0,
@@ -847,8 +847,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":513.5,
-                 "y":478
+                 "x":1007.5,
+                 "y":430
                 }, 
                 {
                  "gid":25,
@@ -1055,7 +1055,7 @@
                 {
                  "height":23,
                  "id":98,
-                 "name":"door-home-entrance",
+                 "name":"door-magehouse-entrance",
                  "rotation":0,
                  "type":"",
                  "visible":true,

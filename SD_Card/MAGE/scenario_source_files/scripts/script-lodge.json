@@ -1,0 +1,314 @@
+{
+	"on_tick-lodge": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "tuesday",
+			"expected_bool": true,
+			"success_script": "on_tick-tuesday"
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-lodge",
+			"success_script": "leave-lodge-cutscene",
+			"expected_bool": true
+		}
+	],
+	"on_tick-tuesday": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-lodge",
+			"success_script": "leave-lodge",
+			"expected_bool": true
+		}
+	],
+	"elders-leaving-lodge": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Bert",
+			"script": "on_tick-elders-leaving-lodge"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Alfonso",
+			"script": "on_tick-elders-leaving-lodge"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Jackob",
+			"script": "on_tick-elders-leaving-lodge"
+		}
+	],
+	"on_tick-elders-leaving-lodge": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 400
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 2000
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"leave-lodge": [
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-lodge"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"leave-lodge-cutscene": [
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-lodge-cutscene"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"on_load-lodge": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "tuesday",
+			"expected_bool": false,
+			"success_script": "on_load-lodge-cutscene"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "empty-lodge"
+		}
+	],
+	"on_load-lodge-cutscene": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "enter-lodge",
+			"duration": 200
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-intro1",
+			"doc": "Come on in, Player!"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "lodge-path1",
+			"duration": 300
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "lodge-path1",
+			"duration": 1400
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Uncle Zappy"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-intro2",
+			"doc": "We'll be right here."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "lodge-path2",
+			"duration": 300
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Aunt Zippy"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-intro3",
+			"doc": "Go ahead. You'll do great."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "lodge-path2",
+			"duration": 800
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"debug-tuesday": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesday",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "empty-lodge"
+		}
+	],
+	"empty-lodge": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Jackob",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Cleo",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Shepherd",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Beatrice",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Baker",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Trekkie",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Max Swagger",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Smith",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Verthandi",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Uncle Zappy",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Aunt Zippy",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ssen",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Goose  ",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Goose ",
+			"geometry": "lodge-hidingplace"
+		}
+	]
+}
