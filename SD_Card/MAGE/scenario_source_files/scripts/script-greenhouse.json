@@ -70,7 +70,7 @@
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Modem",
-			"byte_value": 1,
+			"byte_value": 4,
 			"doc": "should be modem working animation"
 		}
 	],

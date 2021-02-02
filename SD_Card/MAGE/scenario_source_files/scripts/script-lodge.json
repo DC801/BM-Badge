@@ -9,6 +9,13 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
+			"geometry": "door-lodge",
+			"success_script": "show_dialog-lodge-cantleaveyet",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
 			"geometry": "door-secretdoor",
 			"success_script": "enter-secretroom",
 			"expected_bool": true
@@ -173,6 +180,10 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-lodge"
 		}
 	],
 	"secret-door-open": [
@@ -207,17 +218,90 @@
 			"duration": 1800
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Bookcase",
-			"byte_value": 3,
-			"doc": "down anim"
+			"geometry": "lodge-hidingplace"
 		}
 	],
 	"on_load-lodge-cutscene": [
 		{
+			"action": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Aunt Zippy",
+			"byte_value": 3
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script",
 			"doc": "TO DO: change to \"cutscene-tuesday\" for final version"
+		}
+	],
+	"lodge-watch-player-gradually": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Beatrice",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Trekkie",
+			"script": "watch-player"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Max Swagger",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Verthandi",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "watch-player"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Baker",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Smith",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Uncle Zappy",
+			"script": "watch-player"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Aunt Zippy",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Shepherd",
+			"script": "watch-player"
 		}
 	],
 	"cutscene-tuesday": [
@@ -239,6 +323,14 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-tuesday-intro1",
 			"doc": "Come on in, Player!"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "lodge-watch-player-gradually"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -326,7 +418,7 @@
 			"bool_value": true
 		}
 	],
-	"debug-tuesdayd": [
+	"debug-tuesday": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "tuesdayd",
@@ -421,6 +513,11 @@
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Goose ",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bookcase",
 			"geometry": "lodge-hidingplace"
 		}
 	]

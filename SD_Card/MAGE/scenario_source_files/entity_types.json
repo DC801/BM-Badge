@@ -245,6 +245,29 @@
 			]
 		}
 	},
+	"lightning_boy2": {
+		"tileset": "entity-lightning_boy2.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
 	"goat": {
 		"tileset": "entity-goat.json",
 		"animations": {
