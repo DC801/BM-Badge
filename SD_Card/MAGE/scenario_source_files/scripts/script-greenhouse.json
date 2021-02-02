@@ -88,7 +88,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-start1"
+			"dialog": "dialog-trekkie-start1",
+			"doc": "Happy birthday / aww thanks"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -127,7 +128,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-start2"
+			"dialog": "dialog-trekkie-start2",
+			"doc": "Me sorry, internet no working."
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -144,7 +146,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-start3"
+			"dialog": "dialog-trekkie-start3",
+			"doc": "Flowers lined up wrong."
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -161,7 +164,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-start4"
+			"dialog": "dialog-trekkie-start4",
+			"doc": "Can't just dig up Ether Nettles."
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -304,7 +308,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-oh"
+			"dialog": "dialog-trekkie-oh",
+			"doc": "Oh!"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -320,13 +325,13 @@
 			"duration": 900
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
-			"target_entity": "%PLAYER%"
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 900
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -344,7 +349,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-end"
+			"dialog": "dialog-trekkie-end",
+			"doc": "PLAYER did it!"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -358,44 +364,8 @@
 	],
 	"solve-ethernet-puzzle": [
 		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle1",
-			"u2_value": 3
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle2",
-			"u2_value": 2
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle3",
-			"u2_value": 7
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle4",
-			"u2_value": 0
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle5",
-			"u2_value": 1
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle6",
-			"u2_value": 6
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle7",
-			"u2_value": 5
-		},
-		{
-			"action": "SET_ENTITY_SECONDARY_ID",
-			"entity": "EtherNettle8",
-			"u2_value": 4
+			"action": "COPY_SCRIPT",
+			"script": "make-ethernettle-correct"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -404,7 +374,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-solve-ethernet-puzzle"
+			"dialog": "dialog-solve-ethernet-puzzle",
+			"doc": "Ether Nettle restored."
 		}
 	],
 	"show_dialog-trekkie-start-s": [
@@ -415,7 +386,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-start-s"
+			"dialog": "dialog-trekkie-start-s",
+			"doc": "Me can't remember order, but orange stripey first."
 		}
 	],
 	"show_dialog-trekkie-end-s": [
@@ -426,7 +398,13 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-end-s"
+			"dialog": "dialog-trekkie-end-s",
+			"doc": "So what's the internet for, anyway?"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
 		}
 	]
 }

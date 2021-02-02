@@ -1,4 +1,12 @@
 { "columns":4,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"entity-bender.png",
  "imageheight":2160,
  "imagewidth":192,
@@ -6,7 +14,7 @@
  "name":"entity-bender",
  "spacing":0,
  "tilecount":180,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":48,
  "tiles":[
         {
@@ -747,6 +755,10 @@
                 {
                  "duration":75,
                  "tileid":172
+                }, 
+                {
+                 "duration":1000,
+                 "tileid":176
                 }],
          "id":92,
          "type":"bender"
@@ -836,6 +848,10 @@
                 {
                  "duration":75,
                  "tileid":173
+                }, 
+                {
+                 "duration":1000,
+                 "tileid":177
                 }],
          "id":93,
          "type":"bender"
@@ -925,6 +941,10 @@
                 {
                  "duration":75,
                  "tileid":174
+                }, 
+                {
+                 "duration":1000,
+                 "tileid":178
                 }],
          "id":94,
          "type":"bender"
@@ -1014,6 +1034,10 @@
                 {
                  "duration":75,
                  "tileid":175
+                }, 
+                {
+                 "duration":1000,
+                 "tileid":179
                 }],
          "id":95,
          "type":"bender"

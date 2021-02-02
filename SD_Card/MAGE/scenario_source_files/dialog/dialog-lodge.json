@@ -1,4 +1,14 @@
 {
+	"dialog-lodge-cantleaveyet": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wait, I can't leave yet!"
+			]
+		}
+	],
 	"dialog-tuesday-intro1": [
 		{
 			"alignment": "BOTTOM_LEFT",
