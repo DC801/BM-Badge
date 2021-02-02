@@ -672,7 +672,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesday",
+			"save_flag": "tuesdayd",
 			"bool_value": false
 		},
 		{
