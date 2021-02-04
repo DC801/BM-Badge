@@ -67,9 +67,6 @@ private:
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 
-	//this is an array of all the geometry objects in the ROM
-	std::unique_ptr<MageGeometry[]> geometries;
-
 	//this is an array of all the colorPalettes objects in the ROM
 	std::unique_ptr<MageColorPalette[]> colorPalettes;
 
@@ -151,8 +148,8 @@ public:
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
 	uint8_t  getValidEntityTypeDirection(uint8_t direction);
-	MageGeometry* getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
-	MageGeometry* getGeometryFromGlobalId(uint16_t globalGeometryId);
+	MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
+	MageGeometry getGeometryFromGlobalId(uint16_t globalGeometryId);
 	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
 	std::string getString(
