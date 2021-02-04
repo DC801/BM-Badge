@@ -615,8 +615,8 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
-		bool colliding = geometry->isPointInGeometry(renderable->center);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		bool colliding = geometry.isPointInGeometry(renderable->center);
 		if(colliding == argStruct->expectedBoolValue) {
 			//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 			mapLocalJumpScript = argStruct->successScriptId;
@@ -989,10 +989,10 @@ void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScr
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		entity->direction = getRelativeDirection(
 			renderable->center,
-			geometry->points[0]
+			geometry.points[0]
 		);
 	}
 	return;
@@ -1261,13 +1261,13 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
 				renderable,
 				entity,
-				&geometry->points[0]
+				&geometry.points[0]
 			)
 		);
 		MageGame->updateEntityRenderableData(entityIndex);
@@ -1286,7 +1286,7 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
 			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
@@ -1302,7 +1302,7 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 			resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(
 				renderable,
 				entity,
-				&geometry->points[0]
+				&geometry.points[0]
 			);
 			entity->direction = getRelativeDirection(
 				resumeStateStruct->pointA,
@@ -1338,17 +1338,17 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
-		if(geometry->pointCount == 1) {
+		if(geometry.pointCount == 1) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 			setEntityPositionToPoint(
 				entity,
 				offsetPointRelativeToEntityCenter(
 					renderable,
 					entity,
-					&geometry->points[0]
+					&geometry.points[0]
 				)
 			);
 			MageGame->updateEntityRenderableData(entityIndex);
@@ -1360,18 +1360,18 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			//now set the resumeStateStruct variables:
 			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-			resumeStateStruct->length = geometry->pathLength;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			resumeStateStruct->length = geometry.pathLength;
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = 1;
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-			geometry,
+			&geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
 		float totalProgress = getProgressOfAction(resumeStateStruct);
 		float currentProgressLength = resumeStateStruct->length * totalProgress;
-		float currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+		float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 		float lengthAtEndOfCurrentSegment = (
 			resumeStateStruct->lengthOfPreviousSegments
 			+ currentSegmentLength
@@ -1384,18 +1384,18 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
 			uint16_t pointBIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex + 1
 			);
 			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
-			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 			lengthAtEndOfCurrentSegment = (
 				resumeStateStruct->lengthOfPreviousSegments
 				+ currentSegmentLength
@@ -1408,7 +1408,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 				resumeStateStruct,
 				renderable,
 				entity,
-				geometry,
+				&geometry,
 				pointAIndex,
 				pointBIndex
 			);
@@ -1440,17 +1440,17 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
-		if(geometry->pointCount == 1) {
+		if(geometry.pointCount == 1) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 			setEntityPositionToPoint(
 				entity,
 				offsetPointRelativeToEntityCenter(
 					renderable,
 					entity,
-					&geometry->points[0]
+					&geometry.points[0]
 				)
 			);
 			MageGame->updateEntityRenderableData(entityIndex);
@@ -1462,24 +1462,24 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			//now set the resumeStateStruct variables:
 			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-			resumeStateStruct->length = (geometry->typeId == POLYLINE)
-				? geometry->pathLength * 2
-				: geometry->pathLength;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			resumeStateStruct->length = (geometry.typeId == POLYLINE)
+				? geometry.pathLength * 2
+				: geometry.pathLength;
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = 1;
 		}
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-			geometry,
+			&geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
 		float totalProgress = getProgressOfAction(resumeStateStruct);
 		float currentProgressLength = resumeStateStruct->length * totalProgress;
-		float currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+		float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 		float lengthAtEndOfCurrentSegment = (
 			resumeStateStruct->lengthOfPreviousSegments
 			+ currentSegmentLength
@@ -1492,18 +1492,18 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
 			uint16_t pointBIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex + 1
 			);
 			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
-			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 			lengthAtEndOfCurrentSegment = (
 				resumeStateStruct->lengthOfPreviousSegments
 				+ currentSegmentLength
@@ -1516,7 +1516,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 				resumeStateStruct,
 				renderable,
 				entity,
-				geometry,
+				&geometry,
 				pointAIndex,
 				pointBIndex
 			);
