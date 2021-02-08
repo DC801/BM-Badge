@@ -75,6 +75,15 @@ class MageGeometry{
 			uint16_t width = 0,
 			uint16_t height = 0
 		);
+
+		Point getPushBackFromCollidingPolygon(
+			MageGeometry *collidingPolygon
+		);
+
+		static Point pushADiagonalsVsBEdges(
+			MageGeometry *a,
+			MageGeometry *b
+		);
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H
