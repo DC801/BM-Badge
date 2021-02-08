@@ -142,5 +142,15 @@
 				"I test `SET_ENTITY_DIRECTION_RELATIVE`\nWalk around me, I should point away from\nyou, no matter your position!"
 			]
 		}
+	],
+	"dialog-mage09": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test `COPY_SCRIPT`, using onTicks 07 & 08!\nWalk around me, I should point at you,\nPause half a second, then look away, \nno matter your position!"
+			]
+		}
 	]
 }

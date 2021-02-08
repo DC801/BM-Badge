@@ -10,7 +10,14 @@
 		"scripts/script-bobsclub.json",
 		"scripts/script-oldcouplehouse.json",
 		"scripts/script-bender.json",
-		"scripts/script-family.json"
+		"scripts/script-family.json",
+		"scripts/script-greenhouse.json",
+		"scripts/script-magehouse.json",
+		"scripts/script-lodge.json",
+		"scripts/script-secretroom.json",
+		"scripts/script-goose.json",
+		"scripts/script-goats.json",
+		"scripts/script-max.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-test_map.json",
@@ -20,7 +27,11 @@
 		"dialog/dialog-oldcouplehouse.json",
 		"dialog/dialog-main.json",
 		"dialog/dialog-bender.json",
-		"dialog/dialog-family.json"
+		"dialog/dialog-family.json",
+		"dialog/dialog-greenhouse.json",
+		"dialog/dialog-lodge.json",
+		"dialog/dialog-secretroom.json",
+		"dialog/dialog-max.json"
 	],
 	"maps": {
 		"main": "maps/map-main.json",
@@ -30,6 +41,10 @@
 		"oldcouplehouse": "maps/map-oldcouplehouse.json",
 		"bakery": "maps/map-bakery.json",
 		"family": "maps/map-family.json",
+		"magehouse": "maps/map-magehouse.json",
+		"lodge": "maps/map-lodge.json",
+		"greenhouse": "maps/map-greenhouse.json",
+		"secretroom": "maps/map-secretroom.json",
 		"action_testing_01": "maps/map-action_testing_01.json",
 		"action_testing_02": "maps/map-action_testing_02.json"
 	},

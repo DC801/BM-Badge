@@ -7,13 +7,13 @@
          "target":"."
         }
     },
- "image":"tileset-monstrosity.png",
- "imageheight":576,
+ "image":"tileset-greenhouse.png",
+ "imageheight":256,
  "imagewidth":256,
  "margin":0,
- "name":"tileset_houseInterior",
+ "name":"tileset-greenhouse",
  "spacing":0,
- "tilecount":144,
+ "tilecount":64,
  "tiledversion":"1.4.3",
  "tileheight":32,
  "tilewidth":32,

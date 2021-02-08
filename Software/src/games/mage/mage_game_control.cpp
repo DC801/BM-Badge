@@ -90,13 +90,6 @@ MageGameControl::MageGameControl()
 
 	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
 
-	geometries = std::make_unique<MageGeometry[]>(geometryHeader.count());
-
-	for (uint32_t i = 0; i < geometryHeader.count(); i++)
-	{
-		geometries[i] = MageGeometry(geometryHeader.offset(i));
-	}
-
 	colorPalettes = std::make_unique<MageColorPalette[]>(colorPaletteHeader.count());
 
 	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
@@ -164,11 +157,6 @@ uint32_t MageGameControl::Size() const
 	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
 	{
 		size += entityTypes[i].Size();
-	}
-
-	for (uint32_t i = 0; i < geometryHeader.count(); i++)
-	{
-		size += geometries[i].size();
 	}
 
 	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
@@ -763,7 +751,7 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 	int32_t x = 0;
 	int32_t y = 0;
 	uint16_t geometryId = 0;
-	MageGeometry *geometry;
+	MageGeometry geometry;
 
 	struct MageMapTile {
 		uint16_t tileId = 0;
@@ -845,14 +833,14 @@ void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
 						.x= playerPoint.x - tile_x,
 						.y= playerPoint.y - tile_y,
 					};
-					isMageInGeometry = geometry->isPointInGeometry(
+					isMageInGeometry = geometry.isPointInGeometry(
 						offsetPoint,
 						currentTile.flags,
 						tileset.TileWidth(),
 						tileset.TileHeight()
 					);
 				}
-				geometry->draw(
+				geometry.draw(
 					camera_x,
 					camera_y,
 					isMageInGeometry
@@ -1383,11 +1371,11 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 		playerPosition = {0};
 	}
 	for (uint16_t i = 0; i < map.GeometryCount(); i++) {
-		MageGeometry *geometry = getGeometryFromMapLocalId(i);
+		MageGeometry geometry = getGeometryFromMapLocalId(i);
 		if (isPlayerPresent) {
-			isColliding = geometry->isPointInGeometry(*playerPosition);
+			isColliding = geometry.isPointInGeometry(*playerPosition);
 		}
-		geometry->draw(
+		geometry.draw(
 			cameraX,
 			cameraY,
 			isColliding
@@ -1397,12 +1385,20 @@ void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-MageGeometry* MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
-	return &geometries[map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()];
+MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
+	return MageGeometry(
+		geometryHeader.offset(
+			map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()
+		)
+	);
 }
 
-MageGeometry* MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
-	return &geometries[globalGeometryId % geometryHeader.count()];
+MageGeometry MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
+	return MageGeometry(
+		geometryHeader.offset(
+			globalGeometryId % geometryHeader.count()
+		)
+	);
 }
 
 MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {

@@ -1,0 +1,251 @@
+{
+	"show_dialog-goose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goose"
+		}
+	],
+	"goose-mission": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "lake",
+			"success_script": "goose-misison-rake-out-of-lake",
+			"expected_bool": false
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 0
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"goose-misison-rake-out-of-lake": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-on-rake-point",
+			"expected_bool": true
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point3",
+			"duration": 600
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point1",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-on-rake-point",
+			"expected_bool": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "honk"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "goose-mission"
+		}
+	],
+	"goose-misison-rake-on-rake-point": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-out-of-lake",
+			"expected_bool": false
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point2",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Goose",
+			"target_entity": "Rake"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "honk"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_point1",
+			"duration": 1200
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-on-rake-point",
+			"expected_bool": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "honk"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "goose-mission"
+		}
+	],
+	"honk": [
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 0
+		}
+	],
+	"rake-float-demo": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-lake-point"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "make-rake-float"
+		}
+	],
+	"honk-to-make-rake-float": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Goose",
+			"target_entity": "Rake"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Goose",
+			"script": "make-rake-float"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3000
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goose",
+			"byte_value": 0
+		}
+	],
+	"make-rake-float": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Rake",
+			"script": "rake-drift-south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Rake",
+			"script": "rake-drift-west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Rake",
+			"script": "rake-drift-south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Rake",
+			"script": "rake-drift-east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		}
+	],
+	"rake-drift-south": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "drift-south",
+			"duration": 60000
+		}
+	],
+	"rake-drift-east": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "drift-east",
+			"duration": 60000
+		}
+	],
+	"rake-drift-west": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "drift-west",
+			"duration": 60000
+		}
+	]
+}
