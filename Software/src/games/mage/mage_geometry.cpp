@@ -290,3 +290,90 @@ void MageGeometry::draw(
 		}
 	}
 }
+
+Point MageGeometry::getPushBackFromCollidingPolygon(
+	MageGeometry *collidingPolygon
+) {
+	Point pushback = {
+		.x= 0,
+		.y= 0,
+	};
+	Point force;
+
+	MageGeometry *currentPolygon = this;
+
+	force = pushADiagonalsVsBEdges(
+		collidingPolygon,
+		currentPolygon
+	);
+	pushback.x -= force.x;
+	pushback.y -= force.y;
+
+	force = pushADiagonalsVsBEdges(
+		currentPolygon,
+		collidingPolygon
+	);
+	pushback.x += force.x;
+	pushback.y += force.y;
+
+	return pushback;
+}
+
+Point MageGeometry::pushADiagonalsVsBEdges(
+	MageGeometry *a,
+	MageGeometry *b
+) {
+	Point pushback = {
+		.x= 0,
+		.y= 0,
+	};
+	Point polyACenter = {
+		.x= 0,
+		.y= 0,
+	};
+
+	for (int lineAPointIndex = 0; lineAPointIndex < a->pointCount; lineAPointIndex++) {
+		Point lineAPointA = a->points[lineAPointIndex];
+		polyACenter.x += lineAPointA.x;
+		polyACenter.y += lineAPointA.y;
+	}
+	polyACenter.x = polyACenter.x / a->pointCount;
+	polyACenter.y = polyACenter.y / a->pointCount;
+
+	for (int lineAPointIndex = 0; lineAPointIndex < a->pointCount; lineAPointIndex++) {
+		Point lineAPoint = a->points[lineAPointIndex];
+
+		for (int lineBPointIndex = 0; lineBPointIndex < b->pointCount; lineBPointIndex++) {
+			Point lineBPointA = b->points[lineBPointIndex];
+			Point lineBPointB = b->points[(lineBPointIndex + 1) % b->pointCount];
+
+			// Standard "off the shelf" line segment intersection
+			float h = (
+				(lineBPointB.x - lineBPointA.x)
+				* (polyACenter.y - lineAPoint.y)
+				- (polyACenter.x - lineAPoint.x)
+				* (lineBPointB.y - lineBPointA.y)
+			);
+			float t1 = (
+				(lineBPointA.y - lineBPointB.y)
+				* (polyACenter.x - lineBPointA.x)
+				+ (lineBPointB.x - lineBPointA.x)
+				* (polyACenter.y - lineBPointA.y)
+			) / h;
+			float t2 = (
+				(polyACenter.y - lineAPoint.y)
+				* (polyACenter.x - lineBPointA.x)
+				+ (lineAPoint.x - polyACenter.x)
+				* (polyACenter.y - lineBPointA.y)
+			) / h;
+
+			if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
+			{
+				pushback.x += (1.0f - t1) * (lineAPoint.x - polyACenter.x);
+				pushback.y += (1.0f - t1) * (lineAPoint.y - polyACenter.y);
+			}
+		}
+	}
+
+	return pushback;
+}

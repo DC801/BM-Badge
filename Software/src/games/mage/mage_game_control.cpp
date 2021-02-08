@@ -880,8 +880,12 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	int32_t x = 0;
 	int32_t y = 0;
 	uint16_t geometryId = 0;
-	MageGeometry *geometry;
+	MageGeometry geometry;
 	Point pushback = {
+		.x= 0,
+		.y= 0,
+	};
+	Point pushbackForCurrentGeometry = {
 		.x= 0,
 		.y= 0,
 	};
@@ -951,6 +955,14 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 			}
 			geometryId = tileset.globalGeometryIds[currentTile.tileId];
 			if (geometryId) {
+				magePointBasedRect.points[0].x = x0 - tileRect.x;
+				magePointBasedRect.points[0].y = y0 - tileRect.y;
+				magePointBasedRect.points[1].x = x1 - tileRect.x;
+				magePointBasedRect.points[1].y = y0 - tileRect.y;
+				magePointBasedRect.points[2].x = x1 - tileRect.x;
+				magePointBasedRect.points[2].y = y1 - tileRect.y;
+				magePointBasedRect.points[3].x = x0 - tileRect.x;
+				magePointBasedRect.points[3].y = y1 - tileRect.y;
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
 				bool isMageInGeometry = false;
@@ -958,14 +970,41 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 					.x= playerPoint.x - tileRect.x,
 					.y= playerPoint.y - tileRect.y,
 				};
-				isMageInGeometry = geometry->isPointInGeometry(
-					offsetPoint,
-					currentTile.flags,
-					tileset.TileWidth(),
-					tileset.TileHeight()
+				pushbackForCurrentGeometry = geometry.getPushBackFromCollidingPolygon(
+					&magePointBasedRect
 				);
+				isMageInGeometry = (
+					pushbackForCurrentGeometry.x != 0
+					|| pushbackForCurrentGeometry.y != 0
+				);
+				pushback.x += pushbackForCurrentGeometry.x;
+				pushback.y += pushbackForCurrentGeometry.y;
 				if (isCollisionDebugOn) {
-					geometry->draw(
+					magePointBasedRect.draw(
+						0,
+						0,
+						isMageInGeometry
+						? COLOR_WHITE
+						: COLOR_ORANGE,
+						0,
+						0,
+						0,
+						tileset.TileWidth(),
+						tileset.TileHeight()
+					);
+					geometry.draw(
+						0,
+						0,
+						isMageInGeometry
+						? COLOR_RED
+						: COLOR_YELLOW,
+						0,
+						0,
+						currentTile.flags,
+						tileset.TileWidth(),
+						tileset.TileHeight()
+					);
+					geometry.draw(
 						cameraPosition.x,
 						cameraPosition.y,
 						isMageInGeometry
@@ -995,7 +1034,7 @@ uint16_t MageGameControl::getValidMapId(uint16_t mapId)
 	return mapId % (mapHeader.count());
 }
 
-uint16_t MageGameControl::getValidPrimaryIdType(uint16_t primaryIdType)
+uint8_t MageGameControl::getValidPrimaryIdType(uint8_t primaryIdType)
 {
 	//always return a valid primaryId:
 	return primaryIdType % MageEntityPrimaryIdType::NUM_PRIMARY_ID_TYPES;
@@ -1094,7 +1133,7 @@ void MageGameControl::updateEntityRenderableData(uint8_t index)
 		MageEntity entity = entities[index];
 
 		//ensure the primaryIdType is valid
-		entity.primaryIdType = getValidPrimaryIdType(entity.primaryIdType);
+		entity.primaryIdType = (MageEntityPrimaryIdType) getValidPrimaryIdType(entity.primaryIdType);
 
 
 		//then get valid tileset data based on primaryId type:

@@ -267,21 +267,21 @@ typedef struct{
 //the complete current entity state can be determined with only this info and
 //the MageGame class interpreting the ROM data.
 typedef struct {
-    char name[MAGE_ENTITY_NAME_LENGTH]; // bob's club
-    uint16_t x; // put the sheep back in the pen, rake in the lake
-    uint16_t y;
-    uint16_t onInteractScriptId;
-    uint16_t onTickScriptId;
-    uint16_t primaryId; // Bender's shiny metal ass, old man -> sheep, blitzball
-    uint16_t secondaryId; // ethernettles
-    uint8_t primaryIdType;
-    uint8_t currentAnimation; // Impersonate PipsCat and "action" to give approval to start work on X
-    uint8_t currentFrame;
-    uint8_t direction; // Some trees are upside-down, and you need to right them
-    uint8_t hackableStateA;
-    uint8_t hackableStateB;
-    uint8_t hackableStateC;
-    uint8_t hackableStateD;
+	char name[MAGE_ENTITY_NAME_LENGTH]; // bob's club
+	uint16_t x; // put the sheep back in the pen, rake in the lake
+	uint16_t y;
+	uint16_t onInteractScriptId;
+	uint16_t onTickScriptId;
+	uint16_t primaryId; // Bender's shiny metal ass, old man -> sheep, blitzball
+	uint16_t secondaryId; // ethernettles
+	MageEntityPrimaryIdType primaryIdType;
+	uint8_t currentAnimation; // Impersonate PipsCat and "action" to give approval to start work on X
+	uint8_t currentFrame;
+	uint8_t direction; // Some trees are upside-down, and you need to right them
+	uint8_t hackableStateA;
+	uint8_t hackableStateB;
+	uint8_t hackableStateC;
+	uint8_t hackableStateD;
 } MageEntity;
 
 typedef struct {
@@ -634,7 +634,7 @@ typedef struct {
 } ActionSetEntitySecondaryId;
 
 typedef struct {
-	uint8_t newValue;
+	MageEntityPrimaryIdType newValue;
 	uint8_t entityId;
 	uint8_t paddingC;
 	uint8_t paddingD;

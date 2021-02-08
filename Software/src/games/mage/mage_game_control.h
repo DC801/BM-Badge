@@ -141,7 +141,7 @@ public:
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
 	uint16_t getValidEntityId(uint16_t entityId);
 	uint16_t getValidMapId(uint16_t mapId);
-	uint16_t getValidPrimaryIdType(uint16_t primaryIdType);
+	uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
 	uint16_t getValidTilesetId(uint16_t tilesetId);
 	uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
 	uint16_t getValidAnimationId(uint16_t animationId);
