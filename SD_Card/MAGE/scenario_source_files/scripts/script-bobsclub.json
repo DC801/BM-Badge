@@ -7,19 +7,19 @@
 			"duration": 400
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "wash_hands"
 		},
 		{
@@ -35,7 +35,7 @@
 			"duration": 400
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "load_bread"
 		},
 		{
@@ -51,16 +51,12 @@
 			"duration": 1200
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "check_fridge"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "wash_hands"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "bake"
 		}
 	],
 	"add_flour": [
@@ -495,6 +491,11 @@
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Strong Bad",
 			"byte_value": 0
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobsclub",
+			"bool_value": true
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",

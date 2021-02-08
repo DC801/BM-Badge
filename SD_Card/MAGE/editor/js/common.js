@@ -1,3 +1,6 @@
+var IS_LITTLE_ENDIAN = true;
+var IS_SCREEN_LITTLE_ENDIAN = false;
+
 var getFileJson = function (file) {
 	return file.text()
 		.then(function (text) {

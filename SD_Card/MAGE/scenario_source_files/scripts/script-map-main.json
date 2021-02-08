@@ -1,11 +1,118 @@
 {	
 	"on_load-map-main": [
 		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-rake-check"
+		}
+	],
+	"on_load-map-main-rake-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "rake",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-rake-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
+		}
+	],
+	"on_load-map-main-rake-do": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "rake-in-lake"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Goose",
+			"script": "honk-to-make-rake-float"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
+		}
+	],
+	"rake-in-lake": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-lake-point"
+		}
+	],
+	"on_load-map-main-sheep-check": [
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "shepherd2",
 			"expected_bool": true,
-			"success_script": "sheep-in-pen"
+			"success_script": "on_load-map-main-sheep-do"
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-bender-check"
+		}
+	],
+	"on_load-map-main-sheep-do": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "sheep-in-pen"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-bender-check"
+		}
+	],
+	"sheep-in-pen": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Baa",
+			"geometry": "baa_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ram",
+			"geometry": "ram_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ewe",
+			"geometry": "ewe_point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Helga",
+			"geometry": "helga_point"
+		}
+	],
+	"on_load-map-main-bender-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender2",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-bender-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-warps"
+		}
+	],
+	"on_load-map-main-bender-do": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bender-happybutt"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-warps"
+		}
+	],
+	"bender-happybutt": [
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Bender",
+			"entity_type": "bender"
+		}
+	],
+	"on_load-map-main-warps": [
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-east",
@@ -32,6 +139,30 @@
 		},
 		{
 			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-lodge",
+			"success_script": "enter_from-lodge",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-lodge-cutscene",
+			"success_script": "enter_from-lodge-cutscene",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-greenhouse",
+			"success_script": "enter_from-greenhouse",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-magehouse",
+			"success_script": "enter_from-magehouse",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
 			"string": "exit_from-oldcouplehouse",
 			"success_script": "enter_from-oldcouplehouse",
 			"expected_bool": true
@@ -43,151 +174,16 @@
 			"expected_bool": true
 		}
 	],
-	"sheep-in-pen": [
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Baa",
-			"geometry": "baa_point"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Ram",
-			"geometry": "ram_point"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Ewe",
-			"geometry": "ewe_point"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Helga",
-			"geometry": "helga_point"
-		}
-	],
 	"show_dialog-sheep": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-max": [
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "west"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max1"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "east"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "south"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Max Swagger",
-			"direction": "west"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "walk_on_path_20s"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max3"
-		}
-	],
 	"show_dialog-timmy": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-timmy"
-		}
-	],
-	"show_dialog-goose": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-goose"
-		}
-	],
-	"show_dialog-beatrice": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-beatrice1"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "east"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "west"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "beatrice",
-			"direction": "south"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-beatrice2"
-		}
-	],
-	"show_dialog-trekkie_demo": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie_demo"
-		}
-	],
-	"show_dialog-verthandi": [
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Verthandi",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Verthandi",
-			"target_entity": "goat1"
-		}
-	],
-	"show_dialog-goat": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-goat"
 		}
 	],
 	"show_dialog-cleo1": [
@@ -278,161 +274,11 @@
 			"target_entity": "Cleo"
 		}
 	],
-	"check_if_player_is_goat_high": [
-		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "high",
-			"success_script": "move_goats_to_low",
-			"expected_bool": true
-		}
-	],
 	"watch-player": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
-		}
-	],
-	"check_if_player_is_goat_low": [
-		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "low",
-			"success_script": "move_goats_to_high",
-			"expected_bool": true
-		}
-	],
-	"move_goats_to_low": [
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat1",
-			"script": "move_goat1_to_low"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat2",
-			"script": "move_goat2_to_low"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "check_if_player_is_goat_low"
-		}
-	],
-	"move_goats_to_high": [
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat1",
-			"script": "move_goat1_to_high"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat2",
-			"script": "move_goat2_to_high"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "check_if_player_is_goat_high"
-		}
-	],
-	"move_goat1_to_low": [
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat1",
-			"geometry": "low1",
-			"duration": 900
-		},
-		{
-			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat1",
-			"geometry": "low1",
-			"duration": 3000
-		}
-	],
-	"move_goat2_to_low": [
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "low2",
-			"duration": 1100
-		},
-		{
-			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "low2",
-			"duration": 3400
-		}
-	],
-	"move_goat1_to_high": [
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat1",
-			"geometry": "high1",
-			"duration": 900
-		},
-		{
-			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat1",
-			"geometry": "high1",
-			"duration": 3000
-		}
-	],
-	"move_goat2_to_high": [
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "high2",
-			"duration": 1100
-		},
-		{
-			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat2",
-			"geometry": "high2",
-			"duration": 3400
-		}
-	],
-	"goose-mission": [
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "Goose",
-			"geometry": "goose_point1",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Goose",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Goose",
-			"byte_value": 2
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 2400
-		},
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "Goose",
-			"geometry": "goose_point2",
-			"duration": 1200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Goose",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Goose",
-			"byte_value": 2
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 2400
 		}
 	],
 	"loop_on_path_30s": [
@@ -484,6 +330,27 @@
 			"entity": "%PLAYER%",
 			"geometry": "door-family-entrance",
 			"success_script": "load_map-family",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-greenhouse-entrance",
+			"success_script": "load_map-greenhouse",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-magehouse-entrance",
+			"success_script": "load_map-magehouse",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-lodge-entrance",
+			"success_script": "load_map-lodge",
 			"expected_bool": true
 		},
 		{
@@ -555,6 +422,24 @@
 			"map": "map-oldcouplehouse"
 		}
 	],
+	"load_map-greenhouse": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-greenhouse"
+		}
+	],
+	"load_map-magehouse": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-magehouse"
+		}
+	],
+	"load_map-lodge": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-lodge"
+		}
+	],
 	"load_map-family": [
 		{
 			"action": "LOAD_MAP",
@@ -585,6 +470,70 @@
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-oldcouplehouse",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-greenhouse": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-greenhouse",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-magehouse": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-magehouse",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-lodge": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-lodge",
+			"entity": "%PLAYER%",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"enter_from-lodge-cutscene": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-lodge",
 			"entity": "%PLAYER%",
 			"duration": 200
 		},
@@ -699,6 +648,36 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "ball",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "maxtalk",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie1",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie2",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake",
 			"bool_value": false
 		},
 		{

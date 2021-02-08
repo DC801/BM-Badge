@@ -1,0 +1,21 @@
+{
+	"on_tick-magehouse": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-magehouse",
+			"success_script": "leave-magehouse",
+			"expected_bool": true
+		}
+	],
+	"leave-magehouse": [
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-magehouse"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	]
+}

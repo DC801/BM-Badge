@@ -224,12 +224,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage09-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage09-copy_script"
                         }],
                  "rotation":0,
                  "type":"",
