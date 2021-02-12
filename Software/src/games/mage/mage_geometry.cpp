@@ -249,6 +249,12 @@ Point MageGeometry::flipVectorByFlags(
 	return point;
 };
 
+float MageGeometry::getVectorLength(
+	Point v
+) {
+	return sqrt((v.x * v.x) + (v.y * v.y));
+};
+
 void MageGeometry::draw(
 	int32_t cameraX,
 	int32_t cameraY,
