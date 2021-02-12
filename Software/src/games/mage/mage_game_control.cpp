@@ -963,6 +963,16 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 				magePointBasedRect.points[2].y = y1 - tileRect.y;
 				magePointBasedRect.points[3].x = x0 - tileRect.x;
 				magePointBasedRect.points[3].y = y1 - tileRect.y;
+				if(currentTile.flags != 0) {
+					for(uint8_t pointIndex = 0; pointIndex < 4; pointIndex++) {
+						magePointBasedRect.points[pointIndex] = magePointBasedRect.flipPointByFlags(
+							magePointBasedRect.points[pointIndex],
+							currentTile.flags,
+							map.TileWidth(),
+							map.TileHeight()
+						);
+					}
+				}
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
 				bool isMageInGeometry = false;
@@ -973,6 +983,13 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 				pushbackForCurrentGeometry = geometry.getPushBackFromCollidingPolygon(
 					&magePointBasedRect
 				);
+
+				if(currentTile.flags != 0) {
+					pushbackForCurrentGeometry = magePointBasedRect.flipVectorByFlags(
+						pushbackForCurrentGeometry,
+						currentTile.flags
+					);
+				}
 				isMageInGeometry = (
 					pushbackForCurrentGeometry.x != 0
 					|| pushbackForCurrentGeometry.y != 0
@@ -1000,7 +1017,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 						: COLOR_YELLOW,
 						0,
 						0,
-						currentTile.flags,
+						0,
 						tileset.TileWidth(),
 						tileset.TileHeight()
 					);

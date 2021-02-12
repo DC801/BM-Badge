@@ -227,6 +227,28 @@ Point MageGeometry::flipPointByFlags(
 	return point;
 };
 
+Point MageGeometry::flipVectorByFlags(
+	Point unflippedPoint,
+	uint8_t flags
+) {
+	Point point = unflippedPoint;
+	if (flags != 0) {
+		RenderFlagsUnion flagsUnion = {};
+		flagsUnion.i = flags;
+		if (flagsUnion.f.diagonal) {
+			point.x = point.y;
+			point.y = point.x;
+		}
+		if (flagsUnion.f.horizontal) {
+			point.x = -point.x;
+		}
+		if (flagsUnion.f.vertical) {
+			point.y = -point.y;
+		}
+	}
+	return point;
+};
+
 void MageGeometry::draw(
 	int32_t cameraX,
 	int32_t cameraY,
