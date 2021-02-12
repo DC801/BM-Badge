@@ -53,10 +53,6 @@ all of the old code used as the foundation of this badge.
 //current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PATH 65535
 
-//this is a fudge factor to make animations look better on the desktop
-//it's added to animation ticks every loop:
-#define DESKTOP_TIME_FUDGE_FACTOR 50
-
 //these are the failover values that the game will use when an invalid hacked entity state is found:
 #define MAGE_TILESET_FAILOVER_ID 0
 #define MAGE_TILE_FAILOVER_ID 0

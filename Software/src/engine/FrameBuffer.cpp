@@ -63,17 +63,13 @@ void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	int s1 = min(x1, x2);
 	int s2 = max(x1, x2);
-	if (y < 0 || y > HEIGHT) { return; }
-	for (int x=s1; x <= s2; ++x)
-	{
-		int32_t dest = y * WIDTH + x;
+	if (y < 0 || y >= HEIGHT) { return; }
+	for (int x = s1; x <= s2; ++x) {
 		if (
 			x >= 0
 			&& x < WIDTH
-			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest]=SCREEN_ENDIAN_U2_VALUE(color);
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -81,17 +77,13 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
-	if (x < 0 || x > WIDTH) { return; }
-	for (int y=s1; y <= s2; ++y)
-	{
-		int32_t dest = y * WIDTH + x;
+	if (x < 0 || x >= WIDTH) { return; }
+	for (int y = s1; y <= s2; ++y) {
 		if (
 			y >= 0
 			&& y < HEIGHT
-			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest] = SCREEN_ENDIAN_U2_VALUE(color);
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -1464,9 +1456,9 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 		x = round(lerp((float) x1, (float) x2, progress));
 		y = round(lerp((float) y1, (float) y2, progress));
 		if ( // crop to screen bounds
-			x > 0
+			x >= 0
 			&& x < WIDTH
-			&& y > 0
+			&& y >= 0
 			&& y < HEIGHT
 		) {
 			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);

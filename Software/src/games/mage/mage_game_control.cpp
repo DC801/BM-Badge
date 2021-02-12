@@ -1271,12 +1271,6 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 		//increment the frame ticks based on the delta_time since the last check:
 		entityRenderableData[i].currentFrameTicks += deltaTime;
 
-		#ifdef DC801_DESKTOP
-		//add fudge factor for desktop version to make animations
-		//look better on slow-running emulation machine
-		//entityRenderableData[i].currentFrameTicks += DESKTOP_TIME_FUDGE_FACTOR;
-		#endif
-
 		//update entity info:
 		updateEntityRenderableData(i);
 
