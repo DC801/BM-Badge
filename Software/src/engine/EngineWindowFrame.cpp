@@ -55,6 +55,11 @@ void EngineWindowFrameInit()
 		&renderer
 	);
 
+	SDL_SetWindowTitle(
+		window,
+		"DC801 MAGE GAME"
+	);
+
 	if(window == nullptr)
 	{
 		ENGINE_PANIC("Failed to create SDL Window\nSDL_Error: %s\n", SDL_GetError());
