@@ -879,6 +879,8 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	};
 	int32_t x = 0;
 	int32_t y = 0;
+	float largestPushbackLength = 0;
+	float currentPushbackLength = 0;
 	uint16_t geometryId = 0;
 	MageGeometry geometry;
 	Point pushback = {
@@ -994,8 +996,13 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 					pushbackForCurrentGeometry.x != 0
 					|| pushbackForCurrentGeometry.y != 0
 				);
-				pushback.x += pushbackForCurrentGeometry.x;
-				pushback.y += pushbackForCurrentGeometry.y;
+				if(isMageInGeometry){
+					currentPushbackLength = MageGeometry::getVectorLength(pushbackForCurrentGeometry);
+					if(currentPushbackLength >= largestPushbackLength) {
+						pushback = pushbackForCurrentGeometry;
+						largestPushbackLength = currentPushbackLength;
+					}
+				}
 				if (isCollisionDebugOn) {
 					magePointBasedRect.draw(
 						0,

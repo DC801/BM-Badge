@@ -57,16 +57,20 @@ class MageGeometry{
 
 		static bool doRectsOverlap(Rect a, Rect b);
 
-		Point flipPointByFlags(
+		static Point flipPointByFlags(
 			Point point,
 			uint8_t flags,
 			uint16_t width,
 			uint16_t height
 		);
 
-		Point flipVectorByFlags(
+		static Point flipVectorByFlags(
 			Point unflippedPoint,
 			uint8_t flags
+		);
+
+		static float getVectorLength(
+			Point v
 		);
 
 		void draw(
