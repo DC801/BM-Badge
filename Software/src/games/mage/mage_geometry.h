@@ -64,6 +64,11 @@ class MageGeometry{
 			uint16_t height
 		);
 
+		Point flipVectorByFlags(
+			Point unflippedPoint,
+			uint8_t flags
+		);
+
 		void draw(
 			int32_t cameraX,
 			int32_t cameraY,
