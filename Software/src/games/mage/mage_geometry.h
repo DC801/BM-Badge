@@ -58,8 +58,7 @@ class MageGeometry{
 		static bool doRectsOverlap(Rect a, Rect b);
 
 		Point flipPointByFlags(
-			uint16_t x,
-			uint16_t y,
+			Point point,
 			uint8_t flags,
 			uint16_t width,
 			uint16_t height

@@ -130,8 +130,7 @@ bool MageGeometry::isPointInGeometry(
 )
 {
 	Point point = flipPointByFlags(
-		unFlippedPoint.x,
-		unFlippedPoint.y,
+		unFlippedPoint,
 		flags,
 		width,
 		height
@@ -205,22 +204,18 @@ bool MageGeometry::doRectsOverlap(Rect a, Rect b)
 
 
 Point MageGeometry::flipPointByFlags(
-	uint16_t x,
-	uint16_t y,
+	Point unflippedPoint,
 	uint8_t flags,
 	uint16_t width,
 	uint16_t height
 ) {
-	Point point = {
-		.x= x,
-		.y= y,
-	};
-	if (flags) {
+	Point point = unflippedPoint;
+	if (flags != 0) {
 		RenderFlagsUnion flagsUnion = {};
 		flagsUnion.i = flags;
 		if (flagsUnion.f.diagonal) {
-			point.x = y;
-			point.y = x;
+			point.x = point.y;
+			point.y = point.x;
 		}
 		if (flagsUnion.f.horizontal) {
 			point.x = -point.x + width;
@@ -248,8 +243,7 @@ void MageGeometry::draw(
 	if(typeId == POINT) {
 		pointA = points[0];
 		pointA = flipPointByFlags(
-			pointA.x,
-			pointA.y,
+			pointA,
 			flags,
 			width,
 			height
@@ -267,15 +261,13 @@ void MageGeometry::draw(
 			pointA = points[i];
 			pointB = points[(i + 1) % pointCount];
 			pointA = flipPointByFlags(
-				pointA.x,
-				pointA.y,
+				pointA,
 				flags,
 				width,
 				height
 			);
 			pointB = flipPointByFlags(
-				pointB.x,
-				pointB.y,
+				pointB,
 				flags,
 				width,
 				height
