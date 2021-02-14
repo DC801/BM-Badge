@@ -144,7 +144,7 @@
                         {
                          "name":"path",
                          "type":"object",
-                         "value":106
+                         "value":144
                         }],
                  "rotation":0,
                  "type":"",
@@ -172,7 +172,7 @@
                         {
                          "name":"path",
                          "type":"object",
-                         "value":107
+                         "value":145
                         }],
                  "rotation":0,
                  "type":"",
@@ -500,17 +500,6 @@
                  "y":105.333333333333
                 }, 
                 {
-                 "height":23.1666666666666,
-                 "id":79,
-                 "name":"door-oldcouplehouse-entrance",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":30,
-                 "x":384,
-                 "y":590.666666666667
-                }, 
-                {
                  "gid":636,
                  "height":32,
                  "id":95,
@@ -530,72 +519,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":771.666666666666,
-                 "y":338.333333333333
-                }, 
-                {
-                 "height":23,
-                 "id":96,
-                 "name":"door-family-entrance",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":27,
-                 "x":994.666666666667,
-                 "y":626.333333333333
-                }, 
-                {
-                 "height":23,
-                 "id":98,
-                 "name":"door-magehouse-entrance",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":27,
-                 "x":770,
-                 "y":528
-                }, 
-                {
-                 "height":23,
-                 "id":100,
-                 "name":"door-lodge-entrance",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":27,
-                 "x":1025.5,
-                 "y":335.5
-                }, 
-                {
-                 "height":0,
-                 "id":102,
-                 "name":"enter_from-greenhouse",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":911.333,
-                 "y":882.167
-                }, 
-                {
-                 "height":23,
-                 "id":103,
-                 "name":"door-greenhouse-entrance",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":27,
-                 "x":897,
-                 "y":855.5
+                 "x":773.999999999999,
+                 "y":336.666666666666
                 }, 
                 {
                  "gid":1007,
@@ -617,7 +542,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":845.5,
+                 "x":853.833333333333,
                  "y":366.5
                 }, 
                 {
@@ -640,7 +565,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":820.5,
+                 "x":828.833333333333,
                  "y":407
                 }, 
                 {
@@ -663,7 +588,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":730.5,
+                 "x":738.833333333333,
                  "y":376.5
                 }, 
                 {
@@ -686,7 +611,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":762,
+                 "x":770.333333333333,
                  "y":406.5
                 }, 
                 {
@@ -702,10 +627,52 @@
                  "y":797.5
                 }, 
                 {
+                 "gid":1082,
+                 "height":40,
+                 "id":151,
+                 "name":"Bert",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":1119,
+                 "y":419.5
+                }, 
+                {
+                 "gid":1101,
+                 "height":40,
+                 "id":152,
+                 "name":"Alfonso",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":1052.5,
+                 "y":369.5
+                }, 
+                {
                  "gid":968,
                  "height":32,
-                 "id":140,
-                 "name":"Debug Man 2",
+                 "id":153,
+                 "name":"Jackob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":940.5,
+                 "y":390
+                }, 
+                {
+                 "gid":1131,
+                 "height":32,
+                 "id":161,
+                 "name":"Marta",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -716,8 +683,38 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":632,
-                 "y":1002.33333333333
+                 "x":627.5,
+                 "y":989.5
+                }, 
+                {
+                 "gid":498,
+                 "height":32,
+                 "id":162,
+                 "name":"Beatrice",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-133.5,
+                 "y":-109.5
+                }, 
+                {
+                 "gid":513,
+                 "height":32,
+                 "id":163,
+                 "name":"Trekkie",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"demoend-cutscene"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1024,
+                 "y":512
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -730,17 +727,6 @@
          "id":6,
          "name":"Paths",
          "objects":[
-                {
-                 "height":101,
-                 "id":23,
-                 "name":"fountain",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":136.5,
-                 "x":539,
-                 "y":761
-                }, 
                 {
                  "height":0,
                  "id":27,
@@ -1086,7 +1072,7 @@
                  "type":"",
                  "visible":true,
                  "width":140,
-                 "x":733.666666666667,
+                 "x":742,
                  "y":326
                 }, 
                 {
@@ -1109,7 +1095,7 @@
                  "type":"",
                  "visible":true,
                  "width":50,
-                 "x":836,
+                 "x":844.333333333333,
                  "y":331.666666666667
                 }, 
                 {
@@ -1120,7 +1106,7 @@
                  "type":"",
                  "visible":true,
                  "width":50,
-                 "x":752,
+                 "x":760.333333333333,
                  "y":376.333316666667
                 }, 
                 {
@@ -1131,7 +1117,7 @@
                  "type":"",
                  "visible":true,
                  "width":50,
-                 "x":812.333333333333,
+                 "x":820.666666666666,
                  "y":375.333316666667
                 }, 
                 {
@@ -1142,7 +1128,7 @@
                  "type":"",
                  "visible":true,
                  "width":50,
-                 "x":720,
+                 "x":728.333333333333,
                  "y":342.66665
                 }, 
                 {
@@ -1154,8 +1140,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":816.333333333333,
-                 "y":358.333333333333
+                 "x":815.333333333333,
+                 "y":369.833333333333
                 }, 
                 {
                  "height":0,
@@ -1530,6 +1516,177 @@
                  "width":0,
                  "x":709.333333333333,
                  "y":878.666666666667
+                }, 
+                {
+                 "height":0,
+                 "id":165,
+                 "name":"demoend-trekkie-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1075.5,
+                 "y":443.5
+                }, 
+                {
+                 "height":0,
+                 "id":166,
+                 "name":"demoend-beatrice-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":944,
+                 "y":458.5
+                }, 
+                {
+                 "height":0,
+                 "id":167,
+                 "name":"demoend-player-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1006.5,
+                 "y":444.5
+                }, 
+                {
+                 "height":0,
+                 "id":168,
+                 "name":"demoend-jackob-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":980,
+                 "y":401.5
+                }, 
+                {
+                 "height":0,
+                 "id":169,
+                 "name":"demoend-alfonso-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1018.5,
+                 "y":385.5
+                }, 
+                {
+                 "height":0,
+                 "id":170,
+                 "name":"demoend-bert-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1067,
+                 "y":402.5
+                }, 
+                {
+                 "height":0,
+                 "id":171,
+                 "name":"demoend-marta-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":990.5,
+                 "y":483
+                }, 
+                {
+                 "height":0,
+                 "id":172,
+                 "name":"demoend-jackob-pace",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":958.5,
+                 "y":402
+                }, 
+                {
+                 "height":23.1667,
+                 "id":173,
+                 "name":"door-oldcouplehouse-entrance",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":30,
+                 "x":384,
+                 "y":592.75015
+                }, 
+                {
+                 "height":23,
+                 "id":174,
+                 "name":"door-magehouse-entrance",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27,
+                 "x":770,
+                 "y":530.08315
+                }, 
+                {
+                 "height":23,
+                 "id":175,
+                 "name":"door-family-entrance",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27,
+                 "x":994.5835,
+                 "y":623.9165
+                }, 
+                {
+                 "height":23,
+                 "id":176,
+                 "name":"door-lodge-entrance",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27,
+                 "x":1025.4165,
+                 "y":333.0835
+                }, 
+                {
+                 "height":0,
+                 "id":179,
+                 "name":"enter_from-greenhouse",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":17
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":910.833,
+                 "y":875.167
+                }, 
+                {
+                 "height":23,
+                 "id":180,
+                 "name":"door-greenhouse-entrance",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27,
+                 "x":896.5,
+                 "y":848.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1562,12 +1719,12 @@
                  "type":"",
                  "visible":true,
                  "width":320,
-                 "x":522,
-                 "y":891.333333333333
+                 "x":864,
+                 "y":296.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -1715,12 +1872,12 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":151,
+ "nextobjectid":181,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1836,6 +1993,18 @@
         {
          "firstgid":1081,
          "source":"..\/entities\/entity-rake.json"
+        }, 
+        {
+         "firstgid":1082,
+         "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":1100,
+         "source":"..\/entities\/entity-alfonso.json"
+        }, 
+        {
+         "firstgid":1118,
+         "source":"..\/entities\/entity-marta.json"
         }],
  "tilewidth":32,
  "type":"map",

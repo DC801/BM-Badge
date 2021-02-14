@@ -1,0 +1,253 @@
+{
+	"dialog-demoend-cutscene-intro1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Good heavens! What was that?"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-lasttime1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, no! This is just like last time!"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-lasttime2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Last time?"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-lasttime3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "%Trekkie%",
+			"messages": [
+				"Last time Big Bad came!"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-lasttime4": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Last time WHAT?"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-middle1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Oh, dear. Oh, goodness gracious.",
+				"I was afraid of this."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Afraid of WHAT?"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-middle2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"I was afraid the Big Bad would notice what\nyou were doing."
+			]
+		}
+	],
+	"dialog-demoend-cutscene-middle3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"You think the Big Bad somehow knows that\nsomeone here has been using Ring Zero?"
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"But it's been so long since the Big Bad\nwas seen at all! You think he might still\nbe out there, somewhere?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"Perhaps."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"What else does this earthquake mean?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Oh, dear.... Oh, dear!"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-middle4": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"But I can't fight the Big Bad! What am I\nsupposed to do?"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-middle5": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"I suppose... I suppose we must consider...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"The other artifacts?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Dangerous. Dangerous, but...."
+			]
+		}
+	],
+	"dialog-demoend-cutscene-end1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"*sigh*",
+				"We have no choice.",
+				"%PLAYER%, you must collect the\nartifacts of power.",
+				"Just outside the town are three dungeons,\nand at the end of each there is one\nmagical artifact.",
+				"That ring will not be enough to defeat\nthe Big Bad, but with those three\nartifacts...."			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Yes, %PLAYER%!",
+				"You must go and retrieve them!",
+				"Go!"
+			]
+		}
+	],
+	"dialog-demoend-cutscene-end-demo1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Next year."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Next... huh?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"This has been DC801's badge game for 2020!",
+				"Thank you for playing, and we hope you'll\nplay the rest of the game next year!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Buh?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"As a reward for completing the demo, I'll\ntell you how to unlock debug mode."
+			]
+		}
+	],
+	"dialog-demoend-cutscene-end-demo2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Press XOR and MEM1 at the same time--\nthat's the top button on each side of the\nscreen--and...."
+			]
+		}
+	],
+	"dialog-demoend-cutscene-end-demo3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Voila!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(Zuh)"
+			]
+		}
+	]
+}
