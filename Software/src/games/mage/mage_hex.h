@@ -98,7 +98,7 @@ public:
 		hexCursorLocation{0},
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
-		memAddresses{0}
+		memAddresses{0, 1, 2, 3}
 	{};
 
 	//returns the size in RAM of the class variables.
