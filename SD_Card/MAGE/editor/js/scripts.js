@@ -323,13 +323,11 @@ var actionFieldsMap = {
 	],
 	PAN_CAMERA_TO_ENTITY: [
 		{propertyName: 'duration', size: 4},
-		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 	],
 	PAN_CAMERA_TO_GEOMETRY: [
 		{propertyName: 'duration', size: 4},
 		{propertyName: 'geometry', size: 2},
-		{propertyName: 'entity', size: 1},
 	],
 	PAN_CAMERA_ALONG_GEOMETRY: [
 		{propertyName: 'duration', size: 4},

@@ -1193,7 +1193,6 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
-
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
@@ -1202,11 +1201,6 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
-			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-			//now set the resumeStateStruct variables:
-			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
 				.x = entity->x,
@@ -1223,14 +1217,17 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 			);
 			entity->currentAnimation = 1;
 		}
-		resumeStateStruct->loopsToNextAction--;
+		float progress = manageProgressOfAction(
+			resumeStateStruct,
+			argStruct->duration
+		);
 		Point betweenPoint = FrameBuffer::lerpPoints(
 			resumeStateStruct->pointA,
 			resumeStateStruct->pointB,
-			getProgressOfAction(resumeStateStruct)
+			progress
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
-		if(resumeStateStruct->loopsToNextAction == 0) {
+		if(progress >= 1.0f) {
 			entity->currentAnimation = 0;
 			entity->currentFrame = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
@@ -1465,6 +1462,41 @@ void MageScriptControl::panCameraToEntity(uint8_t * args, MageScriptState * resu
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+
+		if(resumeStateStruct->totalLoopsToNextAction == 0) {
+			MageGame->cameraFollowEntityId = NO_PLAYER;
+			//this is the points we're interpolating between
+			resumeStateStruct->pointA = {
+				.x = MageGame->cameraPosition.x,
+				.y = MageGame->cameraPosition.y,
+			};
+		}
+		float progress = manageProgressOfAction(
+			resumeStateStruct,
+			argStruct->duration
+		);
+		// yes, this is intentional;
+		// if the entity is moving, pan will continue to the entity
+		resumeStateStruct->pointB = {
+			.x = renderable->center.x - HALF_WIDTH,
+			.y = renderable->center.y - HALF_HEIGHT,
+		};
+		Point betweenPoint = FrameBuffer::lerpPoints(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB,
+			progress
+		);
+		MageGame->cameraPosition.x = betweenPoint.x;
+		MageGame->cameraPosition.y = betweenPoint.y;
+		if(progress >= 1.0f) {
+			// Moved the camera there, may as well follow the entity now.
+			MageGame->cameraFollowEntityId = entityIndex;
+		}
+	}
 }
 
 void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1474,6 +1506,33 @@ void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * re
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
+	MageEntity *entity = MageGame->getValidEntity(currentEntityId);
+	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+	MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageGame->cameraFollowEntityId = NO_PLAYER;
+		//this is the points we're interpolating between
+		resumeStateStruct->pointA = {
+			.x = MageGame->cameraPosition.x,
+			.y = MageGame->cameraPosition.y,
+		};
+		resumeStateStruct->pointB = {
+			.x = geometry.points[0].x - HALF_WIDTH,
+			.y = geometry.points[0].y - HALF_HEIGHT,
+		};
+	}
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
+	Point betweenPoint = FrameBuffer::lerpPoints(
+		resumeStateStruct->pointA,
+		resumeStateStruct->pointB,
+		progress
+	);
+	MageGame->cameraPosition.x = betweenPoint.x;
+	MageGame->cameraPosition.y = betweenPoint.y;
 }
 
 void MageScriptControl::panCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
