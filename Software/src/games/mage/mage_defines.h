@@ -98,7 +98,7 @@ all of the old code used as the foundation of this badge.
 //30fps: ~33ms
 //24fps: ~41ms
 #ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 8)
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150

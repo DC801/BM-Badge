@@ -135,6 +135,7 @@ uint32_t MageGameControl::Size() const
 		sizeof(playerHasControl) +
 		sizeof(isCollisionDebugOn) +
 		sizeof(cameraShakeAmplitude) +
+		sizeof(cameraFollowEntityId) +
 		sizeof(cameraShakePhase) +
 		sizeof(cameraPosition) +
 		magePointBasedRect.size() +
@@ -397,6 +398,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	}
 
 	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
+	cameraFollowEntityId = playerEntityIndex;
 	if(playerEntityIndex != NO_PLAYER) {
 		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
 			entities[playerEntityIndex].name[i] = playerName[i];
@@ -518,8 +520,6 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			MageDialog->isOpen
 			|| !playerHasControl
 		) {
-			cameraPosition.x = renderableData->center.x - HALF_WIDTH;
-			cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 			return;
 		}
 
@@ -643,9 +643,6 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		) {
 			updateEntityRenderableData(playerEntityIndex);
 		}
-		//set camera to center of player tile.
-		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
-		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
 	}
 	else //no player on map
 	{
@@ -660,6 +657,11 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 }
 
 void MageGameControl::applyCameraEffects(uint32_t deltaTime) {
+	if(cameraFollowEntityId != NO_PLAYER) {
+		MageEntityRenderableData *renderableData = &entityRenderableData[cameraFollowEntityId];
+		cameraPosition.x = renderableData->center.x - HALF_WIDTH;
+		cameraPosition.y = renderableData->center.y - HALF_HEIGHT;
+	}
 	adjustedCameraPosition.x = cameraPosition.x;
 	adjustedCameraPosition.y = cameraPosition.y;
 	if(cameraShaking) {

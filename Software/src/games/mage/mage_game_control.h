@@ -114,6 +114,7 @@ public:
 	bool cameraShaking = false;
 	float cameraShakePhase = 0;
 	uint8_t cameraShakeAmplitude = 0;
+	int16_t cameraFollowEntityId = NO_PLAYER;
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
