@@ -79,7 +79,18 @@ private:
 	bool isMoving;
 
 	MageGeometry magePointBasedRect;
-	Point playerVelocity;
+	Point playerVelocity = {
+		.x = 0,
+		.y = 0,
+	};
+	Point cameraPosition = {
+		.x = 0,
+		.y = 0,
+	};
+	Point adjustedCameraPosition= {
+		.x = 0,
+		.y = 0,
+	};
 
 	//this handles script initialization when loading a new map
 	void initializeScriptsOnMapLoad();
@@ -100,6 +111,9 @@ public:
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
 	bool isCollisionDebugOn;
+	bool cameraShaking = false;
+	float cameraShakePhase = 0;
+	uint8_t cameraShakeAmplitude = 0;
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
@@ -130,12 +144,14 @@ public:
 	//If there is no playerEntity, it just moves the camera freely.
 	void applyGameModeInputs(uint32_t deltaTime);
 
+	void applyCameraEffects(uint32_t deltaTime);
+
 	//this will check in the direction the player entity is facing and start
 	//an on_interact script for an entity if any qualify.
 	void handleEntityInteract();
 
 	//this will render the map onto the screen.
-	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y);
+	void DrawMap(uint8_t layer);
 
 	//the functions below will validate specific properties to see if they are valid.
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
@@ -167,16 +183,25 @@ public:
 
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
-	void updateEntityRenderableData(uint8_t index);
+	void updateEntityRenderableData(
+		uint8_t index,
+		bool skipTilesetCheck = false
+	);
+
+	void updateEntityRenderableBoxes(
+		MageEntityRenderableData *data,
+		const MageEntity *entity,
+		const MageTileset *tileset
+	) const;
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
 	//this will draw the entities over the current state of the screen
-	void DrawEntities(int32_t cameraX, int32_t cameraY);
+	void DrawEntities();
 
 	//this will draw the current map's geometry over the current state of the screen
-	void DrawGeometry(int32_t cameraX, int32_t cameraY);
+	void DrawGeometry();
 
 	MageEntity* getValidEntity(int8_t entityId);
 

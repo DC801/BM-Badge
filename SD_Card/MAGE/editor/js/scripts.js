@@ -342,9 +342,9 @@ var actionFieldsMap = {
 		{propertyName: 'entity', size: 1},
 	],
 	SET_SCREEN_SHAKE: [
-		{propertyName: 'duration', size: 4},
+		{propertyName: 'duration', size: 2},
+		{propertyName: 'frequency', size: 2},
 		{propertyName: 'amplitude', size: 1},
-		{propertyName: 'frequency', size: 1},
 	],
 	SCREEN_FADE_OUT: [
 		{propertyName: 'duration', size: 4},
@@ -825,7 +825,7 @@ var actionPropertyNameToHandlerMap = {
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
-	frequency: getByteFromAction,
+	frequency: getTwoBytesFromAction,
 	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
 	relative_direction: getRelativeDirectionFromAction,

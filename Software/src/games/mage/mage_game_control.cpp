@@ -1,13 +1,13 @@
 #include "mage_game_control.h"
 
 #include "EngineROM.h"
-#include "EnginePanic.h"
 #include "FrameBuffer.h"
 #include "mage_hex.h"
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 
-extern Point cameraPosition;
+#define PI 3.14159265
+
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
@@ -106,11 +106,6 @@ MageGameControl::MageGameControl()
 
 	magePointBasedRect = MageGeometry(POLYGON, 4);
 
-	playerVelocity = {
-		.x= 0,
-		.y= 0
-	};
-
 	//load the map
 	PopulateMapData(currentMapId);
 }
@@ -139,8 +134,13 @@ uint32_t MageGameControl::Size() const
 		(sizeof(char) * MAGE_ENTITY_NAME_LENGTH) + //playerName
 		sizeof(playerHasControl) +
 		sizeof(isCollisionDebugOn) +
+		sizeof(cameraShakeAmplitude) +
+		sizeof(cameraShakePhase) +
+		sizeof(cameraPosition) +
 		magePointBasedRect.size() +
 		sizeof(playerVelocity) +
+		sizeof(cameraShaking) +
+		sizeof(adjustedCameraPosition) +
 		sizeof(MageEntity)*MAX_ENTITIES_PER_MAP+ //entities array
 		sizeof(MageEntityRenderableData)*MAX_ENTITIES_PER_MAP; //entityRenderableData array
 
@@ -408,7 +408,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		//all entities start with 0 frame ticks
 		entityRenderableData[i].currentFrameTicks = 0;
 		//other values are filled in when getEntityRenderableData is called:
-		updateEntityRenderableData(i);
+		updateEntityRenderableData(i, true);
 	}
 
 	//make sure the tileset Id is updated when the map loads to prevent camera jumping when switching entity types
@@ -488,6 +488,11 @@ void MageGameControl::applyUniversalInputs()
 
 void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 {
+	//set mage speed based on if the right pad down is being pressed:
+	float moveType = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+	float howManyMsPerSecond = 1000.0;
+	float whatFractionOfSpeed = moveType / howManyMsPerSecond;
+	mageSpeed = whatFractionOfSpeed * deltaTime;
 	if(MageDialog->isOpen) {
 		if(
 			EngineInput_Activated.rjoy_down
@@ -531,12 +536,6 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
 		isMoving = false;
-
-		//set mage speed based on if the right pad down is being pressed:
-		float moveType = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
-		float howManyMsPerSecond = 1000.0;
-		float whatFractionOfSpeed = moveType / howManyMsPerSecond;
-		mageSpeed = whatFractionOfSpeed * deltaTime;
 
 		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
 		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
@@ -637,26 +636,11 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			renderableData->currentFrameTicks = 0;
 		}
 
-		//set camera position to mage position, accounting for possible change in tile size due to hacking:
-		if(previousPlayerTilesetId != renderableData->tilesetId)
-		{
-			//get the relative sizes of the tile widths:
-			uint16_t oldTileWidth = tilesets[previousPlayerTilesetId].TileWidth();
-			uint16_t oldTileHeight = tilesets[previousPlayerTilesetId].TileHeight();
-			uint16_t newTileWidth = tilesets[renderableData->tilesetId].TileWidth();
-			uint16_t newTileHeight = tilesets[renderableData->tilesetId].TileHeight();
-			//the offset to maintain camera centered on the player is equal to half the difference in size
-			int32_t xOffset = (oldTileHeight - newTileWidth)/2;
-			int32_t yOffset = (oldTileHeight - newTileHeight)/2;
-			//adjust player position so that the camera centring will not change from the previous tileset to the new tileset.
-			playerEntity->x = playerEntity->x + xOffset;
-			playerEntity->y = playerEntity->y - yOffset; //negative because player tile width is offset towards negative y
-			//reset previous to prevent continuous updating
-			previousPlayerTilesetId = renderableData->tilesetId;
-		}
-
-		if(isMoving)
-		{
+		//What scenarios call for an extra renderableData update?
+		if(
+			isMoving
+			|| (previousPlayerTilesetId != renderableData->tilesetId)
+		) {
 			updateEntityRenderableData(playerEntityIndex);
 		}
 		//set camera to center of player tile.
@@ -668,11 +652,19 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		if (!playerHasControl) {
 			return;
 		}
-		uint8_t panSpeed = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
-		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= panSpeed; }
-		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += panSpeed; }
-		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= panSpeed; }
-		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += panSpeed; }
+		if(EngineInput_Buttons.ljoy_left ) { cameraPosition.x -= mageSpeed; }
+		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; }
+		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= mageSpeed; }
+		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; }
+	}
+}
+
+void MageGameControl::applyCameraEffects(uint32_t deltaTime) {
+	adjustedCameraPosition.x = cameraPosition.x;
+	adjustedCameraPosition.y = cameraPosition.y;
+	if(cameraShaking) {
+		adjustedCameraPosition.x += cos(PI * 2 * cameraShakePhase) * (float)cameraShakeAmplitude;
+		adjustedCameraPosition.y += sin(PI * 2 * (cameraShakePhase * 2)) * (float)cameraShakeAmplitude;
 	}
 }
 
@@ -737,8 +729,10 @@ void MageGameControl::handleEntityInteract()
 	}
 }
 
-void MageGameControl::DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y)
+void MageGameControl::DrawMap(uint8_t layer)
 {
+	int32_t camera_x = adjustedCameraPosition.x;
+	int32_t camera_y = adjustedCameraPosition.y;
 	uint32_t tilesPerLayer = map.Cols() * map.Rows();
 	uint32_t layerAddress = map.LayerOffset(layer);
 	if(layerAddress == 0)
@@ -911,8 +905,8 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	magePointBasedRect.points[3].x = x0;
 	magePointBasedRect.points[3].y = y1;
 	magePointBasedRect.draw(
-		cameraPosition.x,
-		cameraPosition.y,
+		adjustedCameraPosition.x,
+		adjustedCameraPosition.y,
 		COLOR_PURPLE
 	);
 	uint8_t layerCount = map.LayerCount();
@@ -1029,8 +1023,8 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 						tileset.TileHeight()
 					);
 					geometry.draw(
-						cameraPosition.x,
-						cameraPosition.y,
+						adjustedCameraPosition.x,
+						adjustedCameraPosition.y,
 						isMageInGeometry
 							? COLOR_RED
 							: COLOR_YELLOW,
@@ -1138,7 +1132,10 @@ uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
 	return scriptHeader.offset(scriptId);
 }
 
-void MageGameControl::updateEntityRenderableData(uint8_t index)
+void MageGameControl::updateEntityRenderableData(
+	uint8_t index,
+	bool skipTilesetCheck
+)
 {
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
@@ -1146,6 +1143,7 @@ void MageGameControl::updateEntityRenderableData(uint8_t index)
 	if(index >= map.EntityCount())
 	{
 		data->tilesetId = MAGE_TILESET_FAILOVER_ID;
+		data->lastTilesetId = MAGE_TILE_FAILOVER_ID;
 		data->tileId = MAGE_TILE_FAILOVER_ID;
 		data->duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
 		data->frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
@@ -1155,6 +1153,8 @@ void MageGameControl::updateEntityRenderableData(uint8_t index)
 	else {
 		//make a local copy of the entity so the hacked values remain unchanged:
 		MageEntity entity = entities[index];
+		//but make a pointer to the real deal in case it needs to be moved by hacking changes
+		MageEntity *entityPointer = &entities[index];
 
 		//ensure the primaryIdType is valid
 		entity.primaryIdType = (MageEntityPrimaryIdType) getValidPrimaryIdType(entity.primaryIdType);
@@ -1241,8 +1241,10 @@ void MageGameControl::updateEntityRenderableData(uint8_t index)
 				uint16_t animationId = getValidAnimationId(directedAnimation.TypeId());
 				uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
 				data->tilesetId = animations[animationId].TilesetId();
-				data->tileId = getValidTileId(animations[animationId].AnimationFrame(currentFrame).TileId(),
-											  data->tilesetId);
+				data->tileId = getValidTileId(
+					animations[animationId].AnimationFrame(currentFrame).TileId(),
+					data->tilesetId
+				);
 				data->duration = animations[animationId].AnimationFrame(
 					currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
 				data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
@@ -1260,17 +1262,47 @@ void MageGameControl::updateEntityRenderableData(uint8_t index)
 			}
 		}
 		MageTileset *tileset = &tilesets[getValidTilesetId(data->tilesetId)];
-		uint16_t width = tileset->TileWidth();
-		uint16_t height = tileset->TileHeight();
-		uint16_t halfWidth = width / 2;
-		uint16_t halfHeight = height / 2;
-		data->hitBox.x = entity.x + (halfWidth / 2);
-		data->hitBox.y = entity.y + (halfHeight) - height;
-		data->hitBox.w = halfWidth;
-		data->hitBox.h = halfHeight;
-		data->center.x = data->hitBox.x + (data->hitBox.w / 2);
-		data->center.y = data->hitBox.y + (data->hitBox.h / 2);
+		Point oldCenter = {
+			.x = data->center.x,
+			.y = data->center.y,
+		};
+		updateEntityRenderableBoxes(data, &entity, tileset);
+		// accounting for possible change in tile size due to hacking;
+		// adjust entity position so that the center will not change
+		// from the previous tileset to the new tileset.
+		if (
+			!skipTilesetCheck
+			&& data->lastTilesetId != data->tilesetId
+		) {
+			//get the difference between entity centers:
+			entityPointer->x += oldCenter.x - data->center.x;
+			entityPointer->y += oldCenter.y - data->center.y;
+			entity.x = entityPointer->x;
+			entity.y = entityPointer->y;
+			printf(
+				"ENTITY TILESET CHANGED!\n"
+			);
+			updateEntityRenderableBoxes(data, &entity, tileset);
+		}
+		data->lastTilesetId = data->tilesetId;
 	}
+}
+
+void MageGameControl::updateEntityRenderableBoxes(
+	MageEntityRenderableData *data,
+	const MageEntity *entity,
+	const MageTileset *tileset
+) const {
+	uint16_t width = tileset->TileWidth();
+	uint16_t height = tileset->TileHeight();
+	uint16_t halfWidth = width / 2;
+	uint16_t halfHeight = height / 2;
+	data->hitBox.x = entity->x + (halfWidth / 2);
+	data->hitBox.y = entity->y + (halfHeight) - height;
+	data->hitBox.w = halfWidth;
+	data->hitBox.h = halfHeight;
+	data->center.x = data->hitBox.x + (data->hitBox.w / 2);
+	data->center.y = data->hitBox.y + (data->hitBox.h / 2);
 }
 
 void MageGameControl::UpdateEntities(uint32_t deltaTime)
@@ -1316,8 +1348,10 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	}
 }
 
-void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
+void MageGameControl::DrawEntities()
 {
+	int32_t cameraX = adjustedCameraPosition.x;
+	int32_t cameraY = adjustedCameraPosition.y;
 	//first sort entities by their y values:
 	uint16_t entitySortOrder[map.EntityCount()];
 	//init index array:
@@ -1416,8 +1450,10 @@ void MageGameControl::DrawEntities(int32_t cameraX, int32_t cameraY)
 	}
 }
 
-void MageGameControl::DrawGeometry(int32_t cameraX, int32_t cameraY)
+void MageGameControl::DrawGeometry()
 {
+	int32_t  cameraX = adjustedCameraPosition.x;
+	int32_t cameraY = adjustedCameraPosition.y;
 	Point *playerPosition;
 	bool isColliding = false;
 	bool isPlayerPresent = playerEntityIndex != NO_PLAYER;

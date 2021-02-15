@@ -11,7 +11,6 @@ extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
-extern Point cameraPosition;
 
 void MageScriptControl::initScriptState(
 	MageScriptState * resumeStateStruct,
@@ -1592,9 +1591,29 @@ void MageScriptControl::setScreenShake(uint8_t * args, MageScriptState * resumeS
 {
 	ActionSetScreenShake *argStruct = (ActionSetScreenShake*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+	argStruct->duration = ROM_ENDIAN_U2_VALUE(argStruct->duration);
+	argStruct->frequency = ROM_ENDIAN_U2_VALUE(argStruct->frequency);
 
-	return;
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
+
+	if(progress < 1.0) {
+		MageGame->cameraShaking = true;
+		MageGame->cameraShakeAmplitude = argStruct->amplitude;
+		MageGame->cameraShakePhase = (
+			progress /
+			(
+				(float)argStruct->frequency
+				/ 1000.0f
+			)
+		);
+	} else {
+		MageGame->cameraShaking = false;
+		MageGame->cameraShakeAmplitude = 0;
+		MageGame->cameraShakePhase = 0;
+	}
 }
 void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -1859,6 +1878,27 @@ float MageScriptControl::getProgressOfAction(
 		(float)resumeStateStruct->loopsToNextAction
 		/ (float)resumeStateStruct->totalLoopsToNextAction
 	);
+}
+
+float MageScriptControl::manageProgressOfAction(
+	MageScriptState *resumeStateStruct,
+	uint32_t duration
+) const {
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		uint16_t totalDelayLoops = duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	}
+	resumeStateStruct->loopsToNextAction--;
+	float result = 1.0f - (
+		(float)resumeStateStruct->loopsToNextAction
+		/ (float)resumeStateStruct->totalLoopsToNextAction
+	);
+	if (result >= 1.0f) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+		resumeStateStruct->loopsToNextAction = 0;
+	}
+	return result;
 }
 
 MageEntityAnimationDirection MageScriptControl::getRelativeDirection(

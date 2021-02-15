@@ -152,5 +152,35 @@
 				"I test `COPY_SCRIPT`, using onTicks 07 & 08!\nWalk around me, I should point at you,\nPause half a second, then look away, \nno matter your position!"
 			]
 		}
+	],
+	"dialog-mage10-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test will `SET_SCREEN_SHAKE` 3 times:\n\t\t\t\"frequency\": 20,\n\t\t\t\"amplitude\": 3,\n\t\t\t\"duration\": 2000"
+			]
+		}
+	],
+	"dialog-mage10-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now:,\n\t\t\t\"frequency\": 1000,\n\t\t\t\"amplitude\": 32,\n\t\t\t\"duration\": 8000"
+			]
+		}
+	],
+	"dialog-mage10-c": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now:\n\t\t\t\"frequency\": 50,\n\t\t\t\"amplitude\": 5,\n\t\t\t\"duration\": 5000"
+			]
+		}
 	]
 }

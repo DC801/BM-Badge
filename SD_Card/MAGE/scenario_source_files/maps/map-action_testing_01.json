@@ -247,7 +247,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage10-interact"
                         }, 
                         {
                          "name":"on_tick",

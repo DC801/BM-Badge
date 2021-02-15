@@ -353,5 +353,37 @@
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		}
+	],
+	"mage10-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-a"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 20,
+			"amplitude": 3,
+			"duration": 2000
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-b"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 1000,
+			"amplitude": 32,
+			"duration": 8000
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-c"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 50,
+			"amplitude": 5,
+			"duration": 5000
+		}
 	]
 }

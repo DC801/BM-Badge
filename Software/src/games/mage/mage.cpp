@@ -29,11 +29,6 @@ uint32_t now;
 uint32_t deltaTime;
 uint32_t lastLoopTime;
 
-Point cameraPosition = {
-	.x = 0,
-	.y = 0,
-};
-
 void handleBlockingDelay()
 {
 	//if a blocking delay was added by any actions, pause before returning to the game loop:
@@ -105,6 +100,7 @@ void GameUpdate(uint32_t deltaTime)
 
 		//update the entities based on the current state of their (hackable) data array.
 		MageGame->UpdateEntities(deltaTime);
+		MageGame->applyCameraEffects(deltaTime);
 	}
 }
 
@@ -154,7 +150,7 @@ void GameRender()
 			)
 			{
 				//draw all map layers except the last one before drawing entities.
-				MageGame->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+				MageGame->DrawMap(layerIndex);
 				#ifdef TIMING_DEBUG
 					diff = millis() - now;
 					debug_print("Layer Time: %d",diff);
@@ -165,7 +161,7 @@ void GameRender()
 		else
 		{
 			//if there is only one map layer, it will always be drawn before the entities.
-			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(0);
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
 				debug_print("Layer Time: %d",diff);
@@ -174,7 +170,7 @@ void GameRender()
 		}
 
 		//now that the entities are updated, draw them to the screen.
-		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
+		MageGame->DrawEntities();
 		#ifdef TIMING_DEBUG
 			diff = millis() - now;
 			debug_print("Entity Time: %d",diff);
@@ -184,7 +180,7 @@ void GameRender()
 		if (layerCount > 1)
 		{
 			//draw the final layer above the entities.
-			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(layerCount - 1);
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
 				debug_print("Layer n Time: %d",diff);
@@ -193,7 +189,7 @@ void GameRender()
 		}
 
 		if (MageGame->isCollisionDebugOn) {
-			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
+			MageGame->DrawGeometry();
 			if(MageGame->playerEntityIndex != NO_PLAYER) {
 				MageGame->getPushBackFromTilesThatCollideWithPlayerRect();
 			}
