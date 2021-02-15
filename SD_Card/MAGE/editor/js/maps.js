@@ -171,6 +171,17 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 	map.entityObjects = allObjectsOnAllObjectLayers.filter(function(object) {
 		return object.gid !== undefined;
 	});
+	if (map.entityObjects.length > MAX_ENTITIES_PER_MAP) {
+		throw new Error(
+			`Map "${
+				map.name
+			}" has ${
+				map.entityObjects.length
+			} entities, but the limit is ${
+				MAX_ENTITIES_PER_MAP
+			}`
+		);
+	}
 	map.geometryObjects = allObjectsOnAllObjectLayers.filter(function(object) {
 		return object.gid === undefined;
 	});
