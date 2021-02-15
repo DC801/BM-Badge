@@ -150,5 +150,27 @@
 			"entity": "%SELF%",
 			"script": "set_save_flag-bobs_not_on_fire"
 		}
+	],
+	"test_camera_follow_bert": [
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "Bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "test_camera_follow_player"
+		}
+	],
+	"test_camera_follow_player": [
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "test_camera_follow_bert"
+		}
 	]
 }
