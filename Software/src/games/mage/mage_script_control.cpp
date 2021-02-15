@@ -1534,7 +1534,8 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 void MageScriptControl::setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetCameraToFollowEntity *argStruct = (ActionSetCameraToFollowEntity*)args;
-
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	MageGame->cameraFollowEntityId = entityIndex;
 	return;
 }
 
