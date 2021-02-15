@@ -122,12 +122,20 @@
 			"doc": "Good heavens! What was that?"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "earthquake-setpiece"
+			"action": "SCREEN_FADE_OUT",
+			"duration": 300,
+			"color": "#FF0000",
+			"doc": "TO DO: make earthquake"
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "demoend-cutscene-move"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 300,
+			"color": "#FF0000",
+			"doc": "TO DO: make earthquake"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -351,7 +359,7 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-demoend-cutscene-end-demo2",
-			"doc": "Press XOR and MEM1 and...."
+			"doc": "Press XOR and MEM0 and...."
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",

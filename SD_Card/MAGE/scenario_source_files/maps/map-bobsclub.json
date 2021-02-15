@@ -39,7 +39,7 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":135,
+                 "gid":159,
                  "height":40,
                  "id":1,
                  "name":"Strong Bad",
@@ -57,7 +57,7 @@
                  "y":163.333333333333
                 }, 
                 {
-                 "gid":172,
+                 "gid":196,
                  "height":40,
                  "id":2,
                  "name":"Guardian Bob",
@@ -103,7 +103,7 @@
                  "y":448
                 }, 
                 {
-                 "height":9.5,
+                 "height":32.8333333333333,
                  "id":5,
                  "name":"door-bobsclub-exit",
                  "rotation":0,
@@ -114,7 +114,7 @@
                  "y":471.833333333333
                 }, 
                 {
-                 "gid":195,
+                 "gid":219,
                  "height":32,
                  "id":7,
                  "name":"Bob",
@@ -172,15 +172,15 @@
          "source":"..\/tilesets\/tileset-monstrosity.json"
         }, 
         {
-         "firstgid":129,
+         "firstgid":153,
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":171,
+         "firstgid":195,
          "source":"..\/entities\/entity-bob.json"
         }, 
         {
-         "firstgid":189,
+         "firstgid":213,
          "source":"..\/entities\/entity-mage.json"
         }],
  "tilewidth":32,

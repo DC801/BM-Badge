@@ -1,0 +1,124 @@
+{
+	"dialog-bert-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Who needs help?"
+			]
+		}
+	],
+	"dialog-bert-end": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Perhaps the world."
+			]
+		}
+	],
+	"dialog-bert-catwork": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Max. Purple man.",
+				"Max wants his house to be built."
+			]
+		}
+	],
+	"dialog-bert-shepherd": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"The shepherd.",
+				"He had one job."
+			]
+		}
+	],
+	"dialog-bert-bender": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Robot?",
+				"Some kind of robot.",
+				"I do not know this robot.",
+				"...I think he took my watch."
+			]
+		}
+	],
+	"dialog-bert-baker": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Baker.",
+				"Baker is busy. He has trouble with customer."
+			]
+		}
+	],
+	"dialog-bert-delmar1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Old woman, beatrice.",
+				"She has been sad a long time."
+			]
+		}
+	],
+	"dialog-bert-trekkie": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Trekkie.",
+				"Trekkie works on plants in the glass house."
+			]
+		}
+	],
+	"dialog-bert-sportskid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Small child with big dream.",
+				"Child lives with father."
+			]
+		}
+	],
+	"dialog-bert-delmar2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Old woman, Beatrice.",
+				"Does she know what she wants?"
+			]
+		}
+	],
+	"dialog-bert-goose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "Bert",
+			"messages": [
+				"Goose is mad?",
+				"Goose is always mad.",
+				"Perhaps... extra mad this time?"
+			]
+		}
+	]
+}

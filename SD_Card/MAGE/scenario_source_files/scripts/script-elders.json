@@ -1,0 +1,167 @@
+{
+	"show_dialog-bert-start": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-start",
+			"doc": "Who needs help?"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-catwork"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "shepherd2",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-shepherd"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender2",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-bender"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "baker2",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-baker"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea-happy",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-delmar1"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "trekkie2",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-trekkie"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ball",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-sportskid"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea-relief",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-delmar2"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "rake",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-goose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-end",
+			"doc": "Perhaps the world."
+		}
+	],
+	"show_dialog-bert-catwork": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-catwork"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-shepherd": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-shepherd"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-bender": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-bender"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-baker": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-baker"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-delmar1": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-delmar1"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-trekkie": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-trekkie"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-sportskid": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-sportskid"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-delmar2": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-delmar2"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-bert-goose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-goose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	]
+}
