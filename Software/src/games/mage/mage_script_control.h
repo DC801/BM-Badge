@@ -276,6 +276,10 @@ class MageScriptControl
 			const Point &point
 		) const;
 		float getProgressOfAction(const MageScriptState *resumeStateStruct) const;
+		float manageProgressOfAction(
+			MageScriptState *resumeStateStruct,
+			uint32_t duration
+		) const;
 		uint16_t getLoopableGeometryPointIndex(
 			MageGeometry *geometry,
 			uint8_t index

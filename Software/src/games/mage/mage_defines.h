@@ -98,7 +98,7 @@ all of the old code used as the foundation of this badge.
 //30fps: ~33ms
 //24fps: ~41ms
 #ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 8)
 #endif
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
@@ -295,6 +295,7 @@ typedef struct {
 	Point center;
 	uint16_t currentFrameTicks;
 	uint16_t tilesetId;
+	uint16_t lastTilesetId;
 	uint16_t tileId;
 	uint32_t duration;
 	uint16_t frameCount;
@@ -968,9 +969,10 @@ typedef struct {
 } ActionLoopCameraAlongGeometry;
 
 typedef struct {
-	uint32_t duration; //in ms
+	uint16_t duration; //in ms
+	uint16_t frequency;
 	uint8_t amplitude;
-	uint8_t frequency;
+	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetScreenShake;
 
