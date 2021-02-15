@@ -18,6 +18,7 @@
 		"scripts/script-goose.json",
 		"scripts/script-goats.json",
 		"scripts/script-enddemo.json",
+		"scripts/script-elders.json",
 		"scripts/script-max.json"
 	],
 	"dialogPaths": [
@@ -33,6 +34,7 @@
 		"dialog/dialog-lodge.json",
 		"dialog/dialog-secretroom.json",
 		"dialog/dialog-enddemo.json",
+		"dialog/dialog-elders.json",
 		"dialog/dialog-max.json"
 	],
 	"maps": {
