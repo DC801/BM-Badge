@@ -92,6 +92,10 @@ void MageHexEditor::updateHexLights()
 	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_MEM0, (hexCursorLocation == memAddresses[0]) ? 0xFF : 0x00);
+	ledSet(LED_MEM1, (hexCursorLocation == memAddresses[1]) ? 0xFF : 0x00);
+	ledSet(LED_MEM2, (hexCursorLocation == memAddresses[2]) ? 0xFF : 0x00);
+	ledSet(LED_MEM3, (hexCursorLocation == memAddresses[3]) ? 0xFF : 0x00);
 }
 
 uint16_t MageHexEditor::getCurrentMemPage()
