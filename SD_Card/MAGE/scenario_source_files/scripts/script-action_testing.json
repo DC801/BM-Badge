@@ -385,5 +385,31 @@
 			"amplitude": 5,
 			"duration": 5000
 		}
+	],
+	"mage11-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage11"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 2000,
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1000,
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 500,
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 2000,
+			"entity": "%PLAYER%"
+		}
 	]
 }

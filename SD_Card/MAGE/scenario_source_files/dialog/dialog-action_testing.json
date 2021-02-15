@@ -182,5 +182,15 @@
 				"Now:\n\t\t\t\"frequency\": 50,\n\t\t\t\"amplitude\": 5,\n\t\t\t\"duration\": 5000"
 			]
 		}
+	],
+	"dialog-mage11": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Panning camera to 3 separate geometries,\nthen panning camera back to the player"
+			]
+		}
 	]
 }

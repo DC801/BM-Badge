@@ -83,10 +83,6 @@ private:
 		.x = 0,
 		.y = 0,
 	};
-	Point cameraPosition = {
-		.x = 0,
-		.y = 0,
-	};
 	Point adjustedCameraPosition= {
 		.x = 0,
 		.y = 0,
@@ -115,6 +111,10 @@ public:
 	float cameraShakePhase = 0;
 	uint8_t cameraShakeAmplitude = 0;
 	int16_t cameraFollowEntityId = NO_PLAYER;
+	Point cameraPosition = {
+		.x = 0,
+		.y = 0,
+	};
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
