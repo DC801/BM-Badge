@@ -363,6 +363,16 @@
 			]
 		}
 	],
+	"dialog-bobsclub-bob-where": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Wait. Weren't there two Bob golems last\nyear?"
+			]
+		}
+	],
 	"dialog-bobsclub-strongbob": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -542,6 +552,49 @@
 			"name": "%Baker%",
 			"messages": [
 				"Say, you wouldn't want a B-shaped donut,\nwould you? On the house."
+			]
+		}
+	],
+	"dialog-bobmoss-start1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Oh, hello, there."
+			]
+		}
+	],
+	"dialog-bobmoss-start2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"I was just admiring the forest, with its\nhappy little trees....",
+				"I've made so many squirrel friends,\nand...."
+			]
+		}
+	],
+	"dialog-bobmoss-start3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Oh!",
+				"I didn't realize how late it was getting.\nI think I'm a little late for work.",
+				"I'd better head out. Hope to see you\nagain."
+			]
+		}
+	],
+	"dialog-bobmoss-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Sorry, I can't serve anyone until the\nparty starts."
 			]
 		}
 	]
