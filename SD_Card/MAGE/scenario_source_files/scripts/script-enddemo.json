@@ -63,17 +63,17 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Beatrice",
-			"script": "maru-loiter"
+			"script": "loiter1"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Trekkie",
-			"script": "deut-loiter"
+			"script": "loiter2"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Marta",
-			"script": "bmurray-loiter"
+			"script": "loiter2"
 		}
 	],
 	"jackob-pace": [
@@ -124,7 +124,7 @@
 		{
 			"action": "SCREEN_FADE_OUT",
 			"duration": 300,
-			"color": "#FF0000",
+			"color": "#000000",
 			"doc": "TO DO: make earthquake"
 		},
 		{
@@ -134,7 +134,7 @@
 		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 300,
-			"color": "#FF0000",
+			"color": "#000000",
 			"doc": "TO DO: make earthquake"
 		},
 		{
@@ -384,6 +384,131 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		}
+	],
+	"loiter1": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		}
+	],
+	"loiter2": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
+		}
+	],
+	"loiter3": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		}
+	],
+	"loiter4": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		}
 	]
 }

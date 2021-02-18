@@ -260,7 +260,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
@@ -270,7 +270,7 @@
 	],
 	"dialog-bobsclub3": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
@@ -278,7 +278,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
@@ -289,7 +289,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
@@ -298,7 +298,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
@@ -306,7 +306,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [

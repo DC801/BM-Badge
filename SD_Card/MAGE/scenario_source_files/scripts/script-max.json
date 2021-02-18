@@ -78,9 +78,31 @@
 			"doc": "Have everything!"
 		},
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 800,
+			"geometry": "camera-felix"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-max-start4",
 			"doc": "Not everything. Cat boss must approve."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 800,
+			"entity": "%PLAYER%"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -616,10 +638,6 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "catwalk-hide"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "null_script"
 		}
 	]
 }

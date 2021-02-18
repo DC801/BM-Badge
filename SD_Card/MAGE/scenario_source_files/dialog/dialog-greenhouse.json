@@ -132,7 +132,7 @@
 	],
 	"dialog-trekkie-oh": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "trekkie",
 			"name": "%Trekkie%",
 			"messages": [
