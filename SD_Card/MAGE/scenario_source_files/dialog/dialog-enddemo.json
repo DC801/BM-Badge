@@ -11,7 +11,7 @@
 	],
 	"dialog-demoend-cutscene-lasttime1": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
@@ -31,7 +31,7 @@
 	],
 	"dialog-demoend-cutscene-lasttime3": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "trekkie",
 			"name": "%Trekkie%",
 			"messages": [

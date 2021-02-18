@@ -1622,6 +1622,30 @@
                  "width":0,
                  "x":841.333333333333,
                  "y":354.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":189,
+                 "name":"earthquake-setpiece-marta-walk",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":711.333333333333,
+                 "y":475.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":191,
+                 "name":"demoend-marta-start",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":922.333333333333,
+                 "y":480
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1781,7 +1805,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":189,
+ "nextobjectid":192,
  "orientation":"orthogonal",
  "properties":[
         {
