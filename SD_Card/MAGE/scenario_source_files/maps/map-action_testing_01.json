@@ -293,7 +293,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage12-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -316,7 +316,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage13-interact"
                         }, 
                         {
                          "name":"on_tick",

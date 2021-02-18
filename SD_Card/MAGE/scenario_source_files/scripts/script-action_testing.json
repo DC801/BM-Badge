@@ -411,5 +411,120 @@
 			"duration": 2000,
 			"entity": "%PLAYER%"
 		}
+	],
+	"mage12-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage12"
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "%PLAYER%"
+		}
+	],
+	"mage13-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage13-interact"
+		}
+	],
+	"mage13-success-n": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-n"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-e": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-e"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-s"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-w": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-w"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-interact": [
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "north",
+			"expected_bool": true,
+			"success_script": "mage13-success-n"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "east",
+			"expected_bool": true,
+			"success_script": "mage13-success-e"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south",
+			"expected_bool": true,
+			"success_script": "mage13-success-s"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "west",
+			"expected_bool": true,
+			"success_script": "mage13-success-w"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-fail"
+		}
 	]
 }

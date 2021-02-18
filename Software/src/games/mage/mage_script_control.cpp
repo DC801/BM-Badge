@@ -397,7 +397,6 @@ void MageScriptControl::checkEntityCurrentFrame(uint8_t * args, MageScriptState 
 	}
 }
 
-//This probably needs more testing, as direction is more complicated than just an integer comparison -Tim
 void MageScriptControl::checkEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityDirection *argStruct = (ActionCheckEntityDirection*)args;
@@ -1453,7 +1452,12 @@ void MageScriptControl::teleportCameraToGeometry(uint8_t * args, MageScriptState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-
+	MageEntity *entity = MageGame->getValidEntity(currentEntityId);
+	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+	MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+	MageGame->cameraFollowEntityId = NO_PLAYER;
+	MageGame->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
+	MageGame->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
 }
 
 void MageScriptControl::panCameraToEntity(uint8_t * args, MageScriptState * resumeStateStruct)
