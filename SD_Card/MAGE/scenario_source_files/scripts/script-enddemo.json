@@ -19,9 +19,132 @@
 	],
 	"earthquake-setpiece": [
 		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "earthquake-setpiece-camera-spot"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Verthandi",
+			"geometry": "earthquake-setpiece-verthandi-spot"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "earthquake-setpiece-marta-spot"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 300,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "loiter1"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Verthandi",
+			"script": "loiter2"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "loiter3"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cat",
+			"script": "loiter4"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1800
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Verthandi",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cat",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Marta",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Cleo",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Cat",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Verthandi",
+			"direction": "south"
+		},
+		{
 			"action": "COPY_SCRIPT",
-			"script": "earthquake",
-			"doc": "TO DO: change this to camera pan over town etc"
+			"script": "earthquake"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "marta-walk"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "loiter1"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Verthandi",
+			"script": "loiter2"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cat",
+			"script": "loiter4"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 300,
+			"color": "#000000"
+		}
+	],
+	"marta-walk": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "earthquake-setpiece-marta-walk",
+			"duration": 900
 		}
 	],
 	"demoend-cutscene-move": [
@@ -41,9 +164,14 @@
 			"geometry": "demoend-jackob-point"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "null_script"
+		},
+		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Marta",
-			"geometry": "demoend-marta-point"
+			"geometry": "demoend-marta-start"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -68,11 +196,6 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Trekkie",
-			"script": "loiter2"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Marta",
 			"script": "loiter2"
 		}
 	],
@@ -107,6 +230,90 @@
 			"direction": "south"
 		}
 	],
+	"demoend-everyone-south": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Beatrice",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Trekkie",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Beatrice",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Marta",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Bert",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Jackob",
+			"direction": "south"
+		}
+	],
+	"demoend-everyone-look-at-jackob": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Marta",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Beatrice",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "Jackob"
+		}
+	],
 	"demoend-cutscene": [
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -124,18 +331,39 @@
 		{
 			"action": "SCREEN_FADE_OUT",
 			"duration": 300,
-			"color": "#000000",
-			"doc": "TO DO: make earthquake"
+			"color": "#000000"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "earthquake-setpiece"
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "demoend-cutscene-move"
 		},
 		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "%PLAYER%"
+		},
+		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 300,
-			"color": "#000000",
-			"doc": "TO DO: make earthquake"
+			"color": "#000000"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "demoend-marta-point",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "loiter3"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -202,34 +430,8 @@
 			"doc": "Last time WHAT?"
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Beatrice",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Marta",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Beatrice",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Marta",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%PLAYER%",
-			"direction": "south"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "south"
+			"action": "COPY_SCRIPT",
+			"script": "demoend-everyone-south"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -238,6 +440,10 @@
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 600
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "demoend-everyone-look-at-jackob"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -321,6 +527,10 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "demoend-everyone-south"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "earthquake"
 		},
 		{
@@ -382,6 +592,11 @@
 			"bool_value": true
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "check_if_player_is_goat_low"
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
 		}
@@ -394,7 +609,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 2200
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -423,7 +638,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1100
+			"duration": 800
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -441,7 +656,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 2400
+			"duration": 400
 		}
 	],
 	"loiter3": [
@@ -470,7 +685,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 200
 		}
 	],
 	"loiter4": [
@@ -481,7 +696,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1100
+			"duration": 300
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -490,7 +705,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1800
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
