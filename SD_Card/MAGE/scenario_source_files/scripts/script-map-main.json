@@ -2,6 +2,29 @@
 	"on_load-map-main": [
 		{
 			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-bobmoss-check"
+		}
+	],
+	"on_load-map-main-bobmoss-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-bobmoss-hide"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-rake-check"
+		}
+	],
+	"on_load-map-main-bobmoss-hide": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bob Moss",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "RUN_SCRIPT",
 			"script": "on_load-map-main-rake-check"
 		}
 	],
