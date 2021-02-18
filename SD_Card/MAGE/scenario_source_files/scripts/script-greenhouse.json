@@ -268,7 +268,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1400
+			"duration": 600
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1400,
+			"entity": "Modem"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
@@ -334,6 +343,15 @@
 			"duration": 900
 		},
 		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1400,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "east"
@@ -349,7 +367,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 600
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -384,7 +402,7 @@
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Modem",
 			"byte_value": 0,
-			"doc": "for sake of debugging, the modem still isn't working until you speak to Treakkie"
+			"doc": "the modem still isn't working until you speak to Trekkie"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",

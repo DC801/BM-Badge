@@ -1610,6 +1610,18 @@
                  "width":0,
                  "x":271.33365,
                  "y":846.417
+                }, 
+                {
+                 "height":0,
+                 "id":188,
+                 "name":"camera-felix",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":841.333333333333,
+                 "y":354.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1769,7 +1781,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":187,
+ "nextobjectid":189,
  "orientation":"orthogonal",
  "properties":[
         {

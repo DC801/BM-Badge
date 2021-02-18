@@ -345,12 +345,23 @@
 	],
 	"show_dialog-bea-happy-branch": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea-happy",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea-happy-aftermath-branch"
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Beatrice",
+			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -367,7 +378,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-happy"
+			"dialog": "dialog-bea-happy",
+			"doc": "Oh, Delmar, it's you!"
 		},
 		{
 			"action": "SET_SAVE_FLAG",

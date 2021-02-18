@@ -456,7 +456,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub1"
+			"dialog": "dialog-bobsclub1",
+			"doc": "Oh, hello."
 		},
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
@@ -480,7 +481,17 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub2"
+			"dialog": "dialog-bobsclub2",
+			"doc": "I hate to tell you this, but it's canceled."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1200,
+			"entity": "Strong Bad"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -510,7 +521,21 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub3"
+			"dialog": "dialog-bobsclub3",
+			"doc": "Ladies? / What about Bob-vylin? / Came to the wrong party."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1200,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -519,7 +544,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub4"
+			"dialog": "dialog-bobsclub4",
+			"doc": "This place should be full of Bobs... next year."
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
