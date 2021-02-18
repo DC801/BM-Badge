@@ -451,12 +451,12 @@
 	"show_dialog-jackob-hint-shepherd": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-jackob-hint-catwork"
+			"dialog": "dialog-jackob-hint-shepherd"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "show_dialog-shepherd-start"
+			"script": "show_dialog-jackob-start"
 		}
 	],
 	"show_dialog-jackob-hint-bender": [

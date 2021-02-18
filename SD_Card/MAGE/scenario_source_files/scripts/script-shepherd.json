@@ -2,7 +2,7 @@
 	"show_dialog-shepherd-start": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -23,7 +23,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -67,7 +67,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -117,8 +117,7 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "shepherd-hint",
-			"bool_value": false,
-			"doc": "change to true eventually"
+			"bool_value": true
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",

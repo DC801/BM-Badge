@@ -1030,7 +1030,6 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 	}
 }
 
-//waiting for save flag system implementation -Tim
 void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetSaveFlag *argStruct = (ActionSetSaveFlag*)args;
