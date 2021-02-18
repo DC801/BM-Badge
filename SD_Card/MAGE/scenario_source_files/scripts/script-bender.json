@@ -91,6 +91,15 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender1",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bender-start-alt": [
@@ -102,6 +111,15 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender1",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
 			"bool_value": true
 		},
 		{
@@ -131,6 +149,15 @@
 			"doc": "That doesn't look anything like me"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bender",
 			"script": "show_dialog-bender-start"
@@ -146,6 +173,15 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bender-start-s",
 			"doc": "Oh, right. Hurry up and fix it"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -178,6 +214,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender2",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

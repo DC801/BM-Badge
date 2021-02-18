@@ -704,6 +704,20 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hackbook",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hackbook-hint-done",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-reset"
 		}

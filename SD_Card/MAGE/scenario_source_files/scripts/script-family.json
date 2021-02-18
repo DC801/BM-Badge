@@ -44,12 +44,25 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-kid"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-kid-ball": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-kid-ball"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SET_SAVE_FLAG",

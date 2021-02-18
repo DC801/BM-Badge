@@ -239,6 +239,15 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker1",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-baker-start-s": [
@@ -250,6 +259,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bobrock-gottago": [
@@ -568,21 +586,34 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 120
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
 		},
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Guardian Bob",
-			"script": "look-left-and-right"
+			"script": "look-left-and-right-fast"
 		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub-bob-where",
 			"doc": "Wait. Weren't there two?"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -692,6 +723,10 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
@@ -765,6 +800,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bobmoss",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SCREEN_FADE_IN",

@@ -5,6 +5,34 @@
 			"dialog": "dialog-goose"
 		}
 	],
+	"show_dialog-goose-rake": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goose"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "rake",
+			"expected_bool": false,
+			"success_script": "goose-hints"
+		}
+	],
+	"goose-hints": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake-hint",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-goose-rake"
+		}
+	],
 	"goose-mission": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -27,6 +55,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "rake",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -92,6 +124,13 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Goose",
 			"target_entity": "Rake"
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-out-of-lake",
+			"expected_bool": false
 		},
 		{
 			"action": "COPY_SCRIPT",

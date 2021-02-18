@@ -81,7 +81,9 @@
 			"messages": [
 				"They have everything they need to begin\nand yet they won't do any work!"
 			]
-		},
+		}
+	],
+	"dialog-max-start4": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "felix",
@@ -92,7 +94,7 @@
 			]
 		}
 	],
-	"dialog-max-start4": [
+	"dialog-max-start5": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",
@@ -102,7 +104,7 @@
 			]
 		}
 	],
-	"dialog-max-start5": [
+	"dialog-max-start6": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "max",

@@ -47,7 +47,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose"
+                         "value":"show_dialog-goose-rake"
                         }, 
                         {
                          "name":"on_tick",
@@ -637,7 +637,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-jackob-start"
                         }],
                  "rotation":0,
                  "type":"",

@@ -38,7 +38,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start1"
+			"dialog": "dialog-max-start1",
+			"doc": "You're the birthday mage!"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -55,7 +56,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start2"
+			"dialog": "dialog-max-start2",
+			"doc": "Crew must finish interior!"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -72,7 +74,13 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start3"
+			"dialog": "dialog-max-start3",
+			"doc": "Have everything!"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-start4",
+			"doc": "Not everything. Cat boss must approve."
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -89,7 +97,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start4"
+			"dialog": "dialog-max-start5",
+			"doc": "Yes of course, cat boss must approve first!"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -106,11 +115,21 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start5"
+			"dialog": "dialog-max-start6",
+			"doc": "Cat boss is nowhere around!"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "maxtalk",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
 			"bool_value": true
 		},
 		{
@@ -126,7 +145,17 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-start-s"
+			"dialog": "dialog-max-start-s",
+			"doc": "Where is that cat?"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -142,7 +171,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-catbosshere"
+			"dialog": "dialog-max-catbosshere",
+			"doc": "Cat boss! Give them the thumbs up!"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -158,7 +188,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-end"
+			"dialog": "dialog-max-end",
+			"doc": "Finally!"
 		}
 	],
 	"show_dialog-felix": [
@@ -345,7 +376,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
+			"duration": 700
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -354,7 +385,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
+			"duration": 700
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -363,7 +394,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
+			"duration": 700
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -386,6 +417,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "catwork",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -567,7 +602,8 @@
 	"show_dialog-max-crewmissing": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-max-crewmissing"
+			"dialog": "dialog-max-crewmissing",
+			"doc": "Is the crew here to see it?"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
