@@ -297,7 +297,7 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
-			"script": "look-left-and-right"
+			"script": "look-left-and-right-fast"
 		},
 		{
 			"action": "SHOW_DIALOG",

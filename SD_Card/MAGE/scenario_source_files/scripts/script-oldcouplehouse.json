@@ -220,6 +220,15 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Beatrice",
 			"script": "watch-player"
@@ -234,6 +243,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bea-mandud-branch": [
@@ -295,6 +313,15 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Beatrice",
 			"script": "watch-player"
@@ -346,6 +373,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-happy",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -478,6 +509,15 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
@@ -492,6 +532,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bea-sheepening-branch": [
@@ -515,6 +564,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-relief",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -558,6 +611,10 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
@@ -583,6 +640,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea-relief",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

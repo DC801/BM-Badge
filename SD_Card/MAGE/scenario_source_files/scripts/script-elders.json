@@ -31,6 +31,12 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-bobmoss"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bea-happy",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-delmar1"
@@ -109,6 +115,26 @@
 			"script": "show_dialog-bert-start"
 		}
 	],
+	"show_dialog-bert-bobmoss": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-bobmoss"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"bool_value": true
+		}
+	],
 	"show_dialog-bert-delmar1": [
 		{
 			"action": "SHOW_DIALOG",
@@ -162,6 +188,363 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		}
+	],
+	"reset-hint-flags": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hackbook-hint",
+			"bool_value": false
+		}
+	],
+	"show_dialog-jackob-start": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-start",
+			"doc": "Did you have a question?"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hackbook-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-hackbook"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-catwork"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-shepherd"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-bender"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-baker"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-bobmoss"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-bea1"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-trekkie"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-sportskid"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-bea2"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "rake-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-rake"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-jackob-hints"
+		}
+	],
+	"show_dialog-jackob-hint-hackbook": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hackbook-hint-done",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-hackbook-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook1",
+			"doc": "I must have read it before, but...."
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_RELATIVE",
+			"entity": "%SELF%",
+			"relative_direction": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_RELATIVE",
+			"entity": "%SELF%",
+			"relative_direction": -2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook2",
+			"doc": "...."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook3",
+			"doc": "...."
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hackbook-hint-done",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-hackbook-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hints": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hints"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-jackob-hint1"
+		}
+	],
+	"show_dialog-jackob-hint1": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint1"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-catwork": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-catwork"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-shepherd": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-catwork"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-shepherd-start"
+		}
+	],
+	"show_dialog-jackob-hint-bender": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bender"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-baker": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-baker"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-bobmoss": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bobmoss"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-bea1": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bea1"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-trekkie": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-trekkie"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-sportskid": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-sportskid"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-bea2": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bea2"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-rake": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-rake"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
 		}
 	]
 }

@@ -3,7 +3,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Who needs help?"
 			]
@@ -13,7 +13,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Perhaps the world."
 			]
@@ -23,7 +23,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Max. Purple man.",
 				"Max wants his house to be built."
@@ -34,7 +34,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"The shepherd.",
 				"He had one job."
@@ -45,7 +45,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Robot?",
 				"Some kind of robot.",
@@ -58,10 +58,22 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Baker.",
 				"Baker is busy. He has trouble with customer."
+			]
+		}
+	],
+	"dialog-bert-bobmoss": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"Bob Moss.",
+				"Cousin of Stone Cold Bob Austin.",
+				"He is lost. Or is he hiding?"
 			]
 		}
 	],
@@ -69,7 +81,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Old woman, beatrice.",
 				"She has been sad a long time."
@@ -80,7 +92,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Trekkie.",
 				"Trekkie works on plants in the glass house."
@@ -91,7 +103,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Small child with big dream.",
 				"Child lives with father."
@@ -102,7 +114,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Old woman, Beatrice.",
 				"Does she know what she wants?"
@@ -113,11 +125,361 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
-			"name": "Bert",
+			"name": "%Bert%",
 			"messages": [
 				"Goose is mad?",
 				"Goose is always mad.",
 				"Perhaps... extra mad this time?"
+			]
+		}
+	],
+	"dialog-jackob-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Did you have a question,\n%PLAYER%?"
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook1": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Well... I found this book in the inner\nsanctum, and I had a question about it."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Of course. What do you want to know?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"You see, it's a book about the Big Bad,\nbut the words inside are all scrambled up."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"I see.",
+				"Perhaps that's something the Big Bad did.\nIt would be logical for him to hide\ninformation about himself."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"But what can I do to get the book back to\nnormal?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"The Big Bad had powers beyond what you can\ndo with that ring alone, %PLAYER%.",
+				"I suspect it's something even Ring Zero\ncannot fix."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Do you know what the book used to say,\nat least?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"That book... I must have read it before,\nbut...."
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"...."
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Oh, %PLAYER%, I'm sorry.",
+				"I can't remember anything about what the\nbook said.",
+				"I suppose it doesn't matter, either way.\nThe Big Bad is gone, perhaps for good."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"But the Big Bad's name used to be in that\nbook!",
+				"It made me realize that I've never heard\nhis name before. Not once!",
+				"Do you know what his name is?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"....",
+				"I must have known it, once.",
+				"But....",
+				"I can't remember.",
+				"I'm sorry, %PLAYER%."
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook-s": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"About that glitched-out book...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"I'm sorry. I don't think there's anything\nyou can do to fix it."
+			]
+		}
+	],
+	"dialog-jackob-hints": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Not really."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Well, then a hint:"
+			]
+		}
+	],
+	"dialog-jackob-hint1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"If you've hacked things so badly you're\nnot sure how you could possibly straighten\nthings out again....",
+				"Walk through a door. The world will right\nitself."
+			]
+		}
+	],
+	"dialog-jackob-hint-catwork": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"The cat crew needs their cat boss."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Well, if you can't give them their cat\nboss, you might try the next best thing:",
+				"A doppelganger!"
+			]
+		}
+	],
+	"dialog-jackob-hint-shepherd": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION SHEPHERD."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER SHEEP!"
+			]
+		}
+	],
+	"dialog-jackob-hint-bender": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION ROBOT."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER ASS!"
+			]
+		}
+	],
+	"dialog-jackob-hint-baker": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION BAKER."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER BOBS!"
+			]
+		}
+	],
+	"dialog-jackob-hint-bobmoss": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION BOB."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER MOSS!"
+			]
+		}
+	],
+	"dialog-jackob-hint-bea1": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION OLD WOMAN."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER OLD MAN!"
+			]
+		}
+	],
+	"dialog-jackob-hint-trekkie": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION GREENHOUSE."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER TREKKIE!"
+			]
+		}
+	],
+	"dialog-jackob-hint-sportskid": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION SPORTS."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER KID!"
+			]
+		}
+	],
+	"dialog-jackob-hint-bea2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION OLD WOMAN."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER SHEEP!"
+			]
+		}
+	],
+	"dialog-jackob-hint-rake": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"TEMPORARY QUESTION GOOSE."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"TEMPORARY ANSWER RAKE!"
 			]
 		}
 	]
