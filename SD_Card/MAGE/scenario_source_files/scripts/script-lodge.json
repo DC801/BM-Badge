@@ -49,7 +49,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
+			"duration": 200
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -216,6 +216,11 @@
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 1800
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"bool_value": true
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -414,8 +419,751 @@
 			"target_entity": "Alfonso"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "cutscene-tuesday2"
+		}
+	],
+	"cutscene-tuesday2": [
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1500,
+			"geometry": "lodge-camera-point"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday1",
+			"doc": "The day has come! You might have more hair that didn't used to"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday2",
+			"doc": "TUESDAY not puberty!"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday3",
+			"doc": "It Friday"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Bert"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday4",
+			"doc": "Not Tuesday, TUESDAY"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Jackob",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday5",
+			"doc": "Ah, yes"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 50
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Jackob",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday6",
+			"doc": "Each mage, upon their 16th"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "elder-point",
+			"duration": 400
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "alfonso-left-right"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday7",
+			"doc": "The mage must present themselves"
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1200,
+			"entity": "%PLAYER%"
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		}
+	],
+	"alfonso-left-right": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		}
+	],
+	"artifacts-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bracelet",
+			"expected_bool": false,
+			"success_script": "show_dialog-artifacts-eval-bad"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "broom",
+			"expected_bool": false,
+			"success_script": "show_dialog-artifacts-eval-bad"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "glasses",
+			"expected_bool": false,
+			"success_script": "show_dialog-artifacts-eval-bad"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "wand",
+			"expected_bool": false,
+			"success_script": "show_dialog-artifacts-eval-bad"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "book",
+			"expected_bool": false,
+			"success_script": "show_dialog-artifacts-eval-bad"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maybe-another",
+			"doc": "Maybe another artifact?"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maybe-none",
+			"doc": "Wait, was that the last one?"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "look-left-and-right-fast"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1400
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "show_dialog-artifacts-eval-good"
+		}
+	],
+	"show_dialog-artifacts-eval-bad": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maybe-another",
+			"doc": "Maybe another artifact?"
+		}
+	],
+	"show_dialog-artifacts-eval-good": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring1",
+			"doc": "This is certainly unexpected."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "alfonso-left-right"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring2",
+			"doc": "Why don't we"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 300,
+			"color": "#FFDD00"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 300,
+			"color": "#FFDD00"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring3",
+			"doc": "Oh! Oh, good heavens, is that? Ring Zero?"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "player-struggles-a-bit"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring4",
+			"doc": "It's on my finger!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "player-struggles-a-bit"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring5",
+			"doc": "It's not coming off!"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring6",
+			"doc": "That ring isn't normal! / but, perhaps...."
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Alfonso",
+			"script": "look-left-and-right-fast"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring7",
+			"doc": "Oh, but this is good news, isn't it?"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Alfonso",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "south"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring8",
+			"doc": "You can fix things at last!"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "loiter2"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring9",
+			"doc": "But the town is all glitched!"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring10",
+			"doc": "Yes, exactly! That ring hack! / you see..."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "elders-whisper"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring11",
+			"doc": "Please come with us."
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1200,
+			"geometry": "lodge-camera-point"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "alfonso-to-secretdoor-button"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "secret-door-open"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "alfonso-from-secretdoor-button"
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 900,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ring12",
+			"doc": "To the inner sanctum."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "elders-to-secretdoor"
+		}
+	],
+	"alfonso-to-secretdoor-button": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "secretdoor-button-path1",
+			"duration": 600
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "secretdoor-button-path2",
+			"duration": 500
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Alfonso",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		}
+	],
+	"alfonso-from-secretdoor-button": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "secretdoor-button-path1",
+			"duration": 500
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "elder-point",
+			"duration": 600
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		}
+	],
+	"elders-whisper": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Jackob",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Bert"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 50
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Jackob",
+			"target_entity": "%PLAYER%"
+		}
+	],
+	"player-struggles-a-bit": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "west"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 50
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"byte_value": 0
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "east"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 50
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"byte_value": 0
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		}
+	],
+	"examine-bracelet": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-lunch",
+			"doc": "That? That is my lunch!"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "bert-lunch-take-spot",
+			"duration": 400
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Bert",
+			"direction": "south"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bracelet",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "bert-lunch-watch-spot",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Bert",
+			"direction": "south"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bracelet",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "artifacts-eval"
+		}
+	],
+	"examine-glasses": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glasses",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "artifacts-eval"
+		}
+	],
+	"examine-book": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "book",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "artifacts-eval"
+		}
+	],
+	"examine-broom": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "marta-broom-step-spot",
+			"duration": 500
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-broom",
+			"doc": "Oh, that's mine!"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "marta-broom-take-spot",
+			"duration": 600
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Broom",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "marta-broom-watch-spot",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Marta",
+			"direction": "north"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "broom",
+			"bool_value": true
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "artifacts-eval"
+		}
+	],
+	"examine-wand": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wand",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "artifacts-eval"
 		}
 	],
 	"debug-tuesday": [
@@ -426,7 +1174,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "empty-lodge"
+			"script": "artifacts-eval"
 		}
 	],
 	"empty-lodge": [
@@ -519,6 +1267,235 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Bookcase",
 			"geometry": "lodge-hidingplace"
+		}
+	],
+	"show_dialog-zippy-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-zippy-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zippy-prechoose",
+			"doc": "Go ahead, dear!"
+		}
+	],
+	"show_dialog-zappy-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-zappy-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zappy-prechoose",
+			"doc": "Take your time!"
+		}
+	],
+	"show_dialog-verthandi-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-verthandi-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-prechoose",
+			"doc": "Oh, how exciting!"
+		}
+	],
+	"show_dialog-smith-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-smith-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-prechoose"
+		}
+	],
+	"show_dialog-max-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-max-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-prechoose"
+		}
+	],
+	"show_dialog-marta-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-marta-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-prechoose"
+		}
+	],
+	"show_dialog-trekkie-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-trekkie-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-prechoose"
+		}
+	],
+	"show_dialog-shepherd-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-shepherd-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-shepherd-prechoose"
+		}
+	],
+	"show_dialog-cleo-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-cleo-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cleo-prechoose"
+		}
+	],
+	"show_dialog-beatrice-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-beatrice-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-beatrice-prechoose"
+		}
+	],
+	"show_dialog-baker-prechoose": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"expected_bool": true,
+			"success_script": "show_dialog-baker-postchoose"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-baker-prechoose"
+		}
+	],
+	"show_dialog-jackob-prechoose": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Jackob",
+			"script": "look-left-and-right-fast"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-prechoose"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Jackob",
+			"script": "null_script"
+		}
+	],
+	"show_dialog-alfonso-prechoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-alfonso-prechoose"
+		}
+	],
+	"show_dialog-bert-prechoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-prechoose"
+		}
+	],
+	"show_dialog-zippy-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zippy-postchoose"
+		}
+	],
+	"show_dialog-zappy-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zappy-postchoose"
+		}
+	],
+	"show_dialog-verthandi-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-postchoose"
+		}
+	],
+	"show_dialog-smith-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-postchoose"
+		}
+	],
+	"show_dialog-max-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-postchoose"
+		}
+	],
+	"show_dialog-marta-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-postchoose"
+		}
+	],
+	"show_dialog-trekkie-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-postchoose"
+		}
+	],
+	"show_dialog-shepherd-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-shepherd-postchoose"
+		}
+	],
+	"show_dialog-cleo-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cleo-postchoose"
+		}
+	],
+	"show_dialog-beatrice-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-beatrice-postchoose"
+		}
+	],
+	"show_dialog-baker-postchoose": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-baker-postchoose"
 		}
 	]
 }

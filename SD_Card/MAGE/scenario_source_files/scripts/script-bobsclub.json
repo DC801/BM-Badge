@@ -648,12 +648,12 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
+			"entity": "Guardian Bob",
 			"direction": "south"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Strong Bad",
+			"entity": "Guardian Bob",
 			"script": "show_dialog-bobsclub-bob"
 		}
 	],

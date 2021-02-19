@@ -47,7 +47,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"secret-door-open"
+                         "value":"show_dialog-alfonso-prechoose"
                         }, 
                         {
                          "name":"path",
@@ -59,7 +59,7 @@
                  "visible":true,
                  "width":40,
                  "x":316.333333333333,
-                 "y":196.833333333333
+                 "y":194.651515151515
                 }, 
                 {
                  "gid":172,
@@ -70,7 +70,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-bert-prechoose"
                         }, 
                         {
                          "name":"path",
@@ -93,7 +93,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"elders-to-secretdoor"
+                         "value":"cutscene-tuesday2"
                         }],
                  "rotation":0,
                  "type":"",
@@ -134,7 +134,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-zippy-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -152,7 +152,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-zappy-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -170,7 +170,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-beatrice-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -188,7 +188,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-cleo-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -211,7 +211,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-verthandi-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -229,7 +229,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-max-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -247,7 +247,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-smith-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -265,7 +265,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-baker-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -283,7 +283,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"elders-to-secretdoor"
                         }],
                  "rotation":0,
                  "type":"",
@@ -301,7 +301,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-trekkie-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -319,13 +319,13 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-marta-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":298.5,
+                 "x":291,
                  "y":309.666666666667
                 }, 
                 {
@@ -337,7 +337,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-goose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -355,7 +355,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-goose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -373,7 +373,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-shepherd-prechoose"
                         }],
                  "rotation":0,
                  "type":"",
@@ -409,7 +409,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"secret-door-open"
                         }],
                  "rotation":0,
                  "type":"",
@@ -439,7 +439,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-jackob-prechoose"
                         }, 
                         {
                          "name":"path",
@@ -510,6 +510,96 @@
                  "width":32,
                  "x":358.25,
                  "y":414.75
+                }, 
+                {
+                 "gid":710,
+                 "height":32,
+                 "id":49,
+                 "name":"Glasses",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-glasses"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":320.5,
+                 "y":228.5
+                }, 
+                {
+                 "gid":710,
+                 "height":32,
+                 "id":50,
+                 "name":"Book",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-book"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":350,
+                 "y":228.5
+                }, 
+                {
+                 "gid":710,
+                 "height":32,
+                 "id":51,
+                 "name":"Bracelet",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-bracelet"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":383,
+                 "y":229
+                }, 
+                {
+                 "gid":710,
+                 "height":32,
+                 "id":52,
+                 "name":"Broom",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-broom"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":287.5,
+                 "y":230
+                }, 
+                {
+                 "gid":710,
+                 "height":32,
+                 "id":53,
+                 "name":"Wand",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-wand"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":255.5,
+                 "y":228
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -723,6 +813,102 @@
                  "width":0,
                  "x":335.5,
                  "y":127.75
+                }, 
+                {
+                 "height":0,
+                 "id":48,
+                 "name":"lodge-camera-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":333.25,
+                 "y":174.75
+                }, 
+                {
+                 "height":0,
+                 "id":54,
+                 "name":"marta-broom-watch-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":307.5,
+                 "y":303.25
+                }, 
+                {
+                 "height":0,
+                 "id":55,
+                 "name":"marta-broom-take-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":304.75,
+                 "y":243
+                }, 
+                {
+                 "height":0,
+                 "id":56,
+                 "name":"bert-lunch-watch-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":368,
+                 "y":187.25
+                }, 
+                {
+                 "height":0,
+                 "id":57,
+                 "name":"bert-lunch-take-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":399.5,
+                 "y":188.25
+                }, 
+                {
+                 "height":0,
+                 "id":58,
+                 "name":"marta-broom-step-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":308,
+                 "y":291
+                }, 
+                {
+                 "height":0,
+                 "id":60,
+                 "name":"secretdoor-button-path1",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":154.25
+                }, 
+                {
+                 "height":0,
+                 "id":61,
+                 "name":"secretdoor-button-path2",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":369.75,
+                 "y":153
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -765,7 +951,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":48,
+ "nextobjectid":64,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -861,6 +1047,10 @@
         {
          "firstgid":702,
          "source":"..\/entities\/entity-bookcase.json"
+        }, 
+        {
+         "firstgid":710,
+         "source":"..\/entities\/entity-rake.json"
         }],
  "tilewidth":32,
  "type":"map",
