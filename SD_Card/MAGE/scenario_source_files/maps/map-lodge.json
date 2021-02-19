@@ -85,24 +85,6 @@
                  "y":196.75
                 }, 
                 {
-                 "gid":202,
-                 "height":32,
-                 "id":4,
-                 "name":"Debug Man 2",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"cutscene-tuesday2"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":287.666666666667,
-                 "y":260.666666666666
-                }, 
-                {
                  "gid":219,
                  "height":32,
                  "id":7,
@@ -609,6 +591,231 @@
         }, 
         {
          "draworder":"topdown",
+         "id":7,
+         "name":"walking zones",
+         "objects":[
+                {
+                 "height":22.25,
+                 "id":64,
+                 "name":"ringzero-walk-9",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32.5,
+                 "x":224.75,
+                 "y":212.5
+                }, 
+                {
+                 "height":0,
+                 "id":65,
+                 "name":"ringzero-landing-6",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":246
+                }, 
+                {
+                 "height":37.5,
+                 "id":66,
+                 "name":"ringzero-walk-8",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":31,
+                 "x":255,
+                 "y":231.5
+                }, 
+                {
+                 "height":30.5,
+                 "id":68,
+                 "name":"ringzero-walk-11",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":22.25,
+                 "x":252.5,
+                 "y":166.75
+                }, 
+                {
+                 "height":22.25,
+                 "id":69,
+                 "name":"ringzero-walk-10",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32.5,
+                 "x":224.75,
+                 "y":190.875
+                }, 
+                {
+                 "height":22.25,
+                 "id":70,
+                 "name":"ringzero-walk-3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32.5,
+                 "x":414.5,
+                 "y":212.875
+                }, 
+                {
+                 "height":37.5,
+                 "id":71,
+                 "name":"ringzero-walk-4",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29.5,
+                 "x":386.5,
+                 "y":232.375
+                }, 
+                {
+                 "height":30.5,
+                 "id":72,
+                 "name":"ringzero-walk-1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.75,
+                 "x":399,
+                 "y":166.375
+                }, 
+                {
+                 "height":22.25,
+                 "id":73,
+                 "name":"ringzero-walk-2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32.5,
+                 "x":414.5,
+                 "y":191.25
+                }, 
+                {
+                 "height":31,
+                 "id":74,
+                 "name":"ringzero-walk-1159",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37,
+                 "x":300,
+                 "y":167
+                }, 
+                {
+                 "height":31,
+                 "id":75,
+                 "name":"ringzero-walk-1201",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":34.5,
+                 "x":336.5,
+                 "y":166.75
+                }, 
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"ringzero-landing-8",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":245,
+                 "y":244.25
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"ringzero-landing-10",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":246.75,
+                 "y":187.5
+                }, 
+                {
+                 "height":0,
+                 "id":78,
+                 "name":"ringzero-landing-1",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":428,
+                 "y":188
+                }, 
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"ringzero-landing-4",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":427.75,
+                 "y":247.25
+                }, 
+                {
+                 "height":30.5,
+                 "id":80,
+                 "name":"ringzero-walk-1130",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26.25,
+                 "x":274.375,
+                 "y":167.5
+                }, 
+                {
+                 "height":30.5,
+                 "id":81,
+                 "name":"ringzero-walk-1230",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29.5,
+                 "x":370.125,
+                 "y":167.25
+                }, 
+                {
+                 "height":37.5,
+                 "id":82,
+                 "name":"ringzero-walk-7",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":31,
+                 "x":285.25,
+                 "y":231.5
+                }, 
+                {
+                 "height":37.5,
+                 "id":83,
+                 "name":"ringzero-walk-5",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29.5,
+                 "x":357.5,
+                 "y":232.5
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":5,
          "name":"paths",
          "objects":[
@@ -912,7 +1119,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -950,8 +1157,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":64,
+ "nextlayerid":8,
+ "nextobjectid":84,
  "orientation":"orthogonal",
  "properties":[
         {
