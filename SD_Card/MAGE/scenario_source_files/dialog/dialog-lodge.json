@@ -654,5 +654,75 @@
 				"Wait. Was that the last one?"
 			]
 		}
+	],
+	"dialog-tuesday-glasses": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Glasses?"
+			]
+		}
+	],
+	"dialog-tuesday-book": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Book?"
+			]
+		}
+	],
+	"dialog-tuesday-wand": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wand?"
+			]
+		}
+	],
+	"dialog-debug-tuesday-over": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "Debug Man",
+			"name": "%Debug Man%",
+			"messages": [
+				"Tuesday bypassed."
+			]
+		}
+	],
+	"dialog-murmur1": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Did they do it wrong?"
+			]
+		}
+	],
+	"dialog-murmur2": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Maybe they missed one."
+			]
+		}
+	],
+	"dialog-murmur3": [
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"I'm pretty sure %PLAYER% touched\nall of them...."
+			]
+		}
 	]
 }
