@@ -714,6 +714,36 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ringchoose",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wand",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glasses",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "book",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "broom",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bracelet",
+			"bool_value": false
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "reset-hint-flags"
 		},
