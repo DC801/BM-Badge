@@ -331,7 +331,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 800
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -692,6 +692,11 @@
 			"script": "null_script"
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Beatrice",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Shepherd",
 			"script": "gossip-left-player"
@@ -730,6 +735,11 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Uncle Zappy",
 			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Uncle Zappy",
+			"target_entity": "%PLAYER%"
 		}
 	],
 	"lodge-un-murmur": [
@@ -1345,6 +1355,10 @@
 			"color": "#FFDD00"
 		},
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-ring3",
 			"doc": "Oh! Oh, good heavens, is that? Ring Zero?"
@@ -1352,6 +1366,10 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "player-struggles-a-bit"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -1366,6 +1384,18 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "player-struggles-a-bit"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "player-struggles-a-bit"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -1450,6 +1480,10 @@
 			"action": "PAN_CAMERA_TO_GEOMETRY",
 			"duration": 1200,
 			"geometry": "lodge-camera-point"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -2221,6 +2255,11 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Jackob",
 			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
 		}
 	],
 	"show_dialog-alfonso-prechoose": [
@@ -2232,6 +2271,11 @@
 			{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-alfonso-prechoose"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
 		}
 	],
 	"show_dialog-bert-prechoose": [
@@ -2243,6 +2287,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bert-prechoose"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
 		}
 	],
 	"show_dialog-zippy-postchoose": [
