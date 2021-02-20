@@ -232,6 +232,11 @@
 			"success_script": "show_dialog-baker-start-s"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start"
 		},
@@ -245,12 +250,22 @@
 			"script": "reset-hint-flags"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker-hint",
 			"bool_value": true
 		}
 	],
 	"show_dialog-baker-start-s": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start-s"
@@ -263,6 +278,11 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -734,6 +754,11 @@
 	],
 	"show_dialog-baker-end": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "baker2",
 			"expected_bool": true,
@@ -753,6 +778,11 @@
 			"script": "reset-hint-flags"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
@@ -767,6 +797,11 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-bobmoss-start": [
@@ -884,6 +919,13 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "map-main"
+		}
+	],
+	"watch-baker": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Baker"
 		}
 	]
 }

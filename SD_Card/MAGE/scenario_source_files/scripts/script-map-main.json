@@ -507,6 +507,11 @@
 			"bool_value": false
 		},
 		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"geometry": "enter_from-greenhouse",
+			"entity": "%PLAYER%"
+		},
+		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-greenhouse",
 			"entity": "%PLAYER%",
