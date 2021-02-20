@@ -101,7 +101,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 #ifdef DC801_EMBEDDED
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
 #endif
 
 //these are the types of scripts that can be on a map or entity:
@@ -111,6 +111,41 @@ typedef enum : uint8_t {
 	ON_INTERACT = 2,
 	NUM_SCRIPT_TYPES
 } MageScriptType;
+
+typedef enum : uint8_t {
+	SET = 0,
+	ADD,
+	SUB,
+	DIV,
+	MUL,
+	MOD,
+	RNG
+} MageMutateOperation;
+
+typedef enum : uint8_t {
+	LT = 0,
+	LTEQ,
+	EQ,
+	GTEQ,
+	GT
+} MageCheckComparison;
+
+typedef enum : uint8_t {
+	x = 12,
+	y = 14,
+	onInteractScriptId = 16,
+	onTickScriptId = 18,
+	primaryId = 20,
+	secondaryId = 22,
+	primaryIdType = 24,
+	currentAnimation = 25,
+	currentFrame = 26,
+	direction = 27,
+	hackableStateA = 28,
+	hackableStateB = 29,
+	hackableStateC = 30,
+	hackableStateD = 31
+} MageEntityField;
 
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum : uint8_t {
@@ -223,6 +258,11 @@ typedef enum : uint8_t {
 	SET_SCREEN_SHAKE,
 	SCREEN_FADE_OUT,
 	SCREEN_FADE_IN,
+	MUTATE_VARIABLE,
+	MUTATE_VARIABLES,
+	COPY_VARIABLE,
+	CHECK_VARIABLE,
+	CHECK_VARIABLES,
 	PLAY_SOUND_CONTINUOUS,
 	PLAY_SOUND_INTERRUPT,
 	//this tracks the number of actions we're at:
@@ -987,6 +1027,52 @@ typedef struct {
 	uint16_t color;
 	uint8_t paddingG;
 } ActionScreenFadeIn;
+
+typedef struct {
+	uint16_t value;
+	uint8_t variableId;
+	MageMutateOperation operation;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMutateVariable;
+
+typedef struct {
+	uint8_t variableId;
+	uint8_t sourceId;
+	MageMutateOperation operation;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMutateVariables;
+
+typedef struct {
+	uint8_t variableId;
+	uint8_t entityId;
+	MageEntityField field;
+	uint8_t inbound;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCopyVariable;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint16_t value;
+	uint8_t variableId;
+	MageCheckComparison comparison;
+	uint8_t expectedBool;
+} ActionCheckVariable;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t variableId;
+	uint8_t sourceId;
+	MageCheckComparison comparison;
+	uint8_t expectedBool;
+	uint8_t paddingG;
+} ActionCheckVariables;
 
 typedef struct {
 	uint16_t soundId;

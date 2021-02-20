@@ -1619,6 +1619,122 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 		mage_canvas->isFading = true;
 	}
 }
+
+void MageScriptControl::mutateVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionMutateVariable *argStruct = (ActionMutateVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+
+	mutate(
+		argStruct->operation,
+		currentValue,
+		argStruct->value
+	);
+}
+
+void MageScriptControl::mutateVariables(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionMutateVariables *argStruct = (ActionMutateVariables*)args;
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = scriptVariables[argStruct->sourceId];
+
+	mutate(
+		argStruct->operation,
+		currentValue,
+		sourceValue
+	);
+}
+
+void MageScriptControl::copyVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCopyVariable *argStruct = (ActionCopyVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		currentEntityId
+	);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		uint16_t *variableValue = &scriptVariables[argStruct->variableId];
+		uint8_t *fieldValue = ((uint8_t *)entity) + argStruct->field;
+
+
+		switch(argStruct->field) {
+			case x :
+			case y :
+			case onInteractScriptId :
+			case onTickScriptId :
+			case primaryId :
+			case secondaryId :
+				if(argStruct->inbound) {
+					*variableValue = (uint16_t)*fieldValue;
+				} else {
+					uint16_t *destination = (uint16_t*)fieldValue;
+					*destination = *variableValue;
+				}
+				break;
+			case primaryIdType :
+			case currentAnimation :
+			case currentFrame :
+			case direction :
+			case hackableStateA :
+			case hackableStateB :
+			case hackableStateC :
+			case hackableStateD :
+				if(argStruct->inbound) {
+					*variableValue = (uint8_t)*fieldValue;
+				} else {
+					*fieldValue = *variableValue % 256;
+				}
+				break;
+			default : debug_print(
+				"copyVariable received an invalid field: %d",
+				argStruct->field
+			);
+		}
+	}
+}
+
+void MageScriptControl::checkVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckVariable *argStruct = (ActionCheckVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	uint16_t variableValue = scriptVariables[argStruct->variableId];
+	bool comparison = compare(
+		argStruct->comparison,
+		variableValue,
+		argStruct->value
+	);
+	if(comparison == argStruct->expectedBool) {
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
+}
+
+void MageScriptControl::checkVariables(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckVariables *argStruct = (ActionCheckVariables*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	uint16_t variableValue = scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = scriptVariables[argStruct->sourceId];
+	bool comparison = compare(
+		argStruct->comparison,
+		variableValue,
+		sourceValue
+	);
+	if(comparison == argStruct->expectedBool) {
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
+}
+
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
@@ -1736,6 +1852,11 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_SCREEN_SHAKE] = &MageScriptControl::setScreenShake;
 	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT] = &MageScriptControl::screenFadeOut;
 	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN] = &MageScriptControl::screenFadeIn;
+	actionFunctions[MageScriptActionTypeId::MUTATE_VARIABLE] = &MageScriptControl::mutateVariable;
+	actionFunctions[MageScriptActionTypeId::MUTATE_VARIABLES] = &MageScriptControl::mutateVariables;
+	actionFunctions[MageScriptActionTypeId::COPY_VARIABLE] = &MageScriptControl::copyVariable;
+	actionFunctions[MageScriptActionTypeId::CHECK_VARIABLE] = &MageScriptControl::checkVariable;
+	actionFunctions[MageScriptActionTypeId::CHECK_VARIABLES] = &MageScriptControl::checkVariables;
 	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS] = &MageScriptControl::playSoundContinuous;
 	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT] = &MageScriptControl::playSoundInterrupt;
 
@@ -2069,4 +2190,44 @@ int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(
 		entityIndex = NO_PLAYER;
 	}
 	return entityIndex;
+}
+
+void MageScriptControl::mutate(
+	MageMutateOperation operation,
+	uint16_t *destination,
+	uint16_t value
+) const {
+	switch(operation) {
+		case SET : *destination = value; break;
+		case ADD : *destination += value; break;
+		case SUB : *destination -= value; break;
+		case DIV : *destination /= value; break;
+		case MUL : *destination *= value; break;
+		case MOD : *destination %= value; break;
+		case RNG : *destination = rand() % value; break;
+		default : debug_print(
+			"mutateVariable received an invalid operation: %d",
+			operation
+		);
+	}
+}
+
+bool MageScriptControl::compare(
+	MageCheckComparison comparison,
+	uint16_t a,
+	uint16_t b
+) const {
+	switch(comparison) {
+		case LT   : return a <  b;
+		case LTEQ : return a <= b;
+		case EQ   : return a == b;
+		case GTEQ : return a <= b;
+		case GT   : return a <  b;
+		default :
+			debug_print(
+				"checkComparison received an invalid comparison: %d",
+				comparison
+			);
+			return false;
+	}
 }

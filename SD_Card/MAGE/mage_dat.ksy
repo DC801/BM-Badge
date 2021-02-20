@@ -30,6 +30,8 @@ seq:
     type: count_with_offsets
   - id: save_flags_offsets
     type: count_with_offsets
+  - id: variables_offsets
+    type: count_with_offsets
   - id: image_offsets
     type: count_with_offsets
   - id: maps
@@ -77,6 +79,10 @@ instances:
     type: string(_index)
     repeat: expr
     repeat-expr: save_flags_offsets.count
+  variables:
+    type: string(_index)
+    repeat: expr
+    repeat-expr: variables_offsets.count
   images:
     type: image(_index)
     repeat: expr
@@ -595,8 +601,13 @@ enums:
     77: set_screen_shake
     78: screen_fade_out
     79: screen_fade_in
-    80: play_sound_continuous
-    81: play_sound_interrupt
+    80: mutate_variable
+    81: mutate_variables
+    82: copy_variable
+    83: check_variable
+    84: check_variables
+    85: play_sound_continuous
+    86: play_sound_interrupt
 
   dialog_screen_alignment_type:
     0: bottom_left

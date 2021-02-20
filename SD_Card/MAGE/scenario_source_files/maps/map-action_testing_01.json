@@ -339,7 +339,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage14-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -354,7 +354,7 @@
                  "y":192
                 }, 
                 {
-                 "gid":321,
+                 "gid":326,
                  "height":32,
                  "id":16,
                  "name":"Mage 15",
@@ -362,7 +362,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage15-interact"
                         }, 
                         {
                          "name":"on_tick",
