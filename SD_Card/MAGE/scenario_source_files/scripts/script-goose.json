@@ -143,6 +143,11 @@
 			"duration": 1200
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-point",
@@ -150,9 +155,11 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Goose",
-			"direction": "south"
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-point",
+			"success_script": "goose-misison-rake-out-of-lake",
+			"expected_bool": false
 		},
 		{
 			"action": "COPY_SCRIPT",
