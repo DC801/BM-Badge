@@ -352,6 +352,36 @@ var actionFieldsMap = {
 		{propertyName: 'duration', size: 4},
 		{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
 	],
+	MUTATE_VARIABLE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'operation', size: 1},
+	],
+	MUTATE_VARIABLES: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'source', size: 1},
+		{propertyName: 'operation', size: 1},
+	],
+	COPY_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'field', size: 1},
+		{propertyName: 'inbound', size: 1},
+	],
+	CHECK_VARIABLE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'value', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'comparison', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_VARIABLES: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'source', size: 1},
+		{propertyName: 'comparison', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 	PLAY_SOUND_CONTINUOUS: null,
 	PLAY_SOUND_INTERRUPT: null,
 };
@@ -437,6 +467,11 @@ var actionNames = [
 	'SET_SCREEN_SHAKE',
 	'SCREEN_FADE_OUT',
 	'SCREEN_FADE_IN',
+	'MUTATE_VARIABLE',
+	'MUTATE_VARIABLES',
+	'COPY_VARIABLE',
+	'CHECK_VARIABLE',
+	'CHECK_VARIABLES',
 	'PLAY_SOUND_CONTINUOUS',
 	'PLAY_SOUND_INTERRUPT',
 ];
@@ -574,7 +609,7 @@ var getDirectionFromAction = function (
 	};
 	var direction = directions[value];
 	if (direction === undefined) {
-		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
 			Object.keys(directions)
 		}`);
 	}
@@ -718,6 +753,122 @@ var getSaveFlagIdFromAction = function (
 	);
 };
 
+var getVariableIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	return serializeVariable(
+		value,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getFieldFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} requires a value for "${propertyName}"`);
+	}
+	var fields = {
+		x: 12,
+		y: 14,
+		interact_script_id: 16,
+		tick_script_id: 18,
+		primary_id: 20,
+		secondary_id: 22,
+		primary_id_type: 24,
+		current_animation: 25,
+		current_frame: 26,
+		direction: 27,
+		hackable_state_a: 28,
+		hackable_state_b: 29,
+		hackable_state_c: 30,
+		hackable_state_d: 31,
+	};
+	var field = fields[value];
+	if (field === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(fields)
+		}`);
+	}
+	return field;
+};
+
+var getOperationFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
+	}
+	var operations = {
+		SET: 0,
+		ADD: 1,
+		SUB: 2,
+		DIV: 3,
+		MUL: 4,
+		MOD: 5,
+		RNG: 6,
+	};
+	var operation = operations[value];
+	if (operation === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(operations)
+		}`);
+	}
+	return operation;
+};
+
+var getComparisonFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
+	}
+	var comparisons = {
+		LT  : 0,
+		LTEQ: 1,
+		EQ  : 2,
+		GTEQ: 3,
+		GT  : 4,
+		"<" : 0,
+		"<=": 1,
+		"==": 2,
+		">=": 3,
+		">" : 4,
+	};
+	var comparison = comparisons[value];
+	if (comparison === undefined) {
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(comparisons)
+		}`);
+	}
+	return comparison;
+};
+
 var getDialogIdFromAction = function (
 	propertyName,
 	action,
@@ -830,6 +981,13 @@ var actionPropertyNameToHandlerMap = {
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
 	state: getBoolFromAction,
+	value: getTwoBytesFromAction,
+	variable: getVariableIdFromAction,
+	source: getVariableIdFromAction,
+	field: getFieldFromAction,
+	inbound: getBoolFromAction,
+	operation: getOperationFromAction,
+	comparison: getComparisonFromAction,
 };
 
 var sizeHandlerMap = [
@@ -1124,12 +1282,26 @@ var handleMapScripts = function (
 	);
 };
 
+var makeVariableLookaheadFunction = function(scenarioData) {
+	return function (script) {
+		script.forEach(function (action) {
+			if(action.variable) {
+				serializeVariable(action.variable, {}, {}, scenarioData);
+			}
+			if(action.source) {
+				serializeVariable(action.source, {}, {}, scenarioData);
+			}
+		});
+	}
+};
+
 var mergeScriptDataIntoScenario = function(
 	fileNameMap,
 	scenarioData,
 ) {
 	var allScripts = {};
 	scenarioData.scripts = allScripts;
+	var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
 	return Promise.all(
 		scenarioData.scriptPaths.map(function(scriptPath) {
 			var scriptFileName = scriptPath.split('/').pop();
@@ -1145,5 +1317,9 @@ var mergeScriptDataIntoScenario = function(
 						})
 				});
 		})
-	);
+	)
+		.then(function () {
+			Object.values(allScripts)
+				.forEach(lookaheadAndIdentifyAllScriptVariables);
+		});
 };

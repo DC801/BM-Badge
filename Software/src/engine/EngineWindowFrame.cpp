@@ -11,7 +11,7 @@ SDL_Surface *frameLEDSurface = nullptr;
 SDL_Texture *frameLEDTexture = nullptr;
 SDL_Texture *gameViewportTexture = nullptr;
 
-const int SCREEN_MULTIPLIER = 3;
+const int SCREEN_MULTIPLIER = 2;
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 

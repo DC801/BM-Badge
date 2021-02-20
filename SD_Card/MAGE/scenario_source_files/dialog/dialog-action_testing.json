@@ -252,5 +252,105 @@
 				"I test CHECK_ENTITY_DIRECTION!\n...but something has gone wrong!\nI cannot detect your direction!\nThis action has FAILED!!!"
 			]
 		}
+	],
+	"dialog-mage14": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the 'VARIABLE' actions:\nMUTATE_VARIABLE, MUTATE_VARIABLES\nCHECK_VARIABLE, CHECK_VARIABLES"
+			]
+		}
+	],
+	"dialog-mage14-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I tested a goat load of simple maths\nusing the variable actions,\nand they all verified!\nRandom Number was: $goat_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-==": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value == comparison has FAILED!!!"
+			]
+		}
+	],
+	"dialog-mage14-fail-variable-<": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe variable < comparison has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-ADD": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value ADD operation has FAILED!!!"
+			]
+		}
+	],
+	"dialog-mage14-fail-variable-ADD": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe variable ADD operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-SUB": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value SUB operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-RNG": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value RNG operation has FAILED!!!\nA: $goat_count$;"
+			]
+		}
+	],
+	"dialog-mage15": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the action COPY_VARIABLE.\nChange my 'hackable_state_a' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
+			]
+		}
+	],
+	"dialog-mage15-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Hooray! 'hackable_state_a' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
+			]
+		}
 	]
 }

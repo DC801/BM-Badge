@@ -10,6 +10,7 @@ var dataTypes = [
 	'imageColorPalettes',
 	'strings',
 	'save_flags',
+	'variables',
 	'images',
 ];
 
@@ -24,6 +25,7 @@ var handleScenarioData = function(fileNameMap) {
 		scenarioData.uniqueStringLikeMaps = {
 			strings: {},
 			save_flags: {},
+			variables: {},
 		};
 		scenarioData.uniqueDialogMap = {};
 		dataTypes.forEach(function (typeName) {

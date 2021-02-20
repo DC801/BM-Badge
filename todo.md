@@ -148,6 +148,11 @@
 		- [x] SET_SCREEN_SHAKE
 		- [x] SCREEN_FADE_OUT
 		- [x] SCREEN_FADE_IN
+		- [x] MUTATE_VARIABLE
+		- [x] MUTATE_VARIABLES
+		- [X] COPY_VARIABLE
+		- [x] CHECK_VARIABLE
+		- [x] CHECK_VARIABLES
 		- [ ] PLAY_SOUND_CONTINUOUS
 		- [ ] PLAY_SOUND_INTERRUPT
 - [x] Geometry
@@ -160,7 +165,7 @@
 	- [ ] For Tiles
 	- [ ] For Entities
 - [ ] Dialog Data Type Implementation:
-	- [ ] Display Name - either stringId, or entityId
+	- [x] Display Name - either stringId, or entityId
 	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.
 	- [x] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
 		- [x] flags for position encoding byte:
@@ -168,6 +173,8 @@
 			- [x] Portrait on or off
 			- [x] portrait left or right
 	- [x] tilesetId and tileId for the portrait picture.
+	- [x] Support for string templates that make use of hacked entity names
+	- [x] Support for string templates that make use of numeric variables
 	- [ ] display font
 	- [ ] voice sound Id
 	- [ ] Dialog Responses:

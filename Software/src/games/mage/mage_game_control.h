@@ -46,6 +46,7 @@ private:
 	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
 	MageHeader saveFlagHeader;
+	MageHeader variableHeader;
 	MageHeader imageHeader;
 
 	//this is where the current map data from the ROM is stored.

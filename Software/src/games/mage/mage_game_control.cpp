@@ -60,6 +60,9 @@ MageGameControl::MageGameControl()
 	saveFlagHeader = MageHeader(offset);
 	offset += saveFlagHeader.size();
 
+	variableHeader = MageHeader(offset);
+	offset += variableHeader.size();
+
 	imageHeader = MageHeader(offset);
 	offset += imageHeader.size();
 
@@ -124,6 +127,7 @@ uint32_t MageGameControl::Size() const
 		colorPaletteHeader.size() +
 		stringHeader.size() +
 		saveFlagHeader.size() +
+		variableHeader.size() +
 		imageHeader.size() +
 		map.Size() +
 		sizeof(previousPlayerTilesetId) +
@@ -1559,6 +1563,30 @@ std::string MageGameControl::getString(
 			);
 			outputString.append(missingError);
 		}
+		variableStartPosition = variableEndPosition + 1;
+		cursor = variableStartPosition;
+		replaceCount++;
+	}
+	if (replaceCount) {
+		outputString.append(romString.substr(cursor, romString.length() - 1));
+	}
+	cursor = 0;
+	variableStartPosition = 0;
+	variableEndPosition = 0;
+	while ((variableStartPosition = romString.find("$$", variableStartPosition)) != std::string::npos) {
+		outputString.append(romString.substr(
+			cursor,
+			(variableStartPosition - cursor)
+		));
+		variableEndPosition = romString.find("$$", variableStartPosition + 1) + 1;
+		std::string variableHolder = romString.substr(
+			variableStartPosition + 2,
+			variableStartPosition - (variableEndPosition - 2)
+		);
+		int parsedVariableIndex = std::stoi(variableHolder);
+		uint16_t variableValue = MageScript->scriptVariables[parsedVariableIndex];
+		std::string valueString = std::to_string(variableValue);
+		outputString.append(valueString.c_str());
 		variableStartPosition = variableEndPosition + 1;
 		cursor = variableStartPosition;
 		replaceCount++;
