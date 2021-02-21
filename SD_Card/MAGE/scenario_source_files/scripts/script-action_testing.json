@@ -544,6 +544,16 @@
 			"script": "mage14-reset"
 		}
 	],
+	"mage14-fail-value->": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value->"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
 	"mage14-fail-variable-<": [
 		{
 			"action": "SHOW_DIALOG",
@@ -680,10 +690,10 @@
 		{
 			"action": "CHECK_VARIABLE",
 			"variable": "goat_count",
-			"value": 65,
-			"comparison": "==",
+			"value": 64,
+			"comparison": ">",
 			"expected_bool": false,
-			"success_script": "mage14-fail-value-ADD"
+			"success_script": "mage14-fail-value->"
 		},
 		{
 			"action": "MUTATE_VARIABLE",

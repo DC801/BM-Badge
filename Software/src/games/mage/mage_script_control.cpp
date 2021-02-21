@@ -2221,8 +2221,8 @@ bool MageScriptControl::compare(
 		case LT   : return a <  b;
 		case LTEQ : return a <= b;
 		case EQ   : return a == b;
-		case GTEQ : return a <= b;
-		case GT   : return a <  b;
+		case GTEQ : return a >= b;
+		case GT   : return a >  b;
 		default :
 			debug_print(
 				"checkComparison received an invalid comparison: %d",
