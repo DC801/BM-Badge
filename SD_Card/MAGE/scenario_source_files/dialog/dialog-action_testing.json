@@ -283,6 +283,16 @@
 			]
 		}
 	],
+	"dialog-mage14-fail-value->": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value > comparison has FAILED!!!\nA: $goat_count$;"
+			]
+		}
+	],
 	"dialog-mage14-fail-variable-<": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -299,7 +309,7 @@
 			"portrait": "mage",
 			"name": "%SELF%",
 			"messages": [
-				"...but something has gone wrong!\nThe value ADD operation has FAILED!!!"
+				"...but something has gone wrong!\nThe value ADD operation has FAILED!!!\nA: $goat_count$"
 			]
 		}
 	],
