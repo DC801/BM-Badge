@@ -28,7 +28,7 @@
          "name":"Tile Layer 2",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":21,
          "x":0,
          "y":0
@@ -585,7 +585,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -810,7 +810,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -967,7 +967,7 @@
                  "y":188.35238098881
                 }, 
                 {
-                 "height":25.5,
+                 "height":43.25,
                  "id":41,
                  "name":"door-secretdoor",
                  "rotation":0,
@@ -995,7 +995,7 @@
                  "visible":true,
                  "width":0,
                  "x":335.5,
-                 "y":136.5
+                 "y":153.5
                 }, 
                 {
                  "height":0,
@@ -1119,7 +1119,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1152,7 +1152,7 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":21,
          "x":0,
          "y":0
