@@ -214,8 +214,8 @@ Point MageGeometry::flipPointByFlags(
 		RenderFlagsUnion flagsUnion = {};
 		flagsUnion.i = flags;
 		if (flagsUnion.f.diagonal) {
-			point.x = point.y;
-			point.y = point.x;
+			point.x = unflippedPoint.y;
+			point.y = unflippedPoint.x;
 		}
 		if (flagsUnion.f.horizontal) {
 			point.x = -point.x + width;
