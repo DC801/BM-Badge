@@ -16,6 +16,13 @@ public:
 
 	MageColorPalette(uint32_t address);
 
+	MageColorPalette(
+		MageColorPalette *sourcePalette,
+		uint16_t transparentColor,
+		uint16_t fadeColor,
+		float fadeFraction
+	);
+
 	uint32_t size() const;
 };
 

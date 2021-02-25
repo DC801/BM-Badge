@@ -131,7 +131,8 @@ void GameRender()
 	else
 	{
 		//otherwise run mage game:
-		mage_canvas->clearScreen(RGB(0,0,255));
+		uint16_t backgroundColor = RGB(0,0,255);
+		mage_canvas->clearScreen(mage_canvas->applyFadeColor(backgroundColor));
 		#ifdef TIMING_DEBUG
 			diff = millis() - now;
 			debug_print("screen clear time: %d",diff);
