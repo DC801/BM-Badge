@@ -96,6 +96,11 @@
                          "value":2
                         }, 
                         {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-verthandi"
@@ -114,6 +119,11 @@
                  "name":"Cat",
                  "properties":[
                         {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-cat"
@@ -131,6 +141,11 @@
                  "id":12,
                  "name":"goat1",
                  "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -159,6 +174,11 @@
                  "id":13,
                  "name":"goat2",
                  "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -210,6 +230,11 @@
                  "id":18,
                  "name":"Cleo",
                  "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -501,6 +526,11 @@
                  "name":"Felix",
                  "properties":[
                         {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-felix"
@@ -523,6 +553,11 @@
                  "id":126,
                  "name":"Maru",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -569,6 +604,11 @@
                  "id":128,
                  "name":"Deuteronomy",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":2
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -749,11 +789,16 @@
                  "y":143.333333333333
                 }, 
                 {
-                 "gid":1145,
+                 "gid":2147484793,
                  "height":48,
                  "id":192,
                  "name":"Marta",
                  "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":false
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -763,8 +808,8 @@
                  "type":"marta_broom",
                  "visible":true,
                  "width":48,
-                 "x":625.333333333333,
-                 "y":996
+                 "x":462.333333333333,
+                 "y":639.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1051,7 +1096,7 @@
                  "visible":true,
                  "width":0,
                  "x":815.333333333333,
-                 "y":369.833333333333
+                 "y":359.833333333333
                 }, 
                 {
                  "height":0,

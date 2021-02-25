@@ -430,14 +430,22 @@
 	],
 	"mage-to-lodge": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "morning-walk-mage",
-			"duration": 10200
+			"duration": 10300
 		},
 		{
 			"action": "LOAD_MAP",
 			"map": "map-lodge"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	],
 	"zippy-to-lodge": [
@@ -445,7 +453,7 @@
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "Ram",
 			"geometry": "morning-walk-zippy",
-			"duration": 10000
+			"duration": 10200
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
