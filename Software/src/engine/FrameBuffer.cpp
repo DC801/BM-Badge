@@ -275,7 +275,12 @@ void FrameBuffer::drawChunkWithFlags(
 	bool flip_x    = flagSplit.f.horizontal;
 	bool flip_y    = flagSplit.f.vertical;
 	bool flip_diag = flagSplit.f.diagonal;
+	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
+	if(glitched) {
+		screen_x += tile_width * 0.125;
+		tile_width *= 0.75;
+	}
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||
@@ -284,7 +289,6 @@ void FrameBuffer::drawChunkWithFlags(
 	) {
 		return;
 	}
-
 	uint8_t pixels[tile_width * tile_height];
 
 	EngineROM_Read(

@@ -48,7 +48,11 @@ struct RenderFlags {
 	bool diagonal:1;
 	bool vertical:1;
 	bool horizontal:1;
-	uint8_t padding:5;
+	bool paddingA:1;
+	bool paddingB:1;
+	bool paddingC:1;
+	bool paddingD:1;
+	bool glitched:1;
 };
 union RenderFlagsUnion {
 	RenderFlags f;

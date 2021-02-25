@@ -132,6 +132,11 @@
                  "name":"goat1",
                  "properties":[
                         {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-goat"
@@ -159,6 +164,11 @@
                  "id":13,
                  "name":"goat2",
                  "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -310,22 +320,22 @@
                  "y":687.5
                 }, 
                 {
-                 "gid":25,
+                 "gid":2147483690,
                  "height":32,
-                 "id":53,
-                 "name":"",
+                 "id":56,
+                 "name":"waterfall_3",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":576,
-                 "y":800
+                 "x":608,
+                 "y":832
                 }, 
                 {
                  "gid":41,
                  "height":32,
                  "id":54,
-                 "name":"",
+                 "name":"waterfall_2",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -337,7 +347,13 @@
                  "gid":2147483674,
                  "height":32,
                  "id":55,
-                 "name":"",
+                 "name":"waterfall_1",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -346,16 +362,16 @@
                  "y":800
                 }, 
                 {
-                 "gid":2147483690,
+                 "gid":25,
                  "height":32,
-                 "id":56,
-                 "name":"",
+                 "id":53,
+                 "name":"waterfall_0",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":608,
-                 "y":832
+                 "x":576,
+                 "y":800
                 }, 
                 {
                  "gid":731,

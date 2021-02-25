@@ -99,6 +99,8 @@ class MageScriptControl
 		//Action Logic Type: I+C
 		void checkEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
+		void checkEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
 		void checkEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -164,6 +166,8 @@ class MageScriptControl
 		void setEntityDirectionTargetEntity(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityDirectionTargetGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I

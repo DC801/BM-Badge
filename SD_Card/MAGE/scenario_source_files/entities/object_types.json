@@ -24,6 +24,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -68,6 +73,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -116,6 +126,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -160,6 +175,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -208,6 +228,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -252,6 +277,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -300,6 +330,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -344,6 +379,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -392,6 +432,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -436,6 +481,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -484,6 +534,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -528,6 +583,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -576,6 +636,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -620,6 +685,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -668,6 +738,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -712,6 +787,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -760,6 +840,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -804,6 +889,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -852,6 +942,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -896,6 +991,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -944,6 +1044,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -988,6 +1093,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -1036,6 +1146,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -1080,6 +1195,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -1128,6 +1248,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -1172,6 +1297,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",
@@ -1220,6 +1350,11 @@
                 "value": 0
             },
             {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "is_player",
                 "type": "bool",
                 "value": false
@@ -1264,6 +1399,11 @@
                 "name": "hackable_state_d",
                 "type": "int",
                 "value": 0
+            },
+            {
+                "name": "is_glitched",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "is_player",

@@ -37,7 +37,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-sheep-check"
+			"script": "on_load-map-main-glitch_goats-check"
 		}
 	],
 	"on_load-map-main-rake-do": [
@@ -52,7 +52,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-sheep-check"
+			"script": "on_load-map-main-glitch_goats-check"
 		}
 	],
 	"rake-in-lake": [
@@ -60,6 +60,34 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-lake-point"
+		}
+	],
+	"on_load-map-main-glitch_goats-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "glitch_goats",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-glitch_goats-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
+		}
+	],
+	"on_load-map-main-glitch_goats-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "goat1",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "goat2",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
 		}
 	],
 	"on_load-map-main-sheep-check": [

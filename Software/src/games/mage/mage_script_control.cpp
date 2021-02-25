@@ -413,6 +413,22 @@ void MageScriptControl::checkEntityDirection(uint8_t * args, MageScriptState * r
 	}
 }
 
+void MageScriptControl::checkEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckEntityGlitched *argStruct = (ActionCheckEntityGlitched*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		bool isGlitched = (entity->direction & IS_GLITCHED) != 0;
+		if(isGlitched == argStruct->expectedBool) {
+			mapLocalJumpScript = argStruct->successScriptId;
+		}
+	}
+}
+
 void MageScriptControl::checkEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateA *argStruct = (ActionCheckEntityHackableStateA*)args;
@@ -874,7 +890,10 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			argStruct->direction,
+			entity->direction
+		);
 	}
 }
 
@@ -885,9 +904,14 @@ void MageScriptControl::setEntityDirectionRelative(uint8_t * args, MageScriptSta
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->direction = (
-			entity->direction + NUM_DIRECTIONS + argStruct->relativeDirection
-		) % NUM_DIRECTIONS;
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			(MageEntityAnimationDirection) ((
+				entity->direction
+				+ argStruct->relativeDirection
+				+ NUM_DIRECTIONS
+			) % NUM_DIRECTIONS),
+			entity->direction
+		);
 	}
 }
 
@@ -904,9 +928,12 @@ void MageScriptControl::setEntityDirectionTargetEntity(uint8_t * args, MageScrip
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageEntityRenderableData *targetRenderable = MageGame->getValidEntityRenderableData(targetEntityIndex);
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
-		entity->direction = getRelativeDirection(
-			renderable->center,
-			targetRenderable->center
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			getRelativeDirection(
+				renderable->center,
+				targetRenderable->center
+			),
+			entity->direction
 		);
 	}
 }
@@ -923,9 +950,26 @@ void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScr
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
 		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
-		entity->direction = getRelativeDirection(
-			renderable->center,
-			geometry.points[0]
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			getRelativeDirection(
+				renderable->center,
+				geometry.points[0]
+			),
+			entity->direction
+		);
+	}
+}
+
+void MageScriptControl::setEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityGlitched *argStruct = (ActionSetEntityGlitched*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->direction = (MageEntityAnimationDirection) (
+			(entity->direction & IS_GLITCHED_MASK)
+			| (argStruct->isGlitched * IS_GLITCHED)
 		);
 	}
 }
@@ -1209,9 +1253,12 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 				entity,
 				&geometry.points[0]
 			);
-			entity->direction = getRelativeDirection(
-				resumeStateStruct->pointA,
-				resumeStateStruct->pointB
+			entity->direction = MageGame->updateDirectionAndPreserveFlags(
+				getRelativeDirection(
+					resumeStateStruct->pointA,
+					resumeStateStruct->pointB
+				),
+				entity->direction
 			);
 			entity->currentAnimation = 1;
 		}
@@ -1785,6 +1832,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_ANIMATION] = &MageScriptControl::checkEntityCurrentAnimation;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_FRAME] = &MageScriptControl::checkEntityCurrentFrame;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_DIRECTION] = &MageScriptControl::checkEntityDirection;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_GLITCHED] = &MageScriptControl::checkEntityGlitched;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::checkEntityHackableStateA;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::checkEntityHackableStateB;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::checkEntityHackableStateC;
@@ -1818,6 +1866,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_RELATIVE] = &MageScriptControl::setEntityDirectionRelative;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_ENTITY] = &MageScriptControl::setEntityDirectionTargetEntity;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_GEOMETRY] = &MageScriptControl::setEntityDirectionTargetGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_GLITCHED] = &MageScriptControl::setEntityGlitched;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::setEntityHackableStateA;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::setEntityHackableStateB;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::setEntityHackableStateC;
@@ -2036,9 +2085,12 @@ void MageScriptControl::setResumeStatePointsAndEntityDirection(
 		entity,
 		&geometry->points[pointBIndex]
 	);
-	entity->direction = getRelativeDirection(
-		resumeStateStruct->pointA,
-		resumeStateStruct->pointB
+	entity->direction = MageGame->updateDirectionAndPreserveFlags(
+		getRelativeDirection(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB
+		),
+		entity->direction
 	);
 }
 

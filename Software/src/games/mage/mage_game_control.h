@@ -168,7 +168,13 @@ public:
 	uint16_t getValidMapLocalScriptId(uint16_t scriptId);
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
-	uint8_t  getValidEntityTypeDirection(uint8_t direction);
+	MageEntityAnimationDirection getValidEntityTypeDirection(
+		MageEntityAnimationDirection direction
+	);
+	MageEntityAnimationDirection updateDirectionAndPreserveFlags(
+		MageEntityAnimationDirection desired,
+		MageEntityAnimationDirection previous
+	);
 	MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
 	MageGeometry getGeometryFromGlobalId(uint16_t globalGeometryId);
 	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);

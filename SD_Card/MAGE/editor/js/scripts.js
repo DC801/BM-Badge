@@ -72,6 +72,11 @@ var actionFieldsMap = {
 		{propertyName: 'direction', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
+	CHECK_ENTITY_GLITCHED: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 	CHECK_ENTITY_HACKABLE_STATE_A: [
 		{propertyName: 'success_script', size: 2},
 		{propertyName: 'entity', size: 1},
@@ -220,6 +225,10 @@ var actionFieldsMap = {
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: [
 		{propertyName: 'target_geometry', size: 2},
 		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_GLITCHED: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'bool_value', size: 1},
 	],
 	SET_ENTITY_HACKABLE_STATE_A: [
 		{propertyName: 'byte_value', size: 1},
@@ -400,6 +409,7 @@ var actionNames = [
 	'CHECK_ENTITY_CURRENT_ANIMATION',
 	'CHECK_ENTITY_CURRENT_FRAME',
 	'CHECK_ENTITY_DIRECTION',
+	'CHECK_ENTITY_GLITCHED',
 	'CHECK_ENTITY_HACKABLE_STATE_A',
 	'CHECK_ENTITY_HACKABLE_STATE_B',
 	'CHECK_ENTITY_HACKABLE_STATE_C',
@@ -433,6 +443,7 @@ var actionNames = [
 	'SET_ENTITY_DIRECTION_RELATIVE',
 	'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 	'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
+	'SET_ENTITY_GLITCHED',
 	'SET_ENTITY_HACKABLE_STATE_A',
 	'SET_ENTITY_HACKABLE_STATE_B',
 	'SET_ENTITY_HACKABLE_STATE_C',
