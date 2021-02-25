@@ -6,6 +6,23 @@
 			"target_entity": "%PLAYER%"
 		},
 		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "goat1",
+			"success_script": "show_dialog-verthandi-ohno",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "goat2",
+			"success_script": "show_dialog-verthandi-ohno",
+			"expected_bool": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glitch_goats",
+			"bool_value": true
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-verthandi"
 		},
@@ -15,10 +32,38 @@
 			"target_entity": "goat1"
 		}
 	],
+	"show_dialog-verthandi-ohno": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-ohno"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Verthandi",
+			"target_entity": "goat1"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-verthandi"
+		}
+	],
 	"show_dialog-goat": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-goat-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goat"
+		}
+	],
+	"show_dialog-goat-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goat-glitched"
 		}
 	],
 	"check_if_player_is_goat_high": [

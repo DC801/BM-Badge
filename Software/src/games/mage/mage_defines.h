@@ -161,7 +161,9 @@ typedef enum : uint8_t{
 	EAST = 1,
 	SOUTH = 2,
 	WEST = 3,
-	NUM_DIRECTIONS
+	NUM_DIRECTIONS,
+	IS_GLITCHED_MASK = 0b01111111,
+	IS_GLITCHED = 0b10000000
 } MageEntityAnimationDirection;
 
 //this contains all the possible script actions by actionTypeId value.
@@ -191,6 +193,7 @@ typedef enum : uint8_t {
 	CHECK_ENTITY_CURRENT_ANIMATION,
 	CHECK_ENTITY_CURRENT_FRAME,
 	CHECK_ENTITY_DIRECTION,
+	CHECK_ENTITY_GLITCHED,
 	CHECK_ENTITY_HACKABLE_STATE_A,
 	CHECK_ENTITY_HACKABLE_STATE_B,
 	CHECK_ENTITY_HACKABLE_STATE_C,
@@ -224,6 +227,7 @@ typedef enum : uint8_t {
 	SET_ENTITY_DIRECTION_RELATIVE,
 	SET_ENTITY_DIRECTION_TARGET_ENTITY,
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
+	SET_ENTITY_GLITCHED,
 	SET_ENTITY_HACKABLE_STATE_A,
 	SET_ENTITY_HACKABLE_STATE_B,
 	SET_ENTITY_HACKABLE_STATE_C,
@@ -308,12 +312,12 @@ typedef struct {
 	uint16_t y;
 	uint16_t onInteractScriptId;
 	uint16_t onTickScriptId;
-	uint16_t primaryId; // Bender's shiny metal ass, old man -> sheep, blitzball
-	uint16_t secondaryId; // ethernettles
+	uint16_t primaryId;
+	uint16_t secondaryId;
 	MageEntityPrimaryIdType primaryIdType;
-	uint8_t currentAnimation; // Impersonate PipsCat and "action" to give approval to start work on X
+	uint8_t currentAnimation;
 	uint8_t currentFrame;
-	uint8_t direction; // Some trees are upside-down, and you need to right them
+	MageEntityAnimationDirection direction;
 	uint8_t hackableStateA;
 	uint8_t hackableStateB;
 	uint8_t hackableStateC;
@@ -453,6 +457,15 @@ typedef struct {
 	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityDirection;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t entityId;
+	uint8_t expectedBool;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckEntityGlitched;
 
 typedef struct {
 	uint16_t successScriptId;
@@ -738,6 +751,16 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetEntityDirectionTargetGeometry;
+
+typedef struct {
+	uint8_t entityId;
+	uint8_t isGlitched;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityGlitched;
 
 typedef struct {
 	uint8_t newValue;

@@ -81,6 +81,16 @@
 			]
 		}
 	],
+	"dialog-verthandi-ohno": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "Verthandi",
+			"messages": [
+				"Oh no, the adorable little goats seem to\nbe fighting! Or... umm... perhaps...\nthey have been glitched?"
+			]
+		}
+	],
 	"dialog-goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -88,6 +98,16 @@
 			"name": "Goat",
 			"messages": [
 				"Baaahhh!"
+			]
+		}
+	],
+	"dialog-goat-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goat",
+			"name": "Goat",
+			"messages": [
+				"ba15456`-------++++++gf\n+++++-//==========/*8901ikg"
 			]
 		}
 	],

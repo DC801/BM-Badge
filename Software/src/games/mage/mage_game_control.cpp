@@ -553,13 +553,16 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 				.x= 0,
 				.y= 0
 			};
-			uint8_t direction = playerEntity->direction;
+			MageEntityAnimationDirection direction = playerEntity->direction;
 			if(EngineInput_Buttons.ljoy_left ) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_right) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_up   ) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
 			if(EngineInput_Buttons.ljoy_down ) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
 			if(isMoving) {
-				playerEntity->direction = direction;
+				playerEntity->direction = updateDirectionAndPreserveFlags(
+					direction,
+					playerEntity->direction
+				);
 				Point pushback = getPushBackFromTilesThatCollideWithPlayerRect();
 				playerEntity->x += playerVelocity.x + pushback.x;
 				playerEntity->y += playerVelocity.y + pushback.y;
@@ -690,19 +693,22 @@ void MageGameControl::handleEntityInteract()
 	playerRenderableData->interactBox.w = playerRenderableData->hitBox.w;
 	playerRenderableData->interactBox.h = playerRenderableData->hitBox.h;
 	uint8_t interactLength = 32;
-	if(playerEntity->direction == NORTH) {
+	MageEntityAnimationDirection direction = getValidEntityTypeDirection(
+		playerEntity->direction
+	);
+	if(direction == NORTH) {
 		playerRenderableData->interactBox.y -= interactLength;
 		playerRenderableData->interactBox.h = interactLength;
 	}
-	if(playerEntity->direction == EAST) {
+	if(direction == EAST) {
 		playerRenderableData->interactBox.x += playerRenderableData->interactBox.w;
 		playerRenderableData->interactBox.w = interactLength;
 	}
-	if(playerEntity->direction == SOUTH) {
+	if(direction == SOUTH) {
 		playerRenderableData->interactBox.y += playerRenderableData->interactBox.h;
 		playerRenderableData->interactBox.h = interactLength;
 	}
-	if(playerEntity->direction == WEST) {
+	if(direction == WEST) {
 		playerRenderableData->interactBox.x -= interactLength;
 		playerRenderableData->interactBox.w = interactLength;
 	}
@@ -1122,11 +1128,23 @@ uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimati
 	return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
 }
 
-uint8_t MageGameControl::getValidEntityTypeDirection(uint8_t direction)
-{
-	//always return a valid direction.
-	//Subtract 1 because they are 0-indexed.
-	return direction % MageEntityAnimationDirection::NUM_DIRECTIONS;
+MageEntityAnimationDirection MageGameControl::getValidEntityTypeDirection(
+	MageEntityAnimationDirection direction
+) {
+	return (MageEntityAnimationDirection) (
+		(direction & IS_GLITCHED_MASK)
+		% NUM_DIRECTIONS
+	);
+}
+
+MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(
+	MageEntityAnimationDirection desired,
+	MageEntityAnimationDirection previous
+) {
+	return (MageEntityAnimationDirection) (
+		getValidEntityTypeDirection(desired)
+		| (previous & IS_GLITCHED)
+	);
 }
 
 uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
@@ -1231,13 +1249,13 @@ void MageGameControl::updateEntityRenderableData(
 
 			//create a directedAnimation entity based on entity.direction:
 			MageEntityTypeAnimationDirection directedAnimation;
-			if (entity.direction == MageEntityAnimationDirection::NORTH) {
+			if (direction == MageEntityAnimationDirection::NORTH) {
 				directedAnimation = currentAnimation.North();
-			} else if (entity.direction == MageEntityAnimationDirection::EAST) {
+			} else if (direction == MageEntityAnimationDirection::EAST) {
 				directedAnimation = currentAnimation.East();
-			} else if (entity.direction == MageEntityAnimationDirection::SOUTH) {
+			} else if (direction == MageEntityAnimationDirection::SOUTH) {
 				directedAnimation = currentAnimation.South();
-			} else if (entity.direction == MageEntityAnimationDirection::WEST) {
+			} else if (direction == MageEntityAnimationDirection::WEST) {
 				directedAnimation = currentAnimation.West();
 			}
 
@@ -1255,6 +1273,7 @@ void MageGameControl::updateEntityRenderableData(
 					currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
 				data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
 				data->renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
+				data->renderFlags += entity.direction & 0x80;
 			}
 			//Test whether or not the 0-index stuff is working:
 			//Scenario B: Type is not 0, so TypeId is a tileset, and Type is the tileId (you will need to subtract 1 to get it 0-indexed).
