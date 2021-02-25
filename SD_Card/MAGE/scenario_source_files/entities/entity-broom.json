@@ -1,28 +1,28 @@
-{ "columns":2,
- "image":"..\/entities\/entity-null.png",
- "imageheight":32,
- "imagewidth":64,
+{ "columns":1,
+ "image":"entity-broom.png",
+ "imageheight":40,
+ "imagewidth":40,
  "margin":0,
- "name":"entity-null",
+ "name":"entity-broom",
  "spacing":0,
- "tilecount":2,
+ "tilecount":1,
  "tiledversion":"1.4.3",
- "tileheight":32,
+ "tileheight":40,
  "tiles":[
         {
          "animation":[
                 {
-                 "duration":1000,
+                 "duration":200,
                  "tileid":0
                 }, 
                 {
-                 "duration":1000,
+                 "duration":200,
                  "tileid":0
                 }],
          "id":0,
-         "type":"null"
+         "type":"broom"
         }],
- "tilewidth":32,
+ "tilewidth":40,
  "type":"tileset",
  "version":1.4
 }
