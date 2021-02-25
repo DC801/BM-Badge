@@ -226,6 +226,45 @@
 			]
 		}
 	],
+	"dialog-marta-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"It's true. I can fly. It's not a trick.",
+				"I had my TUESDAY a few years ago, and this\nbroom chose me.",
+				"I'm one of the last mages to gain an\nartifact in a while. It's kind of nice\nthere's finally another.",
+				"Though your powers seem more useful than\nmine. All I can do is fly!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"That's still pretty cool!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"It helps me deliver newspapers, I guess.\nCan't fix much else around here."
+			]
+		}
+	],
+	"dialog-marta-cheat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"....","That's cheating."
+			]
+		}
+	],
 	"dialog-reset": [
 		{
 			"alignment": "BOTTOM_LEFT",

@@ -641,7 +641,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Maybe another artifact?"
+				"Maybe a different artifact?"
 			]
 		}
 	],
