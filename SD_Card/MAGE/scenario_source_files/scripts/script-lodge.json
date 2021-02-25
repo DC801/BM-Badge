@@ -339,7 +339,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 900
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
@@ -561,6 +561,16 @@
 			"action": "PAN_CAMERA_TO_ENTITY",
 			"duration": 1200,
 			"entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-candothis",
+			"doc": "Okay. I can do this."
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -2413,6 +2423,13 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-postchoose"
+		}
+	],
+	"face-player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
 		}
 	]
 }

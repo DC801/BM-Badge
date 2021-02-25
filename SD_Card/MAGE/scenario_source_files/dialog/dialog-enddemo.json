@@ -78,7 +78,7 @@
 			]
 		}
 	],
-	"dialog-demoend-cutscene-middle3": [
+	"dialog-demoend-cutscene-middle3a": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "alfonso",
@@ -86,7 +86,9 @@
 			"messages": [
 				"You think the Big Bad somehow knows that\nsomeone here has been using Ring Zero?"
 			]
-		},
+		}
+	],
+	"dialog-demoend-cutscene-middle3b": [
 		{
 			"alignment": "TOP_LEFT",
 			"portrait": "marta",
@@ -94,7 +96,9 @@
 			"messages": [
 				"But it's been so long since the Big Bad\nwas seen at all! You think he might still\nbe out there, somewhere?"
 			]
-		},
+		}
+	],
+	"dialog-demoend-cutscene-middle3c": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",

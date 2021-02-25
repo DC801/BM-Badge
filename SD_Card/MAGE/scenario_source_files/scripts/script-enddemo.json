@@ -492,7 +492,32 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-demoend-cutscene-middle3",
+			"dialog": "dialog-demoend-cutscene-middle3a",
+			"doc": "Somehow the Big Bad knows?"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "loiter2"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-demoend-cutscene-middle3b",
+			"doc": "But the Big Bad's been gone for ages!"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Marta",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-demoend-cutscene-middle3c",
 			"doc": "What else would this earthquake mean?"
 		},
 		{
