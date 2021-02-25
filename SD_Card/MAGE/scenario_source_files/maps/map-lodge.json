@@ -28,7 +28,7 @@
          "name":"Tile Layer 2",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":21,
          "x":0,
          "y":0
@@ -550,24 +550,6 @@
                 {
                  "gid":710,
                  "height":32,
-                 "id":52,
-                 "name":"Broom",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"examine-broom"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":287.5,
-                 "y":230
-                }, 
-                {
-                 "gid":710,
-                 "height":32,
                  "id":53,
                  "name":"Wand",
                  "properties":[
@@ -582,10 +564,28 @@
                  "width":32,
                  "x":255.5,
                  "y":228
+                }, 
+                {
+                 "gid":711,
+                 "height":40,
+                 "id":84,
+                 "name":"Broom",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-broom"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":285.25,
+                 "y":234.75
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1158,7 +1158,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":84,
+ "nextobjectid":85,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1258,6 +1258,10 @@
         {
          "firstgid":710,
          "source":"..\/entities\/entity-rake.json"
+        }, 
+        {
+         "firstgid":711,
+         "source":"..\/entities\/entity-broom.json"
         }],
  "tilewidth":32,
  "type":"map",

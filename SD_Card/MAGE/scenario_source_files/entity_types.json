@@ -1876,5 +1876,32 @@
 				}
 			]
 		}
+	},
+	"marta_broom": {
+		"tileset": "entity-marta-broom.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			]
+		}
 	}
 }
