@@ -1049,11 +1049,6 @@
 			"dialog": "dialog-alfonso-eval-done"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
-		},
-		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "wonthedemo",
 			"bool_value": true
