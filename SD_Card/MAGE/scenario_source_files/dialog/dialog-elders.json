@@ -482,5 +482,208 @@
 				"TEMPORARY ANSWER RAKE!"
 			]
 		}
+	],
+	"dialog-alfonso-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"There's a number of issues around town\nthat your ring should be able to fix.",
+				"There are... now, let's just see....",
+				"There are 10 tasks, according to my notes.\nGo get 'em!"
+			]
+		}
+	],
+	"dialog-alfonso-eval": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"You've completed $story-flag-count$ tasks."
+			]
+		}
+	],
+	"dialog-alfonso-eval0": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Uh....",
+				"Nowhere to go now but up!"
+			]
+		}
+	],
+	"dialog-alfonso-eval1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"That's the spirit! What a great start!"
+			]
+		}
+	],
+	"dialog-alfonso-eval-early": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"You're getting the hang of this!"
+			]
+		}
+	],
+	"dialog-alfonso-eval-mid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Oh, my! You're getting a lot of work done!\nMarvelous!"
+			]
+		}
+	],
+	"dialog-alfonso-eval-late": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Wow! You're nearly done!"
+			]
+		}
+	],
+	"dialog-alfonso-eval-done": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Incredible! You've done everything on my\nlist!"
+			]
+		}
+	],
+	"dialog-alfonso-wonthedemo": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Congratulations! You fixed the town!"
+			]
+		}
+	],
+	"dialog-alfonso-debug-catwork": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: catwork counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-shepherd2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: shepherd2 counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-bender2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: bender2 counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-baker2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: baker2 counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-bobmoss": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: bobmoss counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-bea-happy": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: bea-happy counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-trekkie2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: trekkie2 counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-sportskid": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: sportskid counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-bea-relief": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: bea-relief counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-debug-rake": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Debug: rake counted.\nTotal: $story-flag-count$"
+			]
+		}
+	],
+	"dialog-alfonso-story-flag-set": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Story flag count reset (0)"
+			]
+		}
 	]
 }

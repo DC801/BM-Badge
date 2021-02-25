@@ -621,6 +621,12 @@
                  "height":40,
                  "id":152,
                  "name":"Alfonso",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-alfonso-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -651,12 +657,18 @@
                  "height":32,
                  "id":162,
                  "name":"Beatrice",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"story-flags-all"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":-133.5,
-                 "y":-109.5
+                 "x":1087.83333333333,
+                 "y":451.166666666667
                 }, 
                 {
                  "gid":513,
