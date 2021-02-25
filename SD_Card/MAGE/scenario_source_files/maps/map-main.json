@@ -647,24 +647,6 @@
                  "y":390
                 }, 
                 {
-                 "gid":1131,
-                 "height":32,
-                 "id":161,
-                 "name":"Marta",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"rake-float-demo"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":627.5,
-                 "y":989.5
-                }, 
-                {
                  "gid":498,
                  "height":32,
                  "id":162,
@@ -747,6 +729,24 @@
                  "width":64,
                  "x":93.3333333333333,
                  "y":143.333333333333
+                }, 
+                {
+                 "gid":1145,
+                 "height":48,
+                 "id":192,
+                 "name":"Marta",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"rake-float-demo"
+                        }],
+                 "rotation":0,
+                 "type":"marta_broom",
+                 "visible":true,
+                 "width":48,
+                 "x":625.333333333333,
+                 "y":996
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1805,7 +1805,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":192,
+ "nextobjectid":193,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1933,6 +1933,10 @@
         {
          "firstgid":1118,
          "source":"..\/entities\/entity-marta.json"
+        }, 
+        {
+         "firstgid":1142,
+         "source":"..\/entities\/entity-marta-broom.json"
         }],
  "tilewidth":32,
  "type":"map",
