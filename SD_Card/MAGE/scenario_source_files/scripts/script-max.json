@@ -429,7 +429,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 600
+			"duration": 300
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",

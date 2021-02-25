@@ -265,14 +265,14 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"elders-to-secretdoor"
+                         "value":"show_dialog-goose"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":223,
-                 "y":184
+                 "x":217.333333333333,
+                 "y":163.666666666667
                 }, 
                 {
                  "gid":398,
@@ -391,14 +391,14 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"secret-door-open"
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":414.5,
-                 "y":190.5
+                 "x":418.166666666667,
+                 "y":189.5
                 }, 
                 {
                  "height":0,
@@ -1152,7 +1152,7 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":21,
          "x":0,
          "y":0
