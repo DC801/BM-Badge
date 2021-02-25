@@ -1,6 +1,8 @@
 # DC801 Black Mage Badge
 The DC801 Badge Platform for DC28+
 
+<p><a href="https://vimeo.com/515088170" target="_blank"><img src="https://i.vimeocdn.com/video/1066639355" alt="DC28 DC801 SAFEMODE badge, 2021-02-21 development update" /></a></p>
+<p><a href="https://vimeo.com/515088170" target="_blank">Watch one of our new puzzles and see some of our new narrative focused engine scripting capabilities in our 2021-02-21 development update video!</a></p>
 <p><a href="https://vimeo.com/487527877" target="_blank"><img src="https://i.vimeocdn.com/video/1008891350" alt="DC28 DC801 SAFEMODE badge, 2020-12-04 development update" /></a></p>
 <p><a href="https://vimeo.com/487527877" target="_blank">Watch almost 6 minutes of 100% in-engine gameplay in our 2020-12-04 development update video!</a></p>
 

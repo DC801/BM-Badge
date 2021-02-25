@@ -81,6 +81,7 @@
 		- [x] CHECK_ENTITY_CURRENT_ANIMATION
 		- [x] CHECK_ENTITY_CURRENT_FRAME
 		- [x] CHECK_ENTITY_DIRECTION
+		- [x] CHECK_ENTITY_GLITCHED
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_B
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_C
@@ -114,6 +115,7 @@
 		- [x] SET_ENTITY_DIRECTION_RELATIVE
 		- [x] SET_ENTITY_DIRECTION_TARGET_ENTITY
 		- [x] SET_ENTITY_DIRECTION_TARGET_GEOMETRY
+		- [x] SET_ENTITY_GLITCHED
 		- [ ] SET_ENTITY_HACKABLE_STATE_A
 		- [ ] SET_ENTITY_HACKABLE_STATE_B
 		- [ ] SET_ENTITY_HACKABLE_STATE_C
@@ -175,6 +177,7 @@
 	- [x] tilesetId and tileId for the portrait picture.
 	- [x] Support for string templates that make use of hacked entity names
 	- [x] Support for string templates that make use of numeric variables
+	- [ ] Please stop player walking when a dialog shows
 	- [ ] display font
 	- [ ] voice sound Id
 	- [ ] Dialog Responses:
