@@ -764,12 +764,41 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "alfonso-explain",
+			"bool_value": false
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "reset-hint-flags"
 		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-reset"
+		}
+	],
+	"show_dialog-marta-start": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Marta",
+			"entity_type": "marta_broom",
+			"expected_bool": false,
+			"success_script": "show_dialog-marta-cheat"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-start"
+		}
+	],
+	"show_dialog-marta-cheat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-cheat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Marta",
+			"script": "show_dialog-marta-start"
 		}
 	]
 }

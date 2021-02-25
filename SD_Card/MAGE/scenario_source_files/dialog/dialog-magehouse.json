@@ -1,0 +1,139 @@
+{
+	"dialog-zappy-start": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Did you remember to feed Mr. Tickles today?"
+			]
+		}
+	],
+	"dialog-zippy-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"How's your day going, %PLAYER%?"
+			]
+		}
+	],
+	"dialog-goodmorning-wake": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Ahh, what a good night's sleep!"
+			]
+		}
+	],
+	"dialog-goodmorning-start1": [
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Is that %PLAYER% I hear?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Oh good! They're awake!"
+			]
+		}
+	],
+	"dialog-goodmorning-start2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Oh! Uncle Zappy! Aunt Zippy!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Good morning, %PLAYER%!",
+				"We were beginning to think you were going\nto sleep through your big day!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Big day?"
+			]
+		}
+	],
+	"dialog-goodmorning-start3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(OH GOD IT'S TUESDAY!)"
+			]
+		}
+	],
+	"dialog-goodmorning-start4": [
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Don't worry! We weren't about to let you\nmiss it!"
+			]
+		}
+	],
+	"dialog-goodmorning-start5": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(AAAAH!)"
+			]
+		}
+	],
+	"dialog-goodmorning-start6": [
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Your 16th birthday is a big day. But no\nmatter what happens, we're proud of you\nand the mage you've become.","Remember that today, okay?"
+			]
+		}
+	],
+	"dialog-goodmorning-start7": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Okay.",
+				"Yeah. I'll'll be okay.",
+				"It's just the most important day in my\nlife, but I'll definitely be okay."
+			]
+		}
+	],
+	"dialog-goodmorning-start8": [
+		{
+			"alignment": "BOTTOM_TOP",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Come along, now! The village elders are\nall waiting for you!"
+			]
+		}
+	]
+}
