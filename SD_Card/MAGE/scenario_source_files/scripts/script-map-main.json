@@ -715,6 +715,11 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "hackbook-hint-done",
 			"bool_value": false
 		},
@@ -746,6 +751,16 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bracelet",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid",
 			"bool_value": false
 		},
 		{
