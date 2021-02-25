@@ -556,10 +556,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-story-flag-set"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-catwork"
 		}
@@ -583,10 +579,6 @@
 			"value": 1,
 			"operation": "ADD",
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-catwork"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -614,10 +606,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-shepherd2"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-bender2"
 		}
@@ -641,10 +629,6 @@
 			"value": 1,
 			"operation": "ADD",
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-bender2"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -672,10 +656,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-baker2"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-bobmoss"
 		}
@@ -699,10 +679,6 @@
 			"value": 1,
 			"operation": "ADD",
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-bobmoss"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -730,10 +706,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-bea-happy"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-trekkie2"
 		}
@@ -757,10 +729,6 @@
 			"value": 1,
 			"operation": "ADD",
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-trekkie2"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -788,10 +756,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-sportskid"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-bea-relief"
 		}
@@ -817,10 +781,6 @@
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-bea-relief"
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "story-eval-rake"
 		}
@@ -844,10 +804,6 @@
 			"value": 1,
 			"operation": "ADD",
 			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-debug-rake"
 		},
 		{
 			"action": "RUN_SCRIPT",
