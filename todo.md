@@ -177,7 +177,7 @@
 	- [x] tilesetId and tileId for the portrait picture.
 	- [x] Support for string templates that make use of hacked entity names
 	- [x] Support for string templates that make use of numeric variables
-	- [ ] Please stop player walking when a dialog shows
+	- [x] Please stop player walking when a dialog shows
 	- [ ] display font
 	- [ ] voice sound Id
 	- [ ] Dialog Responses:

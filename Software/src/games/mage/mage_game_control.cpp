@@ -728,6 +728,7 @@ void MageGameControl::handleEntityInteract()
 			if (colliding) {
 				playerRenderableData->isInteracting = true;
 				targetRenderableData->isInteracting = true;
+				isMoving = false;
 				if (targetEntity->onInteractScriptId) {
 					MageScript->initScriptState(
 						MageScript->getEntityInteractResumeState(i),
