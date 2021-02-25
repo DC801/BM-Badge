@@ -9,6 +9,16 @@
 			]
 		}
 	],
+	"dialog-candothis": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Okay. I can do this."
+			]
+		}
+	],
 	"dialog-tuesday-intro1": [
 		{
 			"alignment": "BOTTOM_LEFT",
