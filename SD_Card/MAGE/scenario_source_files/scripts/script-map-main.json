@@ -807,6 +807,11 @@
 	],
 	"show_dialog-marta-start": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Marta",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "Marta",
 			"entity_type": "marta_broom",

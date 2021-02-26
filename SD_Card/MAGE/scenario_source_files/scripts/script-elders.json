@@ -1,6 +1,11 @@
 {
 	"show_dialog-bert-start": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bert-start",
 			"doc": "Who needs help?"
