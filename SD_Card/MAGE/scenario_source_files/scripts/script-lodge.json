@@ -1862,6 +1862,15 @@
 			"duration": 300
 		},
 		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Marta",
+			"entity_type": "marta_broom"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Marta",
 			"geometry": "marta-broom-watch-spot",
