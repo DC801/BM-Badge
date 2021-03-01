@@ -165,5 +165,50 @@
 				"Good ol' glitched-out fish."
 			]
 		}
+	],
+	"dialog-magejournal": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "journal",
+			"name": "%Mage Journal%",
+			"messages": [
+				"Dear Diary,",
+				"I'm turning 16 soon, and I keep wondering\nwhat my magic will turn out to be.",
+				"Maybe I'll be able to turn invisible!\nOr fly!",
+				"But really, my power will probably turn\nout to be something dumb.",
+				"I just hope I don't make a mess of\nanything. The town is already messed up\nenough from the Big Bad's hacks."
+			]
+		}
+	],
+	"dialog-magebox": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"I can't even remember what's in that box.\nComics? Amiibos? Otomotones?"
+			]
+		}
+	],
+	"dialog-magefacts": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "journal",
+			"name": "%Mage Facts%",
+			"messages": [
+				"Mage Facts Magazine, issue 28.",
+				"Did you know you can press X to run,\ncircle to interact with something,\nand square to perform a short animation?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Well, what about triangle?",
+				"What say you about triangle, Mage Facts\nMagazine?",
+				"Yeah, that's what I thought."
+			]
+		}
 	]
 }

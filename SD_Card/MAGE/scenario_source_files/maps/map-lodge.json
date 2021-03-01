@@ -389,6 +389,11 @@
                  "name":"Cat",
                  "properties":[
                         {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"face-player"

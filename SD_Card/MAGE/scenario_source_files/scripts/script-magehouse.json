@@ -20,6 +20,10 @@
 			"save_flag": "goldfish",
 			"expected_bool": true,
 			"success_script": "unglitch-fish"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "where-player-spawn"
 		}
 	],
 	"unglitch-fish": [
@@ -27,6 +31,30 @@
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Mr. Tickles",
 			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "where-player-spawn"
+		}
+	],
+	"where-player-spawn": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goodmorning",
+			"expected_bool": false,
+			"success_script": "player-at-bed"
+		}
+	],
+	"player-at-bed": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "wakeup_spot"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
 		}
 	],
 	"bedroom-door-watch": [
@@ -296,6 +324,21 @@
 	"walk-to-lodge": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Verthandi",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Cleo",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Max Swagger",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Alfonso",
 			"geometry": "catwalk-hide"
 		},
@@ -542,6 +585,24 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "goldfish",
 			"bool_value": true
+		}
+	],
+	"show_dialog-magejournal": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-magejournal"
+		}
+	],
+	"show_dialog-magefacts": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-magefacts"
+		}
+	],
+	"show_dialog-magebox": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-magebox"
 		}
 	]
 }

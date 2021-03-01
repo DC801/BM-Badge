@@ -51,6 +51,14 @@
 	],
 	"dialog-tuesday-lunch": [
 		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"A bracelet?"
+			]
+		},
+		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "bert",
 			"name": "%Bert%",
