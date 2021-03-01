@@ -254,6 +254,29 @@
                  "width":0,
                  "x":499,
                  "y":156
+                }, 
+                {
+                 "gid":402,
+                 "height":32,
+                 "id":25,
+                 "name":"Mr. Tickles",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-goldfish"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":704,
+                 "y":208
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -296,9 +319,14 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":25,
+ "nextobjectid":26,
  "orientation":"orthogonal",
  "properties":[
+        {
+         "name":"on_load",
+         "type":"string",
+         "value":"on_load-magehouse"
+        }, 
         {
          "name":"on_tick",
          "type":"string",
@@ -343,6 +371,10 @@
         {
          "firstgid":366,
          "source":"..\/entities\/entity-lightning_boy2.json"
+        }, 
+        {
+         "firstgid":402,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

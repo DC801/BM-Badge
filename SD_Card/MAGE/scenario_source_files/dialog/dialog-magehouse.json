@@ -5,7 +5,7 @@
 			"portrait": "zappy",
 			"name": "%Uncle Zappy%",
 			"messages": [
-				"Did you remember to feed Mr. Tickles today?"
+				"Did you remember to feed %Mr. Tickles%?"
 			]
 		}
 	],
@@ -133,6 +133,36 @@
 			"name": "%Uncle Zappy%",
 			"messages": [
 				"Come along, now! The village elders are\nall waiting for you!"
+			]
+		}
+	],
+	"dialog-goldfish": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Good morning, %Mr. Tickles%!"
+			]
+		}
+	],
+	"dialog-goldfish-unglitched": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Looking good!"
+			]
+		}
+	],
+	"dialog-goldfish-glitched": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Good ol' glitched-out fish."
 			]
 		}
 	]

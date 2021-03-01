@@ -14,6 +14,21 @@
 			"success_script": "bedroom-door-watch"
 		}
 	],
+	"on_load-magehouse": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goldfish",
+			"expected_bool": true,
+			"success_script": "unglitch-fish"
+		}
+	],
+	"unglitch-fish": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Mr. Tickles",
+			"bool_value": false
+		}
+	],
 	"bedroom-door-watch": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -480,6 +495,38 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"
+		}
+	],
+	"show_dialog-goldfish": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goldfish"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Mr. Tickles",
+			"success_script": "show_dialog-goldfish-unglitched",
+			"expected_bool": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goldfish-glitched"
+		}
+	],
+	"show_dialog-goldfish-unglitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-goldfish-unglitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mr. Tickles",
+			"script": "show_dialog-goldfish"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goldfish",
+			"bool_value": true
 		}
 	]
 }
