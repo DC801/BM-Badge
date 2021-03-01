@@ -1901,8 +1901,44 @@
 	],
 	"examine-wand": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "spin-around-fast"
+		},
+		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-tuesday-wand"
+			"dialog": "dialog-tuesday-wand1"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-wand2"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Wand"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tuesday-wand3"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -2439,6 +2475,44 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
+		}
+	],
+	"spin-around-fast": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
 		}
 	]
 }

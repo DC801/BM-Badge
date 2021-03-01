@@ -508,62 +508,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":320.5,
-                 "y":228.5
-                }, 
-                {
-                 "gid":710,
-                 "height":32,
-                 "id":50,
-                 "name":"Book",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"examine-book"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":350,
-                 "y":228.5
-                }, 
-                {
-                 "gid":710,
-                 "height":32,
-                 "id":51,
-                 "name":"Bracelet",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"examine-bracelet"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":383,
-                 "y":229
-                }, 
-                {
-                 "gid":710,
-                 "height":32,
-                 "id":53,
-                 "name":"Wand",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"examine-wand"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":255.5,
-                 "y":228
+                 "x":259.045454545455,
+                 "y":229.045454545455
                 }, 
                 {
                  "gid":711,
@@ -580,8 +526,62 @@
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":285.25,
-                 "y":234.75
+                 "x":285.068181818182,
+                 "y":232.931818181818
+                }, 
+                {
+                 "gid":712,
+                 "height":16,
+                 "id":85,
+                 "name":"Bracelet",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-bracelet"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":392.363636363636,
+                 "y":222.909090909091
+                }, 
+                {
+                 "gid":713,
+                 "height":32,
+                 "id":86,
+                 "name":"Book",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-book"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":323.454545454546,
+                 "y":226
+                }, 
+                {
+                 "gid":718,
+                 "height":32,
+                 "id":87,
+                 "name":"Wand",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"examine-wand"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":357.454545454545,
+                 "y":229.454545454546
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1158,7 +1158,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":85,
+ "nextobjectid":88,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1262,6 +1262,18 @@
         {
          "firstgid":711,
          "source":"..\/entities\/entity-broom.json"
+        }, 
+        {
+         "firstgid":712,
+         "source":"..\/entities\/entity-bracelet.json"
+        }, 
+        {
+         "firstgid":713,
+         "source":"..\/entities\/entity-book.json"
+        }, 
+        {
+         "firstgid":718,
+         "source":"..\/entities\/entity-wand.json"
         }],
  "tilewidth":32,
  "type":"map",

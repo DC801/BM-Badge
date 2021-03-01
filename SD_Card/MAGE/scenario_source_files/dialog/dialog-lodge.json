@@ -671,7 +671,10 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Glasses?"
+				"This?","This is clearly a temporary asset that\nhasn't been replaced with anything yet.",
+				"Though....",
+				"(touch)",
+				"Ahh, oh well."
 			]
 		}
 	],
@@ -681,17 +684,40 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Book?"
+				"Ugh. Is that an eye on the cover?",
+				"And I don't wanna know what kind of\nleather that is.",
+				"....",
+				"It's not reacting to me, though."
 			]
 		}
 	],
-	"dialog-tuesday-wand": [
+	"dialog-tuesday-wand1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Wand?"
+				"Moon Prism Power...."
+			]
+		}
+	],
+	"dialog-tuesday-wand2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Make Up!"
+			]
+		}
+	],
+	"dialog-tuesday-wand3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Erm, maybe I had that a bit wrong.","Still, no response."
 			]
 		}
 	],
