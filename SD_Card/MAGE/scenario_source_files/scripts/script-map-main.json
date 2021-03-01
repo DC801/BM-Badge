@@ -633,6 +633,16 @@
 	"show_dialog-reset": [
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "goodmorning",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goldfish",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender1",
 			"bool_value": false
 		},
