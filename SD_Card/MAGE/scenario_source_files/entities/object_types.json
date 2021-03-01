@@ -561,57 +561,6 @@
         ]
     },
     {
-        "color": "#ffa0a0a4",
-        "name": "goat",
-        "properties": [
-            {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "is_glitched",
-                "type": "bool",
-                "value": false
-            },
-            {
-                "name": "is_player",
-                "type": "bool",
-                "value": false
-            },
-            {
-                "name": "on_interact",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "on_tick",
-                "type": "string",
-                "value": ""
-            },
-            {
-                "name": "path",
-                "type": "object",
-                "value": 0
-            }
-        ]
-    },
-    {
         "color": "#ff888888",
         "name": "golem",
         "properties": [
