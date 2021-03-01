@@ -208,6 +208,11 @@
                          "value":"12"
                         }, 
                         {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-sheep"
@@ -216,8 +221,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":223.666666666667,
-                 "y":626.166666666666
+                 "x":584.666666666667,
+                 "y":435.666666666666
                 }, 
                 {
                  "gid":2147484241,
@@ -243,7 +248,7 @@
                  "y":631.5
                 }, 
                 {
-                 "gid":2147484181,
+                 "gid":533,
                  "height":32,
                  "id":19,
                  "name":"Ram",
@@ -256,14 +261,14 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"story-flags-all"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":399.166666666667,
-                 "y":199
+                 "x":1085.16666666667,
+                 "y":370
                 }, 
                 {
                  "gid":2147484181,
@@ -297,14 +302,14 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"walk-to-lodge"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":401.666666666667,
-                 "y":465
+                 "x":954.166666666667,
+                 "y":663
                 }, 
                 {
                  "gid":688,
@@ -439,7 +444,7 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":546.5,
+                 "x":515.5,
                  "y":649
                 }, 
                 {
@@ -636,7 +641,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"rake-float-demo"
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -698,42 +703,6 @@
                  "width":32,
                  "x":940.5,
                  "y":390
-                }, 
-                {
-                 "gid":498,
-                 "height":32,
-                 "id":162,
-                 "name":"Beatrice",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"story-flags-all"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1087.83333333333,
-                 "y":451.166666666667
-                }, 
-                {
-                 "gid":513,
-                 "height":32,
-                 "id":163,
-                 "name":"Trekkie",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"walk-to-lodge"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":959.5,
-                 "y":663.5
                 }, 
                 {
                  "height":0,

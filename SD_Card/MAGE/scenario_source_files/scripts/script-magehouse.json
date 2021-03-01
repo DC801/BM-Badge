@@ -296,6 +296,21 @@
 	"walk-to-lodge": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Jackob",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Helga",
 			"geometry": "morning-walk-zappy"
 		},

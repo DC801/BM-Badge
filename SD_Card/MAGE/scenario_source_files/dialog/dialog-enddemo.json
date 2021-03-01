@@ -13,7 +13,7 @@
 		{
 			"alignment": "TOP_RIGHT",
 			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"name": "Beatrice",
 			"messages": [
 				"Oh, no! This is just like last time!"
 			]
@@ -33,7 +33,7 @@
 		{
 			"alignment": "TOP_LEFT",
 			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"name": "Trekkie",
 			"messages": [
 				"Last time Big Bad came!"
 			]
