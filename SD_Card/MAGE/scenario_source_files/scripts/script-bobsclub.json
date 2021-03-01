@@ -927,5 +927,11 @@
 			"entity": "%SELF%",
 			"target_entity": "Baker"
 		}
+	],
+	"show_dialog-bobwall": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobwall"
+		}
 	]
 }

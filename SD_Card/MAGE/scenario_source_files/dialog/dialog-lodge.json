@@ -741,7 +741,7 @@
 	],
 	"dialog-murmur1": [
 		{
-			"alignment": "TOP_LEFT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "marta",
 			"name": "%Marta%",
 			"messages": [

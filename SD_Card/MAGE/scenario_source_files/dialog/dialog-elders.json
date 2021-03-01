@@ -381,7 +381,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION BOB."
+				"I guess I'm looking for another Bob, maybe\nsome relation to Stone Cold Bob Austin?"
 			]
 		},
 		{
@@ -683,6 +683,46 @@
 			"name": "%Alfonso%",
 			"messages": [
 				"Story flag count reset (0)"
+			]
+		}
+	],
+	"dialog-story-flags-all": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Debug Sheep",
+			"messages": [
+				"All story flags set to true."
+			]
+		}
+	],
+	"dialog-debug-bob": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Debug Sheep",
+			"messages": [
+				"Bob shortcut activated."
+			]
+		}
+	],
+	"dialog-debug-bob2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Debug Sheep",
+			"messages": [
+				"Extra Bob shortcut activated."
+			]
+		}
+	],
+	"dialog-debug-bob3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "sheep",
+			"name": "Debug Sheep",
+			"messages": [
+				"Teleportation in progress."
 			]
 		}
 	]

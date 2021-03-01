@@ -1838,6 +1838,11 @@
 			"duration": 500
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-marta"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-tuesday-broom",
 			"doc": "Oh, that's mine!"
@@ -1889,6 +1894,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "broom",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -2475,6 +2485,13 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
+		}
+	],
+	"watch-marta": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Marta"
 		}
 	],
 	"spin-around-fast": [

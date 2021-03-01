@@ -1085,6 +1085,57 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "rake",
 			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-story-flags-all"
+		}
+	],
+	"debug-bob": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Bob"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobrock",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bob2"
+		}
+	],
+	"debug-bob2": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobsclub",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob2"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bob3"
+		}
+	],
+	"debug-bob3": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob3"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-bobsclub"
 		}
 	]
 }
