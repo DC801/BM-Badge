@@ -175,13 +175,26 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Beatrice",
-			"geometry": "demoend-beatrice-point"
+			"entity": "Ram",
+			"geometry": "demoend-beatrice-point",
+			"doc": "for some reason, teleport doesn't happen if it comes after changing entity type"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"geometry": "demoend-trekkie-point"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Ram",
+			"entity_type": "old_lady",
+			"doc": "The part of Beatrice will be played by Ram in this episode"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Helga",
+			"entity_type": "trekkie",
+			"doc": "The part of Trekkie will be played by Helga in this episode"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -190,12 +203,12 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Beatrice",
+			"entity": "Ram",
 			"script": "loiter1"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"script": "loiter2"
 		}
 	],
@@ -233,7 +246,7 @@
 	"demoend-everyone-south": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Beatrice",
+			"entity": "Ram",
 			"script": "null_script"
 		},
 		{
@@ -243,7 +256,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"script": "null_script"
 		},
 		{
@@ -253,7 +266,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Beatrice",
+			"entity": "Ram",
 			"direction": "south"
 		},
 		{
@@ -268,7 +281,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"direction": "south"
 		},
 		{
@@ -290,7 +303,7 @@
 	"demoend-everyone-look-at-jackob": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"target_entity": "Jackob"
 		},
 		{
@@ -300,7 +313,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
+			"entity": "Ram",
 			"target_entity": "Jackob"
 		},
 		{
@@ -377,7 +390,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%PLAYER%",
-			"target_entity": "Beatrice"
+			"target_entity": "Ram"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -394,12 +407,12 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "Helga",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -418,7 +431,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%PLAYER%",
-			"target_entity": "Trekkie"
+			"target_entity": "Helga"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
