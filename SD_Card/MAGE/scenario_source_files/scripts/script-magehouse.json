@@ -104,6 +104,11 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "%PLAYER%",
+			"byte_value": 0
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goodmorning-start1",
 			"doc": "Is that PLAYER I hear?"
