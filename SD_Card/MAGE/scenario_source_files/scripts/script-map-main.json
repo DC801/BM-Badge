@@ -843,5 +843,11 @@
 			"entity": "Marta",
 			"script": "show_dialog-marta-start"
 		}
+	],
+	"load_map-testbig": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-testbig"
+		}
 	]
 }
