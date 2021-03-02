@@ -64,6 +64,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goat-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-goat"
 		}
 	],
 	"check_if_player_is_goat_high": [
