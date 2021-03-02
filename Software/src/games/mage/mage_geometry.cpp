@@ -285,6 +285,22 @@ void MageGeometry::draw(
 	} else {
 		// POLYLINE segmentCount is pointCount - 1
 		// POLYGON segmentCount is same as pointCount
+		Point polyACenter = {
+			.x= 0,
+			.y= 0,
+		};
+		for (int lineAPointIndex = 0; lineAPointIndex < pointCount; lineAPointIndex++) {
+			pointA = flipPointByFlags(
+				points[lineAPointIndex],
+				flags,
+				width,
+				height
+			);
+			polyACenter.x += pointA.x;
+			polyACenter.y += pointA.y;
+		}
+		polyACenter.x = polyACenter.x / pointCount;
+		polyACenter.y = polyACenter.y / pointCount;
 		for (int i = 0; i < segmentCount; i++) {
 			pointA = points[i];
 			pointB = points[(i + 1) % pointCount];
@@ -305,6 +321,13 @@ void MageGeometry::draw(
 				pointA.y + offset_y - cameraY,
 				pointB.x + offset_x - cameraX,
 				pointB.y + offset_y - cameraY,
+				color
+			);
+			mage_canvas->drawLine(
+				pointA.x + offset_x - cameraX,
+				pointA.y + offset_y - cameraY,
+				polyACenter.x + offset_x - cameraX,
+				polyACenter.y + offset_y - cameraY,
 				color
 			);
 		}

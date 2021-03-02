@@ -887,8 +887,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	int32_t x = 0;
 	int32_t y = 0;
 	uint16_t collisionCount = 0;
-	float largestPushbackLength = 0;
-	float currentPushbackLength = 0;
 	uint16_t geometryId = 0;
 	MageGeometry geometry;
 	Point pushback = {
@@ -1006,7 +1004,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 				);
 				if(isMageInGeometry){
 					collisionCount++;
-					currentPushbackLength = MageGeometry::getVectorLength(pushbackForCurrentGeometry);
 					pushback.x += pushbackForCurrentGeometry.x;
 					pushback.y += pushbackForCurrentGeometry.y;
 				}
