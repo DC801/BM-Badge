@@ -498,7 +498,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 	float moveType = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
 	float howManyMsPerSecond = 1000.0;
 	float whatFractionOfSpeed = moveType / howManyMsPerSecond;
-	mageSpeed = whatFractionOfSpeed * deltaTime;
+	mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
 	if(MageDialog->isOpen) {
 		if(
 			EngineInput_Activated.rjoy_down
