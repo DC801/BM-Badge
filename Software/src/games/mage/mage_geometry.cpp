@@ -351,6 +351,7 @@ Point MageGeometry::pushADiagonalsVsBEdges(
 		.x= 0,
 		.y= 0,
 	};
+	uint16_t collisionCount = 0;
 
 	for (int lineAPointIndex = 0; lineAPointIndex < a->pointCount; lineAPointIndex++) {
 		Point lineAPointA = a->points[lineAPointIndex];
@@ -389,11 +390,15 @@ Point MageGeometry::pushADiagonalsVsBEdges(
 
 			if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
 			{
+				collisionCount++;
 				pushback.x += (1.0f - t1) * (lineAPoint.x - polyACenter.x);
 				pushback.y += (1.0f - t1) * (lineAPoint.y - polyACenter.y);
 			}
 		}
 	}
-
+	if(collisionCount > 0) {
+		pushback.x /= collisionCount;
+		pushback.y /= collisionCount;
+	}
 	return pushback;
 }

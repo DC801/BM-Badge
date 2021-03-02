@@ -886,6 +886,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	};
 	int32_t x = 0;
 	int32_t y = 0;
+	uint16_t collisionCount = 0;
 	float largestPushbackLength = 0;
 	float currentPushbackLength = 0;
 	uint16_t geometryId = 0;
@@ -1004,11 +1005,10 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 					|| pushbackForCurrentGeometry.y != 0
 				);
 				if(isMageInGeometry){
+					collisionCount++;
 					currentPushbackLength = MageGeometry::getVectorLength(pushbackForCurrentGeometry);
-					if(currentPushbackLength >= largestPushbackLength) {
-						pushback = pushbackForCurrentGeometry;
-						largestPushbackLength = currentPushbackLength;
-					}
+					pushback.x += pushbackForCurrentGeometry.x;
+					pushback.y += pushbackForCurrentGeometry.y;
 				}
 				if (isCollisionDebugOn) {
 					magePointBasedRect.draw(
@@ -1050,6 +1050,10 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 				}
 			}
 		}
+	}
+	if(collisionCount > 0) {
+		pushback.x /= collisionCount;
+		pushback.y /= collisionCount;
 	}
 	return pushback;
 }
