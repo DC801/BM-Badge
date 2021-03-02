@@ -780,6 +780,24 @@
                  "width":48,
                  "x":538.833333333333,
                  "y":959
+                }, 
+                {
+                 "gid":1158,
+                 "height":32,
+                 "id":196,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"load_map-testbig"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":923,
+                 "y":671
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1938,7 +1956,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":196,
+ "nextobjectid":197,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -2070,6 +2088,10 @@
         {
          "firstgid":1142,
          "source":"..\/entities\/entity-marta-broom.json"
+        }, 
+        {
+         "firstgid":1158,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",
