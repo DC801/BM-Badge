@@ -192,7 +192,7 @@ void GameRender()
 		if (MageGame->isCollisionDebugOn) {
 			MageGame->DrawGeometry();
 			if(MageGame->playerEntityIndex != NO_PLAYER) {
-				MageGame->getPushBackFromTilesThatCollideWithPlayerRect();
+				MageGame->getPushBackFromTilesThatCollideWithPlayer();
 			}
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;

@@ -10,6 +10,8 @@
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
 
+#define MAGE_COLLISION_SPOKE_COUNT 8
+
 /*
 The MageGameControl object handles several important tasks. It's basically the
 core of the entire MAGE() game, and contains all the important variables that
@@ -79,7 +81,6 @@ private:
 	float mageSpeed;
 	bool isMoving;
 
-	MageGeometry magePointBasedRect;
 	Point playerVelocity = {
 		.x = 0,
 		.y = 0,
@@ -217,7 +218,7 @@ public:
 
 	std::string getEntityNameStringById(int16_t entityId);
 
-	Point getPushBackFromTilesThatCollideWithPlayerRect();
+	Point getPushBackFromTilesThatCollideWithPlayer();
 
 }; //class MageGameControl
 

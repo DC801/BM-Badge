@@ -1,7 +1,6 @@
 #include "mage_geometry.h"
 #include "FrameBuffer.h"
 #include "EngineROM.h"
-#include "EnginePanic.h"
 
 extern FrameBuffer *mage_canvas;
 
@@ -122,19 +121,28 @@ uint32_t MageGeometry::size() const
 	return size;
 }
 
-bool MageGeometry::isPointInGeometry(
-	Point unFlippedPoint,
+void MageGeometry::flipSelfByFlags(
 	uint8_t flags,
 	uint16_t width,
 	uint16_t height
+) {
+	if (flags == 0) {
+		return;
+	}
+	for (uint8_t i = 0; i < pointCount; i++) {
+		points[i] = flipPointByFlags(
+			points[i],
+			flags,
+			width,
+			height
+		);
+	}
+}
+
+bool MageGeometry::isPointInGeometry(
+	Point point
 )
 {
-	Point point = flipPointByFlags(
-		unFlippedPoint,
-		flags,
-		width,
-		height
-	);
 	//first check for the case where the geometry is a point:
 	if(typeId == MageGeometryTypeId::POINT)
 	{
@@ -260,22 +268,13 @@ void MageGeometry::draw(
 	int32_t cameraY,
 	uint16_t color,
 	int32_t offset_x,
-	int32_t offset_y,
-	uint8_t flags,
-	uint16_t width,
-	uint16_t height
+	int32_t offset_y
 )
 {
 	Point pointA;
 	Point pointB;
 	if(typeId == POINT) {
 		pointA = points[0];
-		pointA = flipPointByFlags(
-			pointA,
-			flags,
-			width,
-			height
-		);
 		mage_canvas->drawPoint(
 			pointA.x + offset_x - cameraX,
 			pointA.y + offset_y - cameraY,
@@ -285,37 +284,9 @@ void MageGeometry::draw(
 	} else {
 		// POLYLINE segmentCount is pointCount - 1
 		// POLYGON segmentCount is same as pointCount
-		Point polyACenter = {
-			.x= 0,
-			.y= 0,
-		};
-		for (int lineAPointIndex = 0; lineAPointIndex < pointCount; lineAPointIndex++) {
-			pointA = flipPointByFlags(
-				points[lineAPointIndex],
-				flags,
-				width,
-				height
-			);
-			polyACenter.x += pointA.x;
-			polyACenter.y += pointA.y;
-		}
-		polyACenter.x = polyACenter.x / pointCount;
-		polyACenter.y = polyACenter.y / pointCount;
 		for (int i = 0; i < segmentCount; i++) {
 			pointA = points[i];
 			pointB = points[(i + 1) % pointCount];
-			pointA = flipPointByFlags(
-				pointA,
-				flags,
-				width,
-				height
-			);
-			pointB = flipPointByFlags(
-				pointB,
-				flags,
-				width,
-				height
-			);
 			mage_canvas->drawLine(
 				pointA.x + offset_x - cameraX,
 				pointA.y + offset_y - cameraY,
@@ -323,105 +294,166 @@ void MageGeometry::draw(
 				pointB.y + offset_y - cameraY,
 				color
 			);
-			mage_canvas->drawLine(
-				pointA.x + offset_x - cameraX,
-				pointA.y + offset_y - cameraY,
-				polyACenter.x + offset_x - cameraX,
-				polyACenter.y + offset_y - cameraY,
-				color
-			);
 		}
 	}
 }
 
-Point MageGeometry::getPushBackFromCollidingPolygon(
-	MageGeometry *collidingPolygon
+void MageGeometry::drawSpokes(
+	Point polyACenter,
+	int32_t cameraX,
+	int32_t cameraY,
+	uint16_t color,
+	int32_t offset_x,
+	int32_t offset_y
 ) {
-	Point pushback = {
-		.x= 0,
-		.y= 0,
-	};
-	Point force;
-
-	MageGeometry *currentPolygon = this;
-
-	force = pushADiagonalsVsBEdges(
-		collidingPolygon,
-		currentPolygon
-	);
-	pushback.x -= force.x;
-	pushback.y -= force.y;
-
-	force = pushADiagonalsVsBEdges(
-		currentPolygon,
-		collidingPolygon
-	);
-	pushback.x += force.x;
-	pushback.y += force.y;
-
-	return pushback;
+	Point point;
+	for (int i = 0; i < segmentCount; i++) {
+		point = points[i];
+		mage_canvas->drawLine(
+			point.x + offset_x - cameraX,
+			point.y + offset_y - cameraY,
+			polyACenter.x + offset_x - cameraX,
+			polyACenter.y + offset_y - cameraY,
+			color
+		);
+	}
 }
 
-Point MageGeometry::pushADiagonalsVsBEdges(
-	MageGeometry *a,
-	MageGeometry *b
+bool MageGeometry::pushADiagonalsVsBEdges(
+	Point *spokeCenter,
+	MageGeometry *playerSpokes,
+	float *maxSpokePushbackLengths,
+	Point *maxSpokePushbackVectors,
+	MageGeometry *tile
 ) {
-	Point pushback = {
-		.x= 0,
-		.y= 0,
-	};
-	Point polyACenter = {
-		.x= 0,
-		.y= 0,
-	};
-	uint16_t collisionCount = 0;
-
-	for (int lineAPointIndex = 0; lineAPointIndex < a->pointCount; lineAPointIndex++) {
-		Point lineAPointA = a->points[lineAPointIndex];
-		polyACenter.x += lineAPointA.x;
-		polyACenter.y += lineAPointA.y;
-	}
-	polyACenter.x = polyACenter.x / a->pointCount;
-	polyACenter.y = polyACenter.y / a->pointCount;
-
-	for (int lineAPointIndex = 0; lineAPointIndex < a->pointCount; lineAPointIndex++) {
-		Point lineAPoint = a->points[lineAPointIndex];
-
-		for (int lineBPointIndex = 0; lineBPointIndex < b->pointCount; lineBPointIndex++) {
-			Point lineBPointA = b->points[lineBPointIndex];
-			Point lineBPointB = b->points[(lineBPointIndex + 1) % b->pointCount];
-
-			// Standard "off the shelf" line segment intersection
-			float h = (
-				(lineBPointB.x - lineBPointA.x)
-				* (polyACenter.y - lineAPoint.y)
-				- (polyACenter.x - lineAPoint.x)
-				* (lineBPointB.y - lineBPointA.y)
+	bool collidedWithThisTileAtAll = false;
+	for (int tileLinePointIndex = 0; tileLinePointIndex < tile->pointCount; tileLinePointIndex++) {
+		Point tileLinePointA = tile->points[tileLinePointIndex];
+		Point tileLinePointB = tile->points[(tileLinePointIndex + 1) % tile->pointCount];
+		bool collidedWithTileLine = false;
+		for (int spokeIndex = 0; spokeIndex < playerSpokes->pointCount; spokeIndex++) {
+			Point spokePointB = playerSpokes->points[spokeIndex];
+			Point spokeIntersectionPoint = {
+				.x= 0,
+				.y= 0,
+			};
+			bool collided = getIntersectPointBetweenLineSegments(
+				*spokeCenter,
+				spokePointB,
+				tileLinePointA,
+				tileLinePointB,
+				spokeIntersectionPoint
 			);
-			float t1 = (
-				(lineBPointA.y - lineBPointB.y)
-				* (polyACenter.x - lineBPointA.x)
-				+ (lineBPointB.x - lineBPointA.x)
-				* (polyACenter.y - lineBPointA.y)
-			) / h;
-			float t2 = (
-				(polyACenter.y - lineAPoint.y)
-				* (polyACenter.x - lineBPointA.x)
-				+ (lineAPoint.x - polyACenter.x)
-				* (polyACenter.y - lineBPointA.y)
-			) / h;
-
-			if (t1 >= 0.0f && t1 < 1.0f && t2 >= 0.0f && t2 < 1.0f)
-			{
-				collisionCount++;
-				pushback.x += (1.0f - t1) * (lineAPoint.x - polyACenter.x);
-				pushback.y += (1.0f - t1) * (lineAPoint.y - polyACenter.y);
+			if (collided) {
+				collidedWithTileLine = true;
+				collidedWithThisTileAtAll = true;
+				mage_canvas->drawLine(
+					spokeCenter->x,
+					spokeCenter->y,
+					spokePointB.x,
+					spokePointB.y,
+					COLOR_RED
+				);
+				mage_canvas->drawLine(
+					spokeCenter->x,
+					spokeCenter->y,
+					spokeIntersectionPoint.x,
+					spokeIntersectionPoint.y,
+					COLOR_GREENYELLOW
+				);
+				Point diff = {
+					.x= spokeIntersectionPoint.x - spokePointB.x,
+					.y= spokeIntersectionPoint.y - spokePointB.y,
+				};
+				mage_canvas->drawLine(
+					spokeCenter->x,
+					spokeCenter->y,
+					spokeCenter->x + diff.x,
+					spokeCenter->y + diff.y,
+					COLOR_ORANGE
+				);
+				float currentIntersectLength = getVectorLength(diff);
+				maxSpokePushbackLengths[spokeIndex] = MAX(
+					currentIntersectLength,
+					maxSpokePushbackLengths[spokeIndex]
+				);
+				if(currentIntersectLength == maxSpokePushbackLengths[spokeIndex]) {
+					maxSpokePushbackVectors[spokeIndex] = diff;
+				}
 			}
 		}
+		mage_canvas->drawLine(
+			tileLinePointA.x,
+			tileLinePointA.y,
+			tileLinePointB.x,
+			tileLinePointB.y,
+			collidedWithTileLine
+			? COLOR_RED
+			: COLOR_ORANGE
+		);
 	}
-	if(collisionCount > 0) {
-		pushback.x /= collisionCount;
-		pushback.y /= collisionCount;
+	return collidedWithThisTileAtAll;
+}
+
+// Returns true if collision has occurred, and if it has,
+// sets the new value of intersectPoint.
+// Ref: https://stackoverflow.com/a/385355
+// Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+bool MageGeometry::getIntersectPointBetweenLineSegments(
+	const Point &lineAPointA,
+	const Point &lineAPointB,
+	const Point &lineBPointA,
+	const Point &lineBPointB,
+	Point &intersectPoint
+) {
+	float x1 = lineAPointA.x;
+	float x2 = lineAPointB.x;
+	float x3 = lineBPointA.x;
+	float x4 = lineBPointB.x;
+	float y1 = lineAPointA.y;
+	float y2 = lineAPointB.y;
+	float y3 = lineBPointA.y;
+	float y4 = lineBPointB.y;
+
+	float x12 = x1 - x2;
+	float x34 = x3 - x4;
+	float y12 = y1 - y2;
+	float y34 = y3 - y4;
+
+	float c = x12 * y34 - y12 * x34;
+
+	if (fabs(c) > 0.01) {
+		// Intersection
+		float a = x1 * y2 - y1 * x2;
+		float b = x3 * y4 - y3 * x4;
+
+		float x = (a * x34 - b * x12) / c;
+		float y = (a * y34 - b * y12) / c;
+
+		// Determine if the intersection is inside the bounds of lineA AND lineB
+		float lineAXMin = MIN(x1, x2);
+		float lineAXMax = MAX(x1, x2);
+		float lineAYMin = MIN(y1, y2);
+		float lineAYMax = MAX(y1, y2);
+		float lineBXMin = MIN(x3, x4);
+		float lineBXMax = MAX(x3, x4);
+		float lineBYMin = MIN(y3, y4);
+		float lineBYMax = MAX(y3, y4);
+		if (
+			x >= lineAXMin &&
+			x <= lineAXMax &&
+			y >= lineAYMin &&
+			y <= lineAYMax &&
+			x >= lineBXMin &&
+			x <= lineBXMax &&
+			y >= lineBYMin &&
+			y <= lineBYMax
+		) {
+			intersectPoint.x = x;
+			intersectPoint.y = y;
+			return true;
+		}
 	}
-	return pushback;
+	// No intersection
+	return false;
 }
