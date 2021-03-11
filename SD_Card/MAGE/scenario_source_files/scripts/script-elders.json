@@ -54,7 +54,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ball",
+			"save_flag": "sportskid",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-sportskid"
 		},

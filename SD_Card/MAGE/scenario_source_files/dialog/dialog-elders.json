@@ -71,7 +71,6 @@
 			"portrait": "bert",
 			"name": "%Bert%",
 			"messages": [
-				"Bob Moss.",
 				"Cousin of Stone Cold Bob Austin.",
 				"He is lost. Or is he hiding?"
 			]
@@ -327,7 +326,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION SHEPHERD."
+				"I guess the shepherd wants me to put the\nsheep back inside their pen."
 			]
 		},
 		{
@@ -335,7 +334,26 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER SHEEP!"
+				"That seems simple enough. All you must do\nis change their X and Y position until\nthey are inside the sheep pen.",
+				"The hard part will be learning their\nnames."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Names?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"All sheep have names, but they don't share\nthem except in the direst of emergencies.",
+				"But their names are still inherent in the\ndata of our world. Their names are not\nhidden from you.",
+				"You can find their names -- and their\ndata -- if you look long enough."
 			]
 		}
 	],
@@ -345,7 +363,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION ROBOT."
+				"Bender wants his ass back, I guess."
 			]
 		},
 		{
@@ -353,7 +371,9 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER ASS!"
+				"Our every state of being can be defined by\ndata.",
+				"In his case, he once existed with a whole\nass, and therefore, there exists an entity\ntype where his ass is whole.",
+				"Though unless you are looking directly at\nhis ass, it might be difficult to see if\nyou have succeeded."
 			]
 		}
 	],
@@ -363,7 +383,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION BAKER."
+				"How do I get into the Bob's Club?"
 			]
 		},
 		{
@@ -371,7 +391,9 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER BOBS!"
+				"The bouncer, Stone Cold Bob Austin, is\nvery strict. If your name is not 'Bob'\nexactly, he will not budge.",
+				"And just so you know, there are multiple\nvalues which will APPEAR to be a blank\nspace, but will not satisfy him.",
+				"Fortunately, the correct value will\nterminate the string his logic is\nevaluating, so only the first byte after\n'Bob' will matter."
 			]
 		}
 	],
@@ -381,7 +403,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"I guess I'm looking for another Bob, maybe\nsome relation to Stone Cold Bob Austin?"
+				"I heard there might be another Stone Cold\nBob Austin. Like his cousin or something?"
 			]
 		},
 		{
@@ -389,7 +411,8 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER MOSS!"
+				"Oh, you mean Bob Moss. Yes, he disappears\nonce in a while.",
+				"He's never far. But if you can't find him\nin town, you might have to look in places\none cannot normally walk."
 			]
 		}
 	],
@@ -399,7 +422,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION OLD WOMAN."
+				"Beatrice wants her husband to become a man\nagain."
 			]
 		},
 		{
@@ -407,7 +430,8 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER OLD MAN!"
+				"Ah, yes, a simple entity type change.",
+				"You'll know you have the right entity type\nwhen you get to an old man, balding,\nhunched over, and in overalls."
 			]
 		}
 	],
@@ -417,7 +441,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION GREENHOUSE."
+				"Trekkie needs help with the Ether Nettle."
 			]
 		},
 		{
@@ -425,7 +449,10 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER TREKKIE!"
+				"That one might be tricky.",
+				"If I understand plant genetics correctly,\nthen hypothetically.... Ether Nettle\ncolors are simply variations of a single\nentity type.",
+				"You won't be able to change the flower\ncolor by changing the entity type, I'm\nafraid.",
+				"All those flowers should have almost\nidentical values, I imagine. Try to change\na value they don't have in common."
 			]
 		}
 	],
@@ -435,7 +462,8 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION SPORTS."
+				"This kid....",
+				"He's just running around in circles,\nsaying he wants to grow up to be some kind\nof sports ball."
 			]
 		},
 		{
@@ -443,7 +471,65 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER KID!"
+				"If that's what he wants, that's what he\nwants."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Yeah, but... that's not really fixing\nsomething that's broken, though, is it?",
+				"He's a living person, but if I change him\ninto an inanimate object....",
+				"Does he cease to be alive? Or a human\nbeing? What if he can't breathe anymore?",
+				"What happens to his mind? His memories?\nIf the ball doesn't have a brain, does it\nall go away if I change what he is?",
+				"Even if he WANTS to become a ball....",
+				"I mean, do I have that right? Does this\nstray too much into me playing God?",
+				"Don't I have a moral responsibility to\navoid causing harm to those around me?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"If you turn him into a ball, will that\nharm him?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"I don't know. Will it?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Everything you see around you is pixels\nand data. All ones and zeroes.",
+				"Are any of us really alive? If you change\nsomething, does that change what\nfundamentally lies underneath, or only\nhow it appears?",
+				"If life is a game, and you do something\nimmoral you can immediately revert if you\nwish, with none the wiser, is it truly an\nimmoral art?",
+				"Wouldn't that simply be considered part of\nthe game you are playing? Why would such\nan act ill speak of your character?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wouldn't it?",
+				"The way we behave when no one is\nlooking... doesn't that say more of our\ncharacter than anything else?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"These are questions for philosophers and\ngamers. All we mortals can do is fulfill a\nchild's wish to become sports\nequipment."
 			]
 		}
 	],
@@ -453,7 +539,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION OLD WOMAN."
+				"Now Beatrice wants her husband to turn\nback into a sheep."
 			]
 		},
 		{
@@ -461,7 +547,8 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER SHEEP!"
+				"She must have gotten sick of his yammering\nagain.",
+				"Ah, well. You know what to do by now."
 			]
 		}
 	],
@@ -471,7 +558,8 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"TEMPORARY QUESTION GOOSE."
+				"I think the goose wants me to move the\nrake.",
+				"Perhaps... into the lake?"
 			]
 		},
 		{
@@ -479,7 +567,8 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"TEMPORARY ANSWER RAKE!"
+				"Likely. You'll need to change the\nrake's X and Y coordinates.",
+				"But just so you know, each coordinate\nactually spans two bytes, and if the\ndistance is great enough, you'll have to\nchange both."
 			]
 		}
 	],
