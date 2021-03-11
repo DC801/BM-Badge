@@ -76,6 +76,11 @@ class MageGeometry{
 			Point v
 		);
 
+		static float getDotProduct(
+			Point a,
+			Point b
+		);
+
 		void draw(
 			int32_t cameraX,
 			int32_t cameraY,

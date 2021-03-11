@@ -263,6 +263,16 @@ float MageGeometry::getVectorLength(
 	return sqrt((v.x * v.x) + (v.y * v.y));
 };
 
+float MageGeometry::getDotProduct(
+	Point a,
+	Point b
+) {
+	float result = 0;
+	result += (float)a.x * (float)b.x;
+	result += (float)a.y * (float)b.y;
+	return result;
+};
+
 void MageGeometry::draw(
 	int32_t cameraX,
 	int32_t cameraY,
