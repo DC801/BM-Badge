@@ -887,6 +887,12 @@
 			"dialog": "dialog-bobmoss-start-s"
 		}
 	],
+	"show_dialog-fridge": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-fridge"
+		}
+	],
 	"on_tick-bobsclub": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -937,6 +943,12 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobwall"
+		}
+	],
+	"show_dialog-balloonbox": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-balloonbox"
 		}
 	]
 }

@@ -215,17 +215,6 @@
 			]
 		}
 	],
-	"dialog-smith": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
-			"messages": [
-				"I came here on a blacksmithing\nscholarship, but there's not much\nblacksmithing to do at the moment.",
-				"I think I'll stick around anyway.\nSee what happens."
-			]
-		}
-	],
 	"dialog-sheep": [
 		{
 			"alignment": "BOTTOM_LEFT",
