@@ -713,7 +713,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "ball",
+			"save_flag": "sportskid",
 			"bool_value": false
 		},
 		{

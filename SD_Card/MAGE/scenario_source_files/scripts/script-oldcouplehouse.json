@@ -43,6 +43,11 @@
 			"bool_value": true
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-happy",
+			"bool_value": true
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-debug-sequel"
 		}

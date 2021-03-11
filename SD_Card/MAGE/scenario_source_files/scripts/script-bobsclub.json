@@ -341,6 +341,11 @@
 			"target_entity": "%PLAYER%"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
+		},
+		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Bob Austin",
 			"geometry": "bobzone",
