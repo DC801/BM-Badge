@@ -10,7 +10,7 @@
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
 
-#define MAGE_COLLISION_SPOKE_COUNT 8
+#define MAGE_COLLISION_SPOKE_COUNT 6
 
 /*
 The MageGameControl object handles several important tasks. It's basically the
