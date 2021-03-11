@@ -31,5 +31,15 @@
 				"...Nah, just kidding. It's saag paneer."
 			]
 		}
+	],
+	"dialog-smith-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "%Smith%",
+			"messages": [
+				"Real talk, don't eat memory leek soup.\nIt'll mess with your head."
+			]
+		}
 	]
 }

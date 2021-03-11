@@ -77,8 +77,30 @@
 			"target_entity": "%PLAYER%"
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "smith",
+			"expected_bool": true,
+			"success_script": "show_dialog-smith-s"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-smith"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "smith",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Smith",
+			"direction": "east"
+		}
+	],
+	"show_dialog-smith-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-s"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
