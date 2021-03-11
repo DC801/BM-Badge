@@ -561,8 +561,20 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 					playerEntity->direction
 				);
 				Point pushback = getPushBackFromTilesThatCollideWithPlayer();
-				playerEntity->x += playerVelocity.x + pushback.x;
-				playerEntity->y += playerVelocity.y + pushback.y;
+				Point velocityAfterPushback = {
+					.x = playerVelocity.x + pushback.x,
+					.y = playerVelocity.y + pushback.y,
+				};
+				float dotProductOfVelocityAndPushback = MageGeometry::getDotProduct(
+					playerVelocity,
+					velocityAfterPushback
+				);
+				// false would mean that the pushback is greater than the input velocity,
+				// which would glitch the player into geometry really bad, so... don't.
+				if (dotProductOfVelocityAndPushback > 0) {
+					playerEntity->x += velocityAfterPushback.x;
+					playerEntity->y += velocityAfterPushback.y;
+				}
 			}
 			if(EngineInput_Activated.rjoy_right ) {
 				handleEntityInteract();
