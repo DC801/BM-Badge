@@ -107,8 +107,6 @@ MageGameControl::MageGameControl()
 	isCollisionDebugOn = false;
 	playerHasControl = true;
 
-	magePointBasedRect = MageGeometry(POLYGON, 4);
-
 	//load the map
 	PopulateMapData(currentMapId);
 }
@@ -142,7 +140,6 @@ uint32_t MageGameControl::Size() const
 		sizeof(cameraFollowEntityId) +
 		sizeof(cameraShakePhase) +
 		sizeof(cameraPosition) +
-		magePointBasedRect.size() +
 		sizeof(playerVelocity) +
 		sizeof(cameraShaking) +
 		sizeof(adjustedCameraPosition) +
@@ -563,7 +560,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 					direction,
 					playerEntity->direction
 				);
-				Point pushback = getPushBackFromTilesThatCollideWithPlayerRect();
+				Point pushback = getPushBackFromTilesThatCollideWithPlayer();
 				playerEntity->x += playerVelocity.x + pushback.x;
 				playerEntity->y += playerVelocity.y + pushback.y;
 			}
@@ -828,6 +825,11 @@ void MageGameControl::DrawMap(uint8_t layer)
 			if (geometryId) {
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
+				geometry.flipSelfByFlags(
+					currentTile.flags,
+					tileset.TileWidth(),
+					tileset.TileHeight()
+				);
 				bool isMageInGeometry = false;
 				if (
 					playerEntityIndex != NO_PLAYER
@@ -841,10 +843,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 						.y= playerPoint.y - tile_y,
 					};
 					isMageInGeometry = geometry.isPointInGeometry(
-						offsetPoint,
-						currentTile.flags,
-						tileset.TileWidth(),
-						tileset.TileHeight()
+						offsetPoint
 					);
 				}
 				geometry.draw(
@@ -854,18 +853,18 @@ void MageGameControl::DrawMap(uint8_t layer)
 						? COLOR_RED
 						: COLOR_GREEN,
 					tile_x,
-					tile_y,
-					currentTile.flags,
-					tileset.TileWidth(),
-					tileset.TileHeight()
+					tile_y
 				);
 			}
 		}
 	}
 }
 
-Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
+Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 {
+	MageGeometry mageCollisionSpokes = MageGeometry(POLYGON, MAGE_COLLISION_SPOKE_COUNT);
+	float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT];
+	Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT];
 	MageEntityRenderableData *playerRenderableData = getValidEntityRenderableData(
 		playerEntityIndex
 	);
@@ -873,27 +872,34 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	uint32_t layerAddress = 0;
 	uint32_t address = 0;
 	Rect playerRect = {
-		.x= playerRenderableData->hitBox.x + playerVelocity.x,
-		.y= playerRenderableData->hitBox.y + playerVelocity.y,
+		.x= playerRenderableData->hitBox.x,
+		.y= playerRenderableData->hitBox.y,
 		.w= playerRenderableData->hitBox.w,
 		.h= playerRenderableData->hitBox.h,
 	};
-	Rect tileRect = {
+	int16_t abs_x = abs(playerVelocity.x);
+	int16_t abs_y = abs(playerVelocity.y);
+	if (abs_x) {
+		playerRect.w += abs_x;
+		if(playerVelocity.x < 0) {
+			playerRect.x += playerVelocity.x;
+		}
+	}
+	if (abs_y) {
+		playerRect.h += abs_y;
+		if(playerVelocity.y < 0) {
+			playerRect.y += playerVelocity.y;
+		}
+	}
+	Point tileTopLeftPoint = {
 		.x= 0,
 		.y= 0,
-		.w= 0,
-		.h= 0
 	};
 	int32_t x = 0;
 	int32_t y = 0;
-	uint16_t collisionCount = 0;
 	uint16_t geometryId = 0;
 	MageGeometry geometry;
 	Point pushback = {
-		.x= 0,
-		.y= 0,
-	};
-	Point pushbackForCurrentGeometry = {
 		.x= 0,
 		.y= 0,
 	};
@@ -908,27 +914,61 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 	int32_t x1 = x0 + playerRect.w;
 	int32_t y0 = playerRect.y;
 	int32_t y1 = y0 + playerRect.h;
-	magePointBasedRect.points[0].x = x0;
-	magePointBasedRect.points[0].y = y0;
-	magePointBasedRect.points[1].x = x1;
-	magePointBasedRect.points[1].y = y0;
-	magePointBasedRect.points[2].x = x1;
-	magePointBasedRect.points[2].y = y1;
-	magePointBasedRect.points[3].x = x0;
-	magePointBasedRect.points[3].y = y1;
-	magePointBasedRect.draw(
-		adjustedCameraPosition.x,
-		adjustedCameraPosition.y,
-		COLOR_PURPLE
+	uint8_t playerSpokeRadius = playerRenderableData->hitBox.w / 2;
+	float angleOffset = (
+		atan2(playerVelocity.y, playerVelocity.x)
+		- (PI / 2)
+		+ ((PI / MAGE_COLLISION_SPOKE_COUNT) / 2)
 	);
+	for(uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++) {
+		maxSpokePushbackLengths[i] = -INFINITY;
+		maxSpokePushbackVectors[i].x = 0;
+		maxSpokePushbackVectors[i].y = 0;
+		Point *spokePoint = &mageCollisionSpokes.points[i];
+		float angle = (
+			(((float) i)* (PI / MAGE_COLLISION_SPOKE_COUNT))
+			+ angleOffset
+		);
+		spokePoint->x = (
+			(
+				cos(angle)
+				* playerSpokeRadius
+			)
+			+ playerVelocity.x
+			+ playerPoint.x
+		);
+		spokePoint->y = (
+			(
+				sin(angle)
+				* playerSpokeRadius
+			)
+			+ playerVelocity.y
+			+ playerPoint.y
+		);
+	}
+	if(isCollisionDebugOn) {
+		mage_canvas->drawRect(
+			playerRect.x - cameraPosition.x,
+			playerRect.y - cameraPosition.y,
+			playerRect.w,
+			playerRect.h,
+			COLOR_BLUE
+		);
+		mageCollisionSpokes.drawSpokes(
+			playerPoint,
+			adjustedCameraPosition.x,
+			adjustedCameraPosition.y,
+			COLOR_PURPLE
+		);
+	}
 	uint8_t layerCount = map.LayerCount();
 	for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
 		layerAddress = map.LayerOffset(layerIndex);
 		for (uint32_t i = 0; i < tilesPerLayer; i++) {
-			tileRect.x = (int32_t)(map.TileWidth() * (i % map.Cols()));
-			tileRect.y = (int32_t)(map.TileHeight() * (i / map.Cols()));
-			x = tileRect.x - x0;
-			y = tileRect.y - y0;
+			tileTopLeftPoint.x = (int32_t)(map.TileWidth() * (i % map.Cols()));
+			tileTopLeftPoint.y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+			x = tileTopLeftPoint.x - x0;
+			y = tileTopLeftPoint.y - y0;
 			if (
 				(x < -map.TileWidth() ||
 				(x > playerRect.w) ||
@@ -943,7 +983,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 				address,
 				sizeof(currentTile),
 				(uint8_t *)&currentTile,
-				"getPushBackFromTilesThatCollideWithPlayerRect Failed to read property 'currentTile'"
+				"getPushBackFromTilesThatCollideWithPlayer Failed to read property 'currentTile'"
 			);
 
 			currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
@@ -963,94 +1003,83 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayerRect()
 			}
 			geometryId = tileset.globalGeometryIds[currentTile.tileId];
 			if (geometryId) {
-				magePointBasedRect.points[0].x = x0 - tileRect.x;
-				magePointBasedRect.points[0].y = y0 - tileRect.y;
-				magePointBasedRect.points[1].x = x1 - tileRect.x;
-				magePointBasedRect.points[1].y = y0 - tileRect.y;
-				magePointBasedRect.points[2].x = x1 - tileRect.x;
-				magePointBasedRect.points[2].y = y1 - tileRect.y;
-				magePointBasedRect.points[3].x = x0 - tileRect.x;
-				magePointBasedRect.points[3].y = y1 - tileRect.y;
-				if(currentTile.flags != 0) {
-					for(uint8_t pointIndex = 0; pointIndex < 4; pointIndex++) {
-						magePointBasedRect.points[pointIndex] = magePointBasedRect.flipPointByFlags(
-							magePointBasedRect.points[pointIndex],
-							currentTile.flags,
-							map.TileWidth(),
-							map.TileHeight()
-						);
-					}
+				for(uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++) {
+					float angle = (
+						(((float) i)* (PI / MAGE_COLLISION_SPOKE_COUNT))
+						+ angleOffset
+					);
+					Point *spokePoint = &mageCollisionSpokes.points[i];
+					spokePoint->x = (
+						(
+							cos(angle)
+							* playerSpokeRadius
+						)
+						+ playerVelocity.x
+						+ playerPoint.x
+						- tileTopLeftPoint.x
+					);
+					spokePoint->y = (
+						(
+							sin(angle)
+							* playerSpokeRadius
+						)
+						+ playerVelocity.y
+						+ playerPoint.y
+						- tileTopLeftPoint.y
+					);
 				}
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
-				bool isMageInGeometry = false;
-				Point offsetPoint = {
-					.x= playerPoint.x - tileRect.x,
-					.y= playerPoint.y - tileRect.y,
-				};
-				pushbackForCurrentGeometry = geometry.getPushBackFromCollidingPolygon(
-					&magePointBasedRect
+				geometry.flipSelfByFlags(
+					currentTile.flags,
+					tileset.TileWidth(),
+					tileset.TileHeight()
 				);
 
-				if(currentTile.flags != 0) {
-					pushbackForCurrentGeometry = magePointBasedRect.flipVectorByFlags(
-						pushbackForCurrentGeometry,
-						currentTile.flags
-					);
-				}
-				isMageInGeometry = (
-					pushbackForCurrentGeometry.x != 0
-					|| pushbackForCurrentGeometry.y != 0
+				Point offsetPoint = {
+					.x= playerPoint.x - tileTopLeftPoint.x,
+					.y= playerPoint.y - tileTopLeftPoint.y,
+				};
+
+				bool isMageInGeometry = MageGeometry::pushADiagonalsVsBEdges(
+					&offsetPoint,
+					&mageCollisionSpokes,
+					maxSpokePushbackLengths,
+					maxSpokePushbackVectors,
+					&geometry
 				);
-				if(isMageInGeometry){
-					collisionCount++;
-					pushback.x += pushbackForCurrentGeometry.x;
-					pushback.y += pushbackForCurrentGeometry.y;
-				}
 				if (isCollisionDebugOn) {
-					magePointBasedRect.draw(
-						0,
-						0,
-						isMageInGeometry
-						? COLOR_WHITE
-						: COLOR_ORANGE,
-						0,
-						0,
-						0,
-						tileset.TileWidth(),
-						tileset.TileHeight()
-					);
-					geometry.draw(
-						0,
-						0,
-						isMageInGeometry
-						? COLOR_RED
-						: COLOR_YELLOW,
-						0,
-						0,
-						0,
-						tileset.TileWidth(),
-						tileset.TileHeight()
-					);
 					geometry.draw(
 						adjustedCameraPosition.x,
 						adjustedCameraPosition.y,
 						isMageInGeometry
 							? COLOR_RED
 							: COLOR_YELLOW,
-						tileRect.x,
-						tileRect.y,
-						currentTile.flags,
-						tileset.TileWidth(),
-						tileset.TileHeight()
+						tileTopLeftPoint.x,
+						tileTopLeftPoint.y
 					);
 				}
 			}
 		}
 	}
+	uint8_t collisionCount = 0;
+	for(uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++) {
+		if (maxSpokePushbackLengths[i] != -INFINITY) {
+			collisionCount++;
+			pushback.x += maxSpokePushbackVectors[i].x;
+			pushback.y += maxSpokePushbackVectors[i].y;
+		};
+	}
 	if(collisionCount > 0) {
 		pushback.x /= collisionCount;
 		pushback.y /= collisionCount;
+		mage_canvas->drawLine(
+			playerPoint.x - adjustedCameraPosition.x,
+			playerPoint.y - adjustedCameraPosition.y,
+			playerPoint.x + pushback.x - adjustedCameraPosition.x,
+			playerPoint.y + pushback.y - adjustedCameraPosition.y,
+			COLOR_RED
+		);
 	}
 	return pushback;
 }

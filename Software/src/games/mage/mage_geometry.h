@@ -47,12 +47,15 @@ class MageGeometry{
 		//returns the size in RAM of a MageGeometry object.
 		uint32_t size() const;
 
+		void flipSelfByFlags(
+			uint8_t flags,
+			uint16_t width,
+			uint16_t height
+		);
+
 		//this checks to see if a given point is inside the boundaries of a given geometry:
 		bool isPointInGeometry(
-			Point point,
-			uint8_t flags = 0,
-			uint16_t width = 0,
-			uint16_t height = 0
+			Point point
 		);
 
 		static bool doRectsOverlap(Rect a, Rect b);
@@ -78,20 +81,34 @@ class MageGeometry{
 			int32_t cameraY,
 			uint16_t color,
 			int32_t offset_x = 0,
-			int32_t offset_y = 0,
-			uint8_t flags = 0,
-			uint16_t width = 0,
-			uint16_t height = 0
+			int32_t offset_y = 0
 		);
 
-		Point getPushBackFromCollidingPolygon(
-			MageGeometry *collidingPolygon
+		void drawSpokes(
+			Point polyACenter,
+			int32_t cameraX,
+			int32_t cameraY,
+			uint16_t color,
+			int32_t offset_x = 0,
+			int32_t offset_y = 0
 		);
 
-		static Point pushADiagonalsVsBEdges(
-			MageGeometry *a,
-			MageGeometry *b
+		static bool pushADiagonalsVsBEdges(
+			Point *spokeCenter,
+			MageGeometry *playerSpokes,
+			float *maxSpokePushbackLengths,
+			Point *maxSpokePushbackVectors,
+			MageGeometry *tile
 		);
+
+		static bool getIntersectPointBetweenLineSegments(
+			const Point &lineAPointA,
+			const Point &lineAPointB,
+			const Point &lineBPointA,
+			const Point &lineBPointB,
+			Point &intersectPoint
+		);
+
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H
