@@ -258,6 +258,14 @@
 				"Yeah. This time, for real.",
 				"I mean, every year they SAY its canceled,\nbut this time it's actually genuinely\ncanceled."
 			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
+			"messages": [
+				"Wait, canceled?!"
+			]
 		}
 	],
 	"dialog-bobsclub3": [
@@ -266,7 +274,7 @@
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
-				"Wait, canceled?! But what about all the\nladies?!"
+				"But what about all the ladies?!"
 			]
 		},
 		{
@@ -464,7 +472,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"We've been through all this before,\nyou know."
+				"We've been through all this before, you\nknow."
 			]
 		},
 		{
@@ -472,7 +480,7 @@
 			"portrait": "bob",
 			"name": "%Bob Austin%",
 			"messages": [
-				"Doesn't matter. It's just the rules.\nBobs only."
+				"Doesn't matter. It's just the rules. Bobs\nonly."
 			]
 		}
 	],
@@ -594,7 +602,7 @@
 			"name": "%Bob Moss%",
 			"messages": [
 				"Oh!",
-				"I didn't realize how late it was getting.\nI think I'm a little late for work.",
+				"I didn't realize how late it was getting.\nI think I might be late for work.",
 				"I'd better head out. Hope to see you\nagain."
 			]
 		}

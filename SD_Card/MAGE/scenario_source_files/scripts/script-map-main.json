@@ -807,6 +807,11 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "smith",
+			"bool_value": false
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "reset-hint-flags"
 		},
