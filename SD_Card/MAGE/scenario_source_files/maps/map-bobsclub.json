@@ -190,6 +190,42 @@
                  "width":32,
                  "x":159.5,
                  "y":256.5
+                }, 
+                {
+                 "gid":281,
+                 "height":32,
+                 "id":18,
+                 "name":"Fridge",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-fridge"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":576,
+                 "y":289
+                }, 
+                {
+                 "gid":281,
+                 "height":32,
+                 "id":19,
+                 "name":"Balloon Box",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-balloonbox"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":383,
+                 "y":349
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -210,7 +246,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":18,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "properties":[
         {

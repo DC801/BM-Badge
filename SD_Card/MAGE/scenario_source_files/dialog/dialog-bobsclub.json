@@ -258,7 +258,9 @@
 				"Yeah. This time, for real.",
 				"I mean, every year they SAY its canceled,\nbut this time it's actually genuinely\ncanceled."
 			]
-		},
+		}
+	],
+	"dialog-bobsclub3": [
 		{
 			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
@@ -266,9 +268,7 @@
 			"messages": [
 				"Wait, canceled?! But what about all the\nladies?!"
 			]
-		}
-	],
-	"dialog-bobsclub3": [
+		},
 		{
 			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
@@ -435,7 +435,18 @@
 			]
 		}
 	],
-	"dialog-bobsclub-wall": [
+	"dialog-balloonbox": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Just a box of pre-inflated balloons.",
+				"How many balloos does a party need,\nanyway?"
+			]
+		}
+	],
+	"dialog-bobsclub-bal": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
@@ -594,7 +605,18 @@
 			"portrait": "bobmoss",
 			"name": "%Bob Moss%",
 			"messages": [
-				"Sorry, I can't serve anyone until the\nparty starts."
+				"Sorry, I can't serve anyone until the\nparty starts.",
+				"Help yourself to a Cactus Cooler, though.\nPlenty in the fridge."
+			]
+		}
+	],
+	"dialog-fridge": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(Wow. There's literally nothing but cans\nof Cactus Cooler in here.)"
 			]
 		}
 	],

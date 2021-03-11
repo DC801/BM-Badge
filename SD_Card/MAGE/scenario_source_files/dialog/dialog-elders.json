@@ -138,7 +138,7 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"Did you have a question,\n%PLAYER%?"
+				"Did you have a question?"
 			]
 		}
 	],
@@ -521,7 +521,7 @@
 			"name": "%PLAYER%",
 			"messages": [
 				"Wouldn't it?",
-				"The way we behave when no one is\nlooking... doesn't that say more of our\ncharacter than anything else?"
+				"The way we behave when no one is\nlooking... doesn't that say more about our\ncharacter than anything else?"
 			]
 		},
 		{
@@ -529,7 +529,7 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"These are questions for philosophers and\ngamers. All we mortals can do is fulfill a\nchild's wish to become sports\nequipment."
+				"These are questions for philosophers and\ngamers. All we mortals can do is fulfill a\nchild's wish to become sports equipment."
 			]
 		}
 	],
@@ -567,7 +567,7 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"Likely. You'll need to change the\nrake's X and Y coordinates.",
+				"Likely. You'll need to change the\nrake's Y coordinates.",
 				"But just so you know, each coordinate\nactually spans two bytes, and if the\ndistance is great enough, you'll have to\nchange both."
 			]
 		}
