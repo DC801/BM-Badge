@@ -914,7 +914,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 	int32_t x1 = x0 + playerRect.w;
 	int32_t y0 = playerRect.y;
 	int32_t y1 = y0 + playerRect.h;
-	uint8_t playerSpokeRadius = playerRenderableData->hitBox.w / 2;
+	float playerSpokeRadius = playerRenderableData->hitBox.w / 1.5;
 	float angleOffset = (
 		atan2(playerVelocity.y, playerVelocity.x)
 		- (PI / 2)
