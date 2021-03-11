@@ -579,8 +579,9 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			if(EngineInput_Activated.rjoy_right ) {
 				handleEntityInteract();
 			}
-			if(EngineInput_Buttons.rjoy_up );
-				//no task assigned to rjoy_up in game mode
+			if(EngineInput_Buttons.rjoy_up ){
+				handleEntityInteract(true);
+			}
 			if(EngineInput_Buttons.ljoy_center );
 				//no task assigned to ljoy_center in game mode
 			if(EngineInput_Buttons.rjoy_center );
@@ -686,7 +687,9 @@ void MageGameControl::applyCameraEffects(uint32_t deltaTime) {
 	}
 }
 
-void MageGameControl::handleEntityInteract()
+void MageGameControl::handleEntityInteract(
+	bool hack
+)
 {
 	//interacting is impossible if there is no player entity, so return.
 	if(playerEntityIndex == NO_PLAYER)
@@ -738,7 +741,9 @@ void MageGameControl::handleEntityInteract()
 				playerRenderableData->isInteracting = true;
 				targetRenderableData->isInteracting = true;
 				isMoving = false;
-				if (targetEntity->onInteractScriptId) {
+				if (hack) {
+					MageHex->openToEntityByIndex(i);
+				} else if (targetEntity->onInteractScriptId) {
 					MageScript->initScriptState(
 						MageScript->getEntityInteractResumeState(i),
 						targetEntity->onInteractScriptId,
