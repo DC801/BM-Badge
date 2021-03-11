@@ -151,7 +151,9 @@ public:
 
 	//this will check in the direction the player entity is facing and start
 	//an on_interact script for an entity if any qualify.
-	void handleEntityInteract();
+	void handleEntityInteract(
+		bool hack = false
+	);
 
 	//this will render the map onto the screen.
 	void DrawMap(uint8_t layer);
