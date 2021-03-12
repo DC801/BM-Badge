@@ -1,7 +1,7 @@
 var IS_LITTLE_ENDIAN = true;
 var IS_SCREEN_LITTLE_ENDIAN = false;
 var IS_GLITCHED_FLAG = 0b10000000;
-var MAX_ENTITIES_PER_MAP = 32;
+var MAX_ENTITIES_PER_MAP = 64;
 
 var getFileJson = function (file) {
 	return file.text()
