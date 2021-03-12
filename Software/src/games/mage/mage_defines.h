@@ -26,7 +26,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
 //this is the most unique entities that can be in any map.
-#define MAX_ENTITIES_PER_MAP 32
+#define MAX_ENTITIES_PER_MAP 64
 
 //this is the map that will load at the start of the game:
 #define DEFAULT_MAP 0
