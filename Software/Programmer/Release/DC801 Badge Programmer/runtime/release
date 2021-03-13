@@ -1,0 +1,2 @@
+JAVA_VERSION="15.0.2"
+MODULES="java.base java.compiler java.datatransfer java.xml java.prefs java.desktop java.logging javafx.base jdk.unsupported javafx.graphics javafx.controls javafx.media programmer.merged.module com.google.common com.google.guice java.scripting javafx.fxml programmer"

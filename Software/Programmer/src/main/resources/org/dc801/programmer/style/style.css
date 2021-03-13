@@ -1,0 +1,17 @@
+#buttonProgram {
+	-fx-background-color: white, #43e6f5;
+	-fx-background-radius: 10;
+	-fx-background-insets: 2,5;
+}
+
+#buttonProgram:hover {
+	-fx-background-color: white, #10bdce;
+	-fx-background-radius: 10;
+	-fx-background-insets: 2,5;
+}
+
+#buttonProgram:pressed {
+	-fx-background-color: white, lightgreen;
+	-fx-background-radius: 10;
+	-fx-background-insets: 2,5;
+}

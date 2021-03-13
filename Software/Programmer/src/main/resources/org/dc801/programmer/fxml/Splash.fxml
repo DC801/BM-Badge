@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane fx:id="splashpane" xmlns="http://javafx.com/javafx/8.0.171" style="-fx-border-radius: 20 20 20 20; -fx-background-radius: 20 20 20 20;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.dc801.programmer.controllers.SplashController">
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="400.0" pickOnBounds="true">
+         <image>
+            <Image url="@../style/splash.png" />
+         </image>
+      </ImageView>
+   </children>
+</Pane>
