@@ -11,6 +11,7 @@ uint32_t MageHexEditor::size() const
 		sizeof(currentOp) +
 		sizeof(hexEditorState) +
 		sizeof(anyHexMovement) +
+		sizeof(hexTickDelay) +
 		sizeof(dialogState) +
 		sizeof(bytesPerPage) +
 		sizeof(hexRows) +
@@ -81,6 +82,10 @@ void MageHexEditor::setHexCursorLocation(uint16_t address)
 	hexCursorLocation = address;
 }
 
+void MageHexEditor::setPageToCursorLocation() {
+	currentMemPage = getCurrentMemPage();
+}
+
 void MageHexEditor::updateHexLights()
 {
 	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hexCursorLocation);
@@ -92,6 +97,10 @@ void MageHexEditor::updateHexLights()
 	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
+	ledSet(LED_MEM0, (hexCursorLocation == memAddresses[0]) ? 0xFF : 0x00);
+	ledSet(LED_MEM1, (hexCursorLocation == memAddresses[1]) ? 0xFF : 0x00);
+	ledSet(LED_MEM2, (hexCursorLocation == memAddresses[2]) ? 0xFF : 0x00);
+	ledSet(LED_MEM3, (hexCursorLocation == memAddresses[3]) ? 0xFF : 0x00);
 }
 
 uint16_t MageHexEditor::getCurrentMemPage()
@@ -126,8 +135,6 @@ void MageHexEditor::updateHexStateVariables()
 
 void MageHexEditor::applyHexModeInputs()
 {
-	static uint8_t hexTickDelay = 0;
-	
 	//check to see if player input is allowed:
 	if(
 		MageDialog->isOpen ||
@@ -221,28 +228,28 @@ void MageHexEditor::applyHexModeInputs()
 				//move the cursor left:
 				hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
 				//change the current page to wherever the cursor is:
-				currentMemPage = getCurrentMemPage();
+				setPageToCursorLocation();
 			}
 			if (EngineInput_Buttons.ljoy_right || EngineInput_Buttons.rjoy_right)
 			{
 				//move the cursor right:
 				hexCursorLocation = (hexCursorLocation + 1) % memTotal;
 				//change the current page to wherever the cursor is:
-				currentMemPage = getCurrentMemPage();
+				setPageToCursorLocation();
 			}
 			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
 			{
 				//move the cursor up:
 				hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
 				//change the current page to wherever the cursor is:
-				currentMemPage = getCurrentMemPage();
+				setPageToCursorLocation();
 			}
 			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
 			{
 				//move the cursor down:
 				hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
 				//change the current page to wherever the cursor is:
-				currentMemPage = getCurrentMemPage();
+				setPageToCursorLocation();
 			}
 		}
 		if (anyHexMovement) {
@@ -363,4 +370,11 @@ void MageHexEditor::runHex(uint8_t value)
 		default: break;
 	}
 	*currentByte = changedValue;
+}
+
+void MageHexEditor::openToEntityByIndex(uint8_t entityIndex) {
+	setHexCursorLocation(entityIndex * sizeof(MageEntity));
+	setPageToCursorLocation();
+	toggleHexEditor();
+	hexTickDelay = 10;
 }

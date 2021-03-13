@@ -26,12 +26,12 @@ all of the old code used as the foundation of this badge.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
 //this is the most unique entities that can be in any map.
-#define MAX_ENTITIES_PER_MAP 32
+#define MAX_ENTITIES_PER_MAP 64
 
 //this is the map that will load at the start of the game:
 #define DEFAULT_MAP 0
 
-#define DEFAULT_PLAYER_NAME "Player"
+#define DEFAULT_PLAYER_NAME "Bub"
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
@@ -53,10 +53,6 @@ all of the old code used as the foundation of this badge.
 //current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PATH 65535
 
-//this is a fudge factor to make animations look better on the desktop
-//it's added to animation ticks every loop:
-#define DESKTOP_TIME_FUDGE_FACTOR 50
-
 //these are the failover values that the game will use when an invalid hacked entity state is found:
 #define MAGE_TILESET_FAILOVER_ID 0
 #define MAGE_TILE_FAILOVER_ID 0
@@ -66,14 +62,8 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
-#ifdef DC801_DESKTOP
-#define MAGE_RUNNING_SPEED 5
-#define MAGE_WALKING_SPEED 1
-#endif
-#ifdef DC801_EMBEDDED
-#define MAGE_RUNNING_SPEED 10
-#define MAGE_WALKING_SPEED 5
-#endif
+#define MAGE_RUNNING_SPEED 200
+#define MAGE_WALKING_SPEED 100
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may
@@ -108,10 +98,10 @@ all of the old code used as the foundation of this badge.
 //30fps: ~33ms
 //24fps: ~41ms
 #ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 16
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 #ifdef DC801_EMBEDDED
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 150
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
 #endif
 
 //these are the types of scripts that can be on a map or entity:
@@ -121,6 +111,41 @@ typedef enum : uint8_t {
 	ON_INTERACT = 2,
 	NUM_SCRIPT_TYPES
 } MageScriptType;
+
+typedef enum : uint8_t {
+	SET = 0,
+	ADD,
+	SUB,
+	DIV,
+	MUL,
+	MOD,
+	RNG
+} MageMutateOperation;
+
+typedef enum : uint8_t {
+	LT = 0,
+	LTEQ,
+	EQ,
+	GTEQ,
+	GT
+} MageCheckComparison;
+
+typedef enum : uint8_t {
+	x = 12,
+	y = 14,
+	onInteractScriptId = 16,
+	onTickScriptId = 18,
+	primaryId = 20,
+	secondaryId = 22,
+	primaryIdType = 24,
+	currentAnimation = 25,
+	currentFrame = 26,
+	direction = 27,
+	hackableStateA = 28,
+	hackableStateB = 29,
+	hackableStateC = 30,
+	hackableStateD = 31
+} MageEntityField;
 
 //this contains the possible options for an entity PrimaryIdType value.
 typedef enum : uint8_t {
@@ -136,7 +161,9 @@ typedef enum : uint8_t{
 	EAST = 1,
 	SOUTH = 2,
 	WEST = 3,
-	NUM_DIRECTIONS
+	NUM_DIRECTIONS,
+	IS_GLITCHED_MASK = 0b01111111,
+	IS_GLITCHED = 0b10000000
 } MageEntityAnimationDirection;
 
 //this contains all the possible script actions by actionTypeId value.
@@ -166,6 +193,7 @@ typedef enum : uint8_t {
 	CHECK_ENTITY_CURRENT_ANIMATION,
 	CHECK_ENTITY_CURRENT_FRAME,
 	CHECK_ENTITY_DIRECTION,
+	CHECK_ENTITY_GLITCHED,
 	CHECK_ENTITY_HACKABLE_STATE_A,
 	CHECK_ENTITY_HACKABLE_STATE_B,
 	CHECK_ENTITY_HACKABLE_STATE_C,
@@ -199,6 +227,7 @@ typedef enum : uint8_t {
 	SET_ENTITY_DIRECTION_RELATIVE,
 	SET_ENTITY_DIRECTION_TARGET_ENTITY,
 	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
+	SET_ENTITY_GLITCHED,
 	SET_ENTITY_HACKABLE_STATE_A,
 	SET_ENTITY_HACKABLE_STATE_B,
 	SET_ENTITY_HACKABLE_STATE_C,
@@ -233,6 +262,11 @@ typedef enum : uint8_t {
 	SET_SCREEN_SHAKE,
 	SCREEN_FADE_OUT,
 	SCREEN_FADE_IN,
+	MUTATE_VARIABLE,
+	MUTATE_VARIABLES,
+	COPY_VARIABLE,
+	CHECK_VARIABLE,
+	CHECK_VARIABLES,
 	PLAY_SOUND_CONTINUOUS,
 	PLAY_SOUND_INTERRUPT,
 	//this tracks the number of actions we're at:
@@ -273,21 +307,21 @@ typedef struct{
 //the complete current entity state can be determined with only this info and
 //the MageGame class interpreting the ROM data.
 typedef struct {
-    char name[MAGE_ENTITY_NAME_LENGTH];
-    uint16_t x;
-    uint16_t y;
-    uint16_t onInteractScriptId;
-    uint16_t onTickScriptId;
-    uint16_t primaryId;
-    uint16_t secondaryId;
-    uint8_t primaryIdType;
-    uint8_t currentAnimation;
-    uint8_t currentFrame;
-    uint8_t direction;
-    uint8_t hackableStateA;
-    uint8_t hackableStateB;
-    uint8_t hackableStateC;
-    uint8_t hackableStateD;
+	char name[MAGE_ENTITY_NAME_LENGTH]; // bob's club
+	uint16_t x; // put the sheep back in the pen, rake in the lake
+	uint16_t y;
+	uint16_t onInteractScriptId;
+	uint16_t onTickScriptId;
+	uint16_t primaryId;
+	uint16_t secondaryId;
+	MageEntityPrimaryIdType primaryIdType;
+	uint8_t currentAnimation;
+	uint8_t currentFrame;
+	MageEntityAnimationDirection direction;
+	uint8_t hackableStateA;
+	uint8_t hackableStateB;
+	uint8_t hackableStateC;
+	uint8_t hackableStateD;
 } MageEntity;
 
 typedef struct {
@@ -305,6 +339,7 @@ typedef struct {
 	Point center;
 	uint16_t currentFrameTicks;
 	uint16_t tilesetId;
+	uint16_t lastTilesetId;
 	uint16_t tileId;
 	uint32_t duration;
 	uint16_t frameCount;
@@ -422,6 +457,15 @@ typedef struct {
 	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckEntityDirection;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t entityId;
+	uint8_t expectedBool;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckEntityGlitched;
 
 typedef struct {
 	uint16_t successScriptId;
@@ -640,7 +684,7 @@ typedef struct {
 } ActionSetEntitySecondaryId;
 
 typedef struct {
-	uint8_t newValue;
+	MageEntityPrimaryIdType newValue;
 	uint8_t entityId;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -707,6 +751,16 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetEntityDirectionTargetGeometry;
+
+typedef struct {
+	uint8_t entityId;
+	uint8_t isGlitched;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityGlitched;
 
 typedef struct {
 	uint8_t newValue;
@@ -978,9 +1032,10 @@ typedef struct {
 } ActionLoopCameraAlongGeometry;
 
 typedef struct {
-	uint32_t duration; //in ms
+	uint16_t duration; //in ms
+	uint16_t frequency;
 	uint8_t amplitude;
-	uint8_t frequency;
+	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetScreenShake;
 
@@ -995,6 +1050,52 @@ typedef struct {
 	uint16_t color;
 	uint8_t paddingG;
 } ActionScreenFadeIn;
+
+typedef struct {
+	uint16_t value;
+	uint8_t variableId;
+	MageMutateOperation operation;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMutateVariable;
+
+typedef struct {
+	uint8_t variableId;
+	uint8_t sourceId;
+	MageMutateOperation operation;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionMutateVariables;
+
+typedef struct {
+	uint8_t variableId;
+	uint8_t entityId;
+	MageEntityField field;
+	uint8_t inbound;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCopyVariable;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint16_t value;
+	uint8_t variableId;
+	MageCheckComparison comparison;
+	uint8_t expectedBool;
+} ActionCheckVariable;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t variableId;
+	uint8_t sourceId;
+	MageCheckComparison comparison;
+	uint8_t expectedBool;
+	uint8_t paddingG;
+} ActionCheckVariables;
 
 typedef struct {
 	uint16_t soundId;

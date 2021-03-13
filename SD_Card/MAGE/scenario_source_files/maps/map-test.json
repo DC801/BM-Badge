@@ -397,8 +397,13 @@
                  "gid":716,
                  "height":40,
                  "id":34,
-                 "name":"",
+                 "name":"Bert",
                  "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"test_camera_follow_bert"
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -568,7 +573,7 @@
                  "y":352
                 }, 
                 {
-                 "gid":1049,
+                 "gid":1064,
                  "height":32,
                  "id":50,
                  "name":"",
@@ -586,7 +591,7 @@
                  "y":480
                 }, 
                 {
-                 "gid":1073742900,
+                 "gid":1073742915,
                  "height":40,
                  "id":58,
                  "name":"",
@@ -598,7 +603,7 @@
                  "y":416
                 }, 
                 {
-                 "gid":1105,
+                 "gid":1120,
                  "height":48,
                  "id":60,
                  "name":"Bender2",
@@ -1103,15 +1108,15 @@
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":1048,
+         "firstgid":1063,
          "source":"..\/entities\/entity-trekkie.json"
         }, 
         {
-         "firstgid":1069,
+         "firstgid":1084,
          "source":"..\/entities\/entity-bob.json"
         }, 
         {
-         "firstgid":1087,
+         "firstgid":1102,
          "source":"..\/entities\/entity-bender_sadbutt.json"
         }],
  "tilewidth":32,

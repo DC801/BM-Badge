@@ -11,7 +11,7 @@
 	"on_load-family": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ball",
+			"save_flag": "sportskid",
 			"expected_bool": true,
 			"success_script": "make-kid-ball"
 		}
@@ -44,6 +44,15 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-kid"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-kid-ball": [
@@ -52,24 +61,50 @@
 			"dialog": "dialog-kid-ball"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "ball",
+			"save_flag": "sportskid",
 			"bool_value": true
 		}
 	],
 	"show_dialog-smith": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "smith",
+			"entity": "Smith",
 			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "smith",
+			"expected_bool": true,
+			"success_script": "show_dialog-smith-s"
 		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-smith"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "smith",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "smith",
+			"entity": "Smith",
+			"direction": "east"
+		}
+	],
+	"show_dialog-smith-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-s"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Smith",
 			"direction": "east"
 		}
 	]

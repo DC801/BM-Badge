@@ -10,11 +10,9 @@ var dataTypes = [
 	'imageColorPalettes',
 	'strings',
 	'save_flags',
+	'variables',
 	'images',
 ];
-
-var IS_LITTLE_ENDIAN = true;
-var IS_SCREEN_LITTLE_ENDIAN = false;
 
 var handleScenarioData = function(fileNameMap) {
 	return function (scenarioData) {
@@ -27,6 +25,7 @@ var handleScenarioData = function(fileNameMap) {
 		scenarioData.uniqueStringLikeMaps = {
 			strings: {},
 			save_flags: {},
+			variables: {},
 		};
 		scenarioData.uniqueDialogMap = {};
 		dataTypes.forEach(function (typeName) {

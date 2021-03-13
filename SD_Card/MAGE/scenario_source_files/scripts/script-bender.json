@@ -1,9 +1,38 @@
 {
+	"bender-loiter": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		}
+	],
 	"show_dialog-bender-start": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bender",
-			"target_entity": "%PLAYER%"
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "watch-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -18,12 +47,26 @@
 			"success_script": "show_dialog-bender-eval"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start1"
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Bender",
+			"entity_type": "bender",
+			"expected_bool": true,
+			"success_script": "show_dialog-bender-end"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start2"
+			"dialog": "dialog-bender-start1",
+			"doc": "you look friendly / I'm not"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "Bender",
+			"script": "bite-my-shiny-metal-ass-sad"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-start2",
+			"doc": "Aww man, my ass!"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
@@ -41,22 +84,42 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start3a"
+			"dialog": "dialog-bender-start3a",
+			"doc": "Hey you, kid"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender1",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
 			"bool_value": true
 		}
 	],
 	"show_dialog-bender-start-alt": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start3b"
+			"dialog": "dialog-bender-start3b",
+			"doc": "Hey you, strangely-handsome kid"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender1",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
 			"bool_value": true
 		},
 		{
@@ -82,7 +145,17 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-eval-bad"
+			"dialog": "dialog-bender-eval-bad",
+			"doc": "That doesn't look anything like me"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -92,8 +165,23 @@
 	],
 	"show_dialog-bender-start-s": [
 		{
+			"action": "COPY_SCRIPT",
+			"entity": "Bender",
+			"script": "bite-my-shiny-metal-ass-sad"
+		},
+		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-start-s"
+			"dialog": "dialog-bender-start-s",
+			"doc": "Oh, right. Hurry up and fix it"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -104,11 +192,23 @@
 	"show_dialog-bender-end": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-end1"
+			"dialog": "dialog-bender-end1",
+			"doc": "Hey, you did it!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "Bender",
+			"script": "bite-my-shiny-metal-ass"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-end2"
+			"dialog": "dialog-bender-end2",
+			"doc": "Don't I get a reward?"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender1",
+			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -116,9 +216,18 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bender",
 			"script": "show_dialog-bender-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "bender-loiter"
 		}
 	],
 	"show_dialog-bender-end-s": [
@@ -131,23 +240,106 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-comedian"
+			"dialog": "dialog-bender-comedian",
+			"doc": "Yeah, yeah, real funny"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bender",
 			"script": "show_dialog-bender-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "bender-loiter"
 		}
 	],
 	"show_dialog-bender-satisfied": [
 		{
+			"action": "COPY_SCRIPT",
+			"entity": "Bender",
+			"script": "bite-my-shiny-metal-ass"
+		},
+		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bender-satisfied"
+			"dialog": "dialog-bender-satisfied",
+			"doc": "Ooh yeah!"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bender",
 			"script": "show_dialog-bender-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "bender-loiter"
+		}
+	],
+	"bite-my-shiny-metal-ass": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Bender",
+			"byte_value": 3
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Bender",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3200
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Bender",
+			"byte_value": 0
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"bite-my-shiny-metal-ass-sad": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Bender",
+			"byte_value": 3
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_FRAME",
+			"entity": "Bender",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3800
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Bender",
+			"byte_value": 0
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	]
 }

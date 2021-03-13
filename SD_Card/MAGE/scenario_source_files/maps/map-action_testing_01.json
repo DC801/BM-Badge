@@ -224,12 +224,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage09-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage09-copy_script"
                         }],
                  "rotation":0,
                  "type":"",
@@ -247,7 +247,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage10-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -270,7 +270,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage11-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -293,7 +293,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage12-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -316,7 +316,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage13-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -339,7 +339,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage14-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -354,7 +354,7 @@
                  "y":192
                 }, 
                 {
-                 "gid":321,
+                 "gid":326,
                  "height":32,
                  "id":16,
                  "name":"Mage 15",
@@ -362,7 +362,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage15-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -761,6 +761,42 @@
                  "width":32,
                  "x":96,
                  "y":160
+                }, 
+                {
+                 "height":0,
+                 "id":75,
+                 "name":"mage_11-point-a",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":256,
+                 "y":128
+                }, 
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"mage_11-point-b",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":352,
+                 "y":192
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"mage_11-point-c",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":256,
+                 "y":256
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -878,7 +914,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":75,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "properties":[
         {

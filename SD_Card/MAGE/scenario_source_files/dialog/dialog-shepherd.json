@@ -16,7 +16,7 @@
 			"portrait": "shepherd",
 			"name": "%Shepherd%",
 			"messages": [
-				"I was supposed to be watching the sheep,\nbut I took a quick nap, and the next thing\nI know… they were all over the place."
+				"I was supposed to be watching the sheep,\nbut I took a quick nap, and the next thing\nI know... they were all over the place."
 
 			]
 		}
@@ -35,7 +35,7 @@
 			"portrait": "shepherd",
 			"name": "%Shepherd%",
 			"messages": [
-				"I don't even know.\nMaybe they were, you know, hacked out.\nBy the big bad."
+				"I don't even know.\nMaybe they were, you know, hacked out.\nBy the Big Bad."
 			]
 		},
 		{
@@ -43,7 +43,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"But the big bad hasn't been around\nfor years. Just how long was this nap?"
+				"But the Big Bad hasn't been around\nfor years. Just how long was this nap?"
 			]
 		},
 		{

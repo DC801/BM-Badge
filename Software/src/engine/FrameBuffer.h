@@ -48,7 +48,11 @@ struct RenderFlags {
 	bool diagonal:1;
 	bool vertical:1;
 	bool horizontal:1;
-	uint8_t padding:5;
+	bool paddingA:1;
+	bool paddingB:1;
+	bool paddingC:1;
+	bool paddingD:1;
+	bool glitched:1;
 };
 union RenderFlagsUnion {
 	RenderFlags f;
@@ -244,6 +248,7 @@ public:
 	static float lerp(float a, float b, float progress);
 	static uint8_t lerp(uint8_t a, uint8_t b, float progress);
 	static Point lerpPoints(Point a, Point b, float progress);
+	uint16_t applyFadeColor(uint16_t color);
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 	void drawPoint(int x, int y, uint8_t size, uint16_t color);
 	void drawHorizontalLine(int x1, int y, int x2, uint16_t color);
@@ -271,7 +276,7 @@ public:
 
 	void drawChunkWithFlags(
 		uint32_t address, //address of first pixel of image in ROM
-		MageColorPalette *colorPalette, //color palette to lookup image colors from
+		MageColorPalette *colorPaletteFaded, //color palette to lookup image colors from
 		int32_t x, //x coordinate of destination pixel on screen
 		int32_t y, //y coordinate of destination pixel on screen
 		uint16_t tile_width, //width of tile being drawn

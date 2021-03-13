@@ -142,5 +142,225 @@
 				"I test `SET_ENTITY_DIRECTION_RELATIVE`\nWalk around me, I should point away from\nyou, no matter your position!"
 			]
 		}
+	],
+	"dialog-mage09": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test `COPY_SCRIPT`, using onTicks 07 & 08!\nWalk around me, I should point at you,\nPause half a second, then look away, \nno matter your position!"
+			]
+		}
+	],
+	"dialog-mage10-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test will `SET_SCREEN_SHAKE` 3 times:\n\t\t\t\"frequency\": 20,\n\t\t\t\"amplitude\": 3,\n\t\t\t\"duration\": 2000"
+			]
+		}
+	],
+	"dialog-mage10-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now:,\n\t\t\t\"frequency\": 1000,\n\t\t\t\"amplitude\": 32,\n\t\t\t\"duration\": 8000"
+			]
+		}
+	],
+	"dialog-mage10-c": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now:\n\t\t\t\"frequency\": 50,\n\t\t\t\"amplitude\": 5,\n\t\t\t\"duration\": 5000"
+			]
+		}
+	],
+	"dialog-mage11": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Panning camera to 3 separate geometries,\nthen panning camera back to the player"
+			]
+		}
+	],
+	"dialog-mage12": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test SET_CAMERA_TO_FOLLOW_ENTITY &\nTELEPORT_CAMERA_TO_GEOMETRY!\n3 points first, then back to player!"
+			]
+		}
+	],
+	"dialog-mage13-success-n": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing NORTH!"
+			]
+		}
+	],
+	"dialog-mage13-success-e": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing EAST!"
+			]
+		}
+	],
+	"dialog-mage13-success-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing SOUTH!"
+			]
+		}
+	],
+	"dialog-mage13-success-w": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing WEST!"
+			]
+		}
+	],
+	"dialog-mage13-fail": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test CHECK_ENTITY_DIRECTION!\n...but something has gone wrong!\nI cannot detect your direction!\nThis action has FAILED!!!"
+			]
+		}
+	],
+	"dialog-mage14": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the 'VARIABLE' actions:\nMUTATE_VARIABLE, MUTATE_VARIABLES\nCHECK_VARIABLE, CHECK_VARIABLES"
+			]
+		}
+	],
+	"dialog-mage14-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I tested a goat load of simple maths\nusing the variable actions,\nand they all verified!\nRandom Number was: $goat_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-==": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value == comparison has FAILED!!!"
+			]
+		}
+	],
+	"dialog-mage14-fail-value->": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value > comparison has FAILED!!!\nA: $goat_count$;"
+			]
+		}
+	],
+	"dialog-mage14-fail-variable-<": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe variable < comparison has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-ADD": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value ADD operation has FAILED!!!\nA: $goat_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-variable-ADD": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe variable ADD operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-SUB": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value SUB operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
+			]
+		}
+	],
+	"dialog-mage14-fail-value-RNG": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"...but something has gone wrong!\nThe value RNG operation has FAILED!!!\nA: $goat_count$;"
+			]
+		}
+	],
+	"dialog-mage15": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the action COPY_VARIABLE.\nChange my 'hackable_state_a' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
+			]
+		}
+	],
+	"dialog-mage15-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Hooray! 'hackable_state_a' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
+			]
+		}
 	]
 }

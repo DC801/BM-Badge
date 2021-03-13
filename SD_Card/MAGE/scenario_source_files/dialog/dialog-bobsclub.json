@@ -5,7 +5,7 @@
 			"portrait": "baker",
 			"name": "%Baker%",
 			"messages": [
-				"Hey, I'm pretty swamped.\nCan you run an errand for me?"
+				"Hey, I'm pretty swamped. Can you run an\nerrand for me?"
 			]
 		},
 		{
@@ -109,7 +109,7 @@
 			"name": "%Bob Austin%",
 			"messages": [
 				"Bob. Camel case.\nNice and plain.\nTraditional.",
-				"'Cause this club is Bobs-only.\nYou know, the Bobs-Only Club."
+				"'Cause this club is Bobs-only. You know,\nthe Bobs-Only Club."
 			]
 		},
 		{
@@ -136,7 +136,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Well, the baker needs to know whether\nthe club still needs a bunch of\nB-shaped donuts for tonight.",
+				"Well, the baker needs to know whether the\nclub still needs a bunch of B-shaped\ndonuts for tonight.",
 				"Do you know if the Bobs still want them?\nThere's gonna be a party tonight, right?"
 			]
 		},
@@ -163,7 +163,7 @@
 			"portrait": "bob",
 			"name": "%Bob Austin%",
 			"messages": [
-				"Well, if his name was Bob,\nI would've let him in!"
+				"Well, if his name was Bob, I would've let\nhim in!"
 			]
 		}
 	],
@@ -201,7 +201,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Why, what luck!\nMy name happens to be Bob!"
+				"Why, what luck! My name happens to be Bob!"
 			]
 		},
 		{
@@ -209,7 +209,7 @@
 			"portrait": "bob",
 			"name": "%Bob Austin%",
 			"messages": [
-				"Nice. Great name.\nI'll open it on up."
+				"Nice. Great name. I'll open it on up."
 			]
 		}
 	],
@@ -229,7 +229,7 @@
 			"portrait": "bobg",
 			"name": "%Guardian Bob%",
 			"messages": [
-				"Oh, hello.\nYou must be here for the annual\nBobs-Only Party, right?"
+				"Oh, hello. You must be here for the annual\nBobs-Only Party, right?"
 			]
 		}
 	],
@@ -239,7 +239,7 @@
 			"portrait": "bobg",
 			"name": "%Guardian Bob%",
 			"messages": [
-				"Well I hate to tell you this,\nbut it's canceled this year."
+				"Well, I hate to tell you this, but it's\ncanceled this year."
 			]
 		},
 		{
@@ -260,25 +260,33 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
-				"Wait, canceled?!\nBut what about all the ladies?!"
+				"Wait, canceled?!"
 			]
 		}
 	],
 	"dialog-bobsclub3": [
 		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"alignment": "TOP_LEFT",
+			"portrait": "strongbad",
+			"name": "%Strong Bad%",
 			"messages": [
-				"Ladies?\nI'm pretty sure Bob is a masculine name,\ntraditionally."
+				"But what about all the ladies?!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Ladies? I'm pretty sure Bob is a masculine\nname, traditionally."
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
@@ -289,24 +297,24 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Sorry, dude!\nNot if the party's canceled.",
+				"Sorry, dude! Not if the party's canceled.",
 				"...Also not if none of them are named Bob."
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
-				"Sure, they'll come!\nI just gotta wait a little more!"
+				"Sure, they'll come! I just gotta wait a\nlittle more!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
@@ -340,7 +348,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"So I guess I can tell the baker\nto cancel the donut order then, huh?"
+				"So I guess I can tell the baker to cancel\nthe donut order then, huh?"
 			]
 		},
 		{
@@ -358,8 +366,18 @@
 			"portrait": "bobg",
 			"name": "%Guardian Bob%",
 			"messages": [
-				"They could've told me the party was\nactually canceled before I made\nthe trip out here.",
+				"They could've told me the party was\nactually canceled before I made the trip\nout here.",
 				"*sigh*\nOh, well."
+			]
+		}
+	],
+	"dialog-bobsclub-bob-where": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobg",
+			"name": "%Guardian Bob%",
+			"messages": [
+				"Wait. Weren't there two Bob golems last\nyear?"
 			]
 		}
 	],
@@ -393,7 +411,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"You look an awful lot like Strong Bad to me."
+				"You look an awful lot like Strong Bad to\nme."
 			]
 		},
 		{
@@ -401,8 +419,8 @@
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
-				"Wha-what? STRONG BAD?\nNever heard of him....\nThough he sounds like quite the\nrugged and handsome gentleman.",
-				"The name's Strong BOB!\nJust lookee here at my fake--\nI mean real--ID!"
+				"Wha-what? STRONG BAD? Never heard of him.\nThough he sounds like quite the rugged\nand handsome gentleman.",
+				"The name's Strong BOB! Just lookee here\nat my fake--I mean real--ID!"
 			]
 		},
 		{
@@ -411,7 +429,7 @@
 			"name": "%PLAYER%",
 			"messages": [
 				"(This ID clearly belongs to \"Bob Newhart,\"\nbut the word Newhart is crossed out.)",
-				"(I guess Bob out front\ndoesn't have very good eyes.)"
+				"(I guess Bob out front doesn't have very\ngood eyes.)"
 			]
 		}
 	],
@@ -421,11 +439,22 @@
 			"portrait": "strongbad",
 			"name": "%Strong Bad%",
 			"messages": [
-				"Yessirree!\nStrong Bob's the name,\nand partyin's the game!"
+				"Yessirree! Strong Bob's the name, and\npartyin's the game!"
 			]
 		}
 	],
-	"dialog-bobsclub-wall": [
+	"dialog-balloonbox": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Just a box of pre-inflated balloons.",
+				"How many balloos does a party need,\nanyway?"
+			]
+		}
+	],
+	"dialog-bobsclub-bal": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
@@ -443,7 +472,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"We've been through all this before,\nyou know."
+				"We've been through all this before, you\nknow."
 			]
 		},
 		{
@@ -451,7 +480,7 @@
 			"portrait": "bob",
 			"name": "%Bob Austin%",
 			"messages": [
-				"Doesn't matter.\nIt's just the rules.\nBobs only."
+				"Doesn't matter. It's just the rules. Bobs\nonly."
 			]
 		}
 	],
@@ -462,7 +491,7 @@
 			"name": "%PLAYER%",
 			"messages": [
 				"....",
-				"Fine.\nI guess I'm not getting in, then."
+				"Fine. I guess I'm not getting in, then."
 			]
 		},
 		{
@@ -498,7 +527,7 @@
 			"portrait": "baker",
 			"name": "%Baker%",
 			"messages": [
-				"Canceled?\nThey're really sure it's all canceled?\nFor real?"
+				"Canceled? They're really sure it's all\ncanceled? For real?"
 			]
 		},
 		{
@@ -514,7 +543,7 @@
 			"portrait": "baker",
 			"name": "%Baker%",
 			"messages": [
-				"Bob?\nStone Cold Bob Austin?"
+				"Bob? Stone Cold Bob Austin?"
 			]
 		},
 		{
@@ -522,7 +551,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"Uh... well, it was someone\nnamed Bob."
+				"Uh... well, it was someone named Bob."
 			]
 		},
 		{
@@ -542,6 +571,71 @@
 			"name": "%Baker%",
 			"messages": [
 				"Say, you wouldn't want a B-shaped donut,\nwould you? On the house."
+			]
+		}
+	],
+	"dialog-bobmoss-start1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Oh, hello, there."
+			]
+		}
+	],
+	"dialog-bobmoss-start2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"I was just admiring the forest, with its\nhappy little trees....",
+				"I've made so many squirrel friends,\nand...."
+			]
+		}
+	],
+	"dialog-bobmoss-start3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Oh!",
+				"I didn't realize how late it was getting.\nI think I might be late for work.",
+				"I'd better head out. Hope to see you\nagain."
+			]
+		}
+	],
+	"dialog-bobmoss-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bobmoss",
+			"name": "%Bob Moss%",
+			"messages": [
+				"Sorry, I can't serve anyone until the\nparty starts.",
+				"Help yourself to a Cactus Cooler, though.\nPlenty in the fridge."
+			]
+		}
+	],
+	"dialog-fridge": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"(Wow. There's literally nothing but cans\nof Cactus Cooler in here.)"
+			]
+		}
+	],
+	"dialog-bobwall": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wall of Bobs: famous Bobs.",
+				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook."
 			]
 		}
 	]

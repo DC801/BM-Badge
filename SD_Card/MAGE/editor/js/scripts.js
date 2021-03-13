@@ -1,1070 +1,396 @@
-var actionHandlerMap = {
+var actionFieldsMap = {
 	NULL_ACTION: null,
-	CHECK_ENTITY_NAME: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'string', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_NAME',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_X: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_X',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_Y: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_Y',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_INTERACT_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_INTERACT_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_TICK_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_TICK_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_TYPE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity_type', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_PRIMARY_ID',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_PRIMARY_ID: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_PRIMARY_ID',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_SECONDARY_ID: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_SECONDARY_ID',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_PRIMARY_ID_TYPE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_PRIMARY_ID_TYPE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_CURRENT_ANIMATION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_CURRENT_ANIMATION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_CURRENT_FRAME: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_CURRENT_FRAME',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_DIRECTION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'direction', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_DIRECTION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_A: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_A',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_B: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_B',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_C: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_C',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_D: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_byte', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_D',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_A_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_A_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_C_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_C_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_HACKABLE_STATE_A_U4: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'expected_u4', size: 4},
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'CHECK_ENTITY_HACKABLE_STATE_A_U4',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_ENTITY_PATH: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'expected_u2', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_ENTITY_PATH',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_SAVE_FLAG: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'save_flag', size: 2},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_SAVE_FLAG',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_IF_ENTITY_IS_IN_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_FOR_BUTTON_PRESS: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'button_id', size: 1},
-			],
-			'CHECK_FOR_BUTTON_PRESS',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_FOR_BUTTON_STATE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'button_id', size: 1},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_FOR_BUTTON_STATE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	CHECK_WARP_STATE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'success_script', size: 2},
-				{propertyName: 'string', size: 2},
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'CHECK_WARP_STATE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	RUN_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'script', size: 2},
-			],
-			'RUN_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	BLOCKING_DELAY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-			],
-			'BLOCKING_DELAY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	NON_BLOCKING_DELAY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-			],
-			'NON_BLOCKING_DELAY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PAUSE_GAME: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'state', size: 1},
-			],
-			'PAUSE_GAME',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PAUSE_ENTITY_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'script_type', size: 1},
-				{propertyName: 'state', size: 1},
-			],
-			'PAUSE_ENTITY_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_NAME: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'string', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_NAME',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_X: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_X',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_Y: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_Y',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_INTERACT_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'script', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_INTERACT_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_TICK_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'script', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_TICK_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_TYPE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'entity_type', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_TYPE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_PRIMARY_ID: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_PRIMARY_ID',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_SECONDARY_ID: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_SECONDARY_ID',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_PRIMARY_ID_TYPE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_PRIMARY_ID_TYPE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_CURRENT_ANIMATION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_CURRENT_ANIMATION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_CURRENT_FRAME: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_CURRENT_FRAME',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_DIRECTION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'direction', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_DIRECTION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_DIRECTION_RELATIVE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'relative_direction', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_DIRECTION_RELATIVE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_DIRECTION_TARGET_ENTITY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'target_entity', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_DIRECTION_TARGET_ENTITY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'target_geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_A: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_A',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_B: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_B',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_C: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_C',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_D: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'byte_value', size: 1},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_D',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_A_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_A_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_C_U2: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_C_U2',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_HACKABLE_STATE_A_U4: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u4_value', size: 4},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_HACKABLE_STATE_A_U4',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_ENTITY_PATH: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'u2_value', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_ENTITY_PATH',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_SAVE_FLAG: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'save_flag', size: 2},
-				{propertyName: 'bool_value', size: 1},
-			],
-			'SET_SAVE_FLAG',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_PLAYER_CONTROL: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'bool_value', size: 1},
-			],
-			'SET_PLAYER_CONTROL',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_MAP_TICK_SCRIPT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'script', size: 2},
-			],
-			'SET_MAP_TICK_SCRIPT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_HEX_CURSOR_LOCATION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'address', size: 2},
-			],
-			'SET_HEX_CURSOR_LOCATION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_HEX_BITS: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'bitmask', size: 1},
-				{propertyName: 'bool_value', size: 1},
-			],
-			'SET_HEX_BITS',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_WARP_STATE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'string', size: 2}
-			],
-			'SET_WARP_STATE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	UNLOCK_HAX_CELL: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'address', size: 2},
-			],
-			'UNLOCK_HAX_CELL',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	LOCK_HAX_CELL: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'address', size: 2},
-			],
-			'LOCK_HAX_CELL',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_HEX_EDITOR_STATE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'SET_HEX_EDITOR_STATE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_HEX_EDITOR_DIALOG_MODE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'expected_bool', size: 1},
-			],
-			'SET_HEX_EDITOR_DIALOG_MODE',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	LOAD_MAP: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'map', size: 2},
-			],
-			'LOAD_MAP',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SHOW_DIALOG: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'dialog', size: 2},
-			],
-			'SHOW_DIALOG',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PLAY_ENTITY_ANIMATION: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'entity', size: 1},
-				{propertyName: 'animation', size: 1},
-				{propertyName: 'play_count', size: 1},
-			],
-			'PLAY_ENTITY_ANIMATION',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	TELEPORT_ENTITY_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'TELEPORT_ENTITY_TO_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	WALK_ENTITY_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'WALK_ENTITY_TO_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	WALK_ENTITY_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'WALK_ENTITY_ALONG_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	LOOP_ENTITY_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'LOOP_ENTITY_ALONG_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_CAMERA_TO_FOLLOW_ENTITY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'entity', size: 1},
-			],
-			'SET_CAMERA_TO_FOLLOW_ENTITY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	TELEPORT_CAMERA_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'geometry', size: 2},
-			],
-			'TELEPORT_CAMERA_TO_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PAN_CAMERA_TO_ENTITY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'PAN_CAMERA_TO_ENTITY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PAN_CAMERA_TO_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'PAN_CAMERA_TO_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	PAN_CAMERA_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'PAN_CAMERA_ALONG_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	LOOP_CAMERA_ALONG_GEOMETRY: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'geometry', size: 2},
-				{propertyName: 'entity', size: 1},
-			],
-			'LOOP_CAMERA_ALONG_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SET_SCREEN_SHAKE: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'amplitude', size: 1},
-				{propertyName: 'frequency', size: 1},
-			],
-			'LOOP_CAMERA_ALONG_GEOMETRY',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SCREEN_FADE_OUT: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
-			],
-			'SCREEN_FADE_OUT',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
-	SCREEN_FADE_IN: function (action, map, fileNameMap, scenarioData) {
-		return handleActionWithFields(
-			action,
-			[
-				{propertyName: 'duration', size: 4},
-				{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
-			],
-			'SCREEN_FADE_IN',
-			map,
-			fileNameMap,
-			scenarioData,
-		);
-	},
+	CHECK_ENTITY_NAME: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'string', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_X: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_Y: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_INTERACT_SCRIPT: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_TICK_SCRIPT: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_TYPE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity_type', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_PRIMARY_ID: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_SECONDARY_ID: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_PRIMARY_ID_TYPE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_CURRENT_ANIMATION: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_CURRENT_FRAME: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_DIRECTION: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'direction', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_GLITCHED: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_A: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_B: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_C: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_D: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_byte', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_A_U2: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_C_U2: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_ENTITY_HACKABLE_STATE_A_U4: [
+		{propertyName: 'expected_u4', size: 4},
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	CHECK_ENTITY_PATH: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_SAVE_FLAG: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'save_flag', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_FOR_BUTTON_PRESS: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'button_id', size: 1},
+	],
+	CHECK_FOR_BUTTON_STATE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'button_id', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_WARP_STATE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'string', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	RUN_SCRIPT: [
+		{propertyName: 'script', size: 2},
+	],
+	BLOCKING_DELAY: [
+		{propertyName: 'duration', size: 4},
+	],
+	NON_BLOCKING_DELAY: [
+		{propertyName: 'duration', size: 4},
+	],
+	PAUSE_GAME: [
+		{propertyName: 'state', size: 1},
+	],
+	PAUSE_ENTITY_SCRIPT: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'script_type', size: 1},
+		{propertyName: 'state', size: 1},
+	],
+	SET_ENTITY_NAME: [
+		{propertyName: 'string', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_X: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_Y: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_INTERACT_SCRIPT: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_TICK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_TYPE: [
+		{propertyName: 'entity_type', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_PRIMARY_ID: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_SECONDARY_ID: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_PRIMARY_ID_TYPE: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_CURRENT_ANIMATION: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_CURRENT_FRAME: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_DIRECTION: [
+		{propertyName: 'direction', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_DIRECTION_RELATIVE: [
+		{propertyName: 'relative_direction', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_DIRECTION_TARGET_ENTITY: [
+		{propertyName: 'target_entity', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_DIRECTION_TARGET_GEOMETRY: [
+		{propertyName: 'target_geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_GLITCHED: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_A: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_B: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_C: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_D: [
+		{propertyName: 'byte_value', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_A_U2: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_C_U2: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_HACKABLE_STATE_A_U4: [
+		{propertyName: 'u4_value', size: 4},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_ENTITY_PATH: [
+		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_SAVE_FLAG: [
+		{propertyName: 'save_flag', size: 2},
+		{propertyName: 'bool_value', size: 1},
+	],
+	SET_PLAYER_CONTROL: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	SET_MAP_TICK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+	],
+	SET_HEX_CURSOR_LOCATION: [
+		{propertyName: 'address', size: 2},
+	],
+	SET_HEX_BITS: [
+		{propertyName: 'bitmask', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	SET_WARP_STATE: [
+		{propertyName: 'string', size: 2}
+	],
+	UNLOCK_HAX_CELL: [
+		{propertyName: 'address', size: 2},
+	],
+	LOCK_HAX_CELL: [
+		{propertyName: 'address', size: 2},
+	],
+	SET_HEX_EDITOR_STATE: [
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_HEX_EDITOR_DIALOG_MODE: [
+		{propertyName: 'expected_bool', size: 1},
+	],
+	LOAD_MAP: [
+		{propertyName: 'map', size: 2},
+	],
+	SHOW_DIALOG: [
+		{propertyName: 'dialog', size: 2},
+	],
+	PLAY_ENTITY_ANIMATION: [
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'animation', size: 1},
+		{propertyName: 'play_count', size: 1},
+	],
+	TELEPORT_ENTITY_TO_GEOMETRY: [
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	WALK_ENTITY_TO_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	WALK_ENTITY_ALONG_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	LOOP_ENTITY_ALONG_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_CAMERA_TO_FOLLOW_ENTITY: [
+		{propertyName: 'entity', size: 1},
+	],
+	TELEPORT_CAMERA_TO_GEOMETRY: [
+		{propertyName: 'geometry', size: 2},
+	],
+	PAN_CAMERA_TO_ENTITY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'entity', size: 1},
+	],
+	PAN_CAMERA_TO_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+	],
+	PAN_CAMERA_ALONG_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	LOOP_CAMERA_ALONG_GEOMETRY: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'geometry', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_SCREEN_SHAKE: [
+		{propertyName: 'duration', size: 2},
+		{propertyName: 'frequency', size: 2},
+		{propertyName: 'amplitude', size: 1},
+	],
+	SCREEN_FADE_OUT: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
+	],
+	SCREEN_FADE_IN: [
+		{propertyName: 'duration', size: 4},
+		{propertyName: 'color', size: 2, endian: IS_SCREEN_LITTLE_ENDIAN},
+	],
+	MUTATE_VARIABLE: [
+		{propertyName: 'value', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'operation', size: 1},
+	],
+	MUTATE_VARIABLES: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'source', size: 1},
+		{propertyName: 'operation', size: 1},
+	],
+	COPY_VARIABLE: [
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'field', size: 1},
+		{propertyName: 'inbound', size: 1},
+	],
+	CHECK_VARIABLE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'value', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'comparison', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_VARIABLES: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'variable', size: 1},
+		{propertyName: 'source', size: 1},
+		{propertyName: 'comparison', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 	PLAY_SOUND_CONTINUOUS: null,
 	PLAY_SOUND_INTERRUPT: null,
 };
@@ -1083,6 +409,7 @@ var actionNames = [
 	'CHECK_ENTITY_CURRENT_ANIMATION',
 	'CHECK_ENTITY_CURRENT_FRAME',
 	'CHECK_ENTITY_DIRECTION',
+	'CHECK_ENTITY_GLITCHED',
 	'CHECK_ENTITY_HACKABLE_STATE_A',
 	'CHECK_ENTITY_HACKABLE_STATE_B',
 	'CHECK_ENTITY_HACKABLE_STATE_C',
@@ -1116,6 +443,7 @@ var actionNames = [
 	'SET_ENTITY_DIRECTION_RELATIVE',
 	'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 	'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
+	'SET_ENTITY_GLITCHED',
 	'SET_ENTITY_HACKABLE_STATE_A',
 	'SET_ENTITY_HACKABLE_STATE_B',
 	'SET_ENTITY_HACKABLE_STATE_C',
@@ -1150,6 +478,11 @@ var actionNames = [
 	'SET_SCREEN_SHAKE',
 	'SCREEN_FADE_OUT',
 	'SCREEN_FADE_IN',
+	'MUTATE_VARIABLE',
+	'MUTATE_VARIABLES',
+	'COPY_VARIABLE',
+	'CHECK_VARIABLE',
+	'CHECK_VARIABLES',
 	'PLAY_SOUND_CONTINUOUS',
 	'PLAY_SOUND_INTERRUPT',
 ];
@@ -1161,7 +494,7 @@ var specialKeywordsEnum = {
 	'%ENTITY_PATH%': 65535,
 }
 
-var getObjectByNameOnMap = function(name, map, actionName) {
+var getObjectByNameOnMap = function(name, map, action) {
 	var specialIndex = specialKeywordsEnum[name];
 	var object;
 	if (specialIndex) {
@@ -1178,7 +511,7 @@ var getObjectByNameOnMap = function(name, map, actionName) {
 		});
 	}
 	if (!object) {
-		throw new Error(`"${actionName}" No object named "${name}" could be found on map: "${map.name}"!`);
+		throw new Error(`"${action.action}" No object named "${name}" could be found on map: "${map.name}"!`);
 	}
 	return object;
 };
@@ -1186,26 +519,25 @@ var getObjectByNameOnMap = function(name, map, actionName) {
 var getMapLocalEntityIndexFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (!value) {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"`);
 	}
 	var entity = getObjectByNameOnMap(
 		value,
 		map,
-		actionName,
+		action,
 	);
 	var mapLocalEntityIndex = (
 		entity.specialIndex
 		|| map.entityIndices.indexOf(entity.compositeEntity.scenarioIndex)
 	)
 	if(mapLocalEntityIndex === -1) {
-		throw new Error(`${actionName} found entity "${value}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
+		throw new Error(`${action.action} found entity "${value}" on map "${map.name}", but it was somehow not already a member of the map it should be used on!`);
 	}
 	return mapLocalEntityIndex;
 };
@@ -1213,18 +545,17 @@ var getMapLocalEntityIndexFromAction = function (
 var getEntityTypeScenarioIndex = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (!value) {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"`);
 	}
 	var entityType = scenarioData.entityTypes[value];
 	if(!entityType) {
-		throw new Error(`${actionName} requires a valid value for "${propertyName}"; "${value}" was not found in ScenarioData!`);
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; "${value}" was not found in ScenarioData!`);
 	}
 	return entityType.scenarioIndex;
 };
@@ -1232,19 +563,18 @@ var getEntityTypeScenarioIndex = function (
 var getMapIndexFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (!value) {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"`);
 	}
 	var lookedUpMap = scenarioData.mapsByName[value];
 	var mapIndex = lookedUpMap && lookedUpMap.scenarioIndex;
 	if(mapIndex === undefined) {
-		throw new Error(`${actionName} was unable to find map "${value}"!`);
+		throw new Error(`${action.action} was unable to find map "${value}"!`);
 	}
 	return mapIndex;
 };
@@ -1252,18 +582,17 @@ var getMapIndexFromAction = function (
 var getGeometryIndexFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (!value) {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"`);
 	}
-	var geometry = getObjectByNameOnMap(value, map, actionName);
+	var geometry = getObjectByNameOnMap(value, map, action);
 	if (!geometry) {
-		throw new Error(`${actionName} was not able to find geometry named "${value}" on the map named "${map.name}"`);
+		throw new Error(`${action.action} was not able to find geometry named "${value}" on the map named "${map.name}"`);
 	}
 	return geometry.specialIndex || geometry.mapIndex;
 };
@@ -1271,14 +600,13 @@ var getGeometryIndexFromAction = function (
 var getDirectionFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (value === undefined) {
-		throw new Error(`${actionName} requires a value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
 	var directions = {
 		0: 0,
@@ -1292,7 +620,7 @@ var getDirectionFromAction = function (
 	};
 	var direction = directions[value];
 	if (direction === undefined) {
-		throw new Error(`${actionName} requires a valid value for "${propertyName}"; Possible values:\n${
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
 			Object.keys(directions)
 		}`);
 	}
@@ -1302,20 +630,19 @@ var getDirectionFromAction = function (
 var getRelativeDirectionFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (value === undefined) {
-		throw new Error(`${actionName} requires a value for "${propertyName}"`);
+		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
 	if (
 		!Number.isInteger(value)
 		|| (Math.abs(value) > 3)
 	) {
-		throw new Error(`${actionName} requires a valid value for "${propertyName}"; Value must be an integer from -3 to +3`);
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Value must be an integer from -3 to +3`);
 	}
 	return value;
 };
@@ -1323,44 +650,43 @@ var getRelativeDirectionFromAction = function (
 var getNumberFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData
 ) {
 	var value = action[propertyName];
 	if (typeof value !== 'number') {
-		throw new Error(`${actionName} requires a value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a value for "${propertyName}"!`);
 	}
 	value = parseInt(value, 10);
 	if (value < 0) {
-		throw new Error(`${actionName} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
 	}
 	return value;
 };
 
-var getByteFromAction = function (propertyName, action, map, actionName) {
-	var value = getNumberFromAction(propertyName, action, map, actionName);
+var getByteFromAction = function (propertyName, action, map) {
+	var value = getNumberFromAction(propertyName, action, map);
 	var maxSize = 255;
 	if (value > maxSize) {
-		throw new Error(`${actionName} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
 	}
 	return value;
 };
 
 var rgbRegex = /#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/;
 var rgbaRegex = /#([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})/;
-var getColor = function (propertyName, action, map, actionName) {
+var getColor = function (propertyName, action, map) {
 	var value = action[propertyName];
 	if (typeof value !== 'string') {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
 	}
 	var match = (
 		rgbaRegex.exec(value)
 		|| rgbRegex.exec(value)
 	);
 	if (!match) {
-		throw new Error(`${actionName} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be greater than or equal to zero!`);
 	}
 	match.shift();
 	match[0] = parseInt(match[0], 16);
@@ -1377,11 +703,11 @@ var getColor = function (propertyName, action, map, actionName) {
 	);
 };
 
-var getTwoBytesFromAction = function (propertyName, action, map, actionName) {
-	var value = getNumberFromAction(propertyName, action, map, actionName);
+var getTwoBytesFromAction = function (propertyName, action, map) {
+	var value = getNumberFromAction(propertyName, action, map);
 	var maxSize = 65535;
 	if (value > maxSize) {
-		throw new Error(`${actionName} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
+		throw new Error(`${action.action} "${propertyName}" value "${value}" must be less than or equal to ${maxSize}!`);
 	}
 	return value;
 };
@@ -1389,14 +715,13 @@ var getTwoBytesFromAction = function (propertyName, action, map, actionName) {
 var getBoolFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (typeof value !== 'boolean') {
-		throw new Error(`${actionName} requires a (true | false) value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a (true | false) value for "${propertyName}"!`);
 	}
 	return value;
 };
@@ -1404,14 +729,13 @@ var getBoolFromAction = function (
 var getStringIdFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (typeof value !== 'string') {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
 	}
 	return serializeString(
 		value,
@@ -1424,14 +748,13 @@ var getStringIdFromAction = function (
 var getSaveFlagIdFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (typeof value !== 'string') {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
 	}
 	return serializeSaveFlag(
 		value,
@@ -1441,21 +764,136 @@ var getSaveFlagIdFromAction = function (
 	);
 };
 
-var getDialogIdFromAction = function (
+var getVariableIdFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
 	var value = action[propertyName];
 	if (typeof value !== 'string') {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"!`);
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	return serializeVariable(
+		value,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getFieldFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} requires a value for "${propertyName}"`);
+	}
+	var fields = {
+		x: 12,
+		y: 14,
+		interact_script_id: 16,
+		tick_script_id: 18,
+		primary_id: 20,
+		secondary_id: 22,
+		primary_id_type: 24,
+		current_animation: 25,
+		current_frame: 26,
+		direction: 27,
+		hackable_state_a: 28,
+		hackable_state_b: 29,
+		hackable_state_c: 30,
+		hackable_state_d: 31,
+	};
+	var field = fields[value];
+	if (field === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(fields)
+		}`);
+	}
+	return field;
+};
+
+var getOperationFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
+	}
+	var operations = {
+		SET: 0,
+		ADD: 1,
+		SUB: 2,
+		DIV: 3,
+		MUL: 4,
+		MOD: 5,
+		RNG: 6,
+	};
+	var operation = operations[value];
+	if (operation === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(operations)
+		}`);
+	}
+	return operation;
+};
+
+var getComparisonFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
+	}
+	var comparisons = {
+		LT  : 0,
+		LTEQ: 1,
+		EQ  : 2,
+		GTEQ: 3,
+		GT  : 4,
+		"<" : 0,
+		"<=": 1,
+		"==": 2,
+		">=": 3,
+		">" : 4,
+	};
+	var comparison = comparisons[value];
+	if (comparison === undefined) {
+		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(comparisons)
+		}`);
+	}
+	return comparison;
+};
+
+var getDialogIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
 	}
 	var dialog = scenarioData.dialogs[value];
 	if (!dialog) {
-		throw new Error(`${actionName} was unable to find a dialog named "${value}"!`);
+		throw new Error(`${action.action} was unable to find a dialog named "${value}"!`);
 	}
 	return serializeDialog(
 		dialog,
@@ -1465,28 +903,44 @@ var getDialogIdFromAction = function (
 	);
 };
 
+var getScriptByName = function (
+	scriptName,
+	scenarioData,
+) {
+	var sourceScript = scenarioData.scripts[scriptName];
+	if (!sourceScript) {
+		throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
+	}
+	return sourceScript;
+};
+var getScriptByPropertyName = function (
+	propertyName,
+	action,
+) {
+	var scriptName = action[propertyName];
+	if (!scriptName) {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"`);
+	}
+	return scriptName;
+};
 var getMapLocalScriptIdFromAction = function (
 	propertyName,
 	action,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
-	var value = action[propertyName];
-	if (!value) {
-		throw new Error(`${actionName} requires a string value for "${propertyName}"`);
-	}
-	if (!scenarioData.scripts[value]) {
-		throw new Error(`${actionName} was not able to find a script named "${value}" provided at the property "${propertyName}"`);
-	}
-	var mapLocalScriptId = handleScript(
-		value,
+	var scriptName = getScriptByPropertyName(
+		propertyName,
+		action,
+	);
+	var encodedScript = handleScript(
+		scriptName,
 		map,
 		fileNameMap,
 		scenarioData
-	).mapLocalScriptId;
-	return mapLocalScriptId;
+	);
+	return encodedScript.mapLocalScriptId;
 };
 
 var initActionData = function (action) {
@@ -1531,13 +985,20 @@ var actionPropertyNameToHandlerMap = {
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
-	frequency: getByteFromAction,
+	frequency: getTwoBytesFromAction,
 	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
 	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
 	state: getBoolFromAction,
+	value: getTwoBytesFromAction,
+	variable: getVariableIdFromAction,
+	source: getVariableIdFromAction,
+	field: getFieldFromAction,
+	inbound: getBoolFromAction,
+	operation: getOperationFromAction,
+	comparison: getComparisonFromAction,
 };
 
 var sizeHandlerMap = [
@@ -1555,7 +1016,6 @@ var sizeHandlerMap = [
 var handleActionWithFields = function(
 	action,
 	fields,
-	actionName,
 	map,
 	fileNameMap,
 	scenarioData,
@@ -1570,7 +1030,6 @@ var handleActionWithFields = function(
 		var value = handler(
 			field.propertyName,
 			action,
-			actionName,
 			map,
 			fileNameMap,
 			scenarioData,
@@ -1598,16 +1057,55 @@ var serializeAction = function (
 	if (actionIndex === -1) {
 		throw new Error(`Action: "${action.action}" is not valid! Check the "actionHandlerMap" for valid options!`);
 	}
-	var handler = actionHandlerMap[action.action];
-	if (!handler) {
+	var fields = actionFieldsMap[action.action];
+	if (!fields) {
 		throw new Error(`Action: "${action.action}" has not been implemented yet! Please add it to the "actionHandlerMap"!`);
 	}
-	return handler(
+	return handleActionWithFields(
 		action,
+		fields,
 		map,
 		fileNameMap,
 		scenarioData,
 	).buffer;
+};
+
+var detectCopyScript = function (script) {
+	return script.filter(function (action) {
+		return action.action === 'COPY_SCRIPT';
+	}).length > 0;
+};
+
+var preProcessScript = function(
+	script,
+	scriptName,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var result = script;
+	var read = script;
+	while (detectCopyScript(read)) {
+		result = [];
+		read.forEach(function (action) {
+			if(action.action === 'COPY_SCRIPT') {
+				var scriptName = getScriptByPropertyName(
+					'script',
+					action,
+				)
+				var sourceScript = getScriptByName(
+					scriptName,
+					scenarioData
+				);
+				var copiedScript = jsonClone(sourceScript);
+				result = result.concat(copiedScript);
+			} else {
+				result.push(action);
+			}
+		});
+		read = result;
+	}
+	return result;
 };
 
 var serializeScript = function (
@@ -1632,9 +1130,16 @@ var serializeScript = function (
 		0,
 		offset += 32
 	);
+	var compositeScript = preProcessScript(
+		script,
+		scriptName,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
 	dataView.setUint32(
 		offset,
-		script.length,
+		compositeScript.length,
 		IS_LITTLE_ENDIAN
 	);
 	offset += 4;
@@ -1648,11 +1153,12 @@ var serializeScript = function (
 	var mapLocalScriptId = map.scriptIndices.length;
 	map.scriptIndices.push(script.scenarioIndex);
 	map.scriptNameKeys[scriptName] = {
+		compositeScript: compositeScript,
 		mapLocalScriptId: mapLocalScriptId,
 		globalScriptId: script.scenarioIndex
 	};
 
-	script.forEach(function(action) {
+	compositeScript.forEach(function(action) {
 		result = combineArrayBuffers(
 			result,
 			serializeAction(
@@ -1662,7 +1168,7 @@ var serializeScript = function (
 				scenarioData,
 			),
 		);
-	})
+	});
 	return result;
 };
 
@@ -1701,10 +1207,10 @@ var handleScript = function(
 			map.scriptIndices.push(0);
 			map.scriptNameKeys[scriptName] = result;
 		} else {
-			var sourceScript = scenarioData.scripts[scriptName];
-			if (!sourceScript) {
-				throw new Error(`Script: "${scriptName}" could not be found in scenario.json!`);
-			}
+			var sourceScript = getScriptByName(
+				scriptName,
+				scenarioData,
+			);
 			var script = jsonClone(sourceScript);
 			script.serialized = serializeScript(
 				script,
@@ -1787,12 +1293,26 @@ var handleMapScripts = function (
 	);
 };
 
+var makeVariableLookaheadFunction = function(scenarioData) {
+	return function (script) {
+		script.forEach(function (action) {
+			if(action.variable) {
+				serializeVariable(action.variable, {}, {}, scenarioData);
+			}
+			if(action.source) {
+				serializeVariable(action.source, {}, {}, scenarioData);
+			}
+		});
+	}
+};
+
 var mergeScriptDataIntoScenario = function(
 	fileNameMap,
 	scenarioData,
 ) {
 	var allScripts = {};
 	scenarioData.scripts = allScripts;
+	var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
 	return Promise.all(
 		scenarioData.scriptPaths.map(function(scriptPath) {
 			var scriptFileName = scriptPath.split('/').pop();
@@ -1808,5 +1328,9 @@ var mergeScriptDataIntoScenario = function(
 						})
 				});
 		})
-	);
+	)
+		.then(function () {
+			Object.values(allScripts)
+				.forEach(lookaheadAndIdentifyAllScriptVariables);
+		});
 };

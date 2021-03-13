@@ -1,104 +1,9 @@
 {
-	"dialog-max1": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"Ah, a citizen!",
-				"I wondered if you could help me!"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"What do you need?"
-			]
-		},
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"My name's Swagger!\nMax Swagger!",
-				"I was doing a bit of reconnoissance,\nlooking for a place where I can\nopen my new fashion shop.",
-				"The board here says there's space\navailable, but I can't seem to find\nthe building it's talking about.",
-				"The only thing actually here is\nthe Bobs-Only Club!"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"Well, the town isn't fully implemented\nyet, so... you might have to wait\na few more weeks for the rest of\nthe buildings to return."
-			]
-		}
-	],
-	"dialog-max2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"Not fully implemented?"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"Sorry.",
-				"But I can personally guarantee\nyou can have a building all to yourself\nwhen the time comes."
-			]
-		},
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"Oh! That's good news! All to myself?",
-				"I'm picturing two stories... no, three!",
-				"Lush woven carpets... vaulted ceilings...\nbeautiful oak doors...\nhand-carved decorative moulding...."
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"Um, well....\nYou'll definitely get a building."
-			]
-		},
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "Max Swagger",
-			"messages": [
-				"Excellent! Then I shall return\nwhen the time comes!",
-				"Until that glorious day, farewell!"
-			]
-		}
-	],
-	"dialog-max3": [
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "Black Mage",
-			"messages": [
-				"Not much of a market for fashion here,\nI would've thought.",
-				"Best of luck, Max Swagger!"
-			]
-		}
-	],
 	"dialog-timmy": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "timmy",
-			"name": "Timmy",
+			"name": "%Timmy%",
 			"messages": [
 				"I'm practicing for my triathlon!",
 				"Running is my weakest event, so I'm\nworking hard to improve my time!"
@@ -107,7 +12,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Don't you need legs to run?"
 			]
@@ -115,7 +20,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "timmy",
-			"name": "Timmy",
+			"name": "%Timmy%",
 			"messages": [
 				"...?",
 				"No?"
@@ -136,7 +41,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "trekkie",
-			"name": "Trekkie",
+			"name": "%Trekkie%",
 			"messages": [
 				"Me heard you will soon have a birthday!"
 			]
@@ -144,7 +49,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"That's right! I'll be turning 16,\nand I'll get to be an official\nvillage mage!"
 			]
@@ -152,7 +57,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "trekkie",
-			"name": "Trekkie",
+			"name": "%Trekkie%",
 			"messages": [
 				"Me hope you have happy birthday!"
 			]
@@ -160,7 +65,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
-			"name": "Black Mage",
+			"name": "%PLAYER%",
 			"messages": [
 				"Thanks very much, Trekkie!"
 			]
@@ -176,6 +81,16 @@
 			]
 		}
 	],
+	"dialog-verthandi-ohno": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "Verthandi",
+			"messages": [
+				"Oh no, the adorable little goats seem to\nbe fighting! Or... umm... perhaps...\nthey have been glitched?"
+			]
+		}
+	],
 	"dialog-goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -183,6 +98,16 @@
 			"name": "Goat",
 			"messages": [
 				"Baaahhh!"
+			]
+		}
+	],
+	"dialog-goat-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goat",
+			"name": "Goat",
+			"messages": [
+				"ba15456`-------++++++gf\n+++++-//==========/*8901ikg"
 			]
 		}
 	],
@@ -290,17 +215,6 @@
 			]
 		}
 	],
-	"dialog-smith": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "Mr. Smith",
-			"messages": [
-				"I came here on a blacksmithing\nscholarship, but there's not much\nblacksmithing to do at the moment.",
-				"I think I'll stick around anyway.\nSee what happens."
-			]
-		}
-	],
 	"dialog-sheep": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -315,9 +229,48 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "sheep",
-			"name": "Delmar",
+			"name": "%Delmar%",
 			"messages": [
 				"...?"
+			]
+		}
+	],
+	"dialog-marta-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"It's true. I can fly. It's not a trick.",
+				"I had my TUESDAY a few years ago, and this\nbroom chose me.",
+				"I'm one of the last mages to gain an\nartifact in a while. It's kind of nice\nthere's finally another.",
+				"Though your powers seem more useful than\nmine. All I can do is fly!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"That's still pretty cool!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"It helps me deliver newspapers, I guess.\nCan't fix much else around here."
+			]
+		}
+	],
+	"dialog-marta-cheat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"....","That's cheating."
 			]
 		}
 	],
@@ -325,7 +278,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
-			"name": "V. Elder",
+			"name": "Debug Man",
 			"messages": [
 				"All flags reset."
 			]

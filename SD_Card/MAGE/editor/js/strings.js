@@ -26,6 +26,24 @@ var serializeSaveFlag = function (
 		'save_flags'
 	);
 };
+var serializeVariable = function (
+	string,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var variableId = serializeSomethingLikeAString(
+		string,
+		map,
+		fileNameMap,
+		scenarioData,
+		'variables'
+	);
+	if(variableId > 255) {
+		throw new Error(`There is a limit of 255 Variables! The one that broke the encoder's back was: "${string}"`);
+	}
+	return variableId;
+};
 var serializeSomethingLikeAString = function (
 	string,
 	map,
@@ -33,7 +51,11 @@ var serializeSomethingLikeAString = function (
 	scenarioData,
 	destinationPropertyName,
 ) {
-	var parsedString = templatizeString(string, map);
+	var parsedString = templatizeString(
+		string,
+		map,
+		scenarioData,
+	);
 	var scenarioIndex = scenarioData.uniqueStringLikeMaps[destinationPropertyName][parsedString];
 	if (scenarioIndex === undefined) {
 		// allow for explicit null char at the end
@@ -58,9 +80,14 @@ var serializeSomethingLikeAString = function (
 	return scenarioIndex;
 };
 
-var templatizeString = function (templateString, map) {
-	var variableRegex = /%(.*?)%/gm
-	var replaceFunction = function (
+var templatizeString = function (
+	templateString,
+	map,
+	scenarioData,
+) {
+	var entityRegex = /%(.*?)%/gm;
+	var variableRegex = /\$(.*?)\$/gm;
+	var entityIndexReplaceFunction = function (
 		wholeVariable,
 		variableName
 	) {
@@ -74,8 +101,23 @@ var templatizeString = function (templateString, map) {
 		);
 		return `%%${entityId}%%`;
 	}
-	return templateString.replace(
-		variableRegex,
-		replaceFunction
-	)
+	var variableIndexReplaceFunction = function (
+		wholeVariable,
+		variableName
+	) {
+		var variableIndex = scenarioData.uniqueStringLikeMaps.variables[variableName];
+		if(variableIndex === undefined) {
+			throw new Error(`templatizeString was unable to find the variable "${variableName}" in the string "${templateString}"`);
+		}
+		return `$$${variableIndex}$$`;
+	}
+	return templateString
+		.replace(
+			entityRegex,
+			entityIndexReplaceFunction
+		)
+		.replace(
+			variableRegex,
+			variableIndexReplaceFunction
+		);
 };

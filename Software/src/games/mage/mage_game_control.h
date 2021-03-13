@@ -10,6 +10,8 @@
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
 
+#define MAGE_COLLISION_SPOKE_COUNT 6
+
 /*
 The MageGameControl object handles several important tasks. It's basically the
 core of the entire MAGE() game, and contains all the important variables that
@@ -46,6 +48,7 @@ private:
 	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
 	MageHeader saveFlagHeader;
+	MageHeader variableHeader;
 	MageHeader imageHeader;
 
 	//this is where the current map data from the ROM is stored.
@@ -67,9 +70,6 @@ private:
 	//on the screen in their current animation state.
 	std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
 
-	//this is an array of all the geometry objects in the ROM
-	std::unique_ptr<MageGeometry[]> geometries;
-
 	//this is an array of all the colorPalettes objects in the ROM
 	std::unique_ptr<MageColorPalette[]> colorPalettes;
 
@@ -78,8 +78,17 @@ private:
 	uint16_t previousPlayerTilesetId;
 
 	//a couple of state variables for tracking player movement:
-	uint8_t mageSpeed;
+	float mageSpeed;
 	bool isMoving;
+
+	Point playerVelocity = {
+		.x = 0,
+		.y = 0,
+	};
+	Point adjustedCameraPosition= {
+		.x = 0,
+		.y = 0,
+	};
 
 	//this handles script initialization when loading a new map
 	void initializeScriptsOnMapLoad();
@@ -100,6 +109,14 @@ public:
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
 	bool isCollisionDebugOn;
+	bool cameraShaking = false;
+	float cameraShakePhase = 0;
+	uint8_t cameraShakeAmplitude = 0;
+	int16_t cameraFollowEntityId = NO_PLAYER;
+	Point cameraPosition = {
+		.x = 0,
+		.y = 0,
+	};
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
@@ -128,20 +145,24 @@ public:
 
 	//this takes input information and moves the playerEntity around
 	//If there is no playerEntity, it just moves the camera freely.
-	void applyGameModeInputs();
+	void applyGameModeInputs(uint32_t deltaTime);
+
+	void applyCameraEffects(uint32_t deltaTime);
 
 	//this will check in the direction the player entity is facing and start
 	//an on_interact script for an entity if any qualify.
-	void handleEntityInteract();
+	void handleEntityInteract(
+		bool hack = false
+	);
 
 	//this will render the map onto the screen.
-	void DrawMap(uint8_t layer, int32_t camera_x, int32_t camera_y);
+	void DrawMap(uint8_t layer);
 
 	//the functions below will validate specific properties to see if they are valid.
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
 	uint16_t getValidEntityId(uint16_t entityId);
 	uint16_t getValidMapId(uint16_t mapId);
-	uint16_t getValidPrimaryIdType(uint16_t primaryIdType);
+	uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
 	uint16_t getValidTilesetId(uint16_t tilesetId);
 	uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
 	uint16_t getValidAnimationId(uint16_t animationId);
@@ -150,9 +171,15 @@ public:
 	uint16_t getValidMapLocalScriptId(uint16_t scriptId);
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
-	uint8_t  getValidEntityTypeDirection(uint8_t direction);
-	MageGeometry* getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
-	MageGeometry* getGeometryFromGlobalId(uint16_t globalGeometryId);
+	MageEntityAnimationDirection getValidEntityTypeDirection(
+		MageEntityAnimationDirection direction
+	);
+	MageEntityAnimationDirection updateDirectionAndPreserveFlags(
+		MageEntityAnimationDirection desired,
+		MageEntityAnimationDirection previous
+	);
+	MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
+	MageGeometry getGeometryFromGlobalId(uint16_t globalGeometryId);
 	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
 	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
 	std::string getString(
@@ -167,22 +194,34 @@ public:
 
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
-	void updateEntityRenderableData(uint8_t index);
+	void updateEntityRenderableData(
+		uint8_t index,
+		bool skipTilesetCheck = false
+	);
+
+	void updateEntityRenderableBoxes(
+		MageEntityRenderableData *data,
+		const MageEntity *entity,
+		const MageTileset *tileset
+	) const;
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
 	//this will draw the entities over the current state of the screen
-	void DrawEntities(int32_t cameraX, int32_t cameraY);
+	void DrawEntities();
 
 	//this will draw the current map's geometry over the current state of the screen
-	void DrawGeometry(int32_t cameraX, int32_t cameraY);
+	void DrawGeometry();
 
 	MageEntity* getValidEntity(int8_t entityId);
 
 	MageTileset* getValidTileset(uint16_t tilesetId);
 
 	std::string getEntityNameStringById(int16_t entityId);
+
+	Point getPushBackFromTilesThatCollideWithPlayer();
+
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL

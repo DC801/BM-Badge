@@ -99,6 +99,8 @@ class MageScriptControl
 		//Action Logic Type: I+C
 		void checkEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
+		void checkEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
 		void checkEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -164,6 +166,8 @@ class MageScriptControl
 		void setEntityDirectionTargetEntity(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityDirectionTargetGeometry(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -232,6 +236,16 @@ class MageScriptControl
 		void screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB
+		void mutateVariable(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB
+		void mutateVariables(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB
+		void copyVariable(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkVariable(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I+C
+		void checkVariables(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (sounds should begin playing when called by an action and continue until the sound file ends)
 		void playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
@@ -245,6 +259,8 @@ class MageScriptControl
 		//when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
 		//the new map will be loaded at the beginning of the next tick
 		int32_t mapLoadId;
+
+		uint16_t scriptVariables[256] = {0};
 
 		MageScriptControl();
 
@@ -276,6 +292,10 @@ class MageScriptControl
 			const Point &point
 		) const;
 		float getProgressOfAction(const MageScriptState *resumeStateStruct) const;
+		float manageProgressOfAction(
+			MageScriptState *resumeStateStruct,
+			uint32_t duration
+		) const;
 		uint16_t getLoopableGeometryPointIndex(
 			MageGeometry *geometry,
 			uint8_t index
@@ -310,6 +330,17 @@ class MageScriptControl
 			int16_t callingEntityId
 		);
 
+		void mutate(
+			MageMutateOperation operation,
+			uint16_t *destination,
+			uint16_t value
+		) const;
+
+		bool compare(
+			MageCheckComparison comparison,
+			uint16_t a,
+			uint16_t b
+		) const;
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H

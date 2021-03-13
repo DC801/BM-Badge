@@ -1,0 +1,772 @@
+{
+	"dialog-lodge-cantleaveyet": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wait, I can't leave yet!"
+			]
+		}
+	],
+	"dialog-candothis": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Okay. I can do this."
+			]
+		}
+	],
+	"dialog-tuesday-intro1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Come on in, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-tuesday-intro2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"We'll be right here."
+			]
+		}
+	],
+	"dialog-tuesday-intro3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Go ahead. You'll do great!"
+			]
+		}
+	],
+	"dialog-tuesday-lunch": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"A bracelet?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"That?",
+				"That is my lunch!"
+			]
+		}
+	],
+	"dialog-tuesday-broom": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Hey, that broom is mine! How did that end\nup there?"
+			]
+		}
+	],
+	"dialog-zippy-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Go ahead, dear!"
+			]
+		}
+	],
+	"dialog-zappy-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Take your time!"
+			]
+		}
+	],
+	"dialog-verthandi-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "%Verthandi%",
+			"messages": [
+				"Oh, how exciting!"
+			]
+		}
+	],
+	"dialog-smith-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "%Smith%",
+			"messages": [
+				"Don't look at me! I don't know how any of\nthis stuff works!"
+			]
+		}
+	],
+	"dialog-max-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Hmm. I've seen better artifacts."
+			]
+		}
+	],
+	"dialog-marta-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"One of those artifacts seems a little\nfamiliar to me...."
+			]
+		}
+	],
+	"dialog-trekkie-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "%Trekkie%",
+			"messages": [
+				"Oh, me hope it's a good one!"
+			]
+		}
+	],
+	"dialog-shepherd-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Is that old junk really magic?"
+			]
+		}
+	],
+	"dialog-cleo-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "%Cleo%",
+			"messages": [
+				"Ooh! I bet it's gonna be the one on the\nleft! No, the right! No, the second one!"
+			]
+		}
+	],
+	"dialog-beatrice-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"It's been so long since we've had a new\nmage!"
+			]
+		}
+	],
+	"dialog-baker-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Um, I gotta get back to work, kid. You\nwanna hurry it up a little?"
+			]
+		}
+	],
+	"dialog-jackob-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"(Wait, was this everything?)"
+			]
+		}
+	],
+	"dialog-alfonso-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"*ahem*",
+				"The mage must present themselves to the\nartifacts until one shows interest."
+			]
+		}
+	],
+	"dialog-bert-prechoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"Touch each item, please."
+			]
+		}
+	],
+	"dialog-zippy-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"We always knew you were destined for great\nthings!"
+			]
+		}
+	],
+	"dialog-zappy-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"We're both so proud of you!"
+			]
+		}
+	],
+	"dialog-verthandi-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "verthandi",
+			"name": "%Verthandi%",
+			"messages": [
+				"Oh, how exciting!"
+			]
+		}
+	],
+	"dialog-smith-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "%Smith%",
+			"messages": [
+				"Sounds like that ring is a big deal.",
+				"Neat."
+			]
+		}
+	],
+	"dialog-max-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Hmm. That ring looks a bit too plain to\nbe the real Ring Zero, doesn't it?"
+			]
+		}
+	],
+	"dialog-marta-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Wow. Never seen a TUESDAY like this before!"
+			]
+		}
+	],
+	"dialog-trekkie-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "%Trekkie%",
+			"messages": [
+				"Amazing!"
+			]
+		}
+	],
+	"dialog-shepherd-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Neat!"
+			]
+		}
+	],
+	"dialog-cleo-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "%Cleo%",
+			"messages": [
+				"It looks so shiny!"
+			]
+		}
+	],
+	"dialog-beatrice-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh! I never thought I'd see this day! Oh,\nmy Delmar...!"
+			]
+		}
+	],
+	"dialog-baker-postchoose": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"Congratulations, %PLAYER%!"
+			]
+		}
+	],
+	"dialog-tuesday1": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"The day has come!",
+				"You have come of age, and what a joyous\nday it is.",
+				"You may have noticed some aches and pains,\nand hair growing in new places. It's also\npossible --"
+			]
+		}
+	],
+	"dialog-tuesday2": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Uh, that's the wrong speech! It's TUESDAY,\nnot puberty education!"
+			]
+		}
+	],
+	"dialog-tuesday3": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"It Friday."
+			]
+		}
+	],
+	"dialog-tuesday4": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"No, not Tuesday, TUESDAY. You know,\nTraditional and Unambiguous Event of\nSelection Directly Affecting You."
+			]
+		}
+	],
+	"dialog-tuesday5": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Ah, yes. Right you are."
+			]
+		}
+	],
+	"dialog-tuesday6": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"*Ahem*",
+				"Each mage, upon the day of their 16th\nbirthday, will then be present for their\nTUESDAY.",
+				"Upon the chosen TUESDAY, each mage is\nrecognized by forces beyond our\ncomprehension as ready to wield power\nbestowed upon them by a magical artifact.",
+				"Mages do not choose their own artifacts,\nbut rather are subject to the moods and\ntemperaments of the artifacts.",
+				"(And boy they are moody.)"
+			]
+		}
+	],
+	"dialog-tuesday7": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"The mage must present themselves to the\nartifacts until one shows interest. Mage,\nstep forth."
+			]
+		}
+	],
+	"dialog-ring1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Well, this is certainly... unexpected.\nWe've never had a dud quite like this one\nbefore."
+			]
+		}
+	],
+	"dialog-ring2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Why don't we --"
+			]
+		}
+	],
+	"dialog-ring3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Oh! Oh, good heavens! Is that --"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"It is."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"It's Ring Zero!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"What?! What is that?"
+			]
+		}
+	],
+	"dialog-ring4": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"It just slipped itself onto my finger!"
+			]
+		}
+	],
+	"dialog-ring5": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Um, it's not coming off. Is that normal?"
+			]
+		}
+	],
+	"dialog-ring6": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Normal? Normal?!",
+				"Nothing about that thing is normal!",
+				"This is --\nThis is unprecedented."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Is it bad?! What's wrong with it?",
+				"Am I... am I gonna die?!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"The ring isn't bad, it's just... powerful."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"No one has been chosen by this ring before."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Oh, but... but perhaps...."
+			]
+		}
+	],
+	"dialog-ring7": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Oh, but this is good news, isn't it?",
+				"This means we can finally fix things!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"Fix the town."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Yes....",
+				"Yes!"
+			]
+		}
+	],
+	"dialog-ring8": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Yes, you can fix things at last!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Fix the town?"
+			]
+		}
+	],
+	"dialog-ring9": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"But the town is all glitchy and hacked!\nHow am I supposed to fix it with this\nthing? Unless...."
+			]
+		}
+	],
+	"dialog-ring10": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Yes, exactly! That ring, Ring Zero --",
+				"That ring gives you the power to hack the\nplanet!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Hack the planet? You mean... all the stuff\nthat's broken?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"You can fix what the Big Bad broke!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Everything that the Big Bag hackced so\nmany years ago.... Everything that\nscoundrel ruined...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"This ring gives me the Big Bad's power?",
+				"But I don't know how to hack! How am I\nsupposed to fix anything?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Yes, well, you see...."
+			]
+		}
+	],
+	"dialog-ring11": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Please come with us, %PLAYER%."
+			]
+		}
+	],
+	"dialog-ring12": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Into the inner sanctum!"
+			]
+		}
+	],
+	"dialog-maybe-another": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Maybe a different artifact?"
+			]
+		}
+	],
+	"dialog-maybe-none": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Wait. Was that the last one?"
+			]
+		}
+	],
+	"dialog-tuesday-glasses": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"This?","This is clearly a temporary asset that\nhasn't been replaced with anything yet.",
+				"Though....",
+				"(touch)",
+				"Ahh, oh well."
+			]
+		}
+	],
+	"dialog-tuesday-book": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Ugh. Is that an eye on the cover?",
+				"And I don't wanna know what kind of\nleather that is.",
+				"....",
+				"It's not reacting to me, though."
+			]
+		}
+	],
+	"dialog-tuesday-wand1": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Moon Prism Power...."
+			]
+		}
+	],
+	"dialog-tuesday-wand2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Make Up!"
+			]
+		}
+	],
+	"dialog-tuesday-wand3": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"Erm, maybe I had that a bit wrong.","Still, no response."
+			]
+		}
+	],
+	"dialog-debug-tuesday-over": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "Debug Man",
+			"name": "%Debug Man%",
+			"messages": [
+				"Tuesday bypassed."
+			]
+		}
+	],
+	"dialog-murmur1": [
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Did they do it wrong?"
+			]
+		}
+	],
+	"dialog-murmur2": [
+		{
+			"alignment": "TOP_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Maybe they missed one."
+			]
+		}
+	],
+	"dialog-murmur3": [
+		{
+			"alignment": "TOP_RIGHT",
+			"portrait": "baker",
+			"name": "%Baker%",
+			"messages": [
+				"I'm pretty sure %PLAYER% touched\nall of them...."
+			]
+		}
+	]
+}

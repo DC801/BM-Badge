@@ -7,19 +7,19 @@
 			"duration": 400
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "add_flour"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "wash_hands"
 		},
 		{
@@ -35,7 +35,7 @@
 			"duration": 400
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "load_bread"
 		},
 		{
@@ -51,16 +51,12 @@
 			"duration": 1200
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "check_fridge"
 		},
 		{
-			"action": "RUN_SCRIPT",
+			"action": "COPY_SCRIPT",
 			"script": "wash_hands"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "bake"
 		}
 	],
 	"add_flour": [
@@ -236,6 +232,11 @@
 			"success_script": "show_dialog-baker-start-s"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start"
 		},
@@ -243,9 +244,28 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker1",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-baker-start-s": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start-s"
@@ -254,6 +274,20 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bobrock-gottago": [
@@ -305,6 +339,11 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Bob Austin",
 			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -384,23 +423,48 @@
 			"script": "show_dialog-bobrock-start"
 		}
 	],
-"show_dialog-bobrock-yesbob": [
+	"show_dialog-bobrock-yesbob": [
+			{
+				"action": "SHOW_DIALOG",
+				"dialog": "dialog-bobrock-yesbob1"
+			},
+			{
+				"action": "RUN_SCRIPT",
+				"script": "unlock_door"
+			}
+		],
+	"on_load-bobsclub1": [
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobrock-yesbob1"
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"expected_bool": false,
+			"success_script": "hide-bobmoss"
 		},
 		{
-			"action": "RUN_SCRIPT",
-			"script": "unlock_door"
+			"action": "COPY_SCRIPT",
+			"script": "on_load-bobsclub2"
 		}
 	],
-"show_dialog-bobsclub": [
+	"hide-bobmoss": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bob Moss",
+			"geometry": "bobsclub-hidingplace"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "on_load-bobsclub2"
+		}
+		],
+	"on_load-bobsclub2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bobsclub",
-			"expected_bool": true,
-			"success_script": "null_script"
-		},
+			"expected_bool": false,
+			"success_script": "show_dialog-bobsclub"
+		}
+	],
+"show_dialog-bobsclub": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
@@ -417,7 +481,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub1"
+			"dialog": "dialog-bobsclub1",
+			"doc": "Oh, hello."
 		},
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
@@ -441,7 +506,17 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub2"
+			"dialog": "dialog-bobsclub2",
+			"doc": "I hate to tell you this, but it's canceled."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1200,
+			"entity": "Strong Bad"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -471,7 +546,21 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub3"
+			"dialog": "dialog-bobsclub3",
+			"doc": "Ladies? / What about Bob-vylin? / Came to the wrong party."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 700,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -480,7 +569,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub4"
+			"dialog": "dialog-bobsclub4",
+			"doc": "This place should be full of Bobs... next year."
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
@@ -495,6 +585,11 @@
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Strong Bad",
 			"byte_value": 0
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobsclub",
+			"bool_value": true
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -517,15 +612,74 @@
 			"dialog": "dialog-bobsclub6"
 		}
 	],
-"show_dialog-bobsclub-bob": [
+	"show_dialog-bobsclub-bob": [
+			{
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"entity": "Guardian Bob",
+				"target_entity": "%PLAYER%"
+			},
+			{
+				"action": "SHOW_DIALOG",
+				"dialog": "dialog-bobsclub-bob",
+				"doc": "They could've told me it was canceled before I came out here."
+			},
+			{
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "bobmoss",
+				"expected_bool": false,
+				"success_script": "show_dialog-bobsclub-bob-where"
+			}
+		],
+	"show_dialog-bobsclub-bob-where": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 120
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Guardian Bob",
-			"target_entity": "%PLAYER%"
+			"script": "look-left-and-right-fast"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bobsclub-bob"
+			"dialog": "dialog-bobsclub-bob-where",
+			"doc": "Wait. Weren't there two?"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Guardian Bob",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Guardian Bob",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Guardian Bob",
+			"script": "show_dialog-bobsclub-bob"
 		}
 	],
 "show_dialog-bobsclub-strongbob": [
@@ -593,7 +747,7 @@
 			"script": "show_dialog-bobrock-start"
 		}
 	],
-"show_dialog-bobrock-yesbob-rehash": [
+	"show_dialog-bobrock-yesbob-rehash": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-yesbob-rehash"
@@ -603,7 +757,12 @@
 			"script": "unlock_door"
 		}
 	],
-"show_dialog-baker-end": [
+	"show_dialog-baker-end": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "baker2",
@@ -620,12 +779,21 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
 		}
 	],
-"show_dialog-baker-end-s": [
+	"show_dialog-baker-end-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-end-s"
@@ -634,9 +802,98 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Baker",
 			"script": "show_dialog-baker-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
-"on_tick-bobsclub": [
+	"show_dialog-bobmoss-start": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bob Moss",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"expected_bool": true,
+			"success_script": "show_dialog-bobmoss-start-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-start1"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Bob Moss",
+			"script": "spin_self_clockwise"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-start2"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Bob Moss",
+			"script": "null_script"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bob Moss",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-start3"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 500,
+			"color": "#000000"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bob Moss",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 500,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"show_dialog-bobmoss-start-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-start-s"
+		}
+	],
+	"show_dialog-fridge": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-fridge"
+		}
+	],
+	"on_tick-bobsclub": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
@@ -645,7 +902,7 @@
 			"expected_bool": true
 		}
 	],
-"leave-bobsclub": [
+	"leave-bobsclub": [
 		{
 			"action": "SET_WARP_STATE",
 			"string": "exit_from-bobsclub"
@@ -656,7 +913,7 @@
 		}
 
 	],
-"on_tick-bakery": [
+	"on_tick-bakery": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
@@ -665,7 +922,7 @@
 			"expected_bool": true
 		}
 	],
-"leave-bakery": [
+	"leave-bakery": [
 		{
 			"action": "SET_WARP_STATE",
 			"string": "exit_from-bakery"
@@ -673,6 +930,25 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "map-main"
+		}
+	],
+	"watch-baker": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Baker"
+		}
+	],
+	"show_dialog-bobwall": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobwall"
+		}
+	],
+	"show_dialog-balloonbox": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-balloonbox"
 		}
 	]
 }
