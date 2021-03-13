@@ -1,0 +1,456 @@
+{
+	"on_tick-greenhouse": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "door-greenhouse",
+			"success_script": "leave-greenhouse",
+			"expected_bool": true
+		}
+	],
+	"leave-greenhouse": [
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-greenhouse"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"on_load-greenhouse": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "trekkie2",
+			"expected_bool": true,
+			"success_script": "make-ethernettle-correct"
+		}
+	],
+	"make-ethernettle-correct": [
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle1",
+			"u2_value": 3
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle2",
+			"u2_value": 2
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle3",
+			"u2_value": 7
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle4",
+			"u2_value": 0
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle5",
+			"u2_value": 1
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle6",
+			"u2_value": 6
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle7",
+			"u2_value": 5
+		},
+		{
+			"action": "SET_ENTITY_SECONDARY_ID",
+			"entity": "EtherNettle8",
+			"u2_value": 4
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 4,
+			"doc": "should be modem working animation"
+		}
+	],
+	"show_dialog-trekkie-start": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "trekkie1",
+			"expected_bool": true,
+			"success_script": "show_dialog-trekkie-eval"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-start1",
+			"doc": "Happy birthday / aww thanks"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-start2",
+			"doc": "Me sorry, internet no working."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-start3",
+			"doc": "Flowers lined up wrong."
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-start4",
+			"doc": "Can't just dig up Ether Nettles."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie1",
+			"bool_value": true
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"show_dialog-trekkie-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "trekkie2",
+			"expected_bool": true,
+			"success_script": "show_dialog-trekkie-end-s"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle1",
+			"expected_u2": 3,
+			"expected_bool": false,
+			"doc": "EtherNettle1 should be orange-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle2",
+			"expected_u2": 2,
+			"expected_bool": false,
+			"doc": "EtherNettle2 should be orange"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle3",
+			"expected_u2": 7,
+			"expected_bool": false,
+			"doc": "EtherNettle3 should be green-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle4",
+			"expected_u2": 0,
+			"expected_bool": false,
+			"doc": "EtherNettle4 should be blue"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle5",
+			"expected_u2": 1,
+			"expected_bool": false,
+			"doc": "EtherNettle5 should be blue-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle6",
+			"expected_u2": 6,
+			"expected_bool": false,
+			"doc": "EtherNettle6 should be green"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle7",
+			"expected_u2": 5,
+			"expected_bool": false,
+			"doc": "EtherNettle7 should be brown-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-trekkie-start-s",
+			"entity": "EtherNettle8",
+			"expected_u2": 4,
+			"expected_bool": false,
+			"doc": "EtherNettle8 should be brown"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1400,
+			"entity": "Modem"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1500
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 3
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-oh",
+			"doc": "Oh!"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 4
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 1400,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 900
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-end",
+			"doc": "PLAYER did it!"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie2",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"solve-ethernet-puzzle": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "make-ethernettle-correct"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Modem",
+			"byte_value": 0,
+			"doc": "the modem still isn't working until you speak to Trekkie"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Debug Man",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-solve-ethernet-puzzle",
+			"doc": "Ether Nettle restored."
+		}
+	],
+	"show_dialog-trekkie-start-s": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-start-s",
+			"doc": "Me can't remember order, but orange stripey first."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"bool_value": true
+		}
+	],
+	"show_dialog-trekkie-end-s": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-end-s",
+			"doc": "So what's the internet for, anyway?"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
+		}
+	]
+}

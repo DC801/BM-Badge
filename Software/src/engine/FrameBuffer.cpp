@@ -63,17 +63,13 @@ void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	int s1 = min(x1, x2);
 	int s2 = max(x1, x2);
-	if (y < 0 || y > HEIGHT) { return; }
-	for (int x=s1; x <= s2; ++x)
-	{
-		int32_t dest = y * WIDTH + x;
+	if (y < 0 || y >= HEIGHT) { return; }
+	for (int x = s1; x <= s2; ++x) {
 		if (
 			x >= 0
 			&& x < WIDTH
-			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest]=SCREEN_ENDIAN_U2_VALUE(color);
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -81,17 +77,13 @@ void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	int s1 = min(y1, y2);
 	int s2 = max(y1, y2);
-	if (x < 0 || x > WIDTH) { return; }
-	for (int y=s1; y <= s2; ++y)
-	{
-		int32_t dest = y * WIDTH + x;
+	if (x < 0 || x >= WIDTH) { return; }
+	for (int y = s1; y <= s2; ++y) {
 		if (
 			y >= 0
 			&& y < HEIGHT
-			&& dest >= 0
-			&& dest < (int32_t)FRAMEBUFFER_SIZE
 		) {
-			frame[dest] = SCREEN_ENDIAN_U2_VALUE(color);
+			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
 		}
 	}
 }
@@ -264,7 +256,7 @@ void FrameBuffer::drawImageWithFlags(
 
 void FrameBuffer::drawChunkWithFlags(
 	uint32_t address,
-	MageColorPalette *colorPalette,
+	MageColorPalette *colorPaletteOriginal,
 	int32_t screen_x, // top-left corner of screen coordinates to draw at
 	int32_t screen_y, // top-left corner of screen coordinates to draw at
 	uint16_t tile_width,
@@ -276,12 +268,19 @@ void FrameBuffer::drawChunkWithFlags(
 	uint8_t flags
 )
 {
+	MageColorPalette colorPaletteFaded;
+	MageColorPalette *colorPalette = colorPaletteOriginal;
 	RenderFlagsUnion flagSplit;
 	flagSplit.i = flags;
 	bool flip_x    = flagSplit.f.horizontal;
 	bool flip_y    = flagSplit.f.vertical;
 	bool flip_diag = flagSplit.f.diagonal;
+	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
+	if(glitched) {
+		screen_x += tile_width * 0.125;
+		tile_width *= 0.75;
+	}
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||
@@ -290,7 +289,6 @@ void FrameBuffer::drawChunkWithFlags(
 	) {
 		return;
 	}
-
 	uint8_t pixels[tile_width * tile_height];
 
 	EngineROM_Read(
@@ -299,6 +297,16 @@ void FrameBuffer::drawChunkWithFlags(
 		(uint8_t *)&pixels,
 		"Failed to read pixel data"
 	);
+
+	if(fadeFraction != 0) {
+		colorPaletteFaded = MageColorPalette(
+			colorPaletteOriginal,
+			transparent_color,
+			fadeColor,
+			fadeFraction
+		);
+		colorPalette = &colorPaletteFaded;
+	}
 
 	if(flip_x == false && flip_y == false && flip_diag == false) {
 		tileToBufferNoXNoYNoZ(
@@ -1451,6 +1459,22 @@ Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 	return point;
 }
 
+uint16_t FrameBuffer::applyFadeColor(uint16_t color) {
+	uint16_t result = color;
+	if(fadeFraction) {
+		ColorUnion fadeColorUnion;
+		ColorUnion colorUnion;
+		fadeColorUnion.i = fadeColor;
+		colorUnion.i = result;
+		colorUnion.c.r = FrameBuffer::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
+		colorUnion.c.g = FrameBuffer::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
+		colorUnion.c.b = FrameBuffer::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
+		colorUnion.c.alpha = FrameBuffer::lerp(colorUnion.c.alpha, fadeColorUnion.c.alpha, fadeFraction);
+		result = colorUnion.i;
+	}
+	return result;
+}
+
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 	int dx = x2 - x1;
 	int dy = y2 - y1;
@@ -1464,9 +1488,9 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 		x = round(lerp((float) x1, (float) x2, progress));
 		y = round(lerp((float) y1, (float) y2, progress));
 		if ( // crop to screen bounds
-			x > 0
+			x >= 0
 			&& x < WIDTH
-			&& y > 0
+			&& y >= 0
 			&& y < HEIGHT
 		) {
 			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
@@ -1809,31 +1833,6 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
 
 void FrameBuffer::blt()
 {
-	if(
-		isFading
-		&& fadeFraction == 1.0f
-	) {
-		clearScreen(fadeColor);
-	} else if (
-		isFading
-		&& fadeFraction != 0.0f
-	) {
-		ColorUnion color;
-		color.i = fadeColor;
-		uint8_t fade_r = color.c.r;
-		uint8_t fade_g = color.c.g;
-		uint8_t fade_b = color.c.b;
-		uint8_t fade_a = color.c.alpha;
-		for(uint32_t i = 0; i < FRAMEBUFFER_SIZE; i++) {
-			color.i = SCREEN_ENDIAN_U2_VALUE(frame[i]);
-			color.c.r = lerp(color.c.r, fade_r, fadeFraction);
-			color.c.g = lerp(color.c.g, fade_g, fadeFraction);
-			color.c.b = lerp(color.c.b, fade_b, fadeFraction);
-			color.c.alpha = lerp(color.c.alpha, fade_a, fadeFraction);
-			frame[i] = SCREEN_ENDIAN_U2_VALUE(color.i);
-		}
-	}
-
 	#ifdef DC801_DESKTOP
 		EngineWindowFrameGameBlt(frame);
 	#endif

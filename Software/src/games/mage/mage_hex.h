@@ -28,7 +28,7 @@ This class contains all the code related to the hex editor hacking interface.
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
 #ifdef DC801_DESKTOP
 #define HEXED_QUICK_PRESS_TIMEOUT 50
-#define HEXED_TICK_DELAY 10
+#define HEXED_TICK_DELAY 1
 #endif
 #ifdef DC801_EMBEDDED
 #define HEXED_QUICK_PRESS_TIMEOUT 500
@@ -52,6 +52,9 @@ private:
 
 	//true if there has been any button presses that change the cursor position.
 	bool anyHexMovement;
+
+	//delays all hex input by this many ticks
+	uint8_t hexTickDelay = 0;
 
 	//true if the hex editor screen is reduced in size to allow for a
 	//dialog window to be displayed.
@@ -89,6 +92,7 @@ public:
 	MageHexEditor() : currentOp{HEX_OPS::HEX_OPS_XOR},
 		hexEditorState{false},
 		anyHexMovement{false},
+		hexTickDelay{0},
 		dialogState{false},
 		bytesPerPage{HEXED_DEFAULT_BYTES_PER_PAGE},
 		hexRows{0},
@@ -98,7 +102,7 @@ public:
 		hexCursorLocation{0},
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
-		memAddresses{0}
+		memAddresses{0, 1, 2, 3}
 	{};
 
 	//returns the size in RAM of the class variables.
@@ -126,6 +130,8 @@ public:
 	//sets the hex cursor location to address:
 	void setHexCursorLocation(uint16_t address);
 
+	void setPageToCursorLocation();
+
 	//this calculates which memory page the hexCursorLocation appears on.
 	uint16_t getCurrentMemPage();
 
@@ -151,6 +157,8 @@ public:
 
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
+
+	void openToEntityByIndex(uint8_t entityIndex);
 };
 
 #endif //_MAGE_HEX_H

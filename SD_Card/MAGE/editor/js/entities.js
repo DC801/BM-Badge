@@ -89,6 +89,9 @@ var serializeEntity = function (
 	if(primaryIndexType !== 2) {
 		directionOrRenderFlags = entity.renderFlags;
 	}
+	if(entity.is_glitched) {
+		directionOrRenderFlags |= IS_GLITCHED_FLAG;
+	}
 	dataView.setUint16(
 		offset, // primary_id // may be: entity_type_id, animation_id, tileset_id
 		primaryIndex,

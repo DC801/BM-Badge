@@ -97,6 +97,34 @@ You should now have the badge running on your desktop computer screen!
 
 To debug you need to open the Run/debug menu on the left (`Ctrl+Shift+D`). It looks like it has a triangle and a bug symbol. At the top, make sure that the dropdown says "Debug (Desktop)", and either click the green arrow or hit F5. You're debugging the Desktop build now!
 
+### Desktop Build controls
+
+| Function       | Key     |
+|---------------:|:-------:|
+| ``Move Up``    | ``W``   |
+| ``Move Down``  | ``S``   |
+| ``Move Right`` | ``A``   |
+| ``Move Left``  | ``D``   |
+| ``Interact``   | ``L``   |
+| ``Run``        | ``K``   |
+| ``Action``     | ``J``   |
+| ``HexEditor``  | ``Tab`` |
+| ``Interact``   | ``L``   |
+| ``Hex XOR``    | ``F1``  |
+| ``Hex ADD``    | ``F2``  |
+| ``Hex SUB``    | ``F3``  |
+| ``Hex PAGE``   | ``F4``  |
+| ``Hex MEM0``   | ``F5``  |
+| ``Hex MEM1``   | ``F6``  |
+| ``Hex MEM2``   | ``F8``  |
+| ``Hex MEM3``   | ``F8``  |
+
+Hex Bit keys:
+
+| Bit | 128 | 64  | 32  | 16  | 8   | 4   | 2   | 1   |
+|-----|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| Key | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   |
+
 ### Optional - Install Tiled
 
 Tiled (https://www.mapeditor.org/) is being used to edit the game map & character files. If you want to edit these, you'll need to install tiled. (The `wget` isn't grabbing the latest. If you want, download it manually to get the newest version of tiled, but you must use v 1.4.2 or later)

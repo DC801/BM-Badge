@@ -2,6 +2,9 @@
 #include "modules/sd.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
+#include "FrameBuffer.h"
+
+extern FrameBuffer *mage_canvas;
 
 MageColorPalette::MageColorPalette(uint32_t address)
 {
@@ -31,8 +34,6 @@ MageColorPalette::MageColorPalette(uint32_t address)
 		(uint8_t *)colors.get(),
 		"Failed to read ColorPalette property 'colors'"
 	);
-
-	return;
 }
 
 uint32_t MageColorPalette::size() const
@@ -42,4 +43,42 @@ uint32_t MageColorPalette::size() const
 		(sizeof(colorCount) * sizeof(uint16_t))
 	);
 	return size;
+}
+
+MageColorPalette::MageColorPalette(
+	MageColorPalette *sourcePalette,
+	uint16_t transparentColor,
+	uint16_t fadeColor,
+	float fadeFraction
+) {
+	uint16_t sourceColor;
+	colorCount = sourcePalette->colorCount;
+	colors = std::make_unique<uint16_t[]>(colorCount);
+	if(
+		fadeFraction == 1.0f
+	) {
+		for (int i = 0; i < sourcePalette->colorCount; ++i) {
+			sourceColor = sourcePalette->colors[i];
+			colors[i] = sourceColor == transparentColor
+				? sourceColor
+				: fadeColor;
+		}
+	} else if (
+		fadeFraction != 0.0f
+	) {
+		for (int i = 0; i < sourcePalette->colorCount; ++i) {
+			sourceColor = sourcePalette->colors[i];
+			if(sourceColor != transparentColor) {
+				colors[i] = SCREEN_ENDIAN_U2_VALUE(
+					mage_canvas->applyFadeColor(
+						SCREEN_ENDIAN_U2_VALUE(
+							sourceColor
+						)
+					)
+				);
+			} else {
+				colors[i] = sourceColor;
+			}
+		}
+	}
 }

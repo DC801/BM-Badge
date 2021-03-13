@@ -1,6 +1,11 @@
 {
 	"show_dialog-shepherd-start": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "shepherd2",
 			"expected_bool": true,
@@ -18,7 +23,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -36,7 +41,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_RELATIVE",
@@ -45,7 +50,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_RELATIVE",
@@ -62,7 +67,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -76,7 +81,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_RELATIVE",
@@ -85,7 +90,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1000
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_RELATIVE",
@@ -106,11 +111,34 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
 		}
 	],
 	"show_dialog-shepherd-start-s": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": true
+		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Baa",
@@ -151,6 +179,11 @@
 	],
 	"show_dialog-shepherd-sheepcheck": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Baa",
 			"geometry": "sheep-pen",
@@ -184,6 +217,10 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-end"
 		},
@@ -195,6 +232,11 @@
 	],
 	"show_dialog-shepherd-sheepcheer": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-sheepcheer"
 		},
@@ -205,6 +247,11 @@
 		}
 	],
 	"show_dialog-shepherd-end": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Shepherd",
+			"target_entity": "%PLAYER%"
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-end"

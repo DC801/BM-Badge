@@ -11,7 +11,6 @@ extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
-extern Point cameraPosition;
 
 void MageScriptControl::initScriptState(
 	MageScriptState * resumeStateStruct,
@@ -121,7 +120,6 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		//we can now set resumeState.scriptIsRunning to false and end processing the script:
 		resumeStateStruct->scriptIsRunning = false;
 	}
-	return;
 }
 
 void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState * resumeStateStruct)
@@ -163,7 +161,6 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState 
 	actionHandlerFunction = actionFunctions[actionTypeId];
 	(this->*actionHandlerFunction)(romValues, resumeStateStruct);
 
-	return;
 }
 
 void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType)
@@ -208,7 +205,6 @@ uint16_t MageScriptControl::getUsefulGeometryIndexFromActionGeometryId(
 void MageScriptControl::nullAction(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	//nullAction does nothing.
-	return;
 }
 
 void MageScriptControl::checkEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -228,7 +224,6 @@ void MageScriptControl::checkEntityName(uint8_t * args, MageScriptState * resume
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityX(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -246,7 +241,6 @@ void MageScriptControl::checkEntityX(uint8_t * args, MageScriptState * resumeSta
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityY(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -264,7 +258,6 @@ void MageScriptControl::checkEntityY(uint8_t * args, MageScriptState * resumeSta
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -282,7 +275,6 @@ void MageScriptControl::checkEntityInteractScript(uint8_t * args, MageScriptStat
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -300,7 +292,6 @@ void MageScriptControl::checkEntityTickScript(uint8_t * args, MageScriptState * 
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityType(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -322,7 +313,6 @@ void MageScriptControl::checkEntityType(uint8_t * args, MageScriptState * resume
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -340,7 +330,6 @@ void MageScriptControl::checkEntityPrimaryId(uint8_t * args, MageScriptState * r
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -358,7 +347,6 @@ void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState *
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityPrimaryIdType(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -375,7 +363,6 @@ void MageScriptControl::checkEntityPrimaryIdType(uint8_t * args, MageScriptState
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityCurrentAnimation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -392,7 +379,6 @@ void MageScriptControl::checkEntityCurrentAnimation(uint8_t * args, MageScriptSt
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityCurrentFrame(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -409,10 +395,8 @@ void MageScriptControl::checkEntityCurrentFrame(uint8_t * args, MageScriptState 
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
-//This probably needs more testing, as direction is more complicated than just an integer comparison -Tim
 void MageScriptControl::checkEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityDirection *argStruct = (ActionCheckEntityDirection*)args;
@@ -427,7 +411,22 @@ void MageScriptControl::checkEntityDirection(uint8_t * args, MageScriptState * r
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
+}
+
+void MageScriptControl::checkEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckEntityGlitched *argStruct = (ActionCheckEntityGlitched*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		bool isGlitched = (entity->direction & IS_GLITCHED) != 0;
+		if(isGlitched == argStruct->expectedBool) {
+			mapLocalJumpScript = argStruct->successScriptId;
+		}
+	}
 }
 
 void MageScriptControl::checkEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -444,7 +443,6 @@ void MageScriptControl::checkEntityHackableStateA(uint8_t * args, MageScriptStat
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -461,7 +459,6 @@ void MageScriptControl::checkEntityHackableStateB(uint8_t * args, MageScriptStat
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityHackableStateC(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -478,7 +475,6 @@ void MageScriptControl::checkEntityHackableStateC(uint8_t * args, MageScriptStat
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 void MageScriptControl::checkEntityHackableStateD(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -495,7 +491,6 @@ void MageScriptControl::checkEntityHackableStateD(uint8_t * args, MageScriptStat
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 // Need to verify the u2 conversion of bytes is working -Tim
@@ -517,7 +512,6 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 //Need to verify encoding of u2_value variable works correctly -Tim
@@ -539,7 +533,6 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 //Need to verify encoding of u4_value variable works correctly -Tim
@@ -560,7 +553,6 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 // Need to verify which two bytes make up the pathId. I think it's A and B, so that's what I put in here for now. -Tim
@@ -582,7 +574,6 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
 	}
-	return;
 }
 
 //waiting for implementation of Save Flag System to implement -Tim
@@ -600,7 +591,6 @@ void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeSt
 	if(bitValue == argStruct->expectedBoolValue) {
 		mapLocalJumpScript = argStruct->successScriptId;
 	}
-	return;
 }
 
 void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -615,8 +605,8 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
-		bool colliding = geometry->isPointInGeometry(renderable->center);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		bool colliding = geometry.isPointInGeometry(renderable->center);
 		if(colliding == argStruct->expectedBoolValue) {
 			//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 			mapLocalJumpScript = argStruct->successScriptId;
@@ -638,7 +628,6 @@ void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * re
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 		mapLocalJumpScript = argStruct->successScriptId;
 	}
-	return;
 }
 
 void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -655,7 +644,6 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 		mapLocalJumpScript = argStruct->successScriptId;
 	}
-	return;
 }
 
 void MageScriptControl::checkWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -671,7 +659,6 @@ void MageScriptControl::checkWarpState(uint8_t * args, MageScriptState * resumeS
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 		mapLocalJumpScript = argStruct->successScriptId;
 	}
-	return;
 }
 
 void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -682,7 +669,6 @@ void MageScriptControl::runScript(uint8_t * args, MageScriptState * resumeStateS
 
 	//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
 	mapLocalJumpScript = argStruct->scriptId;
-	return;
 }
 
 void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -716,7 +702,6 @@ void MageScriptControl::blockingDelay(uint8_t * args, MageScriptState * resumeSt
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
 	}
-	return;
 }
 
 void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -725,37 +710,16 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
-	//If there's already a total number of loops to next action set, a delay is currently in progress:
-	if(resumeStateStruct->totalLoopsToNextAction != 0)
-	{
-		//decrement the number of loops to the end of the delay:
-		resumeStateStruct->loopsToNextAction--;
-		//if we've reached the end:
-		if(resumeStateStruct->loopsToNextAction <= 0)
-		{
-			//reset the variables and return, the delay is complete.
-			resumeStateStruct->totalLoopsToNextAction = 0;
-			resumeStateStruct->loopsToNextAction = 0;
-			return;
-		}
-	}
-	//a delay is not active, so we should start one:
-	else
-	{
-		//convert delay into a number of game loops:
-		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-		//now set the resumeStateStruct variables:
-		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-		resumeStateStruct->loopsToNextAction = totalDelayLoops;
-	}
-	return;
+	manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
 }
 
 //Need to implement -Tim
 void MageScriptControl::pauseGame(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionPauseGame *argStruct = (ActionPauseGame*)args;
-	return;
 }
 
 void MageScriptControl::pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -769,7 +733,6 @@ void MageScriptControl::pauseEntityScript(uint8_t * args, MageScriptState * resu
 		// TODO: Get the target scriptType resumeStateStruct
 		// TODO: Add `resumeStateStruct.isPaused` and toggle it
 	}
-	return;
 }
 
 void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -793,7 +756,6 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 			}
 		}
 	}
-	return;
 }
 
 void MageScriptControl::setEntityX(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -807,7 +769,6 @@ void MageScriptControl::setEntityX(uint8_t * args, MageScriptState * resumeState
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->x = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityY(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -821,7 +782,6 @@ void MageScriptControl::setEntityY(uint8_t * args, MageScriptState * resumeState
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->y = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityInteractScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -835,7 +795,6 @@ void MageScriptControl::setEntityInteractScript(uint8_t * args, MageScriptState 
 		getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId),
 		ON_INTERACT
 	);
-	return;
 }
 
 void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -849,7 +808,6 @@ void MageScriptControl::setEntityTickScript(uint8_t * args, MageScriptState * re
 		getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId),
 		ON_TICK
 	);
-	return;
 }
 
 void MageScriptControl::setEntityType(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -864,7 +822,6 @@ void MageScriptControl::setEntityType(uint8_t * args, MageScriptState * resumeSt
 		entity->primaryId = argStruct->entityTypeId;
 		entity->primaryIdType = ENTITY_TYPE;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityPrimaryId(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -878,7 +835,6 @@ void MageScriptControl::setEntityPrimaryId(uint8_t * args, MageScriptState * res
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->primaryId = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntitySecondaryId(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -892,7 +848,6 @@ void MageScriptControl::setEntitySecondaryId(uint8_t * args, MageScriptState * r
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->secondaryId = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityPrimaryIdType(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -904,7 +859,6 @@ void MageScriptControl::setEntityPrimaryIdType(uint8_t * args, MageScriptState *
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->primaryIdType = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityCurrentAnimation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -916,7 +870,6 @@ void MageScriptControl::setEntityCurrentAnimation(uint8_t * args, MageScriptStat
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->currentAnimation = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityCurrentFrame(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -928,7 +881,6 @@ void MageScriptControl::setEntityCurrentFrame(uint8_t * args, MageScriptState * 
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->currentFrame = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -938,9 +890,11 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->direction = MageGame->getValidEntityTypeDirection(argStruct->direction);
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			argStruct->direction,
+			entity->direction
+		);
 	}
-	return;
 }
 
 void MageScriptControl::setEntityDirectionRelative(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -950,11 +904,15 @@ void MageScriptControl::setEntityDirectionRelative(uint8_t * args, MageScriptSta
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->direction = (
-			entity->direction + NUM_DIRECTIONS + argStruct->relativeDirection
-		) % NUM_DIRECTIONS;
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			(MageEntityAnimationDirection) ((
+				entity->direction
+				+ argStruct->relativeDirection
+				+ NUM_DIRECTIONS
+			) % NUM_DIRECTIONS),
+			entity->direction
+		);
 	}
-	return;
 }
 
 void MageScriptControl::setEntityDirectionTargetEntity(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -970,12 +928,14 @@ void MageScriptControl::setEntityDirectionTargetEntity(uint8_t * args, MageScrip
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageEntityRenderableData *targetRenderable = MageGame->getValidEntityRenderableData(targetEntityIndex);
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
-		entity->direction = getRelativeDirection(
-			renderable->center,
-			targetRenderable->center
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			getRelativeDirection(
+				renderable->center,
+				targetRenderable->center
+			),
+			entity->direction
 		);
 	}
-	return;
 }
 
 void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -989,13 +949,29 @@ void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScr
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
-		entity->direction = getRelativeDirection(
-			renderable->center,
-			geometry->points[0]
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		entity->direction = MageGame->updateDirectionAndPreserveFlags(
+			getRelativeDirection(
+				renderable->center,
+				geometry.points[0]
+			),
+			entity->direction
 		);
 	}
-	return;
+}
+
+void MageScriptControl::setEntityGlitched(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityGlitched *argStruct = (ActionSetEntityGlitched*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		entity->direction = (MageEntityAnimationDirection) (
+			(entity->direction & IS_GLITCHED_MASK)
+			| (argStruct->isGlitched * IS_GLITCHED)
+		);
+	}
 }
 
 void MageScriptControl::setEntityHackableStateA(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1007,7 +983,6 @@ void MageScriptControl::setEntityHackableStateA(uint8_t * args, MageScriptState 
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateA = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityHackableStateB(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1019,7 +994,6 @@ void MageScriptControl::setEntityHackableStateB(uint8_t * args, MageScriptState 
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateB = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityHackableStateC(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1031,7 +1005,6 @@ void MageScriptControl::setEntityHackableStateC(uint8_t * args, MageScriptState 
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateC = argStruct->newValue;
 	}
-	return;
 }
 
 void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1043,7 +1016,6 @@ void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState 
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		entity->hackableStateD = argStruct->newValue;
 	}
-	return;
 }
 
 //need to verify that u2 values are set correctly in the struct. -Tim
@@ -1058,7 +1030,6 @@ void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptStat
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
-	return;
 }
 
 //need to verify that u2 values are set correctly in the struct. -Tim
@@ -1073,7 +1044,6 @@ void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptStat
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
 	}
-	return;
 }
 
 //need to verify that u4 values are set correctly in the struct. -Tim
@@ -1088,7 +1058,6 @@ void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptStat
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint32_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
-	return;
 }
 
 //need to verify that u2 values are set correctly in the struct. -Tim
@@ -1103,10 +1072,8 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
 	}
-	return;
 }
 
-//waiting for save flag system implementation -Tim
 void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetSaveFlag *argStruct = (ActionSetSaveFlag*)args;
@@ -1122,14 +1089,12 @@ void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStat
 		currentByteValue &= ~(0x01u << bitOffset);
 	}
 	saveFlags[byteOffset] = currentByteValue;
-	return;
 }
 
 void MageScriptControl::setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetPlayerControl *argStruct = (ActionSetPlayerControl*)args;
 	MageGame->playerHasControl = argStruct->playerHasControl;
-	return;
 }
 
 void MageScriptControl::setMapTickScript(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1143,7 +1108,6 @@ void MageScriptControl::setMapTickScript(uint8_t * args, MageScriptState * resum
 		MAGE_MAP_ENTITY,
 		ON_TICK
 	);
-	return;
 }
 
 void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1153,7 +1117,6 @@ void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * r
 	argStruct->byteAddress = ROM_ENDIAN_U2_VALUE(argStruct->byteAddress);
 
 	MageHex->setHexCursorLocation(argStruct->byteAddress);
-	return;
 }
 
 //Need to implement a set-current-byte-value type function on MageHex for this to work. -Tim
@@ -1161,7 +1124,6 @@ void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeState
 {
 	ActionSetHexBits *argStruct = (ActionSetHexBits*)args;
 
-	return;
 }
 
 void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1171,7 +1133,6 @@ void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeSta
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	MageGame->warpState = argStruct->stringId;
-	return;
 }
 
 //Need to implement locking and unlocking in MageHex for this to work -Tim
@@ -1179,7 +1140,6 @@ void MageScriptControl::unlockHaxCell(uint8_t * args, MageScriptState * resumeSt
 {
 	ActionUnlockHaxCell *argStruct = (ActionUnlockHaxCell*)args;
 
-	return;
 }
 
 //Need to implement locking and unlocking in MageHex for this to work -Tim
@@ -1187,7 +1147,6 @@ void MageScriptControl::lockHaxCell(uint8_t * args, MageScriptState * resumeStat
 {
 	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
 
-	return;
 }
 
 void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1198,7 +1157,6 @@ void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resu
 	{
 		MageHex->toggleHexEditor();
 	}
-	return;
 }
 
 void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1209,7 +1167,6 @@ void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState *
 	{
 		MageHex->toggleHexDialog();
 	}
-	return;
 }
 
 void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1219,7 +1176,6 @@ void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStr
 	argStruct->mapId = ROM_ENDIAN_U2_VALUE(argStruct->mapId);
 
 	mapLoadId = MageGame->getValidMapId(argStruct->mapId);
-	return;
 }
 
 void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1235,7 +1191,6 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 	} else if (!MageDialog->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
-	return;
 }
 
 void MageScriptControl::playEntityAnimation(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1261,13 +1216,13 @@ void MageScriptControl::teleportEntityToGeometry(uint8_t * args, MageScriptState
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
 				renderable,
 				entity,
-				&geometry->points[0]
+				&geometry.points[0]
 			)
 		);
 		MageGame->updateEntityRenderableData(entityIndex);
@@ -1280,20 +1235,14 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
-
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
-			uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-			//now set the resumeStateStruct variables:
-			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
 				.x = entity->x,
@@ -1302,22 +1251,28 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 			resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(
 				renderable,
 				entity,
-				&geometry->points[0]
+				&geometry.points[0]
 			);
-			entity->direction = getRelativeDirection(
-				resumeStateStruct->pointA,
-				resumeStateStruct->pointB
+			entity->direction = MageGame->updateDirectionAndPreserveFlags(
+				getRelativeDirection(
+					resumeStateStruct->pointA,
+					resumeStateStruct->pointB
+				),
+				entity->direction
 			);
 			entity->currentAnimation = 1;
 		}
-		resumeStateStruct->loopsToNextAction--;
+		float progress = manageProgressOfAction(
+			resumeStateStruct,
+			argStruct->duration
+		);
 		Point betweenPoint = FrameBuffer::lerpPoints(
 			resumeStateStruct->pointA,
 			resumeStateStruct->pointB,
-			getProgressOfAction(resumeStateStruct)
+			progress
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
-		if(resumeStateStruct->loopsToNextAction == 0) {
+		if(progress >= 1.0f) {
 			entity->currentAnimation = 0;
 			entity->currentFrame = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
@@ -1338,17 +1293,17 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
-		if(geometry->pointCount == 1) {
+		if(geometry.pointCount == 1) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 			setEntityPositionToPoint(
 				entity,
 				offsetPointRelativeToEntityCenter(
 					renderable,
 					entity,
-					&geometry->points[0]
+					&geometry.points[0]
 				)
 			);
 			MageGame->updateEntityRenderableData(entityIndex);
@@ -1360,18 +1315,18 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			//now set the resumeStateStruct variables:
 			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-			resumeStateStruct->length = geometry->pathLength;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			resumeStateStruct->length = geometry.pathLength;
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = 1;
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-			geometry,
+			&geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
 		float totalProgress = getProgressOfAction(resumeStateStruct);
 		float currentProgressLength = resumeStateStruct->length * totalProgress;
-		float currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+		float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 		float lengthAtEndOfCurrentSegment = (
 			resumeStateStruct->lengthOfPreviousSegments
 			+ currentSegmentLength
@@ -1384,18 +1339,18 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
 			uint16_t pointBIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex + 1
 			);
 			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
-			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 			lengthAtEndOfCurrentSegment = (
 				resumeStateStruct->lengthOfPreviousSegments
 				+ currentSegmentLength
@@ -1408,7 +1363,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 				resumeStateStruct,
 				renderable,
 				entity,
-				geometry,
+				&geometry,
 				pointAIndex,
 				pointBIndex
 			);
@@ -1426,7 +1381,6 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 		}
 		MageGame->updateEntityRenderableData(entityIndex);
 	}
-	return;
 }
 void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -1440,17 +1394,17 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry *geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
-		if(geometry->pointCount == 1) {
+		if(geometry.pointCount == 1) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 			setEntityPositionToPoint(
 				entity,
 				offsetPointRelativeToEntityCenter(
 					renderable,
 					entity,
-					&geometry->points[0]
+					&geometry.points[0]
 				)
 			);
 			MageGame->updateEntityRenderableData(entityIndex);
@@ -1462,24 +1416,24 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			//now set the resumeStateStruct variables:
 			resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 			resumeStateStruct->loopsToNextAction = totalDelayLoops;
-			resumeStateStruct->length = (geometry->typeId == POLYLINE)
-				? geometry->pathLength * 2
-				: geometry->pathLength;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			resumeStateStruct->length = (geometry.typeId == POLYLINE)
+				? geometry.pathLength * 2
+				: geometry.pathLength;
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = 1;
 		}
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-			geometry,
+			&geometry,
 			resumeStateStruct->currentSegmentIndex
 		);
 		float totalProgress = getProgressOfAction(resumeStateStruct);
 		float currentProgressLength = resumeStateStruct->length * totalProgress;
-		float currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+		float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 		float lengthAtEndOfCurrentSegment = (
 			resumeStateStruct->lengthOfPreviousSegments
 			+ currentSegmentLength
@@ -1492,18 +1446,18 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
 			resumeStateStruct->currentSegmentIndex++;
 			uint16_t pointAIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
 			uint16_t pointBIndex = getLoopableGeometryPointIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex + 1
 			);
 			sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-				geometry,
+				&geometry,
 				resumeStateStruct->currentSegmentIndex
 			);
-			currentSegmentLength = geometry->segmentLengths[sanitizedCurrentSegmentIndex];
+			currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
 			lengthAtEndOfCurrentSegment = (
 				resumeStateStruct->lengthOfPreviousSegments
 				+ currentSegmentLength
@@ -1516,7 +1470,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 				resumeStateStruct,
 				renderable,
 				entity,
-				geometry,
+				&geometry,
 				pointAIndex,
 				pointBIndex
 			);
@@ -1529,14 +1483,13 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 		setEntityPositionToPoint(entity, betweenPoint);
 		MageGame->updateEntityRenderableData(entityIndex);
 	}
-	return;
 }
 
 void MageScriptControl::setCameraToFollowEntity(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetCameraToFollowEntity *argStruct = (ActionSetCameraToFollowEntity*)args;
-
-	return;
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	MageGame->cameraFollowEntityId = entityIndex;
 }
 
 void MageScriptControl::teleportCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1545,8 +1498,12 @@ void MageScriptControl::teleportCameraToGeometry(uint8_t * args, MageScriptState
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-
-	return;
+	MageEntity *entity = MageGame->getValidEntity(currentEntityId);
+	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+	MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+	MageGame->cameraFollowEntityId = NO_PLAYER;
+	MageGame->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
+	MageGame->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
 }
 
 void MageScriptControl::panCameraToEntity(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1555,7 +1512,41 @@ void MageScriptControl::panCameraToEntity(uint8_t * args, MageScriptState * resu
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
-	return;
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
+	if(entityIndex != NO_PLAYER) {
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+
+		if(resumeStateStruct->totalLoopsToNextAction == 0) {
+			MageGame->cameraFollowEntityId = NO_PLAYER;
+			//this is the points we're interpolating between
+			resumeStateStruct->pointA = {
+				.x = MageGame->cameraPosition.x,
+				.y = MageGame->cameraPosition.y,
+			};
+		}
+		float progress = manageProgressOfAction(
+			resumeStateStruct,
+			argStruct->duration
+		);
+		// yes, this is intentional;
+		// if the entity is moving, pan will continue to the entity
+		resumeStateStruct->pointB = {
+			.x = renderable->center.x - HALF_WIDTH,
+			.y = renderable->center.y - HALF_HEIGHT,
+		};
+		Point betweenPoint = FrameBuffer::lerpPoints(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB,
+			progress
+		);
+		MageGame->cameraPosition.x = betweenPoint.x;
+		MageGame->cameraPosition.y = betweenPoint.y;
+		if(progress >= 1.0f) {
+			// Moved the camera there, may as well follow the entity now.
+			MageGame->cameraFollowEntityId = entityIndex;
+		}
+	}
 }
 
 void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1565,7 +1556,33 @@ void MageScriptControl::panCameraToGeometry(uint8_t * args, MageScriptState * re
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	return;
+	MageEntity *entity = MageGame->getValidEntity(currentEntityId);
+	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
+	MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
+
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageGame->cameraFollowEntityId = NO_PLAYER;
+		//this is the points we're interpolating between
+		resumeStateStruct->pointA = {
+			.x = MageGame->cameraPosition.x,
+			.y = MageGame->cameraPosition.y,
+		};
+		resumeStateStruct->pointB = {
+			.x = geometry.points[0].x - HALF_WIDTH,
+			.y = geometry.points[0].y - HALF_HEIGHT,
+		};
+	}
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
+	Point betweenPoint = FrameBuffer::lerpPoints(
+		resumeStateStruct->pointA,
+		resumeStateStruct->pointB,
+		progress
+	);
+	MageGame->cameraPosition.x = betweenPoint.x;
+	MageGame->cameraPosition.y = betweenPoint.y;
 }
 
 void MageScriptControl::panCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1575,7 +1592,6 @@ void MageScriptControl::panCameraAlongGeometry(uint8_t * args, MageScriptState *
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	return;
 }
 
 void MageScriptControl::loopCameraAlongGeometry(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1585,16 +1601,35 @@ void MageScriptControl::loopCameraAlongGeometry(uint8_t * args, MageScriptState 
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	return;
 }
 
 void MageScriptControl::setScreenShake(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetScreenShake *argStruct = (ActionSetScreenShake*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+	argStruct->duration = ROM_ENDIAN_U2_VALUE(argStruct->duration);
+	argStruct->frequency = ROM_ENDIAN_U2_VALUE(argStruct->frequency);
 
-	return;
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
+
+	if(progress < 1.0) {
+		MageGame->cameraShaking = true;
+		MageGame->cameraShakeAmplitude = argStruct->amplitude;
+		MageGame->cameraShakePhase = (
+			progress /
+			(
+				(float)argStruct->frequency
+				/ 1000.0f
+			)
+		);
+	} else {
+		MageGame->cameraShaking = false;
+		MageGame->cameraShakeAmplitude = 0;
+		MageGame->cameraShakePhase = 0;
+	}
 }
 void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -1603,45 +1638,16 @@ void MageScriptControl::screenFadeOut(uint8_t * args, MageScriptState * resumeSt
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
-	//If there's already a total number of loops to next action set, a delay is currently in progress:
-	if(resumeStateStruct->totalLoopsToNextAction != 0)
-	{
-		//decrement the number of loops to the end of the delay:
-		resumeStateStruct->loopsToNextAction--;
-		mage_canvas->fadeFraction = 1.0f - (
-			(float)resumeStateStruct->loopsToNextAction
-			/ (float)resumeStateStruct->totalLoopsToNextAction
-		);
-		//if we've reached the end:
-		if(resumeStateStruct->loopsToNextAction <= 0)
-		{
-			//reset the variables and return, the delay is complete.
-			resumeStateStruct->totalLoopsToNextAction = 0;
-			resumeStateStruct->loopsToNextAction = 0;
-			mage_canvas->fadeFraction = 1;
-			//mage_canvas->isFading = false; // no, stay faded out until manual fade in
-			return;
-		}
-		mage_canvas->fadeColor = argStruct->color;
-	}
-	//a delay is not active, so we should start one:
-	else
-	{
-		//convert delay into a number of game loops:
-		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-		//now set the resumeStateStruct variables:
-		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
+
+	mage_canvas->fadeColor = argStruct->color;
+	mage_canvas->fadeFraction = progress;
+	if(progress < 1.0f) {
 		mage_canvas->isFading = true;
-		mage_canvas->fadeFraction = 0;
 	}
-	// printf(
-	// 	"screenFadeOut: fadeFraction: %f; loops: %04d; total: %04d\n",
-	// 	mage_canvas->fadeFraction,
-	// 	resumeStateStruct->loopsToNextAction,
-	// 	resumeStateStruct->totalLoopsToNextAction
-	// );
-	return;
 }
 void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeStateStruct)
 {
@@ -1649,62 +1655,144 @@ void MageScriptControl::screenFadeIn(uint8_t * args, MageScriptState * resumeSta
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
+	float progress = manageProgressOfAction(
+		resumeStateStruct,
+		argStruct->duration
+	);
 
-	//If there's already a total number of loops to next action set, a delay is currently in progress:
-	if(resumeStateStruct->totalLoopsToNextAction != 0)
-	{
-		//decrement the number of loops to the end of the delay:
-		resumeStateStruct->loopsToNextAction--;
-		mage_canvas->fadeFraction = (
-			(float)resumeStateStruct->loopsToNextAction
-			/ (float)resumeStateStruct->totalLoopsToNextAction
-		);
-		//if we've reached the end:
-		if(resumeStateStruct->loopsToNextAction <= 0)
-		{
-			//reset the variables and return, the delay is complete.
-			resumeStateStruct->totalLoopsToNextAction = 0;
-			resumeStateStruct->loopsToNextAction = 0;
-			mage_canvas->fadeFraction = 0;
-			mage_canvas->isFading = false;
-			return;
-		}
-		mage_canvas->fadeColor = argStruct->color;
-	}
-	//a delay is not active, so we should start one:
-	else
-	{
-		//convert delay into a number of game loops:
-		uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-		//now set the resumeStateStruct variables:
-		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	mage_canvas->fadeColor = argStruct->color;
+	mage_canvas->fadeFraction = 1.0f - progress;
+	if(progress < 1.0f) {
 		mage_canvas->isFading = true;
-		mage_canvas->fadeFraction = 1;
 	}
-	// printf(
-	// 	"screenFadeIn: fadeFraction: %f; loops: %04d; total: %04d\n",
-	// 	mage_canvas->fadeFraction,
-	// 	resumeStateStruct->loopsToNextAction,
-	// 	resumeStateStruct->totalLoopsToNextAction
-	// );
-	return;
 }
+
+void MageScriptControl::mutateVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionMutateVariable *argStruct = (ActionMutateVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+
+	mutate(
+		argStruct->operation,
+		currentValue,
+		argStruct->value
+	);
+}
+
+void MageScriptControl::mutateVariables(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionMutateVariables *argStruct = (ActionMutateVariables*)args;
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = scriptVariables[argStruct->sourceId];
+
+	mutate(
+		argStruct->operation,
+		currentValue,
+		sourceValue
+	);
+}
+
+void MageScriptControl::copyVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCopyVariable *argStruct = (ActionCopyVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	uint16_t *currentValue = &scriptVariables[argStruct->variableId];
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		currentEntityId
+	);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		uint16_t *variableValue = &scriptVariables[argStruct->variableId];
+		uint8_t *fieldValue = ((uint8_t *)entity) + argStruct->field;
+
+
+		switch(argStruct->field) {
+			case x :
+			case y :
+			case onInteractScriptId :
+			case onTickScriptId :
+			case primaryId :
+			case secondaryId :
+				if(argStruct->inbound) {
+					*variableValue = (uint16_t)*fieldValue;
+				} else {
+					uint16_t *destination = (uint16_t*)fieldValue;
+					*destination = *variableValue;
+				}
+				break;
+			case primaryIdType :
+			case currentAnimation :
+			case currentFrame :
+			case direction :
+			case hackableStateA :
+			case hackableStateB :
+			case hackableStateC :
+			case hackableStateD :
+				if(argStruct->inbound) {
+					*variableValue = (uint8_t)*fieldValue;
+				} else {
+					*fieldValue = *variableValue % 256;
+				}
+				break;
+			default : debug_print(
+				"copyVariable received an invalid field: %d",
+				argStruct->field
+			);
+		}
+	}
+}
+
+void MageScriptControl::checkVariable(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckVariable *argStruct = (ActionCheckVariable*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	uint16_t variableValue = scriptVariables[argStruct->variableId];
+	bool comparison = compare(
+		argStruct->comparison,
+		variableValue,
+		argStruct->value
+	);
+	if(comparison == argStruct->expectedBool) {
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
+}
+
+void MageScriptControl::checkVariables(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckVariables *argStruct = (ActionCheckVariables*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	uint16_t variableValue = scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = scriptVariables[argStruct->sourceId];
+	bool comparison = compare(
+		argStruct->comparison,
+		variableValue,
+		sourceValue
+	);
+	if(comparison == argStruct->expectedBool) {
+		mapLocalJumpScript = argStruct->successScriptId;
+	}
+}
+
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-
-	return;
 }
 void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionPlaySoundInterrupt *argStruct = (ActionPlaySoundInterrupt*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-
-	return;
 }
 
 MageScriptControl::MageScriptControl()
@@ -1744,6 +1832,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_ANIMATION] = &MageScriptControl::checkEntityCurrentAnimation;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_CURRENT_FRAME] = &MageScriptControl::checkEntityCurrentFrame;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_DIRECTION] = &MageScriptControl::checkEntityDirection;
+	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_GLITCHED] = &MageScriptControl::checkEntityGlitched;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::checkEntityHackableStateA;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::checkEntityHackableStateB;
 	actionFunctions[MageScriptActionTypeId::CHECK_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::checkEntityHackableStateC;
@@ -1777,6 +1866,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_RELATIVE] = &MageScriptControl::setEntityDirectionRelative;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_ENTITY] = &MageScriptControl::setEntityDirectionTargetEntity;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_DIRECTION_TARGET_GEOMETRY] = &MageScriptControl::setEntityDirectionTargetGeometry;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_GLITCHED] = &MageScriptControl::setEntityGlitched;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_A] = &MageScriptControl::setEntityHackableStateA;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_B] = &MageScriptControl::setEntityHackableStateB;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_HACKABLE_STATE_C] = &MageScriptControl::setEntityHackableStateC;
@@ -1811,6 +1901,11 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_SCREEN_SHAKE] = &MageScriptControl::setScreenShake;
 	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_OUT] = &MageScriptControl::screenFadeOut;
 	actionFunctions[MageScriptActionTypeId::SCREEN_FADE_IN] = &MageScriptControl::screenFadeIn;
+	actionFunctions[MageScriptActionTypeId::MUTATE_VARIABLE] = &MageScriptControl::mutateVariable;
+	actionFunctions[MageScriptActionTypeId::MUTATE_VARIABLES] = &MageScriptControl::mutateVariables;
+	actionFunctions[MageScriptActionTypeId::COPY_VARIABLE] = &MageScriptControl::copyVariable;
+	actionFunctions[MageScriptActionTypeId::CHECK_VARIABLE] = &MageScriptControl::checkVariable;
+	actionFunctions[MageScriptActionTypeId::CHECK_VARIABLES] = &MageScriptControl::checkVariables;
 	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS] = &MageScriptControl::playSoundContinuous;
 	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT] = &MageScriptControl::playSoundInterrupt;
 
@@ -1861,21 +1956,35 @@ float MageScriptControl::getProgressOfAction(
 	);
 }
 
+float MageScriptControl::manageProgressOfAction(
+	MageScriptState *resumeStateStruct,
+	uint32_t duration
+) const {
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		uint16_t totalDelayLoops = duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
+		resumeStateStruct->loopsToNextAction = totalDelayLoops;
+	}
+	resumeStateStruct->loopsToNextAction--;
+	float result = 1.0f - (
+		(float)resumeStateStruct->loopsToNextAction
+		/ (float)resumeStateStruct->totalLoopsToNextAction
+	);
+	if (result >= 1.0f) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+		resumeStateStruct->loopsToNextAction = 0;
+	}
+	return result;
+}
+
 MageEntityAnimationDirection MageScriptControl::getRelativeDirection(
 	const Point &pointA,
 	const Point &pointB
 ) const {
-	#ifdef DESKTOP
-	float angle = atan2f32(
-		pointB.y - pointA.y,
-		pointB.x - pointA.x
-	);
-	#else
 	float angle = atan2f(
 		pointB.y - pointA.y,
 		pointB.x - pointA.x
 	);
-	#endif
 	float absoluteAngle = abs(angle);
 	MageEntityAnimationDirection direction = SOUTH;
 	if(absoluteAngle > 2.356194) {
@@ -1976,9 +2085,12 @@ void MageScriptControl::setResumeStatePointsAndEntityDirection(
 		entity,
 		&geometry->points[pointBIndex]
 	);
-	entity->direction = getRelativeDirection(
-		resumeStateStruct->pointA,
-		resumeStateStruct->pointB
+	entity->direction = MageGame->updateDirectionAndPreserveFlags(
+		getRelativeDirection(
+			resumeStateStruct->pointA,
+			resumeStateStruct->pointB
+		),
+		entity->direction
 	);
 }
 
@@ -2130,4 +2242,44 @@ int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(
 		entityIndex = NO_PLAYER;
 	}
 	return entityIndex;
+}
+
+void MageScriptControl::mutate(
+	MageMutateOperation operation,
+	uint16_t *destination,
+	uint16_t value
+) const {
+	switch(operation) {
+		case SET : *destination = value; break;
+		case ADD : *destination += value; break;
+		case SUB : *destination -= value; break;
+		case DIV : *destination /= value; break;
+		case MUL : *destination *= value; break;
+		case MOD : *destination %= value; break;
+		case RNG : *destination = rand() % value; break;
+		default : debug_print(
+			"mutateVariable received an invalid operation: %d",
+			operation
+		);
+	}
+}
+
+bool MageScriptControl::compare(
+	MageCheckComparison comparison,
+	uint16_t a,
+	uint16_t b
+) const {
+	switch(comparison) {
+		case LT   : return a <  b;
+		case LTEQ : return a <= b;
+		case EQ   : return a == b;
+		case GTEQ : return a >= b;
+		case GT   : return a >  b;
+		default :
+			debug_print(
+				"checkComparison received an invalid comparison: %d",
+				comparison
+			);
+			return false;
+	}
 }

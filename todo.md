@@ -80,7 +80,8 @@
 		- [x] CHECK_ENTITY_PRIMARY_ID_TYPE
 		- [x] CHECK_ENTITY_CURRENT_ANIMATION
 		- [x] CHECK_ENTITY_CURRENT_FRAME
-		- [ ] CHECK_ENTITY_DIRECTION
+		- [x] CHECK_ENTITY_DIRECTION
+		- [x] CHECK_ENTITY_GLITCHED
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_B
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_C
@@ -114,6 +115,7 @@
 		- [x] SET_ENTITY_DIRECTION_RELATIVE
 		- [x] SET_ENTITY_DIRECTION_TARGET_ENTITY
 		- [x] SET_ENTITY_DIRECTION_TARGET_GEOMETRY
+		- [x] SET_ENTITY_GLITCHED
 		- [ ] SET_ENTITY_HACKABLE_STATE_A
 		- [ ] SET_ENTITY_HACKABLE_STATE_B
 		- [ ] SET_ENTITY_HACKABLE_STATE_C
@@ -139,15 +141,20 @@
 		- [x] WALK_ENTITY_TO_GEOMETRY
 		- [x] WALK_ENTITY_ALONG_GEOMETRY
 		- [x] LOOP_ENTITY_ALONG_GEOMETRY
-		- [ ] SET_CAMERA_TO_FOLLOW_ENTITY
-		- [ ] TELEPORT_CAMERA_TO_GEOMETRY
-		- [ ] PAN_CAMERA_TO_ENTITY
-		- [ ] PAN_CAMERA_TO_GEOMETRY
+		- [x] SET_CAMERA_TO_FOLLOW_ENTITY
+		- [x] TELEPORT_CAMERA_TO_GEOMETRY
+		- [x] PAN_CAMERA_TO_ENTITY
+		- [x] PAN_CAMERA_TO_GEOMETRY
 		- [ ] PAN_CAMERA_ALONG_GEOMETRY
 		- [ ] LOOP_CAMERA_ALONG_GEOMETRY
-		- [ ] SET_SCREEN_SHAKE
+		- [x] SET_SCREEN_SHAKE
 		- [x] SCREEN_FADE_OUT
 		- [x] SCREEN_FADE_IN
+		- [x] MUTATE_VARIABLE
+		- [x] MUTATE_VARIABLES
+		- [X] COPY_VARIABLE
+		- [x] CHECK_VARIABLE
+		- [x] CHECK_VARIABLES
 		- [ ] PLAY_SOUND_CONTINUOUS
 		- [ ] PLAY_SOUND_INTERRUPT
 - [x] Geometry
@@ -160,7 +167,7 @@
 	- [ ] For Tiles
 	- [ ] For Entities
 - [ ] Dialog Data Type Implementation:
-	- [ ] Display Name - either stringId, or entityId
+	- [x] Display Name - either stringId, or entityId
 	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.
 	- [x] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
 		- [x] flags for position encoding byte:
@@ -168,6 +175,9 @@
 			- [x] Portrait on or off
 			- [x] portrait left or right
 	- [x] tilesetId and tileId for the portrait picture.
+	- [x] Support for string templates that make use of hacked entity names
+	- [x] Support for string templates that make use of numeric variables
+	- [x] Please stop player walking when a dialog shows
 	- [ ] display font
 	- [ ] voice sound Id
 	- [ ] Dialog Responses:

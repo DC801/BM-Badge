@@ -317,5 +317,475 @@
 			"entity": "%SELF%",
 			"relative_direction": 2
 		}
+	],
+	"mage09-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage09"
+		}
+	],
+	"mage09-copy_script": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage07-point_at_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage08-point_away_from_player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_deeper"
+		}
+	],
+	"mage09-copy_script_deeper": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage09-copy_script_delay"
+		}
+	],
+	"mage09-copy_script_delay": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		}
+	],
+	"mage10-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-a"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 20,
+			"amplitude": 3,
+			"duration": 2000
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-b"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 1000,
+			"amplitude": 32,
+			"duration": 8000
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage10-c"
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 50,
+			"amplitude": 5,
+			"duration": 5000
+		}
+	],
+	"mage11-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage11"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 2000,
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1000,
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 500,
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 2000,
+			"entity": "%PLAYER%"
+		}
+	],
+	"mage12-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage12"
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-a"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-b"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "mage_11-point-c"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "%PLAYER%"
+		}
+	],
+	"mage13-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage13-interact"
+		}
+	],
+	"mage13-success-n": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-n"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-e": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-e"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-s"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-success-w": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-success-w"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage13-reset"
+		}
+	],
+	"mage13-interact": [
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "north",
+			"expected_bool": true,
+			"success_script": "mage13-success-n"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "east",
+			"expected_bool": true,
+			"success_script": "mage13-success-e"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south",
+			"expected_bool": true,
+			"success_script": "mage13-success-s"
+		},
+		{
+			"action": "CHECK_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "west",
+			"expected_bool": true,
+			"success_script": "mage13-success-w"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage13-fail"
+		}
+	],
+	"mage14-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage14-interact"
+		}
+	],
+	"mage14-fail-value-==": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value-=="
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-value->": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value->"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-variable-<": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-variable-<"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-value-ADD": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value-ADD"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-variable-ADD": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-variable-ADD"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-value-SUB": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value-SUB"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-fail-value-RNG": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-fail-value-RNG"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage14-reset"
+		}
+	],
+	"mage14-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 32,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 32,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-=="
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 16,
+			"operation": "ADD"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 48,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-ADD"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "another_count",
+			"value": 16,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "another_count",
+			"value": 16,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-value-=="
+		},
+		{
+			"action": "CHECK_VARIABLES",
+			"variable": "another_count",
+			"source": "goat_count",
+			"comparison": "<",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-variable-<"
+		},
+		{
+			"action": "MUTATE_VARIABLES",
+			"variable": "goat_count",
+			"source": "another_count",
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage14-fail-variable-ADD"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 1,
+			"operation": "ADD"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": ">",
+			"expected_bool": false,
+			"success_script": "mage14-fail-value->"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 1,
+			"operation": "SUB"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": false,
+			"success_script": "mage14-fail-value-SUB"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "goat_count",
+			"value": 65535,
+			"operation": "RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "goat_count",
+			"value": 64,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "mage14-fail-value-RNG"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage14-success"
+		}
+	],
+	"mage15-success": [
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "primary_id"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage15-success"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "entity_type_id",
+			"value": 0,
+			"operation": "SET"
+		},
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "hackable_state_a"
+		},
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": false,
+			"entity": "%SELF%",
+			"field": "primary_id"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage15-interact"
+		}
+	],
+	"mage15-interact": [
+		{
+			"action": "COPY_VARIABLE",
+			"variable": "entity_type_id",
+			"inbound": true,
+			"entity": "%SELF%",
+			"field": "hackable_state_a"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "entity_type_id",
+			"value": 0,
+			"comparison": "==",
+			"expected_bool": false,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "mage15-success"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage15"
+		}
 	]
 }

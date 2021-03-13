@@ -29,12 +29,7 @@ uint32_t now;
 uint32_t deltaTime;
 uint32_t lastLoopTime;
 
-Point cameraPosition = {
-	.x = 0,
-	.y = 0,
-};
-
-void handleBLockingDelay()
+void handleBlockingDelay()
 {
 	//if a blocking delay was added by any actions, pause before returning to the game loop:
 	if(MageScript->blockingDelayTime)
@@ -70,7 +65,7 @@ void handleScripts()
 	}
 }
 
-void GameUpdate()
+void GameUpdate(uint32_t deltaTime)
 {
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
@@ -95,7 +90,7 @@ void GameUpdate()
 	else
 	{
 		//this handles buttons and state updates based on button presses in game mode:
-		MageGame->applyGameModeInputs();
+		MageGame->applyGameModeInputs(deltaTime);
 
 		//handle scripts:
 		handleScripts();
@@ -105,6 +100,7 @@ void GameUpdate()
 
 		//update the entities based on the current state of their (hackable) data array.
 		MageGame->UpdateEntities(deltaTime);
+		MageGame->applyCameraEffects(deltaTime);
 	}
 }
 
@@ -135,7 +131,8 @@ void GameRender()
 	else
 	{
 		//otherwise run mage game:
-		mage_canvas->clearScreen(RGB(0,0,255));
+		uint16_t backgroundColor = RGB(0,0,255);
+		mage_canvas->clearScreen(mage_canvas->applyFadeColor(backgroundColor));
 		#ifdef TIMING_DEBUG
 			diff = millis() - now;
 			debug_print("screen clear time: %d",diff);
@@ -154,7 +151,7 @@ void GameRender()
 			)
 			{
 				//draw all map layers except the last one before drawing entities.
-				MageGame->DrawMap(layerIndex, cameraPosition.x, cameraPosition.y);
+				MageGame->DrawMap(layerIndex);
 				#ifdef TIMING_DEBUG
 					diff = millis() - now;
 					debug_print("Layer Time: %d",diff);
@@ -165,7 +162,7 @@ void GameRender()
 		else
 		{
 			//if there is only one map layer, it will always be drawn before the entities.
-			MageGame->DrawMap(0, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(0);
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
 				debug_print("Layer Time: %d",diff);
@@ -174,7 +171,7 @@ void GameRender()
 		}
 
 		//now that the entities are updated, draw them to the screen.
-		MageGame->DrawEntities(cameraPosition.x, cameraPosition.y);
+		MageGame->DrawEntities();
 		#ifdef TIMING_DEBUG
 			diff = millis() - now;
 			debug_print("Entity Time: %d",diff);
@@ -184,7 +181,7 @@ void GameRender()
 		if (layerCount > 1)
 		{
 			//draw the final layer above the entities.
-			MageGame->DrawMap(layerCount - 1, cameraPosition.x, cameraPosition.y);
+			MageGame->DrawMap(layerCount - 1);
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
 				debug_print("Layer n Time: %d",diff);
@@ -193,7 +190,10 @@ void GameRender()
 		}
 
 		if (MageGame->isCollisionDebugOn) {
-			MageGame->DrawGeometry(cameraPosition.x, cameraPosition.y);
+			MageGame->DrawGeometry();
+			if(MageGame->playerEntityIndex != NO_PLAYER) {
+				MageGame->getPushBackFromTilesThatCollideWithPlayer();
+			}
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;
 				debug_print("Geometry Time: %d",diff);
@@ -296,7 +296,7 @@ void MAGE()
 		EngineHandleInput();
 
 		//updates the state of all the things before rendering:
-		GameUpdate();
+		GameUpdate(deltaTime);
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -305,7 +305,7 @@ void MAGE()
 			//clear the mapLoadId to prevent infinite reloads
 			MageScript->mapLoadId = MAGE_NO_MAP;
 			//Update the game for the new map
-			GameUpdate();
+			GameUpdate(deltaTime);
 		}
 
 		//This renders the game to the screen based on the loop's updated state.
@@ -313,11 +313,18 @@ void MAGE()
 		uint32_t fullLoopTime = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
-		handleBLockingDelay();
+		handleBlockingDelay();
+
+		uint32_t updateAndRenderTime = millis() - lastTime;
 
 		#ifdef TIMING_DEBUG
 			debug_print("End of Loop Total: %d", fullLoopTime);
 			debug_print("----------------------------------------");
+		#endif
+		#ifdef DC801_DESKTOP
+			if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) {
+				SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
+			}
 		#endif
 	}
 
