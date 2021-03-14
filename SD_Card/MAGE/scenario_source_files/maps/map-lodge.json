@@ -587,6 +587,18 @@
                  "width":32,
                  "x":357.454545454545,
                  "y":229.454545454546
+                }, 
+                {
+                 "gid":727,
+                 "height":128,
+                 "id":88,
+                 "name":"Ring Zero",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":242,
+                 "y":720
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -812,6 +824,18 @@
                  "width":29.5,
                  "x":357.5,
                  "y":232.5
+                }, 
+                {
+                 "height":0,
+                 "id":89,
+                 "name":"ring_zero_when_off_screen",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":339,
+                 "y":691
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1141,8 +1165,8 @@
                  "type":"",
                  "visible":true,
                  "width":320,
-                 "x":167,
-                 "y":141.5
+                 "x":176,
+                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1163,7 +1187,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":88,
+ "nextobjectid":90,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1279,6 +1303,10 @@
         {
          "firstgid":726,
          "source":"..\/entities\/entity-wand.json"
+        }, 
+        {
+         "firstgid":727,
+         "source":"..\/tilesets\/tileset-ring_zero.json"
         }],
  "tilewidth":32,
  "type":"map",
