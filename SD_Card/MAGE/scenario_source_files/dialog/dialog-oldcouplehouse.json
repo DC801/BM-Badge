@@ -25,7 +25,7 @@
 			"portrait": "delmar",
 			"name": "%Delmar%",
 			"messages": [
-				"Huh? What's goin' on?\nWhat'd I miss?"
+				"Huh? What's goin' on? What'd I miss?"
 			]
 		}
 	],
@@ -46,7 +46,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"My husband was a real man!\nNot a farm animal!"
+				"My husband was a real man! Not a farm\nanimal!"
 			]
 		}
 	],
@@ -57,13 +57,13 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"That ghastly hacker ruffian hacked him\ninto a sheep on a whim!",
-				"%Delmar% didn't even\ndo anything to him!",
-				"...Other than insult his character,\nand that of his mother.",
+				"%Delmar% didn't even do anything\nto him!",
+				"...Other than insult his character, and\nthat of his mother.",
 				"...And eat his lunch.",
 				"...And cut his brake line.",
 				"The point is, child, that %Delmar%'s\nbeen stuck as a sheep ever since!",
 				"But you, now that you have Ring Zero....",
-				"You can make things right again, \ncan't you?",
+				"You can make things right again, can't\nyou?",
 				"I miss my %Delmar%!"
 			]
 		},
@@ -90,7 +90,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, %Delmar%...\nwe'll fix you up real soon!"
+				"Oh, %Delmar%... we'll fix you up\nreal soon!"
 			]
 		}
 	],
@@ -100,7 +100,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, %Delmar%!\nYou're... oh...."
+				"Oh, %Delmar%! You're... oh...."
 			]
 		}
 	],
@@ -110,8 +110,8 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, goodness.\nWell, this isn't my %Delmar%,\nbut I suppose it's nice he's not a sheep\nanymore, at least.",
-				"He's been a sheep for so long...\nwell, I suppose it's been forty years."
+				"Oh, goodness. Well, this isn't my\n%Delmar%, but I suppose it's nice\nhe's not a sheep anymore, at least.",
+				"He's been a sheep for so long... well, I\nsuppose it's been forty years."
 			]
 		}
 	],
@@ -121,7 +121,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, %Delmar%!\nwe'll make you your normal self soon!"
+				"Oh, %Delmar%! We'll make you your\nnormal self soon!"
 			]
 		}
 	],
@@ -139,7 +139,7 @@
 			"portrait": "delmar",
 			"name": "%Delmar%",
 			"messages": [
-				"Whazzat, %Beatrice%?\nSomething seems different."
+				"Whazzat, %Beatrice%? Something seems\ndifferent."
 			]
 		},
 		{
@@ -147,7 +147,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, it's my %Delmar%!\nThank you, %PLAYER%!"
+				"Oh, it's my %Delmar%! Thank you,\n%PLAYER%!"
 			]
 		}
 	],
@@ -159,7 +159,7 @@
 			"messages": [
 				"Oh! That's a nasty trick,\n%PLAYER%!",
 				"How could you?",
-				"Although...\nI sort of get the feeling he'll be back\nto normal in a few minutes."
+				"Although... I sort of get the feeling\nhe'll be back to normal in a few minutes."
 			]
 		}
 	],
@@ -169,7 +169,7 @@
 			"portrait": "beatrice",
 			"name": "%Beatrice%",
 			"messages": [
-				"Oh, %Delmar%,\nyou're... uh...."
+				"Oh, %Delmar%, you're... uh...."
 			]
 		}
 	],
@@ -211,10 +211,10 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"But now I find myself longing for quiet.",
-				"It was so peaceful, before.\nMe and %Delmar% used to\nget along so well.",
+				"It was so peaceful, before. Me and\n%Delmar% used to get along so well.",
 				"And it's so difficult to fall asleep\nrecently.",
 				"I hate to ask it, child, but....",
-				"I can't hear myself think!\nPlease change him back!"
+				"I can't hear myself think! Please change\nhim back!"
 			]
 		}
 	],
@@ -225,7 +225,7 @@
 			"name": "%Beatrice%",
 			"messages": [
 				"I'm sure he won't mind being a sheep\nagain. In fact, I'm not sure he'll notice.",
-				"But I sure will!\nI won't have peace otherwise!"
+				"But I sure will! I won't have peace\notherwise!"
 			]
 		}
 	],

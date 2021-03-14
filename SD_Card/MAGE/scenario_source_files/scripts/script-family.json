@@ -99,6 +99,11 @@
 	],
 	"show_dialog-smith-s": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Smith",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-smith-s"
 		},
