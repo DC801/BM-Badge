@@ -1351,7 +1351,7 @@
 		},
 		{
 			"action": "SCREEN_FADE_OUT",
-			"duration": 300,
+			"duration": 1000,
 			"color": "#FFDD00"
 		},
 		{
@@ -1360,8 +1360,13 @@
 			"direction": "south"
 		},
 		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero",
+			"geometry": "ringzero-landing-6"
+		},
+		{
 			"action": "SCREEN_FADE_IN",
-			"duration": 300,
+			"duration": 1000,
 			"color": "#FFDD00"
 		},
 		{
@@ -1382,9 +1387,24 @@
 			"duration": 200
 		},
 		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 1000,
+			"color": "#FFDD00"
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "south"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero",
+			"geometry": "ring_zero_when_off_screen"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 1000,
+			"color": "#FFDD00"
 		},
 		{
 			"action": "SHOW_DIALOG",
