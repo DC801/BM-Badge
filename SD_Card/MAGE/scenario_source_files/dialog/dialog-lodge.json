@@ -138,6 +138,16 @@
 			]
 		}
 	],
+	"dialog-marta-prechoose-broomd": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"I knew I recognized this broom!"
+			]
+		}
+	],
 	"dialog-trekkie-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
