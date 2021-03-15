@@ -278,7 +278,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
-			"name": "Debug Man",
+			"name": "%SELF%",
 			"messages": [
 				"All flags reset."
 			]

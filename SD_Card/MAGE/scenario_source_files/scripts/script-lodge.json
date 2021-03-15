@@ -1351,7 +1351,7 @@
 		},
 		{
 			"action": "SCREEN_FADE_OUT",
-			"duration": 300,
+			"duration": 1000,
 			"color": "#FFDD00"
 		},
 		{
@@ -1360,13 +1360,27 @@
 			"direction": "south"
 		},
 		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero",
+			"geometry": "ringzero-landing-66"
+		},
+		{
 			"action": "SCREEN_FADE_IN",
-			"duration": 300,
+			"duration": 1000,
 			"color": "#FFDD00"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 500
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1100,
+			"geometry": "ringzero-landing-66"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -1382,9 +1396,33 @@
 			"duration": 200
 		},
 		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 800,
+			"entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 50
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 1000,
+			"color": "#FFDD00"
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "south"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero",
+			"geometry": "ring_zero_when_off_screen"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 1000,
+			"color": "#FFDD00"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -1920,6 +1958,10 @@
 			"dialog": "dialog-tuesday-wand1"
 		},
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 900
 		},
@@ -1940,6 +1982,10 @@
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 400
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -2212,8 +2258,30 @@
 			"success_script": "show_dialog-marta-postchoose"
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "broom",
+			"expected_bool": true,
+			"success_script": "show_dialog-marta-prechoose-broomd"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-marta-prechoose"
+		}
+	],
+	"show_dialog-marta-prechoose-broomd": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-prechoose-broomd"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Marta",
+			"script": "show_dialog-marta-prechoose"
 		}
 	],
 	"show_dialog-trekkie-prechoose": [

@@ -138,6 +138,16 @@
 			]
 		}
 	],
+	"dialog-marta-prechoose-broomd": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"I knew I recognized this broom!"
+			]
+		}
+	],
 	"dialog-trekkie-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -612,7 +622,7 @@
 			"portrait": "jackob",
 			"name": "%Jackob%",
 			"messages": [
-				"Everything that the Big Bag hackced so\nmany years ago.... Everything that\nscoundrel ruined...."
+				"Everything that the Big Bag hacked so\nmany years ago.... Everything that\nscoundrel ruined...."
 			]
 		},
 		{
@@ -732,8 +742,8 @@
 	"dialog-debug-tuesday-over": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "Debug Man",
-			"name": "%Debug Man%",
+			"portrait": "jackob",
+			"name": "%SELF%",
 			"messages": [
 				"Tuesday bypassed."
 			]
