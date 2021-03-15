@@ -14,6 +14,27 @@
 			"success_script": "bedroom-door-watch"
 		}
 	],
+	"debug-cutscene-begin": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-morning-begin"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "cutscene-begin"
+		}
+	],
+	"cutscene-begin": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goodmorning",
+			"bool_value": false
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "on_tick-magehouse"
+		}
+	],
 	"on_load-magehouse": [
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -125,7 +146,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 2000
+			"duration": 400
+		},
+		{
+			"action": "PAN_CAMERA_TO_GEOMETRY",
+			"duration": 1000,
+			"geometry": "morning-camera"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -225,8 +255,13 @@
 			"doc": "Come along, now!"
 		},
 		{
+			"action": "PAN_CAMERA_TO_ENTITY",
+			"duration": 399,
+			"entity": "%PLAYER%"
+		},
+		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 1
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",

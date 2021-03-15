@@ -511,22 +511,12 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			}
 		}
 	}
+	// if there is a player on the map
 	if(playerEntityIndex != NO_PLAYER) {
 		//get useful variables for below:
 		updateEntityRenderableData(playerEntityIndex);
 		MageEntity *playerEntity = &entities[playerEntityIndex];
 		MageEntityRenderableData *renderableData = &entityRenderableData[playerEntityIndex];
-		//update camera even if player does not have control:
-		if(
-			MageDialog->isOpen
-			|| !playerHasControl
-		) {
-			return;
-		}
-
-		//opening the hex editor is the only button press that will lag actual gameplay by one frame
-		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
-		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
 
 		//update renderable info before proceeding:
 		bool hasEntityType = getValidPrimaryIdType(playerEntity->primaryIdType) == ENTITY_TYPE;
@@ -535,16 +525,22 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
 		bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+		bool acceptPlayerInput = !(MageDialog->isOpen || !playerHasControl);
 
 		isMoving = false;
 
 		//check to see if the mage is pressing the action button, or currently in the middle of an action animation.
-		if(playerIsActioning || EngineInput_Buttons.rjoy_left)
-		{
+		if(
+			acceptPlayerInput
+			&& (
+				playerIsActioning
+				|| EngineInput_Buttons.rjoy_left
+			)
+		) {
 			playerIsActioning = true;
 		}
 		//if not actioning or resetting, handle all remaining inputs:
-		else
+		else if(acceptPlayerInput)
 		{
 			playerVelocity = {
 				.x= 0,
@@ -590,23 +586,6 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 				//no task assigned to op_page in game mode
 		}
 
-		//check for memory button presses and set the hex cursor to the memory location
-		if(EngineInput_Activated.mem0)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
-		}
-		if(EngineInput_Activated.mem1)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
-		}
-		if(EngineInput_Activated.mem2)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
-		}
-		if(EngineInput_Activated.mem3)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
-		}
 
 		//handle animation assignment for the player:
 		//Scenario 1 - preform action:
@@ -636,7 +615,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		//this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
 		bool isPlayingActionButShouldReturnControlToPlayer = (
 			hasEntityType &&
-			(playerEntity->currentAnimation == 2) &&
+			(playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX) &&
 			(playerEntity->currentFrame == (renderableData->frameCount - 1))
 		);
 
@@ -659,6 +638,31 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			|| (previousPlayerTilesetId != renderableData->tilesetId)
 		) {
 			updateEntityRenderableData(playerEntityIndex);
+		}
+		if(!acceptPlayerInput) {
+			return;
+		}
+
+		//opening the hex editor is the only button press that will lag actual gameplay by one frame
+		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
+		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
+
+		//check for memory button presses and set the hex cursor to the memory location
+		if(EngineInput_Activated.mem0)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
+		}
+		if(EngineInput_Activated.mem1)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
+		}
+		if(EngineInput_Activated.mem2)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
+		}
+		if(EngineInput_Activated.mem3)
+		{
+			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
 		}
 	}
 	else //no player on map
