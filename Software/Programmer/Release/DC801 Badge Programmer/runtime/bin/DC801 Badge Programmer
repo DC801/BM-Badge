@@ -1,0 +1,3 @@
+#!/bin/sh
+DIR="${0%/*}"
+"$DIR/java"  -p "$DIR/../app" -m programmer/org.dc801.programmer.Main  "$@"
