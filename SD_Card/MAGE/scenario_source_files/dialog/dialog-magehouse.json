@@ -209,5 +209,15 @@
 				"What say you about triangle, Mage Facts\nMagazine?"
 			]
 		}
+	],
+	"dialog-morning-begin": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%SELF%",
+			"messages": [
+				"Cutscene can now begin."
+			]
+		}
 	]
 }

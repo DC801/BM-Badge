@@ -1,4 +1,12 @@
 { "columns":1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"entity-pot.png",
  "imageheight":64,
  "imagewidth":32,

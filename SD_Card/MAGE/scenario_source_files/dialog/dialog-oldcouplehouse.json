@@ -277,7 +277,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
-			"name": "Debug Man",
+			"name": "%SELF%",
 			"messages": [
 				"Sequal branch activated."
 			]

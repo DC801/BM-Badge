@@ -742,8 +742,8 @@
 	"dialog-debug-tuesday-over": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "Debug Man",
-			"name": "%Debug Man%",
+			"portrait": "jackob",
+			"name": "%SELF%",
 			"messages": [
 				"Tuesday bypassed."
 			]
