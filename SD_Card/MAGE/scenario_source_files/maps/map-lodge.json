@@ -1145,6 +1145,18 @@
                  "width":0,
                  "x":369.75,
                  "y":153
+                }, 
+                {
+                 "height":0,
+                 "id":90,
+                 "name":"ringzero-landing-66",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":274
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1187,7 +1199,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":90,
+ "nextobjectid":91,
  "orientation":"orthogonal",
  "properties":[
         {
