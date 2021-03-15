@@ -441,29 +441,6 @@
                  "y":196.666666666667
                 }, 
                 {
-                 "gid":210,
-                 "height":32,
-                 "id":39,
-                 "name":"Debug Man",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-tuesday"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":283.333333333333,
-                 "y":415.166666666667
-                }, 
-                {
                  "gid":710,
                  "height":64,
                  "id":40,
@@ -474,29 +451,6 @@
                  "width":64,
                  "x":304,
                  "y":146
-                }, 
-                {
-                 "gid":210,
-                 "height":32,
-                 "id":44,
-                 "name":"Debug Man 3",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"cutscene-tuesday"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":358.25,
-                 "y":414.75
                 }, 
                 {
                  "gid":718,
@@ -599,6 +553,42 @@
                  "width":192,
                  "x":242,
                  "y":720
+                }, 
+                {
+                 "gid":787,
+                 "height":32,
+                 "id":92,
+                 "name":"Debug Exa",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-tuesday"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":284,
+                 "y":415
+                }, 
+                {
+                 "gid":2147484435,
+                 "height":32,
+                 "id":93,
+                 "name":"Debug Exa 2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"cutscene-tuesday"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":354,
+                 "y":415
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1199,7 +1189,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":91,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1319,6 +1309,10 @@
         {
          "firstgid":727,
          "source":"..\/tilesets\/tileset-ring_zero.json"
+        }, 
+        {
+         "firstgid":787,
+         "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,
  "type":"map",

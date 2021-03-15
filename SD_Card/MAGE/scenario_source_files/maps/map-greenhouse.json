@@ -189,10 +189,10 @@
                  "y":106.5
                 }, 
                 {
-                 "gid":323,
+                 "gid":2147483982,
                  "height":32,
-                 "id":18,
-                 "name":"Debug Man",
+                 "id":20,
+                 "name":"Debug Exa",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -204,7 +204,7 @@
                  "visible":true,
                  "width":32,
                  "x":224,
-                 "y":127
+                 "y":129
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -259,7 +259,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":20,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -303,6 +303,10 @@
         {
          "firstgid":310,
          "source":"..\/entities\/entity-village_elder.json"
+        }, 
+        {
+         "firstgid":334,
+         "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,
  "type":"map",

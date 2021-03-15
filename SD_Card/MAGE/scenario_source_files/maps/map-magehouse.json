@@ -121,7 +121,7 @@
                  "y":97
                 }, 
                 {
-                 "height":23.5,
+                 "height":54,
                  "id":15,
                  "name":"bedroom-door",
                  "rotation":0,
@@ -367,6 +367,24 @@
                  "width":0,
                  "x":558,
                  "y":170
+                }, 
+                {
+                 "gid":425,
+                 "height":32,
+                 "id":37,
+                 "name":"Debug Exa",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-cutscene-begin"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":643,
+                 "y":223
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -409,7 +427,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -473,6 +491,10 @@
         {
          "firstgid":423,
          "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":425,
+         "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,
  "type":"map",
