@@ -607,7 +607,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
 		}
 		//Scenario 3 - show idle animation:
-		else
+		else if (acceptPlayerInput)
 		{
 			playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 		}
@@ -622,7 +622,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		//if the above bool is true, set the player back to their idle animation:
 		if (isPlayingActionButShouldReturnControlToPlayer) {
 			playerEntity->currentFrame = 0;
-			playerEntity->currentAnimation = 0;
+			playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 		}
 
 		//if the animation changed since the start of this function, reset to the first frame and restart the timer:
