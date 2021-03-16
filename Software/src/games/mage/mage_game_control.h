@@ -73,10 +73,6 @@ private:
 	//this is an array of all the colorPalettes objects in the ROM
 	std::unique_ptr<MageColorPalette[]> colorPalettes;
 
-	//these two variables store the player's previous tilesetId and tileId
-	//for use in keeping the camera centered while hacking.
-	uint16_t previousPlayerTilesetId;
-
 	//a couple of state variables for tracking player movement:
 	float mageSpeed;
 	bool isMoving;

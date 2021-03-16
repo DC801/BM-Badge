@@ -362,5 +362,35 @@
 				"Hooray! 'hackable_state_a' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
 			]
 		}
+	],
+	"dialog-mage16-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the action PLAY_ENTITY_ANIMATION.\nFirst, I will play my walk animation once."
+			]
+		}
+	],
+	"dialog-mage16-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now, my 'action' animation will play twice."
+			]
+		}
+	],
+	"dialog-mage16-c": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"Now, I will turn into Bender and play the\n\"Shiny Metal Ass\" 'action' animation once,\nthen turn back into a mage."
+			]
+		}
 	]
 }

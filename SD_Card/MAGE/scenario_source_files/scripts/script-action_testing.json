@@ -787,5 +787,60 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage15"
 		}
+	],
+	"mage16-interact": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage16-a"
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 1,
+			"play_count": 1
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage16-b"
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 2
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage16-c"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "bender"
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 3,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "mage"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
 	]
 }

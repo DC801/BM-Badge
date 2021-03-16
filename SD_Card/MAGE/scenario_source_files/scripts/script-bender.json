@@ -286,23 +286,10 @@
 			"duration": 300
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Bender",
-			"byte_value": 3
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_FRAME",
-			"entity": "Bender",
-			"byte_value": 1
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 3200
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Bender",
-			"byte_value": 0
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 3,
+			"play_count": 1
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -319,23 +306,10 @@
 			"duration": 300
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Bender",
-			"byte_value": 3
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_FRAME",
-			"entity": "Bender",
-			"byte_value": 1
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 3800
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Bender",
-			"byte_value": 0
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 3,
+			"play_count": 1
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",

@@ -92,14 +92,15 @@ void GameUpdate(uint32_t deltaTime)
 		//this handles buttons and state updates based on button presses in game mode:
 		MageGame->applyGameModeInputs(deltaTime);
 
+		//update the entities based on the current state of their (hackable) data array.
+		MageGame->UpdateEntities(deltaTime);
+
 		//handle scripts:
 		handleScripts();
 
 		//check for loadMap:
 		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 
-		//update the entities based on the current state of their (hackable) data array.
-		MageGame->UpdateEntities(deltaTime);
 		MageGame->applyCameraEffects(deltaTime);
 	}
 }
