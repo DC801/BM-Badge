@@ -24,7 +24,7 @@
         {
          "draworder":"topdown",
          "id":3,
-         "name":"Object Layer",
+         "name":"Entities",
          "objects":[
                 {
                  "gid":321,
@@ -385,7 +385,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage16-interact"
                         }, 
                         {
                          "name":"on_tick",

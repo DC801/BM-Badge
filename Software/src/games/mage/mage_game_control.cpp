@@ -100,8 +100,6 @@ MageGameControl::MageGameControl()
 		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
 	}
 
-	previousPlayerTilesetId = MAGE_TILESET_FAILOVER_ID;
-
 	mageSpeed = 0;
 	isMoving = false;
 	isCollisionDebugOn = false;
@@ -128,7 +126,6 @@ uint32_t MageGameControl::Size() const
 		variableHeader.size() +
 		imageHeader.size() +
 		map.Size() +
-		sizeof(previousPlayerTilesetId) +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
 		sizeof(playerEntityIndex) +
@@ -413,9 +410,6 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		//other values are filled in when getEntityRenderableData is called:
 		updateEntityRenderableData(i, true);
 	}
-
-	//make sure the tileset Id is updated when the map loads to prevent camera jumping when switching entity types
-	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
 }
 
 void MageGameControl::initializeScriptsOnMapLoad()
@@ -635,7 +629,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		//What scenarios call for an extra renderableData update?
 		if(
 			isMoving
-			|| (previousPlayerTilesetId != renderableData->tilesetId)
+			|| (renderableData->lastTilesetId != renderableData->tilesetId)
 		) {
 			updateEntityRenderableData(playerEntityIndex);
 		}
@@ -1356,9 +1350,9 @@ void MageGameControl::updateEntityRenderableData(
 			entityPointer->y += oldCenter.y - data->center.y;
 			entity.x = entityPointer->x;
 			entity.y = entityPointer->y;
-			printf(
-				"ENTITY TILESET CHANGED!\n"
-			);
+			// printf(
+			// 	"ENTITY TILESET CHANGED!\n"
+			// );
 			updateEntityRenderableBoxes(data, &entity, tileset);
 		}
 		data->lastTilesetId = data->tilesetId;
@@ -1389,8 +1383,6 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 	{
 		return;
 	}
-	//store the current player tileset info for comparison when moving cameras while hacking:
-	previousPlayerTilesetId = entityRenderableData[playerEntityIndex].tilesetId;
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{

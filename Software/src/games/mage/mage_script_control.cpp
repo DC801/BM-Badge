@@ -879,7 +879,10 @@ void MageScriptControl::setEntityCurrentFrame(uint8_t * args, MageScriptState * 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		entity->currentFrame = argStruct->newValue;
+		renderable->currentFrameTicks = 0;
+		MageGame->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1200,8 +1203,32 @@ void MageScriptControl::playEntityAnimation(uint8_t * args, MageScriptState * re
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->currentAnimation = argStruct->animationId;
-		// TODO: Implement the non-blocking `argStruct->playCount` part
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
+		if (resumeStateStruct->totalLoopsToNextAction == 0) {
+			resumeStateStruct->totalLoopsToNextAction = argStruct->playCount;
+			resumeStateStruct->loopsToNextAction = argStruct->playCount;
+			entity->currentAnimation = argStruct->animationId;
+			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
+			MageGame->updateEntityRenderableData(entityIndex);
+		} else if (
+			// we just reset to 0
+			entity->currentFrame == 0
+			// the previously rendered frame was the last in the animation
+			&& resumeStateStruct->currentSegmentIndex == (renderable->frameCount - 1)
+		) {
+			resumeStateStruct->loopsToNextAction--;
+			if (resumeStateStruct->loopsToNextAction == 0) {
+				resumeStateStruct->totalLoopsToNextAction = 0;
+				entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+				entity->currentFrame = 0;
+				renderable->currentFrameTicks = 0;
+				MageGame->updateEntityRenderableData(entityIndex);
+			}
+		}
+		// this is just a quick and dirty place to hold on to
+		// the last frame that was rendered for this entity
+		resumeStateStruct->currentSegmentIndex = entity->currentFrame;
 	}
 }
 
@@ -1260,7 +1287,7 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 				),
 				entity->direction
 			);
-			entity->currentAnimation = 1;
+			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
 		}
 		float progress = manageProgressOfAction(
 			resumeStateStruct,
@@ -1273,8 +1300,9 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
 		if(progress >= 1.0f) {
-			entity->currentAnimation = 0;
+			entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
 		}
 		MageGame->updateEntityRenderableData(entityIndex);
@@ -1317,7 +1345,7 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->loopsToNextAction = totalDelayLoops;
 			resumeStateStruct->length = geometry.pathLength;
 			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
-			entity->currentAnimation = 1;
+			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
@@ -1376,8 +1404,9 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 		setEntityPositionToPoint(entity, betweenPoint);
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->totalLoopsToNextAction = 0;
-			entity->currentAnimation = 0;
+			entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
 		}
 		MageGame->updateEntityRenderableData(entityIndex);
 	}
@@ -1420,7 +1449,7 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 				? geometry.pathLength * 2
 				: geometry.pathLength;
 			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
-			entity->currentAnimation = 1;
+			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
 		}
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;

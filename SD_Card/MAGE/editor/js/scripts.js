@@ -985,6 +985,8 @@ var actionPropertyNameToHandlerMap = {
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,
+	animation: getByteFromAction,
+	play_count: getByteFromAction,
 	frequency: getTwoBytesFromAction,
 	font_id: getByteFromAction,
 	direction: getDirectionFromAction,
@@ -1025,7 +1027,7 @@ var handleActionWithFields = function(
 	fields.forEach(function (field) {
 		var handler = actionPropertyNameToHandlerMap[field.propertyName];
 		if (!handler) {
-			throw new Error(`No action filed handler for property "${field.propertyName}"!`)
+			throw new Error(`No action field handler for property "${field.propertyName}"!`)
 		}
 		var value = handler(
 			field.propertyName,
