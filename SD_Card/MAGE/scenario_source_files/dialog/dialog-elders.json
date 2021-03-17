@@ -415,7 +415,7 @@
 			"name": "%Jackob%",
 			"messages": [
 				"Oh, you mean Bob Moss. Yes, he disappears\nonce in a while.",
-				"He's never far. But if you can't find him\nin town, you might have to look in places\none cannot normally walk."
+				"He's never far. But if you can't find him\nin town, you might have to look in places\none cannot ordinarily walk."
 			]
 		}
 	],
@@ -593,7 +593,7 @@
 			"portrait": "alfonso",
 			"name": "%Alfonso%",
 			"messages": [
-				"You've completed $story-flag-count$ tasks."
+				"You've completed $story-flag-count$ out of 10 tasks."
 			]
 		}
 	],

@@ -23,9 +23,9 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"Aww, man... I forgot!\nSomeone bit my shiny metal ass!",
+				"Aww, man... I forgot! Someone bit my shiny\nmetal ass!",
 				"Why would someone do such a horrible thing\nto an innocent robot?!",
-				"Life's not the same without my ass!\nHow else am I supposed to taunt\neveryone stupid-looking?"
+				"Life's not the same without my ass! How\nelse am I supposed to taunt everyone\nstupid-looking?"
 
 			]
 		}
@@ -36,9 +36,9 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"Hey, you, kid!\nYou're the one with the magic whatsit!",
-				"Can't you fix this with your\nwhatever powers?",
-				"I'll give you a great reward!\nJust get my ass back!"
+				"Hey, you, kid! You're the one with the\nmagic whatsit!",
+				"Can't you fix this with your whatever\npowers?",
+				"I'll give you a great reward! Just get my\nass back!"
 			]
 		}
 	],
@@ -49,8 +49,8 @@
 			"name": "%Bender%",
 			"messages": [
 				"Hey, you, strangely-handsome-looking kid!\nYou're the one with the magic whatsit!",
-				"Can't you fix this with your\nwhatever powers?",
-				"I'll give you a great reward!\nJust get my ass back!"
+				"Can't you fix this with your whatever\npowers?",
+				"I'll give you a great reward! Just get my\nass back!"
 			]
 		}
 	],
@@ -70,9 +70,9 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"...Oh, right. My ass.\nSomeone bit it off.",
-				"So what's the holdup?\nI know you can fix it!",
-				"I'll reward you!\nJust hurry it up!"
+				"...Oh, right. My ass. Someone bit it off.",
+				"So what's the holdup? I know you can fix\nit!",
+				"I'll reward you! Just hurry it up!"
 			]
 		}
 	],
@@ -82,7 +82,7 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"Hey, you did it!\nMy ass is back!"
+				"Hey, you did it! My ass is back!"
 			]
 		}
 	],
@@ -141,7 +141,7 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"I did!\nYou got a front row seat to me, Bender,\nshowing off my shiny metal ass!",
+				"I did! You got a front row seat to me,\nBender, showing off my shiny metal ass!",
 				"That's the greatest reward there is!"
 			]
 		},
@@ -159,7 +159,7 @@
 			"name": "%Bender%",
 			"messages": [
 				"Well, you know what they say about\nassumptions.",
-				"They make a shiny ass...\nand they give it to me, Bender."
+				"They make a shiny ass... and they give it\nto me, Bender."
 			]
 		}
 	],
@@ -187,7 +187,7 @@
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [
-				"It's shiny.\nI'll give you that."
+				"It's shiny. I'll give you that."
 			]
 		}
 	]

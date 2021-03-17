@@ -20,6 +20,10 @@
 			"dialog": "dialog-morning-begin"
 		},
 		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "cutscene-begin"
 		}
@@ -76,6 +80,10 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "south"
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
 		}
 	],
 	"bedroom-door-watch": [

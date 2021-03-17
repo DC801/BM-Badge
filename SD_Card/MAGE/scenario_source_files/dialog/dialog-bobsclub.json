@@ -454,18 +454,6 @@
 			]
 		}
 	],
-	"dialog-bobsclub-bal": [
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
-			"messages": [
-				"The Wall of Bobs.",
-				"Robert Parr (superhero),\nSpongebob (fry cook),\nBob Kelso (physician)....",
-				"There sure are a lot of Bobs in the world."
-			]
-		}
-	],
 	"dialog-bobrock-bounce-rehash": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -635,7 +623,8 @@
 			"name": "%PLAYER%",
 			"messages": [
 				"Wall of Bobs: famous Bobs.",
-				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook."
+				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.",
+				"There sure are a lot of Bobs in the world."
 			]
 		}
 	]

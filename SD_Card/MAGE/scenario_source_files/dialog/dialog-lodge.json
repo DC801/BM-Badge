@@ -626,7 +626,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "BOTTOM_RIGHT",
 			"portrait": "mage",
 			"name": "%PLAYER%",
 			"messages": [

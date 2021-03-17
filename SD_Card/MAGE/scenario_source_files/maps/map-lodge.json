@@ -289,8 +289,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":241.5,
-                 "y":326
+                 "x":255,
+                 "y":335
                 }, 
                 {
                  "gid":547,
@@ -577,6 +577,24 @@
                  "width":32,
                  "x":354,
                  "y":415
+                }, 
+                {
+                 "gid":847,
+                 "height":32,
+                 "id":103,
+                 "name":"Debug Exa 3",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-all-artifacts"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":252,
+                 "y":166
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -962,15 +980,15 @@
                  "y":188.35238098881
                 }, 
                 {
-                 "height":43.25,
+                 "height":34,
                  "id":41,
                  "name":"door-secretdoor",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":319.75,
-                 "y":108.75
+                 "x":320,
+                 "y":116
                 }, 
                 {
                  "height":0,
@@ -1236,7 +1254,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":103,
+ "nextobjectid":104,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -55,6 +55,61 @@
                  "width":32,
                  "x":91.6684978439364,
                  "y":98.2635713863784
+                }, 
+                {
+                 "height":32,
+                 "id":2,
+                 "name":"door-main",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1,
+                 "y":1
+                }, 
+                {
+                 "height":32,
+                 "id":3,
+                 "name":"door-test",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":65,
+                 "y":1
+                }, 
+                {
+                 "height":32,
+                 "id":4,
+                 "name":"door-town",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":129,
+                 "y":1
+                }, 
+                {
+                 "height":32,
+                 "id":5,
+                 "name":"door-action_testing_01",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":193,
+                 "y":1
+                }, 
+                {
+                 "height":32,
+                 "id":6,
+                 "name":"door-action_testing_02",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":257,
+                 "y":1
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -75,7 +130,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":2,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
@@ -92,6 +147,10 @@
         {
          "firstgid":65,
          "source":"..\/tilesets\/tileset-colllision_64x64.json"
+        }, 
+        {
+         "firstgid":81,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":64,
  "type":"map",

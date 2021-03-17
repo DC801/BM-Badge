@@ -101,7 +101,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-delmar-huh"
+			"dialog": "dialog-delmar-huh",
+			"doc": "Huh?"
 		}
 	],
 	"show_dialog-delmar-blab": [
