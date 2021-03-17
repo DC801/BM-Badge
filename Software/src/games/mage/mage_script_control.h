@@ -204,6 +204,8 @@ class MageScriptControl
 		void setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setHexEditorDialogMode(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setHexEditorControl(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I (loadMap will stop all other scripts immediately, loading a new map with new scripts)
 		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)

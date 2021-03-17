@@ -587,29 +587,30 @@ enums:
     63: lock_hax_cell
     64: set_hex_editor_state
     65: set_hex_editor_dialog_mode
-    66: load_map
-    67: show_dialog
-    68: play_entity_animation
-    69: teleport_entity_to_geometry
-    70: walk_entity_to_geometry
-    71: walk_entity_along_geometry
-    72: loop_entity_along_geometry
-    73: set_camera_to_follow_entity
-    74: teleport_camera_to_geometry
-    75: pan_camera_to_entity
-    76: pan_camera_to_geometry
-    77: pan_camera_along_geometry
-    78: loop_camera_along_geometry
-    79: set_screen_shake
-    80: screen_fade_out
-    81: screen_fade_in
-    82: mutate_variable
-    83: mutate_variables
-    84: copy_variable
-    85: check_variable
-    86: check_variables
-    87: play_sound_continuous
-    88: play_sound_interrupt
+    66: set_hex_editor_control
+    67: load_map
+    68: show_dialog
+    69: play_entity_animation
+    70: teleport_entity_to_geometry
+    71: walk_entity_to_geometry
+    72: walk_entity_along_geometry
+    73: loop_entity_along_geometry
+    74: set_camera_to_follow_entity
+    75: teleport_camera_to_geometry
+    76: pan_camera_to_entity
+    77: pan_camera_to_geometry
+    78: pan_camera_along_geometry
+    79: loop_camera_along_geometry
+    80: set_screen_shake
+    81: screen_fade_out
+    82: screen_fade_in
+    83: mutate_variable
+    84: mutate_variables
+    85: copy_variable
+    86: check_variable
+    87: check_variables
+    88: play_sound_continuous
+    89: play_sound_interrupt
 
   dialog_screen_alignment_type:
     0: bottom_left

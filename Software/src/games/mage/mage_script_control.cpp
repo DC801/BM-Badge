@@ -1172,6 +1172,12 @@ void MageScriptControl::setHexEditorDialogMode(uint8_t * args, MageScriptState *
 	}
 }
 
+void MageScriptControl::setHexEditorControl(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetHexEditorControl *argStruct = (ActionSetHexEditorControl*)args;
+	MageGame->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
+}
+
 void MageScriptControl::loadMap(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionLoadMap *argStruct = (ActionLoadMap*)args;
@@ -1914,6 +1920,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL] = &MageScriptControl::lockHaxCell;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE] = &MageScriptControl::setHexEditorState;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE] = &MageScriptControl::setHexEditorDialogMode;
+	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_CONTROL] = &MageScriptControl::setHexEditorControl;
 	actionFunctions[MageScriptActionTypeId::LOAD_MAP] = &MageScriptControl::loadMap;
 	actionFunctions[MageScriptActionTypeId::SHOW_DIALOG] = &MageScriptControl::showDialog;
 	actionFunctions[MageScriptActionTypeId::PLAY_ENTITY_ANIMATION] = &MageScriptControl::playEntityAnimation;
