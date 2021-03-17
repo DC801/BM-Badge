@@ -451,7 +451,6 @@ void MageGameControl::LoadMap(uint16_t index)
 	//close any open dialogs and return player control as well:
 	MageDialog->closeDialog();
 	playerHasControl = true;
-	playerHasHexEditorControl = true;
 }
 
 void MageGameControl::applyUniversalInputs()
