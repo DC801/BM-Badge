@@ -12,6 +12,12 @@
 			"geometry": "door-lodge",
 			"success_script": "show_dialog-lodge-cantleaveyet",
 			"expected_bool": true
+		}
+	],
+	"on_tick-lodge-plus-secretdoor": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "on_tick-tuesdayd"
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -208,14 +214,10 @@
 			"duration": 400
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"action": "PLAY_ENTITY_ANIMATION",
 			"entity": "Bookcase",
-			"byte_value": 2,
-			"doc": "falling anim"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 1800
+			"animation": 2,
+			"play_count": 1
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -312,6 +314,10 @@
 	"cutscene-tuesday": [
 		{
 			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
 		},
 		{
@@ -571,6 +577,10 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-candothis",
 			"doc": "Okay. I can do this."
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -1548,8 +1558,16 @@
 			"script": "alfonso-to-secretdoor-button"
 		},
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "secret-door-open"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -1576,6 +1594,10 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "deaden-artifacts"
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "on_tick-lodge-plus-secretdoor"
 		}
 	],
 	"deaden-artifacts": [
@@ -1630,10 +1652,6 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Alfonso",
 			"direction": "north"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 500
 		}
 	],
 	"alfonso-from-secretdoor-button": [
@@ -2608,6 +2626,48 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "north"
+		}
+	],
+	"debug-all-artifacts": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "broom",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wand",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "book",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glasses",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bracelet",
+			"bool_value": true
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "elder-point"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "marta-broom-watch-spot"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Marta",
+			"entity_type": "marta_broom"
 		}
 	]
 }
