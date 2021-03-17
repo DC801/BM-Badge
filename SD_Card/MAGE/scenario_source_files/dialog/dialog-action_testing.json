@@ -392,5 +392,25 @@
 				"Now, I will turn into Bender and play the\n\"Shiny Metal Ass\" 'action' animation once,\nthen turn back into a mage."
 			]
 		}
+	],
+	"dialog-mage17-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the action SET_HEX_EDITOR_CONTROL.\nI have disabled your ability to hex edit.\nTalk to me again to re-enable hex editing."
+			]
+		}
+	],
+	"dialog-mage17-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"I test the action SET_HEX_EDITOR_CONTROL.\nI have enabled your ability to hex edit.\nTalk to me again to disable hex editing."
+			]
+		}
 	]
 }

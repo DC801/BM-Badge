@@ -6,7 +6,7 @@
 		},
 		{
 			"action": "SET_HEX_EDITOR_STATE",
-			"expected_bool": true
+			"bool_value": true
 		},
 		{
 			"action": "BLOCKING_DELAY",
@@ -14,7 +14,7 @@
 		},
 		{
 			"action": "SET_HEX_EDITOR_STATE",
-			"expected_bool": false
+			"bool_value": false
 		}
 	],
 	"entity_on_interact_script": [
@@ -34,7 +34,7 @@
 	"button_success_script": [
 		{
 			"action": "SET_HEX_EDITOR_DIALOG_MODE",
-			"expected_bool": true
+			"bool_value": true
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -42,7 +42,7 @@
 		},
 		{
 			"action": "SET_HEX_EDITOR_DIALOG_MODE",
-			"expected_bool": false
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",

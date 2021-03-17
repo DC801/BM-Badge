@@ -246,6 +246,7 @@ typedef enum : uint8_t {
 	LOCK_HAX_CELL,
 	SET_HEX_EDITOR_STATE,
 	SET_HEX_EDITOR_DIALOG_MODE,
+	SET_HEX_EDITOR_CONTROL,
 	LOAD_MAP,
 	SHOW_DIALOG,
 	PLAY_ENTITY_ANIMATION,
@@ -931,6 +932,16 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetHexEditorDialogMode;
+
+typedef struct {
+	uint8_t playerHasHexEditorControl;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetHexEditorControl;
 
 typedef struct {
 	uint16_t mapId;

@@ -104,6 +104,7 @@ public:
 
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
+	bool playerHasHexEditorControl;
 	bool isCollisionDebugOn;
 	bool cameraShaking = false;
 	float cameraShakePhase = 0;

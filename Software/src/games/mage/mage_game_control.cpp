@@ -104,6 +104,7 @@ MageGameControl::MageGameControl()
 	isMoving = false;
 	isCollisionDebugOn = false;
 	playerHasControl = true;
+	playerHasHexEditorControl = true;
 
 	//load the map
 	PopulateMapData(currentMapId);
@@ -132,6 +133,7 @@ uint32_t MageGameControl::Size() const
 		sizeof(warpState) +
 		(sizeof(char) * MAGE_ENTITY_NAME_LENGTH) + //playerName
 		sizeof(playerHasControl) +
+		sizeof(playerHasHexEditorControl) +
 		sizeof(isCollisionDebugOn) +
 		sizeof(cameraShakeAmplitude) +
 		sizeof(cameraFollowEntityId) +
@@ -449,6 +451,7 @@ void MageGameControl::LoadMap(uint16_t index)
 	//close any open dialogs and return player control as well:
 	MageDialog->closeDialog();
 	playerHasControl = true;
+	playerHasHexEditorControl = true;
 }
 
 void MageGameControl::applyUniversalInputs()
@@ -461,6 +464,9 @@ void MageGameControl::applyUniversalInputs()
 		MageDialog->isOpen
 		|| !playerHasControl
 	) {
+		return;
+	}
+	if(!playerHasHexEditorControl) {
 		return;
 	}
 	//make sure any button handling in this function can be processed in ANY game mode.
@@ -633,7 +639,10 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		) {
 			updateEntityRenderableData(playerEntityIndex);
 		}
-		if(!acceptPlayerInput) {
+		if(
+			!acceptPlayerInput
+			|| !playerHasHexEditorControl
+		) {
 			return;
 		}
 
@@ -739,9 +748,9 @@ void MageGameControl::handleEntityInteract(
 				playerRenderableData->isInteracting = true;
 				targetRenderableData->isInteracting = true;
 				isMoving = false;
-				if (hack) {
+				if (hack && playerHasHexEditorControl) {
 					MageHex->openToEntityByIndex(i);
-				} else if (targetEntity->onInteractScriptId) {
+				} else if (!hack && targetEntity->onInteractScriptId) {
 					MageScript->initScriptState(
 						MageScript->getEntityInteractResumeState(i),
 						targetEntity->onInteractScriptId,

@@ -137,8 +137,9 @@ void MageHexEditor::applyHexModeInputs()
 {
 	//check to see if player input is allowed:
 	if(
-		MageDialog->isOpen ||
-		!MageGame->playerHasControl
+		MageDialog->isOpen
+		|| !MageGame->playerHasControl
+		|| !MageGame->playerHasHexEditorControl
 	) {
 		return;
 	}

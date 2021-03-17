@@ -289,10 +289,13 @@ var actionFieldsMap = {
 		{propertyName: 'address', size: 2},
 	],
 	SET_HEX_EDITOR_STATE: [
-		{propertyName: 'expected_bool', size: 1},
+		{propertyName: 'bool_value', size: 1},
 	],
 	SET_HEX_EDITOR_DIALOG_MODE: [
-		{propertyName: 'expected_bool', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	SET_HEX_EDITOR_CONTROL: [
+		{propertyName: 'bool_value', size: 1},
 	],
 	LOAD_MAP: [
 		{propertyName: 'map', size: 2},
@@ -462,6 +465,7 @@ var actionNames = [
 	'LOCK_HAX_CELL',
 	'SET_HEX_EDITOR_STATE',
 	'SET_HEX_EDITOR_DIALOG_MODE',
+	'SET_HEX_EDITOR_CONTROL',
 	'LOAD_MAP',
 	'SHOW_DIALOG',
 	'PLAY_ENTITY_ANIMATION',
