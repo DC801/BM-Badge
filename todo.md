@@ -236,7 +236,7 @@
 - [ ] More villagers
 	- [ ] One of the children's actions should be a sneeze
 - [ ] The other mystical artifacts, which do _not_ pick the mage
-- [ ] Ring Zero, spinning
+- [x] Ring Zero, spinning
 - [ ] Chicken
 - [ ] Sparkles that could be overlayed on anything to draw attention
 - [ ] Character Portraits for the Dialog system

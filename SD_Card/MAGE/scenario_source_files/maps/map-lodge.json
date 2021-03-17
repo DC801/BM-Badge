@@ -217,8 +217,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":349,
-                 "y":314
+                 "x":348,
+                 "y":305
                 }, 
                 {
                  "gid":460,
@@ -307,8 +307,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":291,
-                 "y":309.666666666667
+                 "x":292,
+                 "y":305
                 }, 
                 {
                  "gid":491,
@@ -543,19 +543,7 @@
                  "y":229.454545454546
                 }, 
                 {
-                 "gid":727,
-                 "height":128,
-                 "id":88,
-                 "name":"Ring Zero",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":192,
-                 "x":242,
-                 "y":720
-                }, 
-                {
-                 "gid":787,
+                 "gid":847,
                  "height":32,
                  "id":92,
                  "name":"Debug Exa",
@@ -573,7 +561,7 @@
                  "y":415
                 }, 
                 {
-                 "gid":2147484435,
+                 "gid":2147484495,
                  "height":32,
                  "id":93,
                  "name":"Debug Exa 2",
@@ -814,18 +802,6 @@
                  "width":29.5,
                  "x":357.5,
                  "y":232.5
-                }, 
-                {
-                 "height":0,
-                 "id":89,
-                 "name":"ring_zero_when_off_screen",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":339,
-                 "y":691
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1061,7 +1037,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":307.5,
+                 "x":308,
                  "y":294.25
                 }, 
                 {
@@ -1135,18 +1111,6 @@
                  "width":0,
                  "x":369.75,
                  "y":153
-                }, 
-                {
-                 "height":0,
-                 "id":90,
-                 "name":"ringzero-landing-66",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":336,
-                 "y":274
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1177,6 +1141,89 @@
          "y":0
         }, 
         {
+         "draworder":"topdown",
+         "id":8,
+         "name":"ring_zero",
+         "objects":[
+                {
+                 "gid":727,
+                 "height":64,
+                 "id":96,
+                 "name":"Ring Zero[0]",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":240,
+                 "y":600
+                }, 
+                {
+                 "gid":728,
+                 "height":64,
+                 "id":97,
+                 "name":"Ring Zero[1]",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":240,
+                 "y":664
+                }, 
+                {
+                 "height":0,
+                 "id":98,
+                 "name":"ringzero-landing[0]",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":226
+                }, 
+                {
+                 "height":0,
+                 "id":99,
+                 "name":"ringzero-landing[1]",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":290
+                }, 
+                {
+                 "height":0,
+                 "id":100,
+                 "name":"ring_zero_when_off_screen[0]",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":584
+                }, 
+                {
+                 "height":0,
+                 "id":101,
+                 "name":"ring_zero_when_off_screen[1]",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":648
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483701, 0, 0, 47, 2147483695, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 2147483695, 0, 0, 2147483787, 0, 0, 0, 47, 2147483695, 0, 0, 47, 2147483696, 2147483695, 0, 0, 47, 2147483695, 0, 0, 0, 131, 0, 0, 53, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 139, 2147483701, 0, 0, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 135, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":14,
          "id":3,
@@ -1188,8 +1235,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":94,
+ "nextlayerid":9,
+ "nextobjectid":103,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1311,7 +1358,7 @@
          "source":"..\/tilesets\/tileset-ring_zero.json"
         }, 
         {
-         "firstgid":787,
+         "firstgid":847,
          "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,

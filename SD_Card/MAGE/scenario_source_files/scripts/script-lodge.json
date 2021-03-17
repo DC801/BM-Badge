@@ -1361,8 +1361,13 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Ring Zero",
-			"geometry": "ringzero-landing-66"
+			"entity": "Ring Zero[0]",
+			"geometry": "ringzero-landing[0]"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero[1]",
+			"geometry": "ringzero-landing[1]"
 		},
 		{
 			"action": "SCREEN_FADE_IN",
@@ -1376,7 +1381,7 @@
 		{
 			"action": "PAN_CAMERA_TO_GEOMETRY",
 			"duration": 1100,
-			"geometry": "ringzero-landing-66"
+			"geometry": "ringzero-landing[1]"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -1416,8 +1421,13 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Ring Zero",
-			"geometry": "ring_zero_when_off_screen"
+			"entity": "Ring Zero[0]",
+			"geometry": "ring_zero_when_off_screen[0]"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Ring Zero[1]",
+			"geometry": "ring_zero_when_off_screen[1]"
 		},
 		{
 			"action": "SCREEN_FADE_IN",
