@@ -446,7 +446,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -455,7 +455,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -464,7 +464,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -473,7 +473,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 400
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -506,13 +506,13 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "catwalk-spot",
-			"duration": 800
+			"duration": 600
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "catwalk-door",
-			"duration": 400
+			"duration": 500
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
