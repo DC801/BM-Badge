@@ -169,11 +169,17 @@ bool QSPI::erase(tBlockSize blockSize, uint32_t startAddress){
 	}
 
 	switch(blockSize){
-		case BLOCK_SIZE_4K:
-			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
-			break;
-		case BLOCK_SIZE_64K:
-			errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
+		// disabled because it does nothing on our hardware
+		// case BLOCK_SIZE_4K:
+		// 	errCode = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_4KB, startAddress);
+		// 	break;
+		case BLOCK_SIZE_256K:
+			errCode = nrfx_qspi_erase(
+				// NOPE, THIS "NRF_QSPI_ERASE_LEN_64KB" NAME IS WRONG!
+				// on our chip, this value ACTUALLY erases 262144 bytes (256KB)
+				NRF_QSPI_ERASE_LEN_64KB, // THIS IS A DAMN LIE
+				startAddress
+			);
 		break;
 		case BLOCK_SIZE_ALL:
 			errCode = nrfx_qspi_chip_erase();

@@ -138,40 +138,195 @@ void test_rom(){
 	uint8_t erased_array[9] {255, 255, 255, 255, 255, 255, 255, 255, 0};
 	char test_array[9] = "GOATBOAT";
 	char test_rx_array[36] {'X','X','X','X','X','X','X','X',0};
-	p_canvas()->clearScreen(COLOR_BLACK);
-	p_canvas()->blt();
-	/* disabling erase and write unless specifically needed for testing.
-	debug_print("Erasing first 64k of ROM Chip memory...");
-	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_64K, 0)){
-		ENGINE_PANIC("Failed to send erase comand.");
-	}
-	debug_print("Verifying Erase...");
-	if(EngineROM_Verify(0, 8, erased_array) != ENGINE_ROM_VERIFY_SUCCESS){
-		ENGINE_PANIC("Verification of erase failed.");
-	}
-	debug_print("Writing %s to ROM chip...", test_array);
-	EngineROM_Write(
-		0,
-		8,
-		(uint8_t *)test_array,
-		"Failed to write to ROM."
-	);
-	*/
-
+	char address_message[128];
 	EngineROM_Read(
 		0,
-		8,
+		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
 		(uint8_t *)test_rx_array,
-		"QSPI read failed."
+		"Failed to read timestamp from ROM"
 	);
-
+	p_canvas()->clearScreen(COLOR_BLACK);
+	sprintf(
+		address_message,
+		"First few bytes after startup:\n%03d %03d %03d %03d %03d %03d %03d %03d \n",
+		test_rx_array[0],
+		test_rx_array[1],
+		test_rx_array[2],
+		test_rx_array[3],
+		test_rx_array[4],
+		test_rx_array[5],
+		test_rx_array[6],
+		test_rx_array[7]
+	);
 	p_canvas()->printMessage(
-		test_rx_array,
+		address_message,
 		Monaco9,
 		COLOR_WHITE,
 		32,
-		32
+		8
 	);
+	p_canvas()->printMessage(
+		"Starting to write zeros",
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		48
+	);
+	p_canvas()->blt();
+	/*
+	while(qspiControl.isBusy()){
+		// is very busy
+	}
+	// disabling erase and write unless specifically needed for testing.
+	uint32_t zero = 0;
+	for (uint32_t i = 0; i < 262145; i += 4) {
+		EngineROM_Write(
+			i,
+			4,
+			(uint8_t *)&zero,
+			"Could not write zeros to ROM"
+		);
+	}
+	EngineROM_Read(
+		0,
+		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
+		(uint8_t *)test_rx_array,
+		"Failed to read timestamp from ROM"
+	);
+	sprintf(
+		address_message,
+		"First few bytes read after write:\n%03d %03d %03d %03d %03d %03d %03d %03d \n",
+		test_rx_array[0],
+		test_rx_array[1],
+		test_rx_array[2],
+		test_rx_array[3],
+		test_rx_array[4],
+		test_rx_array[5],
+		test_rx_array[6],
+		test_rx_array[7]
+	);
+	p_canvas()->printMessage(
+		address_message,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		64
+	);
+	p_canvas()->blt();
+	p_canvas()->printMessage(
+		"Erasing one BLOCK_SIZE_256K",
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		96
+	);
+	p_canvas()->blt();
+	if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, 0)){
+		ENGINE_PANIC("Failed to send erase comand.");
+	}
+	while(qspiControl.isBusy()){
+		// is very busy
+	}
+	EngineROM_Read(
+		0,
+		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
+		(uint8_t *)test_rx_array,
+		"Failed to read timestamp from ROM"
+	);
+	sprintf(
+		address_message,
+		"First few bytes read after sector erase:\n%03d %03d %03d %03d %03d %03d %03d %03d \n",
+		test_rx_array[0],
+		test_rx_array[1],
+		test_rx_array[2],
+		test_rx_array[3],
+		test_rx_array[4],
+		test_rx_array[5],
+		test_rx_array[6],
+		test_rx_array[7]
+	);
+	p_canvas()->printMessage(
+		address_message,
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		112
+	);
+	p_canvas()->printMessage(
+		"Starting to read how many ones in a row",
+		Monaco9,
+		COLOR_WHITE,
+		32,
+		136
+	);
+	p_canvas()->blt();
+	for (uint32_t i = 0; i < ENGINE_ROM_QSPI_CHIP_SIZE; i += 4) {
+		EngineROM_Read(
+			i,
+			4,
+			(uint8_t *)&zero,
+			"Could not read from ROM"
+		);
+		if(zero == 0) {
+			sprintf(
+				address_message,
+				"Address of first zero is: %d\n",
+				i
+			);
+			p_canvas()->printMessage(
+				address_message,
+				Monaco9,
+				COLOR_WHITE,
+				32,
+				144
+			);
+			p_canvas()->blt();
+			break;
+		}
+	}
+	*/
+
+	// p_canvas()->printMessage(
+	// 	"Starting chip erase",
+	// 	Monaco9,
+	// 	COLOR_WHITE,
+	// 	32,
+	// 	32
+	// );
+	// p_canvas()->blt();
+	// //start by erasing the whole chip:
+	// while(qspiControl.isBusy()){
+	// 	// is very busy
+	// }
+	// if(!qspiControl.chipErase()){
+	// 	ENGINE_PANIC("Failed to erase ROM Chip.");
+	// }
+
+	// debug_print("Verifying Erase...");
+	// if(EngineROM_Verify(0, 8, erased_array) != ENGINE_ROM_VERIFY_SUCCESS){
+	// 	ENGINE_PANIC("Verification of erase failed.");
+	// }
+	// debug_print("Writing %s to ROM chip...", test_array);
+	// EngineROM_Write(
+	// 	0,
+	// 	8,
+	// 	(uint8_t *)test_array,
+	// 	"Failed to write to ROM."
+	// );
+	// EngineROM_Read(
+	// 	0,
+	// 	8,
+	// 	(uint8_t *)test_rx_array,
+	// 	"QSPI read failed."
+	// );
+
+	// p_canvas()->printMessage(
+	// 	"We got to the end",
+	// 	Monaco9,
+	// 	COLOR_WHITE,
+	// 	32,
+	// 	160
+	// );
 
 	p_canvas()->blt();
 	#endif
