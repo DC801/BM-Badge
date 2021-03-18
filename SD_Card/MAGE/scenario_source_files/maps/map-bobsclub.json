@@ -226,6 +226,36 @@
                  "width":32,
                  "x":383,
                  "y":349
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"strongbad_camera",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":283,
+                 "y":269
+                }, 
+                {
+                 "gid":539,
+                 "height":32,
+                 "id":21,
+                 "name":"Debug Exa",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-begin-flail"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":225,
+                 "y":296
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -246,7 +276,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":20,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -290,6 +320,10 @@
         {
          "firstgid":283,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":539,
+         "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,
  "type":"map",
