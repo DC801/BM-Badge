@@ -76,7 +76,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-sheep-check"
+			"script": "on_load-map-main-glitch_fountain-check"
 		}
 	],
 	"on_load-map-main-glitch_goats-do": [
@@ -88,6 +88,29 @@
 		{
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "goat2",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-glitch_fountain-check"
+		}
+	],
+	"on_load-map-main-glitch_fountain-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "fountain_unglitched",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-glitch_fountain-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
+		}
+	],
+	"on_load-map-main-glitch_fountain-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Fountain",
 			"bool_value": false
 		},
 		{
@@ -828,7 +851,22 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "fountain_unglitched",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "lodge_cat_unglitched",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "smith",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glitch_goats",
 			"bool_value": false
 		},
 		{
@@ -867,6 +905,21 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Marta",
 			"script": "show_dialog-marta-start"
+		}
+	],
+	"fountain-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "fountain_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"fountain_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "fountain_unglitched",
+			"bool_value": true
 		}
 	],
 	"load_map-testbig": [

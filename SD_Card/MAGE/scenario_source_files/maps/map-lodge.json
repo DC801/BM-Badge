@@ -396,7 +396,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"face-player"
+                         "value":"show_dialog-lodge-cat"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"lodge_cat-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -485,8 +490,8 @@
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":285.068181818182,
-                 "y":232.931818181818
+                 "x":285,
+                 "y":232
                 }, 
                 {
                  "gid":720,
@@ -631,7 +636,7 @@
                  "y":246
                 }, 
                 {
-                 "height":37.5,
+                 "height":40.5,
                  "id":66,
                  "name":"ringzero-walk-8",
                  "rotation":0,
@@ -675,7 +680,7 @@
                  "y":212.875
                 }, 
                 {
-                 "height":37.5,
+                 "height":38.625,
                  "id":71,
                  "name":"ringzero-walk-4",
                  "rotation":0,
@@ -800,7 +805,7 @@
                  "y":167.25
                 }, 
                 {
-                 "height":37.5,
+                 "height":40.5,
                  "id":82,
                  "name":"ringzero-walk-7",
                  "rotation":0,
@@ -811,7 +816,7 @@
                  "y":231.5
                 }, 
                 {
-                 "height":37.5,
+                 "height":38.5,
                  "id":83,
                  "name":"ringzero-walk-5",
                  "rotation":0,
@@ -820,6 +825,28 @@
                  "width":29.5,
                  "x":357.5,
                  "y":232.5
+                }, 
+                {
+                 "height":39,
+                 "id":104,
+                 "name":"ringzero-walk-6",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":42,
+                 "x":316,
+                 "y":233
+                }, 
+                {
+                 "height":15,
+                 "id":105,
+                 "name":"ringzero-walk-6-donut",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":328,
+                 "y":238
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1173,7 +1200,7 @@
                  "visible":true,
                  "width":192,
                  "x":240,
-                 "y":600
+                 "y":696
                 }, 
                 {
                  "gid":728,
@@ -1185,7 +1212,7 @@
                  "visible":true,
                  "width":192,
                  "x":240,
-                 "y":664
+                 "y":760
                 }, 
                 {
                  "height":0,
@@ -1221,7 +1248,7 @@
                  "visible":true,
                  "width":0,
                  "x":336,
-                 "y":584
+                 "y":680
                 }, 
                 {
                  "height":0,
@@ -1233,7 +1260,7 @@
                  "visible":true,
                  "width":0,
                  "x":336,
-                 "y":648
+                 "y":744
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1254,7 +1281,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":104,
+ "nextobjectid":106,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -161,10 +161,54 @@
 			"script": "empty-lodge"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-glitch_cat-check"
+		}
+	],
+	"on_load-lodge-glitch_cat-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "lodge_cat_unglitched",
+			"expected_bool": true,
+			"success_script": "on_load-lodge-glitch_cat-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-end"
+		}
+	],
+	"on_load-lodge-glitch_cat-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Cat",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-end"
+		}
+	],
+	"on_load-lodge-end": [
+		{
 			"action": "CHECK_WARP_STATE",
 			"string": "exit_from-secretroom",
 			"success_script": "enter_from-secretroom",
 			"expected_bool": true
+		}
+	],
+	"lodge_cat-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "lodge_cat_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"lodge_cat_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "lodge_cat_unglitched",
+			"bool_value": true
 		}
 	],
 	"show_dialog-lodge-cantleaveyet": [
@@ -974,6 +1018,20 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
+			"geometry": "ringzero-walk-6-donut",
+			"success_script": "player-ringzero-from6-donut",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "ringzero-walk-6",
+			"success_script": "player-ringzero-from6",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
 			"geometry": "ringzero-walk-1159",
 			"success_script": "player-ringzero-from1159",
 			"expected_bool": true
@@ -1284,6 +1342,30 @@
 			"entity": "%PLAYER%",
 			"geometry": "ringzero-landing-6",
 			"duration": 800
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-artifacts-eval-good"
+		}
+	],
+	"player-ringzero-from6-donut": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "ringzero-landing-6",
+			"duration": 200
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-artifacts-eval-good"
+		}
+	],
+	"player-ringzero-from6": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "ringzero-landing-6",
+			"duration": 300
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -2668,6 +2750,21 @@
 			"action": "SET_ENTITY_TYPE",
 			"entity": "Marta",
 			"entity_type": "marta_broom"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-artifacts-touch"
+		}
+	],
+	"show_dialog-lodge-cat": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-lodge-cat",
+			"doc": "...."
 		}
 	]
 }

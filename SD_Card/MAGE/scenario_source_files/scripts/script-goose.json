@@ -44,7 +44,8 @@
 			"entity": "Rake",
 			"geometry": "lake",
 			"success_script": "goose-misison-rake-out-of-lake",
-			"expected_bool": false
+			"expected_bool": false,
+			"doc": "on_tick is 'mission' -- if rake not in lake, diverge"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -76,18 +77,28 @@
 			"entity": "Rake",
 			"geometry": "rake-point",
 			"success_script": "goose-misison-rake-on-rake-point",
-			"expected_bool": true
+			"expected_bool": true,
+			"doc": "if rake is approx at start point, diverge"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "honk"
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Goose",
-			"geometry": "goose_point3",
+			"geometry": "goose_midpoint",
 			"duration": 600
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Goose",
-			"geometry": "goose_point1",
+			"geometry": "goose_lakepoint",
 			"duration": 600
 		},
 		{
@@ -101,10 +112,6 @@
 			"geometry": "rake-point",
 			"success_script": "goose-misison-rake-on-rake-point",
 			"expected_bool": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "honk"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -117,12 +124,22 @@
 			"entity": "Rake",
 			"geometry": "rake-point",
 			"success_script": "goose-misison-rake-out-of-lake",
-			"expected_bool": false
+			"expected_bool": false,
+			"doc": "if rake has left its start point, diverge"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "south"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "honk"
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Goose",
-			"geometry": "goose_point2",
+			"geometry": "goose_rakepoint",
 			"duration": 1200
 		},
 		{
@@ -135,7 +152,8 @@
 			"entity": "Rake",
 			"geometry": "rake-point",
 			"success_script": "goose-misison-rake-out-of-lake",
-			"expected_bool": false
+			"expected_bool": false,
+			"doc": "if rake has left its start point, diverge"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -144,7 +162,7 @@
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "Goose",
-			"geometry": "goose_point1",
+			"geometry": "goose_lakepoint",
 			"duration": 1200
 		},
 		{
@@ -156,19 +174,9 @@
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-point",
-			"success_script": "goose-misison-rake-on-rake-point",
-			"expected_bool": true
-		},
-		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "Rake",
-			"geometry": "rake-point",
 			"success_script": "goose-misison-rake-out-of-lake",
-			"expected_bool": false
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "honk"
+			"expected_bool": false,
+			"doc": "if rake has left its start point, diverge"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -177,18 +185,10 @@
 	],
 	"honk": [
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"action": "PLAY_ENTITY_ANIMATION",
 			"entity": "Goose",
-			"byte_value": 2
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 2400
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Goose",
-			"byte_value": 0
+			"animation": 2,
+			"play_count": 3
 		}
 	],
 	"rake-float-demo": [
@@ -297,6 +297,43 @@
 			"entity": "Rake",
 			"geometry": "drift-west",
 			"duration": 60000
+		}
+	],
+	"goose-bounds-watch": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "bounds",
+			"success_script": "rescue-goose",
+			"expected_bool": false
+		}
+	],
+	"rescue-goose": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Goose",
+			"script": "null_script"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose-rescue"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "Goose",
+			"geometry": "goose_lakepoint",
+			"duration": 2000
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Goose",
+			"script": "goose-mission"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "goose-bounds-watch"
 		}
 	]
 }
