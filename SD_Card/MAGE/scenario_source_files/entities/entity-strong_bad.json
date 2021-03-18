@@ -351,10 +351,6 @@
          "animation":[
                 {
                  "duration":100,
-                 "tileid":39
-                }, 
-                {
-                 "duration":100,
                  "tileid":36
                 }, 
                 {
@@ -364,6 +360,10 @@
                 {
                  "duration":100,
                  "tileid":36
+                }, 
+                {
+                 "duration":100,
+                 "tileid":39
                 }],
          "id":36
         }, 

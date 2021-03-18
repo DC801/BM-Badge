@@ -37,40 +37,6 @@
 			]
 		}
 	],
-	"dialog-trekkie_demo": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
-			"messages": [
-				"Me heard you will soon have a birthday!"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
-			"messages": [
-				"That's right! I'll be turning 16,\nand I'll get to be an official\nvillage mage!"
-			]
-		},
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
-			"messages": [
-				"Me hope you have happy birthday!"
-			]
-		},
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
-			"messages": [
-				"Thanks very much, Trekkie!"
-			]
-		}
-	],
 	"dialog-verthandi": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -125,7 +91,7 @@
 			"portrait": "cleo",
 			"name": "%Cleo%",
 			"messages": [
-				"That's what I've been saying\nthis whole time!"
+				"That's what I've been saying this whole\ntime!"
 			]
 		},
 		{
@@ -203,7 +169,7 @@
 			"portrait": "cleo",
 			"name": "%Cleo%",
 			"messages": [
-				"Excuse me, but we were in the middle\nof a conversation."
+				"Excuse me, but we were in the middle of a\nconversation."
 			]
 		},
 		{
