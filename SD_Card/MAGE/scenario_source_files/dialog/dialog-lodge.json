@@ -778,5 +778,25 @@
 				"I'm pretty sure %PLAYER% touched\nall of them...."
 			]
 		}
+	],
+	"dialog-lodge-cat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "%Cat%",
+			"messages": [
+				"...."
+			]
+		}
+	],
+	"dialog-artifacts-touch": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%SELF%",
+			"messages": [
+				"All artifacts touched."
+			]
+		}
 	]
 }

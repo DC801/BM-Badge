@@ -377,6 +377,11 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Cleo",
 			"geometry": "catwalk-hide"
 		},

@@ -1,22 +1,28 @@
 {
 	"bake": [
 		{
+			"action": "COPY_SCRIPT",
+			"script": "add_flour"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "add_flour"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "add_flour"
+		},
+		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_mid",
-			"duration": 400
+			"duration": 200
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "add_flour"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "add_flour"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "add_flour"
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "pre_sink",
+			"duration": 350
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -25,14 +31,8 @@
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
-			"geometry": "bakery_mid",
-			"duration": 400
-		},
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "%SELF%",
 			"geometry": "bakery_ovenzone",
-			"duration": 400
+			"duration": 1300
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -42,21 +42,47 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_ovenzone",
-			"duration": 200
+			"duration": 300
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "load_bread"
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
-			"geometry": "bakery_stovezone",
-			"duration": 1200
+			"geometry": "bakery_fridgezone",
+			"duration": 1800
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "check_fridge"
 		},
 		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "pre_sink",
+			"duration": 700
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "wash_hands"
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_mid",
+			"duration": 450
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_kneading",
+			"duration": 250
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
 		}
 	],
 	"add_flour": [
@@ -67,6 +93,12 @@
 			"duration": 600
 		},
 		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_flour_touch",
+			"duration": 120
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "south"
@@ -74,6 +106,12 @@
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 400
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_flour",
+			"duration": 120
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
@@ -96,16 +134,17 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_sink",
-			"duration": 300
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
-			"direction": "north"
+			"duration": 200
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 1200
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "pre_sink",
+			"duration": 200
 		}
 	],
 	"load_bread": [
@@ -113,12 +152,7 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_rack",
-			"duration": 100
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
-			"direction": "north"
+			"duration": 200
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -127,17 +161,30 @@
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
-			"geometry": "bakery_oven",
+			"geometry": "bakery_ovenzone",
+			"duration": 200
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_pre_oven",
 			"duration": 300
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
+			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
-			"direction": "north"
+			"geometry": "bakery_oven",
+			"duration": 200
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 800
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "bakery_pre_oven",
+			"duration": 200
 		}
 	],
 	"check_fridge": [
@@ -145,21 +192,16 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_fridge",
-			"duration": 300
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
-			"direction": "north"
+			"duration": 200
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
+			"duration": 700
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
-			"geometry": "bakery_stovezone",
+			"geometry": "bakery_fridgezone",
 			"duration": 200
 		}
 	],
@@ -514,9 +556,9 @@
 			"duration": 400
 		},
 		{
-			"action": "PAN_CAMERA_TO_ENTITY",
+			"action": "PAN_CAMERA_TO_GEOMETRY",
 			"duration": 1200,
-			"entity": "Strong Bad"
+			"geometry": "strongbad_camera"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -573,18 +615,16 @@
 			"doc": "This place should be full of Bobs... next year."
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Strong Bad",
-			"byte_value": 5
+			"action": "COPY_SCRIPT",
+			"script": "begin-flail"
 		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub5"
 		},
 		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Strong Bad",
-			"byte_value": 0
+			"action": "COPY_SCRIPT",
+			"script": "end-flail"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -949,6 +989,54 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-balloonbox"
+		}
+	],
+	"begin-flail": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Strong Bad",
+			"animation": 3,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Strong Bad",
+			"byte_value": 5
+		}
+	],
+	"end-flail": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Strong Bad",
+			"animation": 4,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Strong Bad",
+			"byte_value": 0
+		}
+	],
+	"debug-begin-flail": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "begin-flail"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-end-flail"
+		}
+	],
+	"debug-end-flail": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "end-flail"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-begin-flail"
 		}
 	]
 }

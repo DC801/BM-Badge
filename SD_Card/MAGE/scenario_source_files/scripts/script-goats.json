@@ -156,7 +156,7 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat1",
 			"geometry": "high1",
-			"duration": 900
+			"duration": 700
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
@@ -170,7 +170,7 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "goat2",
 			"geometry": "high2",
-			"duration": 1100
+			"duration": 800
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
