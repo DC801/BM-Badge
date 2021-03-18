@@ -35,6 +35,7 @@ bool EngineROM_Init(void)
 	//get the game.dat filesize:
 	gameDatFilesize = util_sd_file_size(filename);
 	char debugString[128];
+	p_canvas()->clearScreen(COLOR_BLACK);
 	sprintf(
 		debugString,
 		"gameDatFilesize: %08u",
@@ -139,12 +140,12 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		96,
 		WIDTH,
 		96,
-		0x0000
+		COLOR_BLACK
 	);
 	p_canvas()->printMessage(
 		"Erasing ROM chip",
 		Monaco9,
-		0xffff,
+		COLOR_WHITE,
 		16,
 		96
 	);
@@ -152,10 +153,43 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 	//then write the entire SD card game.dat file to the ROM chip MAGE_SD_CHUNK_READ_SIZE bytes at a time.
 	uint32_t currentAddress = 0;
 	uint8_t strBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE] {0};
-	//start by erasing the whole chip:
-	if(!qspiControl.chipErase()){
-		ENGINE_PANIC("Failed to erase ROM Chip.");
+	// I mean, you _COULD_ start by erasing the whole chip...
+	// if(!qspiControl.chipErase()){
+	// 	ENGINE_PANIC("Failed to erase ROM Chip.");
+	// }
+	// or you could do it one page at a time, so it saves a LOT of time
+	while(currentAddress < gameDatFilesize){
+		if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress)){
+			ENGINE_PANIC("Failed to send erase comand.");
+		}
+		while(qspiControl.isBusy()){
+			// is very busy
+		}
+		//Debug Print:
+		sprintf(
+			debugString,
+			"Erasing currentAddress: %08u\ngameDatFilesize:%08u",
+			currentAddress,
+			gameDatFilesize
+		);
+		p_canvas()->fillRect(
+			0,
+			96,
+			WIDTH,
+			96,
+			COLOR_BLACK
+		);
+		p_canvas()->printMessage(
+			debugString,
+			Monaco9,
+			COLOR_WHITE,
+			16,
+			96
+		);
+		p_canvas()->blt();
+		currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
 	}
+	currentAddress = 0;
 	while(currentAddress < gameDatFilesize){
 		uint32_t chunkSize = MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (gameDatFilesize - currentAddress));
 		//seek to the currentAddress on the SD card:
@@ -207,7 +241,7 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		//Debug Print:
 		sprintf(
 			debugString,
-			"currentAddress: %08u\ngameDatFilesize:%08u",
+			"Copying currentAddress: %08u\ngameDatFilesize:%08u",
 			currentAddress,
 			gameDatFilesize
 		);
@@ -216,12 +250,12 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 			96,
 			WIDTH,
 			96,
-			0x0000
+			COLOR_BLACK
 		);
 		p_canvas()->printMessage(
 			debugString,
 			Monaco9,
-			0xffff,
+			COLOR_WHITE,
 			16,
 			96
 		);
@@ -317,18 +351,17 @@ bool EngineROM_Write(
 	const char *errorString
 )
 {
-#ifdef DC801_EMBEDDED
-	if (data == NULL)
-	{
-		ENGINE_PANIC("EngineROM_Write: Null pointer");
-	}
-
 	if(length % sizeof(uint32_t)){
 		ENGINE_PANIC(
 			"Length of write is not aligned to uint32_t\n"
 			"You can't do this, fix whatever is\n"
 			"sending an unaligned write."
 		);
+	}
+#ifdef DC801_EMBEDDED
+	if (data == NULL)
+	{
+		ENGINE_PANIC("EngineROM_Write: Null pointer");
 	}
 
 	if(!qspiControl.write(data, length, address))

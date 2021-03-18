@@ -41,8 +41,9 @@
 
 
 typedef enum {
-	BLOCK_SIZE_4K,
-	BLOCK_SIZE_64K,
+	// BLOCK_SIZE_4K, // disabled because this does nothing at all on our hardware
+	// BLOCK_SIZE_64K, // disabled because this is a DAMN LIE on our hardware
+	BLOCK_SIZE_256K,
 	BLOCK_SIZE_ALL
 } tBlockSize;
 

@@ -4,6 +4,12 @@
 //size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
 
+//This is the smallest page we know how to erase on our chip,
+//because the smaller values provided by nordic are incorrect, 
+//and this is the only one that has worked for us so far
+//262144 bytes = 256KB
+#define ENGINE_ROM_ERASE_PAGE_SIZE 262144
+
 //size of largest single EngineROM_Write data that can be sent at one time:
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this 
 //or you'll lose data.
@@ -25,8 +31,9 @@
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
 //We are also subtracting 4096 for ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE
-#define ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE 4096
-#define ENGINE_ROM_MAX_DAT_FILE_SIZE (33554432 - ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE)
+#define ENGINE_ROM_QSPI_CHIP_SIZE 33554432
+#define ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE (ENGINE_ROM_ERASE_PAGE_SIZE)
+#define ENGINE_ROM_MAX_DAT_FILE_SIZE (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE)
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the EngineROM_Verify function returns 
