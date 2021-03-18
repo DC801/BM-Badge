@@ -14,7 +14,7 @@
  "name":"entity-trekkie",
  "spacing":0,
  "tilecount":21,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -69,14 +69,41 @@
          "type":"trekkie"
         }, 
         {
+         "animation":[
+                {
+                 "duration":50,
+                 "tileid":3
+                }, 
+                {
+                 "duration":100,
+                 "tileid":6
+                }],
          "id":3,
          "type":"trekkie"
         }, 
         {
+         "animation":[
+                {
+                 "duration":50,
+                 "tileid":4
+                }, 
+                {
+                 "duration":100,
+                 "tileid":7
+                }],
          "id":4,
          "type":"trekkie"
         }, 
         {
+         "animation":[
+                {
+                 "duration":50,
+                 "tileid":5
+                }, 
+                {
+                 "duration":100,
+                 "tileid":8
+                }],
          "id":5,
          "type":"trekkie"
         }, 

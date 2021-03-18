@@ -57,14 +57,41 @@
          "type":"bert"
         }, 
         {
+         "animation":[
+                {
+                 "duration":900,
+                 "tileid":3
+                }, 
+                {
+                 "duration":100,
+                 "tileid":0
+                }],
          "id":3,
          "type":"bert"
         }, 
         {
+         "animation":[
+                {
+                 "duration":900,
+                 "tileid":4
+                }, 
+                {
+                 "duration":100,
+                 "tileid":1
+                }],
          "id":4,
          "type":"bert"
         }, 
         {
+         "animation":[
+                {
+                 "duration":900,
+                 "tileid":5
+                }, 
+                {
+                 "duration":100,
+                 "tileid":2
+                }],
          "id":5,
          "type":"bert"
         }, 

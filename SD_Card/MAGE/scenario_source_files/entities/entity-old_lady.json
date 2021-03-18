@@ -1,4 +1,12 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"entity-old_lady.png",
  "imageheight":160,
  "imagewidth":96,
@@ -6,7 +14,7 @@
  "name":"entity-old_lady",
  "spacing":0,
  "tilecount":15,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -148,14 +156,53 @@
          "type":"old_lady"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":12
+                }, 
+                {
+                 "duration":200,
+                 "tileid":0
+                }, 
+                {
+                 "duration":400,
+                 "tileid":12
+                }],
          "id":12,
          "type":"old_lady"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":13
+                }, 
+                {
+                 "duration":200,
+                 "tileid":1
+                }, 
+                {
+                 "duration":400,
+                 "tileid":13
+                }],
          "id":13,
          "type":"old_lady"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":14
+                }, 
+                {
+                 "duration":200,
+                 "tileid":2
+                }, 
+                {
+                 "duration":400,
+                 "tileid":14
+                }],
          "id":14,
          "type":"old_lady"
         }],

@@ -24,15 +24,15 @@
                  "tileid":0
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":3
                 }, 
                 {
-                 "duration":120,
+                 "duration":100,
                  "tileid":6
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":9
                 }],
          "id":0,
@@ -45,15 +45,15 @@
                  "tileid":1
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":4
                 }, 
                 {
-                 "duration":120,
+                 "duration":100,
                  "tileid":7
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":10
                 }],
          "id":1,
@@ -66,29 +66,116 @@
                  "tileid":2
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":5
                 }, 
                 {
-                 "duration":120,
+                 "duration":100,
                  "tileid":8
                 }, 
                 {
-                 "duration":24,
+                 "duration":100,
                  "tileid":11
                 }],
          "id":2,
          "type":"sports_kid"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":3
+                }, 
+                {
+                 "duration":100,
+                 "tileid":6
+                }, 
+                {
+                 "duration":24,
+                 "tileid":9
+                }, 
+                {
+                 "duration":100,
+                 "tileid":0
+                }, 
+                {
+                 "duration":24,
+                 "tileid":3
+                }, 
+                {
+                 "duration":100,
+                 "tileid":6
+                }, 
+                {
+                 "duration":24,
+                 "tileid":3
+                }],
          "id":3,
          "type":"sports_kid"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":4
+                }, 
+                {
+                 "duration":100,
+                 "tileid":7
+                }, 
+                {
+                 "duration":24,
+                 "tileid":10
+                }, 
+                {
+                 "duration":100,
+                 "tileid":1
+                }, 
+                {
+                 "duration":24,
+                 "tileid":4
+                }, 
+                {
+                 "duration":100,
+                 "tileid":7
+                }, 
+                {
+                 "duration":24,
+                 "tileid":4
+                }],
          "id":4,
          "type":"sports_kid"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":5
+                }, 
+                {
+                 "duration":100,
+                 "tileid":8
+                }, 
+                {
+                 "duration":24,
+                 "tileid":11
+                }, 
+                {
+                 "duration":100,
+                 "tileid":2
+                }, 
+                {
+                 "duration":24,
+                 "tileid":5
+                }, 
+                {
+                 "duration":100,
+                 "tileid":8
+                }, 
+                {
+                 "duration":24,
+                 "tileid":5
+                }],
          "id":5,
          "type":"sports_kid"
         }, 
