@@ -393,7 +393,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 2000
+			"duration": 1300
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -422,6 +422,14 @@
 			"geometry": "bmurray-spot",
 			"success_script": "show_dialog-max-crewmissing",
 			"expected_bool": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "max-grin-start"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -479,6 +487,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "catwork",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "max-grin-end"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -678,6 +690,32 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "catwalk-hide"
+		}
+	],
+	"max-grin-start": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Max Swagger",
+			"animation": 3,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Max Swagger",
+			"byte_value": 4
+		}
+	],
+	"max-grin-end": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Max Swagger",
+			"animation": 5,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Max Swagger",
+			"byte_value": 0
 		}
 	]
 }

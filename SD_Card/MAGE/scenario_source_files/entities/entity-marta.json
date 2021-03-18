@@ -14,7 +14,7 @@
  "name":"entity-marta",
  "spacing":0,
  "tilecount":24,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -180,14 +180,53 @@
          "type":"marta"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":15
+                }, 
+                {
+                 "duration":120,
+                 "tileid":18
+                }, 
+                {
+                 "duration":24,
+                 "tileid":21
+                }],
          "id":15,
          "type":"marta"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":16
+                }, 
+                {
+                 "duration":120,
+                 "tileid":19
+                }, 
+                {
+                 "duration":24,
+                 "tileid":22
+                }],
          "id":16,
          "type":"marta"
         }, 
         {
+         "animation":[
+                {
+                 "duration":24,
+                 "tileid":17
+                }, 
+                {
+                 "duration":120,
+                 "tileid":20
+                }, 
+                {
+                 "duration":24,
+                 "tileid":23
+                }],
          "id":17,
          "type":"marta"
         }, 

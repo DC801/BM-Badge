@@ -14,7 +14,7 @@
  "name":"entity-tailor",
  "spacing":0,
  "tilecount":30,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -30,26 +30,73 @@
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":3
+                }, 
+                {
+                 "duration":1600,
+                 "tileid":6
+                }],
          "id":3,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":4
+                }, 
+                {
+                 "duration":1600,
+                 "tileid":7
+                }],
          "id":4,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":5
+                }, 
+                {
+                 "duration":1600,
+                 "tileid":8
+                }],
          "id":5,
          "type":"tailor"
         }, 
         {
          "animation":[
                 {
-                 "duration":1600,
+                 "duration":75,
+                 "tileid":3
+                }, 
+                {
+                 "duration":75,
                  "tileid":6
                 }, 
                 {
-                 "duration":100,
+                 "duration":800,
+                 "tileid":9
+                }, 
+                {
+                 "duration":75,
+                 "tileid":6
+                }, 
+                {
+                 "duration":75,
                  "tileid":3
+                }, 
+                {
+                 "duration":75,
+                 "tileid":12
+                }, 
+                {
+                 "duration":100,
+                 "tileid":15
                 }],
          "id":6,
          "type":"tailor"
@@ -57,12 +104,32 @@
         {
          "animation":[
                 {
-                 "duration":1600,
+                 "duration":75,
+                 "tileid":4
+                }, 
+                {
+                 "duration":75,
                  "tileid":7
                 }, 
                 {
-                 "duration":100,
+                 "duration":800,
+                 "tileid":10
+                }, 
+                {
+                 "duration":75,
+                 "tileid":7
+                }, 
+                {
+                 "duration":75,
                  "tileid":4
+                }, 
+                {
+                 "duration":75,
+                 "tileid":13
+                }, 
+                {
+                 "duration":100,
+                 "tileid":16
                 }],
          "id":7,
          "type":"tailor"
@@ -70,37 +137,111 @@
         {
          "animation":[
                 {
-                 "duration":1600,
+                 "duration":75,
+                 "tileid":5
+                }, 
+                {
+                 "duration":75,
                  "tileid":8
                 }, 
                 {
-                 "duration":100,
+                 "duration":800,
+                 "tileid":11
+                }, 
+                {
+                 "duration":75,
+                 "tileid":8
+                }, 
+                {
+                 "duration":75,
                  "tileid":5
+                }, 
+                {
+                 "duration":75,
+                 "tileid":14
+                }, 
+                {
+                 "duration":100,
+                 "tileid":17
                 }],
          "id":8,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":15
+                }, 
+                {
+                 "duration":100,
+                 "tileid":15
+                }],
          "id":9,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":16
+                }, 
+                {
+                 "duration":100,
+                 "tileid":16
+                }],
          "id":10,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":17
+                }, 
+                {
+                 "duration":100,
+                 "tileid":17
+                }],
          "id":11,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":75,
+                 "tileid":12
+                }, 
+                {
+                 "duration":75,
+                 "tileid":3
+                }],
          "id":12,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":75,
+                 "tileid":13
+                }, 
+                {
+                 "duration":75,
+                 "tileid":4
+                }],
          "id":13,
          "type":"tailor"
         }, 
         {
+         "animation":[
+                {
+                 "duration":75,
+                 "tileid":14
+                }, 
+                {
+                 "duration":75,
+                 "tileid":5
+                }],
          "id":14,
          "type":"tailor"
         }, 

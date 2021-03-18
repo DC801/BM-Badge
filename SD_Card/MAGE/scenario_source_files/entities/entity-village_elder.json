@@ -14,7 +14,7 @@
  "name":"elder",
  "spacing":0,
  "tilecount":24,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -180,14 +180,53 @@
          "type":"village_elder"
         }, 
         {
+         "animation":[
+                {
+                 "duration":135,
+                 "tileid":15
+                }, 
+                {
+                 "duration":800,
+                 "tileid":18
+                }, 
+                {
+                 "duration":135,
+                 "tileid":21
+                }],
          "id":15,
          "type":"village_elder"
         }, 
         {
+         "animation":[
+                {
+                 "duration":135,
+                 "tileid":16
+                }, 
+                {
+                 "duration":800,
+                 "tileid":19
+                }, 
+                {
+                 "duration":135,
+                 "tileid":22
+                }],
          "id":16,
          "type":"village_elder"
         }, 
         {
+         "animation":[
+                {
+                 "duration":135,
+                 "tileid":17
+                }, 
+                {
+                 "duration":800,
+                 "tileid":20
+                }, 
+                {
+                 "duration":135,
+                 "tileid":23
+                }],
          "id":17,
          "type":"village_elder"
         }, 

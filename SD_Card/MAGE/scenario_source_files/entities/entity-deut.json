@@ -1,5 +1,13 @@
 { "columns":3,
- "image":"..\/entities\/entity-deut.png",
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
+ "image":"entity-deut.png",
  "imageheight":224,
  "imagewidth":96,
  "margin":0,
@@ -22,14 +30,53 @@
          "type":"deut"
         }, 
         {
+         "animation":[
+                {
+                 "duration":25,
+                 "tileid":3
+                }, 
+                {
+                 "duration":120,
+                 "tileid":0
+                }, 
+                {
+                 "duration":25,
+                 "tileid":3
+                }],
          "id":3,
          "type":"deut"
         }, 
         {
+         "animation":[
+                {
+                 "duration":25,
+                 "tileid":4
+                }, 
+                {
+                 "duration":120,
+                 "tileid":1
+                }, 
+                {
+                 "duration":25,
+                 "tileid":4
+                }],
          "id":4,
          "type":"deut"
         }, 
         {
+         "animation":[
+                {
+                 "duration":25,
+                 "tileid":5
+                }, 
+                {
+                 "duration":120,
+                 "tileid":2
+                }, 
+                {
+                 "duration":25,
+                 "tileid":5
+                }],
          "id":5,
          "type":"deut"
         }, 

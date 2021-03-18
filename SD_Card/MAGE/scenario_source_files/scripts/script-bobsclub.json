@@ -684,10 +684,6 @@
 			"bool_value": true
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Guardian Bob",
 			"script": "look-left-and-right-fast"

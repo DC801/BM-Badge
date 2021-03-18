@@ -14,7 +14,7 @@
  "name":"entity-alfonso",
  "spacing":0,
  "tilecount":18,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":40,
  "tiles":[
         {
@@ -81,14 +81,53 @@
          "type":"alfonso"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":3
+                }, 
+                {
+                 "duration":200,
+                 "tileid":0
+                }, 
+                {
+                 "duration":400,
+                 "tileid":3
+                }],
          "id":3,
          "type":"alfonso"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":4
+                }, 
+                {
+                 "duration":200,
+                 "tileid":1
+                }, 
+                {
+                 "duration":400,
+                 "tileid":4
+                }],
          "id":4,
          "type":"alfonso"
         }, 
         {
+         "animation":[
+                {
+                 "duration":200,
+                 "tileid":5
+                }, 
+                {
+                 "duration":200,
+                 "tileid":2
+                }, 
+                {
+                 "duration":400,
+                 "tileid":5
+                }],
          "id":5,
          "type":"alfonso"
         }, 
