@@ -868,7 +868,11 @@ void MageScriptControl::setEntityCurrentAnimation(uint8_t * args, MageScriptStat
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
+		MageEntityRenderableData *renderable = MageGame->getValidEntityRenderableData(entityIndex);
 		entity->currentAnimation = argStruct->newValue;
+		entity->currentFrame = 0;
+		renderable->currentFrameTicks = 0;
+		MageGame->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1294,6 +1298,8 @@ void MageScriptControl::walkEntityToGeometry(uint8_t * args, MageScriptState * r
 				entity->direction
 			);
 			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
 		}
 		float progress = manageProgressOfAction(
 			resumeStateStruct,
@@ -1352,6 +1358,8 @@ void MageScriptControl::walkEntityAlongGeometry(uint8_t * args, MageScriptState 
 			resumeStateStruct->length = geometry.pathLength;
 			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
 		}
 		resumeStateStruct->loopsToNextAction--;
 		uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
@@ -1456,6 +1464,8 @@ void MageScriptControl::loopEntityAlongGeometry(uint8_t * args, MageScriptState 
 				: geometry.pathLength;
 			initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
 			entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+			entity->currentFrame = 0;
+			renderable->currentFrameTicks = 0;
 		}
 		if(resumeStateStruct->loopsToNextAction == 0) {
 			resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
