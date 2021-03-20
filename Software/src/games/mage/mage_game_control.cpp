@@ -615,7 +615,8 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		bool isPlayingActionButShouldReturnControlToPlayer = (
 			hasEntityType &&
 			(playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX) &&
-			(playerEntity->currentFrame == (renderableData->frameCount - 1))
+			(playerEntity->currentFrame == (renderableData->frameCount - 1)) &&
+			(renderableData->currentFrameTicks + deltaTime >= (renderableData->duration))
 		);
 
 		//if the above bool is true, set the player back to their idle animation:
