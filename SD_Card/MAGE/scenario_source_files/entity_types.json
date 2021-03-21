@@ -2222,5 +2222,50 @@
 				}
 			]
 		}
+	},
+	"hamster": {
+		"tileset": "entity-hamster.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 5,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 4,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": true
+				},
+				{
+					"tileid": 7,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

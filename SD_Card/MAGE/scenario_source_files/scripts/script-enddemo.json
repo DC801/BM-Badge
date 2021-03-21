@@ -793,5 +793,72 @@
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 400
 		}
+	],
+	"on_tick-credits": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "cameraman"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "cameraman",
+			"geometry": "credits_camera"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Goat",
+			"byte_value": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"duration": 55000,
+			"geometry": "credits_camera",
+			"entity": "cameraman"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Cat",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 1200,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-credits"
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "load_map-main"
+		}
+	],
+	"roll-credits": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-credits"
+		}
 	]
 }

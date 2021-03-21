@@ -52,6 +52,7 @@
 		"secretroom": "maps/map-secretroom.json",
 		"action_testing_01": "maps/map-action_testing_01.json",
 		"testbig": "maps/map-testbig.json",
+		"credits": "maps/map-credits.json",
 		"action_testing_02": "maps/map-action_testing_02.json"
 	},
 	"dialogSkins": {
