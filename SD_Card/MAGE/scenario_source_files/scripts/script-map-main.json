@@ -251,6 +251,12 @@
 			"string": "exit_from-family",
 			"success_script": "enter_from-family",
 			"expected_bool": true
+		},
+		{
+			"action": "CHECK_WARP_STATE",
+			"string": "exit_from-credits",
+			"success_script": "enter_from-credits",
+			"expected_bool": true
 		}
 	],
 	"show_dialog-sheep": [
@@ -926,6 +932,25 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "map-testbig"
+		}
+	],
+	"enter_from-credits": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 800,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	]
 }

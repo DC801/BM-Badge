@@ -331,8 +331,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":748,
-                 "y":758
+                 "x":1040,
+                 "y":561
                 }, 
                 {
                  "gid":731,
@@ -753,6 +753,36 @@
                  "width":32,
                  "x":899,
                  "y":1296
+                }, 
+                {
+                 "gid":1177,
+                 "height":16,
+                 "id":261,
+                 "name":"Hamster",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":1257,
+                 "y":931
+                }, 
+                {
+                 "gid":1158,
+                 "height":32,
+                 "id":262,
+                 "name":"Credits Fish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"roll-credits"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1051,
+                 "y":507
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2044,7 +2074,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":261,
+ "nextobjectid":263,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -2188,6 +2218,10 @@
         {
          "firstgid":1172,
          "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":1174,
+         "source":"..\/entities\/entity-hamster.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -1,0 +1,14 @@
+{ "columns":17,
+ "image":"tileset-creditwords.png",
+ "imageheight":368,
+ "imagewidth":272,
+ "margin":0,
+ "name":"tileset-creditwords.png",
+ "spacing":0,
+ "tilecount":391,
+ "tiledversion":"1.4.3",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}
