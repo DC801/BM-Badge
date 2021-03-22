@@ -6,6 +6,7 @@
 #include "mage_tileset.h"
 #include "mage_game_control.h"
 #include "fonts/Monaco9.h"
+#include "mage_script_control.h"
 
 #define DIALOG_TILES_TOP_LEFT 0
 #define DIALOG_TILES_TOP_REPEAT 1
@@ -34,6 +35,14 @@ enum MageDialogScreenAlignment : uint8_t {
 	ALIGNMENT_COUNT
 };
 
+enum MageDialogResponseType : uint8_t {
+	NO_RESPONSE = 0,
+	SELECT_FROM_SHORT_LIST = 1,
+	SELECT_FROM_LONG_LIST = 2,
+	ENTER_NUMBER = 3,
+	ENTER_ALPHANUMERIC = 4,
+};
+
 
 typedef struct {
 	// TODO: portraits, after we have some graphics for them
@@ -42,8 +51,15 @@ typedef struct {
 	MageDialogScreenAlignment alignment;
 	uint8_t fontIndex;
 	uint8_t messageCount;
+	MageDialogResponseType responseType;
+	uint8_t responseCount;
 	uint8_t padding;
 } MageDialogScreen;
+
+typedef struct {
+	uint16_t stringIndex;
+	uint16_t mapLocalScriptIndex;
+} MageDialogResponse;
 
 typedef struct {
 	Rect text;
@@ -63,10 +79,13 @@ class MageDialogControl {
 		uint16_t currentImageIndex;
 		uint32_t currentImageAddress;
 		uint32_t cursorPhase;
+		uint8_t currentResponseIndex;
 		MageDialogScreen currentScreen;
-		std::unique_ptr<uint16_t[]>messageIds;
 		std::string currentEntityName;
 		std::string currentMessage;
+		std::unique_ptr<uint16_t[]>messageIds;
+		std::unique_ptr<MageDialogResponse[]>responses;
+		std::unique_ptr<std::string[]>responseLabels;
 		uint8_t getTileIdFromXY(
 			uint8_t x,
 			uint8_t y,
@@ -77,9 +96,11 @@ class MageDialogControl {
 			Rect box,
 			bool drawArrow = false
 		);
+		bool shouldShowResponses() const;
 
 	public:
 		bool isOpen;
+		uint16_t mapLocalJumpScriptId;
 		MageDialogControl();
 		uint32_t size();
 		void load(

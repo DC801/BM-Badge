@@ -412,5 +412,75 @@
 				"I test the action SET_HEX_EDITOR_CONTROL.\nI have enabled your ability to hex edit.\nTalk to me again to disable hex editing."
 			]
 		}
+	],
+	"dialog-mage18": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"You are in a desert.\nYou approached by a mysterious goat.",
+				"How do you react to the mysterious goat?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Do nothing",
+					"script": "response-do_nothing"
+				},
+				{
+					"response_text": "Pet The Goat",
+					"script": "response-pet_the_goat"
+				},
+				{
+					"response_text": "Feed The Goat",
+					"script": "response-feed_the_goat"
+				},
+				{
+					"response_text": "Give the Goat a Sugar Cube",
+					"script": "response-give_goat_sugar_cube"
+				}
+			]
+		}
+	],
+	"dialog-do_nothing": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"You do nothing about the mysterious goat.\nYou have lost the game.\n\nGAME OVER"
+			]
+		}
+	],
+	"dialog-pet_the_goat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"You have pet the mysterious goat.\n\nThe goat is pleased."
+			]
+		}
+	],
+	"dialog-feed_the_goat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"You give some bread to the mysterious goat,\n\nThe goat is pleased, and less hungry."
+			]
+		}
+	],
+	"dialog-give_goat_sugar_cube": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "%SELF%",
+			"messages": [
+				"You give a Sugar Cube to mysterious goat.\nThe goat says this to you:\nThanks for the Sugar Cube[TM]!\nNow I can fly! BRB"
+			]
+		}
 	]
 }

@@ -4,6 +4,13 @@ var dialogAlignmentEnum = {
 	TOP_LEFT: 2,
 	TOP_RIGHT: 3,
 };
+var dialogResponseTypeEnum = {
+	NO_RESPONSE: 0,
+	SELECT_FROM_SHORT_LIST: 1,
+	SELECT_FROM_LONG_LIST: 2,
+	ENTER_NUMBER: 3,
+	ENTER_ALPHANUMERIC: 4
+};
 
 var serializeDialog = function (
 	dialog,
@@ -82,14 +89,24 @@ var serializeDialogScreen = function (
 	fileNameMap,
 	scenarioData,
 ) {
+	var responses = dialogScreen.responses_text || []
 	var headerLength = getPaddedHeaderLength(
-		2 // uint16_t name_index
+		+ 2 // uint16_t name_string_index
 		+ 2 // uint16_t border_tileset_index
 		+ 1 // uint8_t alignment
 		+ 1 // uint8_t font_index
 		+ 1 // uint8_t message_count
+		+ 1 // uint8_t response_type
+		+ 1 // uint8_t response_count
 		+ 1 // uint8_t padding
 		+ (2 * dialogScreen.messages.length) // uint16_t messages[message_count]
+		+ (
+			(
+				+ 2 //stringIndex
+				+ 2 //mapLocalScriptIndex
+			)
+			* responses.length
+		) // uint16_t responses[response_count]
 	);
 	var result = new ArrayBuffer(
 		headerLength
@@ -136,6 +153,16 @@ var serializeDialogScreen = function (
 	);
 	offset += 1;
 	dataView.setUint8(
+		offset, // uint8_t response_type
+		dialogResponseTypeEnum[dialogScreen.response_type] || 0,
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t response_count
+		responses.length,
+	);
+	offset += 1;
+	dataView.setUint8(
 		offset, // uint8_t padding
 		0,
 	);
@@ -150,6 +177,32 @@ var serializeDialogScreen = function (
 		dataView.setUint16(
 			offset, // uint16_t string_id
 			stringId,
+			IS_LITTLE_ENDIAN
+		);
+		offset += 2;
+	});
+	responses.forEach(function (response) {
+		var stringId = serializeString(
+			response.response_text,
+			map,
+			fileNameMap,
+			scenarioData,
+		);
+		var encodedScript = handleScript(
+			response.script,
+			map,
+			fileNameMap,
+			scenarioData
+		);
+		dataView.setUint16(
+			offset, // uint16_t string_id
+			stringId,
+			IS_LITTLE_ENDIAN
+		);
+		offset += 2;
+		dataView.setUint16(
+			offset, // uint16_t string_id
+			encodedScript.mapLocalScriptId,
 			IS_LITTLE_ENDIAN
 		);
 		offset += 2;

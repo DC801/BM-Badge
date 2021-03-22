@@ -431,7 +431,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage18-interact"
                         }, 
                         {
                          "name":"on_tick",

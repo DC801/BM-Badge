@@ -494,19 +494,10 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 	float whatFractionOfSpeed = moveType / howManyMsPerSecond;
 	mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
 	if(MageDialog->isOpen) {
-		if(
-			EngineInput_Activated.rjoy_down
-			|| EngineInput_Activated.rjoy_left
-			|| EngineInput_Activated.rjoy_right
-			|| (MageScript->mapLoadId != MAGE_NO_MAP)
-		) {
-			MageDialog->advanceMessage();
-			// If interacting with the dialog this tick has closed the dialog,
-			// return early before the same "advance button press triggers an on_interact below
-			if(!MageDialog->isOpen) {
-				return;
-			}
-		}
+		// If interacting with the dialog this tick has closed the dialog,
+		// return early before the same "advance button press triggers an on_interact below
+		MageDialog->update();
+		return;
 	}
 	// if there is a player on the map
 	if(playerEntityIndex != NO_PLAYER) {

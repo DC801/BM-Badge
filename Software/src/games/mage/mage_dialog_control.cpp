@@ -1,6 +1,7 @@
 #include "mage_dialog_control.h"
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
+extern MageScriptControl *MageScript;
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
@@ -63,6 +64,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 MageDialogControl::MageDialogControl() {
 	isOpen = false;
+	mapLocalJumpScriptId = 0;
 	triggeringEntityId = 0;
 	currentDialogIndex = 0;
 	currentDialogAddress = 0;
@@ -70,7 +72,11 @@ MageDialogControl::MageDialogControl() {
 	currentScreenIndex = 0;
 	currentMessageIndex = 0;
 	currentImageAddress = 0;
+	cursorPhase = 0;
+	currentResponseIndex = 0;
 	messageIds = std::make_unique<uint16_t[]>(0);
+	responses = std::make_unique<MageDialogResponse[]>(0);
+	responseLabels = std::make_unique<std::string[]>(0);
 	currentScreen = {0};
 }
 
@@ -78,13 +84,22 @@ uint32_t MageDialogControl::size() {
 	return (
 		0
 		+ sizeof(currentFrameTileset)
+		+ sizeof(triggeringEntityId)
 		+ sizeof(currentDialogIndex)
 		+ sizeof(currentDialogAddress)
+		+ sizeof(currentDialogScreenCount)
 		+ sizeof(currentScreenIndex)
+		+ sizeof(currentMessageIndex)
 		+ sizeof(currentMessageIndex)
 		+ sizeof(currentImageAddress)
 		+ sizeof(cursorPhase)
+		+ sizeof(currentResponseIndex)
 		+ sizeof(currentScreen)
+		+ sizeof(std::string) // currentEntityName
+		+ sizeof(std::string) // currentMessage
+		+ sizeof(uint16_t) * currentScreen.messageCount // messageIds
+		+ sizeof(MageDialogResponse) * currentScreen.responseCount // responses
+		+ sizeof(std::string) * currentScreen.responseCount // responseLabels
 		+ sizeof(isOpen)
 	);
 }
@@ -96,6 +111,7 @@ void MageDialogControl::load(
 	triggeringEntityId = currentEntityId;
 	currentDialogIndex = dialogId;
 	currentScreenIndex = 0;
+	currentResponseIndex = 0;
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
@@ -111,6 +127,7 @@ void MageDialogControl::load(
 	loadNextScreen();
 
 	isOpen = true;
+	mapLocalJumpScriptId = 0;
 }
 
 void MageDialogControl::loadNextScreen() {
@@ -148,6 +165,29 @@ void MageDialogControl::loadNextScreen() {
 		messageIds[currentMessageIndex],
 		triggeringEntityId
 	);
+	uint8_t sizeOfResponseIndex = sizeof(MageDialogResponse);
+	uint32_t sizeOfResponseIds = sizeOfResponseIndex * currentScreen.responseCount;
+	responses.reset();
+	responses = std::make_unique<MageDialogResponse[]>(currentScreen.responseCount);
+	responseLabels.reset();
+	responseLabels = std::make_unique<std::string[]>(currentScreen.responseCount);
+	EngineROM_Read(
+		currentDialogAddress,
+		sizeOfResponseIds,
+		(uint8_t *)responses.get(),
+		"Failed to read Dialog property 'responses'"
+	);
+	// this is probably cheating, but these structs are just a pair of uint16_t values,
+	// so... it will probably work?
+	ROM_ENDIAN_U2_BUFFER(responses.get(), currentScreen.responseCount * 2);
+	for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
+		responseLabels[responseIndex] = MageGame->getString(
+			responses[responseIndex].stringIndex,
+			triggeringEntityId
+		);
+	}
+	currentDialogAddress += sizeOfResponseIds;
+	currentDialogAddress += (currentScreen.responseCount % 2) * sizeOfResponseIndex;
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageIndex = currentFrameTileset->ImageId();
@@ -173,10 +213,41 @@ void MageDialogControl::advanceMessage() {
 
 void MageDialogControl::closeDialog() {
 	isOpen = false;
+	mapLocalJumpScriptId = 0;
 }
 
 void MageDialogControl::update() {
 	cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+	bool shouldAdvance = (
+		EngineInput_Activated.rjoy_down
+		|| EngineInput_Activated.rjoy_left
+		|| EngineInput_Activated.rjoy_right
+		|| (MageScript->mapLoadId != MAGE_NO_MAP)
+	);
+	if(shouldShowResponses()) {
+		if(EngineInput_Activated.ljoy_up) { currentResponseIndex -= 1; }
+		if(EngineInput_Activated.ljoy_down) { currentResponseIndex += 1; }
+		currentResponseIndex %= currentScreen.responseCount;
+		if(shouldAdvance) {
+			mapLocalJumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
+			isOpen = false;
+		}
+	}
+	else if(shouldAdvance) {
+		advanceMessage();
+	}
+}
+
+bool MageDialogControl::shouldShowResponses() const {
+	return (
+		// last page of messages on this screen
+		currentMessageIndex == (currentScreen.messageCount - 1)
+		// and we have responses
+		&& (
+			currentScreen.responseType == SELECT_FROM_SHORT_LIST
+			|| currentScreen.responseType == SELECT_FROM_LONG_LIST
+		)
+	);
 }
 
 void MageDialogControl::draw() {
@@ -227,20 +298,39 @@ void MageDialogControl::drawDialogBox(
 		offsetY + tileHeight - 2
 	);
 	if (drawArrow) {
-		x = offsetX + ((box.w - 2) * tileWidth);
-		y = offsetY + ((box.h - 2) * tileHeight);
+		int8_t bounce = cos(((float)cursorPhase / 1000.0) * TAU) * 3;
+		uint8_t flags = 0;
+		if(shouldShowResponses()) {
+			flags = 0b00000011;
+			x = offsetX + tileWidth + bounce;
+			y = offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6;
+			// render all of the responseLabels
+			for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
+				mage_canvas->printMessage(
+					responseLabels[responseIndex].c_str(),
+					Monaco9,
+					0xffff,
+					offsetX + (2 * tileWidth) + 8,
+					offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
+				);
+			}
+		} else {
+			// bounce the arrow at the bottom
+			x = offsetX + ((box.w - 2) * tileWidth);
+			y = offsetY + ((box.h - 2) * tileHeight) + bounce;
+		}
 		canvas.drawChunkWithFlags(
 			currentImageAddress,
 			MageGame->getValidColorPalette(currentImageIndex),
 			x,
-			y + (cos(((float)cursorPhase / 1000.0) * TAU) * 3),
+			y,
 			tileWidth,
 			tileHeight,
 			(DIALOG_TILES_ARROW % tilesetColumns) * tileWidth,
 			(DIALOG_TILES_ARROW / tilesetColumns) * tileHeight,
 			imageWidth,
 			TRANSPARENCY_COLOR,
-			0
+			flags
 		);
 	}
 }
