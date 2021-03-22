@@ -172,5 +172,11 @@
 			"entity": "Bert",
 			"script": "test_camera_follow_bert"
 		}
+	],
+	"show_dialog-lots_of_text": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-lots_of_text"
+		}
 	]
 }

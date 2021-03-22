@@ -132,6 +132,12 @@
  "nextlayerid":5,
  "nextobjectid":8,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"on_tick",
+         "type":"string",
+         "value":"map_on_tick-doors"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":64,

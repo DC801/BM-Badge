@@ -6,8 +6,6 @@
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 
-#define PI 3.14159265
-
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
