@@ -222,6 +222,29 @@
 			]
 		}
 	},
+	"bobmoss": {
+		"tileset": "entity-bobmoss.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		}
+	},
 	"lightning_boy": {
 		"tileset": "entity-lightning_boy.json",
 		"animations": {
@@ -329,6 +352,65 @@
 	},
 	"sheep": {
 		"tileset": "entity-sheep.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 38,
+					"flip_x": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": true
+				},
+				{
+					"tileid": 37,
+					"flip_x": false
+				},
+				{
+					"tileid": 36,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		}
+	},
+	"helga": {
+		"tileset": "entity-helga.json",
 		"animations": {
 			"idle": [
 				{

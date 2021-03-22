@@ -8,24 +8,36 @@
         }
     },
  "image":"entity-sheep.png",
- "imageheight":512,
+ "imageheight":672,
  "imagewidth":96,
  "margin":0,
  "name":"Sheep",
  "spacing":0,
- "tilecount":48,
- "tiledversion":"1.4.2",
+ "tilecount":63,
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
          "animation":[
                 {
-                 "duration":1500,
-                 "tileid":0
+                 "duration":200,
+                 "tileid":48
                 }, 
                 {
-                 "duration":400,
-                 "tileid":3
+                 "duration":100,
+                 "tileid":51
+                }, 
+                {
+                 "duration":100,
+                 "tileid":54
+                }, 
+                {
+                 "duration":100,
+                 "tileid":57
+                }, 
+                {
+                 "duration":100,
+                 "tileid":60
                 }],
          "id":0,
          "type":"sheep"
@@ -33,12 +45,24 @@
         {
          "animation":[
                 {
-                 "duration":1500,
-                 "tileid":1
+                 "duration":200,
+                 "tileid":49
                 }, 
                 {
-                 "duration":400,
-                 "tileid":4
+                 "duration":100,
+                 "tileid":52
+                }, 
+                {
+                 "duration":100,
+                 "tileid":55
+                }, 
+                {
+                 "duration":100,
+                 "tileid":58
+                }, 
+                {
+                 "duration":100,
+                 "tileid":61
                 }],
          "id":1,
          "type":"sheep"
@@ -46,12 +70,24 @@
         {
          "animation":[
                 {
-                 "duration":1500,
-                 "tileid":2
+                 "duration":200,
+                 "tileid":50
                 }, 
                 {
-                 "duration":400,
-                 "tileid":5
+                 "duration":100,
+                 "tileid":53
+                }, 
+                {
+                 "duration":100,
+                 "tileid":56
+                }, 
+                {
+                 "duration":100,
+                 "tileid":59
+                }, 
+                {
+                 "duration":100,
+                 "tileid":62
                 }],
          "id":2,
          "type":"sheep"

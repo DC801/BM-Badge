@@ -144,24 +144,6 @@
                  "y":46.6666666666667
                 }, 
                 {
-                 "gid":270,
-                 "height":64,
-                 "id":10,
-                 "name":"Bob Moss",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bobmoss-start-s"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":64,
-                 "x":496,
-                 "y":310
-                }, 
-                {
                  "gid":281,
                  "height":32,
                  "id":12,
@@ -256,6 +238,24 @@
                  "width":32,
                  "x":225,
                  "y":296
+                }, 
+                {
+                 "gid":542,
+                 "height":64,
+                 "id":22,
+                 "name":"Bob Moss",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-bobmoss-start-s"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":488,
+                 "y":316
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -276,7 +276,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":22,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -324,6 +324,10 @@
         {
          "firstgid":539,
          "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":541,
+         "source":"..\/entities\/entity-bobmoss.json"
         }],
  "tilewidth":32,
  "type":"map",

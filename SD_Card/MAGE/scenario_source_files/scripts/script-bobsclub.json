@@ -919,8 +919,18 @@
 	],
 	"show_dialog-bobmoss-start-s": [
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bob Moss",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobmoss-start-s"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Bob Moss",
+			"direction": "south"
 		}
 	],
 	"show_dialog-fridge": [
