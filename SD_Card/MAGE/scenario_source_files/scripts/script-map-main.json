@@ -681,6 +681,20 @@
 	],
 	"show_dialog-reset": [
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-story-flags"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-reset"
+		}
+	],
+	"reset-story-flags": [
+		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "goodmorning",
 			"bool_value": false
@@ -847,11 +861,6 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "sportskid",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
 			"save_flag": "alfonso-explain",
 			"bool_value": false
 		},
@@ -874,14 +883,6 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "glitch_goats",
 			"bool_value": false
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-reset"
 		}
 	],
 	"show_dialog-marta-start": [

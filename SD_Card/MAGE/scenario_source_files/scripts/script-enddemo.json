@@ -800,6 +800,11 @@
 			"bool_value": false
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "south"
+		},
+		{
 			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
 			"entity": "cameraman"
 		},

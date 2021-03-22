@@ -261,5 +261,65 @@
 			"entity": "Shepherd",
 			"script": "show_dialog-shepherd-start"
 		}
+	],
+	"loiter-sheep4": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2400
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 4880
+		}
+	],
+	"loiter-sheep3": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 7500
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3200
+		}
+	],
+	"loiter-sheep2": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 9210
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 4300
+		}
+	],
+	"loiter-sheep1": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 8530
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		}
 	]
 }

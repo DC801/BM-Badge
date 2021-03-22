@@ -424,6 +424,11 @@
 			"expected_bool": false
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "%PLAYER%"
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "max-grin-start"
 		},
