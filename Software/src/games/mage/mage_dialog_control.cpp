@@ -83,6 +83,7 @@ uint32_t MageDialogControl::size() {
 		+ sizeof(currentScreenIndex)
 		+ sizeof(currentMessageIndex)
 		+ sizeof(currentImageAddress)
+		+ sizeof(cursorPhase)
 		+ sizeof(currentScreen)
 		+ sizeof(isOpen)
 	);
@@ -154,10 +155,12 @@ void MageDialogControl::loadNextScreen() {
 		currentImageIndex
 	);
 	currentScreenIndex++;
+	cursorPhase += 250;
 }
 
 void MageDialogControl::advanceMessage() {
 	currentMessageIndex++;
+	cursorPhase = 250;
 	if (currentMessageIndex >= currentScreen.messageCount) {
 		loadNextScreen();
 	} else {
@@ -172,13 +175,21 @@ void MageDialogControl::closeDialog() {
 	isOpen = false;
 }
 
+void MageDialogControl::update() {
+	cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+}
+
 void MageDialogControl::draw() {
 	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
-	drawDialogBox(currentMessage, coords.text);
+	drawDialogBox(currentMessage, coords.text, true);
 	drawDialogBox(currentEntityName, coords.label);
 }
 
-void MageDialogControl::drawDialogBox(const std::string &string, Rect box) {
+void MageDialogControl::drawDialogBox(
+	const std::string &string,
+	Rect box,
+	bool drawArrow
+) {
 	uint16_t tileWidth = currentFrameTileset->TileWidth();
 	uint16_t tileHeight = currentFrameTileset->TileHeight();
 	uint16_t offsetX = (box.x * tileWidth) + (tileWidth / 2);
@@ -215,6 +226,23 @@ void MageDialogControl::drawDialogBox(const std::string &string, Rect box) {
 		offsetX + tileWidth + 8,
 		offsetY + tileHeight - 2
 	);
+	if (drawArrow) {
+		x = offsetX + ((box.w - 2) * tileWidth);
+		y = offsetY + ((box.h - 2) * tileHeight);
+		canvas.drawChunkWithFlags(
+			currentImageAddress,
+			MageGame->getValidColorPalette(currentImageIndex),
+			x,
+			y + (cos(((float)cursorPhase / 1000.0) * TAU) * 3),
+			tileWidth,
+			tileHeight,
+			(DIALOG_TILES_ARROW % tilesetColumns) * tileWidth,
+			(DIALOG_TILES_ARROW / tilesetColumns) * tileHeight,
+			imageWidth,
+			TRANSPARENCY_COLOR,
+			0
+		);
+	}
 }
 
 uint8_t MageDialogControl::getTileIdFromXY(

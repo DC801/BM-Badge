@@ -17,14 +17,14 @@
 #define DIALOG_TILES_BOTTOM_REPEAT 9
 #define DIALOG_TILES_BOTTOM_RIGHT 10
 
-#define DIALOG_TILES_SCROLL_TOP 3
+#define DIALOG_TILES_SCROLL_END 3
 #define DIALOG_TILES_SCROLL_REPEAT 7
 #define DIALOG_TILES_SCROLL_POSITION 11
-#define DIALOG_TILES_SCROLL_BOTTOM 15
 
 #define DIALOG_TILES_CHECKBOX 12
-#define DIALOG_TILES_CHECKBOX_CHECKED 13
+#define DIALOG_TILES_CHECK 13
 #define DIALOG_TILES_HIGHLIGHT 14
+#define DIALOG_TILES_ARROW 15
 
 enum MageDialogScreenAlignment : uint8_t {
 	BOTTOM_LEFT = 0,
@@ -62,6 +62,7 @@ class MageDialogControl {
 		int32_t currentMessageIndex;
 		uint16_t currentImageIndex;
 		uint32_t currentImageAddress;
+		uint32_t cursorPhase;
 		MageDialogScreen currentScreen;
 		std::unique_ptr<uint16_t[]>messageIds;
 		std::string currentEntityName;
@@ -73,7 +74,8 @@ class MageDialogControl {
 		);
 		void drawDialogBox(
 			const std::string &string,
-			Rect box
+			Rect box,
+			bool drawArrow = false
 		);
 
 	public:
@@ -87,6 +89,7 @@ class MageDialogControl {
 		void loadNextScreen();
 		void advanceMessage();
 		void closeDialog();
+		void update();
 		void draw();
 
 };

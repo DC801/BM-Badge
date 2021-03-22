@@ -22,6 +22,9 @@
 #include <string.h>
 #include <sys/time.h>
 
+#define PI 3.141592653589793
+#define TAU 6.283185307179586
+
 typedef struct {
 	int16_t xs, ys, xe, ye;
 } area_t;

@@ -202,6 +202,7 @@ void GameRender()
 			#endif
 		}
 		if(MageDialog->isOpen) {
+			MageDialog->update();
 			MageDialog->draw();
 			#ifdef TIMING_DEBUG
 				diff = millis() - now;

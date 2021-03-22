@@ -215,5 +215,15 @@
 				"Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
 			]
 		}
+	],
+	"dialog-lots_of_text": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "max_swagger",
+			"name": "%SELF%",
+			"messages": [
+				"How long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################"
+			]
+		}
 	]
 }
