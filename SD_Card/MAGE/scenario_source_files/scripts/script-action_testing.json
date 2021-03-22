@@ -882,5 +882,60 @@
 			"entity": "%SELF%",
 			"script": "mage17-interact-a"
 		}
+	],
+	"mage18-interact": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage18"
+		}
+	],
+	"response-pet_the_goat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-pet_the_goat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	],
+	"response-feed_the_goat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-feed_the_goat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	],
+	"response-give_goat_sugar_cube": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-give_goat_sugar_cube"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
+	],
+	"response-do_nothing": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-do_nothing"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage18-interact"
+		}
 	]
 }

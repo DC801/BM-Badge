@@ -433,17 +433,33 @@ types:
         type: u1
       - id: message_count
         type: u1
+      - id: response_type
+        type: u1
+        enum: dialog_response_type
+      - id: response_count
+        type: u1
       - id: padding
         type: u1
       - id: messages
         type: u2
         repeat: expr
         repeat-expr: message_count
+      - id: responses
+        type: dialog_response
+        repeat: expr
+        repeat-expr: response_count
       - id: dialog_screen_padding
         type: u2
         repeat: expr
-        repeat-expr: (message_count) % 2
+        repeat-expr: (message_count + 1) % 2
         doc: Padding to align things back to uint32_t
+
+  dialog_response:
+    seq:
+      - id: string_id
+        type: u2
+      - id: map_local_script_id
+        type: u2
 
   string:
     params:
@@ -621,3 +637,10 @@ enums:
     5: bottom_right_with_name
     6: top_left_with_name
     7: top_right_with_name
+
+  dialog_response_type:
+    0: no_response
+    1: select_from_short_list
+    2: select_from_long_list
+    3: enter_number
+    4: enter_alphanumeric
