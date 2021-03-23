@@ -365,24 +365,6 @@
                  "y":282
                 }, 
                 {
-                 "gid":593,
-                 "height":32,
-                 "id":27,
-                 "name":"Ssen",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":""
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":501.5,
-                 "y":293
-                }, 
-                {
                  "gid":690,
                  "height":32,
                  "id":28,
@@ -600,6 +582,29 @@
                  "width":32,
                  "x":252,
                  "y":166
+                }, 
+                {
+                 "gid":849,
+                 "height":48,
+                 "id":106,
+                 "name":"Timmy",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-timmy-start"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":48,
+                 "x":501,
+                 "y":337
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1281,7 +1286,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":106,
+ "nextobjectid":107,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -1405,6 +1410,10 @@
         {
          "firstgid":847,
          "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":849,
+         "source":"..\/entities\/entity-eye_faerie.json"
         }],
  "tilewidth":32,
  "type":"map",

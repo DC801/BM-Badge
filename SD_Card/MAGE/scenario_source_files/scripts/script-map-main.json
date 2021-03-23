@@ -104,13 +104,36 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-sheep-check"
+			"script": "on_load-map-main-glitch_hamster-check"
 		}
 	],
 	"on_load-map-main-glitch_fountain-do": [
 		{
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Fountain",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-glitch_hamster-check"
+		}
+	],
+	"on_load-map-main-glitch_hamster-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hamster_unglitched",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-glitch_hamster-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-sheep-check"
+		}
+	],
+	"on_load-map-main-glitch_hamster-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Hamster",
 			"bool_value": false
 		},
 		{
@@ -701,6 +724,10 @@
 			"script": "reset-story-flags"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-glitch-flags"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-debug-reset-all-false"
 		},
@@ -714,6 +741,10 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-story-flags-true"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-glitch-flags-true"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -893,22 +924,7 @@
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "fountain_unglitched",
-            "bool_value": true
-        },
-        {
-            "action": "SET_SAVE_FLAG",
-            "save_flag": "lodge_cat_unglitched",
-            "bool_value": true
-        },
-        {
-            "action": "SET_SAVE_FLAG",
             "save_flag": "smith",
-            "bool_value": true
-        },
-        {
-            "action": "SET_SAVE_FLAG",
-            "save_flag": "glitch_goats",
             "bool_value": true
         }
 	],
@@ -1104,6 +1120,13 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "smith",
+			"bool_value": false
+		}
+	],
+	"reset-glitch-flags": [
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "fountain_unglitched",
 			"bool_value": false
 		},
@@ -1114,13 +1137,45 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "smith",
+			"save_flag": "lodge_timmy_unglitched",
 			"bool_value": false
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "glitch_goats",
 			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "main_hamster_unglitched",
+			"bool_value": false
+		}
+	],
+	"set-glitch-flags-true": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "fountain_unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "lodge_cat_unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "lodge_timmy_unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glitch_goats",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "main_hamster_unglitched",
+			"bool_value": true
 		}
 	],
 	"show_dialog-marta-start": [
@@ -1165,6 +1220,29 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "fountain_unglitched",
 			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"hamster-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "hamster_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"hamster_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hamster_unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"load_map-testbig": [

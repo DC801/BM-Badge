@@ -720,6 +720,17 @@
                  "height":16,
                  "id":261,
                  "name":"Hamster",
+                 "properties":[
+                        {
+                         "name":"is_glitched",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"hamster-glitchwatch"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
