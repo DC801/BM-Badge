@@ -18,14 +18,41 @@
  "tileheight":16,
  "tiles":[
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":0
+                }, 
+                {
+                 "duration":400,
+                 "tileid":3
+                }],
          "id":0,
          "type":"hamster"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":1
+                }, 
+                {
+                 "duration":400,
+                 "tileid":4
+                }],
          "id":1,
          "type":"hamster"
         }, 
         {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":2
+                }, 
+                {
+                 "duration":400,
+                 "tileid":5
+                }],
          "id":2,
          "type":"hamster"
         }, 
