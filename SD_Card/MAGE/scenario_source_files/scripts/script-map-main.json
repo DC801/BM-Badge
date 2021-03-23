@@ -679,7 +679,19 @@
 			"bool_value": true
 		}
 	],
-	"show_dialog-reset": [
+	"debug-reset-all-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-reset-all-q",
+			"doc": "Reset all save flags?"
+		}
+	],
+	"debug-reset-all-false": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "reset-hint-flags"
@@ -690,7 +702,233 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-reset"
+			"dialog": "dialog-debug-reset-all-false"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-reset-all-q"
+		}
+	],
+	"debug-reset-all-true": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-story-flags-true"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-reset-all-true"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-reset-all-q"
+		}
+	],
+	"set-story-flags-true": [
+		{
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "goodmorning",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "goldfish",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bender1",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bender2",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "baker1",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "baker2",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bobrock",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bobsclub",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "strongbob",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bea-sequel",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bea-backstory",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bea-happy",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bea-regret",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bea-relief",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "shepherd1",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "shepherd2",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "sportskid",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "maxtalk",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "catwork",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "trekkie1",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "trekkie2",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "tuesdayd",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "rake",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "hackbook",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "hackbook-hint-done",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "ringchoose",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "wand",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "glasses",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "book",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "broom",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bracelet",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bobmoss",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "alfonso-explain",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "fountain_unglitched",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "lodge_cat_unglitched",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "smith",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "glitch_goats",
+            "bool_value": true
+        }
+	],
+	"no_debug-reset-all": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-hint-flags"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reset-story-flags"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_debug-reset-all"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-reset-all-q"
 		}
 	],
 	"reset-story-flags": [
@@ -952,6 +1190,26 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		}
+	],
+	"debug-hub-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-hub-q",
+			"doc": "Go to debug map hub?"
+		}
+	],
+	"debug-hub": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "load_map-testbig"
+		}
+	],
+	"no_debug-hub": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-hub-q"
 		}
 	]
 }

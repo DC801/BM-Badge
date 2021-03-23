@@ -253,5 +253,26 @@
 				"(Zuh)"
 			]
 		}
+	],
+	"dialog-debug-roll-credits-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "goldfish",
+			"name": "%SELF%",
+			"messages": [
+				"Show credits?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-roll-credits"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-roll-credits"
+				}
+			]
+		}
 	]
 }

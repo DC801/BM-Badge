@@ -210,13 +210,55 @@
 			]
 		}
 	],
-	"dialog-morning-begin": [
+	"dialog-debug-goodmorning": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "jackob",
 			"name": "%SELF%",
 			"messages": [
-				"Cutscene can now begin."
+				"Walk through the doorway to begin\ncutscene."
+			]
+		}
+	],
+	"dialog-debug-walk-to-lodge-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Go on a morning walk?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-walk-to-lodge"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-walk-to-lodge"
+				}
+			]
+		}
+	],
+	"dialog-debug-goodmorning-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Start the beginning cutscene?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-goodmorning"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-goodmorning"
+				}
 			]
 		}
 	]

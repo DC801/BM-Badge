@@ -14,20 +14,6 @@
 			"success_script": "bedroom-door-watch"
 		}
 	],
-	"debug-cutscene-begin": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-morning-begin"
-		},
-		{
-			"action": "SET_HEX_EDITOR_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "cutscene-begin"
-		}
-	],
 	"cutscene-begin": [
 		{
 			"action": "SET_SAVE_FLAG",
@@ -656,6 +642,65 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-magebox"
+		}
+	],
+	"debug-walk-to-lodge-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-walk-to-lodge-q",
+			"doc": "Go on a morning walk?"
+		}
+	],
+	"debug-walk-to-lodge": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "walk-to-lodge"
+		}
+	],
+	"no_debug-walk-to-lodge": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-walk-to-lodge-q"
+		}
+	],
+	"debug-goodmorning-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-goodmorning-q",
+			"doc": "Start good morning cutscene?"
+		}
+	],
+	"debug-goodmorning": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-goodmorning",
+			"doc": "Start good morning cutscene?"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "cutscene-begin"
+		}
+	],
+	"no_debug-goodmorning": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-goodmorning-q"
 		}
 	]
 }

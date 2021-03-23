@@ -2116,51 +2116,6 @@
 			"script": "artifacts-eval"
 		}
 	],
-	"debug-tuesday": [
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "broom",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "wand",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "book",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "glasses",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bracelet",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesdayd",
-			"bool_value": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "empty-lodge"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "deaden-artifacts"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-tuesday-over",
-			"doc": "Tuesday bypassed."
-		}
-	],
 	"empty-lodge": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -2710,7 +2665,135 @@
 			"direction": "north"
 		}
 	],
-	"debug-all-artifacts": [
+	"show_dialog-lodge-cat": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-lodge-cat",
+			"doc": "...."
+		}
+	],
+	"bypass-tuesday": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "broom",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wand",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "book",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glasses",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bracelet",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "empty-lodge"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "deaden-artifacts"
+		}
+	],
+	"debug-bypass-tuesday-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bypass-tuesday-q",
+			"doc": "Bypass Tuesday?"
+		}
+	],
+	"debug-bypass-tuesday": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bypass-tuesday"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bypass-tuesday",
+			"doc": "Tuesday bypassed."
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bypass-tuesday-q"
+		}
+	],
+	"no_debug-bypass-tuesday": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bypass-tuesday-q"
+		}
+	],
+	"debug-cutscene-tuesday-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-cutscene-tuesday-q",
+			"doc": "Begin TUESDAY cutscene?"
+		}
+	],
+	"debug-cutscene-tuesday": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "cutscene-tuesday"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bypass-tuesday-q"
+		}
+	],
+	"no_debug-cutscene-tuesday": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bypass-tuesday-q"
+		}
+	],
+	"debug-touch-artifacts-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-touch-artifacts-q",
+			"doc": "Begin TUESDAY cutscene?"
+		}
+	],
+	"debug-touch-artifacts": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "broom",
@@ -2747,24 +2830,35 @@
 			"geometry": "marta-broom-watch-spot"
 		},
 		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Broom",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bracelet",
+			"geometry": "lodge-hidingplace"
+		},
+		{
 			"action": "SET_ENTITY_TYPE",
 			"entity": "Marta",
 			"entity_type": "marta_broom"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-artifacts-touch"
-		}
-	],
-	"show_dialog-lodge-cat": [
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
+			"dialog": "dialog-debug-touch-artifacts"
 		},
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-lodge-cat",
-			"doc": "...."
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-touch-artifacts-q"
+		}
+	],
+	"no_debug-touch-artifacts": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-touch-artifacts-q"
 		}
 	]
 }

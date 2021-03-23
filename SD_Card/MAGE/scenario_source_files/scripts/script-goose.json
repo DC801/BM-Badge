@@ -191,18 +191,6 @@
 			"play_count": 3
 		}
 	],
-	"rake-float-demo": [
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Rake",
-			"geometry": "rake-lake-point"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%SELF%",
-			"script": "make-rake-float"
-		}
-	],
 	"honk-to-make-rake-float": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -334,6 +322,37 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
 			"script": "goose-bounds-watch"
+		}
+	],
+	"debug-win-rake-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-win-rake-q",
+			"doc": "Position rake in the lake?"
+		}
+	],
+	"debug-win-rake": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Rake",
+			"geometry": "rake-lake-point"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-win-rake-q"
+		}
+	],
+	"no_debug-win-rake": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-win-rake-q"
 		}
 	]
 }

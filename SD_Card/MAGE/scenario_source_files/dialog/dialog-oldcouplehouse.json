@@ -298,10 +298,6 @@
 				{
 					"response_text": "No",
 					"script": "no_debug-bea-sequel"
-				},
-				{
-					"response_text": "GOAT TRACK do nothing",
-					"script": "response-do_nothing"
 				}
 			]
 		}
