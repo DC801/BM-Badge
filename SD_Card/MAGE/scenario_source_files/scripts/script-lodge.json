@@ -174,13 +174,36 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-lodge-end"
+			"script": "on_load-lodge-glitch_timmy-check"
 		}
 	],
 	"on_load-lodge-glitch_cat-do": [
 		{
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Cat",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-glitch_timmy-check"
+		}
+	],
+	"on_load-lodge-glitch_timmy-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "lodge_timmy_unglitched",
+			"expected_bool": true,
+			"success_script": "on_load-lodge-glitch_timmy-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-end"
+		}
+	],
+	"on_load-lodge-glitch_timmy-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Timmy",
 			"bool_value": false
 		},
 		{
@@ -2189,11 +2212,6 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Ssen",
-			"geometry": "lodge-hidingplace"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Goose  ",
 			"geometry": "lodge-hidingplace"
 		},
@@ -2674,6 +2692,45 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge-cat",
 			"doc": "...."
+		}
+	],
+	"show_dialog-timmy-start": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-timmy-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-start",
+			"doc": "Oh! How nice! Much easier to read!"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "west"
+		}
+	],
+	"show_dialog-timmy-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-glitched",
+			"doc": "Ner ubg qbtf n fnaqjvpu?"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-timmy-start"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Goose",
+			"direction": "west"
 		}
 	],
 	"bypass-tuesday": [

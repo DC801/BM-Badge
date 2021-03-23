@@ -789,6 +789,26 @@
 			]
 		}
 	],
+	"dialog-timmy-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "%SELF%",
+			"messages": [
+				"Ner ubg qbtf n fnaqjvpu?"
+			]
+		}
+	],
+	"dialog-timmy-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "%SELF%",
+			"messages": [
+				"Oh, how lovely! It's much easier to read\nlike this!"
+			]
+		}
+	],
 	"dialog-debug-bypass-tuesday-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
