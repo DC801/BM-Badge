@@ -191,7 +191,7 @@
 	"on_load-lodge-glitch_timmy-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "lodge_timmy_unglitched",
+			"save_flag": "timmy_unglitched",
 			"expected_bool": true,
 			"success_script": "on_load-lodge-glitch_timmy-do"
 		},
@@ -231,6 +231,21 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "lodge_cat_unglitched",
+			"bool_value": true
+		}
+	],
+	"timmy-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "timmy_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"timmy_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "timmy_unglitched",
 			"bool_value": true
 		}
 	],
@@ -2706,13 +2721,40 @@
 			"expected_bool": true
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "timmy",
+			"expected_bool": true,
+			"success_script": "show_dialog-timmy-start-s"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-timmy-start",
 			"doc": "Oh! How nice! Much easier to read!"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "timmy",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Goose",
+			"entity": "%SELF%",
+			"direction": "west"
+		}
+	],
+	"show_dialog-timmy-start-s": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-start-s",
+			"doc": "I want to get a high jump gold medal!"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
 			"direction": "west"
 		}
 	],
@@ -2729,7 +2771,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Goose",
+			"entity": "%SELF%",
 			"direction": "west"
 		}
 	],

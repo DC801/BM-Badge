@@ -121,7 +121,7 @@
 	"on_load-map-main-glitch_hamster-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "hamster_unglitched",
+			"save_flag": "main_hamster_unglitched",
 			"expected_bool": true,
 			"success_script": "on_load-map-main-glitch_hamster-do"
 		},
@@ -924,6 +924,11 @@
         },
         {
             "action": "SET_SAVE_FLAG",
+            "save_flag": "timmy",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
             "save_flag": "smith",
             "bool_value": true
         }
@@ -1118,6 +1123,11 @@
 			"save_flag": "alfonso-explain",
 			"bool_value": false
 		},
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "timmy",
+            "bool_value": false
+        },
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "smith",
@@ -1137,7 +1147,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "lodge_timmy_unglitched",
+			"save_flag": "timmy_unglitched",
 			"bool_value": false
 		},
 		{
@@ -1164,7 +1174,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "lodge_timmy_unglitched",
+			"save_flag": "timmy_unglitched",
 			"bool_value": true
 		},
 		{
@@ -1237,7 +1247,7 @@
 	"hamster_now_unglitched": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "hamster_unglitched",
+			"save_flag": "main_hamster_unglitched",
 			"bool_value": true
 		},
 		{
