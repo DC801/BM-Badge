@@ -727,6 +727,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-hamster-start"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"hamster-glitchwatch"
