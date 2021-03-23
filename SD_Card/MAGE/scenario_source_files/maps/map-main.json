@@ -611,7 +611,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"load_map-testbig"
+                         "value":"debug-hub-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -644,24 +644,6 @@
                  "y":736
                 }, 
                 {
-                 "gid":2147484835,
-                 "height":32,
-                 "id":251,
-                 "name":"Debug Exa 4",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"story-flags-all"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1155,
-                 "y":504
-                }, 
-                {
                  "gid":1187,
                  "height":32,
                  "id":252,
@@ -670,7 +652,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-reset"
+                         "value":"debug-reset-all-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -706,7 +688,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"walk-to-lodge"
+                         "value":"debug-walk-to-lodge-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -724,7 +706,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"rake-float-demo"
+                         "value":"debug-win-rake-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -754,7 +736,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"roll-credits"
+                         "value":"debug-roll-credits-q"
                         }],
                  "rotation":0,
                  "type":"",

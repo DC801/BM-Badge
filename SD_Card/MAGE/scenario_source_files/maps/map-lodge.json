@@ -556,7 +556,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-tuesday"
+                         "value":"debug-bypass-tuesday-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -574,7 +574,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"cutscene-tuesday"
+                         "value":"debug-cutscene-tuesday-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -592,7 +592,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-all-artifacts"
+                         "value":"debug-touch-artifacts-q"
                         }],
                  "rotation":0,
                  "type":"",

@@ -777,15 +777,5 @@
 				"Story flag count reset (0)"
 			]
 		}
-	],
-	"dialog-story-flags-all": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Debug Sheep",
-			"messages": [
-				"All story flags set to true."
-			]
-		}
 	]
 }

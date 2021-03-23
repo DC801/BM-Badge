@@ -192,14 +192,6 @@
 				{
 					"response_text": "No",
 					"script": "no_debug-ethernet-puzzle"
-				},
-				{
-					"response_text": "No",
-					"script": "no_debug-ethernet-puzzle"
-				},
-				{
-					"response_text": "No",
-					"script": "no_debug-ethernet-puzzle"
 				}
 			]
 		}

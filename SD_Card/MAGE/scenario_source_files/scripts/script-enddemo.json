@@ -860,10 +860,24 @@
 			"script": "load_map-main"
 		}
 	],
-	"roll-credits": [
+	"debug-roll-credits-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-roll-credits-q",
+			"doc": "Show credits?"
+		}
+	],
+	"debug-roll-credits": [
 		{
 			"action": "LOAD_MAP",
 			"map": "map-credits"
+		}
+	],
+	"no_debug-roll-credits": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-roll-credits-q"
 		}
 	]
 }

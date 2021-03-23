@@ -50,7 +50,7 @@
                  "y":288
                 }, 
                 {
-                 "gid":230,
+                 "gid":245,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -68,7 +68,7 @@
                  "y":290.165441953572
                 }, 
                 {
-                 "gid":2147483986,
+                 "gid":2147484001,
                  "height":48,
                  "id":11,
                  "name":"Aunt Zippy",
@@ -86,7 +86,7 @@
                  "y":252
                 }, 
                 {
-                 "gid":2147484022,
+                 "gid":2147484037,
                  "height":48,
                  "id":12,
                  "name":"Uncle Zappy",
@@ -256,7 +256,7 @@
                  "y":156
                 }, 
                 {
-                 "gid":410,
+                 "gid":425,
                  "height":32,
                  "id":25,
                  "name":"Mr. Tickles",
@@ -279,7 +279,7 @@
                  "y":208
                 }, 
                 {
-                 "gid":421,
+                 "gid":436,
                  "height":16,
                  "id":27,
                  "name":"Mage Journal",
@@ -297,7 +297,7 @@
                  "y":81.3333333333333
                 }, 
                 {
-                 "gid":420,
+                 "gid":435,
                  "height":16,
                  "id":30,
                  "name":"",
@@ -309,7 +309,7 @@
                  "y":81.5833333333333
                 }, 
                 {
-                 "gid":421,
+                 "gid":436,
                  "height":16,
                  "id":31,
                  "name":"",
@@ -321,7 +321,7 @@
                  "y":77.0833333333333
                 }, 
                 {
-                 "gid":423,
+                 "gid":438,
                  "height":32,
                  "id":32,
                  "name":"Mage Box",
@@ -351,7 +351,7 @@
                  "y":170
                 }, 
                 {
-                 "gid":425,
+                 "gid":440,
                  "height":32,
                  "id":37,
                  "name":"Debug Exa",
@@ -359,7 +359,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-cutscene-begin"
+                         "value":"debug-goodmorning-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -369,7 +369,7 @@
                  "y":223
                 }, 
                 {
-                 "gid":423,
+                 "gid":438,
                  "height":32,
                  "id":38,
                  "name":"Mage Facts",
@@ -457,43 +457,43 @@
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":224,
+         "firstgid":239,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":272,
+         "firstgid":287,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":296,
+         "firstgid":311,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":320,
+         "firstgid":335,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":338,
+         "firstgid":353,
          "source":"..\/entities\/entity-lightning_boy.json"
         }, 
         {
-         "firstgid":374,
+         "firstgid":389,
          "source":"..\/entities\/entity-lightning_boy2.json"
         }, 
         {
-         "firstgid":410,
+         "firstgid":425,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":420,
+         "firstgid":435,
          "source":"..\/entities\/entity-journal.json"
         }, 
         {
-         "firstgid":423,
+         "firstgid":438,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":425,
+         "firstgid":440,
          "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,

@@ -739,16 +739,6 @@
 			]
 		}
 	],
-	"dialog-debug-tuesday-over": [
-		{
-			"alignment": "BOTTOM_RIGHT",
-			"portrait": "jackob",
-			"name": "%SELF%",
-			"messages": [
-				"Tuesday bypassed."
-			]
-		}
-	],
 	"dialog-murmur1": [
 		{
 			"alignment": "TOP_RIGHT",
@@ -796,6 +786,89 @@
 			"name": "%SELF%",
 			"messages": [
 				"All artifacts touched."
+			]
+		}
+	],
+	"dialog-debug-bypass-tuesday-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Bypass TUESDAY?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-bypass-tuesday"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-bypass-tuesday"
+				}
+			]
+		}
+	],
+	"dialog-debug-bypass-tuesday": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Tuesday bypassed."
+			]
+		}
+	],
+	"dialog-debug-cutscene-tuesday-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Begin TUESDAY cutscene?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-cutscene-tuesday"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-cutscene-tuesday"
+				}
+			]
+		}
+	],
+	"dialog-debug-touch-artifacts-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Touch all artifacts?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Yes",
+					"script": "debug-touch-artifacts"
+				},
+				{
+					"response_text": "No",
+					"script": "no_debug-touch-artifacts"
+				}
+			]
+		}
+	],
+	"dialog-debug-touch-artifacts": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Artifacts touched."
 			]
 		}
 	]
