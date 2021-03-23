@@ -108,7 +108,7 @@
                  "y":1019
                 }, 
                 {
-                 "gid":434,
+                 "gid":437,
                  "height":32,
                  "id":10,
                  "name":"Cat",
@@ -131,7 +131,7 @@
                  "y":811
                 }, 
                 {
-                 "gid":473,
+                 "gid":476,
                  "height":32,
                  "id":12,
                  "name":"goat1",
@@ -164,7 +164,7 @@
                  "y":1064.28787878788
                 }, 
                 {
-                 "gid":473,
+                 "gid":476,
                  "height":32,
                  "id":13,
                  "name":"goat2",
@@ -197,7 +197,7 @@
                  "y":1062.31818181818
                 }, 
                 {
-                 "gid":533,
+                 "gid":536,
                  "height":32,
                  "id":17,
                  "name":"Ewe",
@@ -230,7 +230,7 @@
                  "y":647
                 }, 
                 {
-                 "gid":2147484256,
+                 "gid":2147484259,
                  "height":32,
                  "id":18,
                  "name":"Cleo",
@@ -253,7 +253,7 @@
                  "y":821
                 }, 
                 {
-                 "gid":533,
+                 "gid":536,
                  "height":32,
                  "id":19,
                  "name":"Ram",
@@ -281,7 +281,7 @@
                  "y":730
                 }, 
                 {
-                 "gid":2147484181,
+                 "gid":2147484184,
                  "height":32,
                  "id":20,
                  "name":"Baa",
@@ -309,7 +309,7 @@
                  "y":741
                 }, 
                 {
-                 "gid":703,
+                 "gid":706,
                  "height":32,
                  "id":48,
                  "name":"Bub",
@@ -332,7 +332,7 @@
                  "y":561
                 }, 
                 {
-                 "gid":746,
+                 "gid":749,
                  "height":48,
                  "id":78,
                  "name":"Shepherd",
@@ -350,7 +350,7 @@
                  "y":640
                 }, 
                 {
-                 "gid":2147484447,
+                 "gid":2147484450,
                  "height":48,
                  "id":91,
                  "name":"Bender",
@@ -373,7 +373,7 @@
                  "y":731
                 }, 
                 {
-                 "gid":651,
+                 "gid":654,
                  "height":32,
                  "id":95,
                  "name":"Max Swagger",
@@ -396,7 +396,7 @@
                  "y":944
                 }, 
                 {
-                 "gid":1022,
+                 "gid":1025,
                  "height":32,
                  "id":125,
                  "name":"Felix",
@@ -424,7 +424,7 @@
                  "y":973.833333333334
                 }, 
                 {
-                 "gid":1043,
+                 "gid":1046,
                  "height":32,
                  "id":126,
                  "name":"Maru",
@@ -452,7 +452,7 @@
                  "y":1004.33333333333
                 }, 
                 {
-                 "gid":1061,
+                 "gid":1064,
                  "height":32,
                  "id":127,
                  "name":"B. Murray",
@@ -475,7 +475,7 @@
                  "y":983.833333333334
                 }, 
                 {
-                 "gid":1082,
+                 "gid":1085,
                  "height":32,
                  "id":128,
                  "name":"Deuteronomy",
@@ -503,7 +503,7 @@
                  "y":1003.58333333333
                 }, 
                 {
-                 "gid":1096,
+                 "gid":1099,
                  "height":32,
                  "id":129,
                  "name":"Rake",
@@ -526,7 +526,7 @@
                  "y":1047
                 }, 
                 {
-                 "gid":1097,
+                 "gid":1100,
                  "height":40,
                  "id":151,
                  "name":"Bert",
@@ -544,7 +544,7 @@
                  "y":535
                 }, 
                 {
-                 "gid":1116,
+                 "gid":1119,
                  "height":40,
                  "id":152,
                  "name":"Alfonso",
@@ -562,7 +562,7 @@
                  "y":505
                 }, 
                 {
-                 "gid":983,
+                 "gid":986,
                  "height":32,
                  "id":153,
                  "name":"Jackob",
@@ -580,7 +580,7 @@
                  "y":507
                 }, 
                 {
-                 "gid":1160,
+                 "gid":1163,
                  "height":48,
                  "id":192,
                  "name":"Marta",
@@ -603,7 +603,7 @@
                  "y":860
                 }, 
                 {
-                 "gid":1173,
+                 "gid":1176,
                  "height":32,
                  "id":196,
                  "name":"Chaos Fish",
@@ -621,7 +621,7 @@
                  "y":151
                 }, 
                 {
-                 "gid":1183,
+                 "gid":1186,
                  "height":64,
                  "id":198,
                  "name":"Fountain",
@@ -644,7 +644,7 @@
                  "y":736
                 }, 
                 {
-                 "gid":1187,
+                 "gid":1190,
                  "height":32,
                  "id":252,
                  "name":"Debug Exa 0",
@@ -662,7 +662,7 @@
                  "y":734
                 }, 
                 {
-                 "gid":1187,
+                 "gid":1190,
                  "height":32,
                  "id":253,
                  "name":"Debug Exa 3",
@@ -680,7 +680,7 @@
                  "y":734
                 }, 
                 {
-                 "gid":1187,
+                 "gid":1190,
                  "height":32,
                  "id":254,
                  "name":"Debug Exa",
@@ -698,7 +698,7 @@
                  "y":1211
                 }, 
                 {
-                 "gid":1187,
+                 "gid":1190,
                  "height":32,
                  "id":255,
                  "name":"Debug Exa 2",
@@ -716,7 +716,7 @@
                  "y":1296
                 }, 
                 {
-                 "gid":1192,
+                 "gid":1195,
                  "height":16,
                  "id":261,
                  "name":"Hamster",
@@ -739,7 +739,7 @@
                  "y":931
                 }, 
                 {
-                 "gid":1173,
+                 "gid":1176,
                  "height":32,
                  "id":262,
                  "name":"Credits Fish",
@@ -757,7 +757,7 @@
                  "y":507
                 }, 
                 {
-                 "gid":1208,
+                 "gid":1211,
                  "height":32,
                  "id":263,
                  "name":"Helga",
@@ -780,7 +780,7 @@
                  "y":397
                 }, 
                 {
-                 "gid":1271,
+                 "gid":1274,
                  "height":64,
                  "id":264,
                  "name":"Bob Moss",
@@ -2125,123 +2125,123 @@
          "source":"..\/entities\/entity-old_man.json"
         }, 
         {
-         "firstgid":356,
+         "firstgid":359,
          "source":"..\/entities\/entity-pipscat.json"
         }, 
         {
-         "firstgid":455,
+         "firstgid":458,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":473,
+         "firstgid":476,
          "source":"..\/entities\/entity-baby_goat.json"
         }, 
         {
-         "firstgid":497,
+         "firstgid":500,
          "source":"..\/entities\/entity-old_lady.json"
         }, 
         {
-         "firstgid":512,
+         "firstgid":515,
          "source":"..\/entities\/entity-trekkie.json"
         }, 
         {
-         "firstgid":533,
+         "firstgid":536,
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":596,
+         "firstgid":599,
          "source":"..\/entities\/entity-cleo.json"
         }, 
         {
-         "firstgid":620,
+         "firstgid":623,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":644,
+         "firstgid":647,
          "source":"..\/entities\/entity-tailor.json"
         }, 
         {
-         "firstgid":674,
+         "firstgid":677,
          "source":"..\/entities\/entity-eye_faerie.json"
         }, 
         {
-         "firstgid":698,
+         "firstgid":701,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":746,
+         "firstgid":749,
          "source":"..\/entities\/entity-dragon_skull.json"
         }, 
         {
-         "firstgid":782,
+         "firstgid":785,
          "source":"..\/entities\/entity-bender_sadbutt.json"
         }, 
         {
-         "firstgid":970,
+         "firstgid":973,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":994,
+         "firstgid":997,
          "source":"..\/entities\/entity-blitzball.json"
         }, 
         {
-         "firstgid":1018,
+         "firstgid":1021,
          "source":"..\/entities\/entity-felix.json"
         }, 
         {
-         "firstgid":1036,
+         "firstgid":1039,
          "source":"..\/entities\/entity-maru.json"
         }, 
         {
-         "firstgid":1057,
+         "firstgid":1060,
          "source":"..\/entities\/entity-bmurray.json"
         }, 
         {
-         "firstgid":1075,
+         "firstgid":1078,
          "source":"..\/entities\/entity-deut.json"
         }, 
         {
-         "firstgid":1096,
+         "firstgid":1099,
          "source":"..\/entities\/entity-rake.json"
         }, 
         {
-         "firstgid":1097,
+         "firstgid":1100,
          "source":"..\/entities\/entity-bert.json"
         }, 
         {
-         "firstgid":1115,
+         "firstgid":1118,
          "source":"..\/entities\/entity-alfonso.json"
         }, 
         {
-         "firstgid":1133,
+         "firstgid":1136,
          "source":"..\/entities\/entity-marta.json"
         }, 
         {
-         "firstgid":1157,
+         "firstgid":1160,
          "source":"..\/entities\/entity-marta-broom.json"
         }, 
         {
-         "firstgid":1173,
+         "firstgid":1176,
          "source":"..\/entities\/entity-goldfish.json"
         }, 
         {
-         "firstgid":1183,
+         "firstgid":1186,
          "source":"..\/entities\/entity-fountain.json"
         }, 
         {
-         "firstgid":1187,
+         "firstgid":1190,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":1189,
+         "firstgid":1192,
          "source":"..\/entities\/entity-hamster.json"
         }, 
         {
-         "firstgid":1207,
+         "firstgid":1210,
          "source":"..\/entities\/entity-helga.json"
         }, 
         {
-         "firstgid":1270,
+         "firstgid":1273,
          "source":"..\/entities\/entity-bobmoss.json"
         }],
  "tilewidth":32,

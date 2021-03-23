@@ -809,6 +809,18 @@
 			]
 		}
 	],
+	"dialog-timmy-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "timmy",
+			"name": "%SELF%",
+			"messages": [
+				"I've been trying to find books about the\nolympics.",
+				"Gosh, it'd be cool if I could get a gold\nmedal for the high jump!",
+				"I can jump, like, SO high!"
+			]
+		}
+	],
 	"dialog-debug-bypass-tuesday-q": [
 		{
 			"alignment": "BOTTOM_LEFT",

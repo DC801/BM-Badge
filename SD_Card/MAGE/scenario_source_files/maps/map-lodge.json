@@ -598,6 +598,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-timmy-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"timmy-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
