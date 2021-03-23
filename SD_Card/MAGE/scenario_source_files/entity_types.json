@@ -945,19 +945,19 @@
 		"animations": {
 			"idle": [
 				{
-					"tileid": 2,
+					"tileid": 5,
 					"flip_x": false
 				},
 				{
-					"tileid": 0,
+					"tileid": 3,
 					"flip_x": true
 				},
 				{
-					"tileid": 1,
+					"tileid": 4,
 					"flip_x": false
 				},
 				{
-					"tileid": 0,
+					"tileid": 3,
 					"flip_x": false
 				}
 			],
@@ -976,6 +976,42 @@
 				},
 				{
 					"tileid": 9,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 23,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": true
+				},
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
 					"flip_x": false
 				}
 			]
@@ -2345,6 +2381,24 @@
 				},
 				{
 					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
 					"flip_x": false
 				}
 			]
