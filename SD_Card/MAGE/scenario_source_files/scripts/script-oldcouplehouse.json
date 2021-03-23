@@ -36,22 +36,6 @@
 			"entity_type": "sheep"
 		}
 	],
-	"set_flag-bea-sequel": [
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-sequel",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-happy",
-			"bool_value": true
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-sequel"
-		}
-	],
 	"leave-oldcouplehouse": [
 		{
 			"action": "SET_WARP_STATE",
@@ -667,6 +651,76 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
 			"script": "show_dialog-bea-start"
+		}
+	],
+	"debug-bea-sequel-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bea-sequel-q"
+		}
+	],
+	"debug-bea-sequel-man": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-sequel",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-happy",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bea-sequel-man"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bea-sequel-q"
+		}
+	],
+	"debug-bea-sequel-noman": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-sequel",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea-happy",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bea-sequel-noman"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bea-sequel-q"
+		}
+	],
+	"no_debug-bea-sequel": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_debug-bea-sequel",
+			"doc": "Nothing changed."
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bea-sequel-q"
 		}
 	]
 }

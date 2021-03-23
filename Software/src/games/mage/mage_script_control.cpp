@@ -1203,7 +1203,7 @@ void MageScriptControl::showDialog(uint8_t * args, MageScriptState * resumeState
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	} else if (!MageDialog->isOpen) {
 		// will be 0 any time there is no response; no jump
-		if(MageDialog->mapLocalJumpScriptId) {
+		if(MageDialog->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
 			mapLocalJumpScript = MageDialog->mapLocalJumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;

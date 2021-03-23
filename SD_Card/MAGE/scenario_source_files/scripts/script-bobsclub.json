@@ -1044,5 +1044,75 @@
 			"entity": "%SELF%",
 			"script": "debug-begin-flail"
 		}
+	],
+	"debug-bob-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob-q"
+		}
+	],
+	"debug-bob-skipconvo": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobrock",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob-skipconvo"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bob-q"
+		}
+	],
+	"debug-bob-also-setnamebob": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Bob"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobrock",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob-also-setnamebob"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bob-q"
+		}
+	],
+	"debug-bob-teleport": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobsclub",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bob-teleport"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-bobsclub"
+		}
+	],
+	"no_debug-bob": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bob-q"
+		}
 	]
 }

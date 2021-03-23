@@ -64,7 +64,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 MageDialogControl::MageDialogControl() {
 	isOpen = false;
-	mapLocalJumpScriptId = 0;
+	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
 	triggeringEntityId = 0;
 	currentDialogIndex = 0;
 	currentDialogAddress = 0;
@@ -127,7 +127,7 @@ void MageDialogControl::load(
 	loadNextScreen();
 
 	isOpen = true;
-	mapLocalJumpScriptId = 0;
+	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::loadNextScreen() {
@@ -160,34 +160,46 @@ void MageDialogControl::loadNextScreen() {
 	);
 	ROM_ENDIAN_U2_BUFFER(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
-	currentDialogAddress += (currentScreen.messageCount % 2) * sizeOfMessageIndex;
 	currentMessage = MageGame->getString(
 		messageIds[currentMessageIndex],
 		triggeringEntityId
 	);
-	uint8_t sizeOfResponseIndex = sizeof(MageDialogResponse);
-	uint32_t sizeOfResponseIds = sizeOfResponseIndex * currentScreen.responseCount;
+	uint8_t sizeOfResponse = sizeof(MageDialogResponse);
+	uint32_t sizeOfResponses = sizeOfResponse * currentScreen.responseCount;
 	responses.reset();
 	responses = std::make_unique<MageDialogResponse[]>(currentScreen.responseCount);
 	responseLabels.reset();
 	responseLabels = std::make_unique<std::string[]>(currentScreen.responseCount);
 	EngineROM_Read(
 		currentDialogAddress,
-		sizeOfResponseIds,
+		sizeOfResponses,
 		(uint8_t *)responses.get(),
 		"Failed to read Dialog property 'responses'"
 	);
-	// this is probably cheating, but these structs are just a pair of uint16_t values,
-	// so... it will probably work?
-	ROM_ENDIAN_U2_BUFFER(responses.get(), currentScreen.responseCount * 2);
 	for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
+		responses[responseIndex].stringIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].stringIndex);
+		responses[responseIndex].mapLocalScriptIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].mapLocalScriptIndex);
 		responseLabels[responseIndex] = MageGame->getString(
 			responses[responseIndex].stringIndex,
 			triggeringEntityId
 		);
+		printf(
+			"currentDialogIndex: %d\n"
+			"responseIndex: %d\n"
+			"response.stringIndex: %d\n"
+			"response.mapLocalScriptIndex: %d\n"
+			"response: %s\n",
+			currentDialogIndex,
+			responseIndex,
+			responses[responseIndex].stringIndex,
+			responses[responseIndex].mapLocalScriptIndex,
+			responseLabels[responseIndex].c_str()
+		);
 	}
-	currentDialogAddress += sizeOfResponseIds;
-	currentDialogAddress += (currentScreen.responseCount % 2) * sizeOfResponseIndex;
+	currentDialogAddress += sizeOfResponses;
+
+	// padding at the end os the screen struct
+	currentDialogAddress += ((currentScreen.messageCount + 1) % 2) * sizeOfMessageIndex;
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageIndex = currentFrameTileset->ImageId();
@@ -213,7 +225,7 @@ void MageDialogControl::advanceMessage() {
 
 void MageDialogControl::closeDialog() {
 	isOpen = false;
-	mapLocalJumpScriptId = 0;
+	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::update() {

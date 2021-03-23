@@ -627,5 +627,64 @@
 				"There sure are a lot of Bobs in the world."
 			]
 		}
+	],
+	"dialog-debug-bob-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"How to Bob?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"responses_text": [
+				{
+					"response_text": "Skip Bob Austin conversation",
+					"script": "debug-bob-skipconvo"
+				},
+				{
+					"response_text": "Above + set name Bob",
+					"script": "debug-bob-also-setnamebob"
+				},
+				{
+					"response_text": "Skip cutscene and teleport",
+					"script": "debug-bob-teleport"
+				},
+				{
+					"response_text": "Never mind",
+					"script": "no_debug-bob"
+				}
+			]
+		}
+	],
+	"dialog-debug-bob-skipconvo": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Bob Austin has been spoken to."
+			]
+		}
+	],
+	"dialog-debug-bob-also-setnamebob": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Bob Austin has been spoken to, and your\nname is Bob."
+			]
+		}
+	],
+	"dialog-debug-bob-teleport": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Teleportation in progress."
+			]
+		}
 	]
 }

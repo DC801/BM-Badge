@@ -86,7 +86,7 @@
                  "y":222.830691185796
                 }, 
                 {
-                 "gid":230,
+                 "gid":245,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -104,7 +104,7 @@
                  "y":219.890932149651
                 }, 
                 {
-                 "gid":296,
+                 "gid":311,
                  "height":32,
                  "id":8,
                  "name":"Debug Exa",
@@ -112,7 +112,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"set_flag-bea-sequel"
+                         "value":"debug-bea-sequel-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -170,15 +170,15 @@
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":224,
+         "firstgid":239,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":272,
+         "firstgid":287,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":296,
+         "firstgid":311,
          "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,

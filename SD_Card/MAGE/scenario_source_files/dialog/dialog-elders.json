@@ -787,35 +787,5 @@
 				"All story flags set to true."
 			]
 		}
-	],
-	"dialog-debug-bob": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Debug Sheep",
-			"messages": [
-				"Bob shortcut activated."
-			]
-		}
-	],
-	"dialog-debug-bob2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Debug Sheep",
-			"messages": [
-				"Extra Bob shortcut activated."
-			]
-		}
-	],
-	"dialog-debug-bob3": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Debug Sheep",
-			"messages": [
-				"Teleportation in progress."
-			]
-		}
 	]
 }
