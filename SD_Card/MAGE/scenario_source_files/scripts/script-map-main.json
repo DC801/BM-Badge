@@ -288,12 +288,6 @@
 			"dialog": "dialog-sheep"
 		}
 	],
-	"show_dialog-timmy": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-timmy"
-		}
-	],
 	"show_dialog-cleo1": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -702,6 +696,55 @@
 			"bool_value": true
 		}
 	],
+	"show_dialog-hamster-start": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-hamster-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hamster",
+			"expected_bool": true,
+			"success_script": "show_dialog-hamster-start-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hamster-start"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hamster",
+			"bool_value": true
+		}
+	],
+	"show_dialog-hamster-start-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hamster-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-hamster-start"
+		}
+	],
+	"show_dialog-hamster-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hamster-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-hamster-start"
+		}
+	],
 	"debug-reset-all-q": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -929,6 +972,11 @@
         },
         {
             "action": "SET_SAVE_FLAG",
+            "save_flag": "hamster",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
             "save_flag": "smith",
             "bool_value": true
         }
@@ -1126,6 +1174,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "timmy",
+            "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "hamster",
             "bool_value": false
         },
 		{

@@ -2756,6 +2756,11 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-timmy-start"
 		}
 	],
 	"show_dialog-timmy-glitched": [
@@ -2765,14 +2770,14 @@
 			"doc": "Ner ubg qbtf n fnaqjvpu?"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "%SELF%",
-			"script": "show_dialog-timmy-start"
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-timmy-start"
 		}
 	],
 	"bypass-tuesday": [
