@@ -393,7 +393,31 @@
 			"bool_value": true
 		}
 	],
-	"solve-ethernet-puzzle": [
+	"debug-ethernet-puzzle-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-ethernet-puzzle-q",
+			"doc": "Restore Ether Nettle?"
+		}
+	],
+	"no_debug-ethernet-puzzle": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_debug-ethernet-puzzle",
+			"doc": "Wanna do it yourself, huh?"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-ethernet-puzzle-q"
+		}
+	],
+	"debug-ethernet-puzzle": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "make-ethernettle-correct"
@@ -411,8 +435,13 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-solve-ethernet-puzzle",
+			"dialog": "dialog-debug-ethernet-puzzle",
 			"doc": "Ether Nettle restored."
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-ethernet-puzzle-q"
 		}
 	],
 	"show_dialog-trekkie-start-s": [

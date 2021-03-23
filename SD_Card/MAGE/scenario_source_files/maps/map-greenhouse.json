@@ -197,7 +197,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"solve-ethernet-puzzle"
+                         "value":"debug-ethernet-puzzle-q"
                         }],
                  "rotation":0,
                  "type":"",

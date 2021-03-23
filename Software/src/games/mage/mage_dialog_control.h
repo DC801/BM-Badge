@@ -100,7 +100,7 @@ class MageDialogControl {
 
 	public:
 		bool isOpen;
-		uint16_t mapLocalJumpScriptId;
+		int32_t mapLocalJumpScriptId;
 		MageDialogControl();
 		uint32_t size();
 		void load(

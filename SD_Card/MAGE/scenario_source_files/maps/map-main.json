@@ -688,7 +688,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-bob"
+                         "value":"debug-bob-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -2094,7 +2094,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":265,
+ "nextobjectid":266,
  "orientation":"orthogonal",
  "properties":[
         {
