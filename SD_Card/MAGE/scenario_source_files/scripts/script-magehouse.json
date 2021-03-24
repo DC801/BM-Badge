@@ -373,6 +373,11 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Shepherd",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Max Swagger",
 			"geometry": "catwalk-hide"
 		},
