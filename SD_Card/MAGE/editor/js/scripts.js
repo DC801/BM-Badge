@@ -394,6 +394,13 @@ var actionFieldsMap = {
 		{propertyName: 'comparison', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
+	SLOT_SAVE: [],
+	SLOT_LOAD: [
+		{propertyName: 'slot', size: 1},
+	],
+	SLOT_ERASE: [
+		{propertyName: 'slot', size: 1},
+	],
 	PLAY_SOUND_CONTINUOUS: null,
 	PLAY_SOUND_INTERRUPT: null,
 };
@@ -487,6 +494,9 @@ var actionNames = [
 	'COPY_VARIABLE',
 	'CHECK_VARIABLE',
 	'CHECK_VARIABLES',
+	'SLOT_SAVE',
+	'SLOT_LOAD',
+	'SLOT_ERASE',
 	'PLAY_SOUND_CONTINUOUS',
 	'PLAY_SOUND_INTERRUPT',
 ];
@@ -993,6 +1003,7 @@ var actionPropertyNameToHandlerMap = {
 	play_count: getByteFromAction,
 	frequency: getTwoBytesFromAction,
 	font_id: getByteFromAction,
+	slot: getByteFromAction,
 	direction: getDirectionFromAction,
 	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,

@@ -801,6 +801,24 @@
                  "width":64,
                  "x":424,
                  "y":347
+                }, 
+                {
+                 "gid":1285,
+                 "height":32,
+                 "id":266,
+                 "name":"Save Floppy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show-save_game"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":960,
+                 "y":512
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2092,7 +2110,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":266,
+ "nextobjectid":267,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -2248,6 +2266,10 @@
         {
          "firstgid":1273,
          "source":"..\/entities\/entity-bobmoss.json"
+        }, 
+        {
+         "firstgid":1285,
+         "source":"..\/entities\/entity-save_floppy.json"
         }],
  "tilewidth":32,
  "type":"map",

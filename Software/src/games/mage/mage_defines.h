@@ -76,14 +76,13 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
+#define MAGE_SAVE_GAME_SLOTS 3
+
 //this is the number of chars that are used in the entity struct as part of the entity name
 #define MAGE_ENTITY_NAME_LENGTH 12
-
-// When saving the state of the game back to the ROM chip,
-// it can write only whole PAGES of bytes at a time.
-// This is the number of bytes that you can write save flags into.
-// Hamster says this is configurable to 256 OR 512.
-#define MAGE_SAVE_FLAG_PAGE_SIZE 256
+#define MAGE_SAVE_FLAG_COUNT 2048
+#define MAGE_SAVE_FLAG_BYTE_COUNT (MAGE_SAVE_FLAG_COUNT / 8)
+#define MAGE_SCRIPT_VARIABLE_COUNT 256
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT (-1)
@@ -129,6 +128,14 @@ typedef enum : uint8_t {
 	GTEQ,
 	GT
 } MageCheckComparison;
+
+typedef struct {
+	char name[MAGE_ENTITY_NAME_LENGTH] = {0};
+	uint16_t currentMapId = DEFAULT_MAP;
+	uint16_t warpState = MAGE_NO_WARP_STATE;
+	uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] = {0};
+	uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] = {0};
+} MageSaveGame;
 
 typedef enum : uint8_t {
 	x = 12,
@@ -268,6 +275,9 @@ typedef enum : uint8_t {
 	COPY_VARIABLE,
 	CHECK_VARIABLE,
 	CHECK_VARIABLES,
+	SLOT_SAVE,
+	SLOT_LOAD,
+	SLOT_ERASE,
 	PLAY_SOUND_CONTINUOUS,
 	PLAY_SOUND_INTERRUPT,
 	//this tracks the number of actions we're at:
@@ -1107,6 +1117,36 @@ typedef struct {
 	uint8_t expectedBool;
 	uint8_t paddingG;
 } ActionCheckVariables;
+
+typedef struct {
+	uint8_t paddingA;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSlotSave;
+
+typedef struct {
+	uint8_t slotIndex;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSlotLoad;
+
+typedef struct {
+	uint8_t slotIndex;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSlotErase;
 
 typedef struct {
 	uint16_t soundId;

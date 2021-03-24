@@ -1,0 +1,135 @@
+{
+	"dialog-main_menu": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Main Menu",
+			"messages": [
+				"CHOOSE YOUR FATE"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "New Game",
+					"script": "show-new_game"
+				},
+				{
+					"label": "Load Game",
+					"script": "show-load_game"
+				},
+				{
+					"label": "Erase Save",
+					"script": "show-erase_save"
+				}
+			]
+		}
+	],
+	"dialog-new_game": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "New Game",
+			"messages": [
+				"CHOOSE SAVE SLOT"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Slot 1",
+					"script": "new_game-0"
+				},
+				{
+					"label": "Slot 2",
+					"script": "new_game-1"
+				},
+				{
+					"label": "Slot 3",
+					"script": "new_game-2"
+				},
+				{
+					"label": "Back",
+					"script": "on_load-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-load_game": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Load Game",
+			"messages": [
+				"CHOOSE SAVE SLOT"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Slot 1",
+					"script": "load_game-0"
+				},
+				{
+					"label": "Slot 2",
+					"script": "load_game-1"
+				},
+				{
+					"label": "Slot 3",
+					"script": "load_game-2"
+				},
+				{
+					"label": "Back",
+					"script": "on_load-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-erase_save": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Erase Save",
+			"messages": [
+				"BOOM TIME!!"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Slot 1",
+					"script": "erase_save-0"
+				},
+				{
+					"label": "Slot 2",
+					"script": "erase_save-1"
+				},
+				{
+					"label": "Slot 3",
+					"script": "erase_save-2"
+				},
+				{
+					"label": "Back",
+					"script": "on_load-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-save_game": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "mage",
+			"name": "Save Game",
+			"messages": [
+				"Would you like to save your progress?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "save_game-yes"
+				},
+				{
+					"label": "No",
+					"script": "save_game-no"
+				}
+			]
+		}
+	]
+}

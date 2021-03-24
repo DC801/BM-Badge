@@ -263,13 +263,13 @@
 				"Show credits?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Yes",
+					"label": "Yes",
 					"script": "debug-roll-credits"
 				},
 				{
-					"response_text": "No",
+					"label": "No",
 					"script": "no_debug-roll-credits"
 				}
 			]

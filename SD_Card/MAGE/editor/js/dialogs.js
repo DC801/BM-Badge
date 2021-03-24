@@ -89,7 +89,7 @@ var serializeDialogScreen = function (
 	fileNameMap,
 	scenarioData,
 ) {
-	var responses = dialogScreen.responses_text || []
+	var responses = dialogScreen.options || []
 	var headerLength = getPaddedHeaderLength(
 		+ 2 // uint16_t name_string_index
 		+ 2 // uint16_t border_tileset_index
@@ -183,7 +183,7 @@ var serializeDialogScreen = function (
 	});
 	responses.forEach(function (response) {
 		var stringId = serializeString(
-			response.response_text,
+			response.label,
 			map,
 			fileNameMap,
 			scenarioData,

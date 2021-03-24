@@ -30,8 +30,6 @@ class MageScriptControl
 		//calls a new script, the original entity can be updated to match.
 		MageScriptType currentScriptType;
 
-		uint8_t saveFlags[MAGE_SAVE_FLAG_PAGE_SIZE] = {0};
-
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;
@@ -248,6 +246,12 @@ class MageScriptControl
 		void checkVariable(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I+C
 		void checkVariables(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void slotSave(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void slotLoad(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void slotErase(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (sounds should begin playing when called by an action and continue until the sound file ends)
 		void playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
@@ -261,8 +265,6 @@ class MageScriptControl
 		//when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
 		//the new map will be loaded at the beginning of the next tick
 		int32_t mapLoadId;
-
-		uint16_t scriptVariables[256] = {0};
 
 		MageScriptControl();
 

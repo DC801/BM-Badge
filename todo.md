@@ -165,7 +165,7 @@
 	- [x] Geometry::inside_poly(point) collision detection function
 	- [x] draw() renders geometry to screen
 - [ ] Collision System
-	- [ ] For Tiles
+	- [x] For Tiles
 	- [ ] For Entities
 - [ ] Dialog Data Type Implementation:
 	- [x] Display Name - either stringId, or entityId
@@ -181,10 +181,10 @@
 	- [x] Please stop player walking when a dialog shows
 	- [ ] display font
 	- [ ] voice sound Id
-	- [ ] Dialog Responses:
-		- [ ] response TypeId:
-			- [ ] NO_RESPONSE = 0
-			- [ ] SELECT_FROM_SHORT_LIST = 1
+	- [x] Dialog Responses:
+		- [x] response TypeId:
+			- [x] NO_RESPONSE = 0
+			- [x] SELECT_FROM_SHORT_LIST = 1
 			- [ ] SELECT_FROM_LONG_LIST = 2
 			- [ ] ENTER_NUMBER = 2
 			- [ ] ENTER_ALPHANUMERIC = 3
@@ -195,14 +195,15 @@
 				- [ ] enter a numerical code
 				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 			- [ ] new script and/or dialog to call depending on player response
-		- [ ] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
+		- [x] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long
 - [ ] Save system with flags
 	- [ ] Player Name (12 bytes, like all other entities)
-	- [ ] On map init, replace player name into PlayerEntity
+	- [x] On map init, replace player name into PlayerEntity
 	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
+	
 - [ ] Allow upload of game.dat to ROM chip using nrfjprog
 	- [ ] Convert game.daty into a game.hex file that writes data to address 0x12000000 and up on the ROM chip.
 	- [ ] Use qcustominit.ini file added with this commit and the following command to upload:

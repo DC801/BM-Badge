@@ -32,9 +32,6 @@ game based on input data and rendering it all to the screen every frame.
 class MageGameControl
 {
 private:
-	//Stores the current map's index value
-	uint32_t currentMapId;
-
 	//these header objects store the header information for all datasets on the ROM,
 	//including address offsets for each item, and the length of the item in memory.
 	MageHeader mapHeader;
@@ -97,10 +94,9 @@ public:
 	//the entities[] array and also the offset to it from hackableDataAddress
 	int32_t playerEntityIndex;
 
-	//used to store a stringId which `CHECK_WARP_STATE` action compares against
-	int32_t warpState;
-
-	char playerName[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
+	uint8_t currentSaveIndex;
+	MageSaveGame saveGames[MAGE_SAVE_GAME_SLOTS];
+	MageSaveGame *currentSave;
 
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
@@ -120,6 +116,11 @@ public:
 
 	//returns the size in memory of the MageGameControl object.
 	uint32_t Size() const;
+
+	void readSavesFromRomIntoRam();
+	void gameSave();
+	void gameErase(uint8_t slotIndex);
+	void gameLoad(uint8_t slotIndex);
 
 	//this will return a specific MageTileset object by index.
 	const MageTileset& Tileset(uint32_t index) const;
