@@ -757,7 +757,7 @@
                  "tileid":172
                 }, 
                 {
-                 "duration":1000,
+                 "duration":75,
                  "tileid":176
                 }],
          "id":92,
@@ -850,7 +850,7 @@
                  "tileid":173
                 }, 
                 {
-                 "duration":1000,
+                 "duration":75,
                  "tileid":177
                 }],
          "id":93,
@@ -943,7 +943,7 @@
                  "tileid":174
                 }, 
                 {
-                 "duration":1000,
+                 "duration":75,
                  "tileid":178
                 }],
          "id":94,
@@ -1036,7 +1036,7 @@
                  "tileid":175
                 }, 
                 {
-                 "duration":1000,
+                 "duration":75,
                  "tileid":179
                 }],
          "id":95,

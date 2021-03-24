@@ -328,8 +328,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":1040,
-                 "y":561
+                 "x":1041,
+                 "y":563
                 }, 
                 {
                  "gid":749,
@@ -762,7 +762,7 @@
                  "y":507
                 }, 
                 {
-                 "gid":1211,
+                 "gid":1229,
                  "height":32,
                  "id":263,
                  "name":"Helga",
@@ -785,7 +785,7 @@
                  "y":397
                 }, 
                 {
-                 "gid":1274,
+                 "gid":1292,
                  "height":64,
                  "id":264,
                  "name":"Bob Moss",
@@ -803,7 +803,7 @@
                  "y":347
                 }, 
                 {
-                 "gid":1285,
+                 "gid":1303,
                  "height":32,
                  "id":266,
                  "name":"Save Floppy",
@@ -2260,15 +2260,15 @@
          "source":"..\/entities\/entity-hamster.json"
         }, 
         {
-         "firstgid":1210,
+         "firstgid":1228,
          "source":"..\/entities\/entity-helga.json"
         }, 
         {
-         "firstgid":1273,
+         "firstgid":1291,
          "source":"..\/entities\/entity-bobmoss.json"
         }, 
         {
-         "firstgid":1285,
+         "firstgid":1303,
          "source":"..\/entities\/entity-save_floppy.json"
         }],
  "tilewidth":32,

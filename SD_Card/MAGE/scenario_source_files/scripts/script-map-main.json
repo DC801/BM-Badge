@@ -729,6 +729,12 @@
 			"dialog": "dialog-hamster-start-s"
 		},
 		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 2
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-hamster-start"

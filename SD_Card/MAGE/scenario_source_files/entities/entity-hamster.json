@@ -8,24 +8,40 @@
         }
     },
  "image":"entity-hamster.png",
- "imageheight":96,
+ "imageheight":192,
  "imagewidth":48,
  "margin":0,
  "name":"entity-hamster",
  "spacing":0,
- "tilecount":18,
+ "tilecount":36,
  "tiledversion":"1.4.3",
  "tileheight":16,
  "tiles":[
         {
          "animation":[
                 {
-                 "duration":100,
-                 "tileid":0
+                 "duration":125,
+                 "tileid":18
                 }, 
                 {
-                 "duration":400,
-                 "tileid":3
+                 "duration":125,
+                 "tileid":21
+                }, 
+                {
+                 "duration":125,
+                 "tileid":24
+                }, 
+                {
+                 "duration":125,
+                 "tileid":27
+                }, 
+                {
+                 "duration":125,
+                 "tileid":30
+                }, 
+                {
+                 "duration":125,
+                 "tileid":33
                 }],
          "id":0,
          "type":"hamster"
@@ -33,12 +49,28 @@
         {
          "animation":[
                 {
-                 "duration":100,
-                 "tileid":1
+                 "duration":125,
+                 "tileid":19
                 }, 
                 {
-                 "duration":400,
-                 "tileid":4
+                 "duration":125,
+                 "tileid":22
+                }, 
+                {
+                 "duration":125,
+                 "tileid":25
+                }, 
+                {
+                 "duration":125,
+                 "tileid":28
+                }, 
+                {
+                 "duration":125,
+                 "tileid":31
+                }, 
+                {
+                 "duration":125,
+                 "tileid":34
                 }],
          "id":1,
          "type":"hamster"
@@ -46,12 +78,28 @@
         {
          "animation":[
                 {
-                 "duration":100,
-                 "tileid":2
+                 "duration":125,
+                 "tileid":20
                 }, 
                 {
-                 "duration":400,
-                 "tileid":5
+                 "duration":125,
+                 "tileid":23
+                }, 
+                {
+                 "duration":125,
+                 "tileid":26
+                }, 
+                {
+                 "duration":125,
+                 "tileid":29
+                }, 
+                {
+                 "duration":125,
+                 "tileid":32
+                }, 
+                {
+                 "duration":125,
+                 "tileid":35
                 }],
          "id":2,
          "type":"hamster"
