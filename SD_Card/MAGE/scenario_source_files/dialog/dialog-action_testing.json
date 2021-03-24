@@ -423,21 +423,21 @@
 				"How do you react to the mysterious goat?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Do nothing",
+					"label": "Do nothing",
 					"script": "response-do_nothing"
 				},
 				{
-					"response_text": "Pet The Goat",
+					"label": "Pet The Goat",
 					"script": "response-pet_the_goat"
 				},
 				{
-					"response_text": "Feed The Goat",
+					"label": "Feed The Goat",
 					"script": "response-feed_the_goat"
 				},
 				{
-					"response_text": "Give the Goat a Sugar Cube",
+					"label": "Give the Goat a Sugar Cube",
 					"script": "response-give_goat_sugar_cube"
 				}
 			]

@@ -637,21 +637,21 @@
 				"How to Bob?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Skip Bob Austin conversation",
+					"label": "Skip Bob Austin conversation",
 					"script": "debug-bob-skipconvo"
 				},
 				{
-					"response_text": "Above + set name Bob",
+					"label": "Above + set name Bob",
 					"script": "debug-bob-also-setnamebob"
 				},
 				{
-					"response_text": "Skip cutscene and teleport",
+					"label": "Skip cutscene and teleport",
 					"script": "debug-bob-teleport"
 				},
 				{
-					"response_text": "Never mind",
+					"label": "Never mind",
 					"script": "no_debug-bob"
 				}
 			]

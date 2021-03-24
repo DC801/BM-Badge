@@ -1,0 +1,143 @@
+{
+	"on_load-main_menu": [
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "center"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-main_menu"
+		}
+	],
+	"show-new_game": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-new_game"
+		}
+	],
+	"show-load_game": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-load_game"
+		}
+	],
+	"show-erase_save": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-erase_save"
+		}
+	],
+	"show-save_game": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-save_game"
+		}
+	],
+	"save_game-yes": [
+		{
+			"action": "SLOT_SAVE"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"script": "show-save_game",
+			"entity": "%SELF%"
+		}
+	],
+	"save_game-no": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"script": "show-save_game",
+			"entity": "%SELF%"
+		}
+	],
+	"new_game-0": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 0
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"new_game-1": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 1
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"new_game-2": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 2
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"load_game-0": [
+		{
+			"action": "SLOT_LOAD",
+			"slot": 0
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"load_game-1": [
+		{
+			"action": "SLOT_LOAD",
+			"slot": 1
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"load_game-2": [
+		{
+			"action": "SLOT_LOAD",
+			"slot": 2
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-main"
+		}
+	],
+	"erase_save-0": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 0
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-main_menu"
+		}
+	],
+	"erase_save-1": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 1
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-main_menu"
+		}
+	],
+	"erase_save-2": [
+		{
+			"action": "SLOT_ERASE",
+			"slot": 2
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-main_menu"
+		}
+	]
+}

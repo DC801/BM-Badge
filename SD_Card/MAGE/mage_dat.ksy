@@ -625,6 +625,9 @@ enums:
     85: copy_variable
     86: check_variable
     87: check_variables
+    88: slot_save
+    89: slot_load
+    87: slot_erase
     88: play_sound_continuous
     89: play_sound_interrupt
 

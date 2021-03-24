@@ -271,17 +271,17 @@
 				"Set all save flags?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 			{
-					"response_text": "Set all to FALSE",
+					"label": "Set all to FALSE",
 					"script": "debug-reset-all-false"
 				},
 				{
-					"response_text": "Set all to TRUE (except winning)",
+					"label": "Set all to TRUE (except winning)",
 					"script": "debug-reset-all-true"
 				},
 				{
-					"response_text": "Never mind",
+					"label": "Never mind",
 					"script": "no_debug-reset-all"
 				}
 			]
@@ -326,13 +326,13 @@
 				"Go to debug map hub?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 			{
-					"response_text": "Yes",
+					"label": "Yes",
 					"script": "debug-hub"
 				},
 				{
-					"response_text": "No",
+					"label": "No",
 					"script": "no_debug-hub"
 				}
 			]
@@ -357,13 +357,13 @@
 				"Position rake in lake?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Yes",
+					"label": "Yes",
 					"script": "debug-win-rake"
 				},
 				{
-					"response_text": "No",
+					"label": "No",
 					"script": "no_debug-win-rake"
 				}
 			]

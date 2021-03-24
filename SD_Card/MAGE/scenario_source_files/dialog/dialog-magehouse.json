@@ -229,13 +229,13 @@
 				"Go on a morning walk?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Yes",
+					"label": "Yes",
 					"script": "debug-walk-to-lodge"
 				},
 				{
-					"response_text": "No",
+					"label": "No",
 					"script": "no_debug-walk-to-lodge"
 				}
 			]
@@ -250,13 +250,13 @@
 				"Start the beginning cutscene?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
-			"responses_text": [
+			"options": [
 				{
-					"response_text": "Yes",
+					"label": "Yes",
 					"script": "debug-goodmorning"
 				},
 				{
-					"response_text": "No",
+					"label": "No",
 					"script": "no_debug-goodmorning"
 				}
 			]
