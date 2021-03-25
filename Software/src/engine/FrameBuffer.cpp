@@ -1676,9 +1676,12 @@ void FrameBuffer::printMessage(const char *text, GFXfont font, uint16_t color, i
 	m_cursor_x = m_cursor_area.xs;
 	m_cursor_y = y + (font.yAdvance / 2);
 
-	for (uint16_t i = 0; i < strlen(text); i++)
-	{
-		write_char(text[i], font);
+	// this prevents crashing if the first character of the string is null
+	if(text[0] != '\0') {
+		for (uint16_t i = 0; i < strlen(text); i++)
+		{
+			write_char(text[i], font);
+		}
 	}
 	m_cursor_area.xs = 0;
 }

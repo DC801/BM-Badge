@@ -76,7 +76,6 @@ MageDialogControl::MageDialogControl() {
 	currentResponseIndex = 0;
 	messageIds = std::make_unique<uint16_t[]>(0);
 	responses = std::make_unique<MageDialogResponse[]>(0);
-	responseLabels = std::make_unique<std::string[]>(0);
 	currentScreen = {0};
 }
 
@@ -99,7 +98,6 @@ uint32_t MageDialogControl::size() {
 		+ sizeof(std::string) // currentMessage
 		+ sizeof(uint16_t) * currentScreen.messageCount // messageIds
 		+ sizeof(MageDialogResponse) * currentScreen.responseCount // responses
-		+ sizeof(std::string) * currentScreen.responseCount // responseLabels
 		+ sizeof(isOpen)
 	);
 }
@@ -168,8 +166,6 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfResponses = sizeOfResponse * currentScreen.responseCount;
 	responses.reset();
 	responses = std::make_unique<MageDialogResponse[]>(currentScreen.responseCount);
-	responseLabels.reset();
-	responseLabels = std::make_unique<std::string[]>(currentScreen.responseCount);
 	EngineROM_Read(
 		currentDialogAddress,
 		sizeOfResponses,
@@ -179,21 +175,15 @@ void MageDialogControl::loadNextScreen() {
 	for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
 		responses[responseIndex].stringIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].stringIndex);
 		responses[responseIndex].mapLocalScriptIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].mapLocalScriptIndex);
-		responseLabels[responseIndex] = MageGame->getString(
-			responses[responseIndex].stringIndex,
-			triggeringEntityId
-		);
-		printf(
-			"currentDialogIndex: %d\n"
-			"responseIndex: %d\n"
-			"response.stringIndex: %d\n"
-			"response.mapLocalScriptIndex: %d\n"
-			"response: %s\n",
+		debug_print(
+			"currentDialogIndex: %d\r\n"
+			"responseIndex: %d\r\n"
+			"response.stringIndex: %d\r\n"
+			"response.mapLocalScriptIndex: %d\r\n",
 			currentDialogIndex,
 			responseIndex,
 			responses[responseIndex].stringIndex,
-			responses[responseIndex].mapLocalScriptIndex,
-			responseLabels[responseIndex].c_str()
+			responses[responseIndex].mapLocalScriptIndex
 		);
 	}
 	currentDialogAddress += sizeOfResponses;
@@ -316,10 +306,13 @@ void MageDialogControl::drawDialogBox(
 			flags = 0b00000011;
 			x = offsetX + tileWidth + bounce;
 			y = offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6;
-			// render all of the responseLabels
+			// render all of the response labels
 			for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
 				mage_canvas->printMessage(
-					responseLabels[responseIndex].c_str(),
+					MageGame->getString(
+						responses[responseIndex].stringIndex,
+						triggeringEntityId
+					).c_str(),
 					Monaco9,
 					0xffff,
 					offsetX + (2 * tileWidth) + 8,

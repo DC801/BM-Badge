@@ -85,7 +85,6 @@ class MageDialogControl {
 		std::string currentMessage;
 		std::unique_ptr<uint16_t[]>messageIds;
 		std::unique_ptr<MageDialogResponse[]>responses;
-		std::unique_ptr<std::string[]>responseLabels;
 		uint8_t getTileIdFromXY(
 			uint8_t x,
 			uint8_t y,
