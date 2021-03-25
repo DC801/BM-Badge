@@ -50,8 +50,10 @@ void handleScripts()
 	//complete any non-blocking actions that were called when the map was first loaded,
 	//but it will not allow it to run the script again once it is completed.
 	MageScript->handleMapOnLoadScript(false);
+	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	MageScript->handleMapOnTickScript();
+	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	for(uint8_t i = 0; i < MageGame->Map().EntityCount(); i++)
 	{
 		//this script will not initiate any new onInteract scripts. It will simply run an
@@ -59,9 +61,11 @@ void handleScripts()
 		//the struct is initialized in MageGame->applyUniversalInputs() when the interact
 		//button is pressed.
 		MageScript->handleEntityOnInteractScript(i);
+		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 		//handle Entity onTick scripts for the local entity at Id 'i':
 		//these scripts will run every tick, starting from the beginning as they complete.
 		MageScript->handleEntityOnTickScript(i);
+		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	}
 }
 
