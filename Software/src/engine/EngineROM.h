@@ -30,10 +30,12 @@
 //this is all the bytes on our ROM chip. We aren't able to write more than this
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
-//We are also subtracting 4096 for ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE
+//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data and the end of rom
+#define ENGINE_ROM_SAVE_GAME_SLOTS 3
 #define ENGINE_ROM_QSPI_CHIP_SIZE 33554432
-#define ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE (ENGINE_ROM_ERASE_PAGE_SIZE)
-#define ENGINE_ROM_MAX_DAT_FILE_SIZE (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_FLAG_RESERVED_MEMORY_SIZE)
+#define ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS)
+#define ENGINE_ROM_MAX_DAT_FILE_SIZE (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE)
+#define ENGINE_ROM_SAVE_OFFSET (ENGINE_ROM_MAX_DAT_FILE_SIZE)
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the EngineROM_Verify function returns 
@@ -60,6 +62,18 @@ bool EngineROM_Verify(
 	uint32_t address,
 	uint32_t length,
 	const uint8_t *data
+);
+uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex);
+void EngineROM_ReadSaveSlot(
+	uint8_t slotIndex,
+	size_t length,
+	uint8_t *data
+);
+void EngineROM_EraseSaveSlot(uint8_t slotIndex);
+void EngineROM_WriteSaveSlot(
+	uint8_t slotIndex,
+	size_t length,
+	uint8_t *hauntedDataPointer
 );
 bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat);
 

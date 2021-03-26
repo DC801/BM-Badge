@@ -22,9 +22,8 @@ MageGameControl::MageGameControl()
 	offset += ENGINE_ROM_TIMESTAMP_LENGTH; //skip timestamp string at front of .dat file
 
 	currentSaveIndex = 0;
-	currentSave = &saveGames[currentSaveIndex];
-
-	readSavesFromRomIntoRam();
+	MageSaveGame newSave = {};
+	currentSave = newSave;
 
 	mapHeader = MageHeader(offset);
 	offset += mapHeader.size();
@@ -106,7 +105,9 @@ MageGameControl::MageGameControl()
 	playerHasHexEditorControl = true;
 
 	//load the map
-	PopulateMapData(currentSave->currentMapId);
+	PopulateMapData(currentSave.currentMapId);
+
+	saveGameSlotLoad(currentSaveIndex);
 }
 
 uint32_t MageGameControl::Size() const
@@ -130,7 +131,6 @@ uint32_t MageGameControl::Size() const
 		sizeof(isMoving) +
 		sizeof(playerEntityIndex) +
 		sizeof(currentSaveIndex) +
-		(sizeof(MageSaveGame) * MAGE_SAVE_GAME_SLOTS) +
 		sizeof(currentSave) +
 		sizeof(playerHasControl) +
 		sizeof(playerHasHexEditorControl) +
@@ -169,39 +169,26 @@ uint32_t MageGameControl::Size() const
 	return size;
 }
 
-void MageGameControl::readSavesFromRomIntoRam() {
-	#ifdef DC801_DESKTOP
-	FILE *saveFile = fopen("MAGE/save.dat", "r+b");
-	if (saveFile == NULL) {
-		saveFile = fopen("MAGE/save.dat", "w+b");
-		if (saveFile == NULL) {
-			int error = errno;
-			fprintf(stderr, "Error: %s\n", strerror(error));
-			ENGINE_PANIC("Desktop build: SAVE file missing");
-		}
-	}
-	fseek(saveFile, 0, SEEK_END);
-	size_t saveFileSize = ftell(saveFile);
-	rewind(saveFile);
-	debug_print(
-		"Save file size: %d\n",
-		saveFileSize
+void MageGameControl::readSaveFromRomIntoRam() {
+	EngineROM_ReadSaveSlot(
+		currentSaveIndex,
+		sizeof(MageSaveGame),
+		(uint8_t *)&currentSave
 	);
-	if(saveFileSize) {
-		if (fread(saveGames, saveFileSize, 1, saveFile) != 1) {
-			fclose(saveFile);
-			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
-		}
+	if (
+		playerEntityIndex != NO_PLAYER
+		&& playerEntityIndex != MAGE_MAP_ENTITY
+	) {
+		// copy save ram name into current player name
+		memcpy(
+			&entities[playerEntityIndex].name,
+			&currentSave.name,
+			MAGE_ENTITY_NAME_LENGTH
+		);
 	}
-	fclose(saveFile);
-	#endif
-
-	#ifdef DC801_EMBEDDED
-
-	#endif
 }
 
-void MageGameControl::gameSave() {
+void MageGameControl::saveGameSlotSave() {
 	// do rom writes
 	if (
 		playerEntityIndex != NO_PLAYER
@@ -209,56 +196,30 @@ void MageGameControl::gameSave() {
 	) {
 		// copy current player entity name into the save ram
 		memcpy(
-			&currentSave->name,
+			&currentSave.name,
 			&entities[playerEntityIndex].name,
 			MAGE_ENTITY_NAME_LENGTH
 		);
 	}
-
-	#ifdef DC801_DESKTOP
-	FILE *saveFile = fopen("MAGE/save.dat", "r+b");
-	if (saveFile == NULL) {
-		saveFile = fopen("MAGE/save.dat", "w+b");
-		if (saveFile == NULL) {
-			int error = errno;
-			fprintf(stderr, "Error: %s\n", strerror(error));
-			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
-		}
-	}
-	fwrite(
-		(uint8_t *) &saveGames,
-		sizeof(MageSaveGame) * MAGE_SAVE_GAME_SLOTS,
-		1,
-		saveFile
+	EngineROM_WriteSaveSlot(
+		currentSaveIndex,
+		sizeof(MageSaveGame),
+		(uint8_t *)&currentSave
 	);
-	fclose(saveFile);
-	#endif
-
-	#ifdef DC801_EMBEDDED
-	#endif
-	readSavesFromRomIntoRam();
+	readSaveFromRomIntoRam();
 }
 
-void MageGameControl::gameErase(uint8_t slotIndex) {
+void MageGameControl::saveGameSlotErase(uint8_t slotIndex) {
 	currentSaveIndex = slotIndex;
-	currentSave = &saveGames[currentSaveIndex];
 	MageSaveGame blankSave = {};
-	saveGames[currentSaveIndex] = blankSave;
-	gameSave();
+	currentSave = blankSave;
+	saveGameSlotSave();
 }
 
-void MageGameControl::gameLoad(uint8_t slotIndex) {
+void MageGameControl::saveGameSlotLoad(uint8_t slotIndex) {
 	currentSaveIndex = slotIndex;
-	currentSave = &saveGames[currentSaveIndex];
-	//LoadMap(currentSave->currentMapId);
-	if (playerEntityIndex != NO_PLAYER) {
-		// copy save ram name into  current player name
-		memcpy(
-			&entities[playerEntityIndex].name,
-			&currentSave->name,
-			MAGE_ENTITY_NAME_LENGTH
-		);
-	}
+	readSaveFromRomIntoRam();
+	//LoadMap(currentSave.currentMapId);
 }
 
 const MageTileset& MageGameControl::Tileset(uint32_t index) const
@@ -468,10 +429,10 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 
 void MageGameControl::PopulateMapData(uint16_t index)
 {
-	currentSave->currentMapId = getValidMapId(index);
+	currentSave.currentMapId = getValidMapId(index);
 
 	//load new map:
-	map = MageMap(mapHeader.offset(currentSave->currentMapId));
+	map = MageMap(mapHeader.offset(currentSave.currentMapId));
 
 	#ifdef DC801_DESKTOP
 		if(map.EntityCount() > MAX_ENTITIES_PER_MAP)
@@ -493,9 +454,11 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
 	cameraFollowEntityId = playerEntityIndex;
 	if(playerEntityIndex != NO_PLAYER) {
-		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
-			entities[playerEntityIndex].name[i] = currentSave->name[i];
-		}
+		memcpy(
+			&entities[playerEntityIndex].name,
+			&currentSave.name,
+			MAGE_ENTITY_NAME_LENGTH
+		);
 	}
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
@@ -537,9 +500,11 @@ void MageGameControl::LoadMap(uint16_t index)
 	initializeScriptsOnMapLoad();
 
 	if(playerEntityIndex != NO_PLAYER) {
-		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
-			currentSave->name[i] = entities[playerEntityIndex].name[i];
-		}
+		memcpy(
+			&currentSave.name,
+			&entities[playerEntityIndex].name,
+			MAGE_ENTITY_NAME_LENGTH
+		);
 	}
 
 	//close hex editor if open:
@@ -551,8 +516,9 @@ void MageGameControl::LoadMap(uint16_t index)
 void MageGameControl::applyUniversalInputs()
 {
 	//make map reload global regardless of player control state:
-	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3)
-	{ MageScript->mapLoadId = currentSave->currentMapId; }
+	if(EngineInput_Buttons.op_xor && EngineInput_Activated.mem3) {
+		MageScript->mapLoadId = currentSave.currentMapId;
+	}
 	//check to see if player input is allowed:
 	if(
 		MageDialog->isOpen
@@ -1742,7 +1708,7 @@ std::string MageGameControl::getString(
 			variableStartPosition - (variableEndPosition - 2)
 		);
 		int parsedVariableIndex = std::stoi(variableHolder);
-		uint16_t variableValue = currentSave->scriptVariables[parsedVariableIndex];
+		uint16_t variableValue = currentSave.scriptVariables[parsedVariableIndex];
 		std::string valueString = std::to_string(variableValue);
 		outputString.append(valueString.c_str());
 		variableStartPosition = variableEndPosition + 1;

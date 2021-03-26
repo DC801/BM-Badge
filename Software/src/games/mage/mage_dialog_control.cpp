@@ -175,16 +175,16 @@ void MageDialogControl::loadNextScreen() {
 	for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
 		responses[responseIndex].stringIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].stringIndex);
 		responses[responseIndex].mapLocalScriptIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].mapLocalScriptIndex);
-		debug_print(
-			"currentDialogIndex: %d\r\n"
-			"responseIndex: %d\r\n"
-			"response.stringIndex: %d\r\n"
-			"response.mapLocalScriptIndex: %d\r\n",
-			currentDialogIndex,
-			responseIndex,
-			responses[responseIndex].stringIndex,
-			responses[responseIndex].mapLocalScriptIndex
-		);
+		// debug_print(
+		// 	"currentDialogIndex: %d\r\n"
+		// 	"responseIndex: %d\r\n"
+		// 	"response.stringIndex: %d\r\n"
+		// 	"response.mapLocalScriptIndex: %d\r\n",
+		// 	currentDialogIndex,
+		// 	responseIndex,
+		// 	responses[responseIndex].stringIndex,
+		// 	responses[responseIndex].mapLocalScriptIndex
+		// );
 	}
 	currentDialogAddress += sizeOfResponses;
 

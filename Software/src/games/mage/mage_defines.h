@@ -130,7 +130,7 @@ typedef enum : uint8_t {
 } MageCheckComparison;
 
 typedef struct {
-	char name[MAGE_ENTITY_NAME_LENGTH] = {0};
+	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
 	uint16_t currentMapId = DEFAULT_MAP;
 	uint16_t warpState = MAGE_NO_WARP_STATE;
 	uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] = {0};

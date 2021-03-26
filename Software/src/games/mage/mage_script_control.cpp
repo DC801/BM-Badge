@@ -585,7 +585,7 @@ void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeSt
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = MageGame->currentSave->saveFlags[byteOffset];
+	uint8_t currentByteValue = MageGame->currentSave.saveFlags[byteOffset];
 	bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
 	if(bitValue == argStruct->expectedBoolValue) {
@@ -653,7 +653,7 @@ void MageScriptControl::checkWarpState(uint8_t * args, MageScriptState * resumeS
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	bool doesWarpStateMatch = MageGame->currentSave->warpState == argStruct->stringId;
+	bool doesWarpStateMatch = MageGame->currentSave.warpState == argStruct->stringId;
 	if(doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -1087,7 +1087,7 @@ void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStat
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = MageGame->currentSave->saveFlags[byteOffset];
+	uint8_t currentByteValue = MageGame->currentSave.saveFlags[byteOffset];
 
 	if(argStruct->newBoolValue) {
 		currentByteValue |= 0x01u << bitOffset;
@@ -1095,7 +1095,7 @@ void MageScriptControl::setSaveFlag(uint8_t * args, MageScriptState * resumeStat
 		// tilde operator inverts all the bits on a byte; Bitwise NOT
 		currentByteValue &= ~(0x01u << bitOffset);
 	}
-	MageGame->currentSave->saveFlags[byteOffset] = currentByteValue;
+	MageGame->currentSave.saveFlags[byteOffset] = currentByteValue;
 }
 
 void MageScriptControl::setPlayerControl(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1139,7 +1139,7 @@ void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeSta
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	MageGame->currentSave->warpState = argStruct->stringId;
+	MageGame->currentSave.warpState = argStruct->stringId;
 }
 
 //Need to implement locking and unlocking in MageHex for this to work -Tim
@@ -1721,7 +1721,7 @@ void MageScriptControl::mutateVariable(uint8_t * args, MageScriptState * resumeS
 	ActionMutateVariable *argStruct = (ActionMutateVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
-	uint16_t *currentValue = &MageGame->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
 
 	mutate(
 		argStruct->operation,
@@ -1733,8 +1733,8 @@ void MageScriptControl::mutateVariable(uint8_t * args, MageScriptState * resumeS
 void MageScriptControl::mutateVariables(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionMutateVariables *argStruct = (ActionMutateVariables*)args;
-	uint16_t *currentValue = &MageGame->currentSave->scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = MageGame->currentSave->scriptVariables[argStruct->sourceId];
+	uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = MageGame->currentSave.scriptVariables[argStruct->sourceId];
 
 	mutate(
 		argStruct->operation,
@@ -1747,7 +1747,7 @@ void MageScriptControl::copyVariable(uint8_t * args, MageScriptState * resumeSta
 {
 	ActionCopyVariable *argStruct = (ActionCopyVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	uint16_t *currentValue = &MageGame->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -1755,7 +1755,7 @@ void MageScriptControl::copyVariable(uint8_t * args, MageScriptState * resumeSta
 	);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		uint16_t *variableValue = &MageGame->currentSave->scriptVariables[argStruct->variableId];
+		uint16_t *variableValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
 		uint8_t *fieldValue = ((uint8_t *)entity) + argStruct->field;
 
 
@@ -1802,7 +1802,7 @@ void MageScriptControl::checkVariable(uint8_t * args, MageScriptState * resumeSt
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = MageGame->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t variableValue = MageGame->currentSave.scriptVariables[argStruct->variableId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
@@ -1819,8 +1819,8 @@ void MageScriptControl::checkVariables(uint8_t * args, MageScriptState * resumeS
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = MageGame->currentSave->scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = MageGame->currentSave->scriptVariables[argStruct->sourceId];
+	uint16_t variableValue = MageGame->currentSave.scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = MageGame->currentSave.scriptVariables[argStruct->sourceId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
@@ -1834,19 +1834,19 @@ void MageScriptControl::checkVariables(uint8_t * args, MageScriptState * resumeS
 void MageScriptControl::slotSave(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotSave *argStruct = (ActionSlotSave*)args;
-	MageGame->gameSave();
+	MageGame->saveGameSlotSave();
 }
 
 void MageScriptControl::slotLoad(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotLoad *argStruct = (ActionSlotLoad*)args;
-	MageGame->gameLoad(argStruct->slotIndex);
+	MageGame->saveGameSlotLoad(argStruct->slotIndex);
 }
 
 void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotErase *argStruct = (ActionSlotErase*)args;
-	MageGame->gameErase(argStruct->slotIndex);
+	MageGame->saveGameSlotErase(argStruct->slotIndex);
 }
 
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
