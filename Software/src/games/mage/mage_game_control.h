@@ -95,8 +95,7 @@ public:
 	int32_t playerEntityIndex;
 
 	uint8_t currentSaveIndex;
-	MageSaveGame saveGames[MAGE_SAVE_GAME_SLOTS];
-	MageSaveGame *currentSave;
+	MageSaveGame currentSave;
 
 	//this lets us make it so that inputs stop working for the player
 	bool playerHasControl;
@@ -117,10 +116,10 @@ public:
 	//returns the size in memory of the MageGameControl object.
 	uint32_t Size() const;
 
-	void readSavesFromRomIntoRam();
-	void gameSave();
-	void gameErase(uint8_t slotIndex);
-	void gameLoad(uint8_t slotIndex);
+	void readSaveFromRomIntoRam();
+	void saveGameSlotSave();
+	void saveGameSlotErase(uint8_t slotIndex);
+	void saveGameSlotLoad(uint8_t slotIndex);
 
 	//this will return a specific MageTileset object by index.
 	const MageTileset& Tileset(uint32_t index) const;

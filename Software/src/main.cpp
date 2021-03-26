@@ -165,13 +165,13 @@ void test_rom(){
 		32,
 		8
 	);
-	p_canvas()->printMessage(
-		"Starting to write zeros",
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		48
-	);
+	// p_canvas()->printMessage(
+	// 	"Starting to write zeros",
+	// 	Monaco9,
+	// 	COLOR_WHITE,
+	// 	32,
+	// 	48
+	// );
 	p_canvas()->blt();
 	/*
 	while(qspiControl.isBusy()){

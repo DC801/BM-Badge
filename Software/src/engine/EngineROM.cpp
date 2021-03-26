@@ -11,6 +11,11 @@
 
 FILE *romfile = NULL;
 uint8_t *romDataInDesktopRam = NULL;
+char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][16] = {
+	"MAGE/save_0.dat",
+	"MAGE/save_1.dat",
+	"MAGE/save_2.dat"
+};
 #endif //DC801_DESKTOP
 
 #ifdef DC801_EMBEDDED
@@ -78,7 +83,13 @@ bool EngineROM_Init(void)
 	//compare the two timestamps:
 	bool timestampsMatch = (strcmp(gameDatTimestampSD, gameDatTimestampROM) == 0);
 
-	if(!timestampsMatch){
+	//handles hardware inputs and makes their state available
+	EngineHandleInput();
+
+	if(
+		!timestampsMatch
+		|| EngineInput_Buttons.mem3
+	){
 		//we need a prompt to see if they want to erase the chip: -Tim
 		if(!EngineROM_SD_Copy(gameDatFilesize, gameDat)){
 			ENGINE_PANIC("SD Copy Operation was not successful.");
@@ -124,6 +135,120 @@ bool EngineROM_Init(void)
 	}
 #endif //DC801_DESKTOP
 	return true;
+}
+
+uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
+	return (
+		ENGINE_ROM_SAVE_OFFSET
+		+ (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE)
+	);
+}
+
+void EngineROM_ReadSaveSlot(
+	uint8_t slotIndex,
+	size_t length,
+	uint8_t *data
+) {
+	#ifdef DC801_DESKTOP
+	char *saveFileName = saveFileSlotNames[slotIndex];
+	FILE *saveFile = fopen(saveFileName, "r+b");
+	if (saveFile == NULL) {
+		saveFile = fopen(saveFileName, "w+b");
+		if (saveFile == NULL) {
+			int error = errno;
+			fprintf(stderr, "Error: %s\n", strerror(error));
+			ENGINE_PANIC("Desktop build: SAVE file missing");
+		}
+	}
+	fseek(saveFile, 0, SEEK_END);
+	size_t saveFileSize = ftell(saveFile);
+	rewind(saveFile);
+	debug_print(
+		"Save file size: %d\n",
+		saveFileSize
+	);
+	if(saveFileSize) {
+		if (fread(data, saveFileSize, 1, saveFile) != 1) {
+			fclose(saveFile);
+			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
+		}
+	}
+	fclose(saveFile);
+	#endif //DC801_DESKTOP
+
+	#ifdef DC801_EMBEDDED
+	EngineROM_Read(
+		getSaveSlotAddressByIndex(slotIndex),
+		length,
+		data,
+		"Failed to read saveGame from ROM"
+	);
+	#endif //DC801_EMBEDDED
+}
+
+void EngineROM_EraseSaveSlot(uint8_t slotIndex) {
+	#ifdef DC801_EMBEDDED
+	if(!qspiControl.erase(
+		tBlockSize::BLOCK_SIZE_256K,
+		getSaveSlotAddressByIndex(slotIndex)
+	)){
+		ENGINE_PANIC("Failed to send erase command for save slot.");
+	}
+	while(qspiControl.isBusy()){
+		// is very busy
+	}
+	#endif //DC801_EMBEDDED
+}
+
+void EngineROM_WriteSaveSlot(
+	uint8_t slotIndex,
+	size_t length,
+	uint8_t *hauntedDataPointer
+) {
+	// Why is this named `hauntedDataPointer`?
+	// Because horrifyingly, depending WHERE you get this pointer FROM,
+	// when you write it to ROM, it MAY be prefixed with extra 2 bytes of data,
+	// likely the registers are being over-written on embedded.
+	// So what's the solution on the embedded version of the code?
+	// Copy the data from the hauntedDataPointer to a locally scoped stack copy,
+	// and write to ROM from the pointer to the locally scoped stack copy.
+	// This may actually be a compiler bug, or ROM interface black magic.
+	#ifdef DC801_DESKTOP
+	char *saveFileName = saveFileSlotNames[slotIndex];
+	FILE *saveFile = fopen(saveFileName, "r+b");
+	if (saveFile == NULL) {
+		saveFile = fopen(saveFileName, "w+b");
+		if (saveFile == NULL) {
+			int error = errno;
+			fprintf(stderr, "Error: %s\n", strerror(error));
+			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
+		}
+	}
+	fwrite(
+		hauntedDataPointer,
+		sizeof(MageSaveGame),
+		1,
+		saveFile
+	);
+	fclose(saveFile);
+	#endif // DC801_DESKTOP
+
+	#ifdef DC801_EMBEDDED
+	uint8_t localUnHauntedSaveDataCopy[length];
+	memcpy(
+		&localUnHauntedSaveDataCopy,
+		hauntedDataPointer,
+		length
+	);
+	EngineROM_EraseSaveSlot(slotIndex);
+	EngineROM_Write(
+		getSaveSlotAddressByIndex(slotIndex),
+		length,
+		// hauntedDataPointer, // DO NOT USE, HAUNTED!!!
+		(uint8_t *)&localUnHauntedSaveDataCopy,
+		"Failed to write currentSave into ROM"
+	);
+	#endif // DC801_EMBEDDED
 }
 
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
@@ -189,6 +314,13 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		p_canvas()->blt();
 		currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
 	}
+
+	// erase save games at the end of ROM chip too when copying
+	// because new dat files means new save flags and variables
+	for(uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
+		EngineROM_EraseSaveSlot(i);
+	}
+
 	currentAddress = 0;
 	while(currentAddress < gameDatFilesize){
 		uint32_t chunkSize = MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (gameDatFilesize - currentAddress));
