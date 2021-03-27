@@ -39,6 +39,24 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":260,
+                 "height":32,
+                 "id":11,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":127.5,
+                 "y":212.5
+                }, 
+                {
                  "gid":2147483713,
                  "height":32,
                  "id":1,
@@ -57,42 +75,6 @@
                  "y":186.833333333333
                 }, 
                 {
-                 "gid":93,
-                 "height":32,
-                 "id":2,
-                 "name":"EtherNettle6",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":286,
-                 "y":116
-                }, 
-                {
-                 "gid":91,
-                 "height":32,
-                 "id":3,
-                 "name":"EtherNettle3",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":161,
-                 "y":116
-                }, 
-                {
-                 "gid":87,
-                 "height":32,
-                 "id":4,
-                 "name":"EtherNettle5",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":255.5,
-                 "y":116
-                }, 
-                {
                  "gid":89,
                  "height":32,
                  "id":5,
@@ -102,30 +84,6 @@
                  "visible":true,
                  "width":32,
                  "x":99.5,
-                 "y":116
-                }, 
-                {
-                 "gid":88,
-                 "height":32,
-                 "id":6,
-                 "name":"EtherNettle4",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":191,
-                 "y":116
-                }, 
-                {
-                 "gid":86,
-                 "height":32,
-                 "id":7,
-                 "name":"EtherNettle8",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":349.666666666667,
                  "y":116
                 }, 
                 {
@@ -141,6 +99,54 @@
                  "y":116
                 }, 
                 {
+                 "gid":91,
+                 "height":32,
+                 "id":3,
+                 "name":"EtherNettle3",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":161,
+                 "y":116
+                }, 
+                {
+                 "gid":88,
+                 "height":32,
+                 "id":6,
+                 "name":"EtherNettle4",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":191,
+                 "y":116
+                }, 
+                {
+                 "gid":87,
+                 "height":32,
+                 "id":4,
+                 "name":"EtherNettle5",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":255.5,
+                 "y":116
+                }, 
+                {
+                 "gid":93,
+                 "height":32,
+                 "id":2,
+                 "name":"EtherNettle6",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":286,
+                 "y":116
+                }, 
+                {
                  "gid":90,
                  "height":32,
                  "id":9,
@@ -153,22 +159,16 @@
                  "y":116
                 }, 
                 {
-                 "gid":260,
+                 "gid":86,
                  "height":32,
-                 "id":11,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }],
+                 "id":7,
+                 "name":"EtherNettle8",
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":127.5,
-                 "y":212.5
+                 "x":349.666666666667,
+                 "y":116
                 }, 
                 {
                  "gid":304,

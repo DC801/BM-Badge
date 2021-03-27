@@ -39,6 +39,29 @@
          "name":"entities?",
          "objects":[
                 {
+                 "gid":706,
+                 "height":32,
+                 "id":48,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_goat_high"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1041,
+                 "y":563
+                }, 
+                {
                  "gid":260,
                  "height":48,
                  "id":6,
@@ -307,29 +330,6 @@
                  "width":32,
                  "x":1281,
                  "y":741
-                }, 
-                {
-                 "gid":706,
-                 "height":32,
-                 "id":48,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"check_if_player_is_goat_high"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1041,
-                 "y":563
                 }, 
                 {
                  "gid":749,

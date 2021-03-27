@@ -39,6 +39,24 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":227,
+                 "height":32,
+                 "id":7,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":405.25
+                }, 
+                {
                  "gid":162,
                  "height":40,
                  "id":1,
@@ -83,24 +101,6 @@
                  "width":40,
                  "x":348.333333333333,
                  "y":196.75
-                }, 
-                {
-                 "gid":227,
-                 "height":32,
-                 "id":7,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":320,
-                 "y":405.25
                 }, 
                 {
                  "gid":269,
