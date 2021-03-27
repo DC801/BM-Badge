@@ -39,6 +39,24 @@
          "name":"Object Layer 1",
          "objects":[
                 {
+                 "gid":227,
+                 "height":32,
+                 "id":7,
+                 "name":"Bob",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":415.5,
+                 "y":594
+                }, 
+                {
                  "gid":167,
                  "height":40,
                  "id":1,
@@ -112,24 +130,6 @@
                  "width":34.6666666666666,
                  "x":414,
                  "y":606
-                }, 
-                {
-                 "gid":227,
-                 "height":32,
-                 "id":7,
-                 "name":"Bob",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":415.5,
-                 "y":594
                 }, 
                 {
                  "height":0,
