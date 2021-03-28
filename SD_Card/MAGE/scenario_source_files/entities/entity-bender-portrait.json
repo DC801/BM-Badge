@@ -1,11 +1,19 @@
-{ "columns":2,
+{ "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"entity-bender-portrait.png",
  "imageheight":32,
- "imagewidth":64,
+ "imagewidth":96,
  "margin":0,
  "name":"entity-bender-portrait",
  "spacing":0,
- "tilecount":2,
+ "tilecount":3,
  "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
@@ -14,6 +22,15 @@
          "type":"bender-portrait"
         }, 
         {
+         "animation":[
+                {
+                 "duration":150,
+                 "tileid":1
+                }, 
+                {
+                 "duration":150,
+                 "tileid":2
+                }],
          "id":1,
          "type":"bender-portrait-happy"
         }],
