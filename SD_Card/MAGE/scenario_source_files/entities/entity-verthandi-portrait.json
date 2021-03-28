@@ -1,0 +1,19 @@
+{ "columns":1,
+ "image":"entity-verthandi-portrait.png",
+ "imageheight":32,
+ "imagewidth":32,
+ "margin":0,
+ "name":"entity-verthandi-portrait",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.4.3",
+ "tileheight":32,
+ "tiles":[
+        {
+         "id":0,
+         "type":"verthandi-portrait"
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}
