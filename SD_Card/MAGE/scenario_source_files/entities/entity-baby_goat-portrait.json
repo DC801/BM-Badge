@@ -1,9 +1,9 @@
 { "columns":1,
- "image":"entity-golem-portrait.png",
+ "image":"entity-baby_goat-portrait.png",
  "imageheight":64,
  "imagewidth":64,
  "margin":0,
- "name":"entity-golem-portrait",
+ "name":"entity-baby_goat-portrait",
  "spacing":0,
  "tilecount":1,
  "tiledversion":"1.4.3",
@@ -11,7 +11,7 @@
  "tiles":[
         {
          "id":0,
-         "type":"golem-portrait"
+         "type":"baby_goat-portrait"
         }],
  "tilewidth":64,
  "type":"tileset",
