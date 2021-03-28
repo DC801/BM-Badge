@@ -1,0 +1,23 @@
+{ "columns":2,
+ "image":"entity-bender-portrait.png",
+ "imageheight":32,
+ "imagewidth":64,
+ "margin":0,
+ "name":"entity-bender-portrait",
+ "spacing":0,
+ "tilecount":2,
+ "tiledversion":"1.4.3",
+ "tileheight":32,
+ "tiles":[
+        {
+         "id":0,
+         "type":"bender-portrait"
+        }, 
+        {
+         "id":1,
+         "type":"bender-portrait-happy"
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}
