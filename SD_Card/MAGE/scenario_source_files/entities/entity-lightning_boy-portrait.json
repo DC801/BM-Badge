@@ -1,9 +1,9 @@
 { "columns":1,
- "image":"entity-golem-portrait.png",
+ "image":"entity-lightning_boy-portrait.png",
  "imageheight":64,
  "imagewidth":64,
  "margin":0,
- "name":"entity-golem-portrait",
+ "name":"entity-lightning_boy-portrait",
  "spacing":0,
  "tilecount":1,
  "tiledversion":"1.4.3",
@@ -11,7 +11,7 @@
  "tiles":[
         {
          "id":0,
-         "type":"golem-portrait"
+         "type":"lightning_boy-portrait"
         }],
  "tilewidth":64,
  "type":"tileset",

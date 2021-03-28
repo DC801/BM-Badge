@@ -8,14 +8,14 @@
         }
     },
  "image":"entity-bender-portrait.png",
- "imageheight":32,
- "imagewidth":96,
+ "imageheight":64,
+ "imagewidth":192,
  "margin":0,
  "name":"entity-bender-portrait",
  "spacing":0,
  "tilecount":3,
  "tiledversion":"1.4.3",
- "tileheight":32,
+ "tileheight":64,
  "tiles":[
         {
          "id":0,
@@ -34,7 +34,7 @@
          "id":1,
          "type":"bender-portrait-happy"
         }],
- "tilewidth":32,
+ "tilewidth":64,
  "type":"tileset",
  "version":1.4
 }
