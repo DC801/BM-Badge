@@ -157,7 +157,7 @@
                  "gid":476,
                  "height":32,
                  "id":12,
-                 "name":"goat1",
+                 "name":"Billy",
                  "properties":[
                         {
                          "name":"is_glitched",
@@ -190,7 +190,7 @@
                  "gid":476,
                  "height":32,
                  "id":13,
-                 "name":"goat2",
+                 "name":"Kid",
                  "properties":[
                         {
                          "name":"is_glitched",
@@ -647,19 +647,19 @@
                  "gid":1190,
                  "height":32,
                  "id":252,
-                 "name":"Debug Exa 0",
+                 "name":"Debug Exa 9001",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-reset-all-q"
+                         "value":"debug-set-flags-false-q"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":873,
-                 "y":734
+                 "x":887,
+                 "y":618
                 }, 
                 {
                  "gid":1190,
@@ -819,6 +819,24 @@
                  "width":32,
                  "x":960,
                  "y":512
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":267,
+                 "name":"Debug Exa 0",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-set-flags-true-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":889,
+                 "y":577
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2110,7 +2128,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":267,
+ "nextobjectid":268,
  "orientation":"orthogonal",
  "properties":[
         {

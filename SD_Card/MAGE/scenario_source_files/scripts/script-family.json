@@ -11,7 +11,7 @@
 	"on_load-family": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "sportskid",
+			"save_flag": "storyflag-sportskid",
 			"expected_bool": true,
 			"success_script": "make-kid-ball"
 		}
@@ -47,7 +47,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -62,11 +62,11 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "sportskid",
+			"save_flag": "storyflag-sportskid",
 			"bool_value": true
 		}
 	],
@@ -78,7 +78,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "smith",
+			"save_flag": "smith-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-smith-s"
 		},
@@ -88,7 +88,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "smith",
+			"save_flag": "smith-backstory",
 			"bool_value": true
 		},
 		{

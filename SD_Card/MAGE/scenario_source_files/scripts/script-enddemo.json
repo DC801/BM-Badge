@@ -625,48 +625,8 @@
 			"doc": "Voila!"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "wonthedemo",
-			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "check_if_player_is_goat_low"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Verthandi",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Cleo",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Cat",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Verthandi",
-			"target_entity": "goat1"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
+			"action": "RUN_SCRIPT",
+			"script": "debug-roll-credits"
 		}
 	],
 	"loiter1": [

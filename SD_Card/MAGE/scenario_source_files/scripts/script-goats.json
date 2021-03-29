@@ -7,19 +7,19 @@
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "goat1",
+			"entity": "Billy",
 			"success_script": "show_dialog-verthandi-ohno",
 			"expected_bool": true
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "goat2",
+			"entity": "Kid",
 			"success_script": "show_dialog-verthandi-ohno",
 			"expected_bool": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "glitch_goats",
+			"save_flag": "goats-unglitched",
 			"bool_value": true
 		},
 		{
@@ -29,7 +29,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Verthandi",
-			"target_entity": "goat1"
+			"target_entity": "Kid"
 		}
 	],
 	"show_dialog-verthandi-ohno": [
@@ -40,7 +40,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Verthandi",
-			"target_entity": "goat1"
+			"target_entity": "Kid"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -92,13 +92,13 @@
 	"move_goats_to_low": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat1",
-			"script": "move_goat1_to_low"
+			"entity": "Billy",
+			"script": "move_billy_to_low"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat2",
-			"script": "move_goat2_to_low"
+			"entity": "Kid",
+			"script": "move_kid_to_low"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -109,13 +109,13 @@
 	"move_goats_to_high": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat1",
-			"script": "move_goat1_to_high"
+			"entity": "Billy",
+			"script": "move_billy_to_high"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "goat2",
-			"script": "move_goat2_to_high"
+			"entity": "Kid",
+			"script": "move_kid_to_high"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -123,58 +123,58 @@
 			"script": "check_if_player_is_goat_high"
 		}
 	],
-	"move_goat1_to_low": [
+	"move_billy_to_low": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat1",
+			"entity": "Billy",
 			"geometry": "low1",
 			"duration": 900
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat1",
+			"entity": "Billy",
 			"geometry": "low1",
 			"duration": 3000
 		}
 	],
-	"move_goat2_to_low": [
+	"move_kid_to_low": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
+			"entity": "Kid",
 			"geometry": "low2",
 			"duration": 1100
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat2",
+			"entity": "Kid",
 			"geometry": "low2",
 			"duration": 3400
 		}
 	],
-	"move_goat1_to_high": [
+	"move_billy_to_high": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat1",
+			"entity": "Billy",
 			"geometry": "high1",
 			"duration": 700
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat1",
+			"entity": "Billy",
 			"geometry": "high1",
 			"duration": 3000
 		}
 	],
-	"move_goat2_to_high": [
+	"move_kid_to_high": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "goat2",
+			"entity": "Kid",
 			"geometry": "high2",
 			"duration": 800
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
-			"entity": "goat2",
+			"entity": "Kid",
 			"geometry": "high2",
 			"duration": 3400
 		}

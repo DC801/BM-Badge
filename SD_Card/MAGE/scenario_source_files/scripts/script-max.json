@@ -2,7 +2,7 @@
 	"show_dialog-max-start": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "show_dialog-max-end"
 		},
@@ -15,7 +15,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "maxtalk",
+			"save_flag": "max-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-max-start-s"
 		},
@@ -142,12 +142,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "maxtalk",
+			"save_flag": "max-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -172,7 +172,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -198,7 +198,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "maxtalk",
+			"save_flag": "max-backstory",
 			"bool_value": true
 		}
 	],
@@ -301,7 +301,7 @@
 	"on_tick-max-neutral": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "null_script"
 		},
@@ -490,7 +490,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"bool_value": true
 		},
 		{
@@ -499,7 +499,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -532,7 +532,7 @@
 	"felix-loiter": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "hiding-cat"
 		},
@@ -567,7 +567,7 @@
 	"deut-loiter": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "hiding-cat"
 		},
@@ -602,7 +602,7 @@
 	"bmurray-loiter": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "hiding-cat"
 		},
@@ -637,7 +637,7 @@
 	"maru-loiter": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "hiding-cat"
 		},

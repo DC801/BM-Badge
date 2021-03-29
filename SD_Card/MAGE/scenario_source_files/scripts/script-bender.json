@@ -36,13 +36,13 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bender2",
+			"save_flag": "storyflag-bender",
 			"expected_bool": true,
 			"success_script": "show_dialog-bender-end-s"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bender1",
+			"save_flag": "bender-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-bender-eval"
 		},
@@ -89,12 +89,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bender1",
+			"save_flag": "bender-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -110,12 +110,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bender1",
+			"save_flag": "bender-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -150,7 +150,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -176,7 +176,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -207,17 +207,17 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bender1",
+			"save_flag": "bender-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bender2",
+			"save_flag": "storyflag-bender",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

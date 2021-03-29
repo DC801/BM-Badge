@@ -262,32 +262,57 @@
 			]
 		}
 	],
-	"dialog-debug-reset-all-q": [
+	"dialog-debug-set-flags-false-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
 			"name": "%SELF%",
 			"messages": [
-				"Set all save flags?"
+				"Set what to FALSE?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
-			{
-					"label": "Set all to FALSE",
-					"script": "debug-reset-all-false"
+				{
+					"label": "Reset everything",
+					"script": "debug-set-all-false"
 				},
 				{
-					"label": "Set all to TRUE (except winning)",
-					"script": "debug-reset-all-true"
+					"label": "Backstory flags",
+					"script": "debug-set-backstory-false"
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-reset-all"
+					"script": "no_debug-set-flags-false"
 				}
 			]
 		}
 	],
-	"dialog-debug-reset-all-true": [
+	"dialog-debug-set-flags-true-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"Set what to TRUE?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Everything (except winning)",
+					"script": "debug-set-all-true"
+				},
+				{
+					"label": "Backstory flags",
+					"script": "debug-set-backstory-true"
+				},
+				{
+					"label": "Never mind",
+					"script": "no_debug-set-flags-true"
+				}
+			]
+		}
+	],
+	"dialog-debug-true": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
@@ -297,7 +322,7 @@
 			]
 		}
 	],
-	"dialog-debug-reset-all-false": [
+	"dialog-debug-set-all-false": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",
@@ -307,7 +332,27 @@
 			]
 		}
 	],
-	"dialog-no_debug-reset-all": [
+	"dialog-debug-set-backstory-false": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"All entities have forgotten their first\nconversations with you."
+			]
+		}
+	],
+	"dialog-debug-set-backstory-true": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "elder",
+			"name": "%SELF%",
+			"messages": [
+				"All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
+			]
+		}
+	],
+	"dialog-no_debug-nothing-changed": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "elder",

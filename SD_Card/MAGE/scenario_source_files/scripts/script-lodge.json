@@ -168,7 +168,7 @@
 	"on_load-lodge-glitch_cat-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "lodge_cat_unglitched",
+			"save_flag": "lodge_cat-unglitched",
 			"expected_bool": true,
 			"success_script": "on_load-lodge-glitch_cat-do"
 		},
@@ -191,7 +191,7 @@
 	"on_load-lodge-glitch_timmy-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "timmy_unglitched",
+			"save_flag": "timmy-unglitched",
 			"expected_bool": true,
 			"success_script": "on_load-lodge-glitch_timmy-do"
 		},
@@ -230,7 +230,7 @@
 	"lodge_cat_now_unglitched": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "lodge_cat_unglitched",
+			"save_flag": "lodge_cat-unglitched",
 			"bool_value": true
 		}
 	],
@@ -245,7 +245,7 @@
 	"timmy_now_unglitched": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "timmy_unglitched",
+			"save_flag": "timmy-unglitched",
 			"bool_value": true
 		}
 	],
@@ -303,7 +303,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"bool_value": true
 		},
 		{
@@ -705,31 +705,31 @@
 	"artifacts-eval": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bracelet",
+			"save_flag": "artifact-bracelet-touched",
 			"expected_bool": false,
 			"success_script": "show_dialog-artifacts-eval-bad"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "broom",
+			"save_flag": "artifact-broom-touched",
 			"expected_bool": false,
 			"success_script": "show_dialog-artifacts-eval-bad"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "glasses",
+			"save_flag": "artifact-glasses-touched",
 			"expected_bool": false,
 			"success_script": "show_dialog-artifacts-eval-bad"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "wand",
+			"save_flag": "artifact-wand-touched",
 			"expected_bool": false,
 			"success_script": "show_dialog-artifacts-eval-bad"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "book",
+			"save_flag": "artifact-book-touched",
 			"expected_bool": false,
 			"success_script": "show_dialog-artifacts-eval-bad"
 		},
@@ -1969,7 +1969,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bracelet",
+			"save_flag": "artifact-bracelet-touched",
 			"bool_value": true
 		},
 		{
@@ -1984,7 +1984,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "glasses",
+			"save_flag": "artifact-glasses-touched",
 			"bool_value": true
 		},
 		{
@@ -1999,7 +1999,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "book",
+			"save_flag": "artifact-book-touched",
 			"bool_value": true
 		},
 		{
@@ -2078,7 +2078,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "broom",
+			"save_flag": "artifact-broom-touched",
 			"bool_value": true
 		},
 		{
@@ -2146,7 +2146,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "wand",
+			"save_flag": "artifact-wand-touched",
 			"bool_value": true
 		},
 		{
@@ -2263,7 +2263,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-zippy-postchoose"
 		},
@@ -2281,7 +2281,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-zappy-postchoose"
 		},
@@ -2299,7 +2299,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-verthandi-postchoose"
 		},
@@ -2317,7 +2317,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-smith-postchoose"
 		},
@@ -2334,7 +2334,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-max-postchoose"
 		},
@@ -2351,13 +2351,13 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-marta-postchoose"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "broom",
+			"save_flag": "artifact-broom-touched",
 			"expected_bool": true,
 			"success_script": "show_dialog-marta-prechoose-broomd"
 		},
@@ -2390,7 +2390,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-trekkie-postchoose"
 		},
@@ -2407,7 +2407,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-shepherd-postchoose"
 		},
@@ -2424,7 +2424,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-cleo-postchoose"
 		},
@@ -2441,7 +2441,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-beatrice-postchoose"
 		},
@@ -2458,7 +2458,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ringchoose",
+			"save_flag": "ring-aqcuired",
 			"expected_bool": true,
 			"success_script": "show_dialog-baker-postchoose"
 		},
@@ -2722,7 +2722,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "timmy",
+			"save_flag": "timmy-endstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-timmy-start-s"
 		},
@@ -2733,7 +2733,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "timmy",
+			"save_flag": "timmy-endstory",
 			"bool_value": true
 		},
 		{
@@ -2782,29 +2782,8 @@
 	],
 	"bypass-tuesday": [
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "broom",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "wand",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "book",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "glasses",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bracelet",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "set-artifact-flags-true"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -2900,27 +2879,27 @@
 	"debug-touch-artifacts": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "broom",
+			"save_flag": "artifact-broom-touched",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "wand",
+			"save_flag": "artifact-wand-touched",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "book",
+			"save_flag": "artifact-book-touched",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "glasses",
+			"save_flag": "artifact-glasses-touched",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bracelet",
+			"save_flag": "artifact-bracelet-touched",
 			"bool_value": true
 		},
 		{

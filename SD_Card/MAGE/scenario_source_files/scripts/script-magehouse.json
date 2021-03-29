@@ -28,7 +28,7 @@
 	"on_load-magehouse": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "goldfish",
+			"save_flag": "goldfish-unglitched",
 			"expected_bool": true,
 			"success_script": "unglitch-fish"
 		},
@@ -627,7 +627,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "goldfish",
+			"save_flag": "goldfish-unglitched",
 			"bool_value": true
 		}
 	],
