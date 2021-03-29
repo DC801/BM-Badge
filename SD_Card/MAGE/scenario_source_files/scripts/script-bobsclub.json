@@ -263,13 +263,13 @@
 	"show_dialog-baker-start": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "bobsclub-entered",
 			"expected_bool": true,
 			"success_script": "show_dialog-baker-end"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker1",
+			"save_flag": "baker-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-baker-start-s"
 		},
@@ -284,12 +284,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker1",
+			"save_flag": "baker-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -319,7 +319,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -383,11 +383,6 @@
 			"target_entity": "%PLAYER%"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
-		},
-		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Bob Austin",
 			"geometry": "bobzone",
@@ -395,8 +390,13 @@
 			"expected_bool": false
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
+		},
+		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobrock",
+			"save_flag": "bobrock-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobrock-bounce"
 		},
@@ -406,13 +406,13 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker1",
+			"save_flag": "baker-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobrock-start2"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobrock",
+			"save_flag": "bobrock-backstory",
 			"bool_value": true
 		},
 		{
@@ -428,7 +428,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobrock",
+			"save_flag": "bobrock-backstory",
 			"bool_value": true
 		},
 		{
@@ -440,7 +440,7 @@
 "show_dialog-bobrock-bounce": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "bobsclub-entered",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobrock-bounce2"
 		},
@@ -478,7 +478,7 @@
 	"on_load-bobsclub1": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobmoss",
+			"save_flag": "storyflag-bobmoss",
 			"expected_bool": false,
 			"success_script": "hide-bobmoss"
 		},
@@ -501,7 +501,7 @@
 	"on_load-bobsclub2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "bobsclub-entered",
 			"expected_bool": false,
 			"success_script": "show_dialog-bobsclub"
 		}
@@ -628,12 +628,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "bobsclub-entered",
 			"bool_value": true
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker1",
+			"save_flag": "baker-backstory",
 			"expected_bool": false,
 			"success_script": "null_script"
 		},
@@ -665,7 +665,7 @@
 			},
 			{
 				"action": "CHECK_SAVE_FLAG",
-				"save_flag": "bobmoss",
+				"save_flag": "storyflag-bobmoss",
 				"expected_bool": false,
 				"success_script": "show_dialog-bobsclub-bob-where"
 			}
@@ -695,7 +695,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -726,7 +726,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "strongbob",
+			"save_flag": "strong_bad-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobsclub-strongbob-s"
 		},
@@ -736,7 +736,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "strongbob",
+			"save_flag": "strong_bad-backstory",
 			"bool_value": true
 		}
 	],
@@ -801,7 +801,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker2",
+			"save_flag": "storyflag-baker",
 			"expected_bool": true,
 			"success_script": "show_dialog-baker-end-s"
 		},
@@ -811,12 +811,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker2",
+			"save_flag": "storyflag-baker",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -853,7 +853,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobmoss",
+			"save_flag": "storyflag-bobmoss",
 			"expected_bool": true,
 			"success_script": "show_dialog-bobmoss-start-s"
 		},
@@ -900,12 +900,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobmoss",
+			"save_flag": "storyflag-bobmoss",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SCREEN_FADE_IN",
@@ -1059,7 +1059,7 @@
 	"debug-bob-skipconvo": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobrock",
+			"save_flag": "bobrock-backstory",
 			"bool_value": true
 		},
 		{
@@ -1080,7 +1080,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobrock",
+			"save_flag": "bobrock-backstory",
 			"bool_value": true
 		},
 		{
@@ -1096,7 +1096,7 @@
 	"debug-bob-teleport": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobsclub",
+			"save_flag": "bobsclub-entered",
 			"bool_value": true
 		},
 		{

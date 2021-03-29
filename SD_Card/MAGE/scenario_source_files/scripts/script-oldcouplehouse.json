@@ -11,7 +11,7 @@
 	"on_load-oldcouplehouse": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,
 			"success_script": "make-delmar-man"
 		}
@@ -19,7 +19,7 @@
 	"make-delmar-man": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"expected_bool": true,
 			"success_script": "make-delmar-sheep"
 		},
@@ -47,7 +47,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"expected_bool": true,
 			"success_script": "leave-happytrue"
 		},
@@ -59,7 +59,7 @@
 	"leave-happytrue": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"bool_value": true
 		},
 		{
@@ -77,13 +77,13 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,
 			"success_script": "show_dialog-delmar-blab"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"expected_bool": true,
 			"success_script": "show_dialog-delmar-catchup"
 		},
@@ -136,7 +136,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,
 			"success_script": "show_dialog-bea-sequel-branch"
 		},
@@ -226,7 +226,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -252,7 +252,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -330,7 +330,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -363,7 +363,7 @@
 	"show_dialog-bea-happy-branch": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"expected_bool": true,
 			"success_script": "show_dialog-bea-happy-aftermath-branch"
 		},
@@ -400,12 +400,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -505,7 +505,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-regret",
+			"save_flag": "bea-regret-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-bea-regret-s"
 		},
@@ -560,12 +560,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret",
+			"save_flag": "bea-regret-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -591,7 +591,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -602,13 +602,13 @@
 	"show_dialog-bea-sheepening-branch": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"expected_bool": true,
 			"success_script": "show_dialog-bea-alldone"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-regret",
+			"save_flag": "bea-regret-backstory",
 			"expected_bool": false,
 			"success_script": "show_dialog-bea-coincidence"
 		},
@@ -619,17 +619,17 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret",
+			"save_flag": "bea-regret-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -696,17 +696,17 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret",
+			"save_flag": "bea-regret-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -770,12 +770,12 @@
 	"debug-bea-sequel-man": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"bool_value": true
 		},
 		{
@@ -790,7 +790,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -809,12 +809,12 @@
 	"debug-bea-sequel-noman": [
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-sequel",
+			"save_flag": "bea-sequel-branch",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"bool_value": true
 		},
 		{

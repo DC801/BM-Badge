@@ -20,6 +20,7 @@
 		"scripts/script-goats.json",
 		"scripts/script-enddemo.json",
 		"scripts/script-elders.json",
+		"scripts/script-debug.json",
 		"scripts/script-max.json"
 	],
 	"dialogPaths": [

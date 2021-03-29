@@ -21,7 +21,7 @@
 	"on_load-greenhouse": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "trekkie2",
+			"save_flag": "storyflag-trekkie",
 			"expected_bool": true,
 			"success_script": "make-ethernettle-correct"
 		}
@@ -82,7 +82,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "trekkie1",
+			"save_flag": "trekkie-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-trekkie-eval"
 		},
@@ -169,7 +169,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -178,7 +178,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "trekkie1",
+			"save_flag": "trekkie-backstory",
 			"bool_value": true
 		},
 		{
@@ -189,7 +189,7 @@
 	"show_dialog-trekkie-eval": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "trekkie2",
+			"save_flag": "storyflag-trekkie",
 			"expected_bool": true,
 			"success_script": "show_dialog-trekkie-end-s"
 		},
@@ -381,12 +381,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "trekkie2",
+			"save_flag": "storyflag-trekkie",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -457,7 +457,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",

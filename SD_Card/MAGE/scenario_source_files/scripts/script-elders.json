@@ -12,61 +12,61 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-catwork"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "shepherd2",
+			"save_flag": "storyflag-shepherd",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-shepherd"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bender2",
+			"save_flag": "storyflag-bender",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-bender"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker2",
+			"save_flag": "storyflag-baker",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-baker"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobmoss",
+			"save_flag": "storyflag-bobmoss",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-bobmoss"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-delmar1"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "trekkie2",
+			"save_flag": "storyflag-trekkie",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-trekkie"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "sportskid",
+			"save_flag": "storyflag-sportskid",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-sportskid"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-delmar2"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "rake",
+			"save_flag": "storyflag-rake",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-goose"
 		},
@@ -132,7 +132,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -195,7 +195,7 @@
 			"script": "show_dialog-bert-start"
 		}
 	],
-	"reset-hint-flags": [
+	"set-hint-flags-false": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "catwork-hint",
@@ -337,7 +337,7 @@
 	"show_dialog-jackob-hint-hackbook": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "hackbook-hint-done",
+			"save_flag": "hackbook-endstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-jackob-hint-hackbook-s"
 		},
@@ -401,7 +401,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "hackbook-hint-done",
+			"save_flag": "hackbook-endstory",
 			"bool_value": true
 		},
 		{
@@ -568,7 +568,7 @@
 	"story-eval-catwork": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "catwork",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
 			"success_script": "increment-via-catwork"
 		},
@@ -593,7 +593,7 @@
 	"story-eval-shepherd2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "shepherd2",
+			"save_flag": "storyflag-shepherd",
 			"expected_bool": true,
 			"success_script": "increment-via-shepherd2"
 		},
@@ -618,7 +618,7 @@
 	"story-eval-bender2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bender2",
+			"save_flag": "storyflag-bender",
 			"expected_bool": true,
 			"success_script": "increment-via-bender2"
 		},
@@ -643,7 +643,7 @@
 	"story-eval-baker2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "baker2",
+			"save_flag": "storyflag-baker",
 			"expected_bool": true,
 			"success_script": "increment-via-baker2"
 		},
@@ -668,7 +668,7 @@
 	"story-eval-bobmoss": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bobmoss",
+			"save_flag": "storyflag-bobmoss",
 			"expected_bool": true,
 			"success_script": "increment-via-bobmoss"
 		},
@@ -693,7 +693,7 @@
 	"story-eval-bea-happy": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-happy",
+			"save_flag": "storyflag-bea1",
 			"expected_bool": true,
 			"success_script": "increment-via-bea-happy"
 		},
@@ -718,7 +718,7 @@
 	"story-eval-trekkie2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "trekkie2",
+			"save_flag": "storyflag-trekkie",
 			"expected_bool": true,
 			"success_script": "increment-via-trekkie2"
 		},
@@ -743,7 +743,7 @@
 	"story-eval-sportskid": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "sportskid",
+			"save_flag": "storyflag-sportskid",
 			"expected_bool": true,
 			"success_script": "increment-via-sportskid"
 		},
@@ -768,7 +768,7 @@
 	"story-eval-bea-relief": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-relief",
+			"save_flag": "storyflag-bea2",
 			"expected_bool": true,
 			"success_script": "increment-via-bea-relief"
 		},
@@ -793,7 +793,7 @@
 	"story-eval-rake": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "rake",
+			"save_flag": "storyflag-rake",
 			"expected_bool": true,
 			"success_script": "increment-via-rake"
 		},
@@ -818,7 +818,7 @@
 	"show_dialog-alfonso-start": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "alfonso-explain",
+			"save_flag": "alfonso-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-alfonso-eval"
 		},
@@ -828,7 +828,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "alfonso-explain",
+			"save_flag": "alfonso-backstory",
 			"bool_value": true
 		}
 	],

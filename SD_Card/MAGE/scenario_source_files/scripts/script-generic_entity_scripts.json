@@ -1,4 +1,47 @@
 {
+	"watch-player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		}
+	],
+	"loop_on_path_30s": [
+		{
+			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 30000
+		}
+	],
+	"loop_on_path_10s": [
+		{
+			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 10000
+		}
+	],
+	"loop_on_path_3s": [
+		{
+			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 3000
+		}
+	],
+	"walk_on_path_20s": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 20000
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
 	"spin_self_clockwise": [
 		{
 			"notes": "This script should spin an entity around",

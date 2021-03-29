@@ -7,13 +7,13 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "shepherd2",
+			"save_flag": "storyflag-shepherd",
 			"expected_bool": true,
 			"success_script": "show_dialog-shepherd-end"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "shepherd1",
+			"save_flag": "shepherd-backstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-shepherd-start-s"
 		},
@@ -107,12 +107,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd1",
+			"save_flag": "shepherd-backstory",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -132,7 +132,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -177,6 +177,12 @@
 			"script": "show_dialog-shepherd-start"
 		}
 	],
+	"show_dialog-sheep": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-sheep"
+		}
+	],
 	"show_dialog-shepherd-sheepcheck": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -213,12 +219,12 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd2",
+			"save_flag": "storyflag-shepherd",
 			"bool_value": true
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "reset-hint-flags"
+			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SHOW_DIALOG",
