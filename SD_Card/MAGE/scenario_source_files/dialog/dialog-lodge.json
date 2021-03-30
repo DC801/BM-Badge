@@ -769,13 +769,23 @@
 			]
 		}
 	],
-	"dialog-lodge-cat": [
+	"dialog-lodge_cat": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"portrait": "cat",
 			"name": "%Cat%",
 			"messages": [
 				"...."
+			]
+		}
+	],
+	"dialog-lodge_cat-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "%Cat%",
+			"messages": [
+				"////////"
 			]
 		}
 	],

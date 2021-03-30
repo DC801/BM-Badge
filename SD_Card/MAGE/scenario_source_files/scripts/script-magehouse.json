@@ -632,6 +632,41 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goldfish-glitched"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goldfish-unglitched",
+			"expected_bool": false,
+			"success_script": "goldfish-glitchhint-eval"
+		}
+	],
+	"goldfish-glitchhint-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"expected_bool": true,
+			"success_script": "goldfish-hint-yes"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mr. Tickles",
+			"script": "show_dialog-goldfish"
+		}
+	],
+	"goldfish-hint-yes": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Mr. Tickles",
+			"script": "show_dialog-goldfish"
 		}
 	],
 	"show_dialog-goldfish-unglitched": [

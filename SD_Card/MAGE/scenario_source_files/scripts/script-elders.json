@@ -71,6 +71,13 @@
 			"success_script": "show_dialog-bert-goose"
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-verthandi",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-verthandi",
+			"doc": "UPDATE POINT"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bert-end",
 			"doc": "Perhaps the world."
@@ -195,6 +202,18 @@
 			"script": "show_dialog-bert-start"
 		}
 	],
+	"show_dialog-bert-verthandi": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-verthandi"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start",
+			"doc": "UPDATE POINT"
+		}
+	],
 	"set-hint-flags-false": [
 		{
 			"action": "SET_SAVE_FLAG",
@@ -249,6 +268,11 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "hackbook-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
 			"bool_value": false
 		}
 	],
@@ -328,6 +352,12 @@
 			"save_flag": "rake-hint",
 			"expected_bool": true,
 			"success_script": "show_dialog-jackob-hint-rake"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-verthandi"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -414,6 +444,17 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-hackbook-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-verthandi": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-verthandi"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -749,10 +790,35 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "story-eval-bea-relief"
+			"script": "story-eval-verthandi"
 		}
 	],
 	"increment-via-sportskid": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "story-flag-count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "story-eval-verthandi"
+		}
+	],
+	"story-eval-verthandi": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-verthandi",
+			"expected_bool": true,
+			"success_script": "increment-via-verthandi"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "story-eval-bea-relief"
+		}
+	],
+	"increment-via-verthandi": [
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "story-flag-count",
@@ -928,7 +994,7 @@
 			"comparison": "==",
 			"expected_bool": true,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
-			"success_script": "show_dialog-alfonso-eval-late"
+			"success_script": "show_dialog-alfonso-eval-mid"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -943,6 +1009,15 @@
 			"action": "CHECK_VARIABLE",
 			"variable": "story-flag-count",
 			"value": 10,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "show_dialog-alfonso-eval-late"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "story-flag-count",
+			"value": 11,
 			"comparison": "==",
 			"expected_bool": true,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",

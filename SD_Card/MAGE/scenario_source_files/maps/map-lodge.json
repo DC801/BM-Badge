@@ -378,7 +378,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-lodge-cat"
+                         "value":"show_dialog-lodge_cat"
                         }, 
                         {
                          "name":"on_tick",

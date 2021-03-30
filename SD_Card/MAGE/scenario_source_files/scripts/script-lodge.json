@@ -2698,15 +2698,65 @@
 			"direction": "north"
 		}
 	],
-	"show_dialog-lodge-cat": [
+	"show_dialog-lodge_cat": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-lodge_cat-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-lodge_cat",
+			"doc": "...."
+		}
+	],
+	"show_dialog-lodge_cat-glitched": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-lodge-cat",
-			"doc": "...."
+			"dialog": "dialog-lodge_cat-glitched",
+			"doc": "////////"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "lodge_cat-glitchhint-eval"
+		}
+	],
+	"lodge_cat-glitchhint-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "lodge_cat-unglitched",
+			"expected_bool": false,
+			"success_script": "lodge_cat-hint-yes"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-lodge_cat"
+		}
+	],
+	"lodge_cat-hint-yes": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-lodge_cat"
 		}
 	],
 	"show_dialog-timmy-start": [
@@ -2773,6 +2823,34 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
 			"direction": "west"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "timmy-glitchhint-eval"
+		}
+	],
+	"timmy-glitchhint-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "timmy-unglitched",
+			"expected_bool": false,
+			"success_script": "timmy-hint-yes"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-timmy-start"
+		}
+	],
+	"timmy-hint-yes": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
