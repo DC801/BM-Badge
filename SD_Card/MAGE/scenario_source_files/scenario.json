@@ -39,6 +39,7 @@
 		"dialog/dialog-enddemo.json",
 		"dialog/dialog-elders.json",
 		"dialog/dialog-magehouse.json",
+		"dialog/dialog-goats.json",
 		"dialog/dialog-max.json"
 	],
 	"maps": {

@@ -1,42 +1,21 @@
 {
-	"show_dialog-verthandi": [
+	"show_dialog-verthandi-glitched": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Verthandi",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "Billy",
-			"success_script": "show_dialog-verthandi-ohno",
-			"expected_bool": true
-		},
-		{
-			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "Kid",
-			"success_script": "show_dialog-verthandi-ohno",
-			"expected_bool": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "goats-unglitched",
-			"bool_value": true
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "glitch-lesson",
+			"expected_bool": true,
+			"success_script": "show_dialog-verthandi-glitched-q"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi"
+			"dialog": "dialog-verthandi-glitched-lesson-intro"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Verthandi",
-			"target_entity": "Kid"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-verthandi-glitched-lesson"
 		}
 	],
-	"show_dialog-verthandi-ohno": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-ohno"
-		},
+	"verthandi-wrapup": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Verthandi",
@@ -45,8 +24,490 @@
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "show_dialog-verthandi"
+			"script": "show_dialog-verthandi-start"
 		}
+	],
+	"show_dialog-verthandi-glitched-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-glitched-q"
+		}
+	],
+	"show_dialog-verthandi-glitched-lesson": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-glitched-lesson"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "glitch-lesson",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-glitched-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-glitched-s"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-end": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-end"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-start": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-verthandi-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-verthandi",
+			"expected_bool": true,
+			"success_script": "show_dialog-verthandi-end"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "find-unglitch_count"
+		}
+	],
+	"find-unglitch_count": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 0,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-goldfish"
+		}
+	],
+	"glitch-eval-goldfish": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goldfish-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-goldfish"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-timmy"
+		}
+	],
+	"increment-via-goldfish": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-timmy"
+		}
+	],
+	"glitch-eval-timmy": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "timmy-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-timmy"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-fountain"
+		}
+	],
+	"increment-via-timmy": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-fountain"
+		}
+	],
+	"glitch-eval-fountain": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "fountain-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-fountain"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-lodge_cat"
+		}
+	],
+	"increment-via-fountain": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-lodge_cat"
+		}
+	],
+	"glitch-eval-lodge_cat": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "lodge_cat-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-lodge_cat"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-billy"
+		}
+	],
+	"increment-via-lodge_cat": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-billy"
+		}
+	],
+	"glitch-eval-billy": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "billy-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-billy"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-kid"
+		}
+	],
+	"increment-via-billy": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-kid"
+		}
+	],
+	"glitch-eval-kid": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "kid-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-kid"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-main_hamster"
+		}
+	],
+	"increment-via-kid": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-main_hamster"
+		}
+	],
+	"glitch-eval-main_hamster": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "main_hamster-unglitched",
+			"expected_bool": true,
+			"success_script": "increment-via-main_hamster"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-done"
+		}
+	],
+	"increment-via-main_hamster": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "unglitch_count",
+			"value": 1,
+			"operation": "ADD",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-eval-done"
+		}
+	],
+	"glitch-eval-done": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "total_glitches",
+			"value": 6,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "MUTATE_VARIABLES",
+			"variable": "total_glitches",
+			"source": "unglitch_count",
+			"operation": "SUB",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "unglitch_count-acquired"
+		}
+	],
+	"unglitch_count-acquired": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "total_glitches",
+			"value": 7,
+			"operation": "SET",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "MUTATE_VARIABLES",
+			"variable": "total_glitches",
+			"source": "unglitch_count",
+			"operation": "SUB",
+			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "total_glitches",
+			"value": 0,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "show_dialog-verthandi-noglitches"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "verthandi-backstory",
+			"expected_bool": true,
+			"success_script": "show_dialog-verthandi-start-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-backstory-intro"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"success_script": "show_dialog-verthandi-backstory-goatsnotfine",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Kid",
+			"success_script": "show_dialog-verthandi-backstory-goatsnotfine",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-backstory-goatsfine"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-backstory-goatsnotfine": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-backstory-goatsnotfine"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-noglitches": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "verthandi-backstory",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-noglitches-surprise"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-glitches-solved-now"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-surprise-wrapup"
+		}
+	],
+	"verthandi-surprise-wrapup": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "storyflag-verthandi",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-noglitches-surprise": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-noglitches-surprise"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-surprise-wrapup"
+		}
+	],
+	"show_dialog-verthandi-start-s": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"expected_bool": true,
+			"success_script": "show_dialog-verthandi-otherglitches"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"success_script": "show_dialog-verthandi-s-goatsnotfine",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Kid",
+			"success_script": "show_dialog-verthandi-s-goatsnotfine",
+			"expected_bool": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-verthandi-goats-solved-now"
+		}
+	],
+	"show_dialog-verthandi-otherglitches": [
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "total_glitches",
+			"value": 1,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "show_dialog-verthandi-oneglitch"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-current-glitch-count"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-s-goatsnotfine": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-s-goatsnotfine"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}	
+	],
+	"show_dialog-verthandi-goats-solved-now": [
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "total_glitches",
+			"value": 0,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "show_dialog-verthandi-noglitches"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-goats-solved-now",
+			"dog": "[etc] but there is more yet to unglitch"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}
+	],
+	"show_dialog-verthandi-oneglitch": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-oneglitch"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}	
 	],
 	"show_dialog-goat": [
 		{
@@ -69,6 +530,44 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-goat"
+		}
+	],
+	"billy-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"success_script": "billy_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"billy_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "billy-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"kid-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "Kid",
+			"success_script": "kid_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"kid_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "kid-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"check_if_player_is_goat_high": [
