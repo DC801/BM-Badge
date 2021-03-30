@@ -97,5 +97,17 @@
 				"Thanks a million! I owe you one!"
 			]
 		}
+	],
+	"dialog-shepherd-end-surprise": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Oh, wow, are the sheep actually back\ninside the pen? I could've sworn they....",
+				"Hey, did you do that? Did you put them\nback?",
+				"Wow, thanks a lot! I could've gotten\ninto deep trouble!"
+			]
+		}
 	]
 }

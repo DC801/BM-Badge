@@ -70,7 +70,7 @@
 			"portrait": "bender",
 			"name": "%Bender%",
 			"messages": [
-				"That doesn't look anything like me,\nhalf-assed or full-assed."
+				"Come on! That doesn't look anything like\nme, half-assed or full-assed."
 			]
 		}
 	],
@@ -180,6 +180,44 @@
 			"name": "%Bender%",
 			"messages": [
 				"Yeah, yeah, you're a real comedian, kid.\nNow turn me back!"
+			]
+		}
+	],
+	"dialog-bender-meatbag": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hey, you! Bite my --\nAhhh!",
+				"Aaaargh, this is terrible! My ass is even\nmore missing than before!",
+				"First someone bit it off, and now it's an\nentirely different kind of ass!",
+				"I feel like this is your fault somehow!",
+				"Hurry up and fix it, kid!"
+			]
+		}
+	],
+	"dialog-bender-end-surprise1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hey, my ass! It's back!"
+			]
+		}
+	],
+	"dialog-bender-end-surprise2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"Hee hee hee!",
+				"Hey, everyone! Bender's ass is back!",
+				"....",
+				"Don't look so smug, kid. It had nothing to\ndo with you.",
+				"I'm sure my ass came home on its own!"
 			]
 		}
 	],

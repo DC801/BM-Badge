@@ -52,7 +52,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_goat_high"
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -122,6 +122,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-verthandi-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"check_if_player_is_goat_high"
                         }],
                  "rotation":0,
                  "type":"",
@@ -351,6 +356,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-shepherd-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"bender-handler-timer"
                         }],
                  "rotation":0,
                  "type":"",
@@ -373,7 +383,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"bender-loiter"
+                         "value":"watch-player"
                         }],
                  "rotation":0,
                  "type":"",
@@ -604,6 +614,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-marta-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"marta_broom",
