@@ -328,17 +328,17 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Beatrice",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Cleo",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Trekkie",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -347,17 +347,17 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Max Swagger",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Verthandi",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Marta",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -366,17 +366,17 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Baker",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Smith",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Uncle Zappy",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -385,12 +385,12 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Aunt Zippy",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Shepherd",
-			"script": "watch-player"
+			"script": "face-player"
 		}
 	],
 	"cutscene-tuesday": [
@@ -1167,7 +1167,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from11": [
@@ -1251,7 +1251,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from5": [
@@ -1263,7 +1263,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from8": [
@@ -1275,7 +1275,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from4": [
@@ -1287,7 +1287,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from9": [
@@ -1347,7 +1347,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from-landing-1": [
@@ -1383,7 +1383,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from6-donut": [
@@ -1395,7 +1395,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
 	"player-ringzero-from6": [
@@ -1407,10 +1407,10 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-artifacts-eval-good"
+			"script": "cutscene-artifacts-eval-good"
 		}
 	],
-	"show_dialog-artifacts-eval-good": [
+	"cutscene-artifacts-eval-good": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
@@ -2070,7 +2070,7 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Marta",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -2644,13 +2644,6 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-postchoose"
-		}
-	],
-	"face-player": [
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
 		}
 	],
 	"watch-marta": [

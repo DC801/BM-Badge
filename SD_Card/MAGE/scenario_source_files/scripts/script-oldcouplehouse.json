@@ -165,65 +165,82 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,
-			"success_script": "show_dialog-bea-sequel-branch"
+			"success_script": "show_dialog-bea2-eval"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bea1",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-end-eval"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea1-backstory",
+			"expected_bool": false,
+			"success_script": "show_dialog-bea1-backstory-eval"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "Delmar",
 			"entity_type": "old_man",
 			"expected_bool": true,
-			"success_script": "show_dialog-bea-happy-branch"
+			"success_script": "show_dialog-bea1-success"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea1-backstory-s"
+		}
+	],
+	"show_dialog-bea1-backstory-eval": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-backstory-surprise"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "Delmar",
 			"entity_type": "sheep",
-			"expected_bool": false,
-			"success_script": "show_dialog-bea-mandud-branch"
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-backstory"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "show_dialog-bea-start2"
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "helga",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-backstory"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea1-backstory-alt"
 		}
 	],
-	"show_dialog-bea-start2": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-backstory",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-start-s"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
+	"show_dialog-bea1-backstory": [
+	{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bea-start1",
 			"doc": "Forty years ago, things were"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "Delmar"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"action": "COPY_SCRIPT",
+			"script": "slow-stare-at-delmar"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -231,16 +248,8 @@
 			"doc": "My husband was a real man, not a"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"script": "slow-stare-at-player"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -252,76 +261,18 @@
 			"doc": "That gastly hacker ruffian hacked him on a whim!"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-backstory",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "bea1-incomplete-wrapup"
+		}
+	],
+	"show_dialog-bea1-backstory-alt": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Beatrice",
-			"script": "watch-player"
-		}
-	],
-	"show_dialog-bea-start-s": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-start-s",
-			"doc": "Oh Delmar, we'll fix you up real soon!"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": true
-		}
-	],
-	"show_dialog-bea-mandud-branch": [
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "helga",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-start2"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-backstory",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-mandud-s"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "Delmar"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"script": "slow-stare-at-delmar"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -329,20 +280,8 @@
 			"doc": "Oh, Delmar! You're... oh...."
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "COPY_SCRIPT",
 			"script": "face-player"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -355,8 +294,356 @@
 			"doc": "That gastly hacker ruffian hacked him on a whim!"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "bea1-incomplete-wrapup"
+		}
+	],
+	"show_dialog-bea1-backstory-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-start-s",
+			"doc": "Oh Delmar, we'll fix you up real soon!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea1-incomplete-wrapup"
+		}
+	],
+	"show_dialog-bea1-success": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "slow-stare-at-delmar"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-happy",
+			"doc": "Oh, Delmar, it's you!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea1-complete-wrapup"
+		}
+	],
+	"show_dialog-bea1-end-eval": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-end-s"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "sheep",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-end-trick"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "helga",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea1-end-trick"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea1-end-confused"
+		}
+	],
+	"show_dialog-bea1-end-confused": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-confused",
+			"doc": "Delmar, you're...."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"show_dialog-bea1-end-trick": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-trick",
+			"doc": "How could you? What a nasty trick!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"show_dialog-bea1-end-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-end-s",
+			"doc": "Thank you, Player!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"show_dialog-bea1-backstory-surprise": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-happy",
+			"doc": "He's a man again! Thank you, Player! (TODO: MAKE THIS DIALOG DIFFERENT THO)"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea1-complete-wrapup"
+		}
+	],
+	"show_dialog-bea2-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bea2",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-end-eval"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "bea2-backstory",
+			"expected_bool": false,
+			"success_script": "show_dialog-bea2-backstory-eval"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "sheep",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-success"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "helga",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-success"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea2-backstory-s"
+		}
+	],
+	"show_dialog-bea2-success-surprise": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-coincidence",
+			"doc": "Oh, and I was just thinking how I wanted him to become a sheep"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea2-complete-wrapup"
+		}
+	],
+	"show_dialog-bea2-backstory-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea2-backstory-alt",
+			"doc": "Actually, I was hoping he could become a sheep again."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea2-complete-wrapup"
+		}
+	],
+	"show_dialog-bea2-backstory-eval": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "sheep",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-success-surprise"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "helga",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-success-surprise"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-backstory"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea2-backstory-alt"
+		}
+	],
+	"show_dialog-bea2-backstory": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-regret1",
+			"doc": "You know, I appreciate what you did, Player"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "slow-stare-at-delmar"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-regret2",
+			"doc": "...."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "slow-stare-at-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-regret3",
+			"doc": "But now I find myself longing for quiet."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea2-incomplete-wrapup"
+		}
+	],
+"show_dialog-bea2-backstory-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-regret-s",
+			"doc": "I'm sure he won't mind being a sheep again."
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea2-incomplete-wrapup"
+		}
+	],
+	"show_dialog-bea2-success": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-relief",
+			"doc": "Thank you! And we need not mention this to anyone"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea2-complete-wrapup"
+		}
+	],
+	"show_dialog-bea2-end-eval": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "old_man",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-deja"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "sheep",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-end"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Delmar",
+			"entity_type": "helga",
+			"expected_bool": true,
+			"success_script": "show_dialog-bea2-end"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bea2-end-alt"
+		}
+	],
+	"show_dialog-bea2-end": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-relief-s",
+			"doc": "Peace at last!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"show_dialog-bea2-end-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea2-end-alt",
+			"doc": "Well, I suppose we could give this a try instead"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"show_dialog-bea2-deja": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-deja",
+			"doc": "I suddenly have the strangest feeling of"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"bea-wrapup-mini": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
+		}
+	],
+	"bea1-complete-wrapup": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Delmar"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-backstory",
+			"save_flag": "bea1-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "storyflag-bea1",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"bea1-incomplete-wrapup": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "watch-player"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-backstory",
 			"bool_value": true
 		},
 		{
@@ -369,227 +656,106 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
+		}
+	],
+	"slow-stare-at-delmar": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Delmar"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"slow-stare-at-player": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	"bea2-complete-wrapup": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Delmar"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "storyflag-bea2",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Beatrice",
+			"script": "show_dialog-bea-start"
+		}
+	],
+	"bea2-incomplete-wrapup": [
+		{
+			"action": "COPY_SCRIPT",
 			"script": "watch-player"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-mandud-s": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-mandud-s",
-			"doc": "Oh, Delmar! We'll make you your normal self soon!"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-happy-branch": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bea1",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-happy-aftermath-branch"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Beatrice",
-			"script": "null_script"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "Delmar"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-happy",
-			"doc": "Oh, Delmar, it's you!"
-		},
-		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-bea1",
-			"bool_value": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-happy-aftermath-branch": [
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "old_man",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-end-s"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "sheep",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-trick"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "helga",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-trick"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "show_dialog-bea-confused"
-		}
-	],
-	"show_dialog-bea-trick": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-confused",
-			"doc": "Oh, Delmar, you're... uh...."
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-confused": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-confused",
-			"doc": "Oh, Delmar, you're... uh...."
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-end-s": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-end-s",
-			"doc": "Thank you, Player!"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-sequel-branch": [
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "sheep",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-sheepening-branch"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "helga",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-sheepening-branch"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "old_man",
-			"expected_bool": false,
-			"success_script": "show_dialog-bea-confused"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-regret-backstory",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-regret-s"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-regret1",
-			"doc": "You know, I appreciate what you did, Player"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "Delmar"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-regret2",
-			"doc": "...."
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-regret3",
-			"doc": "But now I find myself longing for quiet."
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret-backstory",
+			"save_flag": "bea2-backstory",
 			"bool_value": true
 		},
 		{
@@ -600,142 +766,6 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea2-hint",
 			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-regret-s": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-regret-s",
-			"doc": "I'm sure he won't mind being a sheep again."
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea2-hint",
-			"bool_value": true
-		}
-	],
-	"show_dialog-bea-sheepening-branch": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bea2",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-alldone"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "bea-regret-backstory",
-			"expected_bool": false,
-			"success_script": "show_dialog-bea-coincidence"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-relief",
-			"doc": "Thank you! And we need not mention this to anyone"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-bea2",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret-backstory",
-			"bool_value": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-relief-s": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-relief-s",
-			"doc": "Peace at last!"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-alldone": [
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "sheep",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-relief-s"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "helga",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-relief-s"
-		},
-		{
-			"action": "CHECK_ENTITY_TYPE",
-			"entity": "Delmar",
-			"entity_type": "old_man",
-			"expected_bool": true,
-			"success_script": "show_dialog-bea-deja"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "show_dialog-bea-coincidence"
-		}
-	],
-	"show_dialog-bea-deja": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-deja",
-			"doc": "I suddenly have the strangest feeling of"
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
-		}
-	],
-	"show_dialog-bea-coincidence": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bea-coincidence",
-			"doc": "Oh, and I was just thinking how I wanted him to become a sheep"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-bea2",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-regret-backstory",
-			"bool_value": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

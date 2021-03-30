@@ -455,7 +455,7 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Bender",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
