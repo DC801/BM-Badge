@@ -35,6 +35,12 @@
 	],
 	"show_dialog-kid": [
 		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-kid-glitched",
+			"expected_bool": true
+		},
+		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "Kid",
 			"entity_type": "blitzball",
@@ -55,6 +61,28 @@
 			"bool_value": true
 		}
 	],
+	"show_dialog-kid-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-kid-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-kid"
+		}
+	],
+	"show_dialog-smith-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-smith"
+		}
+	],
 	"show_dialog-kid-ball": [
 		{
 			"action": "SHOW_DIALOG",
@@ -71,6 +99,12 @@
 		}
 	],
 	"show_dialog-smith": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-smith-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Smith",

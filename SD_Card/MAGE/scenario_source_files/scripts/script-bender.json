@@ -28,7 +28,24 @@
 			"duration": 2000
 		}
 	],
+	"show_dialog-bender-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bender-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bender-start"
+		}
+	],
 	"show_dialog-bender-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bender-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",

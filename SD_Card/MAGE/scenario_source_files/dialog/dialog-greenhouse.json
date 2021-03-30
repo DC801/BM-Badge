@@ -1,4 +1,14 @@
 {
+	"dialog-trekkie-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "trekkie",
+			"name": "%Trekkie%",
+			"messages": [
+				"Hu bu. Qvq zr trg n ivehf?"
+			]
+		}
+	],
 	"dialog-trekkie-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",

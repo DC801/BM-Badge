@@ -1,5 +1,44 @@
 {
+	"show_dialog-bert-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bert-start"
+		}
+	],
+	"show_dialog-alfonso-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-alfonso-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-alfonso-start"
+		}
+	],
+	"show_dialog-jackob-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-bert-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bert-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
@@ -277,6 +316,12 @@
 		}
 	],
 	"show_dialog-jackob-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-jackob-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
@@ -882,6 +927,12 @@
 		}
 	],
 	"show_dialog-alfonso-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-alfonso-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "alfonso-backstory",

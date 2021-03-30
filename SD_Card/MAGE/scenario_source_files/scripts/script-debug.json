@@ -591,6 +591,11 @@
         },
         {
             "action": "SET_SAVE_FLAG",
+            "save_flag": "marta-backstory",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
             "save_flag": "hackbook-endstory",
             "bool_value": true
         },
@@ -669,6 +674,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "verthandi-backstory",
+            "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "marta-backstory",
             "bool_value": false
         },
         {

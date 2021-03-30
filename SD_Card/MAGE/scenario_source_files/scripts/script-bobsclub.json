@@ -260,7 +260,24 @@
 			"map": "map-bobsclub"
 		}
 	],
+	"show_dialog-baker-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-baker-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-baker-start"
+		}
+	],
 	"show_dialog-baker-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-baker-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bobsclub-entered",
@@ -376,11 +393,28 @@
 			"bool_value": true
 		}
 	],
+	"show_dialog-bobrock-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobrock-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bobrock-start"
+		}
+	],
 	"show_dialog-bobrock-start": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Bob Austin",
 			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bobrock-glitched",
+			"expected_bool": true
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -506,7 +540,7 @@
 			"success_script": "show_dialog-bobsclub"
 		}
 	],
-"show_dialog-bobsclub": [
+	"show_dialog-bobsclub": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
@@ -652,24 +686,41 @@
 			"dialog": "dialog-bobsclub6"
 		}
 	],
+	"show_dialog-bobg-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobg-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bobsclub-bob"
+		}
+	],
 	"show_dialog-bobsclub-bob": [
-			{
-				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-				"entity": "Guardian Bob",
-				"target_entity": "%PLAYER%"
-			},
-			{
-				"action": "SHOW_DIALOG",
-				"dialog": "dialog-bobsclub-bob",
-				"doc": "They could've told me it was canceled before I came out here."
-			},
-			{
-				"action": "CHECK_SAVE_FLAG",
-				"save_flag": "storyflag-bobmoss",
-				"expected_bool": false,
-				"success_script": "show_dialog-bobsclub-bob-where"
-			}
-		],
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Guardian Bob",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bobg-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobsclub-bob",
+			"doc": "They could've told me it was canceled before I came out here."
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bobmoss",
+			"expected_bool": false,
+			"success_script": "show_dialog-bobsclub-bob-where"
+		}
+	],
 	"show_dialog-bobsclub-bob-where": [
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -718,7 +769,24 @@
 			"script": "show_dialog-bobsclub-bob"
 		}
 	],
-"show_dialog-bobsclub-strongbob": [
+	"show_dialog-strong_bad-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-strong_bad-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bobsclub-strongbob"
+		}
+	],
+	"show_dialog-bobsclub-strongbob": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-strong_bad-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Strong Bad",

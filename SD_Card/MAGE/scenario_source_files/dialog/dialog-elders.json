@@ -1,4 +1,35 @@
 {
+	"dialog-bert-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"....",
+				"Bczv um jiks."
+			]
+		}
+	],
+	"dialog-alfonso-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "alfonso",
+			"name": "%Alfonso%",
+			"messages": [
+				"Cdl iwpi'h fjxit jcctrthhpgn!"
+			]
+		}
+	],
+	"dialog-jackob-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"Vg'f tbbq gung lbh'er cenpgvpvat, ohg\ncreuncf lbh fubhyq sbphf ba erfgbevat gur\ngbja?"
+			]
+		}
+	],
 	"dialog-bert-start": [
 		{
 			"alignment": "BOTTOM_LEFT",

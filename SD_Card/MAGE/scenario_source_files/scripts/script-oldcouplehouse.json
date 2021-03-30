@@ -67,7 +67,35 @@
 			"map": "map-main"
 		}
 	],
+	"show_dialog-bea-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bea-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bea-start"
+		}
+	],
+	"show_dialog-delmar-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-delmar-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-delmar"
+		}
+	],
 	"show_dialog-delmar": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-delmar-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "Delmar",
@@ -129,6 +157,12 @@
 		}
 	],
 	"show_dialog-bea-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bea-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Beatrice",

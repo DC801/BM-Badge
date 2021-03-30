@@ -300,7 +300,24 @@
 			"expected_bool": true
 		}
 	],
+	"show_dialog-cleo-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cleo-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-cleo1"
+		}
+	],
 	"show_dialog-cleo1": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-cleo-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cleo",
@@ -308,8 +325,8 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
+			"entity": "Cat",
+			"target_entity": "Cleo"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -323,14 +340,20 @@
 	],
 	"show_dialog-cleo2": [
 		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-cleo-glitched",
+			"expected_bool": true
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cleo",
 			"target_entity": "Cat"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
+			"entity": "Cat",
+			"target_entity": "Cleo"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -342,7 +365,24 @@
 			"script": "show_dialog-cleo1"
 		}
 	],
+	"show_dialog-cat-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-cat"
+		}
+	],
 	"show_dialog-cat": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-cat-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-cat1"
@@ -748,11 +788,39 @@
 			"script": "show_dialog-hamster-start"
 		}
 	],
+	"show_dialog-marta-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-marta-start"
+		}
+	],
+	"show_dialog-marta-start-s": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-marta-start-s"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-marta-start"
+		}
+	],
 	"show_dialog-marta-start": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Marta",
 			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-marta-glitched",
+			"expected_bool": true
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
@@ -762,8 +830,19 @@
 			"success_script": "show_dialog-marta-cheat"
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "marta-backstory",
+			"expected_bool": true,
+			"success_script": "show_dialog-marta-start-s"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-marta-start"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "marta-backstory",
+			"bool_value": true
 		}
 	],
 	"show_dialog-marta-cheat": [

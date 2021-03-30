@@ -115,6 +115,56 @@
 			]
 		}
 	],
+	"dialog-max-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "max",
+			"name": "%Max Swagger%",
+			"messages": [
+				"Azr. Vm jvbyzl aolyl'k il huvaoly\njvtwspjhapvu!"
+			]
+		}
+	],
+	"dialog-felix-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "felix",
+			"name": "%Felix%",
+			"messages": [
+				"Sxas. T'gp mppy hzcvtyr dz slco T'x\nslwwfntyletyr!"
+			]
+		}
+	],
+	"dialog-deut-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "deut",
+			"name": "%Deuteronomy%",
+			"messages": [
+				"Abj gung'f n gevc."
+			]
+		}
+	],
+	"dialog-maru-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "maru",
+			"name": "%Maru%",
+			"messages": [
+				"Qisa."
+			]
+		}
+	],
+	"dialog-bmurray-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bmurray",
+			"name": "%B. Murray%",
+			"messages": [
+				"Ib, hi... C ehyq nbun wunhcj qum vux!"
+			]
+		}
+	],
 	"dialog-felix": [
 		{
 			"alignment": "BOTTOM_LEFT",

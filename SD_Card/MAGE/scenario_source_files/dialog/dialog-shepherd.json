@@ -10,6 +10,16 @@
 			]
 		}
 	],
+	"dialog-shepherd-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "shepherd",
+			"name": "%Shepherd%",
+			"messages": [
+				"Jubn, jung'f tbvat ba?!"
+			]
+		}
+	],
 	"dialog-shepherd-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -17,7 +27,6 @@
 			"name": "%Shepherd%",
 			"messages": [
 				"I was supposed to be watching the sheep,\nbut I took a quick nap, and the next thing\nI know... they were all over the place."
-
 			]
 		}
 	],
