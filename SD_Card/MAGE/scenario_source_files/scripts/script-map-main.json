@@ -715,6 +715,34 @@
 			"dialog": "dialog-hamster-glitched"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "hamster-glitchhint-eval"
+		}
+	],
+	"hamster-glitchhint-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "main_hamster-unglitched",
+			"expected_bool": false,
+			"success_script": "hamster-hint-yes"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-hamster-start"
+		}
+	],
+	"hamster-hint-yes": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-hamster-start"

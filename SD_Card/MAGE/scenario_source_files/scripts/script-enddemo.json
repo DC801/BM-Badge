@@ -625,6 +625,11 @@
 			"doc": "Voila!"
 		},
 		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 1200,
+			"color": "#000000"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "debug-roll-credits"
 		}
@@ -758,6 +763,15 @@
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 400,
+			"color": "#000000"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",

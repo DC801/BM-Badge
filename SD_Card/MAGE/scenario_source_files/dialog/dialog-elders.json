@@ -132,6 +132,17 @@
 			]
 		}
 	],
+	"dialog-bert-verthandi": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bert",
+			"name": "%Bert%",
+			"messages": [
+				"A goddess mourns for lost souls.",
+				"She watches the goats."
+			]
+		}
+	],
 	"dialog-jackob-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -575,6 +586,25 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-verthandi": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "mage",
+			"name": "%PLAYER%",
+			"messages": [
+				"How do I unscramble someone's pixels?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "jackob",
+			"name": "%Jackob%",
+			"messages": [
+				"I think there was something in the Entity\nbooks about that, but I didn't quite\nunderstand.",
+				"Something about changing a bit instead of\na byte, I think...."
+			]
+		}
+	],
 	"dialog-alfonso-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -593,7 +623,7 @@
 			"portrait": "alfonso",
 			"name": "%Alfonso%",
 			"messages": [
-				"You've completed $story-flag-count$ out of 10 tasks."
+				"You've completed $story-flag-count$ out of 11 tasks."
 			]
 		}
 	],
