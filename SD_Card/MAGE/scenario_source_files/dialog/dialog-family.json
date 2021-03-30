@@ -19,6 +19,26 @@
 			]
 		}
 	],
+	"dialog-kid-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "blitzball",
+			"name": "%Kid%",
+			"messages": [
+				"Stb N'r ns fstymjw inrjsxnts!"
+			]
+		}
+	],
+	"dialog-smith-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "smith",
+			"name": "%Smith%",
+			"messages": [
+				"Naa, ptl matm lttz itgxxk, hk lxz ytnem\nitgxxk?"
+			]
+		}
+	],
 	"dialog-smith": [
 		{
 			"alignment": "BOTTOM_LEFT",

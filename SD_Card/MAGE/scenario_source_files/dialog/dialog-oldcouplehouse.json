@@ -9,6 +9,26 @@
 			]
 		}
 	],
+	"dialog-bea-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Ydy D ymjk ht bgvnnzn? Ocz rjmgy'n bjiz\nv wdo apuut."
+			]
+		}
+	],
+	"dialog-delmar-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "delmar",
+			"name": "%Delmar%",
+			"messages": [
+				"Bu, qrne. V zhfg'ir fgbbq hc gbb snfg.\nSrry n ovg jbbml."
+			]
+		}
+	],
 	"dialog-delmar-blab": [
 		{
 			"alignment": "BOTTOM_LEFT",

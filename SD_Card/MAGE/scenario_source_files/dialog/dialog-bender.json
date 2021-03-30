@@ -1,4 +1,14 @@
 {
+	"dialog-bender-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "bender",
+			"name": "%Bender%",
+			"messages": [
+				"I speak binary fluently, kid! A little\ntrick like this won't slow me down!"
+			]
+		}
+	],
 	"dialog-bender-start1": [
 		{
 			"alignment": "BOTTOM_RIGHT",

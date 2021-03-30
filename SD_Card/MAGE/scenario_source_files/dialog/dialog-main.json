@@ -95,6 +95,26 @@
 			]
 		}
 	],
+	"dialog-cleo-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cleo",
+			"name": "%Cleo%",
+			"messages": [
+				"Uzz, V srry n ovg shaal."
+			]
+		}
+	],
+	"dialog-cat-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "cat",
+			"name": "%Cat%",
+			"messages": [
+				"...."
+			]
+		}
+	],
 	"dialog-cat1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -187,6 +207,26 @@
 			"name": "%Marta%",
 			"messages": [
 				"....","That's cheating."
+			]
+		}
+	],
+	"dialog-marta-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Jpd, hp rpe te! Jzf slnv!"
+			]
+		}
+	],
+	"dialog-marta-start-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "marta",
+			"name": "%Marta%",
+			"messages": [
+				"Good luck."
 			]
 		}
 	],

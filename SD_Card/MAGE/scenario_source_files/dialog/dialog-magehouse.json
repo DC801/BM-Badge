@@ -19,6 +19,26 @@
 			]
 		}
 	],
+	"dialog-zappy-glitched": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "zappy",
+			"name": "%Uncle Zappy%",
+			"messages": [
+				"Abj V srry rkgen mnccl!"
+			]
+		}
+	],
+	"dialog-zippy-glitched": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "zippy",
+			"name": "%Aunt Zippy%",
+			"messages": [
+				"Jbj, guvf srryf ernyyl jrveq! Vg erzvaqf\nzr bs guvf bar gvzr va pbyyrtr...."
+			]
+		}
+	],
 	"dialog-goodmorning-wake": [
 		{
 			"alignment": "BOTTOM_RIGHT",

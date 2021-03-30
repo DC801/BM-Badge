@@ -91,7 +91,35 @@
 			"map": "map-main"
 		}
 	],
+	"show_dialog-zappy-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zappy-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-zappy-start"
+		}
+	],
+	"show_dialog-zippy-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-zippy-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-zippy-start"
+		}
+	],
 	"show_dialog-zappy-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-zappy-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Uncle Zappy",
@@ -103,6 +131,12 @@
 		}
 	],
 	"show_dialog-zippy-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-zippy-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Uncle Zappy",

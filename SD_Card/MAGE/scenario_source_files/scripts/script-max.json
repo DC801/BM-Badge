@@ -1,5 +1,66 @@
 {
+	"show_dialog-max-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-max-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-max-start"
+		}
+	],
+	"show_dialog-felix-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-felix-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-felix"
+		}
+	],
+	"show_dialog-deut-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-deut-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-deut"
+		}
+	],
+	"show_dialog-bmurray-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bmurray-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bmurray"
+		}
+	],
+	"show_dialog-maru-glitched": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maru-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-maru"
+		}
+	],
 	"show_dialog-max-start": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-max-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-catwork",
@@ -216,6 +277,12 @@
 	],
 	"show_dialog-felix": [
 		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-felix-glitched",
+			"expected_bool": true
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Felix",
 			"script": "null_script"
@@ -236,6 +303,12 @@
 		}
 	],
 	"show_dialog-deut": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-deut-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Deuteronomy",
@@ -258,6 +331,12 @@
 	],
 	"show_dialog-maru": [
 		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-maru-glitched",
+			"expected_bool": true
+		},
+		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Maru",
 			"script": "null_script"
@@ -278,6 +357,12 @@
 		}
 	],
 	"show_dialog-bmurray": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bmurray-glitched",
+			"expected_bool": true
+		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "B. Murray",
