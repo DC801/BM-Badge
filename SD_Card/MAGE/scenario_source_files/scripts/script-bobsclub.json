@@ -355,9 +355,8 @@
 			"bool_value": false
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bob Austin",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -406,9 +405,8 @@
 	],
 	"show_dialog-bobrock-start": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bob Austin",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -699,9 +697,8 @@
 	],
 	"show_dialog-bobsclub-bob": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Guardian Bob",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -788,9 +785,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Strong Bad",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -913,11 +909,76 @@
 			"script": "null_script"
 		}
 	],
+	"show_dialog-bobmoss-glitched": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "show_dialog-bobmoss-deglitch"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bobmoss-start"
+		}
+	],
+	"show_dialog-bobmoss-s-glitched": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "show_dialog-bobmoss-deglitch"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bobmoss-start-s"
+		}
+	],
+	"show_dialog-bobmoss-deglitch": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-glitched1"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 500,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"bool_value": false
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 500,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobmoss-glitched2"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		}
+	],
 	"show_dialog-bobmoss-start": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bob Moss",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bobmoss-glitched",
+			"expected_bool": true
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -944,9 +1005,8 @@
 			"script": "null_script"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bob Moss",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -987,9 +1047,14 @@
 	],
 	"show_dialog-bobmoss-start-s": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Bob Moss",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-bobmoss-s-glitched",
+			"expected_bool": true
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -997,7 +1062,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Bob Moss",
+			"entity": "%SELF%",
 			"direction": "south"
 		}
 	],
@@ -1115,9 +1180,8 @@
 	],
 	"debug-bob-q": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",

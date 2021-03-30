@@ -89,9 +89,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -107,9 +106,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "Felix"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -125,9 +123,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -188,9 +185,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -222,9 +218,8 @@
 	],
 	"show_dialog-max-start-s": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -248,9 +243,8 @@
 	],
 	"show_dialog-max-catbosshere": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -265,9 +259,8 @@
 	],
 	"show_dialog-max-end": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Max Swagger",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -288,9 +281,8 @@
 			"script": "null_script"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Felix",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -315,9 +307,8 @@
 			"script": "null_script"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Deuteronomy",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -342,9 +333,8 @@
 			"script": "null_script"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Maru",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -369,9 +359,8 @@
 			"script": "null_script"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "B. Murray",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",

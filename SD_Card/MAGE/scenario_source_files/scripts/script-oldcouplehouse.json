@@ -164,9 +164,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -236,9 +235,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -335,9 +333,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -512,9 +509,8 @@
 	],
 	"show_dialog-bea-sequel-branch": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
@@ -575,9 +571,8 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Beatrice",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -750,9 +745,8 @@
 	],
 	"debug-bea-sequel-q": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",

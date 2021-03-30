@@ -40,9 +40,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -323,9 +322,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -457,9 +455,8 @@
 			"duration": 400
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
