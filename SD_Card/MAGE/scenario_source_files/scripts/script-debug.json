@@ -384,7 +384,7 @@
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "ring-aqcuired",
+            "save_flag": "ring-acquired",
             "bool_value": true
         },
         {
@@ -416,7 +416,7 @@
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "ring-aqcuired",
+            "save_flag": "ring-acquired",
             "bool_value": false
         },
         {
@@ -546,12 +546,12 @@
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "bea-backstory",
+            "save_flag": "bea1-backstory",
             "bool_value": true
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "bea-regret-backstory",
+            "save_flag": "bea2-backstory",
             "bool_value": true
         },
         {
@@ -633,12 +633,12 @@
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "bea-backstory",
+            "save_flag": "bea1-backstory",
             "bool_value": false
         },
         {
             "action": "SET_SAVE_FLAG",
-            "save_flag": "bea-regret-backstory",
+            "save_flag": "bea2-backstory",
             "bool_value": false
         },
         {

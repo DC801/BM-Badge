@@ -303,7 +303,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"bool_value": true
 		},
 		{
@@ -2263,7 +2263,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-zippy-postchoose"
 		},
@@ -2281,7 +2281,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-zappy-postchoose"
 		},
@@ -2299,7 +2299,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-verthandi-postchoose"
 		},
@@ -2317,7 +2317,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-smith-postchoose"
 		},
@@ -2334,7 +2334,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-max-postchoose"
 		},
@@ -2351,7 +2351,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-marta-postchoose"
 		},
@@ -2390,7 +2390,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-trekkie-postchoose"
 		},
@@ -2407,7 +2407,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-shepherd-postchoose"
 		},
@@ -2424,7 +2424,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-cleo-postchoose"
 		},
@@ -2441,7 +2441,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-beatrice-postchoose"
 		},
@@ -2458,7 +2458,7 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-aqcuired",
+			"save_flag": "ring-acquired",
 			"expected_bool": true,
 			"success_script": "show_dialog-baker-postchoose"
 		},
