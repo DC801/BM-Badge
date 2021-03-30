@@ -121,7 +121,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-verthandi"
+                         "value":"show_dialog-verthandi-start"
                         }],
                  "rotation":0,
                  "type":"",
@@ -145,6 +145,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-cat"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"kid-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -267,6 +272,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-cleo1"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"billy-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -647,7 +657,7 @@
                  "gid":1190,
                  "height":32,
                  "id":252,
-                 "name":"Debug Exa 9001",
+                 "name":"Debug Exa 90",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -2128,7 +2138,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":268,
+ "nextobjectid":269,
  "orientation":"orthogonal",
  "properties":[
         {

@@ -112,6 +112,28 @@
 			"script": "debug-set-flags-true-q"
 		}
 	],
+	"debug-set-glitch-flags-true": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-glitch-flags-true"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-set-flags-true-q"
+		}
+	],
+	"debug-set-glitch-flags-false": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-glitch-flags-false"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-set-flags-true-q"
+		}
+	],
 	"debug-set-all-true": [
 		{
 			"action": "COPY_SCRIPT",
@@ -275,6 +297,11 @@
             "action": "SET_SAVE_FLAG",
             "save_flag": "storyflag-bobmoss",
             "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "storyflag-verthandi",
+            "bool_value": true
         }
 	],
 	"set-story-flags-false": [
@@ -327,6 +354,11 @@
             "action": "SET_SAVE_FLAG",
             "save_flag": "storyflag-bobmoss",
             "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "storyflag-verthandi",
+            "bool_value": false
         }
 	],
 	"set-misc-flags-true": [
@@ -353,6 +385,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "ring-aqcuired",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "glitch-lesson",
             "bool_value": true
         }
 	],
@@ -381,6 +418,11 @@
             "action": "SET_SAVE_FLAG",
             "save_flag": "ring-aqcuired",
             "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "glitch-lesson",
+            "bool_value": false
         }
 	],
 	"set-wonthedemo-flags-true": [
@@ -400,6 +442,21 @@
 	"set-glitch-flags-true": [
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "billy-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "kid-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "fountain-unglitched",
 			"bool_value": true
 		},
@@ -411,11 +468,6 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "timmy-unglitched",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "goats-unglitched",
 			"bool_value": true
 		},
 		{
@@ -432,6 +484,21 @@
 	"set-glitch-flags-false": [
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "billy-unglitched",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "kid-unglitched",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "fountain-unglitched",
 			"bool_value": false
 		},
@@ -443,11 +510,6 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "timmy-unglitched",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "goats-unglitched",
 			"bool_value": false
 		},
 		{
@@ -520,6 +582,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "smith-backstory",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "verthandi-backstory",
             "bool_value": true
         },
         {
@@ -597,6 +664,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "smith-backstory",
+            "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "verthandi-backstory",
             "bool_value": false
         },
         {

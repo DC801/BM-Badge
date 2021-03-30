@@ -599,6 +599,25 @@
 			"script": "null_script"
 		}
 	],
+	"goldfish-glitchwatch": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "goldfish_now_unglitched",
+			"expected_bool": false
+		}
+	],
+	"goldfish_now_unglitched": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goldfish-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
 	"show_dialog-goldfish": [
 		{
 			"action": "SHOW_DIALOG",
@@ -624,11 +643,6 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Mr. Tickles",
 			"script": "show_dialog-goldfish"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "goldfish-unglitched",
-			"bool_value": true
 		}
 	],
 	"show_dialog-magejournal": [

@@ -270,6 +270,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-goldfish"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"goldfish-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"",

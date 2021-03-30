@@ -42,7 +42,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-glitch_goats-check"
+			"script": "on_load-map-main-glitch_billy-check"
 		}
 	],
 	"on_load-map-main-rake-do": [
@@ -57,7 +57,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-glitch_goats-check"
+			"script": "on_load-map-main-glitch_billy-check"
 		}
 	],
 	"rake-in-lake": [
@@ -67,24 +67,42 @@
 			"geometry": "rake-lake-point"
 		}
 	],
-	"on_load-map-main-glitch_goats-check": [
+	"on_load-map-main-glitch_billy-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "goats-unglitched",
+			"save_flag": "billy-unglitched",
 			"expected_bool": true,
-			"success_script": "on_load-map-main-glitch_goats-do"
+			"success_script": "on_load-map-main-glitch_billy-do"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-glitch_kid-check"
+		}
+	],
+	"on_load-map-main-glitch_billy-do": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-glitch_kid-check"
+		}
+	],
+	"on_load-map-main-glitch_kid-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "kid-unglitched",
+			"expected_bool": true,
+			"success_script": "on_load-map-main-glitch_kid-do"
 		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "on_load-map-main-glitch_fountain-check"
 		}
 	],
-	"on_load-map-main-glitch_goats-do": [
-		{
-			"action": "SET_ENTITY_GLITCHED",
-			"entity": "Billy",
-			"bool_value": false
-		},
+	"on_load-map-main-glitch_kid-do": [
 		{
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Kid",

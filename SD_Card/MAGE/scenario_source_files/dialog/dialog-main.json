@@ -27,46 +27,6 @@
 			]
 		}
 	],
-	"dialog-verthandi": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
-			"messages": [
-				"I'm so glad the goats made up\nand are friends again!"
-			]
-		}
-	],
-	"dialog-verthandi-ohno": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "Verthandi",
-			"messages": [
-				"Oh no, the adorable little goats seem to\nbe fighting! Or... umm... perhaps...\nthey have been glitched?"
-			]
-		}
-	],
-	"dialog-goat": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "goat",
-			"name": "Goat",
-			"messages": [
-				"Baaahhh!"
-			]
-		}
-	],
-	"dialog-goat-glitched": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"portrait": "goat",
-			"name": "Goat",
-			"messages": [
-				"ba15456`-------++++++gf\n+++++-//==========/*8901ikg"
-			]
-		}
-	],
 	"dialog-cleo2": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -281,6 +241,10 @@
 					"script": "debug-set-backstory-false"
 				},
 				{
+					"label": "Unglitch flags",
+					"script": "debug-set-glitch-flags-false"
+				},
+				{
 					"label": "Never mind",
 					"script": "no_debug-set-flags-false"
 				}
@@ -304,6 +268,10 @@
 				{
 					"label": "Backstory flags",
 					"script": "debug-set-backstory-true"
+				},
+				{
+					"label": "Unglitch flags",
+					"script": "debug-set-glitch-flags-true"
 				},
 				{
 					"label": "Never mind",
