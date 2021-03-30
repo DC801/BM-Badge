@@ -600,7 +600,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
+			"entity": "Verthandi",
 			"script": "check_if_player_is_goat_low"
 		}
 	],
@@ -617,7 +617,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
+			"entity": "Verthandi",
 			"script": "check_if_player_is_goat_high"
 		}
 	],

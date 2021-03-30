@@ -276,22 +276,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Felix",
-			"script": "null_script"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-felix"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Felix",
-			"script": "felix-loiter"
 		}
 	],
 	"show_dialog-deut": [
@@ -302,22 +288,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Deuteronomy",
-			"script": "null_script"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-deut"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Deuteronomy",
-			"script": "deut-loiter"
 		}
 	],
 	"show_dialog-maru": [
@@ -328,22 +300,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Maru",
-			"script": "null_script"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-maru"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Maru",
-			"script": "maru-loiter"
 		}
 	],
 	"show_dialog-bmurray": [
@@ -354,22 +312,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "B. Murray",
-			"script": "null_script"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bmurray"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "B. Murray",
-			"script": "bmurray-loiter"
 		}
 	],
 	"on_tick-max-neutral": [

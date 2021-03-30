@@ -12,9 +12,8 @@
 	],
 	"show_dialog-shepherd-start": [
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%SELF%",
-			"script": "watch-player"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -28,6 +27,40 @@
 			"expected_bool": true,
 			"success_script": "show_dialog-shepherd-end"
 		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Baa",
+			"geometry": "sheep-pen",
+			"success_script": "show_dialog-shepherd-backstory",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Ram",
+			"geometry": "sheep-pen",
+			"success_script": "show_dialog-shepherd-backstory",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Ewe",
+			"geometry": "sheep-pen",
+			"success_script": "show_dialog-shepherd-backstory",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Helga",
+			"geometry": "sheep-pen",
+			"success_script": "show_dialog-shepherd-backstory",
+			"expected_bool": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-shepherd-end-surprise"
+		}
+	],
+	"show_dialog-shepherd-backstory": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "shepherd-backstory",
@@ -145,15 +178,6 @@
 			"script": "face-player"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": true
-		},
-		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Baa",
 			"geometry": "sheep-pen",
@@ -184,6 +208,15 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-start-s"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -236,8 +269,9 @@
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -259,6 +293,15 @@
 			"dialog": "dialog-shepherd-sheepcheer"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Shepherd",
 			"script": "show_dialog-shepherd-start"
@@ -272,6 +315,36 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-end"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Shepherd",
+			"script": "show_dialog-shepherd-start"
+		}
+	],
+	"show_dialog-shepherd-end-surprise": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-shepherd-end-surprise"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "storyflag-shepherd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-backstory",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

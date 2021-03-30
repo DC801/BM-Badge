@@ -801,7 +801,7 @@
 	],
 	"dialog-timmy-glitched": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "timmy",
 			"name": "%SELF%",
 			"messages": [
@@ -811,7 +811,7 @@
 	],
 	"dialog-timmy-start": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "timmy",
 			"name": "%SELF%",
 			"messages": [
@@ -821,7 +821,7 @@
 	],
 	"dialog-timmy-start-s": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"portrait": "timmy",
 			"name": "%SELF%",
 			"messages": [
