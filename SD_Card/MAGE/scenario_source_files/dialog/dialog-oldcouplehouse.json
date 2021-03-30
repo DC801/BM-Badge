@@ -351,5 +351,26 @@
 				"Nothing changed."
 			]
 		}
+	],
+	"dialog-bea2-backstory-alt": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Oh, um....",
+				"Actually, I was hoping he could become a\nsheep again."
+			]
+		}
+	],
+	"dialog-bea2-end-alt": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "beatrice",
+			"name": "%Beatrice%",
+			"messages": [
+				"Well, I suppose we could give this a try\ninstead...."
+			]
+		}
 	]
 }

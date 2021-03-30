@@ -383,7 +383,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"watch-player"
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "type":"",

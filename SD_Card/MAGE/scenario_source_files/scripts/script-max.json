@@ -362,22 +362,22 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Felix",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Maru",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "B. Murray",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Deuteronomy",
-			"script": "watch-player"
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_ENTITY_CURRENT_ANIMATION",

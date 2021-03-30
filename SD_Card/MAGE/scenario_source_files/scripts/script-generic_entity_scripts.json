@@ -1,9 +1,23 @@
 {
-	"watch-player": [
+	"face-player": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
+		}
+	],
+	"watch-player": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "face-player"
+		}
+	],
+	"clear-own-tick": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
 		}
 	],
 	"loop_on_path_30s": [
