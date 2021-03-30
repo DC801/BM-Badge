@@ -12,9 +12,9 @@
 	],
 	"show_dialog-shepherd-start": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"script": "watch-player"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -39,9 +39,8 @@
 			"bool_value": false
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -83,9 +82,8 @@
 			"dialog": "dialog-shepherd-start2"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -143,9 +141,8 @@
 	],
 	"show_dialog-shepherd-start-s": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -202,9 +199,8 @@
 	],
 	"show_dialog-shepherd-sheepcheck": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -255,9 +251,8 @@
 	],
 	"show_dialog-shepherd-sheepcheer": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -271,9 +266,8 @@
 	],
 	"show_dialog-shepherd-end": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Shepherd",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
