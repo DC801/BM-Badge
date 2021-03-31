@@ -106,8 +106,9 @@
 			"duration": 200
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Max Swagger",
+			"target_entity": "Felix"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -255,6 +256,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "max-backstory",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Max Swagger",
+			"script": "show_dialog-max-start"
 		}
 	],
 	"show_dialog-max-end": [
@@ -266,6 +272,11 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-max-end",
 			"doc": "Finally!"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Max Swagger",
+			"script": "show_dialog-max-start"
 		}
 	],
 	"show_dialog-felix": [
@@ -516,8 +527,9 @@
 			"script": "max-grin-end"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -701,6 +713,10 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-max-crewmissing",
 			"doc": "Is the crew here to see it?"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",

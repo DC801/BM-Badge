@@ -880,6 +880,24 @@
                  "width":32,
                  "x":544,
                  "y":928
+                }, 
+                {
+                 "gid":2147484838,
+                 "height":32,
+                 "id":274,
+                 "name":"Debug Exa 92",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-sheep-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1315,
+                 "y":588
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2202,7 +2220,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":274,
+ "nextobjectid":275,
  "orientation":"orthogonal",
  "properties":[
         {

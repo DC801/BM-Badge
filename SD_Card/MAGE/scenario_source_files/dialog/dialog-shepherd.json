@@ -98,5 +98,65 @@
 				"Wow, thanks a lot! I could've gotten\ninto deep trouble!"
 			]
 		}
+	],
+	"dialog-debug-sheep-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Return sheep to pen?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes (all)",
+					"script": "debug-sheep-all"
+				},
+				{
+					"label": "Yes (three out of four)",
+					"script": "debug-sheep-most"
+				},
+				{
+					"label": "No",
+					"script": "no_debug-sheep"
+				}
+			]
+		}
+	],
+	"dialog-debug-sheep-all": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"All sheep returned."
+			]
+		}
+	],
+	"dialog-debug-sheep-most": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Helga remains."
+			]
+		}
+	],
+	"dialog-no_debug-sheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Nothing changed."
+			]
+		}
+	],
+	"dialog-sheep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"...."
+			]
+		}
 	]
 }

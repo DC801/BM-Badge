@@ -847,8 +847,9 @@
 			"entity_type": "old_man"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": false
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -879,6 +880,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bea1-backstory",
 			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SHOW_DIALOG",
