@@ -2,24 +2,21 @@
 	"dialog-wisdom": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ah, hello little %PLAYER%.\nHave you come to me seeking wisdom?"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "baby_goat",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				":: goat noises ::"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"If you are the smartest person in the room,\nthen you are in the wrong room",
 				"You cannot cross the sea merely by standing\nand staring at the water.",
@@ -29,16 +26,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "baby_goat",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				":: goat noises intensify ::"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...",
 				"Ah, I see that you are seeking only\nmy strongest wisdom.",
@@ -47,8 +42,7 @@
 		},
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "baby_goat",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				":: happy goat noises ::"
 			]
@@ -57,24 +51,21 @@
 	"dialog-strong_bad": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "strong_bad",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I was told that Fhqwhgads would be here.\nHave you seen him?\nI don't know who it is,\nbut it probably is Fhqwhgads."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Sounds kinda sketchy.\nAnd I'm into it.\nI'll keep an eye out."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "strong_bad",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Yeah, you BETTER keep an eye out.",
 				"You don't wanna know what could happen...\nto someone who doesn't keep an eye out."
@@ -84,40 +75,35 @@
 	"dialog-bender": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Hey, robot, could you make me a smoothie?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "bender",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"PFFFFT NO, make your own smoothie!\nWho do I look like to you?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I don't know, I thought your name was\nlike... Blender or something?"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "strong_bad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"BWAHAHAHA!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "bender",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"HEY, CAN IT BOXING-MASK FOR FACE!",
 				"For your information, PLAYER,\nmy name is BENDER! Don't wear it out!"
@@ -127,24 +113,21 @@
 	"dialog-trekkie": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "trekkie",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh no! All me AOL free trial hours\nhave expired! Me need to get back on\nINTERNET!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "Player",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Wait, what?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "trekkie",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Me being left behind in Yahoo Chat Rooms!"
 			]
@@ -153,8 +136,7 @@
 	"dialog-pipscat": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "pipscat",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You know, %Strong Bad% and %Bender%\nare having a feud. It would be more awesome\nif they teamed up -\n%Bender% is some kinda robot."
 			]
@@ -163,8 +145,7 @@
 	"dialog-please_set_bob_on_fire": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "max_swagger",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"%Bob%, AKA \"Stone Cold %Bob% Austin\"\nis cold. Would you please warm him up?"
 			]
@@ -173,16 +154,14 @@
 	"dialog-bob_has_been_set_on_fire": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "goose",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I AM %SELF%!\nI HAVE SET %Bob% ON FIRE!!"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "bob",
-			"name": "%Bob%",
+			"entity": "Bob",
 			"messages": [
 				"Oh yeah! I am so hot right now!"
 			]
@@ -191,16 +170,14 @@
 	"dialog-bob_has_been_set_off_fire": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "goose",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I AM MERCIFUL %SELF%!\nI HAVE SET %Bob% OFF FIRE!!"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "bob",
-			"name": "%Bob%",
+			"entity": "Bob",
 			"messages": [
 				"Aww man, I was just getting toasty!"
 			]
@@ -209,8 +186,7 @@
 	"dialog-thanks_for_setting_bob_on_fire": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "max_swagger",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thank for warming %Bob% up?\nI mean, there were other ways to do it,\nbut that works I guess..."
 			]
@@ -219,8 +195,7 @@
 	"dialog-lots_of_text": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "max_swagger",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"How long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################\nHow long can the text go? ################"
 			]

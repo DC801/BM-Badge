@@ -2,8 +2,7 @@
 	"dialog-baker-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Qacwk, A kmvvwfdq usf'l kww kljsayzl. A\nymwkk A kzgmdv uml tsuc gf lzw usxxawfw"
 			]
@@ -12,8 +11,7 @@
 	"dialog-strong_bad-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "%SELF%",
 			"messages": [
 				"fhqwhgadshgnsdhjsdbkhsdabkfabkveybvf"
 			]
@@ -22,8 +20,7 @@
 	"dialog-bobg-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Gung'f n onq fvta."
 			]
@@ -32,8 +29,7 @@
 	"dialog-bobrock-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "golem",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sqd'j meha byau jxyi."
 			]
@@ -42,24 +38,21 @@
 	"dialog-baker-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, I'm pretty swamped. Can you run an\nerrand for me?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"What do you need?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"The Bobs-Only Club placed a huge order for\nB-shaped donuts, due tonight, but I can't\nget anyone to confirm the order.",
 				"They haven't paid yet, either.",
@@ -70,16 +63,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Sure, I can swing past that way. See what\nI can find out."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thanks.",
 				"Oh, and happy birthday."
@@ -89,8 +80,7 @@
 	"dialog-baker-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hear anything from the Bobs-Only Club yet?"
 			]
@@ -99,8 +89,7 @@
 	"dialog-bobrock-gottago": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Goin' back to work."
 			]
@@ -109,8 +98,7 @@
 	"dialog-bobrock-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Name's Bob.",
 				"Stone Cold %Bob Austin%.",
@@ -120,16 +108,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"You don't know who I am? We've both lived\nhere for years!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Don't know nobody. All I know is, gotta\nkeep everyone out.",
 				"You know, unless their name is Bob."
@@ -137,16 +123,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Bob?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bob. Camel case.\nNice and plain.\nTraditional.",
 				"'Cause this club is Bobs-only. You know,\nthe Bobs-Only Club."
@@ -154,16 +138,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Why is it Bobs only?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Why?\nWhy is it Bobs only?",
 				"Why, it wouldn't be the Bobs-Only Club if\nI just let anyone in!"
@@ -173,8 +155,7 @@
 	"dialog-bobrock-start2": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well, the baker needs to know whether the\nclub still needs a bunch of B-shaped\ndonuts for tonight.",
 				"Do you know if the Bobs still want them?\nThere's gonna be a party tonight, right?"
@@ -182,8 +163,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"That's for Bobs to know.",
 				"Only Bobs.",
@@ -192,16 +172,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I think the baker needs to know, too!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, if his name was Bob, I would've let\nhim in!"
 			]
@@ -210,8 +188,7 @@
 	"dialog-bobrock-bounce": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"So, what's your name then?"
 			]
@@ -220,16 +197,14 @@
 	"dialog-bobrock-nobob": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Um....\nit's %PLAYER%."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sorry, can't unlock the door for ya.\nBobs only."
 			]
@@ -238,16 +213,14 @@
 	"dialog-bobrock-yesbob1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Why, what luck! My name happens to be Bob!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Nice. Great name. I'll open it on up."
 			]
@@ -256,8 +229,7 @@
 	"dialog-bobrock-yesbob2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Head inside quick, now."
 			]
@@ -266,8 +238,7 @@
 	"dialog-bobsclub1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "Guardian Bob",
 			"messages": [
 				"Oh, hello. You must be here for the annual\nBobs-Only Party, right?"
 			]
@@ -276,24 +247,21 @@
 	"dialog-bobsclub2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "Guardian Bob",
 			"messages": [
 				"Well, I hate to tell you this, but it's\ncanceled this year."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"What? Canceled?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "Guardian Bob",
 			"messages": [
 				"Yeah. This time, for real.",
 				"I mean, every year they SAY its canceled,\nbut this time it's actually genuinely\ncanceled."
@@ -301,8 +269,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"Wait, canceled?!"
 			]
@@ -311,24 +278,21 @@
 	"dialog-bobsclub3": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"But what about all the ladies?!"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Ladies? I'm pretty sure Bob is a masculine\nname, traditionally."
 			]
 		},
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"Nuh-uh!",
 				"What about Bob... rietta? Bob... velyn?",
@@ -338,8 +302,7 @@
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Sorry, dude! Not if the party's canceled.",
 				"...Also not if none of them are named Bob."
@@ -347,16 +310,14 @@
 		},
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"Sure, they'll come! I just gotta wait a\nlittle more!"
 			]
 		},
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I think you came to the wrong party."
 			]
@@ -365,8 +326,7 @@
 	"dialog-bobsclub4": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "Guardian Bob",
 			"messages": [
 				"Well, this place should be full of Bobs...\nnext year."
 			]
@@ -375,8 +335,7 @@
 	"dialog-bobsclub5": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "Strong Bad",
 			"messages": [
 				"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
 			]
@@ -385,16 +344,14 @@
 	"dialog-bobsclub6": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"So I guess I can tell the baker to cancel\nthe donut order then, huh?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "Guardian Bob",
 			"messages": [
 				"Guess so. Sorry about this."
 			]
@@ -403,8 +360,7 @@
 	"dialog-bobsclub-bob": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "%SELF%",
 			"messages": [
 				"They could've told me the party was\nactually canceled before I made the trip\nout here.",
 				"And I came all the way from the net!",
@@ -415,8 +371,7 @@
 	"dialog-bobsclub-bob-where": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobg",
-			"name": "%Guardian Bob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wait. Weren't there two Bob golems last\nyear?"
 			]
@@ -425,40 +380,35 @@
 	"dialog-bobsclub-strongbob": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "%SELF%",
 			"messages": [
 				"Why, hello there, fellow Bob!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Your name is Bob?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "%SELF%",
 			"messages": [
 				"Why, it sure is!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"You look an awful lot like Strong Bad to\nme."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wha-what? STRONG BAD? Never heard of him.\nThough he sounds like quite the rugged\nand handsome gentleman.",
 				"The name's Strong BOB! Just lookee here\nat my fake--I mean real--ID!"
@@ -466,8 +416,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"(This ID clearly belongs to \"Bob Newhart,\"\nbut the word Newhart is crossed out.)",
 				"(I guess Bob out front doesn't have very\ngood eyes.)"
@@ -477,8 +426,7 @@
 	"dialog-bobsclub-strongbob-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "strongbad",
-			"name": "%Strong Bad%",
+			"entity": "%SELF%",
 			"messages": [
 				"Yessirree! Strong Bob's the name, and\npartyin's the game!"
 			]
@@ -487,8 +435,7 @@
 	"dialog-balloonbox": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Just a box of pre-inflated balloons.",
 				"How many balloos does a party need,\nanyway?"
@@ -498,26 +445,23 @@
 	"dialog-bobrock-bounce-rehash": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"We've been through all this before, you\nknow."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
-				"Doesn't matter. It's just the rules. Bobs\nonly."
+				"Doesn't matter. It's just the rules.\nBobs only."
 			]
 		}
 	],
 	"dialog-bobrock-nobob-rehash": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"....",
 				"Fine. I guess I'm not getting in, then."
@@ -525,8 +469,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Damn straight."
 			]
@@ -535,16 +478,14 @@
 	"dialog-bobrock-yesbob-rehash": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well, my name is Bob! Happy?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bob",
-			"name": "%Bob Austin%",
+			"entity": "%SELF%",
 			"messages": [
 				"Cool. Great name."
 			]
@@ -553,40 +494,35 @@
 	"dialog-baker-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Canceled? They're really sure it's all\ncanceled? For real?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"That's what Bob said."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bob? Stone Cold Bob Austin?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Uh... well, it was someone named Bob."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Great. Just great. Just as I was putting\neverything in the oven. Not gonna pay me\neither, are they?",
 				"Well, thanks for finding out for me.\nNow I need to find a way to move four\ndozen B-shaped donuts."
@@ -596,8 +532,7 @@
 	"dialog-baker-end-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Say, you wouldn't want a B-shaped donut,\nwould you? On the house."
 			]
@@ -606,8 +541,7 @@
 	"dialog-bobmoss-glitched1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well that's no good. I should really try\nto relax. Loosen up a bit...."
 			]
@@ -616,8 +550,7 @@
 	"dialog-bobmoss-glitched2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ahh, that feels nice."
 			]
@@ -626,8 +559,7 @@
 	"dialog-bobmoss-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, hello, there."
 			]
@@ -636,8 +568,7 @@
 	"dialog-bobmoss-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"I was just admiring the forest, with its\nhappy little trees....",
 				"I've made so many squirrel friends,\nand...."
@@ -647,8 +578,7 @@
 	"dialog-bobmoss-start3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh!",
 				"I didn't realize how late it was getting.\nI think I might be late for work.",
@@ -659,8 +589,7 @@
 	"dialog-bobmoss-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bobmoss",
-			"name": "%Bob Moss%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sorry, I can't serve anyone until the\nparty starts.",
 				"Help yourself to a Cactus Cooler, though.\nPlenty in the fridge."
@@ -670,8 +599,7 @@
 	"dialog-fridge": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"(Wow. There's literally nothing but cans\nof Cactus Cooler in here.)"
 			]
@@ -680,11 +608,10 @@
 	"dialog-bobwall": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Wall of Bobs: famous Bobs.",
-				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.",
+				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.\nSideshow Bob, entertainer.",
 				"There sure are a lot of Bobs in the world."
 			]
 		}
@@ -692,8 +619,7 @@
 	"dialog-debug-bob-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"How to Bob?"
 			],
@@ -721,8 +647,7 @@
 	"dialog-debug-bob-skipconvo": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bob Austin has been spoken to."
 			]
@@ -731,8 +656,7 @@
 	"dialog-debug-bob-also-setnamebob": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bob Austin has been spoken to, and your\nname is Bob."
 			]
@@ -741,8 +665,7 @@
 	"dialog-debug-bob-teleport": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Teleportation in progress."
 			]

@@ -6,6 +6,7 @@ var dataTypes = [
 	'entities',
 	'geometry',
 	'scripts',
+	'portraits',
 	'dialogs',
 	'imageColorPalettes',
 	'strings',
@@ -28,12 +29,18 @@ var handleScenarioData = function(fileNameMap) {
 			variables: {},
 		};
 		scenarioData.uniqueDialogMap = {};
+		scenarioData.entityTypesPlusProperties = {};
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
+		var portraitsFile = fileNameMap['portraits.json'];
+		var portraitsPromise = getFileJson(portraitsFile)
+			.then(handlePortraitsData(fileNameMap, scenarioData));
 		var entityTypesFile = fileNameMap['entity_types.json'];
-		var entityTypesPromise = getFileJson(entityTypesFile)
-			.then(handleEntityTypesData(scenarioData, fileNameMap));
+		var entityTypesPromise = portraitsPromise.then(function() {
+			return getFileJson(entityTypesFile)
+				.then(handleEntityTypesData(fileNameMap, scenarioData))
+		});
 		return Promise.all([
 			entityTypesPromise,
 			preloadAllDialogSkins(fileNameMap, scenarioData),

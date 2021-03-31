@@ -1,0 +1,375 @@
+{
+	"alfonso": {
+		"tileset": "entity-alfonso-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"baby_goat": {
+		"tileset": "entity-baby_goat-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"baker": {
+		"tileset": "entity-baker-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"bender": {
+		"tileset": "entity-bender-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			},
+			"laugh": {
+				"tileid": 1,
+				"flip_x": true
+			}
+		}
+	},
+	"bert": {
+		"tileset": "entity-bert-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"blacksmith": {
+		"tileset": "entity-blacksmith-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"blitzball": {
+		"tileset": "entity-blitzball-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"bmurray": {
+		"tileset": "entity-bmurray-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"bob": {
+		"tileset": "entity-bob-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"bobmoss": {
+		"tileset": "entity-bobmoss-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"bookcase": {
+		"tileset": "entity-bookcase-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"cleo": {
+		"tileset": "entity-cleo-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"deut": {
+		"tileset": "entity-deut-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"dragon_skull": {
+		"tileset": "entity-dragon_skull-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"exa": {
+		"tileset": "entity-exa-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"eye_faerie": {
+		"tileset": "entity-eye_faerie-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"felix": {
+		"tileset": "entity-felix-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"goldfish": {
+		"tileset": "entity-goldfish-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"golem": {
+		"tileset": "entity-golem-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"goose": {
+		"tileset": "entity-goose-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"hamster": {
+		"tileset": "entity-hamster-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"helga": {
+		"tileset": "entity-helga-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"journal": {
+		"tileset": "entity-journal-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"lightning_boy": {
+		"tileset": "entity-lightning_boy-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"lightning_boy2": {
+		"tileset": "entity-lightning_boy2-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"mage": {
+		"tileset": "entity-mage-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"marta": {
+		"tileset": "entity-marta-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"maru": {
+		"tileset": "entity-maru-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"modem": {
+		"tileset": "entity-modem-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"old_lady": {
+		"tileset": "entity-old_lady-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"old_man": {
+		"tileset": "entity-old_man-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"pipscat": {
+		"tileset": "entity-pipscat-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": false
+			}
+		}
+	},
+	"rake": {
+		"tileset": "entity-rake-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"sheep": {
+		"tileset": "entity-sheep-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"sports_kid": {
+		"tileset": "entity-sports_kid-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"ssen": {
+		"tileset": "entity-ssen-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"strong_bad": {
+		"tileset": "entity-strong_bad-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"tailor": {
+		"tileset": "entity-tailor-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"trekkie": {
+		"tileset": "entity-trekkie-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"verthandi": {
+		"tileset": "entity-verthandi-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
+	"village_elder": {
+		"tileset": "entity-village_elder-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	}
+}

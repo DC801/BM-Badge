@@ -3,6 +3,8 @@ var IS_SCREEN_LITTLE_ENDIAN = false;
 var IS_GLITCHED_FLAG = 0b10000000;
 var IS_FLIPPED_DIAGONAL_FLAG = 0b00000001;
 var MAX_ENTITIES_PER_MAP = 64;
+var DIALOG_SCREEN_NO_PORTRAIT = 255;
+var DIALOG_SCREEN_NO_ENTITY = 255;
 
 var getFileJson = function (file) {
 	return file.text()

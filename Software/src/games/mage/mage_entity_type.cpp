@@ -1,6 +1,5 @@
 #include "mage_entity_type.h"
 #include "EngineROM.h"
-#include "EnginePanic.h"
 #include "FrameBuffer.h"
 
 MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t address)
@@ -123,19 +122,18 @@ uint32_t MageEntityTypeAnimation::Size() const
 
 MageEntityType::MageEntityType(uint32_t address)
 {
-	uint32_t size = 0;
+	address += 32; // skip over reading the name, no need to hold that in ram
+	address += sizeof(uint8_t); // paddingA
+	address += sizeof(uint8_t); // paddingB
 
-	// Read name
+	// Read portraitId
 	EngineROM_Read(
 		address,
-		16,
-		(uint8_t *)name,
+		sizeof(portraitId),
+		(uint8_t *)&portraitId,
 		"Failed to read EntityType property 'name'"
 	);
-
-	name[16] = 0; // Null terminate
-	//increment address
-	address += 16 + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint8_t); //padding
+	address += sizeof(portraitId);
 
 	// Read animationCount
 	EngineROM_Read(
@@ -144,8 +142,6 @@ MageEntityType::MageEntityType(uint32_t address)
 		(uint8_t *)&animationCount,
 		"Failed to read EntityType property 'name'"
 	);
-
-	//increment address
 	address += sizeof(animationCount);
 
 	// Construct array
@@ -161,9 +157,9 @@ MageEntityType::MageEntityType(uint32_t address)
 	return;
 }
 
-std::string MageEntityType::Name() const
+uint8_t MageEntityType::PortraitId() const
 {
-	return std::string(name);
+	return portraitId;
 }
 
 uint8_t MageEntityType::AnimationCount() const
@@ -185,11 +181,10 @@ MageEntityTypeAnimation MageEntityType::EntityTypeAnimation(uint32_t index) cons
 
 uint32_t MageEntityType::Size() const
 {
-	uint32_t size = sizeof(name) +
-		sizeof(paddingA) +
-		sizeof(paddingB) +
-		sizeof(paddingC) +
-		sizeof(animationCount);
+	uint32_t size = (
+		sizeof(portraitId) +
+		sizeof(animationCount)
+	);
 
 	for (uint32_t i = 0; i < animationCount; i++)
 	{

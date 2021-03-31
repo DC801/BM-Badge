@@ -2,8 +2,7 @@
 	"dialog-trekkie-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hu bu. Qvq zr trg n ivehf?"
 			]
@@ -12,16 +11,14 @@
 	"dialog-trekkie-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Me want to wish you a happy birthday,\n%PLAYER%."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Aww, gee, thanks, Farmer\n%Trekkie%!"
 			]
@@ -30,16 +27,14 @@
 	"dialog-trekkie-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Me sorry, %PLAYER%...\nbut the internet still no working."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"It's the Ether Nettles, again?"
 			]
@@ -48,16 +43,14 @@
 	"dialog-trekkie-start3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"It always the Ether Nettles. Modem need\nEther Nettles. Ever since the big bad\nhack, the Ether Nettles line up wrong."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"You can't move the flowers? Put them in\nthe right order?"
 			]
@@ -66,8 +59,7 @@
 	"dialog-trekkie-start4": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Can't just dig up Ether Nettles. Wired\nin super, super well.",
 				"Once in a while, me move one, take all\nday, but it no work."
@@ -75,16 +67,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well, maybe I can help. What order are\nthey supposed to be in?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ether Nettle spec on internet.\nBut no Ether Nettle, no internet, me no\ncan check!",
 				"Me remember orange stripey is first.",
@@ -93,8 +83,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well, lemme have a go. I can change their\ncolors instantly.",
 				"Probably."
@@ -102,8 +91,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"%PLAYER% has new magic zeroed ring.\nMaybe %PLAYER% can do it!"
 			]
@@ -112,8 +100,7 @@
 	"dialog-trekkie-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"%PLAYER% did it!\nMade Ether Nettle talk to outside world\nagain!",
 				"Me can go on the internet! Can use so many\nfree AOL hours!",
@@ -122,8 +109,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Sounds great, %Trekkie%."
 			]
@@ -132,8 +118,7 @@
 	"dialog-trekkie-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Me can't remember Ether Nettle color\norder. Me need internet to check!",
 				"But me do remember orange stripey is\nfirst!"
@@ -143,8 +128,7 @@
 	"dialog-trekkie-oh": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh!"
 			]
@@ -153,16 +137,14 @@
 	"dialog-trekkie-end-s": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"So, %Trekkie%....\nWhat's the internet for, anyway?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, me know what the internet is for. The\ninternet is for....",
 				"...."
@@ -170,16 +152,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"...?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"How old is %PLAYER%, again?"
 			]
@@ -188,8 +168,7 @@
 	"dialog-debug-ethernet-puzzle-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Restore Ether Nettle?"
 			],
@@ -209,8 +188,7 @@
 	"dialog-debug-ethernet-puzzle": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ether Nettle restored."
 			]
@@ -219,8 +197,7 @@
 	"dialog-no_debug-ethernet-puzzle": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wanna do it the hard way, huh? Suit\nyourself."
 			]

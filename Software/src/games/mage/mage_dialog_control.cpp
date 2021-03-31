@@ -1,4 +1,5 @@
 #include "mage_dialog_control.h"
+#include "mage_portrait.h"
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
@@ -16,6 +17,12 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.y = 6,
 			.w = 7,
 			.h = 3,
+		},
+		.portrait = {
+			.x = 0,
+			.y = 1,
+			.w = 6,
+			.h = 6,
 		}
 	},
 	{ // BOTTOM_RIGHT
@@ -30,6 +37,12 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.y = 6,
 			.w = 7,
 			.h = 3,
+		},
+		.portrait = {
+			.x = 13,
+			.y = 1,
+			.w = 6,
+			.h = 6,
 		}
 	},
 	{ // TOP_LEFT
@@ -44,6 +57,12 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.y = 5,
 			.w = 7,
 			.h = 3,
+		},
+		.portrait = {
+			.x = 0,
+			.y = 7,
+			.w = 6,
+			.h = 6,
 		}
 	},
 	{ // TOP_RIGHT
@@ -58,6 +77,12 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 			.y = 5,
 			.w = 7,
 			.h = 3,
+		},
+		.portrait = {
+			.x = 13,
+			.y = 7,
+			.w = 6,
+			.h = 6,
 		}
 	}
 };
@@ -74,6 +99,8 @@ MageDialogControl::MageDialogControl() {
 	currentImageAddress = 0;
 	cursorPhase = 0;
 	currentResponseIndex = 0;
+	currentPortraitId = DIALOG_SCREEN_NO_PORTRAIT;
+	currentPortraitRenderableData = {};
 	messageIds = std::make_unique<uint16_t[]>(0);
 	responses = std::make_unique<MageDialogResponse[]>(0);
 	currentScreen = {0};
@@ -93,6 +120,7 @@ uint32_t MageDialogControl::size() {
 		+ sizeof(currentImageAddress)
 		+ sizeof(cursorPhase)
 		+ sizeof(currentResponseIndex)
+		+ sizeof(currentPortraitId)
 		+ sizeof(currentScreen)
 		+ sizeof(std::string) // currentEntityName
 		+ sizeof(std::string) // currentMessage
@@ -145,6 +173,7 @@ void MageDialogControl::loadNextScreen() {
 	currentScreen.borderTilesetIndex = ROM_ENDIAN_U2_VALUE(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
 	currentEntityName = MageGame->getString(currentScreen.nameStringIndex, triggeringEntityId);
+	loadCurrentScreenPortrait();
 
 	uint8_t sizeOfMessageIndex = sizeof(uint16_t);
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
@@ -188,8 +217,8 @@ void MageDialogControl::loadNextScreen() {
 	}
 	currentDialogAddress += sizeOfResponses;
 
-	// padding at the end os the screen struct
-	currentDialogAddress += ((currentScreen.messageCount + 1) % 2) * sizeOfMessageIndex;
+	// padding at the end of the screen struct
+	currentDialogAddress += ((currentScreen.messageCount) % 2) * sizeOfMessageIndex;
 
 	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageIndex = currentFrameTileset->ImageId();
@@ -256,12 +285,16 @@ void MageDialogControl::draw() {
 	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
 	drawDialogBox(currentMessage, coords.text, true);
 	drawDialogBox(currentEntityName, coords.label);
+	if(currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT) {
+		drawDialogBox("", coords.portrait, false, true);
+	}
 }
 
 void MageDialogControl::drawDialogBox(
 	const std::string &string,
 	Rect box,
-	bool drawArrow
+	bool drawArrow,
+	bool drawPortrait
 ) {
 	uint16_t tileWidth = currentFrameTileset->TileWidth();
 	uint16_t tileHeight = currentFrameTileset->TileHeight();
@@ -338,6 +371,26 @@ void MageDialogControl::drawDialogBox(
 			flags
 		);
 	}
+	if(drawPortrait) {
+		x = offsetX + tileWidth;
+		y = offsetY + tileHeight;
+		tileId = currentPortraitRenderableData.tileId;
+		MageTileset* tileset = MageGame->getValidTileset(currentPortraitRenderableData.tilesetId);
+		uint8_t portraitFlags = currentPortraitRenderableData.renderFlags;
+		canvas.drawChunkWithFlags(
+			MageGame->getImageAddress(tileset->ImageId()),
+			MageGame->getValidColorPalette(tileset->ImageId()),
+			x,
+			y,
+			tileset->TileWidth(),
+			tileset->TileHeight(),
+			(tileId % tileset->Cols()) * tileset->TileWidth(),
+			(tileId / tileset->Cols()) * tileset->TileHeight(),
+			tileset->ImageWidth(),
+			TRANSPARENCY_COLOR,
+			portraitFlags
+		);
+	}
 }
 
 uint8_t MageDialogControl::getTileIdFromXY(
@@ -368,4 +421,44 @@ uint8_t MageDialogControl::getTileIdFromXY(
 		tileId = DIALOG_TILES_LEFT_REPEAT;
 	}
 	return tileId;
+}
+
+void MageDialogControl::loadCurrentScreenPortrait() {
+	MageEntity currentEntity = {};
+	uint16_t lastPortraitId = currentPortraitId;
+	if(currentScreen.portraitIndex != DIALOG_SCREEN_NO_PORTRAIT) {
+		currentPortraitId = currentScreen.portraitIndex;
+	}
+	else if(currentScreen.entityIndex != NO_PLAYER) {
+		uint8_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+			currentScreen.entityIndex,
+			triggeringEntityId
+		);
+		currentEntity = MageGame->entities[entityIndex];
+		if(currentEntity.primaryIdType == ENTITY_TYPE) {
+			MageEntityType *entityType = MageGame->getValidEntityType(currentEntity.primaryId);
+			currentPortraitId = entityType->PortraitId();
+		}
+	}
+	if(
+		currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT // we have a portraitl
+	) {
+		uint32_t portraitAddress = MageGame->getPortraitAddress(currentPortraitId);
+		MagePortrait* portrait = new MagePortrait(portraitAddress);
+		MageEntityTypeAnimationDirection *animationDirection = portrait->getEmoteById(
+			currentScreen.emoteIndex
+		);
+		currentPortraitRenderableData = {};
+		MageGame->getRenderableStateFromAnimationDirection(
+			&currentPortraitRenderableData,
+			&currentEntity,
+			animationDirection
+		);
+		currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
+		currentPortraitRenderableData.renderFlags |= (currentEntity.direction & 0x80);
+		// if the portrait is on the right side of the screen, flip the portrait on the X axis
+		if((currentScreen.alignment % 2) == 1) {
+			currentPortraitRenderableData.renderFlags ^= 0x04;
+		}
+	}
 }

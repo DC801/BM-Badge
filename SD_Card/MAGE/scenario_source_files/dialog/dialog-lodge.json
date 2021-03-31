@@ -2,8 +2,7 @@
 	"dialog-lodge-cantleaveyet": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Wait, I can't leave yet!"
 			]
@@ -12,8 +11,7 @@
 	"dialog-candothis": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Okay. I can do this."
 			]
@@ -22,8 +20,7 @@
 	"dialog-tuesday-intro1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Come on in, %PLAYER%!"
 			]
@@ -32,8 +29,7 @@
 	"dialog-tuesday-intro2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "Uncle Zappy",
 			"messages": [
 				"We'll be right here."
 			]
@@ -42,8 +38,7 @@
 	"dialog-tuesday-intro3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "Aunt Zippy",
 			"messages": [
 				"Go ahead. You'll do great!"
 			]
@@ -52,16 +47,14 @@
 	"dialog-tuesday-lunch": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"A bracelet?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"That?",
 				"That is my lunch!"
@@ -71,8 +64,7 @@
 	"dialog-tuesday-broom": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "Marta",
 			"messages": [
 				"Hey, that broom is mine! How did that end\nup there?"
 			]
@@ -81,8 +73,7 @@
 	"dialog-zippy-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "%SELF%",
 			"messages": [
 				"Go ahead, dear!"
 			]
@@ -91,8 +82,7 @@
 	"dialog-zappy-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "%SELF%",
 			"messages": [
 				"Take your time!"
 			]
@@ -101,8 +91,7 @@
 	"dialog-verthandi-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, how exciting!"
 			]
@@ -111,8 +100,7 @@
 	"dialog-smith-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
+			"entity": "%SELF%",
 			"messages": [
 				"Don't look at me! I don't know how any of\nthis stuff works!"
 			]
@@ -121,8 +109,7 @@
 	"dialog-max-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hmm. I've seen better artifacts."
 			]
@@ -131,8 +118,7 @@
 	"dialog-marta-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"One of those artifacts seems a little\nfamiliar to me...."
 			]
@@ -141,8 +127,7 @@
 	"dialog-marta-prechoose-broomd": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "Marta",
 			"messages": [
 				"I knew I recognized this broom!"
 			]
@@ -151,8 +136,7 @@
 	"dialog-trekkie-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, me hope it's a good one!"
 			]
@@ -161,8 +145,7 @@
 	"dialog-shepherd-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Is that old junk really magic?"
 			]
@@ -171,8 +154,7 @@
 	"dialog-cleo-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ooh! I bet it's gonna be the one on the\nleft! No, the right! No, the second one!"
 			]
@@ -181,8 +163,7 @@
 	"dialog-beatrice-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"It's been so long since we've had a new\nmage!"
 			]
@@ -191,8 +172,7 @@
 	"dialog-baker-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Um, I gotta get back to work, kid. You\nwanna hurry it up a little?"
 			]
@@ -201,8 +181,7 @@
 	"dialog-jackob-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"(Wait, was this everything?)"
 			]
@@ -211,8 +190,7 @@
 	"dialog-alfonso-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"*ahem*",
 				"The mage must present themselves to the\nartifacts until one shows interest."
@@ -222,8 +200,7 @@
 	"dialog-bert-prechoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Touch each item, please."
 			]
@@ -232,8 +209,7 @@
 	"dialog-zippy-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "%SELF%",
 			"messages": [
 				"We always knew you were destined for great\nthings!"
 			]
@@ -242,8 +218,7 @@
 	"dialog-zappy-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "%SELF%",
 			"messages": [
 				"We're both so proud of you!"
 			]
@@ -252,8 +227,7 @@
 	"dialog-verthandi-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, how exciting!"
 			]
@@ -262,8 +236,7 @@
 	"dialog-smith-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sounds like that ring is a big deal.",
 				"Neat."
@@ -273,8 +246,7 @@
 	"dialog-max-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hmm. That ring looks a bit too plain to\nbe the real Ring Zero, doesn't it?"
 			]
@@ -283,8 +255,7 @@
 	"dialog-marta-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wow. Never seen a TUESDAY like this before!"
 			]
@@ -293,8 +264,7 @@
 	"dialog-trekkie-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "trekkie",
-			"name": "%Trekkie%",
+			"entity": "%SELF%",
 			"messages": [
 				"Amazing!"
 			]
@@ -303,8 +273,7 @@
 	"dialog-shepherd-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Neat!"
 			]
@@ -313,8 +282,7 @@
 	"dialog-cleo-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "%SELF%",
 			"messages": [
 				"It looks so shiny!"
 			]
@@ -323,8 +291,7 @@
 	"dialog-beatrice-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh! I never thought I'd see this day! Oh,\nmy Delmar...!"
 			]
@@ -333,8 +300,7 @@
 	"dialog-baker-postchoose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"Congratulations, %PLAYER%!"
 			]
@@ -343,8 +309,7 @@
 	"dialog-tuesday1": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"The day has come!",
 				"You have come of age, and what a joyous\nday it is.",
@@ -355,8 +320,7 @@
 	"dialog-tuesday2": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Uh, that's the wrong speech! It's TUESDAY,\nnot puberty education!"
 			]
@@ -365,8 +329,7 @@
 	"dialog-tuesday3": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"It Friday."
 			]
@@ -375,8 +338,7 @@
 	"dialog-tuesday4": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"No, not Tuesday, TUESDAY. You know,\nTraditional and Unambiguous Event of\nSelection Directly Affecting You."
 			]
@@ -385,8 +347,7 @@
 	"dialog-tuesday5": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"Ah, yes. Right you are."
 			]
@@ -395,8 +356,7 @@
 	"dialog-tuesday6": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"*Ahem*",
 				"Each mage, upon the day of their 16th\nbirthday, will then be present for their\nTUESDAY.",
@@ -409,8 +369,7 @@
 	"dialog-tuesday7": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"The mage must present themselves to the\nartifacts until one shows interest. Mage,\nstep forth."
 			]
@@ -419,8 +378,7 @@
 	"dialog-ring1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Well, this is certainly... unexpected.\nWe've never had a dud quite like this one\nbefore."
 			]
@@ -429,8 +387,7 @@
 	"dialog-ring2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Why don't we --"
 			]
@@ -439,32 +396,28 @@
 	"dialog-ring3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Oh! Oh, good heavens! Is that --"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"It is."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"It's Ring Zero!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"What?! What is that?"
 			]
@@ -473,8 +426,7 @@
 	"dialog-ring4": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"It just slipped itself onto my finger!"
 			]
@@ -483,8 +435,7 @@
 	"dialog-ring5": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Um, it's not coming off. Is that normal?"
 			]
@@ -493,8 +444,7 @@
 	"dialog-ring6": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Normal? Normal?!",
 				"Nothing about that thing is normal!",
@@ -503,8 +453,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Is it bad?! What's wrong with it?",
 				"Am I... am I gonna die?!"
@@ -512,24 +461,21 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"The ring isn't bad, it's just... powerful."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"No one has been chosen by this ring before."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Oh, but... but perhaps...."
 			]
@@ -538,8 +484,7 @@
 	"dialog-ring7": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Oh, but this is good news, isn't it?",
 				"This means we can finally fix things!"
@@ -547,16 +492,14 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"Fix the town."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"Yes....",
 				"Yes!"
@@ -566,16 +509,14 @@
 	"dialog-ring8": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"Yes, you can fix things at last!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Fix the town?"
 			]
@@ -584,8 +525,7 @@
 	"dialog-ring9": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"But the town is all glitchy and hacked!\nHow am I supposed to fix it with this\nthing? Unless...."
 			]
@@ -594,8 +534,7 @@
 	"dialog-ring10": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Yes, exactly! That ring, Ring Zero --",
 				"That ring gives you the power to hack the\nplanet!"
@@ -603,32 +542,28 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Hack the planet? You mean... all the stuff\nthat's broken?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "Bert",
 			"messages": [
 				"You can fix what the Big Bad broke!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "Jackob",
 			"messages": [
 				"Everything that the Big Bag hacked so\nmany years ago.... Everything that\nscoundrel ruined...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"This ring gives me the Big Bad's power?",
 				"But I don't know how to hack! How am I\nsupposed to fix anything?"
@@ -636,8 +571,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Yes, well, you see...."
 			]
@@ -646,8 +580,7 @@
 	"dialog-ring11": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Please come with us, %PLAYER%."
 			]
@@ -656,8 +589,7 @@
 	"dialog-ring12": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "Alfonso",
 			"messages": [
 				"Into the inner sanctum!"
 			]
@@ -666,8 +598,7 @@
 	"dialog-maybe-another": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Maybe a different artifact?"
 			]
@@ -676,8 +607,7 @@
 	"dialog-maybe-none": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Wait. Was that the last one?"
 			]
@@ -686,8 +616,7 @@
 	"dialog-tuesday-glasses": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"This?","This is clearly a temporary asset that\nhasn't been replaced with anything yet.",
 				"Though....",
@@ -699,8 +628,7 @@
 	"dialog-tuesday-book": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Ugh. Is that an eye on the cover?",
 				"And I don't wanna know what kind of\nleather that is.",
@@ -712,8 +640,7 @@
 	"dialog-tuesday-wand1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Moon Prism Power...."
 			]
@@ -722,8 +649,7 @@
 	"dialog-tuesday-wand2": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Make Up!"
 			]
@@ -732,8 +658,7 @@
 	"dialog-tuesday-wand3": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Erm, maybe I had that a bit wrong.","Still, no response."
 			]
@@ -742,8 +667,7 @@
 	"dialog-murmur1": [
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "Marta",
 			"messages": [
 				"Did they do it wrong?"
 			]
@@ -752,8 +676,7 @@
 	"dialog-murmur2": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Maybe they missed one."
 			]
@@ -762,8 +685,7 @@
 	"dialog-murmur3": [
 		{
 			"alignment": "TOP_RIGHT",
-			"portrait": "baker",
-			"name": "%Baker%",
+			"entity": "%SELF%",
 			"messages": [
 				"I'm pretty sure %PLAYER% touched\nall of them...."
 			]
@@ -772,8 +694,7 @@
 	"dialog-lodge_cat": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
@@ -782,8 +703,7 @@
 	"dialog-lodge_cat-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "%SELF%",
 			"messages": [
 				"////////"
 			]
@@ -792,8 +712,7 @@
 	"dialog-artifacts-touch": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"All artifacts touched."
 			]
@@ -802,8 +721,7 @@
 	"dialog-timmy-glitched": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "timmy",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ner ubg qbtf n fnaqjvpu?"
 			]
@@ -812,8 +730,7 @@
 	"dialog-timmy-start": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "timmy",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, how lovely! It's much easier to read\nlike this!"
 			]
@@ -822,8 +739,7 @@
 	"dialog-timmy-start-s": [
 		{
 			"alignment": "TOP_LEFT",
-			"portrait": "timmy",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I've been trying to find books about the\nolympics.",
 				"Gosh, it'd be cool if I could get a gold\nmedal for the high jump!",
@@ -834,8 +750,7 @@
 	"dialog-debug-bypass-tuesday-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bypass TUESDAY?"
 			],
@@ -855,8 +770,7 @@
 	"dialog-debug-bypass-tuesday": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Tuesday bypassed."
 			]
@@ -865,8 +779,7 @@
 	"dialog-debug-cutscene-tuesday-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Begin TUESDAY cutscene?"
 			],
@@ -886,8 +799,7 @@
 	"dialog-debug-touch-artifacts-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Touch all artifacts?"
 			],
@@ -907,8 +819,7 @@
 	"dialog-debug-touch-artifacts": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Artifacts touched."
 			]

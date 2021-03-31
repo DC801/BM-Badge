@@ -2,18 +2,16 @@
 	"dialog-zappy-start": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "%SELF%",
 			"messages": [
-				"Did you remember to feed %Mr. Tickles%?"
+				"Did you remember to feed your goldfish,\n%Mr. Tickles%?"
 			]
 		}
 	],
 	"dialog-zippy-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "%SELF%",
 			"messages": [
 				"How's your day going, %PLAYER%?"
 			]
@@ -22,8 +20,7 @@
 	"dialog-zappy-glitched": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "%SELF%",
 			"messages": [
 				"Abj V srry rkgen mnccl!"
 			]
@@ -32,8 +29,7 @@
 	"dialog-zippy-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "%SELF%",
 			"messages": [
 				"Jbj, guvf srryf ernyyl jrveq! Vg erzvaqf\nzr bs guvf bar gvzr va pbyyrtr...."
 			]
@@ -42,8 +38,7 @@
 	"dialog-goodmorning-wake": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Ahh, what a good night's sleep!"
 			]
@@ -52,16 +47,14 @@
 	"dialog-goodmorning-start1": [
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "Aunt Zippy",
 			"messages": [
 				"Is that %PLAYER% I hear?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "Uncle Zappy",
 			"messages": [
 				"Oh good! They're awake!"
 			]
@@ -70,16 +63,14 @@
 	"dialog-goodmorning-start2": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Oh! Uncle Zappy! Aunt Zippy!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "Uncle Zappy",
 			"messages": [
 				"Good morning, %PLAYER%!",
 				"We were beginning to think you were going\nto sleep through your big day!"
@@ -87,8 +78,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Big day?"
 			]
@@ -97,8 +87,7 @@
 	"dialog-goodmorning-start3": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"(OH GOD IT'S TUESDAY!)"
 			]
@@ -107,8 +96,7 @@
 	"dialog-goodmorning-start4": [
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zippy",
-			"name": "%Aunt Zippy%",
+			"entity": "Aunt Zippy",
 			"messages": [
 				"Don't worry! We weren't about to let you\nmiss it!"
 			]
@@ -117,8 +105,7 @@
 	"dialog-goodmorning-start5": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"(AAAAH!)"
 			]
@@ -127,8 +114,7 @@
 	"dialog-goodmorning-start6": [
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "Uncle Zappy",
 			"messages": [
 				"Your 16th birthday is a big day. But no\nmatter what happens, we're proud of you\nand the mage you've become.","Remember that today, okay?"
 			]
@@ -137,8 +123,7 @@
 	"dialog-goodmorning-start7": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Okay.",
 				"Yeah. I'll be okay.",
@@ -149,8 +134,7 @@
 	"dialog-goodmorning-start8": [
 		{
 			"alignment": "BOTTOM_TOP",
-			"portrait": "zappy",
-			"name": "%Uncle Zappy%",
+			"entity": "Uncle Zappy",
 			"messages": [
 				"Come along, now! The village elders are\nall waiting for you!"
 			]
@@ -159,8 +143,7 @@
 	"dialog-goldfish": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Good morning, %Mr. Tickles%!"
 			]
@@ -169,18 +152,24 @@
 	"dialog-goldfish-unglitched": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Looking good!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "Mr. Tickles",
+			"portrait": "goldfish",
+			"messages": [
+				"(Glub, glub.)"
 			]
 		}
 	],
 	"dialog-goldfish-glitched": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Good ol' glitched-out fish."
 			]
@@ -189,8 +178,8 @@
 	"dialog-magejournal": [
 		{
 			"alignment": "BOTTOM_LEFT",
+			"entity": "Mage Journal",
 			"portrait": "journal",
-			"name": "%Mage Journal%",
 			"messages": [
 				"Dear Diary,",
 				"I'm turning 16 soon, and I keep wondering\nwhat my magic will turn out to be.",
@@ -203,8 +192,7 @@
 	"dialog-magebox": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I can't even remember what's in that box.\nComics? Amiibos? Otomatones?"
 			]
@@ -213,8 +201,8 @@
 	"dialog-magefacts": [
 		{
 			"alignment": "BOTTOM_LEFT",
+			"entity": "Mage Facts",
 			"portrait": "journal",
-			"name": "%Mage Facts%",
 			"messages": [
 				"Mage Facts Magazine, issue 28.",
 				"Did you know you can press X to run,\ncircle to interact with something,\nand square to perform a short animation?"
@@ -222,8 +210,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well, what about triangle?",
 				"What say you about triangle, Mage Facts\nMagazine?"
@@ -233,8 +220,7 @@
 	"dialog-debug-goodmorning": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Walk through the doorway to begin\ncutscene."
 			]
@@ -243,8 +229,7 @@
 	"dialog-debug-walk-to-lodge-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Go on a morning walk?"
 			],
@@ -264,8 +249,7 @@
 	"dialog-debug-goodmorning-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Start the beginning cutscene?"
 			],

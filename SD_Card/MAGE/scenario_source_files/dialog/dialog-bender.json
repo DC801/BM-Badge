@@ -2,8 +2,8 @@
 	"dialog-bender-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
+			"emote": 1,
 			"messages": [
 				"I speak binary fluently, kid! A little\ntrick like this won't slow me down!"
 			]
@@ -12,16 +12,14 @@
 	"dialog-bender-start1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Oh! You look friendly!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, I'm not!"
 			]
@@ -30,8 +28,7 @@
 	"dialog-bender-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Aww, man... I forgot! Someone bit my shiny\nmetal ass!",
 				"Why would someone do such a horrible thing\nto an innocent robot?!",
@@ -43,8 +40,7 @@
 	"dialog-bender-start3a": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, you, kid! You're the one with the\nmagic whatsit!",
 				"Can't you fix this with your whatever\npowers?",
@@ -55,8 +51,7 @@
 	"dialog-bender-start3b": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, you, strangely-handsome-looking kid!\nYou're the one with the magic whatsit!",
 				"Can't you fix this with your whatever\npowers?",
@@ -67,8 +62,7 @@
 	"dialog-bender-eval-bad": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Come on! That doesn't look anything like\nme, half-assed or full-assed."
 			]
@@ -77,8 +71,7 @@
 	"dialog-bender-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"...Oh, right. My ass. Someone bit it off.",
 				"So what's the holdup? I know you can fix\nit!",
@@ -89,8 +82,7 @@
 	"dialog-bender-end1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, you did it! My ass is back!"
 			]
@@ -99,8 +91,8 @@
 	"dialog-bender-end2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
+			"emote": 1,
 			"messages": [
 				"Hee hee hee!",
 				"Hey, everyone! Bender's ass is back!"
@@ -108,48 +100,42 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, what?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"You said you'd give me a reward!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"I did! You got a front row seat to me,\nBender, showing off my shiny metal ass!",
 				"That's the greatest reward there is!"
@@ -157,16 +143,15 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I don't know why I assumed you'd be\nfriendly."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
+			"emote": 1,
 			"messages": [
 				"Well, you know what they say about\nassumptions.",
 				"They make a shiny ass... and they give it\nto me, Bender."
@@ -176,8 +161,7 @@
 	"dialog-bender-comedian": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Yeah, yeah, you're a real comedian, kid.\nNow turn me back!"
 			]
@@ -186,8 +170,7 @@
 	"dialog-bender-meatbag": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, you! Bite my --\nAhhh!",
 				"Aaaargh, this is terrible! My ass is even\nmore missing than before!",
@@ -200,8 +183,7 @@
 	"dialog-bender-end-surprise1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hey, my ass! It's back!"
 			]
@@ -210,8 +192,7 @@
 	"dialog-bender-end-surprise2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hee hee hee!",
 				"Hey, everyone! Bender's ass is back!",
@@ -224,16 +205,14 @@
 	"dialog-bender-satisfied": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bender",
-			"name": "%Bender%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ooh, yeah!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"It's shiny. I'll give you that."
 			]

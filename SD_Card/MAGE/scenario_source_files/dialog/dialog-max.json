@@ -2,8 +2,7 @@
 	"dialog-max-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ah, yes! I know you!",
 				"You're the birthday mage!"
@@ -11,16 +10,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I guess you could say that."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Yes, yes!",
 				"Well, you're invited to the grand opening\nof my new fashion shop!"
@@ -28,32 +25,28 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Oh, neat!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"...Next year!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"What? Next year? Your shop isn't ready\nyet?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, good heavens, no! Not yet!",
 				"There's much more to do... so much more!",
@@ -66,8 +59,7 @@
 	"dialog-max-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"The CONSTRUCTION CREW must finish building\nthe interior!!"
 			]
@@ -76,8 +68,7 @@
 	"dialog-max-start3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"They have everything they need to begin\nand yet they won't do any work!"
 			]
@@ -86,8 +77,7 @@
 	"dialog-max-start4": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "felix",
-			"name": "%Felix%",
+			"entity": "Felix",
 			"messages": [
 				"No, we don't have everything.",
 				"We need the boss to sign off on the plans,\nfirst."
@@ -97,8 +87,7 @@
 	"dialog-max-start5": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Yes, of course! Of course the boss must\napprove first!"
 			]
@@ -107,8 +96,7 @@
 	"dialog-max-start6": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"But the boss is nowhere around!",
 				"I gave him the plans days ago! What could\npossibly be taking so long?"
@@ -118,8 +106,7 @@
 	"dialog-max-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"Azr. Vm jvbyzl aolyl'k il huvaoly\njvtwspjhapvu!"
 			]
@@ -128,8 +115,7 @@
 	"dialog-felix-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "felix",
-			"name": "%Felix%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sxas. T'gp mppy hzcvtyr dz slco T'x\nslwwfntyletyr!"
 			]
@@ -138,8 +124,7 @@
 	"dialog-deut-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "deut",
-			"name": "%Deuteronomy%",
+			"entity": "%SELF%",
 			"messages": [
 				"Abj gung'f n gevc."
 			]
@@ -148,8 +133,7 @@
 	"dialog-maru-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "maru",
-			"name": "%Maru%",
+			"entity": "%SELF%",
 			"messages": [
 				"Qisa."
 			]
@@ -158,8 +142,7 @@
 	"dialog-bmurray-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bmurray",
-			"name": "%B. Murray%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ib, hi... C ehyq nbun wunhcj qum vux!"
 			]
@@ -168,8 +151,7 @@
 	"dialog-felix": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "felix",
-			"name": "%Felix%",
+			"entity": "%SELF%",
 			"messages": [
 				"Can't begin work until the boss approves\nthe plans."
 			]
@@ -178,8 +160,7 @@
 	"dialog-deut": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "deut",
-			"name": "%Deuteronomy%",
+			"entity": "%SELF%",
 			"messages": [
 				"The boss is usually pretty busy.\nNot sure where he is right now."
 			]
@@ -188,8 +169,7 @@
 	"dialog-maru": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "maru",
-			"name": "%Maru%",
+			"entity": "%SELF%",
 			"messages": [
 				"Meow."
 			]
@@ -198,8 +178,7 @@
 	"dialog-bmurray": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bmurray",
-			"name": "%B. Murray%",
+			"entity": "%SELF%",
 			"messages": [
 				"As much as I like to loaf around, I sure\nhope the boss'll get over here soon so\nwe can start!"
 			]
@@ -208,8 +187,7 @@
 	"dialog-max-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "%SELF%",
 			"messages": [
 				"All the crew needs to begin now is a\nthumbs up from their boss!",
 				"Where is that cat?"
@@ -219,8 +197,7 @@
 	"dialog-max-catbosshere": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Oh! The cat boss!",
 				"Oh, at last! Come tell your crew that you\napprove of the construction plans!"
@@ -230,8 +207,7 @@
 	"dialog-max-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Finally! Now work on my fashion shop\ncan progress!"
 			]
@@ -240,16 +216,14 @@
 	"dialog-max-crew-success1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Oh! Approval from the cat boss himself!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "felix",
-			"name": "%Felix%",
+			"entity": "Felix",
 			"messages": [
 				"Yeah, all right. We're good to go.",
 				"Let's get started!"
@@ -259,8 +233,7 @@
 	"dialog-max-crew-success2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Brilliant! Now things can finally move\nforward!"
 			]
@@ -269,8 +242,7 @@
 	"dialog-max-crewmissing": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "max",
-			"name": "%Max Swagger%",
+			"entity": "Max Swagger",
 			"messages": [
 				"Oh! Approval from the boss!",
 				"But is the crew all here to see it...?"

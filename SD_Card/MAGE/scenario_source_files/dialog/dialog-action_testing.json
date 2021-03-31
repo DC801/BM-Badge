@@ -2,8 +2,7 @@
 	"dialog-mage01_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_NAME and\nSET_ENTITY_NAME actions.\nSet my name to 'Mage 00'\nand then talk to me again."
 			]
@@ -12,8 +11,7 @@
 	"dialog-mage01_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good work, you set my name to '%SELF%'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
 			]
@@ -22,8 +20,7 @@
 	"dialog-mage02_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_X and\nCHECK_ENTITY_Y actions. Set my\nX to 193 and my Y to 97\nand then talk to me again."
 			]
@@ -32,8 +29,7 @@
 	"dialog-mage02_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good work, you set my X to 193 & my Y to 97!\nI should set X back to 192 and Y back to 96\nwhen you close this dialog."
 			]
@@ -42,8 +38,7 @@
 	"dialog-mage03_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_INTERACT_SCRIPT and\nCHECK_ENTITY_TICK_SCRIPT actions. Set the\ntick or interact scripts for yourself to\nanything other than their current value.",
 				"When you talk to me again, I should know\nif you changed them and will say\nsomething new."
@@ -53,8 +48,7 @@
 	"dialog-mage03_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
 			]
@@ -63,8 +57,7 @@
 	"dialog-mage04_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the CHECK_ENTITY_PRIMARY_ID,\nCHECK_ENTITY_SECONDARY_ID, and\nCHECK_ENTITY_PRIMARY_ID_TYPE actions.",
 				"Set my primary ID to 12,\nmy secondary ID to 1,\n and my primary ID type to 3\nand then talk to me again."
@@ -74,8 +67,7 @@
 	"dialog-mage04_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
 			]
@@ -84,8 +76,7 @@
 	"dialog-mage05_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_CURRENT_ANIMATION\nand CHECK_ENTITY_CURRENT_FRAME.\nUse your action by pressing RJOY_LEFT,\nand I should update my message."
 			]
@@ -94,8 +85,7 @@
 	"dialog-mage05_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good work, you used your action, and I\nwas able to verify that it happened.",
 				"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
@@ -105,8 +95,7 @@
 	"dialog-mage06_1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_TYPE.\nSet your EntityType to `baby_goat`,\nand I should update my message."
 			]
@@ -115,8 +104,7 @@
 	"dialog-mage06_2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good work, you became `baby_goat`, and I\nwas able to verify that it happened.",
 				"Now I will set your EntityType to `mage`\nvia SET_ENTITY_TYPE."
@@ -126,8 +114,7 @@
 	"dialog-mage07": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test `SET_ENTITY_DIRECTION_TARGET_ENTITY`\nWalk around me, I should point at you,\nno matter your position!"
 			]
@@ -136,8 +123,7 @@
 	"dialog-mage08": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test `SET_ENTITY_DIRECTION_RELATIVE`\nWalk around me, I should point away from\nyou, no matter your position!"
 			]
@@ -146,8 +132,7 @@
 	"dialog-mage09": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test `COPY_SCRIPT`, using onTicks 07 & 08!\nWalk around me, I should point at you,\nPause half a second, then look away, \nno matter your position!"
 			]
@@ -156,8 +141,7 @@
 	"dialog-mage10-a": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test will `SET_SCREEN_SHAKE` 3 times:\n\t\t\t\"frequency\": 20,\n\t\t\t\"amplitude\": 3,\n\t\t\t\"duration\": 2000"
 			]
@@ -166,8 +150,7 @@
 	"dialog-mage10-b": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Now:,\n\t\t\t\"frequency\": 1000,\n\t\t\t\"amplitude\": 32,\n\t\t\t\"duration\": 8000"
 			]
@@ -176,8 +159,7 @@
 	"dialog-mage10-c": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Now:\n\t\t\t\"frequency\": 50,\n\t\t\t\"amplitude\": 5,\n\t\t\t\"duration\": 5000"
 			]
@@ -186,8 +168,7 @@
 	"dialog-mage11": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Panning camera to 3 separate geometries,\nthen panning camera back to the player"
 			]
@@ -196,8 +177,7 @@
 	"dialog-mage12": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test SET_CAMERA_TO_FOLLOW_ENTITY &\nTELEPORT_CAMERA_TO_GEOMETRY!\n3 points first, then back to player!"
 			]
@@ -206,8 +186,7 @@
 	"dialog-mage13-success-n": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing NORTH!"
 			]
@@ -216,8 +195,7 @@
 	"dialog-mage13-success-e": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing EAST!"
 			]
@@ -226,8 +204,7 @@
 	"dialog-mage13-success-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing SOUTH!"
 			]
@@ -236,8 +213,7 @@
 	"dialog-mage13-success-w": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_DIRECTION!\nTalk to me from each direction!\n\nYou are facing WEST!"
 			]
@@ -246,8 +222,7 @@
 	"dialog-mage13-fail": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test CHECK_ENTITY_DIRECTION!\n...but something has gone wrong!\nI cannot detect your direction!\nThis action has FAILED!!!"
 			]
@@ -256,8 +231,7 @@
 	"dialog-mage14": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the 'VARIABLE' actions:\nMUTATE_VARIABLE, MUTATE_VARIABLES\nCHECK_VARIABLE, CHECK_VARIABLES"
 			]
@@ -266,8 +240,7 @@
 	"dialog-mage14-success": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I tested a goat load of simple maths\nusing the variable actions,\nand they all verified!\nRandom Number was: $goat_count$"
 			]
@@ -276,8 +249,7 @@
 	"dialog-mage14-fail-value-==": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe value == comparison has FAILED!!!"
 			]
@@ -286,8 +258,7 @@
 	"dialog-mage14-fail-value->": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe value > comparison has FAILED!!!\nA: $goat_count$;"
 			]
@@ -296,8 +267,7 @@
 	"dialog-mage14-fail-variable-<": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe variable < comparison has FAILED!!!\nA: $goat_count$; B: $another_count$"
 			]
@@ -306,8 +276,7 @@
 	"dialog-mage14-fail-value-ADD": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe value ADD operation has FAILED!!!\nA: $goat_count$"
 			]
@@ -316,8 +285,7 @@
 	"dialog-mage14-fail-variable-ADD": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe variable ADD operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
 			]
@@ -326,8 +294,7 @@
 	"dialog-mage14-fail-value-SUB": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe value SUB operation has FAILED!!!\nA: $goat_count$; B: $another_count$"
 			]
@@ -336,8 +303,7 @@
 	"dialog-mage14-fail-value-RNG": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"...but something has gone wrong!\nThe value RNG operation has FAILED!!!\nA: $goat_count$;"
 			]
@@ -346,8 +312,7 @@
 	"dialog-mage15": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the action COPY_VARIABLE.\nChange my 'hackable_state_a' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
 			]
@@ -356,8 +321,7 @@
 	"dialog-mage15-success": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Hooray! 'hackable_state_a' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
 			]
@@ -366,8 +330,7 @@
 	"dialog-mage16-a": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the action PLAY_ENTITY_ANIMATION.\nFirst, I will play my walk animation once."
 			]
@@ -376,8 +339,7 @@
 	"dialog-mage16-b": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Now, my 'action' animation will play twice."
 			]
@@ -386,8 +348,7 @@
 	"dialog-mage16-c": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Now, I will turn into Bender and play the\n\"Shiny Metal Ass\" 'action' animation once,\nthen turn back into a mage."
 			]
@@ -396,8 +357,7 @@
 	"dialog-mage17-a": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the action SET_HEX_EDITOR_CONTROL.\nI have disabled your ability to hex edit.\nTalk to me again to re-enable hex editing."
 			]
@@ -406,8 +366,7 @@
 	"dialog-mage17-b": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"I test the action SET_HEX_EDITOR_CONTROL.\nI have enabled your ability to hex edit.\nTalk to me again to disable hex editing."
 			]
@@ -416,8 +375,7 @@
 	"dialog-mage18": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You are in a desert.\nYou approached by a mysterious goat.",
 				"How do you react to the mysterious goat?"
@@ -446,8 +404,7 @@
 	"dialog-do_nothing": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You do nothing about the mysterious goat.\nYou have lost the game.\n\nGAME OVER"
 			]
@@ -456,8 +413,7 @@
 	"dialog-pet_the_goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You have pet the mysterious goat.\n\nThe goat is pleased."
 			]
@@ -466,8 +422,7 @@
 	"dialog-feed_the_goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You give some bread to the mysterious goat,\n\nThe goat is pleased, and less hungry."
 			]
@@ -476,8 +431,7 @@
 	"dialog-give_goat_sugar_cube": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"You give a Sugar Cube to mysterious goat.\nThe goat says this to you:\nThanks for the Sugar Cube[TM]!\nNow I can fly! BRB"
 			]

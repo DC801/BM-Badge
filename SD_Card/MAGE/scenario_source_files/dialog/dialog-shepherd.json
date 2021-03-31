@@ -2,8 +2,7 @@
 	"dialog-shepherd-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"....",
 				"I messed up."
@@ -13,8 +12,7 @@
 	"dialog-shepherd-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Jubn, jung'f tbvat ba?!"
 			]
@@ -23,8 +21,7 @@
 	"dialog-shepherd-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"I was supposed to be watching the sheep,\nbut I took a quick nap, and the next thing\nI know... they were all over the place."
 			]
@@ -33,32 +30,28 @@
 	"dialog-shepherd-start3": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"How did they get out? The fence looks\nfine."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"I don't even know. Maybe they were, you\nknow, hacked out. By the Big Bad."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"But the Big Bad hasn't been around for\nyears. Just how long was this nap?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"It was the shortest nap. Super quick. It\nwas a long blink, really.",
 				"A super, tiny, microscopic nap.",
@@ -71,8 +64,7 @@
 	"dialog-shepherd-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Can you help a dude out? Put all four\nsheep back inside the fence?"
 			]
@@ -81,8 +73,7 @@
 	"dialog-shepherd-sheepcheer": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Awesome! Don't stop, now!"
 			]
@@ -91,8 +82,7 @@
 	"dialog-shepherd-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thanks a million! I owe you one!"
 			]
@@ -101,8 +91,7 @@
 	"dialog-shepherd-end-surprise": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "shepherd",
-			"name": "%Shepherd%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, wow, are the sheep actually back\ninside the pen? I could've sworn they....",
 				"Hey, did you do that? Did you put them\nback?",

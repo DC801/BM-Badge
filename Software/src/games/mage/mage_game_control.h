@@ -41,6 +41,7 @@ private:
 	MageHeader entityHeader;
 	MageHeader geometryHeader;
 	MageHeader scriptHeader;
+	MageHeader portraitHeader;
 	MageHeader dialogHeader;
 	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
@@ -92,7 +93,7 @@ public:
 
 	//this is the index value of where the playerEntity is located within
 	//the entities[] array and also the offset to it from hackableDataAddress
-	int32_t playerEntityIndex;
+	uint8_t playerEntityIndex;
 
 	uint8_t currentSaveIndex;
 	MageSaveGame currentSave;
@@ -163,8 +164,10 @@ public:
 	uint16_t getValidTilesetId(uint16_t tilesetId);
 	uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
 	uint16_t getValidAnimationId(uint16_t animationId);
+	uint16_t getValidAnimationTilesetId(uint16_t animationId);
 	uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
 	uint16_t getValidEntityTypeId(uint16_t entityTypeId);
+	MageEntityType* getValidEntityType(uint16_t entityTypeId);
 	uint16_t getValidMapLocalScriptId(uint16_t scriptId);
 	uint16_t getValidGlobalScriptId(uint16_t scriptId);
 	uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
@@ -184,6 +187,7 @@ public:
 		int16_t currentEntityId
 	);
 	uint32_t getImageAddress(uint16_t imageId);
+	uint32_t getPortraitAddress(uint16_t portraitId);
 	uint32_t getDialogAddress(uint16_t dialogId);
 
 	//this returns the address offset for a specific script Id:
@@ -219,6 +223,11 @@ public:
 
 	Point getPushBackFromTilesThatCollideWithPlayer();
 
+	void getRenderableStateFromAnimationDirection(
+		MageEntityRenderableData *data,
+		const MageEntity *entity,
+		const MageEntityTypeAnimationDirection *animationDirection
+	);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL

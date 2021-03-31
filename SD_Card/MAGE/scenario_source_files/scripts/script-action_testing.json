@@ -937,5 +937,39 @@
 			"entity": "%SELF%",
 			"script": "mage18-interact"
 		}
+	],
+	"mage19-interact": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "bender"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "verthandi"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage19"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%SELF%",
+			"entity_type": "mage"
+		}
 	]
 }
