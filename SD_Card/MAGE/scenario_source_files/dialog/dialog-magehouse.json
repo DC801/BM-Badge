@@ -158,7 +158,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "BOTTOM_LEFT",
 			"entity": "Mr. Tickles",
 			"portrait": "goldfish",
 			"messages": [

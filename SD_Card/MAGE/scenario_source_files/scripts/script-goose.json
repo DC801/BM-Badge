@@ -62,8 +62,9 @@
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake-hint",
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",

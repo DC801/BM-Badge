@@ -89,8 +89,9 @@
 			"dialog": "dialog-kid-ball"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SET_SAVE_FLAG",

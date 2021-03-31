@@ -309,14 +309,14 @@
 			"script": "set-hint-flags-false"
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "null_script"
-		},
-		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker-hint",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-baker-start-s": [
@@ -339,14 +339,14 @@
 			"script": "set-hint-flags-false"
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "null_script"
-		},
-		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "baker-hint",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-bobrock-gottago": [
@@ -422,11 +422,6 @@
 			"expected_bool": false
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
-		},
-		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bobrock-backstory",
 			"expected_bool": true,
@@ -448,6 +443,15 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bob Austin",
 			"script": "show_dialog-bobrock-start"
@@ -461,6 +465,15 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bobrock-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
 			"bool_value": true
 		},
 		{
@@ -490,6 +503,15 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-nobob"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -615,10 +637,6 @@
 			"duration": 100
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub3",
 			"doc": "Ladies? / What about Bob-vylin? / Came to the wrong party."
@@ -657,6 +675,10 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "end-flail"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -879,8 +901,9 @@
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -1032,8 +1055,9 @@
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bobmoss-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SCREEN_FADE_IN",

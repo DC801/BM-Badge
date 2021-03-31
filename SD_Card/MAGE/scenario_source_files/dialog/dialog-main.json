@@ -134,15 +134,6 @@
 			]
 		}
 	],
-	"dialog-sheep": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"...."
-			]
-		}
-	],
 	"dialog-dsheep": [
 		{
 			"alignment": "BOTTOM_LEFT",

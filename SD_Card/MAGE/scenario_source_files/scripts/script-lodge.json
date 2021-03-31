@@ -439,7 +439,7 @@
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "lodge-path1",
-			"duration": 1400
+			"duration": 1700
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",

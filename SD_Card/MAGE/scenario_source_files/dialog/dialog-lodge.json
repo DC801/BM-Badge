@@ -685,7 +685,7 @@
 	"dialog-murmur3": [
 		{
 			"alignment": "TOP_RIGHT",
-			"entity": "%SELF%",
+			"entity": "Trekkie",
 			"messages": [
 				"I'm pretty sure %PLAYER% touched\nall of them...."
 			]
@@ -808,6 +808,10 @@
 				{
 					"label": "Yes",
 					"script": "debug-touch-artifacts"
+				},
+				{
+					"label": "Skip to secret room",
+					"script": "enter-secretroom"
 				},
 				{
 					"label": "No",
