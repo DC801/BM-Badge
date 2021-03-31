@@ -151,9 +151,15 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
+			"messages": [
+				"Well, you know what they say about\nassumptions."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
 			"emote": 1,
 			"messages": [
-				"Well, you know what they say about\nassumptions.",
 				"They make a shiny ass... and they give it\nto me, Bender."
 			]
 		}
@@ -193,9 +199,16 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
+			"emote": 1,
 			"messages": [
 				"Hee hee hee!",
-				"Hey, everyone! Bender's ass is back!",
+				"Hey, everyone! Bender's ass is back!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
 				"....",
 				"Don't look so smug, kid. It had nothing to\ndo with you.",
 				"I'm sure my ass came home on its own!"
@@ -206,6 +219,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
+			"emote": 1,
 			"messages": [
 				"Ooh, yeah!"
 			]

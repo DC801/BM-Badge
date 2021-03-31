@@ -891,6 +891,12 @@
 			"script": "show_dialog-marta-start"
 		}
 	],
+	"show_dialog-safety-skyler": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-safety-skyler"
+		}
+	],
 	"fountain-glitchwatch": [
 		{
 			"action": "CHECK_ENTITY_GLITCHED",

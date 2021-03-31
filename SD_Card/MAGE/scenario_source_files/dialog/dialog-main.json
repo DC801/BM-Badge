@@ -26,28 +26,28 @@
 	],
 	"dialog-cleo2": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"Meowwowow."
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"That's what I've been saying this whole\ntime!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"Meowwrrrr!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"Oh, I know!"
@@ -56,28 +56,28 @@
 	],
 	"dialog-cleo1": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"Meowrrow."
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"Oh, you don't say!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"Meow!"
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"He didn't!"
@@ -86,7 +86,7 @@
 	],
 	"dialog-cleo-glitched": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"Uzz, V srry n ovg shaal."
@@ -95,7 +95,7 @@
 	],
 	"dialog-cat-glitched": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"...."
@@ -104,7 +104,7 @@
 	],
 	"dialog-cat1": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"Hey there, cat!"
@@ -113,21 +113,21 @@
 	],
 	"dialog-cat2": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cat",
 			"messages": [
 				"...."
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "Cleo",
 			"messages": [
 				"Excuse me, but we were in the middle of a\nconversation."
 			]
 		},
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"Oh, sorry. Carry on."
@@ -363,6 +363,15 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Honk!"
+			]
+		}
+	],
+	"dialog-safety-skyler": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Safety Skyler says, \"Remember to wear eye\nprotection!\""
 			]
 		}
 	],
