@@ -769,11 +769,6 @@
 			"bool_value": true
 		},
 		{
-			"action": "SCREEN_FADE_IN",
-			"duration": 400,
-			"color": "#000000"
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%PLAYER%",
 			"direction": "south"
@@ -786,6 +781,11 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "cameraman",
 			"geometry": "credits_camera"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 400,
+			"color": "#000000"
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",

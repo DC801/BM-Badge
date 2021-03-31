@@ -98,9 +98,21 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-trekkie",
+			"expected_bool": true,
+			"success_script": "show_dialog-trekkie-end-s"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-trekkie-eval"
+		}
+	],
+	"show_dialog-trekkie-nointernet": [
+		{
+			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "trekkie-backstory",
 			"expected_bool": true,
-			"success_script": "show_dialog-trekkie-eval"
+			"success_script": "show_dialog-trekkie-start-s"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -202,14 +214,8 @@
 	],
 	"show_dialog-trekkie-eval": [
 		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-trekkie",
-			"expected_bool": true,
-			"success_script": "show_dialog-trekkie-end-s"
-		},
-		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle1",
 			"expected_u2": 3,
 			"expected_bool": false,
@@ -217,7 +223,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle2",
 			"expected_u2": 2,
 			"expected_bool": false,
@@ -225,7 +231,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle3",
 			"expected_u2": 7,
 			"expected_bool": false,
@@ -233,7 +239,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle4",
 			"expected_u2": 0,
 			"expected_bool": false,
@@ -241,7 +247,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle5",
 			"expected_u2": 1,
 			"expected_bool": false,
@@ -249,7 +255,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle6",
 			"expected_u2": 6,
 			"expected_bool": false,
@@ -257,7 +263,7 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle7",
 			"expected_u2": 5,
 			"expected_bool": false,
@@ -265,12 +271,18 @@
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
-			"success_script": "show_dialog-trekkie-start-s",
+			"success_script": "show_dialog-trekkie-nointernet",
 			"entity": "EtherNettle8",
 			"expected_u2": 4,
 			"expected_bool": false,
 			"doc": "EtherNettle8 should be brown"
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-trekkie-ethernettle-success"
+		}
+	],
+	"show_dialog-trekkie-ethernettle-success": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Trekkie",
@@ -397,12 +409,18 @@
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"bool_value": false
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-trekkie-start"
 		}
 	],
 	"debug-ethernet-puzzle-q": [
@@ -472,6 +490,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "trekkie-hint",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-trekkie-start"
 		}
 	],
 	"show_dialog-trekkie-end-s": [
@@ -489,6 +512,11 @@
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Trekkie",
 			"direction": "east"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-trekkie-start"
 		}
 	]
 }
