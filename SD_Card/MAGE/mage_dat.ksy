@@ -22,6 +22,8 @@ seq:
     type: count_with_offsets
   - id: script_offsets
     type: count_with_offsets
+  - id: portrait_offsets
+    type: count_with_offsets
   - id: dialog_offsets
     type: count_with_offsets
   - id: image_color_palette_offsets
@@ -62,6 +64,10 @@ seq:
     type: script
     repeat: expr
     repeat-expr: script_offsets.count
+  - id: portraits
+    type: portrait
+    repeat: expr
+    repeat-expr: portrait_offsets.count
   - id: dialogs
     type: dialog
     repeat: expr
@@ -265,13 +271,13 @@ types:
     seq:
       - id: name
         type: str
-        size: 16
+        size: 32
         encoding: ASCII
       - id: padding_a
         type: u1
       - id: padding_b
         type: u1
-      - id: padding_c
+      - id: portrait_index
         type: u1
       - id: animation_count
         type: u1
@@ -407,6 +413,25 @@ types:
       - id: padding_g
         type: u1
 
+  portrait:
+    seq:
+      - id: name
+        type: str
+        size: 32
+        encoding: ASCII
+      - id: padding_a
+        type: u1
+      - id: padding_b
+        type: u1
+      - id: padding_c
+        type: u1
+      - id: emote_count
+        type: u1
+      - id: emotes
+        type: entity_type_animation_direction
+        repeat: expr
+        repeat-expr: emote_count
+
   dialog:
     seq:
       - id: name
@@ -438,7 +463,11 @@ types:
         enum: dialog_response_type
       - id: response_count
         type: u1
-      - id: padding
+      - id: entity_id
+        type: u1
+      - id: portrait_id
+        type: u1
+      - id: emote
         type: u1
       - id: messages
         type: u2
@@ -451,7 +480,7 @@ types:
       - id: dialog_screen_padding
         type: u2
         repeat: expr
-        repeat-expr: (message_count + 1) % 2
+        repeat-expr: (message_count) % 2
         doc: Padding to align things back to uint32_t
 
   dialog_response:

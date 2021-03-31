@@ -1,7 +1,6 @@
 #include "mage_color_palette.h"
 #include "modules/sd.h"
 #include "EngineROM.h"
-#include "EnginePanic.h"
 #include "FrameBuffer.h"
 
 extern FrameBuffer *mage_canvas;
@@ -40,7 +39,7 @@ uint32_t MageColorPalette::size() const
 {
 	uint32_t size = (
 		sizeof(colorCount) +
-		(sizeof(colorCount) * sizeof(uint16_t))
+		(colorCount * sizeof(uint16_t))
 	);
 	return size;
 }

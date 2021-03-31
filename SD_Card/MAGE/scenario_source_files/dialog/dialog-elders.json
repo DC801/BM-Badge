@@ -2,8 +2,7 @@
 	"dialog-bert-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"....",
 				"Bczv um jiks."
@@ -13,8 +12,7 @@
 	"dialog-alfonso-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Cdl iwpi'h fjxit jcctrthhpgn!"
 			]
@@ -23,8 +21,7 @@
 	"dialog-jackob-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Vg'f tbbq gung lbh'er cenpgvpvat, ohg\ncreuncf lbh fubhyq sbphf ba erfgbevat gur\ngbja?"
 			]
@@ -33,8 +30,7 @@
 	"dialog-bert-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Who needs help?"
 			]
@@ -43,8 +39,7 @@
 	"dialog-bert-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Perhaps the world."
 			]
@@ -53,8 +48,7 @@
 	"dialog-bert-catwork": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Max. Purple man.",
 				"Max wants his house to be built."
@@ -64,8 +58,7 @@
 	"dialog-bert-shepherd": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"The shepherd.",
 				"He had one job."
@@ -75,8 +68,7 @@
 	"dialog-bert-bender": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Robot?",
 				"Some kind of robot.",
@@ -88,8 +80,7 @@
 	"dialog-bert-baker": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Baker.",
 				"Baker is busy. He has trouble with customer."
@@ -99,8 +90,7 @@
 	"dialog-bert-bobmoss": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Cousin of Stone Cold Bob Austin.",
 				"He is lost. Or is he hiding?"
@@ -110,8 +100,7 @@
 	"dialog-bert-delmar1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Old woman, Beatrice.",
 				"She has been sad a long time."
@@ -121,8 +110,7 @@
 	"dialog-bert-trekkie": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Trekkie.",
 				"Trekkie works on plants in the glass house."
@@ -132,8 +120,7 @@
 	"dialog-bert-sportskid": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Small child with big dream.",
 				"Child lives with father."
@@ -143,8 +130,7 @@
 	"dialog-bert-delmar2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Old woman, Beatrice.",
 				"Does she know what she wants?"
@@ -154,8 +140,7 @@
 	"dialog-bert-goose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"Goose is mad?",
 				"Goose is always mad.",
@@ -166,8 +151,7 @@
 	"dialog-bert-verthandi": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "bert",
-			"name": "%Bert%",
+			"entity": "%SELF%",
 			"messages": [
 				"A goddess mourns for lost souls.",
 				"She watches the goats."
@@ -177,8 +161,7 @@
 	"dialog-jackob-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Did you have a question?"
 			]
@@ -187,32 +170,28 @@
 	"dialog-jackob-hint-hackbook1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Well... I found this book in the inner\nsanctum, and I had a question about it."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Of course. What do you want to know?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"You see, it's a book about the Big Bad,\nbut the words inside are all scrambled up."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"I see.",
 				"Perhaps that's something the Big Bad did.\nIt would be logical for him to hide\ninformation about himself."
@@ -220,16 +199,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"But what can I do to get the book back to\nnormal?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"The Big Bad had powers beyond what you can\ndo with that ring alone, %PLAYER%.",
 				"I suspect it's something even Ring Zero\ncannot fix."
@@ -237,16 +214,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Do you know what the book used to say,\nat least?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"That book... I must have read it before,\nbut...."
 			]
@@ -255,8 +230,7 @@
 	"dialog-jackob-hint-hackbook2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
@@ -265,8 +239,7 @@
 	"dialog-jackob-hint-hackbook3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, %PLAYER%, I'm sorry.",
 				"I can't remember anything about what the\nbook said.",
@@ -275,8 +248,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"But the Big Bad's name used to be in that\nbook!",
 				"It made me realize that I've never heard\nhis name before. Not once!",
@@ -285,8 +257,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"....",
 				"I must have known it, once.",
@@ -299,16 +270,14 @@
 	"dialog-jackob-hint-hackbook-s": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"About that glitched-out book...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"I'm sorry. I don't think there's anything\nyou can do to fix it."
 			]
@@ -317,16 +286,14 @@
 	"dialog-jackob-hints": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Not really."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, then a hint:"
 			]
@@ -335,8 +302,7 @@
 	"dialog-jackob-hint1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"If you've hacked things so badly you're\nnot sure how you could possibly straighten\nthings out again....",
 				"Walk through a door. The world will right\nitself."
@@ -346,16 +312,14 @@
 	"dialog-jackob-hint-catwork": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"The cat crew needs their cat boss."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, if you can't give them their cat\nboss, you might try the next best thing:",
 				"A doppelganger!"
@@ -365,16 +329,14 @@
 	"dialog-jackob-hint-shepherd": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I guess the shepherd wants me to put the\nsheep back inside their pen."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"That seems simple enough. All you must do\nis change their X and Y position until\nthey are inside the sheep pen.",
 				"The hard part will be learning their\nnames."
@@ -382,16 +344,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Names?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"All sheep have names, but they don't share\nthem except in the direst of emergencies.",
 				"But their names are still inherent in the\ndata of our world. Their names are not\nhidden from you.",
@@ -405,16 +365,14 @@
 	"dialog-jackob-hint-bender": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Bender wants his ass back, I guess."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Our every state of being can be defined by\ndata.",
 				"In his case, he once existed with a whole\nass, and therefore, there exists an entity\ntype where his ass is whole.",
@@ -425,16 +383,14 @@
 	"dialog-jackob-hint-baker": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"How do I get into the Bob's Club?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"The bouncer, Stone Cold Bob Austin, is\nvery strict. If your name is not 'Bob'\nexactly, he will not budge.",
 				"And just so you know, there are multiple\nvalues which will APPEAR to be a blank\nspace, but will not satisfy him.",
@@ -445,16 +401,14 @@
 	"dialog-jackob-hint-bobmoss": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I heard there might be another Stone Cold\nBob Austin. Like his cousin or something?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, you mean Bob Moss. Yes, he disappears\nonce in a while.",
 				"He's never far. But if you can't find him\nin town, you might have to look in places\none cannot ordinarily walk."
@@ -464,16 +418,14 @@
 	"dialog-jackob-hint-bea1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Beatrice wants her husband to become a man\nagain."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ah, yes, a simple entity type change.",
 				"You'll know you have the right entity type\nwhen you get to an old man, balding,\nhunched over, and in overalls."
@@ -483,16 +435,14 @@
 	"dialog-jackob-hint-trekkie": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Trekkie needs help with the Ether Nettle."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"That one might be tricky.",
 				"If I understand plant genetics correctly,\nthen hypothetically.... Ether Nettle\ncolors are simply variations of a single\nentity type.",
@@ -504,8 +454,7 @@
 	"dialog-jackob-hint-sportskid": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"This kid....",
 				"He's just running around in circles,\nsaying he wants to grow up to be some kind\nof sports ball."
@@ -513,16 +462,14 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"If that's what he wants, that's what he\nwants."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Yeah, but... that's not really fixing\nsomething that's broken, though, is it?",
 				"He's a living person, but if I change him\ninto an inanimate object....",
@@ -535,24 +482,21 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"If you turn him into a ball, will that\nharm him?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I don't know. Will it?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Everything you see around you is pixels\nand data. All ones and zeroes.",
 				"Are any of us really alive? If you change\nsomething, does that change what\nfundamentally lies underneath, or only\nhow it appears?",
@@ -562,8 +506,7 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Wouldn't it?",
 				"The way we behave when no one is\nlooking... doesn't that say more about our\ncharacter than anything else?"
@@ -571,8 +514,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"These are questions for philosophers and\ngamers. All we mortals can do is fulfill a\nchild's wish to become sports equipment."
 			]
@@ -581,16 +523,14 @@
 	"dialog-jackob-hint-bea2": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Now Beatrice wants her husband to turn\nback into a sheep."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"She must have gotten sick of his yammering\nagain.",
 				"Ah, well. You know what to do by now."
@@ -600,8 +540,7 @@
 	"dialog-jackob-hint-rake": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"I think the goose wants me to move the\nrake.",
 				"Perhaps... into the lake?"
@@ -609,8 +548,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"Likely. You'll need to change the\nrake's Y coordinates.",
 				"But just so you know, each coordinate\nactually spans two bytes, and if the\ndistance is great enough, you'll have to\nchange both."
@@ -620,16 +558,14 @@
 	"dialog-jackob-hint-verthandi": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"How do I unscramble someone's pixels?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "jackob",
-			"name": "%Jackob%",
+			"entity": "%SELF%",
 			"messages": [
 				"I think there was something in the Entity\nbooks about that, but I didn't quite\nunderstand.",
 				"Something about changing a bit instead of\na byte, I think...."
@@ -639,8 +575,7 @@
 	"dialog-alfonso-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"There's a number of issues around town\nthat your ring should be able to fix.",
 				"There are... now, let's just see....",
@@ -651,8 +586,7 @@
 	"dialog-alfonso-eval": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"You've completed $story-flag-count$ out of 11 tasks."
 			]
@@ -661,8 +595,7 @@
 	"dialog-alfonso-eval0": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Uh....",
 				"Nowhere to go now but up!"
@@ -672,8 +605,7 @@
 	"dialog-alfonso-eval1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"That's the spirit! What a great start!"
 			]
@@ -682,8 +614,7 @@
 	"dialog-alfonso-eval-early": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"You're getting the hang of this!"
 			]
@@ -692,8 +623,7 @@
 	"dialog-alfonso-eval-mid": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, my! You're getting a lot of work done!\nMarvelous!"
 			]
@@ -702,8 +632,7 @@
 	"dialog-alfonso-eval-late": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wow! You're nearly done!"
 			]
@@ -712,8 +641,7 @@
 	"dialog-alfonso-eval-done": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Incredible! You've done everything on my\nlist!"
 			]
@@ -722,8 +650,7 @@
 	"dialog-alfonso-wonthedemo": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Congratulations! You fixed the town!"
 			]
@@ -732,8 +659,7 @@
 	"dialog-alfonso-debug-catwork": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: catwork counted.\nTotal: $story-flag-count$"
 			]
@@ -742,8 +668,7 @@
 	"dialog-alfonso-debug-shepherd2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: shepherd2 counted.\nTotal: $story-flag-count$"
 			]
@@ -752,8 +677,7 @@
 	"dialog-alfonso-debug-bender2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: bender2 counted.\nTotal: $story-flag-count$"
 			]
@@ -762,8 +686,7 @@
 	"dialog-alfonso-debug-baker2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: baker2 counted.\nTotal: $story-flag-count$"
 			]
@@ -772,8 +695,7 @@
 	"dialog-alfonso-debug-bobmoss": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: bobmoss counted.\nTotal: $story-flag-count$"
 			]
@@ -782,8 +704,7 @@
 	"dialog-alfonso-debug-bea-happy": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: bea-happy counted.\nTotal: $story-flag-count$"
 			]
@@ -792,8 +713,7 @@
 	"dialog-alfonso-debug-trekkie2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: trekkie2 counted.\nTotal: $story-flag-count$"
 			]
@@ -802,8 +722,7 @@
 	"dialog-alfonso-debug-sportskid": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: sportskid counted.\nTotal: $story-flag-count$"
 			]
@@ -812,8 +731,7 @@
 	"dialog-alfonso-debug-bea-relief": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: bea-relief counted.\nTotal: $story-flag-count$"
 			]
@@ -822,8 +740,7 @@
 	"dialog-alfonso-debug-rake": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug: rake counted.\nTotal: $story-flag-count$"
 			]
@@ -832,8 +749,7 @@
 	"dialog-alfonso-story-flag-set": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "alfonso",
-			"name": "%Alfonso%",
+			"entity": "%SELF%",
 			"messages": [
 				"Story flag count reset (0)"
 			]

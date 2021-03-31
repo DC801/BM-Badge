@@ -2,8 +2,7 @@
 	"dialog-delmar-huh": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "%Delmar%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wha... huh?"
 			]
@@ -12,8 +11,7 @@
 	"dialog-bea-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ydy D ymjk ht bgvnnzn? Ocz rjmgy'n bjiz\nv wdo apuut."
 			]
@@ -22,8 +20,7 @@
 	"dialog-delmar-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "delmar",
-			"name": "%Delmar%",
+			"entity": "%SELF%",
 			"messages": [
 				"Bu, qrne. V zhfg'ir fgbbq hc gbb snfg.\nSrry n ovg jbbml."
 			]
@@ -32,8 +29,7 @@
 	"dialog-delmar-blab": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "delmar",
-			"name": "%Delmar%",
+			"entity": "%SELF%",
 			"messages": [
 				"...I tied an onion to my belt, which was\nthe style at the time.",
 				"Now, to take the ferry cost a nickle, and\nin those days, nickles had pictures of\nbumblebees on 'em.",
@@ -46,8 +42,7 @@
 	"dialog-delmar-catchup": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "delmar",
-			"name": "%Delmar%",
+			"entity": "Delmar",
 			"messages": [
 				"Huh? What's goin' on? What'd I miss?"
 			]
@@ -56,8 +51,7 @@
 	"dialog-bea-start1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Forty years ago, things were sure\ndifferent.",
 				"I was a lot younger then, and my husband,\n%Delmar%...."
@@ -67,8 +61,7 @@
 	"dialog-bea-start2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"My husband was a real man! Not a farm\nanimal!"
 			]
@@ -77,8 +70,7 @@
 	"dialog-bea-start3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"That ghastly hacker ruffian hacked him\ninto a sheep on a whim!",
 				"%Delmar% didn't even do anything\nto him!",
@@ -93,16 +85,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Make things right? Well, I can change\nwhat he looks like, anyway."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"That works for me!"
 			]
@@ -111,8 +101,7 @@
 	"dialog-bea-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, %Delmar%... we'll fix you up\nreal soon!"
 			]
@@ -121,8 +110,7 @@
 	"dialog-bea-mandud1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, %Delmar%! You're... oh...."
 			]
@@ -131,8 +119,7 @@
 	"dialog-bea-mandud2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, goodness. Well, this isn't my\n%Delmar%, but I suppose it's nice\nhe's not a sheep anymore, at least.",
 				"He's been a sheep for so long... well, I\nsuppose it's been forty years."
@@ -142,8 +129,7 @@
 	"dialog-bea-mandud-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, %Delmar%! We'll make you your\nnormal self soon!"
 			]
@@ -152,24 +138,21 @@
 	"dialog-bea-happy": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "Beatrice",
 			"messages": [
 				"Oh, %Delmar%, it's you!\nYou're a man again! At last!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "delmar",
-			"name": "%Delmar%",
+			"entity": "Delmar",
 			"messages": [
 				"Whazzat, %Beatrice%? Something seems\ndifferent."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "Beatrice",
 			"messages": [
 				"Oh, it's my %Delmar%! Thank you,\n%PLAYER%!"
 			]
@@ -178,8 +161,7 @@
 	"dialog-bea-trick": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh! That's a nasty trick,\n%PLAYER%!",
 				"How could you?",
@@ -190,8 +172,7 @@
 	"dialog-bea-confused": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, %Delmar%, you're... uh...."
 			]
@@ -200,8 +181,7 @@
 	"dialog-bea-end-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thank you, %PLAYER%!"
 			]
@@ -210,8 +190,7 @@
 	"dialog-bea-regret1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"....",
 				"You know, I appreciate what you did,\n%PLAYER%. I really do."
@@ -221,8 +200,7 @@
 	"dialog-bea-regret2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
@@ -231,8 +209,7 @@
 	"dialog-bea-regret3": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"But now I find myself longing for quiet.",
 				"It was so peaceful, before. Me and\n%Delmar% used to get along so well.",
@@ -245,8 +222,7 @@
 	"dialog-bea-regret-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"I'm sure he won't mind being a sheep\nagain. In fact, I'm not sure he'll notice.",
 				"But I sure will! I won't have peace\notherwise!"
@@ -256,8 +232,7 @@
 	"dialog-bea-relief": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thank you, child!",
 				"...And, erm, we need not mention this to\nanyone! You understand?"
@@ -267,8 +242,7 @@
 	"dialog-bea-relief-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Peace at last!"
 			]
@@ -277,8 +251,7 @@
 	"dialog-bea-coincidence": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh! And I was just thinking how I wanted\nhim to become a sheep again!",
 				"So gentle... and so quiet!",
@@ -289,8 +262,7 @@
 	"dialog-bea-deja": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"....",
 				"I suddenly have the strangest feeling of\ndeja vu."
@@ -300,8 +272,7 @@
 	"dialog-debug-bea-sequel-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Set sequel branch?"
 			],
@@ -325,8 +296,7 @@
 	"dialog-debug-bea-sequel-man": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sequel branch activated, and Delmar is a\nman."
 			]
@@ -335,8 +305,7 @@
 	"dialog-debug-bea-sequel-noman": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Sequel branch activated, and Delmar left\nalone."
 			]
@@ -345,8 +314,7 @@
 	"dialog-no_debug-bea-sequel": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Nothing changed."
 			]
@@ -355,8 +323,7 @@
 	"dialog-bea2-backstory-alt": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, um....",
 				"Actually, I was hoping he could become a\nsheep again."
@@ -366,8 +333,7 @@
 	"dialog-bea2-end-alt": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "beatrice",
-			"name": "%Beatrice%",
+			"entity": "%SELF%",
 			"messages": [
 				"Well, I suppose we could give this a try\ninstead...."
 			]

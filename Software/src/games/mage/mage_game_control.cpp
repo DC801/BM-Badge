@@ -46,6 +46,9 @@ MageGameControl::MageGameControl()
 	scriptHeader = MageHeader(offset);
 	offset += scriptHeader.size();
 
+	portraitHeader = MageHeader(offset);
+	offset += portraitHeader.size();
+
 	dialogHeader = MageHeader(offset);
 	offset += dialogHeader.size();
 
@@ -120,6 +123,7 @@ uint32_t MageGameControl::Size() const
 		entityHeader.size() +
 		geometryHeader.size() +
 		scriptHeader.size() +
+		portraitHeader.size() +
 		dialogHeader.size() +
 		colorPaletteHeader.size() +
 		stringHeader.size() +
@@ -177,7 +181,6 @@ void MageGameControl::readSaveFromRomIntoRam() {
 	);
 	if (
 		playerEntityIndex != NO_PLAYER
-		&& playerEntityIndex != MAGE_MAP_ENTITY
 	) {
 		// copy save ram name into current player name
 		memcpy(
@@ -1183,6 +1186,16 @@ uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 	return animationId % (animationHeader.count());
 }
 
+uint16_t MageGameControl::getValidAnimationTilesetId(uint16_t animationId)
+{
+	//use failover animation if an invalid animationId is submitted to the function.
+	//There's a good chance if that happens, it will break things.
+	animationId = getValidAnimationId(animationId);
+
+	//always return a valid animation frame for the animationId submitted.
+	return animations[animationId].TilesetId();
+}
+
 uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
 {
 	//use failover animation if an invalid animationId is submitted to the function.
@@ -1213,6 +1226,12 @@ uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 {
 	//always return a valid entity type for the entityTypeId submitted.
 	return entityTypeId % entityTypeHeader.count();
+}
+
+MageEntityType* MageGameControl::getValidEntityType(uint16_t entityTypeId)
+{
+	//always return a valid entity type for the entityTypeId submitted.
+	return &entityTypes[getValidEntityTypeId(entityTypeId)];
 }
 
 uint16_t MageGameControl::getValidMapLocalScriptId(uint16_t scriptId)
@@ -1333,7 +1352,7 @@ void MageGameControl::updateEntityRenderableData(
 			{
 				//the entity has no animations, so return default values and give up.
 				#ifdef DC801_DESKTOP
-				fprintf(stderr, "An entityType entity with no animations exists. Using fallback values.");
+				fprintf(stderr, "An entityType with no animations exists. Using fallback values.");
 				#endif
 				data->tilesetId = MAGE_TILESET_FAILOVER_ID;
 				data->tileId = MAGE_TILE_FAILOVER_ID;
@@ -1365,33 +1384,12 @@ void MageGameControl::updateEntityRenderableData(
 			} else if (direction == MageEntityAnimationDirection::WEST) {
 				directedAnimation = currentAnimation.West();
 			}
+			getRenderableStateFromAnimationDirection(
+				data,
+				&entity,
+				&directedAnimation
+			);
 
-			//based on directedAnimation.Type(), you can get two different outcomes:
-			//Scenario A: Type is 0, TypeID is an animation ID:
-			if (directedAnimation.Type() == 0) {
-				uint16_t animationId = getValidAnimationId(directedAnimation.TypeId());
-				uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
-				data->tilesetId = animations[animationId].TilesetId();
-				data->tileId = getValidTileId(
-					animations[animationId].AnimationFrame(currentFrame).TileId(),
-					data->tilesetId
-				);
-				data->duration = animations[animationId].AnimationFrame(
-					currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
-				data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
-				data->renderFlags = directedAnimation.RenderFlags(); //no need to check, it shouldn't cause a crash.
-				data->renderFlags += entity.direction & 0x80;
-			}
-			//Test whether or not the 0-index stuff is working:
-			//Scenario B: Type is not 0, so TypeId is a tileset, and Type is the tileId (you will need to subtract 1 to get it 0-indexed).
-			else
-			{
-				data->tilesetId = directedAnimation.TypeId();
-				data->tileId = directedAnimation.TypeId() - 1;
-				data->duration = 0; //does not animate;
-				data->frameCount = 0; //does not animate
-				data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
-			}
 		}
 		MageTileset *tileset = &tilesets[getValidTilesetId(data->tilesetId)];
 		Point oldCenter = {
@@ -1417,6 +1415,39 @@ void MageGameControl::updateEntityRenderableData(
 			updateEntityRenderableBoxes(data, &entity, tileset);
 		}
 		data->lastTilesetId = data->tilesetId;
+	}
+}
+
+void MageGameControl::getRenderableStateFromAnimationDirection(
+	MageEntityRenderableData *data,
+	const MageEntity *entity,
+	const MageEntityTypeAnimationDirection *animationDirection
+) {
+	//based on animationDirection.Type(), you can get two different outcomes:
+	//Scenario A: Type is 0, TypeID is an animation ID:
+	if (animationDirection->Type() == 0) {
+		uint16_t animationId = getValidAnimationId(animationDirection->TypeId());
+		uint16_t currentFrame = getValidAnimationFrame(entity->currentFrame, animationId);
+		MageAnimation *animation = &animations[animationId];
+		data->tilesetId = animation->TilesetId();
+		data->tileId = getValidTileId(
+			animation->AnimationFrame(currentFrame).TileId(),
+			data->tilesetId
+		);
+		data->duration = animation->AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
+		data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+		data->renderFlags = animationDirection->RenderFlags(); //no need to check, it shouldn't cause a crash.
+		data->renderFlags += entity->direction & 0x80;
+	}
+	//Test whether or not the 0-index stuff is working:
+	//Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
+	else
+	{
+		data->tilesetId = animationDirection->Type() - 1;
+		data->tileId = animationDirection->TypeId();
+		data->duration = 0; //does not animate;
+		data->frameCount = 0; //does not animate
+		data->renderFlags = entity->direction; //no need to check, it shouldn't cause a crash.
 	}
 }
 
@@ -1723,6 +1754,10 @@ std::string MageGameControl::getString(
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
 	return imageHeader.offset(imageId % imageHeader.count());
+}
+
+uint32_t MageGameControl::getPortraitAddress(uint16_t portraitId) {
+	return portraitHeader.offset(portraitId % portraitHeader.count());
 }
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {

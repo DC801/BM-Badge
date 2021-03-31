@@ -164,9 +164,9 @@
 	- [x] point(uint16_t x, uint16_t y)
 	- [x] Geometry::inside_poly(point) collision detection function
 	- [x] draw() renders geometry to screen
-- [ ] Collision System
+- [x] Collision System
 	- [x] For Tiles
-	- [ ] For Entities
+	- [!] For Entities
 - [ ] Dialog Data Type Implementation:
 	- [x] Display Name - either stringId, or entityId
 	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.
@@ -175,6 +175,24 @@
 			- [x] Top or Bottom
 			- [x] Portrait on or off
 			- [x] portrait left or right
+	- [x] Portraits
+		- [x] Encoder
+			- [x] Needs new top-level protrait type
+			- [x] Needs to store portrait on entityType
+			- [x] Dialog
+				- [x] Needs to store portrait not associated with entityType on dialog
+				- [x] Manually specifyable even if not associated with any entity
+				- [x] Needs to store flip_x
+		- [x] Engine
+			- [x] Should match current entityType of speaking entities
+			- [x] Support Entity Hacked state
+			- [x] look at dialog alignment, and if it's "RIGHT", toggle flip_x into the flags byte
+	- [ ] Fix name not sticking to player when changing rooms
+	- [ ] Look into why EtherNettles puzzle is not triggering
+		- [ ] it's probably a modulo issue on tileId and tilesetId
+	- [ ] Make a new tileset that is mostly transparent for the main menu
+	- [ ] Make some artwork for the main menu
+	- [ ] Create action for setBackground
 	- [x] tilesetId and tileId for the portrait picture.
 	- [x] Support for string templates that make use of hacked entity names
 	- [x] Support for string templates that make use of numeric variables
@@ -199,16 +217,21 @@
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long
-- [ ] Save system with flags
-	- [ ] Player Name (12 bytes, like all other entities)
+- [x] Save system with flags
+	- [x] Player Name (12 bytes, like all other entities)
 	- [x] On map init, replace player name into PlayerEntity
-	- [ ] Use bit flags in a specific region of the ROM chip to encode SAVE data automatically as events transpire.
-	
+	- [x] Use bit flags in a specific region of the ROM chip to encode SAVE
 - [ ] Allow upload of game.dat to ROM chip using nrfjprog
 	- [ ] Convert game.daty into a game.hex file that writes data to address 0x12000000 and up on the ROM chip.
 	- [ ] Use qcustominit.ini file added with this commit and the following command to upload:
 		- `nrfjprog -f nrf52 --qspiini qcustominit.ini --program <filename>`
 		- More info on nrfjprog: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf_cltools%2FUG%2Fcltools%2Fnrf_nrfjprogexe_reference.html
+- [ ] Fix name not sticking to player when changing rooms
+- [ ] Look into why EtherNettles puzzle is not triggering
+	- [ ] it's probably a modulo issue on tileId and tilesetId
+- [ ] Make a new dialog tileset that is mostly transparent for the main menu
+- [ ] Make some background artwork for the main menu
+- [ ] Create action for setBackground
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

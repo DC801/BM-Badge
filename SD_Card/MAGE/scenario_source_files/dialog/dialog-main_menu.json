@@ -2,7 +2,6 @@
 	"dialog-main_menu": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
 			"name": "Main Menu",
 			"messages": [
 				"CHOOSE YOUR FATE"
@@ -27,7 +26,6 @@
 	"dialog-new_game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
 			"name": "New Game",
 			"messages": [
 				"CHOOSE SAVE SLOT"
@@ -56,7 +54,6 @@
 	"dialog-load_game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
 			"name": "Load Game",
 			"messages": [
 				"CHOOSE SAVE SLOT"
@@ -85,7 +82,6 @@
 	"dialog-erase_save": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
 			"name": "Erase Save",
 			"messages": [
 				"BOOM TIME!!"
@@ -114,7 +110,6 @@
 	"dialog-save_game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "mage",
 			"name": "Save Game",
 			"messages": [
 				"Would you like to save your progress?"

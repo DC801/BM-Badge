@@ -2,8 +2,7 @@
 	"dialog-timmy": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "timmy",
-			"name": "%Timmy%",
+			"entity": "Timmy",
 			"messages": [
 				"I'm practicing for my triathlon!",
 				"Running is my weakest event, so I'm\nworking hard to improve my time!"
@@ -11,16 +10,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Don't you need legs to run?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "timmy",
-			"name": "%Timmy%",
+			"entity": "Timmy",
 			"messages": [
 				"...?",
 				"No?"
@@ -30,32 +27,28 @@
 	"dialog-cleo2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"Meowwowow."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"That's what I've been saying this whole\ntime!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"Meowwrrrr!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"Oh, I know!"
 			]
@@ -64,32 +57,28 @@
 	"dialog-cleo1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"Meowrrow."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"Oh, you don't say!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"Meow!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"He didn't!"
 			]
@@ -98,8 +87,7 @@
 	"dialog-cleo-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"Uzz, V srry n ovg shaal."
 			]
@@ -108,8 +96,7 @@
 	"dialog-cat-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"...."
 			]
@@ -118,8 +105,7 @@
 	"dialog-cat1": [
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Hey there, cat!"
 			]
@@ -128,24 +114,21 @@
 	"dialog-cat2": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "%Cat%",
+			"entity": "Cat",
 			"messages": [
 				"...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "%Cleo%",
+			"entity": "Cleo",
 			"messages": [
 				"Excuse me, but we were in the middle of a\nconversation."
 			]
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"Oh, sorry. Carry on."
 			]
@@ -154,8 +137,7 @@
 	"dialog-sheep": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Sheep",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
@@ -164,8 +146,7 @@
 	"dialog-dsheep": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "%Delmar%",
+			"entity": "Delmar",
 			"messages": [
 				"...?"
 			]
@@ -174,8 +155,7 @@
 	"dialog-marta-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"It's true. I can fly. It's not a trick.",
 				"I had my TUESDAY a few years ago, and this\nbroom chose me.",
@@ -185,16 +165,14 @@
 		},
 		{
 			"alignment": "BOTTOM_RIGHT",
-			"portrait": "mage",
-			"name": "%PLAYER%",
+			"entity": "%PLAYER%",
 			"messages": [
 				"That's still pretty cool!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"It helps me deliver newspapers, I guess.\nCan't fix much else around here."
 			]
@@ -203,18 +181,17 @@
 	"dialog-marta-cheat": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
-				"....","That's cheating."
+				"....",
+				"That's cheating."
 			]
 		}
 	],
 	"dialog-marta-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"Jpd, hp rpe te! Jzf slnv!"
 			]
@@ -223,8 +200,7 @@
 	"dialog-marta-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "marta",
-			"name": "%Marta%",
+			"entity": "%SELF%",
 			"messages": [
 				"Good luck."
 			]
@@ -233,8 +209,7 @@
 	"dialog-hamster-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "hamster",
-			"name": "%Hamster%",
+			"entity": "%SELF%",
 			"messages": [
 				"Mxqj'i jxyi? Q mehbtmytu iybysed ixehjqwu?!"
 			]
@@ -243,8 +218,7 @@
 	"dialog-hamster-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "hamster",
-			"name": "%Hamster%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ah, that's better.",
 				"It was real rough wrangling angry pixies\nwith discombobulated pixel hands."
@@ -254,8 +228,7 @@
 	"dialog-hamster-start-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "hamster",
-			"name": "%Hamster%",
+			"entity": "%SELF%",
 			"messages": [
 				"Did you know that all electronics are\npowered by angry pixies?",
 				"The trick is to keep the pixies contained."
@@ -265,8 +238,7 @@
 	"dialog-debug-set-flags-false-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Set what to FALSE?"
 			],
@@ -294,8 +266,7 @@
 	"dialog-debug-set-flags-true-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Set what to TRUE?"
 			],
@@ -323,8 +294,7 @@
 	"dialog-debug-true": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"All flags set to TRUE. You may have to\nreload the map to see some changes."
 			]
@@ -333,8 +303,7 @@
 	"dialog-debug-set-all-false": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"All flags set to FALSE."
 			]
@@ -343,8 +312,7 @@
 	"dialog-debug-set-backstory-false": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"All entities have forgotten their first\nconversations with you."
 			]
@@ -353,8 +321,7 @@
 	"dialog-debug-set-backstory-true": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"All entities are inexplicably under the\nimpression that you've spoken to them\nbefore."
 			]
@@ -363,8 +330,7 @@
 	"dialog-no_debug-nothing-changed": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Nothing changed."
 			]
@@ -373,8 +339,8 @@
 	"dialog-debug-hub-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
+			"portrait": "goldfish",
 			"messages": [
 				"Go to debug map hub?"
 			],
@@ -394,8 +360,7 @@
 	"dialog-goose": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "goose",
-			"name": "%Goose%",
+			"entity": "%SELF%",
 			"messages": [
 				"Honk!"
 			]
@@ -404,8 +369,7 @@
 	"dialog-debug-win-rake-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Position rake in lake?"
 			],

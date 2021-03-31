@@ -60,25 +60,19 @@ public:
 class MageEntityType
 {
 private:
-	char name[17];
-	uint8_t paddingA;
-	uint8_t paddingB;
-	uint8_t paddingC;
+	uint8_t portraitId;
 	uint8_t animationCount;
 	std::unique_ptr<MageEntityTypeAnimation[]> entityTypeAnimations;
+	std::unique_ptr<MageEntityTypeAnimationDirection[]> emotes;
 public:
-	MageEntityType() : name{0},
-		paddingA{0},
-		paddingB{0},
-		paddingC{0},
+	MageEntityType() :
+		portraitId{0},
 		animationCount{0},
 		entityTypeAnimations{std::make_unique<MageEntityTypeAnimation[]>(animationCount)}
 	{};
 
 	MageEntityType(uint32_t address);
-
-	std::string Name() const;
-	//padding is not used, not making getter functions.
+	uint8_t PortraitId() const;
 	uint8_t AnimationCount() const;
 	MageEntityTypeAnimation EntityTypeAnimation(uint32_t index) const;
 	uint32_t Size() const;

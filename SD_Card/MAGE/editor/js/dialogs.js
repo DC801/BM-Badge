@@ -83,13 +83,48 @@ var serializeDialog = function (
 	return scenarioIndex;
 };
 
+var getPortraitIndexFromDialogScreen = function(
+	dialogScreen,
+	scenarioData
+) {
+	var portrait = scenarioData.portraits[dialogScreen.portrait];
+	if(dialogScreen.portrait && !portrait) {
+		throw new Error(`DialogScreen referenced a invalid portrait name: ${dialogScreen.portrait}!\nDialog was: ${JSON.stringify(dialogScreen, null, '\t')}`);
+	}
+	return dialogScreen.portrait
+		? portrait.scenarioIndex
+		: DIALOG_SCREEN_NO_PORTRAIT
+}
+
 var serializeDialogScreen = function (
 	dialogScreen,
 	map,
 	fileNameMap,
 	scenarioData,
 ) {
-	var responses = dialogScreen.options || []
+	var responses = dialogScreen.options || [];
+	var entity = dialogScreen.entity
+		? getObjectByNameOnMap(
+			dialogScreen.entity,
+			map,
+			{ action: "serializeDialogScreen" },
+		)
+		: null;
+	var entityIndex = dialogScreen.entity
+		? (entity.specialIndex || entity.mapIndex)
+		: DIALOG_SCREEN_NO_ENTITY;
+	var portraitIndex = getPortraitIndexFromDialogScreen(
+		dialogScreen,
+		scenarioData
+	);
+	var name = (
+		dialogScreen.name
+		|| (
+			entityIndex
+				? dialogScreen.entity
+				: ""
+		)
+	);
 	var headerLength = getPaddedHeaderLength(
 		+ 2 // uint16_t name_string_index
 		+ 2 // uint16_t border_tileset_index
@@ -98,7 +133,9 @@ var serializeDialogScreen = function (
 		+ 1 // uint8_t message_count
 		+ 1 // uint8_t response_type
 		+ 1 // uint8_t response_count
-		+ 1 // uint8_t padding
+		+ 1 // uint8_t entity_id
+		+ 1 // uint8_t portrait_id
+		+ 1 // uint8_t emote
 		+ (2 * dialogScreen.messages.length) // uint16_t messages[message_count]
 		+ (
 			(
@@ -114,7 +151,7 @@ var serializeDialogScreen = function (
 	var dataView = new DataView(result);
 	var offset = 0;
 	var nameStringId = serializeString(
-		dialogScreen.name,
+		name,
 		map,
 		fileNameMap,
 		scenarioData,
@@ -163,8 +200,18 @@ var serializeDialogScreen = function (
 	);
 	offset += 1;
 	dataView.setUint8(
-		offset, // uint8_t padding
-		0,
+		offset, // uint8_t entity_id
+		entityIndex,
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t portrait_id
+		portraitIndex,
+	);
+	offset += 1;
+	dataView.setUint8(
+		offset, // uint8_t emote
+		dialogScreen.emote || 0,
 	);
 	offset += 1;
 	dialogScreen.messages.forEach(function (message) {

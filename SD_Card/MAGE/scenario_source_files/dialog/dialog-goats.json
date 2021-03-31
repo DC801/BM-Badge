@@ -2,8 +2,7 @@
 	"dialog-verthandi-glitched-lesson-intro": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh! It looks like you would like a lesson\non glitched entities! Please allow me to\nexplain."
 			]
@@ -12,8 +11,7 @@
 	"dialog-verthandi-glitched-lesson": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Ring Zero provides you access to our\nworld's superficial state, but there is\nalso a deeper state you cannot see, nor\ncontrol.",
 				"Our physical appearance is only\nsuperficial, and our deeper soul remembers\nour true identities, even if our\nsuperficial apperance has changed.",
@@ -28,8 +26,7 @@
 	"dialog-verthandi-glitched-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Would you like to hear the lesson again?"
 			],
@@ -49,8 +46,7 @@
 	"dialog-verthandi-glitched-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"I might be glitched for now, but my soul\nis quite unharmed! My appearance will\nreturn to normal soon."
 			]
@@ -59,8 +55,7 @@
 	"dialog-verthandi-end": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Thank you for everything you've done!"
 			]
@@ -69,18 +64,16 @@
 	"dialog-verthandi-backstory-intro": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
-				"Some time ago, the Big Bad brought chaos\nto this place.","To amuse himself, he scrambled the outward\nappearance of many of the people and\nanimals around town."
+				"Some time ago, the Big Bad brought chaos\nto this place.","To amuse himself, he scrambled the outward\nappearance of many of the people, animals,\nand objects around town."
 			]
 		}
 	],
 	"dialog-verthandi-backstory-goatsnotfine": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"These dear baby goats were among his many\nvictims.",
 				"They are so young, and so full of life....\nyet you cannot even hear their cheerful\nbleats!",
@@ -91,8 +84,7 @@
 	"dialog-verthandi-backstory-goatsfine": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"These dear baby goats are back to normal,\nbut I still hear cries for help elsewhere\nin town.",
 				"There is more to unglitch! Please, will\nyou set things right?"
@@ -102,8 +94,7 @@
 	"dialog-verthandi-goats-solved-now": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"You've restored the baby goats! Oh, thank\nyou!",
 				"But I still hear cries for help elsewhere\nin town. Please, can you help?"
@@ -113,8 +104,7 @@
 	"dialog-verthandi-s-goatsnotfine": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, won't you help the baby goats?"
 			]
@@ -123,8 +113,7 @@
 	"dialog-verthandi-current-glitch-count": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"I can hear the cries of $total_glitches$ glitched\nsouls...."
 			]
@@ -133,8 +122,7 @@
 	"dialog-verthandi-oneglitch": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"There is one more glitched soul left to\nhelp. I believe in you!"
 			]
@@ -143,8 +131,7 @@
 	"dialog-verthandi-glitches-solved-now": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"You've restored everyone! Oh, how\nwonderful!",
 				"Oh, thank you, %PLAYER%!"
@@ -154,8 +141,7 @@
 	"dialog-verthandi-noglitches-surprise": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "verthandi",
-			"name": "%Verthandi%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh! It appears you've already restored\neveryone that was glitched!",
 				"How wonderful! I can't thank you enough!"
@@ -165,8 +151,7 @@
 	"dialog-goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "goat",
-			"name": "Goat",
+			"entity": "%SELF%",
 			"messages": [
 				"Baaahhh!"
 			]
@@ -175,8 +160,7 @@
 	"dialog-goat-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "goat",
-			"name": "Goat",
+			"entity": "%SELF%",
 			"messages": [
 				"ba15456`-------++++++gf\n+++++-//==========/*8901ikg"
 			]
@@ -185,8 +169,7 @@
 	"dialog-debug-unglitch_count": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "elder",
-			"name": "%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Debug:\nunglitch_count = $unglitch_count$\ntotal_glitches = $total_glitches$"
 			]

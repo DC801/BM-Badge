@@ -1504,6 +1504,7 @@
 	},
 	"bender_sadbutt": {
 		"tileset": "entity-bender_sadbutt.json",
+		"portrait": "bender",
 		"animations": {
 			"idle": [
 				{
@@ -2316,6 +2317,7 @@
 	},
 	"marta_broom": {
 		"tileset": "entity-marta-broom.json",
+		"portrait": "marta",
 		"animations": {
 			"idle": [
 				{

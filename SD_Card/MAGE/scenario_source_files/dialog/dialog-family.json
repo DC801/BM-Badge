@@ -2,8 +2,7 @@
 	"dialog-kid": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sports_kid",
-			"name": "%Kid%",
+			"entity": "%SELF%",
 			"messages": [
 				"I'm gonna be a Blitzball when I grow up!"
 			]
@@ -12,8 +11,7 @@
 	"dialog-kid-ball": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "blitzball",
-			"name": "%Kid%",
+			"entity": "%SELF%",
 			"messages": [
 				"Wheeeee!"
 			]
@@ -22,8 +20,7 @@
 	"dialog-kid-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "blitzball",
-			"name": "%Kid%",
+			"entity": "%SELF%",
 			"messages": [
 				"Stb N'r ns fstymjw inrjsxnts!"
 			]
@@ -32,8 +29,7 @@
 	"dialog-smith-glitched": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
+			"entity": "%SELF%",
 			"messages": [
 				"Naa, ptl matm lttz itgxxk, hk lxz ytnem\nitgxxk?"
 			]
@@ -42,8 +38,7 @@
 	"dialog-smith": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
+			"entity": "%SELF%",
 			"messages": [
 				"What's for dinner?",
 				"Memory leek soup!",
@@ -55,8 +50,7 @@
 	"dialog-smith-s": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "smith",
-			"name": "%Smith%",
+			"entity": "%SELF%",
 			"messages": [
 				"Real talk, don't eat memory leek soup.\nIt'll mess with your head."
 			]

@@ -8,6 +8,8 @@
 #include "fonts/Monaco9.h"
 #include "mage_script_control.h"
 
+#define DIALOG_SCREEN_NO_PORTRAIT 255
+
 #define DIALOG_TILES_TOP_LEFT 0
 #define DIALOG_TILES_TOP_REPEAT 1
 #define DIALOG_TILES_TOP_RIGHT 2
@@ -53,7 +55,9 @@ typedef struct {
 	uint8_t messageCount;
 	MageDialogResponseType responseType;
 	uint8_t responseCount;
-	uint8_t padding;
+	uint8_t entityIndex;
+	uint8_t portraitIndex;
+	uint8_t emoteIndex;
 } MageDialogScreen;
 
 typedef struct {
@@ -64,6 +68,7 @@ typedef struct {
 typedef struct {
 	Rect text;
 	Rect label;
+	Rect portrait;
 } MageDialogAlignmentCoords;
 
 class MageDialogControl {
@@ -80,6 +85,8 @@ class MageDialogControl {
 		uint32_t currentImageAddress;
 		uint32_t cursorPhase;
 		uint8_t currentResponseIndex;
+		uint8_t currentPortraitId;
+		MageEntityRenderableData currentPortraitRenderableData;
 		MageDialogScreen currentScreen;
 		std::string currentEntityName;
 		std::string currentMessage;
@@ -93,7 +100,8 @@ class MageDialogControl {
 		void drawDialogBox(
 			const std::string &string,
 			Rect box,
-			bool drawArrow = false
+			bool drawArrow = false,
+			bool drawPortrait = false
 		);
 		bool shouldShowResponses() const;
 
@@ -112,6 +120,7 @@ class MageDialogControl {
 		void update();
 		void draw();
 
+	void loadCurrentScreenPortrait();
 };
 
 #endif //MAGE_DIALOG_CONTROL_H
