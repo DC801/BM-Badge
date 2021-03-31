@@ -371,5 +371,14 @@
 				"flip_x": true
 			}
 		}
+	},
+	"wopr": {
+		"tileset": "entity-wopr-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
 	}
 }

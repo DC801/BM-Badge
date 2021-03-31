@@ -391,6 +391,11 @@
             "action": "SET_SAVE_FLAG",
             "save_flag": "glitch-lesson",
             "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "backdoor-found",
+            "bool_value": true
         }
 	],
 	"set-misc-flags-false": [
@@ -422,6 +427,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "glitch-lesson",
+            "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "backdoor-found",
             "bool_value": false
         }
 	],

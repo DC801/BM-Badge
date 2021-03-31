@@ -1,0 +1,36 @@
+{
+	"dialog-wopr-backdoor": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Whoa! It looks like I found some kind of\nback door."
+			]
+		}
+	],
+	"dialog-wopr-start": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"portrait": "wopr",
+			"messages": [
+				"Shall we play a game?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"portrait": "wopr",
+			"messages": [
+				"Play?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+			{
+					"label": "Do not play",
+					"script": "restart-wopr"
+				}
+			]
+		}
+	]
+}

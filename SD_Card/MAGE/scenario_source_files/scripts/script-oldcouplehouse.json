@@ -458,7 +458,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "bea2-complete-wrapup"
+			"script": "bea2-incomplete-wrapup"
 		}
 	],
 	"show_dialog-bea2-backstory-eval": [
@@ -838,7 +838,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-backstory",
+			"save_flag": "bea1-backstory",
 			"bool_value": true
 		},
 		{
@@ -877,7 +877,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea-backstory",
+			"save_flag": "bea1-backstory",
 			"bool_value": true
 		},
 		{

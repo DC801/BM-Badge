@@ -21,6 +21,7 @@
 		"scripts/script-enddemo.json",
 		"scripts/script-elders.json",
 		"scripts/script-debug.json",
+		"scripts/script-woprhouse.json",
 		"scripts/script-max.json"
 	],
 	"dialogPaths": [
@@ -40,6 +41,7 @@
 		"dialog/dialog-elders.json",
 		"dialog/dialog-magehouse.json",
 		"dialog/dialog-goats.json",
+		"dialog/dialog-woprhouse.json",
 		"dialog/dialog-max.json"
 	],
 	"maps": {
@@ -58,6 +60,7 @@
 		"action_testing_01": "maps/map-action_testing_01.json",
 		"testbig": "maps/map-testbig.json",
 		"credits": "maps/map-credits.json",
+		"woprhouse": "maps/map-woprhouse.json",
 		"action_testing_02": "maps/map-action_testing_02.json"
 	},
 	"dialogSkins": {

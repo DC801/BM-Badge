@@ -20,7 +20,7 @@
 	],
 	"dialog-demoend-cutscene-lasttime2": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"Last time?"
@@ -39,7 +39,7 @@
 	],
 	"dialog-demoend-cutscene-lasttime4": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "TOP_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"Last time WHAT?"

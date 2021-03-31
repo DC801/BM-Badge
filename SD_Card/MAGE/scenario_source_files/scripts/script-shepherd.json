@@ -302,6 +302,11 @@
 			"bool_value": true
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-backstory",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Shepherd",
 			"script": "show_dialog-shepherd-start"
