@@ -1,10 +1,10 @@
 {
 	"dialog-zappy-start": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Did you remember to feed your goldfish,\n%Mr. Tickles%?"
+				"Did you remember to feed Mr. Tickles\ntoday?"
 			]
 		}
 	],
@@ -19,7 +19,7 @@
 	],
 	"dialog-zappy-glitched": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
 				"Abj V srry rkgen mnccl!"

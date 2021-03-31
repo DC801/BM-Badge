@@ -1,0 +1,19 @@
+{ "columns":1,
+ "image":"entity-wopr-portrait.png",
+ "imageheight":64,
+ "imagewidth":64,
+ "margin":0,
+ "name":"entity-wopr-portrait",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.4.3",
+ "tileheight":64,
+ "tiles":[
+        {
+         "id":0,
+         "type":"wopr-portrait"
+        }],
+ "tilewidth":64,
+ "type":"tileset",
+ "version":1.4
+}
