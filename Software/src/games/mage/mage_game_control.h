@@ -228,6 +228,8 @@ public:
 		const MageEntity *entity,
 		const MageEntityTypeAnimationDirection *animationDirection
 	);
+
+	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
