@@ -151,18 +151,18 @@
 	],
 	"dialog-goldfish-unglitched": [
 		{
-			"alignment": "BOTTOM_RIGHT",
-			"entity": "%PLAYER%",
-			"messages": [
-				"Looking good!"
-			]
-		},
-		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "Mr. Tickles",
 			"portrait": "goldfish",
 			"messages": [
 				"(Glub, glub.)"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Looking good!"
 			]
 		}
 	],

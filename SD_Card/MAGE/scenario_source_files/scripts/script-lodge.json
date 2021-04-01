@@ -3014,5 +3014,45 @@
 			"entity": "%SELF%",
 			"script": "debug-touch-artifacts-q"
 		}
+	],
+	"debug-touch-artifacts-and-aftermath": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "debug-touch-artifacts"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bookcase",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Jackob",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "on_tick-lodge-plus-secretdoor"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-touch-artifacts-q"
+		}
 	]
 }

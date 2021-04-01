@@ -88,6 +88,10 @@
 	"show_dialog-trekkie-start": [
 		{
 			"action": "COPY_SCRIPT",
+			"script": "clear-own-tick"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "face-player"
 		},
 		{
@@ -208,8 +212,17 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "watch-player"
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-trekkie-start"
 		}
 	],
 	"show_dialog-trekkie-eval": [
@@ -303,6 +316,24 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1500
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Trekkie",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
 			"duration": 1200
 		},
 		{
@@ -312,7 +343,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
+			"duration": 1600
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -320,7 +351,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -395,6 +426,15 @@
 			"duration": 600
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		},
+		{
 			"action": "COPY_SCRIPT",
 			"script": "face-player"
 		},
@@ -402,6 +442,11 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-trekkie-end",
 			"doc": "PLAYER did it!"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Trekkie",
+			"direction": "east"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -490,6 +535,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "trekkie-hint",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "watch-player"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
