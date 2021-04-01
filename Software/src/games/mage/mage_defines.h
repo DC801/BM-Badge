@@ -103,6 +103,15 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
 #endif
 
+// color palette corruption detection - requires much ram, can only be run on desktop
+#ifdef DC801_DESKTOP
+#define LOG_COLOR_PALETTE_CORRUPTION(value) MageGame->verifyAllColorPalettes((value));
+#endif //DC801_DESKTOP
+#ifdef DC801_EMBEDDED
+#define LOG_COLOR_PALETTE_CORRUPTION(value) //(value)
+#endif //DC801_EMBEDDED
+
+
 //these are the types of scripts that can be on a map or entity:
 typedef enum : uint8_t {
 	ON_LOAD = 0,

@@ -234,6 +234,9 @@
 - [ ] Create action for setBackground
 - [x] Fix portrait from last conversation being used on dialogScreens that have none
 - [x] Remove AnimationFrames to free enough ram to run on Hardware again
+- [ ] Fix Color palette corruption bug
+	- [x] Add corruption detection and logging
+	- [ ] Now just reproduce it again - what could possibly have been causing this?
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
