@@ -23,7 +23,7 @@
 			"entity": "%SELF%",
 			"portrait": "wopr",
 			"messages": [
-				"Shall we play a game?"
+				"SHALL WE PLAY A GAME?"
 			]
 		},
 		{
@@ -31,12 +31,12 @@
 			"entity": "%SELF%",
 			"portrait": "wopr",
 			"messages": [
-				"Play?"
+				"PLAY?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 			{
-					"label": "Do not play",
+					"label": "DO NOT PLAY",
 					"script": "restart-wopr"
 				}
 			]
