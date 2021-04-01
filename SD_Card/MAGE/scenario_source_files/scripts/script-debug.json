@@ -394,6 +394,11 @@
         },
         {
             "action": "SET_SAVE_FLAG",
+            "save_flag": "hide-lodge-crowd",
+            "bool_value": true
+        },
+        {
+            "action": "SET_SAVE_FLAG",
             "save_flag": "glitch-lesson",
             "bool_value": true
         },
@@ -432,6 +437,11 @@
         {
             "action": "SET_SAVE_FLAG",
             "save_flag": "walked-to-lodge",
+            "bool_value": false
+        },
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "hide-lodge-crowd",
             "bool_value": false
         },
         {

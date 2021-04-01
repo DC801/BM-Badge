@@ -266,6 +266,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-goose"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"on_tick-lodge-goose"
                         }],
                  "rotation":0,
                  "type":"",

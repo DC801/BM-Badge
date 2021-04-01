@@ -767,12 +767,76 @@
 			]
 		}
 	],
+	"dialog-debug-disable-tuesday-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Disable TUESDAY?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Completely",
+					"script": "debug-disable-tuesday-complete"
+				},
+				{
+					"label": "Partially",
+					"script": "debug-disable-tuesday-ring-acquired"
+				},
+				{
+					"label": "Un-disable",
+					"script": "debug-undisable-tuesday"
+				},
+				{
+					"label": "Never mind",
+					"script": "no_debug-disable-tuesday"
+				}
+			]
+		}
+	],
 	"dialog-debug-bypass-tuesday": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
 				"Tuesday bypassed."
+			]
+		}
+	],
+	"dialog-no_debug-disable-tuesday": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Nothing changed."
+			]
+		}
+	],
+	"dialog-debug-undisable-tuesday": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"TUESDAY re-enabled."
+			]
+		}
+	],
+	"dialog-debug-disable-tuesday-complete": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"TUESDAY completely disabled."
+			]
+		}
+	],
+	"dialog-debug-disable-tuesday-ring-acquired": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"TUESDAY partially disabled."
 			]
 		}
 	],
@@ -826,7 +890,7 @@
 	],
 	"dialog-debug-touch-artifacts": [
 		{
-			"alignment": "BOTTOM_RIGHT",
+			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
 				"Artifacts touched."
