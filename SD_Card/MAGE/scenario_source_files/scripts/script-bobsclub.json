@@ -520,15 +520,15 @@
 		}
 	],
 	"show_dialog-bobrock-yesbob": [
-			{
-				"action": "SHOW_DIALOG",
-				"dialog": "dialog-bobrock-yesbob1"
-			},
-			{
-				"action": "RUN_SCRIPT",
-				"script": "unlock_door"
-			}
-		],
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bobrock-yesbob1"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "unlock_door"
+		}
+	],
 	"on_load-bobsclub1": [
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -537,7 +537,7 @@
 			"success_script": "hide-bobmoss"
 		},
 		{
-			"action": "COPY_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "on_load-bobsclub2"
 		}
 	],
@@ -548,11 +548,34 @@
 			"geometry": "bobsclub-hidingplace"
 		},
 		{
-			"action": "COPY_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "on_load-bobsclub2"
 		}
 		],
 	"on_load-bobsclub2": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "hide-debug-bobsclub"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-bobsclub3"
+		}
+	],
+	"hide-debug-bobsclub": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "bobsclub-hidingplace"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-bobsclub3"
+		}
+	],
+	"on_load-bobsclub3": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bobsclub-entered",

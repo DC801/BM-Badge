@@ -308,5 +308,43 @@
 				}
 			]
 		}
+	],
+	"dialog-debug-everything-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"DEBUG EVERYTHING"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Turn debug mode on",
+					"script": "debug-everything-on"
+				},
+				{
+					"label": "Turn debug mode off",
+					"script": "debug-everything-off"
+				}
+			]
+		}
+	],
+	"dialog-debug-everything-on": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Debug mode on."
+			]
+		}
+	],
+	"dialog-debug-everything-off": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Debug mode off."
+			]
+		}
 	]
 }

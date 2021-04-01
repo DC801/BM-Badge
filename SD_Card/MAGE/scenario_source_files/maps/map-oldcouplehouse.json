@@ -138,6 +138,18 @@
                  "width":32,
                  "x":64,
                  "y":85
+                }, 
+                {
+                 "height":0,
+                 "id":10,
+                 "name":"oldcouplehouse-hidingplace",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-36,
+                 "y":-68
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -158,7 +170,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":10,
+ "nextobjectid":11,
  "orientation":"orthogonal",
  "properties":[
         {

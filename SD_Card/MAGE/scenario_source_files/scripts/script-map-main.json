@@ -1,11 +1,6 @@
 {	
 	"on_load-map-main": [
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "goodmorning",
-			"bool_value": true
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "on_load-map-main-bobmoss-check"
 		}
@@ -212,7 +207,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-warps"
+			"script": "on_load-map-main-debug-check"
 		}
 	],
 	"on_load-map-main-bender-do": [
@@ -222,7 +217,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-warps"
+			"script": "on_load-map-main-debug-check"
 		}
 	],
 	"bender-happybutt": [
@@ -232,7 +227,77 @@
 			"entity_type": "bender"
 		}
 	],
+	"on_load-map-main-debug-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "hide-debug-map-main"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-warps"
+		}
+	],
+	"hide-debug-map-main": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 0",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 2",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 3",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 90",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 92",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Credits Fish",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Chaos Fish",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-warps"
+		}
+	],
+	"on_load-map-main-goodmorning-walk": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "walk-to-lodge"
+		}
+	],
 	"on_load-map-main-warps": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "walked-to-lodge",
+			"expected_bool": false,
+			"success_script": "on_load-map-main-goodmorning-walk"
+		},
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-east",
