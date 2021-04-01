@@ -233,6 +233,11 @@ public:
 	#ifdef DC801_DESKTOP
 	void verifyAllColorPalettes(const char* errorTriggerDescription);
 	#endif //DC801_DESKTOP
+
+	uint16_t entityTypeCount();
+	uint16_t animationCount();
+	uint16_t tilesetCount();
+
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
