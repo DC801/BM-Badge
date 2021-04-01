@@ -436,5 +436,51 @@
 				"You give a Sugar Cube to mysterious goat.\nThe goat says this to you:\nThanks for the Sugar Cube[TM]!\nNow I can fly! BRB"
 			]
 		}
+	],
+	"dialog-mage19": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"border_tileset": "codec",
+			"messages": [
+				"You are in a desert.\nYou approached by a mysterious goat.\nIt is a good goat."
+			]
+		}
+	],
+	"dialog-mage20": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "codec-snek",
+			"name": "Solid Snek",
+			"border_tileset": "codec",
+			"messages": [
+				"Kept you waiting, huh?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "codec-camel",
+			"name": "Col. Camel",
+			"border_tileset": "codec",
+			"messages": [
+				"Terrorists kidnapped some dudes and are\nplanning a nuclear strike!\n\nSnek! Get in there!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "codec-snek",
+			"name": "Solid Snek",
+			"border_tileset": "codec",
+			"messages": [
+				"OKAY!"
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Umm.... How are you guys talking like that?"
+			]
+		}
 	]
 }

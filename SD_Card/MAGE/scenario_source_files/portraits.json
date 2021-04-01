@@ -111,6 +111,24 @@
 			}
 		}
 	},
+	"codec-snek": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 1,
+				"flip_x": true
+			}
+		}
+	},
+	"codec-camel": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": true
+			}
+		}
+	},
 	"deut": {
 		"tileset": "entity-deut-portrait.json",
 		"emotes": {
