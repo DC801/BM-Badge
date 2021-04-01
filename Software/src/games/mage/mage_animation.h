@@ -9,22 +9,10 @@ in a more accessible way.
 
 #include "mage_defines.h"
 
-class MageAnimationFrame
-{
-private:
+typedef struct {
 	uint16_t tileId;
 	uint16_t duration;
-public:
-	MageAnimationFrame() : tileId{0},
-		duration{0}
-	{};
-
-	MageAnimationFrame(uint32_t address);
-
-	uint16_t TileId() const;
-	uint16_t Duration() const;
-	uint32_t Size() const;
-}; //class MageAnimationFrame
+} MageAnimationFrame;
 
 
 class MageAnimation
@@ -32,12 +20,12 @@ class MageAnimation
 private:
 	uint16_t tilesetId;
 	uint16_t frameCount;
+	uint32_t offset;
 
-	std::unique_ptr<MageAnimationFrame[]> animationFrames;
 public:
-	MageAnimation() : tilesetId{0},
-		frameCount{0},
-		animationFrames{std::make_unique<MageAnimationFrame[]>(frameCount)}
+	MageAnimation() :
+		tilesetId{0},
+		frameCount{0}
 	{};
 
 	MageAnimation(uint32_t address);
@@ -46,6 +34,7 @@ public:
 	uint16_t FrameCount() const;
 	MageAnimationFrame AnimationFrame(uint32_t index) const;
 	uint32_t Size() const;
+	uint32_t end() const;
 }; //class MageAnimation
 
 #endif //_MAGE_ANIMATION_H

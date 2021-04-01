@@ -1175,16 +1175,6 @@ uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 	return animationId % (animationHeader.count());
 }
 
-uint16_t MageGameControl::getValidAnimationTilesetId(uint16_t animationId)
-{
-	//use failover animation if an invalid animationId is submitted to the function.
-	//There's a good chance if that happens, it will break things.
-	animationId = getValidAnimationId(animationId);
-
-	//always return a valid animation frame for the animationId submitted.
-	return animations[animationId].TilesetId();
-}
-
 uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
 {
 	//use failover animation if an invalid animationId is submitted to the function.
@@ -1316,16 +1306,16 @@ void MageGameControl::updateEntityRenderableData(
 		{
 			//ensure the animationId (in this scenario, the entity's primaryId) is valid.
 			uint16_t animationId = getValidAnimationId(entity.primaryId);
-			uint16_t currentFrame = getValidAnimationFrame(entity.currentFrame, animationId);
-			data->tilesetId = getValidTilesetId(animations[animationId].TilesetId());
+			MageAnimation *animation = &animations[animationId];
+			uint16_t currentFrameIndex = getValidAnimationFrame(entity.currentFrame, animationId);
+			MageAnimationFrame currentFrame = animation->AnimationFrame(currentFrameIndex);
+			data->tilesetId = getValidTilesetId(animation->TilesetId());
 			data->tileId = getValidTileId(
-				animations[animationId].AnimationFrame(currentFrame).TileId(),
+				currentFrame.tileId,
 				data->tilesetId
 			);
-			data->duration = animations[animationId].AnimationFrame(
-				currentFrame
-			).Duration(); //no need to check, it shouldn't cause a crash.
-			data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+			data->duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
+			data->frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
 			data->renderFlags = entity.direction; //no need to check, it shouldn't cause a crash.
 		}
 
@@ -1416,15 +1406,16 @@ void MageGameControl::getRenderableStateFromAnimationDirection(
 	//Scenario A: Type is 0, TypeID is an animation ID:
 	if (animationDirection->Type() == 0) {
 		uint16_t animationId = getValidAnimationId(animationDirection->TypeId());
-		uint16_t currentFrame = getValidAnimationFrame(entity->currentFrame, animationId);
+		uint16_t currentFrameIndex = getValidAnimationFrame(entity->currentFrame, animationId);
 		MageAnimation *animation = &animations[animationId];
+		MageAnimationFrame currentFrame = animation->AnimationFrame(currentFrameIndex);
 		data->tilesetId = animation->TilesetId();
 		data->tileId = getValidTileId(
-			animation->AnimationFrame(currentFrame).TileId(),
+			currentFrame.tileId,
 			data->tilesetId
 		);
-		data->duration = animation->AnimationFrame(currentFrame).Duration(); //no need to check, it shouldn't cause a crash.
-		data->frameCount = animations[animationId].FrameCount(); //no need to check, it shouldn't cause a crash.
+		data->duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
+		data->frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
 		data->renderFlags = animationDirection->RenderFlags(); //no need to check, it shouldn't cause a crash.
 		data->renderFlags += entity->direction & 0x80;
 	}
