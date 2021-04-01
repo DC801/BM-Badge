@@ -242,11 +242,23 @@ void MAGE()
 	//construct MageHexEditor object, set hex editor defaults
 	MageHex = std::make_unique<MageHexEditor>();
 
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"After HexEditor constructor"
+	);
+
 	//construct MageHexEditor object, set hex editor defaults
 	MageDialog = std::make_unique<MageDialogControl>();
 
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"After MageDialogControl constructor"
+	);
+
 	//construct MageScriptControl object to handle scripts for the game
 	MageScript = std::make_unique<MageScriptControl>();
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"After MageScriptControl constructor"
+	);
 
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
 	hackableDataAddress = MageGame->entities.get();
@@ -271,6 +283,10 @@ void MAGE()
 	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"MageGame->LoadMap(DEFAULT_MAP);"
+	);
 
 	//note the time the first loop is running
 	lastTime = millis();
@@ -300,8 +316,16 @@ void MAGE()
 		//handles hardware inputs and makes their state available
 		EngineHandleInput();
 
+		LOG_COLOR_PALETTE_CORRUPTION(
+			"EngineHandleInput();"
+		);
+
 		//updates the state of all the things before rendering:
 		GameUpdate(deltaTime);
+
+		LOG_COLOR_PALETTE_CORRUPTION(
+			"GameUpdate(deltaTime)"
+		);
 
 		//If the loadMap() action has set a new map, we will load it before we render this frame.
 		if(MageScript->mapLoadId != MAGE_NO_MAP) {
@@ -311,10 +335,30 @@ void MAGE()
 			MageScript->mapLoadId = MAGE_NO_MAP;
 			//Update the game for the new map
 			GameUpdate(deltaTime);
+
+			LOG_COLOR_PALETTE_CORRUPTION(
+				"MageScript->mapLoadId != MAGE_NO_MAP"
+			);
 		}
+
+		#ifdef DC801_DESKTOP
+		// intentionally corrupt the dialog color palette BEFORE rendering,
+		// just so we can SEE if it works
+		if(
+			EngineInput_Buttons.op_page
+			&& EngineInput_Buttons.mem3
+		) {
+			MageColorPalette *colorPalette = MageGame->getValidColorPalette(0);
+			colorPalette->colors[0] = 0xDEAD;
+		}
+		#endif //DC801_DESKTOP
 
 		//This renders the game to the screen based on the loop's updated state.
 		GameRender();
+
+		LOG_COLOR_PALETTE_CORRUPTION(
+			"GameRender()"
+		);
 		uint32_t fullLoopTime = millis() - lastTime;
 
 		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
@@ -335,6 +379,10 @@ void MAGE()
 
 	// Close rom and any open files
 	EngineROM_Deinit();
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"EngineROM_Deinit();"
+	);
 
 	#ifdef DC801_DESKTOP
 		// Clean up

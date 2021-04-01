@@ -100,6 +100,9 @@ MageGameControl::MageGameControl()
 	{
 		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
 	}
+	#ifdef DC801_DESKTOP
+	verifyAllColorPalettes("Right after it was read from ROM");
+	#endif //DC801_DESKTOP
 
 	mageSpeed = 0;
 	isMoving = false;
@@ -1750,3 +1753,10 @@ std::string MageGameControl::getEntityNameStringById(int16_t entityId) {
 	entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
 	return entityName;
 }
+#ifdef DC801_DESKTOP
+void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription) {
+	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++) {
+		colorPalettes[i].verifyColors(errorTriggerDescription);
+	}
+}
+#endif //DC801_DESKTOP

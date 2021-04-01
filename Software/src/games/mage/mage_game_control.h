@@ -229,6 +229,10 @@ public:
 	);
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
+
+	#ifdef DC801_DESKTOP
+	void verifyAllColorPalettes(const char* errorTriggerDescription);
+	#endif //DC801_DESKTOP
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
