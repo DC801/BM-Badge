@@ -20,10 +20,45 @@
 	],
 	"on_load-greenhouse": [
 		{
+			"action": "RUN_SCRIPT",
+			"script": "greenhouse-ethernettle-check"
+		}
+	],
+	"greenhouse-ethernettle-check": [
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-trekkie",
 			"expected_bool": true,
-			"success_script": "make-ethernettle-correct"
+			"success_script": "on_load-correct-nettle"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-greenhouse2"
+		}
+	],
+	"on_load-correct-nettle": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "make-ethernettle-correct"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-greenhouse2"
+		}
+	],
+	"on_load-greenhouse2": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "hide-debug-greenhouse"
+		}
+	],
+	"hide-debug-greenhouse": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "greenhouse-hidingplace"
 		}
 	],
 	"make-ethernettle-correct": [

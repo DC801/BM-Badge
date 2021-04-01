@@ -628,24 +628,6 @@
                  "y":860
                 }, 
                 {
-                 "gid":1176,
-                 "height":32,
-                 "id":196,
-                 "name":"Chaos Fish",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-hub-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":976,
-                 "y":151
-                }, 
-                {
                  "gid":1186,
                  "height":64,
                  "id":198,
@@ -671,42 +653,6 @@
                 {
                  "gid":1190,
                  "height":32,
-                 "id":252,
-                 "name":"Debug Exa 90",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-set-flags-false-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":887,
-                 "y":618
-                }, 
-                {
-                 "gid":1190,
-                 "height":32,
-                 "id":253,
-                 "name":"Debug Exa 3",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-bob-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":670,
-                 "y":734
-                }, 
-                {
-                 "gid":1190,
-                 "height":32,
                  "id":254,
                  "name":"Debug Exa",
                  "properties":[
@@ -721,24 +667,6 @@
                  "width":32,
                  "x":1340,
                  "y":1211
-                }, 
-                {
-                 "gid":1190,
-                 "height":32,
-                 "id":255,
-                 "name":"Debug Exa 2",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-win-rake-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":899,
-                 "y":1296
                 }, 
                 {
                  "gid":1195,
@@ -767,24 +695,6 @@
                  "width":16,
                  "x":1257,
                  "y":931
-                }, 
-                {
-                 "gid":1176,
-                 "height":32,
-                 "id":262,
-                 "name":"Credits Fish",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-roll-credits-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1051,
-                 "y":507
                 }, 
                 {
                  "gid":1229,
@@ -846,6 +756,60 @@
                  "y":512
                 }, 
                 {
+                 "gid":1327,
+                 "height":32,
+                 "id":269,
+                 "name":"Safe Poster",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-safety-skyler"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":544,
+                 "y":928
+                }, 
+                {
+                 "gid":1176,
+                 "height":32,
+                 "id":196,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":976,
+                 "y":151
+                }, 
+                {
+                 "gid":1176,
+                 "height":32,
+                 "id":262,
+                 "name":"Credits Fish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-roll-credits-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1051,
+                 "y":507
+                }, 
+                {
                  "gid":1190,
                  "height":32,
                  "id":267,
@@ -864,22 +828,58 @@
                  "y":577
                 }, 
                 {
-                 "gid":1327,
+                 "gid":1190,
                  "height":32,
-                 "id":269,
-                 "name":"Safe Poster",
+                 "id":255,
+                 "name":"Debug Exa 2",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-safety-skyler"
+                         "value":"debug-win-rake-q"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":544,
-                 "y":928
+                 "x":899,
+                 "y":1296
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":253,
+                 "name":"Debug Exa 3",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-bob-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":670,
+                 "y":734
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":252,
+                 "name":"Debug Exa 90",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-set-flags-false-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":887,
+                 "y":618
                 }, 
                 {
                  "gid":2147484838,
@@ -2232,7 +2232,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":276,
+ "nextobjectid":277,
  "orientation":"orthogonal",
  "properties":[
         {

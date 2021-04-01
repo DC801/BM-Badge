@@ -9,6 +9,12 @@
 			"dialog": "dialog-main_menu"
 		}
 	],
+	"load-start-map": [
+		{
+			"action": "LOAD_MAP",
+			"map": "map-magehouse"
+		}
+	],
 	"show-new_game": [
 		{
 			"action": "SHOW_DIALOG",
@@ -56,8 +62,8 @@
 			"slot": 0
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"new_game-1": [
@@ -66,8 +72,8 @@
 			"slot": 1
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"new_game-2": [
@@ -76,8 +82,8 @@
 			"slot": 2
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"load_game-0": [
@@ -86,8 +92,8 @@
 			"slot": 0
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"load_game-1": [
@@ -96,8 +102,8 @@
 			"slot": 1
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"load_game-2": [
@@ -106,8 +112,8 @@
 			"slot": 2
 		},
 		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
 		}
 	],
 	"erase_save-0": [

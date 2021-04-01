@@ -145,6 +145,45 @@
 	],
 	"on_load-lodge": [
 		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-debug-check"
+		}
+	],
+	"on_load-lodge-debug-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "hide-debug-lodge"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-tuesday-check"
+		}
+	],
+	"hide-debug-lodge": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 2",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 3",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-tuesday-check"
+		}
+	],
+	"on_load-lodge-tuesday-check": [
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "tuesdayd",
 			"expected_bool": false,
@@ -320,8 +359,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "null_script",
-			"doc": "TO DO: change to \"cutscene-tuesday\" for final version"
+			"script": "cutscene-tuesday"
 		}
 	],
 	"lodge-watch-player-gradually": [
@@ -427,7 +465,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 900
+			"duration": 300
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
@@ -439,7 +477,7 @@
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "lodge-path1",
-			"duration": 1700
+			"duration": 1900
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",

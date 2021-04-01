@@ -10,6 +10,27 @@
 	],
 	"on_load-oldcouplehouse": [
 		{
+			"action": "RUN_SCRIPT",
+			"script": "oldcouplehouse-debug-check"
+		}
+	],
+	"oldcouplehouse-debug-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "oldcouplehouse-sequel-check"
+		}
+	],
+	"hide-debug-oldcouplehouse": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "oldcouplehouse-sequel-check"
+		}
+	],
+	"oldcouplehouse-sequel-check": [
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,

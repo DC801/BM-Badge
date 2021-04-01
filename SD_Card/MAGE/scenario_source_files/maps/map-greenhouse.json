@@ -205,6 +205,18 @@
                  "width":32,
                  "x":224,
                  "y":129
+                }, 
+                {
+                 "height":0,
+                 "id":21,
+                 "name":"greenhouse-hidingplace",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-74,
+                 "y":-82
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -259,7 +271,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":21,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "properties":[
         {

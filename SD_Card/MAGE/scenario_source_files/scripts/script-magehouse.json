@@ -14,7 +14,16 @@
 			"success_script": "bedroom-door-watch"
 		}
 	],
-	"cutscene-begin": [
+	"prepare-goodmorning-cutscene": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "walked-to-lodge",
+			"bool_value": false
+		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "goodmorning",
@@ -26,6 +35,35 @@
 		}
 	],
 	"on_load-magehouse": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "magehouse-debug-check"
+		}
+	],
+	"magehouse-debug-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"expected_bool": false,
+			"success_script": "hide-debug-magehouse"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "magehouse-fish-check"
+		}
+	],
+	"hide-debug-magehouse": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "magehouse-hidingplace"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "magehouse-fish-check"
+		}
+	],
+	"magehouse-fish-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "goldfish-unglitched",
@@ -70,6 +108,11 @@
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 500,
+			"color": "#000000"
 		}
 	],
 	"bedroom-door-watch": [
@@ -394,6 +437,10 @@
 	],
 	"walk-to-lodge": [
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Verthandi",
 			"geometry": "catwalk-hide"
@@ -497,6 +544,11 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
 			"script": "mage-to-lodge"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "walked-to-lodge",
+			"bool_value": true
 		}
 	],
 	"freak-out": [
@@ -798,17 +850,12 @@
 	],
 	"debug-goodmorning": [
 		{
-			"action": "SET_HEX_EDITOR_CONTROL",
-			"bool_value": false
-		},
-		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-goodmorning",
-			"doc": "Start good morning cutscene?"
+			"dialog": "dialog-debug-goodmorning"
 		},
 		{
-			"action": "RUN_SCRIPT",
-			"script": "cutscene-begin"
+			"action": "COPY_SCRIPT",
+			"script": "prepare-goodmorning-cutscene"
 		}
 	],
 	"no_debug-goodmorning": [
@@ -816,6 +863,72 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-goodmorning-q"
+		}
+	],
+	"debug-everything": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-everything-q"
+		}
+	],
+	"debug-everything-on": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "goodmorning",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "walked-to-lodge",
+			"bool_value": true
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "on_tick-magehouse"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "debug-exa-spot"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-everything-on"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-everything"
+		}
+	],
+	"debug-everything-off": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"bool_value": false
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa",
+			"geometry": "magehouse-hidingplace"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-everything-off"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-everything"
 		}
 	]
 }
