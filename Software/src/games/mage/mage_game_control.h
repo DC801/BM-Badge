@@ -164,7 +164,6 @@ public:
 	uint16_t getValidTilesetId(uint16_t tilesetId);
 	uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
 	uint16_t getValidAnimationId(uint16_t animationId);
-	uint16_t getValidAnimationTilesetId(uint16_t animationId);
 	uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
 	uint16_t getValidEntityTypeId(uint16_t entityTypeId);
 	MageEntityType* getValidEntityType(uint16_t entityTypeId);
