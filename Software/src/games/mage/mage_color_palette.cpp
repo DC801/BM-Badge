@@ -17,6 +17,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 		(uint8_t *)name,
 		"Failed to read ColorPalette.name"
 	);
+	name[32] = 0; //manually set to null
 	#endif //DC801_DESKTOP
 	// Regardless of reading/storing it, ALWAYS increment past it
 	address += COLOR_PALETTE_NAME_LENGTH;
@@ -44,11 +45,11 @@ MageColorPalette::MageColorPalette(uint32_t address)
 
 	#ifdef DC801_DESKTOP
 	generatePaletteIntegrityString(colorIntegrityString);
-	debug_print(
-		"%s ROM:%s",
-		name,
-		colorIntegrityString
-	);
+	//debug_print(
+	//	"%s ROM:%s",
+	//	name,
+	//	colorIntegrityString
+	//);
 	#endif //DC801_DESKTOP
 }
 
@@ -134,7 +135,7 @@ void MageColorPalette::verifyColors(
 		char corruptionLabel[256];
 		sprintf(
 			corruptionLabel,
-			"COLOR PALETTE CORRUPTION DETECTED\n%s",
+			"COLOR PALETTE CORRUPTION DETECTED AFTER:\n%s",
 			errorTriggerDescription
 		);
 		ENGINE_PANIC(corruptionLabel);
