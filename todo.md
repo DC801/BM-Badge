@@ -226,12 +226,13 @@
 	- [ ] Use qcustominit.ini file added with this commit and the following command to upload:
 		- `nrfjprog -f nrf52 --qspiini qcustominit.ini --program <filename>`
 		- More info on nrfjprog: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf_cltools%2FUG%2Fcltools%2Fnrf_nrfjprogexe_reference.html
-- [ ] Fix name not sticking to player when changing rooms
+- [x] Fix name not sticking to player when changing rooms
 - [ ] Look into why EtherNettles puzzle is not triggering
 	- [ ] it's probably a modulo issue on tileId and tilesetId
 - [ ] Make a new dialog tileset that is mostly transparent for the main menu
 - [ ] Make some background artwork for the main menu
 - [ ] Create action for setBackground
+- [ ] Fix portrait from last conversation being used on dialogScreens that have none
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

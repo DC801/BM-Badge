@@ -179,31 +179,13 @@ void MageGameControl::readSaveFromRomIntoRam() {
 		sizeof(MageSaveGame),
 		(uint8_t *)&currentSave
 	);
-	if (
-		playerEntityIndex != NO_PLAYER
-	) {
-		// copy save ram name into current player name
-		memcpy(
-			&entities[playerEntityIndex].name,
-			&currentSave.name,
-			MAGE_ENTITY_NAME_LENGTH
-		);
-	}
+	// copy save ram name into current player name
+	copyNameToAndFromPlayerAndSave(false);
 }
 
 void MageGameControl::saveGameSlotSave() {
 	// do rom writes
-	if (
-		playerEntityIndex != NO_PLAYER
-		&& playerEntityIndex != MAGE_MAP_ENTITY
-	) {
-		// copy current player entity name into the save ram
-		memcpy(
-			&currentSave.name,
-			&entities[playerEntityIndex].name,
-			MAGE_ENTITY_NAME_LENGTH
-		);
-	}
+	copyNameToAndFromPlayerAndSave(true);
 	EngineROM_WriteSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
@@ -456,13 +438,6 @@ void MageGameControl::PopulateMapData(uint16_t index)
 
 	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
 	cameraFollowEntityId = playerEntityIndex;
-	if(playerEntityIndex != NO_PLAYER) {
-		memcpy(
-			&entities[playerEntityIndex].name,
-			&currentSave.name,
-			MAGE_ENTITY_NAME_LENGTH
-		);
-	}
 
 	for (uint32_t i = 0; i < MAX_ENTITIES_PER_MAP; i++)
 	{
@@ -497,23 +472,37 @@ void MageGameControl::LoadMap(uint16_t index)
 	MageDialog->closeDialog();
 	playerHasControl = true;
 
+	copyNameToAndFromPlayerAndSave(true);
+
 	//get the data for the map:
 	PopulateMapData(index);
 
-	initializeScriptsOnMapLoad();
+	copyNameToAndFromPlayerAndSave(false);
 
-	if(playerEntityIndex != NO_PLAYER) {
-		memcpy(
-			&currentSave.name,
-			&entities[playerEntityIndex].name,
-			MAGE_ENTITY_NAME_LENGTH
-		);
-	}
+	initializeScriptsOnMapLoad();
 
 	//close hex editor if open:
 	if(MageHex->getHexEditorState()) {
 		MageHex->toggleHexEditor();
 	}
+}
+
+void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {
+	if(playerEntityIndex == NO_PLAYER) {
+		return;
+	}
+	uint8_t *destination = (uint8_t *)&entities[playerEntityIndex].name;
+	uint8_t *source = (uint8_t *)&currentSave.name;
+	if(intoSaveRam) {
+		uint8_t *temp = destination;
+		destination = source;
+		source = temp;
+	}
+	memcpy(
+		destination,
+		source,
+		MAGE_ENTITY_NAME_LENGTH
+	);
 }
 
 void MageGameControl::applyUniversalInputs()
