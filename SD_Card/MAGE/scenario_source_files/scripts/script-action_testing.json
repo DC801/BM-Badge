@@ -971,5 +971,11 @@
 			"entity": "%SELF%",
 			"entity_type": "mage"
 		}
+	],
+	"mage20-interact": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage20"
+		}
 	]
 }

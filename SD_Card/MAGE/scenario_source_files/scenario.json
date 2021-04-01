@@ -64,6 +64,7 @@
 		"action_testing_02": "maps/map-action_testing_02.json"
 	},
 	"dialogSkins": {
-		"default": "tilesets/tileset-dialog_moon.json"
+		"default": "tilesets/tileset-dialog_moon.json",
+		"codec": "tilesets/tileset-dialog_codec.json"
 	}
 }

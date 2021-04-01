@@ -3,6 +3,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Main Menu",
+			"border_tileset": "codec",
 			"messages": [
 				"CHOOSE YOUR FATE"
 			],
@@ -27,6 +28,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "New Game",
+			"border_tileset": "codec",
 			"messages": [
 				"CHOOSE SAVE SLOT"
 			],
@@ -55,6 +57,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Load Game",
+			"border_tileset": "codec",
 			"messages": [
 				"CHOOSE SAVE SLOT"
 			],
@@ -83,6 +86,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Erase Save",
+			"border_tileset": "codec",
 			"messages": [
 				"BOOM TIME!!"
 			],
@@ -111,6 +115,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Save Game",
+			"border_tileset": "codec",
 			"portrait": "floppy",
 			"messages": [
 				"Would you like to save your progress?"

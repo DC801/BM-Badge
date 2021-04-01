@@ -136,7 +136,7 @@ void GameRender()
 	else
 	{
 		//otherwise run mage game:
-		uint16_t backgroundColor = RGB(0,0,255);
+		uint16_t backgroundColor = RGB(0,0,0);
 		mage_canvas->clearScreen(mage_canvas->applyFadeColor(backgroundColor));
 		#ifdef TIMING_DEBUG
 			diff = millis() - now;
