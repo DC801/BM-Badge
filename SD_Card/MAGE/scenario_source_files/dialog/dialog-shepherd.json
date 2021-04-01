@@ -154,6 +154,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
+			"name": "Sheep",
 			"messages": [
 				"...."
 			]

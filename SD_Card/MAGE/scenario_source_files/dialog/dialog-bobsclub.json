@@ -238,7 +238,7 @@
 	"dialog-bobsclub1": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": "Guardian Bob",
+			"name": "????",
 			"messages": [
 				"Oh, hello. You must be here for the annual\nBobs-Only Party, right?"
 			]
@@ -363,7 +363,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"They could've told me the party was\nactually canceled before I made the trip\nout here.",
-				"And I came from the net!",
+				"And it was a long trip, too. I came all\nthe way from the net!",
 				"*sigh*\nOh, well."
 			]
 		}
@@ -598,7 +598,7 @@
 	],
 	"dialog-fridge": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"(Wow. There's literally nothing but cans\nof Cactus Cooler in here.)"
@@ -613,6 +613,15 @@
 				"Wall of Bobs: famous Bobs.",
 				"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.\nSideshow Bob, entertainer.",
 				"There sure are a lot of Bobs in the world."
+			]
+		}
+	],
+	"dialog-bread": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Mmmm, fresh bread!"
 			]
 		}
 	],

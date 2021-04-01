@@ -256,6 +256,24 @@
                  "width":64,
                  "x":488,
                  "y":316
+                }, 
+                {
+                 "gid":281,
+                 "height":32,
+                 "id":23,
+                 "name":"Sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":544,
+                 "y":278
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -276,7 +294,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":23,
+ "nextobjectid":24,
  "orientation":"orthogonal",
  "properties":[
         {

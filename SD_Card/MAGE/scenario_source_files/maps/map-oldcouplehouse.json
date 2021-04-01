@@ -120,6 +120,24 @@
                  "width":32,
                  "x":64,
                  "y":224
+                }, 
+                {
+                 "gid":313,
+                 "height":32,
+                 "id":9,
+                 "name":"Sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":85
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -140,7 +158,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":9,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -180,6 +198,10 @@
         {
          "firstgid":311,
          "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":313,
+         "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,
  "type":"map",

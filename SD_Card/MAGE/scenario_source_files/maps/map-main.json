@@ -1811,6 +1811,18 @@
                  "width":0,
                  "x":970,
                  "y":1503
+                }, 
+                {
+                 "height":0,
+                 "id":275,
+                 "name":"from-credits-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1087,
+                 "y":778
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2220,7 +2232,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":275,
+ "nextobjectid":276,
  "orientation":"orthogonal",
  "properties":[
         {

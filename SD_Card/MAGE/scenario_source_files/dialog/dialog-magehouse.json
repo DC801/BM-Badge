@@ -217,6 +217,49 @@
 			]
 		}
 	],
+	"dialog-microwave-magehouse": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Whoops! I think this volcano bakemeat is a\nbit overdone."
+			]
+		}
+	],
+	"dialog-cake": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Is that cake for me?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Uncle Zappy",
+			"messages": [
+				"It's for tonight! Happy birthday,\n%PLAYER%!"
+			]
+		}
+	],
+	"dialog-cake-nozappy": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Is that my birthday cake?","Oh, it looks delicious!"
+			]
+		}
+	],
+	"dialog-sink": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Gotta keep my hands washed!"
+			]
+		}
+	],
 	"dialog-debug-goodmorning": [
 		{
 			"alignment": "BOTTOM_LEFT",

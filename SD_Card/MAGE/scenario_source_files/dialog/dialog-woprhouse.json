@@ -8,6 +8,15 @@
 			]
 		}
 	],
+	"dialog-woprbooks": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"These shelves are full of Vogon poetry!\nWhat an odd sort of thing for a computer\nto collect."
+			]
+		}
+	],
 	"dialog-wopr-start": [
 		{
 			"alignment": "BOTTOM_LEFT",
