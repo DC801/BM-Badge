@@ -801,16 +801,20 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Touch all artifacts?"
+				"Do what to artifacts?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Yes",
+					"label": "Touch all artifacts",
 					"script": "debug-touch-artifacts"
 				},
 				{
-					"label": "Skip to secret room",
+					"label": "Finish lecture and lower bookcase",
+					"script": "debug-touch-artifacts-and-aftermath"
+				},
+				{
+					"label": "Teleport to secret room (with cutscene)",
 					"script": "enter-secretroom"
 				},
 				{

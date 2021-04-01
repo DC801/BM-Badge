@@ -706,21 +706,6 @@
 			"bool_value": true
 		}
 	],
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	"bea2-complete-wrapup": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
