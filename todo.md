@@ -227,8 +227,8 @@
 		- `nrfjprog -f nrf52 --qspiini qcustominit.ini --program <filename>`
 		- More info on nrfjprog: https://infocenter.nordicsemi.com/index.jsp?topic=%2Fug_nrf_cltools%2FUG%2Fcltools%2Fnrf_nrfjprogexe_reference.html
 - [x] Fix name not sticking to player when changing rooms
-- [ ] Look into why EtherNettles puzzle is not triggering
-	- [ ] it's probably a modulo issue on tileId and tilesetId
+- [x] Look into why EtherNettles puzzle is not triggering
+	- [x] it's probably a modulo issue on tileId and tilesetId
 - [ ] Make a new dialog tileset that is mostly transparent for the main menu
 - [ ] Make some background artwork for the main menu
 - [ ] Create action for setBackground

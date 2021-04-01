@@ -432,13 +432,14 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 			triggeringEntityId
 		);
 		currentEntity = MageGame->entities[entityIndex];
-		if(currentEntity.primaryIdType == ENTITY_TYPE) {
+		uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
+		if(sanitizedPrimaryType == ENTITY_TYPE) {
 			MageEntityType *entityType = MageGame->getValidEntityType(currentEntity.primaryId);
 			currentPortraitId = entityType->PortraitId();
 		}
 	}
 	if(
-		currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT // we have a portraitl
+		currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT // we have a portrait
 	) {
 		uint32_t portraitAddress = MageGame->getPortraitAddress(currentPortraitId);
 		MagePortrait* portrait = new MagePortrait(portraitAddress);

@@ -1759,4 +1759,17 @@ void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription
 		colorPalettes[i].verifyColors(errorTriggerDescription);
 	}
 }
+
+uint16_t MageGameControl::entityTypeCount() {
+	return entityTypeHeader.count();
+}
+
+uint16_t MageGameControl::animationCount() {
+	return animationHeader.count();
+}
+
+uint16_t MageGameControl::tilesetCount() {
+	return tilesetHeader.count();
+}
+
 #endif //DC801_DESKTOP

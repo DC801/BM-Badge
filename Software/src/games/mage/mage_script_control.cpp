@@ -325,7 +325,12 @@ void MageScriptControl::checkEntityPrimaryId(uint8_t * args, MageScriptState * r
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		bool identical = (entity->primaryId == argStruct->expectedValue);
+		uint16_t sizeLimit;
+		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+		if(sanitizedPrimaryType == ENTITY_TYPE) {sizeLimit = MageGame->entityTypeCount();}
+		if(sanitizedPrimaryType == ANIMATION) {sizeLimit = MageGame->animationCount();}
+		if(sanitizedPrimaryType == TILESET) {sizeLimit = MageGame->tilesetCount();}
+		bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -342,7 +347,15 @@ void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState *
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		bool identical = (entity->secondaryId == argStruct->expectedValue);
+		uint16_t sizeLimit;
+		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+		if(sanitizedPrimaryType == ENTITY_TYPE) {sizeLimit = 0;}
+		if(sanitizedPrimaryType == ANIMATION) {sizeLimit = 0;}
+		if(sanitizedPrimaryType == TILESET) {
+			MageTileset *tileset = MageGame->getValidTileset(entity->primaryId);
+			sizeLimit = tileset->Count();
+		}
+		bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -358,7 +371,8 @@ void MageScriptControl::checkEntityPrimaryIdType(uint8_t * args, MageScriptState
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		bool identical = (entity->primaryIdType == argStruct->expectedValue);
+		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+		bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
 			mapLocalJumpScript = argStruct->successScriptId;
 		}
@@ -857,7 +871,7 @@ void MageScriptControl::setEntityPrimaryIdType(uint8_t * args, MageScriptState *
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
-		entity->primaryIdType = argStruct->newValue;
+		entity->primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
 	}
 }
 
