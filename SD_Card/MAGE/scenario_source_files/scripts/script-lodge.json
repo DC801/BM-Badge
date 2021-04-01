@@ -14,11 +14,15 @@
 			"expected_bool": true
 		}
 	],
-	"on_tick-lodge-plus-secretdoor": [
+	"on_tick-lodge-goose": [
 		{
-			"action": "COPY_SCRIPT",
-			"script": "on_tick-tuesdayd"
-		},
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"expected_bool": true,
+			"success_script": "on_tick-lodge-goose-ring-acquired"
+		}
+	],
+	"on_tick-lodge-goose-ring-acquired": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
@@ -33,13 +37,6 @@
 			"entity": "%PLAYER%",
 			"geometry": "door-lodge",
 			"success_script": "leave-lodge",
-			"expected_bool": true
-		},
-		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "door-secretdoor",
-			"success_script": "enter-secretroom",
 			"expected_bool": true
 		}
 	],
@@ -185,10 +182,28 @@
 	"on_load-lodge-tuesday-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "tuesdayd",
+			"save_flag": "ring-acquired",
 			"expected_bool": false,
 			"success_script": "on_load-lodge-cutscene"
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-crowd-check"
+		}
+	],
+	"on_load-crowd-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
+			"expected_bool": true,
+			"success_script": "on_load-empty-lodge"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-glitch_cat-check"
+		}
+	],
+	"on_load-empty-lodge": [
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Bookcase",
@@ -343,6 +358,11 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
 			"bool_value": true
 		},
 		{
@@ -1716,10 +1736,6 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "deaden-artifacts"
-		},
-		{
-			"action": "SET_MAP_TICK_SCRIPT",
-			"script": "on_tick-lodge-plus-secretdoor"
 		}
 	],
 	"deaden-artifacts": [
@@ -2259,9 +2275,8 @@
 	],
 	"show_dialog-zippy-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2277,9 +2292,8 @@
 	],
 	"show_dialog-zappy-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2295,9 +2309,8 @@
 	],
 	"show_dialog-verthandi-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2313,9 +2326,8 @@
 	],
 	"show_dialog-smith-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2330,9 +2342,8 @@
 	],
 	"show_dialog-max-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2347,9 +2358,8 @@
 	],
 	"show_dialog-marta-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2370,11 +2380,6 @@
 	],
 	"show_dialog-marta-prechoose-broomd": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-marta-prechoose-broomd"
 		},
@@ -2386,9 +2391,8 @@
 	],
 	"show_dialog-trekkie-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2403,9 +2407,8 @@
 	],
 	"show_dialog-shepherd-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2420,9 +2423,8 @@
 	],
 	"show_dialog-cleo-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2437,9 +2439,8 @@
 	],
 	"show_dialog-beatrice-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2454,9 +2455,8 @@
 	],
 	"show_dialog-baker-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -2471,9 +2471,8 @@
 	],
 	"show_dialog-jackob-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -2497,11 +2496,10 @@
 	],
 	"show_dialog-alfonso-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
-			{
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-alfonso-prechoose"
 		},
@@ -2513,9 +2511,8 @@
 	],
 	"show_dialog-bert-prechoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -2529,123 +2526,123 @@
 	],
 	"show_dialog-zippy-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-zippy-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-zippy-prechoose"
 		}
 	],
 	"show_dialog-zappy-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-zappy-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-zappy-prechoose"
 		}
 	],
 	"show_dialog-verthandi-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-verthandi-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-verthandi-prechoose"
 		}
 	],
 	"show_dialog-smith-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-smith-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-smith-prechoose"
 		}
 	],
 	"show_dialog-max-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-max-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-max-prechoose"
 		}
 	],
 	"show_dialog-marta-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-marta-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-marta-prechoose"
 		}
 	],
 	"show_dialog-trekkie-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-trekkie-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-trekkie-prechoose"
 		}
 	],
 	"show_dialog-shepherd-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-shepherd-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-shepherd-prechoose"
 		}
 	],
 	"show_dialog-cleo-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-cleo-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-cleo-prechoose"
 		}
 	],
 	"show_dialog-beatrice-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-beatrice-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-beatrice-prechoose"
 		}
 	],
 	"show_dialog-baker-postchoose": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-postchoose"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-baker-prechoose"
 		}
 	],
 	"watch-marta": [
@@ -2866,6 +2863,16 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "tuesdayd",
 			"bool_value": true
 		},
@@ -2882,11 +2889,126 @@
 			"script": "deaden-artifacts"
 		}
 	],
+	"debug-disable-tuesday-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-disable-tuesday-q",
+			"doc": "Disable Tuesday?"
+		}
+	],
+	"no_debug-disable-tuesday": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_debug-disable-tuesday"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-disable-tuesday-q"
+		}
+	],
+	"debug-disable-tuesday-ring-acquired": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-disable-tuesday-ring-acquired"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-disable-tuesday-q"
+		}
+	],
+	"debug-disable-tuesday-complete": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-artifact-flags-true"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-disable-tuesday-complete"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-disable-tuesday-q"
+		}
+	],
+	"debug-undisable-tuesday": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-artifact-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "ring-acquired",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-undisable-tuesday"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-disable-tuesday-q"
+		}
+	],
 	"debug-bypass-tuesday-q": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -2919,9 +3041,8 @@
 	],
 	"debug-cutscene-tuesday-q": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -2949,9 +3070,8 @@
 	],
 	"debug-touch-artifacts-q": [
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "%SELF%",
-			"target_entity": "%PLAYER%"
+			"action": "COPY_SCRIPT",
+			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -3056,10 +3176,6 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Jackob",
 			"geometry": "lodge-hidingplace"
-		},
-		{
-			"action": "SET_MAP_TICK_SCRIPT",
-			"script": "on_tick-lodge-plus-secretdoor"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

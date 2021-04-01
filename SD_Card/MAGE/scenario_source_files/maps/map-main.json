@@ -806,8 +806,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":1051,
-                 "y":507
+                 "x":927,
+                 "y":512
                 }, 
                 {
                  "gid":1190,
@@ -898,6 +898,24 @@
                  "width":32,
                  "x":1315,
                  "y":588
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":277,
+                 "name":"Debug Exa 91",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-disable-tuesday-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1056,
+                 "y":509
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2232,7 +2250,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":277,
+ "nextobjectid":278,
  "orientation":"orthogonal",
  "properties":[
         {

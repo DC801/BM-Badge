@@ -267,6 +267,11 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 91",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Debug Exa 92",
 			"geometry": "catwalk-hide"
 		},
