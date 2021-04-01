@@ -1154,6 +1154,12 @@
 			"dialog": "dialog-balloonbox"
 		}
 	],
+	"show_dialog-bread": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bread"
+		}
+	],
 	"begin-flail": [
 		{
 			"action": "PLAY_ENTITY_ANIMATION",

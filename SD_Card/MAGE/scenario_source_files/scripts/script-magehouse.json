@@ -356,6 +356,11 @@
 			"geometry": "magehouse-hidingplace"
 		},
 		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Cake",
+			"script": "show_dialog-cake-nozappy"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"
 		}
@@ -728,6 +733,30 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-magebox"
+		}
+	],
+	"show_dialog-microwave-magehouse": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-microwave-magehouse"
+		}
+	],
+	"show_dialog-cake": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cake"
+		}
+	],
+	"show_dialog-sink": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-sink"
+		}
+	],
+	"show_dialog-cake-nozappy": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cake-nozappy"
 		}
 	],
 	"debug-walk-to-lodge-q": [

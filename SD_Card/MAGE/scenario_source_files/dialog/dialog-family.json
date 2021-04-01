@@ -35,6 +35,15 @@
 			]
 		}
 	],
+	"dialog-smith-dinner": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Smells good!"
+			]
+		}
+	],
 	"dialog-smith": [
 		{
 			"alignment": "BOTTOM_LEFT",

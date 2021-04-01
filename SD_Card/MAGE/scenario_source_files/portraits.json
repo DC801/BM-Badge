@@ -156,6 +156,15 @@
 			}
 		}
 	},
+	"floppy": {
+		"tileset": "entity-floppy-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 0,
+				"flip_x": false
+			}
+		}
+	},
 	"goldfish": {
 		"tileset": "entity-goldfish-portrait.json",
 		"emotes": {

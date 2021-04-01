@@ -50,7 +50,7 @@
                  "y":224.30127942109
                 }, 
                 {
-                 "gid":230,
+                 "gid":245,
                  "height":32,
                  "id":4,
                  "name":"Bub",
@@ -80,7 +80,7 @@
                  "y":157.843137254902
                 }, 
                 {
-                 "gid":308,
+                 "gid":323,
                  "height":32,
                  "id":9,
                  "name":"Kid",
@@ -108,7 +108,7 @@
                  "y":181.549019607843
                 }, 
                 {
-                 "gid":2147483971,
+                 "gid":2147483986,
                  "height":32,
                  "id":10,
                  "name":"Smith",
@@ -117,6 +117,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-smith"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"kid-ballwatch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -126,7 +131,7 @@
                  "y":108
                 }, 
                 {
-                 "gid":338,
+                 "gid":353,
                  "height":32,
                  "id":11,
                  "name":"Dinner",
@@ -136,6 +141,24 @@
                  "width":32,
                  "x":391,
                  "y":78
+                }, 
+                {
+                 "gid":355,
+                 "height":32,
+                 "id":12,
+                 "name":"Sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":85
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -144,7 +167,7 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483768, 0, 0, 0, 0, 0, 0, 0, 118, 3221225500, 0, 2147483724, 0, 0, 0, 0, 2147483776, 0, 139, 2147483693, 0, 0, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 2147483695, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2147483768, 0, 0, 0, 0, 0, 0, 0, 118, 3221225500, 0, 2147483724, 0, 0, 0, 0, 2147483776, 0, 0, 2147483693, 0, 0, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 47, 2147483695, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":8,
          "id":3,
          "name":"Tile Layer 3",
@@ -156,7 +179,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":12,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -186,24 +209,28 @@
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":224,
+         "firstgid":239,
          "source":"..\/entities\/entity-mage.json"
         }, 
         {
-         "firstgid":272,
+         "firstgid":287,
          "source":"..\/entities\/entity-village_elder.json"
         }, 
         {
-         "firstgid":296,
+         "firstgid":311,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":320,
+         "firstgid":335,
          "source":"..\/entities\/entity-blacksmith.json"
         }, 
         {
-         "firstgid":338,
+         "firstgid":353,
          "source":"..\/entities\/entity-pot.json"
+        }, 
+        {
+         "firstgid":355,
+         "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,
  "type":"map",

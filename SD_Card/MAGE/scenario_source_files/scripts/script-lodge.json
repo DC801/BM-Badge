@@ -523,17 +523,9 @@
 			"doc": "The day has come! You might have more hair that didn't used to"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Alfonso",
 			"target_entity": "Jackob"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -541,17 +533,9 @@
 			"doc": "TUESDAY not puberty!"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Bert",
 			"target_entity": "Alfonso"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -559,17 +543,9 @@
 			"doc": "It Friday"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Alfonso",
 			"target_entity": "Bert"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -577,26 +553,14 @@
 			"doc": "Not Tuesday, TUESDAY"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Jackob",
 			"target_entity": "Alfonso"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-tuesday5",
 			"doc": "Ah, yes"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -2806,6 +2770,12 @@
 			"script": "show_dialog-timmy-start"
 		}
 	],
+	"show_dialog-sportsbook": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-sportsbook"
+		}
+	],
 	"show_dialog-timmy-glitched": [
 		{
 			"action": "SHOW_DIALOG",
@@ -2859,6 +2829,10 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "tuesdayd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": true
 		},
 		{

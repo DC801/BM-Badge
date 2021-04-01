@@ -937,6 +937,11 @@
 	],
 	"enter_from-credits": [
 		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%PLAYER%",
+			"geometry": "from-credits-spot"
+		},
+		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},

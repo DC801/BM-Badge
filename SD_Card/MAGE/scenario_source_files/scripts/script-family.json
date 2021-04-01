@@ -35,6 +35,11 @@
 	],
 	"show_dialog-kid": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-kid"
+		},
+		{
 			"action": "CHECK_ENTITY_GLITCHED",
 			"entity": "%SELF%",
 			"success_script": "show_dialog-kid-glitched",
@@ -59,6 +64,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "sportskid-hint",
 			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-kid-glitched": [
@@ -70,6 +80,22 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-kid"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		}
+	],
+	"show_dialog-kid-ball": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-kid-ball"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-smith-glitched": [
@@ -81,22 +107,6 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-smith"
-		}
-	],
-	"show_dialog-kid-ball": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-kid-ball"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "sportskid-hint",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-sportskid",
-			"bool_value": true
 		}
 	],
 	"show_dialog-smith": [
@@ -132,6 +142,12 @@
 			"direction": "east"
 		}
 	],
+	"show_dialog-smith-dinner": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-smith-dinner"
+		}
+	],
 	"show_dialog-smith-s": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -151,6 +167,38 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-smith"
+		}
+	],
+	"kid-ballwatch": [
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "Kid",
+			"entity_type": "blitzball",
+			"expected_bool": true,
+			"success_script": "kid-now-ball"
+		}
+	],
+	"kid-now-ball": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "storyflag-sportskid",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"watch-kid": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Kid"
 		}
 	]
 }

@@ -33,6 +33,12 @@
 			"doc": "Shall we play a game?"
 		}
 	],
+	"show_dialog-woprbooks": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-woprbooks"
+		}
+	],
 	"restart-wopr": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

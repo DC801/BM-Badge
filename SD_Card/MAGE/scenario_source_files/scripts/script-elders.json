@@ -455,8 +455,9 @@
 			"duration": 400
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",

@@ -832,5 +832,14 @@
 				"Artifacts touched."
 			]
 		}
+	],
+	"dialog-sportsbook": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Sports sports sports. This book is about\nsports!","Go, home team!"
+			]
+		}
 	]
 }

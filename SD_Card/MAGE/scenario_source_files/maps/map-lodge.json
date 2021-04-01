@@ -620,7 +620,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-sportsbook"
                         }],
                  "rotation":0,
                  "type":"",

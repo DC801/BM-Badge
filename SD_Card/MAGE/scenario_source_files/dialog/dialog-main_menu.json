@@ -111,6 +111,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Save Game",
+			"portrait": "floppy",
 			"messages": [
 				"Would you like to save your progress?"
 			],
