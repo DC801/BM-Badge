@@ -232,7 +232,8 @@
 - [ ] Make a new dialog tileset that is mostly transparent for the main menu
 - [ ] Make some background artwork for the main menu
 - [ ] Create action for setBackground
-- [ ] Fix portrait from last conversation being used on dialogScreens that have none
+- [x] Fix portrait from last conversation being used on dialogScreens that have none
+- [ ] Remove AnimationFrames to free enough ram to run on Hardware again
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

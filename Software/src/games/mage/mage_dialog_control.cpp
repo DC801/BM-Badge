@@ -425,11 +425,8 @@ uint8_t MageDialogControl::getTileIdFromXY(
 
 void MageDialogControl::loadCurrentScreenPortrait() {
 	MageEntity currentEntity = {};
-	uint16_t lastPortraitId = currentPortraitId;
-	if(currentScreen.portraitIndex != DIALOG_SCREEN_NO_PORTRAIT) {
-		currentPortraitId = currentScreen.portraitIndex;
-	}
-	else if(currentScreen.entityIndex != NO_PLAYER) {
+	currentPortraitId = currentScreen.portraitIndex;
+	if(currentScreen.entityIndex != NO_PLAYER) {
 		uint8_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
 			currentScreen.entityIndex,
 			triggeringEntityId
