@@ -34,7 +34,7 @@
 				"...I tied an onion to my belt, which was\nthe style at the time.",
 				"Now, to take the ferry cost a nickle, and\nin those days, nickles had pictures of\nbumblebees on 'em.",
 				"\"Gimme five bees for a quarter,\" you'd\nsay. Now where were we?",
-				"Oh, yeah. The important thing was that I\nhad an onion on my belt, which was the\nstyle of the time.",
+				"Oh, yeah. The important thing was that I\nhad an onion on my belt, which was the\nstyle at the time.",
 				"They didn't have any white onions, because\nof the war. The only thing you could get\nwas those big yellow ones...."
 			]
 		}
@@ -212,7 +212,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"But now I find myself longing for quiet.",
-				"It was so peaceful, before. Me and\n%Delmar% used to get along so well.",
+				"It was so peaceful, before. %Delmar%\nand I used to get along so well.",
 				"And it's so difficult to fall asleep\nrecently.",
 				"I hate to ask it, child, but....",
 				"I can't hear myself think! Please change\nhim back!"

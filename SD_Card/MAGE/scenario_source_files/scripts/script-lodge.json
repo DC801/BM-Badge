@@ -771,6 +771,10 @@
 			"script": "look-left-and-right-fast"
 		},
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 900
 		},
@@ -782,10 +786,6 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "lodge-murmur"
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
 		},
 		{
 			"action": "COPY_SCRIPT",

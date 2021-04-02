@@ -504,6 +504,38 @@
 			"target_entity": "Cleo"
 		}
 	],
+	"cat-watch": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Cat",
+			"geometry": "cat-watch-box",
+			"success_script": "cat-rescue-protocol",
+			"expected_bool": false
+		}
+	],
+	"cat-rescue-protocol": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"geometry": "cat-rescue-path",
+			"entity": "Cat"
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "cat-rescue-path",
+			"entity": "Cat",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cat",
+			"target_entity": "Cleo"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cat",
+			"script": "cat-watch"
+		}
+	],
 	"on_tick-main": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",

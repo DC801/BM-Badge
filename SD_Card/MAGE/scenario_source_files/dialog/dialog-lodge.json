@@ -678,7 +678,7 @@
 			"alignment": "TOP_LEFT",
 			"entity": "Max Swagger",
 			"messages": [
-				"Maybe they missed one."
+				"I'm pretty sure %PLAYER% touched\nall of them...."
 			]
 		}
 	],
@@ -687,7 +687,7 @@
 			"alignment": "TOP_RIGHT",
 			"entity": "Trekkie",
 			"messages": [
-				"I'm pretty sure %PLAYER% touched\nall of them...."
+				"Maybe they missed one."
 			]
 		}
 	],

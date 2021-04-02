@@ -20,13 +20,21 @@
 			"save_flag": "debug-mode",
 			"expected_bool": false,
 			"success_script": "oldcouplehouse-sequel-check"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "oldcouplehouse-sequel-check"
 		}
 	],
 	"hide-debug-oldcouplehouse": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Debug Exa",
-			"geometry": "oldcouplehouse-sequel-check"
+			"geometry": "oldcouplehouse-hidingspot"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "oldcouplehouse-sequel-check"
 		}
 	],
 	"oldcouplehouse-sequel-check": [
