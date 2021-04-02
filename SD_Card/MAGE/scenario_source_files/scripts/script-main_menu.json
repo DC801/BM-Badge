@@ -12,7 +12,7 @@
 	"load-start-map": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-magehouse"
+			"map": "map-main"
 		}
 	],
 	"show-new_game": [
