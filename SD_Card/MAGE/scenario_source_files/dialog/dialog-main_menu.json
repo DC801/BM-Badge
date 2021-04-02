@@ -132,5 +132,80 @@
 				}
 			]
 		}
+	],
+	"dialog-set-player-name-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "New Game",
+			"border_tileset": "codec",
+			"messages": [
+				"Pick your name."
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Red",
+					"script": "set-player-name-preset1-confirm"
+				},
+				{
+					"label": "Bubbles",
+					"script": "set-player-name-preset2-confirm"
+				},
+				{
+					"label": "Black Mage",
+					"script": "set-player-name-preset3-confirm"
+				},
+				{
+					"label": "Gimme something random",
+					"script": "set-player-name-random-confirm"
+				}
+			]
+		}
+	],
+	"dialog-set-player-name-confirm": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "New Game",
+			"border_tileset": "codec",
+			"messages": [
+				"Your name is %PLAYER%?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "start-new-game-with-name"
+				},
+				{
+					"label": "No",
+					"script": "set-player-name-q"
+				}
+			]
+		}
+	],
+	"dialog-set-player-name-random-confirm": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "New Game",
+			"border_tileset": "codec",
+			"messages": [
+				"Your name is %PLAYER%?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Reroll random name",
+					"script": "set-player-name-random-confirm"
+				},
+				{
+					"label": "Yes",
+					"script": "start-new-game-with-name"
+				},
+				{
+					"label": "No",
+					"script": "set-player-name-q"
+				}
+			]
+		}
 	]
 }

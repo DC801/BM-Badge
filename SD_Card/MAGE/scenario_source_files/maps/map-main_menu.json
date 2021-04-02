@@ -72,6 +72,24 @@
                  "width":0,
                  "x":160,
                  "y":120
+                }, 
+                {
+                 "gid":126,
+                 "height":32,
+                 "id":5,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-192,
+                 "y":-143
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -80,7 +98,7 @@
          "y":0
         }],
  "nextlayerid":3,
- "nextobjectid":5,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -95,6 +113,10 @@
         {
          "firstgid":1,
          "source":"..\/tilesets\/tileset-ring_zero.json"
+        }, 
+        {
+         "firstgid":121,
+         "source":"..\/entities\/entity-mage.json"
         }],
  "tilewidth":32,
  "type":"map",
