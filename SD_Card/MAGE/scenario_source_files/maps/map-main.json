@@ -555,6 +555,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-bert-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "type":"",
@@ -573,13 +578,18 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-alfonso-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":1119,
-                 "y":505
+                 "x":1126,
+                 "y":504
                 }, 
                 {
                  "gid":986,
@@ -591,6 +601,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-jackob-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "type":"",
@@ -914,8 +929,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":1056,
-                 "y":509
+                 "x":1055,
+                 "y":507
                 }, 
                 {
                  "height":20,
@@ -1872,6 +1887,102 @@
                  "width":0,
                  "x":1329,
                  "y":862
+                }, 
+                {
+                 "height":0,
+                 "id":298,
+                 "name":"alfonso-waitspot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1146,
+                 "y":496
+                }, 
+                {
+                 "height":0,
+                 "id":299,
+                 "name":"alfonso-talkspot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1146,
+                 "y":515
+                }, 
+                {
+                 "height":0,
+                 "id":300,
+                 "name":"bert-waitspot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1206,
+                 "y":525
+                }, 
+                {
+                 "height":0,
+                 "id":301,
+                 "name":"hintman-walkback",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-33,
+                         "y":0
+                        }, 
+                        {
+                         "x":-33,
+                         "y":-15
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1074,
+                 "y":514
+                }, 
+                {
+                 "height":0,
+                 "id":302,
+                 "name":"hintman-walktalk",
+                 "polyline":[
+                        {
+                         "x":-9,
+                         "y":-15
+                        }, 
+                        {
+                         "x":-9,
+                         "y":0
+                        }, 
+                        {
+                         "x":24,
+                         "y":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1050,
+                 "y":514
+                }, 
+                {
+                 "height":0,
+                 "id":303,
+                 "name":"bert-talkspot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1185,
+                 "y":525
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2281,7 +2392,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":280,
+ "nextobjectid":304,
  "orientation":"orthogonal",
  "properties":[
         {

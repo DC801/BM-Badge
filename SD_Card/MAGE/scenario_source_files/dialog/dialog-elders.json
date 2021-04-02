@@ -163,7 +163,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Did you have a question?"
+				"Did you have a question about something?"
 			]
 		}
 	],
@@ -288,14 +288,14 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"Not really."
+				"Not at the moment."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Well, then a hint:"
+				"Well, then, here's a general hint:"
 			]
 		}
 	],
@@ -568,18 +568,70 @@
 			"entity": "%SELF%",
 			"messages": [
 				"I think there was something in the Entity\nbooks about that, but I didn't quite\nunderstand.",
-				"Something about changing a bit instead of\na byte, I think...."
+				"Something about changing a bit instead of\na byte, I think....",
+				"But aren't all bytes made up of bits? How\nis changing a single bit different from\nchanging a whole byte?"
 			]
 		}
 	],
-	"dialog-alfonso-start": [
+	"dialog-hintman-alfonso": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
+			"entity": "Alfonso",
 			"messages": [
 				"There's a number of issues around town\nthat your ring should be able to fix.",
 				"There are... now, let's just see....",
-				"There are 11 tasks, according to my notes.\nGo get 'em!"
+				"There are 11 tasks, according to my notes.",
+				"I'll finish their paperwork as you go, so\nI'll be able to provide you a running\ntotal."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"You have to do paperwork when I hack\nthings back to normal?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Alfonso",
+			"messages": [
+				"My dear child, when you grow up, you'll\nunderstand:",
+				"There is paperwork for EVERYTHING!"
+			]
+		}
+	],
+	"dialog-hintman-jackob": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Jackob",
+			"messages": [
+				"And if you have a question about what\nyou're doing, do feel free to ask me for\nadvice.",
+				"Or consult Bert over there, who has good\nintuition for who could still use\nassistance."
+			]
+		}
+	],
+	"dialog-hintman-bert": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"Mmmm."
+			]
+		}
+	],
+	"dialog-hintman-end": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Alfonso",
+			"messages": [
+				"Right! Go get 'em!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"Good luck."
 			]
 		}
 	],
