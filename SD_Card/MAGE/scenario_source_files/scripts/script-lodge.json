@@ -130,16 +130,6 @@
 			"bool_value": true
 		}
 	],
-	"leave-lodge-cutscene": [
-		{
-			"action": "SET_WARP_STATE",
-			"string": "exit_from-lodge-cutscene"
-		},
-		{
-			"action": "LOAD_MAP",
-			"map": "map-main"
-		}
-	],
 	"on_load-lodge": [
 		{
 			"action": "RUN_SCRIPT",
@@ -196,7 +186,8 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "hide-lodge-crowd",
 			"expected_bool": true,
-			"success_script": "on_load-empty-lodge"
+			"success_script": "on_load-empty-lodge",
+			"doc":"this is not set to check 'tuesdayd' because you might want the crowd inside and otherwise leave the tuesday cutscene inert"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -2859,22 +2850,15 @@
 	"bypass-tuesday": [
 		{
 			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-true"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-artifact-flags-true"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-acquired",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "hide-lodge-crowd",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesdayd",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-true"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
@@ -2909,19 +2893,19 @@
 	],
 	"debug-disable-tuesday-ring-acquired": [
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-acquired",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-true",
+			"doc": "so you don't accidentally trigger walk-to-lodge if you set all flags to false before engaging the lodge"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-true"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "hide-lodge-crowd",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesdayd",
-			"bool_value": false
+			"bool_value": false,
+			"doc": "was set true above; set to false now so the lodge crowd isn't hidden upon load, so you can voluntarily start the cutscene and it'll look okay"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
@@ -2940,22 +2924,15 @@
 	"debug-disable-tuesday-complete": [
 		{
 			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-true"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-artifact-flags-true"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-acquired",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "hide-lodge-crowd",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesdayd",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-true"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
@@ -2974,22 +2951,16 @@
 	"debug-undisable-tuesday": [
 		{
 			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-true",
+			"doc": "so you don't accidentally trigger walk-to-lodge if you set all to false before engaging the lodge"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-artifact-flags-false"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-acquired",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "hide-lodge-crowd",
-			"bool_value": false
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "tuesdayd",
-			"bool_value": false
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-false"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
@@ -3022,9 +2993,39 @@
 			"script": "bypass-tuesday"
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-true"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-debug-bypass-tuesday",
 			"doc": "Tuesday bypassed."
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-bypass-tuesday-q"
+		}
+	],
+	"debug-bypass-tuesday-but-enable-hintman": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bypass-tuesday"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-tuesday-flags-true"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hintman-explanation",
+			"bool_value": false,
+			"doc": "set to true in above copied script"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-bypass-tuesday-plus-hintman",
+			"doc": "Tuesday bypassed. Prepare for hintman\ncutscene."
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -3079,31 +3080,10 @@
 			"doc": "Begin TUESDAY cutscene?"
 		}
 	],
-	"debug-touch-artifacts": [
+	"skip-artifacts": [
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "artifact-broom-touched",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "artifact-wand-touched",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "artifact-book-touched",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "artifact-glasses-touched",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "artifact-bracelet-touched",
-			"bool_value": true
+			"action": "COPY_SCRIPT",
+			"script": "set-artifact-flags-true"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -3129,11 +3109,9 @@
 			"action": "SET_ENTITY_TYPE",
 			"entity": "Marta",
 			"entity_type": "marta_broom"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-touch-artifacts"
-		},
+		}
+	],
+	"debug-touch-artifacts-end": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -3150,7 +3128,7 @@
 	"debug-touch-artifacts-and-aftermath": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "debug-touch-artifacts"
+			"script": "skip-artifacts"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -3178,9 +3156,18 @@
 			"geometry": "lodge-hidingplace"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "%SELF%",
-			"script": "debug-touch-artifacts-q"
+			"action": "RUN_SCRIPT",
+			"script": "debug-touch-artifacts-end"
+		}
+	],
+	"debug-touch-artifacts": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "skip-artifacts"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "debug-touch-artifacts-end"
 		}
 	]
 }

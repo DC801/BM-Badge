@@ -20,13 +20,41 @@
 			"bool_value": false
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-false"
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "on_tick-magehouse"
+		}
+	],
+	"prepare-goodmorning-cutscene-plus": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-false"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "walked-to-lodge",
+			"save_flag": "ring-acquired",
 			"bool_value": false
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "goodmorning",
+			"save_flag": "hide-lodge-crowd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hintman-explanation",
 			"bool_value": false
 		},
 		{
@@ -197,6 +225,11 @@
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "%PLAYER%",
 			"byte_value": 0
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%PLAYER%",
+			"direction": "west"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -858,6 +891,16 @@
 			"script": "prepare-goodmorning-cutscene"
 		}
 	],
+	"debug-goodmorning-plus": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-goodmorning"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "prepare-goodmorning-cutscene-plus"
+		}
+	],
 	"no_debug-goodmorning": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -865,7 +908,7 @@
 			"script": "debug-goodmorning-q"
 		}
 	],
-	"debug-everything": [
+	"debug-everything-q": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-debug-everything-q"
@@ -882,13 +925,17 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-goodmorning-flags-true"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "goodmorning",
+			"save_flag": "ring-acquired",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "walked-to-lodge",
+			"save_flag": "hintman-explanation",
 			"bool_value": true
 		},
 		{
@@ -907,7 +954,7 @@
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "debug-everything"
+			"script": "debug-everything-q"
 		}
 	],
 	"debug-everything-off": [
@@ -928,7 +975,7 @@
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "debug-everything"
+			"script": "debug-everything-q"
 		}
 	]
 }

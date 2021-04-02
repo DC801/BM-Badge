@@ -232,11 +232,21 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "debug-mode",
 			"expected_bool": false,
-			"success_script": "hide-debug-map-main"
+			"success_script": "hide-debug-map-main-do"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-map-main-warps"
+			"script": "on_load-map-cutscene-check"
+		}
+	],
+	"hide-debug-map-main-do": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "hide-debug-map-main"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-map-cutscene-check"
 		}
 	],
 	"hide-debug-map-main": [
@@ -284,6 +294,20 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Chaos Fish",
 			"geometry": "catwalk-hide"
+		}
+	],
+	"on_load-map-cutscene-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "walked-to-lodge",
+			"expected_bool": false,
+			"success_script": "on_load-map-main-goodmorning-walk"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hintman-explanation",
+			"expected_bool": false,
+			"success_script": "on_load-map-main-hintman-cutscene"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -296,13 +320,33 @@
 			"script": "walk-to-lodge"
 		}
 	],
-	"on_load-map-main-warps": [
+	"on_load-map-main-hintman-cutscene": [
 		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "walked-to-lodge",
-			"expected_bool": false,
-			"success_script": "on_load-map-main-goodmorning-walk"
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
 		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-lodge",
+			"entity": "%PLAYER%",
+			"duration": 400
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "hintman-cutscene",
+			"doc": "see script-elders.json for this"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hintman-explanation",
+			"bool_value": true
+		}
+	],
+	"on_load-map-main-warps": [
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "enter_from-east",
@@ -331,12 +375,6 @@
 			"action": "CHECK_WARP_STATE",
 			"string": "exit_from-lodge",
 			"success_script": "enter_from-lodge",
-			"expected_bool": true
-		},
-		{
-			"action": "CHECK_WARP_STATE",
-			"string": "exit_from-lodge-cutscene",
-			"success_script": "enter_from-lodge-cutscene",
 			"expected_bool": true
 		},
 		{
@@ -763,22 +801,6 @@
 		}
 	],
 	"enter_from-lodge": [
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "WALK_ENTITY_ALONG_GEOMETRY",
-			"geometry": "enter_from-lodge",
-			"entity": "%PLAYER%",
-			"duration": 200
-		},
-		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
-		}
-	],
-	"enter_from-lodge-cutscene": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false

@@ -430,7 +430,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-everything"
+                         "value":"debug-everything-q"
                         }],
                  "rotation":0,
                  "type":"",

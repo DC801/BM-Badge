@@ -269,6 +269,15 @@
 			]
 		}
 	],
+	"dialog-no_debug-goodmorning": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Nothing changed."
+			]
+		}
+	],
 	"dialog-debug-walk-to-lodge-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -299,8 +308,12 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Yes",
+					"label": "Yes (just the magehouse and exterior)",
 					"script": "debug-goodmorning"
+				},
+				{
+					"label": "Yes (also the lodge stuff)",
+					"script": "debug-goodmorning-plus"
 				},
 				{
 					"label": "No",

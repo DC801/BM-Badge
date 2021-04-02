@@ -32,6 +32,163 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"hintman-cutscene": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "alfonso-talkspot",
+			"entity": "Alfonso",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Alfonso"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hintman-alfonso",
+			"doc": "you have XX tasks according to my notes"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "hintman-walktalk",
+			"entity": "Jackob",
+			"duration": 900
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hintman-jackob",
+			"doc": "feel free to ask me for advice"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "bert-talkspot",
+			"entity": "Bert",
+			"duration": 600
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Bert"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hintman-bert",
+			"doc": "mmm"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hintman-end",
+			"doc": "Go get 'em"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Jackob",
+			"script": "return-to-watchspot-jackob"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Alfonso",
+			"script": "return-to-watchspot-alfonso"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 150
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Bert",
+			"script": "return-to-watchspot-bert"
+		}
+	],
+	"return-to-watchspot-alfonso": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "alfonso-waitspot",
+			"entity": "%SELF%",
+			"duration": 500
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	],
+	"return-to-watchspot-jackob": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "hintman-walkback",
+			"entity": "%SELF%",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	],
+	"return-to-watchspot-bert": [
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "bert-waitspot",
+			"entity": "%SELF%",
+			"duration": 500
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	],
 	"show_dialog-bert-start": [
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -932,19 +1089,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "alfonso-backstory",
-			"expected_bool": true,
-			"success_script": "show_dialog-alfonso-eval"
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-alfonso-start"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "alfonso-backstory",
-			"bool_value": true
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval"
 		}
 	],
 	"show_dialog-alfonso-eval": [

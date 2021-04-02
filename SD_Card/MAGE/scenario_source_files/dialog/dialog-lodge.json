@@ -761,6 +761,10 @@
 					"script": "debug-bypass-tuesday"
 				},
 				{
+					"label": "Yes (but enable hintman cutscene)",
+					"script": "debug-bypass-tuesday-but-enable-hintman"
+				},
+				{
 					"label": "No",
 					"script": "no_debug-bypass-tuesday"
 				}
@@ -801,6 +805,15 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Tuesday bypassed."
+			]
+		}
+	],
+	"dialog-debug-bypass-tuesday-plus-hintman": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Tuesday bypassed. Prepare for hintman\ncutscene."
 			]
 		}
 	],
