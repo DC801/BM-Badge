@@ -154,7 +154,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"kid-glitchwatch"
+                         "value":"cat-watch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -618,7 +618,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"kid-glitchwatch"
                         }],
                  "rotation":0,
                  "type":"marta_broom",
@@ -916,6 +916,17 @@
                  "width":32,
                  "x":1056,
                  "y":509
+                }, 
+                {
+                 "height":20,
+                 "id":279,
+                 "name":"cat-watch-box",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26,
+                 "x":1316,
+                 "y":794
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1841,6 +1852,26 @@
                  "width":0,
                  "x":1087,
                  "y":778
+                }, 
+                {
+                 "height":0,
+                 "id":278,
+                 "name":"cat-rescue-path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":-56
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1329,
+                 "y":862
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2250,7 +2281,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":278,
+ "nextobjectid":280,
  "orientation":"orthogonal",
  "properties":[
         {

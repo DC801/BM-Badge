@@ -602,5 +602,159 @@
 			"entity": "%SELF%",
 			"script": "show_dialog-trekkie-start"
 		}
+	],
+	"show_dialog-ethernettle-wo": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-wo"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-start": [
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-wo",
+			"entity": "%SELF%",
+			"expected_u2": 3,
+			"expected_bool": true,
+			"doc": "orange-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-o",
+			"entity": "%SELF%",
+			"expected_u2": 2,
+			"expected_bool": true,
+			"doc": "orange"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-wg",
+			"entity": "%SELF%",
+			"expected_u2": 7,
+			"expected_bool": true,
+			"doc": "green-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-b",
+			"entity": "%SELF%",
+			"expected_u2": 0,
+			"expected_bool": true,
+			"doc": "blue"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-wb",
+			"entity": "%SELF%",
+			"expected_u2": 1,
+			"expected_bool": true,
+			"doc": "blue-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-g",
+			"entity": "%SELF%",
+			"expected_u2": 6,
+			"expected_bool": true,
+			"doc": "green"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-wbr",
+			"entity": "%SELF%",
+			"expected_u2": 5,
+			"expected_bool": true,
+			"doc": "brown-white"
+		},
+		{
+			"action": "CHECK_ENTITY_SECONDARY_ID",
+			"success_script": "show_dialog-ethernettle-br",
+			"entity": "%SELF%",
+			"expected_u2": 4,
+			"expected_bool": true,
+			"doc": "brown"
+		}
+	],
+	"show_dialog-ethernettle-o": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-o"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-wg": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-wg"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-g": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-g"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-wb": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-wb"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-b": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-b"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-wbr": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-wbr"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
+	],
+	"show_dialog-ethernettle-br": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernettle-br"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-ethernettle-start"
+		}
 	]
 }

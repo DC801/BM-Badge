@@ -79,6 +79,12 @@
                  "height":32,
                  "id":5,
                  "name":"EtherNettle1",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -91,6 +97,12 @@
                  "height":32,
                  "id":8,
                  "name":"EtherNettle2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -103,6 +115,12 @@
                  "height":32,
                  "id":3,
                  "name":"EtherNettle3",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -115,6 +133,12 @@
                  "height":32,
                  "id":6,
                  "name":"EtherNettle4",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -127,6 +151,12 @@
                  "height":32,
                  "id":4,
                  "name":"EtherNettle5",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -139,6 +169,12 @@
                  "height":32,
                  "id":2,
                  "name":"EtherNettle6",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -151,6 +187,12 @@
                  "height":32,
                  "id":9,
                  "name":"EtherNettle7",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -163,6 +205,12 @@
                  "height":32,
                  "id":7,
                  "name":"EtherNettle8",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernettle-start"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

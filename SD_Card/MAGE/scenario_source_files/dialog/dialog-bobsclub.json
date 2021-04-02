@@ -411,7 +411,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Wha-what? STRONG BAD? Never heard of him.\nThough he sounds like quite the rugged\nand handsome gentleman.",
-				"The name's Strong BOB! Just lookee here\nat my fake--I mean real--ID!"
+				"The name's Strong BOB! Just lookee here\nat my fake -- I mean real -- ID!"
 			]
 		},
 		{
@@ -496,7 +496,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Canceled? They're really sure it's all\ncanceled? For real?"
+				"Canceled? The party at the Bobs-Only Club\nwas canceled? For real?"
 			]
 		},
 		{

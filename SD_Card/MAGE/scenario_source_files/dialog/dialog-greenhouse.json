@@ -202,5 +202,77 @@
 				"Wanna do it the hard way, huh? Suit\nyourself."
 			]
 		}
+	],
+	"dialog-ethernettle-wo": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"White-orange."
+			]
+		}
+	],
+	"dialog-ethernettle-o": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Orange."
+			]
+		}
+	],
+	"dialog-ethernettle-wg": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"White-green."
+			]
+		}
+	],
+	"dialog-ethernettle-g": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Green."
+			]
+		}
+	],
+	"dialog-ethernettle-wb": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"White-blue."
+			]
+		}
+	],
+	"dialog-ethernettle-b": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Blue."
+			]
+		}
+	],
+	"dialog-ethernettle-wbr": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"White-brown."
+			]
+		}
+	],
+	"dialog-ethernettle-br": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Brown."
+			]
+		}
 	]
 }

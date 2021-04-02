@@ -95,7 +95,7 @@
 			"emote": 1,
 			"messages": [
 				"Hee hee hee!",
-				"Hey, everyone! Bender's ass is back!"
+				"Hey, everyone!\n%Bender%'s ass is back!"
 			]
 		},
 		{
@@ -137,7 +137,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"I did! You got a front row seat to me,\nBender, showing off my shiny metal ass!",
+				"I did! You got a front row seat to me,\n%Bender%, showing off my shiny\nmetal ass!",
 				"That's the greatest reward there is!"
 			]
 		},
@@ -160,7 +160,7 @@
 			"entity": "%SELF%",
 			"emote": 1,
 			"messages": [
-				"They make a shiny ass... and they give it\nto me, Bender."
+				"They make a shiny ass... and they give it\nto me, %Bender%."
 			]
 		}
 	],
@@ -202,7 +202,7 @@
 			"emote": 1,
 			"messages": [
 				"Hee hee hee!",
-				"Hey, everyone! Bender's ass is back!"
+				"Hey, everyone!\n%Bender%'s ass is back!"
 			]
 		},
 		{
