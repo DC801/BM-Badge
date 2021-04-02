@@ -63,7 +63,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load-start-map"
+			"script": "set-player-name-q"
 		}
 	],
 	"new_game-1": [
@@ -73,7 +73,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load-start-map"
+			"script": "set-player-name-q"
 		}
 	],
 	"new_game-2": [
@@ -83,7 +83,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load-start-map"
+			"script": "set-player-name-q"
 		}
 	],
 	"load_game-0": [
@@ -144,6 +144,428 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "on_load-main_menu"
+		}
+	],
+	"set-player-name-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-q"
+		}
+	],
+	"set-player-name-preset1-confirm": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Red"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-confirm"
+		}
+	],
+	"set-player-name-preset2-confirm": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Bubbles"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-confirm"
+		}
+	],
+	"set-player-name-preset3-confirm": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Black Mage"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-confirm"
+		}
+	],
+	"set-player-name-confirm": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-confirm"
+		}
+	],
+	"set-player-name-random-confirm": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "get-random-name"
+		}
+	],
+	"set-player-name-random-confirm-end": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-random-confirm"
+		}
+	],
+	"set-player-name-random-finish": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-set-player-name-now-random-q"
+		}
+	],
+	"start-new-game-with-name": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "load-start-map"
+		}
+	],
+	"get-random-name": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "random-name-count",
+			"value": 16,
+			"operation": "RNG"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 0,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-00"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 1,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-01"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 2,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-02"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 3,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-03"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 4,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-04"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 5,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-05"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 6,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-06"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 7,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-07"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 8,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-08"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 9,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-09"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 10,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-10"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 11,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-11"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 12,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-12"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 13,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-13"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 14,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-14"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 15,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-15"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 16,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-16"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-name-random-00",
+			"doc": "fallback name"
+		}
+	],
+	"set-name-random-00": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Bub"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-01": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Chara"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-02": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Buster"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-03": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Tidus"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-04": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Frisk"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-05": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Farnsworth"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-06": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Cloud"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-07": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Ash"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-08": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Crono"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-09": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Terra"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-10": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Cecil"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-11": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Zidane"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-12": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Cecil"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-13": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Squall"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-14": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Roxas"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-15": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Steamed Hams"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-16": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Spy"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
 		}
 	]
 }
