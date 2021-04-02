@@ -489,6 +489,20 @@
 			"bool_value": false
 		}
 	],
+	"set-begunthegame-flags-true": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "begunthegame",
+			"bool_value": true
+		}
+	],
+	"set-begunthegame-flags-false": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "begunthegame",
+			"bool_value": false
+		}
+	],
 	"set-wonthedemo-flags-true": [
 		{
 			"action": "SET_SAVE_FLAG",

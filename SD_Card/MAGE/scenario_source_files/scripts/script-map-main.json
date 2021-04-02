@@ -2,7 +2,35 @@
 	"on_load-map-main": [
 		{
 			"action": "RUN_SCRIPT",
+			"script": "on_load-map-main-fresh-game-check"
+		}
+	],
+	"on_load-map-main-fresh-game-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "begunthegame",
+			"expected_bool": false,
+			"success_script": "on_load-map-main-newgame-start"
+		},
+		{
+			"action": "RUN_SCRIPT",
 			"script": "on_load-map-main-bobmoss-check"
+		}
+	],
+	"on_load-map-main-newgame-start": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "begunthegame",
+			"bool_value": true
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 1,
+			"color": "#000000"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "map-magehouse"
 		}
 	],
 	"on_load-map-main-bobmoss-check": [
