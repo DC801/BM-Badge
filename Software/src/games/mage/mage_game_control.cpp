@@ -1759,6 +1759,7 @@ void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription
 		colorPalettes[i].verifyColors(errorTriggerDescription);
 	}
 }
+#endif //DC801_DESKTOP
 
 uint16_t MageGameControl::entityTypeCount() {
 	return entityTypeHeader.count();
@@ -1771,5 +1772,3 @@ uint16_t MageGameControl::animationCount() {
 uint16_t MageGameControl::tilesetCount() {
 	return tilesetHeader.count();
 }
-
-#endif //DC801_DESKTOP
