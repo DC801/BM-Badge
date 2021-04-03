@@ -71,7 +71,7 @@ MageGameControl::MageGameControl()
 
 	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
 	{
-		tilesets[i] = MageTileset(tilesetHeader.offset(i));
+		tilesets[i] = MageTileset(i, tilesetHeader.offset(i));
 	}
 
 	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
@@ -870,11 +870,6 @@ void MageGameControl::DrawMap(uint8_t layer)
 
 		const MageTileset &tileset = Tileset(currentTile.tilesetId);
 
-		if (!tileset.Valid())
-		{
-			continue;
-		}
-
 		MageColorPalette *colorPalette = getValidColorPalette(tileset.ImageId());
 		address = imageHeader.offset(tileset.ImageId());
 		canvas.drawChunkWithFlags(
@@ -892,7 +887,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 		);
 
 		if (isCollisionDebugOn) {
-			geometryId = tileset.globalGeometryIds[currentTile.tileId];
+			geometryId = tileset.getLocalGeometryIdByTileIndex(currentTile.tileId);
 			if (geometryId) {
 				geometryId -= 1;
 				geometry = getGeometryFromGlobalId(geometryId);
@@ -1072,7 +1067,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			{
 				continue;
 			}
-			geometryId = tileset.globalGeometryIds[currentTile.tileId];
+			geometryId = tileset.getLocalGeometryIdByTileIndex(currentTile.tileId);
 			if (geometryId) {
 				for(uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++) {
 					float angle = (
@@ -1201,7 +1196,7 @@ uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
 	tilesetId = getValidTilesetId(tilesetId);
 
 	//always return a valid animation frame for the animationId submitted.
-	return tileId % tilesets[tilesetId].Count();
+	return tileId % tilesets[tilesetId].Tiles();
 }
 
 uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)

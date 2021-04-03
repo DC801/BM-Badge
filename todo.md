@@ -242,16 +242,17 @@
 - [ ] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
 - [ ] People hit escape to close the hex editor, and it closes the program. Oops. Default it to something else.
 - [ ] An idea: I didn't see anyone saving after completing puzzles. Perhaps after each puzzle is solved, show the save dialog, so nobody loses any progress. Perhaps show this after the TUESDAY cutscene as well.
-- [ ] We really need to rearrange the Elder's speaches "I'm X, and I do Y" so that it is outside of the lodge. Nobody talked with them out side of the lodge without direction.
-- [ ] People talk to a lot of objects in the greenhouse, but don't get interactions. Add more interactions there.
-- [ ] People talked to the quest board, and it said nothing. Oops. Add some dialog.
-- [ ] There is still a debug exa in the beatrice puzzle room. Oops.
+- [x] We really need to rearrange the Elder's speeches "I'm X, and I do Y" so that it is outside of the lodge. Nobody talked with them out side of the lodge without direction.
+- [x] People talk to a lot of objects in the greenhouse, but don't get interactions. Add more interactions there.
+- [x] People talked to the quest board, and it said nothing. Oops. Add some dialog.
+- [x] There is still a debug exa in the beatrice puzzle room. Oops.
 - [ ] After switching delmar from to sheep to man, you can't talk with him. Player expected to talk with him.
 - [ ] Fix a bug where modulo on the animation always picks (whatever, mage walking north, blitzball) when the currentAnimation is cycled - it glitches across palettes.
 - [ ] When you load from the main menu on desktop before you've created a save, it crashes.
 - [ ] NewGnu tried to set the corrupted byte on the Big Bad Name Book to uncorrupt the name. He was really fixated on learning about that.
 	- [ ] We should make it do a rot 13 of RED HERRING
-- [ ] Add Desvio to special thanks
+- [x] Add Desvio to special thanks
+- [x] Add AdwareHunter to special thanks
 - [ ] Add a book that mentions that you can press XOR and MEM0 to reset the map.
 - [ ] Rax asks: Is there a place to snag a copy of the books outside of the game, other than to go parse the source code?
 - [ ] Me: Oh man. Not a bad idea! Perhaps we could release a little "Game Manual" with those! Perhaps a print out that's empty, and they player can fill in the values.
@@ -261,10 +262,10 @@
 - [ ] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
 - [ ] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"
 - [ ] When loading a new map, put the hex cursor back at the player
-- [ ] There is a table tile that is on layer 3 in the inner sanctum, but the rest of them are below?
+- [x] There is a table tile that is on layer 3 in the inner sanctum, but the rest of them are below?
 - [ ] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
-- [ ] He tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
-	- [ ] I think that this shoudl be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
+- [x] NewGnu tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
+	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
