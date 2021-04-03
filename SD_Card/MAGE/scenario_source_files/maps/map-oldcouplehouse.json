@@ -84,6 +84,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-delmar"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "type":"",

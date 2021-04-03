@@ -892,7 +892,7 @@
 				},
 				{
 					"label": "Teleport to secret room (with cutscene)",
-					"script": "enter-secretroom"
+					"script": "enter-secretroom-with-guaranteed-cutscene"
 				},
 				{
 					"label": "No",

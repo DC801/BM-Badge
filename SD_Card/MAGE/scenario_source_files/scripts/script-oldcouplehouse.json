@@ -42,10 +42,10 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bea-sequel-branch",
 			"expected_bool": true,
-			"success_script": "make-delmar-man"
+			"success_script": "on_load-make-delmar-man"
 		}
 	],
-	"make-delmar-man": [
+	"on_load-make-delmar-man": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-bea2",
@@ -53,13 +53,29 @@
 			"success_script": "make-delmar-sheep"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "make-delmar-man"
+		}
+	],
+	"make-delmar-man": [
+		{
 			"action": "SET_ENTITY_TYPE",
 			"entity": "Delmar",
 			"entity_type": "old_man"
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "delmar-blab"
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Delmar",
+			"byte_value": 3
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Delmar",
+			"script": "on_tick-delmar-blab-nonman-watch"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-oldcouplehouse-end"
 		}
 	],
 	"make-delmar-sheep": [
@@ -67,6 +83,26 @@
 			"action": "SET_ENTITY_TYPE",
 			"entity": "Delmar",
 			"entity_type": "sheep"
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Delmar",
+			"byte_value": 0
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Delmar",
+			"script": "on_tick-delmar-blab-man-watch"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-oldcouplehouse-end"
+		}
+	],
+	"on_load-oldcouplehouse-end": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"leave-oldcouplehouse": [
