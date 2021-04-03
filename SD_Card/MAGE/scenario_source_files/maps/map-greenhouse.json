@@ -227,7 +227,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"show_dialog-modem"
                         }],
                  "rotation":0,
                  "type":"",
@@ -265,6 +265,78 @@
                  "width":0,
                  "x":-74,
                  "y":-82
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":22,
+                 "name":"Mulch",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-mulch"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":417,
+                 "y":126
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":23,
+                 "name":"Tumbleweed",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-tumbleweed"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":65,
+                 "y":124
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":24,
+                 "name":"Ethernet",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernet"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":384,
+                 "y":125
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":25,
+                 "name":"Barrel",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-greenhouse-barrel"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":114
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,6 +371,24 @@
                  "width":0,
                  "x":82.084,
                  "y":171.15068
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":26,
+                 "name":"Barrel ",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-greenhouse-barrel"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":210
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -319,7 +409,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":22,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -367,6 +457,10 @@
         {
          "firstgid":334,
          "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":336,
+         "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,
  "type":"map",

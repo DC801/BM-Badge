@@ -442,6 +442,12 @@
 			"expected_bool": true
 		}
 	],
+	"show_dialog-messageboard": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-messageboard"
+		}
+	],
 	"show_dialog-cleo-glitched": [
 		{
 			"action": "SHOW_DIALOG",

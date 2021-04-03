@@ -168,6 +168,14 @@
 	],
 	"dialog-goldfish-glitched": [
 		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Mr. Tickles",
+			"portrait": "goldfish",
+			"messages": [
+				"(srrq zr guerr unzf)"
+			]
+		},
+		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [

@@ -581,7 +581,7 @@
 				"There's a number of issues around town\nthat your ring should be able to fix.",
 				"There are... now, let's just see....",
 				"There are 11 tasks, according to my notes.",
-				"I'll finish their paperwork as you go, so\nI'll be able to provide you a running\ntotal."
+				"I'll finish their paperwork as you go, so\nI'll be able to provide a running total."
 			]
 		},
 		{
@@ -615,7 +615,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "Bert",
 			"messages": [
-				"Mmmm."
+				"Yes. I know who still needs help."
 			]
 		}
 	],
@@ -705,105 +705,6 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Congratulations! You fixed the town!"
-			]
-		}
-	],
-	"dialog-alfonso-debug-catwork": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: catwork counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-shepherd2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: shepherd2 counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-bender2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: bender2 counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-baker2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: baker2 counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-bobmoss": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: bobmoss counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-bea-happy": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: bea-happy counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-trekkie2": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: trekkie2 counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-sportskid": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: sportskid counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-bea-relief": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: bea-relief counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-debug-rake": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Debug: rake counted.\nTotal: $story-flag-count$"
-			]
-		}
-	],
-	"dialog-alfonso-story-flag-set": [
-		{
-			"alignment": "BOTTOM_LEFT",
-			"entity": "%SELF%",
-			"messages": [
-				"Story flag count reset (0)"
 			]
 		}
 	]

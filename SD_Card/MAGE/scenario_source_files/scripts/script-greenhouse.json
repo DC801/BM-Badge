@@ -109,6 +109,36 @@
 			"doc": "should be modem working animation"
 		}
 	],
+	"show_dialog-ethernet": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-ethernet"
+		}
+	],
+	"show_dialog-tumbleweed": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-tumbleweed"
+		}
+	],
+	"show_dialog-mulch": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mulch"
+		}
+	],
+	"show_dialog-modem": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-modem"
+		}
+	],
+	"show_dialog-greenhouse-barrel": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-greenhouse-barrel"
+		}
+	],
 	"show_dialog-trekkie-glitched": [
 		{
 			"action": "SHOW_DIALOG",
@@ -216,16 +246,8 @@
 			"doc": "Flowers lined up wrong."
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 100
-		},
-		{
 			"action": "COPY_SCRIPT",
 			"script": "face-player"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
 		},
 		{
 			"action": "SHOW_DIALOG",

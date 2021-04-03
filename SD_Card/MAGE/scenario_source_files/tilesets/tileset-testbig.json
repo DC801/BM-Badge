@@ -1,11 +1,19 @@
 { "columns":4,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"tileset-testbig.png",
- "imageheight":256,
+ "imageheight":320,
  "imagewidth":256,
  "margin":0,
  "name":"tileset-testbig",
  "spacing":0,
- "tilecount":16,
+ "tilecount":20,
  "tiledversion":"1.4.3",
  "tileheight":64,
  "tiles":[
@@ -14,7 +22,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -57,7 +64,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -96,7 +102,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -135,7 +140,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -174,7 +178,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -225,7 +228,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -284,7 +286,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -327,7 +328,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -370,7 +370,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -417,7 +416,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -468,7 +466,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -511,7 +508,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -594,7 +590,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -697,7 +692,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -748,7 +742,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -778,6 +771,242 @@
                      "width":0,
                      "x":0.25,
                      "y":0.374510763209393
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":16,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":8
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":17,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":6
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":18,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":4
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            }
+        }, 
+        {
+         "id":19,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":0,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":47
+                            }, 
+                            {
+                             "x":32,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":46
+                            }, 
+                            {
+                             "x":64,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":-1
+                            }, 
+                            {
+                             "x":32,
+                             "y":0
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":0,
+                     "y":2
                     }],
              "opacity":1,
              "type":"objectgroup",
