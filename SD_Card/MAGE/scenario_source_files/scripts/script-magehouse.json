@@ -159,7 +159,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"show_dialog-zappy-glitched": [
@@ -680,7 +680,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-lodge"
+			"map": "lodge"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",

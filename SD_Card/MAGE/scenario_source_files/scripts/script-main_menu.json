@@ -1,6 +1,18 @@
 {
 	"on_load-main_menu": [
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"expected_bool": true,
+			"success_script": "load-main_menu-from-credits"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "begin-main_menu"
+		}
+	],
+	"begin-main_menu": [
+		{
 			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
 			"geometry": "center"
 		},
@@ -12,7 +24,32 @@
 	"load-start-map": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
+		}
+	],
+	"load-main_menu-from-credits": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"bool_value": false
+		},
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "center"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 1200,
+			"color": "#000000",
+			"doc": "@8fps, 125ms was required to avoid black screen; for 24 fps, 40 was black, 50 was okay"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "begin-main_menu"
 		}
 	],
 	"show-new_game": [
@@ -37,6 +74,12 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-save_game"
+		}
+	],
+	"save_game-main_menu": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main_menu"
 		}
 	],
 	"save_game-yes": [
@@ -586,6 +629,17 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"show-menu-credits": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"bool_value": true
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "credits"
 		}
 	]
 }

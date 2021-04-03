@@ -30,7 +30,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"show_dialog-kid": [

@@ -798,7 +798,7 @@
 		},
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
-			"duration": 55000,
+			"duration": 60000,
 			"geometry": "credits_camera",
 			"entity": "cameraman"
 		},
@@ -830,8 +830,20 @@
 			"bool_value": true
 		},
 		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"expected_bool": true,
+			"success_script": "load-main_menu"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "load_map-main"
+		}
+	],
+	"load-main_menu": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main_menu"
 		}
 	],
 	"debug-roll-credits-q": [
@@ -843,8 +855,13 @@
 	],
 	"debug-roll-credits": [
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"bool_value": false
+		},
+		{
 			"action": "LOAD_MAP",
-			"map": "map-credits"
+			"map": "credits"
 		}
 	],
 	"no_debug-roll-credits": [
