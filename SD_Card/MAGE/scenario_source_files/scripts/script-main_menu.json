@@ -219,7 +219,7 @@
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "random-name-count",
-			"value": 16,
+			"value": 17,
 			"operation": "RNG"
 		},
 		{
@@ -374,6 +374,15 @@
 			"expected_bool": true,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
 			"success_script": "set-name-random-16"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "random-name-count",
+			"value": 17,
+			"comparison": "==",
+			"expected_bool": true,
+			"doc": "Valid comparisons: <, <=, ==, >=, >",
+			"success_script": "set-name-random-17"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -562,6 +571,17 @@
 			"action": "SET_ENTITY_NAME",
 			"entity": "%PLAYER%",
 			"string": "Spy"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "set-player-name-random-confirm-end"
+		}
+	],
+	"set-name-random-17": [
+		{
+			"action": "SET_ENTITY_NAME",
+			"entity": "%PLAYER%",
+			"string": "Tom Honks"
 		},
 		{
 			"action": "RUN_SCRIPT",

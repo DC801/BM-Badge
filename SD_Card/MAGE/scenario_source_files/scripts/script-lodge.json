@@ -108,6 +108,17 @@
 			"map": "map-main"
 		}
 	],
+	"enter-secretroom-with-guaranteed-cutscene": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesdayd",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "enter-secretroom"
+		}
+	],
 	"enter-secretroom": [
 		{
 			"action": "LOAD_MAP",
