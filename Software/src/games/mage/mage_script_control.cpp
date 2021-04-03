@@ -353,7 +353,7 @@ void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState *
 		if(sanitizedPrimaryType == ANIMATION) {sizeLimit = 0;}
 		if(sanitizedPrimaryType == TILESET) {
 			MageTileset *tileset = MageGame->getValidTileset(entity->primaryId);
-			sizeLimit = tileset->Count();
+			sizeLimit = tileset->Tiles();
 		}
 		bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {

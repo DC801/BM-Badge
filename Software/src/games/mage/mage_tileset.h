@@ -8,10 +8,15 @@ in a more accessible way.
 
 #include "mage_defines.h"
 
+#define TILESET_NAME_SIZE 16
+
 class MageTileset
 {
 private:
-	char name[17];
+	#ifdef DC801_DESKTOP
+	char name[TILESET_NAME_SIZE + 1];
+	#endif // DC801_DESKTOP
+	uint32_t offset;
 	uint16_t imageId;
 	uint16_t imageWidth;
 	uint16_t imageHeight;
@@ -19,27 +24,24 @@ private:
 	uint16_t tileHeight;
 	uint16_t cols;
 	uint16_t rows;
-	uint16_t padding;
 
 public:
-	std::unique_ptr<uint16_t[]> globalGeometryIds;
 
 	MageTileset() :
+		#ifdef DC801_DESKTOP
 		name{""},
+		#endif // DC801_DESKTOP
+		offset{0},
 		imageId{0},
 		imageWidth{0},
 		imageHeight{0},
 		tileWidth{0},
 		tileHeight{0},
 		cols{0},
-		rows{0},
-		padding{0},
-		globalGeometryIds{std::make_unique<uint16_t[]>(1)}
-	{ };
+		rows{0}
+{ };
 
-	MageTileset(uint32_t address);
-
-	std::string Name() const;
+	MageTileset(uint8_t index, uint32_t address);
 	uint16_t ImageId() const;
 	uint16_t ImageWidth() const;
 	uint16_t ImageHeight() const;
@@ -47,10 +49,11 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
-	uint16_t Count() const;
-	uint8_t Tileset(uint32_t index) const;
+	uint16_t Tiles() const;
 	uint32_t Size() const;
 	bool Valid() const;
+
+	uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const;
 }; //class MageTileset
 
 #endif //_MAGE_TILESET_H
