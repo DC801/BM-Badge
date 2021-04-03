@@ -1,11 +1,19 @@
 { "columns":17,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"tileset-creditwords.png",
- "imageheight":368,
+ "imageheight":432,
  "imagewidth":272,
  "margin":0,
  "name":"tileset-creditwords.png",
  "spacing":0,
- "tilecount":391,
+ "tilecount":459,
  "tiledversion":"1.4.3",
  "tileheight":16,
  "tilewidth":16,
