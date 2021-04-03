@@ -135,6 +135,12 @@
                  "height":32,
                  "id":11,
                  "name":"Dinner",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-smith-dinner"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

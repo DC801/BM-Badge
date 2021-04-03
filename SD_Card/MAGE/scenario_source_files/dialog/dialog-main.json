@@ -236,8 +236,8 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Reset everything",
-					"script": "debug-set-all-false"
+					"label": "Story flags and misc flags",
+					"script": "debug-set-story-and-misc-flags-false"
 				},
 				{
 					"label": "Backstory flags",
@@ -291,12 +291,12 @@
 			]
 		}
 	],
-	"dialog-debug-set-all-false": [
+	"dialog-debug-set-story-and-misc-flags-false": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"All flags set to FALSE."
+				"All story and misc flags set to FALSE."
 			]
 		}
 	],
@@ -354,6 +354,15 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Honk!"
+			]
+		}
+	],
+	"dialog-messageboard": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "MessageBoard",
+			"messages": [
+				"If you've been hacked, come join us at our\nweekly hacked citizen support group,\nFriday nights at 6pm."
 			]
 		}
 	],

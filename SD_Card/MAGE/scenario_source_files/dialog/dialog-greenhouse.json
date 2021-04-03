@@ -62,7 +62,8 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Can't just dig up Ether Nettles. Wired\nin super, super well.",
-				"Once in a while, me move one, take all\nday, but it no work."
+				"If you move flowers, you must move wires\nunderneath or everything breaks. Very\nslow, very difficult work.",
+				"Once in a while, me move one, take all\nweek, but it no work."
 			]
 		},
 		{
@@ -76,7 +77,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Ether Nettle spec on internet.\nBut no Ether Nettle, no internet, me no\ncan check!",
+				"Ether Nettle spec on internet. But no\nEther Nettle, no internet, me no can\ncheck!",
 				"Me remember orange stripey is first.",
 				"But trial and error take so long, me want\nto give up."
 			]
@@ -93,7 +94,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"%PLAYER% has new magic zeroed ring.\nMaybe %PLAYER% can do it!"
+				"%PLAYER% has new magic zeroed ring.\nMaybe %PLAYER% can change flower\ncolors!"
 			]
 		}
 	],
@@ -162,6 +163,51 @@
 			"entity": "%SELF%",
 			"messages": [
 				"How old is %PLAYER%, again?"
+			]
+		}
+	],
+	"dialog-ethernet": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Now that's a neat-looking pile of cable."
+			]
+		}
+	],
+	"dialog-tumbleweed": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Oof. I'd hate to have to untangle this!"
+			]
+		}
+	],
+	"dialog-mulch": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Oh, I thought this was flour, but it's\nactually mulch."
+			]
+		}
+	],
+	"dialog-greenhouse-barrel": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"What's in here? Water?"
+			]
+		}
+	],
+	"dialog-modem": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"What does this thing do? Just light up?"
 			]
 		}
 	],

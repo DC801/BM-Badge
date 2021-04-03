@@ -646,6 +646,11 @@
 			"dialog": "dialog-jackob-hint-hackbook-s"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hackbook-hint",
+			"bool_value": false
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-jackob-start"

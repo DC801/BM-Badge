@@ -43,7 +43,7 @@
 			"doc": "Set what to true?"
 		}
 	],
-	"debug-set-all-false": [
+	"debug-set-story-and-misc-flags-false": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-flags-false"
@@ -51,26 +51,6 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-story-flags-false"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-glitch-flags-false"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-backstory-flags-false"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-goodmorning-flags-false"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-tuesday-flags-false"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-artifact-flags-false"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -82,7 +62,7 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-set-all-false"
+			"dialog": "dialog-debug-set-story-and-misc-flags-false"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
