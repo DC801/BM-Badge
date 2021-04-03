@@ -155,7 +155,18 @@ uint8_t MageTileset::Tileset(uint32_t index) const
 
 uint32_t MageTileset::Size() const
 {
-	return 16 + (sizeof(uint16_t) * 7) + (rows * cols);
+	return (
+		(sizeof(uint8_t) * 16) +
+		sizeof(imageId) +
+		sizeof(imageWidth) +
+		sizeof(imageHeight) +
+		sizeof(tileWidth) +
+		sizeof(tileHeight) +
+		sizeof(cols) +
+		sizeof(rows) +
+		sizeof(padding) +
+		((rows * cols) * sizeof(uint16_t))
+	);
 }
 
 bool MageTileset::Valid() const
