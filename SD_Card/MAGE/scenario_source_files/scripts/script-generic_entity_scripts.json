@@ -182,19 +182,19 @@
 	"load_map-main": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"load_map-test": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-test"
+			"map": "test"
 		}
 	],
 	"load_map-town": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-town"
+			"map": "town"
 		}
 	],
 	"load_map-main-enter_from-east": [
@@ -286,13 +286,13 @@
 	"load_map-action_testing_01": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-action_testing_01"
+			"map": "action_testing_01"
 		}
 	],
 	"load_map-action_testing_02": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-action_testing_02"
+			"map": "action_testing_02"
 		}
 	]
 }

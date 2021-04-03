@@ -186,7 +186,7 @@
 	"load_map-testbig": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-testbig"
+			"map": "testbig"
 		}
 	],
 	"set-artifact-flags-true": [

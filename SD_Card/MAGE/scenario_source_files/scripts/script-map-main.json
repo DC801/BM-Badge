@@ -30,7 +30,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-magehouse"
+			"map": "magehouse"
 		}
 	],
 	"on_load-map-main-bobmoss-check": [
@@ -676,43 +676,43 @@
 	"load_map-bakery": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-bakery"
+			"map": "bakery"
 		}
 	],
 	"load_map-oldcouplehouse": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-oldcouplehouse"
+			"map": "oldcouplehouse"
 		}
 	],
 	"load_map-greenhouse": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-greenhouse"
+			"map": "greenhouse"
 		}
 	],
 	"load_map-magehouse": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-magehouse"
+			"map": "magehouse"
 		}
 	],
 	"load_map-lodge": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-lodge"
+			"map": "lodge"
 		}
 	],
 	"load_map-family": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-family"
+			"map": "family"
 		}
 	],
 	"load_map-woprhouse": [
 		{
 			"action": "LOAD_MAP",
-			"map": "map-woprhouse"
+			"map": "woprhouse"
 		}
 	],
 	"wrap_from-west": [

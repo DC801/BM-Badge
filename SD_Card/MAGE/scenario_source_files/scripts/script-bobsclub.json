@@ -257,7 +257,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-bobsclub"
+			"map": "bobsclub"
 		}
 	],
 	"show_dialog-baker-glitched": [
@@ -1135,7 +1135,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 
 	],
@@ -1155,7 +1155,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"watch-baker": [
@@ -1290,7 +1290,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-bobsclub"
+			"map": "bobsclub"
 		}
 	],
 	"no_debug-bob": [

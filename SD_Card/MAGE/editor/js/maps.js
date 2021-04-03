@@ -335,14 +335,14 @@ var generateMapHeader = function (map) {
 	return result;
 };
 
-var handleMapData = function (mapFile, fileNameMap, scenarioData) {
+var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
 	return function (map) {
 		// console.log(
 		// 	'Map:',
 		// 	mapFile.name,
 		// 	map
 		// );
-		map.name = mapFile.name.split('.')[0];
+		map.name = name;
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;
 		map.entityIndices = [];
@@ -388,7 +388,7 @@ var handleScenarioMaps = function (scenarioData, fileNameMap) {
 			);
 		} else {
 			return getFileJson(mapFile)
-				.then(handleMapData(mapFile, fileNameMap, scenarioData));
+				.then(handleMapData(key, mapFile, fileNameMap, scenarioData));
 		}
 	}));
 };

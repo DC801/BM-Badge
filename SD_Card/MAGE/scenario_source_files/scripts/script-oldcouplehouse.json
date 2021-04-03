@@ -118,7 +118,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"leave-happytrue": [
@@ -129,7 +129,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"show_dialog-bea-glitched": [

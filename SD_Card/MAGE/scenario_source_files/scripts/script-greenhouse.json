@@ -15,7 +15,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "map-main"
+			"map": "main"
 		}
 	],
 	"on_load-greenhouse": [

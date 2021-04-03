@@ -20,6 +20,10 @@
 				{
 					"label": "Erase Save",
 					"script": "show-erase_save"
+				},
+				{
+					"label": "Show Credits",
+					"script": "show-menu-credits"
 				}
 			]
 		}
@@ -129,6 +133,10 @@
 				{
 					"label": "No",
 					"script": "save_game-no"
+				},
+				{
+					"label": "Return to Main Menu",
+					"script": "save_game-main_menu"
 				}
 			]
 		}
