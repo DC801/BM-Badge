@@ -778,5 +778,30 @@
 			"entity": "%SELF%",
 			"script": "show_dialog-ethernettle-start"
 		}
+	],
+	"no_uproot_ethernettle": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		}
+	],
+	"show_dialog-no_uproot_ethernettle": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_uproot_ethernettle"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "no_uproot_ethernettle"
+		}
 	]
 }

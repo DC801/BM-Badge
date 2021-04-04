@@ -239,7 +239,7 @@
 	- [ ] Now just reproduce it again - what could possibly have been causing this?
 
 ## Playtesting night notes:
-- [ ] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
+- [x] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
 - [ ] People hit escape to close the hex editor, and it closes the program. Oops. Default it to something else.
 - [ ] An idea: I didn't see anyone saving after completing puzzles. Perhaps after each puzzle is solved, show the save dialog, so nobody loses any progress. Perhaps show this after the TUESDAY cutscene as well.
 - [x] We really need to rearrange the Elder's speeches "I'm X, and I do Y" so that it is outside of the lodge. Nobody talked with them out side of the lodge without direction.
@@ -259,7 +259,7 @@
 - [x] NewGnu found that if you set the onTick index to the save action, you can write every tick. FRY ROM STORAGE REAL QUICK
 	- [x] Solution? Show a "Save completed" dialog after save completes, because then it can only burn through as fast as they can confirm the "Save completed" dialog.
 - [ ] Desvio says that Bert should say something different if his name is changed to "Bart" or "Bort" - reference to Simpsons "Who would name a kid Bort" sketch
-- [ ] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
+- [x] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
 - [ ] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"
 - [ ] When loading a new map, put the hex cursor back at the player
 - [x] There is a table tile that is on layer 3 in the inner sanctum, but the rest of them are below?

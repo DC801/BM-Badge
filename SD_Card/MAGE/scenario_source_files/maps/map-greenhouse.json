@@ -84,12 +84,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":29
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":99.5,
+                 "x":99,
                  "y":116
                 }, 
                 {
@@ -102,12 +112,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":28
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":130.166666666667,
+                 "x":129,
                  "y":116
                 }, 
                 {
@@ -120,12 +140,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":30
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":161,
+                 "x":159,
                  "y":116
                 }, 
                 {
@@ -138,12 +168,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":31
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":191,
+                 "x":189,
                  "y":116
                 }, 
                 {
@@ -156,12 +196,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":32
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":255.5,
+                 "x":259,
                  "y":116
                 }, 
                 {
@@ -174,12 +224,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":33
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":286,
+                 "x":289,
                  "y":116
                 }, 
                 {
@@ -192,12 +252,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":34
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":317.833333333333,
+                 "x":319,
                  "y":116
                 }, 
                 {
@@ -210,12 +280,22 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"show_dialog-ethernettle-start"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"no_uproot_ethernettle"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":35
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":349.666666666667,
+                 "x":349,
                  "y":116
                 }, 
                 {
@@ -389,6 +469,102 @@
                  "width":32,
                  "x":416,
                  "y":210
+                }, 
+                {
+                 "height":0,
+                 "id":29,
+                 "name":"EtherNettle1Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":115,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":28,
+                 "name":"EtherNettle2Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":145,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":30,
+                 "name":"EtherNettle3Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":175,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":31,
+                 "name":"EtherNettle4Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":205,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":32,
+                 "name":"EtherNettle5Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":275,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":33,
+                 "name":"EtherNettle6Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":305,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":34,
+                 "name":"EtherNettle7Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":335,
+                 "y":108
+                }, 
+                {
+                 "height":0,
+                 "id":35,
+                 "name":"EtherNettle8Origin",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":365,
+                 "y":108
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -409,7 +585,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":27,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "properties":[
         {
