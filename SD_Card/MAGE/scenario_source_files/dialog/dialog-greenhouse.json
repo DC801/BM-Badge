@@ -320,5 +320,14 @@
 				"Brown."
 			]
 		}
+	],
+	"dialog-no_uproot_ethernettle": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "Trekkie",
+			"messages": [
+				"Didn't me already tell you, %PLAYER%?!\nIt HARMFUL to EtherNettles to uproot them!\nYou not going to change their colors?"
+			]
+		}
 	]
 }

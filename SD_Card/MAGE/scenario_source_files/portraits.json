@@ -129,6 +129,24 @@
 			}
 		}
 	},
+	"codec-mage": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 2,
+				"flip_x": true
+			}
+		}
+	},
+	"codec-goose": {
+		"tileset": "entity-codec-portrait.json",
+		"emotes": {
+			"default": {
+				"tileid": 3,
+				"flip_x": true
+			}
+		}
+	},
 	"deut": {
 		"tileset": "entity-deut-portrait.json",
 		"emotes": {

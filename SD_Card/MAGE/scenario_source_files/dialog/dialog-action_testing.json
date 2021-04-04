@@ -481,6 +481,61 @@
 			"messages": [
 				"Umm.... How are you guys talking like that?"
 			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "codec-goose",
+			"name": "Metal Goose",
+			"border_tileset": "codec",
+			"messages": [
+				"HONK!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "codec-mage",
+			"name": "%SELF%",
+			"border_tileset": "codec",
+			"messages": [
+				"What just happened to me?",
+				"Oh, I guess that's how you talk like this."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "codec-camel",
+			"name": "Col. Camel",
+			"border_tileset": "codec",
+			"messages": [
+				"No! It's Metal Goose! We must stop him!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"portrait": "codec-snek",
+			"name": "Solid Snek",
+			"border_tileset": "codec",
+			"messages": [
+				"METAL GOOSE?!?!?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "codec-goose",
+			"name": "Metal Goose",
+			"border_tileset": "codec",
+			"messages": [
+				"HONK HONK!",
+				"HONK HONK HONK HONK!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"border_tileset": "codec",
+			"name": "GAME OVER?",
+			"messages": [
+				"GAME OVER"
+			]
 		}
 	]
 }
