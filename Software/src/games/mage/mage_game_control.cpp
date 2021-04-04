@@ -488,6 +488,10 @@ void MageGameControl::LoadMap(uint16_t index)
 	if(MageHex->getHexEditorState()) {
 		MageHex->toggleHexEditor();
 	}
+	if(playerEntityIndex != NO_PLAYER) {
+		MageHex->openToEntityByIndex(playerEntityIndex);
+		MageHex->toggleHexEditor();
+	}
 }
 
 void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {

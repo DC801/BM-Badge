@@ -249,8 +249,8 @@
 - [ ] After switching delmar from to sheep to man, you can't talk with him. Player expected to talk with him.
 - [ ] Fix a bug where modulo on the animation always picks (whatever, mage walking north, blitzball) when the currentAnimation is cycled - it glitches across palettes.
 - [ ] When you load from the main menu on desktop before you've created a save, it crashes.
-- [ ] NewGnu tried to set the corrupted byte on the Big Bad Name Book to uncorrupt the name. He was really fixated on learning about that.
-	- [ ] We should make it do a rot 13 of RED HERRING
+- [x] NewGnu tried to set the corrupted byte on the Big Bad Name Book to uncorrupt the name. He was really fixated on learning about that.
+	- [x] We should make it do a rot 13 of RED HERRING
 - [x] Add Desvio to special thanks
 - [x] Add AdwareHunter to special thanks
 - [ ] Add a book that mentions that you can press XOR and MEM3 to reset the map.
@@ -261,7 +261,7 @@
 - [ ] Desvio says that Bert should say something different if his name is changed to "Bart" or "Bort" - reference to Simpsons "Who would name a kid Bort" sketch
 - [x] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
 - [ ] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"
-- [ ] When loading a new map, put the hex cursor back at the player
+- [x] When loading a new map, put the hex cursor back at the player
 - [x] There is a table tile that is on layer 3 in the inner sanctum, but the rest of them are below?
 - [ ] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
 - [x] NewGnu tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
