@@ -762,10 +762,13 @@ void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeSt
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		//simple loop to set the name:
-		//Note: this will stop at the first null character and leave any data after it in place.
 		for(int i=0; i<MAGE_ENTITY_NAME_LENGTH; i++) {
 			entity->name[i] = romString[i];
 			if(romString[i] == 00) {
+				// if we have hit one null, fill in the remainder with null too
+				for(int j=i + 1; j<MAGE_ENTITY_NAME_LENGTH; j++) {
+					entity->name[j] = 00;
+				}
 				break;
 			}
 		}
