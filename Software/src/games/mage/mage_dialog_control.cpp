@@ -1,4 +1,6 @@
 #include "mage_dialog_control.h"
+
+#include <utility>
 #include "mage_portrait.h"
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
@@ -152,6 +154,25 @@ void MageDialogControl::load(
 
 	loadNextScreen();
 
+	isOpen = true;
+	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
+}
+
+void MageDialogControl::showSaveCompleteDialog(std::string messageString) {
+	// Recycle all of the values set by the previous dialog to preserve look and feel
+	// If there was no previous dialog... uhhhhhhh good luck with that?
+	// Saves should always be confirmed. That is my strong opinion.
+	currentResponseIndex = 0;
+	currentMessageIndex = 0;
+	messageIds.reset();
+	messageIds = std::make_unique<uint16_t[]>(1);
+	currentMessage = std::move(messageString);
+	currentScreen.responseCount = 0;
+	currentScreen.messageCount = 1;
+	currentScreen.responseType = NO_RESPONSE;
+	responses.reset();
+	responses = std::make_unique<MageDialogResponse[]>(0);
+	cursorPhase += 250;
 	isOpen = true;
 	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
 }
