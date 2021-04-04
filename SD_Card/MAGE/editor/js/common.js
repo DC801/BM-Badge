@@ -13,7 +13,7 @@ var getFileJson = function (file) {
 		});
 };
 
-var combineArrayBuffers = function(bufferA, bufferB) {
+var combineArrayBuffers = function (bufferA, bufferB) {
 	var temp = new Uint8Array(bufferA.byteLength + bufferB.byteLength);
 	temp.set(new Uint8Array(bufferA), 0);
 	temp.set(new Uint8Array(bufferB), bufferA.byteLength);
@@ -35,7 +35,7 @@ var setCharsIntoDataView = function (
 	}
 };
 
-var getPaddedHeaderLength = function(length) {
+var getPaddedHeaderLength = function (length) {
 	// pad to to uint32_t alignment
 	var mod = length % 4;
 	return length + (
@@ -127,3 +127,4 @@ var assignToLessFalsy = function () {
 var jsonClone = function (input) {
 	return JSON.parse(JSON.stringify(input));
 };
+
