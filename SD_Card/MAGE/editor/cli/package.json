@@ -1,0 +1,11 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "DC 801 Badge game data builder ",
+  "main": "cli.js",
+  "scripts": {
+    "test": "node cli.js"
+  },
+  "author": "DC801",
+  "license": "MIT"
+}

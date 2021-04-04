@@ -290,4 +290,4 @@ var preloadAllDialogSkins = function (filenameMap, scenarioData) {
 			scenarioData,
 		);
 	})));
-}
+};

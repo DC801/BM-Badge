@@ -43,7 +43,7 @@ var serializeColorPalette = function (colorPalette) {
 };
 
 var supportedImageTypes = ['png', 'gif'];
-var handleImage = function(tileset, scenarioData, fileNameMap) {
+var handleImage = function (tileset, scenarioData, fileNameMap) {
 	var imageFileName = tileset.image;
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
@@ -59,7 +59,9 @@ var handleImage = function(tileset, scenarioData, fileNameMap) {
 				+ supportedImageTypes.join()
 			);
 		}
-		file.blobUrl = URL.createObjectURL(file);
+		file.blobUrl = URL.cretaeObjectURL
+			? URL.createObjectURL(file)
+			: file.base64Blob;
 		file.scenarioIndex = scenarioData.parsed.images.length;
 		scenarioData.parsed.images.push(file);
 		var colorPalette = {
@@ -74,7 +76,7 @@ var handleImage = function(tileset, scenarioData, fileNameMap) {
 				file.blobUrl,
 				file.type,
 				function (error, result) {
-					if(error){
+					if (error) {
 						reject(error);
 					} else {
 						resolve(result);
