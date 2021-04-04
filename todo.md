@@ -253,11 +253,11 @@
 	- [ ] We should make it do a rot 13 of RED HERRING
 - [x] Add Desvio to special thanks
 - [x] Add AdwareHunter to special thanks
-- [ ] Add a book that mentions that you can press XOR and MEM0 to reset the map.
+- [ ] Add a book that mentions that you can press XOR and MEM3 to reset the map.
 - [ ] Rax asks: Is there a place to snag a copy of the books outside of the game, other than to go parse the source code?
 - [ ] Me: Oh man. Not a bad idea! Perhaps we could release a little "Game Manual" with those! Perhaps a print out that's empty, and they player can fill in the values.
-- [ ] NewGnu found that if you set the onInteract to the save action, you ca write every tick. FRY ROM STORAGE REAL QUICK
-	- [ ] Solution? Show a "Save completed" dialog after save completes, because then it can only burn through as fast as they can confirm the "Save completed" dialog.
+- [x] NewGnu found that if you set the onTick index to the save action, you can write every tick. FRY ROM STORAGE REAL QUICK
+	- [x] Solution? Show a "Save completed" dialog after save completes, because then it can only burn through as fast as they can confirm the "Save completed" dialog.
 - [ ] Desvio says that Bert should say something different if his name is changed to "Bart" or "Bort" - reference to Simpsons "Who would name a kid Bort" sketch
 - [ ] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
 - [ ] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"

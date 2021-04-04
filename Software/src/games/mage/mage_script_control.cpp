@@ -1851,7 +1851,24 @@ void MageScriptControl::checkVariables(uint8_t * args, MageScriptState * resumeS
 void MageScriptControl::slotSave(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotSave *argStruct = (ActionSlotSave*)args;
-	MageGame->saveGameSlotSave();
+	// In the case that someone hacks an on_tick script to save, we don't want it
+	// just burning through 8 ROM writes per second, our chip would be fried in a
+	// matter on minutes. So how do we counter? Throw up a "Save Completed" dialog
+	// that FORCES user interaction to advance from. A player encountering like 10
+	// of these dialogs right in a row should hopefully get the hint and reset
+	// their board to get out of that dialog lock. Better to protect the player
+	// with an annoying confirm dialog than allowing them to quietly burn through
+	// the ROM chip's 10000 write cycles.
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageGame->saveGameSlotSave();
+		//debug_print("Opening dialog %d\n", argStruct->dialogId);
+		MageDialog->showSaveCompleteDialog(
+			std::string("Save complete.")
+		);
+		resumeStateStruct->totalLoopsToNextAction = 1;
+	} else if (!MageDialog->isOpen) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+	}
 }
 
 void MageScriptControl::slotLoad(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1863,7 +1880,24 @@ void MageScriptControl::slotLoad(uint8_t * args, MageScriptState * resumeStateSt
 void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotErase *argStruct = (ActionSlotErase*)args;
-	MageGame->saveGameSlotErase(argStruct->slotIndex);
+	// In the case that someone hacks an on_tick script to save, we don't want it
+	// just burning through 8 ROM writes per second, our chip would be fried in a
+	// matter on minutes. So how do we counter? Throw up a "Save Completed" dialog
+	// that FORCES user interaction to advance from. A player encountering like 10
+	// of these dialogs right in a row should hopefully get the hint and reset
+	// their board to get out of that dialog lock. Better to protect the player
+	// with an annoying confirm dialog than allowing them to quietly burn through
+	// the ROM chip's 10000 write cycles.
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageGame->saveGameSlotErase(argStruct->slotIndex);
+		//debug_print("Opening dialog %d\n", argStruct->dialogId);
+		MageDialog->showSaveCompleteDialog(
+			std::string("Save erased.")
+		);
+		resumeStateStruct->totalLoopsToNextAction = 1;
+	} else if (!MageDialog->isOpen) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+	}
 }
 
 void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
