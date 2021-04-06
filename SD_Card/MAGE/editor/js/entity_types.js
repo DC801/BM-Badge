@@ -20,10 +20,10 @@ var handleObjectTypesData = function (
 	scenarioData,
 ) {
 	return function (objectTypesData) {
-		console.log(
-			'object_types.json',
-			objectTypesData
-		);
+		// console.log(
+		// 	'object_types.json',
+		// 	objectTypesData
+		// );
 		var entityTilesetsPromiseArray = Object.keys(scenarioData.entityTypes).map(function (key) {
 			var entityType = scenarioData.entityTypes[key];
 			entityType.type = key;

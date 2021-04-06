@@ -351,7 +351,6 @@ var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
 		map.scriptNameKeys = {};
 		map.serializedLayers = [];
 		scenarioData.parsed.maps[mapFile.scenarioIndex] = map;
-		scenarioData.mapsByName[map.name] = map;
 		return handleMapTilesets(map.tilesets, scenarioData, fileNameMap)
 			.then(function () {
 				handleMapLayers(map, scenarioData, fileNameMap);
@@ -374,7 +373,8 @@ var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
 
 var handleScenarioMaps = function (scenarioData, fileNameMap) {
 	var maps = scenarioData.maps;
-	return Promise.all(Object.keys(maps).map(function (key) {
+	var orderedMapPromise = Promise.resolve();
+	Object.keys(maps).forEach(function (key) {
 		var mapFileName = maps[key].split('/').pop();
 		var mapFile = fileNameMap[mapFileName];
 		mapFile.scenarioIndex = scenarioData.parsed.maps.length;
@@ -382,13 +382,17 @@ var handleScenarioMaps = function (scenarioData, fileNameMap) {
 			name: 'temporary - still parsing',
 			scenarioIndex: mapFile.scenarioIndex
 		});
+		scenarioData.mapsByName[key] = mapFile;
 		if (!mapFile) {
 			throw new Error(
 				'Map `' + mapFileName + '` could not be found in folder!'
 			);
 		} else {
-			return getFileJson(mapFile)
-				.then(handleMapData(key, mapFile, fileNameMap, scenarioData));
+			orderedMapPromise = orderedMapPromise.then(function() {
+				return getFileJson(mapFile)
+					.then(handleMapData(key, mapFile, fileNameMap, scenarioData))
+			});
 		}
-	}));
+	});
+	return orderedMapPromise;
 };

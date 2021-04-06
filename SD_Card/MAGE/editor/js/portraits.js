@@ -6,6 +6,8 @@ var handlePortraitsData = function (
 		scenarioData.portraits = portraitsData;
 		var portraitTilesetsPromiseArray = Object.keys(scenarioData.portraits).map(function (key) {
 			var portrait = scenarioData.portraits[key];
+			portrait.scenarioIndex = scenarioData.parsed.portraits.length;
+			scenarioData.parsed.portraits.push(portrait);
 			return loadTilesetByName(
 				portrait.tileset,
 				fileNameMap,
@@ -17,8 +19,6 @@ var handlePortraitsData = function (
 						portrait,
 						fileNameMap
 					);
-					portrait.scenarioIndex = scenarioData.parsed.portraits.length;
-					scenarioData.parsed.portraits.push(portrait);
 				});
 		});
 		return Promise.all(portraitTilesetsPromiseArray);

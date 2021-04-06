@@ -50,8 +50,6 @@ var imageTypeHandlerMap = {
 			info.width * info.height * 4
 		);
 		reader.decodeAndBlitFrameRGBA(0, buffer);
-		console.log('GifReader', reader);
-		console.log('frameInfo', info);
 		return {
 			info: {
 				width: info.width,
