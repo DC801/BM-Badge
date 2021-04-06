@@ -1,6 +1,7 @@
 const fs = require("fs");
 const window = {
-	getPixels: require(`${__dirname}/../dependencies/get-pixels`)
+	fastPng: require(`${__dirname}/../dependencies/fast-png`),
+	omggif: require(`${__dirname}/../dependencies/omggif`),
 };
 
 var DEFAULT_OUTPUT_PATH = `${__dirname}/../../game.dat`;
@@ -26,7 +27,7 @@ var moduleString = "";
 
 for (m of modules) {
 	moduleString += fs.readFileSync(`${__dirname}/../js/${m}.js`);
-};
+}
 
 //for ()
 //JSON.parse(fs.readFileSync(scenarioFile))
@@ -52,8 +53,11 @@ function makeMap(path) {
 			map[file.name] = {
 				name: file.name,
 				type,
-				fileBlob,
-				base64Blob: `data:image/${type};base64,` + fileBlob.toString('base64'),
+				arrayBuffer: function () {
+					return new Promise((resolve) => {
+						resolve(fileBlob);
+					});
+				},
 				text: function text() {
 					return new Promise(resolve => {
 						resolve(fileBlob.toString('utf8'));

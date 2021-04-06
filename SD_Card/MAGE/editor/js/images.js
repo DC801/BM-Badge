@@ -42,14 +42,66 @@ var serializeColorPalette = function (colorPalette) {
 	return arrayBuffer;
 };
 
-var supportedImageTypes = ['png', 'gif'];
+var imageTypeHandlerMap = {
+	gif: function(fileUint8Buffer) {
+		var reader = new window.omggif.GifReader(fileUint8Buffer);
+		var info = reader.frameInfo(0);
+		var buffer = new Uint8Array(
+			info.width * info.height * 4
+		);
+		reader.decodeAndBlitFrameRGBA(0, buffer);
+		console.log('GifReader', reader);
+		console.log('frameInfo', info);
+		return {
+			info: {
+				width: info.width,
+				height: info.height,
+				channels: 4
+			},
+			data: buffer
+		};
+	},
+	png: function(fileUint8Buffer) {
+		var decoded = window.fastPng.decode(fileUint8Buffer);
+		var info = {
+			width: decoded.width,
+			height: decoded.height,
+			channels: decoded.channels
+		};
+		var buffer = decoded.data;
+		if (decoded.palette) {
+			info.channels = decoded.palette[0].length;
+			var hasAlpha = info.channels === 4;
+			var pixels = info.width * info.height;
+			buffer = new Uint8Array(pixels * info.channels);
+			for (var i = 0; i < pixels; i++) {
+				var offset = i * info.channels;
+				var colorIndex = decoded.data[i];
+				var color = decoded.palette[colorIndex] || [0, 0, 0, 0];
+				buffer[offset + 0] = color[0];
+				buffer[offset + 1] = color[1];
+				buffer[offset + 2] = color[2];
+				if (hasAlpha) {
+					buffer[offset + 3] = color[3];
+				}
+			}
+		}
+		return {
+			info: info,
+			data: buffer
+		}
+	},
+};
+var supportedImageTypes = Object.keys(imageTypeHandlerMap);
+
 var handleImage = function (tileset, scenarioData, fileNameMap) {
 	var imageFileName = tileset.image;
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
 	if (file.scenarioIndex === undefined) {
 		var mimeTypeSuffix = file.type.split('/').pop();
-		if (supportedImageTypes.indexOf(mimeTypeSuffix) === -1) {
+		var imageHandler = imageTypeHandlerMap[mimeTypeSuffix];
+		if (!imageHandler) {
 			throw new Error(
 				'Unsupported image type: "'
 				+ file.type
@@ -59,9 +111,6 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 				+ supportedImageTypes.join()
 			);
 		}
-		file.blobUrl = URL.cretaeObjectURL
-			? URL.createObjectURL(file)
-			: file.base64Blob;
 		file.scenarioIndex = scenarioData.parsed.images.length;
 		scenarioData.parsed.images.push(file);
 		var colorPalette = {
@@ -71,21 +120,11 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 			scenarioIndex: scenarioData.parsed.imageColorPalettes.length,
 		};
 		scenarioData.parsed.imageColorPalettes.push(colorPalette);
-		result = new Promise(function (resolve) {
-			window.getPixels(
-				file.blobUrl,
-				file.type,
-				function (error, result) {
-					if (error) {
-						reject(error);
-					} else {
-						resolve(result);
-					}
-				}
-			);
-		})
+		result = file.arrayBuffer()
+			.then(function (arrayBuffer) {
+				return imageHandler(new Uint8Array(arrayBuffer));
+			})
 			.then(function (result) {
-				// URL.revokeObjectURL(blobUrl);
 				var getPaletteIndexForColor = function (color) {
 					var colorIndex = colorPalette.colorArray.indexOf(color);
 					if (colorIndex === -1) {
@@ -94,17 +133,18 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					}
 					return colorIndex;
 				};
-				var sourceWidth = result.shape[0];
-				var sourceHeight = result.shape[1];
+				var sourceWidth = result.info.width;
+				var sourceHeight = result.info.height;
 				var pixelsPerTile = tileset.tilewidth * tileset.tileheight;
-				var hasAlpha = result.shape[2] === 4;
+				var channels = result.info.channels;
+				var hasAlpha = channels === 4;
 				var dataLength = sourceWidth * sourceHeight;
 				var data = new ArrayBuffer(dataLength);
 				var dataView = new DataView(data);
 				var pixelIndex = 0;
 				// var wtfLog = [];
 				while (pixelIndex < dataLength) {
-					var readOffset = pixelIndex * result.shape[2];
+					var readOffset = pixelIndex * channels;
 					var sourceX = pixelIndex % sourceWidth;
 					var sourceY = Math.floor(pixelIndex / sourceWidth);
 					var tileX = sourceX % tileset.tilewidth;
@@ -134,7 +174,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					if (paletteIndex > 255) {
 						throw new Error(`"${imageFileName}" has too many colors! Max supported colors are 256.`);
 					}
-					// if (file.name === "tileset-town.png") {
+					// if (paletteIndex > 255) {
 					// 	wtfLog.push({
 					// 		pixelIndex,
 					// 		sourceX,
@@ -143,9 +183,6 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					// 		color,
 					// 		paletteIndex,
 					// 	});
-					// 	if (pixelIndex > 511) {
-					// 		console.table(wtfLog);
-					// 	}
 					// }
 					dataView.setUint8(
 						writeOffset,
@@ -153,6 +190,7 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 					);
 					pixelIndex += 1;
 				}
+				// console.table(wtfLog);
 				console.log(`Colors in image "${imageFileName}": ${colorPalette.colorArray.length}`);
 				file.serialized = data;
 				colorPalette.serialized = serializeColorPalette(colorPalette);
