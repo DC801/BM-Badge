@@ -131,7 +131,7 @@ Tiled (https://www.mapeditor.org/) is being used to edit the game map & characte
 
 ```shell script
 cd ~/dev/installer
-wget https://github.com/bjorn/tiled/releases/download/v1.4.2/Tiled-1.4.2-x86_64.AppImage
+wget https://github.com/mapeditor/tiled/releases/download/v1.4.3/Tiled-1.4.3-x86_64.AppImage
 chmod +x Tiled-*-x86_64.AppImage
 sudo mkdir -p /usr/share/tiled/
 sudo mv Tiled-*-x86_64.AppImage /usr/share/tiled/
@@ -139,6 +139,17 @@ sudo ln -s /usr/share/tiled/Tiled-*-x86_64.AppImage /usr/bin/tiled
 ```
 
 You can now run `tiled` in the command line to start Tiled.
+
+### Optional - Install Node.js for an automated CLI build for the game.dat
+While it is possible to build the `game.dat` file using only a browser, if you find that you are regenerating this file frequently, it may be very productive to use the CLI build for the `game.dat` file.
+
+```sh
+sudo apt install curl
+curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+
+With Node installed, you can `cd SD_Card/MAGE` and execute `./regenerate_dat_file.sh` to regenerate the game.dat file for a very seamless editing workflow.
 
 ----
 
