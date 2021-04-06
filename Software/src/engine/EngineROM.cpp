@@ -33,8 +33,8 @@ bool EngineROM_Init(void)
 	FIL gameDat;
 	FRESULT result;
 	UINT count;
-	char gameDatTimestampSD[ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
-	char gameDatTimestampROM[ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH+1] {0};
+	char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
+	char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
 	uint32_t gameDatFilesize = 0;
 
 	//get the game.dat filesize:
@@ -61,27 +61,32 @@ bool EngineROM_Init(void)
 		return false;
 	}
 
-	//get the gameDatTimestampSD from the SD card game.dat:
+	//get the gameDatHashSD from the SD card game.dat:
 	result = f_lseek(&gameDat, 0);
 	if (result != FR_OK) {
 		return false;
 	}
-	//read from the file into the gameDatTimestampSD buffer:
-	result = f_read(&gameDat, (uint8_t *)gameDatTimestampSD, ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH, &count);
+	//read from the file into the gameDatHashSD buffer:
+	result = f_read(
+		&gameDat,
+		(uint8_t *)gameDatHashSD,
+		ENGINE_ROM_MAGIC_HASH_LENGTH,
+		&count
+	);
 	if (result != FR_OK) {
 		return false;
 	}
 
-	//get the gameDatTimestampROM from the ROM chip:
+	//get the gameDatHashROM from the ROM chip:
 	EngineROM_Read(
 		0,
-		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
-		(uint8_t *)gameDatTimestampROM,
+		ENGINE_ROM_MAGIC_HASH_LENGTH,
+		(uint8_t *)gameDatHashROM,
 		"Failed to read timestamp from ROM"
 	);
 
 	//compare the two timestamps:
-	bool timestampsMatch = (strcmp(gameDatTimestampSD, gameDatTimestampROM) == 0);
+	bool timestampsMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
 
 	//handles hardware inputs and makes their state available
 	EngineHandleInput();

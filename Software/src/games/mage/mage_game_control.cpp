@@ -18,8 +18,7 @@ extern FrameBuffer *mage_canvas;
 //   Each header is constructed with offsets from the previous
 MageGameControl::MageGameControl()
 {
-	uint32_t offset = ENGINE_ROM_MAGIC_STRING_LENGTH; //skip 'MAGEGAME' string at front of .dat file
-	offset += ENGINE_ROM_TIMESTAMP_LENGTH; //skip timestamp string at front of .dat file
+	uint32_t offset = ENGINE_ROM_MAGIC_HASH_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
 
 	currentSaveIndex = 0;
 	MageSaveGame newSave = {};

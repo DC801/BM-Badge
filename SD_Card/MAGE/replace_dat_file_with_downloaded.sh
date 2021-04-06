@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 unset -v latest
 for file in ~/Downloads/game*.dat; do

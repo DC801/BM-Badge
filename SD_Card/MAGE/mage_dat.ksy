@@ -4,9 +4,9 @@ meta:
 seq:
   - id: identifier
     contents: MAGEGAME
-  - id: timestamp
+  - id: crc32
     type: str
-    size: 24
+    size: 8
     encoding: ASCII
   - id: map_offsets
     type: count_with_offsets

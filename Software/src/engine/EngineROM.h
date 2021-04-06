@@ -22,10 +22,12 @@
 //this is the length of the 'magic string' at the start of the game.dat file:
 #define ENGINE_ROM_MAGIC_STRING_LENGTH 8
 
-//this is the length of the timestamp that follows the magic string in game.dat
+//this is the length of the crc32 that follows the magic string in game.dat
 //it is used to let us check if we need to re-flash the ROM chip with the file on
 //the SD card.
-#define ENGINE_ROM_TIMESTAMP_LENGTH 24
+#define ENGINE_ROM_CRC32_LENGTH 8
+
+#define ENGINE_ROM_MAGIC_HASH_LENGTH (ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_CRC32_LENGTH)
 
 //this is all the bytes on our ROM chip. We aren't able to write more than this
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,

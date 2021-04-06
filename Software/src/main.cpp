@@ -137,26 +137,23 @@ void test_rom(){
 	#ifdef DC801_EMBEDDED
 	uint8_t erased_array[9] {255, 255, 255, 255, 255, 255, 255, 255, 0};
 	char test_array[9] = "GOATBOAT";
-	char test_rx_array[36] {'X','X','X','X','X','X','X','X',0};
+	char test_rx_array[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] = {
+		'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
+		'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
+		0
+	};
 	char address_message[128];
 	EngineROM_Read(
 		0,
-		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
+		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
 		"Failed to read timestamp from ROM"
 	);
 	p_canvas()->clearScreen(COLOR_BLACK);
 	sprintf(
 		address_message,
-		"First few bytes after startup:\n%03d %03d %03d %03d %03d %03d %03d %03d \n",
-		test_rx_array[0],
-		test_rx_array[1],
-		test_rx_array[2],
-		test_rx_array[3],
-		test_rx_array[4],
-		test_rx_array[5],
-		test_rx_array[6],
-		test_rx_array[7]
+		"First few bytes after startup:\n%s\n",
+		test_rx_array
 	);
 	p_canvas()->printMessage(
 		address_message,
@@ -189,7 +186,7 @@ void test_rom(){
 	}
 	EngineROM_Read(
 		0,
-		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
+		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
 		"Failed to read timestamp from ROM"
 	);
@@ -229,7 +226,7 @@ void test_rom(){
 	}
 	EngineROM_Read(
 		0,
-		ENGINE_ROM_MAGIC_STRING_LENGTH + ENGINE_ROM_TIMESTAMP_LENGTH,
+		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
 		"Failed to read timestamp from ROM"
 	);
