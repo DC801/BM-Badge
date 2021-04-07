@@ -349,8 +349,8 @@ void MageScriptControl::checkEntitySecondaryId(uint8_t * args, MageScriptState *
 		MageEntity *entity = MageGame->getValidEntity(entityIndex);
 		uint16_t sizeLimit;
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
-		if(sanitizedPrimaryType == ENTITY_TYPE) {sizeLimit = 0;}
-		if(sanitizedPrimaryType == ANIMATION) {sizeLimit = 0;}
+		if(sanitizedPrimaryType == ENTITY_TYPE) {sizeLimit = 1;}
+		if(sanitizedPrimaryType == ANIMATION) {sizeLimit = 1;}
 		if(sanitizedPrimaryType == TILESET) {
 			MageTileset *tileset = MageGame->getValidTileset(entity->primaryId);
 			sizeLimit = tileset->Tiles();
