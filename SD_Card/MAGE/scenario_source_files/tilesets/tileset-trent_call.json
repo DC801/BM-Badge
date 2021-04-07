@@ -1,0 +1,14 @@
+{ "columns":3,
+ "image":"tileset-trent_call.png",
+ "imageheight":160,
+ "imagewidth":96,
+ "margin":0,
+ "name":"tileset-trent_call",
+ "spacing":0,
+ "tilecount":15,
+ "tiledversion":"1.4.3",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}
