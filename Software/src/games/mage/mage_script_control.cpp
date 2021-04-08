@@ -1862,7 +1862,7 @@ void MageScriptControl::slotSave(uint8_t * args, MageScriptState * resumeStateSt
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		MageGame->saveGameSlotSave();
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		MageDialog->showSaveCompleteDialog(
+		MageDialog->showSaveMessageDialog(
 			std::string("Save complete.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;
@@ -1874,7 +1874,13 @@ void MageScriptControl::slotSave(uint8_t * args, MageScriptState * resumeStateSt
 void MageScriptControl::slotLoad(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSlotLoad *argStruct = (ActionSlotLoad*)args;
-	MageGame->saveGameSlotLoad(argStruct->slotIndex);
+	//delaying until next tick allows for displaying of an error message on read before resuming
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageGame->saveGameSlotLoad(argStruct->slotIndex);
+		resumeStateStruct->totalLoopsToNextAction = 1;
+	} else if (!MageDialog->isOpen) {
+		resumeStateStruct->totalLoopsToNextAction = 0;
+	}
 }
 
 void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1891,7 +1897,7 @@ void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateS
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		MageGame->saveGameSlotErase(argStruct->slotIndex);
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		MageDialog->showSaveCompleteDialog(
+		MageDialog->showSaveMessageDialog(
 			std::string("Save erased.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;

@@ -21,7 +21,7 @@ all of the old code used as the foundation of this badge.
 
 //this is the path to the game.dat file on the SD card.
 //if an SD card is inserted with game.dat in this location
-//and its timestamp is different from the one in the ROM chip
+//and its header hash is different from the one in the ROM chip
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
@@ -336,7 +336,10 @@ typedef struct {
 	uint8_t hackableStateD;
 } MageEntity;
 
-typedef struct {
+typedef struct MageSaveGame {
+	char identifier[ENGINE_ROM_IDENTIFIER_STRING_LENGTH] = ENGINE_ROM_SAVE_IDENTIFIER_STRING;
+	uint32_t scenarioDataCRC32;
+	uint32_t saveDataLength = sizeof(MageSaveGame);
 	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
 	uint16_t currentMapId = DEFAULT_MAP;
 	uint16_t warpState = MAGE_NO_WARP_STATE;

@@ -82,17 +82,17 @@ bool EngineROM_Init(void)
 		0,
 		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)gameDatHashROM,
-		"Failed to read timestamp from ROM"
+		"Failed to read header hash from ROM"
 	);
 
-	//compare the two timestamps:
-	bool timestampsMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
+	//compare the two header hashes:
+	bool headerHashMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
 
 	//handles hardware inputs and makes their state available
 	EngineHandleInput();
 
 	if(
-		!timestampsMatch
+		!headerHashMatch
 		|| EngineInput_Buttons.mem3
 	){
 		//we need a prompt to see if they want to erase the chip: -Tim
@@ -102,7 +102,7 @@ bool EngineROM_Init(void)
 	}
 /*
 	// Verify magic string is on ROM when we're done:
-	if (EngineROM_Magic((const uint8_t*)ENGINE_ROM_MAGIC_STRING, ENGINE_ROM_MAGIC_STRING_LENGTH) != true)
+	if (EngineROM_Magic((const uint8_t*)ENGINE_ROM_GAME_IDENTIFIER_STRING, ENGINE_ROM_IDENTIFIER_STRING_LENGTH) != true)
 	{
 		ENGINE_PANIC("Failed to match Game Magic");
 	} */

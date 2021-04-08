@@ -371,7 +371,7 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"Safety Skyler says, \"Remember to wear eye\nprotection!\""
+				"Safety Skyler says:\n\"Remember to wear eye protection!\""
 			]
 		}
 	],

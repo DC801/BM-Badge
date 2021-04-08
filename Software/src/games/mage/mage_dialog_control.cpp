@@ -158,7 +158,7 @@ void MageDialogControl::load(
 	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
 }
 
-void MageDialogControl::showSaveCompleteDialog(std::string messageString) {
+void MageDialogControl::showSaveMessageDialog(std::string messageString) {
 	// Recycle all of the values set by the previous dialog to preserve look and feel
 	// If there was no previous dialog... uhhhhhhh good luck with that?
 	// Saves should always be confirmed. That is my strong opinion.

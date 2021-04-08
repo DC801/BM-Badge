@@ -115,7 +115,7 @@ class MageDialogControl {
 			int16_t currentEntityId
 		);
 		void loadNextScreen();
-		void showSaveCompleteDialog(std::string messageString);
+		void showSaveMessageDialog(std::string messageString);
 		void advanceMessage();
 		void closeDialog();
 		void update();
