@@ -268,6 +268,12 @@ void MageHexEditor::applyHexModeInputs()
 					clipboard,
 					clipboardLength
 				);
+				MageGame->UpdateEntities(0);
+				memcpy(
+					currentByte,
+					clipboard,
+					clipboardLength
+				);
 			}
 		}
 		if (anyHexMovement) {

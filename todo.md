@@ -275,7 +275,7 @@
 		- [x] Display current clipboard value in header or footer, truncated to 4 bytes and '...'
 		- [x] Copy method
 		- [x] Paste method
-			- [ ] When your paste changes the entityType AND position, it doesn't move to the pasted location for the first tick because the "Did the tile size change this tick" entity jump protection kicks in
+			- [x] When your paste changes the entityType AND position, it doesn't move to the pasted location for the first tick because the "Did the tile size change this tick" entity jump protection kicks in
 		- [ ] Store the clipboard value + length into save file as well
 	- [x] △ should increment the current byte's value by 1
 	- [x] ◯ should copy the current byte's value into the copy buffer

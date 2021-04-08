@@ -1451,11 +1451,6 @@ void MageGameControl::updateEntityRenderableBoxes(
 
 void MageGameControl::UpdateEntities(uint32_t deltaTime)
 {
-	//if no time has passed, there is no need to update.
-	if(!deltaTime)
-	{
-		return;
-	}
 	//cycle through all map entities:
 	for(uint8_t i = 0; i < map.EntityCount(); i++)
 	{
