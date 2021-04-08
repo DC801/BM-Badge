@@ -799,6 +799,7 @@ void MageGameControl::handleEntityInteract(
 				targetRenderableData->isInteracting = true;
 				isMoving = false;
 				if (hack && playerHasHexEditorControl) {
+					MageHex->disableMovementUntilRJoyUpRelease = true;
 					MageHex->openToEntityByIndex(i);
 				} else if (!hack && targetEntity->onInteractScriptId) {
 					MageScript->initScriptState(

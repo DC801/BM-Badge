@@ -22,7 +22,8 @@ uint32_t MageHexEditor::size() const
 		sizeof(previousPageButtonState) +
 		sizeof(lastPageButtonPressTime) +
 		(sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS) +
-		sizeof(isCopying)
+		sizeof(isCopying) +
+		sizeof(disableMovementUntilRJoyUpRelease)
 	);
 	return size;
 }
@@ -131,11 +132,15 @@ void MageHexEditor::updateHexStateVariables()
 
 void MageHexEditor::applyHexModeInputs()
 {
+	if(EngineInput_Deactivated.rjoy_up) {
+		disableMovementUntilRJoyUpRelease = false;
+	}
 	//check to see if player input is allowed:
 	if(
 		MageDialog->isOpen
 		|| !MageGame->playerHasControl
 		|| !MageGame->playerHasHexEditorControl
+		|| disableMovementUntilRJoyUpRelease
 	) {
 		return;
 	}
@@ -147,10 +152,12 @@ void MageHexEditor::applyHexModeInputs()
 	//debounce timer check.
 	if (!hexTickDelay) {
 		anyHexMovement = (
-			EngineInput_Buttons.ljoy_left ||
-			EngineInput_Buttons.ljoy_right ||
-			EngineInput_Buttons.ljoy_up ||
-			EngineInput_Buttons.ljoy_down
+			EngineInput_Buttons.ljoy_left
+			|| EngineInput_Buttons.ljoy_right
+			|| EngineInput_Buttons.ljoy_up
+			|| EngineInput_Buttons.ljoy_down
+			|| EngineInput_Buttons.rjoy_up // triangle for increment
+			|| EngineInput_Buttons.rjoy_down // x for decrement
 		);
 		if (EngineInput_Buttons.op_page) {
 			//reset last press time only when the page button switches from unpressed to pressed
@@ -229,14 +236,14 @@ void MageHexEditor::applyHexModeInputs()
 					//change the current page to wherever the cursor is:
 					setPageToCursorLocation();
 				}
-			}
-			if (EngineInput_Buttons.rjoy_up) {
-				//decrement the value
-				*currentByte += 1;
-			}
-			if (EngineInput_Buttons.rjoy_down) {
-				//decrement the value
-				*currentByte -= 1;
+				if (EngineInput_Buttons.rjoy_up) {
+					//decrement the value
+					*currentByte += 1;
+				}
+				if (EngineInput_Buttons.rjoy_down) {
+					//decrement the value
+					*currentByte -= 1;
+				}
 			}
 			if (EngineInput_Activated.rjoy_right) {
 				//copy
@@ -474,5 +481,4 @@ void MageHexEditor::openToEntityByIndex(uint8_t entityIndex) {
 	setHexCursorLocation(entityIndex * sizeof(MageEntity));
 	setPageToCursorLocation();
 	toggleHexEditor();
-	hexTickDelay = 10;
 }

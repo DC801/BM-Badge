@@ -91,6 +91,8 @@ private:
 	bool isCopying;
 
 public:
+	bool disableMovementUntilRJoyUpRelease;
+
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
 	MageHexEditor() : currentOp{HEX_OPS::HEX_OPS_XOR},
@@ -107,7 +109,8 @@ public:
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
 		memAddresses{0, 1, 2, 3},
-		isCopying{false}
+		isCopying{false},
+		disableMovementUntilRJoyUpRelease{false}
 	{};
 
 	//returns the size in RAM of the class variables.

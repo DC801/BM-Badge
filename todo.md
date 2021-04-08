@@ -268,7 +268,7 @@
 	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
 - [ ] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
 	- [ ] To fix, LoadMap should set fadeFraction to 0
-- [ ] Re-do the handling of the right side buttons when in the HexEditor
+- [x] Re-do the handling of the right side buttons when in the HexEditor
 	- [x] Create Clipboard system
 		- [x] Create a buffer that is sizeof(MageEntity)
 		- [x] A value to indicate the length of what's on the clipboard
@@ -282,8 +282,8 @@
 		- [x] while holding ◯, moving the left/right arrows will select additional cells
 	- [x] ✕ should decrement the current byte's value by 1
 	- [x] ◻ should paste the copy buffer into the current byte's value
-	- [ ] The value +/- operations should be slowed down
-	- [ ] The "triangle to open on an entity + cooldown before normal hex operation" should actually restore normal hex control via "on release handler"
+	- [x] The value +/- operations should be slowed down
+	- [x] The "triangle to open on an entity + cooldown before normal hex operation" should actually restore normal hex control via "on release handler"
 - [ ] Re-do the handling of the MEM buttons in the HexEditor
 	- [ ] Make the addresses stored relative to the currently selected entity
 	- [ ] How to set relative MEM addresses?
