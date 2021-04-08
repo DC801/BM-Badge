@@ -87,9 +87,7 @@ private:
 	//this stores the byte addresses for the hex memory buttons:
 	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
 
-	//clipboard
-	uint8_t clipboard[sizeof(MageEntity)];
-	uint8_t clipboardLength;
+	//clipboard GUI state
 	bool isCopying;
 
 public:
@@ -109,8 +107,6 @@ public:
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
 		memAddresses{0, 1, 2, 3},
-		clipboard{0},
-		clipboardLength{1},
 		isCopying{false}
 	{};
 

@@ -22,8 +22,6 @@ uint32_t MageHexEditor::size() const
 		sizeof(previousPageButtonState) +
 		sizeof(lastPageButtonPressTime) +
 		(sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS) +
-		sizeof(MageEntity) + // clipboard
-		sizeof(clipboardLength) +
 		sizeof(isCopying)
 	);
 	return size;
@@ -242,7 +240,7 @@ void MageHexEditor::applyHexModeInputs()
 			}
 			if (EngineInput_Activated.rjoy_right) {
 				//copy
-				clipboardLength = 1;
+				MageGame->currentSave.clipboardLength = 1;
 				isCopying = true;
 			}
 			if (!EngineInput_Buttons.rjoy_right) {
@@ -250,29 +248,35 @@ void MageHexEditor::applyHexModeInputs()
 			}
 			if (EngineInput_Buttons.rjoy_right) {
 				if (EngineInput_Buttons.ljoy_left) {
-					clipboardLength = MAX((uint8_t) 1, clipboardLength - 1);
+					MageGame->currentSave.clipboardLength = MAX(
+						(uint8_t) 1,
+						MageGame->currentSave.clipboardLength - 1
+					);
 				}
 				if (EngineInput_Buttons.ljoy_right) {
-					clipboardLength = MIN((uint8_t) sizeof(MageEntity), clipboardLength + 1);
+					MageGame->currentSave.clipboardLength = MIN(
+						(uint8_t) sizeof(MageEntity),
+						MageGame->currentSave.clipboardLength + 1
+					);
 				}
 				memcpy(
-					clipboard,
+					MageGame->currentSave.clipboard,
 					currentByte,
-					clipboardLength
+					MageGame->currentSave.clipboardLength
 				);
 			}
 			if (EngineInput_Buttons.rjoy_left) {
 				//paste
 				memcpy(
 					currentByte,
-					clipboard,
-					clipboardLength
+					MageGame->currentSave.clipboard,
+					MageGame->currentSave.clipboardLength
 				);
 				MageGame->UpdateEntities(0);
 				memcpy(
 					currentByte,
-					clipboard,
-					clipboardLength
+					MageGame->currentSave.clipboard,
+					MageGame->currentSave.clipboardLength
 				);
 			}
 		}
@@ -315,7 +319,7 @@ uint16_t MageHexEditor::getRenderableStringLength(uint8_t *bytes, uint16_t maxLe
 void MageHexEditor::renderHexHeader()
 {
 	char headerString[128];
-	char clipboardString[16];
+	char clipboardPreview[16];
 	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
 	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress + hexCursorLocation;
 	uint8_t u1Value = *currentByteAddress;
@@ -337,20 +341,20 @@ void MageHexEditor::renderHexHeader()
 		HEXED_BYTE_OFFSET_X,
 		0
 	);
-	for (
-		uint8_t i = 0;
-		i < MIN((uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH, clipboardLength);
-		i++
-	) {
+	uint8_t clipboardPreviewClamp = MIN(
+		(uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
+		MageGame->currentSave.clipboardLength
+	);
+	for (uint8_t i = 0; i < clipboardPreviewClamp; i++) {
 		sprintf(
-			clipboardString + (i * 2),
+			clipboardPreview + (i * 2),
 			"%02X",
-			*(clipboard + i)
+			*(MageGame->currentSave.clipboard + i)
 		);
 	}
-	if(clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
+	if(MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
 		sprintf(
-			clipboardString + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
+			clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
 			"..."
 		);
 	}
@@ -378,7 +382,7 @@ void MageHexEditor::renderHexHeader()
 		u1Value,
 		u2Value,
 		stringPreview,
-		clipboardString
+		clipboardPreview
 	);
 	mage_canvas->printMessage(
 		headerString,
@@ -402,7 +406,7 @@ void MageHexEditor::renderHexEditor()
 			0x38FF
 		);
 		if (isCopying) {
-			for (uint8_t i = 1; i < clipboardLength; i++) {
+			for (uint8_t i = 1; i < MageGame->currentSave.clipboardLength; i++) {
 				uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
 				mage_canvas->fillRect(
 					(copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,

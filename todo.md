@@ -269,14 +269,14 @@
 - [ ] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
 	- [ ] To fix, LoadMap should set fadeFraction to 0
 - [ ] Re-do the handling of the right side buttons when in the HexEditor
-	- [ ] Create Clipboard system
+	- [x] Create Clipboard system
 		- [x] Create a buffer that is sizeof(MageEntity)
 		- [x] A value to indicate the length of what's on the clipboard
 		- [x] Display current clipboard value in header or footer, truncated to 4 bytes and '...'
 		- [x] Copy method
 		- [x] Paste method
 			- [x] When your paste changes the entityType AND position, it doesn't move to the pasted location for the first tick because the "Did the tile size change this tick" entity jump protection kicks in
-		- [ ] Store the clipboard value + length into save file as well
+		- [x] Store the clipboard value + length into save file as well
 	- [x] △ should increment the current byte's value by 1
 	- [x] ◯ should copy the current byte's value into the copy buffer
 		- [x] while holding ◯, moving the left/right arrows will select additional cells

@@ -138,14 +138,6 @@ typedef enum : uint8_t {
 	GT
 } MageCheckComparison;
 
-typedef struct {
-	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
-	uint16_t currentMapId = DEFAULT_MAP;
-	uint16_t warpState = MAGE_NO_WARP_STATE;
-	uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] = {0};
-	uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] = {0};
-} MageSaveGame;
-
 typedef enum : uint8_t {
 	x = 12,
 	y = 14,
@@ -343,6 +335,19 @@ typedef struct {
 	uint8_t hackableStateC;
 	uint8_t hackableStateD;
 } MageEntity;
+
+typedef struct {
+	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
+	uint16_t currentMapId = DEFAULT_MAP;
+	uint16_t warpState = MAGE_NO_WARP_STATE;
+	uint8_t clipboard[sizeof(MageEntity)] = {0};
+	uint8_t clipboardLength = 1;
+	uint8_t paddingA;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] = {0};
+	uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] = {0};
+} MageSaveGame;
 
 typedef struct {
 	int32_t x;
