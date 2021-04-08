@@ -266,18 +266,46 @@
 - [ ] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
 - [x] NewGnu tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
 	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
+- [ ] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
+	- [ ] To fix, LoadMap should set fadeFraction to 0
+- [ ] Re-do the handling of the right side buttons when in the HexEditor
+	- [ ] Create Clipboard system
+		- [x] Create a buffer that is sizeof(MageEntity)
+		- [x] A value to indicate the length of what's on the clipboard
+		- [x] Display current clipboard value in header or footer, truncated to 4 bytes and '...'
+		- [x] Copy method
+		- [x] Paste method
+			- [ ] When your paste changes the entityType AND position, it doesn't move to the pasted location for the first tick because the "Did the tile size change this tick" entity jump protection kicks in
+		- [ ] Store the clipboard value + length into save file as well
+	- [x] △ should increment the current byte's value by 1
+	- [x] ◯ should copy the current byte's value into the copy buffer
+		- [x] while holding ◯, moving the left/right arrows will select additional cells
+	- [x] ✕ should decrement the current byte's value by 1
+	- [x] ◻ should paste the copy buffer into the current byte's value
+	- [ ] The value +/- operations should be slowed down
+	- [ ] The "triangle to open on an entity + cooldown before normal hex operation" should actually restore normal hex control via "on release handler"
+- [ ] Re-do the handling of the MEM buttons in the HexEditor
+	- [ ] Make the addresses stored relative to the currently selected entity
+	- [ ] How to set relative MEM addresses?
+		- [ ] Hold PAGE and press MEM* to set
+		- [ ] Long-Hold MEM* to set?
+	- [ ] Press MEM* to move cursor there, both in and out of the editor
+	- [ ] Store your 4 MEM addresses into the save file at uint8_t, because MEMs are now relative
+- [ ] Prepare scenario data for bootloader's USB-C/magic drive update flavor
+	- [ ] `game.dat` gets a new header:
+		- [ ] `MAGEGAME`
+		- [ ] uint32_t CRC32 of the `game.dat` before the CRC32 is added
+		- [ ] uint32_t length of `game.dat`
+	- [ ] `save_[0,1,2].dat` get a new header:
+		- [ ] `MAGESAVE`
+		- [ ] uint32_t CRC32 from `game.dat` (so we know if versions match)
+		- [ ] uint32_t length of the `save_[0,1,2].dat`
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
 - [ ] Build a test map with no entities and make sure it does not crash
 - [x] Fix bug where empty string for script on map or entity does not encode as null_script
-- [ ] Action Argument Getters:
-	- [ ] color
-	- [ ] button_id (need enum lookup)
-	- [ ] entity hex cells
-	- [ ] sound id lookup for scripts and dialogs
 - [ ] Music/SFX encoding in the binary asset encoder
-- [ ] Consider adding lookup encoding for setting primary ID, secondary ID, and primary ID type. The numbers seem to be unreliable when you change things in a map (i.e. a mage entity primary id is 3, then after changing something unrelated and re-encoding it jumped to 13), so being able to do a lookup to make sure an entity gets their type set to a specific thing would be useful.
 
 ## Hardware TODO:
 
