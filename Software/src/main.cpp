@@ -147,7 +147,7 @@ void test_rom(){
 		0,
 		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
-		"Failed to read timestamp from ROM"
+		"Failed to read header hash from ROM"
 	);
 	p_canvas()->clearScreen(COLOR_BLACK);
 	sprintf(
@@ -188,7 +188,7 @@ void test_rom(){
 		0,
 		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
-		"Failed to read timestamp from ROM"
+		"Failed to read header hash from ROM"
 	);
 	sprintf(
 		address_message,
@@ -228,7 +228,7 @@ void test_rom(){
 		0,
 		ENGINE_ROM_MAGIC_HASH_LENGTH,
 		(uint8_t *)test_rx_array,
-		"Failed to read timestamp from ROM"
+		"Failed to read header hash from ROM"
 	);
 	sprintf(
 		address_message,

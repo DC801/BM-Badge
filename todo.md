@@ -291,15 +291,15 @@
 		- [ ] Long-Hold MEM* to set?
 	- [ ] Press MEM* to move cursor there, both in and out of the editor
 	- [ ] Store your 4 MEM addresses into the save file at uint8_t, because MEMs are now relative
-- [ ] Prepare scenario data for bootloader's USB-C/magic drive update flavor
-	- [ ] `game.dat` gets a new header:
-		- [ ] `MAGEGAME`
-		- [ ] uint32_t CRC32 of the `game.dat` before the CRC32 is added
-		- [ ] uint32_t length of `game.dat`
-	- [ ] `save_[0,1,2].dat` get a new header:
-		- [ ] `MAGESAVE`
-		- [ ] uint32_t CRC32 from `game.dat` (so we know if versions match)
-		- [ ] uint32_t length of the `save_[0,1,2].dat`
+- [x] Prepare scenario data for bootloader's USB-C/magic drive update flavor
+	- [x] `game.dat` gets a new header:
+		- [x] `MAGEGAME`
+		- [x] uint32_t CRC32 of the `game.dat` before the CRC32 is added
+		- [x] uint32_t length of `game.dat`
+	- [x] `save_[0,1,2].dat` gets a new header:
+		- [x] `MAGESAVE`
+		- [x] uint32_t CRC32 from `game.dat` (so we know if versions match)
+		- [x] uint32_t length of the `save_[0,1,2].dat`
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

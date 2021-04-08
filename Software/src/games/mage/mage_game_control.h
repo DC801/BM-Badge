@@ -49,6 +49,10 @@ private:
 	MageHeader variableHeader;
 	MageHeader imageHeader;
 
+	//used to verify whether a save is compatible with game data
+	uint32_t scenarioDataCRC32;
+	uint32_t scenarioDataLength;
+
 	//this is where the current map data from the ROM is stored.
 	MageMap map;
 
@@ -117,7 +121,10 @@ public:
 	//returns the size in memory of the MageGameControl object.
 	uint32_t Size() const;
 
-	void readSaveFromRomIntoRam();
+	void setCurrentSaveToFreshState();
+	void readSaveFromRomIntoRam(
+		bool silenceErrors = false
+	);
 	void saveGameSlotSave();
 	void saveGameSlotErase(uint8_t slotIndex);
 	void saveGameSlotLoad(uint8_t slotIndex);

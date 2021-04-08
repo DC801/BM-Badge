@@ -18,11 +18,28 @@ extern FrameBuffer *mage_canvas;
 //   Each header is constructed with offsets from the previous
 MageGameControl::MageGameControl()
 {
-	uint32_t offset = ENGINE_ROM_MAGIC_HASH_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
+	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
+
+	EngineROM_Read(
+		offset,
+		sizeof(scenarioDataCRC32),
+		(uint8_t *)&scenarioDataCRC32,
+		"Unable to read scenarioDataCRC32"
+	);
+	ROM_ENDIAN_U4_BUFFER(&scenarioDataCRC32, 1);
+	offset += sizeof(scenarioDataCRC32);
+
+	EngineROM_Read(
+		offset,
+		sizeof(scenarioDataLength),
+		(uint8_t *)&scenarioDataLength,
+		"Unable to read scenarioDataLength"
+	);
+	ROM_ENDIAN_U4_BUFFER(&scenarioDataLength, 1);
+	offset += sizeof(scenarioDataLength);
 
 	currentSaveIndex = 0;
-	MageSaveGame newSave = {};
-	currentSave = newSave;
+	setCurrentSaveToFreshState();
 
 	mapHeader = MageHeader(offset);
 	offset += mapHeader.size();
@@ -112,7 +129,7 @@ MageGameControl::MageGameControl()
 	//load the map
 	PopulateMapData(currentSave.currentMapId);
 
-	saveGameSlotLoad(currentSaveIndex);
+	readSaveFromRomIntoRam(true);
 }
 
 uint32_t MageGameControl::Size() const
@@ -175,13 +192,48 @@ uint32_t MageGameControl::Size() const
 	return size;
 }
 
-void MageGameControl::readSaveFromRomIntoRam() {
+void MageGameControl::setCurrentSaveToFreshState() {
+	MageSaveGame newSave = {};
+	newSave.scenarioDataCRC32 = scenarioDataCRC32;
+	currentSave = newSave;
+}
+
+void MageGameControl::readSaveFromRomIntoRam(
+	bool silenceErrors
+) {
 	EngineROM_ReadSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
 		(uint8_t *)&currentSave
 	);
-	// copy save ram name into current player name
+	ROM_ENDIAN_U4_BUFFER(&currentSave.scenarioDataCRC32, 1);
+	ROM_ENDIAN_U4_BUFFER(&currentSave.saveDataLength, 1);
+
+	bool scenarioIncompatible = currentSave.scenarioDataCRC32 != scenarioDataCRC32;
+	bool engineIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
+	if (
+		scenarioIncompatible
+		|| engineIncompatible
+	) {
+		std::string errorString = std::string("");
+		if (scenarioIncompatible) {
+			errorString.assign(
+				"Save data is incompatible with current\n"
+				"scenario data. Starting with fresh save."
+			);
+		}
+		if (engineIncompatible) {
+			errorString.assign(
+				"Save data is incompatible with current\n"
+				"engine version. Starting with fresh save."
+			);
+		}
+		debug_print(errorString.c_str());
+		if (!silenceErrors) {
+			MageDialog->showSaveMessageDialog(errorString);
+		}
+		setCurrentSaveToFreshState();
+	}
 	copyNameToAndFromPlayerAndSave(false);
 }
 
@@ -198,8 +250,7 @@ void MageGameControl::saveGameSlotSave() {
 
 void MageGameControl::saveGameSlotErase(uint8_t slotIndex) {
 	currentSaveIndex = slotIndex;
-	MageSaveGame blankSave = {};
-	currentSave = blankSave;
+	setCurrentSaveToFreshState();
 	saveGameSlotSave();
 }
 

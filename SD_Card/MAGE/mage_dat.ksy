@@ -5,9 +5,9 @@ seq:
   - id: identifier
     contents: MAGEGAME
   - id: crc32
-    type: str
-    size: 8
-    encoding: ASCII
+    type: u4
+  - id: dat_file_length
+    type: u4
   - id: map_offsets
     type: count_with_offsets
   - id: tileset_offsets

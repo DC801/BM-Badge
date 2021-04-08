@@ -172,18 +172,46 @@ var generateIndexAndComposite = function (scenarioData) {
 		currentOffset += item.byteLength;
 	});
 
-	var shortHash = crc32(compositeArray).toString(16).padStart(8, 0);
-	setCharsIntoDataView(
-		new DataView(compositeArray.buffer),
-		shortHash,
+	var compositeArrayDataView = new DataView(compositeArray.buffer);
+	var compositeArrayDataViewOffsetBySignature = new Uint8Array(
+		compositeArray.buffer,
+		signature.byteLength
+	);
+	var hash = crc32(compositeArrayDataViewOffsetBySignature);
+	compositeArrayDataView.setUint32(
 		8,
-		16
+		hash,
+		IS_LITTLE_ENDIAN
+	);
+	compositeArrayDataView.setUint32(
+		12,
+		compositeSize,
+		IS_LITTLE_ENDIAN
 	);
 
 	console.log(
 		'compositeArray',
 		compositeArray
 	);
-	console.log('data crc32:', shortHash);
+	var hashHex = [
+		compositeArray[8],
+		compositeArray[9],
+		compositeArray[10],
+		compositeArray[11],
+	].map(function (value) {
+		return value.toString(16).padStart(2, 0)
+	}).join('');
+	var lengthHex = [
+		compositeArray[12],
+		compositeArray[13],
+		compositeArray[14],
+		compositeArray[15],
+	].map(function (value) {
+		return value.toString(16).padStart(2, 0)
+	}).join('');
+	console.log('data crc32:', hash);
+	console.log('data crc32 hex:', hashHex);
+	console.log('data length:', compositeSize);
+	console.log('data length hex:', lengthHex);
 	return compositeArray;
 };
