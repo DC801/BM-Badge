@@ -24,6 +24,7 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
 #define HEXED_NUM_MEM_BUTTONS 4
+#define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
 
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
 #ifdef DC801_DESKTOP
@@ -86,6 +87,11 @@ private:
 	//this stores the byte addresses for the hex memory buttons:
 	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
 
+	//clipboard
+	uint8_t clipboard[sizeof(MageEntity)];
+	uint8_t clipboardLength;
+	bool isCopying;
+
 public:
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
@@ -102,7 +108,10 @@ public:
 		hexCursorLocation{0},
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
-		memAddresses{0, 1, 2, 3}
+		memAddresses{0, 1, 2, 3},
+		clipboard{0},
+		clipboardLength{1},
+		isCopying{false}
 	{};
 
 	//returns the size in RAM of the class variables.
@@ -148,6 +157,9 @@ public:
 	//This sets a char array starting at the current byte with any printable characters.
 	//The string will terminate when the first non-printable char is found.
 	void getHexStringForByte (uint8_t byte, char* outputString);
+
+	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
+	uint16_t getRenderableStringLength(uint8_t *string, uint16_t maxLength);
 
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();

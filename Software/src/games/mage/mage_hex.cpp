@@ -7,7 +7,7 @@ extern MageEntity *hackableDataAddress;
 
 uint32_t MageHexEditor::size() const
 {
-	uint32_t size = 
+	uint32_t size = (
 		sizeof(currentOp) +
 		sizeof(hexEditorState) +
 		sizeof(anyHexMovement) +
@@ -21,7 +21,11 @@ uint32_t MageHexEditor::size() const
 		sizeof(hexCursorLocation) +
 		sizeof(previousPageButtonState) +
 		sizeof(lastPageButtonPressTime) +
-		sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS;
+		(sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS) +
+		sizeof(MageEntity) + // clipboard
+		sizeof(clipboardLength) +
+		sizeof(isCopying)
+	);
 	return size;
 }
 
@@ -36,15 +40,9 @@ bool MageHexEditor::getHexDialogState()
 }
 uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 {
-	if(index < HEXED_NUM_MEM_BUTTONS)
-	{
-		return memAddresses[index];
-	}
-	else
-	{
-		return memAddresses[0];
-	}
-	
+	return index < HEXED_NUM_MEM_BUTTONS
+		? memAddresses[index]
+		: memAddresses[0];
 }
 
 void MageHexEditor::toggleHexEditor()
@@ -143,29 +141,22 @@ void MageHexEditor::applyHexModeInputs()
 	) {
 		return;
 	}
-
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
 	if (EngineInput_Activated.hax) { toggleHexEditor(); }
 
 	//debounce timer check.
-	if (!hexTickDelay)
-	{
+	if (!hexTickDelay) {
 		anyHexMovement = (
 			EngineInput_Buttons.ljoy_left ||
 			EngineInput_Buttons.ljoy_right ||
 			EngineInput_Buttons.ljoy_up ||
-			EngineInput_Buttons.ljoy_down ||
-			EngineInput_Buttons.rjoy_left ||
-			EngineInput_Buttons.rjoy_right ||
-			EngineInput_Buttons.rjoy_up ||
-			EngineInput_Buttons.rjoy_down
+			EngineInput_Buttons.ljoy_down
 		);
-		if (EngineInput_Buttons.op_page)
-		{
+		if (EngineInput_Buttons.op_page) {
 			//reset last press time only when the page button switches from unpressed to pressed
-			if(!previousPageButtonState)
-			{
+			if(!previousPageButtonState) {
 				lastPageButtonPressTime = millis();
 			}
 			//change the state to show the button has been pressed.
@@ -174,40 +165,30 @@ void MageHexEditor::applyHexModeInputs()
 			//check to see if there is any directional button action while the page button is pressed
 			if (
 				EngineInput_Buttons.ljoy_up
-				|| EngineInput_Buttons.rjoy_up
 				|| EngineInput_Buttons.ljoy_left
-				|| EngineInput_Buttons.rjoy_left
-			)
-			{
+			) {
 				currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
 			}
 			if (
 				EngineInput_Buttons.ljoy_down
-				|| EngineInput_Buttons.rjoy_down
 				|| EngineInput_Buttons.ljoy_right
-				|| EngineInput_Buttons.rjoy_right
-			)
-			{
+			) {
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
 		}
 		else
 		{
 			//check for memory button presses:
-			if(EngineInput_Activated.mem0 && getHexEditorState())
-			{
+			if(EngineInput_Activated.mem0 && getHexEditorState()) {
 				memAddresses[0] = hexCursorLocation;
 			}
-			if(EngineInput_Activated.mem1 && getHexEditorState())
-			{
+			if(EngineInput_Activated.mem1 && getHexEditorState()) {
 				memAddresses[1] = hexCursorLocation;
 			}
-			if(EngineInput_Activated.mem2 && getHexEditorState())
-			{
+			if(EngineInput_Activated.mem2 && getHexEditorState()) {
 				memAddresses[2] = hexCursorLocation;
 			}
-			if(EngineInput_Activated.mem3 && getHexEditorState())
-			{
+			if(EngineInput_Activated.mem3 && getHexEditorState()) {
 				memAddresses[3] = hexCursorLocation;
 			}
 
@@ -215,8 +196,7 @@ void MageHexEditor::applyHexModeInputs()
 			if(
 				(previousPageButtonState) && 
 				((millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
-			)
-			{
+			) {
 				//if the page button was pressed and then released fast enough, advance one page.
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
@@ -224,33 +204,70 @@ void MageHexEditor::applyHexModeInputs()
 			previousPageButtonState = false;
 
 			//check directional inputs and move cursor.
-			if (EngineInput_Buttons.ljoy_left || EngineInput_Buttons.rjoy_left)
-			{
-				//move the cursor left:
-				hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
-				//change the current page to wherever the cursor is:
-				setPageToCursorLocation();
+			if(
+				!EngineInput_Buttons.rjoy_right // not if in multi-byte selection mode
+			) {
+				if (EngineInput_Buttons.ljoy_left) {
+					//move the cursor left:
+					hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
+					//change the current page to wherever the cursor is:
+					setPageToCursorLocation();
+				}
+				if (EngineInput_Buttons.ljoy_right) {
+					//move the cursor right:
+					hexCursorLocation = (hexCursorLocation + 1) % memTotal;
+					//change the current page to wherever the cursor is:
+					setPageToCursorLocation();
+				}
+				if (EngineInput_Buttons.ljoy_up) {
+					//move the cursor up:
+					hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
+					//change the current page to wherever the cursor is:
+					setPageToCursorLocation();
+				}
+				if (EngineInput_Buttons.ljoy_down) {
+					//move the cursor down:
+					hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
+					//change the current page to wherever the cursor is:
+					setPageToCursorLocation();
+				}
 			}
-			if (EngineInput_Buttons.ljoy_right || EngineInput_Buttons.rjoy_right)
-			{
-				//move the cursor right:
-				hexCursorLocation = (hexCursorLocation + 1) % memTotal;
-				//change the current page to wherever the cursor is:
-				setPageToCursorLocation();
+			if (EngineInput_Buttons.rjoy_up) {
+				//decrement the value
+				*currentByte += 1;
 			}
-			if (EngineInput_Buttons.ljoy_up || EngineInput_Buttons.rjoy_up)
-			{
-				//move the cursor up:
-				hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
-				//change the current page to wherever the cursor is:
-				setPageToCursorLocation();
+			if (EngineInput_Buttons.rjoy_down) {
+				//decrement the value
+				*currentByte -= 1;
 			}
-			if (EngineInput_Buttons.ljoy_down || EngineInput_Buttons.rjoy_down)
-			{
-				//move the cursor down:
-				hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
-				//change the current page to wherever the cursor is:
-				setPageToCursorLocation();
+			if (EngineInput_Activated.rjoy_right) {
+				//copy
+				clipboardLength = 1;
+				isCopying = true;
+			}
+			if (!EngineInput_Buttons.rjoy_right) {
+				isCopying = false;
+			}
+			if (EngineInput_Buttons.rjoy_right) {
+				if (EngineInput_Buttons.ljoy_left) {
+					clipboardLength = MAX((uint8_t) 1, clipboardLength - 1);
+				}
+				if (EngineInput_Buttons.ljoy_right) {
+					clipboardLength = MIN((uint8_t) sizeof(MageEntity), clipboardLength + 1);
+				}
+				memcpy(
+					clipboard,
+					currentByte,
+					clipboardLength
+				);
+			}
+			if (EngineInput_Buttons.rjoy_left) {
+				//paste
+				memcpy(
+					currentByte,
+					clipboard,
+					clipboardLength
+				);
 			}
 		}
 		if (anyHexMovement) {
@@ -269,13 +286,38 @@ void MageHexEditor::getHexStringForByte (uint8_t byte, char* outputString)
 	sprintf(outputString,"%02X", byte);
 }
 
+uint16_t MageHexEditor::getRenderableStringLength(uint8_t *bytes, uint16_t maxLength) {
+	uint16_t offset = 0;
+	uint16_t renderableLength = 0;
+	uint8_t currentByte = bytes[0];
+	while (
+		currentByte != 0 &&
+		offset < maxLength
+	) {
+		offset++;
+		currentByte = bytes[renderableLength];
+		if(
+			currentByte >= 32 &&
+			currentByte < 128
+		) {
+			renderableLength++;
+		}
+	}
+	return renderableLength;
+}
+
 void MageHexEditor::renderHexHeader()
 {
 	char headerString[128];
+	char clipboardString[16];
+	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
+	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress + hexCursorLocation;
+	uint8_t u1Value = *currentByteAddress;
+	uint16_t u2Value = *(uint16_t *) ((currentByteAddress - (hexCursorLocation % 2)));
 	sprintf(
 		headerString,
-		"CurrentPage: %03u              CurrentByte: 0x%04x\n"
-		    "TotalPages:  %03u   Entities: %05u    Mem: 0x%04x",
+		"CurrentPage: %03u              CurrentByte: 0x%04X\n"
+			"TotalPages:  %03u   Entities: %05u    Mem: 0x%04X",
 		currentMemPage,
 		hexCursorLocation,
 		totalMemPages,
@@ -289,15 +331,48 @@ void MageHexEditor::renderHexHeader()
 		HEXED_BYTE_OFFSET_X,
 		0
 	);
-	uint16_t u2Value = *(uint16_t *) ((uint8_t *) hackableDataAddress + (hexCursorLocation - (hexCursorLocation % 2)));
+	for (
+		uint8_t i = 0;
+		i < MIN((uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH, clipboardLength);
+		i++
+	) {
+		sprintf(
+			clipboardString + (i * 2),
+			"%02X",
+			*(clipboard + i)
+		);
+	}
+	if(clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
+		sprintf(
+			clipboardString + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
+			"..."
+		);
+	}
+	memcpy(
+		stringPreview,
+		(uint8_t *) hackableDataAddress + hexCursorLocation,
+		MAGE_ENTITY_NAME_LENGTH
+	);
+	uint16_t stringPreviewLength = getRenderableStringLength(
+		(uint8_t *) stringPreview,
+		MAGE_ENTITY_NAME_LENGTH
+	);
+	// add spaces for padding at the end of the string preview so clipboard stays put
+	for (int i = stringPreviewLength; i < MAGE_ENTITY_NAME_LENGTH; i++) {
+		sprintf(
+			stringPreview + i,
+			" \0"
+		);
+	}
 	sprintf(
 		headerString,
-		"%s | uint8: %03d | uint16: %05d\n"
-		"string output: %s",
+		"%s | uint8: %03d  | uint16: %05d\n"
+		"string output: %s | CP: 0x%s",
 		endian_label,
-		*((uint8_t *) hackableDataAddress + hexCursorLocation),
+		u1Value,
 		u2Value,
-		(uint8_t *) hackableDataAddress + hexCursorLocation
+		stringPreview,
+		clipboardString
 	);
 	mage_canvas->printMessage(
 		headerString,
@@ -318,8 +393,20 @@ void MageHexEditor::renderHexEditor()
 			(hexCursorLocation % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
 			HEXED_BYTE_WIDTH,
 			HEXED_BYTE_HEIGHT,
-			0x38ff
+			0x38FF
 		);
+		if (isCopying) {
+			for (uint8_t i = 1; i < clipboardLength; i++) {
+				uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
+				mage_canvas->fillRect(
+					(copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
+					(copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
+					HEXED_BYTE_WIDTH,
+					HEXED_BYTE_HEIGHT,
+					0x00EE
+				);
+			}
+		}
 	}
 	renderHexHeader();
 	for(
