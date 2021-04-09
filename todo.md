@@ -268,6 +268,7 @@
 	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
 - [ ] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
 	- [ ] To fix, LoadMap should set fadeFraction to 0
+- [x] Fix the ???Mystery Sink??? in the player's house?!?
 - [x] Re-do the handling of the right side buttons when in the HexEditor
 	- [x] Create Clipboard system
 		- [x] Create a buffer that is sizeof(MageEntity)

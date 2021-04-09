@@ -16,7 +16,7 @@
          "name":"Tile Layer 1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":24,
          "x":0,
          "y":0
@@ -28,7 +28,7 @@
          "name":"Tile Layer 2",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":24,
          "x":0,
          "y":0
@@ -472,24 +472,6 @@
                  "width":320,
                  "x":410.5,
                  "y":44
-                }, 
-                {
-                 "gid":438,
-                 "height":32,
-                 "id":40,
-                 "name":"Sink",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-sink"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":376,
-                 "y":130
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -504,7 +486,7 @@
          "name":"Tile Layer 3",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":24,
          "x":0,
          "y":0
