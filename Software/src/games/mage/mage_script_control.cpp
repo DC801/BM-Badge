@@ -2095,12 +2095,12 @@ float MageScriptControl::manageProgressOfAction(
 	MageScriptState *resumeStateStruct,
 	uint32_t duration
 ) const {
+	resumeStateStruct->loopsToNextAction--;
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		uint16_t totalDelayLoops = duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
 	}
-	resumeStateStruct->loopsToNextAction--;
 	float result = 1.0f - (
 		(float)resumeStateStruct->loopsToNextAction
 		/ (float)resumeStateStruct->totalLoopsToNextAction
@@ -2239,13 +2239,6 @@ void MageScriptControl::setEntityPositionToPoint(
 
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 {
-	//since this should only run once when a map is loaded, and then proceed through the script once,
-	//we only need to check the isFirstRun argument to see if we should initialize based on the
-	//map's onLoad mapLocalScriptId or if we should resume from the state of the mapLoadResumeState struct.
-	if(isFirstRun)
-	{
-		initScriptState(&mapLoadResumeState, MageGame->Map().getMapLocalMapOnLoadScriptId(), true);
-	}
 	//this checks to see if the map onLoad script is complete and returns if it is:
 	if(!mapLoadResumeState.scriptIsRunning)
 	{

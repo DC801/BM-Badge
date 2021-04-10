@@ -17,6 +17,12 @@
 			"geometry": "center"
 		},
 		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 1200,
+			"color": "#000000",
+			"doc": "@8fps, 125ms was required to avoid black screen; for 24 fps, 40 was black, 50 was okay"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-main_menu"
 		}
@@ -32,20 +38,6 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "credits-from-menu",
 			"bool_value": false
-		},
-		{
-			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
-			"geometry": "center"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
-		},
-		{
-			"action": "SCREEN_FADE_IN",
-			"duration": 1200,
-			"color": "#000000",
-			"doc": "@8fps, 125ms was required to avoid black screen; for 24 fps, 40 was black, 50 was okay"
 		},
 		{
 			"action": "RUN_SCRIPT",
