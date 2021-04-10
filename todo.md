@@ -266,8 +266,8 @@
 - [ ] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
 - [x] NewGnu tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
 	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
-- [ ] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
-	- [ ] To fix, LoadMap should set fadeFraction to 0
+- [x] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
+	- [x] To fix, LoadMap should set fadeFraction to 0
 - [x] Fix the ???Mystery Sink??? in the player's house?!?
 - [x] Re-do the handling of the right side buttons when in the HexEditor
 	- [x] Create Clipboard system
