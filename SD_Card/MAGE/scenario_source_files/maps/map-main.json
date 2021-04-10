@@ -58,8 +58,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":828,
-                 "y":974
+                 "x":1077,
+                 "y":789
                 }, 
                 {
                  "gid":260,
@@ -666,24 +666,6 @@
                  "y":736
                 }, 
                 {
-                 "gid":1190,
-                 "height":32,
-                 "id":254,
-                 "name":"Debug Exa",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-walk-to-lodge-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":1340,
-                 "y":1211
-                }, 
-                {
                  "gid":1195,
                  "height":16,
                  "id":261,
@@ -789,40 +771,51 @@
                  "y":928
                 }, 
                 {
-                 "gid":1176,
+                 "gid":1327,
                  "height":32,
-                 "id":196,
-                 "name":"Chaos Fish",
+                 "id":304,
+                 "name":"MessageBoard",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"show_dialog-messageboard"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":976,
-                 "y":151
-                }, 
+                 "x":1089,
+                 "y":947
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":9,
+         "name":"exas",
+         "objects":[
                 {
-                 "gid":1176,
+                 "gid":1190,
                  "height":32,
-                 "id":262,
-                 "name":"Credits Fish",
+                 "id":254,
+                 "name":"Debug Exa",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-roll-credits-q"
+                         "value":"debug-walk-to-lodge-q"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":927,
-                 "y":512
+                 "x":1340,
+                 "y":1211
                 }, 
                 {
                  "gid":1190,
@@ -841,24 +834,6 @@
                  "width":32,
                  "x":889,
                  "y":577
-                }, 
-                {
-                 "gid":1190,
-                 "height":32,
-                 "id":255,
-                 "name":"Debug Exa 2",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-win-rake-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":899,
-                 "y":1296
                 }, 
                 {
                  "gid":1190,
@@ -933,37 +908,62 @@
                  "y":507
                 }, 
                 {
-                 "height":20,
-                 "id":279,
-                 "name":"cat-watch-box",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":26,
-                 "x":1316,
-                 "y":794
-                }, 
-                {
-                 "gid":1327,
+                 "gid":1176,
                  "height":32,
-                 "id":304,
-                 "name":"MessageBoard",
+                 "id":196,
+                 "name":"Chaos Fish",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-messageboard"
+                         "value":"debug-hub-q"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":1089,
-                 "y":947
+                 "x":976,
+                 "y":151
+                }, 
+                {
+                 "gid":1176,
+                 "height":32,
+                 "id":262,
+                 "name":"Credits Fish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-roll-credits-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":927,
+                 "y":512
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":255,
+                 "name":"Debug Exa 2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-win-rake-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":899,
+                 "y":1296
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -2001,10 +2001,21 @@
                  "width":0,
                  "x":1185,
                  "y":525
+                }, 
+                {
+                 "height":20,
+                 "id":279,
+                 "name":"cat-watch-box",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26,
+                 "x":1316,
+                 "y":794
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -2405,11 +2416,11 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
+ "nextlayerid":10,
  "nextobjectid":305,
  "orientation":"orthogonal",
  "properties":[

@@ -8,7 +8,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-glitched-lesson-intro"
+			"dialog": "dialog-verthandi-glitched-lesson-intro",
+			"doc": "oh! It looks like you'd like a lesson!"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -30,13 +31,15 @@
 	"show_dialog-verthandi-glitched-q": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-glitched-q"
+			"dialog": "dialog-verthandi-glitched-q",
+			"doc": "Would you like to hear the lesson again? Q"
 		}
 	],
 	"show_dialog-verthandi-glitched-lesson": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-glitched-lesson"
+			"dialog": "dialog-verthandi-glitched-lesson",
+			"doc": "Our physical appearance is superficial / body and soul / etc"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -51,7 +54,8 @@
 	"show_dialog-verthandi-glitched-s": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-glitched-s"
+			"dialog": "dialog-verthandi-glitched-s",
+			"doc": "I might be glitched for now, but I'll return to normal soon!"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -61,7 +65,8 @@
 	"show_dialog-verthandi-end": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-end"
+			"dialog": "dialog-verthandi-end",
+			"doc": "Thank you for everything you've done!"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -330,7 +335,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-backstory-intro"
+			"dialog": "dialog-verthandi-backstory-intro",
+			"doc": "Some time ago, the Big Bad brought chaos...."
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -346,7 +352,8 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-backstory-goatsfine"
+			"dialog": "dialog-verthandi-backstory-goatsfine",
+			"doc": "These goats are back to normal, but"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -359,6 +366,15 @@
 			"bool_value": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "verthandi-wrapup"
 		}
@@ -366,11 +382,21 @@
 	"show_dialog-verthandi-backstory-goatsnotfine": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-backstory-goatsnotfine"
+			"dialog": "dialog-verthandi-backstory-goatsnotfine",
+			"doc": "These baby goats were among his victims"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "verthandi-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
 			"bool_value": true
 		},
 		{
@@ -387,7 +413,13 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-glitches-solved-now"
+			"dialog": "dialog-verthandi-glitches-solved-now",
+			"doc": "You've restored everyone! Oh, thank you!"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -413,7 +445,13 @@
 	"show_dialog-verthandi-noglitches-surprise": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-noglitches-surprise"
+			"dialog": "dialog-verthandi-noglitches-surprise",
+			"doc": "Oh! It appears you've already restored"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -456,17 +494,97 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-current-glitch-count"
+			"dialog": "dialog-verthandi-current-glitch-count",
+			"doc": "I can hear the cries of XX glitched souls...!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "timmy-unglitched",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-lodge-glitch-hint"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "lodge_cat-unglitched",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-lodge-glitch-hint"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "main_hamster-unglitched",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-map_main-glitch-hint"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "fountain-unglitched",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-map_main-glitch-hint"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goldfish-unglitched",
+			"expected_bool": false,
+			"success_script": "show_dialog-verthandi-magehouse-glitch-hint"
 		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "verthandi-wrapup"
 		}
 	],
+	"show_dialog-verthandi-lodge-glitch-hint": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-lodge-glitch-hint"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}	
+	],
+	"show_dialog-verthandi-map_main-glitch-hint": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-map_main-glitch-hint"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}	
+	],
+	"show_dialog-verthandi-magehouse-glitch-hint": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-verthandi-magehouse-glitch-hint"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "verthandi-wrapup"
+		}	
+	],
 	"show_dialog-verthandi-s-goatsnotfine": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-verthandi-s-goatsnotfine"
+			"dialog": "dialog-verthandi-s-goatsnotfine",
+			"doc": "oh, won't you help the goats?"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -486,11 +604,20 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-verthandi-goats-solved-now",
-			"dog": "[etc] but there is more yet to unglitch"
+			"dog": "Oh! You've restored the goats! but there is more yet to unglitch"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "goats-both-unglitched",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
 			"bool_value": true
 		},
 		{
@@ -524,6 +651,34 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-goat-glitched"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "goats-glitchhint-eval"
+		}
+	],
+	"goats-glitchhint-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "goats-both-unglitched",
+			"expected_bool": false,
+			"success_script": "goats-hint-yes"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-goat"
+		}
+	],
+	"goats-hint-yes": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

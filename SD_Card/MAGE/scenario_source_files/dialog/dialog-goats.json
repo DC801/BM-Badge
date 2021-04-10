@@ -148,6 +148,33 @@
 			]
 		}
 	],
+	"dialog-verthandi-lodge-glitch-hint": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Perhaps... somewhere in the great library?"
+			]
+		}
+	],
+	"dialog-verthandi-map_main-glitch-hint": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Perhaps... somewhere outdoors?"
+			]
+		}
+	],
+	"dialog-verthandi-magehouse-glitch-hint": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Perhaps... somewhere in your home?"
+			]
+		}
+	],
 	"dialog-goat": [
 		{
 			"alignment": "BOTTOM_LEFT",
