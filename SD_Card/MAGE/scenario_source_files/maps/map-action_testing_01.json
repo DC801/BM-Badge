@@ -500,8 +500,8 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
-                        }, 
+                         "value":"mage21-interact-a"
+                        },
                         {
                          "name":"on_tick",
                          "type":"string",

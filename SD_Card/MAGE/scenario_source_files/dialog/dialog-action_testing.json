@@ -537,5 +537,23 @@
 				"GAME OVER"
 			]
 		}
+	],
+	"dialog-mage21-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have disabled your ability to clipboard.\nTalk to me again to re-enable hex clipboard."
+			]
+		}
+	],
+	"dialog-mage21-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have enabled your ability to clipboard.\nTalk to me again to disable hex clipboard."
+			]
+		}
 	]
 }

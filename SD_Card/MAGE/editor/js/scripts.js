@@ -297,6 +297,9 @@ var actionFieldsMap = {
 	SET_HEX_EDITOR_CONTROL: [
 		{propertyName: 'bool_value', size: 1},
 	],
+	SET_HEX_EDITOR_CONTROL_CLIPBOARD: [
+		{propertyName: 'bool_value', size: 1},
+	],
 	LOAD_MAP: [
 		{propertyName: 'map', size: 2},
 	],
@@ -473,6 +476,7 @@ var actionNames = [
 	'SET_HEX_EDITOR_STATE',
 	'SET_HEX_EDITOR_DIALOG_MODE',
 	'SET_HEX_EDITOR_CONTROL',
+	'SET_HEX_EDITOR_CONTROL_CLIPBOARD',
 	'LOAD_MAP',
 	'SHOW_DIALOG',
 	'PLAY_ENTITY_ANIMATION',

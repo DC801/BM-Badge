@@ -125,6 +125,7 @@ MageGameControl::MageGameControl()
 	isCollisionDebugOn = false;
 	playerHasControl = true;
 	playerHasHexEditorControl = true;
+	playerHasHexEditorControlClipboard = true;
 
 	//load the map
 	PopulateMapData(currentSave.currentMapId);
