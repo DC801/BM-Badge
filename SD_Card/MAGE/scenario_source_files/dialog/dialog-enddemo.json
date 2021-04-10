@@ -241,7 +241,7 @@
 			"options": [
 				{
 					"label": "Yes",
-					"script": "debug-roll-credits"
+					"script": "roll-credits"
 				},
 				{
 					"label": "No",
@@ -271,7 +271,7 @@
 	],
 	"dialog-timmy-demobonus2": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "%SELF%",
 			"messages": [
 				"There's this weird extra page in my book!"
@@ -280,7 +280,7 @@
 	],
 	"dialog-hexeditor-bonus": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"name": "Hex Editing",
 			"portrait": "parchment",
 			"messages": [
@@ -293,7 +293,7 @@
 	],
 	"dialog-timmy-demobonus-s": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "%SELF%",
 			"messages": [
 				"Oh! I think I've heard of Clippy Bird! My\nuncle let me play it on his phone this one\ntime, ages ago.",

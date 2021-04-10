@@ -732,7 +732,7 @@
 		},
 {
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 100
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -741,7 +741,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 600
+			"duration": 500
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -755,7 +755,7 @@
 		},
 {
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 100
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -764,7 +764,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 600
+			"duration": 500
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",

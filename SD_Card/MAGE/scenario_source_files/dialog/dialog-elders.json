@@ -83,7 +83,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Baker.",
-				"Baker is busy. He has trouble with customer."
+				"Baker is busy. He has trouble with\ncustomer."
 			]
 		}
 	],
