@@ -287,6 +287,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-shepherd": [
@@ -298,6 +307,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-bender": [
@@ -309,6 +327,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bender-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-baker": [
@@ -320,6 +347,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-bobmoss": [
@@ -351,6 +387,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea1-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-trekkie": [
@@ -362,6 +407,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "trekkie-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-sportskid": [
@@ -373,6 +427,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "sportskid-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-delmar2": [
@@ -384,6 +447,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "bea2-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-goose": [
@@ -395,6 +467,15 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
 			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "rake-hint",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bert-verthandi": [
@@ -405,8 +486,16 @@
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Bert",
-			"script": "show_dialog-bert-start",
-			"doc": "UPDATE POINT"
+			"script": "show_dialog-bert-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": true
 		}
 	],
 	"set-hint-flags-false": [

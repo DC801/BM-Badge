@@ -6,6 +6,124 @@
 			"geometry": "door-greenhouse",
 			"success_script": "leave-greenhouse",
 			"expected_bool": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "ethernettle-uproot-check"
+		}
+	],
+	"ethernettle-uproot-check": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle1",
+			"geometry": "EtherNettle1Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle2",
+			"geometry": "EtherNettle2Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle3",
+			"geometry": "EtherNettle3Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle4",
+			"geometry": "EtherNettle4Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle5",
+			"geometry": "EtherNettle5Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle6",
+			"geometry": "EtherNettle6Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle7",
+			"geometry": "EtherNettle7Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "EtherNettle8",
+			"geometry": "EtherNettle8Origin",
+			"success_script": "show_dialog-no_uproot_ethernettle",
+			"expected_bool": false
+		}
+	],
+	"show_dialog-no_uproot_ethernettle": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-no_uproot_ethernettle"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "reposition-ethernettle"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-greenhouse"
+		}
+	],
+	"reposition-ethernettle": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle1",
+			"geometry": "EtherNettle1Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle2",
+			"geometry": "EtherNettle2Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle3",
+			"geometry": "EtherNettle3Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle4",
+			"geometry": "EtherNettle4Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle5",
+			"geometry": "EtherNettle5Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle6",
+			"geometry": "EtherNettle6Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle7",
+			"geometry": "EtherNettle7Origin"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "EtherNettle8",
+			"geometry": "EtherNettle8Origin"
 		}
 	],
 	"leave-greenhouse": [
@@ -197,18 +315,18 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "north"
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Modem"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 900
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -232,9 +350,9 @@
 			"duration": 100
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "north"
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Modem"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -355,7 +473,12 @@
 	"show_dialog-trekkie-ethernettle-success": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "%SELF%",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
 			"target_entity": "Modem"
 		},
 		{
@@ -376,9 +499,9 @@
 			"duration": 200
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -386,7 +509,7 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "%SELF%",
 			"target_entity": "Modem"
 		},
 		{
@@ -407,12 +530,22 @@
 			"script": "face-player"
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "%SELF%"
+		},
+		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "%PLAYER%",
+			"target_entity": "Modem"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
 			"target_entity": "Modem"
 		},
 		{
@@ -465,17 +598,26 @@
 			"duration": 800
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "%SELF%"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 900
+			"duration": 150
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 750
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "%SELF%",
 			"target_entity": "Modem"
 		},
 		{
@@ -483,9 +625,9 @@
 			"duration": 600
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -501,9 +643,9 @@
 			"doc": "PLAYER did it!"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -606,7 +748,7 @@
 	"show_dialog-trekkie-end-s": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Trekkie",
+			"entity": "%SELF%",
 			"target_entity": "%PLAYER%"
 		},
 		{
@@ -615,9 +757,9 @@
 			"doc": "So what's the internet for, anyway?"
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "Trekkie",
-			"direction": "east"
+			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+			"entity": "%SELF%",
+			"target_geometry": "Computer"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -777,31 +919,6 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-ethernettle-start"
-		}
-	],
-	"no_uproot_ethernettle": [
-		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%",
-			"success_script": "show_dialog-no_uproot_ethernettle",
-			"expected_bool": false
-		}
-	],
-	"show_dialog-no_uproot_ethernettle": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-no_uproot_ethernettle"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "%SELF%",
-			"geometry": "%ENTITY_PATH%"
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%SELF%",
-			"script": "no_uproot_ethernettle"
 		}
 	]
 }

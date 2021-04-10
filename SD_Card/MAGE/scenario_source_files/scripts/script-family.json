@@ -77,6 +77,11 @@
 			"dialog": "dialog-kid-glitched"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-kid"
@@ -86,6 +91,11 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-kid-ball"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

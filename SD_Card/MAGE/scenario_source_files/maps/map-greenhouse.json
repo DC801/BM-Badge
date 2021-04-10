@@ -22,7 +22,7 @@
          "y":0
         }, 
         {
-         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 228, 0, 0, 0, 0, 0, 0, 0, 0, 6, 46, 0, 0, 0, 0, 236, 0, 0, 0, 0, 45, 165, 0, 0, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 23, 0, 0, 2147483661, 2147483661, 0, 2147483661, 0, 13, 13, 13, 228, 0, 0, 0, 31, 0, 44, 0, 0, 0, 0, 0, 0, 0, 1073741854, 236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 228, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 236, 0, 0, 0, 0, 0, 0, 0, 0, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 23, 0, 0, 2147483661, 2147483661, 0, 2147483661, 0, 13, 13, 13, 228, 0, 0, 0, 31, 0, 44, 0, 0, 0, 0, 0, 0, 0, 1073741854, 236, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":9,
          "id":3,
          "name":"Tile Layer 2",
@@ -88,12 +88,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":29
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -116,12 +111,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":28
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -144,12 +134,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":30
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -172,12 +157,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":31
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -200,12 +180,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":32
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -228,12 +203,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":33
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -256,12 +226,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":34
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -284,12 +249,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"no_uproot_ethernettle"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":35
+                         "value":""
                         }],
                  "rotation":0,
                  "type":"",
@@ -349,60 +309,6 @@
                 {
                  "gid":336,
                  "height":32,
-                 "id":22,
-                 "name":"Mulch",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-mulch"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":417,
-                 "y":126
-                }, 
-                {
-                 "gid":336,
-                 "height":32,
-                 "id":23,
-                 "name":"Tumbleweed",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-tumbleweed"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":65,
-                 "y":124
-                }, 
-                {
-                 "gid":336,
-                 "height":32,
-                 "id":24,
-                 "name":"Ethernet",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-ethernet"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":384,
-                 "y":125
-                }, 
-                {
-                 "gid":336,
-                 "height":32,
                  "id":25,
                  "name":"Barrel",
                  "properties":[
@@ -415,8 +321,80 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":224,
-                 "y":114
+                 "x":225,
+                 "y":112
+                }, 
+                {
+                 "gid":46,
+                 "height":32,
+                 "id":36,
+                 "name":"Tumbleweed",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-tumbleweed"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":64,
+                 "y":119
+                }, 
+                {
+                 "gid":45,
+                 "height":32,
+                 "id":37,
+                 "name":"Ethernet",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-ethernet"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":118
+                }, 
+                {
+                 "gid":165,
+                 "height":32,
+                 "id":38,
+                 "name":"Mulch",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-mulch"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":383,
+                 "y":112
+                }, 
+                {
+                 "gid":336,
+                 "height":32,
+                 "id":39,
+                 "name":"Barrel ",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-greenhouse-barrel"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":416,
+                 "y":211
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -443,7 +421,7 @@
                 {
                  "height":0,
                  "id":17,
-                 "name":"computer",
+                 "name":"Computer",
                  "point":true,
                  "rotation":0,
                  "type":"",
@@ -451,24 +429,6 @@
                  "width":0,
                  "x":82.084,
                  "y":171.15068
-                }, 
-                {
-                 "gid":336,
-                 "height":32,
-                 "id":26,
-                 "name":"Barrel ",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-greenhouse-barrel"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":416,
-                 "y":210
                 }, 
                 {
                  "height":0,
@@ -585,7 +545,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":36,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "properties":[
         {

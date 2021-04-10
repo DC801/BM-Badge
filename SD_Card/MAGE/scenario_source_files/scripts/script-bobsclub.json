@@ -1202,11 +1202,6 @@
 			"entity": "Strong Bad",
 			"animation": 4,
 			"play_count": 1
-		},
-		{
-			"action": "SET_ENTITY_CURRENT_ANIMATION",
-			"entity": "Strong Bad",
-			"byte_value": 0
 		}
 	],
 	"debug-begin-flail": [

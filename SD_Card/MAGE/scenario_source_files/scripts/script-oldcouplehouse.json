@@ -19,7 +19,7 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "debug-mode",
 			"expected_bool": false,
-			"success_script": "oldcouplehouse-sequel-check"
+			"success_script": "hide-debug-oldcouplehouse"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -30,7 +30,7 @@
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Debug Exa",
-			"geometry": "oldcouplehouse-hidingspot"
+			"geometry": "oldcouplehouse-hidingplace"
 		},
 		{
 			"action": "RUN_SCRIPT",
