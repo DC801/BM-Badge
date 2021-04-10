@@ -1,112 +1,112 @@
 {
 	"alfonso": {
-		"tileset": "entity-alfonso-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
-				"flip_x": true
-			}
-		}
-	},
-	"baby_goat": {
-		"tileset": "entity-baby_goat-portrait.json",
-		"emotes": {
-			"default": {
-				"tileid": 0,
-				"flip_x": true
-			}
-		}
-	},
-	"baker": {
-		"tileset": "entity-baker-portrait.json",
-		"emotes": {
-			"default": {
-				"tileid": 0,
-				"flip_x": true
-			}
-		}
-	},
-	"bender": {
-		"tileset": "entity-bender-portrait.json",
-		"emotes": {
-			"default": {
-				"tileid": 0,
-				"flip_x": true
-			},
-			"laugh": {
 				"tileid": 1,
 				"flip_x": true
 			}
 		}
 	},
-	"bert": {
-		"tileset": "entity-bert-portrait.json",
+	"baby_goat": {
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 8,
+				"flip_x": true
+			}
+		}
+	},
+	"baker": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 15,
+				"flip_x": true
+			}
+		}
+	},
+	"bender": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 21,
+				"flip_x": true
+			},
+			"laugh": {
+				"tileid": 22,
+				"flip_x": true
+			}
+		}
+	},
+	"bert": {
+		"tileset": "portraits-people.json",
+		"emotes": {
+			"default": {
+				"tileid": 2,
 				"flip_x": true
 			}
 		}
 	},
 	"blacksmith": {
-		"tileset": "entity-blacksmith-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 6,
 				"flip_x": true
 			}
 		}
 	},
 	"blitzball": {
-		"tileset": "entity-blitzball-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 1,
 				"flip_x": true
 			}
 		}
 	},
 	"bmurray": {
-		"tileset": "entity-bmurray-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 11,
 				"flip_x": true
 			}
 		}
 	},
 	"bob": {
-		"tileset": "entity-bob-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 19,
 				"flip_x": true
 			}
 		}
 	},
 	"bobmoss": {
-		"tileset": "entity-bobmoss-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 1,
 				"flip_x": true
 			}
 		}
 	},
 	"bookcase": {
-		"tileset": "entity-bookcase-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 3,
 				"flip_x": true
 			}
 		}
 	},
 	"cleo": {
-		"tileset": "entity-cleo-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 8,
 				"flip_x": true
 			}
 		}
@@ -148,70 +148,70 @@
 		}
 	},
 	"deut": {
-		"tileset": "entity-deut-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 10,
 				"flip_x": true
 			}
 		}
 	},
 	"dragon_skull": {
-		"tileset": "entity-dragon_skull-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 5,
 				"flip_x": true
 			}
 		}
 	},
 	"exa": {
-		"tileset": "entity-exa-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 6,
 				"flip_x": true
 			}
 		}
 	},
 	"eye_faerie": {
-		"tileset": "entity-eye_faerie-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 2,
 				"flip_x": true
 			}
 		}
 	},
 	"felix": {
-		"tileset": "entity-felix-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 12,
 				"flip_x": true
 			}
 		}
 	},
 	"floppy": {
-		"tileset": "entity-floppy-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 7,
 				"flip_x": false
 			}
 		}
 	},
 	"goldfish": {
-		"tileset": "entity-goldfish-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 13,
 				"flip_x": true
 			}
 		}
 	},
 	"golem": {
-		"tileset": "entity-golem-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
 				"tileid": 0,
@@ -220,34 +220,34 @@
 		}
 	},
 	"goose": {
-		"tileset": "entity-goose-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 7,
 				"flip_x": true
 			}
 		}
 	},
 	"hamster": {
-		"tileset": "entity-hamster-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 12,
 				"flip_x": true
 			}
 		}
 	},
 	"helga": {
-		"tileset": "entity-helga-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 10,
 				"flip_x": true
 			}
 		}
 	},
 	"journal": {
-		"tileset": "entity-journal-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
 				"tileid": 0,
@@ -265,160 +265,160 @@
 		}
 	},
 	"lightning_boy": {
-		"tileset": "entity-lightning_boy-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 3,
 				"flip_x": true
 			}
 		}
 	},
 	"lightning_boy2": {
-		"tileset": "entity-lightning_boy2-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 4,
 				"flip_x": true
 			}
 		}
 	},
 	"mage": {
-		"tileset": "entity-mage-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 16,
 				"flip_x": true
 			}
 		}
 	},
 	"marta": {
-		"tileset": "entity-marta-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 4,
 				"flip_x": true
 			}
 		}
 	},
 	"maru": {
-		"tileset": "entity-maru-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 9,
 				"flip_x": true
 			}
 		}
 	},
 	"modem": {
-		"tileset": "entity-modem-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 5,
 				"flip_x": true
 			}
 		}
 	},
 	"old_lady": {
-		"tileset": "entity-old_lady-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 14,
 				"flip_x": true
 			}
 		}
 	},
 	"old_man": {
-		"tileset": "entity-old_man-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 13,
 				"flip_x": true
 			}
 		}
 	},
 	"pipscat": {
-		"tileset": "entity-pipscat-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 11,
 				"flip_x": false
 			}
 		}
 	},
 	"rake": {
-		"tileset": "entity-rake-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 4,
 				"flip_x": true
 			}
 		}
 	},
 	"sheep": {
-		"tileset": "entity-sheep-portrait.json",
+		"tileset": "portraits-nonhuman.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 9,
 				"flip_x": true
 			}
 		}
 	},
 	"sports_kid": {
-		"tileset": "entity-sports_kid-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 5,
 				"flip_x": true
 			}
 		}
 	},
 	"ssen": {
-		"tileset": "entity-ssen-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 7,
 				"flip_x": true
 			}
 		}
 	},
 	"strong_bad": {
-		"tileset": "entity-strong_bad-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 20,
 				"flip_x": true
 			}
 		}
 	},
 	"tailor": {
-		"tileset": "entity-tailor-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 18,
 				"flip_x": true
 			}
 		}
 	},
 	"trekkie": {
-		"tileset": "entity-trekkie-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 17,
 				"flip_x": true
 			}
 		}
 	},
 	"verthandi": {
-		"tileset": "entity-verthandi-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 3,
 				"flip_x": true
 			}
 		}
 	},
 	"village_elder": {
-		"tileset": "entity-village_elder-portrait.json",
+		"tileset": "portraits-people.json",
 		"emotes": {
 			"default": {
 				"tileid": 0,
@@ -427,10 +427,10 @@
 		}
 	},
 	"wopr": {
-		"tileset": "entity-wopr-portrait.json",
+		"tileset": "portraits-things.json",
 		"emotes": {
 			"default": {
-				"tileid": 0,
+				"tileid": 2,
 				"flip_x": true
 			}
 		}

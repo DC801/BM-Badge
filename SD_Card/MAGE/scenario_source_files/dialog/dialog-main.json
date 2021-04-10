@@ -390,6 +390,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "MessageBoard",
+			"portrait": "parchment",
 			"messages": [
 				"If you've been the victim of a hack, come\njoin us at our weekly hacked citizen\nsupport group, Friday nights at 6pm in the\nlibrary."
 			]
