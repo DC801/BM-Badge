@@ -507,6 +507,12 @@
 			"bool_value": true
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-verthandi-lodge-glitch-hint-eval"
+		}
+	],
+	"show_dialog-verthandi-lodge-glitch-hint-eval": [
+		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "timmy-unglitched",
 			"expected_bool": false,
@@ -629,6 +635,10 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-verthandi-oneglitch"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-verthandi-lodge-glitch-hint-eval"
 		},
 		{
 			"action": "RUN_SCRIPT",

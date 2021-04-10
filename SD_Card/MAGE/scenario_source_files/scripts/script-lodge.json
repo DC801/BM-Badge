@@ -303,6 +303,18 @@
 			"success_script": "on_load-lodge-demobonus-end"
 		},
 		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-timmy-demobonus1",
 			"doc": "Hey! Hey! My book!"
@@ -2755,6 +2767,11 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge_cat",
 			"doc": "...."
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": false
 		}
 	],
 	"show_dialog-lodge_cat-glitched": [
@@ -2867,6 +2884,11 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "timmy-endstory",
 			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "verthandi-hint",
+			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",

@@ -630,8 +630,13 @@
 			"color": "#000000"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"bool_value": true
+		},
+		{
 			"action": "RUN_SCRIPT",
-			"script": "debug-roll-credits"
+			"script": "roll-credits"
 		}
 	],
 	"loiter1": [
@@ -853,7 +858,7 @@
 			"doc": "Show credits?"
 		}
 	],
-	"debug-roll-credits": [
+	"roll-credits": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "credits-from-menu",

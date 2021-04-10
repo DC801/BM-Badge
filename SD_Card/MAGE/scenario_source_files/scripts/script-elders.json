@@ -1374,18 +1374,8 @@
 			"dialog": "dialog-alfonso-eval-done"
 		},
 		{
-			"action": "COPY_SCRIPT",
+			"action": "RUN_SCRIPT",
 			"script": "demoend-cutscene"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "wonthedemo",
-			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
 		}
 	],
 	"show_dialog-alfonso-wonthedemo": [

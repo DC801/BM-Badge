@@ -124,7 +124,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"There is one more glitched soul left to\nhelp. I believe in you!"
+				"I hear one more glitched soul that needs\nhelp!"
 			]
 		}
 	],

@@ -912,7 +912,7 @@
 	],
 	"dialog-sportsbook": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_LEFT",
 			"entity": "%SELF%",
 			"portrait": "journal",
 			"messages": [
