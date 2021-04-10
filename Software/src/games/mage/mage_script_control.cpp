@@ -918,6 +918,7 @@ void MageScriptControl::setEntityDirection(uint8_t * args, MageScriptState * res
 			argStruct->direction,
 			entity->direction
 		);
+		MageGame->updateEntityRenderableData(currentEntityId);
 	}
 }
 
@@ -936,6 +937,7 @@ void MageScriptControl::setEntityDirectionRelative(uint8_t * args, MageScriptSta
 			) % NUM_DIRECTIONS),
 			entity->direction
 		);
+		MageGame->updateEntityRenderableData(currentEntityId);
 	}
 }
 
@@ -959,6 +961,7 @@ void MageScriptControl::setEntityDirectionTargetEntity(uint8_t * args, MageScrip
 			),
 			entity->direction
 		);
+		MageGame->updateEntityRenderableData(currentEntityId);
 	}
 }
 
@@ -981,6 +984,7 @@ void MageScriptControl::setEntityDirectionTargetGeometry(uint8_t * args, MageScr
 			),
 			entity->direction
 		);
+		MageGame->updateEntityRenderableData(currentEntityId);
 	}
 }
 
@@ -995,6 +999,7 @@ void MageScriptControl::setEntityGlitched(uint8_t * args, MageScriptState * resu
 			(entity->direction & IS_GLITCHED_MASK)
 			| (argStruct->isGlitched * IS_GLITCHED)
 		);
+		MageGame->updateEntityRenderableData(currentEntityId);
 	}
 }
 
@@ -2227,6 +2232,7 @@ void MageScriptControl::setResumeStatePointsAndEntityDirection(
 		),
 		entity->direction
 	);
+	MageGame->updateEntityRenderableData(currentEntityId);
 }
 
 void MageScriptControl::setEntityPositionToPoint(
