@@ -285,6 +285,7 @@
 	- [x] ◻ should paste the copy buffer into the current byte's value
 	- [x] The value +/- operations should be slowed down
 	- [x] The "triangle to open on an entity + cooldown before normal hex operation" should actually restore normal hex control via "on release handler"
+- [x] Add an action to enable/disable copy & paste. It's too powerful to start the game with; Perhaps it is granted by an artifact from a dungeon in 2021?
 - [ ] Re-do the handling of the MEM buttons in the HexEditor
 	- [ ] Make the addresses stored relative to the currently selected entity
 	- [ ] How to set relative MEM addresses?

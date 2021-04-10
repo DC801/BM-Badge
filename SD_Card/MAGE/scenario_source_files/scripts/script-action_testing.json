@@ -977,5 +977,45 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage20"
 		}
+	],
+	"mage21-interact-a": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage21-a"
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage21-interact-b"
+		}
+	],
+	"mage21-interact-b": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage21-b"
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage21-interact-a"
+		}
 	]
 }

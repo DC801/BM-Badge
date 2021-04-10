@@ -245,46 +245,48 @@ void MageHexEditor::applyHexModeInputs()
 					*currentByte -= 1;
 				}
 			}
-			if (EngineInput_Activated.rjoy_right) {
-				//copy
-				MageGame->currentSave.clipboardLength = 1;
-				isCopying = true;
-			}
-			if (!EngineInput_Buttons.rjoy_right) {
-				isCopying = false;
-			}
-			if (EngineInput_Buttons.rjoy_right) {
-				if (EngineInput_Buttons.ljoy_left) {
-					MageGame->currentSave.clipboardLength = MAX(
-						(uint8_t) 1,
-						MageGame->currentSave.clipboardLength - 1
+			if (MageGame->playerHasHexEditorControlClipboard) {
+				if (EngineInput_Activated.rjoy_right) {
+					//start copying
+					MageGame->currentSave.clipboardLength = 1;
+					isCopying = true;
+				}
+				if (!EngineInput_Buttons.rjoy_right) {
+					isCopying = false;
+				}
+				if (EngineInput_Buttons.rjoy_right) {
+					if (EngineInput_Buttons.ljoy_left) {
+						MageGame->currentSave.clipboardLength = MAX(
+							(uint8_t) 1,
+							MageGame->currentSave.clipboardLength - 1
+						);
+					}
+					if (EngineInput_Buttons.ljoy_right) {
+						MageGame->currentSave.clipboardLength = MIN(
+							(uint8_t) sizeof(MageEntity),
+							MageGame->currentSave.clipboardLength + 1
+						);
+					}
+					memcpy(
+						MageGame->currentSave.clipboard,
+						currentByte,
+						MageGame->currentSave.clipboardLength
 					);
 				}
-				if (EngineInput_Buttons.ljoy_right) {
-					MageGame->currentSave.clipboardLength = MIN(
-						(uint8_t) sizeof(MageEntity),
-						MageGame->currentSave.clipboardLength + 1
+				if (EngineInput_Buttons.rjoy_left) {
+					//paste
+					memcpy(
+						currentByte,
+						MageGame->currentSave.clipboard,
+						MageGame->currentSave.clipboardLength
+					);
+					MageGame->UpdateEntities(0);
+					memcpy(
+						currentByte,
+						MageGame->currentSave.clipboard,
+						MageGame->currentSave.clipboardLength
 					);
 				}
-				memcpy(
-					MageGame->currentSave.clipboard,
-					currentByte,
-					MageGame->currentSave.clipboardLength
-				);
-			}
-			if (EngineInput_Buttons.rjoy_left) {
-				//paste
-				memcpy(
-					currentByte,
-					MageGame->currentSave.clipboard,
-					MageGame->currentSave.clipboardLength
-				);
-				MageGame->UpdateEntities(0);
-				memcpy(
-					currentByte,
-					MageGame->currentSave.clipboard,
-					MageGame->currentSave.clipboardLength
-				);
 			}
 		}
 		if (anyHexMovement) {
@@ -326,7 +328,7 @@ uint16_t MageHexEditor::getRenderableStringLength(uint8_t *bytes, uint16_t maxLe
 void MageHexEditor::renderHexHeader()
 {
 	char headerString[128];
-	char clipboardPreview[16];
+	char clipboardPreview[24];
 	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
 	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress + hexCursorLocation;
 	uint8_t u1Value = *currentByteAddress;
@@ -348,23 +350,6 @@ void MageHexEditor::renderHexHeader()
 		HEXED_BYTE_OFFSET_X,
 		0
 	);
-	uint8_t clipboardPreviewClamp = MIN(
-		(uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
-		MageGame->currentSave.clipboardLength
-	);
-	for (uint8_t i = 0; i < clipboardPreviewClamp; i++) {
-		sprintf(
-			clipboardPreview + (i * 2),
-			"%02X",
-			*(MageGame->currentSave.clipboard + i)
-		);
-	}
-	if(MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
-		sprintf(
-			clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
-			"..."
-		);
-	}
 	memcpy(
 		stringPreview,
 		(uint8_t *) hackableDataAddress + hexCursorLocation,
@@ -384,13 +369,36 @@ void MageHexEditor::renderHexHeader()
 	sprintf(
 		headerString,
 		"%s | uint8: %03d  | uint16: %05d\n"
-		"string output: %s | CP: 0x%s",
+		"string output: %s",
 		endian_label,
 		u1Value,
 		u2Value,
-		stringPreview,
-		clipboardPreview
+		stringPreview
 	);
+	if (MageGame->playerHasHexEditorControlClipboard) {
+		uint8_t clipboardPreviewClamp = MIN(
+			(uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
+			MageGame->currentSave.clipboardLength
+		);
+		for (uint8_t i = 0; i < clipboardPreviewClamp; i++) {
+			sprintf(
+				clipboardPreview + (i * 2),
+				"%02X",
+				*(MageGame->currentSave.clipboard + i)
+			);
+		}
+		if(MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
+			sprintf(
+				clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
+				"..."
+			);
+		}
+		sprintf(
+			headerString + strlen(headerString),
+			" | CP: 0x%s",
+			clipboardPreview
+		);
+	}
 	mage_canvas->printMessage(
 		headerString,
 		Monaco9,
