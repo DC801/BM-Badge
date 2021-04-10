@@ -555,5 +555,23 @@
 				"I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have enabled your ability to clipboard.\nTalk to me again to disable hex clipboard."
 			]
 		}
+	],
+	"dialog-mage22-a": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test the FADE scripts!\nPREPARE FOR DARKNESS!!!"
+			]
+		}
+	],
+	"dialog-mage22-b": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Okay, now it is Darkness.\nLET THERE BE LIGHT!!!"
+			]
+		}
 	]
 }

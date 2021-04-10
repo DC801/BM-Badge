@@ -501,7 +501,7 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"mage21-interact-a"
-                        },
+                        }, 
                         {
                          "name":"on_tick",
                          "type":"string",
@@ -523,7 +523,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage22-interact"
                         }, 
                         {
                          "name":"on_tick",
