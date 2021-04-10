@@ -302,7 +302,7 @@
                  "y":81.3333333333333
                 }, 
                 {
-                 "gid":438,
+                 "gid":439,
                  "height":32,
                  "id":32,
                  "name":"Mage Box",
@@ -332,7 +332,7 @@
                  "y":182
                 }, 
                 {
-                 "gid":440,
+                 "gid":441,
                  "height":32,
                  "id":37,
                  "name":"Debug Exa",
@@ -350,7 +350,7 @@
                  "y":223
                 }, 
                 {
-                 "gid":438,
+                 "gid":439,
                  "height":32,
                  "id":38,
                  "name":"Mage Facts",
@@ -368,7 +368,7 @@
                  "y":110
                 }, 
                 {
-                 "gid":438,
+                 "gid":439,
                  "height":32,
                  "id":39,
                  "name":"Sink",
@@ -386,7 +386,7 @@
                  "y":85
                 }, 
                 {
-                 "gid":438,
+                 "gid":439,
                  "height":32,
                  "id":41,
                  "name":"Microwave",
@@ -404,7 +404,7 @@
                  "y":78
                 }, 
                 {
-                 "gid":442,
+                 "gid":443,
                  "height":32,
                  "id":42,
                  "name":"Cake",
@@ -422,7 +422,7 @@
                  "y":190
                 }, 
                 {
-                 "gid":2147484088,
+                 "gid":2147484089,
                  "height":32,
                  "id":43,
                  "name":"Mr. Debug",
@@ -554,15 +554,15 @@
          "source":"..\/entities\/entity-journal.json"
         }, 
         {
-         "firstgid":438,
+         "firstgid":439,
          "source":"..\/entities\/entity-null.json"
         }, 
         {
-         "firstgid":440,
+         "firstgid":441,
          "source":"..\/entities\/entity-exa.json"
         }, 
         {
-         "firstgid":442,
+         "firstgid":443,
          "source":"..\/entities\/entity-cake.json"
         }],
  "tilewidth":32,
