@@ -96,6 +96,11 @@
                          "value":"show_dialog-bobrock-start"
                         }, 
                         {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"billy-glitchwatch"
+                        }, 
+                        {
                          "name":"path",
                          "type":"object",
                          "value":47
@@ -281,7 +286,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"billy-glitchwatch"
+                         "value":"cleo-watch"
                         }],
                  "rotation":0,
                  "type":"",
@@ -393,7 +398,7 @@
                  "y":731
                 }, 
                 {
-                 "gid":654,
+                 "gid":651,
                  "height":32,
                  "id":95,
                  "name":"Max Swagger",
@@ -960,10 +965,28 @@
                  "width":32,
                  "x":899,
                  "y":1296
+                }, 
+                {
+                 "gid":1190,
+                 "height":32,
+                 "id":307,
+                 "name":"Debug Exa 95",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-demobonus-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":991,
+                 "y":510
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1883,8 +1906,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1087,
-                 "y":778
+                 "x":1097,
+                 "y":557
                 }, 
                 {
                  "height":0,
@@ -2012,10 +2035,41 @@
                  "width":26,
                  "x":1316,
                  "y":794
+                }, 
+                {
+                 "height":0,
+                 "id":305,
+                 "name":"cleo-rescue-path",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":-60
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1302,
+                 "y":873
+                }, 
+                {
+                 "height":20,
+                 "id":306,
+                 "name":"cleo-watch-box",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":26,
+                 "x":1289,
+                 "y":803
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -2421,7 +2475,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":305,
+ "nextobjectid":308,
  "orientation":"orthogonal",
  "properties":[
         {

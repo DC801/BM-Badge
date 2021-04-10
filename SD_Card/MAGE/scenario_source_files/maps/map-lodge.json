@@ -633,6 +633,24 @@
                  "width":16,
                  "x":490,
                  "y":332
+                }, 
+                {
+                 "gid":875,
+                 "height":16,
+                 "id":112,
+                 "name":"Mage Facts",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-magefacts2"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":76,
+                 "y":303
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1314,7 +1332,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":112,
+ "nextobjectid":113,
  "orientation":"orthogonal",
  "properties":[
         {

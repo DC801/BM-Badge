@@ -348,6 +348,35 @@
 			]
 		}
 	],
+	"dialog-debug-demobonus-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"portrait": "goldfish",
+			"messages": [
+				"Demo bonus debugging"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Set story flags true + wonthedemo true",
+					"script": "debug-demobonus-pre-flags-true"
+				},
+				{
+					"label": "Set story flags true + wonthedemo false",
+					"script": "debug-demobonus-pre-flags-false"
+				},
+				{
+					"label": "Set demo bonus event flags false",
+					"script": "debug-demobonus-event-flags-false"
+				},
+				{
+					"label": "Never mind",
+					"script": "no_debug-demobonus"
+				}
+			]
+		}
+	],
 	"dialog-goose": [
 		{
 			"alignment": "BOTTOM_LEFT",
@@ -362,7 +391,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"name": "MessageBoard",
 			"messages": [
-				"If you've been hacked, come join us at our\nweekly hacked citizen support group,\nFriday nights at 6pm."
+				"If you've been the victim of a hack, come\njoin us at our weekly hacked citizen\nsupport group, Friday nights at 6pm in the\nlibrary."
 			]
 		}
 	],

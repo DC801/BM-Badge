@@ -914,6 +914,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
+			"portrait": "journal",
 			"messages": [
 				"Sports sports sports. This book is about\nsports!","Go, home team!"
 			]

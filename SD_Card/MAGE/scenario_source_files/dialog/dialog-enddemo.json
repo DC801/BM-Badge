@@ -249,5 +249,56 @@
 				}
 			]
 		}
+	],
+	"dialog-jackob-demobonus": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Jackob",
+			"messages": [
+				"While you were gone, I saw an odd flash of\nlight coming from the library.",
+				"You might want to investigate."
+			]
+		}
+	],
+	"dialog-timmy-demobonus1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Timmy",
+			"messages": [
+				"Hey! Hey! My book!"
+			]
+		}
+	],
+	"dialog-timmy-demobonus2": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"There's this weird extra page in my book!"
+			]
+		}
+	],
+	"dialog-hexeditor-bonus": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "Hex Editing",
+			"portrait": "parchment",
+			"messages": [
+				"-- allows us to copy and paste bytes using\nsomething called a \"Clip Bird.\".",
+				"Pressing the circle button will copy a\nsingle byte into the Clip Bird, but if you\nhold circle, left and right will change\nthe number of bytes to be copied.",
+				"Pressing square will paste the contents of\nthe Clip Bird into the selected cell and\nthereafter.",
+				"This has dramatically improved our\nproductivity!"
+			]
+		}
+	],
+	"dialog-timmy-demobonus-s": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Oh! I think I've heard of Clippy Bird! My\nuncle let me play it on his phone this one\ntime, ages ago.",
+				"He said it was a really rare game."
+			]
+		}
 	]
 }
