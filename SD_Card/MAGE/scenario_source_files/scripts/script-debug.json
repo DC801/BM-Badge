@@ -19,6 +19,87 @@
 			"script": "debug-hub-q"
 		}
 	],
+	"debug-demobonus-q": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-debug-demobonus-q"
+		}
+	],
+	"debug-demobonus-pre-flags-true": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-story-flags-true"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"bool_value": true
+		},
+		{
+			"action": "SET_WARP_STATE",
+			"string": "exit_from-credits"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-demobonus-q"
+		}
+	],
+	"debug-demobonus-pre-flags-false": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-story-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-demobonus-q"
+		}
+	],
+	"debug-demobonus-event-flags-false": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-jackob-informed",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-timmy-yell",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-sportsbook-read",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-demobonus-q"
+		}
+	],
+	"no_debug-demobonus": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "debug-demobonus-q"
+		}
+	],
 	"debug-set-flags-false-q": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",

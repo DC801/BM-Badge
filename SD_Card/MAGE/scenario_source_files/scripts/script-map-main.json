@@ -315,6 +315,11 @@
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Debug Exa 95",
+			"geometry": "catwalk-hide"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Credits Fish",
 			"geometry": "catwalk-hide"
 		},
@@ -606,6 +611,38 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Cat",
 			"script": "cat-watch"
+		}
+	],
+	"cleo-watch": [
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "Cleo",
+			"geometry": "cleo-watch-box",
+			"success_script": "cleo-rescue-protocol",
+			"expected_bool": false
+		}
+	],
+	"cleo-rescue-protocol": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"geometry": "cleo-rescue-path",
+			"entity": "Cleo"
+		},
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "cleo-rescue-path",
+			"entity": "Cleo",
+			"duration": 800
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "Cat"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "cleo-watch"
 		}
 	],
 	"on_tick-main": [
@@ -1115,6 +1152,115 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "enter_from-credits-demobonus-eval"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus-jackob-informed",
+			"expected_bool": true,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"bool_value": true,
+			"doc": "set now because all story flags and credits confirmed true; use this flag for same check hereafter"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-demobonus"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-jackob-informed",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "enter_from-credits-end"
+		}
+	],
+	"enter_from-credits-end": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"enter_from-credits-demobonus-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-catwork",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-shepherd",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bender",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-baker",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bobmoss",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bea1",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-trekkie",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-sportskid",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bea2",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-rake",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-verthandi",
+			"expected_bool": false,
+			"success_script": "enter_from-credits-end"
 		}
 	]
 }

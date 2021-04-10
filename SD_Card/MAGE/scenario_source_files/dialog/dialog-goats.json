@@ -153,7 +153,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Perhaps... somewhere in the great library?"
+				"Perhaps... somewhere in the library?"
 			]
 		}
 	],

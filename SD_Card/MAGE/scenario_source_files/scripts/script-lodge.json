@@ -139,6 +139,10 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-end"
 		}
 	],
 	"on_load-lodge": [
@@ -253,7 +257,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-lodge-end"
+			"script": "on_load-lodge-door-check"
 		}
 	],
 	"on_load-lodge-glitch_timmy-do": [
@@ -264,15 +268,59 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-lodge-end"
+			"script": "on_load-lodge-door-check"
 		}
 	],
-	"on_load-lodge-end": [
+	"on_load-lodge-door-check": [
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "exit_from-secretroom",
 			"success_script": "enter_from-secretroom",
 			"expected_bool": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-end"
+		}
+	],
+	"on_load-lodge-end": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-lodge-demobonus-eval"
+		}
+	],
+	"on_load-lodge-demobonus-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus-timmy-yell",
+			"expected_bool": true,
+			"success_script": "on_load-lodge-demobonus-end"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"expected_bool": false,
+			"success_script": "on_load-lodge-demobonus-end"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-demobonus1",
+			"doc": "Hey! Hey! My book!"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-timmy-yell",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_load-lodge-demobonus-end": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"lodge_cat-glitchwatch": [
@@ -2766,6 +2814,46 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"expected_bool": false,
+			"success_script": "show_dialog-timmy-start-normal"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus-sportsbook-read",
+			"expected_bool": true,
+			"success_script": "show_dialog-timmy-demobonus-s"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-demobonus2",
+			"doc": "Something really weird happened to my book!"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "timmy-wrapup"
+		}
+	],
+	"show_dialog-timmy-demobonus-s": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"expected_bool": false,
+			"success_script": "show_dialog-timmy-start"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-timmy-demobonus-s",
+			"doc": "I've heard of Clippy Bird!!"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "timmy-wrapup"
+		}
+	],
+	"show_dialog-timmy-start-normal": [
+		{
+			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "timmy-endstory",
 			"expected_bool": true,
 			"success_script": "show_dialog-timmy-start-s"
@@ -2781,21 +2869,22 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION",
-			"entity": "%SELF%",
-			"direction": "west"
+			"action": "RUN_SCRIPT",
+			"script": "timmy-wrapup"
 		}
 	],
 	"show_dialog-timmy-start-s": [
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-timmy-start-s",
 			"doc": "I want to get a high jump gold medal!"
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "timmy-wrapup"
+		}
+	],
+	"timmy-wrapup": [
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "%SELF%",
@@ -2811,6 +2900,43 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-sportsbook"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "demobonus-sportsbook-eval"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-hexeditor-bonus",
+			"doc": "Copy paste tutorial"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "demobonus-sportsbook-read",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "dialog-sportsbook-end"
+		}
+	],
+	"demobonus-sportsbook-eval": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "demobonus",
+			"expected_bool": false,
+			"success_script": "dialog-sportsbook-end"
+		}
+	],
+	"dialog-sportsbook-end": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-sportsbook"
 		}
 	],
 	"show_dialog-timmy-glitched": [

@@ -1,11 +1,19 @@
-{ "columns":3,
+{ "columns":4,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"entity-journal.png",
  "imageheight":16,
- "imagewidth":48,
+ "imagewidth":64,
  "margin":0,
  "name":"entity-journal",
  "spacing":0,
- "tilecount":3,
+ "tilecount":4,
  "tiledversion":"1.4.3",
  "tileheight":16,
  "tiles":[
@@ -20,6 +28,10 @@
         {
          "id":2,
          "type":"journal"
+        }, 
+        {
+         "id":3,
+         "type":"parchment"
         }],
  "tilewidth":16,
  "type":"tileset",

@@ -255,6 +255,15 @@
 			}
 		}
 	},
+	"parchment": {
+		"tileset": "portraits-things.json",
+		"emotes": {
+			"default": {
+				"tileid": 8,
+				"flip_x": true
+			}
+		}
+	},
 	"lightning_boy": {
 		"tileset": "entity-lightning_boy-portrait.json",
 		"emotes": {
