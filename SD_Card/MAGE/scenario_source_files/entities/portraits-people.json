@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"portraits-people.png",
+ "imageheight":256,
+ "imagewidth":512,
+ "margin":0,
+ "name":"portraits-people",
+ "spacing":0,
+ "tilecount":32,
+ "tiledversion":"1.4.3",
+ "tileheight":64,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":1.4
+}
