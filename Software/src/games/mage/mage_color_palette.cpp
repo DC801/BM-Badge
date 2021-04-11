@@ -72,13 +72,13 @@ MageColorPalette::MageColorPalette(
 	colorCount = sourcePalette->colorCount;
 	colors = std::make_unique<uint16_t[]>(colorCount);
 	if(
-		fadeFraction == 1.0f
+		fadeFraction >= 1.0f
 	) {
 		for (int i = 0; i < sourcePalette->colorCount; ++i) {
 			sourceColor = sourcePalette->colors[i];
 			colors[i] = sourceColor == transparentColor
 				? sourceColor
-				: fadeColor;
+				: SCREEN_ENDIAN_U2_VALUE(fadeColor);
 		}
 	} else if (
 		fadeFraction != 0.0f
