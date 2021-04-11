@@ -12,6 +12,14 @@
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
+// color palette corruption detection - requires much ram, can only be run on desktop
+#ifdef DC801_DESKTOP
+#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) verifyAllColorPalettes((value));
+#endif //DC801_DESKTOP
+#ifdef DC801_EMBEDDED
+#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
+#endif //DC801_EMBEDDED
+
 /*
 The MageGameControl object handles several important tasks. It's basically the
 core of the entire MAGE() game, and contains all the important variables that

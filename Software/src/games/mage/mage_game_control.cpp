@@ -1335,13 +1335,28 @@ void MageGameControl::updateEntityRenderableData(
 	bool skipTilesetCheck
 )
 {
+	if(index >= MAX_ENTITIES_PER_MAP) {
+		char errorString[256];
+		sprintf(
+			errorString,
+			"We somehow have an entity index\n"
+			"greater than MAX_ENTITIES_PER_MAP:\n"
+			"Index:%d\n"
+			"MAX_ENTITIES_PER_MAP:%d\n",
+			index,
+			MAX_ENTITIES_PER_MAP
+		);
+		ENGINE_PANIC(
+			errorString
+		);
+	}
 	//fill in default values if the map doesn't have an entity this high.
 	//should only be used when initializing the MageGameControl object.
 	MageEntityRenderableData *data = &entityRenderableData[index];
 	if(index >= map.EntityCount())
 	{
 		data->tilesetId = MAGE_TILESET_FAILOVER_ID;
-		data->lastTilesetId = MAGE_TILE_FAILOVER_ID;
+		data->lastTilesetId = MAGE_TILESET_FAILOVER_ID;
 		data->tileId = MAGE_TILE_FAILOVER_ID;
 		data->duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
 		data->frameCount = MAGE_FRAME_COUNT_FAILOVER_VALUE;
