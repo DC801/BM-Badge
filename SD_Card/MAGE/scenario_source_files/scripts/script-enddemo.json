@@ -586,6 +586,10 @@
 			"color": "#000000"
 		},
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1000
+		},
+		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 300,
 			"color": "#000000"

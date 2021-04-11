@@ -1141,10 +1141,6 @@
 			"bool_value": false
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
-		},
-		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 800,
 			"color": "#000000"

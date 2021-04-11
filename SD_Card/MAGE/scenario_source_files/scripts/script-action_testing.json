@@ -1041,6 +1041,24 @@
 			"action": "SCREEN_FADE_IN",
 			"duration": 2000,
 			"color": "#000000"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-a"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 2000,
+			"color": "#00CC00"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage22-b"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 2000,
+			"color": "#00CC00"
 		}
 	]
 }
