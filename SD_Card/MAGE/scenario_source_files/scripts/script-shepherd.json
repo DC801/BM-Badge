@@ -402,6 +402,122 @@
 			"play_count": 1
 		}
 	],
+	"make-sheep-loiter": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Baa",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1700
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Ram",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Helga",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 500
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Ewe",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1300
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Baa",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1800
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Ram",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Baa",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1200
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Ewe",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 300
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Helga",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1500
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Baa",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Ewe",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
+		}
+	],
 	"debug-sheep-q": [
 		{
 			"action": "COPY_SCRIPT",

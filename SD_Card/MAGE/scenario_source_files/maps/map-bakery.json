@@ -159,18 +159,6 @@
                 }, 
                 {
                  "height":0,
-                 "id":16,
-                 "name":"bakery_flour_touch",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":303,
-                 "y":156
-                }, 
-                {
-                 "height":0,
                  "id":17,
                  "name":"pre_sink",
                  "point":true,
@@ -204,6 +192,30 @@
                  "width":0,
                  "x":303,
                  "y":137
+                }, 
+                {
+                 "height":0,
+                 "id":37,
+                 "name":"bakery_flour_touch",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":303,
+                 "y":156
+                }, 
+                {
+                 "height":0,
+                 "id":38,
+                 "name":"bakery_flour_touch",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":276,
+                 "y":148
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -582,7 +594,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":37,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "properties":[
         {

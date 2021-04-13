@@ -96,7 +96,8 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_flour_touch",
-			"duration": 120
+			"duration": 180,
+			"doc": "bug on 2021/04/10: if duration less than frame rate, baker is yeeted to space"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",
@@ -111,7 +112,7 @@
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%SELF%",
 			"geometry": "bakery_flour",
-			"duration": 120
+			"duration": 180
 		},
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",

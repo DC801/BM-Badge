@@ -488,6 +488,11 @@
 			"geometry": "catwalk-hide"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Cleo",
+			"script": "null_script"
+		},
+		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Cleo",
 			"geometry": "catwalk-hide"

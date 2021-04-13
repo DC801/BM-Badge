@@ -187,6 +187,26 @@
 			"script": "set-glitch-flags-true"
 		},
 		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Kid",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Fountain",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Hamster",
+			"bool_value": false
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-set-flags-true-q"
@@ -198,9 +218,29 @@
 			"script": "set-glitch-flags-false"
 		},
 		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Billy",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Kid",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Fountain",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Hamster",
+			"bool_value": true
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "debug-set-flags-true-q"
+			"script": "debug-set-flags-false-q"
 		}
 	],
 	"debug-set-all-true": [

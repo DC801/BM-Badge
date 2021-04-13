@@ -619,7 +619,8 @@
 			"entity": "Cleo",
 			"geometry": "cleo-watch-box",
 			"success_script": "cleo-rescue-protocol",
-			"expected_bool": false
+			"expected_bool": false,
+			"doc": "WARNING!! if you change who is watching, change who to null_script for the walk-to-lodge cutscene!!!"
 		}
 	],
 	"cleo-rescue-protocol": [
