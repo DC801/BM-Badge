@@ -240,8 +240,7 @@
 
 ## Playtesting night notes:
 - [x] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
-- [ ] People hit escape to close the hex editor, and it closes the program. Oops. Default it to something else.
-	- [ ] No, really, actually turn off escape to quit the game
+- [x] People hit escape to close the hex editor, and it closes the program. Oops. Default it to Alt+F4.
 - [ ] An idea: I didn't see anyone saving after completing puzzles. Perhaps after each puzzle is solved, show the save dialog, so nobody loses any progress. Perhaps show this after the TUESDAY cutscene as well.
 - [x] We really need to rearrange the Elder's speeches "I'm X, and I do Y" so that it is outside of the lodge. Nobody talked with them out side of the lodge without direction.
 - [x] People talk to a lot of objects in the greenhouse, but don't get interactions. Add more interactions there.
