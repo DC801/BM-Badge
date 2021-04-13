@@ -51,9 +51,10 @@
 //the failure address which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
-bool EngineROM_Init(void);
-void EngineROM_Deinit(void);
-bool EngineROM_Magic(const uint8_t *magic, uint8_t length);
+void EngineROM_Init();
+void EngineROM_Deinit();
+bool EngineROM_Magic();
+void EngineROM_ErrorUnplayable();
 
 bool EngineROM_Read(
 	uint32_t address,
@@ -67,10 +68,11 @@ bool EngineROM_Write(
 	uint8_t *data,
 	const char *errorString
 );
-bool EngineROM_Verify(
+uint32_t EngineROM_Verify(
 	uint32_t address,
 	uint32_t length,
-	const uint8_t *data
+	const uint8_t *data,
+	bool throwErrorWithLog
 );
 uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex);
 void EngineROM_ReadSaveSlot(

@@ -241,13 +241,15 @@
 ## Playtesting night notes:
 - [x] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
 - [ ] People hit escape to close the hex editor, and it closes the program. Oops. Default it to something else.
+	- [ ] No, really, actually turn off escape to quit the game
 - [ ] An idea: I didn't see anyone saving after completing puzzles. Perhaps after each puzzle is solved, show the save dialog, so nobody loses any progress. Perhaps show this after the TUESDAY cutscene as well.
 - [x] We really need to rearrange the Elder's speeches "I'm X, and I do Y" so that it is outside of the lodge. Nobody talked with them out side of the lodge without direction.
 - [x] People talk to a lot of objects in the greenhouse, but don't get interactions. Add more interactions there.
 - [x] People talked to the quest board, and it said nothing. Oops. Add some dialog.
 - [x] There is still a debug exa in the beatrice puzzle room. Oops.
 - [ ] After switching delmar from to sheep to man, you can't talk with him. Player expected to talk with him.
-- [ ] Fix a bug where modulo on the animation always picks (whatever, mage walking north, blitzball) when the currentAnimation is cycled - it glitches across palettes.
+- [x] Fix a bug where modulo on the animation always picks (whatever, mage walking north, blitzball) when the currentAnimation is cycled - it glitches across palettes.
+	- [x] This is not actually a bug, because the byte changing was primaryIdType. This is expected behavior.
 - [ ] When you load from the main menu on desktop before you've created a save, it crashes.
 - [x] NewGnu tried to set the corrupted byte on the Big Bad Name Book to uncorrupt the name. He was really fixated on learning about that.
 	- [x] We should make it do a rot 13 of RED HERRING
@@ -260,15 +262,18 @@
 	- [x] Solution? Show a "Save completed" dialog after save completes, because then it can only burn through as fast as they can confirm the "Save completed" dialog.
 - [ ] Desvio says that Bert should say something different if his name is changed to "Bart" or "Bort" - reference to Simpsons "Who would name a kid Bort" sketch
 - [x] If player moves the flowers, Trekkie should yell at the player for uprooting the flowers, and then reset the position of all flowers.
-- [ ] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"
+- [x] Talking with the modem should cause the mage to say "Yup, looks like it's not connecting." or "Yay, it's connecting now!"
 - [x] When loading a new map, put the hex cursor back at the player
 - [x] There is a table tile that is on layer 3 in the inner sanctum, but the rest of them are below?
-- [ ] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
+- [!] Possibly redesign the layout of the sheep quest so that the pen is not obscured by the old lady's house.
 - [x] NewGnu tried to glitch the pipscat so it was in the where the cat construction crew was. Very reasonable. Should this be an alternate solution?
 	- [x] I think that this should be countered with "When the cat is glitched off their stump, he should automatically walk back to the point where he started."
 - [x] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
 	- [x] To fix, LoadMap should set fadeFraction to 0
 - [x] Fix the ???Mystery Sink??? in the player's house?!?
+- [ ] Each of the members of the cat construction crew should say something different to the player when they are the PipsCat
+- [ ] The path leading north of the Library should take the player to an "UNDER CONSTRUCTION" zone, saying something about how it's not ready yet.
+- [ ] The wrap-around at the bottom of the map should fade out and then in again
 - [x] Re-do the handling of the right side buttons when in the HexEditor
 	- [x] Create Clipboard system
 		- [x] Create a buffer that is sizeof(MageEntity)
@@ -302,6 +307,18 @@
 		- [x] `MAGESAVE`
 		- [x] uint32_t CRC32 from `game.dat` (so we know if versions match)
 		- [x] uint32_t length of the `save_[0,1,2].dat`
+- [x] Improve the "Power on" experience of the hardware
+	- [x] ROM _is_ valid,
+		- [x] and SD _is not_ present, start game
+		- [x] and SD _is_ present, hash is same, start game
+		- [x] and SD _is_ present, hash is diff, show options
+		- [x] and SD _is_ present, MEM3 is held, show options
+	- [x] ROM _is not_ valid,
+		- [x] and SD _is not_ present, engine panic with message about no rom
+		- [x] and SD _is_ present, _do not_ show options and just copy
+	- [x] Desktop build should also ENGINE_PANIC if ROM Magic is bad
+- [ ] Entity "Action" animation continues playing during dialog but only sometimes
+- [ ] Entities go to space when the duration of a walk path is less than the milliseconds per frame of the current fps
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
