@@ -99,25 +99,27 @@ To debug you need to open the Run/debug menu on the left (`Ctrl+Shift+D`). It lo
 
 ### Desktop Build controls
 
-| Function       | Key     |
-|---------------:|:-------:|
-| ``Move Up``    | ``W``   |
-| ``Move Down``  | ``S``   |
-| ``Move Right`` | ``A``   |
-| ``Move Left``  | ``D``   |
-| ``Interact``   | ``L``   |
-| ``Run``        | ``K``   |
-| ``Action``     | ``J``   |
-| ``HexEditor``  | ``Tab`` |
-| ``Interact``   | ``L``   |
-| ``Hex XOR``    | ``F1``  |
-| ``Hex ADD``    | ``F2``  |
-| ``Hex SUB``    | ``F3``  |
-| ``Hex PAGE``   | ``F4``  |
-| ``Hex MEM0``   | ``F5``  |
-| ``Hex MEM1``   | ``F6``  |
-| ``Hex MEM2``   | ``F8``  |
-| ``Hex MEM3``   | ``F8``  |
+| Function           | Location on board    | Key   | Alternate Key      | Alternate 2 |
+|-------------------:|:---------------------|:-----:|:------------------:|:-----------:|
+| `Move Up`          | `Left Stick Up`      | `W`   | `Arrow Up`         |             |
+| `Move Down`        | `Left Stick Down`    | `S`   | `Arrow Down`       |             |
+| `Move Left`        | `Left Stick Left`    | `A`   | `Arrow Left`       |             |
+| `Move Right`       | `Left Stick Right`   | `D`   | `Arrow Right`      |             |
+| `None`             | `Left Stick Center`  | `Q`   |                    | `Numpad 7`  |
+| `Hack Entity / +`  | `Right Stick Up`     | `I`   | `Back(tick/slash)` | `Numpad 8`  |
+| `Run / -`          | `Right Stick Down`   | `K`   | `Left Shift`       | `Numpad 5`  |
+| `Action / Paste`   | `Right Stick Left`   | `J`   |                    | `Numpad 4`  |
+| `Interact / Copy`  | `Right Stick Right`  | `L`   | `E/Enter/Return`   | `Numpad 6`  |
+| `None`             | `Right Stick Center` | `O`   |                    | `Numpad 9`  |
+| `Toggle HexEditor` | `PCB Capacitive Hat` | `Tab` | `Escape`           |             |
+| `Hex XOR`          | `Scren Left, XOR`    | `F1`  | `Z`                | `Numpad 1`  |
+| `Hex ADD`          | `Scren Left, ADD`    | `F2`  | `X`                | `Numpad 2`  |
+| `Hex SUB`          | `Scren Left, SUB`    | `F3`  | `C`                | `Numpad 3`  |
+| `Hex PAGE`         | `Scren Left, PAGE`   | `F4`  | `V`                | `Numpad 0`  |
+| `Hex MEM0`         | `Screen Right, MEM0` | `F5`  | `B`                |             |
+| `Hex MEM1`         | `Screen Right, MEM1` | `F6`  | `N`                |             |
+| `Hex MEM2`         | `Screen Right, MEM2` | `F7`  | `M`                |             |
+| `Hex MEM3`         | `Screen Right, MEM3` | `F8`  | `,`                |             |
 
 Hex Bit keys:
 
