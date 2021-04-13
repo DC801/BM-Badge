@@ -1,11 +1,19 @@
 { "columns":3,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"tileset-trent_call.png",
- "imageheight":160,
+ "imageheight":192,
  "imagewidth":96,
  "margin":0,
  "name":"tileset-trent_call",
  "spacing":0,
- "tilecount":15,
+ "tilecount":18,
  "tiledversion":"1.4.3",
  "tileheight":32,
  "tilewidth":32,
