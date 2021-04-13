@@ -148,6 +148,42 @@
 			]
 		}
 	],
+	"dialog-felix-pipscat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Okay, boss. We good to go?"
+			]
+		}
+	],
+	"dialog-deut-pipscat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Oh, good! You're here! Gonna give the\nthumbs up?"
+			]
+		}
+	],
+	"dialog-maru-pipscat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Meow?"
+			]
+		}
+	],
+	"dialog-bmurray-pipscat": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"So is it a yea or a nay? Go ahead, show us\nwhat you decided."
+			]
+		}
+	],
 	"dialog-felix": [
 		{
 			"alignment": "BOTTOM_LEFT",

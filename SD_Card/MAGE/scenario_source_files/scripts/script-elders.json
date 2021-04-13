@@ -716,7 +716,40 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-hackbook3",
-			"doc": "...."
+			"doc": "I'm sorry, I can't remember what that book said."
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "wonthedemo",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-hackbook2-alt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook4",
+			"doc": "It doesn't matter. Big Bad is gone, perhaps for good."
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-jackob-hint-hackbook3"
+		}
+	],
+	"show_dialog-jackob-hint-hackbook2-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook4-alt",
+			"doc": "It doesn't matter. You won't want to have a long conversation with him."
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-jackob-hint-hackbook3"
+		}
+	],
+	"show_dialog-jackob-hint-hackbook3": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-hackbook5",
+			"doc": "Do you know what his name is? / I'm sorry. I must have known it once. But I don't remember."
 		},
 		{
 			"action": "SET_SAVE_FLAG",

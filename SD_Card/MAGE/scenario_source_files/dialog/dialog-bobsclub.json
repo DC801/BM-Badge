@@ -437,7 +437,7 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"Just a box of pre-inflated balloons.",
+				"Just a box of uninflated balloons.",
 				"How many balloos does a party need,\nanyway?"
 			]
 		}

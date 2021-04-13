@@ -242,10 +242,29 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Oh, %PLAYER%, I'm sorry.",
-				"I can't remember anything about what the\nbook said.",
+				"I can't remember anything about what the\nbook said."
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook4": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
 				"I suppose it doesn't matter, either way.\nThe Big Bad is gone, perhaps for good."
 			]
-		},
+		}
+	],
+	"dialog-jackob-hint-hackbook4-alt": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I doubt there was much in there that\nwould've helped you in a confrontation\nwith him."
+			]
+		}
+	],
+	"dialog-jackob-hint-hackbook5": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",

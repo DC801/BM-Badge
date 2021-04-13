@@ -1,4 +1,15 @@
 {
+	"set-hint-catwork": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-flags-false"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "catwork-hint",
+			"bool_value": true
+		}
+	],
 	"show_dialog-max-glitched": [
 		{
 			"action": "SHOW_DIALOG",
@@ -47,6 +58,50 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-maru-glitched"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-maru"
+		}
+	],
+	"show_dialog-felix-pipscat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-felix-pipscat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-felix"
+		}
+	],
+	"show_dialog-deut-pipscat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-deut-pipscat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-deut"
+		}
+	],
+	"show_dialog-bmurray-pipscat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bmurray-pipscat"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-bmurray"
+		}
+	],
+	"show_dialog-maru-pipscat": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-maru-pipscat"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -205,12 +260,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "catwork-hint",
-			"bool_value": true
+			"script": "set-hint-catwork"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -229,12 +279,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "catwork-hint",
-			"bool_value": true
+			"script": "set-hint-catwork"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -251,6 +296,10 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-max-catbosshere",
 			"doc": "Cat boss! Give them the thumbs up!"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-catwork"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -287,6 +336,17 @@
 			"expected_bool": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-catwork"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-felix-pipscat"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-felix"
 		}
@@ -297,6 +357,17 @@
 			"entity": "%SELF%",
 			"success_script": "show_dialog-deut-glitched",
 			"expected_bool": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-catwork"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-deut-pipscat"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -311,6 +382,17 @@
 			"expected_bool": true
 		},
 		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-catwork"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-maru-pipscat"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-maru"
 		}
@@ -321,6 +403,17 @@
 			"entity": "%SELF%",
 			"success_script": "show_dialog-bmurray-glitched",
 			"expected_bool": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-catwork"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-bmurray-pipscat"
 		},
 		{
 			"action": "SHOW_DIALOG",
