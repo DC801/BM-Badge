@@ -54,7 +54,7 @@
                  "visible":true,
                  "width":32,
                  "x":320,
-                 "y":405.25
+                 "y":414
                 }, 
                 {
                  "gid":162,
@@ -651,6 +651,24 @@
                  "width":16,
                  "x":76,
                  "y":303
+                }, 
+                {
+                 "gid":873,
+                 "height":16,
+                 "id":113,
+                 "name":"Weird Facts",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-dejavu"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":204,
+                 "y":333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1312,6 +1330,18 @@
                  "width":0,
                  "x":336,
                  "y":744
+                }, 
+                {
+                 "height":0,
+                 "id":114,
+                 "name":"ringzero-camera",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":336,
+                 "y":281
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1332,7 +1362,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":113,
+ "nextobjectid":115,
  "orientation":"orthogonal",
  "properties":[
         {

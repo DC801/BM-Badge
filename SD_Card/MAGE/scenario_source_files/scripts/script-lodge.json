@@ -187,9 +187,38 @@
 	"on_load-lodge-tuesday-check": [
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "ring-acquired",
+			"save_flag": "tuesday-walkedup",
 			"expected_bool": false,
 			"success_script": "on_load-lodge-cutscene"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-crowd-mini-check"
+		}
+	],
+	"on_load-crowd-mini-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
+			"expected_bool": true,
+			"success_script": "on_load-empty-lodge-mini",
+			"doc":"because there's a tiny window where you might reload map after elders leave but before crowd does"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-crowd-check"
+		}
+	],
+	"on_load-empty-lodge-mini": [
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Bookcase",
+			"byte_value": 3,
+			"doc": "down animation"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "empty-lodge-mini"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -423,11 +452,6 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "hide-lodge-crowd",
-			"bool_value": true
-		},
-		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Bookcase",
 			"geometry": "lodge-hidingplace"
@@ -523,10 +547,10 @@
 			"bool_value": false
 		},
 		{
-			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"entity": "%PLAYER%",
-			"geometry": "enter-lodge",
-			"duration": 200
+			"geometry": "lodge-path1",
+			"duration": 600
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -547,12 +571,6 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
-		},
-		{
-			"action": "WALK_ENTITY_TO_GEOMETRY",
-			"entity": "%PLAYER%",
-			"geometry": "lodge-path1",
 			"duration": 300
 		},
 		{
@@ -750,6 +768,11 @@
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesday-walkedup",
 			"bool_value": true
 		}
 	],
@@ -1595,7 +1618,7 @@
 		{
 			"action": "PAN_CAMERA_TO_GEOMETRY",
 			"duration": 1100,
-			"geometry": "ringzero-landing[1]"
+			"geometry": "ringzero-camera"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -1792,12 +1815,17 @@
 			"script": "elders-to-secretdoor"
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
+			"action": "COPY_SCRIPT",
+			"script": "deaden-artifacts"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
 			"bool_value": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "deaden-artifacts"
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
 		}
 	],
 	"deaden-artifacts": [
@@ -2236,19 +2264,9 @@
 	],
 	"empty-lodge": [
 		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Jackob",
-			"geometry": "lodge-hidingplace"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Alfonso",
-			"geometry": "lodge-hidingplace"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Bert",
-			"geometry": "lodge-hidingplace"
+			"action": "COPY_SCRIPT",
+			"script": "empty-lodge-mini",
+			"doc": "just in case I didn't catch all the 'empty-lodge' scripts and need the rest to happen, too"
 		},
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -2314,25 +2332,36 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Goose ",
 			"geometry": "lodge-hidingplace"
-		},
+		}
+	],
+	"empty-lodge-mini": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Bookcase",
 			"geometry": "lodge-hidingplace"
 		},
 		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Bracelet",
-			"geometry": "lodge-hidingplace"
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Broom",
-			"geometry": "lodge-hidingplace"
+			"action": "COPY_SCRIPT",
+			"script": "skip-artifacts"
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "deaden-artifacts"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Jackob",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Alfonso",
+			"geometry": "lodge-hidingplace"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Bert",
+			"geometry": "lodge-hidingplace"
 		}
 	],
 	"show_dialog-zippy-prechoose": [
@@ -3025,11 +3054,11 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "empty-lodge"
+			"script": "deaden-artifacts"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "deaden-artifacts"
+			"script": "empty-lodge"
 		}
 	],
 	"debug-disable-tuesday-q": [
@@ -3050,7 +3079,7 @@
 			"script": "debug-disable-tuesday-q"
 		}
 	],
-	"debug-disable-tuesday-ring-acquired": [
+	"debug-disable-tuesday-walkup": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-goodmorning-flags-true",
@@ -3072,7 +3101,7 @@
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-debug-disable-tuesday-ring-acquired"
+			"dialog": "dialog-debug-disable-tuesday-walkup"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -3297,6 +3326,11 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "ring-acquired",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
 			"bool_value": true
 		},
 		{

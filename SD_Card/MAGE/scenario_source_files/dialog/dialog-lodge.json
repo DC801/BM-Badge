@@ -786,7 +786,7 @@
 				},
 				{
 					"label": "Partially",
-					"script": "debug-disable-tuesday-ring-acquired"
+					"script": "debug-disable-tuesday-walkup"
 				},
 				{
 					"label": "Un-disable",
@@ -844,7 +844,7 @@
 			]
 		}
 	],
-	"dialog-debug-disable-tuesday-ring-acquired": [
+	"dialog-debug-disable-tuesday-walkup": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",

@@ -49,6 +49,11 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "tuesdayd",
 			"bool_value": false
 		},
@@ -939,7 +944,7 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "ring-acquired",
+			"save_flag": "tuesday-walkedup",
 			"bool_value": true
 		},
 		{
