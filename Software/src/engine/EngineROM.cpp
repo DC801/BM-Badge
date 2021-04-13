@@ -24,94 +24,148 @@ extern QSPI qspiControl;
 
 #endif //DC801_EMBEDDED
 
-bool EngineROM_Init(void)
+void EngineROM_Init()
 {
-#ifdef DC801_EMBEDDED
-
-	//first check the SD card to see if it has a game.dat to check against the ROM chip:
+	bool isRomPlayable = false;
 	const char filename[] = MAGE_GAME_DAT_PATH;
+#ifdef DC801_EMBEDDED
+	isRomPlayable = EngineROM_Magic();
 	FIL gameDat;
 	FRESULT result;
 	UINT count;
 	char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
 	char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
-	uint32_t gameDatFilesize = 0;
-
-	//get the game.dat filesize:
-	gameDatFilesize = util_sd_file_size(filename);
-	char debugString[128];
-	p_canvas()->clearScreen(COLOR_BLACK);
-	sprintf(
-		debugString,
-		"gameDatFilesize: %08u",
-		gameDatFilesize
-	);
-	p_canvas()->printMessage(
-		debugString,
-		Monaco9,
-		0xffff,
-		16,
-		64
-	);
-	p_canvas()->blt();
-
-	// Open magegame.dat file on SD card
-	result = f_open(&gameDat, filename, FA_READ | FA_OPEN_EXISTING);
-	if (result != FR_OK) {
-		return false;
-	}
-
-	//get the gameDatHashSD from the SD card game.dat:
-	result = f_lseek(&gameDat, 0);
-	if (result != FR_OK) {
-		return false;
-	}
-	//read from the file into the gameDatHashSD buffer:
-	result = f_read(
-		&gameDat,
-		(uint8_t *)gameDatHashSD,
-		ENGINE_ROM_MAGIC_HASH_LENGTH,
-		&count
-	);
-	if (result != FR_OK) {
-		return false;
-	}
-
-	//get the gameDatHashROM from the ROM chip:
-	EngineROM_Read(
-		0,
-		ENGINE_ROM_MAGIC_HASH_LENGTH,
-		(uint8_t *)gameDatHashROM,
-		"Failed to read header hash from ROM"
-	);
-
-	//compare the two header hashes:
-	bool headerHashMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
-
-	//handles hardware inputs and makes their state available
-	EngineHandleInput();
-
-	if(
-		!headerHashMatch
-		|| EngineInput_Buttons.mem3
-	){
-		//we need a prompt to see if they want to erase the chip: -Tim
-		if(!EngineROM_SD_Copy(gameDatFilesize, gameDat)){
-			ENGINE_PANIC("SD Copy Operation was not successful.");
+	bool gameDatSDPresent = false;
+	// Look on the SD card to read `game.dat` filesize, OR see if it is present at all:
+	uint32_t gameDatFilesize = util_sd_file_size(filename);
+	if(gameDatFilesize > 0) {
+		// Open magegame.dat file on SD card
+		result = f_open(&gameDat, filename, FA_READ | FA_OPEN_EXISTING);
+		if (result == FR_OK) {
+			result = f_lseek(&gameDat, 0);
+			if (result == FR_OK) {
+				// get the gameDatHashSD from the SD card game.dat:
+				result = f_read(
+					&gameDat,
+					(uint8_t *) gameDatHashSD,
+					ENGINE_ROM_MAGIC_HASH_LENGTH,
+					&count
+				);
+				gameDatSDPresent = result == FR_OK;
+			}
 		}
 	}
-/*
-	// Verify magic string is on ROM when we're done:
-	if (EngineROM_Magic((const uint8_t*)ENGINE_ROM_GAME_IDENTIFIER_STRING, ENGINE_ROM_IDENTIFIER_STRING_LENGTH) != true)
-	{
-		ENGINE_PANIC("Failed to match Game Magic");
-	} */
 
+	if (!gameDatSDPresent && isRomPlayable) {
+		// jump right to game
+		return;
+	}
+	else if (!gameDatSDPresent && !isRomPlayable) {
+		// no SD card, rom is invalid - literally unplayable
+		EngineROM_ErrorUnplayable();
+	}
+	else if (gameDatSDPresent && !isRomPlayable) {
+		// we have SD, rom is invalid - skip directly to the copy operation
+	}
+	else if (gameDatSDPresent && isRomPlayable) {
+		// we have SD, and the rom seems valid - check if hashes are the same
+
+		// get the gameDatHashROM from the ROM chip:
+		EngineROM_Read(
+			0,
+			ENGINE_ROM_MAGIC_HASH_LENGTH,
+			(uint8_t *) gameDatHashROM,
+			"Failed to read header hash from ROM"
+		);
+		char gameDatHashSDString[9] = {0};
+		char gameDatHashROMString[9] = {0};
+		sprintf(
+			gameDatHashSDString,
+			"%02X%02X%02X%02X",
+			gameDatHashSD[8],
+			gameDatHashSD[9],
+			gameDatHashSD[10],
+			gameDatHashSD[11]
+		);
+		sprintf(
+			gameDatHashROMString,
+			"%02X%02X%02X%02X",
+			gameDatHashROM[8],
+			gameDatHashROM[9],
+			gameDatHashROM[10],
+			gameDatHashROM[11]
+		);
+
+		// compare the two header hashes:
+		bool headerHashMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
+
+		// handles hardware inputs and makes their state available
+		EngineHandleInput();
+		char updateMessagePrefix[128];
+		if (!headerHashMatch) {
+			sprintf(
+				updateMessagePrefix,
+				"The file `game.dat` on your SD card is\n"
+				"different than what is on your badge."
+			);
+		} else if (EngineInput_Buttons.mem3) {
+			sprintf(
+				updateMessagePrefix,
+				"You have held down MEM3 while booting.\n"
+				"You may force update `game.dat` on badge."
+			);
+		} else {
+			// there is no update, and user is not holding MEM3, proceed as normal
+			result = f_close(&gameDat);
+			return;
+		}
+
+		// show update confirmation
+		char debugString[512];
+		p_canvas()->clearScreen(COLOR_BLACK);
+		//48 chars is a good character width for screen width plus some padding
+		sprintf(
+			debugString,
+			"%s\n\n"
+			"ROM hash: %s\n SD hash: %s\n\n"
+			"Would you like to update your scenario data?\n"
+			"------------------------------------------------\n\n\n"
+			"    > Press MEM0 to cancel\n\n"
+			"    > Press MEM3 to update the ROM",
+			updateMessagePrefix,
+			gameDatHashSDString,
+			gameDatHashROMString
+		);
+		p_canvas()->printMessage(
+			debugString,
+			Monaco9,
+			0xffff,
+			16,
+			16
+		);
+		p_canvas()->blt();
+		bool showOptions = true;
+		while (showOptions) {
+			nrf_delay_ms(10);
+			EngineHandleInput();
+			if (EngineInput_Activated.mem0) {
+				p_canvas()->clearScreen(COLOR_BLACK);
+				p_canvas()->blt();
+				return;
+			}
+			if (EngineInput_Activated.mem3) {
+				showOptions = false;
+			}
+		}
+	}
+	if(!EngineROM_SD_Copy(gameDatFilesize, gameDat)){
+		ENGINE_PANIC("SD Copy Operation was not successful.");
+	}
 	//close game.dat file when done:
 	result = f_close(&gameDat);
 #endif //DC801_EMBEDDED
 #ifdef DC801_DESKTOP
-	romfile = fopen("MAGE/game.dat", "r+b");
+	romfile = fopen(filename, "r+b");
 
 	if (romfile == NULL)
 	{
@@ -139,7 +193,27 @@ bool EngineROM_Init(void)
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 #endif //DC801_DESKTOP
-	return true;
+	// Verify magic string is on ROM when we're done:
+	isRomPlayable = EngineROM_Magic();
+	if (!isRomPlayable) {
+		EngineROM_ErrorUnplayable();
+	}
+}
+
+void EngineROM_ErrorUnplayable() {
+	//let out the magic s̶m̶o̶k̶e̶ goat
+	ENGINE_PANIC(
+		"ROM header invalid. Game cannot start.\n"
+		"Goat is sad.   ##### ####     \n"
+		"             ##   #  ##       \n"
+		"            #   (-)    #      \n"
+		"            #+       ######   \n"
+		"            #^             ## \n"
+		"             ###           #  \n"
+		"               #  #      # #  \n"
+		"               ##  ##  ##  #  \n"
+		"               ######  #####  \n"
+	);
 }
 
 uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
@@ -265,13 +339,7 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 	char debugString[128];
 	FRESULT result;
 	UINT count;
-	p_canvas()->fillRect(
-		0,
-		96,
-		WIDTH,
-		96,
-		COLOR_BLACK
-	);
+	p_canvas()->clearScreen(COLOR_BLACK);
 	p_canvas()->printMessage(
 		"Erasing ROM chip",
 		Monaco9,
@@ -372,7 +440,8 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 			EngineROM_Verify(
 				currentAddress + romPageOffset,
 				writeSize,
-				(uint8_t *)(strBuffer + romPageOffset)
+				(uint8_t *)(strBuffer + romPageOffset),
+				true
 			);
 		}
 		//Debug Print:
@@ -419,7 +488,7 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 	return true;
 }
 
-void EngineROM_Deinit(void) {
+void EngineROM_Deinit() {
 #ifdef DC801_DESKTOP
 	if (romfile == NULL)
 	{
@@ -522,13 +591,13 @@ bool EngineROM_Write(
 #endif // DC801_DESKTOP
 }
 
-bool EngineROM_Verify(
+uint32_t EngineROM_Verify(
 	uint32_t address,
 	uint32_t length,
-	const uint8_t *data
+	const uint8_t *data,
+	bool throwErrorWithLog = false
 )
 {
-#ifdef DC801_EMBEDDED
 	if (data == NULL)
 	{
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
@@ -544,42 +613,31 @@ bool EngineROM_Verify(
 
 	for(uint32_t i=0; i<length; i++){
 		if(data[i] != readBuffer[i]){
-			sprintf(
-				debugString,
-				"EngineROM_Verify failed at address %d\nSD: %d\nROM: %d",
-				address + i,
-				data[i],
-				readBuffer[i]
-			);
-			debug_print(debugString);
-			ENGINE_PANIC(debugString);
+			if (throwErrorWithLog) {
+				sprintf(
+					debugString,
+					"EngineROM_Verify failed at address %d\nTest: %d\n ROM: %d",
+					address + i,
+					data[i],
+					readBuffer[i]
+				);
+				debug_print(debugString);
+				ENGINE_PANIC(debugString);
+			}
 			//return address in ROM where memory does not match
 			return address+i;
 		}
 	}
-#endif // DC801_EMBEDDED
-	return true;
+	return length;
 }
 
-bool EngineROM_Magic(const uint8_t *magic, uint8_t length)
-{
-	uint8_t buffer[length];
-	uint8_t *ptr = buffer;
-
-	uint32_t read = EngineROM_Verify(0, length, buffer);
-	if (read != length)
-	{
-		//let out the magic smoke
-		ENGINE_PANIC("Failed to match Game Data magic");
-	}
-
-	for (int i = 0; i < length; i++)
-	{
-		if (*magic++ != *ptr++)
-		{
-			return false;
-		}
-	}
-
-	return true;
+bool EngineROM_Magic() {
+	uint8_t length = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
+	uint8_t magic[] = ENGINE_ROM_GAME_IDENTIFIER_STRING;
+	u_int32_t bytesVerified = EngineROM_Verify(
+		0,
+		length,
+		magic
+	);
+	return bytesVerified == length;
 }
