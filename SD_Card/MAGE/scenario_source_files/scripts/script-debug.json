@@ -505,12 +505,22 @@
 	"set-tuesday-flags-true": [
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesday-walkedup",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "ring-acquired",
 			"bool_value": true
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "hide-lodge-crowd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
 			"bool_value": true
 		},
 		{
@@ -527,12 +537,22 @@
 	"set-tuesday-flags-false": [
 		{
 			"action": "SET_SAVE_FLAG",
+			"save_flag": "tuesday-walkedup",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
 			"save_flag": "ring-acquired",
 			"bool_value": false
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "hide-lodge-crowd",
+			"bool_value": false
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "hide-lodge-crowd-mini",
 			"bool_value": false
 		},
 		{
