@@ -1751,6 +1751,33 @@ void MageScriptControl::mutateVariable(uint8_t * args, MageScriptState * resumeS
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
 	uint16_t *currentValue = &MageGame->currentSave.scriptVariables[argStruct->variableId];
 
+	// I wanted to log some stats on how well our random function worked
+	// on desktop and hardware after the new random seed changes.
+	// Works really well on both. Can use this again if we need.
+	//if(argStruct->operation == RNG) {
+	//	uint16_t samples = 65000;
+	//	uint16_t testVar = 0;
+	//	uint16_t range = argStruct->value + 1; // to make verify it only goes 0~(n-1), not 0~n
+	//	uint16_t values[range];
+	//	for (int i = 0; i < range; ++i) {
+	//		values[i] = 0;
+	//	}
+	//	for (int i = 0; i < samples; ++i) {
+	//		mutate(
+	//			argStruct->operation,
+	//			&testVar,
+	//			argStruct->value
+	//		);
+	//		values[testVar] += 1;
+	//	}
+	//	for (int i = 0; i < range; ++i) {
+	//		debug_print(
+	//			"%05d: %05d",
+	//			i,
+	//			values[i]
+	//		);
+	//	}
+	//}
 	mutate(
 		argStruct->operation,
 		currentValue,
@@ -2382,14 +2409,16 @@ void MageScriptControl::mutate(
 	uint16_t *destination,
 	uint16_t value
 ) const {
+	//protect against division by 0 errors
+	uint16_t safeValue = value == 0 ? 1 : value;
 	switch(operation) {
 		case SET : *destination = value; break;
 		case ADD : *destination += value; break;
 		case SUB : *destination -= value; break;
-		case DIV : *destination /= value; break;
+		case DIV : *destination /= safeValue; break;
 		case MUL : *destination *= value; break;
-		case MOD : *destination %= value; break;
-		case RNG : *destination = rand() % value; break;
+		case MOD : *destination %= safeValue; break;
+		case RNG : *destination = rand() % safeValue; break;
 		default : debug_print(
 			"mutateVariable received an invalid operation: %d",
 			operation

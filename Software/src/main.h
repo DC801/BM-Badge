@@ -29,4 +29,6 @@ static void rom_init(void);
 
 int main(void);
 
+void setUpRandomSeed();
+
 #endif /* BOOT_H_ */

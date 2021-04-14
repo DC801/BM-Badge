@@ -105,8 +105,8 @@ void EngineROM_Init()
 		if (!headerHashMatch) {
 			sprintf(
 				updateMessagePrefix,
-				"The file `game.dat` on your SD card is\n"
-				"different than what is on your badge."
+				"The file `game.dat` on your SD card does not\n"
+				"match what is on your badge ROM chip."
 			);
 		} else if (EngineInput_Buttons.mem3) {
 			sprintf(
@@ -127,7 +127,8 @@ void EngineROM_Init()
 		sprintf(
 			debugString,
 			"%s\n\n"
-			"ROM hash: %s\n SD hash: %s\n\n"
+			" SD hash: %s\n"
+			"ROM hash: %s\n\n"
 			"Would you like to update your scenario data?\n"
 			"------------------------------------------------\n\n\n"
 			"    > Press MEM0 to cancel\n\n"

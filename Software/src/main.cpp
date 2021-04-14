@@ -25,6 +25,7 @@ QSPI qspiControl;
 #include "test.h"
 
 #ifdef DC801_DESKTOP
+#include <time.h>
 volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
@@ -148,6 +149,7 @@ int main(void){
 	ble_adv_start();
 #endif
 
+	setUpRandomSeed();
 	// Setup LEDs
 	ledInit();
 	ledsOn();
@@ -181,4 +183,28 @@ int main(void){
 		NVIC_SystemReset();
 	}
 #endif
+}
+
+void setUpRandomSeed() {
+#ifdef DC801_EMBEDDED
+	//Set random seed with something from nordic sdk,
+	//so as long as nrf_drv_rng_init() has been run,
+	//this is actually pretty random, probably.
+	uint32_t seed = (
+		(nrf_rng_random_value_get() <<  0) +
+		(nrf_rng_random_value_get() <<  8) +
+		(nrf_rng_random_value_get() << 16) +
+		(nrf_rng_random_value_get() << 24)
+	);
+#endif //DC801_EMBEDDED
+
+#ifdef DC801_DESKTOP
+	//Set random seed with number of seconds since
+	//unix epoc so two desktops launched the same
+	//second get the same rng, and that totally
+	//doesn't matter. Good enough for a simple
+	//dice roll for scripts.
+	uint32_t seed = time(NULL);
+#endif //DC801_DESKTOP
+	srand(seed);
 }
