@@ -2405,5 +2405,68 @@
 				}
 			]
 		}
+	},
+	"yabbo_mongo": {
+		"tileset": "entity-yabbo_mongo.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 36,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 39,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 38,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 37,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 40,
+					"flip_x": false
+				},
+				{
+					"tileid": 43,
+					"flip_x": false
+				},
+				{
+					"tileid": 42,
+					"flip_x": false
+				},
+				{
+					"tileid": 41,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				},
+				{
+					"tileid": 17,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

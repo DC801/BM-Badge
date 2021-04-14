@@ -1259,5 +1259,13 @@
 			"expected_bool": false,
 			"success_script": "enter_from-credits-end"
 		}
+	],
+	"yabbo-journey": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%",
+			"duration": 22000
+		}
 	]
 }

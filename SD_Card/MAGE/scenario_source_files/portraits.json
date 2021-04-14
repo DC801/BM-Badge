@@ -434,5 +434,14 @@
 				"flip_x": true
 			}
 		}
+	},
+	"yabbo_mongo": {
+		"tileset": "portraits-nonhuman.json",
+		"emotes": {
+			"default": {
+				"tileid": 14,
+				"flip_x": false
+			}
+		}
 	}
 }
