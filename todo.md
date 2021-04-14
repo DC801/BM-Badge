@@ -51,7 +51,7 @@
 - [x] Make a list of some C functions we want scripts to be able to call
 - [x] Decide on a common script function signature
 - [x] Define an encoding format for scripts
-- [ ] Adjust entity animation system to allow for multiple actions that can be called from scripts
+- [x] Adjust entity animation system to allow for multiple actions that can be called from scripts
 - [x] Make it so that maps denote a player entity by ID in the game.dat file, and only has ONE or ZERO players per map.
 - [x] Change map reset keybind to be XOR+MEM3 and make it work even in dialogs and the hex editor
 - [ ] Script system
@@ -90,7 +90,7 @@
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_C_U2
 		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U4
 		- [ ] CHECK_ENTITY_PATH (specific hackable state check by name)
-		- [/] CHECK_SAVE_FLAG (needs ROM/DESKTOP reads)
+		- [x] CHECK_SAVE_FLAG
 		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
 		- [x] CHECK_FOR_BUTTON_STATE
@@ -124,7 +124,7 @@
 		- [ ] SET_ENTITY_HACKABLE_STATE_C_U2
 		- [ ] SET_ENTITY_HACKABLE_STATE_A_U4
 		- [ ] SET_ENTITY_PATH (specific hackable state check by name)
-		- [/] SET_SAVE_FLAG (needs ROM/DESKTOP writes)
+		- [x] SET_SAVE_FLAG
 		- [x] SET_PLAYER_CONTROL
 		- [x] SET_MAP_TICK_SCRIPT
 		- [x] SET_HEX_CURSOR_LOCATION
@@ -167,7 +167,7 @@
 - [x] Collision System
 	- [x] For Tiles
 	- [!] For Entities
-- [ ] Dialog Data Type Implementation:
+- [x] Dialog Data Type Implementation:
 	- [x] Display Name - either stringId, or entityId
 	- [x] The actual text to display, probably with line breaks hard coded in to keep things simple.
 	- [x] byte to encode position (i.e. is the text on the top or bottom of the screen, is the portrait on the left or right side of the screen, should we display a portrait at all?, etc.).
@@ -187,12 +187,6 @@
 			- [x] Should match current entityType of speaking entities
 			- [x] Support Entity Hacked state
 			- [x] look at dialog alignment, and if it's "RIGHT", toggle flip_x into the flags byte
-	- [ ] Fix name not sticking to player when changing rooms
-	- [ ] Look into why EtherNettles puzzle is not triggering
-		- [ ] it's probably a modulo issue on tileId and tilesetId
-	- [ ] Make a new tileset that is mostly transparent for the main menu
-	- [ ] Make some artwork for the main menu
-	- [ ] Create action for setBackground
 	- [x] tilesetId and tileId for the portrait picture.
 	- [x] Support for string templates that make use of hacked entity names
 	- [x] Support for string templates that make use of numeric variables
@@ -209,10 +203,13 @@
 			- [ ] etc...
 		- [ ] Player responses to dialog may be desired:
 			- [ ] Assuming pop-up happens while dialog is still active:
-				- [ ] select from a list of options
-				- [ ] enter a numerical code
-				- [ ] enter an alphanumeric code (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
+				- [x] select from a list of options
+				- [ ] enter a numerical value
+				- [ ] enter an alphanumeric value (put on-screen keyboard over dialog? Cycle through all letter options like arcade name entry?)
 			- [ ] new script and/or dialog to call depending on player response
+				- [x] from a list of options
+				- [ ] from a numerical value
+				- [ ] from an alphanumeric value
 		- [x] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
 - [x] Strings
 	- [x] uint16_t Length
@@ -234,9 +231,10 @@
 - [ ] Create action for setBackground
 - [x] Fix portrait from last conversation being used on dialogScreens that have none
 - [x] Remove AnimationFrames to free enough ram to run on Hardware again
-- [ ] Fix Color palette corruption bug
+- [x] Fix Color palette corruption bug
 	- [x] Add corruption detection and logging
-	- [ ] Now just reproduce it again - what could possibly have been causing this?
+	- [x] Now just reproduce it again - what could possibly have been causing this?
+		- [x] Turns out it was something indexing into `entities[255]` and mutating that entity - but entities were only allocated to 64. Entities were allocated just before the ColorPalettes.
 
 ## Playtesting night notes:
 - [x] Text changes: "No! Not Tuesday, T.U.E.S.D.A.Y.!"
@@ -254,9 +252,9 @@
 	- [x] We should make it do a rot 13 of RED HERRING
 - [x] Add Desvio to special thanks
 - [x] Add AdwareHunter to special thanks
-- [ ] Add a book that mentions that you can press XOR and MEM3 to reset the map.
+- [x] Add a book that mentions that you can press XOR and MEM3 to reset the map.
 - [ ] Rax asks: Is there a place to snag a copy of the books outside of the game, other than to go parse the source code?
-- [ ] Me: Oh man. Not a bad idea! Perhaps we could release a little "Game Manual" with those! Perhaps a print out that's empty, and they player can fill in the values.
+	- [ ] Me: Oh man. Not a bad idea! Perhaps we could release a little "Game Manual" with those! Perhaps a print out that's empty, and they player can fill in the values.
 - [x] NewGnu found that if you set the onTick index to the save action, you can write every tick. FRY ROM STORAGE REAL QUICK
 	- [x] Solution? Show a "Save completed" dialog after save completes, because then it can only burn through as fast as they can confirm the "Save completed" dialog.
 - [ ] Desvio says that Bert should say something different if his name is changed to "Bart" or "Bort" - reference to Simpsons "Who would name a kid Bort" sketch
@@ -270,7 +268,7 @@
 - [x] During CorfidBizna's playthrough, she triggered a "fade to black" script, and reloading the map didn't make things playable again.
 	- [x] To fix, LoadMap should set fadeFraction to 0
 - [x] Fix the ???Mystery Sink??? in the player's house?!?
-- [ ] Each of the members of the cat construction crew should say something different to the player when they are the PipsCat
+- [x] Each of the members of the cat construction crew should say something different to the player when they are the PipsCat
 - [ ] The path leading north of the Library should take the player to an "UNDER CONSTRUCTION" zone, saying something about how it's not ready yet.
 - [ ] The wrap-around at the bottom of the map should fade out and then in again
 - [x] Re-do the handling of the right side buttons when in the HexEditor
