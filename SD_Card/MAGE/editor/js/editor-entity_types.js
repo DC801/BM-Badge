@@ -46,15 +46,11 @@ Vue.component(
 				return this.scenarioData.entityTypes;
 			},
 			jsonOutput: function () {
-				var result = {};
-				Object.values(this.scenarioData.entityTypes)
-					.forEach(function (entityType) {
-						result[entityType.type] = {
-							tileset: entityType.tileset,
-							animations: entityType.animations
-						};
-					});
-				return JSON.stringify(result, null, '\t') + '\n';
+				return JSON.stringify(
+					this.scenarioData.entityTypes,
+					null,
+					'\t'
+				) + '\n';
 			},
 			needsSave: function () {
 				return this.initJsonState !== this.jsonOutput;
@@ -192,12 +188,25 @@ Vue.component(
 					}
 				});
 				this.currentEntityType.animations = newValues;
-			},
+			}
+		}
+	}
+);
+
+Vue.component(
+	'unsaved-changes-warning',
+	{
+		name: 'unsaved-changes-warning',
+		template: '#template-unsaved-changes-warning',
+		props: {
+			data: String,
+		},
+		methods: {
 			copyState: function () {
 				this.$refs.copyStateTextArea.select();
 				document.execCommand("copy");
-			}
-		}
+			},
+		},
 	}
 );
 
