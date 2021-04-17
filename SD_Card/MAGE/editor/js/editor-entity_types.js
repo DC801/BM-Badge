@@ -70,9 +70,6 @@ Vue.component(
 			allTilesets: function () {
 				return this.scenarioData.parsed.tilesets.slice().sort()
 			},
-			tilesetImage: function () {
-				return this.tileset.imageFile.blobUrl;
-			},
 			currentDirection: function () {
 				var currentAnimation = this.currentEntityType.animations[this.currentAnimationName];
 				return (
@@ -231,6 +228,10 @@ Vue.component(
 			};
 		},
 		created: function() {
+			var imageFile = this.tileset.imageFile;
+			if (imageFile && !imageFile.blobUrl) {
+				imageFile.blobUrl = URL.createObjectURL(imageFile);
+			}
 			if(this.animation) {
 				this.animate();
 			}
