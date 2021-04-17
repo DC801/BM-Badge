@@ -185,25 +185,12 @@ Vue.component(
 					}
 				});
 				this.currentEntityType.animations = newValues;
-			}
-		}
-	}
-);
-
-Vue.component(
-	'unsaved-changes-warning',
-	{
-		name: 'unsaved-changes-warning',
-		template: '#template-unsaved-changes-warning',
-		props: {
-			data: String,
-		},
-		methods: {
+			},
 			copyState: function () {
 				this.$refs.copyStateTextArea.select();
 				document.execCommand("copy");
 			},
-		},
+		}
 	}
 );
 
