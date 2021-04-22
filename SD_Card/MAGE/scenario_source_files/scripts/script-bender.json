@@ -460,7 +460,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Shepherd",
+			"entity": "Bob Austin",
 			"script": "bender-handler-timer"
 		}
 	],
@@ -472,7 +472,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "Shepherd",
+			"entity": "Bob Austin",
 			"script": "null_script"
 		}
 	]
