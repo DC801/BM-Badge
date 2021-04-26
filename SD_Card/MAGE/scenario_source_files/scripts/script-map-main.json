@@ -1093,6 +1093,29 @@
 			"dialog": "dialog-safety-skyler"
 		}
 	],
+	"fountain-interact": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "fountain-interact-fixed",
+			"expected_bool": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-fountain-interact"
+		}
+	],
+	"fountain-interact-fixed": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-fountain-interact-fixed"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "fountain-interact"
+		}
+	],
 	"fountain-glitchwatch": [
 		{
 			"action": "CHECK_ENTITY_GLITCHED",

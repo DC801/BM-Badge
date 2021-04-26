@@ -405,6 +405,25 @@
 			]
 		}
 	],
+	"dialog-fountain-interact": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"This fountain has been glitched as long as\nI can remember, but now I have the chance\nto fix it!",
+				"I just need to figure out how...."
+			]
+		}
+	],
+	"dialog-fountain-interact-fixed": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"This is fountain is awesome! I've always\nwanted to see it un-glitched!"
+			]
+		}
+	],
 	"dialog-debug-win-rake-q": [
 		{
 			"alignment": "BOTTOM_LEFT",

@@ -1,0 +1,14 @@
+{ "columns":1,
+ "image":"tileset-dc801_gradient.gif",
+ "imageheight":240,
+ "imagewidth":16,
+ "margin":0,
+ "name":"tileset-dc801_gradient",
+ "spacing":0,
+ "tilecount":15,
+ "tiledversion":"1.4.3",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}

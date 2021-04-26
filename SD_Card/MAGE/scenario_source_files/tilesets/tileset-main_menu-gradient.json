@@ -1,0 +1,22 @@
+{ "columns":1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
+ "image":"tileset-main_menu-gradient.gif",
+ "imageheight":240,
+ "imagewidth":16,
+ "margin":0,
+ "name":"tileset-main_menu-gradient",
+ "spacing":0,
+ "tilecount":15,
+ "tiledversion":"1.4.3",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}
