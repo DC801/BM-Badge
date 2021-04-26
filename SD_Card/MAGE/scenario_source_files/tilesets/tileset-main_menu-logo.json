@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"..\/tilesets\/tileset-main_menu-logo.gif",
+ "imageheight":128,
+ "imagewidth":96,
+ "margin":0,
+ "name":"tileset-main_menu-logo",
+ "spacing":0,
+ "tilecount":48,
+ "tiledversion":"1.4.3",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":1.4
+}

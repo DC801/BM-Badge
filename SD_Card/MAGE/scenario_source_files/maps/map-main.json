@@ -659,6 +659,11 @@
                          "value":true
                         }, 
                         {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"fountain-interact"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"fountain-glitchwatch"

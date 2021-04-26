@@ -65,6 +65,7 @@
 	},
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
-		"codec": "tilesets/tileset-dialog_codec.json"
+		"codec": "tilesets/tileset-dialog_codec.json",
+		"menu": "tilesets/tileset-dialog_transparent_menu.json"
 	}
 }
