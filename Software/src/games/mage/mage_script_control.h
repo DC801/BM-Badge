@@ -44,7 +44,7 @@ class MageScriptControl
 
 		//this will process a script based on the state of the resumeStateStruct passed to it.
 		//it should only be called from the 
-		void processScript(MageScriptState * resumeStateStruct, uint8_t entityId, MageScriptType scriptType);
+		void processScript(MageScriptState * resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType);
 
 		//this will run through the actions in a script from the state stores in resumeState
 		//if a mapLocalJumpScript is called by an action, it will return without processing any further actions.
@@ -328,8 +328,8 @@ class MageScriptControl
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
-		void handleEntityOnTickScript(uint8_t index);
-		void handleEntityOnInteractScript(uint8_t index);
+		void handleEntityOnTickScript(uint8_t filteredEntityId);
+		void handleEntityOnInteractScript(uint8_t filteredEntityId);
 
 		int16_t getUsefulEntityIndexFromActionEntityId(
 			uint8_t entityId,

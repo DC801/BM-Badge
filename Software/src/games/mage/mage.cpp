@@ -54,7 +54,7 @@ void handleScripts()
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	MageScript->handleMapOnTickScript();
 	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	for(uint8_t i = 0; i < MageGame->Map().EntityCount(); i++)
+	for(uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++)
 	{
 		//this script will not initiate any new onInteract scripts. It will simply run an
 		//onInteract script based on the state of the entityInteractResumeStates[i] struct

@@ -119,7 +119,7 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"name": "Save Game",
-			"border_tileset": "menu",
+			"border_tileset": "codec",
 			"portrait": "floppy",
 			"messages": [
 				"Would you like to save your progress?"

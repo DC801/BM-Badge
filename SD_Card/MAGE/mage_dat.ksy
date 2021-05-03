@@ -207,12 +207,29 @@ types:
       - id: flags
         type: u1
     instances:
+      is_glitched:
+        value: (flags & 0b10000000) != 0
+      is_debug:
+        value: (flags & 0b01000000) != 0
       flip_x:
         value: (flags & 0b00000100) != 0
       flip_y:
         value: (flags & 0b00000010) != 0
       flip_diag:
         value: (flags & 0b00000001) != 0
+
+  entity_render_flags:
+    seq:
+      - id: flags
+        type: u1
+    instances:
+      is_glitched:
+        value: (flags & 0b10000000) != 0
+      is_debug:
+        value: (flags & 0b01000000) != 0
+      direction:
+        value: (flags & 0b00000011)
+        enum: direction_type
 
   tileset:
     seq:
@@ -337,7 +354,12 @@ types:
       - id: current_frame
         type: u1
       - id: direction
-        type: u1
+        type:
+          switch-on: primary_id_type
+          cases:
+            'entity_primary_id_type::tileset_id': render_flags
+            'entity_primary_id_type::animation_id': render_flags
+            'entity_primary_id_type::entity_type_id': entity_render_flags
       - id: hackable_state_a
         type: u1
       - id: hackable_state_b
@@ -559,6 +581,12 @@ enums:
     0: tileset_id
     1: animation_id
     2: entity_type_id
+
+  direction_type:
+    0: north
+    1: east
+    2: south
+    3: west
 
   geometry_type:
     0: point

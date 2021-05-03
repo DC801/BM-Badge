@@ -483,6 +483,11 @@
                 "value": 0
             },
             {
+                "name": "is_debug",
+                "type": "bool",
+                "value": true
+            },
+            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false

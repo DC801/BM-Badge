@@ -170,9 +170,16 @@ typedef enum : uint8_t{
 	SOUTH = 2,
 	WEST = 3,
 	NUM_DIRECTIONS,
-	IS_GLITCHED_MASK = 0b01111111,
-	IS_GLITCHED = 0b10000000
 } MageEntityAnimationDirection;
+
+#define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
+#define RENDER_FLAGS_IS_GLITCHED			0b10000000
+#define RENDER_FLAGS_IS_DEBUG				0b01000000
+#define RENDER_FLAGS_FLIP_X					0b00000100
+#define RENDER_FLAGS_FLIP_Y					0b00000010
+#define RENDER_FLAGS_FLIP_DIAG				0b00000001
+#define RENDER_FLAGS_FLIP_MASK				0b00000111
+#define RENDER_FLAGS_DIRECTION_MASK			0b00000011
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
