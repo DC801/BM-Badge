@@ -491,6 +491,11 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	debug_print(
 		"Populate entities:"
 	);
+	// reset both arrays so nothing super funky goes down from previous maps
+	for (uint8_t i = 0; i < MAX_ENTITIES_PER_MAP; i++) {
+		filteredMapLocalEntityIds[i] = i;
+		mapLocalEntityIds[i] = i;
+	}
 	filteredEntityCountOnThisMap = 0;
 	for (uint8_t i = 0; i < map.EntityCount(); i++) {
 		//fill in entity data from ROM:
