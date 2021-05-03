@@ -126,7 +126,7 @@ void MageHexEditor::updateHexStateVariables()
 {
 	bytesPerPage = dialogState ? 64 : 192;
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-	memTotal = MageGame->Map().EntityCount() * sizeof(MageEntity);
+	memTotal = MageGame->filteredEntityCountOnThisMap * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
 }
 
@@ -340,7 +340,7 @@ void MageHexEditor::renderHexHeader()
 		currentMemPage,
 		hexCursorLocation,
 		totalMemPages,
-		MageGame->Map().EntityCount(),
+		MageGame->filteredEntityCountOnThisMap,
 		memTotal
 	);
 	mage_canvas->printMessage(

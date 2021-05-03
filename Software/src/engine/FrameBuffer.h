@@ -51,7 +51,7 @@ struct RenderFlags {
 	bool paddingA:1;
 	bool paddingB:1;
 	bool paddingC:1;
-	bool paddingD:1;
+	bool debug:1;
 	bool glitched:1;
 };
 union RenderFlagsUnion {

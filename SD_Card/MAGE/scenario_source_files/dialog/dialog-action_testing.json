@@ -494,7 +494,7 @@
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"portrait": "codec-mage",
-			"name": "%SELF%",
+			"name": "%PLAYER%",
 			"border_tileset": "codec",
 			"messages": [
 				"What just happened to me?",

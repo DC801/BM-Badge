@@ -316,6 +316,34 @@
 	- [x] Desktop build should also ENGINE_PANIC if ROM Magic is bad
 - [ ] Entity "Action" animation continues playing during dialog but only sometimes
 - [ ] Entities go to space when the duration of a walk path is less than the milliseconds per frame of the current fps
+- [x] Hamster has a bug report. The save icon's background dialog tileset is missing.
+- [x] Use entity property `is_debug` (true) to make certain entities "Debug mode only"
+	- [x] Set the "Warp Fish" `is_debug` true
+	- [x] Set the Exa `entity_type` property `is_debug` true by default
+	- [x] Add kaitai `render_flags` type to entity instance direction help show what's up
+	- [x] Make encoder set the `0b0100000` renderFlags so those entities can be filtered out at runtime
+	- [x] In engine, implement runtime "show debug entities" mode
+		- [x] Add `is_debug` for `0b0100000` bit on renderFlags
+		- [x] Pick a key combination to toggle this mode
+			- [x] Pressing the key combination reloads the current map and disables the filter
+		- [x] Filter the entities by the `0b0100000` renderFlags, while tracking the original + filtered entityId
+			- [x] Make an array that maps `mapLocalEntityId` to `filteredMapLocalEntityId`
+			- [x] Change the getEntity* methods to use this
+		- [x] Diligence:
+			- [x] Review all usages of `MAX_ENTITIES_PER_MAP`
+			- [x] Review all usages of `map.EntityCount()`
+			- [x] Review all usages of `entities[`
+			- [x] Review all usages of `entityRenderableData[` -> `getEntityRenderableDataByMapLocalId`
+			- [x] Review all usages of `filteredMapLocalEntityIds`
+			- [x] Review all usages of `mapLocalEntityIds`
+			- [x] Review all usages of `playerEntityIndex`
+			- [x] Review all usages of `cameraFollowEntityId`
+			- [x] Make sure that entity hacking still doesn't jank the player
+			- [x] Make sure that camera wiggle functions still work
+			- [x] Test it on the hardware
+- [ ] Make a "Warp Zone" map that can take players to all of the debug maps
+	- [ ] Make the "Warp Fish" send the player the "Warp Zone"
+	- [ ] Add the "Warp Fish" fish to all the debug maps
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

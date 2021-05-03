@@ -92,6 +92,9 @@ var serializeEntity = function (
 	if(entity.is_glitched) {
 		directionOrRenderFlags |= IS_GLITCHED_FLAG;
 	}
+	if(entity.is_debug) {
+		directionOrRenderFlags |= IS_DEBUG_FLAG;
+	}
 	if(entity.is_flipped_diagonal) {
 		directionOrRenderFlags |= IS_FLIPPED_DIAGONAL_FLAG;
 	}

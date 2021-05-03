@@ -452,7 +452,7 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 			currentScreen.entityIndex,
 			triggeringEntityId
 		);
-		currentEntity = MageGame->entities[entityIndex];
+		currentEntity = *MageGame->getEntityByMapLocalId(entityIndex);
 		uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
 		if(sanitizedPrimaryType == ENTITY_TYPE) {
 			MageEntityType *entityType = MageGame->getValidEntityType(currentEntity.primaryId);

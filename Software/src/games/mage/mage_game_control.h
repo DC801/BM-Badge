@@ -96,6 +96,9 @@ private:
 		.y = 0,
 	};
 
+	uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
+	uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
+
 	//this handles script initialization when loading a new map
 	void initializeScriptsOnMapLoad();
 public:
@@ -115,10 +118,12 @@ public:
 	bool playerHasHexEditorControl;
 	bool playerHasHexEditorControlClipboard;
 	bool isCollisionDebugOn;
+	bool isEntityDebugOn;
+	uint8_t filteredEntityCountOnThisMap;
 	bool cameraShaking = false;
 	float cameraShakePhase = 0;
 	uint8_t cameraShakeAmplitude = 0;
-	int16_t cameraFollowEntityId = NO_PLAYER;
+	uint8_t cameraFollowEntityId = NO_PLAYER;
 	Point cameraPosition = {
 		.x = 0,
 		.y = 0,
@@ -174,7 +179,6 @@ public:
 
 	//the functions below will validate specific properties to see if they are valid.
 	//these are used to ensure that we don't get segfaults from using the hacked entity data.
-	uint16_t getValidEntityId(uint16_t entityId);
 	uint16_t getValidMapId(uint16_t mapId);
 	uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
 	uint16_t getValidTilesetId(uint16_t tilesetId);
@@ -196,11 +200,16 @@ public:
 	MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
 	MageGeometry getGeometryFromGlobalId(uint16_t globalGeometryId);
 	MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
-	MageEntityRenderableData* getValidEntityRenderableData(uint8_t mapLocalEntityId);
+	uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const;
+	uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const;
+	MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
+	MageEntityRenderableData* getEntityRenderableDataByMapLocalId(uint8_t mapLocalEntityId);
 	std::string getString(
 		uint16_t stringId,
-		int16_t currentEntityId
+		int16_t mapLocalEntityId
 	);
+	MageTileset* getValidTileset(uint16_t tilesetId);
+	std::string getEntityNameStringById(int8_t mapLocalEntityId);
 	uint32_t getImageAddress(uint16_t imageId);
 	uint32_t getPortraitAddress(uint16_t portraitId);
 	uint32_t getDialogAddress(uint16_t dialogId);
@@ -211,7 +220,7 @@ public:
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData
 	void updateEntityRenderableData(
-		uint8_t index,
+		uint8_t mapLocalEntityId,
 		bool skipTilesetCheck = false
 	);
 
@@ -224,17 +233,16 @@ public:
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
+	void computeEntityYAxisSort(
+		uint8_t *entitySortOrder,
+		uint8_t filteredEntityCountOnThisMap
+	);
+
 	//this will draw the entities over the current state of the screen
 	void DrawEntities();
 
 	//this will draw the current map's geometry over the current state of the screen
 	void DrawGeometry();
-
-	MageEntity* getValidEntity(int8_t entityId);
-
-	MageTileset* getValidTileset(uint16_t tilesetId);
-
-	std::string getEntityNameStringById(int16_t entityId);
 
 	Point getPushBackFromTilesThatCollideWithPlayer();
 
