@@ -488,13 +488,13 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		ENGINE_PANIC(errorString);
 	}
 
-	debug_print(
-		"Populate entities:"
-	);
+	//debug_print(
+	//	"Populate entities:"
+	//);
 	// reset both arrays so nothing super funky goes down from previous maps
 	for (uint8_t i = 0; i < MAX_ENTITIES_PER_MAP; i++) {
-		filteredMapLocalEntityIds[i] = i;
-		mapLocalEntityIds[i] = i;
+		filteredMapLocalEntityIds[i] = NO_PLAYER;
+		mapLocalEntityIds[i] = NO_PLAYER;
 	}
 	filteredEntityCountOnThisMap = 0;
 	for (uint8_t i = 0; i < map.EntityCount(); i++) {
@@ -548,16 +548,17 @@ void MageGameControl::initializeScriptsOnMapLoad()
 		map.getMapLocalMapOnTickScriptId(),
 		false
 	);
-	for (uint32_t i = 0; i < filteredEntityCountOnThisMap; i++) {
+	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
+		MageEntity *entity = &entities[i];
 		MageScript->initScriptState(
 			MageScript->getEntityTickResumeState(i),
-			entities[i].onTickScriptId,
+			entity->onTickScriptId,
 			false
 		);
 		MageScript->initScriptState(
 			MageScript->getEntityInteractResumeState(i),
-			entities[i].onInteractScriptId,
+			entity->onInteractScriptId,
 			false
 		);
 	}
@@ -581,7 +582,9 @@ void MageGameControl::LoadMap(uint16_t index)
 
 	copyNameToAndFromPlayerAndSave(false);
 
+	//logAllEntityScriptValues("InitScripts-Before");
 	initializeScriptsOnMapLoad();
+	//logAllEntityScriptValues("InitScripts-After");
 
 	//close hex editor if open:
 	if(MageHex->getHexEditorState()) {
@@ -1878,4 +1881,21 @@ uint16_t MageGameControl::animationCount() {
 
 uint16_t MageGameControl::tilesetCount() {
 	return tilesetHeader.count();
+}
+
+void MageGameControl::logAllEntityScriptValues(const char *string) {
+	debug_print(string);
+	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
+		//Initialize the script ResumeStateStructs to default values for this map.
+		MageEntity *entity = &entities[i];
+		debug_print(
+			"Index: %02d; EntityName: %12s; tick: %05d/0x%04X; interact: %05d/0x%04X;",
+			i,
+			entity->name,
+			entity->onTickScriptId,
+			entity->onTickScriptId,
+			entity->onInteractScriptId,
+			entity->onInteractScriptId
+		);
+	}
 }

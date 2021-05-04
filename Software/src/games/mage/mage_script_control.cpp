@@ -74,8 +74,20 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 	);
 
 	//read the action count from ROM:
-	//skip the name of the script, we don't need it in this codebase:
-	address += 32;
+	//skip the name of the script, we don't need it in ram at runtime:
+	//char scriptName[SCRIPT_NAME_LENGTH] = {0};
+	//EngineROM_Read(
+	//	address,
+	//	SCRIPT_NAME_LENGTH,
+	//	(uint8_t *)scriptName,
+	//	"MageScriptControl::processActionQueue\nFailed to load property 'name'"
+	//);
+	//debug_print(
+	//	"Running script: %s",
+	//	scriptName
+	//);
+	//MageGame->logAllEntityScriptValues("processActionQueue-Before");
+	address += SCRIPT_NAME_LENGTH;
 
 	//read the script's action count:
 	uint32_t actionCount = 0;
@@ -96,6 +108,13 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 	//note we're using the value in resumeStateStruct directly as our index so it will update automatically as we proceed:
 	for(; resumeStateStruct->actionOffset<actionCount; resumeStateStruct->actionOffset++)
 	{
+		//char logString[128];
+		//sprintf(
+		//	logString,
+		//	"processActionQueue-action: %02d",
+		//	resumeStateStruct->actionOffset
+		//);
+		//MageGame->logAllEntityScriptValues(logString);
 		runAction(address, resumeStateStruct);
 		//check for loadMap:
 		if(mapLoadId != MAGE_NO_MAP) { return; }
@@ -111,6 +130,14 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		}
 		//check to see if the action set a mapLocalJumpScript value
 		if(mapLocalJumpScript != MAGE_NO_SCRIPT){
+			//debug_print(
+			//	"processActionQueue-mapLocalJumpScript: %02d;\n"
+			//	"	currentEntityId: %02d;\n"
+			//	"	currentScriptType: %02d;",
+			//	resumeStateStruct->actionOffset,
+			//	currentEntityId,
+			//	currentScriptType
+			//);
 			setEntityScript(mapLocalJumpScript, currentEntityId, currentScriptType);
 			//immediately end action processing and return if a mapLocalJumpScript value was set:
 			return;
@@ -124,6 +151,7 @@ void MageScriptControl::processActionQueue(MageScriptState * resumeStateStruct)
 		//we can now set resumeState.scriptIsRunning to false and end processing the script:
 		resumeStateStruct->scriptIsRunning = false;
 	}
+	//MageGame->logAllEntityScriptValues("processActionQueue-after");
 }
 
 void MageScriptControl::runAction(
@@ -593,7 +621,6 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 	}
 }
 
-//waiting for implementation of Save Flag System to implement -Tim
 void MageScriptControl::checkSaveFlag(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckSaveFlag *argStruct = (ActionCheckSaveFlag*)args;
@@ -2414,8 +2441,12 @@ int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(
 		entityIndex = callingEntityId;
 	} else if (entityIndex == MAGE_ENTITY_PLAYER) {
 		entityIndex = MageGame->playerEntityIndex;
-	} else if (entityIndex == MAGE_MAP_ENTITY) {
-		//the map doesn't have an entity, so we return if the script is on the map:
+	}
+	if (entityIndex == MAGE_MAP_ENTITY) {
+		//target is the map itself, leave the value alone
+	} else if (entityIndex >= MageGame->filteredEntityCountOnThisMap) {
+		//if it targets one of the debug entities filtered off the end of the list,
+		//treat it like it's not there:
 		entityIndex = NO_PLAYER;
 	}
 	return entityIndex;

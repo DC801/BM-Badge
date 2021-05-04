@@ -73,7 +73,7 @@ var handleTileLayer = function(layer, map) {
 	map.serializedLayers.push(serializedLayer);
 };
 
-function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioData) {
+var compositeEntityInheritedData = function (entity, map, objects, fileNameMap, scenarioData) {
 	entity.sourceMap = map.name;
 	var tileData = getMapTileAndOrientationByGID(
 		entity.gid,
@@ -111,16 +111,18 @@ function handleTiledObjectAsEntity(entity, map, objects, fileNameMap, scenarioDa
 	//  mergedWithType,
 	//  compositeEntity
 	// ])
+	entity.compositeEntity = compositeEntity;
+};
+
+var handleTiledObjectAsEntity = function (entity, map, objects, fileNameMap, scenarioData) {
 	serializeEntity(
-		compositeEntity,
+		entity.compositeEntity,
 		fileNameMap,
 		scenarioData,
 	);
-	entity.compositeEntity = compositeEntity;
-
 	entity.mapIndex = map.entityIndices.length;
 	map.entityIndices.push(
-		compositeEntity.scenarioIndex
+		entity.compositeEntity.scenarioIndex
 	);
 	if (entity.compositeEntity.is_player) {
 		if (map.playerEntityId !== specialKeywordsEnum['%MAP%']) {
@@ -194,6 +196,22 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 		);
 	});
 	map.playerEntityId = specialKeywordsEnum['%MAP%'];
+	map.entityObjects.forEach(function (tiledObject) {
+		compositeEntityInheritedData(
+			tiledObject,
+			map,
+			map.geometryObjects,
+			fileNameMap,
+			scenarioData,
+		);
+	});
+	map.entityObjects.sort(function (a, b) {
+		return a.compositeEntity.is_debug === b.compositeEntity.is_debug
+			? 0 // same value, don't move
+			: !a.compositeEntity.is_debug
+				? -1 // b is debug, move a left
+				: 1; // a is debug, move a right
+	});
 	map.entityObjects.forEach(function (tiledObject) {
 		handleTiledObjectAsEntity(
 			tiledObject,

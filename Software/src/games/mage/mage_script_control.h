@@ -9,6 +9,8 @@ This class contains all the code related to the hex editor hacking interface.
 #include "mage_game_control.h"
 #include "mage_hex.h"
 
+#define SCRIPT_NAME_LENGTH 32
+
 //this is a class designed to handle all the scripting for the MAGE() game
 //it is designed to work in tandem with a MageGameControl object and a
 //MageHex object to effect that state of the game.
@@ -276,7 +278,11 @@ class MageScriptControl
 		//this resets the values of a MageScriptState struct to default values.
 		//you need to provide a mapLocalScriptId, and the state of the scriptIsRunning variable
 		//the actionId, and duration variables are always reset to 0 on an init.
-		void initScriptState(MageScriptState * resumeStateStruct, uint16_t mapLocalScriptId, bool scriptIsRunning);
+		void initScriptState(
+			MageScriptState * resumeStateStruct,
+			uint16_t mapLocalScriptId,
+			bool scriptIsRunning
+		);
 
 		//these functions return the specified MageScriptState struct:
 		MageScriptState* getMapLoadResumeState();
