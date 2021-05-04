@@ -179,12 +179,15 @@ void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entit
 			MageGame->Map().setOnTick(mapLocalScriptId);
 		}
 	}
-	MageEntity* entity = MageGame->getEntityByMapLocalId(entityId);
-	//if it's not a map script, set the appropriate entity's script value:
-	if(scriptType == MageScriptType::ON_INTERACT) {
-		entity->onInteractScriptId = mapLocalScriptId;
-	} else if(scriptType == MageScriptType::ON_TICK) {
-		entity->onTickScriptId = mapLocalScriptId;
+	//target is an entity
+	else {
+		MageEntity* entity = MageGame->getEntityByMapLocalId(entityId);
+		//if it's not a map script, set the appropriate entity's script value:
+		if(scriptType == MageScriptType::ON_INTERACT) {
+			entity->onInteractScriptId = mapLocalScriptId;
+		} else if(scriptType == MageScriptType::ON_TICK) {
+			entity->onTickScriptId = mapLocalScriptId;
+		}
 	}
 }
 
