@@ -262,6 +262,7 @@ public:
 	uint16_t animationCount();
 	uint16_t tilesetCount();
 
+	void logAllEntityScriptValues(const char *string);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL
