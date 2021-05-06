@@ -367,12 +367,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -392,12 +387,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -417,10 +407,43 @@
 			"doc": "You've restored everyone! Oh, thank you!"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": false
+			"action": "RUN_SCRIPT",
+			"script": "reset-glitch-hint-only-eval"
+		}
+	],
+	"reset-glitch-hint-only-eval": [
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 110,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-glitch-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 111,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-glitch-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-success-wrapup"
+		}
+	],
+	"reset-glitch-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "glitch-success-wrapup"
+		}
+	],
+	"glitch-success-wrapup": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "verthandi-surprise-wrapup"
@@ -449,13 +472,8 @@
 			"doc": "Oh! It appears you've already restored"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": false
-		},
-		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-surprise-wrapup"
+			"script": "reset-glitch-hint-only-eval"
 		}
 	],
 	"show_dialog-verthandi-start-s": [
@@ -499,12 +517,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -585,12 +598,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -619,12 +627,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -683,12 +686,7 @@
 	"goats-hint-yes": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

@@ -58,12 +58,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "sportskid-hint",
-			"bool_value": true
+			"script": "set-hint-sportskid"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -190,10 +185,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "sportskid-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 80,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-sportskid-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 81,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-sportskid-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "sportskid-success-wrapup"
+		}
+	],
+	"reset-sportskid-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "sportskid-success-wrapup"
+		}
+	],
+	"sportskid-success-wrapup": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"

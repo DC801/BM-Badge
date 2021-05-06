@@ -377,6 +377,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "lodge_cat-unglitched",
 			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"timmy-glitchwatch": [
@@ -392,6 +396,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "timmy-unglitched",
 			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-lodge-cantleaveyet": [
@@ -2796,11 +2804,6 @@
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge_cat",
 			"doc": "...."
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": false
 		}
 	],
 	"show_dialog-lodge_cat-glitched": [
@@ -2834,12 +2837,7 @@
 	"lodge_cat-hint-yes": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -2913,11 +2911,6 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "timmy-endstory",
 			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": false
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -3022,12 +3015,7 @@
 	"timmy-hint-yes": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

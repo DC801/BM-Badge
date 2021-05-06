@@ -792,12 +792,7 @@
 	"goldfish-hint-yes": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "verthandi-hint",
-			"bool_value": true
+			"script": "set-hint-glitch"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

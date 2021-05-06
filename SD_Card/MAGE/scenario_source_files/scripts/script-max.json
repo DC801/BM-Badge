@@ -2,12 +2,7 @@
 	"set-hint-catwork": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "catwork-hint",
-			"bool_value": true
+			"script": "set-hint-max"
 		}
 	],
 	"show_dialog-max-glitched": [
@@ -620,10 +615,37 @@
 			"script": "max-grin-end"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "catwork-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 60,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-max-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 61,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-max-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "max-success-wrapup"
+		}
+	],
+	"reset-max-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "max-success-wrapup"
+		}
+	],
+	"max-success-wrapup": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"

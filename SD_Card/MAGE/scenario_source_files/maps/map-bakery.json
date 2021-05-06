@@ -260,7 +260,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"bake"
+                         "value":"on_tick-bake"
                         }],
                  "rotation":0,
                  "type":"",

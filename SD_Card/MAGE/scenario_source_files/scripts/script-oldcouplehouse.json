@@ -692,10 +692,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 40,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bea1-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 41,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bea1-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bea1-success-wrapup"
+		}
+	],
+	"reset-bea1-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bea1-success-wrapup"
+		}
+	],
+	"bea1-success-wrapup": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "bea-wrapup-mini"
@@ -704,7 +731,7 @@
 	"bea1-incomplete-wrapup": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "watch-player"
+			"script": "set_tick-watch-player"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -713,12 +740,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": true
+			"script": "set-hint-bea1"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -788,20 +810,46 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea2-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 90,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bea2-hint-only"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Beatrice",
-			"script": "show_dialog-bea-start"
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 91,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bea2-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bea2-success-wrapup"
+		}
+	],
+	"reset-bea2-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bea2-success-wrapup"
+		}
+	],
+	"bea2-success-wrapup": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "bea-wrapup-mini"
 		}
 	],
 	"bea2-incomplete-wrapup": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "watch-player"
+			"script": "set_tick-watch-player"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -810,12 +858,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea2-hint",
-			"bool_value": true
+			"script": "set-hint-bea2"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -897,9 +940,8 @@
 			"entity_type": "old_man"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": false
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -932,9 +974,8 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bea1-hint",
-			"bool_value": false
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
 		},
 		{
 			"action": "SHOW_DIALOG",
