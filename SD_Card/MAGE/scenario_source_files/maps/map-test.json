@@ -394,7 +394,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":716,
+                 "gid":719,
                  "height":40,
                  "id":34,
                  "name":"Bert",
@@ -422,7 +422,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":734,
+                 "gid":737,
                  "height":32,
                  "id":35,
                  "name":"",
@@ -445,7 +445,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":758,
+                 "gid":761,
                  "height":32,
                  "id":36,
                  "name":"",
@@ -468,7 +468,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":781,
+                 "gid":784,
                  "height":32,
                  "id":37,
                  "name":"",
@@ -491,7 +491,7 @@
                  "y":64
                 }, 
                 {
-                 "gid":800,
+                 "gid":803,
                  "height":32,
                  "id":39,
                  "name":"Max Swagger",
@@ -509,7 +509,7 @@
                  "y":245
                 }, 
                 {
-                 "gid":827,
+                 "gid":830,
                  "height":32,
                  "id":40,
                  "name":"",
@@ -537,7 +537,7 @@
                  "y":280
                 }, 
                 {
-                 "gid":858,
+                 "gid":861,
                  "height":48,
                  "id":48,
                  "name":"Bender",
@@ -555,7 +555,7 @@
                  "y":188
                 }, 
                 {
-                 "gid":1027,
+                 "gid":1030,
                  "height":40,
                  "id":49,
                  "name":"Strong Bad",
@@ -573,7 +573,7 @@
                  "y":352
                 }, 
                 {
-                 "gid":1064,
+                 "gid":1067,
                  "height":32,
                  "id":50,
                  "name":"",
@@ -591,7 +591,7 @@
                  "y":480
                 }, 
                 {
-                 "gid":1073742915,
+                 "gid":1073742918,
                  "height":40,
                  "id":58,
                  "name":"",
@@ -603,7 +603,7 @@
                  "y":416
                 }, 
                 {
-                 "gid":1120,
+                 "gid":1123,
                  "height":48,
                  "id":60,
                  "name":"Bender2",
@@ -939,59 +939,27 @@
          "name":"Doors",
          "objects":[
                 {
+                 "gid":1293,
                  "height":32,
-                 "id":51,
-                 "name":"door-main",
+                 "id":61,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
                  "x":0,
-                 "y":0
-                }, 
-                {
-                 "height":32,
-                 "id":52,
-                 "name":"door-test",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":64,
-                 "y":0
-                }, 
-                {
-                 "height":32,
-                 "id":53,
-                 "name":"door-town",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":128,
-                 "y":0
-                }, 
-                {
-                 "height":32,
-                 "id":54,
-                 "name":"door-action_testing_01",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":192,
-                 "y":0
-                }, 
-                {
-                 "height":32,
-                 "id":55,
-                 "name":"door-action_testing_02",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":256,
-                 "y":0
+                 "y":288
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1000,18 +968,18 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":61,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"on_load",
          "type":"string",
          "value":"my_first_script"
-        }, 
+        },
         {
          "name":"on_tick",
          "type":"string",
-         "value":"map_on_tick-doors"
+         "value":""
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
@@ -1082,48 +1050,52 @@
          "source":"..\/entities\/entity-old_man.json"
         }, 
         {
-         "firstgid":709,
+         "firstgid":712,
          "source":"..\/entities\/entity-bert.json"
         }, 
         {
-         "firstgid":727,
+         "firstgid":730,
          "source":"..\/entities\/entity-ssen.json"
         }, 
         {
-         "firstgid":745,
+         "firstgid":748,
          "source":"..\/entities\/entity-sports_kid.json"
         }, 
         {
-         "firstgid":769,
+         "firstgid":772,
          "source":"..\/entities\/entity-marta.json"
         }, 
         {
-         "firstgid":793,
+         "firstgid":796,
          "source":"..\/entities\/entity-tailor.json"
         }, 
         {
-         "firstgid":823,
+         "firstgid":826,
          "source":"..\/entities\/entity-baker.json"
         }, 
         {
-         "firstgid":841,
+         "firstgid":844,
          "source":"..\/entities\/entity-bender.json"
         }, 
         {
-         "firstgid":1021,
+         "firstgid":1024,
          "source":"..\/entities\/entity-strong_bad.json"
         }, 
         {
-         "firstgid":1063,
+         "firstgid":1066,
          "source":"..\/entities\/entity-trekkie.json"
         }, 
         {
-         "firstgid":1084,
+         "firstgid":1087,
          "source":"..\/entities\/entity-bob.json"
         }, 
         {
-         "firstgid":1102,
+         "firstgid":1105,
          "source":"..\/entities\/entity-bender_sadbutt.json"
+        }, 
+        {
+         "firstgid":1293,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

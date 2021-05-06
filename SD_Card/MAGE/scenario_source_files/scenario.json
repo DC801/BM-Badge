@@ -57,6 +57,7 @@
 		"lodge": "maps/map-lodge.json",
 		"greenhouse": "maps/map-greenhouse.json",
 		"secretroom": "maps/map-secretroom.json",
+		"warp_zone": "maps/map-warp_zone.json",
 		"action_testing_01": "maps/map-action_testing_01.json",
 		"testbig": "maps/map-testbig.json",
 		"credits": "maps/map-credits.json",

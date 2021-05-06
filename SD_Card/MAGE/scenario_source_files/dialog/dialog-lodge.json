@@ -49,15 +49,15 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"A bracelet?"
+				"A Power Bracelet?"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "Bert",
 			"messages": [
-				"That?",
-				"That is my lunch!"
+				"That is croissant!",
+				"Is my lunch!"
 			]
 		}
 	],
