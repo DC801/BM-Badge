@@ -853,59 +853,27 @@
          "name":"Doors",
          "objects":[
                 {
+                 "gid":411,
                  "height":32,
-                 "id":70,
-                 "name":"door-main",
+                 "id":78,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
                  "x":32,
-                 "y":416
-                }, 
-                {
-                 "height":32,
-                 "id":71,
-                 "name":"door-test",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":96,
-                 "y":416
-                }, 
-                {
-                 "height":32,
-                 "id":72,
-                 "name":"door-town",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":160,
-                 "y":416
-                }, 
-                {
-                 "height":32,
-                 "id":73,
-                 "name":"door-action_testing_01",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":224,
-                 "y":416
-                }, 
-                {
-                 "height":32,
-                 "id":74,
-                 "name":"door-action_testing_02",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":288,
-                 "y":416
+                 "y":64
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -914,7 +882,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":78,
+ "nextobjectid":79,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -925,7 +893,7 @@
         {
          "name":"on_tick",
          "type":"string",
-         "value":"map_on_tick-doors"
+         "value":""
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
@@ -946,6 +914,10 @@
         {
          "firstgid":369,
          "source":"..\/entities\/entity-goose.json"
+        }, 
+        {
+         "firstgid":411,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

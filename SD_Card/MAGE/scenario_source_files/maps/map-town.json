@@ -327,7 +327,7 @@
                  "y":838.5
                 }, 
                 {
-                 "gid":2147484200,
+                 "gid":2147484215,
                  "height":32,
                  "id":29,
                  "name":"",
@@ -373,61 +373,6 @@
          "id":7,
          "name":"Doors",
          "objects":[
-                {
-                 "height":32,
-                 "id":31,
-                 "name":"door-main",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":352,
-                 "y":544
-                }, 
-                {
-                 "height":32,
-                 "id":32,
-                 "name":"door-test",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":416,
-                 "y":544
-                }, 
-                {
-                 "height":32,
-                 "id":33,
-                 "name":"door-town",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":480,
-                 "y":544
-                }, 
-                {
-                 "height":32,
-                 "id":34,
-                 "name":"door-action_testing_01",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":544,
-                 "y":544
-                }, 
-                {
-                 "height":32,
-                 "id":35,
-                 "name":"door-action_testing_02",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":608,
-                 "y":544
-                }, 
                 {
                  "height":160,
                  "id":42,
@@ -513,6 +458,29 @@
                  "width":0,
                  "x":1520,
                  "y":722
+                }, 
+                {
+                 "gid":591,
+                 "height":32,
+                 "id":48,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":480,
+                 "y":576
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -521,7 +489,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":48,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -587,8 +555,12 @@
          "source":"..\/entities\/entity-sheep.json"
         }, 
         {
-         "firstgid":552,
+         "firstgid":567,
          "source":"..\/entities\/entity-baby_goat.json"
+        }, 
+        {
+         "firstgid":591,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

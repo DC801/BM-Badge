@@ -1,4 +1,4 @@
-{	
+{
 	"debug-hub-q": [
 		{
 			"action": "SHOW_DIALOG",
@@ -9,7 +9,7 @@
 	"debug-hub": [
 		{
 			"action": "RUN_SCRIPT",
-			"script": "load_map-testbig"
+			"script": "load_map-warp_zone"
 		}
 	],
 	"no_debug-hub": [
@@ -302,6 +302,12 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-set-flags-true-q"
+		}
+	],
+	"load_map-warp_zone": [
+		{
+			"action": "LOAD_MAP",
+			"map": "warp_zone"
 		}
 	],
 	"load_map-testbig": [

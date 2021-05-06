@@ -337,7 +337,7 @@
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
-			{
+				{
 					"label": "Yes",
 					"script": "debug-hub"
 				},

@@ -341,9 +341,9 @@
 			- [x] Make sure that entity hacking still doesn't jank the player
 			- [x] Make sure that camera wiggle functions still work
 			- [x] Test it on the hardware
-- [ ] Make a "Warp Zone" map that can take players to all of the debug maps
-	- [ ] Make the "Warp Fish" send the player the "Warp Zone"
-	- [ ] Add the "Warp Fish" fish to all the debug maps
+- [x] Make a "Warp Zone" map that can take players to all of the debug maps
+	- [x] Make the "Warp Fish" send the player the "Warp Zone"
+	- [x] Add the "Warp Fish" fish to all the debug maps
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
