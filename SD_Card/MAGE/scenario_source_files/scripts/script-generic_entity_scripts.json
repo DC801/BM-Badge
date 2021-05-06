@@ -6,7 +6,7 @@
 			"target_entity": "%PLAYER%"
 		}
 	],
-	"watch-player": [
+	"set_tick-watch-player": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%SELF%",

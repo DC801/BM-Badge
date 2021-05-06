@@ -24,12 +24,7 @@
 	"goose-hints": [
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "rake-hint",
-			"bool_value": true
+			"script": "set-hint-goose"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -62,10 +57,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "rake-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 100,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-goose-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 101,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-goose-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "goose-success-wrapup"
+		}
+	],
+	"reset-goose-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "goose-success-wrapup"
+		}
+	],
+	"goose-success-wrapup": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"

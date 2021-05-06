@@ -1,5 +1,5 @@
 {
-	"bake": [
+	"on_tick-bake": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "add_flour"
@@ -267,12 +267,43 @@
 			"dialog": "dialog-baker-glitched"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-baker-wrapup"
+		}
+	],
+	"show_dialog-baker-start-wrapup": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "baker-backstory",
+			"bool_value": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-baker"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-baker-wrapup"
+		}
+	],
+	"show_dialog-baker-wrapup": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "show_dialog-baker-start"
 		}
 	],
 	"show_dialog-baker-start": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "watch-baker"
+		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
 			"entity": "%SELF%",
@@ -292,32 +323,12 @@
 			"success_script": "show_dialog-baker-start-s"
 		},
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "watch-baker"
-		},
-		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-baker-start"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-backstory",
-			"bool_value": true
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "null_script"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-baker-start-wrapup"
 		}
 	],
 	"show_dialog-baker-start-s": [
@@ -337,17 +348,11 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"script": "set-hint-baker"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
-		},
-		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%PLAYER%",
-			"script": "null_script"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-baker-wrapup"
 		}
 	],
 	"show_dialog-bobrock-gottago": [
@@ -445,12 +450,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
+			"script": "set-hint-baker"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -470,12 +470,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
+			"script": "set-hint-baker"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -507,12 +502,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": true
+			"script": "set-hint-baker"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -789,12 +779,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobmoss-hint",
-			"bool_value": true
+			"script": "set-hint-bobmoss-from-guardian"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -925,10 +910,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "baker-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 20,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-baker-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 21,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-baker-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "baker-success-wrapup"
+		}
+	],
+	"reset-baker-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "baker-success-wrapup"
+		}
+	],
+	"baker-success-wrapup": [
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
@@ -1079,10 +1091,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bobmoss-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 30,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bobmoss-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 32,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-bobmoss-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bobmoss-success-wrapup"
+		}
+	],
+	"reset-bobmoss-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "bobmoss-success-wrapup"
+		}
+	],
+	"bobmoss-success-wrapup": [
 		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 500,

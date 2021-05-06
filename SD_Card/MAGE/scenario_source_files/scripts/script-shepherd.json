@@ -116,12 +116,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": true
+			"script": "set-hint-shepherd"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -164,12 +159,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": true
+			"script": "set-hint-shepherd"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -277,12 +267,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": true
+			"script": "set-hint-shepherd-partial"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -301,19 +286,8 @@
 			"dialog": "dialog-shepherd-end"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-shepherd",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": false
-		},
-			{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Shepherd",
-			"script": "show_dialog-shepherd-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-shepherd-ending"
 		}
 	],
 	"show_dialog-shepherd-end-surprise": [
@@ -323,19 +297,60 @@
 		},
 		{
 			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-hint",
-			"bool_value": false
+			"save_flag": "shepherd-backstory",
+			"bool_value": true
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-shepherd-ending"
+		}
+	],
+	"show_dialog-shepherd-ending": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "storyflag-shepherd",
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-backstory",
-			"bool_value": true
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 10,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-shepherd-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 11,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-shepherd-hint-only"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 12,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-shepherd-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "shepherd-success-wrapup"
+		}
+	],
+	"reset-shepherd-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "shepherd-success-wrapup"
+		}
+	],
+	"shepherd-success-wrapup": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Shepherd",

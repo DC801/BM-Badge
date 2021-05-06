@@ -126,8 +126,10 @@
 	],
 	"debug-set-story-and-misc-flags-false": [
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
+			"action": "MUTATE_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 0,
+			"operation": "SET"
 		},
 		{
 			"action": "COPY_SCRIPT",

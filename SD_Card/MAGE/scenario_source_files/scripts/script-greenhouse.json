@@ -374,12 +374,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "trekkie-hint",
-			"bool_value": true
+			"script": "set-hint-trekkie"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
@@ -388,7 +383,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "watch-player"
+			"script": "set_tick-watch-player"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
@@ -653,10 +648,37 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "trekkie-hint",
-			"bool_value": false
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 70,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-trekkie-hint-only"
 		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 71,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "reset-trekkie-hint-only"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "trekkie-success-wrapup"
+		}
+	],
+	"reset-trekkie-hint-only": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-none"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "trekkie-success-wrapup"
+		}
+	],
+	"trekkie-success-wrapup": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
@@ -728,16 +750,11 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-flags-false"
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "trekkie-hint",
-			"bool_value": true
+			"script": "set-hint-trekkie"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "watch-player"
+			"script": "set_tick-watch-player"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

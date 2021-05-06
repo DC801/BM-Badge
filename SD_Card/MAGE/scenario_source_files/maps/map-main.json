@@ -98,7 +98,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"bender-handler-timer"
+                         "value":"handler-bender-timer"
                         }, 
                         {
                          "name":"path",
