@@ -69,6 +69,11 @@
 	],
 	"on_load-magehouse": [
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "debug-mode",
+			"bool_value": true
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "magehouse-debug-check"
 		}
@@ -967,16 +972,6 @@
 		}
 	],
 	"debug-everything-off": [
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "debug-mode",
-			"bool_value": false
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"entity": "Debug Exa",
-			"geometry": "magehouse-hidingplace"
-		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-debug-everything-off"

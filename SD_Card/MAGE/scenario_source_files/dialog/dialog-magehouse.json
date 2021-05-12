@@ -344,7 +344,7 @@
 					"script": "debug-everything-on"
 				},
 				{
-					"label": "Turn debug mode off",
+					"label": "Never mind",
 					"script": "debug-everything-off"
 				}
 			]
@@ -364,7 +364,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Debug mode off."
+				"Never mind."
 			]
 		}
 	]
