@@ -447,6 +447,12 @@
 			"expected_bool": true
 		}
 	],
+	"show_dialog-construction": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-construction"
+		}
+	],
 	"show_dialog-messageboard": [
 		{
 			"action": "SHOW_DIALOG",
