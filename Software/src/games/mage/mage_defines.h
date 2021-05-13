@@ -76,7 +76,7 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
-#define MAGE_SAVE_GAME_SLOTS 3
+#define MAGE_NUM_MEM_BUTTONS 4
 
 //this is the number of chars that are used in the entity struct as part of the entity name
 #define MAGE_ENTITY_NAME_LENGTH 12
@@ -349,6 +349,13 @@ typedef struct MageSaveGame {
 	uint32_t scenarioDataCRC32;
 	uint32_t saveDataLength = sizeof(MageSaveGame);
 	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
+	//this stores the byte offsets for the hex memory buttons:
+	uint8_t memOffsets[MAGE_NUM_MEM_BUTTONS] = {
+		MageEntityField::x,
+		MageEntityField::y,
+		MageEntityField::primaryId, // entityType
+		MageEntityField::direction,
+	};
 	uint16_t currentMapId = DEFAULT_MAP;
 	uint16_t warpState = MAGE_NO_WARP_STATE;
 	uint8_t clipboard[sizeof(MageEntity)] = {0};

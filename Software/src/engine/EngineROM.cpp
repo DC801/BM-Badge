@@ -252,6 +252,12 @@ void EngineROM_ReadSaveSlot(
 			fclose(saveFile);
 			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
 		}
+	} else {
+		// The file save_*.dat on disk is empty?
+		// Empty out the destination.
+		for(size_t i = 0; i < length; i++) {
+			data[i] = 0;
+		}
 	}
 	fclose(saveFile);
 	#endif //DC801_DESKTOP

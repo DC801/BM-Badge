@@ -21,7 +21,6 @@ uint32_t MageHexEditor::size() const
 		sizeof(hexCursorLocation) +
 		sizeof(previousPageButtonState) +
 		sizeof(lastPageButtonPressTime) +
-		(sizeof(memAddresses)*HEXED_NUM_MEM_BUTTONS) +
 		sizeof(isCopying) +
 		sizeof(disableMovementUntilRJoyUpRelease)
 	);
@@ -39,9 +38,7 @@ bool MageHexEditor::getHexDialogState()
 }
 uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 {
-	return index < HEXED_NUM_MEM_BUTTONS
-		? memAddresses[index]
-		: memAddresses[0];
+	return MageGame->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
 }
 
 void MageHexEditor::toggleHexEditor()
@@ -86,6 +83,8 @@ void MageHexEditor::setPageToCursorLocation() {
 void MageHexEditor::updateHexLights()
 {
 	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hexCursorLocation);
+	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
+	uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT32, ((currentByte >> 5) & 0x01) ? 0xFF : 0x00);
@@ -94,10 +93,10 @@ void MageHexEditor::updateHexLights()
 	ledSet(LED_BIT4, ((currentByte >> 2) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT2, ((currentByte >> 1) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT1, ((currentByte >> 0) & 0x01) ? 0xFF : 0x00);
-	ledSet(LED_MEM0, (hexCursorLocation == memAddresses[0]) ? 0xFF : 0x00);
-	ledSet(LED_MEM1, (hexCursorLocation == memAddresses[1]) ? 0xFF : 0x00);
-	ledSet(LED_MEM2, (hexCursorLocation == memAddresses[2]) ? 0xFF : 0x00);
-	ledSet(LED_MEM3, (hexCursorLocation == memAddresses[3]) ? 0xFF : 0x00);
+	ledSet(LED_MEM0, (entityRelativeMemOffset == memOffsets[0]) ? 0xFF : 0x00);
+	ledSet(LED_MEM1, (entityRelativeMemOffset == memOffsets[1]) ? 0xFF : 0x00);
+	ledSet(LED_MEM2, (entityRelativeMemOffset == memOffsets[2]) ? 0xFF : 0x00);
+	ledSet(LED_MEM3, (entityRelativeMemOffset == memOffsets[3]) ? 0xFF : 0x00);
 }
 
 uint16_t MageHexEditor::getCurrentMemPage()
@@ -145,6 +144,7 @@ void MageHexEditor::applyHexModeInputs()
 		return;
 	}
 	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
+	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
 	if (EngineInput_Activated.hax) { toggleHexEditor(); }
@@ -181,17 +181,13 @@ void MageHexEditor::applyHexModeInputs()
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
 			//check for memory button presses:
-			if(EngineInput_Activated.mem0) {
-				memAddresses[0] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem1) {
-				memAddresses[1] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem2) {
-				memAddresses[2] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem3) {
-				memAddresses[3] = hexCursorLocation;
+			int8_t memIndex = -1;
+			if (EngineInput_Activated.mem0) { memIndex = 0; }
+			if (EngineInput_Activated.mem1) { memIndex = 1; }
+			if (EngineInput_Activated.mem2) { memIndex = 2; }
+			if (EngineInput_Activated.mem3) { memIndex = 3; }
+			if (memIndex != -1) {
+				memOffsets[memIndex] = hexCursorLocation % sizeof(MageEntity);
 			}
 		}
 		else
@@ -301,18 +297,19 @@ void MageHexEditor::applyHexModeInputs()
 }
 
 void MageHexEditor::applyMemRecallInputs() {
+	uint8_t currentEntityIndex = hexCursorLocation / sizeof(MageEntity);
+	uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntity);
 	//check for memory button presses and set the hex cursor to the memory location
-	if(EngineInput_Activated.mem0) {
-		setHexCursorLocation(getMemoryAddress(0));
-	}
-	if(EngineInput_Activated.mem1) {
-		setHexCursorLocation(getMemoryAddress(1));
-	}
-	if(EngineInput_Activated.mem2) {
-		setHexCursorLocation(getMemoryAddress(2));
-	}
-	if(EngineInput_Activated.mem3) {
-		setHexCursorLocation(getMemoryAddress(3));
+	int8_t memIndex = -1;
+	if (EngineInput_Activated.mem0) { memIndex = 0; }
+	if (EngineInput_Activated.mem1) { memIndex = 1; }
+	if (EngineInput_Activated.mem2) { memIndex = 2; }
+	if (EngineInput_Activated.mem3) { memIndex = 3; }
+	if (memIndex != -1) {
+		setHexCursorLocation(
+			currentEntityStart
+			+ getMemoryAddress(memIndex)
+		);
 	}
 }
 
