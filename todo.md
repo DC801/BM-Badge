@@ -289,12 +289,12 @@
 	- [x] The "triangle to open on an entity + cooldown before normal hex operation" should actually restore normal hex control via "on release handler"
 - [x] Add an action to enable/disable copy & paste. It's too powerful to start the game with; Perhaps it is granted by an artifact from a dungeon in 2021?
 - [ ] Re-do the handling of the MEM buttons in the HexEditor
-	- [ ] Make the addresses stored relative to the currently selected entity
-	- [ ] How to set relative MEM addresses?
+	- [x] Make the addresses stored relative to the currently selected entity
+	- [x] How to set relative MEM addresses?
 		- [x] Hold PAGE and press MEM* to set
 		- [ ] Long-Hold MEM* to set?
 	- [x] Press MEM* to move cursor there, both in and out of the editor
-	- [ ] Store your 4 MEM addresses into the save file at uint8_t, because MEMs are now relative
+	- [x] Store your 4 MEM addresses into the save file as uint8_t, because MEMs are now relative
 - [x] Prepare scenario data for bootloader's USB-C/magic drive update flavor
 	- [x] `game.dat` gets a new header:
 		- [x] `MAGEGAME`
@@ -344,6 +344,8 @@
 - [x] Make a "Warp Zone" map that can take players to all of the debug maps
 	- [x] Make the "Warp Fish" send the player the "Warp Zone"
 	- [x] Add the "Warp Fish" fish to all the debug maps
+- [x] Fix bug where loading an un-initialized save doesn't start with default values
+- [ ] In the Dialog, when there are choices, the cursor will loop to the top when you press the down arrow, but not when pressing up from the top item, but it should
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

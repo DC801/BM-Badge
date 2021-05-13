@@ -23,7 +23,6 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_CURSOR_OFFSET_X -4
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
-#define HEXED_NUM_MEM_BUTTONS 4
 #define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
 
 //have to have two values since millis() doesn't work right for 801_DESKTOP:
@@ -77,15 +76,12 @@ private:
 	//this holds the total number of pages needed to display memTotal bytes.
 	uint16_t totalMemPages;
 
-	//this is a vairable that stores the byte that is currently selected for hacking.
+	//this is a variable that stores the byte that is currently selected for hacking.
 	uint16_t hexCursorLocation;
 
 	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
 	bool previousPageButtonState; //tracks previous button state
 	uint32_t lastPageButtonPressTime; //tracks time of last press of page button
-
-	//this stores the byte addresses for the hex memory buttons:
-	uint16_t memAddresses[HEXED_NUM_MEM_BUTTONS];
 
 	//clipboard GUI state
 	bool isCopying;
@@ -108,7 +104,6 @@ public:
 		hexCursorLocation{0},
 		previousPageButtonState{false},
 		lastPageButtonPressTime{0},
-		memAddresses{0, 1, 2, 3},
 		isCopying{false},
 		disableMovementUntilRJoyUpRelease{false}
 	{};

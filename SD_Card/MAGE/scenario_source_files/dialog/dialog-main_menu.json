@@ -39,15 +39,15 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Slot 1",
+					"label": "Slot 0",
 					"script": "new_game-0"
 				},
 				{
-					"label": "Slot 2",
+					"label": "Slot 1",
 					"script": "new_game-1"
 				},
 				{
-					"label": "Slot 3",
+					"label": "Slot 2",
 					"script": "new_game-2"
 				},
 				{
@@ -68,15 +68,15 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Slot 1",
+					"label": "Slot 0",
 					"script": "load_game-0"
 				},
 				{
-					"label": "Slot 2",
+					"label": "Slot 1",
 					"script": "load_game-1"
 				},
 				{
-					"label": "Slot 3",
+					"label": "Slot 2",
 					"script": "load_game-2"
 				},
 				{
@@ -97,15 +97,15 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Slot 1",
+					"label": "Slot 0",
 					"script": "erase_save-0"
 				},
 				{
-					"label": "Slot 2",
+					"label": "Slot 1",
 					"script": "erase_save-1"
 				},
 				{
-					"label": "Slot 3",
+					"label": "Slot 2",
 					"script": "erase_save-2"
 				},
 				{
