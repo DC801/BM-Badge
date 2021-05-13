@@ -345,7 +345,7 @@
 	- [x] Make the "Warp Fish" send the player the "Warp Zone"
 	- [x] Add the "Warp Fish" fish to all the debug maps
 - [x] Fix bug where loading an un-initialized save doesn't start with default values
-- [ ] In the Dialog, when there are choices, the cursor will loop to the top when you press the down arrow, but not when pressing up from the top item, but it should
+- [x] In the Dialog, when there are choices, the cursor will loop to the top when you press the down arrow, but not when pressing up from the top item, but it should
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
