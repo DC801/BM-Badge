@@ -386,6 +386,22 @@
 			]
 		}
 	],
+	"dialog-construction": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "Construction",
+			"messages": [
+				"UNDER CONSTRUCTION"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Guess I'll come back later. Next year,\nperhaps."
+			]
+		}
+	],
 	"dialog-messageboard": [
 		{
 			"alignment": "BOTTOM_LEFT",
