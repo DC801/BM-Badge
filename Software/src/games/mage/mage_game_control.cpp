@@ -814,24 +814,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
 		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
 		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
-
-		//check for memory button presses and set the hex cursor to the memory location
-		if(EngineInput_Activated.mem0)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(0));
-		}
-		if(EngineInput_Activated.mem1)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(1));
-		}
-		if(EngineInput_Activated.mem2)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(2));
-		}
-		if(EngineInput_Activated.mem3)
-		{
-			MageHex->setHexCursorLocation(MageHex->getMemoryAddress(3));
-		}
+		MageHex->applyMemRecallInputs();
 	}
 	else //no player on map
 	{
@@ -842,6 +825,11 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		if(EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; }
 		if(EngineInput_Buttons.ljoy_up   ) { cameraPosition.y -= mageSpeed; }
 		if(EngineInput_Buttons.ljoy_down ) { cameraPosition.y += mageSpeed; }
+		if(!playerHasHexEditorControl) {
+			return;
+		}
+		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
+		MageHex->applyMemRecallInputs();
 	}
 }
 

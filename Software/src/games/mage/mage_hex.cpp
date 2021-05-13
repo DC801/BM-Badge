@@ -180,23 +180,23 @@ void MageHexEditor::applyHexModeInputs()
 			) {
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
+			//check for memory button presses:
+			if(EngineInput_Activated.mem0) {
+				memAddresses[0] = hexCursorLocation;
+			}
+			if(EngineInput_Activated.mem1) {
+				memAddresses[1] = hexCursorLocation;
+			}
+			if(EngineInput_Activated.mem2) {
+				memAddresses[2] = hexCursorLocation;
+			}
+			if(EngineInput_Activated.mem3) {
+				memAddresses[3] = hexCursorLocation;
+			}
 		}
 		else
 		{
-			//check for memory button presses:
-			if(EngineInput_Activated.mem0 && getHexEditorState()) {
-				memAddresses[0] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem1 && getHexEditorState()) {
-				memAddresses[1] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem2 && getHexEditorState()) {
-				memAddresses[2] = hexCursorLocation;
-			}
-			if(EngineInput_Activated.mem3 && getHexEditorState()) {
-				memAddresses[3] = hexCursorLocation;
-			}
-
+			applyMemRecallInputs();
 			//check to see if the page button was pressed and released quickly
 			if(
 				(previousPageButtonState) && 
@@ -297,6 +297,22 @@ void MageHexEditor::applyHexModeInputs()
 	else
 	{
 		hexTickDelay--;
+	}
+}
+
+void MageHexEditor::applyMemRecallInputs() {
+	//check for memory button presses and set the hex cursor to the memory location
+	if(EngineInput_Activated.mem0) {
+		setHexCursorLocation(getMemoryAddress(0));
+	}
+	if(EngineInput_Activated.mem1) {
+		setHexCursorLocation(getMemoryAddress(1));
+	}
+	if(EngineInput_Activated.mem2) {
+		setHexCursorLocation(getMemoryAddress(2));
+	}
+	if(EngineInput_Activated.mem3) {
+		setHexCursorLocation(getMemoryAddress(3));
 	}
 }
 

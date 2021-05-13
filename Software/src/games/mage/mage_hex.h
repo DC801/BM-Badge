@@ -153,6 +153,8 @@ public:
 	//this applies inputs to the hex editor state.
 	void applyHexModeInputs();
 
+	void applyMemRecallInputs();
+
 	//This sets a char array starting at the current byte with any printable characters.
 	//The string will terminate when the first non-printable char is found.
 	void getHexStringForByte (uint8_t byte, char* outputString);
