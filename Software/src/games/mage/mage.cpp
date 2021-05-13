@@ -346,7 +346,7 @@ void MAGE()
 		// just so we can SEE if it works
 		if(
 			EngineInput_Buttons.op_page
-			&& EngineInput_Buttons.mem3
+			&& EngineInput_Buttons.rjoy_center
 		) {
 			MageColorPalette *colorPalette = MageGame->getValidColorPalette(0);
 			colorPalette->colors[0] = 0xDEAD;

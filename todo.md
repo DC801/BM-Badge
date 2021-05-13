@@ -291,9 +291,9 @@
 - [ ] Re-do the handling of the MEM buttons in the HexEditor
 	- [ ] Make the addresses stored relative to the currently selected entity
 	- [ ] How to set relative MEM addresses?
-		- [ ] Hold PAGE and press MEM* to set
+		- [x] Hold PAGE and press MEM* to set
 		- [ ] Long-Hold MEM* to set?
-	- [ ] Press MEM* to move cursor there, both in and out of the editor
+	- [x] Press MEM* to move cursor there, both in and out of the editor
 	- [ ] Store your 4 MEM addresses into the save file at uint8_t, because MEMs are now relative
 - [x] Prepare scenario data for bootloader's USB-C/magic drive update flavor
 	- [x] `game.dat` gets a new header:
