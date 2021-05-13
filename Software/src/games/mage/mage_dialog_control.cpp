@@ -277,6 +277,7 @@ void MageDialogControl::update() {
 		|| (MageScript->mapLoadId != MAGE_NO_MAP)
 	);
 	if(shouldShowResponses()) {
+		currentResponseIndex += currentScreen.responseCount;
 		if(EngineInput_Activated.ljoy_up) { currentResponseIndex -= 1; }
 		if(EngineInput_Activated.ljoy_down) { currentResponseIndex += 1; }
 		currentResponseIndex %= currentScreen.responseCount;
