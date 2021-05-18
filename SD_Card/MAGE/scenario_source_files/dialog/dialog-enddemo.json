@@ -209,7 +209,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "Jackob",
 			"messages": [
-				"Press XOR and MEM0 at the same time --\nthat's the top button on each side of the\nscreen -- and...."
+				"Press XOR and MEM1 at the same time --\nthat's the top button on each side of the\nscreen -- and...."
 			]
 		}
 	],
@@ -281,7 +281,7 @@
 	"dialog-hexeditor-bonus": [
 		{
 			"alignment": "TOP_LEFT",
-			"name": "Hex Editing",
+			"name": "Hex Edits 2",
 			"portrait": "parchment",
 			"messages": [
 				"-- allows us to copy and paste bytes using\nsomething called a \"Clip Bird.\".",

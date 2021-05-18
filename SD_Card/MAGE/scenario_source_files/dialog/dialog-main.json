@@ -222,7 +222,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Did you know that all electronics are\npowered by angry pixies?",
-				"The trick is to keep the pixies angry.\nIf the pixies aren't angry,\nthen they start to get complacent,\nand that's when your battery is dead!"
+				"The trick is to keep the pixies angry. If\nthe pixies aren't angry, then they start\nto get complacent, and that's when your\nbattery dies!"
 			]
 		}
 	],

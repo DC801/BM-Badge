@@ -601,7 +601,7 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"(Wow. There's literally nothing but cans\nof Cactus Cooler in here.)"
+				"Wow. There's literally nothing but cans of\nCactus Cooler in here."
 			]
 		}
 	],
