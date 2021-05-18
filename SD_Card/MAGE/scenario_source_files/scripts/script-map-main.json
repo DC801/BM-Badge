@@ -13,6 +13,11 @@
 			"success_script": "on_load-map-main-newgame-start"
 		},
 		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true,
+			"doc": "couldn't find where it was being turned off, but this brings hex editor access back to normal"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "on_load-map-main-bobmoss-check"
 		}
