@@ -260,7 +260,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"I doubt there was much in there that\nwould've helped you in a confrontation\nwith him."
+				"I doubt there was much in there that\nwould've helped you in a confrontation\nwith him, though."
 			]
 		}
 	],
@@ -345,6 +345,24 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-catwork-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Bert says the \"purple man\" wants his\nhouse to be built. What purple man?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Oh, Bert must mean the night elf tailor.\nHe's new. You might not have met him yet.",
+				"Hmm. What was his name? Top Confidence?\nHigh Bluster?",
+				"He'll be just outside his shop, I should\nthink. The interior is still unfinished,\nyou see."
+			]
+		}
+	],
 	"dialog-jackob-hint-shepherd": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -352,7 +370,9 @@
 			"messages": [
 				"I guess the shepherd wants me to put the\nsheep back inside their pen."
 			]
-		},
+		}
+	],
+	"dialog-jackob-hint-shepherd2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -381,21 +401,74 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-shepherd-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"How do I put the sheep back inside their\npen?"
+			]
+		}
+	],
 	"dialog-jackob-hint-bender": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"Bender wants his ass back, I guess."
+				"This robot named Bender wants his ass\nback, I guess."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Our every state of being can be defined by\ndata.",
+				"Back? Has it gone somewhere?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Someone bit it off or something."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Well, our every state of being can be\ndefined by data.",
 				"In his case, he once existed with a whole\nass, and therefore, there exists an entity\ntype where his ass is whole.",
 				"Though unless you are looking directly at\nhis ass, it might be difficult to see if\nyou have succeeded."
+			]
+		}
+	],
+	"dialog-jackob-hint-bender-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"I gotta help this robot, apparently."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"What does this robot need?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Not sure."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Then you'd better talk to it and find out."
 			]
 		}
 	],
@@ -417,12 +490,62 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-baker-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"The baker's having trouble with a\ncustomer, apparently. But I don't know\nwhat I'm supposed to do about that."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Hmmm. I think in this particular case --\nif what has happened is what I suspect has\nhappened --",
+				"You might be the only one capable of\ngetting to the bottom of it.",
+				"Sometimes blindly following a rule can\ncause problems for others, you see. Better\nto be flexible, not rigid and stone-\nstubborn.",
+				"Better to understand that sometimes rules\nmust be broken."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "Alfonso",
+			"messages": [
+				"The piranha affair was an accident! How\nmany times do I need to apologize,\n%Jackob%?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I wasn't talking to you."
+			]
+		}
+	],
 	"dialog-jackob-hint-bobmoss": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"I heard there might be another Stone Cold\nBob Austin. Like his cousin or something?"
+				"I heard there might be a second rock\ngolem. Do you know anything about that?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"If you're referring to Bob Moss, then I'm\nnot surprised he's absent. He disappears\nonce in a while.",
+				"He's never far. But if you can't find him\nin town, you might have to look in places\none cannot ordinarily walk."
+			]
+		}
+	],
+	"dialog-jackob-hint-bobmoss-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"I heard that Bob Austin's cousin has\ngotten lost."
 			]
 		},
 		{
@@ -446,8 +569,25 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Ah, yes, a simple entity type change.",
+				"A simple entity type change.",
 				"You'll know you have the right entity type\nwhen you get to an old man, balding,\nhunched over, and in overalls."
+			]
+		}
+	],
+	"dialog-jackob-hint-bea1-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Is Beatrice sad about something?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"She misses her husband. The Big Bad turned\nhim into a sheep, don't you know.",
+				"But I imagine you can change him back with\nRing Zero."
 			]
 		}
 	],
@@ -456,17 +596,34 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"Trekkie needs help with the Ether Nettle."
+				"Trekkie needs me to change the color of\nthe Ether Nettle flowers."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"That one might be tricky.",
+				"I see. That one might be tricky.",
 				"If I understand plant genetics correctly,\nthen hypothetically.... Ether Nettle\ncolors are simply variations of a single\nentity type.",
 				"You won't be able to change the flower\ncolor by changing the entity type, I'm\nafraid.",
 				"All those flowers should have almost\nidentical values, I imagine. Try to change\na value they don't have in common."
+			]
+		}
+	],
+	"dialog-jackob-hint-trekkie-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Does Trekkie need help with something?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Trekkie tends the Ether Nettle in the\ngreenhouse. I imagine it's the Ether\nNettle, not Trekkie, that actually needs\nhelp.",
+				"But you had better see in person. I\ndon't know much about why the internet is\nbroken."
 			]
 		}
 	],
@@ -539,6 +696,37 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-sportskid-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"According to Bert, a small child needs\nhelp."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Not many kids around here -- apart from\nthe kids, of course, by which I mean the\ngoats.",
+				"But Bert probably means the smith's son.\nOr... was Smith the man's name? Oh, dear.\nWas it his name AND his occupation?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"I've always called him Mr. Smith, I guess."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Oh, that's right. He's your next-door\nneighbor, isn't he?"
+			]
+		}
+	],
 	"dialog-jackob-hint-bea2": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -553,6 +741,22 @@
 			"messages": [
 				"She must have gotten sick of his yammering\nagain.",
 				"Ah, well. You know what to do by now."
+			]
+		}
+	],
+	"dialog-jackob-hint-bea2-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Bert says I have to help Beatrice. But I\nalready solved her problem!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Did you? Or did you only give her the\nopportunity to rememeber something she had\nforgotten about her husband?"
 			]
 		}
 	],
@@ -574,6 +778,23 @@
 			]
 		}
 	],
+	"dialog-jackob-hint-rake-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Apparently the goose is mad."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Is this news?",
+				"In all seriousness, you might want to\ncheck whether the goose is mad at\nsomething specific or the world at large."
+			]
+		}
+	],
 	"dialog-jackob-hint-verthandi": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -589,6 +810,25 @@
 				"I think there was something in the Entity\nbooks about that, but I didn't quite\nunderstand.",
 				"Something about changing a bit instead of\na byte, I think....",
 				"But aren't all bytes made up of bits? How\nis changing a single bit different from\nchanging a whole byte?"
+			]
+		}
+	],
+	"dialog-jackob-hint-verthandi-from-bert": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"I'm looking for a goat-watching goddess."
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Ah, the winged Belldandy.",
+				"Or... no, that wasn't it. It was Verd...\nVerth....",
+				"...Um, regardless... it's true that she's\nfond of animals. She might very well be\nwatching the goats today.",
+				"Though they might not look like goats at\nthe moment."
 			]
 		}
 	],

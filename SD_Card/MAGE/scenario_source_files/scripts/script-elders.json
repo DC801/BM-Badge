@@ -665,7 +665,7 @@
 			"value": 10,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-shepherd"
+			"success_script": "show_dialog-jackob-hint-shepherd-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -689,7 +689,7 @@
 			"value": 20,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-baker"
+			"success_script": "show_dialog-jackob-hint-baker-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -705,7 +705,7 @@
 			"value": 30,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-bobmoss"
+			"success_script": "show_dialog-jackob-hint-bobmoss-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -721,7 +721,7 @@
 			"value": 40,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-bea1"
+			"success_script": "show_dialog-jackob-hint-bea1-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -737,7 +737,7 @@
 			"value": 50,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-bender"
+			"success_script": "show_dialog-jackob-hint-bender-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -753,7 +753,7 @@
 			"value": 60,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-catwork"
+			"success_script": "show_dialog-jackob-hint-catwork-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -769,7 +769,7 @@
 			"value": 70,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-trekkie"
+			"success_script": "show_dialog-jackob-hint-trekkie-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -785,7 +785,7 @@
 			"value": 80,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-sportskid"
+			"success_script": "show_dialog-jackob-hint-sportskid-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -801,7 +801,7 @@
 			"value": 90,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-bea2"
+			"success_script": "show_dialog-jackob-hint-bea2-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -817,7 +817,7 @@
 			"value": 100,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-rake"
+			"success_script": "show_dialog-jackob-hint-rake-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -833,7 +833,7 @@
 			"value": 110,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "show_dialog-jackob-hint-verthandi"
+			"success_script": "show_dialog-jackob-hint-verthandi-from-bert"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -1011,6 +1011,17 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-verthandi-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-verthandi-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hints": [
 		{
 			"action": "SHOW_DIALOG",
@@ -1043,10 +1054,40 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-catwork-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-catwork-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hint-shepherd": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-shepherd"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-shepherd2"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-shepherd-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-shepherd-from-bert"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-shepherd2"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -1065,10 +1106,32 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-bender-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bender-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hint-baker": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-baker"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-baker-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-baker-from-bert"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -1087,10 +1150,32 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-bobmoss-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bobmoss-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hint-bea1": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-bea1"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-bea1-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bea1-from-bert"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -1109,10 +1194,32 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-trekkie-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-trekkie-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hint-sportskid": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-sportskid"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-sportskid-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-sportskid-from-bert"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -1131,10 +1238,32 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
+	"show_dialog-jackob-hint-bea2-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-bea2-from-bert"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
 	"show_dialog-jackob-hint-rake": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-jackob-hint-rake"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-jackob-start"
+		}
+	],
+	"show_dialog-jackob-hint-rake-from-bert": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-jackob-hint-rake-from-bert"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
