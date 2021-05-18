@@ -296,11 +296,6 @@
 			"dialog": "dialog-shepherd-end-surprise"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "shepherd-backstory",
-			"bool_value": true
-		},
-		{
 			"action": "RUN_SCRIPT",
 			"script": "show_dialog-shepherd-ending"
 		}
@@ -309,6 +304,11 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "storyflag-shepherd",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "shepherd-backstory",
 			"bool_value": true
 		},
 		{

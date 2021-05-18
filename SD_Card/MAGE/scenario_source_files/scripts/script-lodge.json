@@ -589,7 +589,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 100
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -598,7 +598,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 100
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -617,7 +617,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 1200
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -626,7 +626,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 200
+			"duration": 100
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -3047,6 +3047,12 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "empty-lodge"
+		},
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "Marta",
+			"geometry": "lodge-hidingplace",
+			"doc": "possibly you can't teleport an entity twice in one tick... though why then does this one work?"
 		}
 	],
 	"debug-disable-tuesday-q": [

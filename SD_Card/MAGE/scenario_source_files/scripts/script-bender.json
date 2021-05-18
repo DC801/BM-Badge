@@ -201,6 +201,12 @@
 			"doc": "Don't I get a reward?"
 		},
 		{
+			"action": "RUN_SCRIPT",
+			"script": "bender-wrapup-eval"
+		}
+	],
+	"bender-wrapup-eval": [
+		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "bender-backstory",
 			"bool_value": true
@@ -294,18 +300,8 @@
 			"doc": "Oh, my ass is back!"
 		},
 		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "bender-backstory",
-			"bool_value": true
-		},
-		{
-			"action": "SET_SAVE_FLAG",
-			"save_flag": "storyflag-bender",
-			"bool_value": true
-		},
-		{
 			"action": "RUN_SCRIPT",
-			"script": "show_dialog-bender-end-wrapup"
+			"script": "bender-wrapup-eval"
 		}
 	],
 	"show_dialog-bender-satisfied": [

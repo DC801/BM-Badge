@@ -598,7 +598,7 @@
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "%PLAYER%",
 			"geometry": "bob_path",
-			"duration": 4000
+			"duration": 3500
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
@@ -612,7 +612,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"duration": 100
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -621,7 +621,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
+			"duration": 300
 		},
 		{
 			"action": "PAN_CAMERA_TO_GEOMETRY",
@@ -657,7 +657,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
+			"duration": 200
 		},
 		{
 			"action": "PAN_CAMERA_TO_ENTITY",
@@ -666,7 +666,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 400
+			"duration": 200
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION",

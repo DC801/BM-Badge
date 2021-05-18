@@ -482,7 +482,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 600
+			"duration": 200
 		},
 		{
 			"action": "PAN_CAMERA_TO_ENTITY",
@@ -518,7 +518,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1600
+			"duration": 1400
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-trekkie-oh",
+			"doc": "Oh! The lights!"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 800
 		},
 		{
 			"action": "COPY_SCRIPT",
@@ -554,7 +563,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 900
+			"duration": 1400
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
@@ -563,16 +572,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 700
-		},
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-trekkie-oh",
-			"doc": "Oh!"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 1700
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
@@ -590,7 +590,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 800
+			"duration": 400
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
