@@ -716,7 +716,7 @@
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
-				"I've always called him Mr. Smith, I guess."
+				"I've always called him Mr. Smith."
 			]
 		},
 		{
