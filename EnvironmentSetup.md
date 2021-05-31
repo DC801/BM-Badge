@@ -274,7 +274,9 @@ If the link in the wget below doesn't work, head to [J-Link](https://www.nordics
 ```shell script
 cd ~/dev/installer
 wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-2/nRF-Command-Line-Tools_10_12_2_Linux-amd64.zip
-tar -xvf nRFCommandLineTools10121Linuxamd64.tar.gz
+unzip nRF-Command-Line-Tools_10_12_2_Linux-amd64.zip
+cd nRF-Command-Line-Tools_10_12_2_Linux-amd64
+tar -xvf nRF-Command-Line-Tools_10_12_2_Linux-amd64.tar.gz
 sudo dpkg -i *.deb
 ```
 
@@ -299,8 +301,8 @@ nrfjprog --version
 
 You should see, depending on version:
 ```shell script
-nrfjprog version: 10.12.1
-JLinkARM.dll version: 6.84a
+nrfjprog version: 10.12.2
+JLinkARM.dll version: 6.88a
 ```
 
 If you see that, you're good. You have everything you need to program your badge now, how about that?
