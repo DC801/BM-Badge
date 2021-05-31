@@ -273,7 +273,7 @@ If the link in the wget below doesn't work, head to [J-Link](https://www.nordics
 
 ```shell script
 cd ~/dev/installer
-wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-1/nRFCommandLineTools10121Linuxamd64tar.gz
+wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-12-2/nRF-Command-Line-Tools_10_12_2_Linux-amd64.zip
 tar -xvf nRFCommandLineTools10121Linuxamd64.tar.gz
 sudo dpkg -i *.deb
 ```
