@@ -617,7 +617,7 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 1200
+			"duration": 100
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",

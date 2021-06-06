@@ -893,5 +893,143 @@
 			"save_flag": "hamster-endstory",
 			"bool_value": false
 		}
+	],
+	"debug-math": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-20",
+			"value": 20,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-21",
+			"value": 21,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-22",
+			"value": 22,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-23",
+			"value": 23,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-24",
+			"value": 24,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-25",
+			"value": 25,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-26",
+			"value": 26,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-27",
+			"value": 27,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-28",
+			"value": 28,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-29",
+			"value": 29,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-30",
+			"value": 30,
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-20",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-21",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-22",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-23",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-24",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-25",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-26",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-27",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-28",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-29",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "math-test-30",
+			"value": 10,
+			"operation": "DIV"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "math-test"
+		}
 	]
 }

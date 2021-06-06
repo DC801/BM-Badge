@@ -421,6 +421,20 @@
 			]
 		}
 	],
+	"dialog-yabbo": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I found infinity! Take a butcher's!"
+			],
+			"doc": [
+				"Butcher's hook = look",
+				"(Cockney rhyming slang, which was requested by the artist for this character)",
+				"(Something more clever might be used instead; feel free to change)"
+			]
+		}
+	],
 	"dialog-fountain-interact": [
 		{
 			"alignment": "BOTTOM_RIGHT",
@@ -457,6 +471,17 @@
 					"label": "No",
 					"script": "no_debug-win-rake"
 				}
+			]
+		}
+	],
+	"math-test": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I'm a math wizard!\n20 divided by 10 is $math-test-20$!\n21 divided by 10 is $math-test-21$!\n22 divided by 10 is $math-test-22$!",
+				"23 divided by 10 is $math-test-23$!\n24 divided by 10 is $math-test-24$!\n25 divided by 10 is $math-test-25$!\n26 divided by 10 is $math-test-26$!",
+				"27 divided by 10 is $math-test-27$!\n28 divided by 10 is $math-test-28$!\n29 divided by 10 is $math-test-29$!\n30 divided by 10 is $math-test-30$!"
 			]
 		}
 	]
