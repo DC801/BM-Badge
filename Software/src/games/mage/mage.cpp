@@ -314,10 +314,14 @@ void MAGE()
 		#endif
 
 		//handles hardware inputs and makes their state available
-		EngineHandleInput();
+		EngineHandleKeyboardInput();
+
+		//on desktop, interact with stdin
+		//on embedded, interact with USBC com port over serial
+		EngineHandleSerialInput();
 
 		LOG_COLOR_PALETTE_CORRUPTION(
-			"EngineHandleInput();"
+			"EngineHandleKeyboardInput();"
 		);
 
 		//updates the state of all the things before rendering:

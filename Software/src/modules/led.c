@@ -199,6 +199,11 @@ void ledOff(LEDID id) {
     ledSet(id, 0);
 }
 
+void ledInvert(LEDID id) {
+	uint8_t value = 0xFF - led_states[id];
+	ledSet(id, value);
+}
+
 
 void ledPulse(LEDID id) {
     if (id > LED_COUNT) {

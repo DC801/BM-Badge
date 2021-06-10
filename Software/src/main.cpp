@@ -101,7 +101,7 @@ int main(void){
 #ifdef DC801_EMBEDDED
 
 	//USB serial
-	//usb_serial_init();
+	usb_serial_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();

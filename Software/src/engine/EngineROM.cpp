@@ -100,7 +100,7 @@ void EngineROM_Init()
 		bool headerHashMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
 
 		// handles hardware inputs and makes their state available
-		EngineHandleInput();
+		EngineHandleKeyboardInput();
 		char updateMessagePrefix[128];
 		if (!headerHashMatch) {
 			sprintf(
@@ -148,7 +148,7 @@ void EngineROM_Init()
 		bool showOptions = true;
 		while (showOptions) {
 			nrf_delay_ms(10);
-			EngineHandleInput();
+			EngineHandleKeyboardInput();
 			if (EngineInput_Activated.mem0) {
 				p_canvas()->clearScreen(COLOR_BLACK);
 				p_canvas()->blt();

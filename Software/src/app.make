@@ -12,7 +12,6 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/mutex.c \
 	$(SRC_ROOT)/modules/keyboard.c \
 	$(SRC_ROOT)/modules/rc4.c \
-	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/modules/qspi.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
 	$(SRC_ROOT)/engine/EngineROM.cpp \
@@ -35,6 +34,14 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/main.c
 
 APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
+
+ifdef EMBEDDED
+    ifeq ($(OS),Windows_NT)
+        # Placeholder
+    else
+        APP_SRCS += $(SRC_ROOT)/modules/usb.c
+    endif
+endif
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)
