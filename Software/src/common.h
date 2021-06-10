@@ -93,6 +93,7 @@ extern "C" {
 	#include "nrf_log.h"
 	#include "nrf_log_ctrl.h"
 	#include "nrf_log_default_backends.h"
+	#include "modules/usb.h"
 
 #ifdef __cplusplus
 }
@@ -126,7 +127,6 @@ extern "C" {
 #include "modules/i2c.h"
 #include "modules/led.h"
 #include "modules/keyboard.h"
-#include "modules/usb.h"
 #include "adafruit/gfxfont.h"
 
 #include "EngineInput.h"

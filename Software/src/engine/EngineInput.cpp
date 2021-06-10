@@ -1,6 +1,11 @@
 #include "EngineInput.h"
-#include "FrameBuffer.h"
-#include "fonts/Monaco9.h"
+//#include "FrameBuffer.h"
+//#include "fonts/Monaco9.h"
+
+#ifdef DC801_DESKTOP
+#include <stdio.h>
+#include <unistd.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,6 +45,10 @@ bool *buttonBoolPointerArray[] = {
 	&EngineInput_Buttons.rjoy_right,
 	&EngineInput_Buttons.hax,
 };
+
+char command_buffer[COMMAND_BUFFER_SIZE];
+uint16_t command_buffer_length = 0;
+bool was_command_entered = false;
 
 #ifdef DC801_DESKTOP
 
@@ -239,7 +248,89 @@ void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 	EngineInput_Deactivated.hax = EngineInput_Deactivated.hax && !EngineInput_Buttons.hax;
 }
 
-void EngineHandleInput ()
+#ifdef DC801_DESKTOP
+#define FILE_DESCRIPTOR_STDIN 0
+void EngineInputDesktopGetCommandStringFromStandardIn ()
+{
+	memset(
+		command_buffer,
+		0,
+		COMMAND_BUFFER_SIZE
+	);
+	fcntl(FILE_DESCRIPTOR_STDIN, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
+	ssize_t bytes_read = read(
+		FILE_DESCRIPTOR_STDIN,
+		command_buffer,
+		COMMAND_BUFFER_MAX_READ
+	);
+	if (bytes_read > 0) {
+		// length - 1 to purge the newline character
+		command_buffer_length = strlen(command_buffer) - 1;
+		command_buffer[command_buffer_length] = 0x00;
+		was_command_entered = command_buffer_length > 0;
+		/*
+		printf(
+			"stdin"
+			"bytes_read: %d"
+			"| value: %d"
+			"| char: %c"
+			"| command_buffer_length: %d"
+			"| string: %s\n",
+			bytes_read,
+			command_buffer[0],
+			command_buffer[0],
+			command_buffer_length,
+			command_buffer
+		);
+		*/
+	}
+}
+
+#endif
+void EngineHandleSerialInput ()
+{
+#ifdef DC801_DESKTOP
+	EngineInputDesktopGetCommandStringFromStandardIn();
+#endif
+
+#ifdef DC801_EMBEDDED
+	handle_usb_serial_input();
+#endif
+
+	if(was_command_entered) {
+		char message[COMMAND_RESPONSE_SIZE];
+#ifdef DC801_DESKTOP
+		const char message_format[] = "\nThe command you entered was:\n\"%s\"\n\n> ";
+#endif
+#ifdef DC801_EMBEDDED
+		const char message_format[] = "\r\n\r\nThe command you entered was:\r\n\"%s\"\r\n\r\n> ";
+#endif
+		snprintf(
+			message,
+			COMMAND_RESPONSE_SIZE,
+			message_format,
+			command_buffer
+		);
+#ifdef DC801_DESKTOP
+		printf("%s", message);
+		fflush(stdout);
+#endif
+#ifdef DC801_EMBEDDED
+		send_serial_message(
+			message
+		);
+#endif
+		memset(
+			command_buffer,
+			0,
+			command_buffer_length
+		);
+		command_buffer_length = 0;
+		was_command_entered = false;
+	}
+}
+
+void EngineHandleKeyboardInput ()
 {
 	static uint32_t keyboardBitmask = 0x00000000;
 
@@ -248,7 +339,6 @@ void EngineHandleInput ()
 #endif
 
 #ifdef DC801_EMBEDDED
-	app_usbd_event_queue_process();
 	keyboardBitmask = get_keyboard_mask();
 #endif
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
