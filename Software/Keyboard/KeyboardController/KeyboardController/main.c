@@ -36,6 +36,7 @@ uint8_t keyState[6] = { 0 };
 int main(void){
 	
 	bool keyChange = false;
+	uint16_t bootCounter = 200;
 	
 	// Init the system
 	system_init();
@@ -122,11 +123,17 @@ int main(void){
 			KEY_INT_set_level(true);
 		}
 		else{
-			KEY_INT_set_level(false);
+			// At boot time, if a key is down, hold the interrupt output long enough for the BMD to boot and notice it
+			if(bootCounter == 0){
+				KEY_INT_set_level(false);	
+			}
 		}
-				
 		// Slight delay between reads, mostly to make sure the key change flag stays set for at least this long
 		_delay_ms(10);
+		
+		if(bootCounter > 0){
+			bootCounter--;
+		}
 		
 	}
 }
