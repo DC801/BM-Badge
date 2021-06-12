@@ -92,6 +92,10 @@ static void handle_serial_character(char value) {
 			command_buffer[(command_buffer_length + COMMAND_BUFFER_SIZE) % COMMAND_BUFFER_SIZE] = '\0';
 			echo_buffer[(echo_buffer_length + ECHO_BUFFER_SIZE) % ECHO_BUFFER_SIZE] = 127;
 			echo_buffer_length++; // we need to ADD delete characters to the echo_buffer
+			echo_buffer[(echo_buffer_length + ECHO_BUFFER_SIZE) % ECHO_BUFFER_SIZE] = '\b';
+			echo_buffer_length++;
+			echo_buffer[(echo_buffer_length + ECHO_BUFFER_SIZE) % ECHO_BUFFER_SIZE] = command_buffer[command_buffer_length - 1];
+			echo_buffer_length++;
 			is_echo_buffer_populated = true;
 		}
 	} else if (
