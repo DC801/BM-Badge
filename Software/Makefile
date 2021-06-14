@@ -98,7 +98,7 @@ ifndef DESKTOP
 	@$(SIZE) $@
 else
 	@echo "Linking to SD Card files"
-	@ln -s $(PRJ_ROOT)/../SD_Card/* $(OUTPUT_DIR)
+	@ln -sf $(PRJ_ROOT)/../SD_Card/* $(OUTPUT_DIR)
 endif
 
 # Flash hex file using nrfjprog
