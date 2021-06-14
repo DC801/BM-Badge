@@ -20,7 +20,7 @@ else
     endif
 endif
 
-SDK_ROOT ?= $(PRJ_ROOT)/../../nordic-sdk15.3.0
+SDK_ROOT ?= $(PRJ_ROOT)/../../../nordic-sdk15.3.0
 BUILD_DIR ?= $(PRJ_ROOT)/build
 OUTPUT_DIR ?= $(PRJ_ROOT)/output
 TARGET := $(OUTPUT_DIR)/bm_badge
@@ -98,7 +98,7 @@ ifndef DESKTOP
 	@$(SIZE) $@
 else
 	@echo "Linking to SD Card files"
-	@ln -s $(PRJ_ROOT)/../SD_Card/* $(OUTPUT_DIR)
+	@ln -s $(PRJ_ROOT)/../../SD_Card/* $(OUTPUT_DIR)
 endif
 
 # Flash hex file using nrfjprog
