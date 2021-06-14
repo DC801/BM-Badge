@@ -869,7 +869,7 @@ void FrameBuffer::tileToBufferNoXYesYYesZ(
 				((a.x + col) * tile_width) //transposed y
 			);
 			uint8_t color_index = pixels[tile_index];
-			color = colorPalette->colors[color_index];
+			color = colorPalette->colors[color_index % colorPalette->colorCount];
 			if (color != transparent_color) {
 				frame[screen_index] = color;
 			}
