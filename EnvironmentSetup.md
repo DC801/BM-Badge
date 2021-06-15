@@ -25,7 +25,7 @@ Since __**THE HARDWARE ISN'T READY YET**__, you early adopters will have to try 
 - GDB, the Gnu Debugger (https://www.gnu.org/software/gdb/)
     - because writing software without a debugger is for idiots and savants that hate themselves
 - The Python package `compiledb` Compilation Database Generator (https://github.com/nickdiego/compiledb)
-    - this generates the `Software/compile-commands.json` file that allows VSCode's Intellisence system to understand the relationships between all the `.c` and `.h` files, and gives tab completion, include path stuff, etc.
+    - this generates the `Software/GameEngine/compile-commands.json` file that allows VSCode's Intellisence system to understand the relationships between all the `.c` and `.h` files, and gives tab completion, include path stuff, etc.
 
 ```shell script
 sudo apt install -y \
@@ -44,7 +44,16 @@ sudo apt install -y \
   libncurses-dev \
   python3-pip
 
-sudo pip3 install compiledb
+pip3 install compiledb
+# pip installs packages into `~/.local/bin`, but doesn't bother
+# adding that do your path so you can, you know, use them.
+# These echo lines add the user local pip install path to the
+# PATH variable so you can run `compiledb`.
+echo 'PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bash_profile
+# At this point, you may need to close your terminal, relaunch
+# your IDE, or even sign out and back in before you'll be able
+# to run the `compiledb` command in the context you need it.
 ```
 
 ### Setup a dev directory structure
@@ -85,7 +94,7 @@ make cleanall
 compiledb make DESKTOP=1 -j8
 ```
 
-You should now have everything compiled in the `~/dev/BM-Badge/Software/output` folder. Since we compiled the desktop build above, let's test running it.
+You should now have everything compiled in the `~/dev/BM-Badge/Software/GameEngine/output` folder. Since we compiled the desktop build above, let's test running it.
 
 From within the VSCode Terminal:
 ```shell script
@@ -330,12 +339,12 @@ Here are the steps to compile the badge code for the physical Badge:
 - Open a terminal (`Terminal` -> `New Terminal`)
 - From within the terminal that appears, run the following (replace `8` with the number of cores your machine has):
 ```shell script
-cd Software/
+cd Software/GameEngine/
 compiledb make cleanall
 compiledb make EMBEDDED=1 -j8
 ```
 
-You should now have everything compiled in the `~/dev/BM-Badge/Software/output` folder.
+You should now have everything compiled in the `~/dev/BM-Badge/Software/GameEngine/output` folder.
 
 Let's flash it. Make sure you connect your badge to the J-Link Programmer and power on your badge.
 
