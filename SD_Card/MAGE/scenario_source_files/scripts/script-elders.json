@@ -207,21 +207,9 @@
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-catwork",
-			"expected_bool": false,
-			"success_script": "show_dialog-bert-catwork"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-shepherd",
 			"expected_bool": false,
 			"success_script": "show_dialog-bert-shepherd"
-		},
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bender",
-			"expected_bool": false,
-			"success_script": "show_dialog-bert-bender"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -239,7 +227,19 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-bea1",
 			"expected_bool": false,
-			"success_script": "show_dialog-bert-delmar1"
+			"success_script": "show_dialog-bert-bea1"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-bender",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-bender"
+		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-catwork",
+			"expected_bool": false,
+			"success_script": "show_dialog-bert-catwork"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -257,7 +257,7 @@
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-bea2",
 			"expected_bool": false,
-			"success_script": "show_dialog-bert-delmar2"
+			"success_script": "show_dialog-bert-bea2"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -278,6 +278,13 @@
 			"doc": "Perhaps the world."
 		}
 	],
+	"show_dialog-bert-wrapup": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Bert",
+			"script": "show_dialog-bert-start"
+		}
+	],
 	"show_dialog-bert-shepherd": [
 		{
 			"action": "SHOW_DIALOG",
@@ -285,27 +292,24 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-shepherd-from-bert"
+			"script": "calculate-hint-tracking-series"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
-		}
-	],
-	"show_dialog-bert-bender": [
-		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bert-bender"
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 1,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set-hint-bender-from-bert"
+			"script": "set-hint-shepherd-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-baker": [
@@ -315,12 +319,24 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 2,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-baker-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-bobmoss": [
@@ -330,27 +346,78 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 3,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-bobmoss-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
-	"show_dialog-bert-delmar1": [
+	"show_dialog-bert-bea1": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bert-delmar1"
+			"dialog": "dialog-bert-bea1"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 4,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-bea1-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
+		}
+	],
+	"show_dialog-bert-bender": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-bert-bender"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 5,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-bender-from-bert"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-catwork": [
@@ -360,12 +427,24 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 6,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-max-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-trekkie": [
@@ -375,12 +454,24 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 7,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-trekkie-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-sportskid": [
@@ -390,27 +481,51 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 8,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-sportskid-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
-	"show_dialog-bert-delmar2": [
+	"show_dialog-bert-bea2": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-bert-delmar2"
+			"dialog": "dialog-bert-bea2"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 9,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
 		},
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-bea2-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-goose": [
@@ -420,12 +535,24 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 10,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-goose-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
 		}
 	],
 	"show_dialog-bert-verthandi": [
@@ -435,12 +562,39 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 11,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-bert-wrapup",
+			"doc": "if the hint series is the same, leave the hint alone"
+		},
+		{
+			"action": "COPY_SCRIPT",
 			"script": "set-hint-glitch-from-bert"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Bert",
-			"script": "show_dialog-bert-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-bert-wrapup"
+		}
+	],
+	"calculate-hint-tracking-series": [
+		{
+			"action": "MUTATE_VARIABLES",
+			"variable": "hint-tracking-check",
+			"source": "hint-tracking",
+			"operation": "SET"
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "hint-tracking-check",
+			"value": 10,
+			"operation": "DIV",
+			"doc": "checks which hint series it is by dividing by 10"
 		}
 	],
 	"set-hint-shepherd-from-bert": [

@@ -805,6 +805,11 @@
                  "name":"Yabbo Mongo",
                  "properties":[
                         {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-yabbo"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"yabbo-journey"

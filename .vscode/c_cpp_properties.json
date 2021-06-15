@@ -137,10 +137,10 @@
                 "${SDK_ROOT}/modules/nrfx/drivers/include",
                 "${SDK_ROOT}/modules/nrfx/hal",
                 "${SDK_ROOT}/modules/nrfx/mdk",
-                "${workspaceRoot}/Software",
-                "${workspaceRoot}/Software/src",
-                "${workspaceRoot}/Software/config",
-                "${workspaceRoot}/Software/src/modules/cmixer"
+                "${workspaceRoot}/Software/GameEngine",
+                "${workspaceRoot}/Software/GameEngine/src",
+                "${workspaceRoot}/Software/GameEngine/config",
+                "${workspaceRoot}/Software/GameEngine/src/modules/cmixer"
             ],
             "defines": [
                 "BOARD_CUSTOM",
@@ -159,16 +159,16 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-arm",
-            "compileCommands": "${workspaceFolder}/Software/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/Software/GameEngine/compile_commands.json"
         },
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceRoot}/Software",
-                "${workspaceRoot}/Software/src",
-                "${workspaceRoot}/Software/sdk/shim",
-                "${workspaceRoot}/Software/config",
-                "${workspaceRoot}/Software/src/modules/cmixer"
+                "${workspaceRoot}/Software/GameEngine",
+                "${workspaceRoot}/Software/GameEngine/src",
+                "${workspaceRoot}/Software/GameEngine/sdk/shim",
+                "${workspaceRoot}/Software/GameEngine/config",
+                "${workspaceRoot}/Software/GameEngine/src/modules/cmixer"
             ],
             "defines": [
                 "DC801_DESKTOP"
@@ -177,7 +177,7 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-x64",
-            "compileCommands": "${workspaceFolder}/Software/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/Software/GameEngine/compile_commands.json"
         }
     ],
     "version": 4,
