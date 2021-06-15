@@ -98,7 +98,7 @@ ifndef DESKTOP
 	@$(SIZE) $@
 else
 	@echo "Linking to SD Card files"
-	@ln -s $(PRJ_ROOT)/../../SD_Card/* $(OUTPUT_DIR)
+	@ln -sf $(PRJ_ROOT)/../../SD_Card/* $(OUTPUT_DIR)
 endif
 
 # Flash hex file using nrfjprog
@@ -135,7 +135,7 @@ merge: $(TARGET).hex
 
 uf2: merge
 	@echo "Generating UF2 image"
-	@python $(UF2CONV) $(TARGET).merged.hex -c -f 0xADA52840 -o $(TARGET).uf2
+	@python $(UF2CONV) $(TARGET).hex -c -f 0xADA52840 -o $(TARGET).uf2
 
 clean:
 	@rm -rf $(BUILD_DIR) $(TARGET).out $(TARGET).map $(TARGET).hex $(TARGET).bin $(TARGET).merged.hex $(TARGET).uf2
