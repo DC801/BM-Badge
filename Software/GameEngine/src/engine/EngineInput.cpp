@@ -1,3 +1,5 @@
+#include <string>
+#include <regex>
 #include "EngineInput.h"
 //#include "FrameBuffer.h"
 //#include "fonts/Monaco9.h"
@@ -48,6 +50,7 @@ bool *buttonBoolPointerArray[] = {
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;
+bool was_serial_started = false;
 bool was_command_entered = false;
 
 #ifdef DC801_DESKTOP
@@ -287,6 +290,23 @@ void EngineInputDesktopGetCommandStringFromStandardIn ()
 }
 
 #endif
+
+void EngineSendSerialMessage (char *message)
+{
+#ifdef DC801_DESKTOP
+	printf("%s", message);
+	fflush(stdout);
+#endif
+#ifdef DC801_EMBEDDED
+	std::string message_with_crlf = std::regex_replace(
+		message,
+		std::regex("\n"),
+		"\r\n"
+	);
+	send_serial_message((char*)message_with_crlf.c_str());
+#endif
+}
+
 void EngineHandleSerialInput ()
 {
 #ifdef DC801_DESKTOP
@@ -296,30 +316,68 @@ void EngineHandleSerialInput ()
 #ifdef DC801_EMBEDDED
 	handle_usb_serial_input();
 #endif
-
+	if(was_serial_started) {
+		EngineSendSerialMessage(
+			(char*)
+			"WELCOME TO MAGE NET\n"
+			"   __  ______  _________  _  ____________\n"
+			"  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\n"
+			" / /|_/ / __ / (_ / _/  /    / _/  / /   \n"
+			"/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n"
+			"\n> "
+		);
+		was_serial_started = false;
+	}
 	if(was_command_entered) {
-		char message[COMMAND_RESPONSE_SIZE];
-#ifdef DC801_DESKTOP
-		const char message_format[] = "\nThe command you entered was:\n\"%s\"\n\n> ";
-#endif
-#ifdef DC801_EMBEDDED
-		const char message_format[] = "\r\n\r\nThe command you entered was:\r\n\"%s\"\r\n\r\n> ";
-#endif
+		char message[COMMAND_RESPONSE_SIZE + 64];
+		const char message_format[] = "\nThe command you entered was:\n\"%s\"\n";
 		snprintf(
 			message,
 			COMMAND_RESPONSE_SIZE,
 			message_format,
 			command_buffer
 		);
-#ifdef DC801_DESKTOP
-		printf("%s", message);
-		fflush(stdout);
-#endif
-#ifdef DC801_EMBEDDED
-		send_serial_message(
-			message
-		);
-#endif
+		EngineSendSerialMessage(message);
+
+		// start SECRET_GOAT
+		int compare = strcmp(command_buffer, "goat");
+		bool identical = compare == 0;
+		if(identical) {
+			EngineSendSerialMessage(
+				(char*)
+				"You have found a secret goat!\n"
+				"               ##### ####     \n"
+				"             ##   #  ##       \n"
+				"            #   (-)    #      \n"
+				"            #+       ######   \n"
+				" FEED ME -  #^             ## \n"
+				"             ###           #  \n"
+				"               #  #      # #  \n"
+				"               ##  ##  ##  #  \n"
+				"               ######  #####  \n"
+			);
+		}
+		compare = strcmp(command_buffer, "feed goat");
+		identical = compare == 0;
+		if(identical) {
+			EngineSendSerialMessage(
+				(char*)
+				"You have fed the secret goat!\n"
+				"               ##### ####     \n"
+				"             ##   #  ##       \n"
+				"            #   (-)    #      \n"
+				"            #+       ######   \n"
+				"   THANK -  #v             ## \n"
+				"             ###           #  \n"
+				"               #  #      # #  \n"
+				"               ##  ##  ##  #  \n"
+				"               ######  #####  \n"
+			);
+		}
+		// end SECRET_GOAT
+
+		EngineSendSerialMessage((char*)"> ");
+
 		memset(
 			command_buffer,
 			0,

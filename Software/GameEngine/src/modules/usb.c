@@ -136,14 +136,7 @@ static void cdc_acm_user_ev_handler(
 				READ_SIZE
 			);
 			UNUSED_VARIABLE(ret);
-			send_serial_message(
-				"WELCOME TO MAGE NET\r\n"
-				"   __  ______  _________  _  ____________\r\n"
-				"  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\r\n"
-				" / /|_/ / __ / (_ / _/  /    / _/  / /   \r\n"
-				"/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \r\n"
-				"\r\n> "
-			);
+			was_serial_started = true;
 			break;
 		}
 		case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:

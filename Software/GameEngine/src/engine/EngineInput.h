@@ -50,9 +50,11 @@ extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
 extern char command_buffer[COMMAND_BUFFER_SIZE];
 extern uint16_t command_buffer_length;
+extern bool was_serial_started;
 extern bool was_command_entered;
 
 void EngineHandleKeyboardInput();
+void EngineSendSerialMessage (char *message);
 void EngineHandleSerialInput();
 bool EngineIsRunning();
 

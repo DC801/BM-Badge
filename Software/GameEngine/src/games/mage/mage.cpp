@@ -277,6 +277,7 @@ void MAGE()
 		fprintf(stderr, "-------------------------------------------\r\n");
 		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n",
 			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
+		was_serial_started = true;
 	#endif
 	#ifdef DC801_EMBEDDED
 		check_ram_usage();
