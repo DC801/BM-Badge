@@ -268,6 +268,24 @@
                  "width":16,
                  "x":608,
                  "y":109
+                }, 
+                {
+                 "gid":2147484089,
+                 "height":32,
+                 "id":46,
+                 "name":"Mr. Math",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-math"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":486,
+                 "y":287
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -503,7 +521,7 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":46,
+ "nextobjectid":47,
  "orientation":"orthogonal",
  "properties":[
         {

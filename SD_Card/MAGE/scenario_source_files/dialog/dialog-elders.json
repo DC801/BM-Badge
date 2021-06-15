@@ -97,7 +97,7 @@
 			]
 		}
 	],
-	"dialog-bert-delmar1": [
+	"dialog-bert-bea1": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -127,7 +127,7 @@
 			]
 		}
 	],
-	"dialog-bert-delmar2": [
+	"dialog-bert-bea2": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -341,7 +341,7 @@
 			"entity": "%SELF%",
 			"messages": [
 				"Well, if you can't give them their cat\nboss, you might try the next best thing:",
-				"A doppelganger!"
+				"An impersonator!"
 			]
 		}
 	],
@@ -586,8 +586,8 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"She misses her husband. The Big Bad turned\nhim into a sheep, don't you know.",
-				"But I imagine you can change him back with\nRing Zero."
+				"She misses her husband. The Big Bad hacked\nhim, don't you know.",
+				"But I imagine you can fix him with Ring\nZero."
 			]
 		}
 	],

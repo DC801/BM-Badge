@@ -452,6 +452,12 @@
 			"expected_bool": true
 		}
 	],
+	"show_dialog-yabbo": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-yabbo"
+		}
+	],
 	"show_dialog-construction": [
 		{
 			"action": "SHOW_DIALOG",
