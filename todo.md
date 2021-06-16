@@ -352,6 +352,7 @@
 - [ ] Build a test map with no entities and make sure it does not crash
 - [x] Fix bug where empty string for script on map or entity does not encode as null_script
 - [ ] Music/SFX encoding in the binary asset encoder
+- [ ] Error for missing json file at path in encoder is not explicit enough - should show which file it was not able to find
 
 ## Hardware TODO:
 
