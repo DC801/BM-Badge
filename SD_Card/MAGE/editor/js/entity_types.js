@@ -5,15 +5,64 @@ var handleEntityTypesData = function (
 	return function (entityTypesData) {
 		scenarioData.entityTypes = entityTypesData;
 		var objectTypesFile = fileNameMap['object_types.json'];
-		return !objectTypesFile
+		return (!objectTypesFile
 			? Promise.resolve([])
 			: getFileJson(objectTypesFile)
-				.then(handleObjectTypesData(
-					fileNameMap,
-					scenarioData,
-				));
+		)
+			.then(handleObjectTypesData(
+				fileNameMap,
+				scenarioData,
+			));
 	};
 };
+
+var defaultEntityTypeProperties = [
+	{
+		"name": "hackable_state_a",
+		"type": "int",
+		"value": 0
+	},
+	{
+		"name": "hackable_state_b",
+		"type": "int",
+		"value": 0
+	},
+	{
+		"name": "hackable_state_c",
+		"type": "int",
+		"value": 0
+	},
+	{
+		"name": "hackable_state_d",
+		"type": "int",
+		"value": 0
+	},
+	{
+		"name": "is_glitched",
+		"type": "bool",
+		"value": false
+	},
+	{
+		"name": "is_player",
+		"type": "bool",
+		"value": false
+	},
+	{
+		"name": "on_interact",
+		"type": "string",
+		"value": ""
+	},
+	{
+		"name": "on_tick",
+		"type": "string",
+		"value": ""
+	},
+	{
+		"name": "path",
+		"type": "object",
+		"value": 0
+	}
+];
 
 var handleObjectTypesData = function (
 	fileNameMap,
@@ -30,9 +79,9 @@ var handleObjectTypesData = function (
 			entityType.scenarioIndex = scenarioData.parsed.entityTypes.length;
 			scenarioData.parsed.entityTypes.push(entityType);
 			var entityTypePlusProperties = jsonClone(entityType);
-			var objectProperties = objectTypesData.find(function (properties) {
-				return properties.name === key;
-			});
+			var objectProperties = objectTypesData.find(function (objectTypeEntity) {
+				return objectTypeEntity.name === key;
+			}) || defaultEntityTypeProperties.slice();
 			if (objectProperties) {
 				mergeInProperties(
 					entityTypePlusProperties,
