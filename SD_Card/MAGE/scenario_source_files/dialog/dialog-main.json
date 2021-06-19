@@ -134,6 +134,73 @@
 			]
 		}
 	],
+	"dialog-cat-boss1": [
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Excuse me. I'm looking for the cat boss.\nIs that you?"
+			]
+		}
+	],
+	"dialog-cat-boss2": [
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "Cat",
+			"messages": [
+				"...."
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "Cleo",
+			"messages": [
+				"Cat boss?"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Yeah. The construction crew needs a thumbs\nup."
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "Cleo",
+			"messages": [
+				"Well, the cat boss is very busy right now."
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"But the crew --"
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "Cat",
+			"messages": [
+				"Meowrrow!"
+			]
+		},
+		{
+			"alignment": "TOP_LEFT",
+			"entity": "Cleo",
+			"messages": [
+				"Yeah, get some other white cat to do the\nthumbs up!"
+			]
+		},
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"But... where else am I gonna find a white\ncat?"
+			]
+		}
+	],
 	"dialog-dsheep": [
 		{
 			"alignment": "BOTTOM_LEFT",

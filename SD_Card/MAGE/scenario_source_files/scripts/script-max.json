@@ -377,10 +377,6 @@
 			"expected_bool": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-catwork"
-		},
-		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "%PLAYER%",
 			"entity_type": "pipscat",
