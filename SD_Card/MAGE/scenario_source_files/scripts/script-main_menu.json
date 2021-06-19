@@ -1,13 +1,36 @@
 {
-	"on_load-main_menu": [
+	"on_tick-button-to-skip": [
 		{
-			"action": "SET_PLAYER_CONTROL",
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "ANY",
+			"success_script": "handler-skip-splash"
+		}
+	],
+	"handler-skip-splash": [
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "begin-main_menu-intro"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_tick-main_menu": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-splash"
+		}
+	],
+	"on_tick-splash": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
 		},
 		{
 			"action": "CHECK_WARP_STATE",
-			"string": "skip-splash",
-			"success_script": "begin-main_menu",
+			"string": "from-game",
+			"success_script": "begin-main_menu-intro",
 			"expected_bool": true
 		},
 		{
@@ -30,11 +53,25 @@
 			"color": "#000000"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
+		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "begin-main_menu-intro"
 		}
 	],
-	"begin-main_menu": [
+	"begin-main_menu-intro": [
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		},
 		{
 			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
 			"geometry": "menu-center"
@@ -43,6 +80,17 @@
 			"action": "SCREEN_FADE_IN",
 			"duration": 800,
 			"color": "#000000"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "begin-main_menu"
+		}
+	],
+	"begin-main_menu": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -82,7 +130,7 @@
 	"save_game-main_menu": [
 		{
 			"action": "SET_WARP_STATE",
-			"string": "skip-splash"
+			"string": "from-game"
 		},
 		{
 			"action": "LOAD_MAP",
@@ -173,7 +221,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-main_menu"
+			"script": "begin-main_menu"
 		}
 	],
 	"erase_save-1": [
@@ -183,7 +231,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-main_menu"
+			"script": "begin-main_menu"
 		}
 	],
 	"erase_save-2": [
@@ -193,7 +241,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_load-main_menu"
+			"script": "begin-main_menu"
 		}
 	],
 	"set-player-name-q": [

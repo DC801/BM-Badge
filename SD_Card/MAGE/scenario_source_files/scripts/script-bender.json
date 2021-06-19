@@ -129,7 +129,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set_tick-watch-player"
+			"script": "set_handler-bender-on"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -255,9 +255,8 @@
 	],
 	"show_dialog-bender-end-wrapup": [
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%SELF%",
-			"script": "on_tick-bender-loiter"
+			"action": "COPY_SCRIPT",
+			"script": "set_handler-bender-none"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
