@@ -701,6 +701,14 @@
 			"operation": "SET"
 		}
 	],
+	"set-hint-max-from-cleo": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 62,
+			"operation": "SET"
+		}
+	],
 	"set-hint-trekkie-from-bert": [
 		{
 			"action": "MUTATE_VARIABLE",
@@ -913,6 +921,14 @@
 			"action": "CHECK_VARIABLE",
 			"variable": "hint-tracking",
 			"value": 61,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-jackob-hint-catwork"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 62,
 			"comparison": "==",
 			"expected_bool": true,
 			"success_script": "show_dialog-jackob-hint-catwork"

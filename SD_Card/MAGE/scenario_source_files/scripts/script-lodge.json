@@ -2801,16 +2801,20 @@
 			"expected_bool": true
 		},
 		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 62,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-lodge_cat-magic"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge_cat",
 			"doc": "...."
 		}
 	],
 	"show_dialog-lodge_cat-glitched": [
-		{
-			"action": "COPY_SCRIPT",
-			"script": "face-player"
-		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge_cat-glitched",
@@ -2819,6 +2823,74 @@
 		{
 			"action": "RUN_SCRIPT",
 			"script": "lodge_cat-glitchhint-eval"
+		}
+	],
+	"debug-cat-prep": [
+		{
+			"action": "SET_ENTITY_GLITCHED",
+			"entity": "Cat",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-max-from-cleo"
+		}
+	],
+	"begin-thumbsup": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Cat",
+			"animation": 3,
+			"play_count": 1
+		},
+		{
+			"action": "SET_ENTITY_CURRENT_ANIMATION",
+			"entity": "Cat",
+			"byte_value": 4
+		}
+	],
+	"end-thumbsup": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "Cat",
+			"animation": 5,
+			"play_count": 1
+		}
+	],
+	"show_dialog-lodge_cat-magic": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "begin-thumbsup"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 700
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "end-thumbsup"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-lodge_cat"
 		}
 	],
 	"lodge_cat-glitchhint-eval": [

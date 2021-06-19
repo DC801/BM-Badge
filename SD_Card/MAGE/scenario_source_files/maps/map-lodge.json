@@ -276,8 +276,8 @@
                  "type":"",
                  "visible":true,
                  "width":48,
-                 "x":217.333333333333,
-                 "y":163.666666666667
+                 "x":215,
+                 "y":168
                 }, 
                 {
                  "gid":406,
@@ -394,8 +394,8 @@
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":418.166666666667,
-                 "y":189.5
+                 "x":387,
+                 "y":154
                 }, 
                 {
                  "height":0,
@@ -669,6 +669,24 @@
                  "width":16,
                  "x":204,
                  "y":333
+                }, 
+                {
+                 "gid":2147484495,
+                 "height":32,
+                 "id":119,
+                 "name":"Debug Exa 4",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-cat-prep"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":414,
+                 "y":162
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1362,7 +1380,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":115,
+ "nextobjectid":120,
  "orientation":"orthogonal",
  "properties":[
         {
