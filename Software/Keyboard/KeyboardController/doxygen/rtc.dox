@@ -1,0 +1,12 @@
+/*------------------------------------------------------------------------*/ /**
+\defgroup doc_driver_rtc RTC Drivers
+
+
+\section doc_driver_rtc_basic_and_practice RTC Basics and Best Practice
+
+An RTC is a counter connected to a 32kHz clock source, either internal or internal.
+The RTC can be used to generate periodic interrupts at a user-specified interval.
+
+*/
+
+

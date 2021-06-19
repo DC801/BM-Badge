@@ -538,7 +538,6 @@ void MageScriptControl::checkEntityHackableStateD(uint8_t * args, MageScriptStat
 	}
 }
 
-// Need to verify the u2 conversion of bytes is working -Tim
 void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateAU2 *argStruct = (ActionCheckEntityHackableStateAU2*)args;
@@ -559,7 +558,6 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 	}
 }
 
-//Need to verify encoding of u2_value variable works correctly -Tim
 void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateCU2 *argStruct = (ActionCheckEntityHackableStateCU2*)args;
@@ -580,7 +578,6 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 	}
 }
 
-//Need to verify encoding of u4_value variable works correctly -Tim
 void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateAU4 *argStruct = (ActionCheckEntityHackableStateAU4*)args;
@@ -600,7 +597,6 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 	}
 }
 
-// Need to verify which two bytes make up the pathId. I think it's A and B, so that's what I put in here for now. -Tim
 void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityPath *argStruct = (ActionCheckEntityPath*)args;
@@ -612,7 +608,7 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		uint16_t pathId = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
+			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
 		);
 		bool identical = (pathId == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
@@ -658,15 +654,38 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	}
 }
 
+bool MageScriptControl::getButtonStateFromButtonArray(
+	uint8_t buttonId, // enum KEYBOARD_KEY, but can't use that type as uint8_t it because it's c, not cpp
+	ButtonStates *buttonStates
+) {
+	//get state of button:
+	bool button_activated = false;
+	// For some reason, the value of `KEYBOARD_NUM_KEYS` DOESN'T EXIST IN A USEFUL WAY
+	// unless you set it into an explicitly typed variable. WTF.
+	const uint8_t anyKeyId = KEYBOARD_NUM_KEYS;
+	if (buttonId == anyKeyId) { // checking for the elusive `any` key
+		for(uint8_t i = 0; i < anyKeyId; i++) {
+			button_activated = *(((bool *)buttonStates) + i);
+			if(button_activated == true) {
+				break;
+			}
+		}
+	} else { // all other keys
+		button_activated = *(((bool *)buttonStates) + buttonId);
+	}
+	return button_activated;
+}
+
 void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	//get state of button:
-	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
-	bool button_activated = *button_address;
+	bool button_activated = getButtonStateFromButtonArray(
+		argStruct->buttonId,
+		&EngineInput_Activated
+	);
 	if(button_activated)
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -680,9 +699,10 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	//get state of button:
-	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
-	bool button_state = *button_address;
+	bool button_state = getButtonStateFromButtonArray(
+		argStruct->buttonId,
+		&EngineInput_Buttons
+	);
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -758,25 +778,6 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 		resumeStateStruct,
 		argStruct->duration
 	);
-}
-
-//Need to implement -Tim
-void MageScriptControl::pauseGame(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPauseGame *argStruct = (ActionPauseGame*)args;
-}
-
-void MageScriptControl::pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPauseEntityScript *argStruct = (ActionPauseEntityScript*)args;
-
-	//Get the entity:
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		// TODO: Get the target scriptType resumeStateStruct
-		// TODO: Add `resumeStateStruct.isPaused` and toggle it
-	}
 }
 
 void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1077,7 +1078,6 @@ void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState 
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU2 *argStruct = (ActionSetEntityHackableStateAU2*)args;
@@ -1091,7 +1091,6 @@ void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateCU2 *argStruct = (ActionSetEntityHackableStateCU2*)args;
@@ -1105,7 +1104,6 @@ void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u4 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU4 *argStruct = (ActionSetEntityHackableStateAU4*)args;
@@ -1119,7 +1117,6 @@ void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityPath *argStruct = (ActionSetEntityPath*)args;
@@ -1129,7 +1126,7 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
+		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
 
@@ -1178,13 +1175,6 @@ void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * r
 	MageHex->setHexCursorLocation(argStruct->byteAddress);
 }
 
-//Need to implement a set-current-byte-value type function on MageHex for this to work. -Tim
-void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetHexBits *argStruct = (ActionSetHexBits*)args;
-
-}
-
 void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetWarpState *argStruct = (ActionSetWarpState*)args;
@@ -1192,20 +1182,6 @@ void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeSta
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	MageGame->currentSave.warpState = argStruct->stringId;
-}
-
-//Need to implement locking and unlocking in MageHex for this to work -Tim
-void MageScriptControl::unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionUnlockHaxCell *argStruct = (ActionUnlockHaxCell*)args;
-
-}
-
-//Need to implement locking and unlocking in MageHex for this to work -Tim
-void MageScriptControl::lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
-
 }
 
 void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1974,19 +1950,6 @@ void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateS
 	}
 }
 
-void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-}
-void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPlaySoundInterrupt *argStruct = (ActionPlaySoundInterrupt*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-}
-
 MageScriptControl::MageScriptControl()
 {
 	mapLocalJumpScript = MAGE_NO_SCRIPT;
@@ -2041,8 +2004,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT] = &MageScriptControl::runScript;
 	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY] = &MageScriptControl::blockingDelay;
 	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY] = &MageScriptControl::nonBlockingDelay;
-	actionFunctions[MageScriptActionTypeId::PAUSE_GAME] = &MageScriptControl::pauseGame;
-	actionFunctions[MageScriptActionTypeId::PAUSE_ENTITY_SCRIPT] = &MageScriptControl::pauseEntityScript;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_NAME] = &MageScriptControl::setEntityName;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_X] = &MageScriptControl::setEntityX;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_Y] = &MageScriptControl::setEntityY;
@@ -2071,10 +2032,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_PLAYER_CONTROL] = &MageScriptControl::setPlayerControl;
 	actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT] = &MageScriptControl::setMapTickScript;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION] = &MageScriptControl::setHexCursorLocation;
-	actionFunctions[MageScriptActionTypeId::SET_HEX_BITS] = &MageScriptControl::setHexBits;
 	actionFunctions[MageScriptActionTypeId::SET_WARP_STATE] = &MageScriptControl::setWarpState;
-	actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL] = &MageScriptControl::unlockHaxCell;
-	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL] = &MageScriptControl::lockHaxCell;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE] = &MageScriptControl::setHexEditorState;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE] = &MageScriptControl::setHexEditorDialogMode;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_CONTROL] = &MageScriptControl::setHexEditorControl;
@@ -2103,9 +2061,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SLOT_SAVE] = &MageScriptControl::slotSave;
 	actionFunctions[MageScriptActionTypeId::SLOT_LOAD] = &MageScriptControl::slotLoad;
 	actionFunctions[MageScriptActionTypeId::SLOT_ERASE] = &MageScriptControl::slotErase;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS] = &MageScriptControl::playSoundContinuous;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT] = &MageScriptControl::playSoundInterrupt;
-
 }
 
 uint32_t MageScriptControl::size() const
