@@ -346,6 +346,10 @@
 	- [x] Add the "Warp Fish" fish to all the debug maps
 - [x] Fix bug where loading an un-initialized save doesn't start with default values
 - [x] In the Dialog, when there are choices, the cursor will loop to the top when you press the down arrow, but not when pressing up from the top item, but it should
+- [ ] Purge all the actions that didn't get implemented
+- [x] Add a proper encoder enum for property `button_id` so you can refer to buttons by name
+- [x] Add support for the elusive `any key` to the button handlers
+- [ ] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

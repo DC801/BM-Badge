@@ -615,6 +615,62 @@ var getGeometryIndexFromAction = function (
 	return geometry.specialIndex || geometry.mapIndex;
 };
 
+var getButtonFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (value === undefined) {
+		throw new Error(`${action.action} requires a value for "${propertyName}"`);
+	}
+	var buttons = {
+		MEM0: 0,
+		MEM1: 1,
+		MEM2: 2,
+		MEM3: 3,
+		BIT128: 4,
+		BIT64: 5,
+		BIT32: 6,
+		BIT16: 7,
+		BIT8: 8,
+		BIT4: 9,
+		BIT2: 10,
+		BIT1: 11,
+		XOR: 12,
+		ADD: 13,
+		SUB: 14,
+		PAGE: 15,
+		LJOY_CENTER: 16,
+		LJOY_UP: 17,
+		LJOY_DOWN: 18,
+		LJOY_LEFT: 19,
+		LJOY_RIGHT: 20,
+		RJOY_CENTER: 21,
+		RJOY_UP: 22,
+		RJOY_DOWN: 23,
+		RJOY_LEFT: 24,
+		RJOY_RIGHT: 25,
+		TRIANGLE: 22,
+		X: 23,
+		CROSS: 23,
+		CIRCLE: 24,
+		O: 24,
+		SQUARE: 25,
+		HAX: 26, // Cap Touch
+		ANY: 27, // the elusive `any key`
+	};
+	var button = buttons[value];
+	if (button === undefined) {
+		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
+			Object.keys(buttons)
+		}`);
+	}
+	return button;
+};
+
 var getDirectionFromAction = function (
 	propertyName,
 	action,
@@ -999,7 +1055,7 @@ var actionPropertyNameToHandlerMap = {
 	u2_value: getTwoBytesFromAction,
 	amplitude: getByteFromAction,
 	bitmask: getByteFromAction,
-	button_id: getByteFromAction,
+	button_id: getButtonFromAction,
 	byte_offset: getByteFromAction,
 	byte_value: getByteFromAction,
 	expected_byte: getByteFromAction,

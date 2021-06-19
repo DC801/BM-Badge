@@ -177,10 +177,10 @@ var generateIndexAndComposite = function (scenarioData) {
 		compositeArray.buffer,
 		signature.byteLength
 	);
-	var hash = crc32(compositeArrayDataViewOffsetBySignature);
+	var checksum = crc32(compositeArrayDataViewOffsetBySignature);
 	compositeArrayDataView.setUint32(
 		8,
-		hash,
+		checksum,
 		IS_LITTLE_ENDIAN
 	);
 	compositeArrayDataView.setUint32(
@@ -209,7 +209,7 @@ var generateIndexAndComposite = function (scenarioData) {
 	].map(function (value) {
 		return value.toString(16).padStart(2, 0)
 	}).join('');
-	console.log('data crc32:', hash);
+	console.log('data crc32:', checksum);
 	console.log('data crc32 hex:', hashHex);
 	console.log('data length:', compositeSize);
 	console.log('data length hex:', lengthHex);

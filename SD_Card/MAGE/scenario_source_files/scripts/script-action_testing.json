@@ -1060,5 +1060,150 @@
 			"duration": 2000,
 			"color": "#00CC00"
 		}
+	],
+	"mage23-interact": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage23-choices"
+		}
+	],
+	"mage23-interact-reset": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-interact"
+		}
+	],
+	"mage23-tick-reset": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
+		}
+	],
+	"mage23-show_dialog-not_pressed": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage23-not_pressed"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-reset"
+		}
+	],
+	"mage23-show_dialog-was_pressed": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage23-was_pressed"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-reset"
+		}
+	],
+	"mage23-set_tick-press-any": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick_delay-press-any"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	],
+	"mage23-set_tick-press-page": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-press-page"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	],
+	"mage23-set_tick-state-any": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-state-any"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	],
+	"mage23-set_tick-state-page": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-state-page"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage23-interact-reset"
+		}
+	],
+	"mage23-tick_delay-press-any": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage23-tick-press-any",
+			"doc": "We need to force it to wait an extra tick for the `ANY` key, because on_ticks are evaluated after, and on the same tick as on_interacts - and the on_interact's dialog is what triggers this script!"
+		}
+	],
+	"mage23-tick-press-any": [
+		{
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "ANY",
+			"success_script": "mage23-show_dialog-was_pressed"
+		}
+	],
+	"mage23-tick-press-page": [
+		{
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "PAGE",
+			"success_script": "mage23-show_dialog-was_pressed"
+		}
+	],
+	"mage23-tick-state-any": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "ANY",
+			"expected_bool": true,
+			"success_script": "mage23-show_dialog-was_pressed"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "mage23-show_dialog-not_pressed"
+		}
+	],
+	"mage23-tick-state-page": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 2000
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "PAGE",
+			"expected_bool": true,
+			"success_script": "mage23-show_dialog-was_pressed"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "mage23-show_dialog-not_pressed"
+		}
 	]
 }

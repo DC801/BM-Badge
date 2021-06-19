@@ -344,6 +344,10 @@
 					"script": "debug-everything-on"
 				},
 				{
+					"label": "Go to debug map hub",
+					"script": "debug-hub"
+				},
+				{
 					"label": "Never mind",
 					"script": "debug-everything-off"
 				}
