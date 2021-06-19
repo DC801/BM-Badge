@@ -600,7 +600,6 @@ void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptSt
 	}
 }
 
-// Need to verify which two bytes make up the pathId. I think it's A and B, so that's what I put in here for now. -Tim
 void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityPath *argStruct = (ActionCheckEntityPath*)args;
@@ -612,7 +611,7 @@ void MageScriptControl::checkEntityPath(uint8_t * args, MageScriptState * resume
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		uint16_t pathId = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
+			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
 		);
 		bool identical = (pathId == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
@@ -1143,7 +1142,6 @@ void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityPath *argStruct = (ActionSetEntityPath*)args;
@@ -1153,7 +1151,7 @@ void MageScriptControl::setEntityPath(uint8_t * args, MageScriptState * resumeSt
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
+		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
 
