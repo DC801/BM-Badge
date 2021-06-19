@@ -120,6 +120,11 @@
                          "name":"is_player",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"on_tick-button-to-skip"
                         }],
                  "rotation":0,
                  "type":"",
@@ -187,7 +192,12 @@
         {
          "name":"on_load",
          "type":"string",
-         "value":"on_load-main_menu"
+         "value":""
+        }, 
+        {
+         "name":"on_tick",
+         "type":"string",
+         "value":"on_tick-main_menu"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
