@@ -346,20 +346,8 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "calculate-hint-tracking-series"
-		},
-		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking-check",
-			"value": 3,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "show_dialog-bert-wrapup",
-			"doc": "if the hint series is the same, leave the hint alone"
-		},
-		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-bobmoss-from-bert"
+			"script": "set-hint-bobmoss-from-bert",
+			"doc": "no need to check for hint series, because this is the advanced hint, not the basic one; always set this"
 		},
 		{
 			"action": "RUN_SCRIPT",

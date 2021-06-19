@@ -1491,6 +1491,12 @@
                  "height":16,
                  "id":24,
                  "name":"Hamster",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"pixie-training"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1503,6 +1509,12 @@
                  "height":48,
                  "id":52,
                  "name":"Goose",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"goose-loiter-honk"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1563,6 +1575,12 @@
                  "height":32,
                  "id":95,
                  "name":"Helga",
+                 "properties":[
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"helga-munch"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
