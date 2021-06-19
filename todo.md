@@ -219,8 +219,8 @@
 - [x] Fix name not sticking to player when changing rooms
 - [x] Look into why EtherNettles puzzle is not triggering
 	- [x] it's probably a modulo issue on tileId and tilesetId
-- [ ] Make a new dialog tileset that is mostly transparent for the main menu
-- [ ] Make some background artwork for the main menu
+- [x] Make a new dialog tileset that is mostly transparent for the main menu
+- [x] Make some background artwork for the main menu
 - [ ] Create action for setBackground
 - [x] Fix portrait from last conversation being used on dialogScreens that have none
 - [x] Remove AnimationFrames to free enough ram to run on Hardware again
@@ -240,7 +240,7 @@
 - [ ] After switching delmar from to sheep to man, you can't talk with him. Player expected to talk with him.
 - [x] Fix a bug where modulo on the animation always picks (whatever, mage walking north, blitzball) when the currentAnimation is cycled - it glitches across palettes.
 	- [x] This is not actually a bug, because the byte changing was primaryIdType. This is expected behavior.
-- [ ] When you load from the main menu on desktop before you've created a save, it crashes.
+- [?] When you load from the main menu on desktop before you've created a save, it crashes.
 - [x] NewGnu tried to set the corrupted byte on the Big Bad Name Book to uncorrupt the name. He was really fixated on learning about that.
 	- [x] We should make it do a rot 13 of RED HERRING
 - [x] Add Desvio to special thanks
@@ -262,7 +262,7 @@
 	- [x] To fix, LoadMap should set fadeFraction to 0
 - [x] Fix the ???Mystery Sink??? in the player's house?!?
 - [x] Each of the members of the cat construction crew should say something different to the player when they are the PipsCat
-- [ ] The path leading north of the Library should take the player to an "UNDER CONSTRUCTION" zone, saying something about how it's not ready yet.
+- [x] The path leading north of the Library should take the player to an "UNDER CONSTRUCTION" zone, saying something about how it's not ready yet.
 - [ ] The wrap-around at the bottom of the map should fade out and then in again
 - [x] Re-do the handling of the right side buttons when in the HexEditor
 	- [x] Create Clipboard system
@@ -365,40 +365,41 @@
 - [x] Get LED control chip working and update LED control functions
 - [x] Update FrameBuffer.h to work with the new larger screen
 - [x] Use SD card for testing game until ROM chip is functional
-- [ ] Get ROM chip read/write working reliably
-- [ ] Verify function of all desktop testing build features are working correctly on badge hardware
+- [x] Get ROM chip read/write working reliably
+- [x] Verify function of all desktop testing build features are working correctly on badge hardware
 - [ ] Fix audio driver and initialize communication with audio chip
 
 # MAJOR GAMEPLAY AND QUEST SPOILERS BELOW!
 
 ## Assets we need
-- [ ] More villagers
-	- [ ] One of the children's actions should be a sneeze
-- [ ] The other mystical artifacts, which do _not_ pick the mage
+- [x] More villagers
+	- [!] One of the children's actions should be a sneeze
+- [x] The other mystical artifacts, which do _not_ pick the mage
 - [x] Ring Zero, spinning
 - [ ] Chicken
 - [ ] Sparkles that could be overlayed on anything to draw attention
-- [ ] Character Portraits for the Dialog system
-	- [ ] Mouth open, closed
+- [x] Character Portraits for the Dialog system
+	- [!] Mouth open, closed
 - [x] The Quest Board tiles
-- [X] The 9-slice image for "Quest List" screen
-- [X] The 9-slice image for dialog borders
-- [ ] Tiles for the inside of village houses
-- [ ] Set Dressing
-	- [ ] Bed
-	- [ ] Flower Pots
-	- [ ] Windows
-	- [ ] Kitchen table
-	- [ ] Kitchen chairs at table
-	- [ ] Pots
+- [x] The 9-slice image for "Quest List" screen
+- [x] The 9-slice image for dialog borders
+- [x] Tiles for the inside of village houses
+- [ ] Tiles for Dungeons
+- [x] Set Dressing
+	- [x] Bed
+	- [x] Flower Pots
+	- [x] Windows
+	- [x] Kitchen table
+	- [x] Kitchen chairs at table
+	- [x] Pots
 	- [ ] Interior Doors for all 4 walls
-	- [ ] Fireplace
-	- [ ] Shelves with things on them
+	- [x] Fireplace
+	- [x] Shelves with things on them
 	- [ ] Fruits on table
-	- [ ] Fence Posts to paint, so we need 2 states
+	- [!] Fence Posts to paint, so we need 2 states
 	- [ ] Dancy Flowers
-	- [ ] A rake, for the lake
-- [ ] A knob that has never turned, but must be turned to get the fountain to turn on again
-- [ ] A well, for Timmy to get stuck in
+	- [x] A rake, for the lake
+- [!] A knob that has never turned, but must be turned to get the fountain to turn on again
+- [!] A well, for Timmy to get stuck in
 - [ ] Tiles for village elder's basement/dungeon
-- [X] Bender + shiny metal ass
+- [x] Bender + shiny metal ass
