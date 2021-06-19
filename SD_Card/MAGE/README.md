@@ -411,7 +411,7 @@ In addition, because each tile that is drawn increases the draw time, it's best 
 
 ### Object Layers
 
-Vector polygons and points are placed on object layers, but tiles can be placed this way, too, if you use the Insert Tile button on the vector section of the toolbar (shortcut T) — and this is how entities are added to a map.
+Vector polygons and points are placed on object layers, but tiles can be placed this way, too, if you use the Insert Tile button on the vector section of the toolbar (shortcut **T**) — and this is how entities are added to a map.
 
 > **Best Practices**: Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
 >	- the entities themselves
@@ -442,7 +442,7 @@ In the MGE, there are three types of entities. Each have a `PrimaryIdType`:
 	1 = animation
 	2 = entity_type
 
-Any single tile object placed on a map will be one of these types, but all will have all the same entity properties available to them (visible as a pair of rows on the hex editor in BMG2020 — 32 bytes in all). They will therefore all have an [`on_interact`](#on_interact-scripts) and [`on_tick`](#on_tick-scripts) [script slot](#script-slots), various render flags, etc.
+Any single tile object placed on a map will be one of these types, but all will have all the same [entity properties](#entity-properties) available to them (visible as a pair of rows on the hex editor in BMG2020 — 32 bytes in all). They will therefore all have an [`on_interact`](#on_interact-scripts) and [`on_tick`](#on_tick-scripts) [script slot](#script-slots), various render flags, etc.
 
 Entities need not have a name, nor a unique name — scripts targeting an entity by name will simply use the first the [MGE encoder](#mge-encoder) found with that name.
 
@@ -766,7 +766,7 @@ If the script in this slot jumps to another script at some point, interacting wi
 
 `on_tick` scripts continuously evaluate every game tick. Once an `on_tick` script reaches the end of its list of actions, the script will return to the beginning of the currently set script and run again.
 
-To terminate an `on_tick` script, it must run [`null_script`](#null_script) as one of its actions, or another script must tell it to switch to [`null_script`](#null_script).
+To terminate an `on_tick` script, it must [run](#run_script) [`null_script`](#null_script) as one of its actions, or another script must tell it to switch to [`null_script`](#null_script).
 
 A map's `on_tick` script slot is a logical place for a script that watches for whether the player enters a doorway, but `on_tick` scripts are useful for other kinds of watch scripts, too, such as changing an entity's idle behavior after a condition has been met.
 
@@ -1177,11 +1177,13 @@ Example uses of debug entities:
 
 **Clean wipe** — When using debug entities to emulate a fresh game state, be sure you have a good list of the save flags and variables (etc.) you have been using.
 
-**Puzzle solvers** — While some puzzles can be simplified to accelerate playtesting (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make debug entities solve puzzles for you. By the end of game development in BMG2020, there was a Debug Exa capable of solving or partially solving the majority of puzzles.
+**Puzzle solvers** — While some puzzles can be simplified to accelerate playtesting (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make debug entities solve puzzles for you.
+
+> By the end of game development in BMG2020, there was a Debug Exa capable of solving or partially solving the majority of puzzles.
 
 **Choreography controller** — Whenever you have a small segment of choreography you want to polish, it helps to split the sequence into a separate script that you can trigger at will with a debug entity.
 
-> **Best Practice**: When making debug entities, it helps a lot to give them dialog describing what they are doing to change the game state. Better still is putting the debug behavior behind a [multiple choice dialog]{#multiple-choice-dialogs}, so that the debug entity can be disengaged without making any changes in case it is ever engaged by accident.
+> **Best Practice**: When making debug entities, it helps a lot to give them dialog describing what they are doing to change the game state. Better still is putting the debug behavior behind a [multiple choice dialog](#multiple-choice-dialogs), so that the debug entity can be disengaged without making any changes in case it is ever engaged by accident.
 
 ## MGE Encoder Console
 
@@ -1364,9 +1366,9 @@ Because a single [script slot](#script-slots) cannot run multiple threads, you m
 
 If you try to put all simultaneous behaviors into a single script, the actions will execute one after the other, but only after each action has completely finished. Three entities having a race would instead run the entire course one at a time, each waiting patiently for the runner before them to complete their route. And indeed, if one of the simultaneous behaviors has no stopping point, the actions listed afterwards will never execute at all.
 
-The simultaneous behaviors must be managed by [`on_tick`](#on_tick-scripts) slots because [`on_interact`](#on_interact-scripts) and `on_load` script slots cannot execute actions at arbitrary times.
+The simultaneous behaviors must be managed by [`on_tick`](#on_tick-scripts) slots because [`on_interact`](#on_interact-scripts) and [`on_load`](#on_load-scripts) script slots cannot execute actions at arbitrary times.
 
-When the simultaneous behaviors are finished, however, the [`on_tick`](#on_tick-scripts) slots must be then set to something else or the new behavior will loop indefinitely (unless that's what you want). Halt an [`on_tick`](#on_tick-scripts) script by running [`null_script`](#null_script) as its final action or by setting the target slot to a different [`on_tick`](#on_tick-scripts) script.
+When the simultaneous behaviors are finished, however, the [`on_tick`](#on_tick-scripts) slots must be then set to something else or the new behavior will loop indefinitely (unless that's what you want). Halt an [`on_tick`](#on_tick-scripts) script by [running](#run_script) [`null_script`](#null_script) as its final action or by setting the target slot to a different [`on_tick`](#on_tick-scripts) script.
 
 ### Example: Timid Goats
 
@@ -1378,7 +1380,7 @@ Three entities are involved in this behavior (apart from the player themselves):
 - Kid (a baby goat)
 - Verthandi
 
-Each goat has an [`on_tick`](#on_tick-scripts) script that moves it around in a small jaggedy circle: the vector shape `high1` for Billy and `high2` for Kid.
+Each goat has an [`on_tick`](#on_tick-scripts) script that moves it around in a small jaggedy circle: the [vector shape](#polygons-and-points) `high1` for Billy and `high2` for Kid.
 
 What's important here is the **watcher**, Verthandi. Her [`on_tick`](#on_tick-scripts) script, `check_if_player_is_goat_high`, watches for if the player has entered the goat trigger area called `high`, at which point her [`on_tick`](#on_tick-scripts) script jumps to one called `move_goats_to_low`.
 
@@ -1395,7 +1397,7 @@ What's important here is the **watcher**, Verthandi. Her [`on_tick`](#on_tick-sc
 	- Loop Kid along geometry `low2`
 		- NOTE: this action will not end on its own.
 
-This setup does what we want because [2] and [3] are run in [`on_tick`](#on_tick-scripts) slots, and because they are run by entities other than the one running the watch script [1].
+This setup does what we want because [2] and [3] are run in [`on_tick`](#on_tick-scripts) slots, and because they are executed by entities other than the one running the watch script [1].
 
 The end behavior is a reversal of the above: Verthandi is now watching for the player to enter a goat trigger area called `low`, and due to the final action inside [2] and [3], the goats are now looping along their "low" vector paths until their [`on_tick`](#on_tick-scripts) scripts are changed by another script.
 
@@ -1646,7 +1648,7 @@ Plays the named dialog.
 
 No other actions can be executed by that script until the dialog has finished, so any additional behaviors within a cutscene (for instance) must be done between dialog chunks. (If you want someone to turn around during a speech, you must `SHOW_DIALOG` for the script named show_dialog-speech1`, turn them around with `SET_ENTITY_DIRECTION` several times, then `SHOW_DIALOG` for the script named `show_dialog-speech2`, etc.)
 
-When a dialog is showing, the player can only advance to the next dialog message or choose a [multiple choice]{#multiple-choice-dialogs} option (if given one) — the player cannot hack, interact with another entity, move, etc.
+When a dialog is showing, the player can only advance to the next dialog message or choose a [multiple choice](#multiple-choice-dialogs) option (if given one) — the player cannot hack, interact with another entity, move, etc.
 
 ### `SLOT_LOAD`
 - `slot` — `0`, `1`, or `2`
@@ -1703,7 +1705,7 @@ This action enables or disables the clipboard and copy functionality within the 
 
 ## Logic Checks (Entities)
 
-These actions check whether an entity property matches a specific state. If the `expected_bool` is met (either `true` or `false`) then the script branches, or jumps, to the script named by `success_script`, and all other actions from the original script are ignored.
+These actions check whether an [entity property](#entity-properties) matches a specific state. If the `expected_bool` is met (either `true` or `false`) then the script branches, or jumps, to the script named by `success_script`, and all other actions from the original script are ignored.
 
 Remember you can use `%SELF%` to target the entity running the script and `%PLAYER%` to target the player entity. Otherwise, you must use the entity's name as originally assigned on the map (in Tiled).
 
@@ -2188,7 +2190,7 @@ Mutate variable operations:
 - `variable` — the name (string) of a variable
 - `inbound` — `true` or `false`
 - `entity` — target (or source) entity
-- `field` — target (or source) entity property
+- `field` — target (or source) [entity property](#entity-properties)
 
 To copy one of the properties of `entity` into `variable`, set `inbound` to `true`.
 
