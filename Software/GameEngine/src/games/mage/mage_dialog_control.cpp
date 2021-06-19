@@ -5,6 +5,7 @@
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
+extern MageHexEditor *MageHex;
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
@@ -136,6 +137,9 @@ void MageDialogControl::load(
 	uint16_t dialogId,
 	int16_t currentEntityId
 ) {
+	if(MageHex->getHexEditorState()) {
+		MageHex->toggleHexEditor();
+	}
 	triggeringEntityId = currentEntityId;
 	currentDialogIndex = dialogId;
 	currentScreenIndex = 0;
