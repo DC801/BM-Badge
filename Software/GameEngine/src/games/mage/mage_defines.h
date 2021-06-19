@@ -225,8 +225,6 @@ typedef enum : uint8_t {
 	RUN_SCRIPT,
 	BLOCKING_DELAY,
 	NON_BLOCKING_DELAY,
-	PAUSE_GAME,
-	PAUSE_ENTITY_SCRIPT,
 	SET_ENTITY_NAME,
 	SET_ENTITY_X,
 	SET_ENTITY_Y,
@@ -255,10 +253,7 @@ typedef enum : uint8_t {
 	SET_PLAYER_CONTROL,
 	SET_MAP_TICK_SCRIPT,
 	SET_HEX_CURSOR_LOCATION,
-	SET_HEX_BITS,
 	SET_WARP_STATE,
-	UNLOCK_HAX_CELL,
-	LOCK_HAX_CELL,
 	SET_HEX_EDITOR_STATE,
 	SET_HEX_EDITOR_DIALOG_MODE,
 	SET_HEX_EDITOR_CONTROL,
@@ -287,8 +282,6 @@ typedef enum : uint8_t {
 	SLOT_SAVE,
 	SLOT_LOAD,
 	SLOT_ERASE,
-	PLAY_SOUND_CONTINUOUS,
-	PLAY_SOUND_INTERRUPT,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -635,26 +628,6 @@ typedef struct {
 } ActionNonBlockingDelay;
 
 typedef struct {
-	uint8_t state;
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionPauseGame;
-
-typedef struct {
-	uint8_t entityId;
-	MageScriptType scriptType;
-	uint8_t state;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionPauseEntityScript;
-
-typedef struct {
 	uint16_t stringId;
 	uint8_t entityId;
 	uint8_t paddingD;
@@ -917,16 +890,6 @@ typedef struct {
 } ActionSetHexCursorLocation;
 
 typedef struct {
-	uint8_t bitmask;
-	uint8_t state;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionSetHexBits;
-
-typedef struct {
 	uint16_t stringId;
 	uint8_t paddingC;
 	uint8_t paddingD;
@@ -934,26 +897,6 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSetWarpState;
-
-typedef struct {
-	uint8_t fieldType; //needs enum lookup
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionUnlockHaxCell;
-
-typedef struct {
-	uint8_t fieldType; //needs enum lookup
-	uint8_t paddingB;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionLockHaxCell;
 
 typedef struct {
 	uint8_t state;
@@ -1189,23 +1132,5 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSlotErase;
-
-typedef struct {
-	uint16_t soundId;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionPlaySoundContinuous;
-
-typedef struct {
-	uint16_t soundId;
-	uint8_t paddingC;
-	uint8_t paddingD;
-	uint8_t paddingE;
-	uint8_t paddingF;
-	uint8_t paddingG;
-} ActionPlaySoundInterrupt;
 
 #endif //_MAGE_DEFINES_H

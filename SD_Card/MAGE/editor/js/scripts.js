@@ -158,14 +158,6 @@ var actionFieldsMap = {
 	NON_BLOCKING_DELAY: [
 		{propertyName: 'duration', size: 4},
 	],
-	PAUSE_GAME: [
-		{propertyName: 'state', size: 1},
-	],
-	PAUSE_ENTITY_SCRIPT: [
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'script_type', size: 1},
-		{propertyName: 'state', size: 1},
-	],
 	SET_ENTITY_NAME: [
 		{propertyName: 'string', size: 2},
 		{propertyName: 'entity', size: 1},
@@ -275,18 +267,8 @@ var actionFieldsMap = {
 	SET_HEX_CURSOR_LOCATION: [
 		{propertyName: 'address', size: 2},
 	],
-	SET_HEX_BITS: [
-		{propertyName: 'bitmask', size: 1},
-		{propertyName: 'bool_value', size: 1},
-	],
 	SET_WARP_STATE: [
 		{propertyName: 'string', size: 2}
-	],
-	UNLOCK_HAX_CELL: [
-		{propertyName: 'address', size: 2},
-	],
-	LOCK_HAX_CELL: [
-		{propertyName: 'address', size: 2},
 	],
 	SET_HEX_EDITOR_STATE: [
 		{propertyName: 'bool_value', size: 1},
@@ -404,8 +386,6 @@ var actionFieldsMap = {
 	SLOT_ERASE: [
 		{propertyName: 'slot', size: 1},
 	],
-	PLAY_SOUND_CONTINUOUS: null,
-	PLAY_SOUND_INTERRUPT: null,
 };
 
 var actionNames = [
@@ -439,8 +419,6 @@ var actionNames = [
 	'RUN_SCRIPT',
 	'BLOCKING_DELAY',
 	'NON_BLOCKING_DELAY',
-	'PAUSE_GAME',
-	'PAUSE_ENTITY_SCRIPT',
 	'SET_ENTITY_NAME',
 	'SET_ENTITY_X',
 	'SET_ENTITY_Y',
@@ -469,10 +447,7 @@ var actionNames = [
 	'SET_PLAYER_CONTROL',
 	'SET_MAP_TICK_SCRIPT',
 	'SET_HEX_CURSOR_LOCATION',
-	'SET_HEX_BITS',
 	'SET_WARP_STATE',
-	'UNLOCK_HAX_CELL',
-	'LOCK_HAX_CELL',
 	'SET_HEX_EDITOR_STATE',
 	'SET_HEX_EDITOR_DIALOG_MODE',
 	'SET_HEX_EDITOR_CONTROL',
@@ -501,8 +476,6 @@ var actionNames = [
 	'SLOT_SAVE',
 	'SLOT_LOAD',
 	'SLOT_ERASE',
-	'PLAY_SOUND_CONTINUOUS',
-	'PLAY_SOUND_INTERRUPT',
 ];
 
 var specialKeywordsEnum = {
