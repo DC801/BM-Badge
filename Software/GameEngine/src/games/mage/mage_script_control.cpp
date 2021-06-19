@@ -780,25 +780,6 @@ void MageScriptControl::nonBlockingDelay(uint8_t * args, MageScriptState * resum
 	);
 }
 
-//Need to implement -Tim
-void MageScriptControl::pauseGame(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPauseGame *argStruct = (ActionPauseGame*)args;
-}
-
-void MageScriptControl::pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPauseEntityScript *argStruct = (ActionPauseEntityScript*)args;
-
-	//Get the entity:
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, currentEntityId);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		// TODO: Get the target scriptType resumeStateStruct
-		// TODO: Add `resumeStateStruct.isPaused` and toggle it
-	}
-}
-
 void MageScriptControl::setEntityName(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityName *argStruct = (ActionSetEntityName*)args;
@@ -1194,13 +1175,6 @@ void MageScriptControl::setHexCursorLocation(uint8_t * args, MageScriptState * r
 	MageHex->setHexCursorLocation(argStruct->byteAddress);
 }
 
-//Need to implement a set-current-byte-value type function on MageHex for this to work. -Tim
-void MageScriptControl::setHexBits(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionSetHexBits *argStruct = (ActionSetHexBits*)args;
-
-}
-
 void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetWarpState *argStruct = (ActionSetWarpState*)args;
@@ -1208,20 +1182,6 @@ void MageScriptControl::setWarpState(uint8_t * args, MageScriptState * resumeSta
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	MageGame->currentSave.warpState = argStruct->stringId;
-}
-
-//Need to implement locking and unlocking in MageHex for this to work -Tim
-void MageScriptControl::unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionUnlockHaxCell *argStruct = (ActionUnlockHaxCell*)args;
-
-}
-
-//Need to implement locking and unlocking in MageHex for this to work -Tim
-void MageScriptControl::lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionLockHaxCell *argStruct = (ActionLockHaxCell*)args;
-
 }
 
 void MageScriptControl::setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1990,19 +1950,6 @@ void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateS
 	}
 }
 
-void MageScriptControl::playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPlaySoundContinuous *argStruct = (ActionPlaySoundContinuous*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-}
-void MageScriptControl::playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	ActionPlaySoundInterrupt *argStruct = (ActionPlaySoundInterrupt*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->soundId = ROM_ENDIAN_U2_VALUE(argStruct->soundId);
-}
-
 MageScriptControl::MageScriptControl()
 {
 	mapLocalJumpScript = MAGE_NO_SCRIPT;
@@ -2057,8 +2004,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::RUN_SCRIPT] = &MageScriptControl::runScript;
 	actionFunctions[MageScriptActionTypeId::BLOCKING_DELAY] = &MageScriptControl::blockingDelay;
 	actionFunctions[MageScriptActionTypeId::NON_BLOCKING_DELAY] = &MageScriptControl::nonBlockingDelay;
-	actionFunctions[MageScriptActionTypeId::PAUSE_GAME] = &MageScriptControl::pauseGame;
-	actionFunctions[MageScriptActionTypeId::PAUSE_ENTITY_SCRIPT] = &MageScriptControl::pauseEntityScript;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_NAME] = &MageScriptControl::setEntityName;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_X] = &MageScriptControl::setEntityX;
 	actionFunctions[MageScriptActionTypeId::SET_ENTITY_Y] = &MageScriptControl::setEntityY;
@@ -2087,10 +2032,7 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SET_PLAYER_CONTROL] = &MageScriptControl::setPlayerControl;
 	actionFunctions[MageScriptActionTypeId::SET_MAP_TICK_SCRIPT] = &MageScriptControl::setMapTickScript;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_CURSOR_LOCATION] = &MageScriptControl::setHexCursorLocation;
-	actionFunctions[MageScriptActionTypeId::SET_HEX_BITS] = &MageScriptControl::setHexBits;
 	actionFunctions[MageScriptActionTypeId::SET_WARP_STATE] = &MageScriptControl::setWarpState;
-	actionFunctions[MageScriptActionTypeId::UNLOCK_HAX_CELL] = &MageScriptControl::unlockHaxCell;
-	actionFunctions[MageScriptActionTypeId::LOCK_HAX_CELL] = &MageScriptControl::lockHaxCell;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_STATE] = &MageScriptControl::setHexEditorState;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_DIALOG_MODE] = &MageScriptControl::setHexEditorDialogMode;
 	actionFunctions[MageScriptActionTypeId::SET_HEX_EDITOR_CONTROL] = &MageScriptControl::setHexEditorControl;
@@ -2119,9 +2061,6 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SLOT_SAVE] = &MageScriptControl::slotSave;
 	actionFunctions[MageScriptActionTypeId::SLOT_LOAD] = &MageScriptControl::slotLoad;
 	actionFunctions[MageScriptActionTypeId::SLOT_ERASE] = &MageScriptControl::slotErase;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_CONTINUOUS] = &MageScriptControl::playSoundContinuous;
-	actionFunctions[MageScriptActionTypeId::PLAY_SOUND_INTERRUPT] = &MageScriptControl::playSoundInterrupt;
-
 }
 
 uint32_t MageScriptControl::size() const

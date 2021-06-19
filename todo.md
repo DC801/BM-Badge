@@ -82,14 +82,14 @@
 		- [x] CHECK_ENTITY_CURRENT_FRAME
 		- [x] CHECK_ENTITY_DIRECTION
 		- [x] CHECK_ENTITY_GLITCHED
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_A
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_B
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_C
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_D
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U2
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_C_U2
-		- [ ] CHECK_ENTITY_HACKABLE_STATE_A_U4
-		- [ ] CHECK_ENTITY_PATH (specific hackable state check by name)
+		- [x] CHECK_ENTITY_HACKABLE_STATE_A
+		- [x] CHECK_ENTITY_HACKABLE_STATE_B
+		- [x] CHECK_ENTITY_HACKABLE_STATE_C
+		- [x] CHECK_ENTITY_HACKABLE_STATE_D
+		- [x] CHECK_ENTITY_HACKABLE_STATE_A_U2
+		- [x] CHECK_ENTITY_HACKABLE_STATE_C_U2
+		- [x] CHECK_ENTITY_HACKABLE_STATE_A_U4
+		- [x] CHECK_ENTITY_PATH (specific hackable state check by name)
 		- [x] CHECK_SAVE_FLAG
 		- [x] CHECK_IF_ENTITY_IS_IN_GEOMETRY
 		- [x] CHECK_FOR_BUTTON_PRESS
@@ -98,8 +98,6 @@
 		- [x] RUN_SCRIPT
 		- [x] BLOCKING_DELAY
 		- [x] NON_BLOCKING_DELAY
-		- [ ] PAUSE_GAME
-		- [ ] PAUSE_ENTITY_SCRIPT
 		- [x] SET_ENTITY_NAME
 		- [x] SET_ENTITY_X
 		- [x] SET_ENTITY_Y
@@ -116,22 +114,19 @@
 		- [x] SET_ENTITY_DIRECTION_TARGET_ENTITY
 		- [x] SET_ENTITY_DIRECTION_TARGET_GEOMETRY
 		- [x] SET_ENTITY_GLITCHED
-		- [ ] SET_ENTITY_HACKABLE_STATE_A
-		- [ ] SET_ENTITY_HACKABLE_STATE_B
-		- [ ] SET_ENTITY_HACKABLE_STATE_C
-		- [ ] SET_ENTITY_HACKABLE_STATE_D
-		- [ ] SET_ENTITY_HACKABLE_STATE_A_U2
-		- [ ] SET_ENTITY_HACKABLE_STATE_C_U2
-		- [ ] SET_ENTITY_HACKABLE_STATE_A_U4
-		- [ ] SET_ENTITY_PATH (specific hackable state check by name)
+		- [x] SET_ENTITY_HACKABLE_STATE_A
+		- [x] SET_ENTITY_HACKABLE_STATE_B
+		- [x] SET_ENTITY_HACKABLE_STATE_C
+		- [x] SET_ENTITY_HACKABLE_STATE_D
+		- [x] SET_ENTITY_HACKABLE_STATE_A_U2
+		- [x] SET_ENTITY_HACKABLE_STATE_C_U2
+		- [x] SET_ENTITY_HACKABLE_STATE_A_U4
+		- [x] SET_ENTITY_PATH (specific hackable state check by name)
 		- [x] SET_SAVE_FLAG
 		- [x] SET_PLAYER_CONTROL
 		- [x] SET_MAP_TICK_SCRIPT
 		- [x] SET_HEX_CURSOR_LOCATION
-		- [ ] SET_HEX_BITS
 		- [x] SET_WARP_STATE
-		- [ ] UNLOCK_HAX_CELL
-		- [ ] LOCK_HAX_CELL
 		- [x] SET_HEX_EDITOR_STATE
 		- [x] SET_HEX_EDITOR_DIALOG_MODE
 		- [x] SET_HEX_EDITOR_CONTROL
@@ -156,8 +151,6 @@
 		- [X] COPY_VARIABLE
 		- [x] CHECK_VARIABLE
 		- [x] CHECK_VARIABLES
-		- [ ] PLAY_SOUND_CONTINUOUS
-		- [ ] PLAY_SOUND_INTERRUPT
 - [x] Geometry
 	- [x] polygon(uint8_t count, x points[count])
 	- [x] polyline(uint8_t count, x points[count])
@@ -346,7 +339,15 @@
 	- [x] Add the "Warp Fish" fish to all the debug maps
 - [x] Fix bug where loading an un-initialized save doesn't start with default values
 - [x] In the Dialog, when there are choices, the cursor will loop to the top when you press the down arrow, but not when pressing up from the top item, but it should
-- [ ] Purge all the actions that didn't get implemented
+- [x] Purge all the actions that didn't get implemented
+	- [x] PAUSE_GAME
+	- [x] PAUSE_ENTITY_SCRIPT
+	- [x] PLAY_SOUND_CONTINUOUS
+	- [x] PLAY_SOUND_INTERRUPT
+	- [x] SET_HEX_BITS
+	- [x] LOCK_HAX_CELL
+	- [x] UNLOCK_HAX_CELL
+	- [x] Now playtest the game
 - [x] Add a proper encoder enum for property `button_id` so you can refer to buttons by name
 - [x] Add support for the elusive `any key` to the button handlers
 - [x] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
