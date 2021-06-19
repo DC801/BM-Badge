@@ -620,5 +620,23 @@
 				"The button was pressed!"
 			]
 		}
+	],
+	"dialog-mage24-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test `CHECK_ENTITY_PATH`!\nSet my `entity_path` starting byte one\nhigher and then talk with me again!"
+			]
+		}
+	],
+	"dialog-mage24-interact-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Great Jeaoarb!"
+			]
+		}
 	]
 }

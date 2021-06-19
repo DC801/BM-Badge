@@ -1205,5 +1205,46 @@
 			"action": "RUN_SCRIPT",
 			"script": "mage23-show_dialog-not_pressed"
 		}
+	],
+	"mage24-interact": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "CHECK_ENTITY_PATH",
+			"entity": "%SELF%",
+			"geometry": "mage24-geometry-b",
+			"expected_bool": true,
+			"success_script": "mage24-interact-success"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage24-interact"
+		}
+	],
+	"mage24-interact-success": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mage24-interact-success"
+		},
+		{
+			"action": "SET_ENTITY_PATH",
+			"entity": "%SELF%",
+			"geometry": "mage24-geometry-a"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "mage24-interact"
+		}
+	],
+	"mage24-tick": [
+		{
+			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+			"entity": "%SELF%",
+			"geometry": "%ENTITY_PATH%"
+		}
 	]
 }

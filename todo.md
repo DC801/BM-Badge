@@ -349,7 +349,7 @@
 - [ ] Purge all the actions that didn't get implemented
 - [x] Add a proper encoder enum for property `button_id` so you can refer to buttons by name
 - [x] Add support for the elusive `any key` to the button handlers
-- [ ] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
+- [x] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

@@ -562,12 +562,17 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage24-interact"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage24-tick"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":79
                         }],
                  "rotation":0,
                  "type":"",
@@ -790,6 +795,30 @@
                  "width":0,
                  "x":256,
                  "y":256
+                }, 
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"mage24-geometry-a",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":784,
+                 "y":280
+                }, 
+                {
+                 "height":0,
+                 "id":80,
+                 "name":"mage24-geometry-b",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":816,
+                 "y":280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -875,7 +904,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":79,
+ "nextobjectid":81,
  "orientation":"orthogonal",
  "properties":[
         {

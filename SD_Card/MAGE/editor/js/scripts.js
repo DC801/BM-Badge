@@ -120,7 +120,7 @@ var actionFieldsMap = {
 	],
 	CHECK_ENTITY_PATH: [
 		{propertyName: 'success_script', size: 2},
-		{propertyName: 'expected_u2', size: 2},
+		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
@@ -259,7 +259,7 @@ var actionFieldsMap = {
 		{propertyName: 'entity', size: 1},
 	],
 	SET_ENTITY_PATH: [
-		{propertyName: 'u2_value', size: 2},
+		{propertyName: 'geometry', size: 2},
 		{propertyName: 'entity', size: 1},
 	],
 	SET_SAVE_FLAG: [
