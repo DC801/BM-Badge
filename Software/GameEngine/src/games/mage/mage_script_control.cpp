@@ -538,7 +538,6 @@ void MageScriptControl::checkEntityHackableStateD(uint8_t * args, MageScriptStat
 	}
 }
 
-// Need to verify the u2 conversion of bytes is working -Tim
 void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateAU2 *argStruct = (ActionCheckEntityHackableStateAU2*)args;
@@ -559,7 +558,6 @@ void MageScriptControl::checkEntityHackableStateAU2(uint8_t * args, MageScriptSt
 	}
 }
 
-//Need to verify encoding of u2_value variable works correctly -Tim
 void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateCU2 *argStruct = (ActionCheckEntityHackableStateCU2*)args;
@@ -580,7 +578,6 @@ void MageScriptControl::checkEntityHackableStateCU2(uint8_t * args, MageScriptSt
 	}
 }
 
-//Need to verify encoding of u4_value variable works correctly -Tim
 void MageScriptControl::checkEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckEntityHackableStateAU4 *argStruct = (ActionCheckEntityHackableStateAU4*)args;
@@ -1100,7 +1097,6 @@ void MageScriptControl::setEntityHackableStateD(uint8_t * args, MageScriptState 
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU2 *argStruct = (ActionSetEntityHackableStateAU2*)args;
@@ -1114,7 +1110,6 @@ void MageScriptControl::setEntityHackableStateAU2(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u2 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateCU2 *argStruct = (ActionSetEntityHackableStateCU2*)args;
@@ -1128,7 +1123,6 @@ void MageScriptControl::setEntityHackableStateCU2(uint8_t * args, MageScriptStat
 	}
 }
 
-//need to verify that u4 values are set correctly in the struct. -Tim
 void MageScriptControl::setEntityHackableStateAU4(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionSetEntityHackableStateAU4 *argStruct = (ActionSetEntityHackableStateAU4*)args;
