@@ -481,13 +481,7 @@
 			"script": "show_dialog-cleo1"
 		}
 	],
-	"show_dialog-cleo1": [
-		{
-			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "%SELF%",
-			"success_script": "show_dialog-cleo-glitched",
-			"expected_bool": true
-		},
+	"cat-and-cleo-convo": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cleo",
@@ -497,6 +491,30 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cat",
 			"target_entity": "Cleo"
+		}
+	],
+	"cat-and-cleo-convo-player": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cat",
+			"target_entity": "%PLAYER%"
+		}
+	],
+	"show_dialog-cleo1": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-cleo-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -516,14 +534,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -563,21 +575,15 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"duration": 100
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "%PLAYER%"
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo-player"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"duration": 100
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -588,14 +594,8 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo"
 		}
 	],
 	"cat-watch": [
@@ -620,9 +620,8 @@
 			"duration": 800
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -653,9 +652,8 @@
 			"duration": 800
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
+			"action": "RUN_SCRIPT",
+			"script": "cat-and-cleo-convo"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
