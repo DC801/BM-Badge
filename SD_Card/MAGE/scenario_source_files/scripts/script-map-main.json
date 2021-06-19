@@ -457,8 +457,25 @@
 	],
 	"show_dialog-yabbo": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "yabbo-watch"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-yabbo"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		}
+	],
+	"yabbo-watch": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Yabbo Mongo"
 		}
 	],
 	"show_dialog-construction": [
