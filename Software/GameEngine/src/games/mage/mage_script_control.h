@@ -132,10 +132,6 @@ class MageScriptControl
 		void blockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void nonBlockingDelay(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: B (note, pauseGame requires a specific hard-coded key press to unpause the game, pause state can be activated by scripts but only deactivated by player action)
-		void pauseGame(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
-		void pauseEntityScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setEntityName(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -193,13 +189,7 @@ class MageScriptControl
 		//Action Logic Type: I
 		void setHexCursorLocation(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setHexBits(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
 		void setWarpState(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
-		void unlockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: I
-		void lockHaxCell(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setHexEditorState(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
@@ -256,10 +246,6 @@ class MageScriptControl
 		void slotLoad(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void slotErase(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: NB (sounds should begin playing when called by an action and continue until the sound file ends)
-		void playSoundContinuous(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: NB (begin playing sound when called and interrupt the sound file if it was already playing but not complete)
-		void playSoundInterrupt(uint8_t * args, MageScriptState * resumeStateStruct);
 	public:
 		//this is a global that holds the amount of millis that a blocking delay will
 		//prevent the main loop from continuing for. It is set by the blockingDelay() action.
@@ -353,6 +339,11 @@ class MageScriptControl
 			uint16_t a,
 			uint16_t b
 		) const;
+
+		static bool getButtonStateFromButtonArray(
+			uint8_t buttonId,
+			ButtonStates *buttonStates
+		) ;
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H

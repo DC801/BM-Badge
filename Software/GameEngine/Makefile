@@ -135,7 +135,7 @@ merge: $(TARGET).hex
 
 uf2: merge
 	@echo "Generating UF2 image"
-	@python $(UF2CONV) $(TARGET).hex -c -f 0xADA52840 -o $(TARGET).uf2
+	@python3 $(UF2CONV) $(TARGET).hex -c -f 0xADA52840 -o $(TARGET).uf2
 
 clean:
 	@rm -rf $(BUILD_DIR) $(TARGET).out $(TARGET).map $(TARGET).hex $(TARGET).bin $(TARGET).merged.hex $(TARGET).uf2

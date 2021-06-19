@@ -1,0 +1,1093 @@
+Archive member included to satisfy reference by file (symbol)
+
+../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                              qtouch/touch.o (qtm_update_qtlib_timer)
+../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                              qtouch/touch.o (qtm_acquisition_process)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                              C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o (exit)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                              qtouch/touch.o (__do_copy_data)
+c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+                              i2c.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+I2C_0_stop_interrupt_handler
+                    0x2               src/i2c_slave.o
+qtlib_key_grp_data_set1
+                    0x6               qtouch/touch.o
+I2C_0_register_address
+                    0x1               i2c.o
+I2C_0_write_interrupt_handler
+                    0x2               src/i2c_slave.o
+qtm_acquisition_control_working_set_ptr
+                    0x2               ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+I2C_0_read_interrupt_handler
+                    0x2               src/i2c_slave.o
+interrupt_cnt       0x1               qtouch/touch.o
+ptc_qtlib_node_stat1
+                    0x5               qtouch/touch.o
+touch_acq_signals_raw
+                    0x2               qtouch/touch.o
+I2C_0_address_interrupt_handler
+                    0x2               src/i2c_slave.o
+I2C_0_bus_error_interrupt_handler
+                    0x2               src/i2c_slave.o
+qtlib_key_data_set1
+                    0x6               qtouch/touch.o
+I2C_0_slave_address
+                    0x1               i2c.o
+qtm_raw_data_measurements_ptr
+                    0x2               ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+I2C_0_collision_interrupt_handler
+                    0x2               src/i2c_slave.o
+
+Discarded input sections
+
+ .data          0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .bss           0x00000000        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .text          0x00000000        0x0 adc.o
+ .data          0x00000000        0x0 adc.o
+ .bss           0x00000000        0x0 adc.o
+ .text          0x00000000        0x0 atmel_start.o
+ .data          0x00000000        0x0 atmel_start.o
+ .bss           0x00000000        0x0 atmel_start.o
+ .text.atmel_start_init
+                0x00000000        0xa atmel_start.o
+ .debug_info    0x00000000       0xb0 atmel_start.o
+ .debug_abbrev  0x00000000       0x63 atmel_start.o
+ .debug_aranges
+                0x00000000       0x20 atmel_start.o
+ .debug_ranges  0x00000000       0x10 atmel_start.o
+ .debug_line    0x00000000       0x8b atmel_start.o
+ .debug_str     0x00000000      0x1c9 atmel_start.o
+ .comment       0x00000000       0x31 atmel_start.o
+ .debug_frame   0x00000000       0x24 atmel_start.o
+ .text          0x00000000        0x0 bm_board.o
+ .data          0x00000000        0x0 bm_board.o
+ .bss           0x00000000        0x0 bm_board.o
+ .text          0x00000000        0x0 driver_isr.o
+ .data          0x00000000        0x0 driver_isr.o
+ .bss           0x00000000        0x0 driver_isr.o
+ .text          0x00000000        0x0 i2c.o
+ .data          0x00000000        0x0 i2c.o
+ .bss           0x00000000        0x0 i2c.o
+ .text          0x00000000        0x0 key_scan.o
+ .data          0x00000000        0x0 key_scan.o
+ .bss           0x00000000        0x0 key_scan.o
+ .text          0x00000000        0x0 main.o
+ .data          0x00000000        0x0 main.o
+ .bss           0x00000000        0x0 main.o
+ .text          0x00000000        0x0 qtouch/touch.o
+ .data          0x00000000        0x0 qtouch/touch.o
+ .bss           0x00000000        0x0 qtouch/touch.o
+ .text.get_sensor_node_signal
+                0x00000000       0x1a qtouch/touch.o
+ .text.update_sensor_node_signal
+                0x00000000       0x1a qtouch/touch.o
+ .text.get_sensor_node_reference
+                0x00000000       0x1a qtouch/touch.o
+ .text.update_sensor_node_reference
+                0x00000000       0x1a qtouch/touch.o
+ .text.get_sensor_cc_val
+                0x00000000       0x1a qtouch/touch.o
+ .text.update_sensor_cc_val
+                0x00000000       0x1a qtouch/touch.o
+ .text.update_sensor_state
+                0x00000000       0x1e qtouch/touch.o
+ .text.calibrate_node
+                0x00000000       0x32 qtouch/touch.o
+ .text          0x00000000        0x0 src/adc_basic.o
+ .data          0x00000000        0x0 src/adc_basic.o
+ .bss           0x00000000        0x0 src/adc_basic.o
+ .text.ADC_0_disable
+                0x00000000        0xc src/adc_basic.o
+ .text.ADC_0_start_conversion
+                0x00000000        0xc src/adc_basic.o
+ .text.ADC_0_get_conversion_result
+                0x00000000        0xa src/adc_basic.o
+ .text.ADC_0_register_callback
+                0x00000000        0xa src/adc_basic.o
+ .text          0x00000000        0x0 src/bod.o
+ .data          0x00000000        0x0 src/bod.o
+ .bss           0x00000000        0x0 src/bod.o
+ .text          0x00000000        0x0 src/clkctrl.o
+ .data          0x00000000        0x0 src/clkctrl.o
+ .bss           0x00000000        0x0 src/clkctrl.o
+ .text          0x00000000        0x0 src/cpuint.o
+ .data          0x00000000        0x0 src/cpuint.o
+ .bss           0x00000000        0x0 src/cpuint.o
+ .text          0x00000000        0x0 src/driver_init.o
+ .data          0x00000000        0x0 src/driver_init.o
+ .bss           0x00000000        0x0 src/driver_init.o
+ .text.TIMER_0_initialization
+                0x00000000        0x6 src/driver_init.o
+ .text          0x00000000        0x0 src/i2c_slave.o
+ .data          0x00000000        0x0 src/i2c_slave.o
+ .bss           0x00000000        0x0 src/i2c_slave.o
+ .text.I2C_0_close
+                0x00000000        0xc src/i2c_slave.o
+ .text.I2C_0_enable
+                0x00000000        0xc src/i2c_slave.o
+ .text.I2C_0_send_nack
+                0x00000000        0x8 src/i2c_slave.o
+ .text          0x00000000        0x0 src/protected_io.o
+ .data          0x00000000        0x0 src/protected_io.o
+ .bss           0x00000000        0x0 src/protected_io.o
+ .text          0x00000000        0x0 src/rtc.o
+ .data          0x00000000        0x0 src/rtc.o
+ .bss           0x00000000        0x0 src/rtc.o
+ .text          0x00000000        0x0 src/slpctrl.o
+ .data          0x00000000        0x0 src/slpctrl.o
+ .bss           0x00000000        0x0 src/slpctrl.o
+ .text.SLPCTRL_set_sleep_mode
+                0x00000000       0x10 src/slpctrl.o
+ .text          0x00000000        0x0 src/tca.o
+ .data          0x00000000        0x0 src/tca.o
+ .bss           0x00000000        0x0 src/tca.o
+ .text          0x00000000        0x0 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .data          0x00000000        0x0 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .bss           0x00000000        0x0 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text.qtm_key_suspend
+                0x00000000       0x4e ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text.qtm_key_resume
+                0x00000000       0x4e ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text.qtm_get_touch_keys_module_id
+                0x00000000        0x6 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text.qtm_get_touch_keys_module_ver
+                0x00000000        0x4 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text          0x00000000        0x0 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .data          0x00000000        0x0 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .bss           0x00000000        0x0 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_autoscan_sensor_node
+                0x00000000      0x278 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_autoscan_node_cancel
+                0x00000000       0x22 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_t161x_ptc_handler_wcomp
+                0x00000000       0x8c ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_ptc_de_init
+                0x00000000        0xe ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_t161x_acq_module_get_id
+                0x00000000        0x6 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_t161x_acq_module_get_version
+                0x00000000        0x4 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .bss.ptc_wcomp_happened_pointer
+                0x00000000        0x2 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+ .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x00000000         0x00004000         xr
+data             0x00803800         0x00000800         rw !x
+eeprom           0x00810000         0x00000100         rw !x
+fuse             0x00820000         0x0000000a         rw !x
+lock             0x00830000         0x00000400         rw !x
+signature        0x00840000         0x00000400         rw !x
+user_signatures  0x00850000         0x00000400         rw !x
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x803800
+                0x00008000                __RODATA_PM_OFFSET__ = 0x8000
+LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+LOAD adc.o
+LOAD atmel_start.o
+LOAD bm_board.o
+LOAD driver_isr.o
+LOAD i2c.o
+LOAD key_scan.o
+LOAD main.o
+LOAD qtouch/touch.o
+LOAD src/adc_basic.o
+LOAD src/bod.o
+LOAD src/clkctrl.o
+LOAD src/cpuint.o
+LOAD src/driver_init.o
+LOAD src/i2c_slave.o
+LOAD src/protected_io.o
+LOAD src/rtc.o
+LOAD src/slpctrl.o
+LOAD src/tca.o
+START GROUP
+LOAD ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a
+LOAD ../qtouch/lib/gcc\libqtm_binding_layer_t1617_0x0005.a
+LOAD ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+END GROUP
+START GROUP
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libm.a
+LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avrxmega3\libc.a
+LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3\libattiny1617.a
+END GROUP
+                [0x00000000]                __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                [0x00803800]                __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x802000
+                [0x00004000]                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x100000
+                [0x00000800]                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                [0x00000100]                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x0000000a]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x00000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x00000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x00000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+                0x00008000                __RODATA_PM_OFFSET__ = DEFINED (__RODATA_PM_OFFSET__)?__RODATA_PM_OFFSET__:0x8000
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x00000000     0x1bee
+ *(.vectors)
+ .vectors       0x00000000       0x7c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x00000000                __vector_default
+                0x00000000                __vectors
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x0000007c                . = ALIGN (0x2)
+                0x0000007c                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000007c        0x0 linker stubs
+ *(.trampolines*)
+                0x0000007c                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+ *(.progmem*)
+                0x0000007c                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000007c                __ctors_start = .
+ *(.ctors)
+                0x0000007c                __ctors_end = .
+                0x0000007c                __dtors_start = .
+ *(.dtors)
+                0x0000007c                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000007c        0x0 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x0000007c                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000007c        0xc C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x00000088       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_copy_data.o)
+                0x00000088                __do_copy_data
+ .init4         0x0000009e       0x10 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_clear_bss.o)
+                0x0000009e                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000ae        0x8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ *(.init9)
+ *(.text)
+ .text          0x000000b6        0x4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+                0x000000b6                __vector_28
+                0x000000b6                __vector_1
+                0x000000b6                __vector_12
+                0x000000b6                __bad_interrupt
+                0x000000b6                __vector_3
+                0x000000b6                __vector_23
+                0x000000b6                __vector_30
+                0x000000b6                __vector_25
+                0x000000b6                __vector_11
+                0x000000b6                __vector_13
+                0x000000b6                __vector_17
+                0x000000b6                __vector_19
+                0x000000b6                __vector_7
+                0x000000b6                __vector_27
+                0x000000b6                __vector_5
+                0x000000b6                __vector_4
+                0x000000b6                __vector_9
+                0x000000b6                __vector_2
+                0x000000b6                __vector_21
+                0x000000b6                __vector_15
+                0x000000b6                __vector_29
+                0x000000b6                __vector_8
+                0x000000b6                __vector_26
+                0x000000b6                __vector_14
+                0x000000b6                __vector_10
+                0x000000b6                __vector_16
+                0x000000b6                __vector_18
+                0x000000ba                . = ALIGN (0x2)
+ *(.text.*)
+ .text.ts_getY  0x000000ba       0xa2 adc.o
+                0x000000ba                ts_getY
+ .text.ts_getX  0x0000015c       0xa2 adc.o
+                0x0000015c                ts_getX
+ .text.getKeyOffset
+                0x000001fe       0x3a bm_board.o
+                0x000001fe                getKeyOffset
+ .text.__vector_6
+                0x00000238       0x4e driver_isr.o
+                0x00000238                __vector_6
+ .text.I2C_0_stop_handler
+                0x00000286        0x6 i2c.o
+                0x00000286                I2C_0_stop_handler
+ .text.I2C_0_error_handler
+                0x0000028c        0x2 i2c.o
+                0x0000028c                I2C_0_error_handler
+ .text.I2C_0_address_handler
+                0x0000028e       0x12 i2c.o
+                0x0000028e                I2C_0_address_handler
+ .text.I2C_0_write_handler
+                0x000002a0        0xe i2c.o
+                0x000002a0                I2C_0_write_handler
+ .text.I2C_0_read_handler
+                0x000002ae       0x30 i2c.o
+                0x000002ae                I2C_0_read_handler
+ .text.I2C_0_slave_init
+                0x000002de       0x36 i2c.o
+                0x000002de                I2C_0_slave_init
+ .text.setRow   0x00000314       0x56 key_scan.o
+                0x00000314                setRow
+ .text.readCol  0x0000036a       0x70 key_scan.o
+                0x0000036a                readCol
+ .text.getKeyState
+                0x000003da       0x6a key_scan.o
+                0x000003da                getKeyState
+ .text.setKeyState
+                0x00000444       0xf2 key_scan.o
+                0x00000444                setKeyState
+ .text.main     0x00000536       0xd2 main.o
+                0x00000536                main
+ .text.qtm_measure_complete_callback
+                0x00000608        0x8 qtouch/touch.o
+ .text.Timer_set_period
+                0x00000610       0x16 qtouch/touch.o
+                0x00000610                Timer_set_period
+ .text.touch_init
+                0x00000626       0x50 qtouch/touch.o
+                0x00000626                touch_init
+ .text.touch_process
+                0x00000676       0x68 qtouch/touch.o
+                0x00000676                touch_process
+ .text.touch_timer_handler
+                0x000006de       0x24 qtouch/touch.o
+                0x000006de                touch_timer_handler
+ .text.get_sensor_state
+                0x00000702       0x1e qtouch/touch.o
+                0x00000702                get_sensor_state
+ .text.__vector_20
+                0x00000720       0x48 qtouch/touch.o
+                0x00000720                __vector_20
+ .text.ADC_0_init
+                0x00000768       0x10 src/adc_basic.o
+                0x00000768                ADC_0_init
+ .text.ADC_0_enable
+                0x00000778        0xc src/adc_basic.o
+                0x00000778                ADC_0_enable
+ .text.ADC_0_is_conversion_done
+                0x00000784        0x8 src/adc_basic.o
+                0x00000784                ADC_0_is_conversion_done
+ .text.ADC_0_get_conversion
+                0x0000078c       0x24 src/adc_basic.o
+                0x0000078c                ADC_0_get_conversion
+ .text.ADC_0_get_resolution
+                0x000007b0       0x10 src/adc_basic.o
+                0x000007b0                ADC_0_get_resolution
+ .text.__vector_22
+                0x000007c0       0x5c src/adc_basic.o
+                0x000007c0                __vector_22
+ .text.BOD_init
+                0x0000081c        0x4 src/bod.o
+                0x0000081c                BOD_init
+ .text.CLKCTRL_init
+                0x00000820       0x10 src/clkctrl.o
+                0x00000820                CLKCTRL_init
+ .text.CPUINT_init
+                0x00000830        0x6 src/cpuint.o
+                0x00000830                CPUINT_init
+ .text.mcu_init
+                0x00000836       0x38 src/driver_init.o
+                0x00000836                mcu_init
+ .text.ADC_0_initialization
+                0x0000086e       0x66 src/driver_init.o
+                0x0000086e                ADC_0_initialization
+ .text.I2C_0_initialization
+                0x000008d4       0x3a src/driver_init.o
+                0x000008d4                I2C_0_initialization
+ .text.system_init
+                0x0000090e      0x152 src/driver_init.o
+                0x0000090e                system_init
+ .text.I2C_0_init
+                0x00000a60       0x3e src/i2c_slave.o
+                0x00000a60                I2C_0_init
+ .text.I2C_0_open
+                0x00000a9e        0xc src/i2c_slave.o
+                0x00000a9e                I2C_0_open
+ .text.I2C_0_read
+                0x00000aaa        0x6 src/i2c_slave.o
+                0x00000aaa                I2C_0_read
+ .text.I2C_0_write
+                0x00000ab0        0xe src/i2c_slave.o
+                0x00000ab0                I2C_0_write
+ .text.I2C_0_send_ack
+                0x00000abe        0x8 src/i2c_slave.o
+                0x00000abe                I2C_0_send_ack
+ .text.I2C_0_goto_unaddressed
+                0x00000ac6       0x10 src/i2c_slave.o
+                0x00000ac6                I2C_0_goto_unaddressed
+ .text.I2C_0_read_callback
+                0x00000ad6       0x10 src/i2c_slave.o
+                0x00000ad6                I2C_0_read_callback
+ .text.I2C_0_set_read_callback
+                0x00000ae6        0xa src/i2c_slave.o
+                0x00000ae6                I2C_0_set_read_callback
+ .text.I2C_0_write_callback
+                0x00000af0       0x10 src/i2c_slave.o
+                0x00000af0                I2C_0_write_callback
+ .text.I2C_0_set_write_callback
+                0x00000b00        0xa src/i2c_slave.o
+                0x00000b00                I2C_0_set_write_callback
+ .text.I2C_0_address_callback
+                0x00000b0a       0x10 src/i2c_slave.o
+                0x00000b0a                I2C_0_address_callback
+ .text.I2C_0_set_address_callback
+                0x00000b1a        0xa src/i2c_slave.o
+                0x00000b1a                I2C_0_set_address_callback
+ .text.I2C_0_stop_callback
+                0x00000b24       0x10 src/i2c_slave.o
+                0x00000b24                I2C_0_stop_callback
+ .text.I2C_0_set_stop_callback
+                0x00000b34        0xa src/i2c_slave.o
+                0x00000b34                I2C_0_set_stop_callback
+ .text.I2C_0_collision_callback
+                0x00000b3e       0x10 src/i2c_slave.o
+                0x00000b3e                I2C_0_collision_callback
+ .text.I2C_0_set_collision_callback
+                0x00000b4e        0xa src/i2c_slave.o
+                0x00000b4e                I2C_0_set_collision_callback
+ .text.I2C_0_bus_error_callback
+                0x00000b58       0x10 src/i2c_slave.o
+                0x00000b58                I2C_0_bus_error_callback
+ .text.I2C_0_isr
+                0x00000b68       0x90 src/i2c_slave.o
+                0x00000b68                I2C_0_isr
+ .text.__vector_24
+                0x00000bf8       0x48 src/i2c_slave.o
+                0x00000bf8                __vector_24
+ .text.I2C_0_set_bus_error_callback
+                0x00000c40        0xa src/i2c_slave.o
+                0x00000c40                I2C_0_set_bus_error_callback
+ .text.protected_write_io
+                0x00000c4a        0x8 src/protected_io.o
+                0x00000c4a                protected_write_io
+ .text.Timer_init
+                0x00000c52       0x1a src/rtc.o
+                0x00000c52                Timer_init
+ .text.SLPCTRL_init
+                0x00000c6c        0x4 src/slpctrl.o
+                0x00000c6c                SLPCTRL_init
+ .text.TIMER_0_init
+                0x00000c70        0x4 src/tca.o
+                0x00000c70                TIMER_0_init
+ .text.check_for_aks_block
+                0x00000c74       0xd2 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+ .text.qtm_update_qtlib_timer
+                0x00000d46       0x16 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                0x00000d46                qtm_update_qtlib_timer
+ .text.qtm_init_sensor_key
+                0x00000d5c       0x3e ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                0x00000d5c                qtm_init_sensor_key
+ .text.qtm_key_sensors_process
+                0x00000d9a      0x74c ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                0x00000d9a                qtm_key_sensors_process
+ .text.select_next_channel_to_measure
+                0x000014e6       0x66 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_measure_node
+                0x0000154c      0x11a ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .text.qtm_acquisition_process
+                0x00001666      0x2fc ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001666                qtm_acquisition_process
+ .text.qtm_ptc_init_acquisition_module
+                0x00001962       0x8c ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001962                qtm_ptc_init_acquisition_module
+ .text.qtm_ptc_qtlib_assign_signal_memory
+                0x000019ee       0x14 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x000019ee                qtm_ptc_qtlib_assign_signal_memory
+ .text.qtm_ptc_start_measurement_seq
+                0x00001a02       0xd0 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001a02                qtm_ptc_start_measurement_seq
+ .text.qtm_enable_sensor_node
+                0x00001ad2       0x3e ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001ad2                qtm_enable_sensor_node
+ .text.qtm_calibrate_sensor_node
+                0x00001b10       0x82 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001b10                qtm_calibrate_sensor_node
+ .text.qtm_t161x_ptc_handler_eoc
+                0x00001b92       0x58 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00001b92                qtm_t161x_ptc_handler_eoc
+                0x00001bea                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x00001bea        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+                0x00001bea                _exit
+                0x00001bea                exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x00001bea        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avrxmega3\libgcc.a(_exit.o)
+ *(.fini0)
+                0x00001bee                _etext = .
+
+.rodata         0x00009bee       0x54 load address 0x00001bee
+ *(.rodata)
+ *(.rodata*)
+ .rodata.keymap
+                0x00009bee       0x4e bm_board.o
+                0x00009bee                keymap
+ .rodata.gain_setting_int_cap
+                0x00009c3c        0x6 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ *(.gnu.linkonce.r*)
+
+.data           0x00803800       0x2a load address 0x00001c42
+                0x00803800                PROVIDE (__data_start, .)
+ *(.data)
+ *(.data*)
+ .data.qtlib_key_set1
+                0x00803800        0x8 qtouch/touch.o
+                0x00803800                qtlib_key_set1
+ .data.qtlib_key_configs_set1
+                0x00803808        0x3 qtouch/touch.o
+                0x00803808                qtlib_key_configs_set1
+ .data.qtlib_key_grp_config_set1
+                0x0080380b        0xa qtouch/touch.o
+                0x0080380b                qtlib_key_grp_config_set1
+ .data.qtlib_acq_set1
+                0x00803815        0x6 qtouch/touch.o
+                0x00803815                qtlib_acq_set1
+ .data.ptc_seq_node_cfg1
+                0x0080381b        0x8 qtouch/touch.o
+                0x0080381b                ptc_seq_node_cfg1
+ .data.ptc_qtlib_acq_gen1
+                0x00803823        0x5 qtouch/touch.o
+                0x00803823                ptc_qtlib_acq_gen1
+ .data.isFirstByte.3979
+                0x00803828        0x1 src/i2c_slave.o
+ .data.qtm_which_mode_current
+                0x00803829        0x1 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00803829                qtm_which_mode_current
+ *(.gnu.linkonce.d*)
+                0x0080382a                . = ALIGN (0x2)
+                0x0080382a                _edata = .
+                0x0080382a                PROVIDE (__data_end, .)
+
+.bss            0x0080382a       0x3a
+                0x0080382a                PROVIDE (__bss_start, .)
+ *(.bss)
+ *(.bss*)
+ .bss.counter   0x0080382a        0x1 i2c.o
+                0x0080382a                counter
+ .bss.keyState  0x0080382b        0x6 main.o
+                0x0080382b                keyState
+ .bss.module_error_code
+                0x00803831        0x1 qtouch/touch.o
+                0x00803831                module_error_code
+ .bss.measurement_done_touch
+                0x00803832        0x1 qtouch/touch.o
+                0x00803832                measurement_done_touch
+ .bss.touch_postprocess_request
+                0x00803833        0x1 qtouch/touch.o
+                0x00803833                touch_postprocess_request
+ .bss.time_to_measure_touch_flag
+                0x00803834        0x1 qtouch/touch.o
+                0x00803834                time_to_measure_touch_flag
+ .bss.ADC_0_cb  0x00803835        0x2 src/adc_basic.o
+                0x00803835                ADC_0_cb
+ .bss.qtm_local_ms_timecount
+                0x00803837        0x2 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                0x00803837                qtm_local_ms_timecount
+ .bss.ptc_seq_measure_complete_pointer
+                0x00803839        0x2 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .bss.touch_seq_lib_state
+                0x0080383b        0x1 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ .bss.current_measure_channel
+                0x0080383c        0x2 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+ *(COMMON)
+ COMMON         0x0080383e        0x2 i2c.o
+                0x0080383e                I2C_0_register_address
+                0x0080383f                I2C_0_slave_address
+ COMMON         0x00803840       0x14 qtouch/touch.o
+                0x00803840                qtlib_key_grp_data_set1
+                0x00803846                interrupt_cnt
+                0x00803847                ptc_qtlib_node_stat1
+                0x0080384c                touch_acq_signals_raw
+                0x0080384e                qtlib_key_data_set1
+ COMMON         0x00803854        0xc src/i2c_slave.o
+                0x00803854                I2C_0_stop_interrupt_handler
+                0x00803856                I2C_0_write_interrupt_handler
+                0x00803858                I2C_0_read_interrupt_handler
+                0x0080385a                I2C_0_address_interrupt_handler
+                0x0080385c                I2C_0_bus_error_interrupt_handler
+                0x0080385e                I2C_0_collision_interrupt_handler
+ COMMON         0x00803860        0x4 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+                0x00803860                qtm_acquisition_control_working_set_ptr
+                0x00803862                qtm_raw_data_measurements_ptr
+                0x00803864                PROVIDE (__bss_end, .)
+                0x00001c42                __data_load_start = LOADADDR (.data)
+                0x00001c6c                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x00803864        0x0
+                [!provide]                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                PROVIDE (__noinit_end, .)
+                0x00803864                _end = .
+                [!provide]                PROVIDE (__heap_start, .)
+
+.eeprom         0x00810000        0x0
+ *(.eeprom*)
+                0x00810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000       0x60
+ *(.comment)
+ .comment       0x00000000       0x30 adc.o
+                                 0x31 (size before relaxing)
+ .comment       0x00000030       0x31 bm_board.o
+ .comment       0x00000030       0x31 driver_isr.o
+ .comment       0x00000030       0x31 i2c.o
+ .comment       0x00000030       0x31 key_scan.o
+ .comment       0x00000030       0x31 main.o
+ .comment       0x00000030       0x31 qtouch/touch.o
+ .comment       0x00000030       0x31 src/adc_basic.o
+ .comment       0x00000030       0x31 src/bod.o
+ .comment       0x00000030       0x31 src/clkctrl.o
+ .comment       0x00000030       0x31 src/cpuint.o
+ .comment       0x00000030       0x31 src/driver_init.o
+ .comment       0x00000030       0x31 src/i2c_slave.o
+ .comment       0x00000030       0x31 src/rtc.o
+ .comment       0x00000030       0x31 src/slpctrl.o
+ .comment       0x00000030       0x31 src/tca.o
+ .comment       0x00000030       0x30 ../qtouch/lib/gcc\libqtm_touch_key_t1617_0x0002.a(avr_touch_key_g_t1617.o)
+                                 0x31 (size before relaxing)
+ .comment       0x00000060       0x31 ../qtouch/lib/gcc\libqtm_acq_runtime_t1617_0x0018.a(avr_acq_g_t1617.o)
+
+.note.gnu.avr.deviceinfo
+                0x00000000       0x40
+ .note.gnu.avr.deviceinfo
+                0x00000000       0x40 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x3f8
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x28 adc.o
+ .debug_aranges
+                0x00000028       0x20 bm_board.o
+ .debug_aranges
+                0x00000048       0x20 driver_isr.o
+ .debug_aranges
+                0x00000068       0x48 i2c.o
+ .debug_aranges
+                0x000000b0       0x38 key_scan.o
+ .debug_aranges
+                0x000000e8       0x20 main.o
+ .debug_aranges
+                0x00000108       0x90 qtouch/touch.o
+ .debug_aranges
+                0x00000198       0x68 src/adc_basic.o
+ .debug_aranges
+                0x00000200       0x20 src/bod.o
+ .debug_aranges
+                0x00000220       0x20 src/clkctrl.o
+ .debug_aranges
+                0x00000240       0x20 src/cpuint.o
+ .debug_aranges
+                0x00000260       0x40 src/driver_init.o
+ .debug_aranges
+                0x000002a0       0xd0 src/i2c_slave.o
+ .debug_aranges
+                0x00000370       0x20 src/protected_io.o
+ .debug_aranges
+                0x00000390       0x20 src/rtc.o
+ .debug_aranges
+                0x000003b0       0x28 src/slpctrl.o
+ .debug_aranges
+                0x000003d8       0x20 src/tca.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000     0x9235
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x00000000     0x19ed C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_info    0x000019ed     0x1041 adc.o
+ .debug_info    0x00002a2e      0x1f0 bm_board.o
+ .debug_info    0x00002c1e      0x312 driver_isr.o
+ .debug_info    0x00002f30      0x39c i2c.o
+ .debug_info    0x000032cc      0xa17 key_scan.o
+ .debug_info    0x00003ce3      0x5ad main.o
+ .debug_info    0x00004290     0x11da qtouch/touch.o
+ .debug_info    0x0000546a      0x576 src/adc_basic.o
+ .debug_info    0x000059e0       0x8d src/bod.o
+ .debug_info    0x00005a6d      0x2b5 src/clkctrl.o
+ .debug_info    0x00005d22       0x8d src/cpuint.o
+ .debug_info    0x00005daf     0x2809 src/driver_init.o
+ .debug_info    0x000085b8      0x697 src/i2c_slave.o
+ .debug_info    0x00008c4f       0xaa src/protected_io.o
+ .debug_info    0x00008cf9      0x364 src/rtc.o
+ .debug_info    0x0000905d      0x14b src/slpctrl.o
+ .debug_info    0x000091a8       0x8d src/tca.o
+
+.debug_abbrev   0x00000000     0x2df6
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000     0x1888 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_abbrev  0x00001888      0x18a adc.o
+ .debug_abbrev  0x00001a12       0xf6 bm_board.o
+ .debug_abbrev  0x00001b08      0x103 driver_isr.o
+ .debug_abbrev  0x00001c0b      0x10a i2c.o
+ .debug_abbrev  0x00001d15      0x1cd key_scan.o
+ .debug_abbrev  0x00001ee2      0x213 main.o
+ .debug_abbrev  0x000020f5      0x318 qtouch/touch.o
+ .debug_abbrev  0x0000240d      0x230 src/adc_basic.o
+ .debug_abbrev  0x0000263d       0x51 src/bod.o
+ .debug_abbrev  0x0000268e      0x117 src/clkctrl.o
+ .debug_abbrev  0x000027a5       0x51 src/cpuint.o
+ .debug_abbrev  0x000027f6      0x204 src/driver_init.o
+ .debug_abbrev  0x000029fa      0x1db src/i2c_slave.o
+ .debug_abbrev  0x00002bd5       0x14 src/protected_io.o
+ .debug_abbrev  0x00002be9       0xe6 src/rtc.o
+ .debug_abbrev  0x00002ccf       0xd6 src/slpctrl.o
+ .debug_abbrev  0x00002da5       0x51 src/tca.o
+
+.debug_line     0x00000000     0x211b
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x00000000      0x151 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_line    0x00000151      0x282 adc.o
+ .debug_line    0x000003d3       0xe4 bm_board.o
+ .debug_line    0x000004b7      0x114 driver_isr.o
+ .debug_line    0x000005cb      0x183 i2c.o
+ .debug_line    0x0000074e      0x29e key_scan.o
+ .debug_line    0x000009ec      0x2d1 main.o
+ .debug_line    0x00000cbd      0x3a6 qtouch/touch.o
+ .debug_line    0x00001063      0x24a src/adc_basic.o
+ .debug_line    0x000012ad       0xa2 src/bod.o
+ .debug_line    0x0000134f      0x137 src/clkctrl.o
+ .debug_line    0x00001486       0xab src/cpuint.o
+ .debug_line    0x00001531      0x494 src/driver_init.o
+ .debug_line    0x000019c5      0x421 src/i2c_slave.o
+ .debug_line    0x00001de6       0x55 src/protected_io.o
+ .debug_line    0x00001e3b      0x121 src/rtc.o
+ .debug_line    0x00001f5c      0x11d src/slpctrl.o
+ .debug_line    0x00002079       0xa2 src/tca.o
+
+.debug_frame    0x00000000      0x778
+ *(.debug_frame)
+ .debug_frame   0x00000000       0x84 adc.o
+ .debug_frame   0x00000084       0x24 bm_board.o
+ .debug_frame   0x000000a8       0x6c driver_isr.o
+ .debug_frame   0x00000114       0x74 i2c.o
+ .debug_frame   0x00000188       0x60 key_scan.o
+ .debug_frame   0x000001e8       0x24 main.o
+ .debug_frame   0x0000020c      0x158 qtouch/touch.o
+ .debug_frame   0x00000364       0xfc src/adc_basic.o
+ .debug_frame   0x00000460       0x24 src/bod.o
+ .debug_frame   0x00000484       0x24 src/clkctrl.o
+ .debug_frame   0x000004a8       0x24 src/cpuint.o
+ .debug_frame   0x000004cc       0x64 src/driver_init.o
+ .debug_frame   0x00000530      0x1cc src/i2c_slave.o
+ .debug_frame   0x000006fc       0x24 src/rtc.o
+ .debug_frame   0x00000720       0x34 src/slpctrl.o
+ .debug_frame   0x00000754       0x24 src/tca.o
+
+.debug_str      0x00000000     0x316b
+ *(.debug_str)
+ .debug_str     0x00000000      0xacf C:/Program Files (x86)/Atmel/Studio/7.0/Packs/Atmel/ATtiny_DFP/1.6.326/gcc/dev/attiny1617/avrxmega3/crtattiny1617.o
+ .debug_str     0x00000acf      0x521 adc.o
+                                0x581 (size before relaxing)
+ .debug_str     0x00000ff0      0x15c bm_board.o
+                                0x2f2 (size before relaxing)
+ .debug_str     0x0000114c       0xc4 driver_isr.o
+                                0x2ab (size before relaxing)
+ .debug_str     0x00001210      0x183 i2c.o
+                                0x459 (size before relaxing)
+ .debug_str     0x00001393       0xf8 key_scan.o
+                                0x2d3 (size before relaxing)
+ .debug_str     0x0000148b      0x15b main.o
+                                0x466 (size before relaxing)
+ .debug_str     0x000015e6      0xd21 qtouch/touch.o
+                               0x10fc (size before relaxing)
+ .debug_str     0x00002307      0x27c src/adc_basic.o
+                                0x62a (size before relaxing)
+ .debug_str     0x00002583       0x16 src/bod.o
+                                0x1ab (size before relaxing)
+ .debug_str     0x00002599      0x1c2 src/clkctrl.o
+                                0x3a9 (size before relaxing)
+ .debug_str     0x0000275b       0x1c src/cpuint.o
+                                0x1b1 (size before relaxing)
+ .debug_str     0x00002777      0x4f6 src/driver_init.o
+                                0x9ec (size before relaxing)
+ .debug_str     0x00002c6d      0x2a4 src/i2c_slave.o
+                                0x55d (size before relaxing)
+ .debug_str     0x00002f11      0x19d src/rtc.o
+                                0x429 (size before relaxing)
+ .debug_str     0x000030ae       0xb0 src/slpctrl.o
+                                0x277 (size before relaxing)
+ .debug_str     0x0000315e        0xd src/tca.o
+                                0x1af (size before relaxing)
+
+.debug_loc      0x00000000     0x2781
+ *(.debug_loc)
+ .debug_loc     0x00000000      0x752 adc.o
+ .debug_loc     0x00000752       0x73 bm_board.o
+ .debug_loc     0x000007c5       0xcb driver_isr.o
+ .debug_loc     0x00000890      0x68e key_scan.o
+ .debug_loc     0x00000f1e      0x15d main.o
+ .debug_loc     0x0000107b      0x35c qtouch/touch.o
+ .debug_loc     0x000013d7      0x152 src/adc_basic.o
+ .debug_loc     0x00001529       0x29 src/clkctrl.o
+ .debug_loc     0x00001552     0x109e src/driver_init.o
+ .debug_loc     0x000025f0      0x170 src/i2c_slave.o
+ .debug_loc     0x00002760       0x21 src/slpctrl.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x00000000      0x2f0
+ *(.debug_ranges)
+ .debug_ranges  0x00000000       0x18 adc.o
+ .debug_ranges  0x00000018       0x10 bm_board.o
+ .debug_ranges  0x00000028       0x10 driver_isr.o
+ .debug_ranges  0x00000038       0x38 i2c.o
+ .debug_ranges  0x00000070       0x28 key_scan.o
+ .debug_ranges  0x00000098       0x28 main.o
+ .debug_ranges  0x000000c0       0x80 qtouch/touch.o
+ .debug_ranges  0x00000140       0x58 src/adc_basic.o
+ .debug_ranges  0x00000198       0x10 src/bod.o
+ .debug_ranges  0x000001a8       0x10 src/clkctrl.o
+ .debug_ranges  0x000001b8       0x10 src/cpuint.o
+ .debug_ranges  0x000001c8       0x30 src/driver_init.o
+ .debug_ranges  0x000001f8       0xc0 src/i2c_slave.o
+ .debug_ranges  0x000002b8       0x10 src/rtc.o
+ .debug_ranges  0x000002c8       0x18 src/slpctrl.o
+ .debug_ranges  0x000002e0       0x10 src/tca.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(KeyboardController.elf elf32-avr)
+LOAD linker stubs

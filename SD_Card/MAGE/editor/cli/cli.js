@@ -1,4 +1,5 @@
-const fs = require("fs");
+const fs = require('fs');
+const path = require('path');
 const window = {
 	fastPng: require(`${__dirname}/../dependencies/fast-png`),
 	omggif: require(`${__dirname}/../dependencies/omggif`),
@@ -6,6 +7,11 @@ const window = {
 
 var DEFAULT_OUTPUT_PATH = `${__dirname}/../../game.dat`;
 var DEFAULT_SOURCE_PATH = `${__dirname}/../../scenario_source_files`;
+
+var inputPathFromArgs = process.argv[2];
+var outputPathFromArgs = process.argv[3];
+var inputPath = path.resolve(inputPathFromArgs || DEFAULT_SOURCE_PATH);
+var outputPath = path.resolve(outputPathFromArgs || DEFAULT_OUTPUT_PATH);
 
 const modules = [
 	"common",
@@ -69,7 +75,7 @@ function makeMap(path) {
 	return map
 }
 
-var fileNameMap = makeMap(DEFAULT_SOURCE_PATH);
+var fileNameMap = makeMap(inputPath);
 var scenarioFile = fileNameMap['scenario.json'];
 if (!scenarioFile) {
 	throw new Error("No `scenario.json` file detected in folder, nowhere to start!")
@@ -78,6 +84,6 @@ if (!scenarioFile) {
 		.then(handleScenarioData(fileNameMap))
 		.then(generateIndexAndComposite)
 		.then(function (compositeArray) {
-			fs.writeFileSync(DEFAULT_OUTPUT_PATH, compositeArray)
+			fs.writeFileSync(outputPath, compositeArray)
 		})
 }

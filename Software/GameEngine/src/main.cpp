@@ -152,7 +152,7 @@ int main(void){
 	setUpRandomSeed();
 	// Setup LEDs
 	ledInit();
-	ledsOn();
+	ledsOff();
 
 	//morse isn't used on this badge yet...
 	//morseInit();

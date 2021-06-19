@@ -1,0 +1,166 @@
+/**
+\addtogroup doc_driver_i2c_slave
+ 
+\brief Driver for I2C slave functionality
+
+The **I2C Slave** driver provides I2C slave functionality,
+that is:
+- Responding when addressed by a master and reading bytes from the master
+- Responding when addressed by a master and writing bytes to the master
+- Handling bus contention/arbitration
+- Handling bus errors
+
+
+The I2C Slave driver interfaces with the application using an interrupt routine 
+with callback handlers. The driver can be used in a non-interrupt driven way
+by calling the _ISR() function in a polling loop.
+
+
+\section doc_driver_i2c_slave_configuration Driver Configuration
+
+The I2C Slave driver is configured using START, allowing the user to select 
+various parameters, depending on the underlying hardware.
+
+If several I2C hardware instances are available on the device, 
+the user can select which I2C instance the driver shall use.
+
+
+\section doc_driver_i2c_slave_functional Functional Description
+
+The I2C Slave driver has no internal state, but calls callback functions in 
+response to events on the I2C bus. The user defines his own callback 
+functions, and hooks them up to the driver using driver API functions.
+
+
+\subsection doc_driver_i2c_slave_callbacks Callback functions
+
+The I2C Slave driver allows the application to provide callback functions 
+for the following events:
+- Data Read: Master wants to read a byte from the slave.
+- Data Write: Master wants to write a byte to the slave.
+- Address match: The slave address issued by the master matches the slave's 
+  address.
+- Stop: A STOP condition was received on the bus, signalling the end of a 
+  transmission.
+- Write Collision: Several I2C slaves attempted to access the bus at the 
+  same time as us, and we lost the arbitration. This typically happens during 
+  address resolution protocol (ARP).
+- Bus error: AN illegal signal sequence occurred on the bus, typically a START 
+  followed by a STOP.
+
+
+The I2C Slave API provides functions to hook up user-defined
+functions as callbacks to these events. The callback functions take no 
+parameters, and returns no values.
+
+
+\subsection doc_driver_i2c_slave_performing_a_transfer Performing a Transfer
+
+To perform an I2C transfer, do the following steps:
+1. Call <component_name>_open(SLA) to enable I2C hardware, if disabled.
+2. Hookup callback handlers to user-defined functions. For callback hooks 
+   with no defined callback function, no function will be called when the 
+   event occurs.
+3. Make sure that interrupts are enabled to use the polling version of the 
+   driver, or call <component_name>_ISR() in a polling loop for a non-IRQ
+   driven version.
+4. The read callback function should load the data byte to be written on the 
+   bus into the driver using <component_name>_write(). Thereafter, the function
+   should call <component_name>_send_ack() or <component_name>_send_nack()
+   to transmit the data byte and final ACK or NACK.
+5. The address match callback function should call <component_name>_send_ack() 
+   or <component_name>_send_nack() to transmit the address ACK or NACK.
+
+
+\section doc_driver_i2c_slave_hardware Hardware Dependencies
+
+The I2C Slave driver usually uses some sort of hardware 
+that implements I2C functionality, even though it is 
+possible to implement a software I2C implemented by bit-banging 
+I/O pins.
+
+Different MCUs have I2C hardware with different names and 
+functionalities, such as TWI, I2C, USI etc. In START, the user 
+selects a device and adds the I2C Slave driver. A device
+may have several possible hardware resources available for 
+the driver, such as I2C0, I2C1 etc. In this case the user 
+must select which one to use.
+
+The configuration options in START displays options that are 
+dependent on the hardware used to implement the I2C driver.
+
+
+\section doc_driver_i2c_slave_software Software Dependencies
+
+The interrupt-driven configurations use the interrupt functionality 
+of the underlying I2C hardware. Make sure that global interrupts 
+are enabled (using sei()) and that the Interrupt Controller, if 
+present, is configured so that any interrupts are serviced 
+correctly.
+
+
+\section doc_driver_i2c_slave_code Code example
+
+\code
+
+#include <atmel_start.h>
+#include <atomic.h>
+
+volatile uint8_t slave_address;
+volatile uint8_t register_address;
+volatile uint8_t num_addresses;
+volatile uint8_t num_reads;
+volatile uint8_t num_writes;
+volatile uint8_t num_stops;
+
+
+
+void address_handler(){
+	slave_address = I2C_0_read();
+	I2C_0_send_ack();	// or send_nack() if we don't want to ack the address
+	num_addresses++;
+}
+
+void read_handler(){  // Master read operation
+	I2C_0_write(0x0c);
+	num_reads++;	
+}
+
+void write_handler(){  // Master write handler
+	register_address = I2C_0_read();
+	I2C_0_send_ack();	// or send_nack() if we don't want to receive more data
+	num_writes++;
+}
+
+void stop_handler(){
+	num_stops++;
+}
+
+void error_handler(){
+	while(1);
+}
+
+
+int main(void)
+{
+	/* Initializes MCU, drivers and middleware */
+	atmel_start_init();
+	ENABLE_INTERRUPTS();
+
+	I2C_0_set_read_callback(read_handler);
+	I2C_0_set_write_callback(write_handler);
+	I2C_0_set_address_callback(address_handler);
+	I2C_0_set_stop_callback(stop_handler);
+	I2C_0_set_collision_callback(error_handler);
+	I2C_0_set_bus_error_callback(error_handler);
+	I2C_0_open();
+
+	/* Replace with your application code */
+	while (1) {
+	}
+}
+
+\endcode
+
+
+*/

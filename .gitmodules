@@ -1,0 +1,3 @@
+[submodule "Software/Bootloader/Adafruit_nRF52_Bootloader"]
+	path = Software/Bootloader/Adafruit_nRF52_Bootloader
+	url = https://github.com/hamster/Adafruit_nRF52_Bootloader
