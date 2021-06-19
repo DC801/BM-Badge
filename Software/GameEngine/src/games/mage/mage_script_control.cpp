@@ -658,15 +658,38 @@ void MageScriptControl::checkIfEntityIsInGeometry(uint8_t * args, MageScriptStat
 	}
 }
 
+bool MageScriptControl::getButtonStateFromButtonArray(
+	uint8_t buttonId, // enum KEYBOARD_KEY, but can't use that type as uint8_t it because it's c, not cpp
+	ButtonStates *buttonStates
+) {
+	//get state of button:
+	bool button_activated = false;
+	// For some reason, the value of `KEYBOARD_NUM_KEYS` DOESN'T EXIST IN A USEFUL WAY
+	// unless you set it into an explicitly typed variable. WTF.
+	const uint8_t anyKeyId = KEYBOARD_NUM_KEYS;
+	if (buttonId == anyKeyId) { // checking for the elusive `any` key
+		for(uint8_t i = 0; i < anyKeyId; i++) {
+			button_activated = *(((bool *)buttonStates) + i);
+			if(button_activated == true) {
+				break;
+			}
+		}
+	} else { // all other keys
+		button_activated = *(((bool *)buttonStates) + buttonId);
+	}
+	return button_activated;
+}
+
 void MageScriptControl::checkForButtonPress(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	ActionCheckForButtonPress *argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	//get state of button:
-	bool *button_address = (bool*)(&EngineInput_Activated) + argStruct->buttonId;
-	bool button_activated = *button_address;
+	bool button_activated = getButtonStateFromButtonArray(
+		argStruct->buttonId,
+		&EngineInput_Activated
+	);
 	if(button_activated)
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:
@@ -680,9 +703,10 @@ void MageScriptControl::checkForButtonState(uint8_t * args, MageScriptState * re
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	//get state of button:
-	bool *button_address = (bool*)(&EngineInput_Buttons) + argStruct->buttonId;
-	bool button_state = *button_address;
+	bool button_state = getButtonStateFromButtonArray(
+		argStruct->buttonId,
+		&EngineInput_Buttons
+	);
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		//convert mapLocalScriptId from local to global scope and assign to mapLocalJumpScript:

@@ -573,5 +573,52 @@
 				"Okay, now it is Darkness.\nLET THERE BE LIGHT!!!"
 			]
 		}
+	],
+	"dialog-mage23-choices": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test the `any key` features in actions\n`CHECK_FOR_BUTTON_(PRESS / STATE)`!\nWhat would you like to test?",
+				"What would you like to test?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Wait for ANY_KEY activated",
+					"script": "mage23-set_tick-press-any"
+				},
+				{
+					"label": "Wait for PAGE activated",
+					"script": "mage23-set_tick-press-page"
+				},
+				{
+					"label": "Wait 2 sec & check ANY_KEY after exit",
+					"script": "mage23-set_tick-state-any"
+				},
+				{
+					"label": "Wait 2 sec & check PAGE after exit",
+					"script": "mage23-set_tick-state-page"
+				}
+			]
+		}
+	],
+	"dialog-mage23-not_pressed": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"The button was not pressed."
+			]
+		}
+	],
+	"dialog-mage23-was_pressed": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"The button was pressed!"
+			]
+		}
 	]
 }

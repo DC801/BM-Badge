@@ -353,6 +353,11 @@ class MageScriptControl
 			uint16_t a,
 			uint16_t b
 		) const;
+
+		static bool getButtonStateFromButtonArray(
+			uint8_t buttonId,
+			ButtonStates *buttonStates
+		) ;
 }; //MageScriptControl
 
 #endif //_MAGE_SCRIPT_CONTROL_H
