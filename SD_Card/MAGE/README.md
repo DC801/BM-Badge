@@ -1120,7 +1120,13 @@ To run the game on the hardware, prepare a microSD card (FAT32) with a folder ca
 
 ## Game Engine
 
-[bootloader pending]
+[What if it's not plugged in when it boots? Don't have battery; can't check!]
+
+To start the game in bootloader mode, hold down the hex digit 1 button while you power on the hardware. If bootloader mode was successfully triggered, the screen will be white and the LEDs will be lit in a circular pattern.
+
+If the hardware is plugged in to a computer while it is in bootloader mode, it will appear as a drive called NRF52BOOT. Copy the new game engine UF2 (the filename doesn't matter) onto the drive.
+
+Once the UF2 is copied, the drive will disconnect and the badge will reboot automatically.
 
 ---
 
@@ -1580,7 +1586,7 @@ This is the wrapup script for solving Beatrice's first quest line.
 - zeroes the target hint
 - runs `bea-wrapup-mini` to finish
 
-Every branch that ends with solving her first quest line will run this script at the end, including branches that might have already set her backstory flag or might have branched due to the backstory flag being set to `true`, but the flag is set anyway in this script to simplify the logic in general — setting it true a second time won't ruin anything, and it means there doesn't have to be a separate wrapup script for not setting that flag. This decision was easy to make once I had everything mapped and color coded.
+Every branch that ends with solving her first quest line will run this script at the end, including branches that might have already set her backstory flag or might have branched due to the backstory flag being set to `true`, but the flag is set anyway in this script to simplify the logic in general — setting it `true` a second time won't ruin anything, and it means there doesn't have to be a separate wrapup script for not setting that flag. This decision was easy to make once I had everything mapped and color coded.
 
 #### `bea1-incomplete-wrapup`
 
@@ -1636,7 +1642,7 @@ For cinematic cutscenes, you will almost certainly need to `SET_PLAYER_CONTROL` 
 ### `SET_PLAYER_CONTROL`
 - `bool_value` — `true` or `false`
 
-When `true`, the player entity can move around as normal. When false, the player entity cannot move, hack, or interact with anything. (This is set to `true` by default.)
+When `true`, the player entity can move around as normal. When `false`, the player entity cannot move, hack, or interact with anything. (This is set to `true` by default.)
 
 ### `LOAD_MAP`
 - `map`
@@ -1646,7 +1652,7 @@ When `true`, the player entity can move around as normal. When false, the player
 
 Plays the named dialog.
 
-No other actions can be executed by that script until the dialog has finished, so any additional behaviors within a cutscene (for instance) must be done between dialog chunks. (If you want someone to turn around during a speech, you must `SHOW_DIALOG` for the script named show_dialog-speech1`, turn them around with `SET_ENTITY_DIRECTION` several times, then `SHOW_DIALOG` for the script named `show_dialog-speech2`, etc.)
+No other actions can be executed by that script until the dialog has finished, so any additional behaviors within a cutscene (for instance) must be done between dialog chunks. (If you want someone to turn around during a speech, you must `SHOW_DIALOG` for the script named `show_dialog-speech1`, turn them around with `SET_ENTITY_DIRECTION` several times, then `SHOW_DIALOG` for the script named `show_dialog-speech2`, etc.)
 
 When a dialog is showing, the player can only advance to the next dialog message or choose a [multiple choice](#multiple-choice-dialogs) option (if given one) — the player cannot hack, interact with another entity, move, etc.
 
