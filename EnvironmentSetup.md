@@ -89,7 +89,7 @@ sudo snap install --classic code
 - Open a terminal (`Terminal` -> `New Terminal`) or use `Ctrl+backtick`
 - From within the terminal that appears, run the following (replace `8` with the number of cores your machine has, or the number of cores you have allocated to your VM):
 ```shell script
-cd Software/
+cd Software/GameEngine/
 make cleanall
 compiledb make DESKTOP=1 -j8
 ```
@@ -98,7 +98,7 @@ You should now have everything compiled in the `~/dev/BM-Badge/Software/GameEngi
 
 From within the VSCode Terminal:
 ```shell script
-cd ~/dev/BM-Badge/Software/output
+cd ~/dev/BM-Badge/Software/GameEngine/output
 ./bm_badge.out
 ```
 
