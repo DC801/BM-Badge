@@ -672,6 +672,33 @@
 			"dialog": "dialog-cat-boss2"
 		},
 		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-cat-boss-alt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss3"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-cat-boss-wrapup"
+		}
+	],
+	"show_dialog-cat-boss-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss3-alt"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-cat-boss-wrapup"
+		}
+	],
+	"show_dialog-cat-boss-wrapup": [
+		{
 			"action": "COPY_SCRIPT",
 			"script": "cat-and-cleo-convo-turn"
 		},
@@ -682,6 +709,11 @@
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-max-from-cleo"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "white-cat",
+			"bool_value": true
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

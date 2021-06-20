@@ -185,20 +185,17 @@
 			"bool_value": true
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 80,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "reset-sportskid-hint-only"
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 81,
+			"variable": "hint-tracking-check",
+			"value": 8,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-sportskid-hint-only"
+			"success_script": "reset-sportskid-hint-only",
+			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",

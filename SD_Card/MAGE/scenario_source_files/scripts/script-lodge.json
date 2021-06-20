@@ -2801,17 +2801,31 @@
 			"expected_bool": true
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 62,
-			"comparison": "==",
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "storyflag-catwork",
 			"expected_bool": true,
-			"success_script": "show_dialog-lodge_cat-magic"
+			"success_script": "lodge_cat-neutral"
 		},
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "white-cat",
+			"expected_bool": false,
+			"success_script": "lodge_cat-neutral"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-lodge_cat-magic"
+		}
+	],
+	"lodge_cat-neutral": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-lodge_cat",
 			"doc": "...."
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "lodge_cat-wrapup"
 		}
 	],
 	"show_dialog-lodge_cat-glitched": [
@@ -2888,9 +2902,8 @@
 			"bool_value": true
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "%SELF%",
-			"script": "show_dialog-lodge_cat"
+			"action": "RUN_SCRIPT",
+			"script": "lodge_cat-wrapup"
 		}
 	],
 	"lodge_cat-glitchhint-eval": [
@@ -2901,9 +2914,8 @@
 			"success_script": "lodge_cat-hint-yes"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "%SELF%",
-			"script": "show_dialog-lodge_cat"
+			"action": "RUN_SCRIPT",
+			"script": "lodge_cat-wrapup"
 		}
 	],
 	"lodge_cat-hint-yes": [
@@ -2911,6 +2923,12 @@
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-glitch"
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "lodge_cat-wrapup"
+		}
+	],
+	"lodge_cat-wrapup": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
