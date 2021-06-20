@@ -192,12 +192,24 @@
 			"messages": [
 				"Yeah, get some other white cat to do the\nthumbs up!"
 			]
-		},
+		}
+	],
+	"dialog-cat-boss3": [
 		{
 			"alignment": "TOP_RIGHT",
 			"entity": "%PLAYER%",
 			"messages": [
 				"But... where else am I gonna find a white\ncat?"
+			]
+		}
+	],
+	"dialog-cat-boss3-alt": [
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Some other white cat? Seriously?",
+				"You mean me?"
 			]
 		}
 	],
