@@ -692,20 +692,17 @@
 			"bool_value": true
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 40,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "reset-bea1-hint-only"
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 41,
+			"variable": "hint-tracking-check",
+			"value": 4,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-bea1-hint-only"
+			"success_script": "reset-bea1-hint-only",
+			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -810,20 +807,17 @@
 			"bool_value": true
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 90,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "reset-bea2-hint-only"
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 91,
+			"variable": "hint-tracking-check",
+			"value": 9,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-bea2-hint-only"
+			"success_script": "reset-bea2-hint-only",
+			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",

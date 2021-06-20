@@ -14,8 +14,7 @@
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
-			"bool_value": true,
-			"doc": "couldn't find where it was being turned off, but this brings hex editor access back to normal"
+			"bool_value": true
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -27,6 +26,10 @@
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "begunthegame",
 			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": false
 		},
 		{
 			"action": "SCREEN_FADE_IN",
@@ -454,8 +457,25 @@
 	],
 	"show_dialog-yabbo": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "yabbo-watch"
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-yabbo"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
+		}
+	],
+	"yabbo-watch": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%PLAYER%",
+			"target_entity": "Yabbo Mongo"
 		}
 	],
 	"show_dialog-construction": [
@@ -481,13 +501,27 @@
 			"script": "show_dialog-cleo1"
 		}
 	],
-	"show_dialog-cleo1": [
+	"turn-padding-start": [
 		{
-			"action": "CHECK_ENTITY_GLITCHED",
-			"entity": "%SELF%",
-			"success_script": "show_dialog-cleo-glitched",
-			"expected_bool": true
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
 		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
+		}
+	],
+	"turn-padding-end": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 0
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		}
+	],
+	"cat-and-cleo-convo-turn": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cleo",
@@ -497,6 +531,38 @@
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Cat",
 			"target_entity": "Cleo"
+		}
+	],
+	"cat-and-cleo-convo-turn-player": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-start"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cleo",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Cat",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-end"
+		}
+	],
+	"show_dialog-cleo1": [
+		{
+			"action": "CHECK_ENTITY_GLITCHED",
+			"entity": "%SELF%",
+			"success_script": "show_dialog-cleo-glitched",
+			"expected_bool": true
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -516,14 +582,8 @@
 			"expected_bool": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -548,6 +608,22 @@
 	],
 	"show_dialog-cat": [
 		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 61,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-cat-boss"
+		},
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "hint-tracking",
+			"value": 62,
+			"comparison": "==",
+			"expected_bool": true,
+			"success_script": "show_dialog-cat-boss"
+		},
+		{
 			"action": "CHECK_ENTITY_GLITCHED",
 			"entity": "%SELF%",
 			"success_script": "show_dialog-cat-glitched",
@@ -558,44 +634,91 @@
 			"dialog": "dialog-cat1"
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-start"
 		},
 		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "%PLAYER%"
-		},
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-cat2"
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-end"
+		}
+	],
+	"show_dialog-cat-boss": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss1"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-start"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn-player"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss2"
+		},
+		{
+			"action": "CHECK_ENTITY_TYPE",
+			"entity": "%PLAYER%",
+			"entity_type": "pipscat",
+			"expected_bool": true,
+			"success_script": "show_dialog-cat-boss-alt"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss3"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-cat-boss-wrapup"
+		}
+	],
+	"show_dialog-cat-boss-alt": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-cat-boss3-alt"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-cat-boss-wrapup"
+		}
+	],
+	"show_dialog-cat-boss-wrapup": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "turn-padding-end"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "set-hint-max-from-cleo"
+		},
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "white-cat",
 			"bool_value": true
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
-		},
-		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-cat"
 		}
 	],
 	"cat-watch": [
@@ -620,9 +743,8 @@
 			"duration": 800
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cat",
-			"target_entity": "Cleo"
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -653,9 +775,8 @@
 			"duration": 800
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
-			"entity": "Cleo",
-			"target_entity": "Cat"
+			"action": "COPY_SCRIPT",
+			"script": "cat-and-cleo-convo-turn"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -772,39 +893,105 @@
 	],
 	"wrap_from-west": [
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"geometry": "enter_from-east",
-			"entity": "%PLAYER%"
-		},
-		{
-			"action": "WALK_ENTITY_ALONG_GEOMETRY",
-			"geometry": "enter_from-east",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
-			"duration": 600
+			"script": "on_tick-wrap_into-west"
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
+			"action": "SCREEN_FADE_OUT",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_from-west"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 600,
+			"color": "#000000"
 		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "on_tick-main"
 		}
 	],
-	"wrap_from-east": [
+	"on_tick-wrap_into-west": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},
 		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"geometry": "enter_from-west",
-			"entity": "%PLAYER%"
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "exit_to-west",
+			"entity": "%PLAYER%",
+			"duration": 3500
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_tick-wrap_from-west": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-east",
+			"entity": "%PLAYER%",
+			"duration": 600
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"wrap_from-east": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_into-east"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_from-east"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-main"
+		}
+	],
+	"on_tick-wrap_into-east": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "exit_to-east",
+			"entity": "%PLAYER%",
+			"duration": 3500
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_tick-wrap_from-east": [
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-west",
@@ -817,7 +1004,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_tick-main"
+			"script": "null_script"
 		}
 	],
 	"enter_from-bobsclub": [

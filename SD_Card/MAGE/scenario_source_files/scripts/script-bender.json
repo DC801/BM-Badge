@@ -129,7 +129,7 @@
 		},
 		{
 			"action": "COPY_SCRIPT",
-			"script": "set_tick-watch-player"
+			"script": "set_handler-bender-on"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -217,20 +217,17 @@
 			"bool_value": true
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 50,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "reset-bender-hint-only"
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 51,
+			"variable": "hint-tracking-check",
+			"value": 5,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-bender-hint-only"
+			"success_script": "reset-bender-hint-only",
+			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -255,9 +252,8 @@
 	],
 	"show_dialog-bender-end-wrapup": [
 		{
-			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity": "%SELF%",
-			"script": "on_tick-bender-loiter"
+			"action": "COPY_SCRIPT",
+			"script": "set_handler-bender-none"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",

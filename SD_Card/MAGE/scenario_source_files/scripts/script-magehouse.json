@@ -71,7 +71,8 @@
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "debug-mode",
-			"bool_value": true
+			"bool_value": true,
+			"doc": "this is legacy debug mode stuff -- used to hide/show exas with a save flag"
 		},
 		{
 			"action": "RUN_SCRIPT",

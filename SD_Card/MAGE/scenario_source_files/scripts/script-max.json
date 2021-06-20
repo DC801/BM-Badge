@@ -377,10 +377,6 @@
 			"expected_bool": true
 		},
 		{
-			"action": "COPY_SCRIPT",
-			"script": "set-hint-catwork"
-		},
-		{
 			"action": "CHECK_ENTITY_TYPE",
 			"entity": "%PLAYER%",
 			"entity_type": "pipscat",
@@ -615,20 +611,17 @@
 			"script": "max-grin-end"
 		},
 		{
-			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 60,
-			"comparison": "==",
-			"expected_bool": true,
-			"success_script": "reset-max-hint-only"
+			"action": "COPY_SCRIPT",
+			"script": "calculate-hint-tracking-series"
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "hint-tracking",
-			"value": 61,
+			"variable": "hint-tracking-check",
+			"value": 6,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-max-hint-only"
+			"success_script": "reset-max-hint-only",
+			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",

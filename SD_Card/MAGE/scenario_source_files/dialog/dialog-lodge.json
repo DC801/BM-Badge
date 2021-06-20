@@ -56,7 +56,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "Bert",
 			"messages": [
-				"That is croissant!",
+				"That is a croissant!",
 				"Is my lunch!"
 			]
 		}
