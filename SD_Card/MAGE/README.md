@@ -42,6 +42,7 @@ An explanation of how to create content for the "Mage Game Engine" (MGE) and oth
 	1. [Vector View](#vector-view)
 	2. [Debug Mode](#debug-mode)
 	3. [MGE Encoder Console](#mge-encoder-console)
+	4. [Inpsecting Encoded `game.dat`](#inspecting-encoded-gamedat)
 10. [Scripting Techniques](#scripting-techniques)
 	1. [`COPY_SCRIPT` Uses](#copy_script-uses)
 	2. [Beginnings, Middles and Ends](#beginnings-middles-and-ends)
@@ -770,6 +771,8 @@ To terminate an `on_tick` script, it must [run](#run_script) [`null_script`](#nu
 
 A map's `on_tick` script slot is a logical place for a script that watches for whether the player enters a doorway, but `on_tick` scripts are useful for other kinds of watch scripts, too, such as changing an entity's idle behavior after a condition has been met.
 
+`on_tick` slots are what you should use if you want to be able to interrupt or abort a script at an arbitrary place or time e.g. with a button press, or when the player crosses a vector object collision trigger, etc.
+
 #### `on_load` Scripts
 
 A map's `on_load` script runs when a map is first loaded. Like an `on_interact` script, once the script reaches the end of its list of actions, the script stops.
@@ -1116,7 +1119,26 @@ The selected tiles should have a green outline.
 
 ## `game.dat`
 
-To run the game on the hardware, prepare a microSD card (FAT32) with a folder called `MAGE` in the root directory. Copy the `game.dat` into `MAGE/`, then insert the card into the slot on the hardware. The game will flash itself (if the hardware determines the `game.dat` is different).
+To run the game on the hardware, prepare a microSD card (FAT32) with a folder called `MAGE` in the root directory. Copy the `game.dat` into `MAGE/`, then insert the card into the slot on the hardware.
+
+If the hardware determines its `game.dat` is different from the one on the microSD card, you will see:
+
+```
+The file `game.dat` on your SD card does not match
+what is on your badge ROM chip.
+
+ SD hash: [game.dat checksum #1]
+ROM hash: [game.dat checksum #2]
+
+Would you like to update your scenario data?
+------------------------------------------------
+
+> Press MEM0 to cancel
+
+> Press MEM3 to update the ROM
+```
+
+Press MEM3 (lowest button on the right side of the screen) to tell the hardware to flash the new `game.dat`. The time it takes to copy will depend on the size of the `game.dat`, but it should be somewhere in the ballpark of 20 seconds.
 
 ## Game Engine
 
@@ -1193,17 +1215,31 @@ Example uses of debug entities:
 
 ## MGE Encoder Console
 
-Both versions of the [MGE encoder](#mge-encoder) will tell you when something has gone wrong during the encoding process, and many errors should be self explanatory, e.g. "No object named X could be found on map Y!"
+Both versions of the [MGE encoder](#mge-encoder) will tell you when something has gone wrong during the encoding process, and many errors should be self explanatory, e.g. `"No object named X could be found on map Y!"`
+
+The error `Script: X could not be found in scenario.json` does not mean the error is with [`scenario.json`](#scenariojson), only that the encoder couldn't find a script by that name in any of the script JSON files [`scenario.json`](#scenariojson) knows about.
 
 If you get the error "unexpected token" it means one of your files has invalid JSON, and you'll need to check your JSON files for invalid syntax. (A good text editor should have some kind of color coding to help you spot such errors.)
 
-When using the web encoder to produce a `game.dat`, you can use your browser's developer tools to inspect various aspects about how the encoder interpreted your game files.
+## Inpsecting Encoded `game.dat`
+
+### Inspecting with [Web Encoder](#web-encoder)
+
+After using the web encoder to produce a `game.dat`, you can use your browser's developer tools to inspect various aspects about how the encoder interpreted your game files.
 
 - List of all save flags — useful for tracking down inconsistently named save flags or typos. [this doesn't actually happen on its own — you have to set a breakpoint in a specific place]
 - Number of colors in each tileset's pallet — if trying to reduce the file size of your `game.dat`, it can help to identify which tilesets have more colors than intended.
 - Other things that were logged when debugging the encoder. [list them]
 
 [Maybe we should make the encoder console.log specific things?]
+
+### Inspecting with Kaitai
+
+Kaitai (ide.kaitai.io) is a tool that can parse and analyze binary data formats.
+
+Available inside your `MAGE/` folder is a file called `mage_dat.ksy`. You can drag this in a Kaitai window, along with your `game.dat`, to analyze in great detail the encoded structure of your game.
+
+> This tool lets you easily see the relationship between the hex value of a script/entity_type/dialog/etc. and its name. E.g. if an entity's [`on_tick`](#on_tick-scripts) was being changed unexpectedly, but you only knew the hex value that it's being changed to, using Kaitai to find the name of the script in question can help you track down the problem.
 
 ---
 
@@ -1652,21 +1688,30 @@ When `true`, the player entity can move around as normal. When `false`, the play
 
 Plays the named dialog.
 
-No other actions can be executed by that script until the dialog has finished, so any additional behaviors within a cutscene (for instance) must be done between dialog chunks. (If you want someone to turn around during a speech, you must `SHOW_DIALOG` for the script named `show_dialog-speech1`, turn them around with `SET_ENTITY_DIRECTION` several times, then `SHOW_DIALOG` for the script named `show_dialog-speech2`, etc.)
+No other actions can be executed by that script until the dialog has finished, so any additional behaviors within a cutscene (for instance) must be done between dialog chunks or by another script. (If you want someone to turn around during a speech, you must `SHOW_DIALOG` for the script named `show_dialog-speech1`, turn them around with `SET_ENTITY_DIRECTION` several times, then `SHOW_DIALOG` for the script named `show_dialog-speech2`, etc.)
 
 When a dialog is showing, the player can only advance to the next dialog message or choose a [multiple choice](#multiple-choice-dialogs) option (if given one) — the player cannot hack, interact with another entity, move, etc.
-
-### `SLOT_LOAD`
-- `slot` — `0`, `1`, or `2`
-
-This brings the save variables and other data associated with that slot into RAM.
-
-The slot is set to `0` by default.
 
 ### `SLOT_SAVE`
 This action requires no arguments.
 
-This action saves the game state into the chosen slot. (`0` is default.)
+This action saves the game state into the chosen slot (the last slot loaded).
+
+Things that are saved:
+- player name (string)
+- MEM button offsets (the player can change the MEM button mapping)
+- current map id [is saved, but not currently used upon load]
+- warp state (string)
+- hex editor clipboard contents (up to 32 bytes)
+- save flags (booleans)
+- script variables (ints)
+
+### `SLOT_LOAD`
+- `slot` — `0`, `1`, or `2`
+
+This brings the save data associated with that slot into RAM.
+
+The slot is set to `0` by default.
 
 ### `SLOT_ERASE`
 - `slot` — `0`, `1`, or `2`
@@ -1678,15 +1723,6 @@ This action clears all the variables in the given slot.
 [how many of these are implemented?]
 
 ### `SET_HEX_CURSOR_LOCATION`
-???
-
-### `SET_HEX_BITS`
-???
-
-### `UNLOCK_HAX_CELL`
-???
-
-### `LOCK_HAX_CELL`
 ???
 
 ### `SET_HEX_EDITOR_STATE`
@@ -2029,7 +2065,9 @@ NOTE: Unless you want the entity to teleport to the geometry's origin point, you
 
 ### `SET_ENTITY_PATH`
 - `entity`
-- `u2_value` — the name (string) for the desired path [should this be a string though?]
+- `geometry` — the name (string) of the desired path
+
+This assigns a vector object to an entity.
 
 ## Entity Choreography Actions (Appearance)
 
@@ -2219,20 +2257,3 @@ List of fields:
 - `hackable_state_d`
 
 Compares the value of a variable against another.
-
-## Unimplemented Actions (Pending?)
-
-### `PAUSE_GAME`
-
-### `PAUSE_ENTITY_SCRIPT`
-
-### `PLAY_SOUND_CONTINUOUS`
-
-### `PLAY_SOUND_INTERRUPT`
-
-
-
-
-
-
-}
