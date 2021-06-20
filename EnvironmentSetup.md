@@ -142,7 +142,7 @@ Tiled (https://www.mapeditor.org/) is being used to edit the game map & characte
 
 ```shell script
 cd ~/dev/installer
-wget https://github.com/mapeditor/tiled/releases/download/v1.4.3/Tiled-1.4.3-x86_64.AppImage
+wget https://github.com/mapeditor/tiled/releases/download/v1.7.0/Tiled-1.7.0-x86_64.AppImage
 chmod +x Tiled-*-x86_64.AppImage
 sudo mkdir -p /usr/share/tiled/
 sudo mv Tiled-*-x86_64.AppImage /usr/share/tiled/
@@ -340,7 +340,7 @@ Here are the steps to compile the badge code for the physical Badge:
 - From within the terminal that appears, run the following (replace `8` with the number of cores your machine has):
 ```shell script
 cd Software/GameEngine/
-compiledb make cleanall
+make cleanall
 compiledb make EMBEDDED=1 -j8
 ```
 
@@ -351,12 +351,10 @@ Let's flash it. Make sure you connect your badge to the J-Link Programmer and po
 From within the VSCode terminal:
 
 ```shell script
-make flash-merged
+compiledb make flash EMBEDDED=1 -j8
 ```
 
-This flashed the badge code & the soft device to your badge. Now that you have the soft device, from now on only run `make flash`, unless you want to change or update your soft device.
-
-You should now have the game running on your badge screen!
+This compiled and flashed the game engine your badge. You should now have the game running on your badge screen!
 
 To debug you need to open the Run/debug menu on the left (`Ctrl+Shift+D`). It looks like it has a triangle and a bug symbol. At the top, make sure that the dropdown says "Debug (Linux)". Now let's connect the JLink to your Badge. In a new terminal run these commands:
 
