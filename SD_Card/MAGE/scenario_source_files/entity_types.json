@@ -56,7 +56,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "mage",
+		"scenarioIndex": 0,
+		"serialized": {}
 	},
 	"exa": {
 		"tileset": "entity-exa.json",
@@ -79,7 +82,10 @@
 					"flip_x": true
 				}
 			]
-		}
+		},
+		"type": "exa",
+		"scenarioIndex": 1,
+		"serialized": {}
 	},
 	"eye_faerie": {
 		"tileset": "entity-eye_faerie.json",
@@ -138,7 +144,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "eye_faerie",
+		"scenarioIndex": 2,
+		"serialized": {}
 	},
 	"dragon_skull": {
 		"tileset": "entity-dragon_skull.json",
@@ -197,7 +206,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "dragon_skull",
+		"scenarioIndex": 3,
+		"serialized": {}
 	},
 	"golem": {
 		"tileset": "entity-golem.json",
@@ -220,7 +232,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "golem",
+		"scenarioIndex": 4,
+		"serialized": {}
 	},
 	"bobmoss": {
 		"tileset": "entity-bobmoss.json",
@@ -243,7 +258,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bobmoss",
+		"scenarioIndex": 5,
+		"serialized": {}
 	},
 	"lightning_boy": {
 		"tileset": "entity-lightning_boy.json",
@@ -266,7 +284,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "lightning_boy",
+		"scenarioIndex": 6,
+		"serialized": {}
 	},
 	"lightning_boy2": {
 		"tileset": "entity-lightning_boy2.json",
@@ -289,7 +310,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "lightning_boy2",
+		"scenarioIndex": 7,
+		"serialized": {}
 	},
 	"goose": {
 		"tileset": "entity-goose.json",
@@ -348,7 +372,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "goose",
+		"scenarioIndex": 8,
+		"serialized": {}
 	},
 	"sheep": {
 		"tileset": "entity-sheep.json",
@@ -407,7 +434,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "sheep",
+		"scenarioIndex": 9,
+		"serialized": {}
 	},
 	"helga": {
 		"tileset": "entity-helga.json",
@@ -466,7 +496,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "helga",
+		"scenarioIndex": 10,
+		"serialized": {}
 	},
 	"village_elder": {
 		"tileset": "entity-village_elder.json",
@@ -525,7 +558,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "village_elder",
+		"scenarioIndex": 11,
+		"serialized": {}
 	},
 	"old_lady": {
 		"tileset": "entity-old_lady.json",
@@ -584,7 +620,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "old_lady",
+		"scenarioIndex": 12,
+		"serialized": {}
 	},
 	"baby_goat": {
 		"tileset": "entity-baby_goat.json",
@@ -643,7 +682,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "baby_goat",
+		"scenarioIndex": 13,
+		"serialized": {}
 	},
 	"alfonso": {
 		"tileset": "entity-alfonso.json",
@@ -702,7 +744,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "alfonso",
+		"scenarioIndex": 14,
+		"serialized": {}
 	},
 	"cleo": {
 		"tileset": "entity-cleo.json",
@@ -761,7 +806,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "cleo",
+		"scenarioIndex": 15,
+		"serialized": {}
 	},
 	"verthandi": {
 		"tileset": "entity-verthandi.json",
@@ -820,7 +868,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "verthandi",
+		"scenarioIndex": 16,
+		"serialized": {}
 	},
 	"pipscat": {
 		"tileset": "entity-pipscat.json",
@@ -878,8 +929,65 @@
 					"tileid": 12,
 					"flip_x": false
 				}
+			],
+			"special": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			],
+			"extra_special": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"really_extra_special": [
+				{
+					"tileid": 23,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": true
+				},
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				}
 			]
-		}
+		},
+		"type": "pipscat",
+		"scenarioIndex": 17,
+		"serialized": {}
 	},
 	"blacksmith": {
 		"tileset": "entity-blacksmith.json",
@@ -938,7 +1046,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "blacksmith",
+		"scenarioIndex": 18,
+		"serialized": {}
 	},
 	"old_man": {
 		"tileset": "entity-old_man.json",
@@ -1015,7 +1126,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "old_man",
+		"scenarioIndex": 19,
+		"serialized": {}
 	},
 	"bert": {
 		"tileset": "entity-bert.json",
@@ -1074,7 +1188,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bert",
+		"scenarioIndex": 20,
+		"serialized": {}
 	},
 	"sports_kid": {
 		"tileset": "entity-sports_kid.json",
@@ -1133,7 +1250,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "sports_kid",
+		"scenarioIndex": 21,
+		"serialized": {}
 	},
 	"ssen": {
 		"tileset": "entity-ssen.json",
@@ -1192,7 +1312,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "ssen",
+		"scenarioIndex": 22,
+		"serialized": {}
 	},
 	"baker": {
 		"tileset": "entity-baker.json",
@@ -1251,7 +1374,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "baker",
+		"scenarioIndex": 23,
+		"serialized": {}
 	},
 	"marta": {
 		"tileset": "entity-marta.json",
@@ -1310,7 +1436,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "marta",
+		"scenarioIndex": 24,
+		"serialized": {}
 	},
 	"tailor": {
 		"tileset": "entity-tailor.json",
@@ -1423,7 +1552,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "tailor",
+		"scenarioIndex": 25,
+		"serialized": {}
 	},
 	"bender": {
 		"tileset": "entity-bender.json",
@@ -1500,7 +1632,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bender",
+		"scenarioIndex": 26,
+		"serialized": {}
 	},
 	"bender_sadbutt": {
 		"tileset": "entity-bender_sadbutt.json",
@@ -1578,7 +1713,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bender_sadbutt",
+		"scenarioIndex": 27,
+		"serialized": {}
 	},
 	"strong_bad": {
 		"tileset": "entity-strong_bad.json",
@@ -1691,7 +1829,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "strong_bad",
+		"scenarioIndex": 28,
+		"serialized": {}
 	},
 	"trekkie": {
 		"tileset": "entity-trekkie.json",
@@ -1750,7 +1891,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "trekkie",
+		"scenarioIndex": 29,
+		"serialized": {}
 	},
 	"bob": {
 		"tileset": "entity-bob.json",
@@ -1809,7 +1953,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bob",
+		"scenarioIndex": 30,
+		"serialized": {}
 	},
 	"blitzball": {
 		"tileset": "entity-blitzball.json",
@@ -1854,7 +2001,10 @@
 					"flip_x": true
 				}
 			]
-		}
+		},
+		"type": "blitzball",
+		"scenarioIndex": 31,
+		"serialized": {}
 	},
 	"maru": {
 		"tileset": "entity-maru.json",
@@ -1917,7 +2067,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "maru",
+		"scenarioIndex": 32,
+		"serialized": {}
 	},
 	"bmurray": {
 		"tileset": "entity-bmurray.json",
@@ -1980,7 +2133,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bmurray",
+		"scenarioIndex": 33,
+		"serialized": {}
 	},
 	"felix": {
 		"tileset": "entity-felix.json",
@@ -2043,7 +2199,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "felix",
+		"scenarioIndex": 34,
+		"serialized": {}
 	},
 	"deut": {
 		"tileset": "entity-deut.json",
@@ -2106,7 +2265,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "deut",
+		"scenarioIndex": 35,
+		"serialized": {}
 	},
 	"modem": {
 		"tileset": "entity-modem.json",
@@ -2205,7 +2367,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "modem",
+		"scenarioIndex": 36,
+		"serialized": {}
 	},
 	"bookcase": {
 		"tileset": "entity-bookcase.json",
@@ -2286,7 +2451,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "bookcase",
+		"scenarioIndex": 37,
+		"serialized": {}
 	},
 	"rake": {
 		"tileset": "entity-rake.json",
@@ -2313,7 +2481,10 @@
 					"flip_y": false
 				}
 			]
-		}
+		},
+		"type": "rake",
+		"scenarioIndex": 38,
+		"serialized": {}
 	},
 	"marta_broom": {
 		"tileset": "entity-marta-broom.json",
@@ -2341,7 +2512,10 @@
 					"flip_y": false
 				}
 			]
-		}
+		},
+		"type": "marta_broom",
+		"scenarioIndex": 39,
+		"serialized": {}
 	},
 	"hamster": {
 		"tileset": "entity-hamster.json",
@@ -2404,7 +2578,10 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "hamster",
+		"scenarioIndex": 40,
+		"serialized": {}
 	},
 	"yabbo_mongo": {
 		"tileset": "entity-yabbo_mongo.json",
@@ -2467,6 +2644,9 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"type": "yabbo_mongo",
+		"scenarioIndex": 41,
+		"serialized": {}
 	}
 }

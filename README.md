@@ -1,11 +1,9 @@
 # DC801 Black Mage Badge
 The DC801 Badge Platform for DC28+
 
-<p><a href="https://vimeo.com/515088170" target="_blank"><img src="https://i.vimeocdn.com/video/1066639355" alt="DC28 DC801 SAFEMODE badge, 2021-02-21 development update" /></a></p>
-<p><a href="https://vimeo.com/515088170" target="_blank">Watch one of our new puzzles and see some of our new narrative focused engine scripting capabilities in our 2021-02-21 development update video!</a></p>
-<p><a href="https://vimeo.com/487527877" target="_blank"><img src="https://i.vimeocdn.com/video/1008891350" alt="DC28 DC801 SAFEMODE badge, 2020-12-04 development update" /></a></p>
-<p><a href="https://vimeo.com/487527877" target="_blank">Watch almost 6 minutes of 100% in-engine gameplay in our 2020-12-04 development update video!</a></p>
+![DC801 Black Mage Game 2020 main menu](SD_Card/MAGE/docs_images/game-sample-menu.png)
 
+![DC801 Black Mage Game 2020 sample gameplay (screen only)](SD_Card/MAGE/docs_images/game-sample-x4.png)
 
 ## Hardware
 The DC801 BM-Badge brings you an expandable iteration of our robust platfom.
@@ -46,11 +44,22 @@ Check out the [Template](/HW/ART/Template) that you can create a new project in 
  - Custom game engine purpose-built for the badge that can automatically load custom games from the SD Card.
  - Included in the [SD_Card/MAGE](/SD_Card/MAGE) directory is a binary encoder that allows you to generate your own games with our engine using open source tools such as the Tiled Map Editor and our custom json scripting language.
  - Instructions to set up your own dev environment and desktop testing build of our game engine in [EnvironmentSetup.md](/EnvironmentSetup.md).
+ - [Comprehensive engine documentation and content creation guide](SD_Card/MAGE/README.md)
 
 ### SD Card
 Format your SD card as FAT32 and copy the contents of [SD_Card](SD_Card) into it.
 This year's badge game engine allows for you to run custom games from binary files on the SD card.
 
+## Gameplay Videos
+
+<a href="https://vimeo.com/487527877" target="_blank"><img src="https://i.vimeocdn.com/video/1008891350" alt="DC28 DC801 SAFEMODE badge, 2020-12-04 development update" /></a>
+
+[DC28 DC801 SAFEMODE badge, 2020-12-04 development update](https://vimeo.com/487527877): Watch almost 6 minutes of 100% in-engine gameplay in our 2020-12-04 development update video!
+
+<a href="https://vimeo.com/515088170" target="_blank"><img src="https://i.vimeocdn.com/video/1066639355" alt="DC28 DC801 SAFEMODE badge, 2021-02-21 development update" /></a>
+
+[DC28 DC801 SAFEMODE badge, 2021-02-21 development update](https://vimeo.com/515088170):
+Watch one of our puzzles and see some of our new narrative focused engine scripting capabilities in our 2021-02-21 development update video!
 
 ## DC28 dev team
 
@@ -64,6 +73,7 @@ Software Team
 - [kiyoshigawa](https://twa.ninja/)
 - [@newzie1](https://twitter.com/newzie1)
 - [@tazmodius](https://twitter.com/tazmodius)
+- @alamedyang
 
 Hardware Team
 - [@dvdfreitag](https://twitter.com/dvdfreitag)

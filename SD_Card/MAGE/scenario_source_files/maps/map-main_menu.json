@@ -39,24 +39,6 @@
          "name":"Object Layer 1",
          "objects":[
                 {
-                 "gid":126,
-                 "height":32,
-                 "id":5,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":-192,
-                 "y":-143
-                }, 
-                {
                  "gid":186,
                  "height":112,
                  "id":7,
@@ -127,6 +109,29 @@
                  "width":160,
                  "x":160,
                  "y":480
+                }, 
+                {
+                 "gid":367,
+                 "height":32,
+                 "id":19,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"on_tick-button-to-skip"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":-33,
+                 "y":-3
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -181,13 +186,18 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":18,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"on_load",
          "type":"string",
-         "value":"on_load-main_menu"
+         "value":""
+        }, 
+        {
+         "name":"on_tick",
+         "type":"string",
+         "value":"on_tick-main_menu"
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
@@ -220,6 +230,10 @@
         {
          "firstgid":319,
          "source":"..\/tilesets\/tileset-main_menu-logo.json"
+        }, 
+        {
+         "firstgid":367,
+         "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":16,
  "type":"map",

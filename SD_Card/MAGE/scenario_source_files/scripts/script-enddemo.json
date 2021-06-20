@@ -58,6 +58,11 @@
 			"script": "loiter4"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Hamster",
+			"script": "loiter5"
+		},
+		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 1800
 		},
@@ -82,6 +87,11 @@
 			"script": "null_script"
 		},
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Hamster",
+			"script": "null_script"
+		},
+		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Marta",
 			"direction": "south"
@@ -99,6 +109,11 @@
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Verthandi",
+			"direction": "south"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "Hamster",
 			"direction": "south"
 		},
 		{
@@ -128,6 +143,11 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Cat",
 			"script": "loiter4"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Hamster",
+			"script": "loiter5"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -768,6 +788,53 @@
 			"duration": 400
 		}
 	],
+	"loiter5": [
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "south"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "north"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "west"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION",
+			"entity": "%SELF%",
+			"direction": "east"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
+		}
+	],
 	"on_tick-credits": [
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
@@ -878,6 +945,52 @@
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
 			"script": "debug-roll-credits-q"
+		}
+	],
+	"goose-loiter-honk": [
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1500
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 2
+		}
+	],
+	"helga-munch": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3000
+		}
+	],
+	"pixie-training": [
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 1
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 1500
+		},
+		{
+			"action": "PLAY_ENTITY_ANIMATION",
+			"entity": "%SELF%",
+			"animation": 2,
+			"play_count": 2
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 600
 		}
 	]
 }
