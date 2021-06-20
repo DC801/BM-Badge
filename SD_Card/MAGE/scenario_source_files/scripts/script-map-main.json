@@ -861,39 +861,105 @@
 	],
 	"wrap_from-west": [
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": false
-		},
-		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"geometry": "enter_from-east",
-			"entity": "%PLAYER%"
-		},
-		{
-			"action": "WALK_ENTITY_ALONG_GEOMETRY",
-			"geometry": "enter_from-east",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
-			"duration": 600
+			"script": "on_tick-wrap_into-west"
 		},
 		{
-			"action": "SET_PLAYER_CONTROL",
-			"bool_value": true
+			"action": "SCREEN_FADE_OUT",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_from-west"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 600,
+			"color": "#000000"
 		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "on_tick-main"
 		}
 	],
-	"wrap_from-east": [
+	"on_tick-wrap_into-west": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false
 		},
 		{
-			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
-			"geometry": "enter_from-west",
-			"entity": "%PLAYER%"
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "exit_to-west",
+			"entity": "%PLAYER%",
+			"duration": 3500
 		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_tick-wrap_from-west": [
+		{
+			"action": "WALK_ENTITY_ALONG_GEOMETRY",
+			"geometry": "enter_from-east",
+			"entity": "%PLAYER%",
+			"duration": 600
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"wrap_from-east": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_into-east"
+		},
+		{
+			"action": "SCREEN_FADE_OUT",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "on_tick-wrap_from-east"
+		},
+		{
+			"action": "SCREEN_FADE_IN",
+			"duration": 600,
+			"color": "#000000"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-main"
+		}
+	],
+	"on_tick-wrap_into-east": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "WALK_ENTITY_TO_GEOMETRY",
+			"geometry": "exit_to-east",
+			"entity": "%PLAYER%",
+			"duration": 3500
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_tick-wrap_from-east": [
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"geometry": "enter_from-west",
@@ -906,7 +972,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "on_tick-main"
+			"script": "null_script"
 		}
 	],
 	"enter_from-bobsclub": [
