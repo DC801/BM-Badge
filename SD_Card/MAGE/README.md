@@ -16,7 +16,7 @@ An explanation of how to create content for the "Mage Game Engine" (MGE) and oth
 3. [Maps](#maps)
 	1. [Creating a Map JSON File](#creating-a-map-json-file)
 	2. [Map Layers](#map-layers)
-	3. [Entity Types](#entity-types)
+	3. [Three Entity Types](#three-entity-types)
 	4. [Entity Properties](#entity-properties)
 	5. [Map Properties](#map-properties)
 4. [Dialog](#dialog)
@@ -50,9 +50,19 @@ An explanation of how to create content for the "Mage Game Engine" (MGE) and oth
 	4. [One Entity, Complex Behaviors (Handlers)](#one-entity-complex-behaviors-handlers)
 	5. [Chains of Small Checks](#chains-of-small-checks)
 	6. [Cutscene Management](#cutscene-management)
-	7. [Hints](#hints)
+	7. [Hint Systems](#hint-systems)
 	8. [Grand Finale: Beatrice](#grand-finale-beatrice)
-	
+11. [Actions](#actions)
+	1. [Default Script](#default-script)
+	2. [Game Management Actions](#game-management-actions)
+	3. [Hex Editor Actions](#hex-editor-actions)
+	4. [Logic Checks (Entities)](#logic-checks-entities)
+	5. [Logic Checks (Other)](#logic-checks-other)
+	6. [Entity Choreography (Paths)](#entity-choreography-paths)
+	7. [Entity Choreography (Appearnce)](#entity-choreography-appearance)
+	8. [Camera Control](#camera-control)
+	9. [Controlling Scripts](#controlling-scripts)
+	10. [Controlling Variables](#controlling-variables)	
 
 ---
 
@@ -100,17 +110,25 @@ There'll be a bunch of stuff in the game folders, but relevant to creating new c
 
 `scenario_source_files/` — This is where your raw game data lives.
 
-### Inside `scenario_source_files/` (Overview)
+### Inside `scenario_source_files/`
 
 `dialog/` — This folder contains [dialog JSON files](#dialog). For BMG2020, all dialog files are prefixed with `dialog-.`
 
-`entities/` — This folder is for all [character entity](#character-entity-entity_type) assets, such as entity [sprite sheets](#sprite-sheets), [portraits](#portraitsjson), and the [JSON files that drive them](#creating-a-tileset-json-file) (as created by Tiled). This folder will likely be 50% images and 50% JSON files. For BMG2020, all entity files are prefixed with `entity-`. For entities, the file name should match the `entity_type` name.
+`entities/` — This folder is for all [character entity](#character-entity-entity_type) assets, such as entity [sprite sheets](#sprite-sheets), [portraits](#portraitsjson), and the [JSON files that drive them](#creating-a-tileset-json-file) (as created by Tiled). This folder will likely be 50% images and 50% JSON files.
 
-`maps/` — All [map JSON files](#creating-a-map-json-file) (made with Tiled) go in here. Make sure all Tiled files are in the correct place before filling them with stuff or it'll all break when you move them. For BMG2020, all map files are prefixed with `map-`.
+>For BMG2020, all entity files are prefixed with `entity-`. For entities, the file name should match the `entity_type` name.
 
-`scripts/` — All [script JSON files](#scripts) go in here. For BMG2020, all script files are prefixed with `script-`.
+`maps/` — All [map JSON files](#creating-a-map-json-file) (made with Tiled) go in here. Make sure all Tiled files are in the correct place before filling them with stuff or it'll all break when you move them.
 
-`tilesets/` — All [tileset images](#tilesets) and [tileset JSON files](#creating-a-tileset-json-file) (made with Tiled) go in here. Again, make sure these Tiled JSON files are in the correct place before using them on maps or everything will break when you move them. For BMG2020, all tileset files (regardless of their purpose) are prefixed with `tileset-`.
+>For BMG2020, all map files are prefixed with `map-`.
+
+`scripts/` — All [script JSON files](#scripts) go in here.
+
+> For BMG2020, all script files are prefixed with `script-`.
+
+`tilesets/` — All [tileset images](#tilesets) and [tileset JSON files](#creating-a-tileset-json-file) (made with Tiled) go in here. Again, make sure these Tiled JSON files are in the correct place before using them on maps or everything will break when you move them.
+
+>For BMG2020, all tileset files (regardless of their purpose) are prefixed with `tileset-`.
 
 [`portraits.json`](#portraitsjson) — Identifies portrait JSON files within `entities/` and assigns them a name (which should match their associated `entity_type` name, if any), plus a few other properties that the MGE needs. If you add a new portrait JSON file to the `entities/` folder, be sure to include it in `portraits.json` or the encoder will ignore it.
 
@@ -124,7 +142,9 @@ There'll be a bunch of stuff in the game folders, but relevant to creating new c
 >- `scripts/script-secretmines.json`
 >- `dialog/dialog-secretmines.json`
 >
->However, note that splitting scripts and dialog into multiple files is a matter of convenience, not a requirement — there's literally nothing stopping you from putting 100% of the game's scripts inside a single script file within `scripts/`. And once in a while you might very well want to have general-use scripts in a common space, or you'll find yourself referring to a script in another script file. But for BMG2020, we prefer each isolated block of content (usually a map) to have its own separate files, as demonstrated above.
+>However, note that splitting scripts and dialog into multiple files is a matter of convenience, not a requirement — there's literally nothing stopping you from putting 100% of the game's scripts inside a single script file within `scripts/`. And once in a while you might very well want to have general-use scripts in a common space, or you'll find yourself referring to a script in another script file.
+>
+>But for BMG2020, we prefer each isolated block of content (usually a map) to have its own separate files, as demonstrated above.
 
 ## General Process
 
@@ -208,7 +228,9 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 ![example spritesheet](docs_images/spritesheet-example.png)
 
-Likewise, **sprite sheets** are made up of tiles of uniform size on a grid, and they contain every iteration of a sprite needed for all of its animations. Due to the way Tiled defines animations, the order of the sprite tiles doesn't matter, but for BMG2020 we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
+Likewise, **sprite sheets** are made up of tiles of uniform size on a grid, and they contain every iteration of a sprite needed for all of its animations.
+
+>Due to the way Tiled defines animations, the order of the sprite tiles doesn't matter, but for BMG2020 we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
 
 The tiles on the sprite sheet need not be square, though it is preferred.
 
@@ -222,11 +244,11 @@ For tilesets of all types:
 
 **Alpha (transparency) is 1-bit**; you cannot have partially transparent pixels. Semi-transparent pixels are assigned either to be fully opaque or fully transparent at a 50% threshold.
 
-To encode alpha, the MGE repurposes the least-significant green bit in the 5-6-5 color encoding scheme. Because of how the encoder handles this, the color 0x0200 (hex #004000, or rgb 0,64,0) will actually manifest as transparent within the MGE. Avoid using this color.
+To encode alpha, the MGE repurposes the least-significant green bit in the RGB565 color encoding scheme. Because of how the encoder handles this, the color 0x0200 (hex #004000, or rgb 0,64,0) will actually manifest as transparent within the MGE. Avoid using this color (or any color that becomes 0x0200 when converted to RGB565).
 
 The [MGE encoder](#mge-encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset**. If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble (provided the tiles are the same size). The MGE encoder will let you know if one of your tilesets is over the color limit.
 
-> **Best Practices:** On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine all character entity portraits if the color limit permits. (And naturally, tilesets with differing tile sizes must be separate!)
+> **Best Practice:** On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine all character entity portraits if the color limit permits. (And naturally, tilesets with differing tile sizes must be separate!)
 
 ## Creating a Tileset JSON File
 
@@ -244,15 +266,15 @@ Within Tiled:
 
 > **Alternative method (advanced)**: if you are making pallet variations of the same sprite, and every other aspect (apart from the name and the image) are the same, you might copy the original tileset JSON file and manually change whatever is different between them.
 
-The relationship between entities, animations, and tiles is somewhat complicated and is better described below, suffice it to say that you'll want entity tilesets (sprite sheets) to be set up a certain way and all other tilesets a different way.
+The relationship between entities, animations, and tiles is somewhat complicated and is better described below, suffice it to say that you'll want character entity tilesets (sprite sheets) to be set up a certain way and all other tilesets a different way.
 
 The relationship between entities, animations, and tiles is somewhat complicated and is better described below, suffice it to say that you'll want entity tilesets (sprite sheets) to be set up a certain way and all other tilesets a different way.
 
 ### Entity JSON Files
 
-For character entities, all tiles within an entity tileset must have the "type" property set to its `entity_type` name. You can find the "type" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
+For character entities (aka `entity_type`s), all tiles within an entity tileset must have the "type" property set to its `entity_type` name. You can find the "type" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
 
-> You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` at all. See the [Entity Types](#entity-types) section for more information.
+> You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all. See the [Three Entity Types](#three-entity-types) section for more information.
 
 ### Defining Animations
 
@@ -301,7 +323,7 @@ This animation plays for the player character when the player presses the "actio
 
 Action animations are not expected to loop. Instead they are expected to interrupt the idle/walk animation, play once, and then the idle/walk animation will resume.
 
-For BMG2020, actions should not be longer than a couple seconds.
+> For BMG2020, actions should not be longer than a couple seconds.
 
 #### Additional Animations
 
@@ -311,15 +333,13 @@ Keep in mind that these animations can only be deliberately triggered by scripts
 
 #### Animation Transitions and Vamping
 
-An action animation cannot be started and held (or vamped) for an indeterminate length of time, so if you want an action animation to behave this way, you'll need to split the animation into three pieces — the start transition, the "vamp," and the end transition — and trigger each in turn with a script:
+An action animation cannot be started and held (or [vamped](https://en.wikipedia.org/wiki/Ostinato#Musical_theater)) for an indeterminate length of time, so if you want an action animation to behave this way, you'll need to split the animation into three pieces — the start transition, the "vamp," and the end transition — and trigger each in turn with a script:
 
 - `PLAY_ENTITY_ANIMATION` with a `play_count` of `1` for the start transition
-- `SET_ENTITY_CURRENT_ANIMATION` for the "vamp"
+- `SET_ENTITY_CURRENT_ANIMATION` for the "vamp," or the portion you want to repeat for an indeterminate amount of time
 - `PLAY_ENTITY_ANIMATION` with a `play_count` of `1` for the end transition
 
 See Strong Bad in the Bob-Only Club cutscene (in BMG2020) for an example of this approach.
-
-[Is there a better term than "vamp" for this? "sustain"?]
 
 #### MGE Animation Timing
 
@@ -336,7 +356,7 @@ Animation frames will play for a minimum of one game frame regardless of duratio
 
 #### Assigning Animations
 
-Animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [MGE encoder](#mge-encoder) can help you assign animations to character entities, or you can do it [by hand](#animations).
+For character entities, animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [MGE encoder](#mge-encoder) can help you assign animations to character entities, or you can do it [by hand](#animations).
 
 ### Map Tile Collisions
 
@@ -346,7 +366,7 @@ Map tilesets should have collision polygons set for each relevant tile. This is 
 
 For the MGE, each tile can have only one vector shape, and each vertex must fall within the bounds of the tile itself. (Vertices falling outside the tile will cause erratic collision behavior.)
 
-It's helpful to turn on pixel snapping before drawing collision polygons. ("View > Snapping > Snap to Pixels")
+It's helpful to turn on pixel snapping before drawing collision polygons ("View > Snapping > Snap to Pixels").
 
 #### Collision Best Practices
 
@@ -358,7 +378,7 @@ When defining your collision polygons and designing your maps, it's good to test
 
 You will need to make tileset JSON files in Tiled for dialog box skin(s) and entity talk portraits, too.
 
-Other than making sure the tiles are the right size, these files require no preparation.
+Other than making sure the tiles are the right size, these files require no additional preparation.
 
 Put dialogSkin files in `tilesets/` and entity portraits in `entities/`.
 
@@ -400,7 +420,7 @@ Placing tiles is fairly intuitive, but as a quick note, you can press **X** to f
 In the MGE, the topmost tile layer is drawn on top of entities. All others are drawn underneath. (Entities themselves are Y-indexed when drawn.)
 
 #### Tiled vs MGE
-Note that animations placed on a tile layer will not play back within the MGE, regardless of how it may appear within Tiled.
+Note that animations placed on a tile layer will not play back within the MGE, regardless of how things may appear within Tiled.
 
 Similarly, placing a tile of the incorrect size on a map will result in divergent behavior between Tiled and the MGE, so make sure all tiles placed are the same size as the tile size for the map.
 
@@ -414,7 +434,7 @@ In addition, because each tile that is drawn increases the draw time, it's best 
 
 Vector polygons and points are placed on object layers, but tiles can be placed this way, too, if you use the Insert Tile button on the vector section of the toolbar (shortcut **T**) — and this is how entities are added to a map.
 
-> **Best Practices**: Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
+> **Best Practice**: Particularly on maps with a lot going on, it's best to place objects on separate layers so you can easily hide or reveal specific objects, e.g.:
 >	- the entities themselves
 >	- door and exit paths
 >	- cutscene paths and camera points
@@ -425,7 +445,11 @@ Vector polygons and points are placed on object layers, but tiles can be placed 
 
 These can be used as paths or destinations for entities or the camera. Additionally, the MGE can detect whether entities are within polygons, so polygons are also useful for script triggers such as doorways. Be sure to give these vector objects a name in the "Name" properties view so that scripts can identify them.
 
-Within the MGE, movement of an entity along a geometry object (or teleportation to a geometry object) will begin on the origin of a polyline (the first vertex placed), on the upper-left corner of a rectangle, or the rightmost point (0º) of a circle.
+When a MGE entity is teleported to a vector object (or begins to walk along a vector object path), it is moved to the object's **origin**:
+
+- **polyline**: first vertex placed
+- **rectancle**: upper-left corner
+- **circle**: rightmost point (0º)
 
 #### Entities (Tile Objects)
 
@@ -435,7 +459,9 @@ Different entity types will require slightly different [properties](#entity-prop
 
 Entities are Y-indexed in the MGE, meaning they are rendered in front of or behind other entities according to their Y position. For entities being used as environment props, this can result in odd behavior (e.g. the player appearing underneath a bundle of cable if they walk too far behind it).
 
-## Entity Types
+Each map can have a maximum of 64 entities.
+
+## Three Entity Types
 
 In the MGE, there are three types of entities. Each have a `PrimaryIdType`:
 
@@ -443,37 +469,68 @@ In the MGE, there are three types of entities. Each have a `PrimaryIdType`:
 	1 = animation
 	2 = entity_type
 
-Any single tile object placed on a map will be one of these types, but all will have all the same [entity properties](#entity-properties) available to them (visible as a pair of rows on the hex editor in BMG2020 — 32 bytes in all). They will therefore all have an [`on_interact`](#on_interact-scripts) and [`on_tick`](#on_tick-scripts) [script slot](#script-slots), various render flags, etc.
+Any single tile object placed on a map will be one of these types, which is automatically determined by the type of tile you are placing. But as entities, they will all have all the same [entity properties](#entity-properties) available to them (visible as a pair of rows on the hex editor in BMG2020 — 32 bytes in all). They will all therefore have an [`on_interact`](#on_interact-scripts) and [`on_tick`](#on_tick-scripts) [script slot](#script-slots), various render flags, etc.
 
 Entities need not have a name, nor a unique name — scripts targeting an entity by name will simply use the first the [MGE encoder](#mge-encoder) found with that name.
 
-One key difference between the three entity types: the first two entity types will rotate their tile if the entity changes which direction it is "facing," whereas the last entity type will instead choose the correct animation among those it was [assigned](#entity-manager) (north, south, east, or west). Therefore entities that are meant to have standard character animations or that need to retain their appearance when moving around the map must be the third type (hence the rake being the third type in BMG2020).
+One key difference between the three entity types: the first two entity types will rotate their tile if the entity changes which direction it is "facing," whereas the last entity type will instead choose the correct animation among those it was [assigned](#entity-manager) (north, south, east, or west). Therefore entities that are meant to have standard character animations or that need to retain their appearance when moving around the map must be the third type.
 
-In addition, there is currently no way to (precisely) control animations with scripts unless the entity is of the third type (which is why the modem and bookcase are of the third type in BMG2020).
+> In BMG2020, the rake had to be a character entity because it moves in several different directions: [record video example]
 
-This is all a bit confusing in part because the word "entity" can refer to all three types, or only the last one… and while entity JSON files are most required for the last, they might be needed for the second, or also the first…. (Sorry!)
+In addition, there is currently no way to (precisely) control animations with scripts unless the entity is of the third type.
+
+> E.g. the modem and bookcase in BMG2020.
 
 ### Tile Entity (`tileset`)
 
-For these, the `PrimaryId` identifies which tileset the "entity" is using, and the `SecondaryId` identifies which tile on the tileset is being displayed.
+If you place a static (unanimated) tile from a tileset onto an object layer, it will become a **tile entity**.
 
-These are a simple way of making props interactable (as opposed to placing a prop tile in a tile layer on the map and then having an invisible "null entity" on an object layer to store the [`on_interact`](#on_interact-scripts) script).
+- **`PrimaryIdType`**: `0` (`tileset`)
+- **`PrimaryId`**: the `id` of the tileset the entity is using
+- **`SecondaryId`**: the `id` of the tile on the tileset (the Nth tile, counting left to right and top to down, 0-indexed)
+
+These are a simple way of making props interactable.
+
+>#### Null Entities
+>
+>If you don't want an interactable prop to be be Y-indexed with other entities when drawn, you could instead create a **null entity** for the interactable aspects:
+>- Make the prop part of the world map (on a [tile layer](#tile-layers) in Tiled), where it will be remain below or above entities at all times.
+>- Place a "null entity," a completely blank tile, which you can use for all desired entity properties, e.g. an [`on_interact`](#on_interact-scripts) script.
+>
+> **Disadvantages**: The null entity can be hacked to another tile (presumably one with pixel data), in which case a new object will seemingly appear on top of the prop.
+>
+>Such props can also never be moved, as they are permanently baked into the environment — but this is not necessarily a disadvantage.
+
+[`on_interact`](#on_interact-scripts) script).
 
 ### Animation Entity (`animation`)
 
-For these, the `PrimaryId` identifies which animation in the game the animation entity is playing. (`SecondaryId` does nothing.) All animations are basically shoved into one big list by the [MGE encoder](#mge-encoder), so the animation order, while deterministic, is a bit chaotic. Therefore you will probably never want to use the `PrimaryId` to choose a specific animation — instead you will place a specific animation tile from a tileset onto a map with Tiled.
+If you place a animated tile from a tileset onto an object layer, it will become an **animation entity**.
 
-You might refer to these as "animation entities," because they're meant to perform a single animation and nothing more. And while their entity status means they can have all the normal entity properties, they're generally going to be kept to background elements (e.g. a torch flickering on a wall) or otherwise be relatively inert, though they are useful for animated props (like a birthday cake with moving candles).
+>NOTE: If the tile's "Type" property is something defined within [`entity_types.json`](#entity_typesjson), it will instead become a [character entity](#character-entity-entity_type).
+
+- **`PrimaryIdType`**: `1` (`animation`)
+- **`PrimaryId`**: the `id` of the animation the entity is playing
+- **`SecondaryId`**: does nothing
+
+When the game is [encoded](#mge-encoder), all animations are basically shoved together into a single list, so the `id` for `PrimaryId` is fairly subject to change at the whim of the encoder. Therefore, you will probably never want to use the `PrimaryId` to choose a specific animation — instead you will place the desired animation tile from a tileset onto a map with Tiled.
+
+Animation entities are most useful for animated props, e.g. a water fountain, a torch flickering on a wall, a birthday cake with a moving candle flame. Such entities need not use any of the [entity properties](#entity-properties) available to them.
+
+> While NPCs will likely need to be character entities, simpler ones might work perfectly well as animation entities, e.g. WOPR in the BMG2020.
 
 ### Character Entity (`entity_type`)
 
-For these, the `PrimaryId` identifies which `entity_type` the character entity appears to be. (`SecondaryId` does nothing.)
+If you place a tile from a tileset onto an object layer, and the "Type" property of the tile has been defined in [`entity_types.json`](#entity_typesjson), it will become an **character entity**.
 
-Note that `entity_type` is different from "entity type." Also, elsewhere, when we say `entity_type`, we actually mean the `entity_type`'s `PrimaryId`, which is what scripts are referring to when they are targeting an `entity_type`. (Sorry again!)
 
-What's special about these is that they can have a number of animations assigned to them and can switch animations automatically depending on context, as well as having other attributes, like a permanently assigned portrait image, etc. NPCs will therefore likely be this type.
+- **`PrimaryIdType`**: `2` (`entity_type`)
+- **`PrimaryId`**: the `id` of the entity within [`entity_types.json`](#entity_typesjson)
+- **`SecondaryId`**: does nothing
 
-You might unambiguously call these "character entities," although you could technically use "animation entities" once in a while for simpler character needs, if you wanted (e.g. WOPR in BMG2020).
+In scripts, you need not manipulate `PrimaryId` to change a character entity into another, though there are certainly scripts that are capable of this. Instead, you can use scripts with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](#entity_typesjson). (In the entity's tileset, this is what the property "Type" is set to.)
+
+What's special about character entities is that they can have a number of animations [assigned](#entity-manager) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a permanently assigned portrait image. **NPCs will therefore likely be this type.**
 
 ## Entity Properties
 
@@ -484,11 +541,14 @@ These are default properties provided by Tiled. They're found in the top half of
 
 **Name** — In the MGE, names are limited to 12 ASCII characters.
 
-**Type** — For character entities, this is the `entity_type`. This should be automatically assigned when you place a character entity on the map. (The entity tileset must first have their `entity_type` assigned to the type property of their tiles.)
+**Type** — For character entities, this is the `entity_type`, or the name of the character entity as defined by [`entity_types.json`](#entity_typesjson). This should be automatically assigned by Tiled when you place a character entity on the map. (All tiles on the entity tileset must first have their Type property set to the correct `entity_type` name.)
 
 **X** and **Y** position — You don't need to change these directly if you don't want to, since you can simply place or move entities on the map within Tiled itself.
 
-**Direction** — This is the cardinal direction the character entity is facing. This is handled by placing the desired animation tile (and therefore the correct direction) of the target `entity_type` on the map. Left and right can be flipped by taking a side-facing animation tile and checking the **Flipping > Horizontal** checkbox in the Properties view. Note that horizontally flipping a front or back-facing character entity will make it appear horizontally flipped within Tiled, but in the MGE this will turn the entity around 180º. Do not use the vertical flip checkbox for MGE maps. [what happens? Try it!]
+**Direction** — This is the cardinal direction the character entity is facing. This is handled by placing the desired animation tile (and therefore the correct direction) of the target character entity on the map. Left and right can be flipped by taking a side-facing animation tile and checking the **Flipping > Horizontal** checkbox in the Properties view.
+>Note that horizontally flipping a front or back-facing character entity will make it appear horizontally flipped within Tiled, but in the MGE this will turn the entity around 180º.
+>
+>Do not use the vertical flip checkbox for MGE maps. [what happens? Try it!]
 
 ### Custom Entity Properties
 
@@ -502,7 +562,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`PrimaryIdType`**, **`PrimaryId`**, and **`SecondaryId`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map.
 
-**`current_animation` (int)** — This lets you set the specific animation for character entities. (0 is the idle, and will play by default.)
+**`current_animation` (int)** — This lets you set the specific animation for character entities. (`0` is the idle, and will play by default.)
 
 **`current_frame` (int)** — This lets you start an entity's animation at an arbitrary frame. This is useful for staggering entities with identical animation timings.
 
@@ -510,9 +570,9 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](#debug-mode) is off. (While this can be toggled in the hex editor within BMG2020, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
 
-**`hackable_state_a` (int) and `hackable_state_b` (int)** — These can be set arbitrarily as ints, but currently the MGE uses these bytes to store the entity's path. (See below.)
+**`hackable_state_a` (int)** and **`hackable_state_b` (int)** — These can be set arbitrarily as ints, but currently the MGE uses these bytes to store the entity's path. (See below.)
 
-**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path (`%ENTITY_PATH%`).
+**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target geometry to `%ENTITY_PATH%` for such scripts.).
 
 **`hackable_state_c` (int)** and **`hackable_state_d` (int)** — These are not used for anything in the MGE yet, so might be considered "special use space."
 
@@ -534,9 +594,23 @@ To see the map's properties, go to "Map > Map Properties…."
 
 > Any entity's [`on_tick`](#on_tick-scripts) script is capable of watching for the player's movement into doorways, but for BMG2020 at least, this task is usually given to the map's [`on_tick`](#on_tick-scripts) script.
 
+> Because the player cannot directly alter which script is run in a map's [`on_tick`](#on_tick-scripts) slot like they can an entity's [`on_tick`](#on_tick-scripts) slot, actions run in this slot are fairly well protected.
+
 ### Map Size
 
 The map size limit for the MGE is quite large. [65k tiles wide?]
+
+#### Coordinate Considerations
+
+If designing a puzzle involving X and Y coordinates, you should keep the global map coordinate space in mind when placing entities, triggers, etc. Each coordinate spans two bytes, so map distances greater than 256 pixels (horizontal or vertical) are guaranteed to involve the more significant byte of the pair, which can be confusing to players not familiar with little endian byte order.
+
+Distances smaller than 256 can involve this byte, too, depending on where things fall. If you find your puzzle has unintentionally crossed a 256px boundary, you can adjust the map size (and reposition all existing elements relative to the new bounds) to move the puzzle to coordinates more in scope of the target difficulty.
+
+>To design and manage puzzles meant only to involve the least significant byte, you could count map tiles for each puzzle element (keeping in mind your map's tile size), but it might be easier to draw a 256 x 256 vector rectancle (or a series of them) where the puzzle is to take place.
+>
+> [make example image from sheep pen]
+>
+>Lock the layer containing this vector guide and/or place it below all other object layers to keep it from preventing you from selecting other elements in Tiled.
 
 ---
 
@@ -599,49 +673,120 @@ The property `messages` is an array containing the strings for the messages them
 Remember to wrap messages in double quotes and to separate them with commas.
 
 ## Dialog Properties
-**`alignment`** — This controls the position of the dialog box and its portrait/label boxes. Valid choices:
+
+### `alignment`
+
+`alignment` controls the position of the dialog box and its portrait/label boxes. Valid choices:
 
 - `BOTTOM_LEFT`
 - `BOTTOM_RIGHT`
 - `TOP_LEFT`
 - `TOP_RIGHT`
 
-> For BMG2020, dialog alignment should be `BOTTOM_RIGHT` for the player character, and `BOTTOM_LEFT` for everything else. `TOP_LEFT` and `TOP_RIGHT` are only used when an entity would most likely be obscured by the dialog box itself.
+> For BMG2020, dialog alignment should be `BOTTOM_RIGHT` for the player character, and `BOTTOM_LEFT` for everything else. `TOP_LEFT` and `TOP_RIGHT` are only used when an entity is positioned in such a way that it would most likely be obscured by the dialog box itself.
 
-**`entity` (optional)** — Refers to a specific entity by its in-map name, from which the MGE determines the string to put into the dialog label and the portrait to put into the dialog portrait box (which is done via the entity's `entity_type`). You can use `%SELF%` to instead refer to the entity that's running the given script.
+### `entity`
 
->	While strictly optional, you will almost certainly want to include this property.
+`entity` refers to a specific entity by its given name. This is technically optional, but you will almost certainly want to include it.
 
-**`name` (optional)** — The string the dialog box displays for its label. This overrides any names inherited from `entity`. You can give an arbitrary string up to 12 characters long (in ASCII), or use `%[Entity Name]%` to put the [relative entity name](#relative-entity-names) for an arbitrary entity (which will be needed for conversations involving multiple entities).
+This property can be any of the following:
+1. [`%PLAYER%`](#relative-entity-references), which refers to the player entity
+2. [`%SELF%`](#relative-entity-references), which refers to the entity running the script
+3. the **given name** of an entity
 
-**`portrait` (optional)** — Overrides the portrait inherited from `entity`, if any. If the dialog cannot find a portrait to use (either via this property or the entity property) the dialog will display no portrait box.
+If the referenced entity is a [character entity](#character-entity-entity_type), the [MGE encoder](#mge-encoder) will use [`entity_types.json`](#entity_typesjson) to automatically determine the portrait image and the name for the dialog label.
 
-**`border_tileset` (optional)** — The name of the dialog box tileset you want the dialog box to show, if not the default. (Default is the first border tileset listed in [`scenario.json`](#scenariojson).)
+You cannot use [relative entity names](#relative-entity-names) for this property. (If you do, the [encoder](#mge-encoder) will give you a message in the vein of "No entity named `%Helga%` found on map `default`!")
 
-**`emote` (optional)** — Allows you to select which emote from the entity's entry within [`portraits.JSON`](#portraitsjson) to display. The default emote (`0`) will display if not specified.
 
-**`messages`** — This is an array of strings, and each item in the array will be shown on subsequent dialog boxes. More info below.
+### `name`
 
-### Messages
+Optional. This is the string the dialog box displays for its label, and if included, it will override any names inherited from `entity` above, if any.
 
-Each dialog message is limited to five rows of 42 ASCII characters and line breaks must be hard coded with `\n`, but there is currently no encoder enforcement for this, so excess text will simply wrap awkwardly off the screen. Someday, the [MGE encoder](#mge-encoder) might apply line breaks automatically (**FUTURE**).
+This property can be any of the following:
+1. an abritraty ASCII string up to 12 characters long
+2. [`%PLAYER%`](#relative-entity-references), which refers to the player entity
+3. [`%SELF%`](#relative-entity-references), which refers to the entity running the script
+4. the given name of an entity
+5. the [relative name](#relative-entity-names) of an entity, which is the entity's given name enclosed in percent signs: `%[Entity Name]%`
 
-Smart quotes are not a part of ASCII, nor are ellipses (…), so when copying text written in word processors, please take care to replace any such characters with ASCII equivalents. (Shall the encoder automatically do this in the **FUTURE**?) Similarly, to place a double quote within a message, you must type a backslash first: `\"`.
+[4] and [5] will appear to behave the same in most cases, but [5] will allow inherited dialog labels to reflect the entity's name as it currently exists in RAM and not the name it was originally asigned.
 
-### Relative Entity Names
+The dialog label itself is not optional, so failing to provide either `entity` or `name` will result in errant behavior.
 
-To insert relative entity names you can use `%[Entity Name]%` (and likewise `%SELF%` and `%PLAYER%`) into dialog messages or the dialog `name` property.
+### `portrait`
 
-When calculating the position of line breaks in dialog messages, such names should be considered to be 12 characters long. Similarly, you can print the value of variables with `$[Variable Name]$`, which should be considered 5 characters long for the sake of line breaks.
+Optional. This is the name of the portrait defined in [`portraits.JSON`](#portraitsjson) you want to use for the dialog, and will override any portraits inherited from `entity` above.
 
-#### Example Use
+If the dialog cannot find a portrait to use (either via this property or the `entity` property above) the dialog will display no portrait box.
 
-Let's say we have three entities:
+### `border_tileset`
+
+Optional. This is name of the dialog box tileset you want the dialog box to use, if not the default. (Default is the first border tileset listed in [`scenario.json`](#scenariojson).)
+
+### `emote`
+
+Optional. Allows you to select a specific emote within the entity's entry in [`portraits.JSON`](#portraitsjson). The default emote (`0`) will display if not specified. (While emotes can be given names when defined, you must use intigers to control them here.)
+
+### `messages`
+
+Each dialog message is limited to five rows of 42 ASCII characters and line breaks must be hard coded with `\n`, but there is currently no [encoder](#mge-encoder) enforcement for this, so excess text will simply wrap awkwardly off the screen. Someday, the encoder might apply line breaks automatically (**FUTURE**).
+
+> Do not use a space after `\n` unless you want the next line to begin with a space. Therefore, when manually wrapping text, you will likely use `\n` to replace a space character entirely, which can be difficult to read, e.g.:
+>
+>`"Hey, there! This line is really long and\nwill need to be hard wrapped."`
+>
+>>Hey, there! This line is really long and<br>
+>>will need to be hard wrapped.
+
+Smart quotes are not a part of ASCII, nor are ellipses (…), so when copying text written in word processors, please take care to replace any such characters with ASCII equivalents. (Shall the encoder automatically do this in the **FUTURE**?)
+
+Similarly, to place a double quote within a message, you must type a backslash first: `\"`
+
+>Example:
+>
+>`"That's not what he meant by \"safe,\" is it?"`
+>
+>>That's not what he meant by "safe," is it?
+
+When using backslash with a special character (like the double quotes above), consider it to be 1 character and not 2 when calculating text wrapping. E.g., the dialog message above is 44 lines in the dialog JSON file, but only 42 characters when displayed in the dialog box, so the message will not need to be hard wrapped.
+
+Many text editors (such as Visual Studio Code) can tell you how many characters you currently have selected, which makes it easy to determine where line breaks should be inserted.
+
+### Relative Entity Names and References
+
+#### Relative Entity Names
+
+In the MGE, entities' names can be changed, either via a script or via hacking by the player. You can use an entity's **relative name** (i.e. the current value of the entity's name property in RAM) as part of a dialog message or dialog label by enclosing it within percent signs: `%[Entity Name]%`
+
+>Note: when referring to an entity as the argument of an action, you will need to use the entity's **given name**, or the name assigned to it on the map by Tiled. Only use percent signs for an entity name for dialog labels and dialog messages.
+
+When calculating the position of line breaks in dialog messages, relative names should be considered to be 12 characters long.
+
+#### Relative Entity References
+
+- `%SELF%` — the entity running the script
+- `%PLAYER%` — the player entity
+
+Unlike relative entity names, you can use these two **relative entity references** everywhere, including the arguments of actions.
+
+#### Variables in Messages
+
+ Similarly to relative entity names, you can insert the value of [intiger variables](#variables-integers) into dialog messages and dialog labels [verify the latter] by enclosing the name of the variable in dollar signs: `$[Variable Name]$`
+ 
+ Such insertions should be considered 5 characters long for the sake of calculating line breaks in dialog messages.
+
+#### Example Relative References
+
+Let's say we have two entities:
 1. Bender
 2. Strong Bad
-3. Helga
 
-And an example script:
+Plus the [`%PLAYER%`](#relative-entity-references) entity:
+
+3. Bob
+
+And the script:
 
 ```json
 "dialog-introduction": [
@@ -649,33 +794,92 @@ And an example script:
 		"alignment": "BOTTOM_LEFT",
 		"entity": "%SELF%",
 		"messages": [
-			"Idiot! My name is %SELF%!",
-			"Wait, was it Helga or %Helga%?"
+			"So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
+			"Got it memorized?"
+		]
+	}
+]
+```
+If the entity Bender ran the script above, you would see the following dialog boxes:
+
+> **Bender**:<br>
+> So you're Bob, huh?<br>
+> Well, my name is Bender!<br>
+
+> **Bender**:<br>
+> Got it memorized?
+
+Because Bender was the entity running the script, the MGE interpreted [`%SELF%`](#relative-entity-references) to be `Bender`.
+
+If the same script were run by Strong Bad instead, the [`%SELF%`](#relative-entity-references) reference would be `Strong Bad` instead:
+
+> **Strong Bad**:<br>
+> So you're Bob, huh?<br>
+> Well, my name is Strong Bad!<br>
+
+> **Strong Bad**:<br>
+> Got it memorized?
+
+#### Best Practice: Consistent References
+
+All [entity references](#relative-entity-names-and-references) should be consistent within a dialog, whether they are relative or absolute references. If there are multiple dialogs inside the same script, they should be consistent with each other, as well.
+
+If we change `entity` to `Bender` instead of [`%SELF%`](#relative-entity-references), but leave the [`%SELF%`](#relative-entity-references) reference in the dialog `messages` alone, the conversation would appear correct if run by Bender, but no one else.
+
+```json
+"dialog-introduction": [
+	{
+		"alignment": "BOTTOM_LEFT",
+		"entity": "Bender",
+		"messages": [
+			"So you're %PLAYER%, huh?\nWell, My name is %SELF%!",
+			"Got it memorized?"
 		]
 	}
 ]
 ```
 
-If the entity Strong Bad ran the script above, you would see:
+If Strong Bad runs the above dialog:
 
->	**Strong Bad**: Idiot! My name is Strong Bad!<br>
->	**Strong Bad**: Wait, was it Helga or Helga?
+> **Bender**:<br>
+> So you're Bob, huh?<br>
+> Well, my name is Strong Bad!<br>
 
-Because Strong Bad was the entity running the script, the game dialog system interpreted `%SELF%` to be Strong Bad.
+> **Bender**:<br>
+> Got it memorized?<br>
 
-If the same script were run by Bender, the `%SELF%` reference would be Bender instead:
+**NOTE:** the `entity` property is already a relative reference, whereas `name` is not. So if Bender's in-game name were changed by the player or a script — let's change it to Flexo for the sake of this example — then the dialog would still appear consistent (as long as Bender was the one running the script):
 
->	**Bender**: Idiot! My name is Bender!<br>
->	**Bender**: Wait, was it Helga or Helga?
+> **Flexo**:<br>
+> So you're Bob, huh?<br>
+> Well, my name is Flexo!<br>
 
-The fun begins when we hack one of the entity names. Let's hack Helga's name to Gelga, then make Bender run the script again:
+> **Flexo**:<br>
+> Got it memorized?<br>
 
->	**Bender**: Idiot! My name is Bender!<br>
->	**Bender**: Wait, was it Helga or Gelga?
+However, if you were using `name` instead of `entity`, then you would begin to have issues even when the correct entity is running the script:
 
-Putting the entity name inside percent signs makes the dialog message use the entity's name as it currently exists in RAM, or it's **relative name**. Otherwise, the entity name is treated like the rest of the message content.
+```json
+"dialog-introduction": [
+	{
+		"alignment": "BOTTOM_LEFT",
+		"name": "Bender",
+		"messages": [
+			"So you're %PLAYER%, huh?\nWell, My name is %Bender%!",
+			"Got it memorized?"
+		]
+	}
+]
+```
 
-You cannot use percent signs when using an entity name as the value of an `entity` property or `portrait` property, though—only when the name is being displayed as a string on screen. (You would get an error in the vein of "No entity named `%Helga%` found on map `default`!") You can use `%SELF%` or `%PLAYER%` just about anywhere, though.
+> **Bender**:<br>
+> So you're Bob, huh?<br>
+> Well, my name is Flexo!<br>
+
+> **Bender**:<br>
+> Got it memorized?<br>
+
+In such a case, you would want to use `%Bender%` for `name` so that your dialog message and dialog label would be consistent.
 
 ## Multiple Choice Dialogs
 
@@ -709,7 +913,7 @@ Since there are five rows within the dialog box, you can have up to four `option
 
 # Scripts
 
-A **script** is an array of actions which will execute one after the other, top to bottom, when the script is run. Script files are JSON alone, and should live within `script/`.
+A **script** is an array of actions which will execute one after the other, top to bottom, when the script is run. Script files are JSON alone, and should live within `scripts/`.
 
 **Actions** each have predefined arguments, and control how the game behaves. Action names are indicated with "SCREAMING_SNAKE_CASE."
 
@@ -717,13 +921,13 @@ A **script** is an array of actions which will execute one after the other, top 
 
 It doesn't strictly matter which JSON file contains which data, as long as the file is of the right type. Scripts therefore must have completely unique names, even if they are inside different script JSON files.
 
-For all actions, `%SELF%` refers to the entity running the script and `%PLAYER%` refers to the player entity, but variable names and entity names *should not* have dollar signs or percent signs when used as arguments.
+For all actions, [`%SELF%`](#relative-entity-references) refers to the entity running the script and [`%PLAYER%`](#relative-entity-references) refers to the player entity, but [variable names](#variables-integers) and entity names *should not* have [dollar signs](variables-in-messages) or [percent signs](#relative-entity-names) when used as arguments.
 
-> **Best Practice**: Whether to use `%SELF%` or whether to specify the exact target entity for an action depends on the purpose of the script. General-purpose scripts should use `%SELF%`, naturally, but for cutscenes involving multiple characters you might want to specify the entity specifically in case the entity running the script changes at some point, which would change all `%SELF%` references.
+> **Best Practice**: Whether to use [`%SELF%`](#relative-entity-references) or whether to specify the exact target entity for an action depends on the purpose of the script. General-purpose scripts should use [`%SELF%`](#relative-entity-references), naturally, but for cutscenes involving multiple characters you might want to specify the entity specifically in case the entity running the script has to change at some point, which would change all [`%SELF%`](#relative-entity-references) references.
 >
-> If a script involves a conversation between an entity and the player and no one else, however, it might be better to use `%SELF%` if only to limit strange choreography in the case of another entity being hacked to run the script instead.
+> If a script involves a conversation between an entity and the player and no one else, however, it might be better to use [`%SELF%`](#relative-entity-references) if only to limit strange choreography in the case of another entity being hacked to run the script instead.
 
-If a property isn't used by an action, it will be entirely ignored by the encoder. This is the only way documentation or notes can be written in script files, since JSON doesn't support comments. Below is an example, where `"summary"` and `"to to"` are being used for the script writer's notes:
+If a property isn't used by an action, it will be entirely ignored by the encoder. This is the only way documentation or notes can be written in script files, since JSON doesn't support comments. Below is an example, where `"summary"` and `"to do"` are being used for the script writer's notes:
 
 ```json
 "show_dialog-example": [
@@ -753,7 +957,7 @@ Entities have one [`on_tick`](#on_tick-scripts) and one [`on_interact`](#on_inte
 
 Importantly, a "slot" can only run one script — if a script jumps to another script (either with [`RUN_SCRIPT`](#run_script) or by branching via some kind of logic check) the current script is *completely abandoned* and the new script is run instead. It is therefore important to check the order in which actions are given, as any action listed after a script change will be ignored.
 
-There is no nested callback structure, no child function returning something to its parent function, or any of that. Nor is it possible to do more than one logic check simultaneously — if you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. (See the section on **Scripting Techniques** further below.)
+There is no nested callback structure, no child function returning something to its parent function, or any of that. Nor is it possible to do more than one logic check simultaneously — if you want to check multiple conditions at once, you must branch to a different script for each aspect of the fail condition and let the remainder of the original script contain the actions for the success condition. (See the section on [Scripting Techniques](#scripting-techniques) further below.)
 
 #### `on_interact` Scripts
 
@@ -771,7 +975,7 @@ To terminate an `on_tick` script, it must [run](#run_script) [`null_script`](#nu
 
 A map's `on_tick` script slot is a logical place for a script that watches for whether the player enters a doorway, but `on_tick` scripts are useful for other kinds of watch scripts, too, such as changing an entity's idle behavior after a condition has been met.
 
-`on_tick` slots are what you should use if you want to be able to interrupt or abort a script at an arbitrary place or time e.g. with a button press, or when the player crosses a vector object collision trigger, etc.
+`on_tick` slots are what you should use if you want to be able to interrupt or abort a script at an arbitrary place or time e.g. with a button press, or when the player crosses a collision trigger, etc.
 
 #### `on_load` Scripts
 
@@ -783,8 +987,6 @@ They are useful for identifying and re-implementing the "permanent" changes the 
 
 There are only a few variables available for scripts to use.
 
-Every property on every entity is available for scripts to read and/or change, and these could be used like traditional variables. In particular, the last two bytes for every entity have no specific use, and might be considered free space. But apart from the player's name, all of these are reset when a new map is loaded, so in practice they might have marginal utility.
-
 Variables don't have to be declared before they can be used; simply using an action that sets or checks one will cause the encoder to include it in the `game.dat`.
 
 >This means typos can be hard to spot — if you set the int `birthdayparty` in a script but check the int `birthday_party` in another, the encoder won't notice anything is wrong, and will simply create and store both variables as if they were separate things.
@@ -793,9 +995,11 @@ Variables don't have to be declared before they can be used; simply using an act
 
 All variables are persistent between map loads, and are all included in the game save.
 
+Every property on every entity is available for scripts to read and/or change, and these could be used like traditional variables. In particular, the last two bytes for every entity have no specific use, and might be considered free space. But apart from the player's name, all of these are reset when a new map is loaded, so in practice they might have marginal utility.
+
 ### `warp_state` (String)
 
-This is a global variable (a string) that is designated for controlling player spawn behavior on a map's [`on_load`](#on_load-scripts) script. When you leave a room (or otherwise trigger a new map to load), the `warp_state` string should be set to something that indicates the exit/entrance point so the next map can teleport the player entity to an appropriate spawn point.
+This is a global variable (a string) that is designated for controlling player spawn behavior on a map's [`on_load`](#on_load-scripts) script. When you leave a room (or otherwise trigger a new map to load), the `warp_state` string should be set to something that indicates the exit/entrance point so the next map can teleport the player entity to an appropriate [spawn point](#polygons-and-points), such as a doorway.
 
 Handling player spawn points is the original purpose for `warp_state`, but there's nothing stopping you from using it for other things, too.
 
@@ -817,7 +1021,7 @@ Common use cases for save flags include tracking whether the player has:
 
 ## Other States
 
-Control of the player entity can be removed or restored with the action `SET_PLAYER_CONTROL`. When player control is removed, the player cannot move, use the hex editor, or engage with entities. This is useful if you want to force the player entity to walk along a specific path for a cutscene etc.
+Control of the player entity can be removed or restored with the action `SET_PLAYER_CONTROL`. When player control is removed, the player cannot move, use the hex editor, or engage with entities. This is useful if you want to force the player entity to walk along a specific path for a cutscene, or want to make sure the player doesn't walk away from a conversation where an NPC pauses speaking for a minute to (for instance) pace back and forth.
 
 Similarly, the hex editor can be enabled/disabled with the action `SET_HEX_EDITOR_CONTROL`, and the copy function for the hex editor can be enabled/disabled with the action `SET_HEX_EDITOR_CONTROL_CLIPBOARD`.
 
@@ -906,7 +1110,7 @@ This JSON file tells the [MGE encoder](#mge-encoder) which files it should be en
 
 `scriptPaths` and `dialogPaths` contain arrays (square brackets). Each array will simply contain a list of all file paths you want the game encoder to see.
 
-`maps` and `dialogSkins` contain object literals (curly braces), which contain name-value pairs. For those object literals, the "name" will be what actions will want to use for their arguments, and the "value" is the file path for the appropriate JSON file.
+`maps` and `dialogSkins` contain object literals (curly braces), which contain name-value pairs. For those object literals, the "name" is the name of the map/dialogSkin for an action to use, and the "value" is the file path for the appropriate JSON file.
 
 A `dialogSkin` called `default` is mandatory.
 
@@ -945,19 +1149,24 @@ This JSON file is a little more complicated. It looks like this:
 }
 ```
 
-The top-level "name" will be the `entity_type` for the intended entity.
+The top-level "string" is the name of the portrait. For most cases, it should be the same as the `entity_type` name for the intended [character entity](#character-entity-entity_type).
 
 `tileset` is the file path for the JSON file associated with the portrait image. The encoder assumes these JSON files will be inside `entities/`.
 
-`tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, but keep in mind that the IDs are 0-indexed. It might be easier to simply select the appropriate tile within Tiled and see what it says the "ID" is.
+`tileid` is how you define which tile in the tileset you want to use. You can simply count the tiles in the tileset left-to-right and top-to-down, beginning from `0`, but it might be easier to simply select the appropriate tile within Tiled and see what it says the "ID" is.
 
-Game portraits are determined to be in their default position when alignment is `BOTTOM_LEFT` (or `TOP_LEFT`), and the game automatically flips them when in the `BOTTOM_RIGHT` (or `TOP_RIGHT`) position. For normal RPG-style contexts, you'll want your entities facing the center of the screen, meaning if the sprites aren't facing the right, you should set `flip_x` to `true`.
+Game portraits are determined to be in their default position when alignment is `BOTTOM_LEFT` (or `TOP_LEFT`), and the game automatically flips them when in the `BOTTOM_RIGHT` (or `TOP_RIGHT`) position. For normal RPG-style contexts, you'll want your entities facing the center of the screen, so if the portraits in your tileset image aren't facing the right, you should set `flip_x` to `true`.
 
-You should at least have a `default` emote, but you can define any others as you like. Emotes can be explicitly used (by their name) in dialog files.
+You should at least have a `default` emote, but you can define any others as you like. Emotes are currently identified by their index / `id`.
+
+The MGE supports animated emotes. [select a tile with an assigned animation?]
 
 ## `entity_types.json`
 
-This JSON file defines each `entity_type` and its tileset file path, and assigns animations to each of the game's entities.
+This JSON file defines each `entity_type` name for each [character entity](#character-entity-entity_type), plus:
+- `tileset`: their tileset JSON file path
+- `portrait`: the name of their portrait image, if not the same as their `entity_type` name (optional)
+- `animations`: their [animation assignments](#entity-manager)
 
 As an example (keeping in mind that the animation arrays have been closed so the overall structure is more clear):
 
@@ -983,8 +1192,6 @@ As an example (keeping in mind that the animation arrays have been closed so the
 	}
 }
 ```
-
-Optionally, you can add an extra property — `portrait` — which will set the dialog portrait image to something arbitrary. (Otherwise, the MGE will look for a portrait with the same name as an `entity_type`.)
 
 ### Animations
 
@@ -1023,6 +1230,8 @@ The order of the object literals in the animation is fixed:
 - South
 - West
 
+Each character entity should at least have an [idle](#idle), [walk](#walking), and [action](#action) animation.
+
 ---
 
 # MGE Encoder
@@ -1032,20 +1241,20 @@ There are two encoders, but both produce exactly the same `game.dat` file. (They
 What gets processed and encoded:
 
 1. Everything in [`scenario.json`](#scenariojson):
-	- scripts
-	- dialogs
-	- maps
+	- [scripts](#scripts)
+	- [dialogs](#dialog)
+	- [maps](#maps)
 	- dialogSkins
 2. Portraits found in [`portraits.json`](#portraitsjson)
 3. Entities found in [`entity_types.json`](#entity_typesjson).
 
-While every script file (dialog file, tileset file, etc.) is available to the encoder, whether a script (or dialog, tileset etc.) gets encoded depends on whether it's being used by the game in some way. I.e. a script that isn't used by any maps, entities, or any included scripts will be ignored.
+While every [script file](#scripts) (and [dialog file](#dialog), [tileset file](#creating-a-tileset-json-file), etc.) is available to the encoder, whether a [script](#scripts) (and [dialog](#dialog), [tileset](#creating-a-tileset-json-file), etc.) gets encoded depends on whether it's being used by the game in some way. I.e. a script that isn't used by any maps, entities, or any included scripts will be ignored.
 
-Entities must be placed on a map to be encoded.
+[Entities](#entity-types) must be [placed on a map](#entities-tile-objects) to be encoded.
 
 ## CLI Encoder
 
-If you have node.js installed, you can run the shell script `regenerate_dat_file.sh` to generate a new `game.dat` file. This shell script automatically moves the `game.dat` to where the desktop build wants it. (CD into the `SD_Card/MAGE/` folder first!)
+If you have node.js installed, you can run the shell script `regenerate_dat_file.sh` to generate a new `game.dat` file. This shell script automatically moves the `game.dat` to where the desktop build can see it. (`cd` into the `SD_Card/MAGE/` folder first!)
 
 This version of the encoder is excellent for very rapid iterations, as no other steps are required (apart from launching the game).
 
@@ -1055,16 +1264,16 @@ Open `SD_Card/MAGE/editor/index.html` with a web browser.
 
 Once the page is open, you can either:
 
-1. Drag your `scenario_source_files` folder into the window.
-2. Click the "browse" button and choose the `scenario_source_files` using your operating system's file browser.
+1. Drag your [`scenario_source_files/`](#inside-scenario_source_files) folder into the window.
+2. Click the "browse" button and choose the [`scenario_source_files/`](#inside-scenario_source_files) using your operating system's file browser.
 
 Confirm that you want to upload the contents of the folder to your browser, and the encoder will do its magic. If successful, click the "Download game.dat" button, and you're done!
 
-The `game.dat` will be sent to your default download location, so to play it on the desktop build, you'll first have to move it to the correct place by hand or run the shell script `replace_dat_file_with_downloaded.sh`. (CD into the `SD_Card/MAGE/` folder first!)
+The `game.dat` will be sent to your default download location, so to play it on the desktop build, you'll first have to move it to the correct place by hand or run the shell script `replace_dat_file_with_downloaded.sh`. (`cd` into the `SD_Card/MAGE/` folder before using the shell script!)
 
 ### Entity Manager
 
-The web encoder has a few entity management tools. To use them, you must first upload your `scenario_source_files` folder, as described above.
+The web encoder has a few entity management tools. To use them, you must first upload your [`scenario_source_files/`](#inside-scenario_source_files) folder, as described above.
 
 NOTE: Changes you make using these tools are not automatically perpetuated to the `game.dat`, nor are they automatically saved to your filesystem. To make your changes permanent:
 
@@ -1074,7 +1283,7 @@ NOTE: Changes you make using these tools are not automatically perpetuated to th
 
 #### New `entity_type`
 
-In the "Entity Type Editor," type the name of the new `entity_type` you wish to create, then click "Create."
+In the "Entity Type Editor," type the name of the new `entity_type` ([character entity](#character-entity-entity_type)) you wish to create, then click "Create."
 
 You will then be given a drop-down list of tilesets that the encoder found. Select the one you want your new entity to use.
 
@@ -1084,7 +1293,7 @@ The animation pane and tileset pane will now appear.
 
 #### Edit Existing `entity_type`
 
-To instead edit an existing entity, use the drop-down list to choose one, and then the animation and tileset panes will appear.
+To instead edit an existing `entity_type` ([character entity](#character-entity-entity_type)), use the drop-down list to choose one, and then the animation and tileset panes will appear.
 
 #### Animation Pane
 
@@ -1108,9 +1317,10 @@ The tileset pane will show every tile in the tileset JSON file, and if any tiles
 
 You can change the tileset at any time by using the drop-down list.
 
-#### Assigning Animations
+#### To Assign Animations
 
 Animations will use the first tile in the tileset by default. To assign tileset tiles to animation tile slots, click on animation tile in the animation pane (on the left), then click a tileset tile in the tileset pane (on the right).
+
 The selected tiles should have a green outline.
 
 ---
@@ -1144,9 +1354,9 @@ Press MEM3 (lowest button on the right side of the screen) to tell the hardware 
 
 [What if it's not plugged in when it boots? Don't have battery; can't check!]
 
-To start the game in bootloader mode, hold down the hex digit 1 button while you power on the hardware. If bootloader mode was successfully triggered, the screen will be white and the LEDs will be lit in a circular pattern.
+To start the game in bootloader mode, hold down the hex digit 1 button while you power on the hardware. If bootloader mode was successfully triggered, the screen will be white and the LEDs will blink in a circular pattern.
 
-If the hardware is plugged in to a computer while it is in bootloader mode, it will appear as a drive called NRF52BOOT. Copy the new game engine UF2 (the filename doesn't matter) onto the drive.
+If the hardware is plugged in to a computer while it is in bootloader mode, it will appear as a drive called `NRF52BOOT`. Copy the new game engine UF2 (the filename doesn't matter) onto the drive.
 
 Once the UF2 is copied, the drive will disconnect and the badge will reboot automatically.
 
@@ -1199,11 +1409,11 @@ Normally, the MGE omits entities with the `is_debug` value of `true` when loadin
 
 Example uses of debug entities:
 
-**Cutscene skippers** — When debugging later segments of the game, it's helpful to be able to interact with a debug entity to trigger a script that bypasses otherwise-mandatory cutscenes. Such debug scripts should carefully mirror their real counterparts in terms of save flags set and the like, or you might find yourself having to debug the debuggers.
+**Cutscene skippers** — When debugging later segments of the game, it's helpful to be able to interact with a debug entity to trigger a script that bypasses otherwise-mandatory cutscenes. Such debug scripts should carefully mirror their real counterparts in terms of [save flags](#save-flags-booleans) set and the like, or you might find yourself having to debug the debuggers.
 
 **Cutscene restorers** — Likewise, it sometimes helps to be able to play a cutscene over again. Or, if most or all cutscenes have been bypassed, it helps to turn on a specific one separately.
 
-**Clean wipe** — When using debug entities to emulate a fresh game state, be sure you have a good list of the save flags and variables (etc.) you have been using.
+**Clean wipe** — When using debug entities to emulate a fresh game state, be sure you have a good list of the [save flags](#save-flags-booleans) and [variables](#variables-integers) (etc.) you have been using.
 
 **Puzzle solvers** — While some puzzles can be simplified to accelerate playtesting (such as naming the main character "Bub" when they will later need to be named "Bob"), it's much faster to make debug entities solve puzzles for you.
 
@@ -1217,7 +1427,7 @@ Example uses of debug entities:
 
 Both versions of the [MGE encoder](#mge-encoder) will tell you when something has gone wrong during the encoding process, and many errors should be self explanatory, e.g. `"No object named X could be found on map Y!"`
 
-The error `Script: X could not be found in scenario.json` does not mean the error is with [`scenario.json`](#scenariojson), only that the encoder couldn't find a script by that name in any of the script JSON files [`scenario.json`](#scenariojson) knows about.
+**NOTE**: The error `Script: X could not be found in scenario.json` does not necessarily mean there is something wrong with [`scenario.json`](#scenariojson), only that the encoder couldn't find a script by that name in any of the script JSON files [`scenario.json`](#scenariojson) knows about.
 
 If you get the error "unexpected token" it means one of your files has invalid JSON, and you'll need to check your JSON files for invalid syntax. (A good text editor should have some kind of color coding to help you spot such errors.)
 
@@ -1227,7 +1437,7 @@ If you get the error "unexpected token" it means one of your files has invalid J
 
 After using the web encoder to produce a `game.dat`, you can use your browser's developer tools to inspect various aspects about how the encoder interpreted your game files.
 
-- List of all save flags — useful for tracking down inconsistently named save flags or typos. [this doesn't actually happen on its own — you have to set a breakpoint in a specific place]
+- List of all [save flags](#save-flags-booleans) — useful for tracking down inconsistently named save flags or typos. [this doesn't actually happen on its own — you have to set a breakpoint in a specific place]
 - Number of colors in each tileset's pallet — if trying to reduce the file size of your `game.dat`, it can help to identify which tilesets have more colors than intended.
 - Other things that were logged when debugging the encoder. [list them]
 
@@ -1235,7 +1445,7 @@ After using the web encoder to produce a `game.dat`, you can use your browser's 
 
 ### Inspecting with Kaitai
 
-Kaitai (ide.kaitai.io) is a tool that can parse and analyze binary data formats.
+Kaitai ([ide.kaitai.io](https://ide.kaitai.io)) is a tool that can parse and analyze binary data formats.
 
 Available inside your `MAGE/` folder is a file called `mage_dat.ksy`. You can drag this in a Kaitai window, along with your `game.dat`, to analyze in great detail the encoded structure of your game.
 
@@ -1245,7 +1455,7 @@ Available inside your `MAGE/` folder is a file called `mage_dat.ksy`. You can dr
 
 # Scripting Techniques
 
-These are some of the techniques we developed when making the BMG2020. The game itself may not follow these patterns perfectly (since they weren't all invented yet) but content creators should at least keep these techniques in mind.
+These are some of the techniques we developed when making the BMG2020. The game itself may not follow these patterns perfectly (since they weren't all invented yet) but game developers might want to at least keep these techniques in mind.
 
 ## `COPY_SCRIPT` Uses
 
@@ -1308,13 +1518,13 @@ This makes the shepherd's dialog script much easier to understand.
 
 Another advantage is that timing or choreography can be tuned in one place instead of every time the sequence occurs.
 
-But even when a small sequence of actions is only used once, abstracting it into a separate script that does what it says it does (e.g. `walk-elders-to-door`) can make choreography much easier to manage, particularly in long cutscenes.
-
 ### Human Readability
 
-One might use [`COPY_SCRIPT`](#copy_script) not to reuse repeated behavior, but to simplify it for human readability.
+Even when a small sequence of actions is only used once, abstracting it into a separate script that does what it says it does (e.g. `walk-elders-to-door`) can still make choreography much easier to manage, particularly in long cutscenes.
 
-The BMG2020 has a script called `face-player`, which turns the entity (`%SELF%`) toward the player entity (`%PLAYER%`). This behavior only requires one action, so in this case using [`COPY_SCRIPT`](#copy_script) won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse when trying to tune cutscenes or other entity scripts.
+>The sequence need not be long for this technique to be effective.
+>
+>The BMG2020 has a script called `face-player`, which turns the entity ([`%SELF%`](#relative-entity-references)) toward the player entity ([`%PLAYER%`](#relative-entity-references)). This behavior only requires one action, so in this case using [`COPY_SCRIPT`](#copy_script) won't reduce the number of actions within the script, but it does change it into a form that's easier for a human being to parse when trying to tune cutscenes or other entity scripts.
 
 ### Daisy Chaining Long Sequences
 
@@ -1498,8 +1708,8 @@ This is most likely required for a map's [`on_load`](#on_load-scripts) script, b
 - Has Bender's ass been restored? If so, restore it again now. (Resume remainder of script either way.)
 - Has the "walk to lodge" cutscene been seen before? If not, play it now. (Script diverts to a dead end.)
 - [more cutscene checks]
-- Is the warp state "enter_from-greenhouse"? If so, branch: run the "enter_from-greenhouse" script, which teleports the player to the greenhouse door and walks the player down a few pixels. (Script diverts to a dead end.)
-- [more warp state checks]
+- Is the [warp state](#warp_state-string) "enter_from-greenhouse"? If so, branch: run the "enter_from-greenhouse" script, which teleports the player to the greenhouse door and walks the player down a few pixels. (Script diverts to a dead end.)
+- [more [warp state](#warp_state-string) checks]
 
 Unfortunately, the only way to do this is with a lot of tiny scripts. (This is one reason you might want to put [`on_load`](#on_load-scripts) in the script name for all scripts like this — so you know what kind of a chain you're looking at.)
 
@@ -1537,7 +1747,7 @@ Multi-segment cutscenes: since you can reset the map at any point, long cutscene
 
 > We actually did this for the TUESDAY cutscene in BMG2020. Otherwise, the player would have had to start the (long) cutscene over from scratch if they reset the map partway through — and since the "deja vu" book was in that room, there was a good chance of that.
 
-## Hints
+## Hint Systems
 
 For the BMG2020, we implemented a hints system — whenever a player engaged with an entity involving a quest, a hint was triggered so the entity designated to be the "hint man" could provide a hint for the player.
 
@@ -1561,11 +1771,11 @@ For games with a large number of hints this method can be difficult to debug.
 
 One disadvantage of this technique is its susceptibility to typos, as every hint flag is a string.
 
-> For BMG2020 we moved away from this technique because we were setting hint flags *a lot* — every time a hint flag was set, every other hint flag was *also* set. (The reset script set them all to `false`, even if they were already `false`.) We were going to log the save flags triggered by playtesters to do story timing analytics, but found that hint flags overwhelmed everything.
+> For BMG2020 we moved away from this technique because we were setting hint flags *a lot* — every time a hint flag was set, every other hint flag was *also* set. (The reset script set them all to `false`, even if they were already `false`.) We were going to log the [save flags](#save-flags-booleans) triggered by playtesters to do story timing analytics, but found that hint flags overwhelmed everything.
 
 ### Integer Hints
 
-With this method, there is a single integer variable for all hints. Let's call this the "hintiger."
+With this method, there is a single [integer variable](#variables-integers) for all hints. Let's call this the "hintiger."
 
 **Triggering a hint**: If the player talks to a quest entity and triggers "backstory" dialog or otherwise engages the entity in a way that indicates they are involved in a quest, set the hintiger to the value associated with that questline.
 
@@ -1585,13 +1795,13 @@ You might need multiple hints per questline. For BMG2020, we had several values 
 
 If we continued with this pattern, we might have used `22` for if the player got partway through the quest and needed a hint about the second half, etc.
 
-Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory flag or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint questline, so we can divide the current hintiger by 10 (after copying it into another variable!) to procedurally detect which questline we're on.
+Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory [flag](#save-flags-booleans) or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint questline, so we can divide the current hintiger by 10 (after copying it into another [variable](#variables-integers!) to procedurally detect which questline we're on.
 
 ## Grand Finale: Beatrice
 
 [![flowchart of Beatrice's behavior](docs_images/script-beatrice.png)](docs_images/script-beatrice.png)
 
-In the BMG2020, Beatrice's branching was profoundly complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. In particular, hints are now managed with a single integer instead of a bajillion save flags.)
+In the BMG2020, Beatrice's branching was profoundly complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. In particular, hints are now managed with a single integer instead of a bajillion [save flags](#save-flags-booleans).)
 
 ### Beatrice's Branching
 
@@ -1618,11 +1828,11 @@ Sets Beatrice's [`on_interact`](#on_interact-scripts) script back to her start s
 This is the wrapup script for solving Beatrice's first quest line.
 
 - sets her [`on_tick`](#on_tick-scripts) to [`null_script`](#null_script) and turns her toward her husband
-- sets the `bea1` backstory and `bea1` story flag to `true`
+- sets the `bea1` backstory and `bea1` story [flag](#save-flags-booleans) to `true`
 - zeroes the target hint
 - runs `bea-wrapup-mini` to finish
 
-Every branch that ends with solving her first quest line will run this script at the end, including branches that might have already set her backstory flag or might have branched due to the backstory flag being set to `true`, but the flag is set anyway in this script to simplify the logic in general — setting it `true` a second time won't ruin anything, and it means there doesn't have to be a separate wrapup script for not setting that flag. This decision was easy to make once I had everything mapped and color coded.
+Every branch that ends with solving her first quest line will run this script at the end, including branches that might have already set her backstory [flag](#save-flags-booleans) or might have branched due to the backstory flag being set to `true`, but the flag is set anyway in this script to simplify the logic in general — setting it `true` a second time won't ruin anything, and it means there doesn't have to be a separate wrapup script for not setting that flag. This decision was easy to make once I had everything mapped and color coded.
 
 #### `bea1-incomplete-wrapup`
 
@@ -1683,6 +1893,10 @@ When `true`, the player entity can move around as normal. When `false`, the play
 ### `LOAD_MAP`
 - `map`
 
+Except for the player name, all [entity properties](#entity-properties) are reset to their original values when a new map is loaded.
+
+When a player walks through a doorway or otherwise triggers a map load, you should probably set the [warp state](#warp_state-string) variable before using the `LOAD_MAP` action.
+
 ### `SHOW_DIALOG`
 - `dialog`
 
@@ -1693,18 +1907,16 @@ No other actions can be executed by that script until the dialog has finished, s
 When a dialog is showing, the player can only advance to the next dialog message or choose a [multiple choice](#multiple-choice-dialogs) option (if given one) — the player cannot hack, interact with another entity, move, etc.
 
 ### `SLOT_SAVE`
-This action requires no arguments.
-
-This action saves the game state into the chosen slot (the last slot loaded).
+This action requires no arguments. It saves the game state into the current slot (the last slot loaded). It is therefore not possible to write save data into multiple slots.
 
 Things that are saved:
 - player name (string)
 - MEM button offsets (the player can change the MEM button mapping)
 - current map id [is saved, but not currently used upon load]
-- warp state (string)
+- [warp state](#warp_state-string) (string)
 - hex editor clipboard contents (up to 32 bytes)
-- save flags (booleans)
-- script variables (ints)
+- [save flags](#save-flags-booleans) (booleans)
+- [script variables](#variables-integers) (ints)
 
 ### `SLOT_LOAD`
 - `slot` — `0`, `1`, or `2`
@@ -1716,7 +1928,7 @@ The slot is set to `0` by default.
 ### `SLOT_ERASE`
 - `slot` — `0`, `1`, or `2`
 
-This action clears all the variables in the given slot.
+This action clears all the save data in the given slot.
 
 ## Hex Editor Actions
 
@@ -1735,6 +1947,8 @@ Setting this to `true` opens the hex editor. [Does the hex editor need to be ena
 
 When set to `true`, this reduces the number of rows in the hex editor, making room for dialog boxes. (The portrait image can still cover up hex cells, though.)
 
+This action has been disabled in the MGE to prevent accidental soft locks.
+
 ### `SET_HEX_EDITOR_CONTROL`
 - `bool_value` — `true` or `false`
 
@@ -1749,9 +1963,9 @@ This action enables or disables the clipboard and copy functionality within the 
 
 These actions check whether an [entity property](#entity-properties) matches a specific state. If the `expected_bool` is met (either `true` or `false`) then the script branches, or jumps, to the script named by `success_script`, and all other actions from the original script are ignored.
 
-Remember you can use `%SELF%` to target the entity running the script and `%PLAYER%` to target the player entity. Otherwise, you must use the entity's name as originally assigned on the map (in Tiled).
+Remember you can use [`%SELF%`](#relative-entity-references) to target the entity running the script and [`%PLAYER%`](#relative-entity-references) to target the player entity. Otherwise, you must use the entity's name as originally assigned on the map (in Tiled).
 
-See **Entity Types** for specific information about what each of these properties do.
+See [Entity Types](#entity-properties) for specific information about what each of these properties do.
 
 ### `CHECK_ENTITY_NAME`
 - `success_script`
@@ -1921,51 +2135,56 @@ Compares the value of a variable against another.
 
 ### `CHECK_FOR_BUTTON_PRESS`
 - `success_script`
-- `button_id` — the int value for the target button
+- `button_id` — the name of the target button
 
-[not actually implemented yet?]
+This action checks whether the button was pressed down that game tick.
 
 Button IDs:
-- `0` = MEM0
-- `1` = MEM1
-- `2` = MEM2
-- `3` = MEM3
-- `4` = 128-bit
-- `5` = 64-bit
-- `6` = 32-bit
-- `7` = 16-bit
-- `8` = 8-bit
-- `9` = 4-bit
-- `10` = 2-bit
-- `11` = 1-bit
-- `12` = XOR
-- `13` = ADD
-- `14` = SUB
-- `15` = PAGE
-- `16` = left joystick click
-- `17` = left joystick up
-- `18` = left joystick down
-- `19` = left joystick left
-- `20` = left joystick right
-- `21` = right joystick click
-- `22` = right joystick up
-- `23` = right joystick down
-- `24` = right joystick left
-- `25` = right joystick right
-- `26` = hax button
+- `MEM0`
+- `MEM1`
+- `MEM2`
+- `MEM3`
+- `BIT128`
+- `BIT64`
+- `BIT32`
+- `BIT16`
+- `BIT8`
+- `BIT4`
+- `BIT2`
+- `BIT1`
+- `XOR`
+- `ADD`
+- `SUB`
+- `PAGE`
+- `LJOY_CENTER`
+- `LJOY_UP`
+- `LJOY_DOWN`
+- `LJOY_LEFT`
+- `LJOY_RIGHT`
+- `RJOY_CENTER`
+- `RJOY_UP`
+- `RJOY_DOWN`
+- `RJOY_LEFT`
+- `RJOY_RIGHT`
+- `TRIANGLE`
+- `X` or `CROSS`
+- `O` or `CIRCLE`
+- `SQUARE`
+- `HAX` (capacitive touch button on the PCB)
+- `ANY`
 
 ### `CHECK_FOR_BUTTON_STATE`
 - `success_script`
 - `button_id` — the int value for the target button
 - `expected_bool`
 
-[not actually implemented yet?]
+This action checks for whether a specific button is being held down that game tick.
 
 See above the list of buttons and their assigned IDs.
 
 ### `CHECK_WARP_STATE`
 - `success_script`
-- `string` — the target value (string) of the "warp state" variable
+- `string` — the target value (string) of the ["warp state" variable](#warp_state-string)
 - `expected_bool`
 
 ## Entity Set Actions (Properties)
@@ -2028,7 +2247,7 @@ Counterparts to many of the above "check" actions.
 `entity`
 `expected_u4` — the desired int value in all four "hackable state" bytes if interpreted as a u4
 
-## Entity Choreography Actions (Paths)
+## Entity Choreography (Paths)
 
 ### `TELEPORT_ENTITY_TO_GEOMETRY`
 - `entity` — the name (string) of the target entity
@@ -2069,7 +2288,7 @@ NOTE: Unless you want the entity to teleport to the geometry's origin point, you
 
 This assigns a vector object to an entity.
 
-## Entity Choreography Actions (Appearance)
+## Entity Choreography (Appearance)
 
 ### `PLAY_ENTITY_ANIMATION`
 - `entity` — the name (string) of the target entity
@@ -2106,7 +2325,8 @@ The int value for entity animations:
 - `entity`
 - `relative_direction` — the int value for the number of quarter turns the entity will make.
 
-Positive ints are clockwise turns, and negative are counterclockwise.
+Positive ints are clockwise turns, and negative are counterclockwise. (Numbers larger than 3 have a modulo of 4 applied to them.)
+
 This action can be chained with another similar one for complex behaviors. For example, to turn an entity away from the player, you can first set the entity's direction toward the player with the below action, then immediately rotate it 2 turns with this action.
 
 ### `SET_ENTITY_DIRECTION_TARGET_ENTITY`
@@ -2121,12 +2341,12 @@ This action can be chained with another similar one for complex behaviors. For e
 - `entity`
 - `bool_value`
 
-## Camera Control Actions
+## Camera Control
 
 ### `SET_CAMERA_TO_FOLLOW_ENTITY`
 - `entity` — the name (string) of the target entity
 
-Sets what entity the camera is following. `%PLAYER%` is the default.
+Sets what entity the camera is following. [`%PLAYER%`](#relative-entity-references) is the default.
 
 ### `TELEPORT_CAMERA_TO_GEOMETRY`
 - `geometry` — the name (string) of the vector object as defined in Tiled
@@ -2187,6 +2407,10 @@ The encoder literally copies all the actions from the copied `script` and insert
 - `script` — the name (string) of the desired script
 - `entity`
 
+If you use this action to target the script slot running <>SDFKHSDG then actions given afterward may not execute depending on what they are.
+
+[experiment this]
+
 ### `SET_ENTITY_TICK_SCRIPT`
 - `script` — the name (string) of the desired script
 - `entity`
@@ -2198,7 +2422,7 @@ The encoder literally copies all the actions from the copied `script` and insert
 - `bool_value`
 
 ### `SET_WARP_STATE`
-- `string` — the desired value for the warp state variable
+- `string` — the desired value for the [warp state variable](#warp_state-string)
 
 ### `MUTATE_VARIABLE`
 - `variable` — the name (string) of the variable for the target operation
