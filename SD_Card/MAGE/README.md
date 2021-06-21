@@ -473,13 +473,16 @@ Any single tile object placed on a map will be one of these types, which is auto
 
 Entities need not have a name, nor a unique name — scripts targeting an entity by name will simply use the first the [MGE encoder](#mge-encoder) found with that name.
 
-One key difference between the three entity types: the first two entity types will rotate their tile if the entity changes which direction it is "facing," whereas the last entity type will instead choose the correct animation among those it was [assigned](#entity-manager) (north, south, east, or west). Therefore entities that are meant to have standard character animations or that need to retain their appearance when moving around the map must be the third type.
+One key difference between the three entity types: for the first two types (`tileset` and `animation`), the tile will rotate when the entity changes which direction it is "facing," whereas the last type (`entity_type`) will instead choose the correct animation among those it was [assigned](#entity-manager) (north, south, east, or west). Therefore entities that are meant to have standard character animations (like the sheep below) or that need to retain their appearance when moving around the map (like the rake below) *must* be the third type.
 
-> In BMG2020, the rake had to be a character entity because it moves in several different directions: [record video example]
+| rotating tiles | assigned animations|
+| --- | --- |
+| (`animation`) sheep | (`entity_type`) sheep |
+| ![rotating rake](docs_images/sheep-rotating.gif) | ![stable rake](docs_images/sheep-stable.gif) |
+| (`tileset`) rake | (`entity_type`) rake |
+| ![rotating rake](docs_images/rake-rotating.gif) | ![stable rake](docs_images/rake-stable.gif) |
 
-In addition, there is currently no way to (precisely) control animations with scripts unless the entity is of the third type.
-
-> E.g. the modem and bookcase in BMG2020.
+In addition, there is currently no way to (precisely) control animations with scripts unless the entity is of the third type. (See the the modem and bookcase in BMG2020.)
 
 ### Tile Entity (`tileset`)
 
@@ -500,8 +503,6 @@ These are a simple way of making props interactable.
 > **Disadvantages**: The null entity can be hacked to another tile (presumably one with pixel data), in which case a new object will seemingly appear on top of the prop.
 >
 >Such props can also never be moved, as they are permanently baked into the environment — but this is not necessarily a disadvantage.
-
-[`on_interact`](#on_interact-scripts) script).
 
 ### Animation Entity (`animation`)
 
@@ -608,7 +609,7 @@ Distances smaller than 256 can involve this byte, too, depending on where things
 
 >To design and manage puzzles meant only to involve the least significant byte, you could count map tiles for each puzzle element (keeping in mind your map's tile size), but it might be easier to draw a 256 x 256 vector rectancle (or a series of them) where the puzzle is to take place.
 >
-> [make example image from sheep pen]
+> ![sheep pen with 256px boxes](docs_images/sheep-pen.png)
 >
 >Lock the layer containing this vector guide and/or place it below all other object layers to keep it from preventing you from selecting other elements in Tiled.
 
@@ -1297,7 +1298,7 @@ To instead edit an existing `entity_type` ([character entity](#character-entity-
 
 #### Animation Pane
 
-<img src="docs_images/mge-encoder-animation-pane.png" style="max-width: 50%" alt="the MGE encoder's animation pane">
+<img src="docs_images/mge-encoder-animation-pane.gif" style="max-width: 50%" alt="the MGE encoder's animation pane">
 
 There is one animation tile slot for each cardinal direction: north, east, south, west.
 
@@ -1658,42 +1659,37 @@ The end behavior is a reversal of the above: Verthandi is now watching for the p
 To manage an entity's complex idle behavior, or to modify an entity's idle behavior over time, you can use another entity's [`on_tick`](#on_tick-scripts) slot. We call this second entity a **handler**.
 
 It doesn't matter who the handler is, as long as their [`on_tick`](#on_tick-scripts) slot is free, but if you change who is acting as handler be sure to change it everywhere or you'll end up with multiple handlers working against each other:
+
 1. The handler's [`on_tick`](#on_tick-scripts) property on the map
 2. Within every `set_handler` script
 
 ### Example Entity: Bender
 
 Because Bender has three idle behaviors, there are three `set_handler` scripts:
-1. `set_handler-bender-on`
-2. `set_handler-bender-off`
-3. `set_handler-bender-none`
 
-Each `set_handler` script sets the following [`on_tick`](#on_tick-scripts) scripts for Bender and his handler:
-
-1. **Bender's default idle**: Bender faces the player as the player moves around, and once in a while he plays the "I've got my eye on you" animation (while continuing to face the player).
-
-	- Bender's [`on_tick`](#on_tick-scripts) is `face-player` — a general script that sets the entity's direction toward the player
-	- The handler's [`on_tick`](#on_tick-scripts) is `handler-bender-timer` — which waits a set amount of time, then makes Bender play his action animation
-
-In Tiled, Bender and his handler have these scripts set to their [`on_tick`](#on_tick-scripts) slots, so this is their default behavior.
-
-2. **Bender's idle for conversations**: Bender stops moving.
-
-	- The handler's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
-	- Bender's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
-
-This allows his "bite my shiny metal ass" animation to play unimpeded.
-
-3. **Bender's "content" idle**: Bender "loiters," or looks around at his own pace, regardless of the player's position.
-
-	- The handler's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
-	- Bender's [`on_tick`](#on_tick-scripts) is `on_tick-bender-loiter` — a script that turns him in certain directions after certain amounts of time.
-
-Because this behavior isn't complex, it only requires Bender's own [`on_tick`](#on_tick-scripts).
+1. Bender's default idle behavior, triggered with `set_handler-bender-on`:
+	- Bender faces the player as the player moves around, and once in a while he plays the "I've got my eye on you" animation (while continuing to face the player).
+	- In Tiled, Bender and his handler have these scripts set to their [`on_tick`](#on_tick-scripts) slots, so this is their default behavior.
+	- Scripts:
+		- Bender's [`on_tick`](#on_tick-scripts) is `face-player` — a general script that sets the entity's direction toward the player
+		- The handler's [`on_tick`](#on_tick-scripts) is `handler-bender-timer` — which waits a set amount of time, then makes Bender play his action animation
+2. Bender's idle behavior during conversations, triggered with `set_handler-bender-off`:
+	- The handler no longer makes Bender play the "I've got my eye on you" animation. This change in behavior required so that his "bite my shiny metal ass" animation can play without interference.
+	- Scripts:
+		- The handler's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
+		- Bender's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
+3. Bender's "satisfied" idle behavior, triggered with `set_handler-bender-none`:
+	- Bender "loiters," or looks around at his own pace, regardless of the player's position.
+	- Because this behavior isn't complex, it only requires Bender's own [`on_tick`](#on_tick-scripts).
+	- Scripts:
+		- The handler's [`on_tick`](#on_tick-scripts) is [`null_script`](#null_script)
+		- Bender's [`on_tick`](#on_tick-scripts) is `on_tick-bender-loiter` — a script that turns him in certain directions after certain amounts of time.
 
 Whenever the player speaks to Bender, his idle behavior must be set to [2] at the very beginning of the conversation, and after the conversation is over, it must be set to [3] or [1] depending on whether his questline was finished or not. This management is done by using [`COPY_SCRIPT`](#copy_script) for the relevant `set_handler` scripts.
 
-A handler is required because otherwise Bender could not both turn toward the player AND play his "I've got my eye on you" animation at the same time. Only the use of a handler makes this kind of complex behavior possible.
+A handler is required because otherwise Bender could not both turn toward the player AND play his "I've got my eye on you" animation **at the same time**. Only the use of a handler makes this kind of complex behavior possible.
+
+> If [2] is triggered when the current idle behavior is [1], Bender's `on_tick` need not change, but changing it does no harm. But if [2] is triggered when the current idle behavior is [3], Bender's `on_tick` *must* be changed. It's always good to design scripts in such a way that they can be used in as many different circumstances as possible (rather than making a series of almost-identical scripts tuned to each possible application).
 
 ## Chains of Small Checks
 
@@ -1703,13 +1699,13 @@ This is most likely required for a map's [`on_load`](#on_load-scripts) script, b
 - Has Bob Moss's quest been completed? If so, teleport him off screen to hide him. (Resume remainder of script either way.)
 - Has the rake ever been laked? If so, teleport rake to lake. (Resume remainder of script either way.)
 - Has the goat Billy ever been unglitched? If so, unglitch again now. (Resume remainder of script either way.)
-- [more glitch checks]
+- (more glitch checks)
 - Have the sheep been returned to their pen at some point? If so, return them again now. (Resume remainder of script either way.)
 - Has Bender's ass been restored? If so, restore it again now. (Resume remainder of script either way.)
 - Has the "walk to lodge" cutscene been seen before? If not, play it now. (Script diverts to a dead end.)
-- [more cutscene checks]
+- (more cutscene checks)
 - Is the [warp state](#warp_state-string) "enter_from-greenhouse"? If so, branch: run the "enter_from-greenhouse" script, which teleports the player to the greenhouse door and walks the player down a few pixels. (Script diverts to a dead end.)
-- [more [warp state](#warp_state-string) checks]
+- (more [warp state](#warp_state-string) checks)
 
 Unfortunately, the only way to do this is with a lot of tiny scripts. (This is one reason you might want to put [`on_load`](#on_load-scripts) in the script name for all scripts like this — so you know what kind of a chain you're looking at.)
 

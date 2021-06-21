@@ -1,7 +1,7 @@
 # DC801 Black Mage Badge
 The DC801 Badge Platform for DC28+
 
-![DC801 Black Mage Game 2020 main menu](SD_Card/MAGE/docs_images/game-sample-menu.png)
+![DC801 Black Mage Game 2020 main menu](SD_Card/MAGE/docs_images/main-menu.gif)
 
 ![DC801 Black Mage Game 2020 sample gameplay (screen only)](SD_Card/MAGE/docs_images/game-sample-x4.png)
 
