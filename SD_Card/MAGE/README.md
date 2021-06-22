@@ -1,11 +1,12 @@
 # Mage Game Engine (MGE) Content Creation Guide
 
-An explanation of how to create content for the "Mage Game Engine" (MGE) and other information for working with the "Black Mage" game for DC801's party badge (BMG2020).
+Content creation guide for the "Mage Game Engine" (MGE), and other information for working with the "Black Mage" game for DC801's party badge (BMG2020).
 
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
 	1. [What You'll Need](#what-youll-need)
+	2. [Setting Up Your Project](#setting-up-your-project)
 	2. [`MAGE/` Folder](#mage-folder)
 	3. [General Process](#general-process)
 2. [Tilesets](#tilesets)
@@ -13,6 +14,9 @@ An explanation of how to create content for the "Mage Game Engine" (MGE) and oth
 	2. [Sprite Sheets](#sprite-sheets)
 	3. [MGE Tileset Considerations](#mge-tileset-considerations)
 	4. [Creating a Tileset JSON File](#creating-a-tileset-json-file)
+	5. [Defining Animations](#defining-animations)
+	6. [Map Tile Collisions](#map-tile-collisions)
+	7. [Other Kinds of Tilesets](#other-tilesets)
 3. [Maps](#maps)
 	1. [Creating a Map JSON File](#creating-a-map-json-file)
 	2. [Map Layers](#map-layers)
@@ -70,53 +74,108 @@ An explanation of how to create content for the "Mage Game Engine" (MGE) and oth
 
 ## What You'll Need
 
-The MGE is data driven, meaning you won't need to write code or use a compiler to generate game content. All you will need are:
+The MGE is data driven, meaning you won't need to write code or use a compiler to generate game content. All you'll need are:
 
 ### Graphics Software
 
 Any graphics editor capable of doing sprite art can make sprite sheets or tilesets, but if you need custom animation, we highly recommend investing in [Aseprite](https://www.aseprite.org/). It's about $20, but it specializes in creating sprite animations, and it makes previewing animations and exporting sprite sheets quite painless.
 
+If you don't want to make art from scratch, a good source of premade tilesets is [OpenGameArt.org](https://OpenGameArt.org).
+
 ### Text Editor
 
-We recommend Visual Studio Code, which is free and open source, and has great syntax parsers and Git integration. Get it at https://code.visualstudio.com/ (Mac, Linux, or Windows).
+You will definitely need a text editor, preferably one that can parse JSON. We recommend [Visual Studio Code](https://code.visualstudio.com/) (Mac, Linux, or Windows), which is free and open source, and has great syntax parsers and Git integration.
 
 ### A Web Browser
 
-The [MGE encoder](#mge-encoder) can use a modern web browser to take all the game files (contained in your `scenario_source_files/` folder) and export a binary data file (`game.dat`) for the engine to use.
+The [MGE web encoder](#web-encoder) can use a modern web browser to take all the game files (contained in your [`scenario_source_files/`](#inside-scenario_source_files) folder) and export a binary data file (`game.dat`) for the engine to use. This version of the encoder also has an [entity management system](#entity-manager) (for managing animation assignments) so while you might use the [CLI encoder]((#cli-encoder)) most of the time, chances are you'll still need to use the web version once in a while.
 
 ### Node.js
 
-If you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install `node.js`, and use our command line script to regenerate the `game.dat` from the command line, instead.
+This is optional, but if you find yourself constantly making small changes to your content and regenerating your `game.dat` very frequently, it may be worthwhile to install `node.js` so you can use our [command line script](#cli-encoder) to regenerate the `game.dat` instead.
 
 ### MicroSD Card
 
-To put a new `game.dat` onto the badge, you will need a microSD card formatted to FAT32 (and a card reader for your computer).
+To put a new `game.dat` onto the badge, you'll need a microSD card formatted to FAT32.
 
 ### Git
 
-While strictly optional, it's always nice to version control your projects, especially if working with multiple people. We recommend Sublime Merge if you're just getting started with Git, or the JetBrains' Git tools if you're already using one of their IDEs.
+While strictly optional, it's always nice to version control your projects, especially if working with multiple people. We recommend [Sublime Merge](https://www.sublimemerge.com/) if you're just getting started with Git. If you're already using one of [JetBrains' IDEs](https://www.jetbrains.com/), you can use their excellent built-in Git tools.
+
+## Setting Up Your Project
+
+While you could copy the encoded `game.dat` to the badge hardware via microSD card every time you want to test a change, it'll be much faster and easier to test your changes in a desktop environment.
+
+### Desktop Development Environment
+
+At the moment the MGE can only compile in Ubuntu 20.04 or higher, so if you're running Windows, macOS, or any other operating systems, you will need to set up a VM.
+
+We have prepared a [VM image](https://drive.google.com/file/d/1S3qmwfSq9DD3EdxqE4Bh8B2QsWe1d85-/view?usp=sharing), available to download from Google Drive, with everything you'll need to build and run the game. (The download is approximately 6GB.)
+
+In case you need to `sudo` anything:
+
+	username: dc801
+	password: helga
+
+#### VirtualBox
+
+1. Install [VirtualBox](https://www.virtualbox.org/).
+2. Go to File > Import Appliance, then find the .ova file you downloaded previously.
+	- The expanded VM image will be about 12GB, but can become as large as 32GB (depending on what you do inside it), so keep that in mind when choosing where to put it.
+
+### To Run the Game
+
+#### First Time
+
+Double click `pull_latest_and_build.sh` to download and compile the latest version of the MGE. The game will launch itself. Close the window when finished.
+
+#### Thereafter
+
+To run the game without compiling it again, double click `start_game.sh`.
+
+### Game Development
+
+You could do all your game development in your host OS, but you might have to be a bit clever to get the encoded `game.dat` inside the VM environment. Instead, consider doing your game development 100% inside the VM:
+
+- Double click `open_ide.sh` to launch Visual Studio Code, which has been set up for you.
+- Launch Chromium by clicking the "whisker menu" in the top-left corner of the screen, then click "Web Browser." (You'll need Chromium to use the [web encoder](#web-encoder).)
+
+### Raw Game Data Folders
+
+The VM already contains the raw game data for BMG2020 (found in the folder [`MAGE/scenario_source_files/`](#inside-scenario_source_files)), which you could copy to use as a template for your own project, but we have also prepared a bare-bones [sample project repo](https://github.com/AdmiralPotato/mage_game-external_scenario_source_files), which has all of the necessary structure but without the bloat of the finished game.
+
+The [MGE encoder](#mge-encoder) is capable of generating a `game.dat` file from an arbitrary [`scenario_source_files/`](#inside-scenario_source_files) folder, so having multiple project folders is not a problem.
 
 ## `MAGE/` Folder
 
-There'll be a bunch of stuff in the game folders, but relevant to creating new content are:
+There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new content are:
 
 `editor/index.html` — The [MGE web encoder](#web-encoder). To generate a `game.dat`, you can open this file in a web browser and follow the instructions.
 
-`game.dat` — This is the actual data for your game. If you generated a `game.dat` using the encoder above, you must copy that file here for the desktop build to see it.
+`game.dat` — This is the encoded data for your game. If you generated a `game.dat` using the encoder above, you must copy that file here for the desktop build to see it.
 
-`replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory. (Don't forget to CD into `MAGE/` first!)
+`replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
 
-`regenerate_dat_file.sh` — A shell script for rebuilding the `game.dat` and moving it into your current directory. (Don't forget to CD into `MAGE/` first!) This script requires node.js to run.
+`regenerate_dat_file.sh` — This shell script requires `node.js` to run. Both versions will create a `game.dat` and move it to where the game engine can see it.
+- BM-Badge version:
+	- `cd` into `MAGE/`.
+	- Run the shell script. The `game.dat` will be made from the `scenario_source_files/` in `MAGE/`.
+- Sample repo version:
+	- first argument: the `scenario_source_files/` folder to read from
+	- second argument: where to write the `game.dat`
+	- This version of the shell script also launches the game automatically.
 
 `scenario_source_files/` — This is where your raw game data lives.
 
 ### Inside `scenario_source_files/`
 
-`dialog/` — This folder contains [dialog JSON files](#dialog). For BMG2020, all dialog files are prefixed with `dialog-.`
+`dialog/` — This folder contains [dialog JSON files](#dialog).
+
+> For BMG2020, all dialog files are prefixed with `dialog-.`
 
 `entities/` — This folder is for all [character entity](#character-entity-entity_type) assets, such as entity [sprite sheets](#sprite-sheets), [portraits](#portraitsjson), and the [JSON files that drive them](#creating-a-tileset-json-file) (as created by Tiled). This folder will likely be 50% images and 50% JSON files.
 
->For BMG2020, all entity files are prefixed with `entity-`. For entities, the file name should match the `entity_type` name.
+>For BMG2020, all entity spritesheet files are prefixed with `entity-`. For [character entities](#character-entity-entity_type), the file name should match their `entity_type` name.
 
 `maps/` — All [map JSON files](#creating-a-map-json-file) (made with Tiled) go in here. Make sure all Tiled files are in the correct place before filling them with stuff or it'll all break when you move them.
 
@@ -130,7 +189,7 @@ There'll be a bunch of stuff in the game folders, but relevant to creating new c
 
 >For BMG2020, all tileset files (regardless of their purpose) are prefixed with `tileset-`.
 
-[`portraits.json`](#portraitsjson) — Identifies portrait JSON files within `entities/` and assigns them a name (which should match their associated `entity_type` name, if any), plus a few other properties that the MGE needs. If you add a new portrait JSON file to the `entities/` folder, be sure to include it in `portraits.json` or the encoder will ignore it.
+[`portraits.json`](#portraitsjson) — Identifies portrait JSON files within `entities/` and assigns them a name (which should match their associated [`entity_type`](#character-entity-entity_type) name, if any), plus a few other properties that the MGE needs. If you add a new portrait JSON file to the `entities/` folder, be sure to include it in `portraits.json` or the encoder will ignore it.
 
 [`entity_types.json`](#entity_typesjson) — Identifies [entity JSON files](#entity-json-files) within `entities/` and assigns them various properties the MGE needs. This is where character animations are assigned to their MGE purposes (idle, walk, action, etc. — and north, south, west, east), and while this assignment can be done within the [MGE encoder](#mge-encoder), the web browser cannot write to this file directly, and you will therefore need to copy the updated data for `entity_types.json` into the actual file yourself.
 
@@ -150,22 +209,23 @@ There'll be a bunch of stuff in the game folders, but relevant to creating new c
 
 An example production pipeline. The general order can vary a bit, and previous steps might be revisited at any point.
 
-1. Clone the sample game project repo. (https://github.com/AdmiralPotato/mage_game-external_scenario_source_files) 
-2. Prepare entities.
+1. Set up your [development environment](#setting-up-your-project).
+2. Prepare entities. For each entity:
 	1. Acquire [spritesheet(s)](#sprite-sheets).
 	2. In Tiled, make [entity tileset JSON file(s)](#entity-json-files).
 		1. Put it in `entities/`.
-		2. On all tiles, set the type property to what you want the entity's `entity_type` to be.
-		3. [Create animations](#defining-animations): in Tiled, set frames and timings for at least [idle](#idle), [walk](#walking), [action](#action).
-	3. Prepare [`entity_types.json`](#entity_typesjson).
-		1. Use the web encoder to [assign animations and NSEW directions](#entity-manager) for each character entity.
+		2. For [character entities](#character-entity-entity_type), set the type property for all tiles to what you want the entity's `entity_type` name to be.
+		3. [Create animations](#defining-animations): in Tiled, set frames and timings for your animations.
+			1. For [character entities](#character-entity-entity_type), prepare animations for at least [idle](#idle), [walk](#walking), [action](#action).
+	3. Prepare [`entity_types.json`](#entity_typesjson) for each [character entity](#character-entity-entity_type).
+		1. Use the web encoder to [assign animations and NSEW directions](#entity-manager).
 		2. Paste updated entity data into [`entity_types.json`](#entity_typesjson).
-	4. Prepare dialog portraits
-		1. In Tiled, [prepare a tileset JSON file](#creating-a-tileset-json-file) for the talk portrait(s).
+	4. Prepare dialog portraits.
+		1. In Tiled, [prepare a tileset JSON file](#creating-a-tileset-json-file) for the talk portrait images.
 			1. Put it in `entities/`.
 		2. Prepare [`portraits.json`](#portraitsjson).
-		3. Assign portraits to their entities in `entity_types.json` if the portrait name does not match an `entity_type`.
-3. Prepare map(s).
+		3. Assign portraits to their entities in [`entity_types.json`](#entity_typesjson) if the portrait name does not match an [`entity_type`](#character-entity-entity_type) name.
+3. Prepare map(s). For each map:
 	1. Acquire [tileset graphics](#tilesets).
 	2. In Tiled, [prepare a tileset JSON file](#creating-a-tileset-json-file).
 		1. Put it in `tilesets/`.
@@ -184,28 +244,29 @@ An example production pipeline. The general order can vary a bit, and previous s
 		4. Camera targets
 	6. Set map's properties, including its [`on_load`](#on_load-scripts) script.
 	7. Add map file(s) to [`scenario.json`](#scenariojson).
-4. Prepare dialog skin(s).
+4. Prepare dialog skin(s). For each skin:
 	1. Acquire [tileset graphics](#tilesets).
 	2. In Tiled, [prepare a tileset JSON file](#creating-a-tileset-json-file).
 		1. Put it in `tilesets/`.
 	3. Add dialogSkin file(s) to [`scenario.json`](#scenariojson).
-5. Prepare [dialogs](#dialog) in `dialogs/`.
+5. Prepare [dialog JSON file(s)](#dialog) inside `dialogs/`.
 	1. Add dialog file(s) to [`scenario.json`](#scenariojson).
-6. Prepare [scripts](#scripts) in `scripts/`.
+6. Prepare [script JSON file(s)](#scripts) inside `scripts/`.
 	1. Plan logic with flowcharts (optional)
-	2. Doorway watchers
-	3. "Walking out the door" behavior
-	4. Entity dialog
-	5. Cutscenes
+	2. Example scripts:
+		1. Doorway watchers
+		2. "Walking out the door" behavior
+		3. Entity dialog
+		4. Cutscenes
 	6. Add script file(s) to [`scenario.json`](#scenariojson).
 7. Encode the `game.dat`.
-	1. If you haven't yet, use the [web encoder](#web-encoder) to [assign animations and NSEW directions](#entity-manager) for each character entity.
+	1. If you haven't yet, use the [web encoder](#web-encoder) to [assign animations and NSEW directions](#entity-manager) for each [character entity](#character-entity-entity_type).
 8. Test the game.
 	1. See if it works on the desktop build.
 		1. Move `game.dat` to the right place.
 		2. Run the game.
 	2. Verify on hardware.
-		1. Copy `game.dat` onto a microSD card (FAT32).
+		1. Copy `game.dat` onto a microSD card.
 		2. Insert the microSD card into hardware.
 		3. Flash the game.
 		4. Run game.
@@ -218,9 +279,9 @@ A tileset is a series of images on a grid of uniform size used to modularly crea
 
 ## Tilesets
 
-Map tilesets contain square blocks of terrain which can be used for building the world. There is no required structure for how the tiles should be arranged, but ordinarily, similar tiles are placed near each other. A map tileset is not expected to be animated (though you could animate any of it if you wanted).
-
 ![example tileset](docs_images/tileset-example.png)
+
+Map tilesets contain square blocks of terrain which can be used for building the world. There is no required structure for how the tiles should be arranged, but ordinarily, similar tiles are placed near each other. A map tileset is not expected to be animated (though you could animate any of it if you wanted).
 
 All **tileset tiles need to be perfect squares** because tiles can be rotated or flipped on either axis when building maps.
 
@@ -228,27 +289,39 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 ![example spritesheet](docs_images/spritesheet-example.png)
 
-Likewise, **sprite sheets** are made up of tiles of uniform size on a grid, and they contain every iteration of a sprite needed for all of its animations.
+**Sprite sheets** are tilesets that contain every iteration of a sprite needed for all of its animations.
 
 >Due to the way Tiled defines animations, the order of the sprite tiles doesn't matter, but for BMG2020 we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
 
-The tiles on the sprite sheet need not be square, though it is preferred.
-
-Sprite sheets are handled like tilesets within Tiled and the [MGE encoder](#mge-encoder).
-
-For the MGE, the **tile size should not exceed 128x128** or it may not run on the badge hardware.
+Sprite sheets are handled like tilesets within Tiled and the [MGE encoder](#mge-encoder), but unlike tilesets, sprite sheet tiles aren't required to be squares.
 
 ## MGE Tileset Considerations
 
-For tilesets of all types:
+### Tile Size
 
-**Alpha (transparency) is 1-bit**; you cannot have partially transparent pixels. Semi-transparent pixels are assigned either to be fully opaque or fully transparent at a 50% threshold.
+For tilesets and spritesheets, tiles **should not exceed 128x128 in size** or the game may not run on the badge hardware.
 
-To encode alpha, the MGE repurposes the least-significant green bit in the RGB565 color encoding scheme. Because of how the encoder handles this, the color 0x0200 (hex #004000, or rgb 0,64,0) will actually manifest as transparent within the MGE. Avoid using this color (or any color that becomes 0x0200 when converted to RGB565).
+If you need to play animations larger than this, such as an animated logo on a menu screen, you can split the tile into several pieces and place them on a map in such a way that they appear to be a single unit. (This won't work for entities that need to move around on their own, however.)
+
+### Transparency
+
+**You cannot have partially transparent pixels**. Semi-transparent pixels are assigned by the [encoder](#mge-encoder) to be either fully opaque or fully transparent at a 50% threshold.
+
+To encode alpha, the MGE repurposes the least-significant green bit in the RGB565 color encoding scheme. Because of this, the color 0x0200 (hex #004000, or rgb 0,64,0) will actually manifest as transparent within the MGE. Avoid using this color (or any color that becomes 0x0200 when converted to RGB565).
+
+### Pallet
 
 The [MGE encoder](#mge-encoder) indexes the pallets of each image, and there is therefore a **maximum of 256 colors per tileset**. If you need extra colors, consider splitting the tileset into multiple files — maps will quite happily use tiles from multiple tilesets with no trouble (provided the tiles are the same size). The MGE encoder will let you know if one of your tilesets is over the color limit.
 
 > **Best Practice:** On embedded, pixel data is streamed from the ROM chip, but the tileset pallets must be held in RAM. Because RAM is very, very precious, **please combine tilesets if there isn't a compelling reason to keep them in separate files**. Entity sprite sheets are typically kept separate, for instance, but you might combine all character entity portraits if the color limit permits. (And naturally, tilesets with differing tile sizes must be separate!)
+
+### Updating Tileset Images on the Fly
+
+When you save changes to an image that Tiled is actively using, including changing its dimensions, the graphical changes are instantly reflected in all maps, tilesets, etc. within Tiled. This way, you can rapidly iterate on how something looks in its already-established context.
+
+However, changes in image dimensions are *not* automatically perpetuated to the tileset's declared properties, and since the [MGE encoder](#mge-encoder) relies on those values to determine the tileset's size, it will cause problems: for tiles past the tileset's declared bounds, the pixel data will behave correctly, but random collision data will be applied.
+
+**Solution**: Make any change whatsoever to the tileset inside of Tiled to have it recalculate those properties, then save. Alternatively, change the numbers yourself in a text editor.
 
 ## Creating a Tileset JSON File
 
@@ -262,38 +335,35 @@ Within Tiled:
 4. Set the tile width and height to the tile size of your image.
 5. Save the tileset file:
 	- Set the format to JSON.
-	- Set the correct destination folder: `entities/` for entities, and `tilesets/` for everything else. (Keep in mind that Tiled will default to the file path of the last file currently open.)
+	- Set the correct destination folder: `entities/` for entities and their portraits, and `tilesets/` for everything else. (Keep in mind that Tiled will default to the file path of the last file currently open.)
 
 > **Alternative method (advanced)**: if you are making pallet variations of the same sprite, and every other aspect (apart from the name and the image) are the same, you might copy the original tileset JSON file and manually change whatever is different between them.
 
-The relationship between entities, animations, and tiles is somewhat complicated and is better described below, suffice it to say that you'll want character entity tilesets (sprite sheets) to be set up a certain way and all other tilesets a different way.
-
-The relationship between entities, animations, and tiles is somewhat complicated and is better described below, suffice it to say that you'll want entity tilesets (sprite sheets) to be set up a certain way and all other tilesets a different way.
-
 ### Entity JSON Files
 
-For character entities (aka `entity_type`s), all tiles within an entity tileset must have the "type" property set to its `entity_type` name. You can find the "type" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
+For [character entities](#character-entity-entity_type), all tiles within an entity tileset must have the "Type" property set to its `entity_type` name. You can find the "Type" property in the Properties view (i.e. panel/pane/frame), which you can make visible (if currently invisible) via "View > View and Toolbars > Properties."
 
 > You can skip this part if you don't need the entity to be a character entity — if you want to leave it as an animation entity, such as a flickering candle or waving grass, it doesn't need to have an `entity_type` name at all. See the [Three Entity Types](#three-entity-types) section for more information.
 
-### Defining Animations
+## Defining Animations
 
-Animations are assigned to tiles within the sprite sheet. To an assign an animation to a tile, select a tile — preferably something indicative of what the animation will be, such as a first step for a walking animation — and press the button for the animation editor, which looks like a movie camera:
+In Tiled, animations are assigned to tiles within the sprite sheet. To an assign an animation to a tile, select a tile — preferably something indicative of what the animation will be, such as a first step for a walking animation — and press the button for the animation editor, which looks like a movie camera:
 
 ![the fourth icon is a movie camera](docs_images/tiled-animation-editor.png)
 
-You will then see a second window for assigning frames to your animation. Simply set the frame duration (in milliseconds), then double click on the desired tile to add it as a frame to the animation. You can adjust the timing of the frames or move/remove frames as desired, and you'll be able to see your changes live in the preview directly below.
+You will then see a second window for assigning frames to your animation. Set the frame duration (in milliseconds), then double click on the desired tile to add it as a frame to the animation. You can adjust the timing of the frames or move/remove frames as you like, and you'll be able to see your changes live in the preview directly below.
 
 ### MGE Animation Considerations
 
-You need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in Chrono Trigger for the south direction.
+For [character entities](#character-entity-entity_type), you need not prepare an animation for all cardinal directions — e.g. there is only a fright/shock animation in Chrono Trigger for the south direction.
 
 The [MGE encoder](#mge-encoder) accommodates animation flipping, so you don't need sprite tiles for both left-facing and right-facing sprites (as long as you're comfortable with your left-facing and right-facing sprites being perfectly symmetrical).
 
 The MGE animation system requires that each animation have at least two frames, though, so for animations that aren't actually "animated," you might set two of the same frame back-to-back.
 
-#### Animation Types
-Three types of animations are built into the MGE for character entities, and they are triggered in straightforward and predictable ways. [`entity_types.json`](#entity_typesjson) defines which animations are of which type, and they can be set within the [MGE encoder](#mge-encoder) or [by hand](#animations) with a text editor.
+### Animation Types
+
+Three types of animations are built into the MGE for [character entities](#character-entity-entity_type), and they are triggered in straightforward and predictable ways. [`entity_types.json`](#entity_typesjson) defines which animations are of which type, and they can be set within the [MGE encoder](#mge-encoder) or [by hand](#animations) with a text editor.
 
 #### Idle
 
@@ -341,7 +411,7 @@ An action animation cannot be started and held (or [vamped](https://en.wikipedia
 
 See Strong Bad in the Bob-Only Club cutscene (in BMG2020) for an example of this approach.
 
-#### MGE Animation Timing
+### MGE Animation Timing
 
 Requirements:
 
@@ -350,15 +420,15 @@ Requirements:
 
 Animation frames will play for a minimum of one game frame regardless of duration (which, on the BMG2020 badge hardware, is currently in the ballpark of 130 ms, or 8 fps), so animations might play back very slowly in practice if you are frequently using short durations.
 
-> **Best Practices**: Because animations are not aborted when a character entity faces a new direction (it picks up where it left off in the new direction), it is beneficial to keep each animation of the same type completely uniform in terms of frame count and frame duration. This includes animations with fewer unique frames than others of its type, such as an animation from behind (where the face is obscured).
+> **Best Practice**: Because animations are not aborted when a character entity faces a new direction (it picks up where it left off in the new direction), it is beneficial to keep each animation of the same type completely uniform in terms of frame count and frame duration. This includes animations with fewer unique frames than others of its type, such as an animation from behind (where the face is obscured).
 >
 > In addition, we recommend making sure each animation of the same type uses the same tile rows for each frame, even if some of the tiles within the column are technically identical, so that future changes to any of the previously identical frames will not create the need for timing adjustments.
 
-#### Assigning Animations
+### Assigning Animations to Character Entities
 
-For character entities, animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [MGE encoder](#mge-encoder) can help you assign animations to character entities, or you can do it [by hand](#animations).
+For [character entities](#character-entity-entity_type), animations are assigned to an animation type (idle, walk, etc.) and a cardinal direction (north, east, etc.) elsewhere; this cannot be done with Tiled. The [MGE encoder](#mge-encoder) can help you assign animations to character entities, or you can do it [by hand](#animations).
 
-### Map Tile Collisions
+## Map Tile Collisions
 
 Map tilesets should have collision polygons set for each relevant tile. This is done by selecting a tile and clicking the collision editor:
 
@@ -368,27 +438,19 @@ For the MGE, each tile can have only one vector shape, and each vertex must fall
 
 It's helpful to turn on pixel snapping before drawing collision polygons ("View > Snapping > Snap to Pixels").
 
-#### Collision Best Practices
+### Collision Best Practices
 
 Very precise collision shapes are possible, but best practice is to avoid very concave shapes and to avoid diagonals for tiles that are expected to be placed adjacent to other tiles with collision.
 
 When defining your collision polygons and designing your maps, it's good to test the tiles in their map contexts and determine whether the player character is able to push themselves inside one of these shapes.
 
-### Other Tilesets
+## Other Kinds of Tilesets
 
-You will need to make tileset JSON files in Tiled for dialog box skin(s) and entity talk portraits, too.
+You'll need to make tileset JSON files in Tiled for dialog box skin(s) and entity talk portraits, too.
 
 Other than making sure the tiles are the right size, these files require no additional preparation.
 
 Put dialogSkin files in `tilesets/` and entity portraits in `entities/`.
-
-### Updating Tileset Images on the Fly
-
-When you save changes to an image that Tiled is actively using, including changing its dimensions, the graphical changes are instantly reflected in all maps, tilesets, etc. within Tiled. This way, you can rapidly iterate on how something looks in its already-established context.
-
-However, changes in image dimensions are *not* automatically perpetuated to the tileset's declared properties, and since the [MGE encoder](#mge-encoder) relies on those values to determine the tileset's size, it will cause problems: for tiles past the tileset's declared bounds, the pixel data will behave correctly, but random collision data will be applied.
-
-**Solution**: Make any change whatsoever to the tileset inside of Tiled to have it recalculate those properties, then save. Alternatively, change the numbers yourself in a text editor.
 
 ---
 
@@ -402,11 +464,11 @@ Within Tiled:
 	- Orientation: Orthogonal
 	- Tile layer format: CSV
 	- Tile render order: Right Down
-3. Map size can be changed later, so don't worry about getting it too precise right now. [what does the encoder care about in terms of map dimensions?]
+3. Map size can be changed later, so don't worry about getting it too precise right now.
 4. For Tile size, use the tile size for the tileset you intend to use for this map. (For BMG2020, all relevant tilesets are 32 x 32.)
 5. Save the map file:
 	- Set the format to JSON.
-	- Set the correct destination folder — in this case, `maps/` for entities, and `tilesets/` for everything else. (Remember that Tiled will default to the file path of the last file currently open. You don't wanna move this file later!)
+	- Set the correct destination folder — in this case, `maps/`. (Remember that Tiled will default to the file path of the last file currently open. You don't want to move this file later!)
 
 ## Map Layers
 You will be using the Tileset view a lot for this part, which you can make visible (if invisible) via "View > View and Toolbars > Tileset."
@@ -426,7 +488,9 @@ Similarly, placing a tile of the incorrect size on a map will result in divergen
 
 #### MGE Tile Layer Considerations
 
-There has been talk about the MGE encoder automatically combining all non-top tile layers in order to optimize render time (**FUTURE**), but for the moment, each additional layer adds a little bit of overhead to the draw time. Currently, it's recommended to limit tile layers to three: one for the top, and one or two for underneath. (For BMG2020, we use two base layers: one for the base terrain, and one for doodads with alpha.)
+There has been talk about the MGE encoder automatically combining all non-top tile layers in order to optimize render time (**FUTURE**), but for the moment, each additional layer adds a little bit of overhead to the draw time. Currently, it's recommended to limit tile layers to three or less: one for the top (to appear above entities), and one or two for underneath (to appear below entities).
+
+>For BMG2020, we use two base layers — one for the base terrain, and one for doodads with alpha.
 
 In addition, because each tile that is drawn increases the draw time, it's best to remove tiles that are completely obscured by fully opaque tiles.
 
@@ -516,20 +580,19 @@ If you place a animated tile from a tileset onto an object layer, it will become
 
 When the game is [encoded](#mge-encoder), all animations are basically shoved together into a single list, so the `id` for `PrimaryId` is fairly subject to change at the whim of the encoder. Therefore, you will probably never want to use the `PrimaryId` to choose a specific animation — instead you will place the desired animation tile from a tileset onto a map with Tiled.
 
-Animation entities are most useful for animated props, e.g. a water fountain, a torch flickering on a wall, a birthday cake with a moving candle flame. Such entities need not use any of the [entity properties](#entity-properties) available to them.
+Animation entities are most useful for animated props, e.g. a water fountain, a torch flickering on a wall, a birthday cake with a moving candle flame. Such entities need not use any of the [entity properties](#entity-properties) available to them, though they could.
 
-> While NPCs will likely need to be character entities, simpler ones might work perfectly well as animation entities, e.g. WOPR in the BMG2020.
+While NPCs will likely need to be character entities, simpler ones might work perfectly well as animation entities, e.g. WOPR in the BMG2020.
 
 ### Character Entity (`entity_type`)
 
 If you place a tile from a tileset onto an object layer, and the "Type" property of the tile has been defined in [`entity_types.json`](#entity_typesjson), it will become an **character entity**.
 
-
 - **`PrimaryIdType`**: `2` (`entity_type`)
 - **`PrimaryId`**: the `id` of the entity within [`entity_types.json`](#entity_typesjson)
 - **`SecondaryId`**: does nothing
 
-In scripts, you need not manipulate `PrimaryId` to change a character entity into another, though there are certainly scripts that are capable of this. Instead, you can use scripts with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](#entity_typesjson). (In the entity's tileset, this is what the property "Type" is set to.)
+In scripts, you need not manipulate `PrimaryId` to alter the appearance of a character entity, though there are certainly scripts that are capable of doing this. Instead, you can use scripts with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](#entity_typesjson). (In the entity's tileset, this is what the property "Type" is set to.)
 
 What's special about character entities is that they can have a number of animations [assigned](#entity-manager) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a permanently assigned portrait image. **NPCs will therefore likely be this type.**
 
@@ -547,6 +610,7 @@ These are default properties provided by Tiled. They're found in the top half of
 **X** and **Y** position — You don't need to change these directly if you don't want to, since you can simply place or move entities on the map within Tiled itself.
 
 **Direction** — This is the cardinal direction the character entity is facing. This is handled by placing the desired animation tile (and therefore the correct direction) of the target character entity on the map. Left and right can be flipped by taking a side-facing animation tile and checking the **Flipping > Horizontal** checkbox in the Properties view.
+
 >Note that horizontally flipping a front or back-facing character entity will make it appear horizontally flipped within Tiled, but in the MGE this will turn the entity around 180º.
 >
 >Do not use the vertical flip checkbox for MGE maps. [what happens? Try it!]
@@ -573,7 +637,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`hackable_state_a` (int)** and **`hackable_state_b` (int)** — These can be set arbitrarily as ints, but currently the MGE uses these bytes to store the entity's path. (See below.)
 
-**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target geometry to `%ENTITY_PATH%` for such scripts.).
+**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.).
 
 **`hackable_state_c` (int)** and **`hackable_state_d` (int)** — These are not used for anything in the MGE yet, so might be considered "special use space."
 
@@ -619,7 +683,7 @@ Distances smaller than 256 can involve this byte, too, depending on where things
 
 Dialog JSON files define the text that is displayed within a dialog box in the MGE. They should live within `dialog/`.
 
-Dialogs do nothing on their own. To show them, you must use the `SHOW_DIALOG` action within a script. (See the Scripts section below for more about how this works.)
+Dialogs do nothing on their own. To show them, you must use the `SHOW_DIALOG` action within a script. (See the [Scripts](#scripts) section below for more about how this works.)
 
 Arbitrary actions cannot be performed by the script running an in-progress dialog. Therefore, if a character must change their behavior partway through a dialog message, you must split the dialog into multiple pieces (`speech-part-1`, `change-in-behavior action`, `speech-part-2`, etc.) or use another [script slot](#script-slots) to control their behavior.
 
@@ -658,7 +722,7 @@ Within the square brackets above can be any number of object literals (marked wi
 ]
 ```
 
-In the example above, there are three dialog properties: `alignment`, `entity`, and `messages`. There are additional or alternate properties you might use, but these three are a reasonable minimum. (See more in the **Dialog Properties** section below.)
+In the example above, there are three dialog properties: `alignment`, `entity`, and `messages`. There are additional or alternate properties you might use, but these three are a reasonable minimum. (See more in the [Dialog Properties](#dialog-properties) section below.)
 
 The property `messages` is an array containing the strings for the messages themselves (up to 255 total). Multiple messages within the array will be shown on subsequent dialog boxes, so you don't need a whole new object literal unless something else about the properties must change, such as a different character beginning to speak.
 
