@@ -1,5 +1,3 @@
-#include <filesystem>
-
 #include "common.h"
 #include "main.h"
 #include "EnginePanic.h"
@@ -10,6 +8,17 @@
 #ifdef DC801_EMBEDDED
 #include "nrf52840.h"
 #endif
+
+std::string extract_filename(const char * fullpath) {
+	const char * filepart = fullpath;
+	while(*fullpath) {
+		if(*fullpath == '/') {
+			filepart = fullpath + 1;
+		}
+		fullpath += 1;
+  	}
+	return std::string(filepart);
+}
 
 void panic_print(const char *msg, int x, int y)
 {
@@ -48,8 +57,8 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 
 #ifdef DC801_DESKTOP
 	// Print Banner, File Name, Line Number
-	std::filesystem::path path = filename;
-	const char *file = path.filename().c_str();
+	std::string path = extract_filename(filename);
+	const char *file = path.c_str();
 #else
 	const char *file = "There is no file...";
 #endif
