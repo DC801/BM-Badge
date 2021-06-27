@@ -403,3 +403,33 @@
 - [!] A well, for Timmy to get stuck in
 - [ ] Tiles for village elder's basement/dungeon
 - [x] Bender + shiny metal ass
+
+# 2022 big picture objectives
+- [ ] Serial Dungeon
+	- [ ] Text based adventure
+		- [ ] Player loses control over the joysticks and things are instead done over the serial CLI
+		- [ ] The tileset actually just looks like a Zelda MiniMap
+			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
+		- [ ] This dungeon can has an inventory system
+- [ ] Filesystem Dungeon
+	- [ ] A chmod/chown puzzle.
+		- [ ] Enemy dies. drops weapon on to the FileSystem.
+		- [ ] Player can't pick up weapon because its permissions are wrong.
+		- [ ] Chmod/chown that file/weapon. Now player can pick it up, enemy can't.
+- [ ] Uhhh more Hex Dungeon
+	- [ ] Change the layout of the dungeon from spelling `FF` to `0x` because that's more awesome.
+	- [ ] Perhaps unlock/add more in-game memory than just the entity structs for the HexEditor?
+- [ ] When the player approaches a puzzle that they have not seen before, we should blink the light on the board that corresponds to the interface used to solve that puzzle
+
+### Story ideas
+- [ ] After you have all of the artifacts, someone/something should steal them.
+	- [ ] Hacking the save file to restore your artifacts
+- [ ] When you are directed to go get the 3 artifacts, it is super easy to go get them.
+	- [ ] Then when you give them to SPOILERS, everything goes terrible.
+	- [ ] They are teleported back into the dungeons, but much deeper, and you have to go the long way to get them back
+
+### Puzzle ideas
+- [ ] A floor might be on fire. The player has to turn off the "firewall" to cross that part.
+- [ ] Liar'sville puzzle. Start unsolveable. Two black-hats
+	- [ ] Must change one of the color of one of their hats so at least one tells truth
+- [ ] You need to read a value from Bluetooth to open a certain door?
