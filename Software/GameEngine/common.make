@@ -8,6 +8,10 @@ ifndef DESKTOP
     SIZE := $(TOOLCHAIN)size
 endif
 
+ifdef WEB
+    CC := emcc
+endif
+
 # Optimization flags
 OPT ?= -Os -g3
 
@@ -88,7 +92,6 @@ endif
 
 LD_LIBRARIES = -lc \
 	-lm \
-	-lsupc++ \
 	-lstdc++
 
 ifndef DESKTOP
@@ -97,7 +100,9 @@ else
     ifeq ($(OS),Windows_NT)
         # Placeholder
     else
-        LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
+        ifndef WEB
+            LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
+        endif
     endif
 endif
 
@@ -107,6 +112,10 @@ ASMFLAGS += -D__HEAP_SIZE=16384
 ASMFLAGS += -D__STACK_SIZE=16384
 
 CFLAGS += $(TEST_DEFINES)
+
+ifdef WEB
+	CFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
+endif
 
 # GCC Dependency flags:
 #  -MD:		Generate dependency tree for specified object as a side effect of compilation
@@ -129,7 +138,12 @@ else
 	@$(MKDIR) $(@D)
 endif
 
-	@$(CC) -x c -c -std=c11 $(CFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
+	@$(CC) -x c -c \
+		-std=c11 \
+		$(CFLAGS) \
+		$(WEB_SDL) \
+		$(INCLUDES) \
+		-MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<" \
 
 # C++ files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cpp
