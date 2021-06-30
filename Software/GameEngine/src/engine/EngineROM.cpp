@@ -337,9 +337,9 @@ void EngineROM_WriteSaveSlot(
 	#endif // DC801_EMBEDDED
 }
 
+#ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
 bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
-#ifdef DC801_EMBEDDED
 	if(gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE){
 		ENGINE_PANIC("Your game.dat is larger than 33550336 bytes.\nYou will need to reduce its size to use it\non this board.");
 	}
@@ -491,9 +491,9 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		96
 	);
 	p_canvas()->blt();
-#endif //DC801_EMBEDDED
 	return true;
 }
+#endif //DC801_EMBEDDED
 
 void EngineROM_Deinit() {
 #ifdef DC801_DESKTOP
@@ -641,7 +641,7 @@ uint32_t EngineROM_Verify(
 bool EngineROM_Magic() {
 	uint8_t length = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
 	uint8_t magic[] = ENGINE_ROM_GAME_IDENTIFIER_STRING;
-	u_int32_t bytesVerified = EngineROM_Verify(
+	uint32_t bytesVerified = EngineROM_Verify(
 		0,
 		length,
 		magic
