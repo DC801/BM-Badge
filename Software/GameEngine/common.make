@@ -5,11 +5,11 @@ AR := $(TOOLCHAIN)ar
 OBJCOPY := $(TOOLCHAIN)objcopy
 
 ifndef DESKTOP
-    SIZE := $(TOOLCHAIN)size
+	SIZE := $(TOOLCHAIN)size
 endif
 
 ifdef WEB
-    CC := emcc
+	CC := emcc
 endif
 
 # Optimization flags
@@ -36,11 +36,11 @@ FLAGS = -DBOARD_CUSTOM \
 	-DSWI_DISABLE0
 
 ifdef DESKTOP
-    ifeq ($(OS),Windows_NT)
-        # Placeholder
-    else
-        FLAGS += $(shell pkg-config --cflags-only-other sdl2)
-    endif
+	ifeq ($(OS),Windows_NT)
+		# Placeholder
+	else
+		FLAGS += $(shell pkg-config --cflags-only-other sdl2)
+	endif
 endif
 
 # C flags common to all targets
@@ -95,15 +95,17 @@ LD_LIBRARIES = -lc \
 	-lstdc++
 
 ifndef DESKTOP
-    LD_LIBRARIES += -lnosys
+	LD_LIBRARIES += -lnosys
 else
-    ifeq ($(OS),Windows_NT)
-        # Placeholder
-    else
-        ifndef WEB
-            LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
-        endif
-    endif
+	ifeq ($(OS),Windows_NT)
+		# Placeholder
+	else
+		ifdef WEB
+			LD_LIBRARIES +=  -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
+		else
+			LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
+		endif
+	endif
 endif
 
 CFLAGS += -D__HEAP_SIZE=16384
@@ -169,15 +171,19 @@ endif
 
 	@$(CC) -x assembler-with-cpp -c $(ASMFLAGS) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
+ifndef DESKTOP
 # Intel format Hex files
 $(PRJ_ROOT)/output/%.hex: $(PRJ_ROOT)/output/%.out
 	@echo "[ HEX ] $(notdir $@)"
 	@$(OBJCOPY) -O ihex "$<" "$@"
+endif
 
 # Output binary
 $(PRJ_ROOT)/output/%.bin: $(PRJ_ROOT)/output/%.out
 	@echo "[ BIN ] $(notdir $@)"
+ifndef WEB
 	@$(OBJCOPY) -O binary "$<" "$@"
+endif
 
 # ---------- Test ----------
 # C++ files
