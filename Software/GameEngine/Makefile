@@ -106,7 +106,9 @@ else
 ifdef WEB
 	@echo "Prepping web build"
 	@mv $(TARGET).out $(TARGET).js
-	@echo "<script src=\"bm_badge.js\"></script>" > $(OUTPUT_DIR)/index.html
+	@echo \
+		"<canvas id=\"canvas\"></canvas><script>var Module = {canvas: document.getElementById('canvas')}</script><script src=\"bm_badge.js\"></script>" \
+		> $(OUTPUT_DIR)/index.html
 endif
 endif
 
