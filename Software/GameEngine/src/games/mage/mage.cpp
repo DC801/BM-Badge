@@ -13,6 +13,10 @@
 #include "EngineWindowFrame.h"
 #endif
 
+#ifdef EMSCRIPTEN
+#include "emscripten.h"
+#endif
+
 #include "mage_hex.h"
 #include "mage_dialog_control.h"
 #include "mage_script_control.h"
@@ -225,6 +229,90 @@ void GameRender()
 	#endif
 }
 
+void EngineMainGameLoop ()
+{
+	//update timing information at the start of every game loop
+	now = millis();
+	deltaTime = now - lastTime;
+	#ifdef TIMING_DEBUG
+	debug_print("Current Loop Time: %d",now);
+	#endif
+	lastTime = now;
+
+	//frame limiter code to keep game running at a specific FPS:
+	//only do this on the real hardware:
+	#ifdef DC801_EMBEDDED
+	// if(now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
+	// { continue; }
+
+	// //code below here will only be run if enough ms have passed since the last frame:
+	// lastLoopTime = now;
+	#endif
+
+	//handles hardware inputs and makes their state available
+	EngineHandleInput();
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"EngineHandleInput();"
+	);
+
+	//updates the state of all the things before rendering:
+	GameUpdate(deltaTime);
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"GameUpdate(deltaTime)"
+	);
+
+	//If the loadMap() action has set a new map, we will load it before we render this frame.
+	if(MageScript->mapLoadId != MAGE_NO_MAP) {
+		//load the new map data into MageGame
+		MageGame->LoadMap(MageScript->mapLoadId);
+		//clear the mapLoadId to prevent infinite reloads
+		MageScript->mapLoadId = MAGE_NO_MAP;
+		//Update the game for the new map
+		GameUpdate(deltaTime);
+
+		LOG_COLOR_PALETTE_CORRUPTION(
+			"MageScript->mapLoadId != MAGE_NO_MAP"
+		);
+	}
+
+	#ifdef DC801_DESKTOP
+	// intentionally corrupt the dialog color palette BEFORE rendering,
+	// just so we can SEE if it works
+	if(
+		EngineInput_Buttons.op_page
+		&& EngineInput_Buttons.rjoy_center
+	) {
+		MageColorPalette *colorPalette = MageGame->getValidColorPalette(0);
+		colorPalette->colors[0] = 0xDEAD;
+	}
+	#endif //DC801_DESKTOP
+
+	//This renders the game to the screen based on the loop's updated state.
+	GameRender();
+
+	LOG_COLOR_PALETTE_CORRUPTION(
+		"GameRender()"
+	);
+	uint32_t fullLoopTime = millis() - lastTime;
+
+	//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
+	handleBlockingDelay();
+
+	uint32_t updateAndRenderTime = millis() - lastTime;
+
+	#ifdef TIMING_DEBUG
+	debug_print("End of Loop Total: %d", fullLoopTime);
+	debug_print("----------------------------------------");
+	#endif
+	#ifdef DC801_DESKTOP
+	if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) {
+		SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
+	}
+	#endif
+}
+
 void MAGE()
 {
 #ifdef DC801_DESKTOP
@@ -293,89 +381,14 @@ void MAGE()
 	lastLoopTime = lastTime;
 
 	//main game loop:
+	#ifdef EMSCRIPTEN
+	emscripten_set_main_loop(EngineMainGameLoop, 24, 1);
+	#else
 	while (EngineIsRunning())
 	{
-		//update timing information at the start of every game loop
-		now = millis();
-		deltaTime = now - lastTime;
-		#ifdef TIMING_DEBUG
-			debug_print("Current Loop Time: %d",now);
-		#endif
-		lastTime = now;
-
-		//frame limiter code to keep game running at a specific FPS:
-		//only do this on the real hardware:
-		#ifdef DC801_EMBEDDED
-		// if(now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
-		// { continue; }
-
-		// //code below here will only be run if enough ms have passed since the last frame:
-		// lastLoopTime = now;
-		#endif
-
-		//handles hardware inputs and makes their state available
-		EngineHandleInput();
-
-		LOG_COLOR_PALETTE_CORRUPTION(
-			"EngineHandleInput();"
-		);
-
-		//updates the state of all the things before rendering:
-		GameUpdate(deltaTime);
-
-		LOG_COLOR_PALETTE_CORRUPTION(
-			"GameUpdate(deltaTime)"
-		);
-
-		//If the loadMap() action has set a new map, we will load it before we render this frame.
-		if(MageScript->mapLoadId != MAGE_NO_MAP) {
-			//load the new map data into MageGame
-			MageGame->LoadMap(MageScript->mapLoadId);
-			//clear the mapLoadId to prevent infinite reloads
-			MageScript->mapLoadId = MAGE_NO_MAP;
-			//Update the game for the new map
-			GameUpdate(deltaTime);
-
-			LOG_COLOR_PALETTE_CORRUPTION(
-				"MageScript->mapLoadId != MAGE_NO_MAP"
-			);
-		}
-
-		#ifdef DC801_DESKTOP
-		// intentionally corrupt the dialog color palette BEFORE rendering,
-		// just so we can SEE if it works
-		if(
-			EngineInput_Buttons.op_page
-			&& EngineInput_Buttons.rjoy_center
-		) {
-			MageColorPalette *colorPalette = MageGame->getValidColorPalette(0);
-			colorPalette->colors[0] = 0xDEAD;
-		}
-		#endif //DC801_DESKTOP
-
-		//This renders the game to the screen based on the loop's updated state.
-		GameRender();
-
-		LOG_COLOR_PALETTE_CORRUPTION(
-			"GameRender()"
-		);
-		uint32_t fullLoopTime = millis() - lastTime;
-
-		//this pauses for MageScript->blockingDelayTime before continuing to the next loop:
-		handleBlockingDelay();
-
-		uint32_t updateAndRenderTime = millis() - lastTime;
-
-		#ifdef TIMING_DEBUG
-			debug_print("End of Loop Total: %d", fullLoopTime);
-			debug_print("----------------------------------------");
-		#endif
-		#ifdef DC801_DESKTOP
-			if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) {
-				SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
-			}
-		#endif
+		EngineMainGameLoop();
 	}
+	#endif
 
 	// Close rom and any open files
 	EngineROM_Deinit();
