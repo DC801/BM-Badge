@@ -105,10 +105,9 @@ else
 				-s USE_SDL=2 \
 				-s USE_SDL_IMAGE=2 \
 				-s SDL2_IMAGE_FORMATS='["png"]' \
-				--preload-file ../../SD_Card/MAGE/game.dat@/MAGE/game.dat \
-				--preload-file ../../SD_Card/MAGE/window_frame.png@/MAGE/window_frame.png \
-				--preload-file ../../SD_Card/MAGE/window_frame-button.png@/MAGE/window_frame-button.png \
-				--preload-file ../../SD_Card/MAGE/window_frame-led.png@/MAGE/window_frame-led.png \
+				-s FORCE_FILESYSTEM=1 \
+				-s ASSERTIONS=1 \
+				-s TOTAL_MEMORY=48MB \
 				-s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR
 		else
 			LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)

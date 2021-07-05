@@ -8,9 +8,10 @@
 #ifdef DC801_DESKTOP
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 
 FILE *romfile = NULL;
-uint8_t *romDataInDesktopRam = NULL;
+uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = {0};
 char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][16] = {
 	"MAGE/save_0.dat",
 	"MAGE/save_1.dat",
@@ -166,31 +167,45 @@ void EngineROM_Init()
 	result = f_close(&gameDat);
 #endif //DC801_EMBEDDED
 #ifdef DC801_DESKTOP
-	romfile = fopen(filename, "r+b");
+	struct stat stats;
+	size_t romFileSize = 0;
+	if (stat(filename, &stats) == 0) {
+		romFileSize = stats.st_size;
+		printf(
+			"EngineROM_Init - romFileSize: %d\n",
+			romFileSize
+		);
+	} else {
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Unable to read ROM file size"
+		);
+	}
 
+	if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE) {
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Invalid ROM file size!\n"
+			"    This is larger than the hardware's\n"
+			"    ROM chip capacity!\n"
+		);
+	}
+
+	romfile = fopen(filename, "rb");
 	if (romfile == NULL)
 	{
 		int error = errno;
 		fprintf(stderr, "Error: %s\n", strerror(error));
-		ENGINE_PANIC("Desktop build: ROM file missing");
-	}
-
-	fseek(romfile, 0, SEEK_END);
-	size_t romFileSize = ftell(romfile);
-	rewind(romfile);
-
-	romDataInDesktopRam = (uint8_t *) calloc(1, romFileSize);
-	if (!romDataInDesktopRam)
-	{
-		fclose(romfile);
-		ENGINE_PANIC("Desktop build: ROM->RAM memory alloc failed");
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Unable to open ROM file for reading"
+		);
 	}
 
 	/* copy the file into the buffer */
 	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
 	{
 		fclose(romfile);
-		free(romDataInDesktopRam);
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 #endif //DC801_DESKTOP
@@ -508,9 +523,6 @@ void EngineROM_Deinit() {
 	}
 
 	romfile = NULL;
-
-	free(romDataInDesktopRam);
-	romDataInDesktopRam = NULL;
 #endif // DC801_DESKTOP
 }
 
