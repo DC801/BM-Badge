@@ -286,6 +286,29 @@
                  "width":32,
                  "x":486,
                  "y":287
+                }, 
+                {
+                 "gid":425,
+                 "height":32,
+                 "id":61,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":512,
+                 "y":140
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -521,7 +544,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":61,
+ "nextobjectid":62,
  "orientation":"orthogonal",
  "properties":[
         {

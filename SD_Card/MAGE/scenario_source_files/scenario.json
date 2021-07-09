@@ -1,6 +1,7 @@
 {
 	"scriptPaths": [
 		"scripts/script-main_menu.json",
+		"scripts/script-demo_map.json",
 		"scripts/script-generic_entity_scripts.json",
 		"scripts/script-test_scripts.json",
 		"scripts/script-action_testing.json",
@@ -26,6 +27,7 @@
 	],
 	"dialogPaths": [
 		"dialog/dialog-main_menu.json",
+		"dialog/dialog-demo_map.json",
 		"dialog/dialog-test_map.json",
 		"dialog/dialog-action_testing.json",
 		"dialog/dialog-shepherd.json",
@@ -46,6 +48,7 @@
 	],
 	"maps": {
 		"main_menu": "maps/map-main_menu.json",
+		"demo": "maps/map-demo.json",
 		"main": "maps/map-main.json",
 		"bobsclub": "maps/map-bobsclub.json",
 		"test": "maps/map-test.json",
