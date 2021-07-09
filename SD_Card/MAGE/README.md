@@ -295,7 +295,7 @@ All **tileset tiles need to be perfect squares** because tiles can be rotated or
 
 **Sprite sheets** are tilesets that contain every iteration of a sprite needed for all of its animations.
 
->Due to the way Tiled defines animations, the order of the sprite tiles doesn't matter, but for BMG2020 we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
+> Due to the way Tiled defines animations, the order of the sprite tiles doesn't matter, but for BMG2020 we tend to have one sprite tile for the side view, front view, and back view on one row, going down the image in a series of rows.
 
 Sprite sheets are handled like tilesets within Tiled and the [MGE encoder](#mge-encoder), but unlike tilesets, sprite sheet tiles aren't required to be squares.
 
@@ -403,7 +403,9 @@ Action animations are not expected to loop. Instead they are expected to interru
 
 You can add additional animations after the first three, too, as you like.
 
-Keep in mind that these animations can only be deliberately triggered by scripts, either for an arbitrary number of loops with [`PLAY_ENTITY_ANIMATION`](#play_entity_animation), or indefinitely with [`SET_ENTITY_CURRENT_ANIMATION`](#set_entity_current_animation). For the latter action, any animation set this way will be aborted by the walk animation when the character entity attempts to move, and the entity will return to its idle after the walk motion is ended.
+Keep in mind that these animations can only be deliberately triggered by scripts, either for an arbitrary number of loops with [`PLAY_ENTITY_ANIMATION`](#play_entity_animation), or indefinitely with [`SET_ENTITY_CURRENT_ANIMATION`](#set_entity_current_animation).
+
+> Any animation set this way will be overridden by the walk animation if the character entity is compelled to move, and the entity will return to its idle after the walk motion is completed. (Teleports don't count as "movement" in this case because entities don't switch to their walking animation when teleported.)
 
 #### Animation Transitions and Vamping
 
@@ -521,7 +523,7 @@ When a MGE entity is teleported to a vector object (or begins to walk along a ve
 
 #### Entities (Tile Objects)
 
-Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). These tile objects will play the animation associated with that tile, if any, in both Tiled and the MGE.
+Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**).
 
 Different entity types will require slightly different [properties](#entity-properties).
 
@@ -562,23 +564,23 @@ In addition, there is currently no way to (precisely) control animations with sc
 
 If you place a static (unanimated) tile from a tileset onto an object layer, it will become a **tile entity**.
 
+>NOTE: If the tile's "Type" property is something defined within [`entity_types.json`](#entity_typesjson), it will instead become a [character entity](#character-entity-entity_type).
+
 - **`PrimaryIdType`**: `0` (`tileset`)
 - **`PrimaryId`**: the `id` of the tileset the entity is using
 - **`SecondaryId`**: the `id` of the tile on the tileset (the Nth tile, counting left to right and top to down, 0-indexed)
 
 These are a simple way of making props interactable.
 
+If you don't want an interactable prop to be be Y-indexed with other entities when drawn, you could instead put the prop in the map geometry itself and create a **null entity** for the interactable aspects. Such props can never be moved, as they are permanently baked into the environment — but this is not necessarily a disadvantage.
+
 #### Null Entities
 
-A null entity is a tile entity whose tile is entirely transparent.
+A null entity is a tile entity whose tile is entirely transparent. They're useful for implementing scripting behaviors not directly supported by the MGE, such as having an entity procedurally chase a moving (invisible) target.
 
->If you don't want an interactable prop to be be Y-indexed with other entities when drawn, you could instead create a **null entity** for the interactable aspects:
->- Make the prop part of the world map (on a [tile layer](#tile-layers) in Tiled), where it will be remain below or above entities at all times.
->- Place a "null entity," a completely blank tile, which you can use for all desired entity properties, e.g. an [`on_interact`](#on_interact-scripts) script.
->
-> **Disadvantages**: The null entity can be hacked into another tile (presumably one with pixel data), in which case a new object will seemingly appear on top of the prop.
->
->Such props can also never be moved, as they are permanently baked into the environment — but this is not necessarily a disadvantage.
+A common use is to enable interaction behavior for things that aren't themselves entities. To do this, place a null entity on the map wherever you want interaction behavior to happen, then use the null entity's [`on_interact`](#on_interact-scripts) script slot for the interaction behavior.
+
+> **Disadvantages**: The null entity can be hacked into another tile (presumably one with pixel data), in which case a new object will seemingly appear out of nowhere.
 
 ### Animation Entity (`animation`)
 
@@ -607,6 +609,10 @@ If you place a tile from a tileset onto an object layer, and the "Type" property
 In scripts, you need not manipulate `PrimaryId` to alter the appearance of a character entity, though there are certainly scripts that are capable of doing this. Instead, you can use scripts with the argument `entity_type`, which is the name (string) of the character entity as defined within [`entity_types.json`](#entity_typesjson). (In the entity's tileset, this is what the property "Type" is set to.)
 
 What's special about character entities is that they can have a number of animations [assigned](#entity-manager) to them and they will switch animations automatically depending on context (walking or not, facing north/south/east/west, etc.), as well as having other attributes, like a permanently assigned portrait image. **NPCs will therefore likely be this type.**
+
+In the MGE, character entities will default to their idle animation regardless of whatever specific tile is being used within Tiled. (I.e. if you use a "walking animation" tile for the entity on the Tiled map, the entity will appear to be walking in Tiled, but not within the MGE.)
+
+Character entities will face the north by default, but if the tile placed has been [assigned to a NSEW direction and a purpose](#entity-manager), the entity will instead face the direction associated with that tile. 
 
 ## Entity Properties
 
@@ -657,7 +663,21 @@ These properties must be manually added. To add one, first click the plus at the
 
 These are not "hackable" entity bytes in BMG2020, but they are still properties that can be assigned within Tiled.
 
-**`is_player` (bool)** — This is the entity the player will control within the map. There should be only one such entity per map.
+**`is_player` (bool)** — This is the entity the player will control within the map. There should be only one such entity per map. (If there is more than one, the encoder will throw an error.)
+
+Without an `is_player` entity:
+1. The camera will be positioned with its top-left corner aligned with the top-left corner of the map's coordinate space.
+2. The left joystick will control the camera movement.
+	- Holding X (the run button) will make the camera move faster.
+3. The hex editor can still be engaged.
+4. Vector view can still be toggled (XOR + MEM0, or F1 + F5 on desktop).
+5. Map reloads work, but the camera will remain wherever it was last positioned. (It will not be reset to what is described in [1].) Ways to reload the map:
+	- Toggling [debug mode](#debug-mode): XOR + MEM1 (or F1 + F6 on desktop)
+	- Map soft reset: XOR + MEM3 (or F1 + F8 on desktop)
+	- Targetting the current map with [`LOAD_MAP`](#load_map)
+6. Dialogs referencing the player entity will use a random portrait and the name `MISSING: 253`.
+7. Actions targeting the player entity will generally do nothing.
+	- If you want to change the player's name via an action (e.g. in your game's main menu), this means you must have an `is_player` entity somewhere on the map.
 
 ## Map Properties
 
@@ -1299,9 +1319,9 @@ This part is much easier to do using the [web encoder](#web-encoder), but if you
 
 When animations are created within Tiled, they are assigned to a tile on the tileset. So for the above definitions, `tileid` refers to which tile the animation has been assigned to.
 
-> (Like above, if you count left-to-right and top-to-down to get the tile ID, remember to count starting from 0 instead of 1. Alternatively, you can select the correct tile in Tiled and see the tile ID that way.)
+> Like above, if you count left-to-right and top-to-down to get the tile ID, remember to count starting from 0 instead of 1. Alternatively, you can select the correct tile in Tiled and see the tile ID that way.
 
-`flip_x` will horizontally flip the sprites, but otherwise make no changes to the animation on that tile.
+`flip_x` will flip the sprites horizontally, but otherwise make no changes to the animation on that tile.
 
 The order of the object literals in the animation is fixed:
 - North
@@ -2188,6 +2208,8 @@ When `true`, the player entity can move around as normal. When `false`, the play
 - `map`
 
 Except for the player name, all [entity properties](#entity-properties) are reset to their original values when a new map is loaded.
+
+If `map` is the current map, this action will reload the current map. (This behavior is equivolent to pressing XOR + MEM3, or F1 + F8 on desktop.)
 
 When a player walks through a doorway or otherwise triggers a map load, you should probably set the [warp state](#warp_state-string) variable before using the `LOAD_MAP` action.
 
