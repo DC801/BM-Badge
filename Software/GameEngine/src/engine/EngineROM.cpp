@@ -203,9 +203,10 @@ void EngineROM_Init()
 	}
 
 	/* copy the file into the buffer */
-	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
+	bool readFailed = fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1;
+	fclose(romfile);
+	if (readFailed)
 	{
-		fclose(romfile);
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 #endif //DC801_DESKTOP
@@ -512,17 +513,6 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 
 void EngineROM_Deinit() {
 #ifdef DC801_DESKTOP
-	if (romfile == NULL)
-	{
-		ENGINE_PANIC("Game Data file is not open");
-	}
-
-	if (fclose(romfile) != 0)
-	{
-		ENGINE_PANIC("Failed to close Game Data file");
-	}
-
-	romfile = NULL;
 #endif // DC801_DESKTOP
 }
 

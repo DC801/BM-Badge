@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 bool running = true;
+bool shouldReloadGameDat = false;
 
 ButtonStates EngineInput_Buttons = {};
 ButtonStates EngineInput_Activated = {};
@@ -74,6 +75,15 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 				&& (e.key.keysym.mod & KMOD_ALT)
 			) {
 				running = false;
+				return;
+			}
+			// ctrl-r should cause the desktop version of the game to
+			// reload the `game.dat` from the filesystem
+			else if (
+				e.key.keysym.sym == SDLK_r
+				&& (e.key.keysym.mod & KMOD_CTRL)
+			) {
+				shouldReloadGameDat = true;
 				return;
 			}
 		}
@@ -294,6 +304,13 @@ void EngineHandleInput ()
 bool EngineIsRunning()
 {
 	return running;
+}
+
+bool EngineShouldReloadGameDat()
+{
+	bool result = shouldReloadGameDat;
+	shouldReloadGameDat = false;
+	return result;
 }
 
 #ifdef __cplusplus

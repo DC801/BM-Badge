@@ -311,13 +311,12 @@ void EngineMainGameLoop ()
 		SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
 	}
 	#endif
+	if (EngineShouldReloadGameDat()) {
+		EngineInit();
+	}
 }
 
-void MAGE()
-{
-#ifdef DC801_DESKTOP
-	EngineWindowFrameInit();
-#endif
+void EngineInit () {
 	//turn off LEDs
 	ledsOff();
 
@@ -351,9 +350,6 @@ void MAGE()
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
 	hackableDataAddress = MageGame->entities.get();
 
-	//initialize the canvas object for the screen buffer.
-	mage_canvas = p_canvas();
-
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);
 
@@ -379,6 +375,17 @@ void MAGE()
 	//note the time the first loop is running
 	lastTime = millis();
 	lastLoopTime = lastTime;
+}
+
+void MAGE()
+{
+	#ifdef DC801_DESKTOP
+		EngineWindowFrameInit();
+	#endif
+	//initialize the canvas object for the screen buffer.
+	mage_canvas = p_canvas();
+
+	EngineInit();
 
 	//main game loop:
 	#ifdef EMSCRIPTEN
