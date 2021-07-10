@@ -355,12 +355,14 @@
 ## Web Build TODO:
 - [x] Get it to be playable in the browser, at all
 - [x] Desktop build should be able to "ctrl-r/refresh" the `game.dat` from filesystem
-- [ ] Default `game.dat` should be cached between refreshes
+- [x] Default `game.dat` should be cached between refreshes
 - [ ] User should be able to drag in a `game.dat` and play it
 	- [ ] The dragged-in `game.dat` should be cached between refreshes
 	- [ ] Should show the CRC32 of the current `game.dat` and the ability to clear it and load default
 	- [ ] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
 - [ ] Save files should persist between refreshes
+- [ ] Add Web Build setup instructions to `EnvironmentSetup.md`
+- [ ] Add Web Build env config to the public dev VM
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
