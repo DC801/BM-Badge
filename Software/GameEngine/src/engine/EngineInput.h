@@ -44,6 +44,7 @@ extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
 void EngineHandleInput();
 bool EngineIsRunning();
+bool EngineShouldReloadGameDat();
 
 #ifdef __cplusplus
 }
