@@ -55,13 +55,21 @@ var Module = {
 // REF: https://emscripten.org/docs/api_reference/Filesystem-API.html#FS.writeFile
 
 var fetchBinaryDataFromPath = function (path) {
-	return fetch(path).then(function (file) {
-		return file.arrayBuffer().then(function (arrayBuffer) {
+	return localforage.getItem(path).then(function (content) {
+		var result = content;
+		if (result === null) {
+			result = fetch(path).then(function (file) {
+				return file.arrayBuffer().then(function (arrayBuffer) {
+					return localforage.setItem(path, arrayBuffer);
+				});
+			})
+		}
+		return result;
+	})
+		.then(function (arrayBuffer) {
 			return loadedDataMap[path] = new Uint8Array(arrayBuffer);
 		});
-	});
 };
-
 
 var filesToPreload = [
 	'MAGE/desktop_assets/window_frame.png',
