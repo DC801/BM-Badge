@@ -352,17 +352,34 @@
 - [x] Add support for the elusive `any key` to the button handlers
 - [x] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
 
+## Development VM TODO:
+- [ ] Set the XFCE GUI "theme" to dark mode
+- [ ] Set the VSCode default "debug" script to "Debug desktop"
+- [ ] Add a few bookmarks to the browser
+	- [ ] Github repo
+	- [ ] ide.kaitai.io
+		- [ ] pre-load the mage_game.ksy into kaitai
+
 ## Web Build TODO:
 - [x] Get it to be playable in the browser, at all
 - [x] Desktop build should be able to "ctrl-r/refresh" the `game.dat` from filesystem
 - [x] Default `game.dat` should be cached between refreshes
-- [ ] User should be able to drag in a `game.dat` and play it
+- [x] User should be able to drag in a `game.dat` and play it
+	- [x] Verify that the header of dragged file contains `MAGEGAME`
+	- [x] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
+	- [x] Reloading the page starts game fresh from original `game.dat` in IndexedDB
+- [ ] Fancy extra `game.dat` features
 	- [ ] The dragged-in `game.dat` should be cached between refreshes
-	- [ ] Should show the CRC32 of the current `game.dat` and the ability to clear it and load default
-	- [ ] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
+	- [ ] Should show the Path/CRC32/Length of each `game.dat`
+	- [ ] Display a list of the available `game.dat` files, filenames + CRC32
+		- [ ] Original
+		- [ ] Each dragged version
+		- [ ] Multiple endorsed scenarios(?)
+	- [ ] Add ability to erase a dragged file from that list
 - [ ] Save files should persist between refreshes
 - [ ] Add Web Build setup instructions to `EnvironmentSetup.md`
 - [ ] Add Web Build env config to the public dev VM
+- [ ] Find a way to display the `ENGINE_PANIC` screens in Emscripten before we get into the main loop, otherwise the browser gets stuck in a broken infinite loading state where the screen doesn't display at all
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
@@ -423,7 +440,17 @@
 		- [ ] The tileset actually just looks like a Zelda MiniMap
 			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
 		- [ ] This dungeon can has an inventory system
+		- [ ] Different rooms can act as mini-tutorials for the features of the "terminal"
+			- [ ] Do you `cd` to uhh... Change Dungeon?
+			- [ ] Do you `ls` to uhh... Look Somewhere?
+			- [ ] Do you `cat` to uhh... Ask a cat to read a file to you?
+				- [ ] Does a cat walk up to you at the start of the dungeon and follow you around? is it your secretary?
+			- [ ] Do we "|" or "pipe" things from one command into another other?
+		- [ ] We need an interactive character named PuTTY
+			- [ ] It should be illustrated or described as a Morph suit like the PUTTYs from Power Rangers
 - [ ] Filesystem Dungeon
+	- [ ] Figure out how to create a USB Mass Storage disk from of the contents of like 4KB of RAM.
+		- [ ] Use a super tiny block size.
 	- [ ] A chmod/chown puzzle.
 		- [ ] Enemy dies. drops weapon on to the FileSystem.
 		- [ ] Player can't pick up weapon because its permissions are wrong.

@@ -1,3 +1,4 @@
+var textDecoder = new TextDecoder();
 var canvas = document.getElementById('canvas');
 var context = canvas.getContext('2d');
 context.fillStyle = '#000';
@@ -31,7 +32,7 @@ var mkdirp = function (_pathSplit) {
 		}
 	}
 };
-var addLoadedFilePathToVirtualFS = function (path) {
+var setDataToPathInVirtualFS = function (path, uintArray) {
 	var pathSplit = path.split('/');
 	var fileName = pathSplit.pop();
 	var parent = '/' + pathSplit.join('/');
@@ -39,10 +40,16 @@ var addLoadedFilePathToVirtualFS = function (path) {
 	FS.createDataFile(
 		parent,
 		fileName,
-		loadedDataMap[path],
+		uintArray,
 		true,
 		false
 	);
+};
+var addLoadedFilePathToVirtualFS = function (path) {
+	setDataToPathInVirtualFS(
+		path,
+		loadedDataMap[path],
+	)
 };
 var Module = {
 	canvas: canvas, // compensates for emscripten startup weirdness - IMPORTANT
@@ -87,3 +94,51 @@ Promise.all(fileLoadPromises)
 		scriptElement.src = './bm_badge.js';
 		document.body.appendChild(scriptElement);
 	});
+
+var handleFileDropIntoPage = function(event) {
+	event.preventDefault();
+	if (event.type === 'drop') {
+		var itemList = Array.prototype.slice.call(event.dataTransfer.items);
+		var item = itemList[0];
+		var file = item.getAsFile();
+		console.log('handleFileDropIntoPage', event, file);
+		file.arrayBuffer().then(function (arrayBuffer) {
+			var uint8Array = new Uint8Array(arrayBuffer);
+			var headerStringUint8Array = uint8Array.slice(0, 8);
+			var headerText = textDecoder.decode(headerStringUint8Array);
+			if (headerText !== 'MAGEGAME') {
+				alert('The file you dragged is not a valid `MAGEGAME` data file!');
+			} else {
+				var headerCrc32Uint8Array = uint8Array.slice(8, 12);
+				var headerCrc32String = (
+					'0x'
+					+ Array.from(headerCrc32Uint8Array)
+						.map((value)=>value.toString(16))
+						.join('')
+				);
+				var headerLengthUint32Array = new Uint32Array(uint8Array.slice(12, 16));
+				var path = 'Dragged';
+				var gameHeaderLabel = [
+					'Source: ' + path,
+					'CRC32: ' + headerCrc32String,
+					'Length: ' + headerLengthUint32Array[0],
+				].join(' | ');
+				console.log('handleFileDropIntoPage:gameHeaderLabel');
+				console.log(gameHeaderLabel);
+				// don't persist this until we add GUI to allow users to delete bad ROMs
+				FS.unlink('MAGE/game.dat');
+				setDataToPathInVirtualFS(
+					'MAGE/game.dat',
+					uint8Array,
+				);
+				Module.ccall('EngineTriggerRomReload');
+			}
+		});
+	}
+};
+
+// weirdly, if you don't preventDefault on dragover & dragenter,
+// your drop handler will never fire???
+document.body.addEventListener('dragover', handleFileDropIntoPage);
+document.body.addEventListener('dragenter', handleFileDropIntoPage);
+document.body.addEventListener('drop', handleFileDropIntoPage);
