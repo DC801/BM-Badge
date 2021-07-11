@@ -313,6 +313,11 @@ bool EngineShouldReloadGameDat()
 	return result;
 }
 
+void EngineTriggerRomReload()
+{
+	shouldReloadGameDat = true;
+}
+
 #ifdef __cplusplus
 }
 #endif
