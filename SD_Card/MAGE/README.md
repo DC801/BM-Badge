@@ -160,14 +160,7 @@ There'll be a bunch of stuff in the `MAGE/` folder, but relevant to creating new
 
 `replace_dat_file_with_downloaded.sh` — A shell script for grabbing the latest `game.dat` from your Downloads folder and moving it to your current directory.
 
-`regenerate_dat_file.sh` — This shell script requires `node.js` to run. Both versions will create a `game.dat` and move it to where the game engine can see it.
-- BM-Badge version:
-	- `cd` into `MAGE/`.
-	- Run the shell script. The `game.dat` will be made from the `scenario_source_files/` in `MAGE/`.
-- Sample repo version:
-	- first argument: the `scenario_source_files/` folder to read from
-	- second argument: where to write the `game.dat`
-	- This version of the shell script also launches the game automatically.
+`regenerate_dat_file.sh` — This shell script requires `node.js` to run. There are [two versions](#cli-encoder), depending on which repo you started with.
 
 `scenario_source_files/` — This is where your raw game data lives.
 
@@ -323,7 +316,7 @@ The [MGE encoder](#mge-encoder) indexes the pallets of each image, and there is 
 
 When you save changes to an image that Tiled is actively using, including changing its dimensions, the graphical changes are instantly reflected in all maps, tilesets, etc. within Tiled. This way, you can rapidly iterate on how something looks in its already-established context.
 
-However, changes in image dimensions are *not* automatically perpetuated to the tileset's declared properties, and since the [MGE encoder](#mge-encoder) relies on those values to determine the tileset's size, it will cause problems: for tiles past the tileset's declared bounds, the pixel data will behave correctly, but random collision data will be applied.
+However, changes in image dimensions are *not* automatically perpetuated to the tileset's declared properties, and since the [MGE encoder](#mge-encoder) relies on those values to determine the tileset's size, it will cause problems: for tiles past the tileset's declared bounds, the pixel data will behave correctly, but random [collision data](#map-tile-collisions) will be applied.
 
 **Solution**: Make any change whatsoever to the tileset inside of Tiled to have it recalculate those properties, then save. Alternatively, change the numbers yourself in a text editor.
 
@@ -511,6 +504,8 @@ Vector polygons and points are placed on object layers, but tiles can be placed 
 >
 > It doesn't matter how many layers there are in terms of accommodating the MGE encoder, but it's best to place the layer for entities just underneath the topmost tile layer, at least, for the most accurate visual preview.
 
+Vector objects are susceptible to [coordinate underflow](#map-coordinate-underflow), so try to keep objects and all their vertices inside the map coordinate space (unless you actually want to yeet an entity to outer space).
+
 #### Polygons and Points
 
 These can be used as paths or destinations for entities or the camera. Additionally, the MGE can detect whether entities are within polygons, so polygons are also useful for script triggers such as doorways. Be sure to give these vector objects a name in the "Name" properties view so that scripts can identify them.
@@ -523,19 +518,21 @@ When a MGE entity is teleported to a vector object (or begins to walk along a ve
 
 #### Entities (Tile Objects)
 
-Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**).
-
-Different entity types will require slightly different [properties](#entity-properties).
+Entities are placed as tiles on an object layer with the "Insert Tile" button (shortcut **T**). The [type of entity](#three-entity-types) placed and [a few](#standard-entity-properties) of its [properties](#entity-properties) are determined by which tile you use, but other entity properties must be [explicitly set](#custom-entity-properties).
 
 Entities are Y-indexed in the MGE, meaning they are rendered in front of or behind other entities according to their Y position. For entities being used as environment props, this can result in odd behavior (e.g. the player appearing underneath a bundle of cable if they walk too far behind it).
 
 Each map can have a maximum of 64 entities.
 
-#### Map Coordinate Underflow
+#### Spawn Points
 
-If a vertex crosses the left and/or top edge of the map coordinate space, its coordinates will underflow (i.e. become a very, very high value). This can cause unexpected behavior in scripts trying to interact with the vector object.
+For [doorway/warp behavior](#doors-player), there are two ways to handle player spawn points:
 
-This goes for the coordinates of entities, too, since they use the map coordinate space.
+1. **Default spawn points**: Player entities will spawn by default where an `is_player` entity was placed in Tiled. For maps with a single door, such as an NPC's house, this will be sufficient to control a player's spawning behavior — simply place a player entity at the entrance, facing the appropriate direction.
+
+2. **Custom spawn points**: To control additional spawn points, you will need to create [vector objects](#polygons-and-points) to use as teleport destinations.
+
+To prevent the player from instantly returning to where they came from, the player spawn point should not overlap with the doorway trigger in the new destination.
 
 ## Three Entity Types
 
@@ -572,7 +569,7 @@ If you place a static (unanimated) tile from a tileset onto an object layer, it 
 
 These are a simple way of making props interactable.
 
-If you don't want an interactable prop to be be Y-indexed with other entities when drawn, you could instead put the prop in the map geometry itself and create a **null entity** for the interactable aspects. Such props can never be moved, as they are permanently baked into the environment — but this is not necessarily a disadvantage.
+If you don't want an interactable prop to be be Y-indexed with other entities when drawn, you could instead put the prop in the map geometry itself and create a **null entity** for the interactable aspects.
 
 #### Null Entities
 
@@ -641,7 +638,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 > **Best Practice**: If you don't want an entity to have an `on_tick` script, you can leave this property blank, or avoid adding it altogether. However, we've found it useful to set an entity's `on_tick` script to [`null_script`](#null_script) if the entity will be given a specific `on_tick` by another script later in the game. This way, it's clear that the entity's `on_tick` slot is "reserved," and you won't accidentally give it an `on_tick` script that will be overwritten later.
 
-**[`on_interact`](on_interact-scripts) (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's `show_dialog` tree.
+**[`on_interact`](on_interact-scripts) (string)** — This identifies the script that is run when the player interacts with the entity. Overwhelmingly, this will be the start of the entity's [dialog tree](#beginnings-middles-and-ends).
 
 **`PrimaryIdType`**, **`PrimaryId`**, and **`SecondaryId`** are also available to entities, but you need not assign these properties explicitly within Tiled, since they are determined by the identity of the tile you are placing on the map.
 
@@ -655,7 +652,7 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`hackable_state_a` (int)** and **`hackable_state_b` (int)** — These can be set arbitrarily as ints, but currently the MGE uses these bytes to store the entity's path. (See below.)
 
-**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.).
+**`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.)
 
 **`hackable_state_c` (int)** and **`hackable_state_d` (int)** — These are not used for anything in the MGE yet, so might be considered "special use space."
 
@@ -697,7 +694,7 @@ To see the map's properties, go to "Map > Map Properties…."
 
 The map size limit for the MGE is quite large. [65k tiles wide?]
 
-#### Coordinate Considerations
+### Coordinate Considerations
 
 If designing a puzzle involving X and Y coordinates, you should keep the global map coordinate space in mind when placing entities, triggers, etc. Each coordinate spans two bytes, so map distances greater than 256 pixels (horizontal or vertical) are guaranteed to involve the more significant byte of the pair, which can be confusing to players not familiar with little endian byte order.
 
@@ -709,13 +706,19 @@ Distances smaller than 256 can involve this byte, too, depending on where things
 >
 >Lock the layer containing this vector guide and/or place it below all other object layers to keep it from preventing you from selecting other elements in Tiled.
 
+### Map Coordinate Underflow
+
+If a vertex crosses the left and/or top edge of the map coordinate space, its coordinates will underflow (i.e. become a very, very high value). This can cause unexpected behavior in scripts trying to interact with the vector object.
+
+This goes for the coordinates of entities, too, since they use the map coordinate space.
+
 ---
 
 # Dialog
 
 Dialog JSON files define the text that is displayed within a dialog box in the MGE. They should live within `dialog/`.
 
-Dialogs do nothing on their own. To show them, you must use the `SHOW_DIALOG` action within a script. (See the [Scripts](#scripts) section below for more about how this works.)
+Dialogs do nothing on their own. To show them, you must use the [`SHOW_DIALOG`](#show_dialog) action within a [script](#scripts).
 
 Arbitrary actions cannot be performed by the script running an in-progress dialog. Therefore, if a character must change their behavior partway through a dialog message, you must split the dialog into multiple pieces (`speech-part-1`, `change-in-behavior action`, `speech-part-2`, etc.) or use another [script slot](#script-slots) to control their behavior.
 
@@ -789,33 +792,35 @@ Remember to wrap messages in double quotes and to separate them with commas.
 This property can be any of the following:
 1. [`%PLAYER%`](#relative-entity-references), which refers to the player entity
 2. [`%SELF%`](#relative-entity-references), which refers to the entity running the script
-3. the **given name** of an entity
+3. the **given name** of an entity (no percent signs)
 
-If the referenced entity is a [character entity](#character-entity-entity_type), the [MGE encoder](#mge-encoder) will use [`entity_types.json`](#entity_typesjson) to automatically determine the portrait image and the name for the dialog label.
+The MGE will use the referenced entity's [relative name](#relative-entity-names) for the dialog label automatically.
 
-You cannot use [relative entity names](#relative-entity-names) for this property. (If you do, the [encoder](#mge-encoder) will give you a message in the vein of "No entity named `%Helga%` found on map `default`!")
+> For the `entity` property, you must not use percent signs to refer to entities. If you do, the [encoder](#mge-encoder) will give you a message in the vein of "No entity named `%Helga%` found on map `default`!"
+>
+> If you don't wnat to use an entity's [relative entity name](#relative-entity-names) in the dialog label, you must use the `name` property.
 
+If the referenced entity is a [character entity](#character-entity-entity_type), the [MGE encoder](#mge-encoder) will use [`entity_types.json`](#entity_typesjson) to automatically determine the portrait image.
 
 ### `name`
 
-Optional. This is the string the dialog box displays for its label, and if included, it will override any names inherited from `entity` above, if any.
+Optional. This is the string the dialog box displays for its label, and if included, it will override any names inherited from `entity` above.
 
 This property can be any of the following:
-1. an abritraty ASCII string up to 12 characters long
-2. [`%PLAYER%`](#relative-entity-references), which refers to the player entity
-3. [`%SELF%`](#relative-entity-references), which refers to the entity running the script
-4. the given name of an entity
-5. the [relative name](#relative-entity-names) of an entity, which is the entity's given name enclosed in percent signs: `%[Entity Name]%`
+1. [`%PLAYER%`](#relative-entity-references), which refers to the player entity
+2. [`%SELF%`](#relative-entity-references), which refers to the entity running the script
+3. an abritraty ASCII string up to 12 characters long
+4. the [relative name](#relative-entity-names) of an entity, which is the entity's given name enclosed in percent signs: `%[Entity Name]%`
 
-[4] and [5] will appear to behave the same in most cases, but [5] will allow inherited dialog labels to reflect the entity's name as it currently exists in RAM and not the name it was originally asigned.
+If you use the entity's given name without percent signs, it will behave as a static string [3]. This will appear to behave the same as [4] in most cases, but [4] will allow inherited dialog labels to reflect the entity's name as it currently exists in RAM and not the name it was originally assigned.
 
 The dialog label itself is not optional, so failing to provide either `entity` or `name` will result in errant behavior.
 
 ### `portrait`
 
-Optional. This is the name of the portrait defined in [`portraits.JSON`](#portraitsjson) you want to use for the dialog, and will override any portraits inherited from `entity` above.
+Optional. This is the name of the portrait defined in [`portraits.json`](#portraitsjson) you want to use for the dialog, and will override any portraits inherited from `entity` above.
 
-If the dialog cannot find a portrait to use (either via this property or the `entity` property above) the dialog will display no portrait box.
+If the dialog cannot find a portrait to use (either via `portrait` or `entity`), then the dialog will display no portrait box.
 
 ### `border_tileset`
 
@@ -823,7 +828,7 @@ Optional. This is name of the dialog box tileset you want the dialog box to use,
 
 ### `emote`
 
-Optional. Allows you to select a specific emote within the entity's entry in [`portraits.JSON`](#portraitsjson). The default emote (`0`) will display if not specified. (While emotes can be given names when defined, you must use intigers to control them here.)
+Optional. Allows you to select a specific emote within the entity's entry in [`portraits.json`](#portraitsjson). The default emote (`0`) will display if not specified. (While emotes can have assigned names, you must use intigers to control them here.)
 
 ### `messages`
 
@@ -838,7 +843,7 @@ Each dialog message is limited to five rows of 42 ASCII characters and line brea
 
 Smart quotes are not a part of ASCII, nor are ellipses (…), so when copying text written in word processors, please take care to replace any such characters with ASCII equivalents. (Shall the encoder automatically do this in the **FUTURE**?)
 
-Similarly, to place a double quote within a message, you must type a backslash first: `\"`
+To place a double quote within a message, you must type a backslash first: `\"`
 
 >Example:
 >
@@ -1094,11 +1099,11 @@ Variables don't have to be declared before they can be used; simply using an act
 
 All variables are persistent between map loads, and are all included in the game save.
 
-Every property on every entity is available for scripts to read and/or change, and these could be used like traditional variables. In particular, the last two bytes for every entity have no specific use, and might be considered free space. But apart from the player's name, all of these are reset when a new map is loaded, so in practice they might have marginal utility.
+Every property on every entity is available for scripts to read and/or change, and these could be used like traditional variables. In particular, the last two bytes for every entity have no specific use, and might be considered free space. But apart from the player entity's name, all entity properties are reset when a new map is loaded, so in practice they might have marginal utility.
 
 ### `warp_state` (String)
 
-This is a global variable (a string) that is designated for controlling player spawn behavior on a map's [`on_load`](#on_load-scripts) script. When you leave a room (or otherwise trigger a new map to load), the `warp_state` string should be set to something that indicates the exit/entrance point so the next map can teleport the player entity to an appropriate [spawn point](#polygons-and-points), such as a doorway.
+This is a global variable (a string) that is designated for controlling player spawn behavior on a map's [`on_load`](#on_load-scripts) script. When you [leave a room](#doors-player) (or otherwise trigger a new map to load), the `warp_state` string should be set to something that indicates the exit/entrance point so the next map can teleport the player entity to the appropriate [spawn point](#spawn-points).
 
 Handling player spawn points is the original purpose for `warp_state`, but there's nothing stopping you from using it for other things, too.
 
@@ -1120,9 +1125,9 @@ Common use cases for save flags include tracking whether the player has:
 
 ## Other States
 
-Control of the player entity can be removed or restored with the action `SET_PLAYER_CONTROL`. When player control is removed, the player cannot move, use the hex editor, or engage with entities. This is useful if you want to force the player entity to walk along a specific path for a cutscene, or want to make sure the player doesn't walk away from a conversation where an NPC pauses speaking for a minute to (for instance) pace back and forth.
+Control of the player entity can be removed or restored with the action [`SET_PLAYER_CONTROL`](#set_player_control). When player control is off, the player cannot move, use the hex editor, or engage with entities. This is useful if you want to force the player entity to walk along a specific path for a [cutscene](#cutscenes), or want to make sure the player doesn't walk away from a conversation where an NPC pauses speaking for a minute to (for instance) pace back and forth.
 
-Similarly, the hex editor can be enabled/disabled with the action `SET_HEX_EDITOR_CONTROL`, and the copy function for the hex editor can be enabled/disabled with the action `SET_HEX_EDITOR_CONTROL_CLIPBOARD`.
+Similarly, the hex editor can be enabled/disabled with the action [`SET_HEX_EDITOR_CONTROL`](#set_hex_editor_control), and the copy function for the hex editor can be enabled/disabled with the action [`SET_HEX_EDITOR_CONTROL_CLIPBOARD`](#set_hex_editor_control_clipboard).
 
 These states are not preserved in game saves, and they are all `true` by default. [verify this]
 
@@ -1173,7 +1178,7 @@ After showing the alternate dialog, the script sets Alice's [`on_interact`](#on_
 
 <img src="docs_images/script-alice.png" style="max-width: 50%" alt="flowchart of Alice's behavior">
 
-For scripts with very complex branching, it can be beneficial to plot them out (and color code them!). This chart was done with diagrams.net, but other graphics software (or a pen and paper) might be used instead.
+For scripts with very complex branching, it can be beneficial to plot them out (and color code them!). This chart was done with [diagrams.net](https://app.diagrams.net/), but other graphics software (or a pen and paper) might be used instead.
 
 For subsequent examples, I'll be using this flow-chart-esque format to demonstrate script behaviors. For these charts, each column represents a different script (named at the top of each column by a rectangle), and the script under the stick figure indicates the entity's default `on_interact` script.
 
@@ -1321,7 +1326,7 @@ When animations are created within Tiled, they are assigned to a tile on the til
 
 > Like above, if you count left-to-right and top-to-down to get the tile ID, remember to count starting from 0 instead of 1. Alternatively, you can select the correct tile in Tiled and see the tile ID that way.
 
-`flip_x` will flip the sprites horizontally, but otherwise make no changes to the animation on that tile.
+`flip_x` will flip the sprites horizontally (and `flip_y` will flip vertically), but will otherwise make no changes to the animation on that tile.
 
 The order of the object literals in the animation is fixed:
 - North
@@ -1353,9 +1358,15 @@ While every [script file](#scripts) (and [dialog file](#dialog), [tileset file](
 
 ## CLI Encoder
 
-If you have node.js installed, you can run the shell script `regenerate_dat_file.sh` to generate a new `game.dat` file. This shell script automatically moves the `game.dat` to where the desktop build can see it. (`cd` into the `SD_Card/MAGE/` folder first!)
+If you have node.js installed, you can run the shell script `regenerate_dat_file.sh` to generate a new `game.dat` file. There are two versions:
 
-This version of the encoder is excellent for very rapid iterations, as no other steps are required (apart from launching the game).
+1. BM-Badge version:
+	- `cd` into `MAGE/`.
+	- Run the shell script. The `game.dat` will be made from the `scenario_source_files/` in `MAGE/`.
+2. Sample repo version:
+	- first argument: the `scenario_source_files/` folder to read from
+	- second argument: where to write the `game.dat`
+	- This version of the shell script also launches the game automatically.
 
 ## Web Encoder
 
@@ -1451,11 +1462,9 @@ Press MEM3 (lowest button on the right side of the screen) to tell the hardware 
 
 ## Game Engine
 
-[What if it's not plugged in when it boots? Don't have battery; can't check!]
-
 To start the game in bootloader mode, hold down the hex digit 1 button while you power on the hardware. If bootloader mode was successfully triggered, the screen will be white and the LEDs will blink in a circular pattern.
 
-If the hardware is plugged in to a computer while it is in bootloader mode, it will appear as a drive called `NRF52BOOT`. Copy the new game engine UF2 (the filename doesn't matter) onto the drive.
+If the hardware is plugged into a computer while it is in bootloader mode, it will appear as a drive called `DC801BOOT` (or `NRF52BOOT`). Copy the new game engine UF2 (the filename doesn't matter) onto the drive.
 
 Once the UF2 is copied, the drive will disconnect and the badge will reboot automatically.
 
@@ -1497,10 +1506,6 @@ These lines are green ordinarily, but will turn red if the player entity is "ins
 **Collision details**
 
 - In the upper-left corner of the screen is a more detailed view of the actual math behind the collision algorithm. Map makers creating original scenarios can safely ignore this part of vector view.
-
-If a map's collision is behaving oddly in terms of doors not triggering, collision boundaries misbehaving, etc. you might try turning on vector view to see what the game is really doing.
-
-If hex editor control is disabled, you will not be able to trigger vector view.
 
 ## Debug Mode
 
@@ -1566,7 +1571,7 @@ This action is purely for the convenience for the game developer and is actually
 
 While this does make the final scripts larger in the `game.dat` once encoded, particularly if there are several layers of copies, this automatic copying process has several important applications.
 
-(Note that [`COPY_SCRIPT`](#copy_script) can trigger an infinite loop in the encoder if it tries to copy a script that copies the script trying to copy it. Try to prevent this from happening.)
+> NOTE: [`COPY_SCRIPT`](#copy_script) can trigger an infinite loop in the encoder if it tries to copy a script that copies the script trying to copy it. Try to keep this from happening.
 
 ### Abstracting Behavior
 
@@ -1862,9 +1867,7 @@ To cut to another credits page, space your text according to the screen size and
 
 Don't forget to return player control (or hex editor control) when the credits are done!
 
-> Feel free to experiment with other styles of game credits; you need not be bound to traditional cinematic tropes.
->
-> E.g. some games have a "credits" building featuring characters that correspond to the game's developers, and who might say a few sentences about what their job was.
+> Feel free to experiment with other styles of game credits; you need not be bound to traditional cinematic tropes. E.g. some games have a "credits" building featuring characters that correspond to the game's developers, and who might say a few sentences about what their job was.
 
 ## Hint Systems
 
@@ -1886,9 +1889,7 @@ The advantage of this technique is that it's effortless to reset only the target
 
 This technique will likely require maintaining a list of hint flags and being very careful about setting them, since it's possible to have multiple hint flags set to `true` at the same time. And if your "set all hint flags to false" script is incomplete, hints might be left on by accident.
 
-For games with a large number of hints this method can be difficult to debug.
-
-One disadvantage of this technique is its susceptibility to typos, as every hint flag is a string.
+For games with a large number of hints this method can be difficult to debug. Another disadvantage of this technique is its susceptibility to typos, as every hint flag is a string.
 
 > For BMG2020 we moved away from this technique because we were setting hint flags *a lot* — every time a hint flag was set, every other hint flag was *also* set. (The reset script set them all to `false`, even if they were already `false`.) We were going to log the [save flags](#save-flags-booleans) triggered by playtesters to do story timing analytics, but found that hint flags overwhelmed everything.
 
@@ -1914,7 +1915,7 @@ You might need multiple hints per questline. For BMG2020, we had several values 
 
 If we continued with this pattern, we might have used `22` for if the player got partway through the quest and needed a hint about the second half, etc.
 
-Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory [flag](#save-flags-booleans) or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint questline, so we can divide the current hintiger by 10 (after copying it into another [variable](#variables-integers!)) to procedurally detect which questline we're on.
+Incorporating hint variations will likely require more frequent hint logic checks. For instance, if the current hint is `21` (continuing from the above example) we wouldn't want speaking to Bert to set it to `20`, which is a more basic hint. To prevent this, we might check the relevant backstory [flag](#save-flags-booleans) or the current hintiger to decide whether to set it to `20`. This is fairly easy to do in the case of BMG2020 because the tens (and hundreds) digit determine the hint questline, so we can divide the current hintiger by 10 (after copying it into another [variable](#variables-integers!)) to procedurally detect which questline the hint was for.
 
 #### Hintiger Abstraction
 
@@ -1962,7 +1963,9 @@ A doorway trigger is a vector shape placed on the map wherever you want to trigg
 
 > The vector shape should be large enough that the player can't skip over it when running past it on low framerate devices (like the hardware).
 
-To allow the player access to the doorway, the tile(s) the door is on should not have any collision data. (If you use a door with alpha on top of a wall tile, for instance, the wall collision might keep the player from physically entering the doorway.)
+To allow the player access to the doorway, the tile(s) the door is on should not have any [collision data](#map-tile-collisions). (If you use a door with alpha on top of a wall tile, for instance, the wall collision might keep the player from physically entering the doorway.)
+
+Use [vector view](#vector-view) to debug misbehaving door triggers.
 
 ### Doorway Watcher
 
@@ -1979,7 +1982,7 @@ When the [`CHECK_IF_ENTITY_IS_IN_GEOMETRY`](#check_if_entity_is_in_geometry) con
 1. If you need to set the [warp state](#warp_state-string) string for this doorway, set it before anything else.
 2. The next action depends on the doorway destination:
 	1. **Another spot on the same map**: Teleport the player to the new spot.
-		- You will likely still need to have "leaving doorway" behavior of some kind, though it need not be a separate script.
+		- You will likely still need to have "leaving a doorway" behavior of some kind, though it need not be a separate script.
 	2. **A different map (e.g. a house, a dungeon, another zone on the overworld)**: The very last action should be [`LOAD_MAP`](#load_map).
 		- This means all "leaving a doorway" behavior must be handled (or at least triggered) by the target map's [`on_load`](#on_load-scripts) script. See below.
 
@@ -1990,24 +1993,22 @@ Generally, entering a doorway requires no other padding or special handling unle
 If a new map is loaded:
 1. Do all other [logic checks](#chains-of-small-checks) first.
 	- Not required, but definitely recommended. Of the things the [`on_load`](#on_load-scripts) is supposed to do, "leaving a doorway" tends to be the most complex in terms of actions required. If these behaviors are last then they can be dead-end branches, which simplifies the rest of the tree.
-2. Use the [warp state string](#warp_state-string) to determine which "leaving doorway" script to run.
+2. Use the [warp state string](#warp_state-string) to determine which "leaving a doorway" script to run.
 
 #### "Leaving a Doorway" Behavior
 
-1. Move the player entity to the correct spawn point. Types of spawn points:
-	1. **Default spawn points**: Player entities will spawn by default where an `is_player` entity was placed in Tiled.
-		- For maps with a single door, such as an NPC's house, this will be sufficient to control a player's spawning behavior — simply place a player entity at the entrance, facing the appropriate direction.
-	2. **Custom spawn points**: To control additional spawn points, you will need to create vector objects to use as teleport destinations.
-2. If the default direction of the player entity is different from what you would like during a "leaving a doorway" script, you should either explicitly turn them the correct direction or have them walk a brief distance in the correct direction out of the doorway.
+1. Move the player entity to the correct [spawn point](#spawn-points).
+2. If the default direction of the player entity is different from what you would like, you should either:
+	1. explicitly turn them the correct direction, or
+	2. have them walk a brief distance in the correct direction out of the doorway.
+		- Walking behavior should *definitely* be last in an [`on_load`](#on_load-scripts) script!
 3. Turn player control back on.
-
-> NOTE: To prevent the player from instantly returning to where they came from, the player spawn point should not overlap with the doorway trigger in the new destination.
 
 ### Doorway Fades
 
 Fades are a little clunky on the hardware, so if using them for doorways, it might be better to limit them to the most important doorways alone, such as the edges of the map.
 
-Because fades require two simultaneous behaviors, you will need two script slots.
+Because fades require two simultaneous behaviors, you will need two script slots. (Using the player's [`on_tick`](#on_tick-scripts) is logical, but not required; feel free to manage the player's behavior with another entity's [`on_tick`](#on_tick-scripts) script, instead.)
 
 #### Entering a Doorway Script (with Fades)
 
@@ -2032,9 +2033,9 @@ Because fades require two simultaneous behaviors, you will need two script slots
 
 To make an entity walk through a door, move them to the doorway and then hide them.
 
-### Hiding an Entity
-
 Entities cannot be unloaded once loaded on a map, so they will always exist no matter what (debug mode aside). You might make a different version of the map without such hidden entities, but this would require a fresh map load — which is likely to be inconvenient, especially if multiple entities have to leave at multiple times.
+
+### Hiding an Entity
 
 There are several ways to hide an entity:
 
@@ -2048,9 +2049,9 @@ There are several ways to hide an entity:
 
 After hiding them, you might optionally change their name to something like `Ghost`.
 
-No matter what, the player will be able to manipulate hidden entities, as they are never properly unloaded. This is somewhat authentic (in terms of how a real game might handle a similar problem), but if you really, truly want to deny the player access to them, you only have two choices:
+No matter what, the player will be able to manipulate hidden entities, as they are never properly unloaded. This is somewhat authentic in terms of how a real game might handle a similar problem, but if you really, truly want to deny the player access to them, you only have two choices:
 1. Make a parallel map without them.
-2. Use "[actors](#actors)". The hiding entity will either be a "costume" that has been removed or an actor that has taken on a new, permanent role.
+2. Use "[actors](#actors)." (See below.)
 
 #### Permanently Hiding Entities
 
@@ -2091,16 +2092,10 @@ To do a costume change, set the actor's properties to the target costume:
 2. X and Y coordinates — best done via teleporting to a vector object
 3. [`on_interact`](#on_interact-scripts) script slot — optional; unnecessary for cutscene-only cameos
 4. [`on_tick`](#on_tick-scripts) script slot — optional; unnecessary for cutscene-only cameos
-5. `name`
+5. `name` — will allow the actor to be labeled correctly in the hex editor and in dialog message labels
 
-When doing choreography involving the actor, use the actor's original name (not the costume's name) in your actions' arguments.
-> It helps to leave [comments](#script-comments) in the actions to remind yourself that an actor is acting.
-
-For the actor's dialog, you will have to fake it:
-- Set the `portrait` to the costume's `entity_type` name (or whatever is appropriate).
-- Set the `name` to the costume's name.
-	- You cannot use a [relative name](#relative-entity-names) for this unless the costume is an already-existing entity.
-- While you could still use the `entity` property, it would literally do no good, as `portrait` and `name` will override it.
+When doing choreography involving the actor, use the actor's original name (not the costume's name) in your actions' arguments. This includes dialog messages using the `entity` property.
+> It helps to leave [comments](#script-comments) to remind yourself that an actor is acting.
 
 To reset the actor, either:
 1. Load a map. (The next load will use the actor's default state.)
@@ -2115,7 +2110,7 @@ To reset the actor, either:
 
 [![flowchart of Beatrice's behavior](docs_images/script-beatrice.png)](docs_images/script-beatrice.png)
 
-In the BMG2020, Beatrice's branching was profoundly complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. In particular, hints are now managed with a single integer instead of a bajillion [save flags](#save-flags-booleans).)
+In the BMG2020, Beatrice's branching was complicated, and was very difficult to debug. But by mapping and color coding the scripts like this I was able to easily identify which sequence of actions were repeated and could be split off into wrapup scripts, and I could more easily see how I needed to arrange the branching to produce the correct behavior. (The map itself was used for planning purposes only and is out of date at this point. E.g. hints are now managed with a single integer instead of a bajillion [save flags](#save-flags-booleans).)
 
 ### Beatrice's Branching
 
@@ -2157,7 +2152,7 @@ This is the script that runs if you interacted with Beatrice but did not solve h
 - sets the targeted hint to her first quest
 - runs `bea-wrapup-mini` to finish
 
-Like the above script, this script is sometimes run at the end of scripts that have already set the backstory flag or branched due to that flag already being `true`, but it's simpler to just set it again here.
+Like the above script, this script is sometimes run at the end of scripts that have already set the backstory flag or branched due to that flag already being `true`, but it's simpler to set it in all cases.
 
 In addition, there are two other wrapup scripts for the second quest line (`bea2`): `bea2-complete-wrapup` and `bea2-incomplete-wrapup`, which mirror their `bea1` counterparts.
 
