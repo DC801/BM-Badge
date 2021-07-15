@@ -379,6 +379,8 @@
 - [x] Save files should persist between refreshes
 - [ ] Add Web Build setup instructions to `EnvironmentSetup.md`
 - [ ] Add Web Build env config to the public dev VM
+- [x] Add public link to main `README.md`
+- [ ] Add usage instructions to content authoring documentation
 - [ ] Find a way to display the `ENGINE_PANIC` screens in Emscripten before we get into the main loop, otherwise the browser gets stuck in a broken infinite loading state where the screen doesn't display at all
 - [ ] Add collision detection to the EngineWindowFrame so a player can click on GUI buttons
 	- [ ] Implement easiest possible click + release of buttons
