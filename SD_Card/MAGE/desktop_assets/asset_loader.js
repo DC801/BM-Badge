@@ -51,15 +51,64 @@ var addLoadedFilePathToVirtualFS = function (path) {
 		loadedDataMap[path],
 	)
 };
+var enableSaveFilePersistence = function () {
+	var saveFilePath = 'MAGE/save_games';
+	var split = saveFilePath.split('/');
+	mkdirp(split);
+	FS.mount(
+		window.IDBFS,
+		{},
+		saveFilePath
+	);
+	return new Promise(function (resolve, reject) {
+		FS.syncfs(true, function (err) {
+			if (err) {
+				reject(err);
+			} else {
+				console.log('IDBFS state applied to Virtual Filesystem');
+				resolve();
+			}
+		});
+	});
+};
+var emscriptenReadyResolve;
+var emscriptenReadyPromise = new Promise(function (resolve, reject) {
+	emscriptenReadyResolve = function (err) {
+		if (err) {
+			reject(err);
+		} else {
+			console.log('Emscripten reports `RuntimeInitialized`, game ready to launch');
+			resolve();
+		}
+	};
+});
 var Module = {
 	canvas: canvas, // compensates for emscripten startup weirdness - IMPORTANT
+	noInitialRun: true, // because preInit isn't promise based, need to start manually
+	onRuntimeInitialized: emscriptenReadyResolve,
 	preInit: function() {
 		Object.keys(loadedDataMap).forEach(addLoadedFilePathToVirtualFS);
-	}
+		Promise.all([
+			enableSaveFilePersistence(),
+			emscriptenReadyPromise,
+		])
+			.then(function () {
+				// Starts the WebAssembly main loop in the most normal way possible,
+				// considering that we're disabling it via `noInitialRun` above.
+				Module.callMain();
+			});
+	},
+	// May look unused, but is actually called by C code
+	persistSaveFiles: function () {
+		FS.syncfs(false, function (err) {
+			if (err) {
+				throw err;
+			} else {
+				console.log('Save files persisted to IndexedDB, probably.');
+			}
+		});
+	},
 };
-
-// TODO: Use FS.writeFile(path, data, opts) to write new `game.dat` when drug into window
-// REF: https://emscripten.org/docs/api_reference/Filesystem-API.html#FS.writeFile
 
 var fetchBinaryDataFromPath = function (path) {
 	return localforage.getItem(path).then(function (content) {

@@ -109,7 +109,8 @@ else
 				-s ASSERTIONS=1 \
 				-s TOTAL_MEMORY=48MB \
 				-s EXPORTED_FUNCTIONS='["_main","_EngineTriggerRomReload"]' \
-				-s EXPORTED_RUNTIME_METHODS='["ccall","cwrap"]' \
+				-s EXPORTED_RUNTIME_METHODS='["callMain","ccall","cwrap"]' \
+				-lidbfs.js \
 				-s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR
 		else
 			LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)

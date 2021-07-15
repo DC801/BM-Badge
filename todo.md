@@ -376,10 +376,15 @@
 		- [ ] Each dragged version
 		- [ ] Multiple endorsed scenarios(?)
 	- [ ] Add ability to erase a dragged file from that list
-- [ ] Save files should persist between refreshes
+- [x] Save files should persist between refreshes
 - [ ] Add Web Build setup instructions to `EnvironmentSetup.md`
 - [ ] Add Web Build env config to the public dev VM
 - [ ] Find a way to display the `ENGINE_PANIC` screens in Emscripten before we get into the main loop, otherwise the browser gets stuck in a broken infinite loading state where the screen doesn't display at all
+- [ ] Add collision detection to the EngineWindowFrame so a player can click on GUI buttons
+	- [ ] Implement easiest possible click + release of buttons
+	- [ ] Add ability to start dragging off a button, and then on to trigger a "press"
+	- [ ] Add ability to start dragging on a button, and then off to trigger a "release"
+	- [ ] Add multi-touch support for phones
 
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`

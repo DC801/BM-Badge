@@ -10,13 +10,26 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif // EMSCRIPTEN
+
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+
 FILE *romfile = NULL;
 uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = {0};
-char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][16] = {
-	"MAGE/save_0.dat",
-	"MAGE/save_1.dat",
-	"MAGE/save_2.dat"
+char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
+	DESKTOP_SAVE_FILE_PATH "save_0.dat",
+	DESKTOP_SAVE_FILE_PATH "save_1.dat",
+	DESKTOP_SAVE_FILE_PATH "save_2.dat"
 };
+
+void makeSureSaveFilePathExists() {
+	struct stat st = {0};
+	if (stat(DESKTOP_SAVE_FILE_PATH, &st) == -1) {
+		mkdir(DESKTOP_SAVE_FILE_PATH, 0777);
+	}
+}
 #endif //DC801_DESKTOP
 
 #ifdef DC801_EMBEDDED
@@ -246,6 +259,7 @@ void EngineROM_ReadSaveSlot(
 	uint8_t *data
 ) {
 	#ifdef DC801_DESKTOP
+	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
@@ -316,6 +330,7 @@ void EngineROM_WriteSaveSlot(
 	// and write to ROM from the pointer to the locally scoped stack copy.
 	// This may actually be a compiler bug, or ROM interface black magic.
 	#ifdef DC801_DESKTOP
+	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
@@ -333,6 +348,15 @@ void EngineROM_WriteSaveSlot(
 		saveFile
 	);
 	fclose(saveFile);
+
+	#ifdef EMSCRIPTEN
+	// triggers a call to the FS.syncfs, asking IDBFS
+	// "pls actually do your job and save for reals"
+	// It's async, so good luck if you interrupt it
+	// ¯\_(ツ)_/¯
+	emscripten_run_script("Module.persistSaveFiles();");
+	#endif // EMSCRIPTEN
+
 	#endif // DC801_DESKTOP
 
 	#ifdef DC801_EMBEDDED
