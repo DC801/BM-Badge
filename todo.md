@@ -441,12 +441,57 @@
 - [x] Bender + shiny metal ass
 
 # 2022 big picture objectives
+- [ ] New actions
+	- [ ] `PRINT_TO_SERIAL`  (string_id)
+	- [ ] `INVENTORY_GET` (item_name)
+	- [ ] `INVENTORY_DROP` (item_name)
+	- [ ] `SET_MAP_LOOK` (script_name)
+	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
+	- [ ] `SET_ITEM_USE` (item_name, script_name)
+	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
 - [ ] Serial Dungeon
+	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
+		- [ ] `path` example "maps/map-main_menu.json"
+		- [ ] `on_tick` script
+		- [ ] `on_load` script
+		- [ ] `on_look` script
+		- [ ] `items` is an array of strings that map to global item names
+		- [ ] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
+	- [ ] Map struct changes
+		- [ ] `on_look` script
+		- [ ] `script_padding` 2 bytes
+		- [ ] `direction_count` uint8_t
+		- [ ] `directions` is an array, so `go $DIRECTION` calls a script
+			- [ ] `name` 12 bytes script ids,
+			- [ ] `script_id` 2 bytes
+			- [ ] `padding` 2 bytes to get us back into 16 alignment
+	- [ ] Entity struct changes
+		- [ ] `on_look` script, stored in bytes 30 & 31
+	- [ ] New Item struct - managed in `items.json`
+		- [ ] There may not be more than 64 items in the whole universe
+		- [ ] 16 of these items need to be held in ram because the scripts need to be mutable to allow branching
+		- [ ] When you load map, loop through the `ItemLocationArray` and load items in the room, or in player inventory, into 1 of 16 slots in ram
+		- [ ] Struct details
+			- [ ] `name` 12 chars
+			- [ ] `on_look` script
+			- [ ] `on_use` script
+	- [ ] New ItemLocationArray
+		- [ ] Part of the save struct
+		- [ ] It's an array of 64 long, matching the `items` limit
+		- [ ] 2 bytes per item `current_location` value
+			- [ ] 0x0000 means nowhere
+			- [ ] 0x0001 0xFFFE means it's on a map
+			- [ ] 0xFFFF means it's in the player's inventory
+		- [ ] Web build should get a toggleable "console" area below the gameplay window, that basically looks like the `text_based_adventure_prototype`
 	- [ ] Text based adventure
 		- [ ] Player loses control over the joysticks and things are instead done over the serial CLI
 		- [ ] The tileset actually just looks like a Zelda MiniMap
 			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
 		- [ ] This dungeon can has an inventory system
+		- [ ] What powers do the Serial artifact give you?
+			- [ ] Having an inventory at all
+			- [ ] Fast travel - if you know the name of a room anywhere in the game, you can type `warp $ROOM_NAME`
+		- [ ] The end goal of the Serial Dungeon + having inventory
 		- [ ] Different rooms can act as mini-tutorials for the features of the "terminal"
 			- [ ] Do you `cd` to uhh... Change Dungeon?
 			- [ ] Do you `ls` to uhh... Look Somewhere?
@@ -458,6 +503,9 @@
 - [ ] Filesystem Dungeon
 	- [ ] Figure out how to create a USB Mass Storage disk from of the contents of like 4KB of RAM.
 		- [ ] Use a super tiny block size.
+	- [ ] Serial command `mount` will cause Mass Storage device to mount
+	- [ ] Serial command `open` will uhh... invoke a file on the virtual FS
+		- [ ] Somewhere there should be a `sesame.sh`, and `open sesame.sh` should solve that puzzle
 	- [ ] A chmod/chown puzzle.
 		- [ ] Enemy dies. drops weapon on to the FileSystem.
 		- [ ] Player can't pick up weapon because its permissions are wrong.
@@ -475,6 +523,9 @@
 	- [ ] They are teleported back into the dungeons, but much deeper, and you have to go the long way to get them back
 
 ### Puzzle ideas
+- [ ] There's an exit somewhere in a forest that you can't get to any way other than being in that room, but using serial to `go $SECRET_ROOM_NAME` when you're in there
+- [ ] There's a sleeping Snorlax blocking your path in one of the forests.
+	- [ ] You need the inventory system so that you can cary an otamatone to play music and wake him up.
 - [ ] A floor might be on fire. The player has to turn off the "firewall" to cross that part.
 - [ ] Liar'sville puzzle. Start unsolveable. Two black-hats
 	- [ ] Must change one of the color of one of their hats so at least one tells truth
