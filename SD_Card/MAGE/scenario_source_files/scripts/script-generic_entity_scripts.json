@@ -167,6 +167,13 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
+			"geometry": "door-demo_map",
+			"success_script": "load_map-demo_map",
+			"expected_bool": true
+		},
+		{
+			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+			"entity": "%PLAYER%",
 			"geometry": "door-action_testing_01",
 			"success_script": "load_map-action_testing_01",
 			"expected_bool": true
@@ -196,6 +203,12 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "test"
+		}
+	],
+	"load_map-demo_map": [
+		{
+			"action": "LOAD_MAP",
+			"map": "demo"
 		}
 	],
 	"load_map-town": [

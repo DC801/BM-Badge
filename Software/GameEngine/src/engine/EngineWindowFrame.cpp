@@ -1,5 +1,6 @@
 #include "EngineWindowFrame.h"
 #include "EnginePanic.h"
+#define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 
 SDL_Window *window = nullptr;
 SDL_Renderer *renderer = nullptr;
@@ -22,21 +23,21 @@ void EngineWindowFrameInit()
 		ENGINE_PANIC("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 
-	frameSurface = IMG_Load("MAGE/window_frame.png");
+	frameSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame.png");
 
 	if (!frameSurface)
 	{
 		ENGINE_PANIC("Failed to load Window Frame\nIMG_Load: %s\n", IMG_GetError());
 	}
 
-	frameButtonSurface = IMG_Load("MAGE/window_frame-button.png");
+	frameButtonSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-button.png");
 
 	if (!frameButtonSurface)
 	{
 		ENGINE_PANIC("Failed to load Window Frame Button\nIMG_Load: %s\n", IMG_GetError());
 	}
 
-	frameLEDSurface = IMG_Load("MAGE/window_frame-led.png");
+	frameLEDSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-led.png");
 
 	if (!frameLEDSurface)
 	{

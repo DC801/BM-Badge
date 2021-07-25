@@ -5,7 +5,11 @@ AR := $(TOOLCHAIN)ar
 OBJCOPY := $(TOOLCHAIN)objcopy
 
 ifndef DESKTOP
-    SIZE := $(TOOLCHAIN)size
+	SIZE := $(TOOLCHAIN)size
+endif
+
+ifdef WEB
+	CC := emcc
 endif
 
 # Optimization flags
@@ -32,11 +36,11 @@ FLAGS = -DBOARD_CUSTOM \
 	-DSWI_DISABLE0
 
 ifdef DESKTOP
-    ifeq ($(OS),Windows_NT)
-        # Placeholder
-    else
-        FLAGS += $(shell pkg-config --cflags-only-other sdl2)
-    endif
+	ifeq ($(OS),Windows_NT)
+		# Placeholder
+	else
+		FLAGS += $(shell pkg-config --cflags-only-other sdl2)
+	endif
 endif
 
 # C flags common to all targets
@@ -88,17 +92,30 @@ endif
 
 LD_LIBRARIES = -lc \
 	-lm \
-	-lsupc++ \
 	-lstdc++
 
 ifndef DESKTOP
-    LD_LIBRARIES += -lnosys
+	LD_LIBRARIES += -lnosys
 else
-    ifeq ($(OS),Windows_NT)
-        # Placeholder
-    else
-        LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
-    endif
+	ifeq ($(OS),Windows_NT)
+		# Placeholder
+	else
+		ifdef WEB
+			LD_LIBRARIES += \
+				-s USE_SDL=2 \
+				-s USE_SDL_IMAGE=2 \
+				-s SDL2_IMAGE_FORMATS='["png"]' \
+				-s FORCE_FILESYSTEM=1 \
+				-s ASSERTIONS=1 \
+				-s TOTAL_MEMORY=48MB \
+				-s EXPORTED_FUNCTIONS='["_main","_EngineTriggerRomReload"]' \
+				-s EXPORTED_RUNTIME_METHODS='["callMain","ccall","cwrap"]' \
+				-lidbfs.js \
+				-s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR
+		else
+			LD_LIBRARIES += $(shell pkg-config --libs SDL2_image)
+		endif
+	endif
 endif
 
 CFLAGS += -D__HEAP_SIZE=16384
@@ -107,6 +124,10 @@ ASMFLAGS += -D__HEAP_SIZE=16384
 ASMFLAGS += -D__STACK_SIZE=16384
 
 CFLAGS += $(TEST_DEFINES)
+
+ifdef WEB
+	CFLAGS += -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='["png"]'
+endif
 
 # GCC Dependency flags:
 #  -MD:		Generate dependency tree for specified object as a side effect of compilation
@@ -129,7 +150,12 @@ else
 	@$(MKDIR) $(@D)
 endif
 
-	@$(CC) -x c -c -std=c11 $(CFLAGS) $(INCLUDES) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
+	@$(CC) -x c -c \
+		-std=c11 \
+		$(CFLAGS) \
+		$(WEB_SDL) \
+		$(INCLUDES) \
+		-MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<" \
 
 # C++ files
 $(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cpp
@@ -155,15 +181,19 @@ endif
 
 	@$(CC) -x assembler-with-cpp -c $(ASMFLAGS) -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -o "$@" "$<"
 
+ifndef DESKTOP
 # Intel format Hex files
 $(PRJ_ROOT)/output/%.hex: $(PRJ_ROOT)/output/%.out
 	@echo "[ HEX ] $(notdir $@)"
 	@$(OBJCOPY) -O ihex "$<" "$@"
+endif
 
 # Output binary
 $(PRJ_ROOT)/output/%.bin: $(PRJ_ROOT)/output/%.out
 	@echo "[ BIN ] $(notdir $@)"
+ifndef WEB
 	@$(OBJCOPY) -O binary "$<" "$@"
+endif
 
 # ---------- Test ----------
 # C++ files

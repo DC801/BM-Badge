@@ -57,6 +57,8 @@ void EngineHandleKeyboardInput();
 void EngineSendSerialMessage (char *message);
 void EngineHandleSerialInput();
 bool EngineIsRunning();
+bool EngineShouldReloadGameDat();
+void EngineTriggerRomReload();
 
 #ifdef __cplusplus
 }

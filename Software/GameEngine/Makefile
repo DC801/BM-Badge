@@ -34,7 +34,11 @@ CONFIG_INCLUDE := -I$(PRJ_ROOT)/config
 .PHONY: $(TARGET) flash flash-merged flash-dap erase recover merge uf2 clean cleanall sdk_config
 
 # Generate a phony for $(TARGET) to build output files
+ifdef EMBEDDED
 $(TARGET): $(TARGET).out $(TARGET).hex $(TARGET).bin
+else
+$(TARGET): $(TARGET).out $(TARGET).bin
+endif
 
 # Here we are providing SDK_TARGET as well as SDK_INCLUDES so we know wether to link against
 #  the SDK library/headers, or the Desktop shim.
@@ -99,6 +103,11 @@ ifndef DESKTOP
 else
 	@echo "Linking to SD Card files"
 	@ln -sf $(PRJ_ROOT)/../../SD_Card/* $(OUTPUT_DIR)
+ifdef WEB
+	@echo "Prepping web build"
+	@mv $(TARGET).out $(TARGET).js
+	@cp $(OUTPUT_DIR)/MAGE/desktop_assets/index.html $(OUTPUT_DIR)/index.html
+endif
 endif
 
 # Flash hex file using nrfjprog

@@ -352,6 +352,42 @@
 - [x] Add support for the elusive `any key` to the button handlers
 - [x] Change `CHECK_ENTITY_PATH` to use `geometry` instead of `expected_u2`
 
+## Development VM TODO:
+- [ ] Set the XFCE GUI "theme" to dark mode
+- [ ] Set the VSCode default "debug" script to "Debug desktop"
+- [ ] Add a few bookmarks to the browser
+	- [ ] Github repo
+	- [ ] ide.kaitai.io
+		- [ ] pre-load the mage_game.ksy into kaitai
+
+## Web Build TODO:
+- [x] Get it to be playable in the browser, at all
+- [x] Desktop build should be able to "ctrl-r/refresh" the `game.dat` from filesystem
+- [x] Default `game.dat` should be cached between refreshes
+- [x] User should be able to drag in a `game.dat` and play it
+	- [x] Verify that the header of dragged file contains `MAGEGAME`
+	- [x] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
+	- [x] Reloading the page starts game fresh from original `game.dat` in IndexedDB
+- [ ] Fancy extra `game.dat` features
+	- [ ] The dragged-in `game.dat` should be cached between refreshes
+	- [ ] Should show the Path/CRC32/Length of each `game.dat`
+	- [ ] Display a list of the available `game.dat` files, filenames + CRC32
+		- [ ] Original
+		- [ ] Each dragged version
+		- [ ] Multiple endorsed scenarios(?)
+	- [ ] Add ability to erase a dragged file from that list
+- [x] Save files should persist between refreshes
+- [ ] Add Web Build setup instructions to `EnvironmentSetup.md`
+- [ ] Add Web Build env config to the public dev VM
+- [x] Add public link to main `README.md`
+- [ ] Add usage instructions to content authoring documentation
+- [ ] Find a way to display the `ENGINE_PANIC` screens in Emscripten before we get into the main loop, otherwise the browser gets stuck in a broken infinite loading state where the screen doesn't display at all
+- [ ] Add collision detection to the EngineWindowFrame so a player can click on GUI buttons
+	- [ ] Implement easiest possible click + release of buttons
+	- [ ] Add ability to start dragging off a button, and then on to trigger a "press"
+	- [ ] Add ability to start dragging on a button, and then off to trigger a "release"
+	- [ ] Add multi-touch support for phones
+
 ## Encoder TODO:
 - [x] Throw error when > 1 entities have `is_player`
 - [ ] Build a test map with no entities and make sure it does not crash
@@ -403,3 +439,94 @@
 - [!] A well, for Timmy to get stuck in
 - [ ] Tiles for village elder's basement/dungeon
 - [x] Bender + shiny metal ass
+
+# 2022 big picture objectives
+- [ ] New actions
+	- [ ] `PRINT_TO_SERIAL`  (string_id)
+	- [ ] `INVENTORY_GET` (item_name)
+	- [ ] `INVENTORY_DROP` (item_name)
+	- [ ] `SET_MAP_LOOK` (script_name)
+	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
+	- [ ] `SET_ITEM_USE` (item_name, script_name)
+	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
+- [ ] Serial Dungeon
+	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
+		- [ ] `path` example "maps/map-main_menu.json"
+		- [ ] `on_tick` script
+		- [ ] `on_load` script
+		- [ ] `on_look` script
+		- [ ] `items` is an array of strings that map to global item names
+		- [ ] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
+	- [ ] Map struct changes
+		- [ ] `on_look` script
+		- [ ] `script_padding` 2 bytes
+		- [ ] `direction_count` uint8_t
+		- [ ] `directions` is an array, so `go $DIRECTION` calls a script
+			- [ ] `name` 12 bytes script ids,
+			- [ ] `script_id` 2 bytes
+			- [ ] `padding` 2 bytes to get us back into 16 alignment
+	- [ ] Entity struct changes
+		- [ ] `on_look` script, stored in bytes 30 & 31
+	- [ ] New Item struct - managed in `items.json`
+		- [ ] There may not be more than 64 items in the whole universe
+		- [ ] 16 of these items need to be held in ram because the scripts need to be mutable to allow branching
+		- [ ] When you load map, loop through the `ItemLocationArray` and load items in the room, or in player inventory, into 1 of 16 slots in ram
+		- [ ] Struct details
+			- [ ] `name` 12 chars
+			- [ ] `on_look` script
+			- [ ] `on_use` script
+	- [ ] New ItemLocationArray
+		- [ ] Part of the save struct
+		- [ ] It's an array of 64 long, matching the `items` limit
+		- [ ] 2 bytes per item `current_location` value
+			- [ ] 0x0000 means nowhere
+			- [ ] 0x0001 0xFFFE means it's on a map
+			- [ ] 0xFFFF means it's in the player's inventory
+		- [ ] Web build should get a toggleable "console" area below the gameplay window, that basically looks like the `text_based_adventure_prototype`
+	- [ ] Text based adventure
+		- [ ] Player loses control over the joysticks and things are instead done over the serial CLI
+		- [ ] The tileset actually just looks like a Zelda MiniMap
+			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
+		- [ ] This dungeon can has an inventory system
+		- [ ] What powers do the Serial artifact give you?
+			- [ ] Having an inventory at all
+			- [ ] Fast travel - if you know the name of a room anywhere in the game, you can type `warp $ROOM_NAME`
+		- [ ] The end goal of the Serial Dungeon + having inventory
+		- [ ] Different rooms can act as mini-tutorials for the features of the "terminal"
+			- [ ] Do you `cd` to uhh... Change Dungeon?
+			- [ ] Do you `ls` to uhh... Look Somewhere?
+			- [ ] Do you `cat` to uhh... Ask a cat to read a file to you?
+				- [ ] Does a cat walk up to you at the start of the dungeon and follow you around? is it your secretary?
+			- [ ] Do we "|" or "pipe" things from one command into another other?
+		- [ ] We need an interactive character named PuTTY
+			- [ ] It should be illustrated or described as a Morph suit like the PUTTYs from Power Rangers
+- [ ] Filesystem Dungeon
+	- [ ] Figure out how to create a USB Mass Storage disk from of the contents of like 4KB of RAM.
+		- [ ] Use a super tiny block size.
+	- [ ] Serial command `mount` will cause Mass Storage device to mount
+	- [ ] Serial command `open` will uhh... invoke a file on the virtual FS
+		- [ ] Somewhere there should be a `sesame.sh`, and `open sesame.sh` should solve that puzzle
+	- [ ] A chmod/chown puzzle.
+		- [ ] Enemy dies. drops weapon on to the FileSystem.
+		- [ ] Player can't pick up weapon because its permissions are wrong.
+		- [ ] Chmod/chown that file/weapon. Now player can pick it up, enemy can't.
+- [ ] Uhhh more Hex Dungeon
+	- [ ] Change the layout of the dungeon from spelling `FF` to `0x` because that's more awesome.
+	- [ ] Perhaps unlock/add more in-game memory than just the entity structs for the HexEditor?
+- [ ] When the player approaches a puzzle that they have not seen before, we should blink the light on the board that corresponds to the interface used to solve that puzzle
+
+### Story ideas
+- [ ] After you have all of the artifacts, someone/something should steal them.
+	- [ ] Hacking the save file to restore your artifacts
+- [ ] When you are directed to go get the 3 artifacts, it is super easy to go get them.
+	- [ ] Then when you give them to SPOILERS, everything goes terrible.
+	- [ ] They are teleported back into the dungeons, but much deeper, and you have to go the long way to get them back
+
+### Puzzle ideas
+- [ ] There's an exit somewhere in a forest that you can't get to any way other than being in that room, but using serial to `go $SECRET_ROOM_NAME` when you're in there
+- [ ] There's a sleeping Snorlax blocking your path in one of the forests.
+	- [ ] You need the inventory system so that you can cary an otamatone to play music and wake him up.
+- [ ] A floor might be on fire. The player has to turn off the "firewall" to cross that part.
+- [ ] Liar'sville puzzle. Start unsolveable. Two black-hats
+	- [ ] Must change one of the color of one of their hats so at least one tells truth
+- [ ] You need to read a value from Bluetooth to open a certain door?

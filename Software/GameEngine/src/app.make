@@ -47,7 +47,13 @@ ifdef DESKTOP
     ifeq ($(OS),Windows_NT)
         # Placeholder
     else
-        APP_INCLUDES += $(shell pkg-config --cflags-only-I sdl2) -I/usr/include
+        SDL_INCLUDE = $(shell pkg-config --cflags-only-I sdl2)
+        NATIVE_INCLUDE_PATH = -I/usr/include
+        ifdef WEB
+            SDL_INCLUDE =
+            NATIVE_INCLUDE_PATH =
+        endif
+        APP_INCLUDES += $(SDL_INCLUDE) $(NATIVE_INCLUDE_PATH)
         APP_SRCS += $(SRC_ROOT)/engine/EngineWindowFrame.cpp
     endif
 endif

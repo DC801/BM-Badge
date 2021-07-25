@@ -362,12 +362,12 @@
                  "gid":260,
                  "height":48,
                  "id":6,
-                 "name":"goose",
+                 "name":"Goose",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose"
+                         "value":"show_dialog-goose-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -380,12 +380,12 @@
                  "gid":300,
                  "height":64,
                  "id":7,
-                 "name":"bob",
+                 "name":"Bob",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-bob-first"
+                         "value":"show_dialog-bob-first-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -403,7 +403,7 @@
                  "gid":324,
                  "height":32,
                  "id":8,
-                 "name":"verthandi",
+                 "name":"Verthandi",
                  "properties":[
                         {
                          "name":"current_frame",
@@ -413,7 +413,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-verthandi"
+                         "value":"show_dialog-verthandi-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -426,12 +426,12 @@
                  "gid":437,
                  "height":32,
                  "id":10,
-                 "name":"cat",
+                 "name":"Cat",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cat"
+                         "value":"show_dialog-cat-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -444,12 +444,12 @@
                  "gid":2147484109,
                  "height":32,
                  "id":11,
-                 "name":"smith",
+                 "name":"Smith",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-smith"
+                         "value":"show_dialog-smith-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -467,12 +467,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog-goat-demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_3s"
+                         "value":"loop_on_path_3s-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -495,12 +495,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goat"
+                         "value":"show_dialog-goat-demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_3s"
+                         "value":"loop_on_path_3s-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -518,12 +518,12 @@
                  "gid":501,
                  "height":32,
                  "id":14,
-                 "name":"beatrice",
+                 "name":"Beatrice",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-beatrice"
+                         "value":"show_dialog-beatrice-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -536,12 +536,12 @@
                  "gid":516,
                  "height":32,
                  "id":15,
-                 "name":"trekkie",
+                 "name":"Trekkie",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-trekkie_demo"
+                         "value":"show_dialog-trekkie-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -554,7 +554,7 @@
                  "gid":2147484184,
                  "height":32,
                  "id":17,
-                 "name":"dsheep",
+                 "name":"Delmar",
                  "properties":[
                         {
                          "name":"current_frame",
@@ -564,7 +564,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-dsheep"
+                         "value":"show_dialog-dsheep-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -577,12 +577,12 @@
                  "gid":2147484259,
                  "height":32,
                  "id":18,
-                 "name":"cleo",
+                 "name":"Cleo",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-cleo1"
+                         "value":"show_dialog-cleo1-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -605,7 +605,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"load_map-town"
+                         "value":"show_dialog-sheep-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -628,7 +628,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog-sheep-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -646,7 +646,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-sheep"
+                         "value":"show_dialog-sheep-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
@@ -664,12 +664,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-kid"
+                         "value":"show_dialog-kid-demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_10s"
+                         "value":"loop_on_path_10s-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -687,12 +687,12 @@
                  "gid":655,
                  "height":32,
                  "id":25,
-                 "name":"max",
+                 "name":"Max",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-max"
+                         "value":"show_dialog-max-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -710,17 +710,17 @@
                  "gid":677,
                  "height":48,
                  "id":26,
-                 "name":"timmy",
+                 "name":"Timmy",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-timmy"
+                         "value":"show_dialog-timmy-demo_map"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"loop_on_path_30s"
+                         "value":"loop_on_path_30s-demo_map"
                         }, 
                         {
                          "name":"path",
@@ -748,14 +748,14 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_goat_high"
+                         "value":"check_if_player_is_goat_high-demo_map"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":32,
-                 "x":548.5,
-                 "y":464
+                 "x":543,
+                 "y":435
                 }, 
                 {
                  "gid":25,
@@ -804,6 +804,41 @@
                  "width":32,
                  "x":480,
                  "y":576
+                }, 
+                {
+                 "height":0,
+                 "id":83,
+                 "name":"hiding",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-33,
+                 "y":-33
+                }, 
+                {
+                 "gid":749,
+                 "height":32,
+                 "id":84,
+                 "name":"Chaos Fish",
+                 "properties":[
+                        {
+                         "name":"is_debug",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"debug-hub-q"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":512,
+                 "y":196
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -935,29 +970,6 @@
                  "width":0,
                  "x":1008,
                  "y":466
-                }, 
-                {
-                 "gid":749,
-                 "height":32,
-                 "id":71,
-                 "name":"Chaos Fish",
-                 "properties":[
-                        {
-                         "name":"is_debug",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"debug-hub-q"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":512,
-                 "y":320
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -966,18 +978,18 @@
          "y":0
         }],
  "nextlayerid":8,
- "nextobjectid":72,
+ "nextobjectid":85,
  "orientation":"orthogonal",
  "properties":[
         {
          "name":"on_load",
          "type":"string",
-         "value":"on_load-east_west"
+         "value":"show_dialog-timewarp"
         }, 
         {
          "name":"on_tick",
          "type":"string",
-         "value":"on_tick-demo"
+         "value":""
         }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
@@ -1050,6 +1062,14 @@
         {
          "firstgid":749,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":759,
+         "source":"..\/entities\/entity-strong_bad.json"
+        }, 
+        {
+         "firstgid":801,
+         "source":"..\/entities\/entity-exa.json"
         }],
  "tilewidth":32,
  "type":"map",
