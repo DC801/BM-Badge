@@ -1,7 +1,7 @@
 # DC801 Black Mage Badge
-The DC801 Badge Platform for DC28+
+The DC801 Badge Platform for DC28+. Now featuring a [playable web build](https://dc801.github.io/BM-Badge/) to increase ease of access for content authorship workflows, as well as for archival access to the game when for the hardware is no longer available.
 
-![DC801 Black Mage Game 2020 main menu](SD_Card/MAGE/docs_images/game-sample-menu.png)
+![DC801 Black Mage Game 2020 main menu](SD_Card/MAGE/docs_images/main-menu.gif)
 
 ![DC801 Black Mage Game 2020 sample gameplay (screen only)](SD_Card/MAGE/docs_images/game-sample-x4.png)
 

@@ -17,7 +17,9 @@ void GameUpdate();
 //This renders the game to the screen based on the loop's updated state.
 void GameRender();
 
-//this runs the actual game, preformining initial setup and then
+void EngineInit ();
+
+//this runs the actual game, performing initial setup and then
 //running the game loop indefinitely until the game is exited.
 void MAGE();
 

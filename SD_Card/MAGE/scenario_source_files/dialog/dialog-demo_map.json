@@ -1,5 +1,5 @@
 {
-	"dialog-bob1": [
+	"dialog-bob1-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -55,7 +55,7 @@
 			]
 		}
 	],
-	"dialog-bob2": [
+	"dialog-bob2-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -64,7 +64,7 @@
 			]
 		}
 	],
-	"dialog-bob3": [
+	"dialog-bob3-demo_map": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
@@ -80,7 +80,7 @@
 			]
 		}
 	],
-	"dialog-bob4": [
+	"dialog-bob4-demo_map": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
@@ -96,16 +96,16 @@
 			]
 		}
 	],
-	"dialog-bob5": [
+	"dialog-bob5-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"There you go. It's open."
 			]
 		}
 	],
-	"dialog-bob6": [
+	"dialog-bob6-demo_map": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
@@ -114,10 +114,10 @@
 			]
 		}
 	],
-	"dialog-bob7": [
+	"dialog-bob7-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh, it's unlocked."
 			]
@@ -131,7 +131,7 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Oh. The door's not implemented yet."
 			]
@@ -146,16 +146,16 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Not my job. My only job is to\nkeep everyone out who's\nnot named Bob."
 			]
 		}
 	],
-	"dialog-bob8": [
+	"dialog-bob8-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"So, what's your name, then?"
 			]
@@ -169,13 +169,13 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"entity": ":%SELF%",
+			"entity": "%SELF%",
 			"messages": [
 				"Not my job.\nMy only job is to keep everyone out\nwho's not named Bob."
 			]
 		}
 	],
-	"dialog-max1": [
+	"dialog-max1-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -209,7 +209,7 @@
 			]
 		}
 	],
-	"dialog-max2": [
+	"dialog-max2-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -250,7 +250,7 @@
 			]
 		}
 	],
-	"dialog-max3": [
+	"dialog-max3-demo_map": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
@@ -260,7 +260,7 @@
 			]
 		}
 	],
-	"dialog-timmy": [
+	"dialog-timmy-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -285,7 +285,7 @@
 			]
 		}
 	],
-	"dialog-kid": [
+	"dialog-kid-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -294,7 +294,7 @@
 			]
 		}
 	],
-	"dialog-goose": [
+	"dialog-goose-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -303,7 +303,7 @@
 			]
 		}
 	],
-	"dialog-beatrice1": [
+	"dialog-beatrice1-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -313,7 +313,7 @@
 			]
 		}
 	],
-	"dialog-beatrice2": [
+	"dialog-beatrice2-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -322,7 +322,7 @@
 			]
 		}
 	],
-	"dialog-trekkie_demo": [
+	"dialog-trekkie-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -352,7 +352,7 @@
 			]
 		}
 	],
-	"dialog-verthandi": [
+	"dialog-verthandi-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -361,7 +361,7 @@
 			]
 		}
 	],
-	"dialog-goat": [
+	"dialog-goat-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -370,75 +370,67 @@
 			]
 		}
 	],
-	"dialog-cleo2": [
+	"dialog-cleo2-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "Cat",
+			"entity": "Cat",
 			"messages": [
 				"Meowwowow."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "Cleo",
+			"entity": "Cleo",
 			"messages": [
 				"That's what I've been saying\nthis whole time!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "Cat",
+			"entity": "Cat",
 			"messages": [
 				"Meowwrrrr!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "Cleo",
+			"entity": "Cleo",
 			"messages": [
 				"Oh, I know!"
 			]
 		}
 	],
-	"dialog-cleo1": [
+	"dialog-cleo1-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "Cat",
+			"entity": "Cat",
 			"messages": [
 				"Meowrrow."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "Cleo",
+			"entity": "Cleo",
 			"messages": [
 				"Oh, you don't say!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "Cat",
+			"entity": "Cat",
 			"messages": [
 				"Meow!"
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "Cleo",
+			"entity": "Cleo",
 			"messages": [
 				"He didn't!"
 			]
 		}
 	],
-	"dialog-cat": [
+	"dialog-cat-demo_map": [
 		{
 			"alignment": "BOTTOM_RIGHT",
 			"entity": "%PLAYER%",
@@ -448,16 +440,14 @@
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cat",
-			"name": "Cat",
+			"entity": "Cat",
 			"messages": [
 				"...."
 			]
 		},
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "cleo",
-			"name": "Cleo",
+			"entity": "Cleo",
 			"messages": [
 				"Excuse me, but we were in the middle\nof a conversation."
 			]
@@ -470,7 +460,7 @@
 			]
 		}
 	],
-	"dialog-smith": [
+	"dialog-smith-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -480,23 +470,42 @@
 			]
 		}
 	],
-	"dialog-sheep": [
+	"dialog-sheep-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Sheep",
+			"entity": "%SELF%",
 			"messages": [
 				"...."
 			]
 		}
 	],
-	"dialog-dsheep": [
+	"dialog-dsheep-demo_map": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"portrait": "sheep",
-			"name": "Delmar",
+			"entity": "%SELF%",
 			"messages": [
 				"...?"
+			]
+		}
+	],
+	"dialog-sleep": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": " ",
+			"messages": [
+				"....",
+				"Am I asleep?"
+			]
+		}
+	],
+	"dialog-timewarp": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Huh? Is this the village?",
+				"No, this is the village of the past. But\nI still have Ring Zero....",
+				"This has got to be a dream."
 			]
 		}
 	]

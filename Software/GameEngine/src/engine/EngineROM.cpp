@@ -8,14 +8,28 @@
 #ifdef DC801_DESKTOP
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
+
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif // EMSCRIPTEN
+
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
 FILE *romfile = NULL;
-uint8_t *romDataInDesktopRam = NULL;
-char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][16] = {
-	"MAGE/save_0.dat",
-	"MAGE/save_1.dat",
-	"MAGE/save_2.dat"
+uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = {0};
+char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
+	DESKTOP_SAVE_FILE_PATH "save_0.dat",
+	DESKTOP_SAVE_FILE_PATH "save_1.dat",
+	DESKTOP_SAVE_FILE_PATH "save_2.dat"
 };
+
+void makeSureSaveFilePathExists() {
+	struct stat st = {0};
+	if (stat(DESKTOP_SAVE_FILE_PATH, &st) == -1) {
+		mkdir(DESKTOP_SAVE_FILE_PATH, 0777);
+	}
+}
 #endif //DC801_DESKTOP
 
 #ifdef DC801_EMBEDDED
@@ -166,31 +180,46 @@ void EngineROM_Init()
 	result = f_close(&gameDat);
 #endif //DC801_EMBEDDED
 #ifdef DC801_DESKTOP
-	romfile = fopen(filename, "r+b");
+	struct stat stats;
+	size_t romFileSize = 0;
+	if (stat(filename, &stats) == 0) {
+		romFileSize = stats.st_size;
+		printf(
+			"EngineROM_Init - romFileSize: %d\n",
+			romFileSize
+		);
+	} else {
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Unable to read ROM file size"
+		);
+	}
 
+	if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE) {
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Invalid ROM file size!\n"
+			"    This is larger than the hardware's\n"
+			"    ROM chip capacity!\n"
+		);
+	}
+
+	romfile = fopen(filename, "rb");
 	if (romfile == NULL)
 	{
 		int error = errno;
 		fprintf(stderr, "Error: %s\n", strerror(error));
-		ENGINE_PANIC("Desktop build: ROM file missing");
-	}
-
-	fseek(romfile, 0, SEEK_END);
-	size_t romFileSize = ftell(romfile);
-	rewind(romfile);
-
-	romDataInDesktopRam = (uint8_t *) calloc(1, romFileSize);
-	if (!romDataInDesktopRam)
-	{
-		fclose(romfile);
-		ENGINE_PANIC("Desktop build: ROM->RAM memory alloc failed");
+		ENGINE_PANIC(
+			"Desktop build:\n"
+			"    Unable to open ROM file for reading"
+		);
 	}
 
 	/* copy the file into the buffer */
-	if (fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1)
+	bool readFailed = fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1;
+	fclose(romfile);
+	if (readFailed)
 	{
-		fclose(romfile);
-		free(romDataInDesktopRam);
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 #endif //DC801_DESKTOP
@@ -230,6 +259,7 @@ void EngineROM_ReadSaveSlot(
 	uint8_t *data
 ) {
 	#ifdef DC801_DESKTOP
+	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
@@ -300,6 +330,7 @@ void EngineROM_WriteSaveSlot(
 	// and write to ROM from the pointer to the locally scoped stack copy.
 	// This may actually be a compiler bug, or ROM interface black magic.
 	#ifdef DC801_DESKTOP
+	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
@@ -317,6 +348,15 @@ void EngineROM_WriteSaveSlot(
 		saveFile
 	);
 	fclose(saveFile);
+
+	#ifdef EMSCRIPTEN
+	// triggers a call to the FS.syncfs, asking IDBFS
+	// "pls actually do your job and save for reals"
+	// It's async, so good luck if you interrupt it
+	// ¯\_(ツ)_/¯
+	emscripten_run_script("Module.persistSaveFiles();");
+	#endif // EMSCRIPTEN
+
 	#endif // DC801_DESKTOP
 
 	#ifdef DC801_EMBEDDED
@@ -337,9 +377,9 @@ void EngineROM_WriteSaveSlot(
 	#endif // DC801_EMBEDDED
 }
 
+#ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
 bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
-#ifdef DC801_EMBEDDED
 	if(gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE){
 		ENGINE_PANIC("Your game.dat is larger than 33550336 bytes.\nYou will need to reduce its size to use it\non this board.");
 	}
@@ -491,26 +531,12 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 		96
 	);
 	p_canvas()->blt();
-#endif //DC801_EMBEDDED
 	return true;
 }
+#endif //DC801_EMBEDDED
 
 void EngineROM_Deinit() {
 #ifdef DC801_DESKTOP
-	if (romfile == NULL)
-	{
-		ENGINE_PANIC("Game Data file is not open");
-	}
-
-	if (fclose(romfile) != 0)
-	{
-		ENGINE_PANIC("Failed to close Game Data file");
-	}
-
-	romfile = NULL;
-
-	free(romDataInDesktopRam);
-	romDataInDesktopRam = NULL;
 #endif // DC801_DESKTOP
 }
 
@@ -641,7 +667,7 @@ uint32_t EngineROM_Verify(
 bool EngineROM_Magic() {
 	uint8_t length = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
 	uint8_t magic[] = ENGINE_ROM_GAME_IDENTIFIER_STRING;
-	u_int32_t bytesVerified = EngineROM_Verify(
+	uint32_t bytesVerified = EngineROM_Verify(
 		0,
 		length,
 		magic
