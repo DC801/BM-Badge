@@ -229,7 +229,7 @@ Edit the file `~/dev/nordic-sdk15.3.0/components/toolchain/gcc/Makefike.posix`
 
 It should read:
 ```shell script
-GNU_INSTALL_ROOT ?= /usr/bin
+GNU_INSTALL_ROOT ?= /usr/bin/
 GNU_VERSION ?= <arm gcc version from above>
 GNU_PREFIX ?= arm-none-eabi
 ```
