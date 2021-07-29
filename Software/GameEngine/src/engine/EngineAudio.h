@@ -15,9 +15,8 @@ public:
 	// The largest part of this function is actually the spinlock while loop.
 
 	// This also generates a DMB ISH instruction, which ensures that all
-	// instructions in the "Inner Shareable Region" are executed in order,
-	// ie the atomic operations, comparisons, and branches happen in explicit
-	// order.
+	// memory operations in the "Inner Shareable Region" that come before
+	// the instruction occur before memory operations after the instruction.
 	void lock()
 	{
 		while (flag.exchange(true, std::memory_order_relaxed));

@@ -233,7 +233,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 				"engine version. Starting with fresh save."
 			);
 		}
-		debug_print(errorString.c_str());
+		debug_print("%s", errorString.c_str());
 		if (!silenceErrors) {
 			MageDialog->showSaveMessageDialog(errorString);
 		}
@@ -1872,7 +1872,7 @@ uint16_t MageGameControl::tilesetCount() {
 }
 
 void MageGameControl::logAllEntityScriptValues(const char *string) {
-	debug_print(string);
+	debug_print("%s", string);
 	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
 		MageEntity *entity = &entities[i];

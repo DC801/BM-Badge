@@ -654,7 +654,7 @@ uint32_t EngineROM_Verify(
 					data[i],
 					readBuffer[i]
 				);
-				debug_print(debugString);
+				debug_print("%s", debugString);
 				ENGINE_PANIC(debugString);
 			}
 			//return address in ROM where memory does not match

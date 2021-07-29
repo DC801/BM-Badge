@@ -35,7 +35,7 @@ void panic_print(const char *msg, int x, int y)
 
 #ifdef DC801_DESKTOP
 	// On desktop, write to stderr as well
-	fprintf(stderr, msg);
+	fprintf(stderr, "%s", msg);
 #endif
 }
 
