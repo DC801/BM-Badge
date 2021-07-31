@@ -233,6 +233,8 @@ var generateMapHeader = function (map) {
 		+ 2 // uint16_t rows
 		+ 2 // uint16_t on_load
 		+ 2 // uint16_t on_tick
+		+ 2 // uint16_t on_look
+		+ 2 // uint16_t script_padding
 		+ 1 // uint8_t layer_count
 		+ 1 // uint8_t player_entity_id
 		+ 2 // uint16_t entity_count
@@ -298,6 +300,18 @@ var generateMapHeader = function (map) {
 		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
+	dataView.setUint16(
+		offset,
+		map.on_look || 0,
+		IS_LITTLE_ENDIAN
+	);
+	offset += 2;
+	dataView.setUint16(
+		offset,
+		0, // script_padding
+		IS_LITTLE_ENDIAN
+	);
+	offset += 2;
 	dataView.setUint8(
 		offset,
 		map.serializedLayers.length
@@ -353,7 +367,13 @@ var generateMapHeader = function (map) {
 	return result;
 };
 
-var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
+var handleMapData = function (
+	name,
+	mapFile,
+	mapProperties,
+	fileNameMap,
+	scenarioData,
+) {
 	return function (map) {
 		// console.log(
 		// 	'Map:',
@@ -361,6 +381,10 @@ var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
 		// 	map
 		// );
 		map.name = name;
+		Object.assign(
+			map,
+			(mapProperties || {}),
+		);
 		mapFile.parsed = map;
 		map.scenarioIndex = mapFile.scenarioIndex;
 		map.entityIndices = [];
@@ -389,15 +413,49 @@ var handleMapData = function (name, mapFile, fileNameMap, scenarioData) {
 	};
 };
 
+var mergeMapDataIntoScenario = function(
+	fileNameMap,
+	scenarioData,
+) {
+	var result = Promise.resolve();
+	var mapsFile = fileNameMap['maps.json'];
+	if (mapsFile) {
+		result = getFileJson(mapsFile).then(function (mapsData) {
+			if(scenarioData.maps && mapsData) {
+				Object.keys(mapsData).forEach(function (key) {
+					if(scenarioData.maps[key]) {
+						throw new Error(`Map "${key}" has duplicate definition in both "scenario.json" and "maps.json"! Remove one to continue!`);
+					}
+				});
+			}
+			scenarioData.maps = Object.assign(
+				{},
+				scenarioData.maps || {},
+				mapsData
+			);
+		});
+	}
+	return result;
+};
+
 var handleScenarioMaps = function (scenarioData, fileNameMap) {
 	var maps = scenarioData.maps;
 	var orderedMapPromise = Promise.resolve();
 	Object.keys(maps).forEach(function (key) {
-		var mapFileName = maps[key].split('/').pop();
+		var mapProperties = maps[key];
+		if (typeof mapProperties === 'string') {
+			mapProperties = {
+				path: mapProperties
+			};
+		}
+		if (!mapProperties.path) {
+			throw new Error(`Map "${key}" is missing a "path" property, cannot load map!`);
+		}
+		var mapFileName = mapProperties.path.split('/').pop();
 		var mapFile = fileNameMap[mapFileName];
 		mapFile.scenarioIndex = scenarioData.parsed.maps.length;
 		scenarioData.parsed.maps.push({
-			name: 'temporary - still parsing',
+			name: key,
 			scenarioIndex: mapFile.scenarioIndex
 		});
 		scenarioData.mapsByName[key] = mapFile;
@@ -408,7 +466,13 @@ var handleScenarioMaps = function (scenarioData, fileNameMap) {
 		} else {
 			orderedMapPromise = orderedMapPromise.then(function() {
 				return getFileJson(mapFile)
-					.then(handleMapData(key, mapFile, fileNameMap, scenarioData))
+					.then(handleMapData(
+						key,
+						mapFile,
+						mapProperties,
+						fileNameMap,
+						scenarioData,
+					));
 			});
 		}
 	});

@@ -78,6 +78,19 @@ MageMap::MageMap(uint32_t address)
 	onTick = ROM_ENDIAN_U2_VALUE(onTick);
 	address += sizeof(onTick);
 
+	//read onLook
+	EngineROM_Read(
+		address,
+		sizeof(onLook),
+		(uint8_t *)&onLook,
+		"Failed to read Map property 'onLook'"
+	);
+	onLook = ROM_ENDIAN_U2_VALUE(onLook);
+	address += sizeof(onLook);
+
+	//script_padding
+	address += sizeof(uint16_t);
+
 	//read layerCount
 	EngineROM_Read(
 		address,
@@ -188,6 +201,7 @@ uint32_t MageMap::Size() const
 		sizeof(rows) +
 		sizeof(onLoad) +
 		sizeof(onTick) +
+		sizeof(onLook) +
 		sizeof(layerCount) +
 		sizeof(entityCount) +
 		sizeof(geometryCount) +
@@ -231,6 +245,11 @@ uint16_t MageMap::getMapLocalMapOnLoadScriptId() const
 uint16_t MageMap::getMapLocalMapOnTickScriptId() const
 {
 	return onTick;
+}
+
+uint16_t MageMap::getMapLocalMapOnLookScriptId() const
+{
+	return onLook;
 }
 
 uint8_t MageMap::LayerCount() const
@@ -291,6 +310,11 @@ void MageMap::setOnLoad(uint16_t scriptId)
 void MageMap::setOnTick(uint16_t scriptId)
 {
 	onTick = scriptId;
+}
+
+void MageMap::setOnLook(uint16_t scriptId)
+{
+	onLook = scriptId;
 }
 
 uint8_t MageMap::getMapLocalPlayerEntityIndex() {

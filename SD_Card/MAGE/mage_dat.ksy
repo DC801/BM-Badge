@@ -135,6 +135,12 @@ types:
       - id: on_tick
         type: u2
         doc: local index to the map's script list
+      - id: on_look
+        type: u2
+        doc: local index to the map's script list
+      - id: script_padding
+        type: u2
+        doc: padding to get back to u4 alignment
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data

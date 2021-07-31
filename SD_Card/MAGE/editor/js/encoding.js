@@ -48,6 +48,7 @@ var handleScenarioData = function (fileNameMap) {
 			entityTypesPromise,
 			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
 			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
 			.then(function () {
 				serializeNullScript(
@@ -120,10 +121,10 @@ var crc32 = function(data) {
 };
 
 var generateIndexAndComposite = function (scenarioData) {
-	console.log(
-		'generateIndexAndComposite:scenarioData',
-		scenarioData
-	);
+	// console.log(
+	// 	'generateIndexAndComposite:scenarioData',
+	// 	scenarioData
+	// );
 	var signature = new ArrayBuffer(16);
 	var signatureDataView = new DataView(signature);
 	setCharsIntoDataView(

@@ -445,6 +445,7 @@
 	- [ ] `PRINT_TO_SERIAL`  (string_id)
 	- [ ] `INVENTORY_GET` (item_name)
 	- [ ] `INVENTORY_DROP` (item_name)
+	- [ ] `CHECK_INVENTORY` (item_name, expected_state, success_script)
 	- [ ] `SET_MAP_LOOK` (script_name)
 	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
 	- [ ] `SET_ITEM_USE` (item_name, script_name)
@@ -460,6 +461,9 @@
 	- [ ] Map struct changes
 		- [ ] `on_look` script
 		- [ ] `script_padding` 2 bytes
+			- [ ] Change the encoder to handle this new shape
+			- [ ] Update the kaitai struct
+			- [ ] Update the C
 		- [ ] `direction_count` uint8_t
 		- [ ] `directions` is an array, so `go $DIRECTION` calls a script
 			- [ ] `name` 12 bytes script ids,
@@ -467,6 +471,7 @@
 			- [ ] `padding` 2 bytes to get us back into 16 alignment
 	- [ ] Entity struct changes
 		- [ ] `on_look` script, stored in bytes 30 & 31
+	- [ ] Action `setEntityScript` needs some TLC and testing for setting look scripts
 	- [ ] New Item struct - managed in `items.json`
 		- [ ] There may not be more than 64 items in the whole universe
 		- [ ] 16 of these items need to be held in ram because the scripts need to be mutable to allow branching
@@ -482,9 +487,21 @@
 			- [ ] 0x0000 means nowhere
 			- [ ] 0x0001 0xFFFE means it's on a map
 			- [ ] 0xFFFF means it's in the player's inventory
-		- [ ] Web build should get a toggleable "console" area below the gameplay window, that basically looks like the `text_based_adventure_prototype`
+	- [ ] Web build should get a toggleable "console" area below the gameplay window, that basically looks like the `text_based_adventure_prototype`
 	- [ ] Text based adventure
 		- [ ] Player loses control over the joysticks and things are instead done over the serial CLI
+		- [ ] Serial command processing system
+			- [ ] Complete list of possible command formats
+				- [ ] Verb: 'look', 'inventory' 'help'
+				- [ ] Verb, Target: 'look flask', 'get flask', 'go north'
+			- [ ] Verbs to implement
+				- [ ] help
+				- [ ] look
+				- [ ] go
+				- [ ] get
+				- [ ] drop
+				- [ ] inventory
+				- [ ] use
 		- [ ] The tileset actually just looks like a Zelda MiniMap
 			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
 		- [ ] This dungeon can has an inventory system

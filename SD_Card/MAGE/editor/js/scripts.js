@@ -1305,7 +1305,39 @@ var handleMapEntityScripts = function (
 	});
 };
 
-var possibleMapScripts = ['on_load', 'on_tick'];
+var possibleMapScripts = [
+	'on_load',
+	'on_tick',
+	'on_look',
+];
+
+var collectMapScripts = function (
+	map,
+) {
+	var result = {};
+	// this is the shape if it came from a tiled map file
+	(map.properties || []).forEach(function(property) {
+		if (
+			property.value // because if it's empty, don't bother
+			&& possibleMapScripts.includes(property.name)
+		) {
+			result[property.name] = property.value;
+		}
+	});
+	// this is if it's a property defined in maps.json
+	possibleMapScripts.forEach(function (scriptSlot) {
+		var scriptName = map[scriptSlot];
+		var existingScriptName = result[scriptSlot];
+		if (scriptName) {
+			if (existingScriptName) {
+				throw new Error(`Duplicate "${scriptSlot}" definition on map "${map.name}": Your map has this script defined in the Tiled map, as well as maps.json. Remove one of them to continue.`);
+			} else {
+				result[scriptSlot] = scriptName;
+			}
+		}
+	});
+	return result;
+};
 
 var handleMapScripts = function (
 	map,
@@ -1323,18 +1355,17 @@ var handleMapScripts = function (
 		fileNameMap,
 		scenarioData,
 	);
-	(map.properties || []).forEach(function(property) {
-		if (
-			property.value // because if it's empty, don't bother
-			&& possibleMapScripts.includes(property.name)
-		) {
-			map[property.name] = handleScript(
-				property.value,
-				map,
-				fileNameMap,
-				scenarioData,
-			).mapLocalScriptId;
-		}
+	var mapScripts = collectMapScripts(map);
+	// console.log(`Processing scripts for map: "${map.name}"`);
+	Object.keys(mapScripts).forEach(function (scriptSlot) {
+		var scriptName = mapScripts[scriptSlot];
+		// console.log(`	- ${scriptSlot}:${scriptName}`);
+		map[scriptSlot] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
 	});
 	handleMapEntityScripts(
 		map,

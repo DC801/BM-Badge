@@ -53,6 +53,8 @@ char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;
 bool was_serial_started = false;
 bool was_command_entered = false;
+void (*on_start_function_pointer)() = nullptr;
+void (*on_command_function_pointer)(char *commandString) = nullptr;
 
 #ifdef DC801_DESKTOP
 
@@ -317,6 +319,14 @@ void EngineSendSerialMessage (char *message)
 #endif
 }
 
+void EngineSerialRegisterEventHandlers (
+	void (*on_start)(),
+	void (*on_command)(char *commandString)
+) {
+	on_start_function_pointer = on_start;
+	on_command_function_pointer = on_command;
+}
+
 void EngineHandleSerialInput ()
 {
 #ifdef DC801_DESKTOP
@@ -327,67 +337,16 @@ void EngineHandleSerialInput ()
 	handle_usb_serial_input();
 #endif
 	if(was_serial_started) {
-		EngineSendSerialMessage(
-			(char*)
-			"WELCOME TO MAGE NET\n"
-			"   __  ______  _________  _  ____________\n"
-			"  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\n"
-			" / /|_/ / __ / (_ / _/  /    / _/  / /   \n"
-			"/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n"
-			"\n> "
-		);
+		if(on_start_function_pointer != nullptr) {
+			on_start_function_pointer();
+		}
 		was_serial_started = false;
 	}
 	if(was_command_entered) {
-		char message[COMMAND_RESPONSE_SIZE + 64];
-		const char message_format[] = "\nThe command you entered was:\n\"%s\"\n";
-		snprintf(
-			message,
-			COMMAND_RESPONSE_SIZE,
-			message_format,
-			command_buffer
-		);
-		EngineSendSerialMessage(message);
-
-		// start SECRET_GOAT
-		int compare = strcmp(command_buffer, "goat");
-		bool identical = compare == 0;
-		if(identical) {
-			EngineSendSerialMessage(
-				(char*)
-				"You have found a secret goat!\n"
-				"               ##### ####     \n"
-				"             ##   #  ##       \n"
-				"            #   (-)    #      \n"
-				"            #+       ######   \n"
-				" FEED ME -  #^             ## \n"
-				"             ###           #  \n"
-				"               #  #      # #  \n"
-				"               ##  ##  ##  #  \n"
-				"               ######  #####  \n"
-			);
+		if(on_command_function_pointer != nullptr) {
+			on_command_function_pointer(command_buffer);
 		}
-		compare = strcmp(command_buffer, "feed goat");
-		identical = compare == 0;
-		if(identical) {
-			EngineSendSerialMessage(
-				(char*)
-				"You have fed the secret goat!\n"
-				"               ##### ####     \n"
-				"             ##   #  ##       \n"
-				"            #   (-)    #      \n"
-				"            #+       ######   \n"
-				"   THANK -  #v             ## \n"
-				"             ###           #  \n"
-				"               #  #      # #  \n"
-				"               ##  ##  ##  #  \n"
-				"               ######  #####  \n"
-			);
-		}
-		// end SECRET_GOAT
-
 		EngineSendSerialMessage((char*)"> ");
-
 		memset(
 			command_buffer,
 			0,

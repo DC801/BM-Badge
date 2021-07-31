@@ -205,6 +205,8 @@ void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entit
 			MageGame->Map().setOnLoad(mapLocalScriptId);
 		} else if(scriptType == MageScriptType::ON_TICK) {
 			MageGame->Map().setOnTick(mapLocalScriptId);
+		} else if(scriptType == MageScriptType::ON_LOOK) {
+			MageGame->Map().setOnLook(mapLocalScriptId);
 		}
 	}
 	//target is an entity
@@ -1964,6 +1966,7 @@ MageScriptControl::MageScriptControl()
 
 	initScriptState(&mapLoadResumeState, MAGE_NO_SCRIPT, false);
 	initScriptState(&mapTickResumeState, MAGE_NO_SCRIPT, false);
+	initScriptState(&mapLookResumeState, MAGE_NO_SCRIPT, false);
 
 	for(uint16_t e=0; e<MAX_ENTITIES_PER_MAP; e++)
 	{
@@ -2073,6 +2076,7 @@ uint32_t MageScriptControl::size() const
 		sizeof(currentScriptType) +
 		sizeof(MageScriptState) + //mapLoadResumeState
 		sizeof(MageScriptState) + //mapTickResumeState
+		sizeof(MageScriptState) + //mapLookResumeState
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityInteractResumeStates
 		sizeof(MageScriptState)*MAX_ENTITIES_PER_MAP + //entityTickResumeStates
 		sizeof(ActionFunctionPointer)*MageScriptActionTypeId::NUM_ACTIONS; //function pointer array
@@ -2087,6 +2091,11 @@ MageScriptState* MageScriptControl::getMapLoadResumeState()
 MageScriptState* MageScriptControl::getMapTickResumeState()
 {
 	return &mapTickResumeState;
+}
+
+MageScriptState* MageScriptControl::getMapLookResumeState()
+{
+	return &mapLookResumeState;
 }
 
 MageScriptState* MageScriptControl::getEntityInteractResumeState(uint8_t index)
@@ -2303,6 +2312,16 @@ void MageScriptControl::handleMapOnTickScript()
 	currentEntityId = MAGE_MAP_ENTITY;
 	//now that the *ResumeState struct is correctly configured, process the script:
 	processScript(&mapTickResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
+}
+
+void MageScriptControl::handleMapOnLookScript()
+{
+	//this checks to see if the map onLoad script is complete and returns if it is:
+	if (!mapLookResumeState.scriptIsRunning) {
+		return;
+	}
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(&mapLookResumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOOK);
 }
 
 void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)

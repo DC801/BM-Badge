@@ -46,27 +46,6 @@
 		"dialog/dialog-woprhouse.json",
 		"dialog/dialog-max.json"
 	],
-	"maps": {
-		"main_menu": "maps/map-main_menu.json",
-		"demo": "maps/map-demo.json",
-		"main": "maps/map-main.json",
-		"bobsclub": "maps/map-bobsclub.json",
-		"test": "maps/map-test.json",
-		"town": "maps/map-town.json",
-		"oldcouplehouse": "maps/map-oldcouplehouse.json",
-		"bakery": "maps/map-bakery.json",
-		"family": "maps/map-family.json",
-		"magehouse": "maps/map-magehouse.json",
-		"lodge": "maps/map-lodge.json",
-		"greenhouse": "maps/map-greenhouse.json",
-		"secretroom": "maps/map-secretroom.json",
-		"warp_zone": "maps/map-warp_zone.json",
-		"action_testing_01": "maps/map-action_testing_01.json",
-		"testbig": "maps/map-testbig.json",
-		"credits": "maps/map-credits.json",
-		"woprhouse": "maps/map-woprhouse.json",
-		"action_testing_02": "maps/map-action_testing_02.json"
-	},
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
 		"codec": "tilesets/tileset-dialog_codec.json",
