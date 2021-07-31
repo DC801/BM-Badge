@@ -1,4 +1,13 @@
 {
+	"dialog-map-action_testing-look": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Hey boss, I'm lookin around for secrets,\nbut it's nothing but numbers and mages in\nthis room!"
+			]
+		}
+	],
 	"dialog-mage01_1": [
 		{
 			"alignment": "BOTTOM_LEFT",

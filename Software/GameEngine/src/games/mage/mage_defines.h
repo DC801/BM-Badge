@@ -115,8 +115,9 @@ all of the old code used as the foundation of this badge.
 //these are the types of scripts that can be on a map or entity:
 typedef enum : uint8_t {
 	ON_LOAD = 0,
-	ON_TICK = 1,
-	ON_INTERACT = 2,
+	ON_TICK,
+	ON_INTERACT,
+	ON_LOOK,
 	NUM_SCRIPT_TYPES
 } MageScriptType;
 

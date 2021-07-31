@@ -18,6 +18,7 @@ private:
 	uint16_t rows;
 	uint16_t onLoad;
 	uint16_t onTick;
+	uint16_t onLook;
 	uint8_t layerCount;
 	uint8_t playerEntityIndex;
 	uint16_t entityCount;
@@ -36,6 +37,7 @@ public:
 		rows{0},
 		onLoad{0},
 		onTick{0},
+		onLook{0},
 		layerCount{0},
 		playerEntityIndex{0},
 		entityCount{0},
@@ -57,6 +59,7 @@ public:
 	uint16_t Rows() const;
 	uint16_t getMapLocalMapOnLoadScriptId() const;
 	uint16_t getMapLocalMapOnTickScriptId() const;
+	uint16_t getMapLocalMapOnLookScriptId() const;
 	uint8_t LayerCount() const;
 	uint8_t EntityCount() const;
 	uint16_t GeometryCount() const;
@@ -71,6 +74,7 @@ public:
 	//this sets the map's onLoad and onTick script value.
 	void setOnLoad(uint16_t scriptId);
 	void setOnTick(uint16_t scriptId);
+	void setOnLook(uint16_t scriptId);
 
 	uint8_t getMapLocalPlayerEntityIndex();
 }; //class MageMap

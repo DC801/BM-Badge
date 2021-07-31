@@ -1,4 +1,10 @@
 {
+	"map-action_testing-look": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-map-action_testing-look"
+		}
+	],
 	"mage01-check_entity_name": [
 		{
 			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",

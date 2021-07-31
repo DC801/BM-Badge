@@ -548,6 +548,11 @@ void MageGameControl::initializeScriptsOnMapLoad()
 		map.getMapLocalMapOnTickScriptId(),
 		false
 	);
+	MageScript->initScriptState(
+		MageScript->getMapLookResumeState(),
+		map.getMapLocalMapOnLookScriptId(),
+		false
+	);
 	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
 		MageEntity *entity = &entities[i];

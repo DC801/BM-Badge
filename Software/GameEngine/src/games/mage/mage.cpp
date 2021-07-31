@@ -20,11 +20,13 @@
 #include "mage_hex.h"
 #include "mage_dialog_control.h"
 #include "mage_script_control.h"
+#include "mage_command_control.h"
 
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
 std::unique_ptr<MageDialogControl> MageDialog;
 std::unique_ptr<MageScriptControl> MageScript;
+std::unique_ptr<MageCommandControl> MageCommand;
 MageEntity *hackableDataAddress;
 FrameBuffer *mage_canvas;
 
@@ -57,6 +59,9 @@ void handleScripts()
 	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	MageScript->handleMapOnTickScript();
+	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
+	//the map's onTick script will run every tick, restarting from the beginning as it completes
+	MageScript->handleMapOnLookScript();
 	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	for(uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++)
 	{
@@ -320,6 +325,13 @@ void EngineMainGameLoop ()
 	}
 }
 
+void onSerialStart () {
+	MageCommand->handleStart();
+}
+void onSerialCommand (char* commandString) {
+	MageCommand->processCommand(commandString);
+}
+
 void EngineInit () {
 	//turn off LEDs
 	ledsOff();
@@ -347,6 +359,13 @@ void EngineInit () {
 	//construct MageScriptControl object to handle scripts for the game
 	MageScript = std::make_unique<MageScriptControl>();
 
+	//construct MageCommandControl object to handle serial/stdin command parsing
+	MageCommand = std::make_unique<MageCommandControl>();
+	EngineSerialRegisterEventHandlers(
+		onSerialStart,
+		onSerialCommand
+	);
+
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"After MageScriptControl constructor"
 	);
@@ -358,13 +377,32 @@ void EngineInit () {
 	MageHex->setHexOp(HEX_OPS_XOR);
 
 	#ifdef DC801_DESKTOP
-		fprintf(stderr, "MageGameControl RAM use:   %8d bytes.\r\n", MageGame->Size());
-		fprintf(stderr, "MageScriptControl RAM use: %8d bytes.\r\n", MageScript->size());
-		fprintf(stderr, "MageHexControl RAM use:    %8d bytes.\r\n", MageHex->size());
-		fprintf(stderr, "FrameBuffer RAM use:       %8d bytes.\r\n", FRAMEBUFFER_SIZE * sizeof(uint16_t));
-		fprintf(stderr, "-------------------------------------------\r\n");
-		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n",
-			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
+		uint32_t gameSize = MageGame->Size();
+		uint32_t scriptSize = MageScript->size();
+		uint32_t hexSize = MageHex->size();
+		uint32_t commandSize = MageCommand->size();
+		uint32_t frameBufferSize = FRAMEBUFFER_SIZE * sizeof(uint16_t);
+		uint32_t totalSize = (
+			0
+			+ gameSize
+			+ scriptSize
+			+ hexSize
+			+ commandSize
+			+ frameBufferSize
+		);
+		fprintf(stderr, "MageGameControl RAM use:    %8d bytes.\n", gameSize);
+		fprintf(stderr, "MageScriptControl RAM use:  %8d bytes.\n", scriptSize);
+		fprintf(stderr, "MageHexControl RAM use:     %8d bytes.\n", hexSize);
+		fprintf(stderr, "MageCommandControl RAM use: %8d bytes.\n", commandSize);
+		fprintf(stderr, "FrameBuffer RAM use:        %8d bytes.\n", frameBufferSize);
+		fprintf(stderr, "-------------------------------------------\n");
+		fprintf(stderr, "Minimum RAM overhead use:   %8d bytes.\n", totalSize);
+		fflush(stderr);
+		// for some reason, outputting to stderr and then flushing, this still comes out AFTER
+		// the message output to stdout AFTER THIS, as triggered by `was_serial_started`.
+		// so forcibly delaying by 20 ms on startup actually allows the stderr/stdout
+		// messages to come out in the correct order. WHY. WHYYYYYYYYY. WHY.
+		nrf_delay_ms(20);
 		was_serial_started = true;
 	#endif
 	#ifdef DC801_EMBEDDED
@@ -404,6 +442,11 @@ void MAGE()
 
 	// Close rom and any open files
 	EngineROM_Deinit();
+
+	EngineSerialRegisterEventHandlers(
+		nullptr,
+		nullptr
+	);
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"EngineROM_Deinit();"

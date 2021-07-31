@@ -35,6 +35,7 @@ class MageScriptControl
 		//variables for tracking suspended script states:
 		MageScriptState mapLoadResumeState;
 		MageScriptState mapTickResumeState;
+		MageScriptState mapLookResumeState;
 		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
 		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
 
@@ -273,6 +274,7 @@ class MageScriptControl
 		//these functions return the specified MageScriptState struct:
 		MageScriptState* getMapLoadResumeState();
 		MageScriptState* getMapTickResumeState();
+		MageScriptState* getMapLookResumeState();
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
 		
@@ -320,6 +322,7 @@ class MageScriptControl
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
+		void handleMapOnLookScript();
 		void handleEntityOnTickScript(uint8_t filteredEntityId);
 		void handleEntityOnInteractScript(uint8_t filteredEntityId);
 
