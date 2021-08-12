@@ -130,6 +130,7 @@ extern "C" {
 #include "adafruit/gfxfont.h"
 
 #include "EngineInput.h"
+#include "EngineSerial.h"
 #include "EngineROM.h"
 #include "engine/convert_endian.h"
 
