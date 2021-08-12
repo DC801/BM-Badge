@@ -254,7 +254,7 @@ void usb_serial_init()
 }
 
 void send_serial_message_with_length(
-	char *message,
+	const char *message,
 	size_t message_length
 ) {
 	// Turns out that calling `app_usbd_cdc_acm_write` with message_length
@@ -297,7 +297,7 @@ void send_serial_message_with_length(
 }
 
 void send_serial_message(
-	char *message
+	const char *message
 ) {
 	size_t message_length = strlen(message);
 	send_serial_message_with_length(message, message_length);

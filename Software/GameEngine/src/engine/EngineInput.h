@@ -54,7 +54,7 @@ extern bool was_serial_started;
 extern bool was_command_entered;
 
 void EngineHandleKeyboardInput();
-void EngineSendSerialMessage (char *message);
+void EngineSendSerialMessage (const char *message);
 void EngineSerialRegisterEventHandlers (
 	void (*on_start)(),
 	void (*on_command)(char *commandString)

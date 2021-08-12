@@ -303,7 +303,7 @@ void EngineInputDesktopGetCommandStringFromStandardIn ()
 
 #endif
 
-void EngineSendSerialMessage (char *message)
+void EngineSendSerialMessage (const char *message)
 {
 #ifdef DC801_DESKTOP
 	printf("%s", message);
@@ -315,7 +315,7 @@ void EngineSendSerialMessage (char *message)
 		std::regex("\n"),
 		"\r\n"
 	);
-	send_serial_message((char*)message_with_crlf.c_str());
+	send_serial_message(message_with_crlf.c_str());
 #endif
 }
 
@@ -346,7 +346,7 @@ void EngineHandleSerialInput ()
 		if(on_command_function_pointer != nullptr) {
 			on_command_function_pointer(command_buffer);
 		}
-		EngineSendSerialMessage((char*)"> ");
+		EngineSendSerialMessage("> ");
 		memset(
 			command_buffer,
 			0,
