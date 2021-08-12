@@ -14,6 +14,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/rc4.c \
 	$(SRC_ROOT)/modules/qspi.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
+	$(SRC_ROOT)/engine/EngineSerial.cpp \
 	$(SRC_ROOT)/engine/EngineROM.cpp \
 	$(SRC_ROOT)/engine/EnginePanic.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \

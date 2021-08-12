@@ -42,24 +42,7 @@ extern ButtonStates EngineInput_Activated;
 extern ButtonStates EngineInput_Deactivated;
 extern bool *buttonBoolPointerArray[KEYBOARD_NUM_KEYS];
 
-#define COMMAND_BUFFER_SIZE 1024
-#define COMMAND_RESPONSE_SIZE (COMMAND_BUFFER_SIZE + 128)
-
-// always allow for a null termination byte
-#define COMMAND_BUFFER_MAX_READ (COMMAND_BUFFER_SIZE - 1)
-
-extern char command_buffer[COMMAND_BUFFER_SIZE];
-extern uint16_t command_buffer_length;
-extern bool was_serial_started;
-extern bool was_command_entered;
-
 void EngineHandleKeyboardInput();
-void EngineSendSerialMessage (const char *message);
-void EngineSerialRegisterEventHandlers (
-	void (*on_start)(),
-	void (*on_command)(char *commandString)
-);
-void EngineHandleSerialInput();
 bool EngineIsRunning();
 bool EngineShouldReloadGameDat();
 void EngineTriggerRomReload();
