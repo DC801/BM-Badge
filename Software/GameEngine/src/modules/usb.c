@@ -180,6 +180,9 @@ static void cdc_acm_user_ev_handler(
 		default:
 			break;
 	}
+	if (was_command_entered) {
+		send_serial_message("\r\n");
+	}
 }
 
 static void usbd_user_ev_handler(app_usbd_event_type_t event)
