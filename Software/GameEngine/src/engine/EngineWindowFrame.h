@@ -12,4 +12,8 @@ void EngineWindowFrameGameBlt(uint16_t *frame);
 
 void EngineWindowFrameDestroy();
 
+void EngineWindowFrameResize(int change);
+
+void EngineWindowFrameCleanup();
+
 #endif //_ENGINEWINDOWFRAME_H

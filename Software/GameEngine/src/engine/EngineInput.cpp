@@ -7,6 +7,7 @@
 #ifdef DC801_DESKTOP
 #include <stdio.h>
 #include <unistd.h>
+#include "EngineWindowFrame.h"
 #endif
 
 #ifdef __cplusplus
@@ -91,6 +92,15 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 				&& (e.key.keysym.mod & KMOD_CTRL)
 			) {
 				shouldReloadGameDat = true;
+				return;
+			}
+			// + or - keys increase or decrease screen size:
+			else if (e.key.keysym.sym == SDLK_MINUS) {
+				EngineWindowFrameResize(-1);
+				return;
+			}
+			else if (e.key.keysym.sym == SDLK_EQUALS) {
+				EngineWindowFrameResize(1);
 				return;
 			}
 		}

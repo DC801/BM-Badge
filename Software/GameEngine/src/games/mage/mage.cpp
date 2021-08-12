@@ -9,10 +9,6 @@
 //uncomment to print main game loop timing debug info to terminal or over serial
 //#define TIMING_DEBUG
 
-#ifdef DC801_DESKTOP
-#include "EngineWindowFrame.h"
-#endif
-
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
 #endif
@@ -422,9 +418,6 @@ void EngineInit () {
 
 void MAGE()
 {
-	#ifdef DC801_DESKTOP
-		EngineWindowFrameInit();
-	#endif
 	//initialize the canvas object for the screen buffer.
 	mage_canvas = p_canvas();
 
@@ -452,10 +445,4 @@ void MAGE()
 		"EngineROM_Deinit();"
 	);
 
-	#ifdef DC801_DESKTOP
-		// Clean up
-		EngineWindowFrameDestroy();
-	#endif
-
-	return;
 }
