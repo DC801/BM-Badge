@@ -2,7 +2,6 @@
 #include "mage_game_control.h"
 #include "mage_script_control.h"
 #include "EngineSerial.h"
-#include <bits/stdc++.h>
 
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
@@ -24,21 +23,27 @@ void MageCommandControl::handleStart() {
 
 void MageCommandControl::processCommand(char *commandString) {
 	// Used to split string around spaces.
-	std::istringstream wordSeparator(commandString);
-
+	std::string input(commandString);
 	bool syntaxValid = true;
 	uint8_t wordCount = 0;
-	std::string word;
+	std::string word = "";
 	std::string verb;
 	std::string subject;
 
 	// Traverse through all words
-	// while loop till we get
-	// strings to store in string word
+	// while loop through segments to store in string word
 	while (
-		(wordSeparator >> word)
+		input.compare(word) != 0
 		&& syntaxValid
 	) {
+		size_t index = input.find_first_of(" ");
+		word = input.substr(0,index);
+		input = input.substr(index+1, input.length());
+		if (word.length() == 0) {
+			// skip space
+			continue;
+		}
+
 		wordCount++;
 		if (wordCount == 1) {
 			verb.append(word);
