@@ -13,7 +13,6 @@ MageCommandControl::MageCommandControl() {
 
 void MageCommandControl::handleStart() {
 	EngineSendSerialMessage(
-		(char*)
 		"WELCOME TO MAGE NET\n"
 		"   __  ______  _________  _  ____________\n"
 		"  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\n"
@@ -59,11 +58,10 @@ void MageCommandControl::processCommand(char *commandString) {
 			message += " | Subject: " + subject + "\n";
 		}
 		EngineSendSerialMessage(
-			(char*) message.c_str()
+			message.c_str()
 		);
 	} else if (!syntaxValid) {
 		EngineSendSerialMessage(
-			(char*)
 			"Invalid command! Commands are exactly one or two words.\n"
 			"Examples: help | look | look $ITEM | go $DIRECTION\n"
 		);
@@ -75,14 +73,12 @@ void MageCommandControl::processCommand(char *commandString) {
 		// would be really useful earlier, but I can't remember why now.
 		lastCommandUsed = COMMAND_HELP;
 		EngineSendSerialMessage(
-			(char*)
 			"Supported Verbs:\n"
 			"\thelp\tlook\n"
 		);
 	} else if(verb == "look") {
 		lastCommandUsed = COMMAND_LOOK;
 		EngineSendSerialMessage(
-			(char*)
 			"You try to look.\n"
 		);
 		MageScript->initScriptState(
@@ -94,7 +90,6 @@ void MageCommandControl::processCommand(char *commandString) {
 	// start SECRET_GOAT
 	else if(verb == "goat") {
 		EngineSendSerialMessage(
-			(char*)
 			"You have found a secret goat!\n"
 			"               ##### ####     \n"
 			"             ##   #  ##       \n"
@@ -109,7 +104,6 @@ void MageCommandControl::processCommand(char *commandString) {
 	}
 	else if(strcmp(commandString, "feed goat") == 0) {
 		EngineSendSerialMessage(
-			(char*)
 			"You have fed the secret goat!\n"
 			"               ##### ####     \n"
 			"             ##   #  ##       \n"
@@ -126,7 +120,7 @@ void MageCommandControl::processCommand(char *commandString) {
 	else {
 		std::string message = "Unrecognized Verb: " + verb + "\n";
 		EngineSendSerialMessage(
-			(char*) message.c_str()
+			message.c_str()
 		);
 	}
 }

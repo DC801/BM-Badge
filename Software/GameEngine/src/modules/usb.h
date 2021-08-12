@@ -15,7 +15,7 @@ extern uint16_t command_buffer_length;
 void usb_serial_init();
 void handle_usb_serial_input();
 void send_serial_message(
-	char *message
+	const char *message
 );
 //bool usb_serial_is_connected();
 //size_t usb_serial_available();
