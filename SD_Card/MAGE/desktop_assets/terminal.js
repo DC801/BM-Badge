@@ -22,3 +22,22 @@ inputForm.addEventListener('submit', function (event) {
 	);
 	commandInput.value = '';
 });
+
+// When bringing focus into this window at all from the parent,
+// there's a 99% chance you actually want to type terminal input,
+// so focus the input directly.
+var makeFocusInputOnTerminalFrameInteract = function (logName) {
+	return function (event) {
+		// console.log('focusInputOnTerminalFrameFocus:', {
+		// 	event: logName,
+		// 	activeElement: document.activeElement,
+		// });
+		if (document.activeElement === document.body) {
+			event.preventDefault();
+			commandInput.focus();
+		}
+	};
+};
+document.addEventListener('mousedown', makeFocusInputOnTerminalFrameInteract('mousedown'));
+document.addEventListener('touchstart', makeFocusInputOnTerminalFrameInteract('touchstart'));
+window.addEventListener('focusin', makeFocusInputOnTerminalFrameInteract('focusin'));
