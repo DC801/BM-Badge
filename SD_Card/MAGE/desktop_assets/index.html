@@ -7,15 +7,32 @@
 	<title>DC801 BLACK MAGE GAME</title>
 	<link rel="stylesheet" href="./MAGE/desktop_assets/styles.css" />
 </head>
-<body>
+<body class="game_body">
 	<div class="container">
-		<canvas id="canvas"></canvas>
+		<div class="box">
+			<canvas
+				id="canvas"
+				width="544"
+				height="400"
+				tabindex="0"
+			></canvas>
+		</div>
 		<p>Controls: <a href="https://github.com/DC801/BM-Badge/blob/main/EnvironmentSetup.md#desktop-build-controls" target="_blank">EnvironmentSetup.md</a></p>
+		<div class="box">
+			<iframe
+				id="terminal_iframe"
+				width="544"
+				height="400"
+				src="./MAGE/desktop_assets/terminal.html"
+				border="0"
+			></iframe>
+		</div>
 	</div>
 	<script
 		data-original-src="https://unpkg.com/localforage@1.9.0/dist/localforage.min.js"
 		src="./MAGE/desktop_assets/localforage.min.js"
 	></script>
+	<script src="./MAGE/desktop_assets/hijack_repair_stdio.js"></script>
 	<script src="./MAGE/desktop_assets/asset_loader.js"></script>
 </body>
 </html>

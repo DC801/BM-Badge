@@ -39,7 +39,7 @@ public:
 timer_manager::timer_manager() : interval{1.0 / APP_TIMER_CLOCK_FREQ}, timers{}, timers_mutex{},
     running{true}, runner{} // runner{&timer_manager::worker, this}
 {
-    std::cout << "New timer manager" << std::endl;
+    //std::cout << "New timer manager" << std::endl;
 }
 
 timer_manager::~timer_manager()
