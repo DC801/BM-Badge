@@ -7,7 +7,9 @@ extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
 
 MageCommandControl::MageCommandControl() {
-	printf("Hello there, the Command Goats are listening for commands.\n");
+	// EngineSendSerialMessage(
+	// 	"Hello there, the Command Goats are listening for commands.\n"
+	// );
 }
 
 void MageCommandControl::handleStart() {

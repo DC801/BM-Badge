@@ -368,6 +368,7 @@
 	- [x] Verify that the header of dragged file contains `MAGEGAME`
 	- [x] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
 	- [x] Reloading the page starts game fresh from original `game.dat` in IndexedDB
+- [ ] !!!CRITICAL!!! Make HTTP HEAD request for `game.dat` on server, compare size/modification to local, and re-download on change
 - [ ] Fancy extra `game.dat` features
 	- [ ] The dragged-in `game.dat` should be cached between refreshes
 	- [ ] Should show the Path/CRC32/Length of each `game.dat`
@@ -450,6 +451,9 @@
 	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
 	- [ ] `SET_ITEM_USE` (item_name, script_name)
 	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
+	- [ ] `CHECK_BLE_FLAG` (flag_constant_name, expected_state, success_script)
+	- [ ] `SET_BLE_FLAG` (flag_constant_name, bool_value)
+- [ ] Add numeric "constants" support to encoder
 - [ ] Serial Dungeon
 	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
 		- [ ] `path` example "maps/map-main_menu.json"

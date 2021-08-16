@@ -1,15 +1,15 @@
 var textDecoder = new TextDecoder();
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
+var gameCanvas = document.getElementById('canvas');
+var context = gameCanvas.getContext('2d');
 context.fillStyle = '#000';
-context.fillRect(0, 0, canvas.width, canvas.height);
+context.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 context.fillStyle = '#dc8';
 context.textAlign = 'center';
 context.font = '32px monospace';
 context.fillText(
 	':: LOAFING ::',
-	(canvas.width / 2),
-	(canvas.height / 2) + 8,
+	(gameCanvas.width / 2),
+	(gameCanvas.height / 2) + 8,
 );
 
 var loadedDataMap = {};
@@ -83,10 +83,13 @@ var emscriptenReadyPromise = new Promise(function (resolve, reject) {
 	};
 });
 var Module = {
-	canvas: canvas, // compensates for emscripten startup weirdness - IMPORTANT
+	canvas: gameCanvas, // compensates for emscripten startup weirdness - IMPORTANT
 	noInitialRun: true, // because preInit isn't promise based, need to start manually
 	onRuntimeInitialized: emscriptenReadyResolve,
+	print: createOutputFunction('stdout'), // handles output strings from stdout
+	printErr: createOutputFunction('stderr'),// handles output strings from stderr
 	preInit: function() {
+		installStdInReplacement(FS);
 		Object.keys(loadedDataMap).forEach(addLoadedFilePathToVirtualFS);
 		Promise.all([
 			enableSaveFilePersistence(),

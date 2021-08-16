@@ -12,7 +12,7 @@ SDL_Surface *frameLEDSurface = nullptr;
 SDL_Texture *frameLEDTexture = nullptr;
 SDL_Texture *gameViewportTexture = nullptr;
 
-int SCREEN_MULTIPLIER = 2;
+int SCREEN_MULTIPLIER = 1;
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 
@@ -264,8 +264,8 @@ void EngineWindowFrameResize(int change) {
 	if (SCREEN_MULTIPLIER < 1) {
 		SCREEN_MULTIPLIER = 1;
 	}
-	if (SCREEN_MULTIPLIER > 8) {
-		SCREEN_MULTIPLIER = 8;
+	if (SCREEN_MULTIPLIER > 2) {
+		SCREEN_MULTIPLIER = 2;
 	}
 	EngineWindowFrameDestroy();
 	EngineWindowFrameInit();
