@@ -76,3 +76,14 @@ var createOutputFunction = function (source) {
 		}
 	}
 };
+
+// because clicking on the canvas itself gets preventDefault'd
+// by the SDL click handlers, and that stops that the parent
+// window from getting a focus event follow-through, so call it
+// manually here, so player can resume playing game by clicking
+// on the canvas after typing in the terminal. :facepalm:
+var focusParentWindowOnCanvasInteraction = function () {
+	window.focus();
+};
+window.addEventListener('mousedown', focusParentWindowOnCanvasInteraction);
+window.addEventListener('touchstart', focusParentWindowOnCanvasInteraction);
