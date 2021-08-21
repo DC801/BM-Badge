@@ -11,6 +11,12 @@ context.fillText(
 	(gameCanvas.width / 2),
 	(gameCanvas.height / 2) + 8,
 );
+gameCanvas.addEventListener('wheel', function (event) {
+	// I will never care about using scroll events in engine,
+	// so prevent SDL's scroll handling from trapping scroll,
+	// which prevents a user's ability to scroll the page.
+	event.stopImmediatePropagation();
+});
 
 var loadedDataMap = {};
 var createdPaths = {};
