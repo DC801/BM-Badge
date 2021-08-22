@@ -368,7 +368,7 @@
 	- [x] Verify that the header of dragged file contains `MAGEGAME`
 	- [x] Change of `game.dat` should call the `EngineInit` function and reload contents from virtual filesystem
 	- [x] Reloading the page starts game fresh from original `game.dat` in IndexedDB
-- [ ] !!!CRITICAL!!! Make HTTP HEAD request for `game.dat` on server, compare size/modification to local, and re-download on change
+- [x] !!!CRITICAL!!! Make HTTP HEAD request for `game.dat` on server, compare size/modification to local, and re-download on change
 - [ ] Fancy extra `game.dat` features
 	- [ ] The dragged-in `game.dat` should be cached between refreshes
 	- [ ] Should show the Path/CRC32/Length of each `game.dat`

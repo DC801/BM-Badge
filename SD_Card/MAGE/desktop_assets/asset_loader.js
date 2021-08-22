@@ -119,15 +119,38 @@ var Module = {
 	},
 };
 
+var getModificationHeaders = function (response) {
+	return response.headers.get('last-modified');
+};
+
 var fetchBinaryDataFromPath = function (path) {
-	return localforage.getItem(path).then(function (content) {
-		var result = content;
-		if (result === null) {
-			result = fetch(path).then(function (file) {
-				return file.arrayBuffer().then(function (arrayBuffer) {
-					return localforage.setItem(path, arrayBuffer);
+	var headersPromise = fetch(path, {
+		method: 'HEAD'
+	}).then(getModificationHeaders);
+	var localAssetAndRemoteHeadPromises = Promise.all([
+		localforage.getItem(path),
+		headersPromise,
+	]);
+	return localAssetAndRemoteHeadPromises.then(function (results) {
+		var localResult = (results[0] || {data: null});
+		var serverLastModified = results[1];
+		var result = localResult.data;
+		var localDataIsEmpty = result === null;
+		var modificationMismatch = localResult.lastModified !== serverLastModified;
+		if (
+			localDataIsEmpty
+			|| modificationMismatch
+		) {
+			result = fetch(path).then(function (response) {
+				return response.arrayBuffer().then(function (arrayBuffer) {
+					return localforage.setItem(path, {
+						lastModified: getModificationHeaders(response),
+						data: arrayBuffer,
+					}).then(function () {
+						return arrayBuffer;
+					});
 				});
-			})
+			});
 		}
 		return result;
 	})
