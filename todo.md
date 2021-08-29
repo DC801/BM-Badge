@@ -442,6 +442,17 @@
 - [x] Bender + shiny metal ass
 
 # 2022 big picture objectives
+- [x] How to version the game.dat and the engine together?
+	- [!] Programmatically? No, the security boundary of the browser `file://` path prevents us from reading the `mage_dat.ksy`
+	- [x] Manually? Yes, just update the docs for "Adding new actions" to manually include a data file version in these places
+		- kaitai
+		- encoder
+		- c code decoder
+	- [x] Add data version to kaitai
+	- [x] Add data version to encoder
+	- [x] Throw error on mismatch in C
+	- [x] Fix web build issues with infinite loop in the `ENGINE_PANIC` screen
+	- [x] Add the docs to the actions update instructions
 - [ ] New actions
 	- [ ] `PRINT_TO_SERIAL`  (string_id)
 	- [ ] `INVENTORY_GET` (item_name)
@@ -449,6 +460,7 @@
 	- [ ] `CHECK_INVENTORY` (item_name, expected_state, success_script)
 	- [ ] `SET_MAP_LOOK` (script_name)
 	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
+	- [ ] `SET_ENTITY_LOOK` (entity_name, script_name)
 	- [ ] `SET_ITEM_USE` (item_name, script_name)
 	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
 	- [ ] `CHECK_BLE_FLAG` (flag_constant_name, expected_state, success_script)
@@ -462,12 +474,21 @@
 		- [ ] `on_look` script
 		- [ ] `items` is an array of strings that map to global item names
 		- [ ] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
+			- JSON looks like:
+				```
+				directions: {
+					north: 'go_main_hall_north',
+					east: 'go_torii_gate',
+					south: 'go_goat_room',
+					west: 'go_west_room',
+				}
+				```
 	- [ ] Map struct changes
-		- [ ] `on_look` script
-		- [ ] `script_padding` 2 bytes
-			- [ ] Change the encoder to handle this new shape
-			- [ ] Update the kaitai struct
-			- [ ] Update the C
+		- [x] `on_look` script
+		- [x] `script_padding` 2 bytes
+			- [x] Change the encoder to handle this new shape
+			- [x] Update the kaitai struct
+			- [x] Update the C
 		- [ ] `direction_count` uint8_t
 		- [ ] `directions` is an array, so `go $DIRECTION` calls a script
 			- [ ] `name` 12 bytes script ids,
@@ -499,28 +520,37 @@
 				- [ ] Verb: 'look', 'inventory' 'help'
 				- [ ] Verb, Target: 'look flask', 'get flask', 'go north'
 			- [ ] Verbs to implement
-				- [ ] help
-				- [ ] look
-				- [ ] go
-				- [ ] get
-				- [ ] drop
-				- [ ] inventory
-				- [ ] use
+				- [ ] help - shows a list of available commands and their syntax
+				- [ ] look - Without an argument, runs the current room's `on_look` script, or a fallback to "There is nothing here but sadness". If there is an argument, looks to the items in that room, and then the inventory to try and find an item with a matching name.
+				- [ ] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
+				- [ ] get/take
+				- [ ] drop/yeet
+				- [ ] inventory - Shows the names of current inventory items
+				- [ ] use - runs the item's `on_use` script from any item in the current room, or your inventory
+				- [ ] teleport - allows you to teleport to any room that you know the name of. This functions as a "fast travel" after you have built the server. Becomes enabled via a specific flag like the Hex Editor.
 		- [ ] The tileset actually just looks like a Zelda MiniMap
 			- [ ] https://nucloud.com/wp-content/uploads/2018/12/zelda-dungeon-maps.png
 		- [ ] This dungeon can has an inventory system
 		- [ ] What powers do the Serial artifact give you?
 			- [ ] Having an inventory at all
-			- [ ] Fast travel - if you know the name of a room anywhere in the game, you can type `warp $ROOM_NAME`
+			- [ ] Teleport - if you know the name of a room anywhere in the game, you can type `warp $ROOM_NAME`
 		- [ ] The end goal of the Serial Dungeon + having inventory
-		- [ ] Different rooms can act as mini-tutorials for the features of the "terminal"
-			- [ ] Do you `cd` to uhh... Change Dungeon?
-			- [ ] Do you `ls` to uhh... Look Somewhere?
-			- [ ] Do you `cat` to uhh... Ask a cat to read a file to you?
-				- [ ] Does a cat walk up to you at the start of the dungeon and follow you around? is it your secretary?
-			- [ ] Do we "|" or "pipe" things from one command into another other?
 		- [ ] We need an interactive character named PuTTY
 			- [ ] It should be illustrated or described as a Morph suit like the PUTTYs from Power Rangers
+	- [ ] You need to be able to build a ~~PC~~ Server from multiple components found in the Serial Dungeon
+		- [ ] In the story, you need to build a server so that you can access/use the serial commands outside of the serial dungeon, and progress in the game by finding secret parts of rooms you've already been in with the `look` command.
+		- [ ] You need a Case
+		- [ ] You need a Motherboard
+		- [ ] You need a Power Supply
+		- [ ] You need a CPU
+		- [ ] You need RAM
+		- [ ] You need a Keyboard - but you can only find a Keytar, or a midi-enabled Button Accordion with a midi to USB keyboard adapter
+		- [ ] There's a cat, and you need to convince it to give you its mouse
+		- [ ] There's a Bitcoin Mine, and you need to convince them to stop burning down the planet and free the video cards
+		- [ ] When you have all of the components are ready, the EXA says: `Now all we need is a Banana, and some Hope!`
+			- [ ] Procure Banana
+			- [ ] Procure Hope
+			- [ ] In the end, the `hope` doesn't help, and you must resort to `percussive maintenance` to get the server to turn on
 - [ ] Filesystem Dungeon
 	- [ ] Figure out how to create a USB Mass Storage disk from of the contents of like 4KB of RAM.
 		- [ ] Use a super tiny block size.

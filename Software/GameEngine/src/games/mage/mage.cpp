@@ -26,6 +26,8 @@ std::unique_ptr<MageCommandControl> MageCommand;
 MageEntity *hackableDataAddress;
 FrameBuffer *mage_canvas;
 
+bool engineIsInitialized;
+
 uint32_t lastTime;
 uint32_t now;
 uint32_t deltaTime;
@@ -232,6 +234,14 @@ void GameRender()
 
 void EngineMainGameLoop ()
 {
+	if(!engineIsInitialized) {
+		// Why do this in the game loop instead of before the game loop?
+		// Because Emscripten started throwing a new useless, meaningless,
+		// recoverable runtime error that the client can just ignore, unless
+		// EngineInit is called from inside the game loop. No idea why.
+		EngineInit();
+		engineIsInitialized = true;
+	}
 	//update timing information at the start of every game loop
 	now = millis();
 	deltaTime = now - lastTime;
@@ -420,8 +430,6 @@ void MAGE()
 {
 	//initialize the canvas object for the screen buffer.
 	mage_canvas = p_canvas();
-
-	EngineInit();
 
 	//main game loop:
 	#ifdef EMSCRIPTEN

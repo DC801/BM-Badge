@@ -25,6 +25,8 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
+#define ENGINE_VERSION 1
+
 //this is the most unique entities that can be in any map.
 #define MAX_ENTITIES_PER_MAP 64
 
@@ -195,6 +197,9 @@ typedef enum : uint8_t{
 //	add action encoder function in `SD_Card/MAGE/editor/js/scripts.js`
 //	add entry in actionNames array in `SD_Card/MAGE/editor/js/scripts.js`
 //	add action_type enum in `SD_Card/MAGE/mage_dat.ksy`
+//	bump the version number in the #define ENGINE_VERSION in this file
+//	bump the version number in `engine_version` in the `SD_Card/MAGE/mage_dat.ksy`
+//	bump the version number in `ENGINE_VERSION` in the `SD_Card/MAGE/editor/js/common.js`
 typedef enum : uint8_t {
 	NULL_ACTION = 0,
 	CHECK_ENTITY_NAME,
@@ -340,6 +345,7 @@ typedef struct {
 
 typedef struct MageSaveGame {
 	char identifier[ENGINE_ROM_IDENTIFIER_STRING_LENGTH] = ENGINE_ROM_SAVE_IDENTIFIER_STRING;
+	uint32_t engineVersion = ENGINE_VERSION;
 	uint32_t scenarioDataCRC32;
 	uint32_t saveDataLength = sizeof(MageSaveGame);
 	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
