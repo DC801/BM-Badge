@@ -13,6 +13,10 @@
 #include <iostream>
 #include <SDL_timer.h>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif
+
 // TODO: Implement this shit
 
 NRF_TIMER_Type NRF_TIMER_1 = { 0 };
@@ -182,7 +186,15 @@ extern "C"
 
 	void nrf_delay_ms(uint32_t time_ms)
 	{
+		#ifdef EMSCRIPTEN
+		// This is needed to allow the JS side of the code to take a turn;
+		// allows for a break to handle input, as well as render canvas output.
+		// If you have a `while(true)` loop that only `break`s on input or whatever,
+		// throw a call to `nrf_delay_ms` in there to at least allow for GUI/input handling.
+		emscripten_sleep(time_ms);
+		#else
 		const auto duration = std::chrono::milliseconds(time_ms);
 		std::this_thread::sleep_for(duration);
+		#endif
 	}
 }

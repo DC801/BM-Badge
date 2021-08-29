@@ -125,7 +125,7 @@ var generateIndexAndComposite = function (scenarioData) {
 	// 	'generateIndexAndComposite:scenarioData',
 	// 	scenarioData
 	// );
-	var signature = new ArrayBuffer(16);
+	var signature = new ArrayBuffer(20);
 	var signatureDataView = new DataView(signature);
 	setCharsIntoDataView(
 		signatureDataView,
@@ -181,11 +181,16 @@ var generateIndexAndComposite = function (scenarioData) {
 	var checksum = crc32(compositeArrayDataViewOffsetBySignature);
 	compositeArrayDataView.setUint32(
 		8,
-		checksum,
+		ENGINE_VERSION,
 		IS_LITTLE_ENDIAN
 	);
 	compositeArrayDataView.setUint32(
 		12,
+		checksum,
+		IS_LITTLE_ENDIAN
+	);
+	compositeArrayDataView.setUint32(
+		16,
 		compositeSize,
 		IS_LITTLE_ENDIAN
 	);

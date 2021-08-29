@@ -58,6 +58,7 @@ private:
 	MageHeader imageHeader;
 
 	//used to verify whether a save is compatible with game data
+	uint32_t engineVersion;
 	uint32_t scenarioDataCRC32;
 	uint32_t scenarioDataLength;
 

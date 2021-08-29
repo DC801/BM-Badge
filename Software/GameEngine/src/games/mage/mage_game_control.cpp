@@ -22,6 +22,25 @@ MageGameControl::MageGameControl()
 
 	EngineROM_Read(
 		offset,
+		sizeof(engineVersion),
+		(uint8_t *)&engineVersion,
+		"Unable to read engineVersion"
+	);
+	ROM_ENDIAN_U4_BUFFER(&engineVersion, 1);
+	offset += sizeof(engineVersion);
+
+	if(engineVersion != ENGINE_VERSION) {
+		ENGINE_PANIC(
+			"game.dat is incompatible with Engine\n\n"
+			"Engine version: %d\n"
+			"game.dat version: %d",
+			ENGINE_VERSION,
+			engineVersion
+		);
+	}
+
+	EngineROM_Read(
+		offset,
 		sizeof(scenarioDataCRC32),
 		(uint8_t *)&scenarioDataCRC32,
 		"Unable to read scenarioDataCRC32"
@@ -211,14 +230,17 @@ void MageGameControl::readSaveFromRomIntoRam(
 		sizeof(MageSaveGame),
 		(uint8_t *)&currentSave
 	);
+	ROM_ENDIAN_U4_BUFFER(&currentSave.engineVersion, 1);
 	ROM_ENDIAN_U4_BUFFER(&currentSave.scenarioDataCRC32, 1);
 	ROM_ENDIAN_U4_BUFFER(&currentSave.saveDataLength, 1);
 
+	bool engineIncompatible = currentSave.engineVersion != engineVersion;
+	bool saveLengthIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
 	bool scenarioIncompatible = currentSave.scenarioDataCRC32 != scenarioDataCRC32;
-	bool engineIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
 	if (
-		scenarioIncompatible
-		|| engineIncompatible
+		engineIncompatible
+		|| saveLengthIncompatible
+		|| scenarioIncompatible
 	) {
 		std::string errorString = std::string("");
 		if (scenarioIncompatible) {
@@ -227,7 +249,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 				"scenario data. Starting with fresh save."
 			);
 		}
-		if (engineIncompatible) {
+		if (engineIncompatible || saveLengthIncompatible) {
 			errorString.assign(
 				"Save data is incompatible with current\n"
 				"engine version. Starting with fresh save."

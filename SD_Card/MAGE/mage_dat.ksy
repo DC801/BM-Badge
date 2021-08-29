@@ -4,7 +4,11 @@ meta:
 seq:
   - id: identifier
     contents: MAGEGAME
-  - id: crc32
+  - id: engine_version
+    type: u4
+    valid: 1
+    doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
+  - id: dat_file_content_crc32
     type: u4
   - id: dat_file_length
     type: u4
