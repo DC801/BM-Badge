@@ -225,6 +225,8 @@ var handleMapLayers = function (map, scenarioData, fileNameMap) {
 };
 
 var generateMapHeader = function (map) {
+	var goDirections = map.directions || {};
+	var goDirectionCount = Object.keys(goDirections).length;
 	var headerLength = (
 		16 // char[] name
 		+ 2 // uint16_t tile_width
@@ -234,12 +236,13 @@ var generateMapHeader = function (map) {
 		+ 2 // uint16_t on_load
 		+ 2 // uint16_t on_tick
 		+ 2 // uint16_t on_look
-		+ 2 // uint16_t script_padding
 		+ 1 // uint8_t layer_count
 		+ 1 // uint8_t player_entity_id
 		+ 2 // uint16_t entity_count
 		+ 2 // uint16_t geometry_count
 		+ 2 // uint16_t script_count
+		+ 1 // uint16_t go_direction_count
+		+ 1 // uint16_t count_padding
 		+ (
 			2 // uint16_t entity_id
 			* map.entityIndices.length
@@ -251,6 +254,10 @@ var generateMapHeader = function (map) {
 		+ (
 			2 // uint16_t script_id
 			* map.scriptIndices.length
+		)
+		+ (
+			16 // go_direction custom type
+			* goDirectionCount
 		)
 	);
 	var result = new ArrayBuffer(
@@ -306,12 +313,6 @@ var generateMapHeader = function (map) {
 		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
-	dataView.setUint16(
-		offset,
-		0, // script_padding
-		IS_LITTLE_ENDIAN
-	);
-	offset += 2;
 	dataView.setUint8(
 		offset,
 		map.serializedLayers.length
@@ -340,6 +341,13 @@ var generateMapHeader = function (map) {
 		IS_LITTLE_ENDIAN
 	);
 	offset += 2;
+	dataView.setUint8(
+		offset,
+		goDirectionCount,
+		IS_LITTLE_ENDIAN
+	);
+	offset += 1;
+	offset += 1; // u1 padding
 	map.entityIndices.forEach(function (entityIndex) {
 		dataView.setUint16(
 			offset,
@@ -363,6 +371,21 @@ var generateMapHeader = function (map) {
 			IS_LITTLE_ENDIAN
 		);
 		offset += 2;
+	});
+	Object.keys(goDirections).forEach(function (directionName) {
+		setCharsIntoDataView(
+			dataView,
+			directionName,
+			offset,
+			offset += 12,
+		);
+		dataView.setUint16(
+			offset,
+			map.directionScriptIds[directionName],
+			IS_LITTLE_ENDIAN
+		);
+		offset += 2;
+		offset += 2; // padding to get back to 16 byte alignment
 	});
 	return result;
 };

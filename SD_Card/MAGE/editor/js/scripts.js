@@ -1367,6 +1367,16 @@ var handleMapScripts = function (
 			scenarioData,
 		).mapLocalScriptId;
 	});
+	map.directionScriptIds = {};
+	Object.keys(map.directions || {}).forEach(function (directionName) {
+		var scriptName = map.directions[directionName];
+		map.directionScriptIds[directionName] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
+	});
 	handleMapEntityScripts(
 		map,
 		fileNameMap,

@@ -1,4 +1,14 @@
 {
+	"action_testing_01": {
+		"path": "maps/map-action_testing_01.json",
+		"on_tick": "null_script",
+		"on_load": "null_script",
+		"on_look": "map-action_testing-look",
+		"directions": {
+			"north": "map-action_testing-go_north",
+			"cleveland": "map-action_testing-go_hell"
+		}
+	},
 	"main_menu": "maps/map-main_menu.json",
 	"demo": "maps/map-demo.json",
 	"main": "maps/map-main.json",
@@ -16,11 +26,5 @@
 	"testbig": "maps/map-testbig.json",
 	"credits": "maps/map-credits.json",
 	"woprhouse": "maps/map-woprhouse.json",
-	"action_testing_01": {
-		"path": "maps/map-action_testing_01.json",
-		"on_tick": "null_script",
-		"on_load": "null_script",
-		"on_look": "map-action_testing-look"
-	},
 	"action_testing_02": "maps/map-action_testing_02.json"
 }

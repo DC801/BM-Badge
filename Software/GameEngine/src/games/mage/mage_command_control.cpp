@@ -93,6 +93,15 @@ void MageCommandControl::processCommand(char *commandString) {
 			MageGame->Map().getMapLocalMapOnLookScriptId(),
 			true
 		);
+		std::string directionNames = MageGame->Map().getDirectionNames();
+		if(directionNames.length() > 0) {
+			std::string output = "Exits are:\n";
+			output += directionNames;
+			output += "\n";
+			EngineSendSerialMessage(
+				output.c_str()
+			);
+		}
 	}
 	// start SECRET_GOAT
 	else if(verb == "goat") {

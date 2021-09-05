@@ -8,6 +8,24 @@
 			]
 		}
 	],
+	"dialog-map-action_testing-go_north": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Hey boss, I tried to go north, but it's\njust empty space up there!"
+			]
+		}
+	],
+	"dialog-map-action_testing-go_hell": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"McScuse me?\nWhat did you just ask me to do?"
+			]
+		}
+	],
 	"dialog-mage01_1": [
 		{
 			"alignment": "BOTTOM_LEFT",

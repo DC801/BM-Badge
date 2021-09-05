@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 1
+    valid: 2
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -142,9 +142,6 @@ types:
       - id: on_look
         type: u2
         doc: local index to the map's script list
-      - id: script_padding
-        type: u2
-        doc: padding to get back to u4 alignment
       - id: layer_count
         type: u1
         doc: The number of layers in this map's tile data
@@ -160,6 +157,12 @@ types:
       - id: script_count
         type: u2
         doc: The number of scripts used on this map
+      - id: go_direction_count
+        type: u1
+        doc: the number of items in the directions array
+      - id: count_padding
+        type: u1
+        doc: padding to get back to u2 alignment
       - id: entity_global_ids
         type: u2
         repeat: expr
@@ -175,6 +178,10 @@ types:
         repeat: expr
         repeat-expr: script_count
         doc: The global IDs of the scripts this map and its entities use
+      - id: go_directions
+        type: go_direction
+        repeat: expr
+        repeat-expr: go_direction_count
       - id: map_header_padding
         type: u2
         repeat: expr
@@ -187,6 +194,18 @@ types:
     instances:
       tiles_per_layer:
         value: 'cols * rows'
+
+  go_direction:
+    seq:
+      - id: name
+        type: str
+        size: 12
+        encoding: ASCII
+      - id: script_id
+        type: u2
+      - id: padding
+        type: u2
+        doc: to get us back into 16 alignment
 
   map_layer:
     params:

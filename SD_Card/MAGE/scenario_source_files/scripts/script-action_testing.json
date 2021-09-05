@@ -5,6 +5,18 @@
 			"dialog": "dialog-map-action_testing-look"
 		}
 	],
+	"map-action_testing-go_north": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-map-action_testing-go_north"
+		}
+	],
+	"map-action_testing-go_hell": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-map-action_testing-go_hell"
+		}
+	],
 	"mage01-check_entity_name": [
 		{
 			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
