@@ -883,7 +883,7 @@
                         {
                          "name":"is_debug",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"on_interact",

@@ -468,12 +468,12 @@
 - [ ] Add numeric "constants" support to encoder
 - [ ] Serial Dungeon
 	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
-		- [ ] `path` example "maps/map-main_menu.json"
-		- [ ] `on_tick` script
-		- [ ] `on_load` script
-		- [ ] `on_look` script
+		- [x] `path` example "maps/map-main_menu.json"
+		- [x] `on_tick` script
+		- [x] `on_load` script
+		- [x] `on_look` script
 		- [ ] `items` is an array of strings that map to global item names
-		- [ ] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
+		- [x] `directions` is an object of `"direction_name": "script_name"`, so `go $DIRECTION` calls a script
 			- JSON looks like:
 				```
 				directions: {
@@ -483,17 +483,17 @@
 					west: 'go_west_room',
 				}
 				```
-	- [ ] Map struct changes
+	- [x] Map struct changes
 		- [x] `on_look` script
 		- [x] `script_padding` 2 bytes
 			- [x] Change the encoder to handle this new shape
 			- [x] Update the kaitai struct
 			- [x] Update the C
-		- [ ] `direction_count` uint8_t
-		- [ ] `directions` is an array, so `go $DIRECTION` calls a script
-			- [ ] `name` 12 bytes script ids,
-			- [ ] `script_id` 2 bytes
-			- [ ] `padding` 2 bytes to get us back into 16 alignment
+		- [x] `direction_count` uint8_t
+		- [x] `directions` is an array, so `go $DIRECTION` calls a script
+			- [x] `name` 12 bytes script ids,
+			- [x] `script_id` 2 bytes
+			- [x] `padding` 2 bytes to get us back into 16 alignment
 	- [ ] Entity struct changes
 		- [ ] `on_look` script, stored in bytes 30 & 31
 	- [ ] Action `setEntityScript` needs some TLC and testing for setting look scripts
@@ -522,6 +522,9 @@
 			- [ ] Verbs to implement
 				- [ ] help - shows a list of available commands and their syntax
 				- [ ] look - Without an argument, runs the current room's `on_look` script, or a fallback to "There is nothing here but sadness". If there is an argument, looks to the items in that room, and then the inventory to try and find an item with a matching name.
+					- [x] Implement execution of `on_look` script
+					- [x] Implement listing of available directions
+					- [ ] Implement listing of items on map/in room
 				- [ ] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
 				- [ ] get/take
 				- [ ] drop/yeet

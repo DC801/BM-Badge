@@ -8,6 +8,14 @@ in a more accessible way.
 
 #include "mage_defines.h"
 
+#define MAP_GO_DIRECTION_NAME_LENGTH 12
+
+typedef struct {
+	char name[MAP_GO_DIRECTION_NAME_LENGTH];
+	uint16_t mapLocalScriptId;
+	uint16_t padding;
+} MapGoDirection;
+
 class MageMap
 {
 private:
@@ -24,9 +32,11 @@ private:
 	uint16_t entityCount;
 	uint16_t geometryCount;
 	uint16_t scriptCount;
+	uint8_t goDirectionCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
 	std::unique_ptr<uint16_t[]> geometryGlobalIds;
 	std::unique_ptr<uint16_t[]> scriptGlobalIds;
+	std::unique_ptr<MapGoDirection[]> goDirections;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
 public:
@@ -43,9 +53,11 @@ public:
 		entityCount{0},
 		geometryCount{0},
 		scriptCount{0},
+		goDirectionCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
 		geometryGlobalIds{std::make_unique<uint16_t[]>(1)},
 		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
+		goDirections{std::make_unique<MapGoDirection[]>(1)},
 		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
 	{ };
 
@@ -70,6 +82,7 @@ public:
 	uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
 	//the returns a global mapLocalScriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
+	std::string getDirectionNames() const;
 	uint32_t LayerOffset(uint16_t num) const;
 	//this sets the map's onLoad and onTick script value.
 	void setOnLoad(uint16_t scriptId);
