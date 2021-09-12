@@ -525,7 +525,9 @@
 					- [x] Implement execution of `on_look` script
 					- [x] Implement listing of available directions
 					- [ ] Implement listing of items on map/in room
-				- [ ] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
+					- [ ] Implement running `on_look` for items
+					- [ ] Implement running `on_look` for entities
+				- [x] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
 				- [ ] get/take
 				- [ ] drop/yeet
 				- [ ] inventory - Shows the names of current inventory items

@@ -561,18 +561,13 @@ void MageGameControl::initializeScriptsOnMapLoad()
 {
 	//initialize the script ResumeStateStructs:
 	MageScript->initScriptState(
-		MageScript->getMapLoadResumeState(),
-		map.getMapLocalMapOnLoadScriptId(),
+		&MageScript->resumeStates.mapLoad,
+		map.onLoad,
 		true
 	);
 	MageScript->initScriptState(
-		MageScript->getMapTickResumeState(),
-		map.getMapLocalMapOnTickScriptId(),
-		false
-	);
-	MageScript->initScriptState(
-		MageScript->getMapLookResumeState(),
-		map.getMapLocalMapOnLookScriptId(),
+		&MageScript->resumeStates.mapTick,
+		map.onLook,
 		false
 	);
 	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {

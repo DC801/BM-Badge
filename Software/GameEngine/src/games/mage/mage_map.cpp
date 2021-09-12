@@ -261,21 +261,6 @@ uint16_t MageMap::Rows() const
 	return rows;
 }
 
-uint16_t MageMap::getMapLocalMapOnLoadScriptId() const
-{
-	return onLoad;
-}
-
-uint16_t MageMap::getMapLocalMapOnTickScriptId() const
-{
-	return onTick;
-}
-
-uint16_t MageMap::getMapLocalMapOnLookScriptId() const
-{
-	return onLook;
-}
-
 uint8_t MageMap::LayerCount() const
 {
 	return layerCount;
@@ -324,6 +309,18 @@ std::string MageMap::getDirectionNames() const
 	return result;
 }
 
+uint16_t MageMap::getDirectionScriptId(const std::string directionName) const {
+	uint16_t result = 0;
+	for (int i = 0; i < goDirectionCount; i++) {
+		MapGoDirection direction = goDirections[i];
+		if (!strcmp(direction.name, directionName.c_str())) {
+			result = direction.mapLocalScriptId;
+			break;
+		}
+	}
+	return result;
+}
+
 uint32_t MageMap::LayerOffset(uint16_t num) const
 {
 	if (!mapLayerOffsets) return 0;
@@ -334,21 +331,6 @@ uint32_t MageMap::LayerOffset(uint16_t num) const
 	}
 
 	return 0;
-}
-
-void MageMap::setOnLoad(uint16_t scriptId)
-{
-	onLoad = scriptId;
-}
-
-void MageMap::setOnTick(uint16_t scriptId)
-{
-	onTick = scriptId;
-}
-
-void MageMap::setOnLook(uint16_t scriptId)
-{
-	onLook = scriptId;
 }
 
 uint8_t MageMap::getMapLocalPlayerEntityIndex() {

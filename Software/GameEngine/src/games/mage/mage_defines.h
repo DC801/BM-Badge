@@ -27,6 +27,8 @@ all of the old code used as the foundation of this badge.
 
 #define ENGINE_VERSION 2
 
+#define MAP_GO_DIRECTION_NAME_LENGTH 12
+
 //this is the most unique entities that can be in any map.
 #define MAX_ENTITIES_PER_MAP 64
 
@@ -120,6 +122,7 @@ typedef enum : uint8_t {
 	ON_TICK,
 	ON_INTERACT,
 	ON_LOOK,
+	ON_COMMAND,
 	NUM_SCRIPT_TYPES
 } MageScriptType;
 

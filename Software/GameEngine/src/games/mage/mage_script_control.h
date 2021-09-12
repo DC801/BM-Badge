@@ -11,6 +11,16 @@ This class contains all the code related to the hex editor hacking interface.
 
 #define SCRIPT_NAME_LENGTH 32
 
+struct resumeStatesStruct {
+	MageScriptState mapLoad;
+	MageScriptState mapTick;
+	MageScriptState commandLook;
+	MageScriptState commandGo;
+	MageScriptState commandUse;
+	MageScriptState commandGet;
+	MageScriptState commandDrop;
+};
+
 //this is a class designed to handle all the scripting for the MAGE() game
 //it is designed to work in tandem with a MageGameControl object and a
 //MageHex object to effect that state of the game.
@@ -28,14 +38,7 @@ class MageScriptControl
 		//most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
 		uint8_t currentEntityId;
 
-		//this tracks which type of script called processScript() so that when a call script
-		//calls a new script, the original entity can be updated to match.
-		MageScriptType currentScriptType;
-
 		//variables for tracking suspended script states:
-		MageScriptState mapLoadResumeState;
-		MageScriptState mapTickResumeState;
-		MageScriptState mapLookResumeState;
 		MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
 		MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
 
@@ -51,14 +54,22 @@ class MageScriptControl
 
 		//this will run through the actions in a script from the state stores in resumeState
 		//if a mapLocalJumpScript is called by an action, it will return without processing any further actions.
-		void processActionQueue(MageScriptState * resumeStateStruct);
+		void processActionQueue(
+			MageScriptState * resumeStateStruct,
+			MageScriptType scriptType
+		);
 
 		//this will get action arguments from ROM memory and call
 		//a function based on the ActionTypeId 
 		void runAction(uint32_t argumentMemoryAddress, MageScriptState * resumeStateStruct);
 
 		//this allows an I+C action to set the calling map or entity script to match the new script.
-		void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
+		void setEntityScript(
+			MageScriptState* resumeStateStruct,
+			uint16_t mapLocalScriptId,
+			uint8_t entityId,
+			uint8_t scriptType
+		);
 
 	uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity *entity);
 
@@ -272,9 +283,7 @@ class MageScriptControl
 		);
 
 		//these functions return the specified MageScriptState struct:
-		MageScriptState* getMapLoadResumeState();
-		MageScriptState* getMapTickResumeState();
-		MageScriptState* getMapLookResumeState();
+		resumeStatesStruct resumeStates;
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
 		
@@ -322,9 +331,11 @@ class MageScriptControl
 		//these functions will call the appropriate script processing for their script type:
 		void handleMapOnLoadScript(bool isFirstRun);
 		void handleMapOnTickScript();
-		void handleMapOnLookScript();
+		void handleCommandScript(MageScriptState *resumeState);
 		void handleEntityOnTickScript(uint8_t filteredEntityId);
 		void handleEntityOnInteractScript(uint8_t filteredEntityId);
+
+		void tickScripts();
 
 		int16_t getUsefulEntityIndexFromActionEntityId(
 			uint8_t entityId,

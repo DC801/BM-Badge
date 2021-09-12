@@ -81,16 +81,17 @@ void MageCommandControl::processCommand(char *commandString) {
 		lastCommandUsed = COMMAND_HELP;
 		EngineSendSerialMessage(
 			"Supported Verbs:\n"
-			"\thelp\tlook\n"
+			"\thelp\tlook\tgo\n"
 		);
-	} else if(verb == "look") {
+	}
+	else if(verb == "look") {
 		lastCommandUsed = COMMAND_LOOK;
 		EngineSendSerialMessage(
 			"You try to look.\n"
 		);
 		MageScript->initScriptState(
-			MageScript->getMapLookResumeState(),
-			MageGame->Map().getMapLocalMapOnLookScriptId(),
+			&MageScript->resumeStates.commandLook,
+			MageGame->Map().onLook,
 			true
 		);
 		std::string directionNames = MageGame->Map().getDirectionNames();
@@ -101,6 +102,35 @@ void MageCommandControl::processCommand(char *commandString) {
 			EngineSendSerialMessage(
 				output.c_str()
 			);
+		}
+	}
+	else if(verb == "go") {
+		lastCommandUsed = COMMAND_GO;
+		if(!subject.length()) {
+			EngineSendSerialMessage(
+				"You cannot `go` nowhere. Pick a direction.\n"
+			);
+		} else {
+			subject = subject.substr (0, MAP_GO_DIRECTION_NAME_LENGTH);
+			std::string output = "You try to go `";
+			output += subject;
+			output += "`";
+			uint16_t directionScriptId = MageGame->Map().getDirectionScriptId(subject);
+			if(!directionScriptId) {
+				output += ", but that is not a valid direction\n";
+			} else {
+				output += "\n";
+			}
+			EngineSendSerialMessage(
+				output.c_str()
+			);
+			if(directionScriptId) {
+				MageScript->initScriptState(
+					&MageScript->resumeStates.commandGo,
+					directionScriptId,
+					true
+				);
+			}
 		}
 	}
 	// start SECRET_GOAT
