@@ -8,8 +8,6 @@ in a more accessible way.
 
 #include "mage_defines.h"
 
-#define MAP_GO_DIRECTION_NAME_LENGTH 12
-
 typedef struct {
 	char name[MAP_GO_DIRECTION_NAME_LENGTH];
 	uint16_t mapLocalScriptId;
@@ -18,7 +16,7 @@ typedef struct {
 
 class MageMap
 {
-private:
+public:
 	char name[17];
 	uint16_t tileWidth;
 	uint16_t tileHeight;
@@ -39,7 +37,6 @@ private:
 	std::unique_ptr<MapGoDirection[]> goDirections;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
-public:
 	MageMap() : name{0},
 		tileWidth{0},
 		tileHeight{0},
@@ -69,9 +66,6 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
-	uint16_t getMapLocalMapOnLoadScriptId() const;
-	uint16_t getMapLocalMapOnTickScriptId() const;
-	uint16_t getMapLocalMapOnLookScriptId() const;
 	uint8_t LayerCount() const;
 	uint8_t EntityCount() const;
 	uint16_t GeometryCount() const;
@@ -83,11 +77,8 @@ public:
 	//the returns a global mapLocalScriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
 	std::string getDirectionNames() const;
+	uint16_t getDirectionScriptId(std::string directionName) const;
 	uint32_t LayerOffset(uint16_t num) const;
-	//this sets the map's onLoad and onTick script value.
-	void setOnLoad(uint16_t scriptId);
-	void setOnTick(uint16_t scriptId);
-	void setOnLook(uint16_t scriptId);
 
 	uint8_t getMapLocalPlayerEntityIndex();
 }; //class MageMap

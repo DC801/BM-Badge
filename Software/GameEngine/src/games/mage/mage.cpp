@@ -45,37 +45,6 @@ void handleBlockingDelay()
 	}
 }
 
-void handleScripts()
-{
-	//Note: all script handlers check for hex editor mode internally and will only continue
-	//scripts that have already started and are not yet complete when in hex editor mode.
-
-	//the map's onLoad script is called with a false isFirstRun flag. This allows it to
-	//complete any non-blocking actions that were called when the map was first loaded,
-	//but it will not allow it to run the script again once it is completed.
-	MageScript->handleMapOnLoadScript(false);
-	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	//the map's onTick script will run every tick, restarting from the beginning as it completes
-	MageScript->handleMapOnTickScript();
-	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	//the map's onTick script will run every tick, restarting from the beginning as it completes
-	MageScript->handleMapOnLookScript();
-	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	for(uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++)
-	{
-		//this script will not initiate any new onInteract scripts. It will simply run an
-		//onInteract script based on the state of the entityInteractResumeStates[i] struct
-		//the struct is initialized in MageGame->applyUniversalInputs() when the interact
-		//button is pressed.
-		MageScript->handleEntityOnInteractScript(i);
-		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-		//handle Entity onTick scripts for the local entity at Id 'i':
-		//these scripts will run every tick, starting from the beginning as they complete.
-		MageScript->handleEntityOnTickScript(i);
-		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	}
-}
-
 void GameUpdate(uint32_t deltaTime)
 {
 	//apply inputs that work all the time
@@ -94,7 +63,7 @@ void GameUpdate(uint32_t deltaTime)
 		MageHex->applyHexModeInputs();
 
 		//then handle any still-running scripts:
-		handleScripts();
+		MageScript->tickScripts();
 	}
 
 	//or be boring and normal:
@@ -107,7 +76,7 @@ void GameUpdate(uint32_t deltaTime)
 		MageGame->UpdateEntities(deltaTime);
 
 		//handle scripts:
-		handleScripts();
+		MageScript->tickScripts();
 
 		//check for loadMap:
 		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
