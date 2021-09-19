@@ -131,6 +131,20 @@ void nau8810_twi_init(void)
 		// Initialization failed. Take recovery action.
 		ENGINE_PANIC("I2S Init Failed");
 	}
+
+	//TODO: Figure out how to send to and read from the chip over its i2c interface
+	//init NAU8810 Via TWI:
+	uint8_t device_id[20];
+	for(int i=0; i<20; i++) {
+		device_id[i] = 0;
+	}
+	//Read from I2S I2C a device id:
+	i2si2cMasterRead(NAU8810_ADDRESS, &device_id, 20);
+	for(int i=0; i<20; i++){
+		if(device_id[i]){
+			ENGINE_PANIC("Device ID: %d", device_id);
+		}
+	}
 }
 
 /*
