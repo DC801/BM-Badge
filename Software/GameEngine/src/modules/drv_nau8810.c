@@ -1,5 +1,8 @@
 #include <common.h>
+#include <nrfx_i2s.h>
+#include <nrf_drv_i2s.h>
 #include "drv_nau8810.h"
+#include "EnginePanic.h"
 
 /*
 
@@ -86,25 +89,51 @@ K						= (2^24)(0.144)
 #define I2S_MCKSETUP_M		NRF_I2S_MCK_32MDIV8				// 16MHz Master clock
 #define I2S_RATIO_M			NRF_I2S_RATIO_128X				// 31.25kHz LRCLK
 
-static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
+//static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
-void nau8810_twi_init(void)
+static void i2sDataHandler(uint32_t const * p_data_received,
+						   uint32_t       * p_data_to_send,
+						   uint16_t         number_of_words)
 {
-	const nrf_drv_twi_config_t config =
+	if (p_data_received != NULL)
 	{
-		.scl				= I2S_SCL_M,
-		.sda				= I2S_SDA_M,
-		.frequency			= NRF_DRV_TWI_FREQ_400K,
-		.interrupt_priority = APP_IRQ_PRIORITY_HIGH,
-		.clear_bus_init		= false
-	};
-
-	if (NRF_SUCCESS == nrf_drv_twi_init(&m_twi_master, &config, NULL, NULL))
+		// Process the received data.
+	}
+	if (p_data_to_send != NULL)
 	{
-		nrf_drv_twi_enable(&m_twi_master);
+		// Provide the data to be sent.
 	}
 }
 
+
+void nau8810_twi_init(void)
+{
+//	const nrf_drv_twi_config_t config =
+//	{
+//		.scl				= I2S_SCL_M,
+//		.sda				= I2S_SDA_M,
+//		.frequency			= NRF_DRV_TWI_FREQ_400K,
+//		.interrupt_priority = APP_IRQ_PRIORITY_HIGH,
+//		.clear_bus_init		= false
+//	};
+//
+//	if (NRF_SUCCESS == nrf_drv_twi_init(&m_twi_master, &config, NULL, NULL))
+//	{
+//		nrf_drv_twi_enable(&m_twi_master);
+//	}
+	uint32_t err_code;
+	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
+	config.mck_setup = NRF_I2S_MCK_32MDIV21;
+	config.ratio     = NRF_I2S_RATIO_96X;
+	err_code = nrf_drv_i2s_init(&config, i2sDataHandler);
+	if (err_code != NRF_SUCCESS)
+	{
+		// Initialization failed. Take recovery action.
+		ENGINE_PANIC("I2S Init Failed");
+	}
+}
+
+/*
 void nau8810_twi_write(uint8_t address, uint16_t value)
 {
 	uint8_t buffer[] =
@@ -141,7 +170,9 @@ uint16_t nau8810_twi_read(uint8_t address)
 
 	return retval;
 }
+*/
 
+/*
 void nau8810_i2s_init(nrfx_i2s_data_handler_t handler)
 {
 	const nrfx_i2s_config_t config =
@@ -166,48 +197,53 @@ void nau8810_i2s_init(nrfx_i2s_data_handler_t handler)
 		NRF_LOG_ERROR("Failed to initialize the I2S driver\n");
 	}
 }
+*/
 
-void nau8810_init(nrfx_i2s_data_handler_t handler)
+void nau8810_init()
 {
-	// Initialize NAU8810 I2C instance
-	nau8810_twi_init();
+    // Initialize NAU8810 I2C instance
+    nau8810_twi_init();
+
+    /*
+
+    Powerup sequence
+
+    SPKBST		= 0x00;	 // Disable speaker boost (3.3v) 				(default)
+    MOUTBST		= 0x00;	 // Disable mic boost (3.3v)					(default)
+    REFIMP		= 0x01;	 // 80k ohm ramp rate, mid ground ramp/PSRR
+    ABIASEN		= 0x01;	 // Enable analog amplifiers
+    IOBUFEN		= 0x01;	 // Enable IO buffers
+    CLKIOEN		= 0x00;	 // Configure receiver mode
+    BCLKSEL		= 0x00;	 // Bit clock = Master clock
+    MCLKSEL		= 0x00;	 // No Master clock divider
+    DACEN		= 0x01;	 // Enable DAC output
+    ADCEN		= 0x00;	 // Leave ADC disabled
+    SPKMXEN		= 0x01;	 // Enable speaker mixer
+    MOUTMXEN	= 0x00;	 // Leave mono mixer disabled
+    MOUTEN		= 0x00;	 // Leave mono output disabled
+    NSPKEN		= 0x01;	 // Enable negative side speaker driver
+    PSPKEN		= 0x01;	 // Enable positive side speakre driver
+    SMPLR		= 0x01;	 // 32kHz sample rate filter
+    DACMT		= 0x00;	 // Disable DAC soft mute						(default)
+
+    */
 
 	/*
+    // Enable 80k reference impedance, i/o buffers, and analog amplifier bias control
+    nau8810_twi_write(NAU8810_REG_POWER1, NAU8810_REFIMP_80K | NAU8810_IOBUF_EN | NAU8810_ABIAS_EN);
+    // Set internal clock source to bypass PLL for receiver mode and MCKSEL to div2
+    nau8810_twi_write(NAU8810_REG_CLOCK, NAU8810_MCKDIV_2);
+    // Enable DAC output, speaker mixer, speaker drivers, and leave mic disabled
+    nau8810_twi_write(NAU8810_REG_POWER3, NAU8810_DAC_EN | NAU8810_SPKMX_EN | NAU8810_PSPK_EN | NAU8810_NSPK_EN);
+    // Set sample rate filter to 32kHz
+    nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_32K);
 
-	Powerup sequence
-
-	SPKBST		= 0x00;	 // Disable speaker boost (3.3v) 				(default)
-	MOUTBST		= 0x00;	 // Disable mic boost (3.3v)					(default)
-	REFIMP		= 0x01;	 // 80k ohm ramp rate, mid ground ramp/PSRR
-	ABIASEN		= 0x01;	 // Enable analog amplifiers
-	IOBUFEN		= 0x01;	 // Enable IO buffers
-	CLKIOEN		= 0x00;	 // Configure receiver mode
-	BCLKSEL		= 0x00;	 // Bit clock = Master clock
-	MCLKSEL		= 0x00;	 // No Master clock divider
-	DACEN		= 0x01;	 // Enable DAC output
-	ADCEN		= 0x00;	 // Leave ADC disabled
-	SPKMXEN		= 0x01;	 // Enable speaker mixer
-	MOUTMXEN	= 0x00;	 // Leave mono mixer disabled
-	MOUTEN		= 0x00;	 // Leave mono output disabled
-	NSPKEN		= 0x01;	 // Enable negative side speaker driver
-	PSPKEN		= 0x01;	 // Enable positive side speakre driver
-	SMPLR		= 0x01;	 // 32kHz sample rate filter
-	DACMT		= 0x00;	 // Disable DAC soft mute						(default)
-
-	*/
-
-	// Enable 80k reference impedance, i/o buffers, and analog amplifier bias control
-	nau8810_twi_write(NAU8810_REG_POWER1, NAU8810_REFIMP_80K | NAU8810_IOBUF_EN | NAU8810_ABIAS_EN);
-	// Set internal clock source to bypass PLL for receiver mode and MCKSEL to div2
-	nau8810_twi_write(NAU8810_REG_CLOCK, NAU8810_MCKDIV_2);
-	// Enable DAC output, speaker mixer, speaker drivers, and leave mic disabled
-	nau8810_twi_write(NAU8810_REG_POWER3, NAU8810_DAC_EN | NAU8810_SPKMX_EN | NAU8810_PSPK_EN | NAU8810_NSPK_EN);
-	// Set sample rate filter to 32kHz
-	nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_32K);
-
-	// Initialize NAU8810 I2S instance
-	nau8810_i2s_init(handler);
+//    // Initialize NAU8810 I2S instance
+//    nau8810_i2s_init(handler);
+	 */
 }
+
+/*
 
 void nau8810_start(const uint32_t *data, uint16_t length)
 {
@@ -235,5 +271,5 @@ void nau8810_stop(void)
 {
 	nrfx_i2s_stop();
 }
-
+*/
 #endif

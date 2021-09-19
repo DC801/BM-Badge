@@ -56,6 +56,7 @@ void sig_handler(int signo)
 static void speaker_init(void){
 	// Setup the nau8810 later -Tim
 	//nrf_gpio_cfg_output(SPEAKER);
+    nau8810_init();
 }
 
 /**
@@ -107,9 +108,6 @@ int main(void){
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
 
-	//this function will set up the NAU8810 chip to play sounds
-	//speaker_init();
-
 	// BLE
 	//gap_params_init();
 	ble_stack_init();
@@ -148,6 +146,9 @@ int main(void){
 	debug_print("advertising user: %s", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
+
+	//this function will set up the NAU8810 chip to play sounds
+	speaker_init();
 #endif
 
 	setUpRandomSeed();

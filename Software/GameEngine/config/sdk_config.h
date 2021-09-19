@@ -1391,7 +1391,7 @@
 // <e> I2S_ENABLED - nrf_drv_i2s - I2S peripheral driver - legacy layer
 //==========================================================
 #ifndef I2S_ENABLED
-#define I2S_ENABLED 0
+#define I2S_ENABLED 1
 #endif
 // <o> I2S_CONFIG_SCK_PIN - SCK pin  <0-31>
 

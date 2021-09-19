@@ -60,7 +60,7 @@ extern "C" {
 #define I2C_SDA_PIN         22
 
 //I2S configuration
-#define I2S_TWI_INST		1
+//#define I2S_TWI_INST		1
 #define I2S_SCL_M			3
 #define I2S_SDA_M			32+13
 

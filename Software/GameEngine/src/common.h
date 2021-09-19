@@ -127,6 +127,7 @@ extern "C" {
 #include "modules/i2c.h"
 #include "modules/led.h"
 #include "modules/keyboard.h"
+#include "modules/drv_nau8810.h"
 #include "adafruit/gfxfont.h"
 
 #include "EngineInput.h"

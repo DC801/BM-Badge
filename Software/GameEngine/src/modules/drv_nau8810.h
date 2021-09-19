@@ -284,12 +284,13 @@ extern "C" {
 #define NAU8810_AUXMOUT_SFT				2
 #define NAU8810_MOUTMXMT_SFT			6
 
-void nau8810_init(nrfx_i2s_data_handler_t handler);
+void nau8810_init();
 
+/*
 void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_next(const uint32_t *data);
 void nau8810_stop(void);
-
+*/
 #endif
 
 #ifdef __cplusplus
