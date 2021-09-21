@@ -87,6 +87,9 @@ MageGameControl::MageGameControl()
 	dialogHeader = MageHeader(offset);
 	offset += dialogHeader.size();
 
+	serialDialogHeader = MageHeader(offset);
+	offset += serialDialogHeader.size();
+
 	colorPaletteHeader = MageHeader(offset);
 	offset += colorPaletteHeader.size();
 
@@ -165,6 +168,7 @@ uint32_t MageGameControl::Size() const
 		scriptHeader.size() +
 		portraitHeader.size() +
 		dialogHeader.size() +
+		serialDialogHeader.size() +
 		colorPaletteHeader.size() +
 		stringHeader.size() +
 		saveFlagHeader.size() +
@@ -584,6 +588,7 @@ void MageGameControl::initializeScriptsOnMapLoad()
 			false
 		);
 	}
+	MageScript->handleMapOnLoadScript(true);
 }
 
 void MageGameControl::LoadMap(uint16_t index)
@@ -1852,7 +1857,12 @@ std::string MageGameControl::getString(
 	if (replaceCount) {
 		outputString.append(romString.substr(cursor, romString.length() - 1));
 	}
-	return replaceCount ? outputString : romString;
+	// why wrap it in another string at the end?
+	// Because somehow, extra null bytes were being explicitly stored in the return value's length,
+	// and this should crop them out from the return value
+	return std::string(
+		(replaceCount ? outputString : romString).c_str()
+	);
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
@@ -1865,6 +1875,10 @@ uint32_t MageGameControl::getPortraitAddress(uint16_t portraitId) {
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
 	return dialogHeader.offset(dialogId % dialogHeader.count());
+}
+
+uint32_t MageGameControl::getSerialDialogAddress(uint16_t serialDialogId) {
+	return serialDialogHeader.offset(serialDialogId % serialDialogHeader.count());
 }
 
 std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {

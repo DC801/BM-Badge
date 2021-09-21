@@ -82,6 +82,7 @@ class MageScriptControl
 		//NBC = non-blocking continuous, will never proceed to another action, and will begin the same action again forever until the mapLocalScriptId is changed
 		//B   = blocking, will pause all game actions until complete.
 		//I+C = scripts that may call another mapLocalScriptId, discarding any actions that occur after them in the current script
+		//NB+C= non-blocking + check, MAY block the continuation of that script until the user has provided input of some type. These actions may also branch via mapLocalScriptId, OR continue to the next action in the current script.
 		//I've noted the blocking state of actions below on the line above the action:
 
 		//Action Logic Type: I
@@ -212,7 +213,10 @@ class MageScriptControl
 		void setHexEditorControlClipboard(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I (loadMap will stop all other scripts immediately, loading a new map with new scripts)
 		void loadMap(uint8_t * args, MageScriptState * resumeStateStruct);
-		//Action Logic Type: NB (note showDialog will render over the main game loop and not return player control until the dialog is concluded)
+		//Action Logic Type: NB+C (
+		//  note showDialog will render over the main game loop and not return player control until the dialog is concluded
+		//  and MAY branch script execution if that dialog presents choices that the user can select from
+		//)
 		void showDialog(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: NB
 		void playEntityAnimation(uint8_t * args, MageScriptState * resumeStateStruct);
@@ -258,6 +262,34 @@ class MageScriptControl
 		void slotLoad(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void slotErase(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setConnectSerialDialog(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: NB+C (
+		//  showSerialDialog will send a message out over serial
+		//  and MAY not return serial control until after a serial response is input
+		//  and depending on whether the response matches one of the correct responses,
+		//  MAY branch script execution
+		//  OR resume current script flow
+		//)
+		void showSerialDialog(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void inventoryGet(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void inventoryDrop(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void checkInventory(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setMapLook(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setEntityLook(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setTeleportEnabled(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: C
+		void checkMap(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: I
+		void setBleFlag(uint8_t * args, MageScriptState * resumeStateStruct);
+		//Action Logic Type: C
+		void checkBleFlag(uint8_t * args, MageScriptState * resumeStateStruct);
 	public:
 		//this is a global that holds the amount of millis that a blocking delay will
 		//prevent the main loop from continuing for. It is set by the blockingDelay() action.

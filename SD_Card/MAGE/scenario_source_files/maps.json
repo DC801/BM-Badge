@@ -2,11 +2,13 @@
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",
 		"on_tick": "null_script",
-		"on_load": "null_script",
+		"on_load": "map-action_testing-load",
 		"on_look": "map-action_testing-look",
 		"directions": {
 			"north": "map-action_testing-go_north",
-			"cleveland": "map-action_testing-go_hell"
+			"cleveland": "map-action_testing-go_cleveland",
+			"numbers": "map-action_testing-go_numbers",
+			"sphinx": "map-action_testing-go_sphinx"
 		}
 	},
 	"main_menu": "maps/map-main_menu.json",

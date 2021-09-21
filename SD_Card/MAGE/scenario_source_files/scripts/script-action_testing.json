@@ -1,20 +1,67 @@
 {
+	"map-action_testing-load": [
+		{
+			"action": "SET_CONNECT_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-on_connect"
+		}
+	],
 	"map-action_testing-look": [
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-map-action_testing-look"
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-look"
 		}
 	],
 	"map-action_testing-go_north": [
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-map-action_testing-go_north"
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_north"
 		}
 	],
-	"map-action_testing-go_hell": [
+	"map-action_testing-go_cleveland": [
 		{
-			"action": "SHOW_DIALOG",
-			"dialog": "dialog-map-action_testing-go_hell"
+			"action": "CHECK_ENTITY_NAME",
+			"success_script": "map-action_testing-go_cleveland-protected",
+			"string": "Bob",
+			"entity": "%PLAYER%",
+			"expected_bool": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_cleveland"
+		}
+	],
+	"map-action_testing-go_cleveland-protected": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_cleveland-protected"
+		}
+	],
+	"map-action_testing-go_numbers": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_numbers"
+		}
+	],
+	"map-action_testing-go_sphinx": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-fail"
+		}
+	],
+	"map-action_testing-go_sphinx-success": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-success"
+		}
+	],
+	"map-action_testing-go_sphinx-wtf": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-wtf"
 		}
 	],
 	"mage01-check_entity_name": [
@@ -57,7 +104,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage02_1"
 		}
 	],

@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 2
+#define ENGINE_VERSION 3
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -291,6 +291,17 @@ typedef enum : uint8_t {
 	SLOT_SAVE,
 	SLOT_LOAD,
 	SLOT_ERASE,
+	SET_CONNECT_SERIAL_DIALOG,
+	SHOW_SERIAL_DIALOG,
+	INVENTORY_GET,
+	INVENTORY_DROP,
+	CHECK_INVENTORY,
+	SET_MAP_LOOK,
+	SET_ENTITY_LOOK,
+	SET_TELEPORT_ENABLED,
+	CHECK_MAP,
+	SET_BLE_FLAG,
+	CHECK_BLE_FLAG,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -308,7 +319,7 @@ typedef enum : uint8_t{
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
-	//the script Id to resume - this is a global mapLocalScriptId number value
+	//the script Id to resume - this is a mapLocalScriptId number value
 	uint16_t mapLocalScriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
 	uint16_t actionOffset;
@@ -1142,5 +1153,107 @@ typedef struct {
 	uint8_t paddingF;
 	uint8_t paddingG;
 } ActionSlotErase;
+
+typedef struct {
+	uint16_t serialDialogId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetConnectSerialDialog;
+
+typedef struct {
+	uint16_t serialDialogId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionShowSerialDialog;
+
+typedef struct {
+	uint8_t itemId;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionInventoryGet;
+
+typedef struct {
+	uint8_t itemId;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionInventoryDrop;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t itemId;
+	uint8_t expectedBool;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckInventory;
+
+typedef struct {
+	uint16_t scriptId;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetMapLook;
+
+typedef struct {
+	uint16_t scriptId;
+	uint8_t entityId;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetEntityLook;
+
+typedef struct {
+	uint8_t value;
+	uint8_t paddingB;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetTeleportEnabled;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint16_t mapId;
+	uint8_t expectedBool;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckMap;
+
+typedef struct {
+	uint8_t bleFlagOffset;
+	uint8_t newBoolValue;
+	uint8_t paddingC;
+	uint8_t paddingD;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionSetBleFlag;
+
+typedef struct {
+	uint16_t successScriptId;
+	uint8_t bleFlagOffset;
+	uint8_t expectedBoolValue;
+	uint8_t paddingE;
+	uint8_t paddingF;
+	uint8_t paddingG;
+} ActionCheckBleFlag;
 
 #endif //_MAGE_DEFINES_H
