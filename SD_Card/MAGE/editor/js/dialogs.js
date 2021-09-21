@@ -230,7 +230,7 @@ var serializeDialogScreen = function (
 	});
 	responses.forEach(function (response) {
 		var stringId = serializeString(
-			response.label,
+			response.label.toLocaleLowerCase(),
 			map,
 			fileNameMap,
 			scenarioData,
@@ -255,31 +255,6 @@ var serializeDialogScreen = function (
 		offset += 2;
 	});
 	return result;
-};
-
-var mergeDialogDataIntoScenario = function(
-	fileNameMap,
-	scenarioData,
-) {
-	var allDialogs = {};
-	scenarioData.dialogs = allDialogs;
-	return Promise.all(
-		scenarioData.dialogPaths.map(function(dialogPath) {
-			var dialogFileName = dialogPath.split('/').pop();
-			var dialogFile = fileNameMap[dialogFileName];
-			return getFileJson(dialogFile)
-				.then(function(dialogFileData) {
-					Object.keys(dialogFileData)
-						.forEach(function(dialogName) {
-							if (allDialogs[dialogName]) {
-								throw new Error(`Duplicate dialog name "${dialogName}" found in ${dialogFileName}!`);
-							}
-							dialogFileData[dialogName].name = dialogName;
-							allDialogs[dialogName] = dialogFileData[dialogName]
-						})
-				});
-		})
-	);
 };
 
 var preloadAllDialogSkins = function (filenameMap, scenarioData) {

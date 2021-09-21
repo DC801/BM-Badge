@@ -375,16 +375,21 @@ void EngineInit () {
 		fflush(stderr);
 		// for some reason, outputting to stderr and then flushing, this still comes out AFTER
 		// the message output to stdout AFTER THIS, as triggered by `was_serial_started`.
-		// so forcibly delaying by 20 ms on startup actually allows the stderr/stdout
+		// so forcibly delaying by 50 ms on startup actually allows the stderr/stdout
 		// messages to come out in the correct order. WHY. WHYYYYYYYYY. WHY.
-		nrf_delay_ms(20);
-		was_serial_started = true;
+		nrf_delay_ms(50);
 	#endif
 	#ifdef DC801_EMBEDDED
 		check_ram_usage();
 	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
+
+	#ifdef DC801_DESKTOP
+	// don't want to show welcome message until after map has loaded
+	// in case map on_load has a `SET_CONNECT_SERIAL_DIALOG` action
+	was_serial_started = true;
+	#endif
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"MageGame->LoadMap(DEFAULT_MAP);"

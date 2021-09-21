@@ -3,12 +3,14 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "EngineInput.h"
+#include "mage_command_control.h"
 
 //load in the global variables that the scripts will be operating on:
 extern MageGameControl *MageGame;
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
+extern MageCommandControl *MageCommand;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
 
@@ -1968,6 +1970,95 @@ void MageScriptControl::slotErase(uint8_t * args, MageScriptState * resumeStateS
 	}
 }
 
+void MageScriptControl::setConnectSerialDialog(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetConnectSerialDialog *argStruct = (ActionSetConnectSerialDialog*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
+	MageCommand->connectSerialDialogId = argStruct->serialDialogId;
+}
+
+void MageScriptControl::showSerialDialog(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionShowSerialDialog *argStruct = (ActionShowSerialDialog*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
+	if(resumeStateStruct->totalLoopsToNextAction == 0) {
+		MageCommand->showSerialDialog(argStruct->serialDialogId);
+		resumeStateStruct->totalLoopsToNextAction = 1;
+	} else if (!MageCommand->isInputTrapped) {
+		if(MageCommand->globalJumpScriptId != MAGE_NO_SCRIPT) {
+			// OH NO!!!!
+			// SERIAL DIALOGS ONLY HAVE A GLOBAL JUMP SCRIPT ID!!
+			// globalJumpScript = MageCommand->globalJumpScriptId;
+			debug_print(
+				"I DON'T KNOW WHAT TO DO WITH A GLOBAL JUMP SCRIPT ID!!!\n"
+				"globalJumpScript: %d\n",
+				MageCommand->globalJumpScriptId
+			);
+		}
+		resumeStateStruct->totalLoopsToNextAction = 0;
+	}
+}
+
+void MageScriptControl::inventoryGet(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionInventoryGet *argStruct = (ActionInventoryGet*)args;
+	// TODO: implement this
+}
+
+void MageScriptControl::inventoryDrop(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionInventoryDrop *argStruct = (ActionInventoryDrop*)args;
+	// TODO: implement this
+}
+
+void MageScriptControl::checkInventory(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckInventory *argStruct = (ActionCheckInventory*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
+	// TODO: implement this
+}
+
+void MageScriptControl::setMapLook(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetMapLook *argStruct = (ActionSetMapLook*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
+	// TODO: implement this
+}
+
+void MageScriptControl::setEntityLook(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetEntityLook *argStruct = (ActionSetEntityLook*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
+	// TODO: implement this
+}
+
+void MageScriptControl::setTeleportEnabled(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetTeleportEnabled *argStruct = (ActionSetTeleportEnabled*)args;
+	// TODO: implement this
+}
+
+void MageScriptControl::checkMap(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckMap *argStruct = (ActionCheckMap*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->mapId, 1);
+	// TODO: implement this
+}
+
+void MageScriptControl::setBleFlag(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionSetBleFlag *argStruct = (ActionSetBleFlag*)args;
+	// TODO: implement this
+}
+
+void MageScriptControl::checkBleFlag(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	ActionCheckBleFlag *argStruct = (ActionCheckBleFlag*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
+	// TODO: implement this
+}
+
 MageScriptControl::MageScriptControl()
 {
 	mapLocalJumpScript = MAGE_NO_SCRIPT;
@@ -2078,6 +2169,17 @@ MageScriptControl::MageScriptControl()
 	actionFunctions[MageScriptActionTypeId::SLOT_SAVE] = &MageScriptControl::slotSave;
 	actionFunctions[MageScriptActionTypeId::SLOT_LOAD] = &MageScriptControl::slotLoad;
 	actionFunctions[MageScriptActionTypeId::SLOT_ERASE] = &MageScriptControl::slotErase;
+	actionFunctions[MageScriptActionTypeId::SET_CONNECT_SERIAL_DIALOG] = &MageScriptControl::setConnectSerialDialog;
+	actionFunctions[MageScriptActionTypeId::SHOW_SERIAL_DIALOG] = &MageScriptControl::showSerialDialog;
+	actionFunctions[MageScriptActionTypeId::INVENTORY_GET] = &MageScriptControl::inventoryGet;
+	actionFunctions[MageScriptActionTypeId::INVENTORY_DROP] = &MageScriptControl::inventoryDrop;
+	actionFunctions[MageScriptActionTypeId::CHECK_INVENTORY] = &MageScriptControl::checkInventory;
+	actionFunctions[MageScriptActionTypeId::SET_MAP_LOOK] = &MageScriptControl::setMapLook;
+	actionFunctions[MageScriptActionTypeId::SET_ENTITY_LOOK] = &MageScriptControl::setEntityLook;
+	actionFunctions[MageScriptActionTypeId::SET_TELEPORT_ENABLED] = &MageScriptControl::setTeleportEnabled;
+	actionFunctions[MageScriptActionTypeId::CHECK_MAP] = &MageScriptControl::checkMap;
+	actionFunctions[MageScriptActionTypeId::SET_BLE_FLAG] = &MageScriptControl::setBleFlag;
+	actionFunctions[MageScriptActionTypeId::CHECK_BLE_FLAG] = &MageScriptControl::checkBleFlag;
 }
 
 uint32_t MageScriptControl::size() const
@@ -2262,24 +2364,18 @@ void MageScriptControl::setEntityPositionToPoint(
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 {
 	MageScriptState* resumeState = &resumeStates.mapLoad;
-	//this checks to see if the map onLoad script is complete and returns if it is:
-	if(!resumeState->scriptIsRunning)
-	{
-		return;
-	}
-	//otherwise, the load script is still running and the resumeStateStruct controls all further actions:
-	else
-	{
+	//the load script is still running and the resumeStateStruct controls all further actions:
+	if(resumeState->scriptIsRunning) {
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
 		//the mapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+		//now that the *ResumeState struct is correctly configured, process the script:
+		processScript(
+			resumeState,
+			MAGE_MAP_ENTITY,
+			MageScriptType::ON_LOAD
+		);
 	}
-	//now that the *ResumeState struct is correctly configured, process the script:
-	processScript(
-		resumeState,
-		MAGE_MAP_ENTITY,
-		MageScriptType::ON_LOAD
-	);
 }
 
 void MageScriptControl::handleMapOnTickScript()
@@ -2432,7 +2528,7 @@ void MageScriptControl::tickScripts()
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	handleMapOnTickScript();
 	if(mapLoadId != MAGE_NO_MAP) { return; }
-	//the map's command scripts will run every tick
+	//the command scripts states need to be checked every tick
 	MageScriptState* commandStates [] = {
 		&resumeStates.commandLook,
 		&resumeStates.commandGo,
@@ -2458,6 +2554,7 @@ void MageScriptControl::tickScripts()
 		handleEntityOnTickScript(i);
 		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	}
+	MageCommand->sendBufferedOutput();
 }
 
 int16_t MageScriptControl::getUsefulEntityIndexFromActionEntityId(

@@ -51,6 +51,7 @@ private:
 	MageHeader scriptHeader;
 	MageHeader portraitHeader;
 	MageHeader dialogHeader;
+	MageHeader serialDialogHeader;
 	MageHeader colorPaletteHeader;
 	MageHeader stringHeader;
 	MageHeader saveFlagHeader;
@@ -214,6 +215,7 @@ public:
 	uint32_t getImageAddress(uint16_t imageId);
 	uint32_t getPortraitAddress(uint16_t portraitId);
 	uint32_t getDialogAddress(uint16_t dialogId);
+	uint32_t getSerialDialogAddress(uint16_t serialDialogId);
 
 	//this returns the address offset for a specific script Id:
 	uint32_t getScriptAddress(uint32_t scriptId);

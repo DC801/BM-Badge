@@ -454,17 +454,23 @@
 	- [x] Fix web build issues with infinite loop in the `ENGINE_PANIC` screen
 	- [x] Add the docs to the actions update instructions
 - [ ] New actions
-	- [ ] `PRINT_TO_SERIAL`  (string_id)
+	- [x] `SET_CONNECT_SERIAL_DIALOG` (serial_dialog_id)
+	- [ ] `SHOW_SERIAL_DIALOG` (serial_dialog_id)
+		- [x] Output text
+		- [x] Sanitize & handle input
+		- [ ] implement a globalJumpScriptId
 	- [ ] `INVENTORY_GET` (item_name)
 	- [ ] `INVENTORY_DROP` (item_name)
 	- [ ] `CHECK_INVENTORY` (item_name, expected_state, success_script)
 	- [ ] `SET_MAP_LOOK` (script_name)
-	- [ ] `SET_ITEM_LOOK` (item_name, script_name)
 	- [ ] `SET_ENTITY_LOOK` (entity_name, script_name)
-	- [ ] `SET_ITEM_USE` (item_name, script_name)
+	- [ ] `SET_TELEPORT_ENABLED` (bool_value)
 	- [ ] `CHECK_MAP` (map_name, expected_state, success_script)
-	- [ ] `CHECK_BLE_FLAG` (flag_constant_name, expected_state, success_script)
 	- [ ] `SET_BLE_FLAG` (flag_constant_name, bool_value)
+	- [ ] `CHECK_BLE_FLAG` (flag_constant_name, expected_state, success_script)
+	- [!] Don't implement because this introduces more state to track. Item use/look scripts will be stateless like the map go scripts
+		- [!] `SET_ITEM_LOOK` (item_name, script_name)
+		- [!] `SET_ITEM_USE` (item_name, script_name)
 - [ ] Add numeric "constants" support to encoder
 - [ ] Serial Dungeon
 	- [ ] Create a new `maps.json`; Maps are named keys full of objects:
@@ -503,8 +509,9 @@
 		- [ ] When you load map, loop through the `ItemLocationArray` and load items in the room, or in player inventory, into 1 of 16 slots in ram
 		- [ ] Struct details
 			- [ ] `name` 12 chars
-			- [ ] `on_look` script
-			- [ ] `on_use` script
+			- [ ] The following script IDs are GLOBAL SCRIPT IDS because they can be run from ANY room!
+				- [ ] `on_look` script ID
+				- [ ] `on_use` script ID
 	- [ ] New ItemLocationArray
 		- [ ] Part of the save struct
 		- [ ] It's an array of 64 long, matching the `items` limit
@@ -527,6 +534,7 @@
 					- [ ] Implement listing of items on map/in room
 					- [ ] Implement running `on_look` for items
 					- [ ] Implement running `on_look` for entities
+					- [ ] If `teleport` is enabled, the `on_look` output is prefixed with the name of the room that the player is in
 				- [x] go - Looks up the `directions` in the current room, and if there is one that matches the second argument, runs the script for going that direction
 				- [ ] get/take
 				- [ ] drop/yeet

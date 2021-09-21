@@ -1,0 +1,96 @@
+{
+	"serial_dialog-map-action_testing-on_connect": {
+		"messages": [
+			"WELCOME TO GOAT NET",
+			" NOW       ##### ####     ",
+			" I       ##   #  ##       ",
+			" RULE   #   (=)    #      ",
+			" WORLD  #+        ######  ",
+			"      - #v              ##",
+			"         ###           #  ",
+			"           #  #      # #  ",
+			"           ##  ##  ##  #  ",
+			"-----------######--#####--"
+		]
+	},
+	"serial_dialog-map-action_testing-look": {
+		"messages": [
+			"Hey boss, I'm lookin around for secrets,",
+			"but it's nothing but numbers and mages in",
+			"this room!"
+		]
+	},
+	"serial_dialog-map-action_testing-go_north": {
+		"messages": [
+			"Hey boss, I tried to go north, but it's",
+			"just empty space up there!"
+		]
+	},
+	"serial_dialog-map-action_testing-go_cleveland": {
+		"messages": [
+			"McScuse me?",
+			"What did you just ask me to do?",
+			"My name isn't Bob, I can't go to Cleveland!"
+		]
+	},
+	"serial_dialog-map-action_testing-go_cleveland-protected": {
+		"messages": [
+			"My name is Bob?!??",
+			"Looks like I have to go to Cleveland..."
+		]
+	},
+	"serial_dialog-map-action_testing-go_numbers": {
+		"messages": [
+			"You are in a desert.",
+			"You approached by a mysterious goat.",
+			"How do you react to the mysterious goat?"
+		],
+		"options": [
+			{
+				"label": "Do nothing",
+				"script": "response-do_nothing"
+			},
+			{
+				"label": "Pet The Goat",
+				"script": "response-pet_the_goat"
+			},
+			{
+				"label": "Feed The Goat",
+				"script": "response-feed_the_goat"
+			},
+			{
+				"label": "Give the Goat a Sugar Cube",
+				"script": "response-give_goat_sugar_cube"
+			}
+		]
+	},
+	"serial_dialog-map-action_testing-go_sphinx": {
+		"messages": [
+			"When you arrive at the Sphinx,",
+			"it speaks in a slow, monotone voice:",
+			"WHEN DO THE FLYING TOASTERS COME OUT?"
+		],
+		"text_options": {
+			"after dark": "map-action_testing-go_sphinx-success",
+			"before dark": "map-action_testing-go_sphinx-wtf"
+		}
+	},
+	"serial_dialog-map-action_testing-go_sphinx-success": {
+		"messages": [
+			"The Sphinx bellows:",
+			"YOU ARE ELITE!"
+		]
+	},
+	"serial_dialog-map-action_testing-go_sphinx-wtf": {
+		"messages": [
+			"The Sphinx bellows:",
+			"Okay bro, now you're just messing with me. WTF"
+		]
+	},
+	"serial_dialog-map-action_testing-go_sphinx-fail": {
+		"messages": [
+			"The Sphinx bellows:",
+			"YOU HAVE FAILED MY CHALLENGE!"
+		]
+	}
+}

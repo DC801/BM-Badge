@@ -386,6 +386,47 @@ var actionFieldsMap = {
 	SLOT_ERASE: [
 		{propertyName: 'slot', size: 1},
 	],
+	SET_CONNECT_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+	],
+	SHOW_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+	],
+	INVENTORY_GET: [
+		{propertyName: 'item_name', size: 1},
+	],
+	INVENTORY_DROP: [
+		{propertyName: 'item_name', size: 1},
+	],
+	CHECK_INVENTORY: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'item_name', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_MAP_LOOK: [
+		{propertyName: 'script', size: 2},
+	],
+	SET_ENTITY_LOOK: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_TELEPORT_ENABLED: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_MAP: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'map', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_BLE_FLAG: [
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_BLE_FLAG: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 };
 
 var actionNames = [
@@ -476,6 +517,17 @@ var actionNames = [
 	'SLOT_SAVE',
 	'SLOT_LOAD',
 	'SLOT_ERASE',
+	'SET_CONNECT_SERIAL_DIALOG',
+	'SHOW_SERIAL_DIALOG',
+	'INVENTORY_GET',
+	'INVENTORY_DROP',
+	'CHECK_INVENTORY',
+	'SET_MAP_LOOK',
+	'SET_ENTITY_LOOK',
+	'SET_TELEPORT_ENABLED',
+	'CHECK_MAP',
+	'SET_BLE_FLAG',
+	'CHECK_BLE_FLAG',
 ];
 
 var specialKeywordsEnum = {
@@ -1007,6 +1059,38 @@ var initActionData = function (action) {
 	}
 };
 
+var getSerialDialogIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	var serialDialog = scenarioData.serialDialogs[value];
+	if (!serialDialog) {
+		throw new Error(`${action.action} was unable to find a serial_dialog named "${value}"!`);
+	}
+	return serializeSerialDialog(
+		serialDialog,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getItemIdFromAction = function () {
+	throw new Error('getItemIdFromAction is not implemented yet!');
+};
+
+var getBleFlagIdFromAction = function () {
+	throw new Error('getBleFlagIdFromAction is not implemented yet!');
+};
+
+
 var actionPropertyNameToHandlerMap = {
 	duration: getNumberFromAction,
 	expected_u4: getNumberFromAction,
@@ -1049,6 +1133,9 @@ var actionPropertyNameToHandlerMap = {
 	inbound: getBoolFromAction,
 	operation: getOperationFromAction,
 	comparison: getComparisonFromAction,
+	serial_dialog: getSerialDialogIdFromAction,
+	item_name: getItemIdFromAction,
+	ble_flag: getBleFlagIdFromAction,
 };
 
 var sizeHandlerMap = [
@@ -1395,33 +1482,4 @@ var makeVariableLookaheadFunction = function(scenarioData) {
 			}
 		});
 	}
-};
-
-var mergeScriptDataIntoScenario = function(
-	fileNameMap,
-	scenarioData,
-) {
-	var allScripts = {};
-	scenarioData.scripts = allScripts;
-	var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
-	return Promise.all(
-		scenarioData.scriptPaths.map(function(scriptPath) {
-			var scriptFileName = scriptPath.split('/').pop();
-			var scriptFile = fileNameMap[scriptFileName];
-			return getFileJson(scriptFile)
-				.then(function(scriptFileData) {
-					Object.keys(scriptFileData)
-						.forEach(function(scriptName) {
-							if (allScripts[scriptName]) {
-								throw new Error(`Duplicate script name "${scriptName}" found in ${scriptFileName}!`);
-							}
-							allScripts[scriptName] = scriptFileData[scriptName]
-						})
-				});
-		})
-	)
-		.then(function () {
-			Object.values(allScripts)
-				.forEach(lookaheadAndIdentifyAllScriptVariables);
-		});
 };

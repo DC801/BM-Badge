@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 2
+    valid: 3
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -29,6 +29,8 @@ seq:
   - id: portrait_offsets
     type: count_with_offsets
   - id: dialog_offsets
+    type: count_with_offsets
+  - id: serial_dialog_offsets
     type: count_with_offsets
   - id: image_color_palette_offsets
     type: count_with_offsets
@@ -76,6 +78,10 @@ seq:
     type: dialog
     repeat: expr
     repeat-expr: dialog_offsets.count
+  - id: serial_dialogs
+    type: serial_dialog
+    repeat: expr
+    repeat-expr: serial_dialog_offsets.count
   - id: image_color_palettes
     type: image_color_palette
     repeat: expr
@@ -541,6 +547,31 @@ types:
       - id: map_local_script_id
         type: u2
 
+  serial_dialog:
+    seq:
+      - id: name
+        type: str
+        size: 32
+        encoding: ASCII
+      - id: string_id
+        type: u2
+      - id: serial_response_type
+        type: u1
+        enum: serial_response_type
+      - id: response_count
+        type: u1
+      - id: responses
+        type: serial_dialog_response
+        repeat: expr
+        repeat-expr: response_count
+
+  serial_dialog_response:
+    seq:
+      - id: string_id
+        type: u2
+      - id: global_script_id
+        type: u2
+
   string:
     params:
       - id: index
@@ -710,6 +741,17 @@ enums:
     84: slot_save
     85: slot_load
     86: slot_erase
+    87: set_connect_serial_dialog
+    88: show_serial_dialog
+    89: inventory_get
+    90: inventory_drop
+    91: check_inventory
+    92: set_map_look
+    93: set_entity_look
+    94: set_teleport_enabled
+    95: check_map
+    96: set_ble_flag
+    97: check_ble_flag
 
   dialog_screen_alignment_type:
     0: bottom_left
@@ -727,3 +769,8 @@ enums:
     2: select_from_long_list
     3: enter_number
     4: enter_alphanumeric
+
+  serial_response_type:
+    0: response_none
+    1: response_enter_number
+    2: response_enter_string
