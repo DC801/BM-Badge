@@ -218,7 +218,7 @@ public:
 	uint32_t getSerialDialogAddress(uint16_t serialDialogId);
 
 	//this returns the address offset for a specific script Id:
-	uint32_t getScriptAddress(uint32_t scriptId);
+	uint32_t getScriptAddressFromGlobalScriptId(uint32_t scriptId);
 
 	//this calculates the relevant info to be able to draw an entity based on the
 	//current state of the data in MageGameControl and stores the info in entityRenderableData

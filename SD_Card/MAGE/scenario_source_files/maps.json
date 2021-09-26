@@ -8,7 +8,8 @@
 			"north": "map-action_testing-go_north",
 			"cleveland": "map-action_testing-go_cleveland",
 			"numbers": "map-action_testing-go_numbers",
-			"sphinx": "map-action_testing-go_sphinx"
+			"sphinx": "map-action_testing-go_sphinx",
+			"hub": "map-action_testing-go_hub"
 		}
 	},
 	"main_menu": "maps/map-main_menu.json",
@@ -24,7 +25,18 @@
 	"lodge": "maps/map-lodge.json",
 	"greenhouse": "maps/map-greenhouse.json",
 	"secretroom": "maps/map-secretroom.json",
-	"warp_zone": "maps/map-warp_zone.json",
+	"warp_zone": {
+		"path": "maps/map-warp_zone.json",
+		"directions": {
+			"main": "load_map-main",
+			"test": "load_map-test",
+			"town": "load_map-town",
+			"demo_map": "load_map-demo_map",
+			"action1": "load_map-action_testing_01",
+			"action2": "load_map-action_testing_02",
+			"testbig": "load_map-testbig"
+		}
+	},
 	"testbig": "maps/map-testbig.json",
 	"credits": "maps/map-credits.json",
 	"woprhouse": "maps/map-woprhouse.json",

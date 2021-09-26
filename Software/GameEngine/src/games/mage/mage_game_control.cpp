@@ -5,10 +5,12 @@
 #include "mage_hex.h"
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
+#include "mage_command_control.h"
 
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
+extern MageCommandControl *MageCommand;
 
 extern FrameBuffer *mage_canvas;
 
@@ -588,6 +590,7 @@ void MageGameControl::initializeScriptsOnMapLoad()
 			false
 		);
 	}
+	MageCommand->reset();
 	MageScript->handleMapOnLoadScript(true);
 }
 
@@ -1375,12 +1378,12 @@ MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(
 	);
 }
 
-uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
+uint32_t MageGameControl::getScriptAddressFromGlobalScriptId(uint32_t scriptId)
 {
-	//first validate the mapLocalScriptId:
+	//first validate the scriptId:
 	scriptId = getValidGlobalScriptId(scriptId);
 
-	//then return the address offset for thast script from the scriptHeader:
+	//then return the address offset for that script from the scriptHeader:
 	return scriptHeader.offset(scriptId);
 }
 
