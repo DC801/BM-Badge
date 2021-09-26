@@ -198,19 +198,21 @@ void MageCommandControl::processCommandAsResponseInput(std::string input) {
 			&& responseIndex < (serialDialog.responseCount)
 		) {
 			MageSerialDialogResponse *response = &serialDialogResponses[responseIndex];
-			globalJumpScriptId = response->globalScriptId;
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
 			commandResponseBuffer += (
 				"Valid response: " +
 				input + " - " +
 				responseLabel + "\n"
 			);
+			globalJumpScriptId = response->globalScriptId;
 			isInputTrapped = false;
 		} else {
 			commandResponseBuffer += "Invalid response: " + input + "\n";
 			showSerialDialog(serialDialogId);
 		}
-	} else if (responseType == RESPONSE_ENTER_STRING) {
+	}
+	else if (responseType == RESPONSE_ENTER_STRING)
+	{
 		bool validResponseFound = false;
 		for(uint8_t i = 0; i < serialDialog.responseCount; i++) {
 			MageSerialDialogResponse *response = &serialDialogResponses[i];
@@ -291,6 +293,17 @@ uint32_t MageCommandControl::size() {
 		+ sizeof(lastCommandUsed)
 		+ sizeof(isInputTrapped)
 	);
+}
+
+void MageCommandControl::reset() {
+	globalJumpScriptId = MAGE_NO_SCRIPT;
+	isInputTrapped = false;
+	// if reset has been run, you're probably on a new map
+	// so don't show the postDialogBuffer contents,
+	// but we do need to show the commandResponse and dialog
+	// strings provided just before loading to the new map
+	postDialogBuffer = "";
+	sendBufferedOutput();
 }
 
 void MageCommandControl::sendBufferedOutput() {

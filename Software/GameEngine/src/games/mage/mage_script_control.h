@@ -65,7 +65,6 @@ class MageScriptControl
 
 		//this allows an I+C action to set the calling map or entity script to match the new script.
 		void setEntityScript(
-			MageScriptState* resumeStateStruct,
 			uint16_t mapLocalScriptId,
 			uint8_t entityId,
 			uint8_t scriptType
@@ -279,9 +278,9 @@ class MageScriptControl
 		//Action Logic Type: I
 		void checkInventory(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setMapLook(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setMapLookScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
-		void setEntityLook(uint8_t * args, MageScriptState * resumeStateStruct);
+		void setEntityLookScript(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: I
 		void setTeleportEnabled(uint8_t * args, MageScriptState * resumeStateStruct);
 		//Action Logic Type: C

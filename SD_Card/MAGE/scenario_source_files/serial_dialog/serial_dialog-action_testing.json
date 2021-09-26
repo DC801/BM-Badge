@@ -92,5 +92,10 @@
 			"The Sphinx bellows:",
 			"YOU HAVE FAILED MY CHALLENGE!"
 		]
+	},
+	"serial_dialog-map-action_testing-go_hub": {
+		"messages": [
+			"You're goating to the Hub map now!"
+		]
 	}
 }

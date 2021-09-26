@@ -403,10 +403,10 @@ var actionFieldsMap = {
 		{propertyName: 'item_name', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
-	SET_MAP_LOOK: [
+	SET_MAP_LOOK_SCRIPT: [
 		{propertyName: 'script', size: 2},
 	],
-	SET_ENTITY_LOOK: [
+	SET_ENTITY_LOOK_SCRIPT: [
 		{propertyName: 'script', size: 2},
 		{propertyName: 'entity', size: 1},
 	],
@@ -522,8 +522,8 @@ var actionNames = [
 	'INVENTORY_GET',
 	'INVENTORY_DROP',
 	'CHECK_INVENTORY',
-	'SET_MAP_LOOK',
-	'SET_ENTITY_LOOK',
+	'SET_MAP_LOOK_SCRIPT',
+	'SET_ENTITY_LOOK_SCRIPT',
 	'SET_TELEPORT_ENABLED',
 	'CHECK_MAP',
 	'SET_BLE_FLAG',
@@ -1229,7 +1229,7 @@ var preProcessScript = function(
 				var scriptName = getScriptByPropertyName(
 					'script',
 					action,
-				)
+				);
 				var sourceScript = getScriptByName(
 					scriptName,
 					scenarioData

@@ -296,8 +296,8 @@ typedef enum : uint8_t {
 	INVENTORY_GET,
 	INVENTORY_DROP,
 	CHECK_INVENTORY,
-	SET_MAP_LOOK,
-	SET_ENTITY_LOOK,
+	SET_MAP_LOOK_SCRIPT,
+	SET_ENTITY_LOOK_SCRIPT,
 	SET_TELEPORT_ENABLED,
 	CHECK_MAP,
 	SET_BLE_FLAG,
@@ -320,7 +320,7 @@ typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
 	//the script Id to resume - this is a mapLocalScriptId number value
-	uint16_t mapLocalScriptId;
+	uint16_t currentMapLocalScriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
 	uint16_t actionOffset;
 	//the number of loops until the next action in the script is to run
@@ -1208,7 +1208,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetMapLook;
+} ActionSetMapLookScript;
 
 typedef struct {
 	uint16_t scriptId;
@@ -1217,7 +1217,7 @@ typedef struct {
 	uint8_t paddingE;
 	uint8_t paddingF;
 	uint8_t paddingG;
-} ActionSetEntityLook;
+} ActionSetEntityLookScript;
 
 typedef struct {
 	uint8_t value;

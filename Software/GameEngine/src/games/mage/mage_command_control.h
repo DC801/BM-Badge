@@ -54,6 +54,7 @@ class MageCommandControl {
 		void processCommandAsResponseInput(std::string input);
 		void showSerialDialog(uint16_t serialDialogId);
 		uint32_t size();
+		void reset();
 		void sendBufferedOutput();
 };
 

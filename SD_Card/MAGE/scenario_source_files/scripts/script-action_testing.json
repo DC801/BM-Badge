@@ -64,6 +64,16 @@
 			"serial_dialog": "serial_dialog-map-action_testing-go_sphinx-wtf"
 		}
 	],
+	"map-action_testing-go_hub": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-go_hub"
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "warp_zone"
+		}
+	],
 	"mage01-check_entity_name": [
 		{
 			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",
