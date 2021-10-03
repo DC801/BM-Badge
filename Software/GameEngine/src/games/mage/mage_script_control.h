@@ -8,6 +8,16 @@
 
 #define SCRIPT_NAME_LENGTH 32
 
+//these are the types of scripts that can be on a map or entity:
+typedef enum : uint8_t {
+	ON_LOAD = 0,
+	ON_TICK,
+	ON_INTERACT,
+	ON_LOOK,
+	ON_COMMAND,
+	NUM_SCRIPT_TYPES
+} MageScriptType;
+
 struct resumeStatesStruct {
 	MageScriptState mapLoad;
 	MageScriptState mapTick;

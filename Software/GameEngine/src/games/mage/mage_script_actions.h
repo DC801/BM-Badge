@@ -7,6 +7,124 @@
 #include "mage_hex.h"
 #include "mage_script_control.h"
 
+//this contains all the possible script actions by actionTypeId value.
+//these enum values match the data generated in the binary,
+//so don't change any numbering unless you fix the binary generation as well.
+//don't add more than 255 actions, or it will break the binary file.
+//!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!
+//IF YOU WANT TO ADD ACTIONS, YOU MUST UPDATE THE FOLLOWING FILES AS WELL!!
+//	add enum for the MageScriptActionTypeId, right here in this file
+//	add struct for the action arguments, lower in this file
+//	add entry in `actionFunctions` the constructor of `Software/src/games/mage/mage_script_control.cpp`
+//	add action handler function in `Software/src/games/mage/mage_script_control.(cpp/h)`
+//	add action encoder function in `SD_Card/MAGE/editor/js/scripts.js`
+//	add entry in actionNames array in `SD_Card/MAGE/editor/js/scripts.js`
+//	add action_type enum in `SD_Card/MAGE/mage_dat.ksy`
+//	bump the version number in the #define ENGINE_VERSION in this file
+//	bump the version number in `engine_version` in the `SD_Card/MAGE/mage_dat.ksy`
+//	bump the version number in `ENGINE_VERSION` in the `SD_Card/MAGE/editor/js/common.js`
+typedef enum : uint8_t {
+	NULL_ACTION = 0,
+	CHECK_ENTITY_NAME,
+	CHECK_ENTITY_X,
+	CHECK_ENTITY_Y,
+	CHECK_ENTITY_INTERACT_SCRIPT,
+	CHECK_ENTITY_TICK_SCRIPT,
+	CHECK_ENTITY_TYPE,
+	CHECK_ENTITY_PRIMARY_ID,
+	CHECK_ENTITY_SECONDARY_ID,
+	CHECK_ENTITY_PRIMARY_ID_TYPE,
+	CHECK_ENTITY_CURRENT_ANIMATION,
+	CHECK_ENTITY_CURRENT_FRAME,
+	CHECK_ENTITY_DIRECTION,
+	CHECK_ENTITY_GLITCHED,
+	CHECK_ENTITY_HACKABLE_STATE_A,
+	CHECK_ENTITY_HACKABLE_STATE_B,
+	CHECK_ENTITY_HACKABLE_STATE_C,
+	CHECK_ENTITY_HACKABLE_STATE_D,
+	CHECK_ENTITY_HACKABLE_STATE_A_U2,
+	CHECK_ENTITY_HACKABLE_STATE_C_U2,
+	CHECK_ENTITY_HACKABLE_STATE_A_U4,
+	CHECK_ENTITY_PATH,
+	CHECK_SAVE_FLAG,
+	CHECK_IF_ENTITY_IS_IN_GEOMETRY,
+	CHECK_FOR_BUTTON_PRESS,
+	CHECK_FOR_BUTTON_STATE,
+	CHECK_WARP_STATE,
+	RUN_SCRIPT,
+	BLOCKING_DELAY,
+	NON_BLOCKING_DELAY,
+	SET_ENTITY_NAME,
+	SET_ENTITY_X,
+	SET_ENTITY_Y,
+	SET_ENTITY_INTERACT_SCRIPT,
+	SET_ENTITY_TICK_SCRIPT,
+	SET_ENTITY_TYPE,
+	SET_ENTITY_PRIMARY_ID,
+	SET_ENTITY_SECONDARY_ID,
+	SET_ENTITY_PRIMARY_ID_TYPE,
+	SET_ENTITY_CURRENT_ANIMATION,
+	SET_ENTITY_CURRENT_FRAME,
+	SET_ENTITY_DIRECTION,
+	SET_ENTITY_DIRECTION_RELATIVE,
+	SET_ENTITY_DIRECTION_TARGET_ENTITY,
+	SET_ENTITY_DIRECTION_TARGET_GEOMETRY,
+	SET_ENTITY_GLITCHED,
+	SET_ENTITY_HACKABLE_STATE_A,
+	SET_ENTITY_HACKABLE_STATE_B,
+	SET_ENTITY_HACKABLE_STATE_C,
+	SET_ENTITY_HACKABLE_STATE_D,
+	SET_ENTITY_HACKABLE_STATE_A_U2,
+	SET_ENTITY_HACKABLE_STATE_C_U2,
+	SET_ENTITY_HACKABLE_STATE_A_U4,
+	SET_ENTITY_PATH,
+	SET_SAVE_FLAG,
+	SET_PLAYER_CONTROL,
+	SET_MAP_TICK_SCRIPT,
+	SET_HEX_CURSOR_LOCATION,
+	SET_WARP_STATE,
+	SET_HEX_EDITOR_STATE,
+	SET_HEX_EDITOR_DIALOG_MODE,
+	SET_HEX_EDITOR_CONTROL,
+	SET_HEX_EDITOR_CONTROL_CLIPBOARD,
+	LOAD_MAP,
+	SHOW_DIALOG,
+	PLAY_ENTITY_ANIMATION,
+	TELEPORT_ENTITY_TO_GEOMETRY,
+	WALK_ENTITY_TO_GEOMETRY,
+	WALK_ENTITY_ALONG_GEOMETRY,
+	LOOP_ENTITY_ALONG_GEOMETRY,
+	SET_CAMERA_TO_FOLLOW_ENTITY,
+	TELEPORT_CAMERA_TO_GEOMETRY,
+	PAN_CAMERA_TO_ENTITY,
+	PAN_CAMERA_TO_GEOMETRY,
+	PAN_CAMERA_ALONG_GEOMETRY,
+	LOOP_CAMERA_ALONG_GEOMETRY,
+	SET_SCREEN_SHAKE,
+	SCREEN_FADE_OUT,
+	SCREEN_FADE_IN,
+	MUTATE_VARIABLE,
+	MUTATE_VARIABLES,
+	COPY_VARIABLE,
+	CHECK_VARIABLE,
+	CHECK_VARIABLES,
+	SLOT_SAVE,
+	SLOT_LOAD,
+	SLOT_ERASE,
+	SET_CONNECT_SERIAL_DIALOG,
+	SHOW_SERIAL_DIALOG,
+	INVENTORY_GET,
+	INVENTORY_DROP,
+	CHECK_INVENTORY,
+	SET_MAP_LOOK_SCRIPT,
+	SET_ENTITY_LOOK_SCRIPT,
+	SET_TELEPORT_ENABLED,
+	CHECK_MAP,
+	SET_BLE_FLAG,
+	CHECK_BLE_FLAG,
+	//this tracks the number of actions we're at:
+	NUM_ACTIONS
+} MageScriptActionTypeId;
 
 //the functions below here are the action functions. These are going to be
 //called directly by scripts, and preform their actions based on arguments read from ROM
@@ -280,6 +398,24 @@ int16_t getUsefulEntityIndexFromActionEntityId(
 	uint8_t entityId,
 	int16_t callingEntityId
 );
+
+typedef enum : uint8_t {
+	SET = 0,
+	ADD,
+	SUB,
+	DIV,
+	MUL,
+	MOD,
+	RNG
+} MageMutateOperation;
+
+typedef enum : uint8_t {
+	LT = 0,
+	LTEQ,
+	EQ,
+	GTEQ,
+	GT
+} MageCheckComparison;
 
 void mutate(
 	MageMutateOperation operation,
