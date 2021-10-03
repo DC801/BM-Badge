@@ -3,6 +3,7 @@
 #include "EngineROM.h"
 #include "FrameBuffer.h"
 #include "mage_hex.h"
+#include "mage_script_actions.h"
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
@@ -1813,7 +1814,7 @@ std::string MageGameControl::getString(
 			variableStartPosition - (variableEndPosition - 2)
 		);
 		int parsedEntityIndex = std::stoi(variableHolder);
-		int16_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+		int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 			parsedEntityIndex,
 			mapLocalEntityId
 		);

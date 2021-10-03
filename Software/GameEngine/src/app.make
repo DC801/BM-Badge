@@ -28,6 +28,7 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/mage/mage_color_palette.cpp \
 	$(SRC_ROOT)/games/mage/mage_game_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
+	$(SRC_ROOT)/games/mage/mage_script_actions.cpp \
 	$(SRC_ROOT)/games/mage/mage_script_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_portrait.cpp \
 	$(SRC_ROOT)/games/mage/mage_dialog_control.cpp \
