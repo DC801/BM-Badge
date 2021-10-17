@@ -1,0 +1,112 @@
+{
+    "dialog-mux-teleport_goose_a": [
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I HAVE THE POWER OF CAPTAIN TELEPORT, YEET!"
+			]
+		},
+        {
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Not this again..."
+			]
+		},
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"POOF!"
+			]
+		}
+    ],
+	"dialog-mux-teleport_goose_b": [
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Wanna see it again?"
+			]
+		},
+        {
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Please no, I have goat yoga soon."
+			]
+		},
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"TOO LATE!"
+			]
+		}
+	],
+	"dialog-mux-teleport_goose_c": [
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I am the Tom Nook of teleporting!"
+			]
+		},
+        {
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"That makes no sense."
+			]
+		},
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"It doesn't have to...\n(disappears)!"
+			]
+		}
+	],
+	"dialog-mux-teleport_goose_d": [
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Ok, one more for fun!"
+			]
+		},
+        {
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"I feel sick tbh."
+			]
+		},
+        {
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Can't stop the beat,\nwon't stop the teleport!\nLET'S GO!"
+			]
+		}
+	],
+	"dialog-mux-fish-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I wish to be under the sea,\ndown where it's better where it's wetter!\nMy family is waiting on the other side."
+			]
+		}
+	],
+	"dialog-mux-fish-tick-success": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"VIVA LA FISHDOM!"
+			]
+		}
+	]
+}

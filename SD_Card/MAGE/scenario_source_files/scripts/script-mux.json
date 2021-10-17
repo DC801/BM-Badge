@@ -1,0 +1,92 @@
+{
+    "map-mux-teleport_goose_a": [
+        {
+            "action": "SHOW_DIALOG",
+            "dialog": "dialog-mux-teleport_goose_a"
+        },
+        {
+            "action": "TELEPORT_ENTITY_TO_GEOMETRY",
+            "geometry": "yeet_a",
+            "entity": "Honky"
+        },
+        {
+            "action": "SET_ENTITY_INTERACT_SCRIPT",
+            "script": "map-mux-teleport_goose_b",
+            "entity": "%SELF%"
+        }
+    ],
+    "map-mux-teleport_goose_b": [
+        {
+            "action": "SHOW_DIALOG",
+            "dialog": "dialog-mux-teleport_goose_b"
+        },
+        {
+            "action": "TELEPORT_ENTITY_TO_GEOMETRY",
+            "geometry": "yeet_b",
+            "entity": "Honky"
+        },
+        {
+            "action": "SET_ENTITY_INTERACT_SCRIPT",
+            "script": "map-mux-teleport_goose_c",
+            "entity": "%SELF%"
+        }
+
+    ],
+    "map-mux-teleport_goose_c": [
+        {
+            "action": "SHOW_DIALOG",
+            "dialog": "dialog-mux-teleport_goose_c"
+        },
+        {
+            "action": "TELEPORT_ENTITY_TO_GEOMETRY",
+            "geometry": "yeet_c",
+            "entity": "Honky"
+        },
+        {
+            "action": "SET_ENTITY_INTERACT_SCRIPT",
+            "script": "map-mux-teleport_goose_d",
+            "entity": "%SELF%"
+        }
+    ],
+    "map-mux-teleport_goose_d": [
+        {
+            "action": "SHOW_DIALOG",
+            "dialog": "dialog-mux-teleport_goose_d"
+        },
+        {
+            "action": "TELEPORT_ENTITY_TO_GEOMETRY",
+            "geometry": "yeet_d",
+            "entity": "Honky"
+        },
+        {
+            "action": "SET_ENTITY_INTERACT_SCRIPT",
+            "script": "map-mux-teleport_goose_a",
+            "entity": "%SELF%"
+        }
+    ],
+    "map-mux-fish-interact": [
+        {
+            "action":"SHOW_DIALOG",
+            "dialog":"dialog-mux-fish-interact"
+        }
+    ],
+    "map-mux-fish-tick": [
+        {
+            "action":"CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+            "geometry":"%ENTITY_PATH%",
+            "entity": "%SELF%",
+            "expected_bool": true,
+            "success_script": "map-mux-fish-tick-success"
+        }
+    ],
+    "map-mux-fish-tick-success": [
+        {
+            "action":"SHOW_DIALOG",
+            "dialog":"dialog-mux-fish-tick-success"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "null_script"
+        }
+    ]
+}

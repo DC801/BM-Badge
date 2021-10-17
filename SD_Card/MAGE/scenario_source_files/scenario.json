@@ -1,5 +1,6 @@
 {
 	"scriptPaths": [
+		"scripts/script-mux.json",
 		"scripts/script-main_menu.json",
 		"scripts/script-demo_map.json",
 		"scripts/script-generic_entity_scripts.json",
@@ -26,6 +27,7 @@
 		"scripts/script-max.json"
 	],
 	"dialogPaths": [
+		"dialog/dialog-mux.json",
 		"dialog/dialog-main_menu.json",
 		"dialog/dialog-demo_map.json",
 		"dialog/dialog-test_map.json",
@@ -47,6 +49,7 @@
 		"dialog/dialog-max.json"
 	],
 	"maps": {
+		"mux": "maps/map-mux.json",
 		"main_menu": "maps/map-main_menu.json",
 		"demo": "maps/map-demo.json",
 		"main": "maps/map-main.json",
