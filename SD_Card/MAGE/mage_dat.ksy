@@ -746,8 +746,8 @@ enums:
     89: inventory_get
     90: inventory_drop
     91: check_inventory
-    92: SET_MAP_LOOK_SCRIPT
-    93: SET_ENTITY_LOOK_SCRIPT
+    92: set_map_look_script
+    93: set_entity_look_script
     94: set_teleport_enabled
     95: check_map
     96: set_ble_flag
