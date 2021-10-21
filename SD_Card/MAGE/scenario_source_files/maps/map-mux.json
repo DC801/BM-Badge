@@ -99,6 +99,29 @@
                  "width":32,
                  "x":296,
                  "y":580
+                }, 
+                {
+                 "gid":340,
+                 "height":16,
+                 "id":12,
+                 "name":"Marcel",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"map-mux-marcel-interact"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":13
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":669.333333333333,
+                 "y":540
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -218,6 +241,42 @@
                  "width":0,
                  "x":384,
                  "y":633.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":13,
+                 "name":"fear-run",
+                 "polygon":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":316,
+                         "y":-2.66666666666663
+                        }, 
+                        {
+                         "x":178.666666666667,
+                         "y":261.333333333333
+                        }, 
+                        {
+                         "x":-18.6666666666666,
+                         "y":169.333333333333
+                        }, 
+                        {
+                         "x":-6.66666666666663,
+                         "y":452
+                        }, 
+                        {
+                         "x":100,
+                         "y":328
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":678.666666666667,
+                 "y":534.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -238,7 +297,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":12,
+ "nextobjectid":14,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.0",
@@ -259,6 +318,10 @@
         {
          "firstgid":323,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":333,
+         "source":"..\/entities\/entity-hamster.json"
         }],
  "tilewidth":32,
  "type":"map",

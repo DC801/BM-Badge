@@ -108,5 +108,14 @@
 				"VIVA LA FISHDOM!"
 			]
 		}
+	],
+	"dialog-mux-marcel-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"AH OH NO! GOATS MY SECOND FEAR!\nNEXT TO CAPITAL LETTERS!"
+			]
+		}
 	]
 }

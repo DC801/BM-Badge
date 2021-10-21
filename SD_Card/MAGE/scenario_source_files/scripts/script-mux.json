@@ -7,7 +7,7 @@
         {
             "action": "TELEPORT_ENTITY_TO_GEOMETRY",
             "geometry": "yeet_a",
-            "entity": "Honky"
+            "entity": "%SELF%"
         },
         {
             "action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -23,7 +23,7 @@
         {
             "action": "TELEPORT_ENTITY_TO_GEOMETRY",
             "geometry": "yeet_b",
-            "entity": "Honky"
+            "entity": "%SELF%"
         },
         {
             "action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -40,7 +40,7 @@
         {
             "action": "TELEPORT_ENTITY_TO_GEOMETRY",
             "geometry": "yeet_c",
-            "entity": "Honky"
+            "entity": "%SELF%"
         },
         {
             "action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -56,7 +56,7 @@
         {
             "action": "TELEPORT_ENTITY_TO_GEOMETRY",
             "geometry": "yeet_d",
-            "entity": "Honky"
+            "entity": "%SELF%"
         },
         {
             "action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -87,6 +87,18 @@
         {
             "action": "RUN_SCRIPT",
             "script": "null_script"
+        }
+    ],
+    "map-mux-marcel-interact": [
+        {
+            "action": "SHOW_DIALOG",
+            "dialog": "dialog-mux-marcel-interact"
+        },
+        {
+            "action":"WALK_ENTITY_ALONG_GEOMETRY",
+            "geometry":"%ENTITY_PATH%",
+            "entity": "%SELF%",
+            "duration": 7000
         }
     ]
 }
