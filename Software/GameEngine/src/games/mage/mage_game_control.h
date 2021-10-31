@@ -101,8 +101,6 @@ private:
 	uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
 	uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
 
-	//this handles script initialization when loading a new map
-	void initializeScriptsOnMapLoad();
 public:
 	//this is the hackable array of entities that are on the current map
 	//the data contained within is the data that can be hacked in the hex editor.

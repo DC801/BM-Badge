@@ -7,6 +7,7 @@
 #include "mage_hex.h"
 
 #define SCRIPT_NAME_LENGTH 32
+#define COMMAND_STATES_COUNT 5
 
 //these are the types of scripts that can be on a map or entity:
 typedef enum : uint8_t {
@@ -81,7 +82,19 @@ class MageScriptControl
 		//the new map will be loaded at the beginning of the next tick
 		int32_t mapLoadId;
 
+		//these functions return the specified MageScriptState struct:
+		resumeStatesStruct resumeStates;
+		MageScriptState* commandStates [COMMAND_STATES_COUNT] = {
+			&resumeStates.commandLook,
+			&resumeStates.commandGo,
+			&resumeStates.commandGet,
+			&resumeStates.commandDrop,
+			&resumeStates.commandUse,
+		};
+
 		MageScriptControl();
+
+		void initializeScriptsOnMapLoad();
 
 		//returns size in RAM of all reserved class variables.
 		uint32_t size() const;
@@ -94,9 +107,6 @@ class MageScriptControl
 			uint16_t mapLocalScriptId,
 			bool scriptIsRunning
 		);
-
-		//these functions return the specified MageScriptState struct:
-		resumeStatesStruct resumeStates;
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);
 
