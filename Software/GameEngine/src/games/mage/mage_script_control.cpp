@@ -15,6 +15,58 @@ extern MageCommandControl *MageCommand;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
 
+MageScriptControl::MageScriptControl()
+{
+	mapLocalJumpScript = MAGE_NO_SCRIPT;
+
+	blockingDelayTime = 0;
+
+	mapLoadId = MAGE_NO_MAP;
+
+	//these should never be used in their initialized states, they will always be set when calling processScript()
+	currentEntityId = MAGE_MAP_ENTITY;
+}
+
+void MageScriptControl::initializeScriptsOnMapLoad()
+{
+	MageMap* map = &MageGame->Map();
+	//initialize the script ResumeStateStructs:
+	MageScript->initScriptState(
+		&MageScript->resumeStates.mapLoad,
+		map->onLoad,
+		true
+	);
+	MageScript->initScriptState(
+		&MageScript->resumeStates.mapTick,
+		map->onTick,
+		false
+	);
+	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
+	{
+		MageScript->initScriptState(
+			commandStates[i],
+			0,
+			false
+		);
+	}
+	for (uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++) {
+		//Initialize the script ResumeStateStructs to default values for this map.
+		MageEntity *entity = &MageGame->entities[i];
+		MageScript->initScriptState(
+			MageScript->getEntityTickResumeState(i),
+			entity->onTickScriptId,
+			false
+		);
+		MageScript->initScriptState(
+			MageScript->getEntityInteractResumeState(i),
+			entity->onInteractScriptId,
+			false
+		);
+	}
+	MageCommand->reset();
+	MageScript->handleMapOnLoadScript(true);
+}
+
 void MageScriptControl::initScriptState(
 	MageScriptState * resumeStateStruct,
 	uint16_t mapLocalScriptId,
@@ -234,27 +286,6 @@ void MageScriptControl::setEntityScript(
 	}
 }
 
-MageScriptControl::MageScriptControl()
-{
-	mapLocalJumpScript = MAGE_NO_SCRIPT;
-
-	blockingDelayTime = 0;
-
-	mapLoadId = MAGE_NO_MAP;
-
-	//these should never be used in their initialized states, they will always be set when calling processScript()
-	currentEntityId = MAGE_MAP_ENTITY;
-
-	initScriptState(&resumeStates.mapLoad, MAGE_NO_SCRIPT, false);
-	initScriptState(&resumeStates.mapTick, MAGE_NO_SCRIPT, false);
-
-	for(uint16_t e=0; e<MAX_ENTITIES_PER_MAP; e++)
-	{
-		initScriptState(&entityInteractResumeStates[e], MAGE_NO_SCRIPT, false);
-		initScriptState(&entityTickResumeStates[e], MAGE_NO_SCRIPT, false);
-	}
-}
-
 uint32_t MageScriptControl::size() const
 {
 	uint32_t size =
@@ -446,15 +477,7 @@ void MageScriptControl::tickScripts()
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	handleMapOnTickScript();
 	if(mapLoadId != MAGE_NO_MAP) { return; }
-	//the command scripts states need to be checked every tick
-	MageScriptState* commandStates [] = {
-		&resumeStates.commandLook,
-		&resumeStates.commandGo,
-		&resumeStates.commandGet,
-		&resumeStates.commandDrop,
-		&resumeStates.commandUse,
-	};
-	for(uint8_t i = 0; i < 5; i++)
+	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
 	{
 		handleCommandScript(commandStates[i]);
 		if(mapLoadId != MAGE_NO_MAP) { return; }

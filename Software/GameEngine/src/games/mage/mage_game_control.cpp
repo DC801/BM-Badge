@@ -564,37 +564,6 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	}
 }
 
-void MageGameControl::initializeScriptsOnMapLoad()
-{
-	//initialize the script ResumeStateStructs:
-	MageScript->initScriptState(
-		&MageScript->resumeStates.mapLoad,
-		map.onLoad,
-		true
-	);
-	MageScript->initScriptState(
-		&MageScript->resumeStates.mapTick,
-		map.onLook,
-		false
-	);
-	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
-		//Initialize the script ResumeStateStructs to default values for this map.
-		MageEntity *entity = &entities[i];
-		MageScript->initScriptState(
-			MageScript->getEntityTickResumeState(i),
-			entity->onTickScriptId,
-			false
-		);
-		MageScript->initScriptState(
-			MageScript->getEntityInteractResumeState(i),
-			entity->onInteractScriptId,
-			false
-		);
-	}
-	MageCommand->reset();
-	MageScript->handleMapOnLoadScript(true);
-}
-
 void MageGameControl::LoadMap(uint16_t index)
 {
 
@@ -614,7 +583,7 @@ void MageGameControl::LoadMap(uint16_t index)
 	copyNameToAndFromPlayerAndSave(false);
 
 	//logAllEntityScriptValues("InitScripts-Before");
-	initializeScriptsOnMapLoad();
+	MageScript->initializeScriptsOnMapLoad();
 	//logAllEntityScriptValues("InitScripts-After");
 
 	//close hex editor if open:
