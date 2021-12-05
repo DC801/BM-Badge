@@ -4,9 +4,16 @@ var serialDialogResponseTypeEnum = {
 	ENTER_STRING: 2
 };
 
+var emptyMap = { // global scope, mock being real map
+	name: 'GLOBAL',
+	scriptIndices: [],
+	scriptNameKeys: {},
+	layers: []
+}
+
 var serializeSerialDialog = function (
 	serialDialog,
-	map,
+	seriouslyDontUseThisMapBecauseEverythingInTheScopeOfThisFunctionShouldOperateGloballyAndNotMapLocally,
 	fileNameMap,
 	scenarioData,
 ) {
@@ -38,6 +45,9 @@ var serializeSerialDialog = function (
 			});
 			responseType = serialDialogResponseTypeEnum.ENTER_STRING;
 		}
+		if (responses.length > 255) {
+			throw new Error(`SerialDialog named "${serialDialog.name}" is malformed, it has too many options! It should have less than 265 options!!`);
+		}
 		var headerLength = getPaddedHeaderLength(
 			32 // char[32] name
 			+ 2 // uint16_t string_id
@@ -64,7 +74,7 @@ var serializeSerialDialog = function (
 		);
 		var stringId = serializeString(
 			serialDialog.messages.join('\n'),
-			{}, // global scope, no pass map
+			emptyMap,
 			fileNameMap,
 			scenarioData,
 		);
@@ -87,13 +97,13 @@ var serializeSerialDialog = function (
 		responses.forEach(function (response) {
 			var stringId = serializeString(
 				response.label,
-				{}, // global scope, no pass map
+				emptyMap,
 				fileNameMap,
 				scenarioData,
 			);
 			var encodedScript = handleScript(
 				response.script,
-				map,
+				emptyMap,
 				fileNameMap,
 				scenarioData
 			);

@@ -164,6 +164,7 @@ typedef struct{
 	bool scriptIsRunning;
 	//the script Id to resume - this is a mapLocalScriptId number value
 	uint16_t currentMapLocalScriptId;
+	uint16_t currentGlobalScriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
 	uint16_t actionOffset;
 	//the number of loops until the next action in the script is to run

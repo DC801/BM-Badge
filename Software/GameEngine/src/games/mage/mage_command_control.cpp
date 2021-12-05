@@ -150,29 +150,29 @@ void MageCommandControl::processCommandAsVerb(std::string input) {
 	else if(verb == "goat") {
 		commandResponseBuffer += (
 			"You have found a secret goat!\n"
-			"               ##### ####     \n"
-			"             ##   #  ##       \n"
-			"            #   (-)    #      \n"
-			"            #+       ######   \n"
-			" FEED ME -  #^             ## \n"
-			"             ###           #  \n"
-			"               #  #      # #  \n"
-			"               ##  ##  ##  #  \n"
-			"               ######  #####  \n"
+			"               ##### ####    \n"
+			"             ##   #  ##      \n"
+			"            #   (-)    #     \n"
+			"            #+       ######  \n"
+			" FEED ME -  #^             ##\n"
+			"             ###           # \n"
+			"               #  #      # # \n"
+			"               ##  ##  ##  # \n"
+			"               ######  ##### \n"
 		);
 	}
 	else if(input == "feed goat") {
 		commandResponseBuffer += (
 			"You have fed the secret goat!\n"
-			"               ##### ####     \n"
-			"             ##   #  ##       \n"
-			"            #   (-)    #      \n"
-			"            #+       ######   \n"
-			"   THANK -  #v             ## \n"
-			"             ###           #  \n"
-			"               #  #      # #  \n"
-			"               ##  ##  ##  #  \n"
-			"               ######  #####  \n"
+			"               ##### ####    \n"
+			"             ##   #  ##      \n"
+			"            #   (-)    #     \n"
+			"            #+       ######  \n"
+			"   THANK -  #v             ##\n"
+			"             ###           # \n"
+			"               #  #      # # \n"
+			"               ##  ##  ##  # \n"
+			"               ######  ##### \n"
 		);
 	}
 	// end SECRET_GOAT

@@ -18,6 +18,7 @@ extern FrameBuffer *mage_canvas;
 MageScriptControl::MageScriptControl()
 {
 	mapLocalJumpScript = MAGE_NO_SCRIPT;
+	globalJumpScript = MAGE_NO_SCRIPT;
 
 	blockingDelayTime = 0;
 
@@ -76,6 +77,7 @@ void MageScriptControl::initScriptState(
 	//set the values passed to the function first:
 	resumeStateStruct->scriptIsRunning = scriptIsRunning;
 	resumeStateStruct->currentMapLocalScriptId = mapLocalScriptId;
+	resumeStateStruct->currentGlobalScriptId = 0;
 	//then set default initializer values for the others:
 	//initial action for a new script is always 0:
 	resumeStateStruct->actionOffset = 0;
@@ -97,8 +99,10 @@ void MageScriptControl::processScript(
 	//All script processing from here relies solely on the state of the resumeStateStruct:
 	//Make sure you've got your script states correct in the resumeStateStruct before calling this function:
 	mapLocalJumpScript = resumeStateStruct->currentMapLocalScriptId;
-	while(mapLocalJumpScript != MAGE_NO_SCRIPT)
-	{
+	while(
+		(mapLocalJumpScript != MAGE_NO_SCRIPT)
+		|| (globalJumpScript != MAGE_NO_SCRIPT)
+	) {
 		processActionQueue(
 			resumeStateStruct,
 			scriptType
@@ -115,13 +119,22 @@ void MageScriptControl::processActionQueue(
 {
 	//reset jump script once processing begins
 	mapLocalJumpScript = MAGE_NO_SCRIPT;
+	globalJumpScript = MAGE_NO_SCRIPT;
+	uint32_t address = MageGame->getScriptAddressFromGlobalScriptId(0);
 
 	//get the memory address for the script:
-	uint32_t address = MageGame->getScriptAddressFromGlobalScriptId(
-		MageGame->Map().getGlobalScriptId(
-			resumeStateStruct->currentMapLocalScriptId
-		)
-	);
+	if (resumeStateStruct->currentMapLocalScriptId) {
+		address = MageGame->getScriptAddressFromGlobalScriptId(
+			MageGame->Map().getGlobalScriptId(
+				resumeStateStruct->currentMapLocalScriptId
+			)
+		);
+	}
+	if (resumeStateStruct->currentGlobalScriptId) {
+		address = MageGame->getScriptAddressFromGlobalScriptId(
+			resumeStateStruct->currentGlobalScriptId
+		);
+	}
 
 	//read the action count from ROM:
 	//skip the name of the script, we don't need it in ram at runtime:
@@ -178,6 +191,8 @@ void MageScriptControl::processActionQueue(
 			//how to complete its action and track how much time is left using the resumeStateStruct's values.
 			return;
 		}
+
+
 		//check to see if the action set a mapLocalJumpScript value
 		if(mapLocalJumpScript != MAGE_NO_SCRIPT){
 			//debug_print(
@@ -199,6 +214,24 @@ void MageScriptControl::processActionQueue(
 				mapLocalJumpScript,
 				true
 			);
+			return;
+		}
+		if(globalJumpScript != MAGE_NO_SCRIPT){
+			//debug_print(
+			//	"processActionQueue-globalJumpScript: %02d;\n"
+			//	"	currentEntityId: %02d;\n",
+			//	resumeStateStruct->actionOffset,
+			//	currentEntityId
+			//);
+			//If we have a new globalJumpScript, we want to re-init the resumeState
+			//to run the new globalJumpScript from the beginning:
+			//immediately end action processing and return if a globalJumpScript value was set:
+			initScriptState(
+				resumeStateStruct,
+				0,
+				true
+			);
+			resumeStateStruct->currentGlobalScriptId = globalJumpScript;
 			return;
 		}
 		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t

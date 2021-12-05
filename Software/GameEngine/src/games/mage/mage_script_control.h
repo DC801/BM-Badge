@@ -68,6 +68,8 @@ class MageScriptControl
 		//it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
 		int32_t mapLocalJumpScript;
 
+		int32_t globalJumpScript;
+
 		//this is a variable that tracks which entity called an action.
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
 		//most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.

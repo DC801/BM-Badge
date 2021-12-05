@@ -61,7 +61,43 @@
 			{
 				"label": "Give the Goat a Sugar Cube",
 				"script": "response-give_goat_sugar_cube"
+			},
+			{
+				"label": "Let's branch into another serial dialog",
+				"script": "map-action_testing-go_sphinx-success"
+			},
+			{
+				"label": "Let's test some RUN_SCRIPT",
+				"script": "map-action_testing-cli-run_script"
+			},
+			{
+				"label": "Let's test some CHECK_SAVE_FLAG",
+				"script": "map-action_testing-cli-check_save_flag"
+			},
+			{
+				"label": "Let's test some SET_SAVE_FLAG",
+				"script": "map-action_testing-cli-set_save_flag"
+			},
+			{
+				"label": "Let's test some CHECK_VARIABLE",
+				"script": "map-action_testing-cli-check_variable"
+			},
+			{
+				"label": "Let's test some MUTATE_VARIABLE",
+				"script": "map-action_testing-cli-mutate_variable"
 			}
+		]
+	},
+	"serial_dialog-map-action_testing-cli-fail": {
+		"messages": [
+			"Fail branch!\n",
+			"cli-variable: $cli-variable$"
+		]
+	},
+	"serial_dialog-map-action_testing-cli-success": {
+		"messages": [
+			"Success branch!",
+			"cli-variable: $cli-variable$"
 		]
 	},
 	"serial_dialog-map-action_testing-go_sphinx": {

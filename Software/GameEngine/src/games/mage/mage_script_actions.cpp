@@ -2563,12 +2563,11 @@ void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStru
 		if(MageCommand->globalJumpScriptId != MAGE_NO_SCRIPT) {
 			// OH NO!!!!
 			// SERIAL DIALOGS ONLY HAVE A GLOBAL JUMP SCRIPT ID!!
-			// globalJumpScript = MageCommand->globalJumpScriptId;
-			debug_print(
-				"I DON'T KNOW WHAT TO DO WITH A GLOBAL JUMP SCRIPT ID!!!\n"
-				"globalJumpScript: %d\n",
-				MageCommand->globalJumpScriptId
-			);
+			//debug_print(
+			//	"globalJumpScript: %d\n",
+			//	MageCommand->globalJumpScriptId
+			//);
+			MageScript->globalJumpScript = MageCommand->globalJumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
