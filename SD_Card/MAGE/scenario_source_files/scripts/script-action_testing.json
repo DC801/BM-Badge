@@ -74,6 +74,65 @@
 			"map": "warp_zone"
 		}
 	],
+	"map-action_testing-cli-run_script": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "map-action_testing-cli-success"
+		}
+	],
+	"map-action_testing-cli-check_save_flag": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-success": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog": "serial_dialog-map-action_testing-cli-success"
+		}
+	],
+	"map-action_testing-cli-set_save_flag": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "cli-flag",
+			"bool_value": true
+		}
+	],
+	"map-action_testing-cli-check_variable": [
+		{
+			"action": "CHECK_VARIABLE",
+			"variable": "cli-variable",
+			"value": 5,
+			"comparison": ">",
+			"expected_bool": true,
+			"success_script": "map-action_testing-cli-success"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "map-action_testing-cli-fail"
+		}
+	],
+	"map-action_testing-cli-mutate_variable": [
+		{
+			"action": "MUTATE_VARIABLE",
+			"variable": "cli-variable",
+			"operation": "ADD",
+			"value": 5
+		}
+	],
 	"mage01-check_entity_name": [
 		{
 			"doc": "Mage 01 tests CHECK_ENTITY_NAME and then SET_ENTITY_NAME after a successful check to reset itself.",

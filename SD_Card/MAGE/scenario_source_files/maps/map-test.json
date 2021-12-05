@@ -1,11 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":16,
  "infinite":false,
  "layers":[
@@ -947,7 +940,7 @@
                         {
                          "name":"is_debug",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"on_interact",
@@ -975,14 +968,14 @@
          "name":"on_load",
          "type":"string",
          "value":"my_first_script"
-        },
+        }, 
         {
          "name":"on_tick",
          "type":"string",
          "value":""
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -1099,6 +1092,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.4,
+ "version":"1.6",
  "width":16
 }
