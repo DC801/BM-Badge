@@ -1773,10 +1773,10 @@ std::string MageGameControl::getString(
 	volatile size_t variableEndPosition = 0;
 	volatile size_t replaceCount = 0;
 	while ((variableStartPosition = romString.find("%%", variableStartPosition)) != std::string::npos) {
-		outputString.append(romString.substr(
+		outputString += romString.substr(
 			cursor,
 			(variableStartPosition - cursor)
-		));
+		);
 		variableEndPosition = romString.find("%%", variableStartPosition + 1) + 1;
 		std::string variableHolder = romString.substr(
 			variableStartPosition + 2,
@@ -1789,7 +1789,7 @@ std::string MageGameControl::getString(
 		);
 		if(entityIndex != NO_PLAYER) {
 			std::string entityName = getEntityNameStringById(entityIndex);
-			outputString.append(entityName.c_str());
+			outputString += entityName.c_str();
 		} else {
 			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
 			sprintf(
@@ -1797,23 +1797,26 @@ std::string MageGameControl::getString(
 				"MISSING: %d",
 				parsedEntityIndex
 			);
-			outputString.append(missingError);
+			outputString += missingError;
 		}
 		variableStartPosition = variableEndPosition + 1;
 		cursor = variableStartPosition;
 		replaceCount++;
 	}
 	if (replaceCount) {
-		outputString.append(romString.substr(cursor, romString.length() - 1));
+		outputString += romString.substr(cursor, romString.length() - 1);
+		romString = outputString;
+		outputString = "";
 	}
 	cursor = 0;
 	variableStartPosition = 0;
 	variableEndPosition = 0;
+	replaceCount = 0;
 	while ((variableStartPosition = romString.find("$$", variableStartPosition)) != std::string::npos) {
-		outputString.append(romString.substr(
+		outputString +=romString.substr(
 			cursor,
 			(variableStartPosition - cursor)
-		));
+		);
 		variableEndPosition = romString.find("$$", variableStartPosition + 1) + 1;
 		std::string variableHolder = romString.substr(
 			variableStartPosition + 2,
@@ -1822,20 +1825,20 @@ std::string MageGameControl::getString(
 		int parsedVariableIndex = std::stoi(variableHolder);
 		uint16_t variableValue = currentSave.scriptVariables[parsedVariableIndex];
 		std::string valueString = std::to_string(variableValue);
-		outputString.append(valueString.c_str());
+		outputString += valueString.c_str();
 		variableStartPosition = variableEndPosition + 1;
 		cursor = variableStartPosition;
 		replaceCount++;
 	}
 	if (replaceCount) {
-		outputString.append(romString.substr(cursor, romString.length() - 1));
+		outputString += romString.substr(cursor, romString.length() - 1);
+		romString = outputString;
+		outputString = "";
 	}
 	// why wrap it in another string at the end?
 	// Because somehow, extra null bytes were being explicitly stored in the return value's length,
 	// and this should crop them out from the return value
-	return std::string(
-		(replaceCount ? outputString : romString).c_str()
-	);
+	return std::string(romString.c_str());
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {

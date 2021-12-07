@@ -97,7 +97,12 @@
 	"serial_dialog-map-action_testing-cli-success": {
 		"messages": [
 			"Success branch!",
-			"cli-variable: $cli-variable$"
+			"PLAYER: %PLAYER%",
+			"cli-variable: $cli-variable$",
+			"'Mage 01': %Mage 01%",
+			"story-flag-count: $story-flag-count$",
+			"SELF: %SELF%",
+			"MAP: %MAP%"
 		]
 	},
 	"serial_dialog-map-action_testing-go_sphinx": {
