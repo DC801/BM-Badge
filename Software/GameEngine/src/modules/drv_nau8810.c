@@ -133,7 +133,7 @@ void nau8810_twi_init(void)
 //
 //	if (NRF_SUCCESS == nrf_drv_twi_init(&m_twi_master, &config, NULL, NULL))
 //	{
-//		nrf_drv_twi_enable(&m_twi_mast	er);
+//		nrf_drv_twi_enable(&m_twi_master);
 //	}
 	uint32_t err_code;
 	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
@@ -151,14 +151,12 @@ void nau8810_twi_init(void)
 	uint8_t device_id[20];
 	for(int i=0; i<20; i++) {
 		device_id[i] = 0;
-	}	nrfx_i2s_buffers_t buffers = {
-		.p_rx_buffer = device_id, 
-		.p_tx_buffer = 0
-	};
+	}
+
 	//Read from I2S I2C a device id:
 	i2si2cMasterRead(NAU8810_ADDRESS, &device_id, 20);
 	for(int i=0; i<20; i++){
-		if(((uint8_t *)device_id)[i]){
+		if(device_id[i]){
 			ENGINE_PANIC("Device ID: %d, i=%d", device_id[i], i);
 		}
 	}
