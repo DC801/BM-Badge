@@ -72,7 +72,7 @@ K						= (2^24)(0.144)
 #ifdef DC801_EMBEDDED
 
 
-#define NAU8810_ADDRESS		0x34
+#define NAU8810_ADDRESS		0x1a
 
 #define NAU8810_PLLN		6
 #define NAU8810_PLLK0		0x0009	// 9-bit values
@@ -91,6 +91,7 @@ K						= (2^24)(0.144)
 
 //static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
+#if 0
 static void i2sDataHandler(uint32_t const * p_data_received,
 						   uint32_t       * p_data_to_send,
 						   uint16_t         number_of_words)
@@ -102,6 +103,19 @@ static void i2sDataHandler(uint32_t const * p_data_received,
 	if (p_data_to_send != NULL)
 	{
 		// Provide the data to be sent.
+	}
+}
+#endif
+static void i2sDataHandler(nrfx_i2s_buffers_t const * p_released,
+                           uint32_t status)
+{
+	if(p_released->p_rx_buffer)
+	{
+		// Process received data
+	}
+	if(p_released->p_tx_buffer)
+	{
+		// Process sent data
 	}
 }
 
@@ -119,7 +133,7 @@ void nau8810_twi_init(void)
 //
 //	if (NRF_SUCCESS == nrf_drv_twi_init(&m_twi_master, &config, NULL, NULL))
 //	{
-//		nrf_drv_twi_enable(&m_twi_master);
+//		nrf_drv_twi_enable(&m_twi_mast	er);
 //	}
 	uint32_t err_code;
 	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
@@ -137,12 +151,15 @@ void nau8810_twi_init(void)
 	uint8_t device_id[20];
 	for(int i=0; i<20; i++) {
 		device_id[i] = 0;
-	}
+	}	nrfx_i2s_buffers_t buffers = {
+		.p_rx_buffer = device_id, 
+		.p_tx_buffer = 0
+	};
 	//Read from I2S I2C a device id:
 	i2si2cMasterRead(NAU8810_ADDRESS, &device_id, 20);
 	for(int i=0; i<20; i++){
-		if(device_id[i]){
-			ENGINE_PANIC("Device ID: %d", device_id);
+		if(((uint8_t *)device_id)[i]){
+			ENGINE_PANIC("Device ID: %d, i=%d", device_id[i], i);
 		}
 	}
 }
