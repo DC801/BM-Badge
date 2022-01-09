@@ -16,11 +16,12 @@ void i2cMasterTransmit(uint16_t addr, uint8_t const * pdata, size_t size);
 void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size);
 void i2si2cMasterTransmit(uint16_t addr, uint8_t const * pdata, size_t size);
 void i2si2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size);
+void i2si2cMasterTransfer(const nrf_drv_twi_xfer_desc_t *desc, uint32_t flags);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif //DC801_EMBEDDED
 
 #endif //I2C_H

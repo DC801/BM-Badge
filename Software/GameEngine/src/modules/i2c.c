@@ -76,3 +76,9 @@ void i2si2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size)
 	//badge_mutex_unlock(&i2c_mutex);
 #endif
 }
+
+#ifdef DC801_EMBEDDED
+void i2si2cMasterTransfer(const nrf_drv_twi_xfer_desc_t *desc, uint32_t flags) {
+    nrf_drv_twi_xfer(&m_i2s_twi_master, desc, flags);
+}
+#endif

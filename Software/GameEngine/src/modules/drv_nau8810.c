@@ -1,8 +1,14 @@
 #include <common.h>
-#include <nrfx_i2s.h>
-#include <nrf_drv_i2s.h>
 #include "drv_nau8810.h"
 #include "EnginePanic.h"
+
+#ifdef DC801_EMBEDDED
+#include <nrfx_i2s.h>
+#include <nrf_drv_i2s.h>
+#include <math.h>
+
+#endif
+
 
 /*
 
@@ -89,6 +95,8 @@ K						= (2^24)(0.144)
 #define I2S_MCKSETUP_M		NRF_I2S_MCK_32MDIV8				// 16MHz Master clock
 #define I2S_RATIO_M			NRF_I2S_RATIO_128X				// 31.25kHz LRCLK
 
+#define DMA_NUMBER_OF_WORDS 256
+static uint32_t dma_data[DMA_NUMBER_OF_WORDS];
 //static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
 #if 0
@@ -106,9 +114,15 @@ static void i2sDataHandler(uint32_t const * p_data_received,
 	}
 }
 #endif
-static void i2sDataHandler(nrfx_i2s_buffers_t const * p_released,
+
+void nau8810_next(const uint32_t *data);
+struct __nau8810_state nau8810_state = {
+	.ctr = 1
+};
+static void i2sDataHandler(nrf_drv_i2s_buffers_t const * p_released,
                            uint32_t status)
 {
+	// if(status != NRF_SUCCESS) ENGINE_PANIC("AHHHHh");
 	if(p_released->p_rx_buffer)
 	{
 		// Process received data
@@ -116,9 +130,20 @@ static void i2sDataHandler(nrfx_i2s_buffers_t const * p_released,
 	if(p_released->p_tx_buffer)
 	{
 		// Process sent data
+
+	}
+
+	if(status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED)
+	{
+		nau8810_state.ctr += 1;
+		float wobble = (sinf(6.28f * nau8810_state.ctr / 10000) + 1.0f) * 200.0f;
+		float freq = (6.28f / DMA_NUMBER_OF_WORDS / 2) * wobble;
+		for(int i = 0; i < DMA_NUMBER_OF_WORDS * 2; i++) {
+			((uint16_t *)dma_data)[i] = (uint16_t)(sinf(freq * i) * 0x7fff + 0x8000);
+		}
+		nau8810_next(dma_data);
 	}
 }
-
 
 void nau8810_twi_init(void)
 {
@@ -135,6 +160,7 @@ void nau8810_twi_init(void)
 //	{
 //		nrf_drv_twi_enable(&m_twi_master);
 //	}
+#if 0
 	uint32_t err_code;
 	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
 	config.mck_setup = NRF_I2S_MCK_32MDIV21;
@@ -145,6 +171,7 @@ void nau8810_twi_init(void)
 		// Initialization failed. Take recovery action.
 		ENGINE_PANIC("I2S Init Failed");
 	}
+#endif
 
 	//TODO: Figure out how to send to and read from the chip over its i2c interface
 	//init NAU8810 Via TWI:
@@ -154,7 +181,7 @@ void nau8810_twi_init(void)
 	}
 
 	//Read from I2S I2C a device id:
-	i2si2cMasterRead(NAU8810_ADDRESS, &device_id, 20);
+	i2si2cMasterRead(NAU8810_ADDRESS, device_id, 20);
 	for(int i=0; i<20; i++){
 		if(device_id[i]){
 			ENGINE_PANIC("Device ID: %d, i=%d", device_id[i], i);
@@ -162,16 +189,17 @@ void nau8810_twi_init(void)
 	}
 }
 
-/*
 void nau8810_twi_write(uint8_t address, uint16_t value)
 {
+	#ifdef DC801_EMBEDDED
 	uint8_t buffer[] =
 	{
 		(address << 1) | (uint8_t)((value >> 7) & 0x01),
 		(uint8_t)value
 	};
 
-	nrf_drv_twi_tx(&m_twi_master, NAU8810_ADDRESS, buffer, sizeof(buffer), false);
+	i2si2cMasterTransmit(NAU8810_ADDRESS, buffer, sizeof(buffer));
+	#endif
 }
 
 uint16_t nau8810_twi_read(uint8_t address)
@@ -195,43 +223,35 @@ uint16_t nau8810_twi_read(uint8_t address)
 		.p_secondary_buf = p
 	};
 
-	nrf_drv_twi_xfer(&m_twi_master, &desc, 0);
+	i2si2cMasterTransfer(&desc, 0);
 
 	return retval;
 }
-*/
 
-/*
+
 void nau8810_i2s_init(nrfx_i2s_data_handler_t handler)
 {
-	const nrfx_i2s_config_t config =
+	#ifdef DC801_EMBEDDED
+	ret_code_t err_code;
+	nrf_drv_i2s_config_t config = NRFX_I2S_DEFAULT_CONFIG;
+	config.mck_setup = NRF_I2S_MCK_32MDIV8;
+	config.ratio     = NRF_I2S_RATIO_256X;
+	config.channels = I2S_CONFIG_CHANNELS_CHANNELS_LEFT;
+	err_code = nrf_drv_i2s_init(&config, handler);
+	if (err_code != NRF_SUCCESS)
 	{
-			.sck_pin		= I2S_SCK_M,
-			.lrck_pin		= I2S_LRCK_M,
-			.mck_pin		= I2S_MCK_M,
-			.sdout_pin		= I2S_SDOUT_M,
-			.sdin_pin		= I2S_SDIN_M,
-			.irq_priority	= I2S_PRIORITY_M,
-			.mode			= I2S_MODE_M,
-			.format			= I2S_FORMAT_M,
-			.alignment		= I2S_ALIGN_M,
-			.sample_width	= I2S_WIDTH_M,
-			.channels		= I2S_CHANNEL_M,
-			.mck_setup		= I2S_MCKSETUP_M,
-			.ratio			= I2S_RATIO_M
-	};
-
-	if (NRFX_SUCCESS != nrfx_i2s_init(&config, handler))
-	{
-		NRF_LOG_ERROR("Failed to initialize the I2S driver\n");
+		// Initialization failed. Take recovery action.
+		ENGINE_PANIC("I2S Init Failed");
 	}
+	#endif
 }
-*/
 
+void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_init()
 {
+	// TWI already initialized in i2c.c at twi_master_init
     // Initialize NAU8810 I2C instance
-    nau8810_twi_init();
+    // nau8810_twi_init();
 
     /*
 
@@ -257,48 +277,61 @@ void nau8810_init()
 
     */
 
-	/*
     // Enable 80k reference impedance, i/o buffers, and analog amplifier bias control
-    nau8810_twi_write(NAU8810_REG_POWER1, NAU8810_REFIMP_80K | NAU8810_IOBUF_EN | NAU8810_ABIAS_EN);
+    nau8810_twi_write(NAU8810_REG_POWER1, (
+		NAU8810_REFIMP_80K 
+		| NAU8810_IOBUF_EN 
+		| NAU8810_ABIAS_EN
+	));
     // Set internal clock source to bypass PLL for receiver mode and MCKSEL to div2
-    nau8810_twi_write(NAU8810_REG_CLOCK, NAU8810_MCKDIV_2);
+    nau8810_twi_write(NAU8810_REG_CLOCK, NAU8810_CLKIO_MASTER);
     // Enable DAC output, speaker mixer, speaker drivers, and leave mic disabled
-    nau8810_twi_write(NAU8810_REG_POWER3, NAU8810_DAC_EN | NAU8810_SPKMX_EN | NAU8810_PSPK_EN | NAU8810_NSPK_EN);
+    nau8810_twi_write(NAU8810_REG_POWER3, (
+		NAU8810_DAC_EN 
+		| NAU8810_SPKMX_EN 
+		| NAU8810_PSPK_EN 
+		| NAU8810_NSPK_EN
+	));
     // Set sample rate filter to 32kHz
     nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_32K);
 
-//    // Initialize NAU8810 I2S instance
-//    nau8810_i2s_init(handler);
-	 */
-}
+	// Set speaker gain
+	// nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x3f);
 
-/*
+
+    // Initialize NAU8810 I2S instance
+    nau8810_i2s_init(i2sDataHandler);
+
+    // Set PLL?
+	// Play the forbidden note
+	nau8810_start(dma_data, DMA_NUMBER_OF_WORDS);
+}
 
 void nau8810_start(const uint32_t *data, uint16_t length)
 {
-	nrfx_i2s_buffers_t buffers =
+	nrf_drv_i2s_buffers_t buffers =
 	{
 		.p_rx_buffer = NULL,
 		.p_tx_buffer = data
 	};
-
-	nrfx_i2s_start(&buffers, length, 0);
+	ret_code_t err = nrf_drv_i2s_start(&buffers, length, 0);
+	if(err != NRF_SUCCESS) ENGINE_PANIC("Failed to start I2S");
 }
 
 void nau8810_next(const uint32_t *data)
 {
-	nrfx_i2s_buffers_t buffers =
+	nrf_drv_i2s_buffers_t buffers =
 	{
 		.p_rx_buffer = NULL,
 		.p_tx_buffer = data
 	};
 
-	nrfx_i2s_next_buffers_set(&buffers);
+	ret_code_t err = nrf_drv_i2s_next_buffers_set(&buffers);
+	if(err != NRF_SUCCESS) ENGINE_PANIC("Failed to set next buffers");
 }
 
 void nau8810_stop(void)
 {
-	nrfx_i2s_stop();
+	nrf_drv_i2s_stop();
 }
-*/
 #endif

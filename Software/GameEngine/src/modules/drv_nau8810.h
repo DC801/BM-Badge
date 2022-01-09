@@ -286,6 +286,10 @@ extern "C" {
 
 void nau8810_init();
 
+struct __nau8810_state {
+	uint16_t ctr;
+};
+
 /*
 void nau8810_start(const uint32_t *data, uint16_t length);
 void nau8810_next(const uint32_t *data);

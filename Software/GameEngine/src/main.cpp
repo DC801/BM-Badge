@@ -56,7 +56,9 @@ void sig_handler(int signo)
 static void speaker_init(void){
 	// Setup the nau8810 later -Tim
 	//nrf_gpio_cfg_output(SPEAKER);
+	#if DC801_EMBEDDED
     nau8810_init();
+	#endif
 }
 
 /**
