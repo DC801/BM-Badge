@@ -96,7 +96,9 @@ K						= (2^24)(0.144)
 #define I2S_RATIO_M			NRF_I2S_RATIO_128X				// 31.25kHz LRCLK
 
 #define DMA_NUMBER_OF_WORDS 256
-static uint32_t dma_data[DMA_NUMBER_OF_WORDS];
+#define DMA_NUMBER_OF_BUFFERS 4
+static int curr_buffer = 0;
+static uint32_t dma_data[DMA_NUMBER_OF_BUFFERS][DMA_NUMBER_OF_WORDS];
 //static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2S_TWI_INST);
 
 #if 0
@@ -135,13 +137,26 @@ static void i2sDataHandler(nrf_drv_i2s_buffers_t const * p_released,
 
 	if(status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED)
 	{
+		/*
 		nau8810_state.ctr += 1;
 		float wobble = (sinf(6.28f * nau8810_state.ctr / 10000) + 1.0f) * 200.0f;
 		float freq = (6.28f / DMA_NUMBER_OF_WORDS / 2) * wobble;
 		for(int i = 0; i < DMA_NUMBER_OF_WORDS * 2; i++) {
 			((uint16_t *)dma_data)[i] = (uint16_t)(sinf(freq * i) * 0x7fff + 0x8000);
 		}
-		nau8810_next(dma_data);
+		*/
+	    memset(dma_data[curr_buffer], 0, sizeof(dma_data[curr_buffer]));
+		uint16_t *buf = (uint16_t *)dma_data[curr_buffer];
+		int num_of_halfwords = DMA_NUMBER_OF_WORDS * 2;
+		int ctr = 0;
+		for(int i = 0; i < num_of_halfwords; i++) {
+			buf[i] = (ctr += 0xff);
+		}
+		nau8810_next(dma_data[curr_buffer]);
+		curr_buffer += 1;
+		if(curr_buffer >= DMA_NUMBER_OF_BUFFERS) {
+			curr_buffer = 0;
+		}
 	}
 }
 
@@ -296,7 +311,7 @@ void nau8810_init()
     nau8810_twi_write(NAU8810_REG_SMPLR, NAU8810_SMPLR_32K);
 
 	// Set speaker gain
-	// nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x3f);
+	nau8810_twi_write(NAU8810_REG_SPKGAIN, 0x3f);
 
 
     // Initialize NAU8810 I2S instance
@@ -304,7 +319,7 @@ void nau8810_init()
 
     // Set PLL?
 	// Play the forbidden note
-	nau8810_start(dma_data, DMA_NUMBER_OF_WORDS);
+	nau8810_start(dma_data[curr_buffer], DMA_NUMBER_OF_WORDS);
 }
 
 void nau8810_start(const uint32_t *data, uint16_t length)

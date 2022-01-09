@@ -405,6 +405,11 @@
 - [x] Get ROM chip read/write working reliably
 - [x] Verify function of all desktop testing build features are working correctly on badge hardware
 - [ ] Fix audio driver and initialize communication with audio chip
+	- [x] Initialize and send audio data to chip at all
+	- [ ] Send prerecorded audio to chip
+		- [ ] Add audio data to encoder
+		- [ ] Write interface to read audio data from ROM
+		- [ ] Figure out how to use CMixer
 
 # MAJOR GAMEPLAY AND QUEST SPOILERS BELOW!
 
