@@ -162,15 +162,19 @@ typedef enum : uint8_t{
 typedef struct{
 	//indicated whether or not an active script is running on this MageScriptState
 	bool scriptIsRunning;
-	//the script Id to resume - this is a mapLocalScriptId number value
-	uint16_t currentMapLocalScriptId;
-	uint16_t currentGlobalScriptId;
+	bool isGlobalExecutionScope;
+	//the script Id to resume, scope determined by isGlobalExecutionScope
+	// - if false, should be treated as mapLocalScriptId
+	// - if true, should be treated as globalScriptId
+	uint16_t currentScriptId;
 	//the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
 	uint16_t actionOffset;
 	//the number of loops until the next action in the script is to run
 	uint16_t loopsToNextAction;
 	//the total number of loops from the start of the action until the next action
 	uint16_t totalLoopsToNextAction;
+
+	//the below should probably be factored out into another struct at some point
 	//used to store state various geometry things
 	Point pointA;
 	Point pointB;

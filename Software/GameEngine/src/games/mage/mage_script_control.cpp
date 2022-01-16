@@ -1,7 +1,6 @@
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 #include "EngineROM.h"
-#include "EnginePanic.h"
 #include "EngineInput.h"
 #include "mage_script_actions.h"
 #include "mage_command_control.h"
@@ -10,15 +9,13 @@
 extern MageGameControl *MageGame;
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
-extern MageScriptControl *MageScript;
 extern MageCommandControl *MageCommand;
 extern MageEntity *hackableDataAddress;
 extern FrameBuffer *mage_canvas;
 
 MageScriptControl::MageScriptControl()
 {
-	mapLocalJumpScript = MAGE_NO_SCRIPT;
-	globalJumpScript = MAGE_NO_SCRIPT;
+	jumpScriptId = MAGE_NO_SCRIPT;
 
 	blockingDelayTime = 0;
 
@@ -32,19 +29,19 @@ void MageScriptControl::initializeScriptsOnMapLoad()
 {
 	MageMap* map = &MageGame->Map();
 	//initialize the script ResumeStateStructs:
-	MageScript->initScriptState(
-		&MageScript->resumeStates.mapLoad,
+	initScriptState(
+		&resumeStates.mapLoad,
 		map->onLoad,
 		true
 	);
-	MageScript->initScriptState(
-		&MageScript->resumeStates.mapTick,
+	initScriptState(
+		&resumeStates.mapTick,
 		map->onTick,
 		false
 	);
 	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
 	{
-		MageScript->initScriptState(
+		initScriptState(
 			commandStates[i],
 			0,
 			false
@@ -53,31 +50,32 @@ void MageScriptControl::initializeScriptsOnMapLoad()
 	for (uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
 		MageEntity *entity = &MageGame->entities[i];
-		MageScript->initScriptState(
-			MageScript->getEntityTickResumeState(i),
+		initScriptState(
+			getEntityTickResumeState(i),
 			entity->onTickScriptId,
 			false
 		);
-		MageScript->initScriptState(
-			MageScript->getEntityInteractResumeState(i),
+		initScriptState(
+			getEntityInteractResumeState(i),
 			entity->onInteractScriptId,
 			false
 		);
 	}
 	MageCommand->reset();
-	MageScript->handleMapOnLoadScript(true);
+	handleMapOnLoadScript(true);
 }
 
 void MageScriptControl::initScriptState(
 	MageScriptState * resumeStateStruct,
-	uint16_t mapLocalScriptId,
-	bool scriptIsRunning
+	uint16_t scriptId,
+	bool scriptIsRunning,
+	bool isGlobalExecutionScope
 )
 {
 	//set the values passed to the function first:
 	resumeStateStruct->scriptIsRunning = scriptIsRunning;
-	resumeStateStruct->currentMapLocalScriptId = mapLocalScriptId;
-	resumeStateStruct->currentGlobalScriptId = 0;
+	resumeStateStruct->isGlobalExecutionScope = isGlobalExecutionScope;
+	resumeStateStruct->currentScriptId = scriptId;
 	//then set default initializer values for the others:
 	//initial action for a new script is always 0:
 	resumeStateStruct->actionOffset = 0;
@@ -98,11 +96,8 @@ void MageScriptControl::processScript(
 	//set the current script type to the passed value.
 	//All script processing from here relies solely on the state of the resumeStateStruct:
 	//Make sure you've got your script states correct in the resumeStateStruct before calling this function:
-	mapLocalJumpScript = resumeStateStruct->currentMapLocalScriptId;
-	while(
-		(mapLocalJumpScript != MAGE_NO_SCRIPT)
-		|| (globalJumpScript != MAGE_NO_SCRIPT)
-	) {
+	jumpScriptId = resumeStateStruct->currentScriptId;
+	while(jumpScriptId != MAGE_NO_SCRIPT) {
 		processActionQueue(
 			resumeStateStruct,
 			scriptType
@@ -118,21 +113,19 @@ void MageScriptControl::processActionQueue(
 )
 {
 	//reset jump script once processing begins
-	mapLocalJumpScript = MAGE_NO_SCRIPT;
-	globalJumpScript = MAGE_NO_SCRIPT;
+	jumpScriptId = MAGE_NO_SCRIPT;
 	uint32_t address = MageGame->getScriptAddressFromGlobalScriptId(0);
 
 	//get the memory address for the script:
-	if (resumeStateStruct->currentMapLocalScriptId) {
+	if (!resumeStateStruct->isGlobalExecutionScope) {
 		address = MageGame->getScriptAddressFromGlobalScriptId(
 			MageGame->Map().getGlobalScriptId(
-				resumeStateStruct->currentMapLocalScriptId
+				resumeStateStruct->currentScriptId
 			)
 		);
-	}
-	if (resumeStateStruct->currentGlobalScriptId) {
+	} else {
 		address = MageGame->getScriptAddressFromGlobalScriptId(
-			resumeStateStruct->currentGlobalScriptId
+			resumeStateStruct->currentScriptId
 		);
 	}
 
@@ -193,52 +186,58 @@ void MageScriptControl::processActionQueue(
 		}
 
 
-		//check to see if the action set a mapLocalJumpScript value
-		if(mapLocalJumpScript != MAGE_NO_SCRIPT){
+		//check to see if the action set a jumpScriptId value
+		if(
+			jumpScriptId != MAGE_NO_SCRIPT
+			&& !resumeStateStruct->isGlobalExecutionScope
+		){
 			//debug_print(
-			//	"processActionQueue-mapLocalJumpScript: %02d;\n"
+			//	"processActionQueue-jumpScriptId: %02d;\n"
 			//	"	currentEntityId: %02d;\n",
 			//	resumeStateStruct->actionOffset,
 			//	currentEntityId
 			//);
-			//If we have a new mapLocalJumpScript, we want to re-init the resumeState
-			//to run the new mapLocalJumpScript from the beginning:
-			//immediately end action processing and return if a mapLocalJumpScript value was set:
+			//If we have a new jumpScriptId, we want to re-init the resumeState
+			//to run the new jumpScriptId from the beginning:
+			//immediately end action processing and return if a jumpScriptId value was set:
 			setEntityScript(
-				mapLocalJumpScript,
+				jumpScriptId,
 				currentEntityId,
 				currentScriptType
 			);
 			initScriptState(
 				resumeStateStruct,
-				mapLocalJumpScript,
+				jumpScriptId,
 				true
 			);
 			return;
 		}
-		if(globalJumpScript != MAGE_NO_SCRIPT){
+		else if (
+			jumpScriptId != MAGE_NO_SCRIPT
+			&& resumeStateStruct->isGlobalExecutionScope
+		){
 			//debug_print(
-			//	"processActionQueue-globalJumpScript: %02d;\n"
+			//	"processActionQueue-jumpScriptId: %02d;\n"
 			//	"	currentEntityId: %02d;\n",
 			//	resumeStateStruct->actionOffset,
 			//	currentEntityId
 			//);
-			//If we have a new globalJumpScript, we want to re-init the resumeState
-			//to run the new globalJumpScript from the beginning:
-			//immediately end action processing and return if a globalJumpScript value was set:
+			//If we have a new jumpScriptId, we want to re-init the resumeState
+			//to run the new jumpScriptId from the beginning:
+			//immediately end action processing and return if a jumpScriptId value was set:
 			initScriptState(
 				resumeStateStruct,
-				0,
+				jumpScriptId,
+				true,
 				true
 			);
-			resumeStateStruct->currentGlobalScriptId = globalJumpScript;
 			return;
 		}
 		//all actions are exactly 8 bytes long, so we can address increment by one uint64_t
 		address += sizeof(uint64_t);
 	}
-	//if you get here, and mapLocalJumpScript == MAGE_NO_SCRIPT, all actions in the script are done
-	if(mapLocalJumpScript == MAGE_NO_SCRIPT)
+	//if you get here, and jumpScriptId == MAGE_NO_SCRIPT, all actions in the script are done
+	if(jumpScriptId == MAGE_NO_SCRIPT)
 	{
 		//we can now set resumeState.scriptIsRunning to false and end processing the script:
 		resumeStateStruct->scriptIsRunning = false;
@@ -304,7 +303,7 @@ void MageScriptControl::setEntityScript(
 			MageGame->Map().onLook = mapLocalScriptId;
 		} else if(scriptType == MageScriptType::ON_COMMAND) {
 			//useless
-			//resumeStateStruct->currentMapLocalScriptId = mapLocalScriptId;
+			//resumeStateStruct->currentScriptId = mapLocalScriptId;
 		}
 	}
 	//target is an entity
@@ -322,7 +321,7 @@ void MageScriptControl::setEntityScript(
 uint32_t MageScriptControl::size() const
 {
 	uint32_t size =
-		sizeof(mapLocalJumpScript) +
+		sizeof(jumpScriptId) +
 		sizeof(blockingDelayTime) +
 		sizeof(mapLoadId) +
 		sizeof(currentEntityId) +
@@ -350,7 +349,7 @@ void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 	if(resumeState->scriptIsRunning) {
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the currentMapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+		//the currentScriptId is contained within the *ResumeState struct so we can call actions:
 		//now that the *ResumeState struct is correctly configured, process the script:
 		processScript(
 			resumeState,
@@ -373,10 +372,10 @@ void MageScriptControl::handleMapOnTickScript()
 	}
 	//if a script isn't already running, OR
 	//if the resumeState script Id doesn't match the *ResumeState,
-	//re-initialize the *ResumeState struct from the currentMapLocalScriptId
+	//re-initialize the *ResumeState struct from the currentScriptId
 	else if(
 		!scriptIsRunning ||
-		resumeState->currentMapLocalScriptId != onTickScriptId
+			resumeState->currentScriptId != onTickScriptId
 	)
 	{
 		//populate the MageScriptState struct with appropriate init data
@@ -391,7 +390,7 @@ void MageScriptControl::handleMapOnTickScript()
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the currentMapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+		//the currentScriptId is contained within the *ResumeState struct so we can call actions:
 	}
 	//set the current entity to the map entity value.
 	currentEntityId = MAGE_MAP_ENTITY;
@@ -431,10 +430,10 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
 	}
 	//if a script isn't already running, OR
 	//if the entityOnTick script Id doesn't match the *ResumeState,
-	//re-initialize the *ResumeState struct from the currentMapLocalScriptId
+	//re-initialize the *ResumeState struct from the currentScriptId
 	else if(
 		!scriptIsRunning ||
-		scriptState->currentMapLocalScriptId != mapLocalScriptId
+		scriptState->currentScriptId != mapLocalScriptId
 	)
 	{
 		//populate the MageScriptState struct with appropriate init data
@@ -449,7 +448,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the currentMapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+		//the currentScriptId is contained within the *ResumeState struct so we can call actions:
 	}
 	//set the current entity to the current entity index value.
 	currentEntityId = MageGame->getMapLocalEntityId(filteredEntityId);
@@ -470,9 +469,9 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 	{
 		return;
 	}
-	//if the entity currentMapLocalScriptId doesn't match what is in the entityInteractResumeStates[filteredEntityId] struct, re-init it
+	//if the entity currentScriptId doesn't match what is in the entityInteractResumeStates[filteredEntityId] struct, re-init it
 	//with .scriptIsRunning set to false to stop all current actions.
-	else if(scriptState->currentMapLocalScriptId != mapLocalScriptId)
+	else if(scriptState->currentScriptId != mapLocalScriptId)
 	{
 		initScriptState(
 			scriptState,
@@ -485,7 +484,7 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 	{
 		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
 		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
-		//the currentMapLocalScriptId is contained within the *ResumeState struct so we can call actions:
+		//the currentScriptId is contained within the *ResumeState struct so we can call actions:
 	}
 	//set the current entity to the current entity index value.
 	currentEntityId = MageGame->getMapLocalEntityId(filteredEntityId);
@@ -509,6 +508,8 @@ void MageScriptControl::tickScripts()
 	if(mapLoadId != MAGE_NO_MAP) { return; }
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	handleMapOnTickScript();
+	if(mapLoadId != MAGE_NO_MAP) { return; }
+	handleCommandScript(&resumeStates.commandLook);
 	if(mapLoadId != MAGE_NO_MAP) { return; }
 	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
 	{

@@ -54,7 +54,7 @@ void action_check_entity_name(uint8_t * args, MageScriptState * resumeStateStruc
 		int compare = strcmp(entityName.c_str(), romString.c_str());
 		bool identical = compare == 0;
 		if(identical == argStruct->expectedBoolValue) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -81,7 +81,7 @@ void action_check_entity_x(uint8_t * args, MageScriptState * resumeStateStruct)
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->x == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -108,7 +108,7 @@ void action_check_entity_y(uint8_t * args, MageScriptState * resumeStateStruct)
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->y == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -135,7 +135,7 @@ void action_check_entity_interact_script(uint8_t * args, MageScriptState * resum
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -162,7 +162,7 @@ void action_check_entity_tick_script(uint8_t * args, MageScriptState * resumeSta
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onTickScriptId == argStruct->expectedScript);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -193,7 +193,7 @@ void action_check_entity_type(uint8_t * args, MageScriptState * resumeStateStruc
 			entity->primaryIdType == ENTITY_TYPE
 		);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -225,7 +225,7 @@ void action_check_entity_primary_id(uint8_t * args, MageScriptState * resumeStat
 		if(sanitizedPrimaryType == TILESET) {sizeLimit = MageGame->tilesetCount();}
 		bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -260,7 +260,7 @@ void action_check_entity_secondary_id(uint8_t * args, MageScriptState * resumeSt
 		}
 		bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -287,7 +287,7 @@ void action_check_entity_primary_id_type(uint8_t * args, MageScriptState * resum
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 		bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -313,7 +313,7 @@ void action_check_entity_current_animation(uint8_t * args, MageScriptState * res
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentAnimation == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -339,7 +339,7 @@ void action_check_entity_current_frame(uint8_t * args, MageScriptState * resumeS
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentFrame == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -365,7 +365,7 @@ void action_check_entity_direction(uint8_t * args, MageScriptState * resumeState
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->direction == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -392,7 +392,7 @@ void action_check_entity_glitched(uint8_t * args, MageScriptState * resumeStateS
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool isGlitched = (entity->direction & RENDER_FLAGS_IS_GLITCHED) != 0;
 		if(isGlitched == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -418,7 +418,7 @@ void action_check_entity_hackable_state_a(uint8_t * args, MageScriptState * resu
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateA == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -444,7 +444,7 @@ void action_check_entity_hackable_state_b(uint8_t * args, MageScriptState * resu
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateB == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -470,7 +470,7 @@ void action_check_entity_hackable_state_c(uint8_t * args, MageScriptState * resu
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateC == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -496,7 +496,7 @@ void action_check_entity_hackable_state_d(uint8_t * args, MageScriptState * resu
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateD == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -525,7 +525,7 @@ void action_check_entity_hackable_state_a_u2(uint8_t * args, MageScriptState * r
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -554,7 +554,7 @@ void action_check_entity_hackable_state_c_u2(uint8_t * args, MageScriptState * r
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -581,7 +581,7 @@ void action_check_entity_hackable_state_a_u4(uint8_t * args, MageScriptState * r
 			*(uint32_t *)((uint8_t *)&entity->hackableStateA)
 		);
 		if(u4_value == argStruct->expectedValue) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -610,7 +610,7 @@ void action_check_entity_path(uint8_t * args, MageScriptState * resumeStateStruc
 		);
 		bool identical = (pathId == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -634,7 +634,7 @@ void action_check_save_flag(uint8_t * args, MageScriptState * resumeStateStruct)
 	bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
 	if(bitValue == argStruct->expectedBoolValue) {
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -663,7 +663,7 @@ void action_check_if_entity_is_in_geometry(uint8_t * args, MageScriptState * res
 		MageGeometry geometry = MageGame->getGeometryFromMapLocalId(geometryIndex);
 		bool colliding = geometry.isPointInGeometry(renderable->center);
 		if(colliding == argStruct->expectedBoolValue) {
-			MageScript->mapLocalJumpScript = argStruct->successScriptId;
+			MageScript->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -688,7 +688,7 @@ void action_check_for_button_press(uint8_t * args, MageScriptState * resumeState
 	);
 	if(button_activated)
 	{
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -712,7 +712,7 @@ void action_check_for_button_state(uint8_t * args, MageScriptState * resumeState
 	);
 	if(button_state == (bool)(argStruct->expectedBoolValue))
 	{
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -733,7 +733,7 @@ void action_check_warp_state(uint8_t * args, MageScriptState * resumeStateStruct
 	bool doesWarpStateMatch = MageGame->currentSave.warpState == argStruct->stringId;
 	if(doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -751,7 +751,7 @@ void action_run_script(uint8_t * args, MageScriptState * resumeStateStruct)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	MageScript->mapLocalJumpScript = argStruct->scriptId;
+	MageScript->jumpScriptId = argStruct->scriptId;
 }
 
 void action_blocking_delay(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -1641,7 +1641,7 @@ void action_show_dialog(uint8_t * args, MageScriptState * resumeStateStruct)
 	} else if (!MageDialog->isOpen) {
 		// will be 0 any time there is no response; no jump
 		if(MageDialog->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
-			MageScript->mapLocalJumpScript = MageDialog->mapLocalJumpScriptId;
+			MageScript->jumpScriptId = MageDialog->mapLocalJumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
@@ -2412,7 +2412,7 @@ void action_check_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 		argStruct->value
 	);
 	if(comparison == argStruct->expectedBool) {
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -2438,7 +2438,7 @@ void action_check_variables(uint8_t * args, MageScriptState * resumeStateStruct)
 		sourceValue
 	);
 	if(comparison == argStruct->expectedBool) {
-		MageScript->mapLocalJumpScript = argStruct->successScriptId;
+		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -2560,14 +2560,12 @@ void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStru
 			resumeStateStruct->totalLoopsToNextAction = 1;
 		}
 	} else if (!MageCommand->isInputTrapped) {
-		if(MageCommand->globalJumpScriptId != MAGE_NO_SCRIPT) {
-			// OH NO!!!!
-			// SERIAL DIALOGS ONLY HAVE A GLOBAL JUMP SCRIPT ID!!
+		if(MageCommand->jumpScriptId != MAGE_NO_SCRIPT) {
 			//debug_print(
-			//	"globalJumpScript: %d\n",
-			//	MageCommand->globalJumpScriptId
+			//	"jumpScriptId: %d\n",
+			//	MageCommand->jumpScriptId
 			//);
-			MageScript->globalJumpScript = MageCommand->globalJumpScriptId;
+			MageScript->jumpScriptId = MageCommand->jumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}

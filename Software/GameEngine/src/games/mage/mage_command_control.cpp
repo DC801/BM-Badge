@@ -204,7 +204,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input) {
 				input + " - " +
 				responseLabel + "\n"
 			);
-			globalJumpScriptId = response->globalScriptId;
+			jumpScriptId = response->scriptId;
 			isInputTrapped = false;
 		} else {
 			commandResponseBuffer += "Invalid response: " + input + "\n";
@@ -220,7 +220,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input) {
 			badAsciiLowerCase(&responseLabel);
 			if (responseLabel == input) {
 				commandResponseBuffer += "Valid response: " + input + "\n";
-				globalJumpScriptId = response->globalScriptId;
+				jumpScriptId = response->scriptId;
 				isInputTrapped = false;
 				validResponseFound = true;
 				break;
@@ -235,7 +235,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input) {
 
 void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogId = _serialDialogId;
-	globalJumpScriptId = MAGE_NO_SCRIPT;
+	jumpScriptId = MAGE_NO_SCRIPT;
 	uint32_t serialDialogAddress = MageGame->getSerialDialogAddress(serialDialogId);
 	EngineROM_Read(
 		serialDialogAddress,
@@ -268,7 +268,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	for(uint8_t i = 0; i < serialDialog.responseCount; i++) {
 		MageSerialDialogResponse *response = &serialDialogResponses[i];
 		ROM_ENDIAN_U2_BUFFER(&response->stringId, 1);
-		ROM_ENDIAN_U2_BUFFER(&response->globalScriptId, 1);
+		ROM_ENDIAN_U2_BUFFER(&response->scriptId, 1);
 		if(serialDialog.serialResponseType == RESPONSE_ENTER_NUMBER) {
 			std::string responseLabel = MageGame->getString(response->stringId, NO_PLAYER);
 			serialDialogBuffer += (
@@ -287,7 +287,7 @@ uint32_t MageCommandControl::size() {
 		+ sizeof(postDialogBuffer)
 		+ sizeof(serialDialog)
 		+ sizeof(serialDialogResponses)
-		+ sizeof(globalJumpScriptId)
+		+ sizeof(jumpScriptId)
 		+ sizeof(connectSerialDialogId)
 		+ sizeof(serialDialogId)
 		+ sizeof(lastCommandUsed)
@@ -296,7 +296,7 @@ uint32_t MageCommandControl::size() {
 }
 
 void MageCommandControl::reset() {
-	globalJumpScriptId = MAGE_NO_SCRIPT;
+	jumpScriptId = MAGE_NO_SCRIPT;
 	isInputTrapped = false;
 	// if reset has been run, you're probably on a new map
 	// so don't show the postDialogBuffer contents,

@@ -45,7 +45,7 @@ class MageScriptControl
 		void processScript(MageScriptState * resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType);
 
 		//this will run through the actions in a script from the state stores in resumeState
-		//if a mapLocalJumpScript is called by an action, it will return without processing any further actions.
+		//if a jumpScriptId is called by an action, it will return without processing any further actions.
 		void processActionQueue(
 			MageScriptState * resumeStateStruct,
 			MageScriptType scriptType
@@ -63,12 +63,10 @@ class MageScriptControl
 			uint8_t scriptType
 		);
 
-		//the mapLocalJumpScript variable is used by some actions to indicate that a script should
+		//the jumpScriptId variable is used by some actions to indicate that a script should
 		//end and immediately begin running a new script.
 		//it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
-		int32_t mapLocalJumpScript;
-
-		int32_t globalJumpScript;
+		int32_t jumpScriptId;
 
 		//this is a variable that tracks which entity called an action.
 		//If the action was called by the map, the value will be MAGE_MAP_ENTITY.
@@ -102,12 +100,13 @@ class MageScriptControl
 		uint32_t size() const;
 
 		//this resets the values of a MageScriptState struct to default values.
-		//you need to provide a mapLocalScriptId, and the state of the scriptIsRunning variable
+		//you need to provide a scriptId, and the state of the scriptIsRunning variable
 		//the actionId, and duration variables are always reset to 0 on an init.
 		void initScriptState(
 			MageScriptState * resumeStateStruct,
-			uint16_t mapLocalScriptId,
-			bool scriptIsRunning
+			uint16_t scriptId,
+			bool scriptIsRunning,
+			bool isGlobalExecutionScope = false
 		);
 		MageScriptState* getEntityInteractResumeState(uint8_t index);
 		MageScriptState* getEntityTickResumeState(uint8_t index);

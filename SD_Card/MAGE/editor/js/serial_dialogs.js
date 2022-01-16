@@ -13,7 +13,7 @@ var emptyMap = { // global scope, mock being real map
 
 var serializeSerialDialog = function (
 	serialDialog,
-	seriouslyDontUseThisMapBecauseEverythingInTheScopeOfThisFunctionShouldOperateGloballyAndNotMapLocally,
+	map,
 	fileNameMap,
 	scenarioData,
 ) {
@@ -56,7 +56,7 @@ var serializeSerialDialog = function (
 			+ (
 				(
 					+ 2 //string_id
-					+ 2 //global_script_id
+					+ 2 //map_local_script_id
 				)
 				* responses.length
 			) // responses[response_count]
@@ -74,7 +74,7 @@ var serializeSerialDialog = function (
 		);
 		var stringId = serializeString(
 			serialDialog.messages.join('\n'),
-			emptyMap,
+			map,
 			fileNameMap,
 			scenarioData,
 		);
@@ -97,13 +97,13 @@ var serializeSerialDialog = function (
 		responses.forEach(function (response) {
 			var stringId = serializeString(
 				response.label,
-				emptyMap,
+				map,
 				fileNameMap,
 				scenarioData,
 			);
 			var encodedScript = handleScript(
 				response.script,
-				emptyMap,
+				map,
 				fileNameMap,
 				scenarioData
 			);
@@ -114,8 +114,8 @@ var serializeSerialDialog = function (
 			);
 			offset += 2;
 			dataView.setUint16(
-				offset, // uint16_t global_script_id
-				encodedScript.globalScriptId,
+				offset, // uint16_t map_local_script_id
+				encodedScript.mapLocalScriptId,
 				IS_LITTLE_ENDIAN
 			);
 			offset += 2;
