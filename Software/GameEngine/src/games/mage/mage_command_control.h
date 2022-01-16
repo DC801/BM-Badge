@@ -32,7 +32,7 @@ typedef struct {
 
 typedef struct {
 	uint16_t stringId;
-	uint16_t globalScriptId;
+	uint16_t scriptId;
 } MageSerialDialogResponse;
 
 class MageCommandControl {
@@ -42,7 +42,7 @@ class MageCommandControl {
 		std::string postDialogBuffer;
 		MageSerialDialog serialDialog = {};
 		std::unique_ptr<MageSerialDialogResponse[]> serialDialogResponses = {};
-		int32_t globalJumpScriptId = MAGE_NO_SCRIPT;
+		int32_t jumpScriptId = MAGE_NO_SCRIPT;
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;

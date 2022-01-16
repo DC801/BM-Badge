@@ -569,7 +569,7 @@ types:
     seq:
       - id: string_id
         type: u2
-      - id: global_script_id
+      - id: map_local_script_id
         type: u2
 
   string:

@@ -63,11 +63,6 @@
                  "name":"Chaos Fish",
                  "properties":[
                         {
-                         "name":"is_debug",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"debug-hub-q"
