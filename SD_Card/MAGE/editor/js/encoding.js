@@ -56,7 +56,11 @@ var handleScenarioData = function (fileNameMap) {
 				scenarioData,
 			) {
 				var collectedTypeMap = {};
+				var itemSourceFileMap = {};
+				var fileItemMap = {};
 				scenarioData[destinationPropertyName] = collectedTypeMap;
+				scenarioData[destinationPropertyName + 'SourceFileMap'] = itemSourceFileMap;
+				scenarioData[destinationPropertyName + 'FileItemMap'] = fileItemMap;
 				var result = Promise.all(
 					scenarioData[pathPropertyName].map(function(filePath) {
 						var fileName = filePath.split('/').pop();
@@ -64,12 +68,22 @@ var handleScenarioData = function (fileNameMap) {
 						return getFileJson(fileObject)
 							.then(function(fileData) {
 								Object.keys(fileData)
-									.forEach(function(itemName) {
+									.forEach(function(itemName, index) {
 										if (collectedTypeMap[itemName]) {
 											throw new Error(`Duplicate ${destinationPropertyName} name "${itemName}" found in ${fileName}!`);
 										}
 										fileData[itemName].name = itemName;
 										collectedTypeMap[itemName] = fileData[itemName];
+										itemSourceFileMap[itemName] = {
+											fileName: fileName,
+											index: index
+										};
+										if (!fileItemMap[fileName]) {
+											fileItemMap[fileName] = [];
+										}
+										fileItemMap[fileName].push(
+											itemName
+										);
 									});
 							});
 					})
