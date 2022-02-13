@@ -47,12 +47,6 @@ Vue.component(
 				this.$refs.copyStateTextArea.select();
 				document.execCommand("copy");
 			},
-			moveScript: function (fileName, index, value) {
-				var scriptList = this.current.scriptFiles[fileName];
-				var splice = scriptList.splice(index, 1);
-				var targetIndex = index + value;
-				scriptList.splice(targetIndex, 0, splice[0]);
-			},
 		}
 	}
 );
