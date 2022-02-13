@@ -450,7 +450,7 @@
 						v-for="(scriptName, index) in current.scriptFiles[currentScriptFileName]"
 						class="card mb-4"
 					>
-						<div class="card-header">
+						<div class="card-header bg-primary">
 							<strong class="me-auto">{{scriptName}}</strong>
 							<span
 								class="position-absolute"
@@ -458,20 +458,28 @@
 							>
 								<button
 									type="button"
-									class="btn btn-dark"
+									class="btn btn-info"
 									:disabled="index === 0"
 									@click="moveScript(currentScriptFileName, index, -1)"
 								>↑</button>
 								<button
 									type="button"
-									class="btn btn-dark"
+									class="btn btn-info"
 									:disabled="index === (scenarioData.scriptsFileItemMap[currentScriptFileName].length - 1)"
 									@click="moveScript(currentScriptFileName, index, 1)"
 								>↓</button>
 							</span>
 						</div>
-						<div class="card-body">
-							{{JSON.stringify(scenarioData.scripts[scriptName],null,'    ')}}
+						<div class="card-body p-2">
+							<div
+								v-for="(action, index) in current.scripts[scriptName]"
+							>
+								<editor-action
+									:file-name-map="fileNameMap"
+									:script-name="scriptName"
+									:action="action"
+								></editor-action>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -492,6 +500,7 @@
 	></script>
 	<script src="js/editor-entity_types.js"></script>
 	<script src="js/editor-scripts.js"></script>
+	<script src="js/editor-action.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
