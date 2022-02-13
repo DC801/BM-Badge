@@ -3,10 +3,6 @@ Vue.component(
 	{
 		name: 'editor-action',
 		props: {
-			fileNameMap: {
-				type: Object,
-				required: true
-			},
 			scriptName: {
 				type: String,
 				required: true
@@ -14,10 +10,28 @@ Vue.component(
 			action: {
 				type: Object,
 				required: true
-			}
+			},
+			index: {
+				type: Number,
+				required: true
+			},
+			fileNameMap: {
+				type: Object,
+				required: true
+			},
+			scenarioData: {
+				type: Object,
+				required: true
+			},
+			currentData: {
+				type: Object,
+				required: true
+			},
 		},
 		data: function () {
-			return {}
+			return {
+				collapsed: false,
+			}
 		},
 		computed: {
 			actionName: function () {
@@ -33,7 +47,6 @@ Vue.component(
 			},
 			foundPropertyNames: function () {
 				var foundProperties = [];
-				console.log(this.action);
 				Object.keys(this.action)
 					.filter(function (key) {
 						return key !== 'action';
@@ -44,17 +57,60 @@ Vue.component(
 				return foundProperties;
 			},
 		},
-		methods: {},
+		methods: {
+			moveAction: function () {
+				// TODO: same as other thing
+			},
+			collapseAction: function () {
+				this.collapsed = !this.collapsed;
+			},
+			deleteAction: function () {
+				// TODO
+			},
+		},
 		template: /*html*/`
 <div
-	class="action-editor mb-2 mt-1 card border-secondary"
+	class="action-editor mb-3 mt-1 card border-secondary"
 >
-	<div class="card-header bg-secondary p-2">{{actionName}}</div>
+	<div class="card-header bg-secondary p-2">
+		<button
+			type="button"
+			class="btn btn-sm mr-1 btn-outline-danger"
+			@click="deleteAction()"
+		>X</button>
+		<span>{{actionName}}</span>
+		<span
+			class="position-absolute"
+			style="top:3px; right:3px;"
+		>
+			<button
+				type="button"
+				class="btn btn-sm btn-outline-light"
+				@click="collapseAction()"
+			>_</button>
+			<button
+				type="button"
+				class="btn btn-sm btn-outline-light"
+				:disabled="index === 0"
+				@click="moveAction(-1)"
+			>↑</button>
+			<button
+				type="button"
+				class="btn btn-sm btn-outline-light"
+				:disabled="index === currentData.scripts[scriptName].length - 1"
+				@click="moveAction(1)"
+			>↓</button>
+		</span>
+	</div>
+	<div
+		class="card-body p-0"
+		v-show="!collapsed"
+	>
 		<ul class="list-group list-group-flush">
 			<li
 				class="list-group-item p-2"
 				v-for="property in foundPropertyNames"
-			>{{property}}</li>
+			>{{property}}: {{currentData.scripts[scriptName][index][property]}}</li>
 		</ul>
 	</div>
 </div>
