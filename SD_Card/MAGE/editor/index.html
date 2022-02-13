@@ -118,6 +118,11 @@
 				:file-name-map="fileNameMap"
 				:scenario-data="scenarioData"
 			></entity-type-editor>
+			<editor-scripts
+				v-if="scenarioData"
+				:file-name-map="fileNameMap"
+				:scenario-data="scenarioData"
+			></editor-scripts>
 		</div>
 	</div>
 	<script
@@ -374,6 +379,105 @@
 			</div>
 		</div>
 	</script>
+
+	<script
+		type="text/x-template"
+		id="template-editor-scripts"
+	>
+		<div
+			class="
+				editor-script
+				card
+				text-white
+				mb-3
+			"
+		>
+			<div class="card-header">Script Editor</div>
+			<div class="card-body">
+				<div
+					v-if="needsSave"
+					class="
+						alert
+						alert-danger
+						alert-dismissible
+						fade
+						show
+					"
+					role="alert"
+				>
+					<strong>Unsaved changes!</strong>
+					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
+					<button
+						type="button"
+						class="close"
+						title="Copy"
+						@click="copyState"
+					>
+						<span aria-hidden="true">📋</span>
+					</button>
+					<textarea
+						cols="80"
+						rows="16"
+						class="position-absolute"
+						style="
+							font-size: 0;
+							opacity: 0;
+						"
+						ref="copyStateTextArea"
+					>{{ jsonOutput }}</textarea>
+				</div>
+				<div class="form-group">
+					<label for="currentScriptFileName">Script Files:</label>
+					<select
+						class="form-control"
+						id="currentScriptFileName"
+						v-model="currentScriptFileName"
+					>
+						<option
+							value=""
+						>Select a script</option>
+						<option
+							v-for="(script, scriptFileName) in scenarioData.scriptsFileItemMap"
+							:key="scriptFileName"
+							:value="scriptFileName"
+						>{{ scriptFileName }}</option>
+					</select>
+				</div>
+				<div
+					v-if="currentScriptFileName"
+				>
+					<div
+						v-for="(scriptName, index) in current.scriptFiles[currentScriptFileName]"
+						class="card mb-4"
+					>
+						<div class="card-header">
+							<strong class="me-auto">{{scriptName}}</strong>
+							<span
+								class="position-absolute"
+								style="top:6px; right:6px;"
+							>
+								<button
+									type="button"
+									class="btn btn-dark"
+									:disabled="index === 0"
+									@click="moveScript(currentScriptFileName, index, -1)"
+								>↑</button>
+								<button
+									type="button"
+									class="btn btn-dark"
+									:disabled="index === (scenarioData.scriptsFileItemMap[currentScriptFileName].length - 1)"
+									@click="moveScript(currentScriptFileName, index, 1)"
+								>↓</button>
+							</span>
+						</div>
+						<div class="card-body">
+							{{JSON.stringify(scenarioData.scripts[scriptName],null,'    ')}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</script>
 	<script
 		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
 		src="./dependencies/vue.js"
@@ -387,6 +491,7 @@
 		src="./dependencies/omggif.js"
 	></script>
 	<script src="js/editor-entity_types.js"></script>
+	<script src="js/editor-scripts.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
