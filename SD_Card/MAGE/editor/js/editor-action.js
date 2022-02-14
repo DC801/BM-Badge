@@ -78,6 +78,11 @@ Vue.component(
 			class="btn btn-sm mr-1 btn-outline-danger"
 			@click="deleteAction()"
 		>X</button>
+		<component-icon
+			:color="'white'"
+			:size="16"
+			:subject="actionName"
+		></component-icon>
 		<span>{{actionName}}</span>
 		<span
 			class="position-absolute"
