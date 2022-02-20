@@ -882,6 +882,22 @@ var getVariableIdFromAction = function (
 	);
 };
 
+var entityFieldMap = {
+	x: 12,
+	y: 14,
+	interact_script_id: 16,
+	tick_script_id: 18,
+	primary_id: 20,
+	secondary_id: 22,
+	primary_id_type: 24,
+	current_animation: 25,
+	current_frame: 26,
+	direction: 27,
+	hackable_state_a: 28,
+	hackable_state_b: 29,
+	hackable_state_c: 30,
+	hackable_state_d: 31,
+};
 var getFieldFromAction = function (
 	propertyName,
 	action,
@@ -893,26 +909,10 @@ var getFieldFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
-	var fields = {
-		x: 12,
-		y: 14,
-		interact_script_id: 16,
-		tick_script_id: 18,
-		primary_id: 20,
-		secondary_id: 22,
-		primary_id_type: 24,
-		current_animation: 25,
-		current_frame: 26,
-		direction: 27,
-		hackable_state_a: 28,
-		hackable_state_b: 29,
-		hackable_state_c: 30,
-		hackable_state_d: 31,
-	};
-	var field = fields[value];
+	var field = entityFieldMap[value];
 	if (field === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(fields)
+			Object.keys(entityFieldMap)
 		}`);
 	}
 	return field;
@@ -1125,7 +1125,6 @@ var actionPropertyNameToHandlerMap = {
 	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
-	state: getBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
 	source: getVariableIdFromAction,
