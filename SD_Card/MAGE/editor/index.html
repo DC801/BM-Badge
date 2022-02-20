@@ -386,7 +386,7 @@
 	>
 		<div
 			class="
-				editor-script
+				editor-scripts
 				card
 				text-white
 				mb-3
@@ -437,7 +437,7 @@
 							value=""
 						>Select a script</option>
 						<option
-							v-for="(script, scriptFileName) in scenarioData.scriptsFileItemMap"
+							v-for="(script, scriptFileName) in currentData.scriptsFileItemMap"
 							:key="scriptFileName"
 							:value="scriptFileName"
 						>{{ scriptFileName }}</option>
@@ -447,7 +447,7 @@
 					v-if="currentScriptFileName"
 				>
 					<div
-						v-for="(scriptName, index) in current.scriptFiles[currentScriptFileName]"
+						v-for="(scriptName, index) in currentData.scriptsFileItemMap[currentScriptFileName]"
 					>
 						<editor-script
 							:script-name="scriptName"
@@ -455,8 +455,9 @@
 							:index="index"
 							:file-name-map="fileNameMap"
 							:scenario-data="scenarioData"
-							:current-data="current"
+							:current-data="currentData"
 							@input="updateScript(scriptName,$event)"
+							@updateScriptsFileItemMap="updateScriptsFileItemMap($event)"
 						></editor-script>
 					</div>
 				</div>
@@ -475,11 +476,6 @@
 		data-original-src="https://wzrd.in/standalone/omggif@1.0.10"
 		src="./dependencies/omggif.js"
 	></script>
-	<script src="js/editor-entity_types.js"></script>
-	<script src="js/editor-scripts.js"></script>
-	<script src="js/editor-script.js"></script>
-	<script src="js/editor-action.js"></script>
-	<script src="js/component-icon.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
@@ -494,6 +490,11 @@
 	<script src="js/serial_dialogs.js"></script>
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
+	<script src="js/editor-entity_types.js"></script>
+	<script src="js/editor-scripts.js"></script>
+	<script src="js/editor-script.js"></script>
+	<script src="js/editor-action.js"></script>
+	<script src="js/component-icon.js"></script>
 	<script src="js/index.js"></script>
 </body>
 </html>

@@ -15,14 +15,6 @@ Vue.component(
 				type: Number,
 				required: true
 			},
-			fileNameMap: {
-				type: Object,
-				required: true
-			},
-			scenarioData: {
-				type: Object,
-				required: true
-			},
 			currentData: {
 				type: Object,
 				required: true
@@ -30,7 +22,7 @@ Vue.component(
 		},
 		data: function () {
 			return {
-				collapsed: false,
+				collapsed: true,
 			}
 		},
 		computed: {
@@ -39,19 +31,29 @@ Vue.component(
 			}
 		},
 		methods: {
-			moveScript: function (value) {
-				// TODO: emit moveScript(fileName, index, value)
-
-				// var scriptList = this.current.scriptFiles[fileName];
-				// var splice = scriptList.splice(index, 1);
-				// var targetIndex = index + value;
-				// scriptList.splice(targetIndex, 0, splice[0]);
+			moveScript: function (direction) {
+				var fileName = this.fileName;
+				var scripts = this.currentData.scriptsFileItemMap[fileName].slice();
+				var index = this.index;
+				var targetIndex = index + direction;
+				var splice = scripts.splice(index, 1);
+				scripts.splice(targetIndex, 0, splice[0]);
+				this.$emit('updateScriptsFileItemMap', scripts)
+			},
+			moveAction: function (index, direction) {
+				var newScript = this.script.slice();
+				var targetIndex = index + direction;
+				var splice = newScript.splice(index, 1);
+				newScript.splice(targetIndex, 0, splice[0]);
+				this.$emit('input', newScript);
+			},
+			deleteAction: function (index) {
+				var newScript = this.script.slice();
+				newScript.splice(index, 1);
+				this.$emit('input', newScript);
 			},
 			collapseScript: function () {
 				this.collapsed = !this.collapsed;
-			},
-			deleteScript: function () {
-				// TODO
 			},
 			updateAction: function (index, action) {
 				var newScript = this.script.slice();
@@ -72,7 +74,7 @@ Vue.component(
 			<button
 				type="button"
 				class="btn btn-outline-info"
-				@click="collapseScript()"
+				@click="collapseScript"
 			>_</button>
 			<button
 				type="button"
@@ -83,7 +85,7 @@ Vue.component(
 			<button
 				type="button"
 				class="btn btn-outline-info"
-				:disabled="index === (scenarioData.scriptsFileItemMap[fileName].length - 1)"
+				:disabled="index === (currentData.scriptsFileItemMap[fileName].length - 1)"
 				@click="moveScript(1)"
 			>↓</button>
 		</span>
@@ -96,13 +98,12 @@ Vue.component(
 			v-for="(action, index) in script"
 		>
 			<editor-action
-				:file-name-map="fileNameMap"
-				:script-name="scriptName"
+				:script="script"
 				:action="action"
 				:index="index"
-				:scenario-data="scenarioData"
-				:current-data="currentData"
 				@input="updateAction(index,$event)"
+				@moveAction="moveAction(index,$event)"
+				@deleteAction="deleteAction(index)"
 			></editor-action>
 		</div>
 	</div>
