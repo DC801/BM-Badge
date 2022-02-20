@@ -918,6 +918,15 @@ var getFieldFromAction = function (
 	return field;
 };
 
+var operationMap = {
+	SET: 0,
+	ADD: 1,
+	SUB: 2,
+	DIV: 3,
+	MUL: 4,
+	MOD: 5,
+	RNG: 6,
+};
 var getOperationFromAction = function (
 	propertyName,
 	action,
@@ -929,24 +938,27 @@ var getOperationFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var operations = {
-		SET: 0,
-		ADD: 1,
-		SUB: 2,
-		DIV: 3,
-		MUL: 4,
-		MOD: 5,
-		RNG: 6,
-	};
-	var operation = operations[value];
+	var operation = operationMap[value];
 	if (operation === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(operations)
+			Object.keys(operationMap)
 		}`);
 	}
 	return operation;
 };
 
+var comparisonMap = {
+	LT  : 0,
+	LTEQ: 1,
+	EQ  : 2,
+	GTEQ: 3,
+	GT  : 4,
+	"<" : 0,
+	"<=": 1,
+	"==": 2,
+	">=": 3,
+	">" : 4,
+};
 var getComparisonFromAction = function (
 	propertyName,
 	action,
@@ -958,22 +970,10 @@ var getComparisonFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var comparisons = {
-		LT  : 0,
-		LTEQ: 1,
-		EQ  : 2,
-		GTEQ: 3,
-		GT  : 4,
-		"<" : 0,
-		"<=": 1,
-		"==": 2,
-		">=": 3,
-		">" : 4,
-	};
-	var comparison = comparisons[value];
+	var comparison = comparisonMap[value];
 	if (comparison === undefined) {
 		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(comparisons)
+			Object.keys(comparisonMap)
 		}`);
 	}
 	return comparison;

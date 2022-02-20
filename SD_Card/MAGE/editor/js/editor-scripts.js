@@ -14,33 +14,23 @@ Vue.component(
 			}
 		},
 		data: function () {
+			var currentData = {
+				scripts: jsonClone(this.scenarioData.scripts),
+				scriptsFileItemMap: jsonClone(this.scenarioData.scriptsFileItemMap),
+			}
 			return {
-				init: {
-					scripts: jsonClone(this.scenarioData.scripts),
-					scriptFiles: jsonClone(this.scenarioData.scriptsFileItemMap),
-				},
-				current: {
-					scripts: jsonClone(this.scenarioData.scripts),
-					scriptFiles: jsonClone(this.scenarioData.scriptsFileItemMap),
-				},
-				initJsonState: '',
+				currentData: currentData,
+				initJsonState: JSON.stringify(currentData),
 				currentScriptFileName: '',
 			}
 		},
 		computed: {
 			jsonOutput: function () {
-				return JSON.stringify(
-					this.current,
-					null,
-					'\t'
-				) + '\n';
+				return JSON.stringify(this.currentData);
 			},
 			needsSave: function () {
 				return this.initJsonState !== this.jsonOutput;
 			}
-		},
-		created: function () {
-			this.initJsonState = this.jsonOutput;
 		},
 		methods: {
 			copyState: function () {
@@ -48,7 +38,17 @@ Vue.component(
 				document.execCommand("copy");
 			},
 			updateScript: function (scriptName,changes) {
-				this.current.scripts[scriptName] = changes;
+				this.currentData.scripts[scriptName] = changes;
+			},
+			updateScriptsFileItemMap: function (scripts) {
+				var fileName = this.currentScriptFileName;
+				var newScriptsFileItemMap = {}
+				Object.assign(
+					newScriptsFileItemMap,
+					this.currentData.scriptsFileItemMap
+				);
+				newScriptsFileItemMap[fileName] = scripts;
+				this.currentData.scriptsFileItemMap = newScriptsFileItemMap
 			}
 		},
 	}

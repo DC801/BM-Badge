@@ -1,28 +1,14 @@
-var comparisons = [
-	'<',
-	'<=',
-	'==',
-	'>=',
-	'>',
-]
+var comparisons = Object.keys(operationMap).slice(4);
 
-var operations = [
-	'SET',
-	'ADD',
-	'SUB',
-	'DIV',
-	'MUL',
-	'MOD',
-	'RNG',
-]
+var operations = Object.keys(operationMap);
 
 Vue.component(
 	'editor-action',
 	{
 		name: 'editor-action',
 		props: {
-			scriptName: {
-				type: String,
+			script: {
+				type: Array,
 				required: true
 			},
 			action: {
@@ -31,18 +17,6 @@ Vue.component(
 			},
 			index: {
 				type: Number,
-				required: true
-			},
-			fileNameMap: {
-				type: Object,
-				required: true
-			},
-			scenarioData: {
-				type: Object,
-				required: true
-			},
-			currentData: {
-				type: Object,
 				required: true
 			},
 		},
@@ -56,12 +30,10 @@ Vue.component(
 				return this.action.action
 			},
 			requiredPropertyNames: function () {
-				var requiredProperties = [];
-				var actionDefinition = actionFieldsMap[this.actionName];
-				actionDefinition.forEach(function (property) {
-					requiredProperties.push(property.propertyName)
-				});
-				return requiredProperties;
+				return actionFieldsMap[this.actionName]
+					.map(function (property) {
+						return property.propertyName;
+					});
 			},
 			foundPropertyNames: function () {
 				var foundProperties = Object.keys(this.action)
@@ -70,26 +42,8 @@ Vue.component(
 					});
 				return foundProperties;
 			},
-			extraPropertyNames: function () {
-				// var extras = [];
-				// var self = this;
-				// console.log(this.foundPropertyNames);
-				// this.foundPropertyNames.forEach(function (foundProperty) {
-				// 	// console.log(`script: ${self.scriptName}; property: ${foundProperty}`);
-				// 	if (
-				// 		!self.requiredPropertyNames.includes(foundProperty)
-				// 		&& foundProperty !== 'action'
-				// 	) {
-				// 		extras.push(foundProperty);
-				// 	}
-				// })
-				// return extras;
-			}
 		},
 		methods: {
-			moveAction: function () {
-				// TODO: same as other thing
-			},
 			collapseAction: function () {
 				this.collapsed = !this.collapsed;
 			},
@@ -115,10 +69,10 @@ Vue.component(
 		<button
 			type="button"
 			class="btn btn-sm mr-1 btn-outline-danger"
-			@click="deleteAction()"
+			@click="$emit('deleteAction')"
 		>X</button>
 		<component-icon
-			:color="'white'"
+			color="white"
 			:size="16"
 			:subject="actionName"
 		></component-icon>
@@ -130,19 +84,19 @@ Vue.component(
 			<button
 				type="button"
 				class="btn btn-sm btn-outline-light"
-				@click="collapseAction()"
+				@click="collapseAction"
 			>_</button>
 			<button
 				type="button"
 				class="btn btn-sm btn-outline-light"
 				:disabled="index === 0"
-				@click="moveAction(-1)"
+				@click="$emit('moveAction', -1)"
 			>↑</button>
 			<button
 				type="button"
 				class="btn btn-sm btn-outline-light"
-				:disabled="index === currentData.scripts[scriptName].length - 1"
-				@click="moveAction(1)"
+				:disabled="index === script.length - 1"
+				@click="$emit('moveAction', 1)"
 			>↓</button>
 		</span>
 	</div>
