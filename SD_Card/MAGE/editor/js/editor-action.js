@@ -1,6 +1,8 @@
 var comparisons = Object.keys(comparisonMap).slice(5);
-
 var operations = Object.keys(operationMap);
+var buttons = Object.keys(buttonMap);
+var directions = ['north','south','east','west'];
+var slots = [0,1,2];
 
 var sanitizeAsString = function (string) {
 	return string;
@@ -57,8 +59,6 @@ var propertySanitizerMap = {
 	ble_flag: sanitizeAsString,
 };
 
-
-
 var actionInputMixin = {
 	props: {
 		property: {
@@ -72,6 +72,7 @@ var actionInputMixin = {
 		},
 	},
 }
+
 Vue.component('field-text', {
 	mixins: [actionInputMixin],
 	props: {
@@ -93,6 +94,7 @@ Vue.component('field-text', {
 />
 	`
 });
+
 Vue.component('field-number', {
 	mixins: [actionInputMixin],
 	template: `
@@ -103,6 +105,7 @@ Vue.component('field-number', {
 ></field-text>
 	`
 });
+
 Vue.component('field-select', {
 	props: {
 		options: {
@@ -116,7 +119,6 @@ Vue.component('field-select', {
 	template: `
 <select
 	class="form-select"
-	id="exampleSelect1"
 	:value="value"
 	@input="$emit('input', $event.target.value)"
 >
@@ -126,17 +128,19 @@ Vue.component('field-select', {
 </select>
 	`
 });
+
 Vue.component('field-bool', {
 	mixins: [actionInputMixin],
 	operations: operations,
 	template: `
 <field-select
-	:options="['true', 'false']"
+	:options="[true, false]"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
 	`
 });
+
 Vue.component('action-input-operations', {
 	mixins: [actionInputMixin],
 	operations: operations,
@@ -148,6 +152,7 @@ Vue.component('action-input-operations', {
 ></field-select>
 	`
 });
+
 Vue.component('action-input-comparisons', {
 	mixins: [actionInputMixin],
 	comparisons: comparisons,
@@ -159,18 +164,148 @@ Vue.component('action-input-comparisons', {
 ></field-select>
 	`
 });
+
+Vue.component('action-input-buttons', {
+	mixins: [actionInputMixin],
+	buttons: buttons,
+	template: `
+<field-select
+	:options="$options.buttons"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-directions', {
+	mixins: [actionInputMixin],
+	directions: directions,
+	template: `
+<field-select
+	:options="$options.directions"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-slots', {
+	mixins: [actionInputMixin],
+	slots: slots,
+	template: `
+<field-select
+	:options="$options.slots"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
 Vue.component('action-input-scripts', {
 	mixins: [actionInputMixin],
 	computed: {
 		scripts: function () {
 			return Object.keys(
 				this.currentData.scripts
-			)
+			);
 		}
 	},
 	template: `
 <field-select
 	:options="scripts"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-dialogs', {
+	mixins: [actionInputMixin],
+	computed: {
+		dialogs: function () {
+			return Object.keys(
+				this.currentData.dialogs
+			);
+		}
+	},
+	template: `
+<field-select
+	:options="dialogs"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-entity_types', {
+	mixins: [actionInputMixin],
+	computed: {
+		entityTypes: function () {
+			var result = Object.keys(
+				this.currentData.entityTypes
+			);
+			return result.sort(sortCaseInsensitive);
+		}
+	},
+	template: `
+<field-select
+	:options="entityTypes"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-entities', {
+	mixins: [actionInputMixin],
+	computed: {
+		entities: function () {
+			var result = this.currentData.entityNames.slice();
+			result.unshift('%SELF%');
+			result.unshift('%PLAYER%');
+			return result;
+		}
+	},
+	template: `
+<field-select
+	:options="entities"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-geometry', {
+	mixins: [actionInputMixin],
+	computed: {
+		geometry: function () {
+			var result = this.currentData.geometryNames.slice();
+			result.unshift('%ENTITY_PATH%');
+			return result;
+		}
+	},
+	template: `
+<field-select
+	:options="geometry"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+Vue.component('action-input-maps', {
+	mixins: [actionInputMixin],
+	computed: {
+		maps: function () {
+			var result = Object.keys(
+				this.currentData.maps
+			)
+			return result.sort(sortCaseInsensitive);
+		}
+	},
+	template: `
+<field-select
+	:options="maps"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -203,6 +338,16 @@ var propertyEditorComponentMap = {
 	bool_value: 'field-bool',
 	expected_bool: 'field-bool',
 	inbound: 'field-bool',
+	dialog: 'action-input-dialogs',
+	entity_type: 'action-input-entity_types',
+	map: 'action-input-maps',
+	entity: 'action-input-entities',
+	geometry: 'action-input-geometry',
+	target_entity: 'action-input-entities',
+	target_geometry: 'action-input-geometry',
+	direction: 'action-input-directions',
+	slot: 'action-input-slots',
+	button_id: 'action-input-buttons',
 };
 
 Vue.component(
@@ -257,6 +402,29 @@ Vue.component(
 		methods: {
 			collapseAction: function () {
 				this.collapsed = !this.collapsed;
+			},
+			validInput: function (property, value) {
+				var result = true;
+				var actionCategory = propertyEditorComponentMap[property];
+				var actionOptionsMap = {
+					'action-input-comparisons': comparisons,
+					'action-input-operations': operations,
+					'action-input-buttons': buttons,
+					'action-input-directions': directions,
+					'action-input-slots': slots,
+					'field-bool': [true, false],
+					'action-input-scripts': Object.keys(this.currentData.scripts),
+					'action-input-dialogs': Object.keys(this.currentData.dialogs),
+					'action-input-entity_types': Object.keys(this.currentData.entityTypes),
+					'action-input-entities': this.currentData.entityNames.slice().concat(['%SELF%','%PLAYER%']),
+					'action-input-geometry': this.currentData.geometryNames.slice().concat(['%ENTITY_PATH%']),
+					'action-input-maps': Object.keys(this.currentData.maps),
+				}
+				if (Object.keys(actionOptionsMap).includes(actionCategory)) {
+					var options = actionOptionsMap[actionCategory];
+					result = options.includes(value);
+				}
+				return result;
 			},
 			deleteAction: function () {
 				// TODO
@@ -320,26 +488,28 @@ Vue.component(
 		class="card-body p-0"
 		v-show="!collapsed"
 	>
-		<ul class="list-group list-group-flush">
-			<li
-				class="list-group-item p-2"
-				v-for="property in foundPropertyNames"
-			>{{property}}: {{action[property]}}</li>
-		</ul>
 		<div
-			class="input-group mb-3"
 			v-for="property in foundPropertyNames"
+			class="p-2"
 		>
-			<div class="input-group-prepend">
-				<span class="input-group-text">{{property}}</span>
-			</div>
-			<component
-				:is="$options.propertyEditorComponentMap[property] || 'field-text'"
-				:property="property"
-				:value="action[property]"
-				:current-data="currentData"
-				@input="handleInput(property, $event)"
-			></component>
+			<div
+				class="input-group"
+			>
+				<div class="input-group-prepend">
+					<span class="input-group-text">{{property}}</span>
+				</div>
+				<component
+					:is="$options.propertyEditorComponentMap[property] || 'field-text'"
+					:property="property"
+					:value="action[property]"
+					:current-data="currentData"
+					@input="handleInput(property, $event)"
+				></component>
+				</div>
+			<div
+				class="form-text text-danger"
+				v-if="!validInput(property, action[property])"
+			>Value not an option: "{{action[property]}}"</div>
 		</div>
 	</div>
 </div>
