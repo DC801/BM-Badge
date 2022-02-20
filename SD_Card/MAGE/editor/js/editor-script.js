@@ -33,7 +33,11 @@ Vue.component(
 				collapsed: false,
 			}
 		},
-		computed: {},
+		computed: {
+			script: function () {
+				return this.currentData.scripts[this.scriptName];
+			}
+		},
 		methods: {
 			moveScript: function (value) {
 				// TODO: emit moveScript(fileName, index, value)
@@ -49,6 +53,11 @@ Vue.component(
 			deleteScript: function () {
 				// TODO
 			},
+			updateAction: function (index, action) {
+				var newScript = this.script.slice();
+				newScript[index] = action;
+				this.$emit('input', newScript);
+			}
 		},
 		template: /*html*/`
 <div
@@ -84,7 +93,7 @@ Vue.component(
 		v-show="!collapsed"
 	>
 		<div
-			v-for="(action, index) in currentData.scripts[scriptName]"
+			v-for="(action, index) in script"
 		>
 			<editor-action
 				:file-name-map="fileNameMap"
@@ -93,6 +102,7 @@ Vue.component(
 				:index="index"
 				:scenario-data="scenarioData"
 				:current-data="currentData"
+				@input="updateAction(index,$event)"
 			></editor-action>
 		</div>
 	</div>

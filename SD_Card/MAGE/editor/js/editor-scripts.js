@@ -47,6 +47,9 @@ Vue.component(
 				this.$refs.copyStateTextArea.select();
 				document.execCommand("copy");
 			},
-		}
+			updateScript: function (scriptName,changes) {
+				this.current.scripts[scriptName] = changes;
+			}
+		},
 	}
 );
