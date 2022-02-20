@@ -101,6 +101,7 @@ Vue.component(
 				:script="script"
 				:action="action"
 				:index="index"
+				:current-data="currentData"
 				@input="updateAction(index,$event)"
 				@moveAction="moveAction(index,$event)"
 				@deleteAction="deleteAction(index)"

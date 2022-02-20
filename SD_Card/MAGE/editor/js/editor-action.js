@@ -1,11 +1,215 @@
-var comparisons = Object.keys(operationMap).slice(4);
+var comparisons = Object.keys(comparisonMap).slice(5);
 
 var operations = Object.keys(operationMap);
+
+var sanitizeAsString = function (string) {
+	return string;
+}
+var sanitizeAsNumber = function (string) {
+	return parseInt(string, 10);
+}
+var sanitizeAsBool = function (string) {
+	return string === 'true'
+}
+var propertySanitizerMap = {
+	duration: sanitizeAsNumber,
+	expected_u4: sanitizeAsNumber,
+	map: sanitizeAsString,
+	entity: sanitizeAsString,
+	target_entity: sanitizeAsString,
+	entity_type: sanitizeAsString,
+	geometry: sanitizeAsString,
+	target_geometry: sanitizeAsString,
+	script: sanitizeAsString,
+	success_script: sanitizeAsString,
+	expected_script: sanitizeAsString,
+	string: sanitizeAsString,
+	save_flag: sanitizeAsString,
+	dialog: sanitizeAsString,
+	address: sanitizeAsNumber,
+	color: sanitizeAsString,
+	expected_u2: sanitizeAsNumber,
+	u2_value: sanitizeAsNumber,
+	amplitude: sanitizeAsNumber,
+	bitmask: sanitizeAsNumber,
+	button_id: sanitizeAsString,
+	byte_offset: sanitizeAsNumber,
+	byte_value: sanitizeAsNumber,
+	expected_byte: sanitizeAsNumber,
+	animation: sanitizeAsNumber,
+	play_count: sanitizeAsNumber,
+	frequency: sanitizeAsNumber,
+	font_id: sanitizeAsNumber,
+	slot: sanitizeAsNumber,
+	direction: sanitizeAsString,
+	relative_direction: sanitizeAsNumber,
+	bool_value: sanitizeAsBool,
+	expected_bool: sanitizeAsBool,
+	value: sanitizeAsNumber,
+	variable: sanitizeAsString,
+	source: sanitizeAsString,
+	field: sanitizeAsString,
+	inbound: sanitizeAsBool,
+	operation: sanitizeAsString,
+	comparison: sanitizeAsString,
+	serial_dialog: sanitizeAsString,
+	item_name: sanitizeAsString,
+	ble_flag: sanitizeAsString,
+};
+
+
+
+var actionInputMixin = {
+	props: {
+		property: {
+			type: String,
+		},
+		value: {
+			required: true,
+		},
+		currentData: {
+			type: Object,
+		},
+	},
+}
+Vue.component('field-text', {
+	mixins: [actionInputMixin],
+	props: {
+		type: {
+			type: String,
+			default: function () {
+				return 'text'
+			}
+		},
+	},
+	template: `
+<input
+	type="text"
+	class="form-control"
+	:placeholder="property"
+	:value="value"
+	:aria-label="property"
+	@input="$emit('input', $event.target.value)"
+/>
+	`
+});
+Vue.component('field-number', {
+	mixins: [actionInputMixin],
+	template: `
+<field-text
+	type="number"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-text>
+	`
+});
+Vue.component('field-select', {
+	props: {
+		options: {
+			type: Array,
+			required: true,
+		},
+		value: {
+			required: true,
+		},
+	},
+	template: `
+<select
+	class="form-select"
+	id="exampleSelect1"
+	:value="value"
+	@input="$emit('input', $event.target.value)"
+>
+	<option
+		v-for="option in options"
+	>{{option}}</option>
+</select>
+	`
+});
+Vue.component('field-bool', {
+	mixins: [actionInputMixin],
+	operations: operations,
+	template: `
+<field-select
+	:options="['true', 'false']"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+Vue.component('action-input-operations', {
+	mixins: [actionInputMixin],
+	operations: operations,
+	template: `
+<field-select
+	:options="$options.operations"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+Vue.component('action-input-comparisons', {
+	mixins: [actionInputMixin],
+	comparisons: comparisons,
+	template: `
+<field-select
+	:options="$options.comparisons"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+Vue.component('action-input-scripts', {
+	mixins: [actionInputMixin],
+	computed: {
+		scripts: function () {
+			return Object.keys(
+				this.currentData.scripts
+			)
+		}
+	},
+	template: `
+<field-select
+	:options="scripts"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
+var propertyEditorComponentMap = {
+	duration: 'field-number',
+	expected_u4: 'field-number',
+	address: 'field-number',
+	expected_u2: 'field-number',
+	u2_value: 'field-number',
+	amplitude: 'field-number',
+	bitmask: 'field-number',
+	byte_offset: 'field-number',
+	byte_value: 'field-number',
+	expected_byte: 'field-number',
+	animation: 'field-number',
+	play_count: 'field-number',
+	frequency: 'field-number',
+	font_id: 'field-number',
+	slot: 'field-number',
+	relative_direction: 'field-number',
+	value: 'field-number',
+	script: 'action-input-scripts',
+	success_script: 'action-input-scripts',
+	expected_script: 'action-input-scripts',
+	comparison: 'action-input-comparisons',
+	operation: 'action-input-operations',
+	bool_value: 'field-bool',
+	expected_bool: 'field-bool',
+	inbound: 'field-bool',
+};
 
 Vue.component(
 	'editor-action',
 	{
 		name: 'editor-action',
+		propertyEditorComponentMap,
 		props: {
 			script: {
 				type: Array,
@@ -19,6 +223,10 @@ Vue.component(
 				type: Number,
 				required: true
 			},
+			currentData: {
+				type: Object,
+				required: true,
+			},
 		},
 		data: function () {
 			return {
@@ -29,8 +237,11 @@ Vue.component(
 			actionName: function () {
 				return this.action.action
 			},
+			requiredProperties: function () {
+				return actionFieldsMap[this.actionName];
+			},
 			requiredPropertyNames: function () {
-				return actionFieldsMap[this.actionName]
+				return this.requiredProperties
 					.map(function (property) {
 						return property.propertyName;
 					});
@@ -51,11 +262,16 @@ Vue.component(
 				// TODO
 			},
 			handleInput: function (property, value) {
+				var sanitizer = (
+					propertySanitizerMap[property]
+					|| sanitizeAsString // so you can edit extra field like 'doc'
+				);
+				var sanitisedValue = sanitizer(value);
 				var newAction = Object.assign(
 					{},
 					this.action,
 					{
-						[property]: value
+						[property]: sanitisedValue
 					}
 				)
 				this.$emit('input', newAction);
@@ -117,14 +333,13 @@ Vue.component(
 			<div class="input-group-prepend">
 				<span class="input-group-text">{{property}}</span>
 			</div>
-			<input
-				type="text"
-				class="form-control"
-				:placeholder="property"
+			<component
+				:is="$options.propertyEditorComponentMap[property] || 'field-text'"
+				:property="property"
 				:value="action[property]"
-				:aria-label="property"
-				@input="handleInput(property, $event.target.value)"
-			>
+				:current-data="currentData"
+				@input="handleInput(property, $event)"
+			></component>
 		</div>
 	</div>
 </div>
