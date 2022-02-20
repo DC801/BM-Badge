@@ -1,3 +1,21 @@
+var comparisons = [
+	'<',
+	'<=',
+	'==',
+	'>=',
+	'>',
+]
+
+var operations = [
+	'SET',
+	'ADD',
+	'SUB',
+	'DIV',
+	'MUL',
+	'MOD',
+	'RNG',
+]
+
 Vue.component(
 	'editor-action',
 	{
@@ -46,16 +64,27 @@ Vue.component(
 				return requiredProperties;
 			},
 			foundPropertyNames: function () {
-				var foundProperties = [];
-				Object.keys(this.action)
+				var foundProperties = Object.keys(this.action)
 					.filter(function (key) {
 						return key !== 'action';
-					})
-					.forEach(function (propertyName) {
-					foundProperties.push(propertyName);
-				});
+					});
 				return foundProperties;
 			},
+			extraPropertyNames: function () {
+				// var extras = [];
+				// var self = this;
+				// console.log(this.foundPropertyNames);
+				// this.foundPropertyNames.forEach(function (foundProperty) {
+				// 	// console.log(`script: ${self.scriptName}; property: ${foundProperty}`);
+				// 	if (
+				// 		!self.requiredPropertyNames.includes(foundProperty)
+				// 		&& foundProperty !== 'action'
+				// 	) {
+				// 		extras.push(foundProperty);
+				// 	}
+				// })
+				// return extras;
+			}
 		},
 		methods: {
 			moveAction: function () {
@@ -66,6 +95,16 @@ Vue.component(
 			},
 			deleteAction: function () {
 				// TODO
+			},
+			handleInput: function (property, value) {
+				var newAction = Object.assign(
+					{},
+					this.action,
+					{
+						[property]: value
+					}
+				)
+				this.$emit('input', newAction);
 			},
 		},
 		template: /*html*/`
@@ -115,8 +154,24 @@ Vue.component(
 			<li
 				class="list-group-item p-2"
 				v-for="property in foundPropertyNames"
-			>{{property}}: {{currentData.scripts[scriptName][index][property]}}</li>
+			>{{property}}: {{action[property]}}</li>
 		</ul>
+		<div
+			class="input-group mb-3"
+			v-for="property in foundPropertyNames"
+		>
+			<div class="input-group-prepend">
+				<span class="input-group-text">{{property}}</span>
+			</div>
+			<input
+				type="text"
+				class="form-control"
+				:placeholder="property"
+				:value="action[property]"
+				:aria-label="property"
+				@input="handleInput(property, $event.target.value)"
+			>
+		</div>
 	</div>
 </div>
 `}
