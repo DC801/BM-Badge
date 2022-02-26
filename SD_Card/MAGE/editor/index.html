@@ -394,8 +394,21 @@
 		>
 			<div class="card-header">Script Editor</div>
 			<div class="card-body">
-				<div
+				<template
 					v-if="needsSave"
+				>
+				<textarea
+					cols="80"
+					rows="16"
+					class="position-absolute"
+					style="
+						font-size: 0;
+						opacity: 0;
+					"
+					ref="copyStateTextArea"
+				>{{ fileOutputToCopy }}</textarea>
+				<div
+					v-for="(changes, fileName) in changedFileMap"
 					class="
 						alert
 						alert-danger
@@ -405,27 +418,18 @@
 					"
 					role="alert"
 				>
-					<strong>Unsaved changes!</strong>
-					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
+					<strong>Unsaved changes in <em>{{fileName}}</em>!</strong>
+					<span>You can click the "Copy" button to the right to put the current scripts your clipboard, then paste it into your `<strong>{{fileName}}</strong>` file to save.</span>
 					<button
 						type="button"
 						class="close"
 						title="Copy"
-						@click="copyState"
+						@click="copyState(changes)"
 					>
 						<span aria-hidden="true">📋</span>
 					</button>
-					<textarea
-						cols="80"
-						rows="16"
-						class="position-absolute"
-						style="
-							font-size: 0;
-							opacity: 0;
-						"
-						ref="copyStateTextArea"
-					>{{ jsonOutput }}</textarea>
 				</div>
+				</template>
 				<div class="form-group">
 					<label for="currentScriptFileName">Script Files:</label>
 					<select
