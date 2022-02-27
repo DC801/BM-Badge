@@ -51,6 +51,8 @@ Vue.component(
 				initStateJson: JSON.stringify(currentData),
 				currentScriptFileName: '',
 				fileOutputToCopy: '',
+				newScriptFileName: null,
+				newScriptName: null
 			}
 		},
 		computed: {
@@ -118,7 +120,36 @@ Vue.component(
 				);
 				newScriptsFileItemMap[fileName] = scripts;
 				this.currentData.scriptsFileItemMap = newScriptsFileItemMap
-			}
+			},
+			addNewScriptFile () {
+				var fileName = this.newScriptFileName;
+				var allFiles = this.currentData.scriptsFileItemMap;
+				this.currentData.scriptsFileItemMap = Object.assign(
+					{},
+					allFiles,
+					{
+						[fileName]: []
+					}
+				);
+				this.currentScriptFileName = fileName;
+				this.newScriptFileName = null;
+			},
+			addNewScript () {
+				var scriptName = this.newScriptName;
+				var fileName = this.currentScriptFileName;
+				var allScripts = this.currentData.scripts;
+				this.currentData.scripts = Object.assign(
+					{},
+					allScripts,
+					{
+						[scriptName]: []
+					}
+				);
+				this.currentData.scriptsFileItemMap[fileName].push(
+					scriptName
+				);
+				this.newScriptName = null;
+			},
 		},
 	}
 );

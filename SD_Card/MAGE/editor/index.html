@@ -448,6 +448,49 @@
 					</select>
 				</div>
 				<div
+					v-if="newScriptFileName === null"
+					class="form-group"
+				>
+					<button
+						class="btn btn-block btn-primary"
+						type="button"
+						@click="newScriptFileName = 'script-YOUR_SCRIPT_NAME_HERE.json'"
+					>Create New Script File</button>
+				</div>
+				<form
+					v-if="newScriptFileName !== null"
+					@submit.prevent="addNewScriptFile"
+				>
+					<div
+						class="form-group"
+					>
+						<label
+							class="form-label"
+							for="newScriptFileName"
+						>New Script FileName</label>
+						<div class="input-group">
+							<button
+								class="btn btn-primary"
+								type="button"
+								@click="newScriptFileName = null"
+							>X</button>
+							<input
+								type="text"
+								class="form-control"
+								id="newScriptFileName"
+								placeholder="New Script FileName"
+								aria-label="New Script FileName"
+								v-model="newScriptFileName"
+							/>
+							<button
+								class="btn btn-primary"
+								type="submit"
+							>Create New File</button>
+						</div>
+					</div>
+				</form>
+
+				<div
 					v-if="currentScriptFileName"
 				>
 					<div
@@ -464,6 +507,48 @@
 							@updateScriptsFileItemMap="updateScriptsFileItemMap($event)"
 						></editor-script>
 					</div>
+					<div
+						v-if="newScriptName === null"
+						class="form-group"
+					>
+						<button
+							class="btn btn-block btn-primary"
+							type="button"
+							@click="newScriptName = 'script-YOUR_SCRIPT_NAME_HERE'"
+						>Create New Script</button>
+					</div>
+					<form
+						v-if="newScriptName !== null"
+						@submit.prevent="addNewScript"
+					>
+						<div
+							class="form-group"
+						>
+							<label
+								class="form-label"
+								for="newScriptName"
+							>New Script</label>
+							<div class="input-group">
+								<button
+									class="btn btn-primary"
+									type="button"
+									@click="newScriptName = null"
+								>X</button>
+								<input
+									type="text"
+									class="form-control"
+									id="newScriptName"
+									placeholder="New Script Name"
+									aria-label="New Script Name"
+									v-model="newScriptName"
+								/>
+								<button
+									class="btn btn-primary"
+									type="submit"
+								>Create New Script</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 		</div>
