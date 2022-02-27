@@ -23,6 +23,7 @@ Vue.component(
 		data: function () {
 			return {
 				collapsed: true,
+				newActionName: null
 			}
 		},
 		computed: {
@@ -59,6 +60,23 @@ Vue.component(
 				var newScript = this.script.slice();
 				newScript[index] = action;
 				this.$emit('input', newScript);
+			},
+			addAction: function () {
+				var actionName = this.newActionName;
+				var fieldsForAction = actionFieldsMap[actionName];
+				// don't try to add an action if it's not valid
+				if (fieldsForAction) {
+					var newScript = this.script.slice();
+					var action = {
+						action: actionName
+					};
+					fieldsForAction.forEach(function (field) {
+						action[field.propertyName] = null;
+					});
+					newScript.push(action);
+					this.$emit('input', newScript);
+				}
+				this.newActionName = null;
 			}
 		},
 		template: /*html*/`
@@ -107,6 +125,30 @@ Vue.component(
 				@deleteAction="deleteAction(index)"
 			></editor-action>
 		</div>
+		<form
+			@submit.prevent="addAction"
+		>
+			<div
+				class="form-group"
+			>
+				<label
+					class="form-label"
+					for="newScriptFileName"
+				>New Action</label>
+				<div class="input-group">
+					<action-input-action-type
+						id="newActionName"
+						placeholder="New Action"
+						aria-label="New Action"
+						v-model="newActionName"
+					></action-input-action-type>
+					<button
+						class="btn btn-primary"
+						type="submit"
+					>Add Action</button>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 `}
