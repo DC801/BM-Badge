@@ -312,6 +312,22 @@ Vue.component('action-input-maps', {
 	`
 });
 
+Vue.component('action-input-action-type', {
+	mixins: [actionInputMixin],
+	computed: {
+		actions: function () {
+			return Object.keys(actionFieldsMap);
+		}
+	},
+	template: `
+<field-select
+	:options="actions"
+	:value="value"
+	@input="$emit('input', $event)"
+></field-select>
+	`
+});
+
 var propertyEditorComponentMap = {
 	duration: 'field-number',
 	expected_u4: 'field-number',
