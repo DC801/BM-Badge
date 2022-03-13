@@ -212,7 +212,15 @@ var handleFileDropIntoPage = function(event) {
 					'MAGE/game.dat',
 					uint8Array,
 				);
-				Module.ccall('EngineTriggerRomReload');
+				Module.ccall(
+					'EngineTriggerRomReload',
+					undefined,
+					undefined,
+					undefined,
+					{
+						async: true
+					}
+				);
 			}
 		});
 	}
