@@ -343,7 +343,6 @@ var propertyEditorComponentMap = {
 	play_count: 'field-number',
 	frequency: 'field-number',
 	font_id: 'field-number',
-	slot: 'field-number',
 	relative_direction: 'field-number',
 	value: 'field-number',
 	script: 'action-input-scripts',

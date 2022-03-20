@@ -53,7 +53,7 @@ Vue.component(
 				newScript.splice(index, 1);
 				this.$emit('input', newScript);
 			},
-			collapseScript: function () {
+			collapse: function () {
 				this.collapsed = !this.collapsed;
 			},
 			updateAction: function (index, action) {
@@ -92,7 +92,7 @@ Vue.component(
 			<button
 				type="button"
 				class="btn btn-outline-info"
-				@click="collapseScript"
+				@click="collapse"
 			>_</button>
 			<button
 				type="button"

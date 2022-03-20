@@ -263,6 +263,9 @@ var preloadAllDialogSkins = function (filenameMap, scenarioData) {
 			scenarioData.dialogSkins[key],
 			filenameMap,
 			scenarioData,
-		);
+		)
+			.then(function (tilesetData) {
+				scenarioData.dialogSkinsTilesetMap[key] = tilesetData;
+			});
 	})));
 };

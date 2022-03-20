@@ -27,6 +27,24 @@
 			padding: 0;
 			line-height: 0;
 		}
+		.editor-dialog-preview {
+			position: relative;
+			width: 320px;
+			height: 240px;
+			background-color: #000;
+		}
+		.font-image {
+			position: absolute;
+		}
+		.font-image-relative {
+			position: relative;
+		}
+		.image_font-monaco_9-6x12 {
+			width: 6px;
+			height: 12px;
+			position: absolute;
+			background-image: url('./dependencies/font-monaco_9-6x12-transparent.png')
+		}
 	</style>
 	<title>MAGE GAME DATA TOOL</title>
 </head>
@@ -123,6 +141,11 @@
 				:file-name-map="fileNameMap"
 				:scenario-data="scenarioData"
 			></editor-scripts>
+			<editor-dialogs
+					v-if="scenarioData"
+					:file-name-map="fileNameMap"
+					:scenario-data="scenarioData"
+			></editor-dialogs>
 		</div>
 	</div>
 	<script
@@ -579,9 +602,14 @@
 	<script src="js/serial_dialogs.js"></script>
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
+	<script src="js/font-image.js"></script>
 	<script src="js/editor-entity_types.js"></script>
 	<script src="js/editor-scripts.js"></script>
 	<script src="js/editor-script.js"></script>
+	<script src="js/editor-dialogs.js"></script>
+	<script src="js/editor-dialog.js"></script>
+	<script src="js/editor-dialog-preview.js"></script>
+	<script src="js/editor-dialog-box.js"></script>
 	<script src="js/editor-action.js"></script>
 	<script src="js/component-icon.js"></script>
 	<script src="js/index.js"></script>
