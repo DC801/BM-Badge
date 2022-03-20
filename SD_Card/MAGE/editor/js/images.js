@@ -97,6 +97,11 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
 	if (file.scenarioIndex === undefined) {
+		if (URL.createObjectURL) {
+			// node doesn't have a createObjectURL, and we need this for
+			// UI components to display these images
+			file.blobUrl = URL.createObjectURL(file);
+		}
 		var mimeTypeSuffix = file.type.split('/').pop();
 		var imageHandler = imageTypeHandlerMap[mimeTypeSuffix];
 		if (!imageHandler) {

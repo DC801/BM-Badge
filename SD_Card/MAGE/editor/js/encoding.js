@@ -22,6 +22,7 @@ var handleScenarioData = function (fileNameMap) {
 			'scenario.json',
 			scenarioData
 		);
+		scenarioData.tilesetMap = {};
 		scenarioData.mapsByName = {};
 		scenarioData.parsed = {};
 		scenarioData.uniqueStringLikeMaps = {
@@ -34,6 +35,7 @@ var handleScenarioData = function (fileNameMap) {
 		dataTypes.forEach(function (typeName) {
 			scenarioData.parsed[typeName] = [];
 		});
+		scenarioData.dialogSkinsTilesetMap = {}
 		var preloadSkinsPromise = preloadAllDialogSkins(fileNameMap, scenarioData);
 		var portraitsFile = fileNameMap['portraits.json'];
 		var portraitsPromise = preloadSkinsPromise.then(function () {
