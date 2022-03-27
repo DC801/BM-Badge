@@ -369,7 +369,7 @@ Vue.component(
 						<div
 							class="invalid-feedback"
 							v-if="!isNewScriptNameUnique"
-						>Script name already exists!</div>
+						>Another script already has that name!</div>
 					</div>
 				</div>
 			</form>
