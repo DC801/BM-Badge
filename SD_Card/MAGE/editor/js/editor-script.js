@@ -23,7 +23,9 @@ Vue.component(
 		data: function () {
 			return {
 				collapsed: true,
-				newActionName: null
+				editingName: this.scriptName,
+				newActionName: null,
+				editing: false,
 			}
 		},
 		computed: {
@@ -39,7 +41,12 @@ Vue.component(
 				var targetIndex = index + direction;
 				var splice = scripts.splice(index, 1);
 				scripts.splice(targetIndex, 0, splice[0]);
-				this.$emit('updateScriptsFileItemMap', scripts)
+				this.$emit('updateScriptsFileItemMap', scripts);
+			},
+			submitNewScriptName: function () {
+				var newName = this.editingName;
+				this.editing = false;
+				this.$emit('updateScriptName', newName);
 			},
 			moveAction: function (index, direction) {
 				var newScript = this.script.slice();
@@ -84,29 +91,74 @@ Vue.component(
 	class="editor-script card border-primary mb-4"
 >
 	<div class="card-header bg-primary">
-		<strong class="me-auto">{{scriptName}}</strong>
-		<span
-			class="position-absolute"
-			style="top:6px; right:6px;"
+		<div
+			v-if="!editing"
 		>
 			<button
 				type="button"
-				class="btn btn-outline-info"
-				@click="collapse"
-			>_</button>
+				class="btn mr-1 btn-outline-danger"
+				@click="$emit('deleteScript')"
+			>X</button>
+			<strong class="me-auto">{{scriptName}}</strong>
 			<button
 				type="button"
-				class="btn btn-outline-info"
-				:disabled="index === 0"
-				@click="moveScript(-1)"
-			>↑</button>
-			<button
-				type="button"
-				class="btn btn-outline-info"
-				:disabled="index === (currentData.scriptsFileItemMap[fileName].length - 1)"
-				@click="moveScript(1)"
-			>↓</button>
-		</span>
+				class="btn btn-sm p-0"
+				@click="editing = true"
+			>
+				<component-icon
+					color="white"
+					:size="12"
+					subject="edit"
+				></component-icon>
+			</button>
+			<span
+				class="position-absolute"
+				style="top:6px; right:6px;"
+			>
+				<button
+					type="button"
+					class="btn btn-outline-info"
+					@click="collapse"
+				>_</button>
+				<button
+					type="button"
+					class="btn btn-outline-info"
+					:disabled="index === 0"
+					@click="moveScript(-1)"
+				>↑</button>
+				<button
+					type="button"
+					class="btn btn-outline-info"
+					:disabled="index === (currentData.scriptsFileItemMap[fileName].length - 1)"
+					@click="moveScript(1)"
+				>↓</button>
+			</span>
+		</div>
+		<div
+			v-if="editing"
+		>
+			<div class="input-group">
+				<input
+					type="text"
+					class="form-control"
+					v-model="editingName"
+					aria-label="editingName"
+				>
+				<button
+					type="button"
+					class="btn btn-sm"
+					@click="editing = false; editingName = scriptName"
+				>Cancel</button>
+				<button
+					type="button"
+					class="btn btn-sm"
+					@click="submitNewScriptName"
+				>OK</button>
+			</div>
+			<div
+				class="form-text text-danger"
+			>NOTE: Script name references will not be updated elsewhere!</div>
+		</div>
 	</div>
 	<div
 		class="card-body p-3"

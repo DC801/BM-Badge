@@ -441,9 +441,6 @@ Vue.component(
 				}
 				return result;
 			},
-			deleteAction: function () {
-				// TODO
-			},
 			handleInput: function (property, value) {
 				var sanitizer = (
 					propertySanitizerMap[property]
