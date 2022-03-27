@@ -77,7 +77,14 @@ Vue.component(
 			},
 			needsSave: function () {
 				return this.initStateJson !== this.jsonOutput;
-			}
+			},
+			existingScriptNames: function () {
+				return Object.keys(this.currentData.scripts);
+			},
+			isNewScriptNameUnique: function () {
+				var existingNames = this.existingScriptNames;
+				return !existingNames.includes(this.newScriptName);
+			},
 		},
 		methods: {
 			getAllScriptFileJsonForSource (source) {
@@ -109,6 +116,41 @@ Vue.component(
 			},
 			updateScript: function (scriptName,changes) {
 				this.currentData.scripts[scriptName] = changes;
+			},
+			updateScriptName: function (oldName, newName, index) {
+				// updates global script map
+				var scriptValue = this.currentData.scripts[oldName];
+				var newScriptsMap = Object.assign(
+					{
+						[newName]: scriptValue,
+					},
+					this.currentData.scripts,
+				);
+				delete newScriptsMap[oldName];
+
+				// updates script name in file script list
+				var fileName = this.currentScriptFileName;
+				var newScriptList = this.currentData.scriptsFileItemMap[fileName].slice();
+				newScriptList[index] = newName;
+
+				this.currentData.scripts = newScriptsMap;
+				this.updateScriptsFileItemMap(newScriptList);
+			},
+			deleteScript: function (scriptName) {
+				var fileName = this.currentScriptFileName;
+				var newScriptList = this.currentData.scriptsFileItemMap[fileName]
+					.filter(function (name) {
+						return name !== scriptName
+					});
+
+				var newScriptsMap = Object.assign(
+					{},
+					this.currentData.scripts,
+				);
+				delete newScriptsMap[scriptName];
+
+				this.currentData.scripts = newScriptsMap;
+				this.updateScriptsFileItemMap(newScriptList);
 			},
 			updateScriptsFileItemMap: function (scripts) {
 				var fileName = this.currentScriptFileName;
@@ -271,6 +313,8 @@ Vue.component(
 					:scenario-data="scenarioData"
 					:current-data="currentData"
 					@input="updateScript(scriptName,$event)"
+					@updateScriptName="updateScriptName(scriptName,$event,index)"
+					@deleteScript="deleteScript(scriptName)"
 					@updateScriptsFileItemMap="updateScriptsFileItemMap($event)"
 				></editor-script>
 			</div>
@@ -295,7 +339,12 @@ Vue.component(
 						class="form-label"
 						for="newScriptName"
 					>New Script</label>
-					<div class="input-group">
+					<div
+						class="input-group"
+						:class="{
+							'has-danger': !isNewScriptNameUnique
+						}"
+					>
 						<button
 							class="btn btn-primary"
 							type="button"
@@ -304,15 +353,23 @@ Vue.component(
 						<input
 							type="text"
 							class="form-control"
+							:class="{
+								'is-invalid': !isNewScriptNameUnique
+							}"
 							id="newScriptName"
 							placeholder="New Script Name"
 							aria-label="New Script Name"
 							v-model="newScriptName"
 						/>
-						<button
+						<button	
 							class="btn btn-primary"
 							type="submit"
+							:disabled="!isNewScriptNameUnique"
 						>Create New Script</button>
+						<div
+							class="invalid-feedback"
+							v-if="!isNewScriptNameUnique"
+						>Script name already exists!</div>
 					</div>
 				</div>
 			</form>

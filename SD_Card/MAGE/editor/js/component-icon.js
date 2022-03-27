@@ -101,6 +101,7 @@ var iconMap = {
 	'CHECK_BLE_FLAG': 'fork',
 	// manually added:
 	'COPY_SCRIPT': 'document',
+	'edit': 'pencil',
 };
 
 var iconData = {
