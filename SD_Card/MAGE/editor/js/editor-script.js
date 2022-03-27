@@ -31,7 +31,14 @@ Vue.component(
 		computed: {
 			script: function () {
 				return this.currentData.scripts[this.scriptName];
-			}
+			},
+			existingScriptNames: function () {
+				return Object.keys(this.currentData.scripts);
+			},
+			isNewScriptNameUnique: function () {
+				var existingNames = this.existingScriptNames;
+				return !existingNames.includes(this.editingName);
+			},
 		},
 		methods: {
 			moveScript: function (direction) {
@@ -141,6 +148,9 @@ Vue.component(
 				<input
 					type="text"
 					class="form-control"
+					:class="{
+						'is-invalid': !isNewScriptNameUnique && scriptName !== editingName
+					}"
 					v-model="editingName"
 					aria-label="editingName"
 				>
@@ -153,11 +163,26 @@ Vue.component(
 					type="button"
 					class="btn btn-sm"
 					@click="submitNewScriptName"
+					:disabled="
+						!isNewScriptNameUnique
+						&& scriptName !== editingName
+					"
 				>OK</button>
 			</div>
 			<div
-				class="form-text text-danger"
+				class="form-text text-warning"
+				v-if="
+					isNewScriptNameUnique
+					|| scriptName === editingName
+				"
 			>NOTE: Script name references will not be updated elsewhere!</div>
+			<div
+				class="form-text text-danger"
+				v-if="
+					!isNewScriptNameUnique
+					&& scriptName !== editingName
+				"
+			>Another script already has that name!</div>
 		</div>
 	</div>
 	<div
