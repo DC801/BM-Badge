@@ -204,6 +204,20 @@
 				- [ ] from a numerical value
 				- [ ] from an alphanumeric value
 		- [x] Show bouncing arrow at bottom of dialog to indicate that the player should press button to continue
+	- [ ] Dialog editor:
+		- [x] File selector
+		- [x] List of Dialogs by name in file
+		- [ ] Show the `dialog phases` in a dialog
+			- [ ] Add `phase`
+			- [ ] Delete `phase`
+			- [ ] Preview/edit `phase`
+				- [x] Preview message
+				- [ ] Select current message
+				- [ ] edit message
+				- [ ] add message
+				- [ ] delete message
+				- [ ] text entry for entity name
+				- [ ] text entry for entity portrait
 - [x] Strings
 	- [x] uint16_t Length
 	- [x] char array with null termination Length bytes long

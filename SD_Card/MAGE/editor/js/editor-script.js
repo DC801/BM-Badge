@@ -2,6 +2,13 @@ Vue.component(
 	'editor-script',
 	{
 		name: 'editor-script',
+		mixins: [
+			{
+				computed: window.Vuex.mapGetters([
+					'scriptsOptions',
+				]),
+			}
+		],
 		props: {
 			scriptName: {
 				type: String,
@@ -32,11 +39,8 @@ Vue.component(
 			script: function () {
 				return this.currentData.scripts[this.scriptName];
 			},
-			existingScriptNames: function () {
-				return Object.keys(this.currentData.scripts);
-			},
 			isNewScriptNameUnique: function () {
-				var existingNames = this.existingScriptNames;
+				var existingNames = this.scriptsOptions;
 				return !existingNames.includes(this.editingName);
 			},
 		},
@@ -187,7 +191,7 @@ Vue.component(
 	</div>
 	<div
 		class="card-body p-3"
-		v-show="!collapsed"
+		v-if="!collapsed"
 	>
 		<div
 			v-for="(action, index) in script"

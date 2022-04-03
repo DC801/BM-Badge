@@ -137,9 +137,7 @@
 				:scenario-data="scenarioData"
 			></entity-type-editor>
 			<editor-scripts
-				v-if="scenarioData"
-				:file-name-map="fileNameMap"
-				:scenario-data="scenarioData"
+				v-if="currentData"
 			></editor-scripts>
 			<editor-dialogs
 					v-if="scenarioData"
@@ -404,8 +402,12 @@
 	</script>
 
 	<script
-		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
+		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"
 		src="./dependencies/vue.js"
+	></script>
+	<script
+		data-original-src="https://cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.js"
+		src="./dependencies/vuex.js"
 	></script>
 	<script
 		data-original-src="https://wzrd.in/standalone/fast-png@5.0.4"
@@ -439,6 +441,7 @@
 	<script src="js/editor-dialog-box.js"></script>
 	<script src="js/editor-action.js"></script>
 	<script src="js/component-icon.js"></script>
+	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
 </body>
 </html>

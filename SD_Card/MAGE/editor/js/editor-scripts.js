@@ -24,30 +24,17 @@ Vue.component(
 	'editor-scripts',
 	{
 		name: 'editor-scripts',
-		props: {
-			fileNameMap: {
-				type: Object,
-				required: true
-			},
-			scenarioData: {
-				type: Object,
-				required: true
-			}
-		},
+		mixins: [
+			makeComputedStoreGetterSettersMixin([
+				'scenarioData',
+				'fileNameMap',
+				'currentData',
+				'initState',
+				'initStateJson',
+			]),
+		],
 		data: function () {
-			var currentData = {
-				scripts: jsonClone(this.scenarioData.scripts),
-				scriptsFileItemMap: jsonClone(this.scenarioData.scriptsFileItemMap),
-				dialogs: jsonClone(this.scenarioData.dialogs),
-				maps: jsonClone(this.scenarioData.maps),
-				entityTypes: jsonClone(this.scenarioData.entityTypes),
-				entityNames: extractNames(this.scenarioData.parsed.entities),
-				geometryNames: extractNames(this.scenarioData.parsed.geometry),
-			}
 			return {
-				currentData: currentData,
-				initState: JSON.parse(JSON.stringify(currentData)),
-				initStateJson: JSON.stringify(currentData),
 				currentScriptFileName: '',
 				fileOutputToCopy: '',
 				newScriptFileName: null,
@@ -78,11 +65,8 @@ Vue.component(
 			needsSave: function () {
 				return this.initStateJson !== this.jsonOutput;
 			},
-			existingScriptNames: function () {
-				return Object.keys(this.currentData.scripts);
-			},
 			isNewScriptNameUnique: function () {
-				var existingNames = this.existingScriptNames;
+				var existingNames = this.scriptsOptions;
 				return !existingNames.includes(this.newScriptName);
 			},
 		},

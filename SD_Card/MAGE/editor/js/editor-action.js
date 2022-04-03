@@ -203,16 +203,12 @@ Vue.component('action-input-slots', {
 
 Vue.component('action-input-scripts', {
 	mixins: [actionInputMixin],
-	computed: {
-		scripts: function () {
-			return Object.keys(
-				this.currentData.scripts
-			);
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'scriptsOptions'
+	]),
 	template: `
 <field-select
-	:options="scripts"
+	:options="scriptsOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -221,16 +217,12 @@ Vue.component('action-input-scripts', {
 
 Vue.component('action-input-dialogs', {
 	mixins: [actionInputMixin],
-	computed: {
-		dialogs: function () {
-			return Object.keys(
-				this.currentData.dialogs
-			);
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'dialogOptions'
+	]),
 	template: `
 <field-select
-	:options="dialogs"
+	:options="dialogOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -239,17 +231,12 @@ Vue.component('action-input-dialogs', {
 
 Vue.component('action-input-entity_types', {
 	mixins: [actionInputMixin],
-	computed: {
-		entityTypes: function () {
-			var result = Object.keys(
-				this.currentData.entityTypes
-			);
-			return result.sort(sortCaseInsensitive);
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'entityTypesOptions'
+	]),
 	template: `
 <field-select
-	:options="entityTypes"
+	:options="entityTypesOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -258,17 +245,12 @@ Vue.component('action-input-entity_types', {
 
 Vue.component('action-input-entities', {
 	mixins: [actionInputMixin],
-	computed: {
-		entities: function () {
-			var result = this.currentData.entityNames.slice();
-			result.unshift('%SELF%');
-			result.unshift('%PLAYER%');
-			return result;
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'entityNamesOptions'
+	]),
 	template: `
 <field-select
-	:options="entities"
+	:options="entityNamesOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -277,16 +259,12 @@ Vue.component('action-input-entities', {
 
 Vue.component('action-input-geometry', {
 	mixins: [actionInputMixin],
-	computed: {
-		geometry: function () {
-			var result = this.currentData.geometryNames.slice();
-			result.unshift('%ENTITY_PATH%');
-			return result;
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'geometryOptions'
+	]),
 	template: `
 <field-select
-	:options="geometry"
+	:options="geometryOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -295,17 +273,12 @@ Vue.component('action-input-geometry', {
 
 Vue.component('action-input-maps', {
 	mixins: [actionInputMixin],
-	computed: {
-		maps: function () {
-			var result = Object.keys(
-				this.currentData.maps
-			)
-			return result.sort(sortCaseInsensitive);
-		}
-	},
+	computed: window.Vuex.mapGetters([
+		'mapsOptions'
+	]),
 	template: `
 <field-select
-	:options="maps"
+	:options="mapsOptions"
 	:value="value"
 	@input="$emit('input', $event)"
 ></field-select>
@@ -369,6 +342,18 @@ Vue.component(
 	'editor-action',
 	{
 		name: 'editor-action',
+		mixins: [
+			{
+				computed: window.Vuex.mapGetters([
+					'dialogOptions',
+					'entityTypesOptions',
+					'entityNamesOptions',
+					'geometryOptions',
+					'mapsOptions',
+					'scriptsOptions',
+				])
+			}
+		],
 		propertyEditorComponentMap,
 		props: {
 			script: {
@@ -428,15 +413,18 @@ Vue.component(
 					'action-input-directions': directions,
 					'action-input-slots': slots,
 					'field-bool': [true, false],
-					'action-input-scripts': Object.keys(this.currentData.scripts),
-					'action-input-dialogs': Object.keys(this.currentData.dialogs),
-					'action-input-entity_types': Object.keys(this.currentData.entityTypes),
-					'action-input-entities': this.currentData.entityNames.slice().concat(['%SELF%','%PLAYER%']),
-					'action-input-geometry': this.currentData.geometryNames.slice().concat(['%ENTITY_PATH%']),
-					'action-input-maps': Object.keys(this.currentData.maps),
+					'action-input-scripts': this.scriptsOptions,
+					'action-input-dialogs': this.dialogOptions,
+					'action-input-entity_types': this.entityTypesOptions,
+					'action-input-entities': this.entityNamesOptions,
+					'action-input-geometry': this.geometryOptions,
+					'action-input-maps': this.mapsOptions,
 				}
 				if (Object.keys(actionOptionsMap).includes(actionCategory)) {
 					var options = actionOptionsMap[actionCategory];
+					if (!options || !options.includes) {
+						throw new Error('Missing ' + actionCategory)
+					}
 					result = options.includes(value);
 				}
 				return result;

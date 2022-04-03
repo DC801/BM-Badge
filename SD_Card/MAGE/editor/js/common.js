@@ -130,3 +130,34 @@ var jsonClone = function (input) {
 	return JSON.parse(JSON.stringify(input));
 };
 
+var makeComputedStoreGetterSetter = function (propertyName) {
+	return {
+		get: function () {
+			return this.$store.state[propertyName]
+		},
+		set: function (value) {
+			return this.$store.commit('GENERIC_MUTATOR', {
+				propertyName: propertyName,
+				value: value,
+			});
+		}
+	}
+};
+
+var makeComputedStoreGetterSettersMixin = function (config) {
+	var vuexPropertyNames = config;
+	var computedNames = config;
+	var computed = {};
+	if (!(config instanceof Array)) {
+		vuexPropertyNames = Object.values(config);
+		computedNames = Object.keys(config);
+	}
+	vuexPropertyNames.forEach(function (vuexPropertyName, index) {
+		computed[computedNames[index]] = makeComputedStoreGetterSetter(
+			vuexPropertyName
+		);
+	});
+	return {
+		computed: computed
+	};
+}

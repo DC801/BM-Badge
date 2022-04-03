@@ -8,16 +8,19 @@ window.Vue.component(
 
 window.vueApp = new window.Vue({
 	el: '#app',
+	store: window.store,
+	mixins: [
+		makeComputedStoreGetterSettersMixin([
+			'scenarioData',
+			'fileNameMap',
+			'currentData',
+		]),
+	],
 	data: {
 		uniqueEncodeAttempt: Math.random(),
 		isLoading: false,
 		error: null,
 		downloadData: null,
-		scenarioData: null,
-		fileNameMap: null,
-	},
-	created: function () {
-		console.log('Created');
 	},
 	methods: {
 		closeError: function () {
@@ -62,6 +65,7 @@ window.vueApp = new window.Vue({
 						.then(function (scenarioData) {
 							vm.fileNameMap = fileNameMap;
 							vm.scenarioData = scenarioData;
+							vm.$store.commit('INIT_CURRENT_DATA');
 							return scenarioData;
 						})
 						.then(generateIndexAndComposite)
