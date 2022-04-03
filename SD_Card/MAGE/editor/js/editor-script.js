@@ -114,7 +114,7 @@ Vue.component(
 			<button
 				type="button"
 				class="btn btn-sm p-0"
-				@click="editing = true"
+				@click="editing = true; editingName = scriptName;"
 			>
 				<component-icon
 					color="white"
@@ -161,7 +161,7 @@ Vue.component(
 				<button
 					type="button"
 					class="btn btn-sm"
-					@click="editing = false; editingName = scriptName"
+					@click="editing = false; editingName = null"
 				>Cancel</button>
 				<button
 					type="button"
