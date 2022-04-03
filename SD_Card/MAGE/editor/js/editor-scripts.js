@@ -99,7 +99,10 @@ Vue.component(
 				document.execCommand("copy");
 			},
 			updateScript: function (scriptName,changes) {
-				this.currentData.scripts[scriptName] = changes;
+				this.$store.commit('UPDATE_SCRIPT_BY_NAME', {
+					scriptName: scriptName,
+					script: changes
+				})
 			},
 			updateScriptName: function (oldName, newName, index) {
 				// updates global script map

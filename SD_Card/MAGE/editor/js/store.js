@@ -19,6 +19,9 @@ window.store = new window.Vuex.Store({
 			state.initState = JSON.parse(JSON.stringify(state.currentData));
 			state.initStateJson = JSON.stringify(state.currentData);
 		},
+		UPDATE_SCRIPT_BY_NAME: function (state, args) {
+			state.currentData.scripts[args.scriptName] = args.script;
+		},
 	},
 	getters: {
 		dialogOptions: function (state) {
