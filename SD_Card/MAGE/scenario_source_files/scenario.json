@@ -23,7 +23,8 @@
 		"scripts/script-elders.json",
 		"scripts/script-debug.json",
 		"scripts/script-woprhouse.json",
-		"scripts/script-max.json"
+		"scripts/script-max.json",
+		"scripts/script-flying-toasters.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-main_menu.json",

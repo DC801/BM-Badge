@@ -1,4 +1,9 @@
 {
+	"flying-toasters": {
+		"path": "maps/map-flying-toasters.json",
+		"on_tick": "on_tick-flying-toasters",
+		"on_load": "on_load-flying-toasters"
+	},
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",
 		"on_tick": "null_script",
