@@ -458,7 +458,7 @@
 			"script": "show_dialog-bobrock-start"
 		}
 	],
-"show_dialog-bobrock-start2": [
+	"show_dialog-bobrock-start2": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-start2"
@@ -478,7 +478,7 @@
 			"script": "show_dialog-bobrock-start"
 		}
 	],
-"show_dialog-bobrock-bounce": [
+	"show_dialog-bobrock-bounce": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "bobsclub-entered",
@@ -539,10 +539,25 @@
 			"geometry": "bobsclub-hidingplace"
 		},
 		{
+			"action": "SET_ENTITY_NAME",
+			"string": " ",
+			"entity": "Bob Moss"
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"script": "null_script",
+			"entity": "Bob Moss"
+		},
+		{
+			"action": "SET_ENTITY_TYPE",
+			"entity_type": "exa",
+			"entity": "Bob Moss"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "on_load-bobsclub2"
 		}
-		],
+	],
 	"on_load-bobsclub2": [
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -835,7 +850,7 @@
 			"bool_value": true
 		}
 	],
-"show_dialog-bobsclub-strongbob-s": [
+	"show_dialog-bobsclub-strongbob-s": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub-strongbob-s"
@@ -846,13 +861,13 @@
 			"script": "show_dialog-bobsclub-strongbob"
 		}
 	],
-"show_dialog-bobsclub-wall": [
+	"show_dialog-bobsclub-wall": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobsclub-wall"
 		}
 	],
-"show_dialog-bobrock-bounce2": [
+	"show_dialog-bobrock-bounce2": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-bobrock-bounce"
@@ -1171,7 +1186,6 @@
 			"action": "LOAD_MAP",
 			"map": "main"
 		}
-
 	],
 	"on_tick-bakery": [
 		{
