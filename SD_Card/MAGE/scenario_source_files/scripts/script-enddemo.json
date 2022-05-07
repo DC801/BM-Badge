@@ -940,7 +940,7 @@
 			"map": "credits"
 		}
 	],
-	"no_debug-roll-credits": [
+	"debug-roll-credits-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",

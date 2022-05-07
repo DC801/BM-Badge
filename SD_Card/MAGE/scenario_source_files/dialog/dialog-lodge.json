@@ -766,7 +766,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-bypass-tuesday"
+					"script": "debug-bypass-tuesday-no"
 				}
 			]
 		}
@@ -794,7 +794,7 @@
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-disable-tuesday"
+					"script": "debug-disable-tuesday-no"
 				}
 			]
 		}
@@ -868,7 +868,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-cutscene-tuesday"
+					"script": "debug-cutscene-tuesday-no"
 				}
 			]
 		}
@@ -896,7 +896,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-touch-artifacts"
+					"script": "debug-touch-artifacts-no"
 				}
 			]
 		}

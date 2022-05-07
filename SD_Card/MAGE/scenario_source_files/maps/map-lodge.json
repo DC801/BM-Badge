@@ -265,7 +265,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose"
+                         "value":"show_dialog-goose-generic"
                         }, 
                         {
                          "name":"on_tick",
@@ -324,7 +324,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose"
+                         "value":"show_dialog-goose-generic"
                         }],
                  "rotation":0,
                  "type":"",
@@ -342,7 +342,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose"
+                         "value":"show_dialog-goose-generic"
                         }],
                  "rotation":0,
                  "type":"",

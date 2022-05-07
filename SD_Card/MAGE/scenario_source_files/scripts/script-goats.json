@@ -16,7 +16,7 @@
 			"script": "show_dialog-verthandi-glitched-lesson"
 		}
 	],
-	"verthandi-wrapup": [
+	"show_dialog-verthandi-wrapup": [
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Verthandi",
@@ -48,7 +48,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-glitched-s": [
@@ -59,7 +59,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-end": [
@@ -70,7 +70,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-start": [
@@ -371,7 +371,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-backstory-goatsnotfine": [
@@ -391,7 +391,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-noglitches": [
@@ -408,10 +408,10 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "reset-glitch-hint-only-eval"
+			"script": "show_dialog-verthandi-clear-glitch-hint-eval"
 		}
 	],
-	"reset-glitch-hint-only-eval": [
+	"show_dialog-verthandi-clear-glitch-hint-eval": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "calculate-hint-tracking-series"
@@ -422,31 +422,25 @@
 			"value": 11,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-glitch-hint-only",
+			"success_script": "show_dialog-verthandi-clear-glitch-hint",
 			"doc": "if the hint series is the same, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "glitch-success-wrapup"
+			"script": "show_dialog-verthandi-glitches-finished-wrapup"
 		}
 	],
-	"reset-glitch-hint-only": [
+	"show_dialog-verthandi-clear-glitch-hint": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-none"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "glitch-success-wrapup"
+			"script": "show_dialog-verthandi-glitches-finished-wrapup"
 		}
 	],
-	"glitch-success-wrapup": [
-		{
-			"action": "RUN_SCRIPT",
-			"script": "verthandi-surprise-wrapup"
-		}
-	],
-	"verthandi-surprise-wrapup": [
+	"show_dialog-verthandi-glitches-finished-wrapup": [
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "storyflag-verthandi",
@@ -459,7 +453,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-noglitches-surprise": [
@@ -470,7 +464,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "reset-glitch-hint-only-eval"
+			"script": "show_dialog-verthandi-clear-glitch-hint-eval"
 		}
 	],
 	"show_dialog-verthandi-start-s": [
@@ -554,7 +548,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-lodge-glitch-hint": [
@@ -564,7 +558,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}	
 	],
 	"show_dialog-verthandi-map_main-glitch-hint": [
@@ -574,7 +568,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}	
 	],
 	"show_dialog-verthandi-magehouse-glitch-hint": [
@@ -584,7 +578,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}	
 	],
 	"show_dialog-verthandi-s-goatsnotfine": [
@@ -599,7 +593,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}	
 	],
 	"show_dialog-verthandi-goats-solved-now": [
@@ -628,7 +622,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}
 	],
 	"show_dialog-verthandi-oneglitch": [
@@ -642,7 +636,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "verthandi-wrapup"
+			"script": "show_dialog-verthandi-wrapup"
 		}	
 	],
 	"show_dialog-goat": [
@@ -664,15 +658,15 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "goats-glitchhint-eval"
+			"script": "show_dialog-goats-glitchhint-eval"
 		}
 	],
-	"goats-glitchhint-eval": [
+	"show_dialog-goats-glitchhint-eval": [
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "goats-both-unglitched",
 			"expected_bool": false,
-			"success_script": "goats-hint-yes"
+			"success_script": "show_dialog-goats-hint-yes"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
@@ -680,7 +674,7 @@
 			"script": "show_dialog-goat"
 		}
 	],
-	"goats-hint-yes": [
+	"show_dialog-goats-hint-yes": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-glitch"

@@ -574,7 +574,7 @@
 			"script": "debug-sheep-q"
 		}
 	],
-	"no_debug-sheep": [
+	"debug-sheep-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-sheep"

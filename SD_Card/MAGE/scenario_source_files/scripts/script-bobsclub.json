@@ -1336,7 +1336,7 @@
 			"map": "bobsclub"
 		}
 	],
-	"no_debug-bob": [
+	"debug-bob-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",

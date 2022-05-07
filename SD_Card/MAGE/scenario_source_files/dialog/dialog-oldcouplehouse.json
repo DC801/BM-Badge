@@ -288,7 +288,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-bea-sequel"
+					"script": "debug-bea-sequel-no"
 				}
 			]
 		}

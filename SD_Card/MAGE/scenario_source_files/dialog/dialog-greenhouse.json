@@ -226,7 +226,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-ethernet-puzzle"
+					"script": "debug-ethernet-puzzle-no"
 				}
 			]
 		}

@@ -245,7 +245,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-roll-credits"
+					"script": "debug-roll-credits-no"
 				}
 			]
 		}

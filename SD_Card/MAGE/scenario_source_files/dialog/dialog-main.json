@@ -328,7 +328,7 @@
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-set-flags-false"
+					"script": "debug-set-flags-false-no"
 				}
 			]
 		}
@@ -356,7 +356,7 @@
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-set-flags-true"
+					"script": "debug-set-flags-true-no"
 				}
 			]
 		}
@@ -418,11 +418,11 @@
 			"options": [
 				{
 					"label": "Yes",
-					"script": "debug-hub"
+					"script": "debug-hub-go"
 				},
 				{
 					"label": "No",
-					"script": "no_debug-hub"
+					"script": "debug-hub-no"
 				}
 			]
 		}
@@ -451,12 +451,12 @@
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-demobonus"
+					"script": "debug-demobonus-no"
 				}
 			]
 		}
 	],
-	"dialog-goose": [
+	"dialog-goose-generic": [
 		{
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
@@ -544,11 +544,11 @@
 			"options": [
 				{
 					"label": "Yes",
-					"script": "debug-win-rake"
+					"script": "debug-win-rake-yes"
 				},
 				{
 					"label": "No",
-					"script": "no_debug-win-rake"
+					"script": "debug-win-rake-no"
 				}
 			]
 		}
