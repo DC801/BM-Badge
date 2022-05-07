@@ -28,7 +28,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-6-66"
+                         "value":"toasters-do_path-6-66"
                         }],
                  "rotation":0,
                  "type":"",
@@ -46,7 +46,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-5-75"
+                         "value":"toasters-do_path-5-75"
                         }],
                  "rotation":0,
                  "type":"",
@@ -64,7 +64,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-8-15"
+                         "value":"toasters-do_path-8-15"
                         }],
                  "rotation":0,
                  "type":"",
@@ -82,7 +82,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-2-50"
+                         "value":"toasters-do_path-2-50"
                         }],
                  "rotation":0,
                  "type":"",
@@ -100,7 +100,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-0-50"
+                         "value":"toasters-do_path-0-50"
                         }],
                  "rotation":0,
                  "type":"",
@@ -118,7 +118,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-10-50"
+                         "value":"toasters-do_path-10-50"
                         }],
                  "rotation":0,
                  "type":"",
@@ -136,7 +136,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-7-60"
+                         "value":"toasters-do_path-7-60"
                         }],
                  "rotation":0,
                  "type":"",
@@ -154,7 +154,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-4-50"
+                         "value":"toasters-do_path-4-50"
                         }],
                  "rotation":0,
                  "type":"",
@@ -172,7 +172,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-5"
+                         "value":"toasters-do_path-5"
                         }],
                  "rotation":0,
                  "type":"",
@@ -190,7 +190,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-10"
+                         "value":"toasters-do_path-10"
                         }],
                  "rotation":0,
                  "type":"",
@@ -208,7 +208,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-3"
+                         "value":"toasters-do_path-3"
                         }],
                  "rotation":0,
                  "type":"",
@@ -226,7 +226,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"do_path-0"
+                         "value":"toasters-do_path-0"
                         }],
                  "rotation":0,
                  "type":"",

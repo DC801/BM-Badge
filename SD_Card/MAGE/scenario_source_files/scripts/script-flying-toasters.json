@@ -1,6 +1,16 @@
 {
 	"on_tick-flying-toasters": [
 		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 3000
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_tick-flying-toasters-listen"
+		}
+	],
+	"on_tick-flying-toasters-listen": [
+		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "ANY",
 			"success_script": "load-main_menu"
@@ -12,7 +22,7 @@
 			"geometry": "flying-toasters-cam"
 		}
 	],
-	"do_path-0": [
+	"toasters-do_path-0": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start0",
@@ -26,11 +36,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-3",
+			"script": "toasters-do_path-3",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-1": [
+	"toasters-do_path-1": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start1",
@@ -44,11 +54,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-10",
+			"script": "toasters-do_path-10",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-2": [
+	"toasters-do_path-2": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start2",
@@ -62,11 +72,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-0",
+			"script": "toasters-do_path-0",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-3": [
+	"toasters-do_path-3": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start3",
@@ -80,11 +90,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-7",
+			"script": "toasters-do_path-7",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-4": [
+	"toasters-do_path-4": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start4",
@@ -98,11 +108,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-9",
+			"script": "toasters-do_path-9",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-5": [
+	"toasters-do_path-5": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start5",
@@ -116,11 +126,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-8",
+			"script": "toasters-do_path-8",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-6": [
+	"toasters-do_path-6": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start6",
@@ -134,11 +144,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-1",
+			"script": "toasters-do_path-1",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-7": [
+	"toasters-do_path-7": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start7",
@@ -152,11 +162,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-5",
+			"script": "toasters-do_path-5",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-8": [
+	"toasters-do_path-8": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start8",
@@ -170,11 +180,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-4",
+			"script": "toasters-do_path-4",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-9": [
+	"toasters-do_path-9": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start9",
@@ -188,11 +198,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-11",
+			"script": "toasters-do_path-11",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-10": [
+	"toasters-do_path-10": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start10",
@@ -206,11 +216,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-2",
+			"script": "toasters-do_path-2",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-11": [
+	"toasters-do_path-11": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"geometry": "start11",
@@ -224,11 +234,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-6",
+			"script": "toasters-do_path-6",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-0-50": [
+	"toasters-do_path-0-50": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 2500,
@@ -237,11 +247,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-3",
+			"script": "toasters-do_path-3",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-2-50": [
+	"toasters-do_path-2-50": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 3400,
@@ -250,11 +260,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-0",
+			"script": "toasters-do_path-0",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-4-50": [
+	"toasters-do_path-4-50": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 4200,
@@ -263,11 +273,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-9",
+			"script": "toasters-do_path-9",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-5-75": [
+	"toasters-do_path-5-75": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 2208,
@@ -276,11 +286,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-8",
+			"script": "toasters-do_path-8",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-6-66": [
+	"toasters-do_path-6-66": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 3333,
@@ -289,11 +299,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-1",
+			"script": "toasters-do_path-1",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-7-60": [
+	"toasters-do_path-7-60": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 3600,
@@ -302,11 +312,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-5",
+			"script": "toasters-do_path-5",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-8-15": [
+	"toasters-do_path-8-15": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 6800,
@@ -315,11 +325,11 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-4",
+			"script": "toasters-do_path-4",
 			"entity": "%SELF%"
 		}
 	],
-	"do_path-10-50": [
+	"toasters-do_path-10-50": [
 		{
 			"action": "WALK_ENTITY_TO_GEOMETRY",
 			"duration": 3000,
@@ -328,7 +338,7 @@
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"script": "do_path-2",
+			"script": "toasters-do_path-2",
 			"entity": "%SELF%"
 		}
 	]
