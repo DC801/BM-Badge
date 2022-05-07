@@ -648,7 +648,7 @@
 				},
 				{
 					"label": "Never mind",
-					"script": "no_debug-bob"
+					"script": "debug-bob-no"
 				}
 			]
 		}

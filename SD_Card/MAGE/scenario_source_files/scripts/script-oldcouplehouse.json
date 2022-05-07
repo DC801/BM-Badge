@@ -981,7 +981,7 @@
 			"script": "debug-bea-sequel-q"
 		}
 	],
-	"no_debug-bea-sequel": [
+	"debug-bea-sequel-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-bea-sequel",

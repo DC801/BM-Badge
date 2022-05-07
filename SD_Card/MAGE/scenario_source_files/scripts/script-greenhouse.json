@@ -697,7 +697,7 @@
 			"doc": "Restore Ether Nettle?"
 		}
 	],
-	"no_debug-ethernet-puzzle": [
+	"debug-ethernet-puzzle-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-ethernet-puzzle",

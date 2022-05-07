@@ -301,7 +301,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-walk-to-lodge"
+					"script": "debug-walk-to-lodge-no"
 				}
 			]
 		}
@@ -325,7 +325,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-goodmorning"
+					"script": "debug-goodmorning-no"
 				}
 			]
 		}
@@ -345,7 +345,7 @@
 				},
 				{
 					"label": "Go to debug map hub",
-					"script": "debug-hub"
+					"script": "debug-hub-go"
 				},
 				{
 					"label": "Never mind",

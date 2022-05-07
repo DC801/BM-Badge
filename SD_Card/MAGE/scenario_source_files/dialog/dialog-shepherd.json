@@ -118,7 +118,7 @@
 				},
 				{
 					"label": "No",
-					"script": "no_debug-sheep"
+					"script": "debug-sheep-no"
 				}
 			]
 		}

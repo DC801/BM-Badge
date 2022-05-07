@@ -1,27 +1,27 @@
 {
-	"show_dialog-goose": [
+	"show_dialog-goose-generic": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "face-player"
 		},
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-goose"
+			"dialog": "dialog-goose-generic"
 		}
 	],
-	"show_dialog-goose-rake": [
+	"show_dialog-goose-mad": [
 		{
 			"action": "SHOW_DIALOG",
-			"dialog": "dialog-goose"
+			"dialog": "dialog-goose-generic"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "storyflag-rake",
 			"expected_bool": false,
-			"success_script": "goose-hints"
+			"success_script": "show_dialog-goose-mad-set-hint"
 		}
 	],
-	"goose-hints": [
+	"show_dialog-goose-mad-set-hint": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-goose"
@@ -29,15 +29,15 @@
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
-			"script": "show_dialog-goose-rake"
+			"script": "show_dialog-goose-mad"
 		}
 	],
-	"goose-mission": [
+	"on_tick-goose-mission": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "lake",
-			"success_script": "goose-misison-rake-out-of-lake",
+			"success_script": "on_tick-goose-mission-rake-out-of-lake",
 			"expected_bool": false,
 			"doc": "on_tick is 'mission' -- if rake not in lake, diverge"
 		},
@@ -66,31 +66,31 @@
 			"value": 10,
 			"comparison": "==",
 			"expected_bool": true,
-			"success_script": "reset-goose-hint-only",
-			"doc": "if the hint series is the same, reset hint"
+			"success_script": "on_tick-goose-mission-clear-hint",
+			"doc": "if the hint series is the currently goose, reset hint"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "goose-success-wrapup"
+			"script": "on_tick-goose-mission-wrapup"
 		}
 	],
-	"reset-goose-hint-only": [
+	"on_tick-goose-mission-clear-hint": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "set-hint-none"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "goose-success-wrapup"
+			"script": "on_tick-goose-mission-wrapup"
 		}
 	],
-	"goose-success-wrapup": [
+	"on_tick-goose-mission-wrapup": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "null_script"
 		}
 	],
-	"goose-misison-rake-out-of-lake": [
+	"on_tick-goose-mission-rake-out-of-lake": [
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
@@ -126,15 +126,8 @@
 			"direction": "south"
 		},
 		{
-			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-			"entity": "Rake",
-			"geometry": "rake-point",
-			"success_script": "goose-misison-rake-on-rake-point",
-			"expected_bool": true
-		},
-		{
 			"action": "RUN_SCRIPT",
-			"script": "goose-mission"
+			"script": "on_tick-goose-mission"
 		}
 	],
 	"goose-misison-rake-on-rake-point": [
@@ -142,7 +135,7 @@
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-point",
-			"success_script": "goose-misison-rake-out-of-lake",
+			"success_script": "on_tick-goose-mission-rake-out-of-lake",
 			"expected_bool": false,
 			"doc": "if rake has left its start point, diverge"
 		},
@@ -170,7 +163,7 @@
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-point",
-			"success_script": "goose-misison-rake-out-of-lake",
+			"success_script": "on_tick-goose-mission-rake-out-of-lake",
 			"expected_bool": false,
 			"doc": "if rake has left its start point, diverge"
 		},
@@ -193,13 +186,13 @@
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "Rake",
 			"geometry": "rake-point",
-			"success_script": "goose-misison-rake-out-of-lake",
+			"success_script": "on_tick-goose-mission-rake-out-of-lake",
 			"expected_bool": false,
 			"doc": "if rake has left its start point, diverge"
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "goose-mission"
+			"script": "on_tick-goose-mission"
 		}
 	],
 	"honk": [
@@ -335,7 +328,7 @@
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Goose",
-			"script": "goose-mission"
+			"script": "on_tick-goose-mission"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
@@ -354,7 +347,7 @@
 			"doc": "Position rake in the lake?"
 		}
 	],
-	"debug-win-rake": [
+	"debug-win-rake-yes": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Rake",
@@ -366,7 +359,7 @@
 			"script": "debug-win-rake-q"
 		}
 	],
-	"no_debug-win-rake": [
+	"debug-win-rake-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
