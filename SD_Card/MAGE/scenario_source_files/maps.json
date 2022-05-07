@@ -1,4 +1,5 @@
 {
+	"main_menu": "maps/map-main_menu.json",
 	"flying-toasters": {
 		"path": "maps/map-flying-toasters.json",
 		"on_tick": "on_tick-flying-toasters",
@@ -17,7 +18,6 @@
 			"hub": "map-action_testing-go_hub"
 		}
 	},
-	"main_menu": "maps/map-main_menu.json",
 	"demo": "maps/map-demo.json",
 	"main": "maps/map-main.json",
 	"bobsclub": "maps/map-bobsclub.json",

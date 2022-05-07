@@ -34,6 +34,10 @@
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
 		}
 	],
 	"show_dialog-bob-first-demo_map": [
@@ -485,6 +489,26 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "demo"
+		}
+	],
+	"show_dialog-demo-end-dream-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-demo-end-dream-q",
+			"doc": "End dream?"
+		}
+	],
+	"demo-end-dream-yes": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main_menu"
+		}
+	],
+	"demo-end-dream-no": [
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "%SELF%",
+			"script": "show_dialog-demo-end-dream-q"
 		}
 	]
 }

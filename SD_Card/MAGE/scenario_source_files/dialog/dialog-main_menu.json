@@ -10,6 +10,81 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
+					"label": "Play Game",
+					"script": "show-menu-play-game"
+				},
+				{
+					"label": "Play Demo",
+					"script": "load_map-demo_map"
+				},
+				{
+					"label": "Bling Mode",
+					"script": "show-menu-bling-mode"
+				},
+				{
+					"label": "Credits",
+					"script": "show-menu-credits"
+				}
+			]
+		}
+	],
+	"dialog-show-menu-bling-mode": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "Bling Mode",
+			"border_tileset": "menu",
+			"messages": [
+				"SAVE YOUR SCREEN"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "1) Flying Toasters",
+					"script": "start_bling-flying-toasters"
+				},
+				{
+					"label": "Back",
+					"script": "begin-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-show-menu-credits-choice": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "Credits",
+			"border_tileset": "menu",
+			"messages": [
+				"WHICH CHAPTER?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Chapter 1",
+					"script": "show-menu-credits"
+				},
+				{
+					"label": "Chapter 2",
+					"script": "show-menu-credits2"
+				},
+				{
+					"label": "Back",
+					"script": "begin-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-show-menu-play-game": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": "Play Game",
+			"border_tileset": "menu",
+			"messages": [
+				"WHAT DO?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
 					"label": "New Game",
 					"script": "show-new_game"
 				},
@@ -22,8 +97,8 @@
 					"script": "show-erase_save"
 				},
 				{
-					"label": "Show Credits",
-					"script": "show-menu-credits"
+					"label": "Back",
+					"script": "begin-main_menu"
 				}
 			]
 		}
@@ -52,7 +127,7 @@
 				},
 				{
 					"label": "Back",
-					"script": "begin-main_menu"
+					"script": "show-menu-play-game"
 				}
 			]
 		}
@@ -81,7 +156,7 @@
 				},
 				{
 					"label": "Back",
-					"script": "begin-main_menu"
+					"script": "show-menu-play-game"
 				}
 			]
 		}
@@ -110,7 +185,7 @@
 				},
 				{
 					"label": "Back",
-					"script": "begin-main_menu"
+					"script": "show-menu-play-game"
 				}
 			]
 		}

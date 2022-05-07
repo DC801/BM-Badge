@@ -9,7 +9,7 @@
 	"handler-skip-splash": [
 		{
 			"action": "SET_MAP_TICK_SCRIPT",
-			"script": "begin-main_menu-intro"
+			"script": "begin-main_menu-fade-in"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -30,7 +30,7 @@
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "from-game",
-			"success_script": "begin-main_menu-intro",
+			"success_script": "begin-main_menu-fade-in",
 			"expected_bool": true
 		},
 		{
@@ -59,10 +59,10 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu-intro"
+			"script": "begin-main_menu-fade-in"
 		}
 	],
-	"begin-main_menu-intro": [
+	"begin-main_menu-fade-in": [
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
@@ -95,6 +95,30 @@
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-main_menu"
+		}
+	],
+	"show-menu-play-game": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-play-game"
+		}
+	],
+	"show-menu-bling-mode": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-bling-mode"
+		}
+	],
+	"show-menu-credits-choice": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-credits-choice"
+		}
+	],
+	"start_bling-flying-toasters": [
+		{
+			"action": "LOAD_MAP",
+			"map": "flying-toasters"
 		}
 	],
 	"load-start-map": [
@@ -221,7 +245,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"erase_save-1": [
@@ -231,7 +255,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"erase_save-2": [
@@ -241,7 +265,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"set-player-name-q": [
@@ -716,6 +740,18 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "credits"
+		}
+	],
+	"show-menu-credits2": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"bool_value": true
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "credits",
+			"todo": "make credits for chapter 2"
 		}
 	]
 }

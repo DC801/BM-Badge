@@ -508,5 +508,27 @@
 				"This has got to be a dream."
 			]
 		}
+	],
+	"dialog-demo-end-dream-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"portrait": "goldfish",
+			"messages": [
+				"End this dream?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "demo-end-dream-yes"
+				},
+				{
+					"label": "No",
+					"script": "demo-end-dream-no"
+				}
+			]
+		}
 	]
+	
 }
