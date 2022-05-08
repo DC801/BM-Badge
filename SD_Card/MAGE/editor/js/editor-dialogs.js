@@ -1,24 +1,18 @@
 Vue.component('editor-dialogs', {
 	name: 'editor-dialogs',
-	props: {
-		fileNameMap: {
-			type: Object,
-			required: true
-		},
-		scenarioData: {
-			type: Object,
-			required: true
-		},
-	},
+	mixins: [
+		makeComputedStoreGetterSettersMixin([
+			'scenarioData',
+			'fileNameMap',
+			'currentData',
+			'initState',
+		]),
+		makeFileChangeTrackerMixinByResourceType('dialogs'),
+	],
 	data: function () {
-		const data = {
-			dialogs: jsonClone(this.scenarioData.dialogs),
-			dialogsFileItemMap: jsonClone(this.scenarioData.dialogsFileItemMap)
-		}
 		return {
-			currentDialogFileName: null,
-			currentDialog: null,
-			currentData: data,
+			currentDialogFileName: '',
+			currentDialog: '',
 		}
 	},
 	computed: {
@@ -44,6 +38,17 @@ Vue.component('editor-dialogs', {
 	<div
 		class="card-body"
 	>
+		<template
+			v-if="dialogsNeedSave"
+		>
+			<copy-changes
+				v-for="(changes, fileName) in dialogsChangedFileMap"
+				:key="fileName"
+				:file-name="fileName"
+				:changes="changes"
+				resource-name="dialog"
+			></copy-changes>
+		</template>
 		<div class="form-group">
 			<label for="currentDialogFileName">Dialog Files:</label>
 			<select

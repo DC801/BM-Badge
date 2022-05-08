@@ -4,6 +4,7 @@ window.store = new window.Vuex.Store({
 			fileNameMap: null,
 			scenarioData: null,
 			currentData: null,
+			initState: null,
 		};
 	},
 	mutations: {
@@ -13,14 +14,25 @@ window.store = new window.Vuex.Store({
 		INIT_CURRENT_DATA: function (state) {
 			var scenarioData = state.scenarioData;
 			state.currentData = {
+				dialogs: jsonClone(state.scenarioData.dialogs),
+				dialogsFileItemMap: jsonClone(state.scenarioData.dialogsFileItemMap),
 				scripts: jsonClone(scenarioData.scripts),
 				scriptsFileItemMap: jsonClone(scenarioData.scriptsFileItemMap),
-			}
-			state.initState = JSON.parse(JSON.stringify(state.currentData));
-			state.initStateJson = JSON.stringify(state.currentData);
+			};
+			state.initState = jsonClone(state.currentData);
 		},
 		UPDATE_SCRIPT_BY_NAME: function (state, args) {
 			state.currentData.scripts[args.scriptName] = args.script;
+		},
+		MOVE_DIALOG: function (state, args) {
+			var direction = args.direction;
+			var fileName = args.fileName;
+			var index = args.index;
+			var scripts = state.currentData.dialogsFileItemMap[fileName].slice();
+			var targetIndex = index + direction;
+			var splice = scripts.splice(index, 1);
+			scripts.splice(targetIndex, 0, splice[0]);
+			state.currentData.dialogsFileItemMap[fileName] = scripts;
 		},
 	},
 	getters: {

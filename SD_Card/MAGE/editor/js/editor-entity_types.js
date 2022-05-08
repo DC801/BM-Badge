@@ -186,10 +186,6 @@ Vue.component(
 				});
 				this.currentEntityType.animations = newValues;
 			},
-			copyState: function () {
-				this.$refs.copyStateTextArea.select();
-				document.execCommand("copy");
-			},
 		}
 	}
 );

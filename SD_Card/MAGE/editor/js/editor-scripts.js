@@ -30,74 +30,23 @@ Vue.component(
 				'fileNameMap',
 				'currentData',
 				'initState',
-				'initStateJson',
 			]),
+			makeFileChangeTrackerMixinByResourceType('scripts'),
 		],
 		data: function () {
 			return {
 				currentScriptFileName: '',
-				fileOutputToCopy: '',
 				newScriptFileName: null,
 				newScriptName: null
 			}
 		},
 		computed: {
-			startFileMap: function () {
-				return this.getAllScriptFileJsonForSource(this.initState);
-			},
-			currentFileMap: function () {
-				return this.getAllScriptFileJsonForSource(this.currentData);
-			},
-			changedFileMap () {
-				var result = {}
-				var currentFileMap = this.currentFileMap
-				var startFileMap = this.startFileMap
-				Object.keys(currentFileMap).forEach(function (fileName) {
-					if (currentFileMap[fileName] !== startFileMap[fileName]) {
-						result[fileName] = currentFileMap[fileName]
-					}
-				})
-				return result;
-			},
-			jsonOutput: function () {
-				return JSON.stringify(this.currentData);
-			},
-			needsSave: function () {
-				return this.initStateJson !== this.jsonOutput;
-			},
 			isNewScriptNameUnique: function () {
 				var existingNames = this.scriptsOptions;
 				return !existingNames.includes(this.newScriptName);
 			},
 		},
 		methods: {
-			getAllScriptFileJsonForSource (source) {
-				var self = this;
-				var result = {};
-				Object.keys(
-					source.scriptsFileItemMap
-				).forEach(function (fileName) {
-					result[fileName] = self.collectFileScripts(
-						fileName,
-						source
-					);
-				});
-				return result
-			},
-			collectFileScripts (fileName, source) {
-				var scriptNamesInFile = source.scriptsFileItemMap[fileName];
-				var result = {};
-				scriptNamesInFile.forEach(function (scriptName) {
-					result[scriptName] = source.scripts[scriptName];
-				})
-				return JSON.stringify(result, null, '\t') + '\n';
-			},
-			copyState: function (changes) {
-				this.fileOutputToCopy = changes;
-				this.$refs.copyStateTextArea.innerHTML = changes;
-				this.$refs.copyStateTextArea.select();
-				document.execCommand("copy");
-			},
 			updateScript: function (scriptName,changes) {
 				this.$store.commit('UPDATE_SCRIPT_BY_NAME', {
 					scriptName: scriptName,
@@ -191,40 +140,15 @@ Vue.component(
 	<div class="card-header">Script Editor</div>
 	<div class="card-body">
 		<template
-			v-if="needsSave"
+			v-if="scriptsNeedSave"
 		>
-		<textarea
-			cols="80"
-			rows="16"
-			class="position-absolute"
-			style="
-				font-size: 0;
-				opacity: 0;
-			"
-			ref="copyStateTextArea"
-		>{{ fileOutputToCopy }}</textarea>
-		<div
-			v-for="(changes, fileName) in changedFileMap"
-			class="
-				alert
-				alert-danger
-				alert-dismissible
-				fade
-				show
-			"
-			role="alert"
-		>
-			<strong>Unsaved changes in <em>{{fileName}}</em>!</strong>
-			<span>You can click the "Copy" button to the right to put the current scripts your clipboard, then paste it into your "<strong>{{fileName}}</strong>" file to save.</span>
-			<button
-				type="button"
-				class="close"
-				title="Copy"
-				@click="copyState(changes)"
-			>
-				<span aria-hidden="true">📋</span>
-			</button>
-		</div>
+			<copy-changes
+				v-for="(changes, fileName) in scriptsChangedFileMap"
+				:key="fileName"
+				:file-name="fileName"
+				:changes="changes"
+				resource-name="script"
+			></copy-changes>
 		</template>
 		<div class="form-group">
 			<label for="currentScriptFileName">Script Files:</label>

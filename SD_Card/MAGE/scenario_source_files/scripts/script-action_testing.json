@@ -231,22 +231,22 @@
 	"mage03-success_script": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity":"Mage 03",
+			"entity": "Mage 03",
 			"script": "mage03-success_prompt"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity":"%PLAYER%",
+			"entity": "%PLAYER%",
 			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity":"%PLAYER%",
+			"entity": "%PLAYER%",
 			"script": "null_script"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
-			"entity":"Mage 03",
+			"entity": "Mage 03",
 			"script": "mage03-check_entity_scripts"
 		}
 	],
@@ -277,7 +277,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
@@ -290,7 +290,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
@@ -303,7 +303,7 @@
 			"expected_bool": true
 		},
 		{
-		"action": "SHOW_DIALOG",
+			"action": "SHOW_DIALOG",
 			"dialog": "dialog-mage04_1"
 		}
 	],
