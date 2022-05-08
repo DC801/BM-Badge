@@ -174,38 +174,12 @@
 		>
 			<div class="card-header">Entity Type Editor</div>
 			<div class="card-body">
-				<div
+				<copy-changes
 					v-if="needsSave"
-					class="
-						alert
-						alert-danger
-						alert-dismissible
-						fade
-						show
-					"
-					role="alert"
-				>
-					<strong>Unsaved changes!</strong>
-					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
-					<button
-						type="button"
-						class="close"
-						title="Copy"
-						@click="copyState"
-					>
-						<span aria-hidden="true">📋</span>
-					</button>
-					<textarea
-						cols="80"
-						rows="16"
-						class="position-absolute"
-						style="
-							font-size: 0;
-							opacity: 0;
-						"
-						ref="copyStateTextArea"
-					>{{ jsonOutput }}</textarea>
-				</div>
+					file-name="entity_types.json"
+					:changes="jsonOutput"
+					resource-name="entityTypes"
+				></copy-changes>
 				<div class="form-group">
 					<label for="currentEntityTypeId">Entity Types:</label>
 					<select
@@ -421,6 +395,7 @@
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
+	<script src="js/editor-copy-changes.js"></script>
 	<script src="js/entity_types.js"></script>
 	<script src="js/portraits.js"></script>
 	<script src="js/entities.js"></script>

@@ -40,14 +40,11 @@ Vue.component('editor-dialog', {
 	},
 	methods: {
 		moveDialog: function (direction) {
-			// TODO: Use this and verify this works
-			var fileName = this.fileName;
-			var scripts = this.currentData.dialogsFileItemMap[fileName].slice();
-			var index = this.index;
-			var targetIndex = index + direction;
-			var splice = scripts.splice(index, 1);
-			scripts.splice(targetIndex, 0, splice[0]);
-			this.$emit('updateDialogsFileItemMap', scripts)
+			this.$store.commit('MOVE_DIALOG', {
+				fileName: this.fileName,
+				index: this.index,
+				direction: direction
+			});
 		},
 		collapse: function () {
 			this.collapsed = !this.collapsed;
@@ -101,13 +98,13 @@ Vue.component('editor-dialog', {
 				type="button"
 				class="btn btn-outline-info"
 				:disabled="index === 0"
-				@click="moveScript(-1)"
+				@click="moveDialog(-1)"
 			>↑</button>
 			<button
 				type="button"
 				class="btn btn-outline-info"
 				:disabled="index === (currentData.dialogsFileItemMap[fileName].length - 1)"
-				@click="moveScript(1)"
+				@click="moveDialog(1)"
 			>↓</button>
 		</span>
 	</div>
