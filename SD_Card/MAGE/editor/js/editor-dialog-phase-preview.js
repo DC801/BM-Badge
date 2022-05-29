@@ -21,72 +21,77 @@ var dialogAlignmentCoords = {
 	}
 };
 
-Vue.component('editor-dialog-preview', {
-	name: 'editor-dialog-preview',
+Vue.component('editor-dialog-phase-preview', {
+	name: 'editor-dialog-phase-preview',
 	props: {
-		index: {
+		phase: {
+			type: Object,
+			required: true
+		},
+		messageIndex: {
 			type: Number,
-			required: true
-		},
-		dialog: {
-			type: Object,
-			required: true
-		},
-		fileNameMap: {
-			type: Object,
-			required: true
-		},
-		scenarioData: {
-			type: Object,
 			required: true
 		},
 	},
 	computed: {
 		tileset: function () {
 			return this.scenarioData.dialogSkinsTilesetMap[
-				this.dialog.border_tileset || 'default'
+				this.phase.border_tileset || 'default'
 			];
 		},
 		alignmentData: function () {
-			var alignment = this.dialog.alignment || 'BOTTOM_LEFT';
+			var alignment = this.phase.alignment || 'BOTTOM_LEFT';
 			return dialogAlignmentCoords[alignment];
 		},
 		label: function () {
-			var dialog = this.dialog;
-			var name = dialog.name;
-			var entity = dialog.entity;
+			var phase = this.phase;
+			var name = phase.name;
+			var entity = phase.entity;
 			return name || entity;
 		},
 		text: function () {
-			var dialog = this.dialog;
-			var messages = dialog.messages;
-			// TODO: Animate these swapping out
-			return messages[0];
+			var phase = this.phase;
+			var messages = phase.messages;
+			return messages[this.messageIndex];
+		},
+		fileNameMap: function () {
+			return this.$store.state.fileNameMap
+		},
+		scenarioData: function () {
+			return this.$store.state.scenarioData
+		},
+		portrait: function () {
+			return this.phase.portrait || this.phase.entity
+		},
+		textValuesMap: function () {
+			return {
+				text: this.text,
+				label: this.label,
+				portrait: this.portrait,
+			}
 		}
 	},
 	template: /*html*/`
 <div
-	class="editor-dialog-preview"
+	class="editor-dialog-phase-preview"
 >
 	<div
 		v-for="(rect, key) in alignmentData"
 		:class="key"
+		:key="key"
 	>
 		<editor-dialog-box
-			:key="key"
+			v-if="textValuesMap[key]"
 			:rect="rect"
-			:dialogSkin="dialog.border_tileset"
+			:dialog-skin="phase.border_tileset"
 			:file-name-map="fileNameMap"
 			:scenario-data="scenarioData"
 		></editor-dialog-box>
 		<font-image
-			v-if="(
-				key === 'text'
-				|| key === 'label'
-			)"
+			v-if="textValuesMap[key]"
 			:x="((rect.x + 1) * tileset.tilewidth) + (tileset.tilewidth / 2) + 4"
 			:y="((rect.y + 1) * tileset.tileheight) + (tileset.tileheight / 2) + 4"
-			:string="key === 'label' ? label : text"
+			:string="textValuesMap[key]"
 		></font-image>
 	</div>
 </div>
