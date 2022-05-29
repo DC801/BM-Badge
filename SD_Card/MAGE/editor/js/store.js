@@ -28,11 +28,27 @@ window.store = new window.Vuex.Store({
 			var direction = args.direction;
 			var fileName = args.fileName;
 			var index = args.index;
-			var scripts = state.currentData.dialogsFileItemMap[fileName].slice();
+			var dialogs = state.currentData.dialogsFileItemMap[fileName].slice();
 			var targetIndex = index + direction;
-			var splice = scripts.splice(index, 1);
-			scripts.splice(targetIndex, 0, splice[0]);
-			state.currentData.dialogsFileItemMap[fileName] = scripts;
+			var splice = dialogs.splice(index, 1);
+			dialogs.splice(targetIndex, 0, splice[0]);
+			state.currentData.dialogsFileItemMap[fileName] = dialogs;
+		},
+		ADD_DIALOG_PHASE: function (state, dialogName) {
+			var dialog = state.currentData.dialogs[dialogName].slice();
+			dialog.push({
+				alignment: 'BOTTOM_LEFT',
+				messages: [],
+			})
+			state.currentData.dialogs[dialogName] = dialog;
+		},
+		UPDATE_DIALOG_PHASE: function (state, args) {
+			var dialogName = args.dialogName;
+			var phaseIndex = args.phaseIndex;
+			var phase = args.phase;
+			var dialog = state.currentData.dialogs[dialogName].slice();
+			dialog[phaseIndex] = phase
+			state.currentData.dialogs[dialogName] = dialog;
 		},
 	},
 	getters: {
