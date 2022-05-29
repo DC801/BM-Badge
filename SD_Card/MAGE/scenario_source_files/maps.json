@@ -1,5 +1,13 @@
 {
 	"main_menu": "maps/map-main_menu.json",
+	"magehouse-birthday": {
+		"path": "maps/map-magehouse-birthday.json",
+		"on_load": "on_load-magehouse-birthday"
+	},
+	"main2": {
+		"path": "maps/map-main2.json",
+		"on_load": "on_load-main2"
+	},
 	"flying-toasters": {
 		"path": "maps/map-flying-toasters.json",
 		"on_tick": "on_tick-flying-toasters",

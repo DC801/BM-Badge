@@ -167,8 +167,8 @@
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
 			"entity": "%PLAYER%",
-			"geometry": "door-demo_map",
-			"success_script": "load_map-demo_map",
+			"geometry": "door-episode2",
+			"success_script": "load_map-chapter2-start",
 			"expected_bool": true
 		},
 		{
@@ -313,6 +313,12 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "action_testing_02"
+		}
+	],
+	"load_map-chapter2-start": [
+		{
+			"action": "LOAD_MAP",
+			"map": "magehouse-birthday"
 		}
 	]
 }
