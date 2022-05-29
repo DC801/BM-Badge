@@ -230,7 +230,7 @@ var serializeDialogScreen = function (
 	});
 	responses.forEach(function (response) {
 		var stringId = serializeString(
-			response.label.toLocaleLowerCase(),
+			response.label,
 			map,
 			fileNameMap,
 			scenarioData,

@@ -39,7 +39,7 @@ var serializeSerialDialog = function (
 		if (textOptionKeys.length) {
 			responses = textOptionKeys.map(function (key) {
 				return {
-					label: key,
+					label: key.toLocaleLowerCase(),
 					script: serialDialog.text_options[key],
 				};
 			});
