@@ -2648,5 +2648,105 @@
 		"type": "yabbo_mongo",
 		"scenarioIndex": 41,
 		"serialized": {}
+	},
+	"cake": {
+		"type": "cake",
+		"tileset": "entity-cake2.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 2,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				}
+			],
+			"extra_special": [
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 14,
+					"flip_x": false
+				},
+				{
+					"tileid": 14,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }
