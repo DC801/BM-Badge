@@ -52,7 +52,16 @@ Vue.component('editor-dialog-phase-preview', {
 		text: function () {
 			var phase = this.phase;
 			var messages = phase.messages;
-			return messages[this.messageIndex];
+			var result = messages[this.messageIndex];
+			if (
+				phase.response_type
+				&& (this.messageIndex === (messages.length - 1))
+			) {
+				phase.options.forEach(function (option) {
+					result += '\n   ' + option.label;
+				});
+			}
+			return result;
 		},
 		fileNameMap: function () {
 			return this.$store.state.fileNameMap

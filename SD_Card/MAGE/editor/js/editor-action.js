@@ -119,12 +119,12 @@ Vue.component('field-select', {
 	template: `
 <select
 	class="form-select"
-	:value="value"
+	:value="value || ''"
 	@input="$emit('input', $event.target.value)"
 >
 	<option
 		value=""
-	>{{'(empty)'}}</option>
+	>(empty)</option>
 	<option
 		v-for="option in options"
 	>{{option}}</option>

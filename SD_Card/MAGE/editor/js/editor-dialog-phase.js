@@ -14,21 +14,30 @@ Vue.component('editor-dialog-phase', {
 	computed: {
 		messageIndexOptions: function () {
 			return Object.keys(this.phase.messages)
+		},
+		showOptions: function () {
+			return this.phase.response_type === 'SELECT_FROM_SHORT_LIST'
 		}
 	},
 	methods: {
-		updateProperty: function (propertyName, value) {
+		updateValueWithChanges: function (changes) {
 			var result = Object.assign(
 				{},
 				this.phase,
-				{
-					[propertyName]: value
-				}
+				changes
 			)
-			if (value === null) {
-				delete result[propertyName]
-			}
+			Object.keys(changes).forEach(function (propertyName) {
+				var value = result[propertyName]
+				if (value === null) {
+					delete result[propertyName]
+				}
+			})
 			this.$emit('input', result);
+		},
+		updateProperty: function (propertyName, value) {
+			this.updateValueWithChanges({
+				[propertyName]: value
+			})
 		},
 		updateMessage: function (index, message) {
 			var messages = (this.phase.messages || []).slice();
@@ -54,6 +63,25 @@ Vue.component('editor-dialog-phase', {
 				messages
 			);
 		},
+		changeOptionsPresence: function (on) {
+			var changes = {}
+			if (on && !this.phase.options) {
+				changes.options = [
+					{
+						"label": "Choice One",
+						"script": null
+					},
+					{
+						"label": "Choice Two",
+						"script": null
+					},
+				];
+			}
+			changes.response_type = on
+				? 'SELECT_FROM_SHORT_LIST'
+				: null
+			this.updateValueWithChanges(changes)
+		}
 	},
 	template: /*html*/`
 <div
@@ -184,7 +212,24 @@ Vue.component('editor-dialog-phase', {
 				@click="addMessage"
 			>Add Message</button>
 		</div>
-		<pre>{{phase}}</pre>
+		<div
+			class="input-group"
+		>
+			<div class="input-group-prepend">
+				<span class="input-group-text">Show Options?</span>
+			</div>
+			<field-select
+				property="response_type"
+				:options="[true]"
+				:value="showOptions"
+				@input="changeOptionsPresence"
+			></field-select>
+		</div>
+		<editor-options
+			v-if="showOptions"
+			:value="phase.options"
+			@input="updateProperty('options', $event)"
+		></editor-options>
 	</div>
 </div>
 `});
