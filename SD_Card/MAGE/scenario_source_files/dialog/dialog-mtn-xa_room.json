@@ -1,0 +1,98 @@
+{
+	"dialog-mtn-bertsecret1": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"%PLAYER%, wait."
+			]
+		}
+	],
+	"dialog-mtn-bertsecret2": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Bert? But how did you get in? I thought\nnone of you could pass the gate!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"I remembered back door. But...."
+			]
+		}
+	],
+	"dialog-mtn-bertsecret3": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"No. I can go no further. I could, once.\nPerhaps."
+			]
+		}
+	],
+	"dialog-mtn-bertsecret4": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"%PLAYER%, I must not stay long. But I\nmust tell you this. Is important.",
+				"Something is wrong.",
+				"That book we wanted to give you... it was\nnot gone yesterday. It was on shelf, in\nlibrary.",
+				"It is only gone today. This morning."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"What? What are you saying? The book only\nwent missing this morning?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"Yes. I am sure of it.",
+				"%PLAYER%, something wants to stop you.\nOr delay you."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Are we too late, then? Is the Big Bad\nhere?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"No. We would know. Big Bad would not hide.",
+				"But perhaps he can still reach into our\nvillage. Small hacks. Subtle things.",
+				"Perhaps he left traps. Protocols. Magic\nthat waits for his signal before working.",
+				"I once knew more. But I am old, and....",
+				"...."
+			]
+		},
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"...?"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Bert",
+			"messages": [
+				"I must go. There is something I must\nlearn. Quickly. But I will return.",
+				"Do not wait for me. Go and get artifact.",
+				"If I find answer, I will leave message\nwith XA.",
+				"Good luck."
+			]
+		}
+	]
+}
