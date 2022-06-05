@@ -54,11 +54,17 @@ Vue.component('editor-dialog', {
 				phaseIndex: phaseIndex,
 				phase: phase,
 			})
-		}
+		},
+		deleteDialogPhase: function (phaseIndex) {
+			this.$store.commit('DELETE_DIALOG_PHASE', {
+				dialogName: this.dialogName,
+				phaseIndex: phaseIndex,
+			});
+		},
 	},
 	template: /*html*/`
 <div
-	class="editor-dialog card border-primary mb-4"
+	class="editor-dialog card bg-secondary border-primary mb-4"
 >
 	<div class="card-header bg-primary">
 		<strong class="me-auto">{{dialogName}}</strong>
@@ -93,7 +99,9 @@ Vue.component('editor-dialog', {
 			v-for="(phase, index) in dialogPhases"
 			:key="index"
 			:phase="phase"
+			:phase-index="index"
 			@input="updateDialogPhase(index, $event)"
+			@delete="deleteDialogPhase(index)"
 		></editor-dialog-phase>
 		<div>
 			<button

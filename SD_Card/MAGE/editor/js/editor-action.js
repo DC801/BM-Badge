@@ -123,6 +123,9 @@ Vue.component('field-select', {
 	@input="$emit('input', $event.target.value)"
 >
 	<option
+		value=""
+	>{{'(empty)'}}</option>
+	<option
 		v-for="option in options"
 	>{{option}}</option>
 </select>
@@ -505,7 +508,7 @@ Vue.component(
 					:current-data="currentData"
 					@input="handleInput(property, $event)"
 				></component>
-				</div>
+			</div>
 			<div
 				class="form-text text-danger"
 				v-if="!validInput(property, action[property])"
