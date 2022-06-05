@@ -2,6 +2,10 @@
 	"scriptPaths": [
 		"scripts/script-main_menu.json",
 		"scripts/script-magehouse-birthday.json",
+		"scripts/script-mtn-xa_room.json",
+		"scripts/script-mtn-castle_entrance.json",
+		"scripts/script-mtn-common.json",
+		"scripts/script-mtn-looks.json",
 		"scripts/script-demo_map.json",
 		"scripts/script-generic_entity_scripts.json",
 		"scripts/script-test_scripts.json",
@@ -55,6 +59,8 @@
 		"menu": "tilesets/tileset-dialog_transparent_menu.json"
 	},
 	"serialDialogPaths": [
+		"serial_dialog/serial_dialog-mtn-looks.json",
+		"serial_dialog/serial_dialog-mtn-common.json",
 		"serial_dialog/serial_dialog-action_testing.json"
 	]
 }
