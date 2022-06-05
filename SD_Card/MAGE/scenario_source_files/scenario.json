@@ -33,6 +33,7 @@
 	],
 	"dialogPaths": [
 		"dialog/dialog-main_menu.json",
+		"dialog/dialog-mtn-xa_room.json",
 		"dialog/dialog-magehouse-birthday.json",
 		"dialog/dialog-demo_map.json",
 		"dialog/dialog-test_map.json",
