@@ -38,7 +38,9 @@ window.store = new window.Vuex.Store({
 			var dialog = state.currentData.dialogs[dialogName].slice();
 			dialog.push({
 				alignment: 'BOTTOM_LEFT',
-				messages: [],
+				messages: [
+					'TEXT_ABOUT_GOATS'
+				],
 			})
 			state.currentData.dialogs[dialogName] = dialog;
 		},
@@ -48,6 +50,13 @@ window.store = new window.Vuex.Store({
 			var phase = args.phase;
 			var dialog = state.currentData.dialogs[dialogName].slice();
 			dialog[phaseIndex] = phase
+			state.currentData.dialogs[dialogName] = dialog;
+		},
+		DELETE_DIALOG_PHASE: function (state, args) {
+			var dialogName = args.dialogName;
+			var phaseIndex = args.phaseIndex;
+			var dialog = state.currentData.dialogs[dialogName].slice();
+			dialog.splice(phaseIndex, 1);
 			state.currentData.dialogs[dialogName] = dialog;
 		},
 	},
@@ -85,6 +94,9 @@ window.store = new window.Vuex.Store({
 				'%ENTITY_PATH%'
 			]
 				.concat(extractNames(state.scenarioData.parsed.geometry));
+		},
+		borderTilesetOptions: function (state) {
+			return Object.keys(state.scenarioData.dialogSkins);
 		},
 	}
 });
