@@ -17,7 +17,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"I remembered back door. But...."
@@ -26,7 +26,7 @@
 	],
 	"dialog-mtn-bertsecret3": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"No. I can go no further. I could, once.\nPerhaps."
@@ -35,7 +35,7 @@
 	],
 	"dialog-mtn-bertsecret4": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"%PLAYER%, I must not stay long. But I\nmust tell you this. Is important.",
@@ -52,7 +52,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"Yes. I am sure of it.",
@@ -67,7 +67,7 @@
 			]
 		},
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"No. We would know. Big Bad would not hide.",
@@ -83,9 +83,11 @@
 			"messages": [
 				"...?"
 			]
-		},
+		}
+	],
+	"dialog-mtn-bertsecret5": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"I must go. There is something I must\nlearn. Quickly. But I will return.",

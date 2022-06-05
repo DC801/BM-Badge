@@ -78,6 +78,11 @@
                          "value":false
                         }, 
                         {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"start-cutscene-bert-secret"
+                        }, 
+                        {
                          "name":"on_look",
                          "type":"string",
                          "value":"on_look-xa"
@@ -130,6 +135,18 @@
                  "width":0,
                  "x":192,
                  "y":193
+                }, 
+                {
+                 "gid":236,
+                 "height":40,
+                 "id":10,
+                 "name":"Bert",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":353,
+                 "y":21
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -183,6 +200,50 @@
                  "width":73,
                  "x":141,
                  "y":94
+                }, 
+                {
+                 "height":0,
+                 "id":14,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":379,
+                 "y":19
+                }, 
+                {
+                 "height":0,
+                 "id":15,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":-154,
+                 "y":462
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"bert-spot",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":0,
+                         "y":-46
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":111,
+                 "y":254
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -191,7 +252,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":10,
+ "nextobjectid":19,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -212,6 +273,10 @@
         {
          "firstgid":211,
          "source":"..\/entities\/entity-save_floppy.json"
+        }, 
+        {
+         "firstgid":235,
+         "source":"..\/entities\/entity-bert.json"
         }],
  "tilewidth":32,
  "type":"map",

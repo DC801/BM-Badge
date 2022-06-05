@@ -3,6 +3,7 @@
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
 		"on_look": "on_look-mtn-xa_room",
+		"on_tick": "on_tick-mtn-xa_room",
 		"directions": {
 			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
 		}
