@@ -1,6 +1,7 @@
 {
 	"scriptPaths": [
 		"scripts/script-main_menu.json",
+		"scripts/script-admin.json",
 		"scripts/script-magehouse-birthday.json",
 		"scripts/script-mtn-xa_room.json",
 		"scripts/script-mtn-castle_entrance.json",

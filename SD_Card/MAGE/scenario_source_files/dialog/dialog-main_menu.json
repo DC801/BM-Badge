@@ -302,7 +302,7 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Chapter 1 (X/11)",
+					"label": "Chapter 1 ($chapter1-storyflag-tally$/11)",
 					"script": "start-chapter1"
 				},
 				{

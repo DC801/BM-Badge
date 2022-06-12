@@ -123,6 +123,30 @@
 	],
 	"load-start-map": [
 		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "count-chapter1-storyflags"
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "main_menu-ch1-storyflag-count-wait"
+		}
+	],
+	"main_menu-ch1-storyflag-count-wait": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "main_menu-ch1-storyflag-count-done",
+			"save_flag": "chapter1-storyflags-tallied",
+			"expected_bool": true
+		}
+	],
+	"main_menu-ch1-storyflag-count-done": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "chapter1-storyflags-tallied",
+			"bool_value": false
+		},
+		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-load-start-map-q"
 		}
