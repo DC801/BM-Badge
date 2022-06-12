@@ -2,7 +2,7 @@
 	"dialog-main_menu": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Main Menu",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
 				"CHOOSE YOUR FATE"
@@ -31,7 +31,7 @@
 	"dialog-show-menu-bling-mode": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Bling Mode",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
 				"SAVE YOUR SCREEN"
@@ -52,19 +52,19 @@
 	"dialog-show-menu-credits-choice": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Credits",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"WHICH CHAPTER?"
+				"CREDITS"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Chapter 1",
+					"label": "Chapter 1 credits",
 					"script": "show-menu-credits"
 				},
 				{
-					"label": "Chapter 2",
+					"label": "Chapter 2 credits",
 					"script": "show-menu-credits2"
 				},
 				{
@@ -77,10 +77,10 @@
 	"dialog-show-menu-play-game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Play Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"WHAT DO?"
+				"PLAY GAME"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
@@ -106,10 +106,10 @@
 	"dialog-new_game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "New Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"CHOOSE SAVE SLOT"
+				"NEW GAME"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
@@ -135,10 +135,10 @@
 	"dialog-load_game": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Load Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"CHOOSE SAVE SLOT"
+				"LOAD GAME"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
@@ -164,23 +164,23 @@
 	"dialog-erase_save": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "Erase Save",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"BOOM TIME!!"
+				"BOOM TIME!"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "Slot 0",
+					"label": "Erase slot 0",
 					"script": "erase_save-0"
 				},
 				{
-					"label": "Slot 1",
+					"label": "Erase slot 1",
 					"script": "erase_save-1"
 				},
 				{
-					"label": "Slot 2",
+					"label": "Erase slot 2",
 					"script": "erase_save-2"
 				},
 				{
@@ -219,10 +219,10 @@
 	"dialog-set-player-name-q": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "New Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
-				"Pick your name."
+				"NEW GAME: Pick your name."
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
@@ -248,7 +248,7 @@
 	"dialog-set-player-name-confirm": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "New Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
 				"Your name is %PLAYER%?"
@@ -269,7 +269,7 @@
 	"dialog-set-player-name-random-confirm": [
 		{
 			"alignment": "BOTTOM_LEFT",
-			"name": "New Game",
+			"name": " ",
 			"border_tileset": "menu",
 			"messages": [
 				"Your name is %PLAYER%?"
@@ -287,6 +287,52 @@
 				{
 					"label": "No",
 					"script": "set-player-name-q"
+				}
+			]
+		}
+	],
+	"dialog-load-start-map-q": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": " ",
+			"border_tileset": "menu",
+			"messages": [
+				"PLAY (slot $slot-number$: \"%PLAYER%\")"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Chapter 1 (X/11)",
+					"script": "start-chapter1"
+				},
+				{
+					"label": "Chapter 2 (X/??)",
+					"script": "start-chapter2-check"
+				},
+				{
+					"label": "Back",
+					"script": "show-menu-play-game"
+				}
+			]
+		}
+	],
+	"dialog-start-chapter2-confirm": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": " ",
+			"border_tileset": "menu",
+			"messages": [
+				"Chapter 1 is unfinished!"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Play chapter 2 anyway",
+					"script": "start-chapter2"
+				},
+				{
+					"label": "Never mind",
+					"script": "show_dialog-load-start-map-q"
 				}
 			]
 		}

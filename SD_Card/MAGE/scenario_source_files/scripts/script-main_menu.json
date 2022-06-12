@@ -123,8 +123,8 @@
 	],
 	"load-start-map": [
 		{
-			"action": "LOAD_MAP",
-			"map": "main"
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-load-start-map-q"
 		}
 	],
 	"show-new_game": [
@@ -184,6 +184,12 @@
 			"slot": 0
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 0,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "set-player-name-q"
 		}
@@ -192,6 +198,12 @@
 		{
 			"action": "SLOT_ERASE",
 			"slot": 1
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 1,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -204,6 +216,12 @@
 			"slot": 2
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 2,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "set-player-name-q"
 		}
@@ -212,6 +230,12 @@
 		{
 			"action": "SLOT_LOAD",
 			"slot": 0
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 0,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -224,6 +248,12 @@
 			"slot": 1
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 1,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "load-start-map"
 		}
@@ -232,6 +262,12 @@
 		{
 			"action": "SLOT_LOAD",
 			"slot": 2
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 2,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -332,6 +368,9 @@
 		}
 	],
 	"start-new-game-with-name": [
+		{
+			"action": "SLOT_SAVE"
+		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "load-start-map"
@@ -752,6 +791,42 @@
 			"action": "LOAD_MAP",
 			"map": "credits2",
 			"todo": "make credits for chapter 2"
+		}
+	],
+	"show_dialog-load-start-map-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-load-start-map-q"
+		}
+	],
+	"start-chapter1": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main"
+		}
+	],
+	"start-chapter2-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "start-chapter2-confirm",
+			"save_flag": "wonthedemo",
+			"expected_bool": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "start-chapter2"
+		}
+	],
+	"start-chapter2-confirm": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-start-chapter2-confirm"
+		}
+	],
+	"start-chapter2": [
+		{
+			"action": "LOAD_MAP",
+			"map": "magehouse-birthday"
 		}
 	]
 }
