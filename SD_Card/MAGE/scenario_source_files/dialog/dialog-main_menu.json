@@ -23,7 +23,7 @@
 				},
 				{
 					"label": "Credits",
-					"script": "show-menu-credits"
+					"script": "show-menu-credits-choice"
 				}
 			]
 		}

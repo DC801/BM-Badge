@@ -750,7 +750,7 @@
 		},
 		{
 			"action": "LOAD_MAP",
-			"map": "credits",
+			"map": "credits2",
 			"todo": "make credits for chapter 2"
 		}
 	]

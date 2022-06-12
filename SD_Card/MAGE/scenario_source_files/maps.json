@@ -1,4 +1,5 @@
 {
+	"main_menu": "maps/map-main_menu.json",
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
@@ -16,7 +17,6 @@
 			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
 		}
 	},
-	"main_menu": "maps/map-main_menu.json",
 	"magehouse-birthday": {
 		"path": "maps/map-magehouse-birthday.json",
 		"on_load": "on_load-magehouse-birthday"
@@ -69,6 +69,7 @@
 	},
 	"testbig": "maps/map-testbig.json",
 	"credits": "maps/map-credits.json",
+	"credits2": "maps/map-credits2.json",
 	"woprhouse": "maps/map-woprhouse.json",
 	"action_testing_02": "maps/map-action_testing_02.json"
 }
