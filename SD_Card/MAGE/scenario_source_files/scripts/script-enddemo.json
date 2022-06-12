@@ -343,6 +343,11 @@
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Alfonso",
+			"target_entity": "Jackob"
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Bert",
 			"target_entity": "Jackob"
 		}

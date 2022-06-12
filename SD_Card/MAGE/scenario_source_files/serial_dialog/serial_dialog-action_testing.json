@@ -100,7 +100,7 @@
 			"PLAYER: %PLAYER%",
 			"cli-variable: $cli-variable$",
 			"'Mage 01': %Mage 01%",
-			"story-flag-count: $story-flag-count$",
+			"chapter1-storyflag-tally: $chapter1-storyflag-tally$",
 			"SELF: %SELF%",
 			"MAP: %MAP%"
 		]
