@@ -126,6 +126,15 @@
 			"dialog": "dialog-mtn-bertsecret5"
 		},
 		{
+			"action": "SET_ENTITY_DIRECTION",
+			"direction": "east",
+			"entity": "Bert"
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-mtn-bertsecret6"
+		},
+		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "saw-bert-secret",
 			"bool_value": true

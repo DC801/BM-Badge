@@ -70,7 +70,15 @@
 			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
 			"messages": [
-				"No. We would know. Big Bad would not hide.",
+				"No. We would know. Big Bad would not hide."
+			]
+		}
+	],
+	"dialog-mtn-bertsecret5": [
+		{
+			"alignment": "TOP_RIGHT",
+			"entity": "Bert",
+			"messages": [
 				"But perhaps he can still reach into our\nvillage. Small hacks. Subtle things.",
 				"Perhaps he left traps. Protocols. Magic\nthat waits for his signal before working.",
 				"I once knew more. But I am old, and....",
@@ -85,7 +93,7 @@
 			]
 		}
 	],
-	"dialog-mtn-bertsecret5": [
+	"dialog-mtn-bertsecret6": [
 		{
 			"alignment": "TOP_RIGHT",
 			"entity": "Bert",
