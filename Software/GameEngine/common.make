@@ -72,6 +72,10 @@ else
 CFLAGS += -DDC801_DESKTOP -fno-short-enums -D_DEFAULT_SOURCE
 endif
 
+ifdef STEAMDECK
+CFLAGS += -DDC801_STEAMDECK
+endif
+
 CXXFLAGS += -Wno-register
 
 # Assembler flags common to all targets
