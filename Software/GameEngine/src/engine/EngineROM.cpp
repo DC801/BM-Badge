@@ -50,6 +50,7 @@ void EngineROM_Init()
 	char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
 	char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
 	bool gameDatSDPresent = false;
+	bool eraseWholeRomChip = false;
 	// Look on the SD card to read `game.dat` filesize, OR see if it is present at all:
 	uint32_t gameDatFilesize = util_sd_file_size(filename);
 	if(gameDatFilesize > 0) {
@@ -146,6 +147,7 @@ void EngineROM_Init()
 			"Would you like to update your scenario data?\n"
 			"------------------------------------------------\n\n\n"
 			"    > Press MEM0 to cancel\n\n"
+			"    > Press MEM2 to erase whole ROM for recovery\n\n"
 			"    > Press MEM3 to update the ROM",
 			updateMessagePrefix,
 			gameDatHashSDString,
@@ -168,12 +170,16 @@ void EngineROM_Init()
 				p_canvas()->blt();
 				return;
 			}
+			if (EngineInput_Activated.mem2) {
+				eraseWholeRomChip = true;
+				showOptions = false;
+			}
 			if (EngineInput_Activated.mem3) {
 				showOptions = false;
 			}
 		}
 	}
-	if(!EngineROM_SD_Copy(gameDatFilesize, gameDat)){
+	if(!EngineROM_SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip)){
 		ENGINE_PANIC("SD Copy Operation was not successful.");
 	}
 	//close game.dat file when done:
@@ -379,7 +385,11 @@ void EngineROM_WriteSaveSlot(
 
 #ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
-bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
+bool EngineROM_SD_Copy(
+	uint32_t gameDatFilesize,
+	FIL gameDat,
+	bool eraseWholeRomChip
+){
 	if(gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE){
 		ENGINE_PANIC(
 			"Your game.dat is larger than %d bytes.\n"
@@ -392,57 +402,69 @@ bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat){
 	FRESULT result;
 	UINT count = 0;
 	p_canvas()->clearScreen(COLOR_BLACK);
-	p_canvas()->printMessage(
-		"Erasing ROM chip",
-		Monaco9,
-		COLOR_WHITE,
-		16,
-		96
-	);
-	p_canvas()->blt();
 	uint32_t currentAddress = 0;
 	uint8_t sdReadBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE] {0};
-	// I mean, you _COULD_ start by erasing the whole chip...
-	// if(!qspiControl.chipErase()){
-	// 	ENGINE_PANIC("Failed to erase ROM Chip.");
-	// }
-	// or you could do it one page at a time, so it saves a LOT of time
-	while(currentAddress < gameDatFilesize){
-		if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress)){
-			ENGINE_PANIC("Failed to send erase command.");
-		}
-		while(qspiControl.isBusy()){
-			// is very busy
-		}
-		//Debug Print:
-		sprintf(
-			debugString,
-			"Erasing currentAddress: %08u\ngameDatFilesize:%08u",
-			currentAddress,
-			gameDatFilesize
-		);
-		p_canvas()->fillRect(
-			0,
-			96,
-			WIDTH,
-			96,
-			COLOR_BLACK
-		);
+	if(eraseWholeRomChip){
 		p_canvas()->printMessage(
-			debugString,
+			"Erasing WHOLE ROM chip.\n"
+			"Please be patient, this may take a few minutes",
 			Monaco9,
 			COLOR_WHITE,
 			16,
 			96
 		);
 		p_canvas()->blt();
-		currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
-	}
+		if(!qspiControl.chipErase()){
+			ENGINE_PANIC("Failed to erase WHOLE ROM Chip.");
+		}
+	} else {
+		p_canvas()->printMessage(
+			"Erasing ROM chip",
+			Monaco9,
+			COLOR_WHITE,
+			16,
+			96
+		);
+		p_canvas()->blt();
+		// I mean, you _COULD_ start by erasing the whole chip...
+		// or you could do it one page at a time, so it saves a LOT of time
+		while(currentAddress < gameDatFilesize){
+			if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress)){
+				ENGINE_PANIC("Failed to send erase command.");
+			}
+			while(qspiControl.isBusy()){
+				// is very busy
+			}
+			//Debug Print:
+			sprintf(
+				debugString,
+				"Erasing currentAddress: %08u\ngameDatFilesize:%08u",
+				currentAddress,
+				gameDatFilesize
+			);
+			p_canvas()->fillRect(
+				0,
+				96,
+				WIDTH,
+				96,
+				COLOR_BLACK
+			);
+			p_canvas()->printMessage(
+				debugString,
+				Monaco9,
+				COLOR_WHITE,
+				16,
+				96
+			);
+			p_canvas()->blt();
+			currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
+		}
 
-	// erase save games at the end of ROM chip too when copying
-	// because new dat files means new save flags and variables
-	for(uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
-		EngineROM_EraseSaveSlot(i);
+		// erase save games at the end of ROM chip too when copying
+		// because new dat files means new save flags and variables
+		for(uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
+			EngineROM_EraseSaveSlot(i);
+		}
 	}
 
 	currentAddress = 0;
