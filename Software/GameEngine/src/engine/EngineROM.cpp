@@ -96,18 +96,18 @@ void EngineROM_Init()
 		sprintf(
 			gameDatHashSDString,
 			"%02X%02X%02X%02X",
-			gameDatHashSD[8],
-			gameDatHashSD[9],
-			gameDatHashSD[10],
-			gameDatHashSD[11]
+			gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET],
+			gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 1],
+			gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 2],
+			gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 3]
 		);
 		sprintf(
 			gameDatHashROMString,
 			"%02X%02X%02X%02X",
-			gameDatHashROM[8],
-			gameDatHashROM[9],
-			gameDatHashROM[10],
-			gameDatHashROM[11]
+			gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET],
+			gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 1],
+			gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 2],
+			gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 3]
 		);
 
 		// compare the two header hashes:
