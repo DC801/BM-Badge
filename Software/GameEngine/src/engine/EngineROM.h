@@ -92,6 +92,10 @@ void EngineROM_WriteSaveSlot(
 	size_t length,
 	uint8_t *hauntedDataPointer
 );
-bool EngineROM_SD_Copy(uint32_t gameDatFilesize, FIL gameDat);
+bool EngineROM_SD_Copy(
+	uint32_t gameDatFilesize,
+	FIL gameDat,
+	bool eraseWholeRomChip
+);
 
 #endif
