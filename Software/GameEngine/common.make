@@ -65,7 +65,6 @@ CFLAGS += -DDC801_EMBEDDED --short-enums
 
 # C++ flags common to all targets
 CXXFLAGS = -felide-constructors \
-	-fno-exceptions \
 	-fno-rtti \
 	-Wno-register
 else
