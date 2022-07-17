@@ -76,6 +76,32 @@ var testSetInteract = {
 	"TODO": "aw yeaahhhhh"
 };
 
+var checkEntityGeneric = function (ao) {
+	var negation = ao.expected_bool ? '' : ' not';
+	var mapThing = entitySpecificPropertyMap[ao.action];
+	if (!mapThing) {
+		return 'ERROR: ' + ao.action;
+	} else {
+		var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
+		var printProp = quotes
+			? `"${ao[mapThing.actionProperty]}"`
+			: `${ao[mapThing.actionProperty]}`;
+		var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
+		return `if entity "${ao.entity}" ${mapThing.natLangProperty} `
+			+ `is${negation} ${printProp} `
+			+ `goto "${ao.success_script}"`;
+	}
+}
+
+var setEntityGeneric = function (ao) {
+	var mapThing = entitySpecificPropertyMap[ao.action];
+	var printProp = fieldsWithQuotes.includes(mapThing.actionProperty)
+		? `"${ao[mapThing.actionProperty]}"`
+		: `${ao[mapThing.actionProperty]}`;
+	return `set entity "${ao.entity}" ${mapThing.natLangProperty} `
+		+ `to ${printProp}`;
+};
+
 var processAO = {
 	generateComment: function (label, comment) {
 		return '// ' + label + ": " + comment;
@@ -142,41 +168,25 @@ var processAO = {
 			+ `is${negation} inside geometry "${ao.geometry}" `
 			+ `goto "${ao.success_script}"`;
 	},
-	checkEntityGeneric: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		var mapThing = entitySpecificPropertyMap[ao.action];
-		if (!mapThing) {
-			return 'ERROR: ' + ao.action;
-		} else {
-			var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
-			var printProp = quotes
-				? `"${ao[mapThing.actionProperty]}"`
-				: `${ao[mapThing.actionProperty]}`;
-			var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
-			return `if entity "${ao.entity}" ${mapThing.natLangProperty} `
-				+ `is${negation} ${printProp} `
-				+ `goto "${ao.success_script}"`;
-		}
-	},
-	checkEntityName: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityX: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityY: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityInteractScript: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityTickScript: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityType: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityPrimaryId: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntitySecondaryId: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityPrimaryIdType: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityCurrentAnimation: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityCurrentFrame: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityDirection: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateA: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateB: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateC: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateD: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateAU2: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityHackableStateCU2: function (ao) { return this.checkEntityGeneric(ao); },
-	checkEntityPath: function (ao) { return this.checkEntityGeneric(ao); },
+	checkEntityName: checkEntityGeneric,
+	checkEntityX: checkEntityGeneric,
+	checkEntityY: checkEntityGeneric,
+	checkEntityInteractScript: checkEntityGeneric,
+	checkEntityTickScript: checkEntityGeneric,
+	checkEntityType: checkEntityGeneric,
+	checkEntityPrimaryId: checkEntityGeneric,
+	checkEntitySecondaryId: checkEntityGeneric,
+	checkEntityPrimaryIdType: checkEntityGeneric,
+	checkEntityCurrentAnimation: checkEntityGeneric,
+	checkEntityCurrentFrame: checkEntityGeneric,
+	checkEntityDirection: checkEntityGeneric,
+	checkEntityHackableStateA: checkEntityGeneric,
+	checkEntityHackableStateB: checkEntityGeneric,
+	checkEntityHackableStateC: checkEntityGeneric,
+	checkEntityHackableStateD: checkEntityGeneric,
+	checkEntityHackableStateAU2: checkEntityGeneric,
+	checkEntityHackableStateCU2: checkEntityGeneric,
+	checkEntityPath: checkEntityGeneric,
 	checkEntityHackableStateAU4: function (ao) {
 		return `if entity "${ao.entity}" hackableStateAU4 `
 			+ `is ${ao.expected_u4} `
@@ -221,28 +231,20 @@ var processAO = {
 			+ `goto "${ao.success_script}"`;
 	},
 	// ENTITY SET ACTIONS (PROPERTIES)
-	setEntityGeneric: function (ao) {
-		var mapThing = entitySpecificPropertyMap[ao.action];
-		var printProp = fieldsWithQuotes.includes(mapThing.actionProperty)
-			? `"${ao[mapThing.actionProperty]}"`
-			: `${ao[mapThing.actionProperty]}`;
-		return `set entity "${ao.entity}" ${mapThing.natLangProperty} `
-			+ `to ${printProp}`;
-	},
-	setEntityName: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityX: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityY: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityType: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityPrimaryId: function (ao) { return this.setEntityGeneric(ao); },
-	setEntitySecondaryId: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityPrimaryIdType: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateA: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateB: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateC: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateD: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateAU2: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateCU2: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityHackableStateAU4: function (ao) { return this.setEntityGeneric(ao); },
+	setEntityName: setEntityGeneric,
+	setEntityX: setEntityGeneric,
+	setEntityY: setEntityGeneric,
+	setEntityType: setEntityGeneric,
+	setEntityPrimaryId: setEntityGeneric,
+	setEntitySecondaryId: setEntityGeneric,
+	setEntityPrimaryIdType: setEntityGeneric,
+	setEntityHackableStateA: setEntityGeneric,
+	setEntityHackableStateB: setEntityGeneric,
+	setEntityHackableStateC: setEntityGeneric,
+	setEntityHackableStateD: setEntityGeneric,
+	setEntityHackableStateAU2: setEntityGeneric,
+	setEntityHackableStateCU2: setEntityGeneric,
+	setEntityHackableStateAU4: setEntityGeneric,
 	// ENTITY CHOREOGRAPHY (PATHS)
 	teleportEntityToGeometry: function (ao) {
 		return `teleport entity "${ao.entity}" `
@@ -273,8 +275,8 @@ var processAO = {
 			+ `animation ${ao.animation} `
 			+ `x${ao.play_count}`;
 	},
-	setEntityCurrentAnimation: function (ao) { return this.setEntityGeneric(ao); },
-	setEntityCurrentFrame: function (ao) { return this.setEntityGeneric(ao); },
+	setEntityCurrentAnimation: setEntityGeneric,
+	setEntityCurrentFrame: setEntityGeneric,
 	setEntityDirection: function (ao) {
 		return `turn entity "${ao.entity}" ${ao.direction}`;
 	},
@@ -378,7 +380,7 @@ var fieldsWithQuotes = [
 	'serial_dialog',
 	'item_name',
 	'ble_flag',
-]
+];
 
 var mutateMap = {
 	SET: '=',
@@ -388,7 +390,7 @@ var mutateMap = {
 	MUL: '*',
 	MOD: '%',
 	RNG: '?',
-}
+};
 
 var opLookup = [
 	{
@@ -397,7 +399,7 @@ var opLookup = [
 	},
 	{
 		op: "ADD",
-		synonyms: ['+', 'ADD', 'ad'],
+		synonyms: ['+', 'ADD', 'add'],
 	},
 	{
 		op: "SUB",
@@ -428,15 +430,15 @@ var getOpSynonym = function (op) {
 	return found.synonyms && found.synonyms[0]
 		? found.synonyms[0]
 		: op;
-}
+};
 var getOpOriginal = function (synonym) {
 	var orig = opLookup.find(function (item) {
 		return item.synonyms.includes(synonym);
 	})
 	return orig && orig.op ? orig.op : synonym;
-}
+};
 
-makeNatLangAction = function (ao, indent) {
+var makeNatLangAction = function (ao, indent) {
 	var indent = indent || '';
 	var result = [];
 	if (!ao.action) {
@@ -445,7 +447,7 @@ makeNatLangAction = function (ao, indent) {
 		console.error({ actionObject: ao });
 		return 'ERROR: ' + message;
 	}
-	var paramsReport = getParamsReport(ao)
+	var paramsReport = getParamsReport(ao);
 	var missingParams = paramsReport.missingParams;
 	var commentParams = paramsReport.extraParams;
 	if (missingParams.length > 0) {
@@ -457,7 +459,7 @@ makeNatLangAction = function (ao, indent) {
 		result.push(indent + processAO[functionName](ao));
 		if (commentParams.length > 0) {
 			commentParams.forEach(function (item) {
-				var comment = indent + indent + processAO.generateComment(item, ao[item])
+				var comment = indent + indent + processAO.generateComment(item, ao[item]);
 				result.push(comment);
 			})
 		}
