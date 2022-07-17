@@ -2,7 +2,6 @@ var fs = require('fs')
 
 var testTokens = [
 	[ 'block', '1ms' ],
-	[ 'camera', 'follow', 'entity', '"Entity Name"' ],
 	[ 'close', 'hex', 'editor' ],
 	[ 'open', 'hex', 'editor' ],
 	[ 'rotate', 'entity', '"Entity Name"', '1' ],
@@ -16,6 +15,7 @@ var testTokens = [
 	[ 'walk', 'entity', '"Entity Name"', 'along', 'geometry', '"geometry-name-walk-along"', 'over', '1000ms' ],
 	[ 'make', 'entity', '"Entity Name"', 'glitched' ],
 	[ 'make', 'entity', '"Entity Name"', 'unglitched' ],
+	[ 'make', 'camera', 'follow', 'entity', '"Entity Name"' ],
 	[ 'teleport', 'entity', '"Entity Name"', 'to', 'geometry', '"geometry-name-teleport"' ],
 	[ 'teleport', 'camera', 'to', 'geometry', '"geometry-name-to-teleport"' ],
 	[ 'turn', 'entity', '"Entity Name"', 'north' ],
@@ -78,73 +78,73 @@ var testTokens = [
 	[ 'set', 'entity', '"Entity Name"', 'animationFrame', 'to', '0' ],
 	[ 'set', 'entity', '"Entity Name"', 'interactScript', 'to', '"script-entity-interact"' ],
 	[ 'set', 'entity', '"Entity Name"', 'tickScript', 'to', '"script-entity-tick"' ],
-	[ 'if', 'flag', '"i-am-a-save-flag"', 'is', 'true', 'goto', '"script-do-if-flag-true"' ],
-	[ 'if', 'flag', '"i-am-a-save-flag"', 'is', 'false', 'goto', '"script-do-if-flag-false"' ],
-	[ 'if', 'button', 'ANY', 'goto', '"script-do-if-button"' ],
-	[ 'if', 'button', 'ANY', 'is', 'pressed', 'goto', '"script-do-if-button-state"' ],
-	[ 'if', 'button', 'ANY', 'is', 'not', 'pressed', 'goto', '"script-do-if-button-state-NOT"' ],
-	[ 'if', 'warp', 'state', 'is', '"warp-state-string"', 'goto', '"script-do-if-warp-state"' ],
-	[ 'if', 'warp', 'state', 'is', 'not', '"warp-state-string"', 'goto', '"script-do-if-NOT-warp-state"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', '15', 'goto', '"script-do-if-variable-=="' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', '<', '15', 'goto', '"script-do-if-variable-<"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '15', 'goto', '"script-do-if-variable-==-NOT"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '<', '15', 'goto', '"script-do-if-variable-<-NOT"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', '"i-am-a-second-variable"', 'goto', '"script-do-if-variable-=="' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', '<', '"i-am-a-second-variable"', 'goto', '"script-do-if-variable-<"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '"i-am-a-second-variable"', 'goto', '"script-do-if-variable-==-NOT"' ],
-	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '<', '"i-am-a-second-variable"', 'goto', '"script-do-if-variable-<-NOT"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU4', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-a-u4"' ],
-	[ 'if', 'entity', '"Entity Name"', 'name', 'is', '"Checked Name"', 'goto', '"script-do-if-entity-name"' ],
-	[ 'if', 'entity', '"Entity Name"', 'x', 'is', '0', 'goto', '"script-do-if-entity-x"' ],
-	[ 'if', 'entity', '"Entity Name"', 'interactScript', 'is', '"name-of-checked-script-interact"', 'goto', '"script-do-if-entity-y"' ],
-	[ 'if', 'entity', '"Entity Name"', 'tickScript', 'is', '"name-of-checked-script-tick"', 'goto', '"script-do-if-entity-tick"' ],
-	[ 'if', 'entity', '"Entity Name"', 'type', 'is', '"some-kind-of-entity-type"', 'goto', '"script-do-if-entity-type"' ],
-	[ 'if', 'entity', '"Entity Name"', 'primaryID', 'is', '16', 'goto', '"script-do-if-entity-primaryid"' ],
-	[ 'if', 'entity', '"Entity Name"', 'secondaryID', 'is', '16', 'goto', '"script-do-if-entity-secondaryid"' ],
-	[ 'if', 'entity', '"Entity Name"', 'primaryIDtype', 'is', '16', 'goto', '"script-do-if-entity-primaryid-type"' ],
-	[ 'if', 'entity', '"Entity Name"', 'animation', 'is', '1', 'goto', '"script-do-if-entity-animation"' ],
-	[ 'if', 'entity', '"Entity Name"', 'animationFrame', 'is', '1', 'goto', '"script-do-if-entity-frame"' ],
-	[ 'if', 'entity', '"Entity Name"', 'direction', 'is', 'north', 'goto', '"script-do-if-entity-direction"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateA', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-a"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateB', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-b"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateC', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-c"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateD', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-d"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU2', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-a-u2"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateCU2', 'is', '1', 'goto', '"script-do-if-entity-is-hackable-c-u2"' ],
-	[ 'if', 'entity', '"Entity Name"', 'path', 'is', '"some-kind-of-geometry-name"', 'goto', '"script-do-if-entity-path"' ],
-	[ 'if', 'entity', '"Entity Name"', 'name', 'is', 'not', '"Checked Name"', 'goto', '"script-do-if-entity-name"' ],
-	[ 'if', 'entity', '"Entity Name"', 'x', 'is', 'not', '0', 'goto', '"script-do-if-entity-x"' ],
-	[ 'if', 'entity', '"Entity Name"', 'interactScript', 'is', 'not', '"name-of-checked-script-interact"', 'goto', '"script-do-if-entity-y"' ],
-	[ 'if', 'entity', '"Entity Name"', 'tickScript', 'is', 'not', '"name-of-checked-script-tick"', 'goto', '"script-do-if-entity-tick"' ],
-	[ 'if', 'entity', '"Entity Name"', 'type', 'is', 'not', '"some-kind-of-entity-type"', 'goto', '"script-do-if-entity-type"' ],
-	[ 'if', 'entity', '"Entity Name"', 'primaryID', 'is', 'not', '16', 'goto', '"script-do-if-entity-primaryid"' ],
-	[ 'if', 'entity', '"Entity Name"', 'secondaryID', 'is', 'not', '16', 'goto', '"script-do-if-entity-secondaryid"' ],
-	[ 'if', 'entity', '"Entity Name"', 'primaryIDtype', 'is', 'not', '16', 'goto', '"script-do-if-entity-primaryid-type"' ],
-	[ 'if', 'entity', '"Entity Name"', 'animation', 'is', 'not', '1', 'goto', '"script-do-if-entity-animation"' ],
-	[ 'if', 'entity', '"Entity Name"', 'animationFrame', 'is', 'not', '1', 'goto', '"script-do-if-entity-frame"' ],
-	[ 'if', 'entity', '"Entity Name"', 'direction', 'is', 'not', 'north', 'goto', '"script-do-if-entity-direction"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateA', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-a"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateB', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-b"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateC', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-c"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateD', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-d"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU2', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-a-u2"' ],
-	[ 'if', 'entity', '"Entity Name"', 'hackableStateCU2', 'is', 'not', '1', 'goto', '"script-do-if-entity-is-hackable-c-u2"' ],
-	[ 'if', 'entity', '"Entity Name"', 'path', 'is', 'not', '"some-kind-of-geometry-name"', 'goto', '"script-do-if-entity-path"' ],
-	[ 'if', 'entity', '"Entity Name"', 'is', 'glitched', 'goto', '"script-do-if-entity-is-glitched"' ],
-	[ 'if', 'entity', '"Entity Name"', 'is', 'inside', 'geometry', '"some-kind-of-geometry-name"', 'goto', '"script-do-if-entity-path-inside"' ],
-	[ 'if', 'entity', '"Entity Name"', 'is', 'not', 'glitched', 'goto', '"script-do-if-entity-is-glitched"' ],
-	[ 'if', 'entity', '"Entity Name"', 'is', 'not', 'inside', 'geometry', '"some-kind-of-geometry-name"', 'goto', '"script-do-if-entity-path-inside"' ],
+	[ 'if', 'flag', '"i-am-a-save-flag"', 'is', 'true', 'then', 'goto', '"script-do-if-flag-true"' ],
+	[ 'if', 'flag', '"i-am-a-save-flag"', 'is', 'false', 'then', 'goto', '"script-do-if-flag-false"' ],
+	[ 'if', 'button', 'ANY', 'then', 'goto', '"script-do-if-button"' ],
+	[ 'if', 'button', 'ANY', 'is', 'pressed', 'then', 'goto', '"script-do-if-button-state"' ],
+	[ 'if', 'button', 'ANY', 'is', 'not', 'pressed', 'then', 'goto', '"script-do-if-button-state-NOT"' ],
+	[ 'if', 'warp', 'state', 'is', '"warp-state-string"', 'then', 'goto', '"script-do-if-warp-state"' ],
+	[ 'if', 'warp', 'state', 'is', 'not', '"warp-state-string"', 'then', 'goto', '"script-do-if-NOT-warp-state"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', '15', 'then', 'goto', '"script-do-if-variable-=="' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', '<', '15', 'then', 'goto', '"script-do-if-variable-<"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '15', 'then', 'goto', '"script-do-if-variable-==-NOT"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '<', '15', 'then', 'goto', '"script-do-if-variable-<-NOT"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', '"i-am-a-second-variable"', 'then', 'goto', '"script-do-if-variable-=="' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', '<', '"i-am-a-second-variable"', 'then', 'goto', '"script-do-if-variable-<"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '"i-am-a-second-variable"', 'then', 'goto', '"script-do-if-variable-==-NOT"' ],
+	[ 'if', 'variable', '"i-am-a-variable"', 'is', 'not', '<', '"i-am-a-second-variable"', 'then', 'goto', '"script-do-if-variable-<-NOT"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU4', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-a-u4"' ],
+	[ 'if', 'entity', '"Entity Name"', 'name', 'is', '"Checked Name"', 'then', 'goto', '"script-do-if-entity-name"' ],
+	[ 'if', 'entity', '"Entity Name"', 'x', 'is', '0', 'then', 'goto', '"script-do-if-entity-x"' ],
+	[ 'if', 'entity', '"Entity Name"', 'interactScript', 'is', '"name-of-checked-script-interact"', 'then', 'goto', '"script-do-if-entity-y"' ],
+	[ 'if', 'entity', '"Entity Name"', 'tickScript', 'is', '"name-of-checked-script-tick"', 'then', 'goto', '"script-do-if-entity-tick"' ],
+	[ 'if', 'entity', '"Entity Name"', 'type', 'is', '"some-kind-of-entity-type"', 'then', 'goto', '"script-do-if-entity-type"' ],
+	[ 'if', 'entity', '"Entity Name"', 'primaryID', 'is', '16', 'then', 'goto', '"script-do-if-entity-primaryid"' ],
+	[ 'if', 'entity', '"Entity Name"', 'secondaryID', 'is', '16', 'then', 'goto', '"script-do-if-entity-secondaryid"' ],
+	[ 'if', 'entity', '"Entity Name"', 'primaryIDtype', 'is', '16', 'then', 'goto', '"script-do-if-entity-primaryid-type"' ],
+	[ 'if', 'entity', '"Entity Name"', 'animation', 'is', '1', 'then', 'goto', '"script-do-if-entity-animation"' ],
+	[ 'if', 'entity', '"Entity Name"', 'animationFrame', 'is', '1', 'then', 'goto', '"script-do-if-entity-frame"' ],
+	[ 'if', 'entity', '"Entity Name"', 'direction', 'is', 'north', 'then', 'goto', '"script-do-if-entity-direction"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateA', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-a"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateB', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-b"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateC', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-c"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateD', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-d"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU2', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-a-u2"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateCU2', 'is', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-c-u2"' ],
+	[ 'if', 'entity', '"Entity Name"', 'path', 'is', '"some-kind-of-geometry-name"', 'then', 'goto', '"script-do-if-entity-path"' ],
+	[ 'if', 'entity', '"Entity Name"', 'name', 'is', 'not', '"Checked Name"', 'then', 'goto', '"script-do-if-entity-name"' ],
+	[ 'if', 'entity', '"Entity Name"', 'x', 'is', 'not', '0', 'then', 'goto', '"script-do-if-entity-x"' ],
+	[ 'if', 'entity', '"Entity Name"', 'interactScript', 'is', 'not', '"name-of-checked-script-interact"', 'then', 'goto', '"script-do-if-entity-y"' ],
+	[ 'if', 'entity', '"Entity Name"', 'tickScript', 'is', 'not', '"name-of-checked-script-tick"', 'then', 'goto', '"script-do-if-entity-tick"' ],
+	[ 'if', 'entity', '"Entity Name"', 'type', 'is', 'not', '"some-kind-of-entity-type"', 'then', 'goto', '"script-do-if-entity-type"' ],
+	[ 'if', 'entity', '"Entity Name"', 'primaryID', 'is', 'not', '16', 'then', 'goto', '"script-do-if-entity-primaryid"' ],
+	[ 'if', 'entity', '"Entity Name"', 'secondaryID', 'is', 'not', '16', 'then', 'goto', '"script-do-if-entity-secondaryid"' ],
+	[ 'if', 'entity', '"Entity Name"', 'primaryIDtype', 'is', 'not', '16', 'then', 'goto', '"script-do-if-entity-primaryid-type"' ],
+	[ 'if', 'entity', '"Entity Name"', 'animation', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-animation"' ],
+	[ 'if', 'entity', '"Entity Name"', 'animationFrame', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-frame"' ],
+	[ 'if', 'entity', '"Entity Name"', 'direction', 'is', 'not', 'north', 'then', 'goto', '"script-do-if-entity-direction"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateA', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-a"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateB', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-b"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateC', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-c"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateD', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-d"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateAU2', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-a-u2"' ],
+	[ 'if', 'entity', '"Entity Name"', 'hackableStateCU2', 'is', 'not', '1', 'then', 'goto', '"script-do-if-entity-is-hackable-c-u2"' ],
+	[ 'if', 'entity', '"Entity Name"', 'path', 'is', 'not', '"some-kind-of-geometry-name"', 'then', 'goto', '"script-do-if-entity-path"' ],
+	[ 'if', 'entity', '"Entity Name"', 'is', 'glitched', 'then', 'goto', '"script-do-if-entity-is-glitched"' ],
+	[ 'if', 'entity', '"Entity Name"', 'is', 'inside', 'geometry', '"some-kind-of-geometry-name"', 'then', 'goto', '"script-do-if-entity-path-inside"' ],
+	[ 'if', 'entity', '"Entity Name"', 'is', 'not', 'glitched', 'then', 'goto', '"script-do-if-entity-is-glitched"' ],
+	[ 'if', 'entity', '"Entity Name"', 'is', 'not', 'inside', 'geometry', '"some-kind-of-geometry-name"', 'then', 'goto', '"script-do-if-entity-path-inside"' ],
 ];
+
+var testStrings = testTokens.map(function (item) {
+	return item.join(' ');
+})
 
 var testScriptFile = {
 	"natlang-UNIQUE": [
 		{
 			"action": "BLOCKING_DELAY",
 			"duration": 1,
-		},
-		{
-			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
-			"entity": "Entity Name",
 		},
 		{
 			"action": "SET_HEX_EDITOR_STATE",
@@ -211,6 +211,10 @@ var testScriptFile = {
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Entity Name",
 			"bool_value": false,
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "Entity Name",
 		}
 	],
 	"natlang-teleport": [
@@ -1078,10 +1082,6 @@ var allTheActions = [
 		"duration": 1
 	},
 	{
-		"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
-		"entity": "Entity Name"
-	},
-	{
 		"action": "SET_HEX_EDITOR_STATE",
 		"bool_value": false
 	},
@@ -1142,6 +1142,10 @@ var allTheActions = [
 		"action": "SET_ENTITY_GLITCHED",
 		"entity": "Entity Name",
 		"bool_value": false
+	},
+	{
+		"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+		"entity": "Entity Name"
 	},
 	{
 		"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -1879,13 +1883,33 @@ describe('MGNL test suite', function () {
 			})
 		})
 	})
-	describe('makeNatLangAction', function () {
+	describe('translateAO', function () {
 		testTokens.forEach(function (tokens, tokenIndex) {
 			var inputObject = allTheActions[tokenIndex]
 			var expected = tokens.join(' ')
 			it(`Should convert ${JSON.stringify(inputObject)} to '${expected}'`, function () {
-				var result = makeNatLangAction(inputObject);
+				var result = translateAO(inputObject);
 				expect(result).toBe(expected);
+			})
+		})
+	})
+	describe('getDictionaryItemFromAO', function () {
+		allTheActions.forEach(function (ao) {
+			it(`Should find 1 dictionary item for ${JSON.stringify(ao)}`, function () {
+				var dictionaryItem = getDictionaryItemFromAO(ao);
+				var length = Object.keys(dictionaryItem).length;
+				var result = length > 0;
+				expect(result).toBe(true);
+			})
+		})
+	})
+	describe('Bidirectional dictionary test', function () {
+		allTheActions.forEach(function (ao, aoIndex) {
+			it(`Should make identical translations for ${JSON.stringify(ao)}`, function () {
+				var oldTranslation = testStrings[aoIndex];
+				var newTranslation = translateAO(ao);
+				var result = oldTranslation === newTranslation;
+				expect(result).toBe(true);
 			})
 		})
 	})

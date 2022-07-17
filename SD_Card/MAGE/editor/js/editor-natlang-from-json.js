@@ -1,22 +1,22 @@
-var getActionParams = function (actionName) {
+// NOTE: ao = actionObject
+
+var getRequiredActionParams = function (actionName) {
 	if (actionName === 'COPY_SCRIPT') {
 		return ['script'];
 	} else {
-		return actionFieldsMap[actionName]
+		return actionFieldsMap[actionName] // external
 			.map(function (item) {
 				return item.propertyName
 			}) || [];
 	}
 };
 
-// ao = actionObject
-
 var getParamsReport = function (ao) {
 	if (!ao.action) {
 		console.error('Cannot get params report for missing action!');
 		return null;
 	}
-	var requiredParams = getActionParams(ao.action);
+	var requiredParams = getRequiredActionParams(ao.action);
 	var foundParams = Object.keys(ao)
 		.filter(function (item) {
 			return item !== 'action'
@@ -37,365 +37,86 @@ var getParamsReport = function (ao) {
 	};
 };
 
-var reportMissingParams = function (ao, params) {
-	var message = ao.action + ' is missing 1 or more params!)';
+var reportMissingParams = function (ao, missingParams) {
+	var message = ao.action + ' is missing 1 or more params!';
 	console.error(message);
-	console.error('   Missing: ' + params.join (', '));
+	console.error('   Missing: ' + missingParams.join (', '));
 	console.error({ actionObject: ao });
-	return 'ERROR: ' + message + '; ' + params.join(', ');
+	return 'ERROR: ' + message + '; ' + missingParams.join(', ');
 }
 
-var makeCamelFromSnake = function (string) {
-	var splits = string.split('_');
-	var newSplits = splits
-		.map(function (word, wordIndex) {
-			var chars = word.split('');
-			var newWord = chars
-				.map(function (char, charIndex) {
-					return charIndex === 0 && wordIndex !== 0
-						? char
-						: char.toLocaleLowerCase();
-				})
-			return newWord.join('');
+var getDefaultDictionaryFields = function (dictionaryItem) {
+	var setFields = {}
+	if (dictionaryItem.values) {
+		dictionaryItem.values.forEach(function (value, index) {
+			if (value !== null) {
+				var fieldName = dictionaryItem.fields[index];
+				setFields[fieldName] = value;
+			}
 		})
-	var newString = newSplits.join('');
-	newString[0] = newString[0].toLocaleLowerCase();
-	return newString;
-};
-
-var testDialog = {
-	"action": "SHOW_DIALOG",
-	"dialog": "dialog-bender-glitched",
-	"comment": "asdlkfjsdf"
-};
-
-var testSetInteract = {
-	"action": "SET_ENTITY_INTERACT_SCRIPT",
-	"entity": "%SELF%",
-	"script": "show_dialog-bender-start",
-	"TODO": "aw yeaahhhhh"
-};
-
-var checkEntityGeneric = function (ao) {
-	var negation = ao.expected_bool ? '' : ' not';
-	var mapThing = entitySpecificPropertyMap[ao.action];
-	if (!mapThing) {
-		return 'ERROR: ' + ao.action;
-	} else {
-		var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
-		var printProp = quotes
-			? `"${ao[mapThing.actionProperty]}"`
-			: `${ao[mapThing.actionProperty]}`;
-		var quotes = fieldsWithQuotes.includes(mapThing.actionProperty);
-		return `if entity "${ao.entity}" ${mapThing.natLangProperty} `
-			+ `is${negation} ${printProp} `
-			+ `goto "${ao.success_script}"`;
 	}
-}
-
-var setEntityGeneric = function (ao) {
-	var mapThing = entitySpecificPropertyMap[ao.action];
-	var printProp = fieldsWithQuotes.includes(mapThing.actionProperty)
-		? `"${ao[mapThing.actionProperty]}"`
-		: `${ao[mapThing.actionProperty]}`;
-	return `set entity "${ao.entity}" ${mapThing.natLangProperty} `
-		+ `to ${printProp}`;
+	return setFields;
 };
 
-var processAO = {
-	generateComment: function (label, comment) {
-		return '// ' + label + ": " + comment;
-	},
-	// GAME MANAGEMENT ACTIONS
-	blockingDelay: function (ao) {
-		return `block ${ao.duration}ms`;
-	},
-	nonBlockingDelay: function (ao) {
-		return `wait ${ao.duration}ms`;
-	},
-	setPlayerControl: function (ao) {
-		var value = ao.bool_value ? "on" : "off"
-		return `set player control ${value}`;
-	},
-	loadMap: function (ao) {
-		return `load map "${ao.map}"`;
-	},
-	showDialog: function (ao) {
-		return `show dialog "${ao.dialog}"`;
-	},
-	showSerialDialog: function (ao) {
-		return `show serial dialog "${ao.serial_dialog}"`;
-	},
-	slotSave: function (ao) {
-		return `save slot`;
-	},
-	slotLoad: function (ao) {
-		return `load slot ${ao.slot}`;
-	},
-	slotErase: function (ao) {
-		return `erase slot ${ao.slot}`;
-	},
-	// HEX EDITOR ACTIONS
-	setHexCursorLocation: function (ao) {
-		return `NOT YET IMPLEMENTED (SET_HEX_CURSOR_LOCATION)`;
-	},
-	setHexEditorState: function (ao) {
-		return ao.bool_value
-			? `open hex editor` : `close hex editor` ;
-	},
-	setHexEditorDialogMode: function (ao) {
-		var value = ao.bool_value ? "on" : "off";
-		return `set hex dialog mode ${value}`;
-	},
-	setHexEditorControl: function (ao) {
-		var value = ao.bool_value ? "on" : "off";
-		return `set hex control ${value}`;
-	},
-	setHexEditorControlClipboard: function (ao) {
-		var value = ao.bool_value ? "on" : "off";
-		return `set hex clipboard ${value}`;
-	},
-	// LOGIC CHECKS (ENTITIES)
-	checkEntityGlitched: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		return `if entity "${ao.entity}" `
-			+ `is${negation} glitched `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkIfEntityIsInGeometry: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		return `if entity "${ao.entity}" `
-			+ `is${negation} inside geometry "${ao.geometry}" `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkEntityName: checkEntityGeneric,
-	checkEntityX: checkEntityGeneric,
-	checkEntityY: checkEntityGeneric,
-	checkEntityInteractScript: checkEntityGeneric,
-	checkEntityTickScript: checkEntityGeneric,
-	checkEntityType: checkEntityGeneric,
-	checkEntityPrimaryId: checkEntityGeneric,
-	checkEntitySecondaryId: checkEntityGeneric,
-	checkEntityPrimaryIdType: checkEntityGeneric,
-	checkEntityCurrentAnimation: checkEntityGeneric,
-	checkEntityCurrentFrame: checkEntityGeneric,
-	checkEntityDirection: checkEntityGeneric,
-	checkEntityHackableStateA: checkEntityGeneric,
-	checkEntityHackableStateB: checkEntityGeneric,
-	checkEntityHackableStateC: checkEntityGeneric,
-	checkEntityHackableStateD: checkEntityGeneric,
-	checkEntityHackableStateAU2: checkEntityGeneric,
-	checkEntityHackableStateCU2: checkEntityGeneric,
-	checkEntityPath: checkEntityGeneric,
-	checkEntityHackableStateAU4: function (ao) {
-		return `if entity "${ao.entity}" hackableStateAU4 `
-			+ `is ${ao.expected_u4} `
-			+ `goto "${ao.success_script}"`;
-	},
-	// LOGIC CHECKS (OTHER)
-	checkVariable: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		var operator = ao.comparison;
-		operator = operator === '==' ? '' : operator + ' ';
-		return `if variable "${ao.variable}" `
-			+ `is${negation} ${operator}${ao.value} `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkVariables: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		var operator = ao.comparison;
-		operator = operator === '==' ? '' : operator + ' ';
-		return `if variable "${ao.variable}" `
-			+ `is${negation} ${operator}"${ao.source}" `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkSaveFlag: function (ao) {
-		return `if flag "${ao.save_flag}" `
-			+ `is ${ao.expected_bool} `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkForButtonPress: function (ao) {
-		return `if button ${ao.button_id} `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkForButtonState: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		return `if button ${ao.button_id} `
-			+ `is${negation} pressed `
-			+ `goto "${ao.success_script}"`;
-	},
-	checkWarpState: function (ao) {
-		var negation = ao.expected_bool ? '' : ' not';
-		return `if warp state `
-			+ `is${negation} "${ao.string}" `
-			+ `goto "${ao.success_script}"`;
-	},
-	// ENTITY SET ACTIONS (PROPERTIES)
-	setEntityName: setEntityGeneric,
-	setEntityX: setEntityGeneric,
-	setEntityY: setEntityGeneric,
-	setEntityType: setEntityGeneric,
-	setEntityPrimaryId: setEntityGeneric,
-	setEntitySecondaryId: setEntityGeneric,
-	setEntityPrimaryIdType: setEntityGeneric,
-	setEntityHackableStateA: setEntityGeneric,
-	setEntityHackableStateB: setEntityGeneric,
-	setEntityHackableStateC: setEntityGeneric,
-	setEntityHackableStateD: setEntityGeneric,
-	setEntityHackableStateAU2: setEntityGeneric,
-	setEntityHackableStateCU2: setEntityGeneric,
-	setEntityHackableStateAU4: setEntityGeneric,
-	// ENTITY CHOREOGRAPHY (PATHS)
-	teleportEntityToGeometry: function (ao) {
-		return `teleport entity "${ao.entity}" `
-			+ `to geometry "${ao.geometry}"`;
-	},
-	walkEntityToGeometry: function (ao) {
-		return `walk entity "${ao.entity}" `
-			+ `to geometry "${ao.geometry}" `
-			+ `over ${ao.duration}ms`;
-	},
-	walkEntityAlongGeometry: function (ao) {
-		return `walk entity "${ao.entity}" `
-			+ `along geometry "${ao.geometry}" `
-			+ `over ${ao.duration}ms`;
-	},
-	loopEntityAlongGeometry: function (ao) {
-		return `loop entity "${ao.entity}" `
-			+ `along geometry "${ao.geometry}" `
-			+ `over ${ao.duration}ms`;
-	},
-	setEntityPath: function (ao) {
-		return `set entity "${ao.entity}" `
-			+ `path to "${ao.geometry}"`;
-	},
-	// ENTITY CHOREOGRAPHY (APPEARANCE)
-	playEntityAnimation: function (ao) {
-		return `play entity "${ao.entity}" `
-			+ `animation ${ao.animation} `
-			+ `x${ao.play_count}`;
-	},
-	setEntityCurrentAnimation: setEntityGeneric,
-	setEntityCurrentFrame: setEntityGeneric,
-	setEntityDirection: function (ao) {
-		return `turn entity "${ao.entity}" ${ao.direction}`;
-	},
-	setEntityDirectionRelative: function (ao) {
-		return `rotate entity "${ao.entity}" ${ao.relative_direction}`;
-	},
-	setEntityDirectionTargetEntity: function (ao) {
-		return `turn entity "${ao.entity}" `
-			+ `toward entity "${ao.target_entity}"`;
-	},
-	setEntityDirectionTargetGeometry: function (ao) {
-		return `turn entity "${ao.entity}" `
-			+ `toward geometry "${ao.target_geometry}"`;
-	},
-	setEntityGlitched: function (ao) {
-		return ao.bool_value
-			? `make entity "${ao.entity}" glitched`
-			: `make entity "${ao.entity}" unglitched`
-	},
-	// CAMERA CONTROL
-	setCameraToFollowEntity: function (ao) {
-		return `camera follow entity "${ao.entity}"`
-	},
-	teleportCameraToGeometry: function (ao) {
-		return `teleport camera to geometry "${ao.geometry}"`
-	},
-	panCameraToEntity: function (ao) {
-		return `pan camera to entity "${ao.entity}" over ${ao.duration}ms`
-	},
-	panCameraToGeometry: function (ao) {
-		return `pan camera to geometry "${ao.geometry}" over ${ao.duration}ms`
-	},
-	panCameraAlongGeometry: function (ao) {
-		return `pan camera along geometry "${ao.geometry}" over ${ao.duration}ms`
-	},
-	loopCameraAlongGeometry: function (ao) {
-		return `loop camera along geometry "${ao.geometry}" over ${ao.duration}ms`
-	},
-	setScreenShake: function (ao) {
-		return `shake camera ${ao.frequency}ms ${ao.amplitude}px for ${ao.duration}ms`
-	},
-	screenFadeOut: function (ao) {
-		return `fade out camera to ${ao.color} over ${ao.duration}ms`
-	},
-	screenFadeIn: function (ao) {
-		return `fade in camera from ${ao.color} over ${ao.duration}ms`
-	},
-	// CONTROLLING SCRIPTS
-	runScript: function (ao) {
-		return `goto "${ao.script}"`
-	},
-	copyScript: function (ao) {
-		return `copy "${ao.script}"`
-	},
-	setMapTickScript: function (ao) {
-		return `set map tick script to "${ao.script}"`
-	},
-	setEntityInteractScript: function (ao) {
-		return `set entity "${ao.entity}" interactScript to "${ao.script}"`;
-	},
-	setEntityTickScript: function (ao) {
-		return `set entity "${ao.entity}" tickScript to "${ao.script}"`;
-	},
-	// CONTROLLING VARIABLES
-	setSaveFlag: function (ao) {
-		return `set flag "${ao.save_flag}" to ${ao.bool_value}`;
-	},
-	setWarpState: function (ao) {
-		return `set warp state to "${ao.string}"`;
-	},
-	mutateVariable: function (ao) {
-		var op = mutateMap[ao.operation];
-		return `mutate "${ao.variable}" ${op} ${ao.value}`;
-	},
-	mutateVariables: function (ao) {
-		var op = mutateMap[ao.operation];
-		return `mutate "${ao.variable}" ${op} "${ao.source}"`;
-	},
-	copyVariable: function (ao) {
-		var direction = ao.inbound ? 'into' : 'from'
-		return `copy entity "${ao.entity}" ${ao.field} ${direction} variable "${ao.variable}"`;
-	},
+var natlangBoolPrefs = {
+	SET_HEX_EDITOR_STATE: [ 'open', 'close' ], // required due to keywords
+	SET_PLAYER_CONTROL: [ 'on', 'off' ],
+	SET_HEX_EDITOR_DIALOG_MODE: [ 'on', 'off' ],
+	SET_HEX_EDITOR_CONTROL: [ 'on', 'off' ],
+	SET_HEX_EDITOR_CONTROL_CLIPBOARD: [ 'on', 'off' ],
+	// [ 'true', 'false' ] for everything else
 };
 
-var fieldsWithQuotes = [
-	'map',
-	'entity',
-	'target_entity',
-	'entity_type',
-	'geometry',
-	'target_geometry',
-	'script',
-	'success_script',
-	'expected_script',
-	'string',
-	'save_flag',
-	'dialog',
-	'variable',
-	'source',
-	'field',
-	'serial_dialog',
-	'item_name',
-	'ble_flag',
-];
+var getPreferredBool = function (actionName, bool) {
+	var preference = natlangBoolPrefs[actionName] || [ 'true', 'false' ];
+	return bool ? preference[0] : preference[1];
+};
 
-var mutateMap = {
-	SET: '=',
-	ADD: '+',
-	SUB: '-',
-	DIV: '/',
-	MUL: '*',
-	MOD: '%',
-	RNG: '?',
+var translateFieldToNatlang = {
+	bool: function (input) {
+		// TODO collect preferences for action names
+		return input + '';
+	},
+	int: function (input) {
+		return input + '';
+	},
+	duration: function (input) {
+		return input + 'ms';
+	},
+	pixels: function (input) {
+		return input + 'px';
+	},
+	string: function (input) {
+		return '"' + input + '"';
+	},
+	qty: function (input) {
+		// TODO make fancy "once, twice" etc?
+		return 'x' + input;
+	},
+	op: function (input) {
+		return getOpSynonym(input);
+	},
+	color: function (input) {
+		return input;
+	},
+	field: function (input) {
+		return input;
+	},
+	button: function (input) {
+		return input;
+	},
+	direction: function (input) {
+		return input;
+	},
+	comparison: function (input) {
+		return input;
+	}
 };
 
 var opLookup = [
 	{
 		op: "SET",
-		synonyms: ['=','SET', 'set'],
+		synonyms: ['=', 'SET', 'set'],
 	},
 	{
 		op: "ADD",
@@ -422,7 +143,6 @@ var opLookup = [
 		synonyms: ['?', 'RNG', 'rng'],
 	}
 ];
-
 var getOpSynonym = function (op) {
 	var found = opLookup.find(function (item) {
 		return item.op === op;
@@ -438,54 +158,225 @@ var getOpOriginal = function (synonym) {
 	return orig && orig.op ? orig.op : synonym;
 };
 
-var makeNatLangAction = function (ao, indent) {
-	var indent = indent || '';
-	var result = [];
-	if (!ao.action) {
-		var message = "Action isn't an action??";
-		console.error(message);
-		console.error({ actionObject: ao });
-		return 'ERROR: ' + message;
+var getDictionaryItemFromAO = function (ao) {
+	var paramsReport = getParamsReport(ao);
+	if (paramsReport.missingParams.length > 0) {
+		console.error('This action object is missing required params!');
+		console.error(ao)
+		return {};
 	}
+	var dictionarySameName = natlangDictionary
+		.filter(function (item) {
+			return ao.action === item.action;
+		})
+	if (dictionarySameName.length === 1) {
+		return dictionarySameName[0]
+	} else if (dictionarySameName.length > 1) {
+		var filtered = dictionarySameName.filter(function (item) {
+			var match = true;
+			var setFields = getDefaultDictionaryFields(item);
+			Object.keys(setFields).forEach(function (fieldName) {
+				// console.log(`checking ${ao[fieldName]} against ${setFields[fieldName]}`)
+				if (ao[fieldName] !== setFields[fieldName]) {
+					match = false;
+				}
+			})
+			// console.log(`match result: ${match}`)
+			return match;
+		})
+		if (filtered.length === 1) {
+			return filtered [0];
+		} else {
+			console.warn('Dictionary filter warning (multiple dictionary entries!)');
+			console.warn(ao)
+			console.warn('Matched dictionary patterns:')
+			filtered.forEach(function (item) {
+				console.warn('    ' + item.pattern)
+			})
+			console.warn('Returning only the first one!')
+			return filtered[0];
+		}
+	} else {
+		console.error('Catastrophic dictionary lookup failure!');
+		console.error(ao)
+		return {};
+	}
+};
+
+var makeActionTokensFromAO = function (ao) {
+	var dictionaryItem = getDictionaryItemFromAO(ao);
+	var resultArray = [];
+	var patternSplits = dictionaryItem.pattern.split(' ');
+	patternSplits.forEach(function (token, index) {
+		if (token[0] === '$') {
+			var fieldName = dictionaryItem.fields[index];
+			var fieldValue = ao[fieldName];
+			if (fieldValue === true || fieldValue === false) {
+				fieldValue = getPreferredBool(ao.action, fieldValue)
+			}
+			var fieldType = token.substring(1);
+			var insert = translateFieldToNatlang[fieldType](fieldValue);
+			resultArray.push(insert);
+		} else {
+			resultArray.push(token);
+		}
+	})
+	return resultArray;
+};
+var makeCommentObjectFromAO = function (ao) {
+	var paramsReport = getParamsReport(ao);
+	var comments = paramsReport.extraParams;
+	if (comments.length > 0) {
+		var commentTokens = {};
+		comments.forEach(function (commentLabel) {
+			commentTokens[commentLabel] = ao[commentLabel];
+		})
+		return commentTokens;
+	} else {
+		return null;
+	}
+};
+
+var makeCommentStringsFromCO = function (co) {
+	var commentStrings = [];
+	if (Object.keys(co).length > 0) {
+		Object.keys(co).forEach(function (commentLabel) {
+			var insert = '// ' + commentLabel + ': ' + co[commentLabel];
+			commentStrings.push(insert);
+		})
+		return commentStrings;
+	} else {
+		return null;
+	}
+}
+
+var translateAOToArrays = function (ao) {
 	var paramsReport = getParamsReport(ao);
 	var missingParams = paramsReport.missingParams;
-	var commentParams = paramsReport.extraParams;
 	if (missingParams.length > 0) {
 		return reportMissingParams(ao, missingParams);
 	}
-	var functionName = makeCamelFromSnake(ao.action);
-	// THE MAGIC
-	if (processAO[functionName]) {
-		result.push(indent + processAO[functionName](ao));
-		if (commentParams.length > 0) {
-			commentParams.forEach(function (item) {
-				var comment = indent + indent + processAO.generateComment(item, ao[item]);
-				result.push(comment);
-			})
-		}
-	} else {
-		console.warn(ao.action + ' not implemented yet');
-		console.warn(ao);
-		result.push(`ERROR: ${ao.action} not yet implemented`);
+	var actionString = makeActionTokensFromAO(ao).join(' ');
+	var resultArray = [ actionString ];
+	var commentObject = makeCommentObjectFromAO(ao);
+	if (commentObject) {
+		commentStrings = makeCommentStringsFromCO(commentObject);
+		resultArray = resultArray.concat(commentStrings);
 	}
+	return resultArray;
+};
+// ^^ alternative if, for some reason, you didn't want them joined yet
+var translateAO = function (ao) {
+	var result = translateAOToArrays(ao);
 	return result.join('\n');
 };
 
-var makeNatLangScripts = function (jsonFile, indent) {
-	indent = indent || '    ';
-	jsonFile = jsonFile || {};
-	var scriptNames = Object.keys(jsonFile);
-	var result = [];
-	scriptNames.forEach(function (scriptName) {
-		var actions = jsonFile[scriptName];
-		result.push(scriptName + ":");
-		actions.forEach(function (action) {
-			result.push(makeNatLangAction(action, indent));
-		})
-		result.push('');
-	})
-	return result.join('\n');
+var defaultNatlangConfig = {
+	indent: '    ',
+	extraIndents: true,
+	splitGoto: true,
 };
+var translateScripts = function (jsonFromFile, importConfig) {
+	var config = JSON.parse(JSON.stringify(defaultNatlangConfig));
+	Object.assign(config, importConfig);
+	jsonFromFile = jsonFromFile || {};
+	var basicArray = [];
+	// Making the text blocks per script
+	var scriptNames = Object.keys(jsonFromFile);
+	scriptNames.forEach(function (scriptName) {
+		basicArray.push(scriptName + ':');
+		var aos = jsonFromFile[scriptName];
+		aos.forEach(function (ao) {
+			var arrayFromAO = translateAOToArrays(ao);
+			basicArray = basicArray.concat(arrayFromAO);
+		})
+		basicArray.push('');
+	})
+	var indent = config.indent;
+	// INDENTING
+	var indentedArray = basicArray.map(function (string) {
+		if (string[string.length-1] === ':') {
+			return string;
+		} else if (string.startsWith('// ')) {
+			return config.extraIndents
+				? indent + indent + string
+				: indent + string;
+		} else {
+			return indent + string;
+		}
+	})
+	// TODO: split goto (should be easier now that it includes "then")
+	return indentedArray.join('\n');
+};
+
+var testJSONFile = {
+	"test-script": [
+		{
+			"action": "BLOCKING_DELAY",
+			"duration": 1,
+		},
+		{
+			"action": "SET_HEX_EDITOR_STATE",
+			"bool_value": false,
+		},
+		{
+			"action": "SLOT_ERASE",
+			"slot": 2,
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_PRESS",
+			"button_id": "ANY",
+			"success_script": "script-do-if-button",
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "ANY",
+			"expected_bool": true,
+			"success_script": "script-do-if-button-state",
+		},
+		{
+			"action": "CHECK_FOR_BUTTON_STATE",
+			"button_id": "ANY",
+			"expected_bool": false,
+			"success_script": "script-do-if-button-state",
+		}
+	],
+	"test-script-2": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "script-to-run",
+		},
+		{
+			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+			"entity": "Entity Name",
+			"geometry": "geometry-name-loop",
+			"duration": 1000,
+		},
+		{
+			"action": "SET_HEX_EDITOR_STATE",
+			"bool_value": true,
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_RELATIVE",
+			"entity": "Entity Name",
+			"relative_direction": 1,
+		},
+		{
+			"action": "SLOT_SAVE",
+		},
+		{
+			"action": "SET_SCREEN_SHAKE",
+			"frequency": 1000,
+			"amplitude": 30,
+			"duration": 4000,
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 100000,
+			"doop":"doop",
+		}
+	]
+}
 
 // SORTED BY FUNCTION
 
@@ -1544,10 +1435,6 @@ var testJSON = {
 			"duration": 1,
 		},
 		{
-			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
-			"entity": "Entity Name",
-		},
-		{
 			"action": "SET_HEX_EDITOR_STATE",
 			"bool_value": false,
 		},
@@ -1612,6 +1499,10 @@ var testJSON = {
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Entity Name",
 			"bool_value": false,
+		},
+		{
+			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+			"entity": "Entity Name",
 		}
 	],
 	"natlang-teleport": [

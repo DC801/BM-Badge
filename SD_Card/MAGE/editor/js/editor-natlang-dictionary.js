@@ -1,3 +1,7 @@
+// in case an action object can genuinely
+// match several dictionary entries (synonyms)
+// put the simplest patterns first
+
 var natlangDictionary = [
 	{
 		action: "BLOCKING_DELAY",
@@ -6,8 +10,8 @@ var natlangDictionary = [
 	},
 	{
 		action: "SET_CAMERA_TO_FOLLOW_ENTITY",
-		pattern: "camera follow entity $string",
-		fields: [ null, null, null, "entity" ],
+		pattern: "make camera follow entity $string",
+		fields: [ null, null, null, null, "entity" ],
 	},
 	{
 		action: "SET_HEX_EDITOR_STATE",
@@ -210,120 +214,120 @@ var natlangDictionary = [
 	// } // ONES LIKE THIS ARE PROCEDURALLY ADDED
 	{
 		action: "CHECK_SAVE_FLAG",
-		pattern: "if flag $string is $bool goto $string",
-		fields: [ null, null, "save_flag", null, "expected_bool", null, "success_script" ]
+		pattern: "if flag $string is $bool then goto $string",
+		fields: [ null, null, "save_flag", null, "expected_bool", null, null, "success_script" ]
 	},
 	{
 		action: "CHECK_FOR_BUTTON_PRESS",
-		pattern: "if button $button goto $string",
-		fields: [ null, null, "button_id", null, "success_script" ]
+		pattern: "if button $button then goto $string",
+		fields: [ null, null, "button_id", null, null, "success_script" ]
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button is pressed goto $string",
-		fields: [ null, null, "button_id", "expected_bool", null, null, "success_script" ],
-		values: [ null, null, null, true, null, null, null ]
+		pattern: "if button $button is pressed then goto $string",
+		fields: [ null, null, "button_id", "expected_bool", null, null, null, "success_script" ],
+		values: [ null, null, null, true, null, null, null, null ]
 	},
 	{
 		action: "CHECK_FOR_BUTTON_STATE",
-		pattern: "if button $button is not pressed goto $string",
-		fields: [ null, null, "button_id", null, "expected_bool", null, null, "success_script" ],
-		values: [ null, null, null, null, false, null, null, null ]
-	},
-	{
-		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is $string goto $string",
-		fields: [ null, null, null, "expected_bool", "string", null, "success_script" ],
-		values: [ null, null, null, true, null, null, null ]
-	},
-	{
-		action: "CHECK_WARP_STATE",
-		pattern: "if warp state is not $string goto $string",
-		fields: [ null, null, null, null, "expected_bool", "string", null, "success_script" ],
-		values: [ null, null, null, null, false, null, null, null ]
-	},
-	{
-		action: "CHECK_VARIABLE",
-		pattern: "if variable $string is $int goto $string",
-		fields: [ "expected_bool", null, "variable", "comparison", "value", null, "success_script" ],
-		values: [ true, null, null, '==', null, null, null ]
-	},
-	{
-		action: "CHECK_VARIABLE",
-		pattern: "if variable $string is $comparison $int goto $string",
-		fields: [ null, null, "variable", "expected_bool", "comparison", "value", null, "success_script" ],
-		values: [ null, null, null, true, null, null, null, null ]
-	},
-	{
-		action: "CHECK_VARIABLE",
-		pattern: "if variable $string is not $int goto $string",
-		fields: [ null, null, "variable", "comparison", "expected_bool", "value", null, "success_script" ],
-		values: [ null, null, null, '==', false, null, null, null ]
-	},
-	{
-		action: "CHECK_VARIABLE",
-		pattern: "if variable $string is not $comparison $int goto $string",
-		fields: [ null, null, "variable", null, "expected_bool", "comparison", "value", null, "success_script" ],
+		pattern: "if button $button is not pressed then goto $string",
+		fields: [ null, null, "button_id", null, "expected_bool", null, null, null, "success_script" ],
 		values: [ null, null, null, null, false, null, null, null, null ]
 	},
 	{
-		action: "CHECK_VARIABLES",
-		pattern: "if variable $string is $string goto $string",
-		fields: [ "expected_bool", null, "variable", "comparison", "source", null, "success_script" ],
-		values: [ true, null, null, '==', null, null, null ]
-	},
-	{
-		action: "CHECK_VARIABLES",
-		pattern: "if variable $string is $comparison $string goto $string",
-		fields: [ null, null, "variable", "expected_bool", "comparison", "source", null, "success_script" ],
+		action: "CHECK_WARP_STATE",
+		pattern: "if warp state is $string then goto $string",
+		fields: [ null, null, null, "expected_bool", "string", null, null, "success_script" ],
 		values: [ null, null, null, true, null, null, null, null ]
 	},
 	{
-		action: "CHECK_VARIABLES",
-		pattern: "if variable $string is not $string goto $string",
-		fields: [ null, null, "variable", "comparison", "expected_bool", "source", null, "success_script" ],
-		values: [ null, null, null, '==', false, null, null, null ]
+		action: "CHECK_WARP_STATE",
+		pattern: "if warp state is not $string then goto $string",
+		fields: [ null, null, null, null, "expected_bool", "string", null, null, "success_script" ],
+		values: [ null, null, null, null, false, null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLE",
+		pattern: "if variable $string is $int then goto $string",
+		fields: [ "expected_bool", null, "variable", "comparison", "value", null, null, "success_script" ],
+		values: [ true, null, null, '==', null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLE",
+		pattern: "if variable $string is $comparison $int then goto $string",
+		fields: [ null, null, "variable", "expected_bool", "comparison", "value", null, null, "success_script" ],
+		values: [ null, null, null, true, null, null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLE",
+		pattern: "if variable $string is not $int then goto $string",
+		fields: [ null, null, "variable", "comparison", "expected_bool", "value", null, null, "success_script" ],
+		values: [ null, null, null, '==', false, null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLE",
+		pattern: "if variable $string is not $comparison $int then goto $string",
+		fields: [ null, null, "variable", null, "expected_bool", "comparison", "value", null, null, "success_script" ],
+		values: [ null, null, null, null, false, null, null, null, null, null ]
 	},
 	{
 		action: "CHECK_VARIABLES",
-		pattern: "if variable $string is not $comparison $string goto $string",
-		fields: [ null, null, "variable", null, "expected_bool", "comparison", "source", null, "success_script" ],
-		values: [ null, null, null, null, false, null, null, null, null ]
+		pattern: "if variable $string is $string then goto $string",
+		fields: [ "expected_bool", null, "variable", "comparison", "source", null, null, "success_script" ],
+		values: [ true, null, null, '==', null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLES",
+		pattern: "if variable $string is $comparison $string then goto $string",
+		fields: [ null, null, "variable", "expected_bool", "comparison", "source", null, null, "success_script" ],
+		values: [ null, null, null, true, null, null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLES",
+		pattern: "if variable $string is not $string then goto $string",
+		fields: [ null, null, "variable", "comparison", "expected_bool", "source", null, null, "success_script" ],
+		values: [ null, null, null, '==', false, null, null, null, null ]
+	},
+	{
+		action: "CHECK_VARIABLES",
+		pattern: "if variable $string is not $comparison $string then goto $string",
+		fields: [ null, null, "variable", null, "expected_bool", "comparison", "source", null, null, "success_script" ],
+		values: [ null, null, null, null, false, null, null, null, null, null ]
 	},
 	{
 		action: "CHECK_ENTITY_HACKABLE_STATE_A_U4",
-		pattern: "if entity $string hackableStateAU4 is $int goto $string",
-		fields: [ null, null, "entity", null, null, "expected_u4", null, "success_script" ]
+		pattern: "if entity $string hackableStateAU4 is $int then goto $string",
+		fields: [ null, null, "entity", null, null, "expected_u4", null, null, "success_script" ]
 	},
 	// {
 	// 	action: "CHECK_ENTITY_NAME",
-	// 	pattern: "if entity $string name is $string goto $string",
+	// 	pattern: "if entity $string name is $string then goto $string",
 	// 	fields: [ null, null, "entity", null, "expected_bool", "string", null, "success_script" ],
 	// 	values: [ null, null, null, null, true, null, null, null ]
 	// } // PROCEDURALLY DONE
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $string is inside geometry $string goto $string",
-		fields: [ null, null, "entity", "expected_bool", null, null, "geometry", null, "success_script" ],
-		values: [ null, null, null, true, null, null, null, null, null ]
+		pattern: "if entity $string is inside geometry $string then goto $string",
+		fields: [ null, null, "entity", "expected_bool", null, null, "geometry", null, null, "success_script" ],
+		values: [ null, null, null, true, null, null, null, null, null, null ]
 	},
 	{
 		action: "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
-		pattern: "if entity $string is not inside geometry $string goto $string",
-		fields: [ null, null, "entity", null, "expected_bool", null, null, "geometry", null, "success_script" ],
-		values: [ null, null, null, null, false, null, null, null, null, null ]
+		pattern: "if entity $string is not inside geometry $string then goto $string",
+		fields: [ null, null, "entity", null, "expected_bool", null, null, "geometry", null, null, "success_script" ],
+		values: [ null, null, null, null, false, null, null, null, null, null, null ]
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $string is glitched goto $string",
-		fields: [ null, null, "entity", "expected_bool", null, null, "success_script" ],
-		values: [ null, null, null, true, null, null, null ]
+		pattern: "if entity $string is glitched then goto $string",
+		fields: [ null, null, "entity", "expected_bool", null, null, null, "success_script" ],
+		values: [ null, null, null, true, null, null, null, null ]
 	},
 	{
 		action: "CHECK_ENTITY_GLITCHED",
-		pattern: "if entity $string is not glitched goto $string",
-		fields: [ null, null, "entity", null, "expected_bool", null, null, "success_script" ],
-		values: [ null, null, null, null, false, null, null, null ]
+		pattern: "if entity $string is not glitched then goto $string",
+		fields: [ null, null, "entity", null, "expected_bool", null, null, null, "success_script" ],
+		values: [ null, null, null, null, false, null, null, null, null ]
 	},
 ];
 
@@ -480,11 +484,6 @@ var entitySpecificPropertyMap = {
 		natLangProperty: "animationFrame",
 		dictionaryRef: "$int",
 	},
-	SET_ENTITY_DIRECTION: {
-		actionProperty: "direction",
-		natLangProperty: "direction",
-		dictionaryRef: "$direction",
-	},
 	SET_ENTITY_HACKABLE_STATE_A: {
 		actionProperty: "byte_value",
 		natLangProperty: "hackableStateA",
@@ -564,7 +563,7 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 			`if entity $string `
 			+ `${mapStuffs.natLangProperty} is `
 			+ `${mapStuffs.dictionaryRef} `
-			+ `goto $string`
+			+ `then goto $string`
 		var insert = {
 			action: actionName,
 			pattern: pattern,
@@ -576,6 +575,7 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 				"expected_bool",
 				mapStuffs.actionProperty,
 				null,
+				null,
 				"success_script"
 			],
 			values: [
@@ -586,6 +586,7 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 				true,
 				null,
 				null,
+				null,
 				null
 			],
 		}
@@ -593,7 +594,7 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 			`if entity $string `
 			+ `${mapStuffs.natLangProperty} is not `
 			+ `${mapStuffs.dictionaryRef} `
-			+ `goto $string`
+			+ `then goto $string`
 		var insertNeg = {
 			action: actionName,
 			pattern: patternNeg,
@@ -606,6 +607,7 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 				"expected_bool",
 				mapStuffs.actionProperty,
 				null,
+				null,
 				"success_script"
 			],
 			values: [
@@ -617,9 +619,37 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 				false,
 				null,
 				null,
+				null,
 				null
 			],
 		}
 		natlangDictionary.push(insert);
 		natlangDictionary.push(insertNeg);
 	})
+
+var natlangVerbs = [
+	'block',
+	'close',
+	'copy',
+	'erase',
+	'fade',
+	'goto',
+	'if',
+	'load',
+	'loop',
+	'make',
+	'mutate',
+	'open',
+	'pan',
+	'play',
+	'rotate',
+	'save',
+	'set',
+	'shake',
+	'show',
+	'teleport',
+	'then',
+	'turn',
+	'wait',
+	'walk',
+];
