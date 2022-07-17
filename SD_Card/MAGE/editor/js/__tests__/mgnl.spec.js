@@ -1871,10 +1871,11 @@ eval(moduleString);
 
 describe('MGNL test suite', function () {
 	describe('translateTokensToJSON', function () {
-		it('Should convert tokens to the expected json objects', function () {
-			testTokens.forEach(function (tokens, tokenIndex) {
+		testTokens.forEach(function (tokens, tokenIndex) {
+			var expected = allTheActions[tokenIndex]
+			it(`Should convert '${tokens.join(' ')}' to ${JSON.stringify(expected)}`, function () {
 				var result = translateTokensToJSON.action(tokens)
-				expect(result).toStrictEqual(allTheActions[tokenIndex]);
+				expect(result).toStrictEqual(expected);
 			})
 		})
 	})
