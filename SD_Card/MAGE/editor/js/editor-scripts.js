@@ -45,6 +45,23 @@ Vue.component(
 				var existingNames = this.scriptsOptions;
 				return !existingNames.includes(this.newScriptName);
 			},
+			/*
+			natLangScript: function () {
+				var currFile = this.currentScriptFileName;
+				var scriptNames = this.currentData.scriptsFileItemMap[currFile];
+				var scripts = this.currentData.scripts;
+				var result = {};
+				if (currFile) {
+					scriptNames.forEach(function (scriptName) {
+						result[scriptName] = scripts[scriptName];
+					})
+					var restored = makeNatLangScripts(result);
+					return restored;
+				} else {
+					return '';
+				}
+			},
+			*/
 		},
 		methods: {
 			updateScript: function (scriptName,changes) {

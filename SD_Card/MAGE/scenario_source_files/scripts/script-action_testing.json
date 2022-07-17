@@ -213,7 +213,7 @@
 	],
 	"mage03-check_entity_scripts": [
 		{
-			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
+			"doc": "Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then SET_ENTITY_(TICK/INTERACT)_SCRIPT",
 			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
 			"success_script": "mage03-success_script",
 			"entity": "%PLAYER%",
