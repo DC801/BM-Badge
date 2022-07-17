@@ -1540,61 +1540,50 @@ var testJSON = {
 		{
 			"action": "BLOCKING_DELAY",
 			"duration": 1,
-			// "camel": "BLOCKING_DELAY"
 		},
 		{
 			"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
 			"entity": "Entity Name",
-			// "camel": "SET_CAMERA_TO_FOLLOW_ENTITY"
 		},
 		{
 			"action": "SET_HEX_EDITOR_STATE",
 			"bool_value": false,
-			// "camel": "SET_HEX_EDITOR_STATE"
 		},
 		{
 			"action": "SLOT_ERASE",
 			"slot": 2,
-			// "camel": "SLOT_ERASE"
 		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "script-to-run",
-			// "camel": "RUN_SCRIPT"
 		},
 		{
 			"action": "LOOP_ENTITY_ALONG_GEOMETRY",
 			"entity": "Entity Name",
 			"geometry": "geometry-name-loop",
 			"duration": 1000,
-			// "camel": "LOOP_ENTITY_ALONG_GEOMETRY"
 		},
 		{
 			"action": "SET_HEX_EDITOR_STATE",
 			"bool_value": true,
-			// "camel": "SET_HEX_EDITOR_STATE"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_RELATIVE",
 			"entity": "Entity Name",
 			"relative_direction": 1,
-			// "camel": "SET_ENTITY_DIRECTION_RELATIVE"
 		},
 		{
 			"action": "SLOT_SAVE",
-			// "camel": "SLOT_SAVE"
 		},
 		{
 			"action": "SET_SCREEN_SHAKE",
 			"frequency": 1000,
 			"amplitude": 30,
 			"duration": 4000,
-			// "camel": "SET_SCREEN_SHAKE"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
 			"duration": 100000,
-			// "camel": "NON_BLOCKING_DELAY"
 		}
 	],
 	"natlang-walk": [
@@ -1603,14 +1592,12 @@ var testJSON = {
 			"entity": "Entity Name",
 			"geometry": "geometry-name-walk-to",
 			"duration": 1000,
-			// "camel": "WALK_ENTITY_TO_GEOMETRY"
 		},
 		{
 			"action": "WALK_ENTITY_ALONG_GEOMETRY",
 			"entity": "Entity Name",
 			"geometry": "geometry-name-walk-along",
 			"duration": 1000,
-			// "camel": "WALK_ENTITY_ALONG_GEOMETRY"
 		}
 	],
 	"natlang-make": [
@@ -1618,13 +1605,11 @@ var testJSON = {
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Entity Name",
 			"bool_value": true,
-			// "camel": "SET_ENTITY_GLITCHED"
 		},
 		{
 			"action": "SET_ENTITY_GLITCHED",
 			"entity": "Entity Name",
 			"bool_value": false,
-			// "camel": "SET_ENTITY_GLITCHED"
 		}
 	],
 	"natlang-teleport": [
@@ -1632,12 +1617,10 @@ var testJSON = {
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Entity Name",
 			"geometry": "geometry-name-teleport",
-			// "camel": "TELEPORT_ENTITY_TO_GEOMETRY"
 		},
 		{
 			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
 			"geometry": "geometry-name-to-teleport",
-			// "camel": "TELEPORT_CAMERA_TO_GEOMETRY"
 		}
 	],
 	"natlang-turn": [
@@ -1645,19 +1628,16 @@ var testJSON = {
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Entity Name",
 			"direction": "north",
-			// "camel": "SET_ENTITY_DIRECTION"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
 			"entity": "Entity Name",
 			"target_entity": "Target Entity",
-			// "camel": "SET_ENTITY_DIRECTION_TARGET_ENTITY"
 		},
 		{
 			"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
 			"entity": "Entity Name",
 			"target_geometry": "target-geometry",
-			// "camel": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY"
 		},
 	],
 	"natlang-pan": [
@@ -1665,13 +1645,11 @@ var testJSON = {
 			"action": "PAN_CAMERA_TO_ENTITY",
 			"duration": 1000,
 			"entity": "Entity Name",
-			// "camel": "PAN_CAMERA_TO_ENTITY"
 		},
 		{
 			"action": "PAN_CAMERA_TO_GEOMETRY",
 			"duration": 1000,
 			"geometry": "geometry-to-pan-camera",
-			// "camel": "PAN_CAMERA_TO_GEOMETRY"
 		}
 	],
 	"natlang-play": [
@@ -1680,14 +1658,12 @@ var testJSON = {
 			"entity": "Entity Name",
 			"animation": 0,
 			"play_count": 1,
-			// "camel": "PLAY_ENTITY_ANIMATION"
 		},
 		{
 			"action": "PLAY_ENTITY_ANIMATION",
 			"entity": "Entity Name",
 			"animation": 0,
 			"play_count": 2,
-			// "camel": "PLAY_ENTITY_ANIMATION"
 		},
 	],
 	"natlang-fade": [
@@ -1695,44 +1671,37 @@ var testJSON = {
 			"action": "SCREEN_FADE_OUT",
 			"duration": 1000,
 			"color": "#FF0000",
-			// "camel": "SCREEN_FADE_OUT"
 		},
 		{
 			"action": "SCREEN_FADE_IN",
 			"duration": 1000,
 			"color": "#00FF00",
-			// "camel": "SCREEN_FADE_IN"
 		}
 	],
 	"natlang-load": [
 		{
 			"action": "LOAD_MAP",
 			"map": "super-long-map-name",
-			// "camel": "LOAD_MAP"
 		},
 		{
 			"action": "SLOT_LOAD",
 			"slot": 0,
-			// "camel": "SLOT_LOAD"
 		}
 	],
 	"natlang-show": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "super-long-dialog-name",
-			// "camel": "SHOW_DIALOG"
 		},
 		{
 			"action": "SHOW_SERIAL_DIALOG",
 			"serial_dialog": "serial-dialog",
-			// "camel": "SHOW_SERIAL_DIALOG"
 		}
 	],
 	"natlang-copy": [
 		{
 			"action": "COPY_SCRIPT",
 			"script": "script-to-copy",
-			// "camel": "COPY_SCRIPT"
 		},
 		{
 			"action": "COPY_VARIABLE",
@@ -1740,7 +1709,6 @@ var testJSON = {
 			"inbound": true,
 			"entity": "Entity Name",
 			"field": "x",
-			// "camel": "COPY_VARIABLE"
 		},
 		{
 			"action": "COPY_VARIABLE",
@@ -1748,7 +1716,6 @@ var testJSON = {
 			"inbound": false,
 			"entity": "Entity Name",
 			"field": "y",
-			// "camel": "COPY_VARIABLE"
 		}
 	],
 	"natlang-mutate": [
@@ -1757,110 +1724,94 @@ var testJSON = {
 			"variable": "variable-name-set",
 			"value": 5,
 			"operation": "SET",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-add",
 			"value": 5,
 			"operation": "ADD",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-sub",
 			"value": 5,
 			"operation": "SUB",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-div",
 			"value": 5,
 			"operation": "DIV",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-mul",
 			"value": 5,
 			"operation": "MUL",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-mod",
 			"value": 5,
 			"operation": "MOD",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLE",
 			"variable": "variable-name-rng",
 			"value": 5,
 			"operation": "RNG",
-			// "camel": "MUTATE_VARIABLE"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-set",
 			"source": "another-variable-name",
 			"operation": "SET",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-add",
 			"source": "another-variable-name",
 			"operation": "ADD",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-sub",
 			"source": "another-variable-name",
 			"operation": "SUB",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-div",
 			"source": "another-variable-name",
 			"operation": "DIV",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-mul",
 			"source": "another-variable-name",
 			"operation": "MUL",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-mod",
 			"source": "another-variable-name",
 			"operation": "MOD",
-			// "camel": "MUTATE_VARIABLES"
 		},
 		{
 			"action": "MUTATE_VARIABLES",
 			"variable": "variable-name-rng",
 			"source": "another-variable-name",
 			"operation": "RNG",
-			// "camel": "MUTATE_VARIABLES"
 		},
 	],
 	"natlang-set-UNIQUE": [
 		{
 			"action": "SET_MAP_TICK_SCRIPT",
 			"script": "script-map-tick",
-			// "camel": "SET_MAP_TICK_SCRIPT"
 		},
 		{
 			"action": "SET_WARP_STATE",
 			"string": "warp-state-string",
-			// "camel": "SET_WARP_STATE"
 		}
 	],
 	"natlang-set-flag": [
@@ -1868,57 +1819,47 @@ var testJSON = {
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "save-flag-to-set",
 			"bool_value": true,
-			// "camel": "SET_SAVE_FLAG"
 		},
 		{
 			"action": "SET_SAVE_FLAG",
 			"save_flag": "save-flag-to-set-NOT",
 			"bool_value": false,
-			// "camel": "SET_SAVE_FLAG"
 		}
 	],
 	"natlang-set-player": [
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": true,
-			// "camel": "SET_PLAYER_CONTROL"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
 			"bool_value": false,
-			// "camel": "SET_PLAYER_CONTROL"
 		}
 	],
 	"natlang-set-hex": [
 		{
 			"action": "SET_HEX_EDITOR_DIALOG_MODE",
 			"bool_value": true,
-			// "camel": "SET_HEX_EDITOR_DIALOG_MODE"
 		},
 		{
 			"action": "SET_HEX_EDITOR_DIALOG_MODE",
 			"bool_value": false,
-			// "camel": "SET_HEX_EDITOR_DIALOG_MODE"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": true,
-			// "camel": "SET_HEX_EDITOR_CONTROL"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false,
-			// "camel": "SET_HEX_EDITOR_CONTROL"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
 			"bool_value": true,
-			// "camel": "SET_HEX_EDITOR_CONTROL_CLIPBOARD"
 		},
 		{
 			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
 			"bool_value": false,
-			// "camel": "SET_HEX_EDITOR_CONTROL_CLIPBOARD"
 		},
 	],
 	"natlang-set-entity": [
@@ -1926,115 +1867,96 @@ var testJSON = {
 			"action": "SET_ENTITY_NAME",
 			"string": "New Name",
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_NAME"
 		},
 		{
 			"action": "SET_ENTITY_X",
 			"u2_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_X"
 		},
 		{
 			"action": "SET_ENTITY_Y",
 			"u2_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_Y"
 		},
 		{
 			"action": "SET_ENTITY_TYPE",
 			"entity_type": "some-kinda-sheep",
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_TYPE"
 		},
 		{
 			"action": "SET_ENTITY_PRIMARY_ID",
 			"u2_value": 1,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_PRIMARY_ID"
 		},
 		{
 			"action": "SET_ENTITY_SECONDARY_ID",
 			"u2_value": 2,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_SECONDARY_ID"
 		},
 		{
 			"action": "SET_ENTITY_PRIMARY_ID_TYPE",
 			"byte_value": 0,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_PRIMARY_ID_TYPE"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_A",
 			"byte_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_A"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_B",
 			"byte_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_B"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_C",
 			"byte_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_C"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_D",
 			"byte_value": 128,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_D"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
 			"u2_value": 2,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_A_U2"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
 			"u2_value": 2,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_C_U2"
 		},
 		{
 			"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
 			"u4_value": 4,
 			"entity": "Entity Name",
-			// "camel": "SET_ENTITY_HACKABLE_STATE_A_U4"
 		},
 		{
 			"action": "SET_ENTITY_PATH",
 			"entity": "Entity Name",
 			"geometry": "geometry-name-entity-path",
-			// "camel": "SET_ENTITY_PATH"
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_ANIMATION",
 			"entity": "Entity Name",
 			"byte_value": 0,
-			// "camel": "SET_ENTITY_CURRENT_ANIMATION"
 		},
 		{
 			"action": "SET_ENTITY_CURRENT_FRAME",
 			"entity": "Entity Name",
 			"byte_value": 0,
-			// "camel": "SET_ENTITY_CURRENT_FRAME"
 		},
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "Entity Name",
 			"script": "script-entity-interact",
-			// "camel": "SET_ENTITY_INTERACT_SCRIPT"
 		},
 		{
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Entity Name",
 			"script": "script-entity-tick",
-			// "camel": "SET_ENTITY_TICK_SCRIPT"
 		}
 	],
 	"natlang-if-flag": [
@@ -2043,14 +1965,12 @@ var testJSON = {
 			"save_flag": "i-am-a-save-flag",
 			"expected_bool": true,
 			"success_script": "script-do-if-flag-true",
-			// "camel": "CHECK_SAVE_FLAG"
 		},
 		{
 			"action": "CHECK_SAVE_FLAG",
 			"save_flag": "i-am-a-save-flag",
 			"expected_bool": false,
 			"success_script": "script-do-if-flag-false",
-			// "camel": "CHECK_SAVE_FLAG"
 		}
 	],
 	"natlang-if-button": [
@@ -2058,21 +1978,18 @@ var testJSON = {
 			"action": "CHECK_FOR_BUTTON_PRESS",
 			"button_id": "ANY",
 			"success_script": "script-do-if-button",
-			// "camel": "CHECK_FOR_BUTTON_PRESS"
 		},
 		{
 			"action": "CHECK_FOR_BUTTON_STATE",
 			"button_id": "ANY",
 			"expected_bool": true,
 			"success_script": "script-do-if-button-state",
-			// "camel": "CHECK_FOR_BUTTON_STATE"
 		},
 		{
 			"action": "CHECK_FOR_BUTTON_STATE",
 			"button_id": "ANY",
 			"expected_bool": false,
 			"success_script": "script-do-if-button-state",
-			// "camel": "CHECK_FOR_BUTTON_STATE"
 		}
 	],
 	"natlang-if-warp": [
@@ -2081,14 +1998,12 @@ var testJSON = {
 			"string": "warp-state-string",
 			"expected_bool": true,
 			"success_script": "script-do-if-warp-state",
-			// "camel": "CHECK_WARP_STATE"
 		},
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "warp-state-string",
 			"expected_bool": false,
 			"success_script": "script-do-if-NOT-warp-state",
-			// "camel": "CHECK_WARP_STATE"
 		}
 	],
 	"natlang-if-variable": [
@@ -2099,7 +2014,6 @@ var testJSON = {
 			"comparison": "==",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-==",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2108,7 +2022,6 @@ var testJSON = {
 			"comparison": "<",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-<",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2117,7 +2030,6 @@ var testJSON = {
 			"comparison": "<=",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-<=",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2126,7 +2038,6 @@ var testJSON = {
 			"comparison": ">=",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable->=",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2135,7 +2046,6 @@ var testJSON = {
 			"comparison": ">",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable->",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2144,7 +2054,6 @@ var testJSON = {
 			"comparison": "==",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-==",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2153,7 +2062,6 @@ var testJSON = {
 			"comparison": "<",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-<",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2162,7 +2070,6 @@ var testJSON = {
 			"comparison": "<=",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable-<=",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2171,7 +2078,6 @@ var testJSON = {
 			"comparison": ">=",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable->=",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2180,7 +2086,6 @@ var testJSON = {
 			"comparison": ">",
 			"expected_bool": true,
 			"success_script": "script-do-if-variable->",
-			// "camel": "CHECK_VARIABLES"
 		}
 	],
 	"natlang-if-variable-NOT": [
@@ -2191,7 +2096,6 @@ var testJSON = {
 			"comparison": "==",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-==-NOT",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2200,7 +2104,6 @@ var testJSON = {
 			"comparison": "<",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-<-NOT",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2209,7 +2112,6 @@ var testJSON = {
 			"comparison": "<=",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-<=-NOT",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2218,7 +2120,6 @@ var testJSON = {
 			"comparison": ">=",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable->=-NOT",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLE",
@@ -2227,7 +2128,6 @@ var testJSON = {
 			"comparison": ">",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable->-NOT",
-			// "camel": "CHECK_VARIABLE"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2236,7 +2136,6 @@ var testJSON = {
 			"comparison": "==",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-==-NOT",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2245,7 +2144,6 @@ var testJSON = {
 			"comparison": "<",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-<-NOT",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2254,7 +2152,6 @@ var testJSON = {
 			"comparison": "<=",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable-<=-NOT",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2263,7 +2160,6 @@ var testJSON = {
 			"comparison": ">=",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable->=-NOT",
-			// "camel": "CHECK_VARIABLES"
 		},
 		{
 			"action": "CHECK_VARIABLES",
@@ -2272,7 +2168,6 @@ var testJSON = {
 			"comparison": ">",
 			"expected_bool": false,
 			"success_script": "script-do-if-variable->-NOT",
-			// "camel": "CHECK_VARIABLES"
 		}
 	],
 	"natlang-if-entity-SPECIAL": [
@@ -2291,7 +2186,6 @@ var testJSON = {
 			"string": "Checked Name",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_NAME"
 		},
 		{
 			"action": "CHECK_ENTITY_X",
@@ -2299,7 +2193,6 @@ var testJSON = {
 			"expected_u2": 0,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_X"
 		},
 		{
 			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
@@ -2307,7 +2200,6 @@ var testJSON = {
 			"expected_script": "name-of-checked-script-interact",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_INTERACT_SCRIPT"
 		},
 		{
 			"action": "CHECK_ENTITY_TICK_SCRIPT",
@@ -2315,7 +2207,6 @@ var testJSON = {
 			"expected_script": "name-of-checked-script-tick",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_TICK_SCRIPT"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
@@ -2323,7 +2214,6 @@ var testJSON = {
 			"entity_type": "some-kind-of-entity-type",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_TYPE"
 		},
 		{
 			"action": "CHECK_ENTITY_PRIMARY_ID",
@@ -2331,7 +2221,6 @@ var testJSON = {
 			"expected_u2": 16,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_PRIMARY_ID"
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
@@ -2339,7 +2228,6 @@ var testJSON = {
 			"expected_u2": 16,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_SECONDARY_ID"
 		},
 		{
 			"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
@@ -2347,7 +2235,6 @@ var testJSON = {
 			"expected_byte": 16,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_PRIMARY_ID_TYPE"
 		},
 		{
 			"action": "CHECK_ENTITY_CURRENT_ANIMATION",
@@ -2355,7 +2242,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_CURRENT_ANIMATION"
 		},
 		{
 			"action": "CHECK_ENTITY_CURRENT_FRAME",
@@ -2363,7 +2249,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_CURRENT_FRAME"
 		},
 		{
 			"action": "CHECK_ENTITY_DIRECTION",
@@ -2371,7 +2256,6 @@ var testJSON = {
 			"direction": "north",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_DIRECTION"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_A",
@@ -2379,7 +2263,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_A"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_B",
@@ -2387,7 +2270,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_B"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_C",
@@ -2395,7 +2277,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_C"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_D",
@@ -2403,7 +2284,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_D"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
@@ -2411,7 +2291,6 @@ var testJSON = {
 			"expected_u2": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_A_U2"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
@@ -2419,7 +2298,6 @@ var testJSON = {
 			"expected_u2": 1,
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_C_U2"
 		},
 		{
 			"action": "CHECK_ENTITY_PATH",
@@ -2427,14 +2305,12 @@ var testJSON = {
 			"geometry": "some-kind-of-geometry-name",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_PATH"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
 			"success_script": "script-do-if-entity-is-glitched",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_ENTITY_GLITCHED"
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -2442,7 +2318,6 @@ var testJSON = {
 			"geometry": "some-kind-of-geometry-name",
 			"entity": "Entity Name",
 			"expected_bool": true,
-			// "camel": "CHECK_IF_ENTITY_IS_IN_GEOMETRY"
 		}
 	],
 	"natlang-if-entity-NOT": [
@@ -2452,7 +2327,6 @@ var testJSON = {
 			"string": "Checked Name",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_NAME"
 		},
 		{
 			"action": "CHECK_ENTITY_X",
@@ -2460,7 +2334,6 @@ var testJSON = {
 			"expected_u2": 0,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_X"
 		},
 		{
 			"action": "CHECK_ENTITY_INTERACT_SCRIPT",
@@ -2468,7 +2341,6 @@ var testJSON = {
 			"expected_script": "name-of-checked-script-interact",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_INTERACT_SCRIPT"
 		},
 		{
 			"action": "CHECK_ENTITY_TICK_SCRIPT",
@@ -2476,7 +2348,6 @@ var testJSON = {
 			"expected_script": "name-of-checked-script-tick",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_TICK_SCRIPT"
 		},
 		{
 			"action": "CHECK_ENTITY_TYPE",
@@ -2484,7 +2355,6 @@ var testJSON = {
 			"entity_type": "some-kind-of-entity-type",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_TYPE"
 		},
 		{
 			"action": "CHECK_ENTITY_PRIMARY_ID",
@@ -2492,7 +2362,6 @@ var testJSON = {
 			"expected_u2": 16,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_PRIMARY_ID"
 		},
 		{
 			"action": "CHECK_ENTITY_SECONDARY_ID",
@@ -2500,7 +2369,6 @@ var testJSON = {
 			"expected_u2": 16,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_SECONDARY_ID"
 		},
 		{
 			"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
@@ -2508,7 +2376,6 @@ var testJSON = {
 			"expected_byte": 16,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_PRIMARY_ID_TYPE"
 		},
 		{
 			"action": "CHECK_ENTITY_CURRENT_ANIMATION",
@@ -2516,7 +2383,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_CURRENT_ANIMATION"
 		},
 		{
 			"action": "CHECK_ENTITY_CURRENT_FRAME",
@@ -2524,7 +2390,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_CURRENT_FRAME"
 		},
 		{
 			"action": "CHECK_ENTITY_DIRECTION",
@@ -2532,7 +2397,6 @@ var testJSON = {
 			"direction": "north",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_DIRECTION"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_A",
@@ -2540,7 +2404,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_A"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_B",
@@ -2548,7 +2411,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_B"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_C",
@@ -2556,7 +2418,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_C"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_D",
@@ -2564,7 +2425,6 @@ var testJSON = {
 			"expected_byte": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_D"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
@@ -2572,7 +2432,6 @@ var testJSON = {
 			"expected_u2": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_A_U2"
 		},
 		{
 			"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
@@ -2580,7 +2439,6 @@ var testJSON = {
 			"expected_u2": 1,
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_HACKABLE_STATE_C_U2"
 		},
 		{
 			"action": "CHECK_ENTITY_PATH",
@@ -2588,14 +2446,12 @@ var testJSON = {
 			"geometry": "some-kind-of-geometry-name",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_PATH"
 		},
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
 			"success_script": "script-do-if-entity-is-glitched",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_ENTITY_GLITCHED"
 		},
 		{
 			"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
@@ -2603,7 +2459,6 @@ var testJSON = {
 			"geometry": "some-kind-of-geometry-name",
 			"entity": "Entity Name",
 			"expected_bool": false,
-			// "camel": "CHECK_IF_ENTITY_IS_IN_GEOMETRY"
 		}
 	]
 };
