@@ -1879,4 +1879,14 @@ describe('MGNL test suite', function () {
 			})
 		})
 	})
+	describe('makeNatLangAction', function () {
+		testTokens.forEach(function (tokens, tokenIndex) {
+			var inputObject = allTheActions[tokenIndex]
+			var expected = tokens.join(' ')
+			it(`Should convert ${JSON.stringify(inputObject)} to '${expected}'`, function () {
+				var result = makeNatLangAction(inputObject);
+				expect(result).toBe(expected);
+			})
+		})
+	})
 })
