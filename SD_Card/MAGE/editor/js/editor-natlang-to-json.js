@@ -1,4 +1,258 @@
-// TODO: parse string into tokens
+patternParse = {
+	ws: function (inputString, pos) {
+		pos = pos || 0;
+		if (
+			inputString[pos] === " "
+			|| inputString[pos] === "\t"
+			|| inputString[pos] === "\n"
+		) {
+			return pos + 1;
+		} else {
+			return false; // no match
+		}
+	},
+	eatWS: function (inputString, pos) {
+		pos = pos || 0;
+		while (true) {
+			var newPos = patternParse.ws(inputString, pos);
+			if (newPos === false) {
+				break;
+			} else {
+				pos = newPos;
+			}
+		}
+		return pos;
+		// always "matches";
+		// returns first position that isn't matched by whitespace
+	},
+	comment: function (inputString, pos) {
+		pos = pos || 0;
+		var startPos = pos;
+		// skipping over white space
+		pos = patternParse.eatWS(inputString, pos);
+		// matching /*
+		if (inputString.substring(pos).match(/^\/\*/)) {
+			pos += 2;
+		} else {
+			return false;
+		}
+		// skipping over white space
+		pos = patternParse.eatWS(inputString, pos);
+		// finding some small chunk of a "modest" string
+		commentLabelObject = patternParse.miniString(inputString, pos);
+		if (!commentLabelObject) {
+			return false;
+		}
+		pos = commentLabelObject.newPosition;
+		// skipping over white space
+		pos = patternParse.eatWS(inputString, pos);
+		// matching :
+		if (inputString.substring(pos).match(/^:/)) {
+			pos += 1;
+		} else {
+			return false;
+		}
+		// skipping over white space
+		pos = patternParse.eatWS(inputString, pos);
+		// finding literally everything except the next *
+		var commentBody = inputString.substring(pos).match(/^[^\*]+/);
+		if (commentBody[0].length > 0) {
+			pos += commentBody[0].length;
+		} else {
+			return false;
+		}
+		// skipping over white space
+		if (inputString.substring(pos).match(/^\*\//)) {
+			pos += 2;
+		} else {
+			return false;
+		}
+		// WRAP UP
+		var commentLabel = commentLabelObject.value;
+		return {
+			startPosition: startPos,
+			newPosition: pos,
+			matchedText: inputString.substring(startPos, pos),
+			type: 'comment',
+			value: {
+				commentLabel: commentLabel,
+				commentBody: commentBody[0],
+			},
+		}
+	},
+	scriptName: function (inputString, pos) {
+		pos = pos || 0;
+		var startPos = pos;
+		// skipping over white space
+		pos = patternParse.eatWS(inputString, pos);
+		// finding some small chunk of a "modest" string
+		scriptNameObject = patternParse.miniString(inputString, pos);
+		if (!scriptNameObject) {
+			return false;
+		}
+		pos = scriptNameObject.newPosition;
+		// matching :
+		if (inputString.substring(pos).match(/^:/)) {
+			pos += 1;
+		} else {
+			return false;
+		}
+		// WRAP UP
+		return {
+			startPosition: startPos,
+			newPosition: pos,
+			matchedText: inputString.substring(startPos, pos),
+			type: 'scriptName',
+			value: scriptNameObject.value,
+		}
+	},
+	miniString: function (inputString, pos) {
+		pos = pos || 0;
+		var startPos = pos;
+		pos = patternParse.eatWS(inputString, pos);
+		var resultArray = inputString.substring(pos)
+			.match(/^[-A-Za-z_<>=#!0-9]+/);
+		if (resultArray) {
+			return {
+				startPosition: startPos,
+				newPosition: pos + resultArray[0].length,
+				type: 'miniString',
+				matchedValue: resultArray[0],
+				value: resultArray[0].slice(),
+			}
+		} else {
+			return false;
+		}
+	},
+	quotedString: function (inputString, pos) {
+		// TODO: are inside quotes gonna be escaped or what??
+		// (this is set to "lazy" for now -- the '?' after the '+')
+		pos = pos || 0;
+		var startPos = pos;
+		pos = patternParse.eatWS(inputString, pos);
+		var resultArray = inputString.substring(pos)
+			.match(/^("|')[-A-Za-z_<>=#!0-9 "']+?\1/);
+		if (resultArray) {
+			return {
+				startPosition: startPos,
+				newPosition: pos + resultArray[0].length,
+				type: 'quotedString',
+				matchedValue: resultArray[0],
+				value: resultArray[0],
+			}
+		} else {
+			return false;
+		}
+	},
+	text: function (inputString, pos) {
+		var match = patternParse.comment(inputString, pos);
+		if (match) {
+			return match;
+		}
+		match = patternParse.quotedString(inputString, pos);
+		if (match) {
+			return match;
+		}
+		match = patternParse.scriptName(inputString, pos);
+		if (match) {
+			return match;
+		}
+		match = patternParse.miniString(inputString, pos);
+		if (match) {
+			return match;
+		}
+		return false;
+	}
+};
+
+var parseNatlangBlock = function (inputString) {
+	var oldPos = null;
+	var pos = pos = patternParse.eatWS(inputString, pos);
+	var result = [];
+	while (
+		oldPos !== pos
+		&& pos < inputString.length
+	) {
+		var match = patternParse.text(inputString, pos)
+		if (match) {
+			result.push(match);
+			oldPos = pos;
+			pos = pos = patternParse.eatWS(inputString, match.newPosition);
+		} else {
+			oldPos = pos;
+			console.error('no match found I guess')
+		}
+	}
+	console.log(`Natlang block (length: ${inputString.length}) parsed to ${pos}`)
+	return result;
+}
+
+var testNatlangBlock = `
+test-script:
+	block 1ms
+	close hex editor
+	erase slot 2
+	if button ANY
+		then goto "script-do-if-button"
+		/* comment: blablablalh */
+	if button ANY is pressed then goto "script-do-if-button-state"
+	if button ANY is not pressed then goto "script-do-if-button-state"
+
+test-script-2:
+    goto "script-to-run"
+    loop entity "Entity Name" along geometry "geometry-name-loop" over 1000ms
+    open hex editor
+    rotate entity "Entity Name" 1
+    save slot
+    shake camera 1000ms 30px for 4000ms
+    wait 100000ms
+        /* doop: doop */`;
+
+var testNatlangStream = parseNatlangBlock(testNatlangBlock);
+
+var testNatlangStream2 = testNatlangStream.map(function (item) {
+	return {type:item.type,value:item.value}
+})
+
+var parseNatlangStream = function (stream) {
+	var scripts = [];
+	// relevant: { type: "miniString", value: "hex" }
+	var insertName = '';
+	var insertBody = [];
+	var tempTokens = [];
+	stream.forEach(function (token, index) {
+		if (token.type === 'scriptName') {
+			if (insertName.length > 0) {
+				scripts.push( {
+					[insertName]: insertBody
+				})
+			}
+			insertName = token.value;
+			insertBody = [];
+		} else if (token.type !== 'comment') {
+			var keyword = natlangVerbs
+				.filter(function (item) { return item !== 'then'})
+				.includes(token.value);
+			var isLinkedGoto =
+				token.value === 'goto'
+				&& stream[index-1].value === 'then'
+			if (keyword && !isLinkedGoto) {
+				if (tempTokens.length > 0) {
+					insertBody.push(translateTokensToJSON.action(tempTokens));
+				}
+				tempTokens = [ token.value ];
+			} else {
+				tempTokens.push(token.value)
+			}
+		} else {
+			insertBody[insertBody.length - 1][token.value.commentLabel] = token.value.commentBody.trim();
+		}
+	})
+	scripts.push( {
+		[insertName]: insertBody
+	});
+	return scripts;
+}
 
 var getDictionaryItemFromTokens = function (tokens) {
 	var sameLengthPatterns = natlangDictionary.filter(function (pattern) {
