@@ -1,5 +1,5 @@
 // in case an action object can genuinely
-// match several dictionary entries (synonyms)
+// match several dictionary entries (synonyms),
 // put the simplest patterns first
 
 var natlangDictionary = [
@@ -648,7 +648,7 @@ var natlangVerbs = [
 	'shake',
 	'show',
 	'teleport',
-	'then',
+	'then', // keeping this one around for possible syntax colors
 	'turn',
 	'wait',
 	'walk',

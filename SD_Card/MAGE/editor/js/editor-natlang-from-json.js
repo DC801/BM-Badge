@@ -241,7 +241,7 @@ var makeCommentStringsFromCO = function (co) {
 	var commentStrings = [];
 	if (Object.keys(co).length > 0) {
 		Object.keys(co).forEach(function (commentLabel) {
-			var insert = '// ' + commentLabel + ': ' + co[commentLabel];
+			var insert = '/* ' + commentLabel + ': ' + co[commentLabel] + ' */';
 			commentStrings.push(insert);
 		})
 		return commentStrings;
