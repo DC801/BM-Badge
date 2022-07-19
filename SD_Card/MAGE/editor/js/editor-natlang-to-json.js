@@ -1,3 +1,6 @@
+// ws and eatWS return a position directly on success, all others return
+// an object containing (at least) a newPosition property
+
 patternParse = {
 	ws: function (inputString, pos) {
 		pos = pos || 0;
@@ -11,6 +14,8 @@ patternParse = {
 			return false; // no match
 		}
 	},
+	// always "matches";
+	// returns first position that isn't matched by whitespace
 	eatWS: function (inputString, pos) {
 		pos = pos || 0;
 		while (true) {
@@ -22,8 +27,6 @@ patternParse = {
 			}
 		}
 		return pos;
-		// always "matches";
-		// returns first position that isn't matched by whitespace
 	},
 	comment: function (inputString, pos) {
 		pos = pos || 0;
@@ -54,29 +57,26 @@ patternParse = {
 		}
 		// skipping over white space
 		pos = patternParse.eatWS(inputString, pos);
-		// finding literally everything except the next *
-		var commentBody = inputString.substring(pos).match(/^[^\*]+/);
-		if (commentBody[0].length > 0) {
-			pos += commentBody[0].length;
-		} else {
-			return false;
-		}
-		// skipping over white space
-		if (inputString.substring(pos).match(/^\*\//)) {
-			pos += 2;
+		// finding literally everything except the next */
+		var matches = inputString.substring(pos).match(/^(.*?)\*\//);
+		if (matches[0].length > 0) {
+			pos += matches[0].length;
 		} else {
 			return false;
 		}
 		// WRAP UP
+		let commentBody = matches[1];
 		var commentLabel = commentLabelObject.value;
 		return {
 			startPosition: startPos,
 			newPosition: pos,
+			// used only for debugging
 			matchedText: inputString.substring(startPos, pos),
+			charCoords: findLineAndCharNumbers(inputString, startPos),
 			type: 'comment',
 			value: {
 				commentLabel: commentLabel,
-				commentBody: commentBody[0],
+				commentBody: commentBody,
 			},
 		}
 	},
@@ -102,6 +102,7 @@ patternParse = {
 			startPosition: startPos,
 			newPosition: pos,
 			matchedText: inputString.substring(startPos, pos),
+			charCoords: findLineAndCharNumbers(inputString, startPos),
 			type: 'scriptName',
 			value: scriptNameObject.value,
 		}
@@ -111,13 +112,14 @@ patternParse = {
 		var startPos = pos;
 		pos = patternParse.eatWS(inputString, pos);
 		var resultArray = inputString.substring(pos)
-			.match(/^[-A-Za-z_<>=#!0-9]+/);
+			.match(/^[-A-Za-z_<>/?%\*+=#!0-9]+/);
 		if (resultArray) {
 			return {
 				startPosition: startPos,
 				newPosition: pos + resultArray[0].length,
 				type: 'miniString',
 				matchedValue: resultArray[0],
+				charCoords: findLineAndCharNumbers(inputString, startPos),
 				value: resultArray[0].slice(),
 			}
 		} else {
@@ -126,18 +128,19 @@ patternParse = {
 	},
 	quotedString: function (inputString, pos) {
 		// TODO: are inside quotes gonna be escaped or what??
-		// (this is set to "lazy" for now -- the '?' after the '+')
+		// (this is set to "lazy" for now -- the '?' after the '*')
 		pos = pos || 0;
 		var startPos = pos;
 		pos = patternParse.eatWS(inputString, pos);
 		var resultArray = inputString.substring(pos)
-			.match(/^("|')[-A-Za-z_<>=#!0-9 "']+?\1/);
+			.match(/^("|')[-A-Za-z_<>/?%\*+=#!0-9 "']*?\1/);
 		if (resultArray) {
 			return {
 				startPosition: startPos,
 				newPosition: pos + resultArray[0].length,
 				type: 'quotedString',
 				matchedValue: resultArray[0],
+				charCoords: findLineAndCharNumbers(inputString, startPos),
 				value: resultArray[0],
 			}
 		} else {
@@ -165,6 +168,20 @@ patternParse = {
 	}
 };
 
+var findLineAndCharNumbers = function (inputString, pos) { // `12345\n789AB`, 8
+	var substring = inputString.substring(0,pos); // `12345\n789`
+	var splits = substring.split('\n') // [ '12345', '789' ]
+	var lineNumber = splits.length; // 2
+	var charCount = splits[lineNumber - 1].length; // 3
+	var wholeString = inputString.split('\n')
+	return {
+		row: lineNumber,
+		col: charCount,
+		lineString: wholeString[lineNumber - 1],
+		char: inputString[pos]
+	};
+};
+
 var parseNatlangBlock = function (inputString) {
 	var oldPos = null;
 	var pos = pos = patternParse.eatWS(inputString, pos);
@@ -180,77 +197,71 @@ var parseNatlangBlock = function (inputString) {
 			pos = pos = patternParse.eatWS(inputString, match.newPosition);
 		} else {
 			oldPos = pos;
-			console.error('no match found I guess')
+			var errorCoords = findLineAndCharNumbers(inputString, pos);
+			var arrow = '~'.repeat(errorCoords.col) + '^';
+			console.error(`╓ Pattern parser failure! Line ${errorCoords.row}:${errorCoords.col}`);
+			console.error('║ ' + `${errorCoords.lineString}`);
+			console.error('╙~' + arrow);
+			return false;
 		}
-	}
-	console.log(`Natlang block (length: ${inputString.length}) parsed to ${pos}`)
+	};
+	// console.log(`Natlang block (length: ${inputString.length}) parsed to ${pos}`);
 	return result;
-}
-
-var testNatlangBlock = `
-test-script:
-	block 1ms
-	close hex editor
-	erase slot 2
-	if button ANY
-		then goto "script-do-if-button"
-		/* comment: blablablalh */
-	if button ANY is pressed then goto "script-do-if-button-state"
-	if button ANY is not pressed then goto "script-do-if-button-state"
-
-test-script-2:
-    goto "script-to-run"
-    loop entity "Entity Name" along geometry "geometry-name-loop" over 1000ms
-    open hex editor
-    rotate entity "Entity Name" 1
-    save slot
-    shake camera 1000ms 30px for 4000ms
-    wait 100000ms
-        /* doop: doop */`;
-
-var testNatlangStream = parseNatlangBlock(testNatlangBlock);
-
-var testNatlangStream2 = testNatlangStream.map(function (item) {
-	return {type:item.type,value:item.value}
-})
+};
 
 var parseNatlangStream = function (stream) {
-	var scripts = [];
-	// relevant: { type: "miniString", value: "hex" }
-	var insertName = '';
-	var insertBody = [];
-	var tempTokens = [];
-	stream.forEach(function (token, index) {
+	var scripts = {};
+	var scriptName = '';
+	var scriptBody = [];
+	var workingTokens = [];
+	var treeRef = natlangParseTree;
+	for (var index = 0; index < stream.length; index++) {
+		var token = stream[index];
 		if (token.type === 'scriptName') {
-			if (insertName.length > 0) {
-				scripts.push( {
-					[insertName]: insertBody
+			if (scriptName.length > 0) {
+				scripts[scriptName] = scriptBody;
+			}
+			scriptName = token.value;
+			scriptBody = [];
+		} else if (token.type === 'comment') {
+			var lastScript = scriptBody[scriptBody.length - 1];
+			// TODO: break gracefully if a comment is above the first action
+			lastScript[token.value.commentLabel] = token.value.commentBody.trim();
+		} else { // ['block','1ms','close','hex','editor']
+			var currentBranches = Object.keys(treeRef); // [ "block", "make", "$bool", "erase", ...]
+			var word = token.value; // 'block'
+			var tokenPotential = natlangVariableReport(word)
+				.map(function (item) {
+					return '$' + item;
 				})
+				.concat([word]);
+			var potentialBranches = tokenPotential
+				.filter(function (item) {
+					return currentBranches.includes(item);
+				})
+			if (potentialBranches.length === 0) {
+				var coords = token.charCoords || null;
+				var message = coords
+					? `Natlang parse error at line ${coords.row}:${coords.col}`
+					: `Natlang parse error at token index ${index}`;
+				console.error(message);
+				console.error(`    Token: ${token.value}`);
+				console.error(`    Expected: ${currentBranches.join(', ')}`);
+				scripts = null;
+				break
+			} else if (potentialBranches.length === 1) {
+				var branch = potentialBranches[0];
+				workingTokens.push(word);
+				treeRef = treeRef[branch];
 			}
-			insertName = token.value;
-			insertBody = [];
-		} else if (token.type !== 'comment') {
-			var keyword = natlangVerbs
-				.filter(function (item) { return item !== 'then'})
-				.includes(token.value);
-			var isLinkedGoto =
-				token.value === 'goto'
-				&& stream[index-1].value === 'then'
-			if (keyword && !isLinkedGoto) {
-				if (tempTokens.length > 0) {
-					insertBody.push(translateTokensToJSON.action(tempTokens));
-				}
-				tempTokens = [ token.value ];
-			} else {
-				tempTokens.push(token.value)
-			}
-		} else {
-			insertBody[insertBody.length - 1][token.value.commentLabel] = token.value.commentBody.trim();
 		}
-	})
-	scripts.push( {
-		[insertName]: insertBody
-	});
+		if (Object.keys(treeRef).length === 1 && Object.keys(treeRef).includes("END")) {
+			scriptBody.push(translateTokensToJSON.action(workingTokens));
+			workingTokens = [];
+			treeRef = natlangParseTree;
+		}
+	};
+	scripts[scriptName] = scriptBody;
 	return scripts;
 }
 
@@ -289,8 +300,8 @@ var getDictionaryItemFromTokens = function (tokens) {
 	if (matches.length === 1) {
 		return matches[0];
 	} else if (matches.length > 1) {
-		console.warn('multiple dictionary matches found!')
-		console.warn(matches)
+		// console.warn('multiple dictionary matches found!')
+		// console.warn(matches)
 		return matches.length;
 	} else {
 		return null;
@@ -424,14 +435,12 @@ var natlangVariableValidate = {
 		return !isNaN(test);
 	},
 	duration: function (string) {
-		var px = string.includes('ms');
-		var int = parseInt(string.replace('ms',''),10);
-		return px && natlangVariableValidate.int(int);
+		var test = string.replace('ms','');
+		return natlangVariableValidate.int(test);
 	},
 	pixels: function (string) {
-		var px = string.includes('px');
-		var int = parseInt(string.replace('px',''),10);
-		return px && natlangVariableValidate.int(int);
+		var test = string.replace('px','');
+		return natlangVariableValidate.int(test);
 	},
 	string: function (string) {
 		var last = string.length - 1;
@@ -440,11 +449,10 @@ var natlangVariableValidate = {
 		return equal && quotes;
 	},
 	qty: function (string) {
-		var px = string.includes('x');
-		var int = parseInt(string.replace('x',''),10);
-		var xVersion = px && natlangVariableValidate.int(int);
+		var test = string.replace('x','');
+		var int = natlangVariableValidate.int(test);
 		var synonyms = ['once', 'twice', 'thrice'];
-		return synonyms.includes(string) || xVersion;
+		return synonyms.includes(string) || int;
 	},
 	op: function (string) {
 		var totalList = [];
@@ -476,14 +484,13 @@ var natlangVariableValidate = {
 	}
 };
 
-var testBidirectionalConversion = function (tokens) {
-	var ao = translateTokensToJSON.action(tokens);
-	var newString = makeNatLangAction(ao);
-	var origString = tokens.join(' ');
-	if (newString === origString) {
-		return true;
-	} else {
-		console.log({newString, origString, ao, tokens})
-		return false;
-	}
-}
+var natlangVariableReport = function (variable) {
+	var result = [];
+	var types = Object.keys(natlangVariableValidate);
+	types.forEach(function (type) {
+		if (natlangVariableValidate[type](variable)) {
+			result.push(type);
+		}
+	})
+	return result;
+};

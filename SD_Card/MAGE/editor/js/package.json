@@ -8,6 +8,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "fast-json-stable-stringify": "^2.1.0",
     "jest": "^28.1.3"
   }
 }
