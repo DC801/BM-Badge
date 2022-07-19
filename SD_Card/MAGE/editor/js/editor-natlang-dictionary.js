@@ -262,7 +262,8 @@ var natlangDictionary = [
 		action: "CHECK_VARIABLE",
 		pattern: "if variable $string is not $int then goto $string",
 		fields: [ null, null, "variable", "comparison", "expected_bool", "value", null, null, "success_script" ],
-		values: [ null, null, null, '==', false, null, null, null, null ]
+		values: [ null, null, null, '==', false, null, null, null, null ],
+		// additional: {"comparison":"=="} // TODO: more of this
 	},
 	{
 		action: "CHECK_VARIABLE",
@@ -626,6 +627,97 @@ Object.keys(entitySpecificPropertyMap) // See line 449 in the other place
 		natlangDictionary.push(insert);
 		natlangDictionary.push(insertNeg);
 	})
+
+// PARSE TREE
+
+var natlangParseTreeExample = {
+	"block": {
+		"$duration": { "END": null }
+	},
+	"show": {
+		"dialog": {
+			"$string": { "END": null }
+		},
+		"serial": {
+			"dialog": {
+				"$string": { "END": null }
+			}
+		}
+	},
+	"mutate": {
+		"$string": {
+			"$op": {
+				"$int": { "END": null },
+				"$string": { "END": null }
+			}
+		}
+	},
+	"set": {
+		"player": {
+			"control": {
+				"$bool": { "END": null }
+			},
+		},
+		"hex": {
+			"dialog": {
+				"mode": {
+					"$bool": { "END": null }
+				}
+			},
+			"control": {
+				"$bool": { "END": null }
+			},
+			"clipboard": {
+				"$bool": { "END": null }
+			}
+		},
+		"$map": {
+			"tick": {
+				"script": {
+					"to": {
+						"$string": { "END": null }
+					},
+				}
+			}
+		},
+		"warp": {
+			"state": {
+				"to": {
+					"$string": { "END": null }
+				}
+			}
+		},
+		"flag": {
+			"$string": {
+				"to": {
+					"$bool": { "END": null }
+				}
+			}
+		}
+	}
+} // testing the structure
+
+var natlangParseTree = {};
+
+var addPatternToParseTree = function (pattern, parseTree) {
+	parseTree = JSON.parse(JSON.stringify(parseTree))
+	var tokens = pattern.split(' ');
+	var ref = parseTree;
+	var word;
+	while(tokens.length > 0) {
+		word = tokens.shift();
+		ref[word] = ref[word] || {};
+		ref = ref[word]
+	}
+	ref["END"] = null;
+	return parseTree;
+}
+natlangDictionary.forEach(function (item) {
+	natlangParseTree = addPatternToParseTree(item.pattern, natlangParseTree)
+	return natlangParseTree;
+})
+
+// OTHER INFO
 
 var natlangVerbs = [
 	'block',

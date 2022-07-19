@@ -1,0 +1,7327 @@
+{
+	"suite": {
+		"actions": {
+			"BLOCKING_DELAY": [
+			  {
+				"action": "BLOCKING_DELAY",
+				"duration": 1
+			  }
+			],
+			"NON_BLOCKING_DELAY": [
+			  {
+				"action": "NON_BLOCKING_DELAY",
+				"duration": 100000
+			  }
+			],
+			"SET_PLAYER_CONTROL": [
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": false
+			  }
+			],
+			"LOAD_MAP": [
+			  {
+				"action": "LOAD_MAP",
+				"map": "super-long-map-name"
+			  }
+			],
+			"SHOW_DIALOG": [
+			  {
+				"action": "SHOW_DIALOG",
+				"dialog": "super-long-dialog-name"
+			  }
+			],
+			"SLOT_SAVE": [
+			  {
+				"action": "SLOT_SAVE"
+			  }
+			],
+			"SLOT_LOAD": [
+			  {
+				"action": "SLOT_LOAD",
+				"slot": 0
+			  }
+			],
+			"SLOT_ERASE": [
+			  {
+				"action": "SLOT_ERASE",
+				"slot": 2
+			  }
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": false
+			  }
+			],
+			"CHECK_ENTITY_NAME": [
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"success_script": "script-do-if-entity-name",
+				"string": "Checked Name",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"success_script": "script-do-if-NOT-entity-name",
+				"string": "Checked Name",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_X": [
+			  {
+				"action": "CHECK_ENTITY_X",
+				"success_script": "script-do-if-entity-x",
+				"expected_u2": 0,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_X",
+				"success_script": "script-do-if-entity-x",
+				"expected_u2": 0,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_INTERACT_SCRIPT": [
+			  {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"success_script": "script-do-if-entity-y",
+				"expected_script": "name-of-checked-script-interact",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"success_script": "script-do-if-entity-y",
+				"expected_script": "name-of-checked-script-interact",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_TICK_SCRIPT": [
+			  {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"success_script": "script-do-if-entity-tick",
+				"expected_script": "name-of-checked-script-tick",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"success_script": "script-do-if-entity-tick",
+				"expected_script": "name-of-checked-script-tick",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_TYPE": [
+			  {
+				"action": "CHECK_ENTITY_TYPE",
+				"success_script": "script-do-if-entity-type",
+				"entity_type": "some-kind-of-entity-type",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_TYPE",
+				"success_script": "script-do-if-entity-type",
+				"entity_type": "some-kind-of-entity-type",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_PRIMARY_ID": [
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"success_script": "script-do-if-entity-primaryid",
+				"expected_u2": 16,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"success_script": "script-do-if-entity-primaryid",
+				"expected_u2": 16,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_SECONDARY_ID": [
+			  {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"success_script": "script-do-if-entity-secondaryid",
+				"expected_u2": 16,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"success_script": "script-do-if-entity-secondaryid",
+				"expected_u2": 16,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_PRIMARY_ID_TYPE": [
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"success_script": "script-do-if-entity-primaryid-type",
+				"expected_byte": 16,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"success_script": "script-do-if-entity-primaryid-type",
+				"expected_byte": 16,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_CURRENT_ANIMATION": [
+			  {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"success_script": "script-do-if-entity-animation",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"success_script": "script-do-if-entity-animation",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_CURRENT_FRAME": [
+			  {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"success_script": "script-do-if-entity-frame",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"success_script": "script-do-if-entity-frame",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_DIRECTION": [
+			  {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"success_script": "script-do-if-entity-direction",
+				"direction": "north",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"success_script": "script-do-if-entity-direction",
+				"direction": "north",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_GLITCHED": [
+			  {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"success_script": "script-do-if-entity-is-glitched",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"success_script": "script-do-if-entity-is-NOT-glitched",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"success_script": "script-do-if-entity-is-hackable-a",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"success_script": "script-do-if-entity-is-hackable-a",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_B": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"success_script": "script-do-if-entity-is-hackable-b",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"success_script": "script-do-if-entity-is-hackable-b",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"success_script": "script-do-if-entity-is-hackable-c",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"success_script": "script-do-if-entity-is-hackable-c",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_D": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"success_script": "script-do-if-entity-is-hackable-d",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"success_script": "script-do-if-entity-is-hackable-d",
+				"expected_byte": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U2": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"success_script": "script-do-if-entity-is-hackable-a-u2",
+				"expected_u2": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"success_script": "script-do-if-entity-is-hackable-a-u2",
+				"expected_u2": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C_U2": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"success_script": "script-do-if-entity-is-hackable-c-u2",
+				"expected_u2": 1,
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"success_script": "script-do-if-entity-is-hackable-c-u2",
+				"expected_u2": 1,
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U4": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+				"success_script": "script-do-if-entity-is-hackable-a-u4",
+				"expected_u4": 1,
+				"entity": "Entity Name",
+				"note": "expected_bool is missing on purpose -- not enough bytes available!"
+			  }
+			],
+			"CHECK_ENTITY_PATH": [
+			  {
+				"action": "CHECK_ENTITY_PATH",
+				"success_script": "script-do-if-entity-path",
+				"geometry": "some-kind-of-geometry-name",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_PATH",
+				"success_script": "script-do-if-entity-path",
+				"geometry": "some-kind-of-geometry-name",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_IF_ENTITY_IS_IN_GEOMETRY": [
+			  {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"success_script": "script-do-if-entity-path-inside",
+				"geometry": "some-kind-of-geometry-name",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"success_script": "script-do-if-NOT-entity-path-inside",
+				"geometry": "some-kind-of-geometry-name",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			],
+			"CHECK_VARIABLE": [
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "==",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-=="
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "==",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-==-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "<",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-<"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "<",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-<-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "<=",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-<="
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": "<=",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-<=-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": ">=",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable->="
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": ">=",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable->=-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": ">",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable->"
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"value": 15,
+				"comparison": ">",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable->-NOT"
+			  }
+			],
+			"CHECK_VARIABLES": [
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "==",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-=="
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "==",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-==-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "<",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-<"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "<",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-<-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "<=",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable-<="
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": "<=",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable-<=-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": ">=",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable->="
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": ">=",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable->=-NOT"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": ">",
+				"expected_bool": true,
+				"success_script": "script-do-if-variable->"
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"source": "i-am-a-second-variable",
+				"comparison": ">",
+				"expected_bool": false,
+				"success_script": "script-do-if-variable->-NOT"
+			  }
+			],
+			"CHECK_SAVE_FLAG": [
+			  {
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "i-am-a-save-flag",
+				"expected_bool": true,
+				"success_script": "script-do-if-flag-true"
+			  },
+			  {
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "i-am-a-save-flag",
+				"expected_bool": false,
+				"success_script": "script-do-if-flag-false"
+			  }
+			],
+			"CHECK_FOR_BUTTON_PRESS": [
+			  {
+				"action": "CHECK_FOR_BUTTON_PRESS",
+				"button_id": "ANY",
+				"success_script": "script-do-if-button"
+			  }
+			],
+			"CHECK_FOR_BUTTON_STATE": [
+			  {
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"button_id": "ANY",
+				"expected_bool": true,
+				"success_script": "script-do-if-button-state"
+			  },
+			  {
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"button_id": "ANY",
+				"expected_bool": false,
+				"success_script": "script-do-if-button-state"
+			  }
+			],
+			"CHECK_WARP_STATE": [
+			  {
+				"action": "CHECK_WARP_STATE",
+				"string": "warp-state-string",
+				"expected_bool": true,
+				"success_script": "script-do-if-warp-state"
+			  },
+			  {
+				"action": "CHECK_WARP_STATE",
+				"string": "warp-state-string",
+				"expected_bool": false,
+				"success_script": "script-do-if-NOT-warp-state"
+			  }
+			],
+			"SET_ENTITY_NAME": [
+			  {
+				"action": "SET_ENTITY_NAME",
+				"string": "New Name",
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_X": [
+			  {
+				"action": "SET_ENTITY_X",
+				"u2_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_Y": [
+			  {
+				"action": "SET_ENTITY_Y",
+				"u2_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_TYPE": [
+			  {
+				"action": "SET_ENTITY_TYPE",
+				"entity_type": "some-kinda-sheep",
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_PRIMARY_ID": [
+			  {
+				"action": "SET_ENTITY_PRIMARY_ID",
+				"u2_value": 1,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_SECONDARY_ID": [
+			  {
+				"action": "SET_ENTITY_SECONDARY_ID",
+				"u2_value": 2,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_PRIMARY_ID_TYPE": [
+			  {
+				"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+				"byte_value": 0,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A",
+				"byte_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_B": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_B",
+				"byte_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_C": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_C",
+				"byte_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_D": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_D",
+				"byte_value": 128,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U2": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+				"u2_value": 2,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_C_U2": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+				"u2_value": 2,
+				"entity": "Entity Name"
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U4": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+				"u4_value": 4,
+				"entity": "Entity Name"
+			  }
+			],
+			"TELEPORT_ENTITY_TO_GEOMETRY": [
+			  {
+				"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-teleport"
+			  }
+			],
+			"WALK_ENTITY_TO_GEOMETRY": [
+			  {
+				"action": "WALK_ENTITY_TO_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-walk-to",
+				"duration": 1000
+			  }
+			],
+			"WALK_ENTITY_ALONG_GEOMETRY": [
+			  {
+				"action": "WALK_ENTITY_ALONG_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-walk-along",
+				"duration": 1000
+			  }
+			],
+			"LOOP_ENTITY_ALONG_GEOMETRY": [
+			  {
+				"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-loop",
+				"duration": 1000
+			  }
+			],
+			"SET_ENTITY_PATH": [
+			  {
+				"action": "SET_ENTITY_PATH",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-entity-path"
+			  }
+			],
+			"PLAY_ENTITY_ANIMATION": [
+			  {
+				"action": "PLAY_ENTITY_ANIMATION",
+				"entity": "Entity Name",
+				"animation": 0,
+				"play_count": 1
+			  },
+			  {
+				"action": "PLAY_ENTITY_ANIMATION",
+				"entity": "Entity Name",
+				"animation": 0,
+				"play_count": 2
+			  }
+			],
+			"SET_ENTITY_CURRENT_ANIMATION": [
+			  {
+				"action": "SET_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"byte_value": 0
+			  }
+			],
+			"SET_ENTITY_CURRENT_FRAME": [
+			  {
+				"action": "SET_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"byte_value": 0
+			  }
+			],
+			"SET_ENTITY_DIRECTION": [
+			  {
+				"action": "SET_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"direction": "north"
+			  }
+			],
+			"SET_ENTITY_DIRECTION_RELATIVE": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_RELATIVE",
+				"entity": "Entity Name",
+				"relative_direction": 1
+			  }
+			],
+			"SET_ENTITY_DIRECTION_TARGET_ENTITY": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"entity": "Entity Name",
+				"target_entity": "Target Entity"
+			  }
+			],
+			"SET_ENTITY_DIRECTION_TARGET_GEOMETRY": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+				"entity": "Entity Name",
+				"target_geometry": "target-geometry"
+			  }
+			],
+			"SET_ENTITY_GLITCHED": [
+			  {
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"bool_value": false
+			  }
+			],
+			"SET_CAMERA_TO_FOLLOW_ENTITY": [
+			  {
+				"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+				"entity": "Entity Name"
+			  }
+			],
+			"TELEPORT_CAMERA_TO_GEOMETRY": [
+			  {
+				"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+				"geometry": "geometry-name-to-teleport"
+			  }
+			],
+			"PAN_CAMERA_TO_ENTITY": [
+			  {
+				"action": "PAN_CAMERA_TO_ENTITY",
+				"duration": 1000,
+				"entity": "Entity Name"
+			  }
+			],
+			"PAN_CAMERA_TO_GEOMETRY": [
+			  {
+				"action": "PAN_CAMERA_TO_GEOMETRY",
+				"duration": 1000,
+				"geometry": "geometry-to-pan-camera"
+			  }
+			],
+			"SET_SCREEN_SHAKE": [
+			  {
+				"action": "SET_SCREEN_SHAKE",
+				"frequency": 1000,
+				"amplitude": 30,
+				"duration": 4000
+			  }
+			],
+			"SCREEN_FADE_OUT": [
+			  {
+				"action": "SCREEN_FADE_OUT",
+				"duration": 1000,
+				"color": "#FF0000"
+			  }
+			],
+			"SCREEN_FADE_IN": [
+			  {
+				"action": "SCREEN_FADE_IN",
+				"duration": 1000,
+				"color": "#00FF00"
+			  }
+			],
+			"RUN_SCRIPT": [
+			  {
+				"action": "RUN_SCRIPT",
+				"script": "script-to-run"
+			  }
+			],
+			"COPY_SCRIPT": [
+			  {
+				"action": "COPY_SCRIPT",
+				"script": "script-to-copy"
+			  }
+			],
+			"SET_MAP_TICK_SCRIPT": [
+			  {
+				"action": "SET_MAP_TICK_SCRIPT",
+				"script": "script-map-tick"
+			  }
+			],
+			"SET_ENTITY_INTERACT_SCRIPT": [
+			  {
+				"action": "SET_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-interact"
+			  }
+			],
+			"SET_ENTITY_TICK_SCRIPT": [
+			  {
+				"action": "SET_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-tick"
+			  }
+			],
+			"SET_SAVE_FLAG": [
+			  {
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "save-flag-to-set",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "save-flag-to-set-NOT",
+				"bool_value": false
+			  }
+			],
+			"SET_WARP_STATE": [
+			  {
+				"action": "SET_WARP_STATE",
+				"string": "warp-state-string"
+			  }
+			],
+			"MUTATE_VARIABLE": [
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-set",
+				"value": 5,
+				"operation": "SET"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-add",
+				"value": 5,
+				"operation": "ADD"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-sub",
+				"value": 5,
+				"operation": "SUB"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-div",
+				"value": 5,
+				"operation": "DIV"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-mul",
+				"value": 5,
+				"operation": "MUL"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-mod",
+				"value": 5,
+				"operation": "MOD"
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-rng",
+				"value": 5,
+				"operation": "RNG"
+			  }
+			],
+			"MUTATE_VARIABLES": [
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-set",
+				"source": "another-variable-name",
+				"operation": "SET"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-add",
+				"source": "another-variable-name",
+				"operation": "ADD"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-sub",
+				"source": "another-variable-name",
+				"operation": "SUB"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-div",
+				"source": "another-variable-name",
+				"operation": "DIV"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-mul",
+				"source": "another-variable-name",
+				"operation": "MUL"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-mod",
+				"source": "another-variable-name",
+				"operation": "MOD"
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-rng",
+				"source": "another-variable-name",
+				"operation": "RNG"
+			  }
+			],
+			"COPY_VARIABLE": [
+			  {
+				"action": "COPY_VARIABLE",
+				"variable": "variable-name-inbound",
+				"inbound": true,
+				"entity": "Entity Name",
+				"field": "x"
+			  },
+			  {
+				"action": "COPY_VARIABLE",
+				"variable": "variable-name-outbound",
+				"inbound": false,
+				"entity": "Entity Name",
+				"field": "y"
+			  }
+			],
+			"SHOW_SERIAL_DIALOG": [
+			  {
+				"action": "SHOW_SERIAL_DIALOG",
+				"serial_dialog": "serial-dialog"
+			  }
+			]
+		},
+		"dictionaryItems": {
+			"BLOCKING_DELAY": [
+			  {
+				"action": "BLOCKING_DELAY",
+				"pattern": "block $duration",
+				"fields": [
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"NON_BLOCKING_DELAY": [
+			  {
+				"action": "NON_BLOCKING_DELAY",
+				"pattern": "wait $duration",
+				"fields": [
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SET_PLAYER_CONTROL": [
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"pattern": "set player control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"pattern": "set player control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"LOAD_MAP": [
+			  {
+				"action": "LOAD_MAP",
+				"pattern": "load map $string",
+				"fields": [
+				  null,
+				  null,
+				  "map"
+				]
+			  }
+			],
+			"SHOW_DIALOG": [
+			  {
+				"action": "SHOW_DIALOG",
+				"pattern": "show dialog $string",
+				"fields": [
+				  null,
+				  null,
+				  "dialog"
+				]
+			  }
+			],
+			"SLOT_SAVE": [
+			  {
+				"action": "SLOT_SAVE",
+				"pattern": "save slot",
+				"fields": [
+				  null,
+				  null
+				]
+			  }
+			],
+			"SLOT_LOAD": [
+			  {
+				"action": "SLOT_LOAD",
+				"pattern": "load slot $int",
+				"fields": [
+				  null,
+				  null,
+				  "slot"
+				]
+			  }
+			],
+			"SLOT_ERASE": [
+			  {
+				"action": "SLOT_ERASE",
+				"pattern": "erase slot $int",
+				"fields": [
+				  null,
+				  null,
+				  "slot"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"pattern": "$bool hex editor",
+				"fields": [
+				  "bool_value",
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"pattern": "$bool hex editor",
+				"fields": [
+				  "bool_value",
+				  null,
+				  null
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"pattern": "set hex dialog mode $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"pattern": "set hex dialog mode $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"pattern": "set hex control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"pattern": "set hex control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"pattern": "set hex clipboard $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"pattern": "set hex clipboard $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"CHECK_ENTITY_NAME": [
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"pattern": "if entity $string name is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"pattern": "if entity $string name is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_X": [
+			  {
+				"action": "CHECK_ENTITY_X",
+				"pattern": "if entity $string x is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_X",
+				"pattern": "if entity $string x is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_INTERACT_SCRIPT": [
+			  {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"pattern": "if entity $string interactScript is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_script",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"pattern": "if entity $string interactScript is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_script",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_TICK_SCRIPT": [
+			  {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"pattern": "if entity $string tickScript is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_script",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"pattern": "if entity $string tickScript is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_script",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_TYPE": [
+			  {
+				"action": "CHECK_ENTITY_TYPE",
+				"pattern": "if entity $string type is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "entity_type",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_TYPE",
+				"pattern": "if entity $string type is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "entity_type",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_PRIMARY_ID": [
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"pattern": "if entity $string primaryID is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"pattern": "if entity $string primaryID is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_SECONDARY_ID": [
+			  {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"pattern": "if entity $string secondaryID is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"pattern": "if entity $string secondaryID is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_PRIMARY_ID_TYPE": [
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"pattern": "if entity $string primaryIDtype is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"pattern": "if entity $string primaryIDtype is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_CURRENT_ANIMATION": [
+			  {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"pattern": "if entity $string animation is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"pattern": "if entity $string animation is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_CURRENT_FRAME": [
+			  {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"pattern": "if entity $string animationFrame is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"pattern": "if entity $string animationFrame is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_DIRECTION": [
+			  {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"pattern": "if entity $string direction is $direction then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "direction",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"pattern": "if entity $string direction is not $direction then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "direction",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_GLITCHED": [
+			  {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"pattern": "if entity $string is glitched then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "expected_bool",
+				  null,
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"pattern": "if entity $string is not glitched then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  null,
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"pattern": "if entity $string hackableStateA is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"pattern": "if entity $string hackableStateA is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_B": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"pattern": "if entity $string hackableStateB is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"pattern": "if entity $string hackableStateB is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"pattern": "if entity $string hackableStateC is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"pattern": "if entity $string hackableStateC is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_D": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"pattern": "if entity $string hackableStateD is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"pattern": "if entity $string hackableStateD is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_byte",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U2": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"pattern": "if entity $string hackableStateAU2 is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"pattern": "if entity $string hackableStateAU2 is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C_U2": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"pattern": "if entity $string hackableStateCU2 is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"pattern": "if entity $string hackableStateCU2 is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "expected_u2",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U4": [
+			  {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+				"pattern": "if entity $string hackableStateAU4 is $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_u4",
+				  null,
+				  null,
+				  "success_script"
+				]
+			  }
+			],
+			"CHECK_ENTITY_PATH": [
+			  {
+				"action": "CHECK_ENTITY_PATH",
+				"pattern": "if entity $string path is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "geometry",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_PATH",
+				"pattern": "if entity $string path is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "geometry",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_IF_ENTITY_IS_IN_GEOMETRY": [
+			  {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"pattern": "if entity $string is inside geometry $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "expected_bool",
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"pattern": "if entity $string is not inside geometry $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_VARIABLE": [
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is $int then goto $string",
+				"fields": [
+				  "expected_bool",
+				  null,
+				  "variable",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  true,
+				  null,
+				  null,
+				  "==",
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is not $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "comparison",
+				  "expected_bool",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  "==",
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is not $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is not $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is not $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLE",
+				"pattern": "if variable $string is not $comparison $int then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "value",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_VARIABLES": [
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is $string then goto $string",
+				"fields": [
+				  "expected_bool",
+				  null,
+				  "variable",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  true,
+				  null,
+				  null,
+				  "==",
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "comparison",
+				  "expected_bool",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  "==",
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is not $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is not $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is not $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_VARIABLES",
+				"pattern": "if variable $string is not $comparison $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "variable",
+				  null,
+				  "expected_bool",
+				  "comparison",
+				  "source",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_SAVE_FLAG": [
+			  {
+				"action": "CHECK_SAVE_FLAG",
+				"pattern": "if flag $string is $bool then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "save_flag",
+				  null,
+				  "expected_bool",
+				  null,
+				  null,
+				  "success_script"
+				]
+			  },
+			  {
+				"action": "CHECK_SAVE_FLAG",
+				"pattern": "if flag $string is $bool then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "save_flag",
+				  null,
+				  "expected_bool",
+				  null,
+				  null,
+				  "success_script"
+				]
+			  }
+			],
+			"CHECK_FOR_BUTTON_PRESS": [
+			  {
+				"action": "CHECK_FOR_BUTTON_PRESS",
+				"pattern": "if button $button then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "button_id",
+				  null,
+				  null,
+				  "success_script"
+				]
+			  }
+			],
+			"CHECK_FOR_BUTTON_STATE": [
+			  {
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"pattern": "if button $button is pressed then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "button_id",
+				  "expected_bool",
+				  null,
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"pattern": "if button $button is not pressed then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "button_id",
+				  null,
+				  "expected_bool",
+				  null,
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"CHECK_WARP_STATE": [
+			  {
+				"action": "CHECK_WARP_STATE",
+				"pattern": "if warp state is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_WARP_STATE",
+				"pattern": "if warp state is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			],
+			"SET_ENTITY_NAME": [
+			  {
+				"action": "SET_ENTITY_NAME",
+				"pattern": "set entity $string name to $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "string"
+				]
+			  }
+			],
+			"SET_ENTITY_X": [
+			  {
+				"action": "SET_ENTITY_X",
+				"pattern": "set entity $string x to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_Y": [
+			  {
+				"action": "SET_ENTITY_Y",
+				"pattern": "set entity $string y to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_TYPE": [
+			  {
+				"action": "SET_ENTITY_TYPE",
+				"pattern": "set entity $string type to $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "entity_type"
+				]
+			  }
+			],
+			"SET_ENTITY_PRIMARY_ID": [
+			  {
+				"action": "SET_ENTITY_PRIMARY_ID",
+				"pattern": "set entity $string primaryID to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_SECONDARY_ID": [
+			  {
+				"action": "SET_ENTITY_SECONDARY_ID",
+				"pattern": "set entity $string secondaryID to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_PRIMARY_ID_TYPE": [
+			  {
+				"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+				"pattern": "set entity $string primaryIDtype to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A",
+				"pattern": "set entity $string hackableStateA to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_B": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_B",
+				"pattern": "set entity $string hackableStateB to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_C": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_C",
+				"pattern": "set entity $string hackableStateC to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_D": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_D",
+				"pattern": "set entity $string hackableStateD to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U2": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+				"pattern": "set entity $string hackableStateAU2 to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_C_U2": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+				"pattern": "set entity $string hackableStateCU2 to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u2_value"
+				]
+			  }
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U4": [
+			  {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+				"pattern": "set entity $string hackableStateAU4 to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "u4_value"
+				]
+			  }
+			],
+			"TELEPORT_ENTITY_TO_GEOMETRY": [
+			  {
+				"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+				"pattern": "teleport entity $string to geometry $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "geometry"
+				]
+			  }
+			],
+			"WALK_ENTITY_TO_GEOMETRY": [
+			  {
+				"action": "WALK_ENTITY_TO_GEOMETRY",
+				"pattern": "walk entity $string to geometry $string over $duration",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"WALK_ENTITY_ALONG_GEOMETRY": [
+			  {
+				"action": "WALK_ENTITY_ALONG_GEOMETRY",
+				"pattern": "walk entity $string along geometry $string over $duration",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"LOOP_ENTITY_ALONG_GEOMETRY": [
+			  {
+				"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+				"pattern": "loop entity $string along geometry $string over $duration",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SET_ENTITY_PATH": [
+			  {
+				"action": "SET_ENTITY_PATH",
+				"pattern": "set entity $string path to $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "geometry"
+				]
+			  }
+			],
+			"PLAY_ENTITY_ANIMATION": [
+			  {
+				"action": "PLAY_ENTITY_ANIMATION",
+				"pattern": "play entity $string animation $int $qty",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "animation",
+				  "play_count"
+				]
+			  },
+			  {
+				"action": "PLAY_ENTITY_ANIMATION",
+				"pattern": "play entity $string animation $int $qty",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "animation",
+				  "play_count"
+				]
+			  }
+			],
+			"SET_ENTITY_CURRENT_ANIMATION": [
+			  {
+				"action": "SET_ENTITY_CURRENT_ANIMATION",
+				"pattern": "set entity $string animation to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_CURRENT_FRAME": [
+			  {
+				"action": "SET_ENTITY_CURRENT_FRAME",
+				"pattern": "set entity $string animationFrame to $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "byte_value"
+				]
+			  }
+			],
+			"SET_ENTITY_DIRECTION": [
+			  {
+				"action": "SET_ENTITY_DIRECTION",
+				"pattern": "turn entity $string $direction",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "direction"
+				]
+			  }
+			],
+			"SET_ENTITY_DIRECTION_RELATIVE": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_RELATIVE",
+				"pattern": "rotate entity $string $int",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "relative_direction"
+				]
+			  }
+			],
+			"SET_ENTITY_DIRECTION_TARGET_ENTITY": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"pattern": "turn entity $string toward entity $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "target_entity"
+				]
+			  }
+			],
+			"SET_ENTITY_DIRECTION_TARGET_GEOMETRY": [
+			  {
+				"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+				"pattern": "turn entity $string toward geometry $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "target_geometry"
+				]
+			  }
+			],
+			"SET_ENTITY_GLITCHED": [
+			  {
+				"action": "SET_ENTITY_GLITCHED",
+				"pattern": "make entity $string glitched",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "bool_value"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  true
+				]
+			  },
+			  {
+				"action": "SET_ENTITY_GLITCHED",
+				"pattern": "make entity $string unglitched",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "bool_value"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  false
+				]
+			  }
+			],
+			"SET_CAMERA_TO_FOLLOW_ENTITY": [
+			  {
+				"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+				"pattern": "make camera follow entity $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "entity"
+				]
+			  }
+			],
+			"TELEPORT_CAMERA_TO_GEOMETRY": [
+			  {
+				"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+				"pattern": "teleport camera to geometry $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "geometry"
+				]
+			  }
+			],
+			"PAN_CAMERA_TO_ENTITY": [
+			  {
+				"action": "PAN_CAMERA_TO_ENTITY",
+				"pattern": "pan camera to entity $string over $duration",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"PAN_CAMERA_TO_GEOMETRY": [
+			  {
+				"action": "PAN_CAMERA_TO_GEOMETRY",
+				"pattern": "pan camera to geometry $string over $duration",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "geometry",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SET_SCREEN_SHAKE": [
+			  {
+				"action": "SET_SCREEN_SHAKE",
+				"pattern": "shake camera $duration $pixels for $duration",
+				"fields": [
+				  null,
+				  null,
+				  "frequency",
+				  "amplitude",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SCREEN_FADE_OUT": [
+			  {
+				"action": "SCREEN_FADE_OUT",
+				"pattern": "fade out camera to $color over $duration",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "color",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SCREEN_FADE_IN": [
+			  {
+				"action": "SCREEN_FADE_IN",
+				"pattern": "fade in camera from $color over $duration",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "color",
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"RUN_SCRIPT": [
+			  {
+				"action": "RUN_SCRIPT",
+				"pattern": "goto $string",
+				"fields": [
+				  null,
+				  "script"
+				]
+			  }
+			],
+			"COPY_SCRIPT": [
+			  {
+				"action": "COPY_SCRIPT",
+				"pattern": "copy $string",
+				"fields": [
+				  null,
+				  "script"
+				]
+			  }
+			],
+			"SET_MAP_TICK_SCRIPT": [
+			  {
+				"action": "SET_MAP_TICK_SCRIPT",
+				"pattern": "set map tick script to $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  "script"
+				]
+			  }
+			],
+			"SET_ENTITY_INTERACT_SCRIPT": [
+			  {
+				"action": "SET_ENTITY_INTERACT_SCRIPT",
+				"pattern": "set entity $string interactScript to $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "script"
+				]
+			  }
+			],
+			"SET_ENTITY_TICK_SCRIPT": [
+			  {
+				"action": "SET_ENTITY_TICK_SCRIPT",
+				"pattern": "set entity $string tickScript to $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "script"
+				]
+			  }
+			],
+			"SET_SAVE_FLAG": [
+			  {
+				"action": "SET_SAVE_FLAG",
+				"pattern": "set flag $string to $bool",
+				"fields": [
+				  null,
+				  null,
+				  "save_flag",
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_SAVE_FLAG",
+				"pattern": "set flag $string to $bool",
+				"fields": [
+				  null,
+				  null,
+				  "save_flag",
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"SET_WARP_STATE": [
+			  {
+				"action": "SET_WARP_STATE",
+				"pattern": "set warp state to $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "string"
+				]
+			  }
+			],
+			"MUTATE_VARIABLE": [
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLE",
+				"pattern": "mutate $string $op $int",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "value"
+				]
+			  }
+			],
+			"MUTATE_VARIABLES": [
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  },
+			  {
+				"action": "MUTATE_VARIABLES",
+				"pattern": "mutate $string $op $string",
+				"fields": [
+				  null,
+				  "variable",
+				  "operation",
+				  "source"
+				]
+			  }
+			],
+			"COPY_VARIABLE": [
+			  {
+				"action": "COPY_VARIABLE",
+				"pattern": "copy entity $string $field into variable $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "field",
+				  "inbound",
+				  null,
+				  "variable"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "COPY_VARIABLE",
+				"pattern": "copy entity $string $field from variable $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  "field",
+				  "inbound",
+				  null,
+				  "variable"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null
+				]
+			  }
+			],
+			"SHOW_SERIAL_DIALOG": [
+			  {
+				"action": "SHOW_SERIAL_DIALOG",
+				"pattern": "show serial dialog $string",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "serial_dialog"
+				]
+			  }
+			]
+		},
+		"tokens": {
+			"BLOCKING_DELAY": [
+			  [ "block", "1ms" ]
+			],
+			"NON_BLOCKING_DELAY": [
+			  [ "wait", "100000ms" ]
+			],
+			"SET_PLAYER_CONTROL": [
+			  [ "set", "player", "control", "on" ],
+			  [ "set", "player", "control", "off" ]
+			],
+			"LOAD_MAP": [
+			  [ "load", "map", "\"super-long-map-name\"" ]
+			],
+			"SHOW_DIALOG": [
+			  [ "show", "dialog", "\"super-long-dialog-name\"" ]
+			],
+			"SLOT_SAVE": [
+			  [ "save", "slot" ]
+			],
+			"SLOT_LOAD": [
+			  [ "load", "slot", "0" ]
+			],
+			"SLOT_ERASE": [
+			  [ "erase", "slot", "2" ]
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  [ "open", "hex", "editor" ],
+			  [ "close", "hex", "editor" ]
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  [ "set", "hex", "dialog", "mode", "on" ],
+			  [ "set", "hex", "dialog", "mode", "off" ]
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  [ "set", "hex", "control", "on" ],
+			  [ "set", "hex", "control", "off" ]
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  [ "set", "hex", "clipboard", "on" ],
+			  [ "set", "hex", "clipboard", "off" ]
+			],
+			"CHECK_ENTITY_NAME": [
+			  [ "if", "entity", "\"Entity Name\"", "name", "is", "\"Checked Name\"", "then", "goto", "\"script-do-if-entity-name\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "name", "is", "not", "\"Checked Name\"", "then", "goto", "\"script-do-if-NOT-entity-name\"" ]
+			],
+			"CHECK_ENTITY_X": [
+			  [ "if", "entity", "\"Entity Name\"", "x", "is", "0", "then", "goto", "\"script-do-if-entity-x\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "x", "is", "not", "0", "then", "goto", "\"script-do-if-entity-x\"" ]
+			],
+			"CHECK_ENTITY_INTERACT_SCRIPT": [
+			  [ "if", "entity", "\"Entity Name\"", "interactScript", "is", "\"name-of-checked-script-interact\"", "then", "goto", "\"script-do-if-entity-y\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "interactScript", "is", "not", "\"name-of-checked-script-interact\"", "then", "goto", "\"script-do-if-entity-y\"" ]
+			],
+			"CHECK_ENTITY_TICK_SCRIPT": [
+			  [ "if", "entity", "\"Entity Name\"", "tickScript", "is", "\"name-of-checked-script-tick\"", "then", "goto", "\"script-do-if-entity-tick\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "tickScript", "is", "not", "\"name-of-checked-script-tick\"", "then", "goto", "\"script-do-if-entity-tick\"" ]
+			],
+			"CHECK_ENTITY_TYPE": [
+			  [ "if", "entity", "\"Entity Name\"", "type", "is", "\"some-kind-of-entity-type\"", "then", "goto", "\"script-do-if-entity-type\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "type", "is", "not", "\"some-kind-of-entity-type\"", "then", "goto", "\"script-do-if-entity-type\"" ]
+			],
+			"CHECK_ENTITY_PRIMARY_ID": [
+			  [ "if", "entity", "\"Entity Name\"", "primaryID", "is", "16", "then", "goto", "\"script-do-if-entity-primaryid\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "primaryID", "is", "not", "16", "then", "goto", "\"script-do-if-entity-primaryid\"" ]
+			],
+			"CHECK_ENTITY_SECONDARY_ID": [
+			  [ "if", "entity", "\"Entity Name\"", "secondaryID", "is", "16", "then", "goto", "\"script-do-if-entity-secondaryid\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "secondaryID", "is", "not", "16", "then", "goto", "\"script-do-if-entity-secondaryid\"" ]
+			],
+			"CHECK_ENTITY_PRIMARY_ID_TYPE": [
+			  [ "if", "entity", "\"Entity Name\"", "primaryIDtype", "is", "16", "then", "goto", "\"script-do-if-entity-primaryid-type\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "primaryIDtype", "is", "not", "16", "then", "goto", "\"script-do-if-entity-primaryid-type\"" ]
+			],
+			"CHECK_ENTITY_CURRENT_ANIMATION": [
+			  [ "if", "entity", "\"Entity Name\"", "animation", "is", "1", "then", "goto", "\"script-do-if-entity-animation\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "animation", "is", "not", "1", "then", "goto", "\"script-do-if-entity-animation\"" ]
+			],
+			"CHECK_ENTITY_CURRENT_FRAME": [
+			  [ "if", "entity", "\"Entity Name\"", "animationFrame", "is", "1", "then", "goto", "\"script-do-if-entity-frame\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "animationFrame", "is", "not", "1", "then", "goto", "\"script-do-if-entity-frame\"" ]
+			],
+			"CHECK_ENTITY_DIRECTION": [
+			  [ "if", "entity", "\"Entity Name\"", "direction", "is", "north", "then", "goto", "\"script-do-if-entity-direction\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "direction", "is", "not", "north", "then", "goto", "\"script-do-if-entity-direction\"" ]
+			],
+			"CHECK_ENTITY_GLITCHED": [
+			  [ "if", "entity", "\"Entity Name\"", "is", "glitched", "then", "goto", "\"script-do-if-entity-is-glitched\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "is", "not", "glitched", "then", "goto", "\"script-do-if-entity-is-NOT-glitched\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateA", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateA", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_B": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateB", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-b\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateB", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-b\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateC", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateC", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_D": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateD", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-d\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateD", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-d\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U2": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateAU2", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u2\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateAU2", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u2\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_C_U2": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateCU2", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c-u2\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateCU2", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c-u2\"" ]
+			],
+			"CHECK_ENTITY_HACKABLE_STATE_A_U4": [
+			  [ "if", "entity", "\"Entity Name\"", "hackableStateAU4", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u4\"" ]
+			],
+			"CHECK_ENTITY_PATH": [
+			  [ "if", "entity", "\"Entity Name\"", "path", "is", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "path", "is", "not", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path\"" ]
+			],
+			"CHECK_IF_ENTITY_IS_IN_GEOMETRY": [
+			  [ "if", "entity", "\"Entity Name\"", "is", "inside", "geometry", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path-inside\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "is", "not", "inside", "geometry", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-NOT-entity-path-inside\"" ]
+			],
+			"CHECK_VARIABLE": [
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "15", "then", "goto", "\"script-do-if-variable-==\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "15", "then", "goto", "\"script-do-if-variable-==-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "<", "15", "then", "goto", "\"script-do-if-variable-<\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<", "15", "then", "goto", "\"script-do-if-variable-<-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "<=", "15", "then", "goto", "\"script-do-if-variable-<=\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<=", "15", "then", "goto", "\"script-do-if-variable-<=-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", ">=", "15", "then", "goto", "\"script-do-if-variable->=\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", ">=", "15", "then", "goto", "\"script-do-if-variable->=-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", ">", "15", "then", "goto", "\"script-do-if-variable->\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", ">", "15", "then", "goto", "\"script-do-if-variable->-NOT\"" ]
+			],
+			"CHECK_VARIABLES": [
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-==\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-==-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "<", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "<=", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<=\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<=", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<=-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", ">=", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable->=\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", ">=", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable->=-NOT\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", ">", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable->\"" ],
+			  [ "if", "variable", "\"i-am-a-variable\"", "is", "not", ">", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable->-NOT\"" ]
+			],
+			"CHECK_SAVE_FLAG": [
+			  [ "if", "flag", "\"i-am-a-save-flag\"", "is", "true", "then", "goto", "\"script-do-if-flag-true\"" ],
+			  [ "if", "flag", "\"i-am-a-save-flag\"", "is", "false", "then", "goto", "\"script-do-if-flag-false\"" ]
+			],
+			"CHECK_FOR_BUTTON_PRESS": [
+			  [ "if", "button", "ANY", "then", "goto", "\"script-do-if-button\"" ]
+			],
+			"CHECK_FOR_BUTTON_STATE": [
+			  [ "if", "button", "ANY", "is", "pressed", "then", "goto", "\"script-do-if-button-state\"" ],
+			  [ "if", "button", "ANY", "is", "not", "pressed", "then", "goto", "\"script-do-if-button-state\"" ]
+			],
+			"CHECK_WARP_STATE": [
+			  [ "if", "warp", "state", "is", "\"warp-state-string\"", "then", "goto", "\"script-do-if-warp-state\"" ],
+			  [ "if", "warp", "state", "is", "not", "\"warp-state-string\"", "then", "goto", "\"script-do-if-NOT-warp-state\"" ]
+			],
+			"SET_ENTITY_NAME": [
+			  [ "set", "entity", "\"Entity Name\"", "name", "to", "\"New Name\"" ]
+			],
+			"SET_ENTITY_X": [
+			  [ "set", "entity", "\"Entity Name\"", "x", "to", "128" ]
+			],
+			"SET_ENTITY_Y": [
+			  [ "set", "entity", "\"Entity Name\"", "y", "to", "128" ]
+			],
+			"SET_ENTITY_TYPE": [
+			  [ "set", "entity", "\"Entity Name\"", "type", "to", "\"some-kinda-sheep\"" ]
+			],
+			"SET_ENTITY_PRIMARY_ID": [
+			  [ "set", "entity", "\"Entity Name\"", "primaryID", "to", "1" ]
+			],
+			"SET_ENTITY_SECONDARY_ID": [
+			  [ "set", "entity", "\"Entity Name\"", "secondaryID", "to", "2" ]
+			],
+			"SET_ENTITY_PRIMARY_ID_TYPE": [
+			  [ "set", "entity", "\"Entity Name\"", "primaryIDtype", "to", "0" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_A": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateA", "to", "128" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_B": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateB", "to", "128" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_C": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateC", "to", "128" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_D": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateD", "to", "128" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U2": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateAU2", "to", "2" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_C_U2": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateCU2", "to", "2" ]
+			],
+			"SET_ENTITY_HACKABLE_STATE_A_U4": [
+			  [ "set", "entity", "\"Entity Name\"", "hackableStateAU4", "to", "4" ]
+			],
+			"TELEPORT_ENTITY_TO_GEOMETRY": [
+			  [ "teleport", "entity", "\"Entity Name\"", "to", "geometry", "\"geometry-name-teleport\"" ]
+			],
+			"WALK_ENTITY_TO_GEOMETRY": [
+			  [ "walk", "entity", "\"Entity Name\"", "to", "geometry", "\"geometry-name-walk-to\"", "over", "1000ms" ]
+			],
+			"WALK_ENTITY_ALONG_GEOMETRY": [
+			  [ "walk", "entity", "\"Entity Name\"", "along", "geometry", "\"geometry-name-walk-along\"", "over", "1000ms" ]
+			],
+			"LOOP_ENTITY_ALONG_GEOMETRY": [
+			  [ "loop", "entity", "\"Entity Name\"", "along", "geometry", "\"geometry-name-loop\"", "over", "1000ms" ]
+			],
+			"SET_ENTITY_PATH": [
+			  [ "set", "entity", "\"Entity Name\"", "path", "to", "\"geometry-name-entity-path\"" ]
+			],
+			"PLAY_ENTITY_ANIMATION": [
+			  [ "play", "entity", "\"Entity Name\"", "animation", "0", "x1" ],
+			  [ "play", "entity", "\"Entity Name\"", "animation", "0", "x2" ]
+			],
+			"SET_ENTITY_CURRENT_ANIMATION": [
+			  [ "set", "entity", "\"Entity Name\"", "animation", "to", "0" ]
+			],
+			"SET_ENTITY_CURRENT_FRAME": [
+			  [ "set", "entity", "\"Entity Name\"", "animationFrame", "to", "0" ]
+			],
+			"SET_ENTITY_DIRECTION": [
+			  [ "turn", "entity", "\"Entity Name\"", "north" ]
+			],
+			"SET_ENTITY_DIRECTION_RELATIVE": [
+			  [ "rotate", "entity", "\"Entity Name\"", "1" ]
+			],
+			"SET_ENTITY_DIRECTION_TARGET_ENTITY": [
+			  [ "turn", "entity", "\"Entity Name\"", "toward", "entity", "\"Target Entity\"" ]
+			],
+			"SET_ENTITY_DIRECTION_TARGET_GEOMETRY": [
+			  [ "turn", "entity", "\"Entity Name\"", "toward", "geometry", "\"target-geometry\"" ]
+			],
+			"SET_ENTITY_GLITCHED": [
+			  [ "make", "entity", "\"Entity Name\"", "glitched" ],
+			  [ "make", "entity", "\"Entity Name\"", "unglitched" ]
+			],
+			"SET_CAMERA_TO_FOLLOW_ENTITY": [
+			  [ "make", "camera", "follow", "entity", "\"Entity Name\"" ]
+			],
+			"TELEPORT_CAMERA_TO_GEOMETRY": [
+			  [ "teleport", "camera", "to", "geometry", "\"geometry-name-to-teleport\"" ]
+			],
+			"PAN_CAMERA_TO_ENTITY": [
+			  [ "pan", "camera", "to", "entity", "\"Entity Name\"", "over", "1000ms" ]
+			],
+			"PAN_CAMERA_TO_GEOMETRY": [
+			  [ "pan", "camera", "to", "geometry", "\"geometry-to-pan-camera\"", "over", "1000ms" ]
+			],
+			"SET_SCREEN_SHAKE": [
+			  [ "shake", "camera", "1000ms", "30px", "for", "4000ms" ]
+			],
+			"SCREEN_FADE_OUT": [
+			  [ "fade", "out", "camera", "to", "#FF0000", "over", "1000ms" ]
+			],
+			"SCREEN_FADE_IN": [
+			  [ "fade", "in", "camera", "from", "#00FF00", "over", "1000ms" ]
+			],
+			"RUN_SCRIPT": [
+			  [ "goto", "\"script-to-run\"" ]
+			],
+			"COPY_SCRIPT": [
+			  [ "copy", "\"script-to-copy\"" ]
+			],
+			"SET_MAP_TICK_SCRIPT": [
+			  [ "set", "map", "tick", "script", "to", "\"script-map-tick\"" ]
+			],
+			"SET_ENTITY_INTERACT_SCRIPT": [
+			  [ "set", "entity", "\"Entity Name\"", "interactScript", "to", "\"script-entity-interact\"" ]
+			],
+			"SET_ENTITY_TICK_SCRIPT": [
+			  [ "set", "entity", "\"Entity Name\"", "tickScript", "to", "\"script-entity-tick\"" ]
+			],
+			"SET_SAVE_FLAG": [
+			  [ "set", "flag", "\"save-flag-to-set\"", "to", "true" ],
+			  [ "set", "flag", "\"save-flag-to-set-NOT\"", "to", "false" ]
+			],
+			"SET_WARP_STATE": [
+			  [ "set", "warp", "state", "to", "\"warp-state-string\"" ]
+			],
+			"MUTATE_VARIABLE": [
+			  [ "mutate", "\"variable-name-set\"", "=", "5" ],
+			  [ "mutate", "\"variable-name-add\"", "+", "5" ],
+			  [ "mutate", "\"variable-name-sub\"", "-", "5" ],
+			  [ "mutate", "\"variable-name-div\"", "/", "5" ],
+			  [ "mutate", "\"variable-name-mul\"", "*", "5" ],
+			  [ "mutate", "\"variable-name-mod\"", "%", "5" ],
+			  [ "mutate", "\"variable-name-rng\"", "?", "5" ]
+			],
+			"MUTATE_VARIABLES": [
+			  [ "mutate", "\"variable-name-set\"", "=", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-add\"", "+", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-sub\"", "-", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-div\"", "/", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-mul\"", "*", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-mod\"", "%", "\"another-variable-name\"" ],
+			  [ "mutate", "\"variable-name-rng\"", "?", "\"another-variable-name\"" ]
+			],
+			"COPY_VARIABLE": [
+			  [ "copy", "entity", "\"Entity Name\"", "x", "into", "variable", "\"variable-name-inbound\"" ],
+			  [ "copy", "entity", "\"Entity Name\"", "y", "from", "variable", "\"variable-name-outbound\"" ]
+			],
+			"SHOW_SERIAL_DIALOG": [
+			  [ "show", "serial", "dialog", "\"serial-dialog\"" ]
+			]
+		}
+	},
+	"suite-mini": {
+		"actions": {
+			"BLOCKING_DELAY": [
+			  {
+				"action": "BLOCKING_DELAY",
+				"duration": 1
+			  }
+			],
+			"NON_BLOCKING_DELAY": [
+			  {
+				"action": "NON_BLOCKING_DELAY",
+				"duration": 100000
+			  }
+			],
+			"SET_PLAYER_CONTROL": [
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": false
+			  }
+			],
+			"LOAD_MAP": [
+			  {
+				"action": "LOAD_MAP",
+				"map": "super-long-map-name"
+			  }
+			],
+			"SHOW_DIALOG": [
+			  {
+				"action": "SHOW_DIALOG",
+				"dialog": "super-long-dialog-name"
+			  }
+			],
+			"SLOT_SAVE": [
+			  {
+				"action": "SLOT_SAVE"
+			  }
+			],
+			"SLOT_LOAD": [
+			  {
+				"action": "SLOT_LOAD",
+				"slot": 0
+			  }
+			],
+			"SLOT_ERASE": [
+			  {
+				"action": "SLOT_ERASE",
+				"slot": 2
+			  }
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": false
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": true
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": false
+			  }
+			],
+			"CHECK_ENTITY_NAME": [
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"success_script": "script-do-if-entity-name",
+				"string": "Checked Name",
+				"entity": "Entity Name",
+				"expected_bool": true
+			  },
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"success_script": "script-do-if-NOT-entity-name",
+				"string": "Checked Name",
+				"entity": "Entity Name",
+				"expected_bool": false
+			  }
+			]
+		},
+		"dictionaryItems": {
+			"BLOCKING_DELAY": [
+			  {
+				"action": "BLOCKING_DELAY",
+				"pattern": "block $duration",
+				"fields": [
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"NON_BLOCKING_DELAY": [
+			  {
+				"action": "NON_BLOCKING_DELAY",
+				"pattern": "wait $duration",
+				"fields": [
+				  null,
+				  "duration"
+				]
+			  }
+			],
+			"SET_PLAYER_CONTROL": [
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"pattern": "set player control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_PLAYER_CONTROL",
+				"pattern": "set player control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"LOAD_MAP": [
+			  {
+				"action": "LOAD_MAP",
+				"pattern": "load map $string",
+				"fields": [
+				  null,
+				  null,
+				  "map"
+				]
+			  }
+			],
+			"SHOW_DIALOG": [
+			  {
+				"action": "SHOW_DIALOG",
+				"pattern": "show dialog $string",
+				"fields": [
+				  null,
+				  null,
+				  "dialog"
+				]
+			  }
+			],
+			"SLOT_SAVE": [
+			  {
+				"action": "SLOT_SAVE",
+				"pattern": "save slot",
+				"fields": [
+				  null,
+				  null
+				]
+			  }
+			],
+			"SLOT_LOAD": [
+			  {
+				"action": "SLOT_LOAD",
+				"pattern": "load slot $int",
+				"fields": [
+				  null,
+				  null,
+				  "slot"
+				]
+			  }
+			],
+			"SLOT_ERASE": [
+			  {
+				"action": "SLOT_ERASE",
+				"pattern": "erase slot $int",
+				"fields": [
+				  null,
+				  null,
+				  "slot"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"pattern": "$bool hex editor",
+				"fields": [
+				  "bool_value",
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_STATE",
+				"pattern": "$bool hex editor",
+				"fields": [
+				  "bool_value",
+				  null,
+				  null
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"pattern": "set hex dialog mode $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"pattern": "set hex dialog mode $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"pattern": "set hex control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"pattern": "set hex control $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"pattern": "set hex clipboard $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  },
+			  {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"pattern": "set hex clipboard $bool",
+				"fields": [
+				  null,
+				  null,
+				  null,
+				  "bool_value"
+				]
+			  }
+			],
+			"CHECK_ENTITY_NAME": [
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"pattern": "if entity $string name is $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  true,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  },
+			  {
+				"action": "CHECK_ENTITY_NAME",
+				"pattern": "if entity $string name is not $string then goto $string",
+				"fields": [
+				  null,
+				  null,
+				  "entity",
+				  null,
+				  null,
+				  "expected_bool",
+				  "string",
+				  null,
+				  null,
+				  "success_script"
+				],
+				"values": [
+				  null,
+				  null,
+				  null,
+				  null,
+				  null,
+				  false,
+				  null,
+				  null,
+				  null,
+				  null
+				]
+			  }
+			]
+		},
+		"tokens": {
+			"BLOCKING_DELAY": [
+			  [ "block", "1ms" ]
+			],
+			"NON_BLOCKING_DELAY": [
+			  [ "wait", "100000ms" ]
+			],
+			"SET_PLAYER_CONTROL": [
+			  [ "set", "player", "control", "on" ],
+			  [ "set", "player", "control", "off" ]
+			],
+			"LOAD_MAP": [
+			  [ "load", "map", "\"super-long-map-name\"" ]
+			],
+			"SHOW_DIALOG": [
+			  [ "show", "dialog", "\"super-long-dialog-name\"" ]
+			],
+			"SLOT_SAVE": [
+			  [ "save", "slot" ]
+			],
+			"SLOT_LOAD": [
+			  [ "load", "slot", "0" ]
+			],
+			"SLOT_ERASE": [
+			  [ "erase", "slot", "2" ]
+			],
+			"SET_HEX_EDITOR_STATE": [
+			  [ "open", "hex", "editor" ],
+			  [ "close", "hex", "editor" ]
+			],
+			"SET_HEX_EDITOR_DIALOG_MODE": [
+			  [ "set", "hex", "dialog", "mode", "on" ],
+			  [ "set", "hex", "dialog", "mode", "off" ]
+			],
+			"SET_HEX_EDITOR_CONTROL": [
+			  [ "set", "hex", "control", "on" ],
+			  [ "set", "hex", "control", "off" ]
+			],
+			"SET_HEX_EDITOR_CONTROL_CLIPBOARD": [
+			  [ "set", "hex", "clipboard", "on" ],
+			  [ "set", "hex", "clipboard", "off" ]
+			],
+			"CHECK_ENTITY_NAME": [
+			  [ "if", "entity", "\"Entity Name\"", "name", "is", "\"Checked Name\"", "then", "goto", "\"script-do-if-entity-name\"" ],
+			  [ "if", "entity", "\"Entity Name\"", "name", "is", "not", "\"Checked Name\"", "then", "goto", "\"script-do-if-NOT-entity-name\"" ]
+			]
+		},
+		"block": "BLOCKING_DELAY:\n    block 1ms\n    \nNON_BLOCKING_DELAY:\n    wait 100000ms\n    \nSET_PLAYER_CONTROL:\n    set player control on\n    set player control off\n    \nLOAD_MAP:\n    load map \"super-long-map-name\"\n    \nSHOW_DIALOG:\n    show dialog \"super-long-dialog-name\"\n    \nSLOT_SAVE:\n    save slot\n    \nSLOT_LOAD:\n    load slot 0\n    \nSLOT_ERASE:\n    erase slot 2\n    \nSET_HEX_EDITOR_STATE:\n    open hex editor\n    close hex editor\n    \nSET_HEX_EDITOR_DIALOG_MODE:\n    set hex dialog mode on\n    set hex dialog mode off\n    \nSET_HEX_EDITOR_CONTROL:\n    set hex control on\n    set hex control off\n    \nSET_HEX_EDITOR_CONTROL_CLIPBOARD:\n    set hex clipboard on\n    set hex clipboard off\n    \nCHECK_ENTITY_NAME:\n    if entity \"Entity Name\" name is \"Checked Name\" then goto \"script-do-if-entity-name\"\n    if entity \"Entity Name\" name is not \"Checked Name\" then goto \"script-do-if-NOT-entity-name\"\n    "
+	},
+	"flat": {
+		"all-the-tokens": [
+			[ "block", "1ms" ],
+			[ "close", "hex", "editor" ],
+			[ "open", "hex", "editor" ],
+			[ "rotate", "entity", "\"Entity Name\"", "1" ],
+			[ "erase", "slot", "2" ],
+			[ "goto", "\"script-to-run\"" ],
+			[ "loop", "entity", "\"Entity Name\"", "along", "geometry", "\"geometry-name-loop\"", "over", "1000ms" ],
+			[ "save", "slot" ],
+			[ "shake", "camera", "1000ms", "30px", "for", "4000ms" ],
+			[ "wait", "100000ms" ],
+			[ "walk", "entity", "\"Entity Name\"", "to", "geometry", "\"geometry-name-walk-to\"", "over", "1000ms" ],
+			[ "walk", "entity", "\"Entity Name\"", "along", "geometry", "\"geometry-name-walk-along\"", "over", "1000ms" ],
+			[ "make", "entity", "\"Entity Name\"", "glitched" ],
+			[ "make", "entity", "\"Entity Name\"", "unglitched" ],
+			[ "make", "camera", "follow", "entity", "\"Entity Name\"" ],
+			[ "teleport", "entity", "\"Entity Name\"", "to", "geometry", "\"geometry-name-teleport\"" ],
+			[ "teleport", "camera", "to", "geometry", "\"geometry-name-to-teleport\"" ],
+			[ "turn", "entity", "\"Entity Name\"", "north" ],
+			[ "turn", "entity", "\"Entity Name\"", "toward", "entity", "\"Target Entity\"" ],
+			[ "turn", "entity", "\"Entity Name\"", "toward", "entity", "\"target-geometry\"" ],
+			[ "pan", "camera", "to", "entity", "\"Entity Name\"", "over", "1000ms" ],
+			[ "pan", "camera", "to", "geometry", "\"geometry-to-pan-camera\"", "over", "1000ms" ],
+			[ "play", "entity", "\"Entity Name\"", "animation", "0", "x1" ],
+			[ "fade", "out", "camera", "to", "#FF0000", "over", "1000ms" ],
+			[ "fade", "in", "camera", "from", "#00FF00", "over", "1000ms" ],
+			[ "load", "map", "\"super-long-map-name\"" ],
+			[ "load", "slot", "0" ],
+			[ "show", "dialog", "\"super-long-dialog-name\"" ],
+			[ "show", "serial", "dialog", "\"serial-dialog\"" ],
+			[ "copy", "\"script-to-copy\"" ],
+			[ "copy", "entity", "\"Entity Name\"", "x", "into", "variable", "\"variable-name-inbound\"" ],
+			[ "copy", "entity", "\"Entity Name\"", "y", "from", "variable", "\"variable-name-outbound\"" ],
+			[ "mutate", "\"variable-name-set\"", "=", "5" ],
+			[ "mutate", "\"variable-name-add\"", "+", "5" ],
+			[ "mutate", "\"variable-name-sub\"", "-", "5" ],
+			[ "mutate", "\"variable-name-div\"", "/", "5" ],
+			[ "mutate", "\"variable-name-mul\"", "*", "5" ],
+			[ "mutate", "\"variable-name-mod\"", "%", "5" ],
+			[ "mutate", "\"variable-name-rng\"", "?", "5" ],
+			[ "mutate", "\"variable-name-set\"", "=", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-add\"", "+", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-sub\"", "-", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-div\"", "/", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-mul\"", "*", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-mod\"", "%", "\"another-variable-name\"" ],
+			[ "mutate", "\"variable-name-rng\"", "?", "\"another-variable-name\"" ],
+			[ "set", "map", "tick", "script", "to", "\"script-map-tick\"" ],
+			[ "set", "warp", "state", "to", "\"warp-state-string\"" ],
+			[ "set", "flag", "\"save-flag-to-set\"", "to", "true" ],
+			[ "set", "flag", "\"save-flag-to-set-NOT\"", "to", "false" ],
+			[ "set", "player", "control", "on" ],
+			[ "set", "player", "control", "off" ],
+			[ "set", "hex", "dialog", "mode", "on" ],
+			[ "set", "hex", "dialog", "mode", "off" ],
+			[ "set", "hex", "control", "on" ],
+			[ "set", "hex", "control", "off" ],
+			[ "set", "hex", "clipboard", "on" ],
+			[ "set", "hex", "clipboard", "off" ],
+			[ "set", "entity", "\"Entity Name\"", "name", "to", "\"New Name\"" ],
+			[ "set", "entity", "\"Entity Name\"", "x", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "y", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "type", "to", "\"some-kinda-sheep\"" ],
+			[ "set", "entity", "\"Entity Name\"", "primaryID", "to", "1" ],
+			[ "set", "entity", "\"Entity Name\"", "secondaryID", "to", "2" ],
+			[ "set", "entity", "\"Entity Name\"", "primaryIDtype", "to", "5" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateA", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateB", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateC", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateD", "to", "128" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateAU2", "to", "2" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateCU2", "to", "2" ],
+			[ "set", "entity", "\"Entity Name\"", "hackableStateAU4", "to", "4" ],
+			[ "set", "entity", "\"Entity Name\"", "path", "to", "\"geometry-name-entity-path\"" ],
+			[ "set", "entity", "\"Entity Name\"", "animation", "to", "0" ],
+			[ "set", "entity", "\"Entity Name\"", "animationFrame", "to", "0" ],
+			[ "set", "entity", "\"Entity Name\"", "interactScript", "to", "\"script-entity-interact\"" ],
+			[ "set", "entity", "\"Entity Name\"", "tickScript", "to", "\"script-entity-tick\"" ],
+			[ "if", "flag", "\"i-am-a-save-flag\"", "is", "true", "then", "goto", "\"script-do-if-flag-true\"" ],
+			[ "if", "flag", "\"i-am-a-save-flag\"", "is", "false", "then", "goto", "\"script-do-if-flag-false\"" ],
+			[ "if", "button", "ANY", "then", "goto", "\"script-do-if-button\"" ],
+			[ "if", "button", "ANY", "is", "pressed", "then", "goto", "\"script-do-if-button-state\"" ],
+			[ "if", "button", "ANY", "is", "not", "pressed", "then", "goto", "\"script-do-if-button-state-NOT\"" ],
+			[ "if", "warp", "state", "is", "\"warp-state-string\"", "then", "goto", "\"script-do-if-warp-state\"" ],
+			[ "if", "warp", "state", "is", "not", "\"warp-state-string\"", "then", "goto", "\"script-do-if-NOT-warp-state\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "15", "then", "goto", "\"script-do-if-variable-==\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "<", "15", "then", "goto", "\"script-do-if-variable-<\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "not", "15", "then", "goto", "\"script-do-if-variable-==-NOT\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<", "15", "then", "goto", "\"script-do-if-variable-<-NOT\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-==\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "<", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "not", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-==-NOT\"" ],
+			[ "if", "variable", "\"i-am-a-variable\"", "is", "not", "<", "\"i-am-a-second-variable\"", "then", "goto", "\"script-do-if-variable-<-NOT\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateAU4", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u4\"" ],
+			[ "if", "entity", "\"Entity Name\"", "name", "is", "\"Checked Name\"", "then", "goto", "\"script-do-if-entity-name\"" ],
+			[ "if", "entity", "\"Entity Name\"", "x", "is", "0", "then", "goto", "\"script-do-if-entity-x\"" ],
+			[ "if", "entity", "\"Entity Name\"", "interactScript", "is", "\"name-of-checked-script-interact\"", "then", "goto", "\"script-do-if-entity-y\"" ],
+			[ "if", "entity", "\"Entity Name\"", "tickScript", "is", "\"name-of-checked-script-tick\"", "then", "goto", "\"script-do-if-entity-tick\"" ],
+			[ "if", "entity", "\"Entity Name\"", "type", "is", "\"some-kind-of-entity-type\"", "then", "goto", "\"script-do-if-entity-type\"" ],
+			[ "if", "entity", "\"Entity Name\"", "primaryID", "is", "16", "then", "goto", "\"script-do-if-entity-primaryid\"" ],
+			[ "if", "entity", "\"Entity Name\"", "secondaryID", "is", "16", "then", "goto", "\"script-do-if-entity-secondaryid\"" ],
+			[ "if", "entity", "\"Entity Name\"", "primaryIDtype", "is", "16", "then", "goto", "\"script-do-if-entity-primaryid-type\"" ],
+			[ "if", "entity", "\"Entity Name\"", "animation", "is", "1", "then", "goto", "\"script-do-if-entity-animation\"" ],
+			[ "if", "entity", "\"Entity Name\"", "animationFrame", "is", "1", "then", "goto", "\"script-do-if-entity-frame\"" ],
+			[ "if", "entity", "\"Entity Name\"", "direction", "is", "north", "then", "goto", "\"script-do-if-entity-direction\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateA", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateB", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-b\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateC", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateD", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-d\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateAU2", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u2\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateCU2", "is", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c-u2\"" ],
+			[ "if", "entity", "\"Entity Name\"", "path", "is", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path\"" ],
+			[ "if", "entity", "\"Entity Name\"", "name", "is", "not", "\"Checked Name\"", "then", "goto", "\"script-do-if-entity-name\"" ],
+			[ "if", "entity", "\"Entity Name\"", "x", "is", "not", "0", "then", "goto", "\"script-do-if-entity-x\"" ],
+			[ "if", "entity", "\"Entity Name\"", "interactScript", "is", "not", "\"name-of-checked-script-interact\"", "then", "goto", "\"script-do-if-entity-y\"" ],
+			[ "if", "entity", "\"Entity Name\"", "tickScript", "is", "not", "\"name-of-checked-script-tick\"", "then", "goto", "\"script-do-if-entity-tick\"" ],
+			[ "if", "entity", "\"Entity Name\"", "type", "is", "not", "\"some-kind-of-entity-type\"", "then", "goto", "\"script-do-if-entity-type\"" ],
+			[ "if", "entity", "\"Entity Name\"", "primaryID", "is", "not", "16", "then", "goto", "\"script-do-if-entity-primaryid\"" ],
+			[ "if", "entity", "\"Entity Name\"", "secondaryID", "is", "not", "16", "then", "goto", "\"script-do-if-entity-secondaryid\"" ],
+			[ "if", "entity", "\"Entity Name\"", "primaryIDtype", "is", "not", "16", "then", "goto", "\"script-do-if-entity-primaryid-type\"" ],
+			[ "if", "entity", "\"Entity Name\"", "animation", "is", "not", "1", "then", "goto", "\"script-do-if-entity-animation\"" ],
+			[ "if", "entity", "\"Entity Name\"", "animationFrame", "is", "not", "1", "then", "goto", "\"script-do-if-entity-frame\"" ],
+			[ "if", "entity", "\"Entity Name\"", "direction", "is", "not", "north", "then", "goto", "\"script-do-if-entity-direction\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateA", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateB", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-b\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateC", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateD", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-d\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateAU2", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-a-u2\"" ],
+			[ "if", "entity", "\"Entity Name\"", "hackableStateCU2", "is", "not", "1", "then", "goto", "\"script-do-if-entity-is-hackable-c-u2\"" ],
+			[ "if", "entity", "\"Entity Name\"", "path", "is", "not", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path\"" ],
+			[ "if", "entity", "\"Entity Name\"", "is", "glitched", "then", "goto", "\"script-do-if-entity-is-glitched\"" ],
+			[ "if", "entity", "\"Entity Name\"", "is", "inside", "geometry", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path-inside\"" ],
+			[ "if", "entity", "\"Entity Name\"", "is", "not", "glitched", "then", "goto", "\"script-do-if-entity-is-glitched\"" ],
+			[ "if", "entity", "\"Entity Name\"", "is", "not", "inside", "geometry", "\"some-kind-of-geometry-name\"", "then", "goto", "\"script-do-if-entity-path-inside\"" ]
+		],
+		"all-the-actions": [
+			{
+				"action": "BLOCKING_DELAY",
+				"duration": 1
+			},
+			{
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": false
+			},
+			{
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": true
+			},
+			{
+				"action": "SET_ENTITY_DIRECTION_RELATIVE",
+				"entity": "Entity Name",
+				"relative_direction": 1
+			},
+			{
+				"action": "SLOT_ERASE",
+				"slot": 2
+			},
+			{
+				"action": "RUN_SCRIPT",
+				"script": "script-to-run"
+			},
+			{
+				"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-loop",
+				"duration": 1000
+			},
+			{
+				"action": "SLOT_SAVE"
+			},
+			{
+				"action": "SET_SCREEN_SHAKE",
+				"frequency": 1000,
+				"amplitude": 30,
+				"duration": 4000
+			},
+			{
+				"action": "NON_BLOCKING_DELAY",
+				"duration": 100000
+			},
+			{
+				"action": "WALK_ENTITY_TO_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-walk-to",
+				"duration": 1000
+			},
+			{
+				"action": "WALK_ENTITY_ALONG_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-walk-along",
+				"duration": 1000
+			},
+			{
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"bool_value": true
+			},
+			{
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"bool_value": false
+			},
+			{
+				"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+				"entity": "Entity Name"
+			},
+			{
+				"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-teleport"
+			},
+			{
+				"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+				"geometry": "geometry-name-to-teleport"
+			},
+			{
+				"action": "SET_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"direction": "north"
+			},
+			{
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"entity": "Entity Name",
+				"target_entity": "Target Entity"
+			},
+			{
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"entity": "Entity Name",
+				"target_entity": "target-geometry"
+			},
+			{
+				"action": "PAN_CAMERA_TO_ENTITY",
+				"entity": "Entity Name",
+				"duration": 1000
+			},
+			{
+				"action": "PAN_CAMERA_TO_GEOMETRY",
+				"geometry": "geometry-to-pan-camera",
+				"duration": 1000
+			},
+			{
+				"action": "PLAY_ENTITY_ANIMATION",
+				"entity": "Entity Name",
+				"animation": 0,
+				"play_count": 1
+			},
+			{
+				"action": "SCREEN_FADE_OUT",
+				"color": "#FF0000",
+				"duration": 1000
+			},
+			{
+				"action": "SCREEN_FADE_IN",
+				"color": "#00FF00",
+				"duration": 1000
+			},
+			{
+				"action": "LOAD_MAP",
+				"map": "super-long-map-name"
+			},
+			{
+				"action": "SLOT_LOAD",
+				"slot": 0
+			},
+			{
+				"action": "SHOW_DIALOG",
+				"dialog": "super-long-dialog-name"
+			},
+			{
+				"action": "SHOW_SERIAL_DIALOG",
+				"serial_dialog": "serial-dialog"
+			},
+			{
+				"action": "COPY_SCRIPT",
+				"script": "script-to-copy"
+			},
+			{
+				"action": "COPY_VARIABLE",
+				"entity": "Entity Name",
+				"field": "x",
+				"inbound": true,
+				"variable": "variable-name-inbound"
+			},
+			{
+				"action": "COPY_VARIABLE",
+				"entity": "Entity Name",
+				"field": "y",
+				"inbound": false,
+				"variable": "variable-name-outbound"
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-set",
+				"operation": "SET",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-add",
+				"operation": "ADD",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-sub",
+				"operation": "SUB",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-div",
+				"operation": "DIV",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-mul",
+				"operation": "MUL",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-mod",
+				"operation": "MOD",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable-name-rng",
+				"operation": "RNG",
+				"value": 5
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-set",
+				"operation": "SET",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-add",
+				"operation": "ADD",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-sub",
+				"operation": "SUB",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-div",
+				"operation": "DIV",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-mul",
+				"operation": "MUL",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-mod",
+				"operation": "MOD",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "MUTATE_VARIABLES",
+				"variable": "variable-name-rng",
+				"operation": "RNG",
+				"source": "another-variable-name"
+			},
+			{
+				"action": "SET_MAP_TICK_SCRIPT",
+				"script": "script-map-tick"
+			},
+			{
+				"action": "SET_WARP_STATE",
+				"string": "warp-state-string"
+			},
+			{
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "save-flag-to-set",
+				"bool_value": true
+			},
+			{
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "save-flag-to-set-NOT",
+				"bool_value": false
+			},
+			{
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": true
+			},
+			{
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": false
+			},
+			{
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": true
+			},
+			{
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": false
+			},
+			{
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": true
+			},
+			{
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": false
+			},
+			{
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": true
+			},
+			{
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": false
+			},
+			{
+				"action": "SET_ENTITY_NAME",
+				"entity": "Entity Name",
+				"string": "New Name"
+			},
+			{
+				"action": "SET_ENTITY_X",
+				"entity": "Entity Name",
+				"u2_value": 128
+			},
+			{
+				"action": "SET_ENTITY_Y",
+				"entity": "Entity Name",
+				"u2_value": 128
+			},
+			{
+				"action": "SET_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"entity_type": "some-kinda-sheep"
+			},
+			{
+				"action": "SET_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"u2_value": 1
+			},
+			{
+				"action": "SET_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			{
+				"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"byte_value": 5
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			{
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+				"entity": "Entity Name",
+				"u4_value": 4
+			},
+			{
+				"action": "SET_ENTITY_PATH",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-entity-path"
+			},
+			{
+				"action": "SET_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"byte_value": 0
+			},
+			{
+				"action": "SET_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"byte_value": 0
+			},
+			{
+				"action": "SET_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-interact"
+			},
+			{
+				"action": "SET_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-tick"
+			},
+			{
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "i-am-a-save-flag",
+				"expected_bool": true,
+				"success_script": "script-do-if-flag-true"
+			},
+			{
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "i-am-a-save-flag",
+				"expected_bool": false,
+				"success_script": "script-do-if-flag-false"
+			},
+			{
+				"action": "CHECK_FOR_BUTTON_PRESS",
+				"button_id": "ANY",
+				"success_script": "script-do-if-button"
+			},
+			{
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"button_id": "ANY",
+				"expected_bool": true,
+				"success_script": "script-do-if-button-state"
+			},
+			{
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"button_id": "ANY",
+				"expected_bool": false,
+				"success_script": "script-do-if-button-state-NOT"
+			},
+			{
+				"action": "CHECK_WARP_STATE",
+				"expected_bool": true,
+				"string": "warp-state-string",
+				"success_script": "script-do-if-warp-state"
+			},
+			{
+				"action": "CHECK_WARP_STATE",
+				"expected_bool": false,
+				"string": "warp-state-string",
+				"success_script": "script-do-if-NOT-warp-state"
+			},
+			{
+				"action": "CHECK_VARIABLE",
+				"expected_bool": true,
+				"variable": "i-am-a-variable",
+				"comparison": "==",
+				"value": 15,
+				"success_script": "script-do-if-variable-=="
+			},
+			{
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"expected_bool": true,
+				"comparison": "<",
+				"value": 15,
+				"success_script": "script-do-if-variable-<"
+			},
+			{
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"comparison": "==",
+				"expected_bool": false,
+				"value": 15,
+				"success_script": "script-do-if-variable-==-NOT"
+			},
+			{
+				"action": "CHECK_VARIABLE",
+				"variable": "i-am-a-variable",
+				"expected_bool": false,
+				"comparison": "<",
+				"value": 15,
+				"success_script": "script-do-if-variable-<-NOT"
+			},
+			{
+				"action": "CHECK_VARIABLES",
+				"expected_bool": true,
+				"variable": "i-am-a-variable",
+				"comparison": "==",
+				"source": "i-am-a-second-variable",
+				"success_script": "script-do-if-variable-=="
+			},
+			{
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"expected_bool": true,
+				"comparison": "<",
+				"source": "i-am-a-second-variable",
+				"success_script": "script-do-if-variable-<"
+			},
+			{
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"comparison": "==",
+				"expected_bool": false,
+				"source": "i-am-a-second-variable",
+				"success_script": "script-do-if-variable-==-NOT"
+			},
+			{
+				"action": "CHECK_VARIABLES",
+				"variable": "i-am-a-variable",
+				"expected_bool": false,
+				"comparison": "<",
+				"source": "i-am-a-second-variable",
+				"success_script": "script-do-if-variable-<-NOT"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+				"entity": "Entity Name",
+				"expected_u4": 1,
+				"success_script": "script-do-if-entity-is-hackable-a-u4"
+			},
+			{
+				"action": "CHECK_ENTITY_NAME",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"string": "Checked Name",
+				"success_script": "script-do-if-entity-name"
+			},
+			{
+				"action": "CHECK_ENTITY_X",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 0,
+				"success_script": "script-do-if-entity-x"
+			},
+			{
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_script": "name-of-checked-script-interact",
+				"success_script": "script-do-if-entity-y"
+			},
+			{
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_script": "name-of-checked-script-tick",
+				"success_script": "script-do-if-entity-tick"
+			},
+			{
+				"action": "CHECK_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"entity_type": "some-kind-of-entity-type",
+				"success_script": "script-do-if-entity-type"
+			},
+			{
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 16,
+				"success_script": "script-do-if-entity-primaryid"
+			},
+			{
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 16,
+				"success_script": "script-do-if-entity-secondaryid"
+			},
+			{
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 16,
+				"success_script": "script-do-if-entity-primaryid-type"
+			},
+			{
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-animation"
+			},
+			{
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-frame"
+			},
+			{
+				"action": "CHECK_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"direction": "north",
+				"success_script": "script-do-if-entity-direction"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-a"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-b"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-c"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-d"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 1,
+				"success_script": "script-do-if-entity-is-hackable-a-u2"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 1,
+				"success_script": "script-do-if-entity-is-hackable-c-u2"
+			},
+			{
+				"action": "CHECK_ENTITY_PATH",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "script-do-if-entity-path"
+			},
+			{
+				"action": "CHECK_ENTITY_NAME",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"string": "Checked Name",
+				"success_script": "script-do-if-entity-name"
+			},
+			{
+				"action": "CHECK_ENTITY_X",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 0,
+				"success_script": "script-do-if-entity-x"
+			},
+			{
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_script": "name-of-checked-script-interact",
+				"success_script": "script-do-if-entity-y"
+			},
+			{
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_script": "name-of-checked-script-tick",
+				"success_script": "script-do-if-entity-tick"
+			},
+			{
+				"action": "CHECK_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"entity_type": "some-kind-of-entity-type",
+				"success_script": "script-do-if-entity-type"
+			},
+			{
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 16,
+				"success_script": "script-do-if-entity-primaryid"
+			},
+			{
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 16,
+				"success_script": "script-do-if-entity-secondaryid"
+			},
+			{
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 16,
+				"success_script": "script-do-if-entity-primaryid-type"
+			},
+			{
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-animation"
+			},
+			{
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-frame"
+			},
+			{
+				"action": "CHECK_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"direction": "north",
+				"success_script": "script-do-if-entity-direction"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-a"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-b"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-c"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "script-do-if-entity-is-hackable-d"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 1,
+				"success_script": "script-do-if-entity-is-hackable-a-u2"
+			},
+			{
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 1,
+				"success_script": "script-do-if-entity-is-hackable-c-u2"
+			},
+			{
+				"action": "CHECK_ENTITY_PATH",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "script-do-if-entity-path"
+			},
+			{
+				"action": "CHECK_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"success_script": "script-do-if-entity-is-glitched"
+			},
+			{
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "script-do-if-entity-path-inside"
+			},
+			{
+				"action": "CHECK_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"success_script": "script-do-if-entity-is-glitched"
+			},
+			{
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "script-do-if-entity-path-inside"
+			}
+		]
+	},
+	"categorized": {
+		"test_scripts-by_keywords": {
+			"natlang-UNIQUE": [
+				{
+					"action": "BLOCKING_DELAY",
+					"duration": 1
+				},
+				{
+					"action": "SET_HEX_EDITOR_STATE",
+					"bool_value": false
+				},
+				{
+					"action": "SLOT_ERASE",
+					"slot": 2
+				},
+				{
+					"action": "RUN_SCRIPT",
+					"script": "script-to-run"
+				},
+				{
+					"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-loop",
+					"duration": 1000
+				},
+				{
+					"action": "SET_HEX_EDITOR_STATE",
+					"bool_value": true
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_RELATIVE",
+					"entity": "Entity Name",
+					"relative_direction": 1
+				},
+				{
+					"action": "SLOT_SAVE"
+				},
+				{
+					"action": "SET_SCREEN_SHAKE",
+					"frequency": 1000,
+					"amplitude": 30,
+					"duration": 4000
+				},
+				{
+					"action": "NON_BLOCKING_DELAY",
+					"duration": 100000
+				}
+			],
+			"natlang-walk": [
+				{
+					"action": "WALK_ENTITY_TO_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-walk-to",
+					"duration": 1000
+				},
+				{
+					"action": "WALK_ENTITY_ALONG_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-walk-along",
+					"duration": 1000
+				}
+			],
+			"natlang-make": [
+				{
+					"action": "SET_ENTITY_GLITCHED",
+					"entity": "Entity Name",
+					"bool_value": true
+				},
+				{
+					"action": "SET_ENTITY_GLITCHED",
+					"entity": "Entity Name",
+					"bool_value": false
+				},
+				{
+					"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+					"entity": "Entity Name"
+				}
+			],
+			"natlang-teleport": [
+				{
+					"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-teleport"
+				},
+				{
+					"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+					"geometry": "geometry-name-to-teleport"
+				}
+			],
+			"natlang-turn": [
+				{
+					"action": "SET_ENTITY_DIRECTION",
+					"entity": "Entity Name",
+					"direction": "north"
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+					"entity": "Entity Name",
+					"target_entity": "Target Entity"
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+					"entity": "Entity Name",
+					"target_geometry": "target-geometry"
+				}
+			],
+			"natlang-pan": [
+				{
+					"action": "PAN_CAMERA_TO_ENTITY",
+					"duration": 1000,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "PAN_CAMERA_TO_GEOMETRY",
+					"duration": 1000,
+					"geometry": "geometry-to-pan-camera"
+				}
+			],
+			"natlang-play": [
+				{
+					"action": "PLAY_ENTITY_ANIMATION",
+					"entity": "Entity Name",
+					"animation": 0,
+					"play_count": 1
+				},
+				{
+					"action": "PLAY_ENTITY_ANIMATION",
+					"entity": "Entity Name",
+					"animation": 0,
+					"play_count": 2
+				}
+			],
+			"natlang-fade": [
+				{
+					"action": "SCREEN_FADE_OUT",
+					"duration": 1000,
+					"color": "#FF0000"
+				},
+				{
+					"action": "SCREEN_FADE_IN",
+					"duration": 1000,
+					"color": "#00FF00"
+				}
+			],
+			"natlang-load": [
+				{
+					"action": "LOAD_MAP",
+					"map": "super-long-map-name"
+				},
+				{
+					"action": "SLOT_LOAD",
+					"slot": 0
+				}
+			],
+			"natlang-show": [
+				{
+					"action": "SHOW_DIALOG",
+					"dialog": "super-long-dialog-name"
+				},
+				{
+					"action": "SHOW_SERIAL_DIALOG",
+					"serial_dialog": "serial-dialog"
+				}
+			],
+			"natlang-copy": [
+				{
+					"action": "COPY_SCRIPT",
+					"script": "script-to-copy"
+				},
+				{
+					"action": "COPY_VARIABLE",
+					"variable": "variable-name-inbound",
+					"inbound": true,
+					"entity": "Entity Name",
+					"field": "x"
+				},
+				{
+					"action": "COPY_VARIABLE",
+					"variable": "variable-name-outbound",
+					"inbound": false,
+					"entity": "Entity Name",
+					"field": "y"
+				}
+			],
+			"natlang-mutate": [
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-set",
+					"value": 5,
+					"operation": "SET"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-add",
+					"value": 5,
+					"operation": "ADD"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-sub",
+					"value": 5,
+					"operation": "SUB"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-div",
+					"value": 5,
+					"operation": "DIV"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-mul",
+					"value": 5,
+					"operation": "MUL"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-mod",
+					"value": 5,
+					"operation": "MOD"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-rng",
+					"value": 5,
+					"operation": "RNG"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-set",
+					"source": "another-variable-name",
+					"operation": "SET"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-add",
+					"source": "another-variable-name",
+					"operation": "ADD"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-sub",
+					"source": "another-variable-name",
+					"operation": "SUB"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-div",
+					"source": "another-variable-name",
+					"operation": "DIV"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-mul",
+					"source": "another-variable-name",
+					"operation": "MUL"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-mod",
+					"source": "another-variable-name",
+					"operation": "MOD"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-rng",
+					"source": "another-variable-name",
+					"operation": "RNG"
+				}
+			],
+			"natlang-set-UNIQUE": [
+				{
+					"action": "SET_MAP_TICK_SCRIPT",
+					"script": "script-map-tick"
+				},
+				{
+					"action": "SET_WARP_STATE",
+					"string": "warp-state-string"
+				}
+			],
+			"natlang-set-flag": [
+				{
+					"action": "SET_SAVE_FLAG",
+					"save_flag": "save-flag-to-set",
+					"bool_value": true
+				},
+				{
+					"action": "SET_SAVE_FLAG",
+					"save_flag": "save-flag-to-set-NOT",
+					"bool_value": false
+				}
+			],
+			"natlang-set-player": [
+				{
+					"action": "SET_PLAYER_CONTROL",
+					"bool_value": true
+				},
+				{
+					"action": "SET_PLAYER_CONTROL",
+					"bool_value": false
+				}
+			],
+			"natlang-set-hex": [
+				{
+					"action": "SET_HEX_EDITOR_DIALOG_MODE",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_DIALOG_MODE",
+					"bool_value": false
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL",
+					"bool_value": false
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+					"bool_value": false
+				}
+			],
+			"natlang-set-entity": [
+				{
+					"action": "SET_ENTITY_NAME",
+					"string": "New Name",
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_X",
+					"u2_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_Y",
+					"u2_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_TYPE",
+					"entity_type": "some-kinda-sheep",
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_PRIMARY_ID",
+					"u2_value": 1,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_SECONDARY_ID",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+					"byte_value": 0,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_B",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_C",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_D",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+					"u4_value": 4,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_PATH",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-entity-path"
+				},
+				{
+					"action": "SET_ENTITY_CURRENT_ANIMATION",
+					"entity": "Entity Name",
+					"byte_value": 0
+				},
+				{
+					"action": "SET_ENTITY_CURRENT_FRAME",
+					"entity": "Entity Name",
+					"byte_value": 0
+				},
+				{
+					"action": "SET_ENTITY_INTERACT_SCRIPT",
+					"entity": "Entity Name",
+					"script": "script-entity-interact"
+				},
+				{
+					"action": "SET_ENTITY_TICK_SCRIPT",
+					"entity": "Entity Name",
+					"script": "script-entity-tick"
+				}
+			],
+			"natlang-if-flag": [
+				{
+					"action": "CHECK_SAVE_FLAG",
+					"save_flag": "i-am-a-save-flag",
+					"expected_bool": true,
+					"success_script": "script-do-if-flag-true"
+				},
+				{
+					"action": "CHECK_SAVE_FLAG",
+					"save_flag": "i-am-a-save-flag",
+					"expected_bool": false,
+					"success_script": "script-do-if-flag-false"
+				}
+			],
+			"natlang-if-button": [
+				{
+					"action": "CHECK_FOR_BUTTON_PRESS",
+					"button_id": "ANY",
+					"success_script": "script-do-if-button"
+				},
+				{
+					"action": "CHECK_FOR_BUTTON_STATE",
+					"button_id": "ANY",
+					"expected_bool": true,
+					"success_script": "script-do-if-button-state"
+				},
+				{
+					"action": "CHECK_FOR_BUTTON_STATE",
+					"button_id": "ANY",
+					"expected_bool": false,
+					"success_script": "script-do-if-button-state"
+				}
+			],
+			"natlang-if-warp": [
+				{
+					"action": "CHECK_WARP_STATE",
+					"string": "warp-state-string",
+					"expected_bool": true,
+					"success_script": "script-do-if-warp-state"
+				},
+				{
+					"action": "CHECK_WARP_STATE",
+					"string": "warp-state-string",
+					"expected_bool": false,
+					"success_script": "script-do-if-NOT-warp-state"
+				}
+			],
+			"natlang-if-variable": [
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "==",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-=="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "==",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-=="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->"
+				}
+			],
+			"natlang-if-variable-NOT": [
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "==",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-==-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "==",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-==-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->-NOT"
+				}
+			],
+			"natlang-if-entity-SPECIAL": [
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+					"success_script": "script-do-if-entity-is-hackable-a-u4",
+					"expected_u4": 1,
+					"entity": "Entity Name",
+					"note": "expected_bool is missing on purpose -- not enough bytes available!"
+				}
+			],
+			"natlang-if-entity": [
+				{
+					"action": "CHECK_ENTITY_NAME",
+					"success_script": "script-do-if-entity-name",
+					"string": "Checked Name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_X",
+					"success_script": "script-do-if-entity-x",
+					"expected_u2": 0,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+					"success_script": "script-do-if-entity-y",
+					"expected_script": "name-of-checked-script-interact",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_TICK_SCRIPT",
+					"success_script": "script-do-if-entity-tick",
+					"expected_script": "name-of-checked-script-tick",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_TYPE",
+					"success_script": "script-do-if-entity-type",
+					"entity_type": "some-kind-of-entity-type",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID",
+					"success_script": "script-do-if-entity-primaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_SECONDARY_ID",
+					"success_script": "script-do-if-entity-secondaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+					"success_script": "script-do-if-entity-primaryid-type",
+					"expected_byte": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+					"success_script": "script-do-if-entity-animation",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_FRAME",
+					"success_script": "script-do-if-entity-frame",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_DIRECTION",
+					"success_script": "script-do-if-entity-direction",
+					"direction": "north",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+					"success_script": "script-do-if-entity-is-hackable-a",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+					"success_script": "script-do-if-entity-is-hackable-b",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+					"success_script": "script-do-if-entity-is-hackable-c",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+					"success_script": "script-do-if-entity-is-hackable-d",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+					"success_script": "script-do-if-entity-is-hackable-a-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+					"success_script": "script-do-if-entity-is-hackable-c-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PATH",
+					"success_script": "script-do-if-entity-path",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_GLITCHED",
+					"success_script": "script-do-if-entity-is-glitched",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+					"success_script": "script-do-if-entity-path-inside",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				}
+			],
+			"natlang-if-entity-NOT": [
+				{
+					"action": "CHECK_ENTITY_NAME",
+					"success_script": "script-do-if-entity-name",
+					"string": "Checked Name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_X",
+					"success_script": "script-do-if-entity-x",
+					"expected_u2": 0,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+					"success_script": "script-do-if-entity-y",
+					"expected_script": "name-of-checked-script-interact",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_TICK_SCRIPT",
+					"success_script": "script-do-if-entity-tick",
+					"expected_script": "name-of-checked-script-tick",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_TYPE",
+					"success_script": "script-do-if-entity-type",
+					"entity_type": "some-kind-of-entity-type",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID",
+					"success_script": "script-do-if-entity-primaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_SECONDARY_ID",
+					"success_script": "script-do-if-entity-secondaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+					"success_script": "script-do-if-entity-primaryid-type",
+					"expected_byte": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+					"success_script": "script-do-if-entity-animation",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_FRAME",
+					"success_script": "script-do-if-entity-frame",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_DIRECTION",
+					"success_script": "script-do-if-entity-direction",
+					"direction": "north",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+					"success_script": "script-do-if-entity-is-hackable-a",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+					"success_script": "script-do-if-entity-is-hackable-b",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+					"success_script": "script-do-if-entity-is-hackable-c",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+					"success_script": "script-do-if-entity-is-hackable-d",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+					"success_script": "script-do-if-entity-is-hackable-a-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+					"success_script": "script-do-if-entity-is-hackable-c-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_PATH",
+					"success_script": "script-do-if-entity-path",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_GLITCHED",
+					"success_script": "script-do-if-entity-is-glitched",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+					"success_script": "script-do-if-entity-path-inside",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				}
+			]
+		},
+		"test_scripts-by_function": {
+			"game-management": [
+				{
+					"action": "BLOCKING_DELAY",
+					"duration": 1
+				},
+				{
+					"action": "NON_BLOCKING_DELAY",
+					"duration": 100000
+				},
+				{
+					"action": "SET_PLAYER_CONTROL",
+					"bool_value": true
+				},
+				{
+					"action": "SET_PLAYER_CONTROL",
+					"bool_value": false
+				},
+				{
+					"action": "LOAD_MAP",
+					"map": "super-long-map-name"
+				},
+				{
+					"action": "SHOW_DIALOG",
+					"dialog": "super-long-dialog-name"
+				},
+				{
+					"action": "SLOT_SAVE"
+				},
+				{
+					"action": "SLOT_LOAD",
+					"slot": 0
+				},
+				{
+					"action": "SLOT_ERASE",
+					"slot": 2
+				}
+			],
+			"hex-editor": [
+				{
+					"action": "SET_HEX_EDITOR_STATE",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_STATE",
+					"bool_value": false
+				},
+				{
+					"action": "SET_HEX_EDITOR_DIALOG_MODE",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_DIALOG_MODE",
+					"bool_value": false
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL",
+					"bool_value": false
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+					"bool_value": true
+				},
+				{
+					"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+					"bool_value": false
+				}
+			],
+			"logic-entities": [
+				{
+					"action": "CHECK_ENTITY_NAME",
+					"success_script": "script-do-if-entity-name",
+					"string": "Checked Name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_NAME",
+					"success_script": "script-do-if-NOT-entity-name",
+					"string": "Checked Name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_X",
+					"success_script": "script-do-if-entity-x",
+					"expected_u2": 0,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_X",
+					"success_script": "script-do-if-entity-x",
+					"expected_u2": 0,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+					"success_script": "script-do-if-entity-y",
+					"expected_script": "name-of-checked-script-interact",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+					"success_script": "script-do-if-entity-y",
+					"expected_script": "name-of-checked-script-interact",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_TICK_SCRIPT",
+					"success_script": "script-do-if-entity-tick",
+					"expected_script": "name-of-checked-script-tick",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_TICK_SCRIPT",
+					"success_script": "script-do-if-entity-tick",
+					"expected_script": "name-of-checked-script-tick",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_TYPE",
+					"success_script": "script-do-if-entity-type",
+					"entity_type": "some-kind-of-entity-type",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_TYPE",
+					"success_script": "script-do-if-entity-type",
+					"entity_type": "some-kind-of-entity-type",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID",
+					"success_script": "script-do-if-entity-primaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID",
+					"success_script": "script-do-if-entity-primaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_SECONDARY_ID",
+					"success_script": "script-do-if-entity-secondaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_SECONDARY_ID",
+					"success_script": "script-do-if-entity-secondaryid",
+					"expected_u2": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+					"success_script": "script-do-if-entity-primaryid-type",
+					"expected_byte": 16,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+					"success_script": "script-do-if-entity-primaryid-type",
+					"expected_byte": 16,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+					"success_script": "script-do-if-entity-animation",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+					"success_script": "script-do-if-entity-animation",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_FRAME",
+					"success_script": "script-do-if-entity-frame",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_CURRENT_FRAME",
+					"success_script": "script-do-if-entity-frame",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_DIRECTION",
+					"success_script": "script-do-if-entity-direction",
+					"direction": "north",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_DIRECTION",
+					"success_script": "script-do-if-entity-direction",
+					"direction": "north",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_GLITCHED",
+					"success_script": "script-do-if-entity-is-glitched",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_GLITCHED",
+					"success_script": "script-do-if-entity-is-NOT-glitched",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+					"success_script": "script-do-if-entity-is-hackable-a",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+					"success_script": "script-do-if-entity-is-hackable-a",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+					"success_script": "script-do-if-entity-is-hackable-b",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+					"success_script": "script-do-if-entity-is-hackable-b",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+					"success_script": "script-do-if-entity-is-hackable-c",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+					"success_script": "script-do-if-entity-is-hackable-c",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+					"success_script": "script-do-if-entity-is-hackable-d",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+					"success_script": "script-do-if-entity-is-hackable-d",
+					"expected_byte": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+					"success_script": "script-do-if-entity-is-hackable-a-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+					"success_script": "script-do-if-entity-is-hackable-a-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+					"success_script": "script-do-if-entity-is-hackable-c-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+					"success_script": "script-do-if-entity-is-hackable-c-u2",
+					"expected_u2": 1,
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+					"success_script": "script-do-if-entity-is-hackable-a-u4",
+					"expected_u4": 1,
+					"entity": "Entity Name",
+					"note": "expected_bool is missing on purpose -- not enough bytes available!"
+				},
+				{
+					"action": "CHECK_ENTITY_PATH",
+					"success_script": "script-do-if-entity-path",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_ENTITY_PATH",
+					"success_script": "script-do-if-entity-path",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				},
+				{
+					"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+					"success_script": "script-do-if-entity-path-inside",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": true
+				},
+				{
+					"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+					"success_script": "script-do-if-NOT-entity-path-inside",
+					"geometry": "some-kind-of-geometry-name",
+					"entity": "Entity Name",
+					"expected_bool": false
+				}
+			],
+			"logic-others": [
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "==",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-=="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "==",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-==-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": "<=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->="
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->"
+				},
+				{
+					"action": "CHECK_VARIABLE",
+					"variable": "i-am-a-variable",
+					"value": 15,
+					"comparison": ">",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "==",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-=="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "==",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-==-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable-<="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": "<=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable-<=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">=",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->="
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">=",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->=-NOT"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">",
+					"expected_bool": true,
+					"success_script": "script-do-if-variable->"
+				},
+				{
+					"action": "CHECK_VARIABLES",
+					"variable": "i-am-a-variable",
+					"source": "i-am-a-second-variable",
+					"comparison": ">",
+					"expected_bool": false,
+					"success_script": "script-do-if-variable->-NOT"
+				},
+				{
+					"action": "CHECK_SAVE_FLAG",
+					"save_flag": "i-am-a-save-flag",
+					"expected_bool": true,
+					"success_script": "script-do-if-flag-true"
+				},
+				{
+					"action": "CHECK_SAVE_FLAG",
+					"save_flag": "i-am-a-save-flag",
+					"expected_bool": false,
+					"success_script": "script-do-if-flag-false"
+				},
+				{
+					"action": "CHECK_FOR_BUTTON_PRESS",
+					"button_id": "ANY",
+					"success_script": "script-do-if-button"
+				},
+				{
+					"action": "CHECK_FOR_BUTTON_STATE",
+					"button_id": "ANY",
+					"expected_bool": true,
+					"success_script": "script-do-if-button-state"
+				},
+				{
+					"action": "CHECK_FOR_BUTTON_STATE",
+					"button_id": "ANY",
+					"expected_bool": false,
+					"success_script": "script-do-if-button-state"
+				},
+				{
+					"action": "CHECK_WARP_STATE",
+					"string": "warp-state-string",
+					"expected_bool": true,
+					"success_script": "script-do-if-warp-state"
+				},
+				{
+					"action": "CHECK_WARP_STATE",
+					"string": "warp-state-string",
+					"expected_bool": false,
+					"success_script": "script-do-if-NOT-warp-state"
+				}
+			],
+			"set-entity": [
+				{
+					"action": "SET_ENTITY_NAME",
+					"string": "New Name",
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_X",
+					"u2_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_Y",
+					"u2_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_TYPE",
+					"entity_type": "some-kinda-sheep",
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_PRIMARY_ID",
+					"u2_value": 1,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_SECONDARY_ID",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+					"byte_value": 0,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_B",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_C",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_D",
+					"byte_value": 128,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+					"u2_value": 2,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+					"u4_value": 4,
+					"entity": "Entity Name"
+				}
+			],
+			"entity-choreography-paths": [
+				{
+					"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-teleport"
+				},
+				{
+					"action": "WALK_ENTITY_TO_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-walk-to",
+					"duration": 1000
+				},
+				{
+					"action": "WALK_ENTITY_ALONG_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-walk-along",
+					"duration": 1000
+				},
+				{
+					"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-loop",
+					"duration": 1000
+				},
+				{
+					"action": "SET_ENTITY_PATH",
+					"entity": "Entity Name",
+					"geometry": "geometry-name-entity-path"
+				}
+			],
+			"entity-choreography-appearance": [
+				{
+					"action": "PLAY_ENTITY_ANIMATION",
+					"entity": "Entity Name",
+					"animation": 0,
+					"play_count": 1
+				},
+				{
+					"action": "PLAY_ENTITY_ANIMATION",
+					"entity": "Entity Name",
+					"animation": 0,
+					"play_count": 2
+				},
+				{
+					"action": "SET_ENTITY_CURRENT_ANIMATION",
+					"entity": "Entity Name",
+					"byte_value": 0
+				},
+				{
+					"action": "SET_ENTITY_CURRENT_FRAME",
+					"entity": "Entity Name",
+					"byte_value": 0
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION",
+					"entity": "Entity Name",
+					"direction": "north"
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_RELATIVE",
+					"entity": "Entity Name",
+					"relative_direction": 1
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+					"entity": "Entity Name",
+					"target_entity": "Target Entity"
+				},
+				{
+					"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+					"entity": "Entity Name",
+					"target_geometry": "target-geometry"
+				},
+				{
+					"action": "SET_ENTITY_GLITCHED",
+					"entity": "Entity Name",
+					"bool_value": true
+				},
+				{
+					"action": "SET_ENTITY_GLITCHED",
+					"entity": "Entity Name",
+					"bool_value": false
+				}
+			],
+			"camera-control": [
+				{
+					"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+					"entity": "Entity Name"
+				},
+				{
+					"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+					"geometry": "geometry-name-to-teleport"
+				},
+				{
+					"action": "PAN_CAMERA_TO_ENTITY",
+					"duration": 1000,
+					"entity": "Entity Name"
+				},
+				{
+					"action": "PAN_CAMERA_TO_GEOMETRY",
+					"duration": 1000,
+					"geometry": "geometry-to-pan-camera"
+				},
+				{
+					"action": "SET_SCREEN_SHAKE",
+					"frequency": 1000,
+					"amplitude": 30,
+					"duration": 4000
+				},
+				{
+					"action": "SCREEN_FADE_OUT",
+					"duration": 1000,
+					"color": "#FF0000"
+				},
+				{
+					"action": "SCREEN_FADE_IN",
+					"duration": 1000,
+					"color": "#00FF00"
+				}
+			],
+			"controlling-scripts": [
+				{
+					"action": "RUN_SCRIPT",
+					"script": "script-to-run"
+				},
+				{
+					"action": "COPY_SCRIPT",
+					"script": "script-to-copy"
+				},
+				{
+					"action": "SET_MAP_TICK_SCRIPT",
+					"script": "script-map-tick"
+				},
+				{
+					"action": "SET_ENTITY_INTERACT_SCRIPT",
+					"entity": "Entity Name",
+					"script": "script-entity-interact"
+				},
+				{
+					"action": "SET_ENTITY_TICK_SCRIPT",
+					"entity": "Entity Name",
+					"script": "script-entity-tick"
+				}
+			],
+			"controlling-variables": [
+				{
+					"action": "SET_SAVE_FLAG",
+					"save_flag": "save-flag-to-set",
+					"bool_value": true
+				},
+				{
+					"action": "SET_SAVE_FLAG",
+					"save_flag": "save-flag-to-set-NOT",
+					"bool_value": false
+				},
+				{
+					"action": "SET_WARP_STATE",
+					"string": "warp-state-string"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-set",
+					"value": 5,
+					"operation": "SET"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-add",
+					"value": 5,
+					"operation": "ADD"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-sub",
+					"value": 5,
+					"operation": "SUB"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-div",
+					"value": 5,
+					"operation": "DIV"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-mul",
+					"value": 5,
+					"operation": "MUL"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-mod",
+					"value": 5,
+					"operation": "MOD"
+				},
+				{
+					"action": "MUTATE_VARIABLE",
+					"variable": "variable-name-rng",
+					"value": 5,
+					"operation": "RNG"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-set",
+					"source": "another-variable-name",
+					"operation": "SET"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-add",
+					"source": "another-variable-name",
+					"operation": "ADD"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-sub",
+					"source": "another-variable-name",
+					"operation": "SUB"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-div",
+					"source": "another-variable-name",
+					"operation": "DIV"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-mul",
+					"source": "another-variable-name",
+					"operation": "MUL"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-mod",
+					"source": "another-variable-name",
+					"operation": "MOD"
+				},
+				{
+					"action": "MUTATE_VARIABLES",
+					"variable": "variable-name-rng",
+					"source": "another-variable-name",
+					"operation": "RNG"
+				},
+				{
+					"action": "COPY_VARIABLE",
+					"variable": "variable-name-inbound",
+					"inbound": true,
+					"entity": "Entity Name",
+					"field": "x"
+				},
+				{
+					"action": "COPY_VARIABLE",
+					"variable": "variable-name-outbound",
+					"inbound": false,
+					"entity": "Entity Name",
+					"field": "y"
+				}
+			],
+			"ch2": [
+				{
+					"action": "SHOW_SERIAL_DIALOG",
+					"serial_dialog": "serial-dialog"
+				}
+			]
+		},
+		"test_block-by_function": "game-management:\nblock 1ms\nwait 100000ms\nset player control on\nset player control off\nload map \"super-long-map-name\"\nshow dialog \"super-long-dialog-name\"\nsave slot\nload slot 0\nerase slot 2\n\nhex-editor:\nopen hex editor\nclose hex editor\nset hex dialog mode on\nset hex dialog mode off\nset hex control on\nset hex control off\nset hex clipboard on\nset hex clipboard off\n\nlogic-entities:\nif entity \"Entity Name\" name is \"Checked Name\" then goto \"script-do-if-entity-name\"\nif entity \"Entity Name\" name is not \"Checked Name\" then goto \"script-do-if-NOT-entity-name\"\nif entity \"Entity Name\" x is 0 then goto \"script-do-if-entity-x\"\nif entity \"Entity Name\" x is not 0 then goto \"script-do-if-entity-x\"\nif entity \"Entity Name\" interactScript is \"name-of-checked-script-interact\" then goto \"script-do-if-entity-y\"\nif entity \"Entity Name\" interactScript is not \"name-of-checked-script-interact\" then goto \"script-do-if-entity-y\"\nif entity \"Entity Name\" tickScript is \"name-of-checked-script-tick\" then goto \"script-do-if-entity-tick\"\nif entity \"Entity Name\" tickScript is not \"name-of-checked-script-tick\" then goto \"script-do-if-entity-tick\"\nif entity \"Entity Name\" type is \"some-kind-of-entity-type\" then goto \"script-do-if-entity-type\"\nif entity \"Entity Name\" type is not \"some-kind-of-entity-type\" then goto \"script-do-if-entity-type\"\nif entity \"Entity Name\" primaryID is 16 then goto \"script-do-if-entity-primaryid\"\nif entity \"Entity Name\" primaryID is not 16 then goto \"script-do-if-entity-primaryid\"\nif entity \"Entity Name\" secondaryID is 16 then goto \"script-do-if-entity-secondaryid\"\nif entity \"Entity Name\" secondaryID is not 16 then goto \"script-do-if-entity-secondaryid\"\nif entity \"Entity Name\" primaryIDtype is 16 then goto \"script-do-if-entity-primaryid-type\"\nif entity \"Entity Name\" primaryIDtype is not 16 then goto \"script-do-if-entity-primaryid-type\"\nif entity \"Entity Name\" animation is 1 then goto \"script-do-if-entity-animation\"\nif entity \"Entity Name\" animation is not 1 then goto \"script-do-if-entity-animation\"\nif entity \"Entity Name\" animationFrame is 1 then goto \"script-do-if-entity-frame\"\nif entity \"Entity Name\" animationFrame is not 1 then goto \"script-do-if-entity-frame\"\nif entity \"Entity Name\" direction is north then goto \"script-do-if-entity-direction\"\nif entity \"Entity Name\" direction is not north then goto \"script-do-if-entity-direction\"\nif entity \"Entity Name\" is glitched then goto \"script-do-if-entity-is-glitched\"\nif entity \"Entity Name\" is not glitched then goto \"script-do-if-entity-is-NOT-glitched\"\nif entity \"Entity Name\" hackableStateA is 1 then goto \"script-do-if-entity-is-hackable-a\"\nif entity \"Entity Name\" hackableStateA is not 1 then goto \"script-do-if-entity-is-hackable-a\"\nif entity \"Entity Name\" hackableStateB is 1 then goto \"script-do-if-entity-is-hackable-b\"\nif entity \"Entity Name\" hackableStateB is not 1 then goto \"script-do-if-entity-is-hackable-b\"\nif entity \"Entity Name\" hackableStateC is 1 then goto \"script-do-if-entity-is-hackable-c\"\nif entity \"Entity Name\" hackableStateC is not 1 then goto \"script-do-if-entity-is-hackable-c\"\nif entity \"Entity Name\" hackableStateD is 1 then goto \"script-do-if-entity-is-hackable-d\"\nif entity \"Entity Name\" hackableStateD is not 1 then goto \"script-do-if-entity-is-hackable-d\"\nif entity \"Entity Name\" hackableStateAU2 is 1 then goto \"script-do-if-entity-is-hackable-a-u2\"\nif entity \"Entity Name\" hackableStateAU2 is not 1 then goto \"script-do-if-entity-is-hackable-a-u2\"\nif entity \"Entity Name\" hackableStateCU2 is 1 then goto \"script-do-if-entity-is-hackable-c-u2\"\nif entity \"Entity Name\" hackableStateCU2 is not 1 then goto \"script-do-if-entity-is-hackable-c-u2\"\nif entity \"Entity Name\" hackableStateAU4 is 1 then goto \"script-do-if-entity-is-hackable-a-u4\"\n/* note: expected_bool is missing on purpose -- not enough bytes available! */\nif entity \"Entity Name\" path is \"some-kind-of-geometry-name\" then goto \"script-do-if-entity-path\"\nif entity \"Entity Name\" path is not \"some-kind-of-geometry-name\" then goto \"script-do-if-entity-path\"\nif entity \"Entity Name\" is inside geometry \"some-kind-of-geometry-name\" then goto \"script-do-if-entity-path-inside\"\nif entity \"Entity Name\" is not inside geometry \"some-kind-of-geometry-name\" then goto \"script-do-if-NOT-entity-path-inside\"\n\nlogic-others:\nif variable \"i-am-a-variable\" is 15 then goto \"script-do-if-variable-==\"\nif variable \"i-am-a-variable\" is not 15 then goto \"script-do-if-variable-==-NOT\"\nif variable \"i-am-a-variable\" is < 15 then goto \"script-do-if-variable-<\"\nif variable \"i-am-a-variable\" is not < 15 then goto \"script-do-if-variable-<-NOT\"\nif variable \"i-am-a-variable\" is <= 15 then goto \"script-do-if-variable-<=\"\nif variable \"i-am-a-variable\" is not <= 15 then goto \"script-do-if-variable-<=-NOT\"\nif variable \"i-am-a-variable\" is >= 15 then goto \"script-do-if-variable->=\"\nif variable \"i-am-a-variable\" is not >= 15 then goto \"script-do-if-variable->=-NOT\"\nif variable \"i-am-a-variable\" is > 15 then goto \"script-do-if-variable->\"\nif variable \"i-am-a-variable\" is not > 15 then goto \"script-do-if-variable->-NOT\"\nif variable \"i-am-a-variable\" is \"i-am-a-second-variable\" then goto \"script-do-if-variable-==\"\nif variable \"i-am-a-variable\" is not \"i-am-a-second-variable\" then goto \"script-do-if-variable-==-NOT\"\nif variable \"i-am-a-variable\" is < \"i-am-a-second-variable\" then goto \"script-do-if-variable-<\"\nif variable \"i-am-a-variable\" is not < \"i-am-a-second-variable\" then goto \"script-do-if-variable-<-NOT\"\nif variable \"i-am-a-variable\" is <= \"i-am-a-second-variable\" then goto \"script-do-if-variable-<=\"\nif variable \"i-am-a-variable\" is not <= \"i-am-a-second-variable\" then goto \"script-do-if-variable-<=-NOT\"\nif variable \"i-am-a-variable\" is >= \"i-am-a-second-variable\" then goto \"script-do-if-variable->=\"\nif variable \"i-am-a-variable\" is not >= \"i-am-a-second-variable\" then goto \"script-do-if-variable->=-NOT\"\nif variable \"i-am-a-variable\" is > \"i-am-a-second-variable\" then goto \"script-do-if-variable->\"\nif variable \"i-am-a-variable\" is not > \"i-am-a-second-variable\" then goto \"script-do-if-variable->-NOT\"\nif flag \"i-am-a-save-flag\" is true then goto \"script-do-if-flag-true\"\nif flag \"i-am-a-save-flag\" is false then goto \"script-do-if-flag-false\"\nif button ANY then goto \"script-do-if-button\"\nif button ANY is pressed then goto \"script-do-if-button-state\"\nif button ANY is not pressed then goto \"script-do-if-button-state\"\nif warp state is \"warp-state-string\" then goto \"script-do-if-warp-state\"\nif warp state is not \"warp-state-string\" then goto \"script-do-if-NOT-warp-state\"\n\nset-entity:\nset entity \"Entity Name\" name to \"New Name\"\nset entity \"Entity Name\" x to 128\nset entity \"Entity Name\" y to 128\nset entity \"Entity Name\" type to \"some-kinda-sheep\"\nset entity \"Entity Name\" primaryID to 1\nset entity \"Entity Name\" secondaryID to 2\nset entity \"Entity Name\" primaryIDtype to 0\nset entity \"Entity Name\" hackableStateA to 128\nset entity \"Entity Name\" hackableStateB to 128\nset entity \"Entity Name\" hackableStateC to 128\nset entity \"Entity Name\" hackableStateD to 128\nset entity \"Entity Name\" hackableStateAU2 to 2\nset entity \"Entity Name\" hackableStateCU2 to 2\nset entity \"Entity Name\" hackableStateAU4 to 4\n\nentity-choreography-paths:\nteleport entity \"Entity Name\" to geometry \"geometry-name-teleport\"\nwalk entity \"Entity Name\" to geometry \"geometry-name-walk-to\" over 1000ms\nwalk entity \"Entity Name\" along geometry \"geometry-name-walk-along\" over 1000ms\nloop entity \"Entity Name\" along geometry \"geometry-name-loop\" over 1000ms\nset entity \"Entity Name\" path to \"geometry-name-entity-path\"\n\nentity-choreography-appearance:\nplay entity \"Entity Name\" animation 0 x1\nplay entity \"Entity Name\" animation 0 x2\nset entity \"Entity Name\" animation to 0\nset entity \"Entity Name\" animationFrame to 0\nturn entity \"Entity Name\" north\nrotate entity \"Entity Name\" 1\nturn entity \"Entity Name\" toward entity \"Target Entity\"\nturn entity \"Entity Name\" toward geometry \"target-geometry\"\nmake entity \"Entity Name\" glitched\nmake entity \"Entity Name\" unglitched\n\ncamera-control:\nmake camera follow entity \"Entity Name\"\nteleport camera to geometry \"geometry-name-to-teleport\"\npan camera to entity \"Entity Name\" over 1000ms\npan camera to geometry \"geometry-to-pan-camera\" over 1000ms\nshake camera 1000ms 30px for 4000ms\nfade out camera to #FF0000 over 1000ms\nfade in camera from #00FF00 over 1000ms\n\ncontrolling-scripts:\ngoto \"script-to-run\"\ncopy \"script-to-copy\"\nset map tick script to \"script-map-tick\"\nset entity \"Entity Name\" interactScript to \"script-entity-interact\"\nset entity \"Entity Name\" tickScript to \"script-entity-tick\"\n\ncontrolling-variables:\nset flag \"save-flag-to-set\" to true\nset flag \"save-flag-to-set-NOT\" to false\nset warp state to \"warp-state-string\"\nmutate \"variable-name-set\" = 5\nmutate \"variable-name-add\" + 5\nmutate \"variable-name-sub\" - 5\nmutate \"variable-name-div\" / 5\nmutate \"variable-name-mul\" * 5\nmutate \"variable-name-mod\" % 5\nmutate \"variable-name-rng\" ? 5\nmutate \"variable-name-set\" = \"another-variable-name\"\nmutate \"variable-name-add\" + \"another-variable-name\"\nmutate \"variable-name-sub\" - \"another-variable-name\"\nmutate \"variable-name-div\" / \"another-variable-name\"\nmutate \"variable-name-mul\" * \"another-variable-name\"\nmutate \"variable-name-mod\" % \"another-variable-name\"\nmutate \"variable-name-rng\" ? \"another-variable-name\"\ncopy entity \"Entity Name\" x into variable \"variable-name-inbound\"\ncopy entity \"Entity Name\" y from variable \"variable-name-outbound\"\n\nch2:\nshow serial dialog \"serial-dialog\"\n"
+
+	}
+}
