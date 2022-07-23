@@ -1,0 +1,38 @@
+warping-out-fade-out:
+	set warp state to "warping"
+	set player control off
+	set entity "%PLAYER%" tickScript to "spin-quickly"
+	fade out camera to #000000 over 500ms
+
+warping-in-fade-in:
+	teleport entity "%PLAYER%" to geometry "warp-spot"
+	set entity "%PLAYER%" tickScript to "spin-quickly"
+	fade in camera from #000000 over 300ms
+	set entity "%PLAYER%" tickScript to "null_script"
+	turn entity "%PLAYER%" south
+	set player control on
+
+boot-out-if-necessary:
+	if variable "current-chapter" is 1 then goto "boot-to-chapter-1"
+
+boot-to-chapter-1:
+	set warp state to "was-booted"
+	load map "main"
+
+disable-hax:
+	set hex control off
+	set hex clipboard off
+
+warp_to-mtn-xa_room:
+	copy "warping-out-fade-out"
+	show serial dialog "serial_dialog-travel_to-xa_room"
+	load map "xa-room"
+
+warp_to-mtn-castle_entrance:
+	copy "warping-out-fade-out"
+	show serial dialog "serial_dialog-travel_to-castle_entrance"
+	load map "castle-door"
+
+spin-quickly:
+	rotate entity "%SELF%" -1
+	wait 150ms

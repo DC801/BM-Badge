@@ -174,8 +174,8 @@ var natlangDictionary = [
 	},
 	{
 		action: "SET_MAP_TICK_SCRIPT",
-		pattern: "set map tick script to $string",
-		fields: [ null, null, null, null, null, "script" ]
+		pattern: "set map tickScript to $string",
+		fields: [ null, null, null, null, "script" ]
 	},
 	{
 		action: "SET_WARP_STATE",

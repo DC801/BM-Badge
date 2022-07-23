@@ -94,8 +94,13 @@ var translateFieldToNatlang = {
 		return '"' + input + '"';
 	},
 	qty: function (input) {
-		// TODO make fancy "once, twice" etc?
-		return 'x' + input;
+		if (input === 1) {
+			return 'once';;
+		} else if (input === 2) {
+			return 'twice';
+		} else {
+			return 'x' + input;
+		}
 	},
 	op: function (input) {
 		return getOpSynonym(input);
@@ -286,7 +291,7 @@ var defaultNatlangConfig = {
 	extraIndentSplitGotos: true,
 	splitGoto: true,
 };
-var translateScripts = function (jsonFromFile, importConfig) {
+var translateJSONToNatlang = function (jsonFromFile, importConfig) {
 	var config = JSON.parse(JSON.stringify(defaultNatlangConfig));
 	Object.assign(config, importConfig);
 	jsonFromFile = jsonFromFile || {};
@@ -311,6 +316,8 @@ var translateScripts = function (jsonFromFile, importConfig) {
 			return config.extraIndentComments
 				? indent + indent + string
 				: indent + string;
+		} else if (string === '') {
+			return string;
 		} else {
 			return indent + string;
 		}

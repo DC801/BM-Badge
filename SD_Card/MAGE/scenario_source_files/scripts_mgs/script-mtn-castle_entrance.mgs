@@ -1,0 +1,29 @@
+on_load-mtn-castle_entrance:
+    teleport camera to geometry "camera-spot"
+    goto "on_load-mtn-castle_entrance-chapter-check"
+
+on_load-mtn-castle_entrance-chapter-check:
+    copy "boot-out-if-necessary"
+    goto "on_load-mtn-castle_entrance-hax-check"
+
+on_load-mtn-castle_entrance-hax-check:
+    if flag "can-use-hax-in-mtn" is false then goto "on_load-mtn-castle_entrance-disable-hax"
+    goto "on_load-mtn-castle_entrance-warp-check"
+
+on_load-mtn-castle_entrance-disable-hax:
+    copy "disable-hax"
+    goto "on_load-mtn-castle_entrance-warp-check"
+
+on_load-mtn-castle_entrance-warp-check:
+    if warp state is "warping" then goto "on_load-mtn-castle_entrance-warp-in"
+    goto "on_load-mtn-castle_entrance-wrapup"
+
+on_load-mtn-castle_entrance-warp-in:
+    copy "warping-in-fade-in"
+    goto "on_load-mtn-castle_entrance-wrapup"
+
+on_load-mtn-castle_entrance-wrapup:
+    goto "null_script"
+
+on_go-mtn-castle_entrance-to-xa_room-check:
+    goto "warp_to-mtn-xa_room"

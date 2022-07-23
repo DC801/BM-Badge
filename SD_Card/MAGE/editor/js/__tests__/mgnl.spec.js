@@ -56,10 +56,9 @@ describe('MGNL test suite', function () {
 				var orig = {
 					[scriptName]: testJSON.suite.actions[scriptName]
 				};
-				var natlang = translateScripts(orig);
-				var stream = parseNatlangBlock(natlang);
-				var result = parseNatlangStream(stream);
-				expect(stableStringify(result)).toBe(stableStringify(orig));
+				var natlang = translateJSONToNatlang(orig);
+				var json = translateNatlangToJSON(natlang);
+				expect(stableStringify(json)).toBe(stableStringify(orig));
 			})
 		})
 	})
