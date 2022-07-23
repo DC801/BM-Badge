@@ -147,6 +147,24 @@
                  "width":40,
                  "x":353,
                  "y":21
+                }, 
+                {
+                 "gid":253,
+                 "height":32,
+                 "id":19,
+                 "name":"door2",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-mtn-door-attempt"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":255,
+                 "y":108
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -252,7 +270,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":19,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.2",
@@ -277,6 +295,10 @@
         {
          "firstgid":235,
          "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":253,
+         "source":"..\/entities\/entity-null.json"
         }],
  "tilewidth":32,
  "type":"map",

@@ -1,0 +1,167 @@
+/* --- Map on_load --- */
+
+on_load-magehouse-birthday:
+	if flag "mtn-birthday-cutscene" is false then goto "mtn-birthday-cutscene-start"
+
+on_load-main2:
+	if flag "mtn-escort-cutscene" is false then goto "mtn-escort-cutscene-start"
+
+/* --- CUTSCENE: Birthday (house) --- */
+
+mtn-birthday-cutscene-start:
+	set player control off
+	close hex editor
+	set entity "%PLAYER%" animation to 0
+	fade out camera to #000000 over 0ms
+	turn entity "%PLAYER%" east
+	teleport camera to geometry "cake-camera-1"
+	set entity "Stunt Cake" animation to 1
+	wait 1000ms
+	fade in camera from #000000 over 1000ms
+	wait 500ms
+	show dialog "dialog-mtn-birthday-song"
+		/* Happy birthday, dear %PLAYER%! ... */
+	wait 200ms
+	play entity "Stunt Cake" animation 2 once
+	set entity "Stunt Cake" animation to 3
+	fade out camera to #000000 over 0ms
+	teleport camera to geometry "cake-camera-2"
+	fade in camera from #000000 over 500ms
+	show dialog "dialog-mtn-birthday-convo1"
+		/* Now you're an official mage, %PLAYER%! ... */
+	fade out camera to #000000 over 500ms
+	set entity "Cake" animation to 4
+	show dialog "dialog-mtn-birthday-munch"
+		/* *munch munch munch* */
+	fade in camera from #000000 over 1000ms
+	show dialog "dialog-mtn-birthday-convo2"
+		/* How was your day, %PLAYER%? ... */
+	wait 600ms
+	turn entity "%PLAYER%" south
+	wait 400ms
+	show dialog "dialog-mtn-birthday-convo3"
+		/* First thing tomorrow, I'm supposed to meet the village elders ... */
+	wait 200ms
+	turn entity "%PLAYER%" east
+	wait 200ms
+	show dialog "dialog-mtn-birthday-convo4"
+		/* It's a lot to ask a sixteen year old, but ... */
+	fade out camera to #000000 over 2000ms
+	set flag "mtn-birthday-cutscene" to true
+	wait 400ms
+	load map "main2"
+
+/* --- CUTSCENE: Birthday (elders) --- */
+
+gossip-right-down:
+	wait 600ms
+	turn entity "%SELF%" east
+	wait 800ms
+	turn entity "%SELF%" south
+	wait 400ms
+
+gossip-left-and-right-down:
+	turn entity "%SELF%" west
+	wait 600ms
+	turn entity "%SELF%" south
+	wait 300ms
+	turn entity "%SELF%" east
+	wait 360ms
+
+gossip-left-down:
+	wait 200ms
+	turn entity "%SELF%" south
+	wait 500ms
+	turn entity "%SELF%" west
+	wait 1100ms
+
+mtn-escort-cutscene-start:
+	fade out camera to #000000 over 0ms
+	set player control off
+	close hex editor
+	teleport entity "Alfonso" to geometry "birthday-alfonso"
+	teleport entity "Bert" to geometry "birthday-bert"
+	teleport entity "Jackob" to geometry "birthday-jackob"
+	turn entity "Alfonso" north
+	turn entity "Bert" north
+	turn entity "Jackob" north
+	teleport camera to geometry "escort-camera"
+	fade in camera from #000000 over 1000ms
+	turn entity "%PLAYER%" south
+	wait 800ms
+	teleport entity "%PLAYER%" to geometry "enter_from-magehouse"
+	walk entity "%PLAYER%" along geometry "enter_from-magehouse" over 400ms
+	wait 1500ms
+	show dialog "dialog-mtn-escort-convo1"
+		/* The time has come to visit the first dungeon ... */
+	wait 200ms
+	set entity "%PLAYER%" tickScript to "look-left-and-right-fast"
+	wait 600ms
+	show dialog "dialog-mtn-escort-convo2"
+		/* Wait, weren't you supposed to bring me a book ... */
+	set entity "%PLAYER%" tickScript to "null_script"
+	turn entity "%PLAYER%" south
+	show dialog "dialog-mtn-escort-convo3"
+		/* The serial dungeon, yes. We did have a book about that ... */
+	wait 200ms
+	set entity "%PLAYER%" tickScript to "look-left-and-right-fast"
+	wait 600ms
+	show dialog "dialog-mtn-escort-convo4"
+		/* On my own? You aren't coming inside with me? */
+	set entity "%PLAYER%" tickScript to "null_script"
+	turn entity "%PLAYER%" south
+	show dialog "dialog-mtn-escort-convo5"
+		/* We are not hackers and cannot pass the gate. */
+	wait 200ms
+	turn entity "Alfonso" south
+	wait 800ms
+	show dialog "dialog-mtn-escort-convo6"
+		/* You don't know? What kind of wise old men are you? */
+	wait 200ms
+	turn entity "Alfonso" toward entity "%PLAYER%"
+	wait 400ms
+	show dialog "dialog-mtn-escort-convo7"
+		/* That book... what did it say? Can you give me a summary at least? */
+	wait 200ms
+	set entity "Jackob" tickScript to "gossip-right-down"
+	set entity "Alfonso" tickScript to "gossip-left-and-right-down"
+	set entity "Bert" tickScript to "gossip-left-down"
+	wait 200ms
+	show dialog "dialog-mtn-escort-convo8"
+		/* I must have read it once.... / ... */
+	wait 500ms
+	set entity "Alfonso" tickScript to "null_script"
+	set entity "Jackob" tickScript to "null_script"
+	set entity "Bert" tickScript to "null_script"
+	wait 100ms
+	turn entity "Alfonso" north
+	wait 50ms
+	turn entity "Bert" north
+	wait 40ms
+	turn entity "Jackob" north
+	show dialog "dialog-mtn-escort-convo9"
+		/* I can't remember. / Ho boy. / ... */
+	goto "birthday-escort-cutscene-end"
+
+birthday-escort-cutscene-end:
+	set flag "mtn-escort-cutscene" to true
+	wait 160ms
+	set entity "Jackob" tickScript to "birthday-march-on-own-path"
+	wait 180ms
+	set entity "Alfonso" tickScript to "birthday-march-on-own-path"
+	wait 90ms
+	set entity "Bert" tickScript to "birthday-march-on-own-path"
+	set entity "%PLAYER%" tickScript to "birthday-march-on-own-path-player"
+	fade out camera to #000000 over 2000ms
+
+birthday-march-on-own-path:
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms
+
+birthday-march-on-own-path-player:
+	wait 200ms
+	walk entity "%PLAYER%" to geometry "hesitation-point" over 300ms
+	wait 400ms
+	walk entity "%PLAYER%" to geometry "birthday-alfonso" over 400ms
+	walk entity "%PLAYER%" along geometry "birthday-alfonso" over 3500ms
+
+/* --- AND THE REST OF THE OWL --- */

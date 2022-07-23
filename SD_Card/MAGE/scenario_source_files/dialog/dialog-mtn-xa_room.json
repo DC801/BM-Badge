@@ -1,4 +1,76 @@
 {
+	"dialog-mtn-door-serial-naive": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"How am I supposed to get around if the\ndoors don't work?"
+			]
+		}
+	],
+	"dialog-mtn-door-attempt-first": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"The doors don't work? This is going to be\na short quest."
+			]
+		}
+	],
+	"dialog-mtn-door-attempt-second": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"The doors don't work, either? This is\ngoing to be a short quest."
+			]
+		}
+	],
+	"dialog-mtn-door-serial-reminder": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Looks like the doors don't work the normal\nway. I guess I'll need to move between\nrooms with the serial console instead."
+			]
+		}
+	],
+	"dialog-mtn-hax-serial-naive": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Why doesn't Ring Zero work?"
+			]
+		}
+	],
+	"dialog-mtn-hax-attempt-first": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Weird. I can't get Ring Zero to work."
+			]
+		}
+	],
+	"dialog-mtn-hax-attempt-second": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Weird. I can't get Ring Zero to work,\neither."
+			]
+		}
+	],
+	"dialog-mtn-hax-attempt-reminder": [
+		{
+			"alignment": "BOTTOM_RIGHT",
+			"entity": "%PLAYER%",
+			"messages": [
+				"Oh, yeah. Ring Zero won't work in here\nuntil I fix the mainframe."
+			]
+		}
+	],
 	"dialog-mtn-bertsecret1": [
 		{
 			"alignment": "BOTTOM_LEFT",
