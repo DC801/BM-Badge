@@ -62,4 +62,53 @@ describe('MGNL test suite', function () {
 			})
 		})
 	})
+	describe('Labeled comment detection', function () {
+		it(`Should parse "/* asdf: asdfff */"`, function () {
+			var testComment = "/* asdf: asdfff */";
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment");
+			expect(result.value.commentLabel).toBe("asdf");
+			expect(result.value.commentBody).toBe("asdfff");
+		})
+		it(`Should parse "/* asdf: as as as */"`, function () {
+			var testComment = `/* asdf: as as as */`;
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment");
+			expect(result.value.commentLabel).toBe("asdf");
+			expect(result.value.commentBody).toBe("as as as");
+		})
+
+	})
+	describe('Unlabeled comment detection', function () {
+		it(`Should parse "/* asdf */"`, function () {
+			var testComment = "/* asdf */";
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment-unlabeled");
+			expect(result.value).toBe("asdf");
+		})
+		it(`Should parse "/* Test! Woo */"`, function () {
+			var testComment = `/* Test! Woo */`;
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment-unlabeled");
+			expect(result.value).toBe(`Test! Woo`);
+		})
+		it(`Should parse "/* "Test! Woo" */"`, function () {
+			var testComment = `/* "Test! Woo" */`;
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment-unlabeled");
+			expect(result.value).toBe(`"Test! Woo"`);
+		})
+		it(`Should parse "/* "Test: Woo" */"`, function () {
+			var testComment = `/* "Test: Woo" */`;
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment-unlabeled");
+			expect(result.value).toBe(`"Test: Woo"`);
+		})
+		it(`Should parse "/* ?!(<^>>) */"`, function () {
+			var testComment = "/* ?!(<^>>) */";
+			var result = patternParse.comment(testComment);
+			expect(result.type).toBe("comment-unlabeled");
+			expect(result.value).toBe("?!(<^>>)");
+		})
+	})
 })

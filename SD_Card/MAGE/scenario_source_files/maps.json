@@ -1,5 +1,4 @@
 {
-	"main_menu": "maps/map-main_menu.json",
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
@@ -9,6 +8,7 @@
 			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
 		}
 	},
+	"main_menu": "maps/map-main_menu.json",
 	"castle-door": {
 		"path": "maps/map-mtn-castle_entrance.json",
 		"on_load": "on_load-mtn-castle_entrance",

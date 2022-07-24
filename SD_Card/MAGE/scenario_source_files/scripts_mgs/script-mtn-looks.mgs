@@ -1,14 +1,29 @@
 on_look-mtn-xa_room:
-    show serial dialog "serial_dialog-on_look-mtn-xa_room"
+	show serial dialog "serial_dialog-beginning-spacer"
+	show serial dialog "serial_dialog-on_look-mtn-xa_room"
+		/* ... once functioned as a kind of hub, though the doors look less than functional ... */
+	show serial dialog "serial_dialog-end-spacer"
 
 on_look-mtn-castle_entrance:
-    show serial dialog "serial_dialog-on_look-mtn-castle_entrance"
+	show serial dialog "serial_dialog-beginning-spacer"
+	show serial dialog "serial_dialog-on_look-mtn-castle_entrance"
+		/* ... used castle smell ... */
+	show serial dialog "serial_dialog-end-spacer"
 
 on_look-player:
-    show serial dialog "serial_dialog-on_look-player"
+	show serial dialog "serial_dialog-beginning-spacer"
+	show serial dialog "serial_dialog-on_look-player"
+		/* Yikes. You need a haircut. */
+	show serial dialog "serial_dialog-end-spacer"
 
 on_look-xa:
-    show serial dialog "serial_dialog-on_look-xa"
+	show serial dialog "serial_dialog-beginning-spacer"
+	show serial dialog "serial_dialog-on_look-xa"
+		/* It's some kind of orange, spider-shaped robot. */
+	show serial dialog "serial_dialog-end-spacer"
 
 on_look-save_floppy:
-    show serial dialog "serial_dialog-on_look-save_floppy"
+	show serial dialog "serial_dialog-beginning-spacer"
+	show serial dialog "serial_dialog-on_look-save_floppy"
+		/* Wow, someone 3D-printed a save icon ... */
+	show serial dialog "serial_dialog-end-spacer"

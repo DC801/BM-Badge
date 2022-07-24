@@ -15,8 +15,7 @@ on_tick-mtn-xa_room-watch-for-xa-too:
 
 on_tick-mtn-hax-attempt-check:
 	if flag "ch2-hax-restored" is false
-		then goto "on_tick-mtn-hax-attempt"
-		/* see far below &*/
+		then goto "on_tick-mtn-hax-attempt" /* see far below */
 	goto "on_tick-mtn-xa_room"
 
 start-cutscene-bert-secret:
@@ -31,11 +30,10 @@ on_tick-mtn-xa_room-watch-only-front-door:
 		then goto "on_tick-mtn-hax-attempt-check"
 
 leave-mtn-xa_room:
-	/* TODO */
+	load map "main"
 
-/* --- On entrance, the player might try things which yields specific dialog responses: --- */
-
-/* -- 1. attempting the door -- */
+/* On entrance, the player might try things which yields specific dialog responses: */
+/* --- 1. attempting the door --- */
 
 show_dialog-mtn-door-attempt:
 	if flag "mtn-serial-toot-done" is true
@@ -70,7 +68,7 @@ show_dialog-mtn-door-wrapup:
 	set flag "mtn-door-attempted" to true
 	set entity "%SELF%" interactScript to "show_dialog-mtn-door-attempt"
 
-/* -- 2. attempting the hax -- */
+/* --- 2. attempting the hax --- */
 	
 on_tick-mtn-hax-attempt:
 	if flag "mtn-serial-toot-done" is true
@@ -105,7 +103,10 @@ on_tick-mtn-hax-attempt-wrapup:
 	set flag "mtn-hax-attempted" to true
 	set map tickScript to "on_tick-mtn-xa_room"
 
-/* --- CUTSCENE: Bert secret --- */
+/* --- CUTSCENE Bert secret --- */
+
+watch-bert:
+	turn entity "%SELF%" toward entity "Bert"
 
 cutscene-bert-secret:
 	teleport entity "Bert" to geometry "bert-spot"
@@ -114,23 +115,26 @@ cutscene-bert-secret:
 		/* %PLAYER%, wait. */
 	set player control off
 	wait 100ms
-	turn entity "%PLAYER%" toward entity "Bert"
+	set entity "%PLAYER%" tickScript to "watch-bert"
 	wait 400ms
 	walk entity "Bert" along geometry "bert-spot" over 1200ms
-	wait 300ms
+	wait 100ms
+	turn entity "Bert" toward entity "%PLAYER%"
+	wait 200ms
 	show dialog "dialog-mtn-bertsecret2"
 		/* Bert? But how did you get in? ... */
 	set entity "Bert" tickScript to "spin_self_clockwise"
+	wait 400ms
 	show dialog "dialog-mtn-bertsecret3"
 		/* No. I can go no further. I could, once. ... */
 	set entity "Bert" tickScript to "null_script"
 	turn entity "Bert" toward entity "%PLAYER%"
 	show dialog "dialog-mtn-bertsecret4"
 		/* That book was not gone yesterday. ... */
-	turn entity "Bert" south
+	turn entity "Bert" east
 	show dialog "dialog-mtn-bertsecret5"
 		/* But perhaps he can still reach into our ... */
-	turn entity "Bert" east
+	turn entity "Bert" south
 	show dialog "dialog-mtn-bertsecret6"
 		/* I must go. There is something I must learn. ... */
 	set flag "saw-bert-secret" to true
@@ -138,6 +142,7 @@ cutscene-bert-secret:
 	walk entity "Bert" to geometry "entrance1-path" over 600ms
 	wait 80ms
 	teleport entity "Bert" to geometry "hiding-spot"
+	set entity "%PLAYER%" tickScript to "null_script"
 	set player control on
 
 /* --- Map on_load --- */

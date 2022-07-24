@@ -3592,7 +3592,6 @@
 				  null,
 				  null,
 				  null,
-				  null,
 				  "script"
 				]
 			  }
@@ -4140,7 +4139,7 @@
 			  [ "copy", "\"script-to-copy\"" ]
 			],
 			"SET_MAP_TICK_SCRIPT": [
-			  [ "set", "map", "tick", "script", "to", "\"script-map-tick\"" ]
+			  [ "set", "map", "tickScript", "to", "\"script-map-tick\"" ]
 			],
 			"SET_ENTITY_INTERACT_SCRIPT": [
 			  [ "set", "entity", "\"Entity Name\"", "interactScript", "to", "\"script-entity-interact\"" ]
@@ -4631,7 +4630,7 @@
 			[ "mutate", "\"variable-name-mul\"", "*", "\"another-variable-name\"" ],
 			[ "mutate", "\"variable-name-mod\"", "%", "\"another-variable-name\"" ],
 			[ "mutate", "\"variable-name-rng\"", "?", "\"another-variable-name\"" ],
-			[ "set", "map", "tick", "script", "to", "\"script-map-tick\"" ],
+			[ "set", "map", "tickScript", "to", "\"script-map-tick\"" ],
 			[ "set", "warp", "state", "to", "\"warp-state-string\"" ],
 			[ "set", "flag", "\"save-flag-to-set\"", "to", "true" ],
 			[ "set", "flag", "\"save-flag-to-set-NOT\"", "to", "false" ],

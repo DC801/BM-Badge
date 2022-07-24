@@ -73,7 +73,12 @@
 			"success_script": "on_tick-mtn-hax-attempt-check"
 		}
 	],
-	"leave-mtn-xa_room": [],
+	"leave-mtn-xa_room": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main"
+		}
+	],
 	"show_dialog-mtn-door-attempt": [
 		{
 			"action": "CHECK_SAVE_FLAG",
@@ -225,6 +230,13 @@
 			"script": "on_tick-mtn-xa_room"
 		}
 	],
+	"watch-bert": [
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "%SELF%",
+			"target_entity": "Bert"
+		}
+	],
 	"cutscene-bert-secret": [
 		{
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
@@ -249,9 +261,9 @@
 			"duration": 100
 		},
 		{
-			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "%PLAYER%",
-			"target_entity": "Bert"
+			"script": "watch-bert"
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
@@ -265,7 +277,16 @@
 		},
 		{
 			"action": "NON_BLOCKING_DELAY",
-			"duration": 300
+			"duration": 100
+		},
+		{
+			"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+			"entity": "Bert",
+			"target_entity": "%PLAYER%"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 200
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -275,6 +296,10 @@
 			"action": "SET_ENTITY_TICK_SCRIPT",
 			"entity": "Bert",
 			"script": "spin_self_clockwise"
+		},
+		{
+			"action": "NON_BLOCKING_DELAY",
+			"duration": 400
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -297,7 +322,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Bert",
-			"direction": "south"
+			"direction": "east"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -306,7 +331,7 @@
 		{
 			"action": "SET_ENTITY_DIRECTION",
 			"entity": "Bert",
-			"direction": "east"
+			"direction": "south"
 		},
 		{
 			"action": "SHOW_DIALOG",
@@ -335,6 +360,11 @@
 			"action": "TELEPORT_ENTITY_TO_GEOMETRY",
 			"entity": "Bert",
 			"geometry": "hiding-spot"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "null_script"
 		},
 		{
 			"action": "SET_PLAYER_CONTROL",
