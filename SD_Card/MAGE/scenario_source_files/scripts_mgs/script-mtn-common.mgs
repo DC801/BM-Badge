@@ -25,12 +25,18 @@ disable-hax:
 
 warp_to-mtn-xa_room:
 	copy "warping-out-fade-out"
+	show serial dialog "serial_dialog-beginning-spacer"
 	show serial dialog "serial_dialog-travel_to-xa_room"
+		/* Traveling to 'xa-room'! */
+	show serial dialog "serial_dialog-end-spacer"
 	load map "xa-room"
 
 warp_to-mtn-castle_entrance:
 	copy "warping-out-fade-out"
+	show serial dialog "serial_dialog-beginning-spacer"
 	show serial dialog "serial_dialog-travel_to-castle_entrance"
+		/* Traveling to 'castle-door'! */
+	show serial dialog "serial_dialog-end-spacer"
 	load map "castle-door"
 
 spin-quickly:

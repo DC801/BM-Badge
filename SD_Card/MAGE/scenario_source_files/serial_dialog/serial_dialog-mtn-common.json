@@ -1,16 +1,24 @@
 {
-	"serial_dialog-travel_to-xa_room": {
+	"serial_dialog-beginning-spacer": {
+		"messages": [
+			" "
+		]
+	},
+	"serial_dialog-end-spacer": {
 		"messages": [
 			" ",
-			"Traveling to 'xa-room'!",
+			"---",
 			" "
+		]
+	},
+	"serial_dialog-travel_to-xa_room": {
+		"messages": [
+			"Traveling to 'xa-room'!"
 		]
 	},
 	"serial_dialog-travel_to-castle_entrance": {
 		"messages": [
-			" ",
-			"Traveling to 'castle-door'!",
-			" "
+			"Traveling to 'castle-door'!"
 		]
 	}
 }

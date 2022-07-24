@@ -43,7 +43,7 @@ patternParse = {
 		// skipping over white space
 		pos = patternParse.eatWS(inputString, pos);
 		// finding literally everything except the next */
-		var matches = inputString.substring(pos).match(/^(.*?)\*\//);
+		var matches = inputString.substring(pos).match(/^(.*)\*\//);
 		// TODO: PROBLEM: a pair of double quotes breaks this match!!
 		if (matches[0].length > 0) {
 			pos += matches[0].length;
@@ -52,17 +52,19 @@ patternParse = {
 		}
 		// COMMENT LABEL DETECTION
 		var commentString = matches[1].trim();
+		var commentResult = {
+			startPosition: startPos,
+			newPosition: pos,
+			// used only for debugging
+			matchedText: inputString.substring(startPos, pos),
+			charCoords: findLineAndCharNumbers(inputString, startPos),
+			type: 'comment-unlabeled',
+			value: commentString,
+		};
 		// finding some small chunk of a "modest" string
 		commentLabelObject = patternParse.miniString(commentString, 0);
 		if (commentLabelObject) {
 			var labelPos = commentLabelObject.newPosition;
-			var commentResult = {
-				startPosition: startPos,
-				newPosition: pos,
-				// used only for debugging
-				matchedText: inputString.substring(startPos, pos),
-				charCoords: findLineAndCharNumbers(inputString, startPos),
-			};
 			if (commentString.substring(labelPos).match(/^:/)) {
 				cutPos = labelPos + 1;
 				commentResult.type = 'comment';
@@ -70,14 +72,9 @@ patternParse = {
 					commentLabel: commentString.substring(0,labelPos),
 					commentBody: commentString.substring(cutPos).trim(),
 				};
-			} else {
-				commentResult.type = 'comment-unlabeled';
-				commentResult.value = commentString;
 			}
-			return commentResult;
-		} else {
-			return false;
 		}
+		return commentResult;
 	},
 	scriptName: function (inputString, pos) {
 		pos = pos || 0;
@@ -111,7 +108,7 @@ patternParse = {
 		var startPos = pos;
 		pos = patternParse.eatWS(inputString, pos);
 		var resultArray = inputString.substring(pos)
-			.match(/^[-A-Za-z_<>/?%\*+=#!0-9]+/);
+			.match(/^[^'"\s:]+/);
 		if (resultArray) {
 			return {
 				startPosition: startPos,

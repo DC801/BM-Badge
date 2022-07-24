@@ -73,7 +73,7 @@
 	],
 	"dialog-mtn-bertsecret1": [
 		{
-			"alignment": "BOTTOM_LEFT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"%PLAYER%, wait."
@@ -89,7 +89,7 @@
 			]
 		},
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"I remembered back door. But...."
@@ -98,7 +98,7 @@
 	],
 	"dialog-mtn-bertsecret3": [
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"No. I can go no further. I could, once.\nPerhaps."
@@ -107,7 +107,7 @@
 	],
 	"dialog-mtn-bertsecret4": [
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"%PLAYER%, I must not stay long. But I\nmust tell you this. Is important.",
@@ -124,7 +124,7 @@
 			]
 		},
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"Yes. I am sure of it.",
@@ -139,7 +139,7 @@
 			]
 		},
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"No. We would know. Big Bad would not hide."
@@ -148,7 +148,7 @@
 	],
 	"dialog-mtn-bertsecret5": [
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"But perhaps he can still reach into our\nvillage. Small hacks. Subtle things.",
@@ -167,7 +167,7 @@
 	],
 	"dialog-mtn-bertsecret6": [
 		{
-			"alignment": "TOP_RIGHT",
+			"alignment": "BOTTOM_RIGHT",
 			"entity": "Bert",
 			"messages": [
 				"I must go. There is something I must\nlearn. Quickly. But I will return.",
