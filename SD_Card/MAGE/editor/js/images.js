@@ -97,9 +97,9 @@ var handleImage = function (tileset, scenarioData, fileNameMap) {
 	var file = fileNameMap[imageFileName.split('/').pop()];
 	var result = Promise.resolve(file);
 	if (file.scenarioIndex === undefined) {
-		if (URL.createObjectURL) {
-			// node doesn't have a createObjectURL, and we need this for
-			// UI components to display these images
+		if (window.Navigator) {
+			// node < 16.7 doesn't have a createObjectURL, and in > 16.7 it's broken
+			// we need this for UI components to display these images, but not in CLI
 			file.blobUrl = URL.createObjectURL(file);
 		}
 		var mimeTypeSuffix = file.type.split('/').pop();
