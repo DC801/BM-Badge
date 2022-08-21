@@ -90,11 +90,7 @@ endif
 $(TARGET).out: $(APP_OBJS) $(TEST_OBJS) $(SDK_TARGET)
 	@echo "[ LD ] $(notdir $@)"
 
-ifeq ($(OS),Windows_NT)
-	@if not exist $(subst /,\,$(@D)) $(MKDIR) $(subst /,\,$(@D))
-else
 	@$(MKDIR) $(@D)
-endif
 
 	@$(CC) $(LDFLAGS) -Wl,-Map=$(@:.out=.map) -o "$@" $^ $(LD_LIBRARIES) $(SDK_TARGET)
 
