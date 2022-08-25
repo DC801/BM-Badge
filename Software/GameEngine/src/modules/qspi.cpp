@@ -10,7 +10,7 @@
 
 #ifdef DC801_EMBEDDED
 
-#include "common.h"
+
 #include "qspi.h"
 
 /**

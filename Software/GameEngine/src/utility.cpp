@@ -12,6 +12,14 @@
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
+#include <SDL.h>
+
+#ifdef DC801_EMBEDDED
+
+#else
+#include "sdk_shim.h"
+#endif
+
 
 #define EE_R1 3900
 #define EE_R2 10000
@@ -20,7 +28,9 @@
 #define EE_TOTR (EE_R1 + EE_R2 + EE_R3 + EE_R4)
 #define EE_VOLT(X) (getVccMillivolts() * (X) / EE_TOTR)
 
-APP_PWM_INSTANCE(PWM1,1);
+APP_TIMER_DEF(sysTickID);
+
+APP_PWM_INSTANCE(PWM1, 1);
 APP_TIMER_DEF(morseID);
 volatile static uint32_t systick = 0;
 bool morse_running = false;
@@ -136,6 +146,12 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
 }
 #endif
 
+#if defined(GCC)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
 #ifdef DC801_DESKTOP
 /**
  * Get a list of files on a path
@@ -144,11 +160,9 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
  * @param fileMax
  * @return
  */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
+uint8_t getFiles(char files[][9], const char* path, uint8_t fileMax)
 {
+	#ifndef WIN32
 	FRESULT ff_result;
 	DIR *dir;
 	FILINFO *fno;
@@ -179,7 +193,13 @@ uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax)
 	f_closedir(dir);
 
 	return counter;
+#else
+	return 0;
+#endif
 }
+#endif
+
+#if defined(GCC)
 #pragma GCC diagnostic pop
 #endif
 
@@ -226,7 +246,9 @@ uint16_t crc16(uint16_t crcValue, uint8_t newByte, const uint16_t POLYNOM){
 	return crcValue;
 }
 
+#ifndef OVERFLOW
 #define OVERFLOW ((uint32_t)(0xFFFFFFFF/32.768))
+#endif
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 {

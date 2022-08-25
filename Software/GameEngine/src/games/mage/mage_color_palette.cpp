@@ -4,7 +4,7 @@
 #include "EnginePanic.h"
 #include "FrameBuffer.h"
 
-extern FrameBuffer *mage_canvas;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
 
 MageColorPalette::MageColorPalette(uint32_t address)
 {

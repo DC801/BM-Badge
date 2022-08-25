@@ -1,11 +1,4 @@
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "shim_err.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "sdk_shim.h"
 
 bool st7735_is_busy()
 {
@@ -51,6 +44,3 @@ nrfx_err_t st7735_push_colors_fast(uint8_t *p_colors, int32_t size)
     return NRFX_SUCCESS;
 }
 
-#ifdef __cplusplus
-}
-#endif

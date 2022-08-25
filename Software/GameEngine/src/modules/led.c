@@ -41,12 +41,10 @@
  * flashing progress. For an error we illuminate all LEDs red, and if
  * the firmware update succeeds we set them all green.
  */
-#include "common.h"
+
 #include "led.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 uint8_t led_states[LED_COUNT] = { 0 };
 
@@ -141,8 +139,9 @@ void ledRegGet (uint8_t reg){
 
     txbuf = reg;
 
-    i2cMasterTransmit(ISSI_I2C_ADDR, &txbuf, 1);
-
+#ifdef DC801_EMBEDDED
+	i2cMasterTransmit(ISSI_I2C_ADDR, &txbuf, 1);
+#endif
 }
 
 void ledRegSet (uint8_t reg, uint8_t val){
@@ -151,9 +150,11 @@ void ledRegSet (uint8_t reg, uint8_t val){
     txbuf[0] = reg;
     txbuf[1] = val;
 
-    i2cMasterTransmit(ISSI_I2C_ADDR, txbuf, 2);
-
-    return;
+#ifdef DC801_EMBEDDED
+	i2cMasterTransmit(ISSI_I2C_ADDR, txbuf, 2);
+#endif 
+	
+	return;
 }
 
 void ledSet (uint8_t index, uint8_t intensity){
@@ -230,6 +231,4 @@ void ledPwm(LEDID id, uint8_t val) {
     ledSet(id, val);
 }
 
-#ifdef __cplusplus
-}
-#endif
+

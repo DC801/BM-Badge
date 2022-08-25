@@ -15,8 +15,12 @@
 #include "sdk_shim.h"
 #endif
 
-#include "common.h"
+
 #include "ble.h"
+#include <string.h>
+
+
+#define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
 
 /**
  * Group info

@@ -1,7 +1,7 @@
 #ifndef ENGINE_PANIC_H_
 #define ENGINE_PANIC_H_
 
-#include <stdarg.h>
+#include <cstdarg>
 
 // Capture File Number, Line Number, and Message.
 //   Message should be at most 39 columns by 10 lines
@@ -23,14 +23,10 @@
 //   Anything beyond 400 characters will be truncated
 #define ENGINE_PANIC(...) EnginePanic(__FILE__, __LINE__, __VA_ARGS__)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-void EnginePanic(const char *filename, int lineno, const char *format, ...) __attribute__((noreturn));
 
-#ifdef __cplusplus
-}
-#endif
+	[[noreturn]] void EnginePanic(const char* filename, int lineno, const char* format, ...);
+
+
 
 #endif

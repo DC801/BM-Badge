@@ -1,7 +1,7 @@
 // System headers
 #ifdef DC801_EMBEDDED
 
-#include "common.h"
+
 #include "drv_ili9341.h"
 
 //size of chunk to transfer each interrupt

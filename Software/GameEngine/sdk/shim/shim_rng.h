@@ -1,9 +1,13 @@
 #ifndef SHIM_RNG_H
 #define SHIM_RNG_H
 
+#include <stdint.h>
+#include "sdk_shim.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+	
 
 typedef struct
 {

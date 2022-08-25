@@ -3,10 +3,9 @@
 
 #include <iostream>
 #include <mutex>
+#include <SDL.h>
 
 #ifdef DC801_DESKTOP
-
-#include <SDL.h>
 
 AudioPlayer audio;
 

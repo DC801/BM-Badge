@@ -1,5 +1,6 @@
-#include "common.h"
+
 #include "keyboard.h"
+#include <stdint.h>
 
 volatile uint32_t keyboard_mask = 0;
 keyboard_evt_handler_t keyboard_evt_handler = NULL;
@@ -44,7 +45,9 @@ uint32_t get_keyboard_mask(void)
 {
 	//need to wait at least KEYBOARD_DEBOUNCE_TIME ms before we try to update again:
 	uint32_t state = 0x0;
-	i2cMasterRead(KEYBOARD_ADDRESS, (uint8_t *)&state, sizeof(uint32_t));
+#ifdef DC801_EMBEDDED
+	i2cMasterRead(KEYBOARD_ADDRESS, (uint8_t*)&state, sizeof(uint32_t));
+#endif
 	return state;
 }
 

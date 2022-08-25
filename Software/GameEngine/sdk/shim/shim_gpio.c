@@ -1,6 +1,5 @@
-#include <assert.h>
-
-#include "sdk_shim.h"
+#include <cassert>
+#include "shim_gpio.h"
 
 #define MAX_PIN_COUNT 48
 

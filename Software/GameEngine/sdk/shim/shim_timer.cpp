@@ -1,21 +1,21 @@
-#include "sdk_shim.h"
 
 #include <atomic>
 #include <chrono>
+#include <cstdlib>
+#include <iostream>
 #include <list>
 #include <mutex>
 #include <thread>
 
-#include <csignal>
-#include <cstdio>
-#include <cstdlib>
-
-#include <iostream>
-#include <SDL_timer.h>
+// #include <csignal>
+// #include <cstdio>
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
 #endif
+
+#include "shim_timer.h"
+#include "sdk_shim.h"
 
 // TODO: Implement this shit
 
@@ -175,7 +175,7 @@ extern "C"
 
 	uint32_t app_timer_cnt_get(void)
 	{
-		return SDL_GetTicks();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 	}
 
 	void nrf_delay_us(uint32_t time_us)

@@ -1,5 +1,10 @@
+
+#include <SDL.h>
+#include <SDL_image.h>
+
 #include "EngineWindowFrame.h"
 #include "EnginePanic.h"
+
 #define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 
 SDL_Window *window = nullptr;

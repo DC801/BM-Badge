@@ -1,6 +1,9 @@
 #ifndef SHIM_ERR_H
 #define SHIM_ERR_H
 
+
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

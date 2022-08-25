@@ -1,9 +1,9 @@
 #include "mage_hex.h"
 
-extern FrameBuffer *mage_canvas;
-extern MageGameControl *MageGame;
-extern MageDialogControl *MageDialog;
-extern MageEntity *hackableDataAddress;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
+extern std::unique_ptr<MageGameControl> MageGame;
+extern std::unique_ptr<MageDialogControl> MageDialog;
+extern std::unique_ptr<MageEntity> hackableDataAddress;
 
 uint32_t MageHexEditor::size() const
 {
@@ -82,7 +82,7 @@ void MageHexEditor::setPageToCursorLocation() {
 
 void MageHexEditor::updateHexLights()
 {
-	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress) + hexCursorLocation);
+	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
 	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
 	uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
@@ -143,7 +143,7 @@ void MageHexEditor::applyHexModeInputs()
 	) {
 		return;
 	}
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
 	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
@@ -343,7 +343,7 @@ void MageHexEditor::renderHexHeader()
 	char headerString[128];
 	char clipboardPreview[24];
 	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
-	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress + hexCursorLocation;
+	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress.get() + hexCursorLocation;
 	uint8_t u1Value = *currentByteAddress;
 	uint16_t u2Value = *(uint16_t *) ((currentByteAddress - (hexCursorLocation % 2)));
 	sprintf(
@@ -365,7 +365,7 @@ void MageHexEditor::renderHexHeader()
 	);
 	memcpy(
 		stringPreview,
-		(uint8_t *) hackableDataAddress + hexCursorLocation,
+		(uint8_t *) hackableDataAddress.get() + hexCursorLocation,
 		MAGE_ENTITY_NAME_LENGTH
 	);
 	uint16_t stringPreviewLength = getRenderableStringLength(
@@ -457,7 +457,7 @@ void MageHexEditor::renderHexEditor()
 	)
 	{
 		getHexStringForByte(
-			*(((uint8_t *) hackableDataAddress) + (i + (currentMemPage * bytesPerPage))),
+			*(((uint8_t *) hackableDataAddress.get()) + (i + (currentMemPage * bytesPerPage))),
 			currentByteString
 		);
 
@@ -487,7 +487,7 @@ void MageHexEditor::renderHexEditor()
 
 void MageHexEditor::runHex(uint8_t value)
 {
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress) + hexCursorLocation);
+	uint8_t *currentByte = (((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
 		case HEX_OPS_XOR: changedValue ^= value; break;

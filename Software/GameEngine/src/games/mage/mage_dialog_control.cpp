@@ -3,10 +3,10 @@
 #include <utility>
 #include "mage_portrait.h"
 #include "mage_script_actions.h"
-extern FrameBuffer *mage_canvas;
-extern MageGameControl *MageGame;
-extern MageScriptControl *MageScript;
-extern MageHexEditor *MageHex;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
+extern std::unique_ptr<MageGameControl> MageGame;
+extern std::unique_ptr<MageScriptControl> MageScript;
+extern std::unique_ptr<MageHexEditor> MageHex;
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT

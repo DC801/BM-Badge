@@ -9,12 +9,13 @@
 #ifndef DC801_BLE_H_
 #define DC801_BLE_H_
 
-#include "common.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <stdint.h>
+	
 #define DATA_SAVE_LEN 16
 
 typedef struct{

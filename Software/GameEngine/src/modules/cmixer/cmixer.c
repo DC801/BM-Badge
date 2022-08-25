@@ -20,9 +20,9 @@
 ** IN THE SOFTWARE.
 **/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 
 #include "cmixer.h"
 
@@ -238,7 +238,7 @@ void cm_process(cm_Int16 *dst, int len) {
 
 
 cm_Source* cm_new_source(const cm_SourceInfo *info) {
-  cm_Source *src = calloc(1, sizeof(*src));
+	cm_Source* src = (cm_Source * )calloc(1, sizeof(*src));
   if (!src) {
     error("allocation failed");
     return NULL;
@@ -256,20 +256,20 @@ cm_Source* cm_new_source(const cm_SourceInfo *info) {
 }
 
 
-static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsdata);
+static const char* wav_init(cm_SourceInfo *info, char *data, int len, int ownsdata);
 
 #ifdef CM_USE_STB_VORBIS
-static const char* ogg_init(cm_SourceInfo *info, void *data, int len, int ownsdata);
+static const char* ogg_init(cm_SourceInfo *info, char* data, int len, int ownsdata);
 #endif
 
 
-static int check_header(void *data, int size, char *str, int offset) {
+static int check_header(char* data, int size, const char *str, int offset) {
   int len = strlen(str);
   return (size >= offset + len) && !memcmp((char*) data + offset, str, len);
 }
 
 
-static cm_Source* new_source_from_mem(void *data, int size, int ownsdata) {
+static cm_Source* new_source_from_mem(char *data, int size, int ownsdata) {
   const char *err;
   cm_SourceInfo info;
 
@@ -296,9 +296,9 @@ static cm_Source* new_source_from_mem(void *data, int size, int ownsdata) {
 }
 
 #ifdef DC801_DESKTOP
-static void* load_file(const char *filename, int *size) {
+static char* load_file(const char *filename, int *size) {
   FILE *fp;
-  void *data;
+  char* data;
   int n;
 
   fp = fopen(filename, "rb");
@@ -312,7 +312,7 @@ static void* load_file(const char *filename, int *size) {
   rewind(fp);
 
   /* Malloc, read and return data */
-  data = malloc(*size);
+  data = (char*)malloc(*size);
   if (!data) {
     fclose(fp);
     return NULL;
@@ -331,12 +331,12 @@ static void* load_file(const char *filename, int *size) {
 #ifdef DC801_EMBEDDED
 #undef MIN
 #undef MAX
-#include "common.h"
+
 
 static void* load_file(const char *filename, int *size)
 {
 	FIL fp;
-	void *data;
+	char* data;
 	unsigned int n = 0;
 
 	/* Get size */
@@ -375,7 +375,7 @@ static void* load_file(const char *filename, int *size)
 cm_Source* cm_new_source_from_file(const char *filename) {
   int size;
   cm_Source *src;
-  void *data;
+  char* data;
 
   /* Load file into memory */
   data = load_file(filename, &size);
@@ -395,7 +395,7 @@ cm_Source* cm_new_source_from_file(const char *filename) {
 }
 
 
-cm_Source* cm_new_source_from_mem(void *data, int size) {
+cm_Source* cm_new_source_from_mem(char* data, int size) {
   return new_source_from_mem(data, size, 0);
 }
 
@@ -501,7 +501,7 @@ void cm_stop(cm_Source *src) {
 **============================================================================*/
 
 typedef struct {
-  void *data;
+  char* data;
   int bitdepth;
   int samplerate;
   int channels;
@@ -510,12 +510,12 @@ typedef struct {
 
 typedef struct {
   Wav wav;
-  void *data;
+  char* data;
   int idx;
 } WavStream;
 
 
-static char* find_subchunk(char *data, int len, char *id, int *size) {
+static char* find_subchunk(char *data, int len, const char *id, int *size) {
   /* TODO : Error handling on malformed wav file */
   int idlen = strlen(id);
   char *p = data + 12;
@@ -530,7 +530,7 @@ next:
 }
 
 
-static const char* read_wav(Wav *w, void *data, int len) {
+static const char* read_wav(Wav *w, char *data, int len) {
   int bitdepth, channels, samplerate, format;
   int sz;
   char *p = data;
@@ -541,7 +541,7 @@ static const char* read_wav(Wav *w, void *data, int len) {
     return error("bad wav header");
   }
   /* Find fmt subchunk */
-  p = find_subchunk(data, len, "fmt", &sz);
+  p = find_subchunk(p, len, "fmt", &sz);
   if (!p) {
     return error("no fmt subchunk");
   }
@@ -565,7 +565,7 @@ static const char* read_wav(Wav *w, void *data, int len) {
   }
 
   /* Init struct */
-  w->data = (void*) p;
+  w->data = p;
   w->samplerate = samplerate;
   w->channels = channels;
   w->length = (sz / (bitdepth / 8)) / channels;
@@ -585,7 +585,7 @@ static const char* read_wav(Wav *w, void *data, int len) {
 static void wav_handler(cm_Event *e) {
   int x, n;
   cm_Int16 *dst;
-  WavStream *s = e->udata;
+  WavStream* s = (WavStream * )e->udata;
   int len;
 
   switch (e->type) {
@@ -636,7 +636,7 @@ fill:
 }
 
 
-static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsdata) {
+static const char* wav_init(cm_SourceInfo *info, char *data, int len, int ownsdata) {
   WavStream *stream;
   Wav wav;
 
@@ -649,7 +649,7 @@ static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsda
     return error("unsupported wav format");
   }
 
-  stream = calloc(1, sizeof(*stream));
+  stream = (WavStream*)calloc(1, sizeof(*stream));
   if (!stream) {
     return error("allocation failed");
   }
@@ -681,7 +681,7 @@ static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsda
 
 typedef struct {
   stb_vorbis *ogg;
-  void *data;
+  char* data;
 } OggStream;
 
 
@@ -721,7 +721,7 @@ fill:
 }
 
 
-static const char* ogg_init(cm_SourceInfo *info, void *data, int len, int ownsdata) {
+static const char* ogg_init(cm_SourceInfo *info, char* data, int len, int ownsdata) {
   OggStream *stream;
   stb_vorbis *ogg;
   stb_vorbis_info ogginfo;

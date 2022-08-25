@@ -2,7 +2,7 @@
 #include "FrameBuffer.h"
 #include "EngineROM.h"
 
-extern FrameBuffer *mage_canvas;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
 
 MageGeometry::MageGeometry(uint32_t address)
 {

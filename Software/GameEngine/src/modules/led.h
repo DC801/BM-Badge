@@ -30,7 +30,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "common.h"
+
 
 #ifndef DC801_EMBEDDED
 #include "i2c.h"
@@ -87,6 +87,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <stdint.h>
 
 typedef enum {
         LED_XOR = 0,

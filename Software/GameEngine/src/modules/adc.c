@@ -4,8 +4,10 @@
 // Determine battery level
 //
 
-#include "common.h"
+
 #include "adc.h"
+#include "shim_timer.h"
+#include "shim_adc.h"
 
 #define BATTERY_LEVEL_MEAS_INTERVAL     APP_TIMER_TICKS(1500)                 /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
 #define ADC_REF_VOLTAGE_IN_MILLIVOLTS   600                                   /**< Reference voltage (in milli volts) used by ADC while doing conversion. */

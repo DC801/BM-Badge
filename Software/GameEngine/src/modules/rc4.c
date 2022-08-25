@@ -3,7 +3,7 @@
     implementation of the RC4 algo
 */
 
-#include "common.h"
+#include <shim_filesystem.h>
 
 #define N 256   // 2^8
 

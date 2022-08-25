@@ -3,9 +3,7 @@
 #include "common.h"
 #include "modules/keyboard.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef struct {
 	bool mem0;
@@ -47,8 +45,6 @@ bool EngineIsRunning();
 bool EngineShouldReloadGameDat();
 void EngineTriggerRomReload();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

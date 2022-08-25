@@ -30,6 +30,8 @@ _build/
 .dep/
 .project
 .settings/
+.vscode/
+build/
 .idea/
 *.tiled-session
 *.code-workspace

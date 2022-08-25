@@ -1,3 +1,5 @@
+#include <SDL.h>
+
 #include "mage.h"
 
 #include "common.h"
@@ -24,7 +26,7 @@ std::unique_ptr<MageDialogControl> MageDialog;
 std::unique_ptr<MageScriptControl> MageScript;
 std::unique_ptr<MageCommandControl> MageCommand;
 MageEntity *hackableDataAddress;
-FrameBuffer *mage_canvas;
+std::unique_ptr<FrameBuffer> mage_canvas;
 
 bool engineIsInitialized;
 
@@ -403,7 +405,7 @@ void EngineInit () {
 void MAGE()
 {
 	//initialize the canvas object for the screen buffer.
-	mage_canvas = p_canvas();
+	mage_canvas = std::unique_ptr<FrameBuffer>{ &canvas };
 
 	//main game loop:
 	#ifdef EMSCRIPTEN

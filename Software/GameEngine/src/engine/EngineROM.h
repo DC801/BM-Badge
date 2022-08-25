@@ -1,6 +1,8 @@
 #ifndef ENGINE_ROM_H_
 #define ENGINE_ROM_H_
 
+#include <stdint.h>
+
 //size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
 
@@ -76,7 +78,7 @@ bool EngineROM_Write(
 );
 uint32_t EngineROM_Verify(
 	uint32_t address,
-	uint32_t length,
+	const uint32_t length,
 	const uint8_t *data,
 	bool throwErrorWithLog
 );
@@ -92,10 +94,14 @@ void EngineROM_WriteSaveSlot(
 	size_t length,
 	uint8_t *hauntedDataPointer
 );
+
+#ifdef DC801_EMBEDDED
+
 bool EngineROM_SD_Copy(
 	uint32_t gameDatFilesize,
 	FIL gameDat,
 	bool eraseWholeRomChip
 );
+#endif
 
 #endif

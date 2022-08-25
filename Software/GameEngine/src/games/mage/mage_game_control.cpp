@@ -7,13 +7,14 @@
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
+#include <array>
 
-extern MageHexEditor *MageHex;
-extern MageDialogControl *MageDialog;
-extern MageScriptControl *MageScript;
-extern MageCommandControl *MageCommand;
+extern std::unique_ptr<MageHexEditor> MageHex;
+extern std::unique_ptr<MageDialogControl> MageDialog;
+extern std::unique_ptr<MageScriptControl> MageScript;
+extern std::unique_ptr<MageCommandControl> MageCommand;
 
-extern FrameBuffer *mage_canvas;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
 
 
 // Initializer list, default construct values
@@ -1579,8 +1580,7 @@ void MageGameControl::UpdateEntities(uint32_t deltaTime)
 }
 
 void MageGameControl::computeEntityYAxisSort(
-	uint8_t *entitySortOrder,
-	uint8_t filteredEntityCountOnThisMap
+	uint8_t *entitySortOrder
 ) {
 	//init index array:
 	for(uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
@@ -1611,8 +1611,8 @@ void MageGameControl::DrawEntities()
 	int32_t cameraX = adjustedCameraPosition.x;
 	int32_t cameraY = adjustedCameraPosition.y;
 	//first sort entities by their y values:
-	uint8_t entitySortOrder[filteredEntityCountOnThisMap];
-	computeEntityYAxisSort(entitySortOrder, filteredEntityCountOnThisMap);
+	uint8_t* entitySortOrder{new uint8_t[filteredEntityCountOnThisMap]{} };
+	computeEntityYAxisSort(entitySortOrder);
 
 	uint8_t filteredPlayerEntityIndex = getFilteredEntityId(playerEntityIndex);
 

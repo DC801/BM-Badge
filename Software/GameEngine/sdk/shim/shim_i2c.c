@@ -1,8 +1,6 @@
 //
 // Created by hamster on 5/23/19.
 //
-
-#include "common.h"
 #include "shim_i2c.h"
 
 #ifdef DC801_EMBEDDED

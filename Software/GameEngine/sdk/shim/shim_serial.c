@@ -1,5 +1,5 @@
 #include <string.h>
-
+#include "shim_serial.h"
 #include "sdk_shim.h"
 
 #define BUFFER_SIZE 255

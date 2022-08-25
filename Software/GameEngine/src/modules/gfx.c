@@ -28,11 +28,11 @@
  *****************************************************************************/
 
 // System headers
-#include <ctype.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#include <cctype>
+#include <cstdlib>
 #include <string.h>
-#include <common.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 #ifdef DC801_EMBEDDED
 
@@ -59,9 +59,7 @@
 #include "../fonts/practical8pt7b.h"
 #include "../fonts/SFAlienEncounters5pt7b.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define PIXEL_BUFFER_COUNT	320
 
@@ -846,6 +844,4 @@ void util_gfx_set_wrap(bool wrap) {
 	m_wrap = wrap;
 }
 
-#ifdef __cplusplus
-}
-#endif
+

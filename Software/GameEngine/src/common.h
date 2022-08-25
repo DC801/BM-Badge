@@ -13,14 +13,15 @@
 #define SYSTEM_H_
 
 // System headers
-#include <ctype.h>
-#include <math.h>
-#include <stdbool.h>
+// #include <ctype.h>
+// #include <math.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
+// #include <cstdio>
+// #include <cstdlib>
+// #include <string.h>
+
+// Standard C++ headers
+#include <ctime>
 
 #define PI 3.141592653589793
 #define TAU 6.283185307179586
@@ -33,9 +34,7 @@ typedef struct {
 #include "config/custom_board.h"
 
 #ifdef DC801_EMBEDDED
-	#ifdef __cplusplus
-extern "C" {
-#endif
+	
 	#include "config/sdk_config.h"
 
 	//this will fix nordik syntax highlighting in vscode when using compiledb and compiling for embedded:
@@ -95,15 +94,14 @@ extern "C" {
 	#include "nrf_log_default_backends.h"
 	#include "modules/usb.h"
 
-#ifdef __cplusplus
-}
-#endif
+
 #endif
 
 #ifdef DC801_DESKTOP
-	#include <fcntl.h>
-	#include "sdk_shim.h"
-	#include <SDL.h>
+#ifndef WIN32
+#include <fcntl.h>
+#endif
+#include "sdk_shim.h"
 
 	#define NRF_LOG_RAW_INFO printf
 	#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
@@ -112,9 +110,6 @@ extern "C" {
 #ifdef DC801_EMBEDDED
 	#define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
 #endif
-
-#define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
-
 
 // Includes for our app
 #include "main.h"
@@ -129,19 +124,19 @@ extern "C" {
 #include "modules/keyboard.h"
 #include "adafruit/gfxfont.h"
 
-#include "EngineInput.h"
-#include "EngineSerial.h"
-#include "EngineROM.h"
+#include "engine/EngineInput.h"
+#include "engine/EngineSerial.h"
+#include "engine/EngineROM.h"
 #include "engine/convert_endian.h"
 
 #define PROGMEM
 
-#include "../fonts/computerfont12pt7b.h"
-#include "../fonts/monof55.h"
-#include "../fonts/gameplay.h"
-#include "../fonts/veramono5pt7b.h"
-#include "../fonts/TomThumb.h"
-#include "../fonts/practical8pt7b.h"
-#include "../fonts/SFAlienEncounters5pt7b.h"
+#include "fonts/computerfont12pt7b.h"
+#include "fonts/monof55.h"
+#include "fonts/gameplay.h"
+#include "fonts/veramono5pt7b.h"
+#include "fonts/TomThumb.h"
+#include "fonts/practical8pt7b.h"
+#include "fonts/SFAlienEncounters5pt7b.h"
 
 #endif /* SYSTEM_H_ */

@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 void adc_configure(void);
 void adc_start(void);
 

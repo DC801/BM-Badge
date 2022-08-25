@@ -1,6 +1,9 @@
 #ifndef SHIM_ADC_H
 #define SHIM_ADC_H
 
+#include <stdint.h>
+#include "sdk_shim.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -158,6 +161,8 @@ typedef struct
     uint8_t                interrupt_priority; ///< Interrupt priority.
     bool                   low_power_mode;     ///< Indicates if low power mode is active.
 } nrf_drv_saadc_config_t;
+
+typedef uint32_t ret_code_t;
 
 typedef void (* nrf_drv_saadc_event_handler_t)(nrf_drv_saadc_evt_t const * p_event);
 

@@ -1,7 +1,7 @@
 #ifndef SHIM_TIMER_H
 #define SHIM_TIMER_H
 
-#include "shim_err.h"
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -90,8 +90,9 @@ typedef struct
 } nrf_drv_timer_t;
 
 
-extern NRF_TIMER_Type *NRF_TIMER1;
+extern NRF_TIMER_Type* NRF_TIMER1;
 
+typedef uint32_t ret_code_t;
 ret_code_t app_timer_init(void);
 ret_code_t app_timer_create(app_timer_id_t const *p_timer_id, app_timer_mode_t mode, app_timer_timeout_handler_t timeout_handler);
 ret_code_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *p_context);

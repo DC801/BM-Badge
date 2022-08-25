@@ -4,7 +4,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+	
+#include <stdint.h>
 #define KEYBOARD_DEBOUNCE_TIME 15
 
 // 27 keys

@@ -18,9 +18,7 @@
 #include "sdk_shim.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define BUTTON_PRESSED 	0
 #define BUTTON_RELEASED 1
@@ -59,7 +57,6 @@ void getString(GFXfont font, char *string, uint8_t chars, bool showScroll);
 void setLevelLEDs(LEVEL level);
 void setPowerUpLEDs(POWERUP powerUp);
 
-APP_TIMER_DEF(sysTickID);
 void sysTickStart(void);
 void sysTickHandler(void * p_context);
 uint32_t getSystick(void);
@@ -87,8 +84,6 @@ void util_gfx_init(void);
 
 void check_ram_usage(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* UTILITY_H_ */

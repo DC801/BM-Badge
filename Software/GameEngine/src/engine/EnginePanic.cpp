@@ -5,7 +5,7 @@
 #include "EnginePanic.h"
 
 #include "FrameBuffer.h"
-#include "../../../fonts/Monaco9.h"
+#include "fonts/Monaco9.h"
 
 #ifdef DC801_EMBEDDED
 #include "nrf52840.h"

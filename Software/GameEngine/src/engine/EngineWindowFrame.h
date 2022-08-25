@@ -3,8 +3,6 @@
 #include "FrameBuffer.h"
 #include "EngineInput.h"
 #include "modules/keyboard.h"
-#include <SDL.h>
-#include <SDL_image.h>
 
 void EngineWindowFrameInit();
 

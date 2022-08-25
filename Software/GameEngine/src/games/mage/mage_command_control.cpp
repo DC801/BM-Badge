@@ -4,8 +4,8 @@
 #include "EngineSerial.h"
 #include <vector>
 
-extern MageGameControl *MageGame;
-extern MageScriptControl *MageScript;
+extern std::unique_ptr<MageGameControl> MageGame;
+extern std::unique_ptr<MageScriptControl> MageScript;
 
 void badAsciiLowerCase(std::string *data) {
 	size_t length = data->size();

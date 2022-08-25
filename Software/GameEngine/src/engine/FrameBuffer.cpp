@@ -1,3 +1,7 @@
+#ifdef DC801_DESKTOP
+#include <SDL.h>
+#endif
+
 #include "main.h"
 #include "utility.h"
 #include "FrameBuffer.h"
@@ -8,10 +12,11 @@
 
 #include "adafruit/gfxfont.h"
 
+#include <algorithm>
+
 #ifdef DC801_DESKTOP
 	#include "shim_timer.h"
 	#include "EngineWindowFrame.h"
-	#include <SDL.h>
 #endif
 
 #ifndef min
@@ -35,12 +40,6 @@ static volatile bool m_stop = false;
 uint16_t frame[FRAMEBUFFER_SIZE];
 FrameBuffer canvas;
 
-extern "C" {
-	FrameBuffer *p_canvas()
-	{
-		return &canvas;
-	}
-}
 
 FrameBuffer::FrameBuffer() {
 	fadeFraction = 0.0f;
@@ -88,7 +87,7 @@ void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color) {
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
+void FrameBuffer::drawImage(int x, int y, int w, int h,  const uint16_t *data)
 {
 	int idx = 0;
 
@@ -102,7 +101,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data)
 
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, uint16_t transparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h,  const uint16_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
@@ -120,7 +119,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, ui
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
+void FrameBuffer::drawImage(int x, int y, int w, int h,  const uint8_t *data)
 {
 	int idx = 0;
 
@@ -136,7 +135,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data)
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color)
+void FrameBuffer::drawImage(int x, int y, int w, int h,  const uint8_t *data, uint16_t transparent_color)
 {
 	int idx = 0;
 
@@ -156,7 +155,7 @@ void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t *data, uin
 	}
 }
 
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch)
+void FrameBuffer::drawImage(int x, int y, int w, int h,  const uint16_t *data, int fx, int fy, int pitch)
 {
 	for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
 	{
@@ -259,8 +258,8 @@ void FrameBuffer::drawChunkWithFlags(
 	MageColorPalette *colorPaletteOriginal,
 	int32_t screen_x, // top-left corner of screen coordinates to draw at
 	int32_t screen_y, // top-left corner of screen coordinates to draw at
-	uint16_t tile_width,
-	uint16_t tile_height,
+	const uint16_t tile_width,
+	const uint16_t tile_height,
 	uint16_t source_x, // top-left corner of source image coordinates to READ FROM
 	uint16_t source_y, // top-left corner of source image coordinates to READ FROM
 	uint16_t pitch, // The width of the source image in pixels
@@ -277,10 +276,7 @@ void FrameBuffer::drawChunkWithFlags(
 	bool flip_diag = flagSplit.f.diagonal;
 	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
-	if(glitched) {
-		screen_x += tile_width * 0.125;
-		tile_width *= 0.75;
-	}
+	
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||
@@ -289,12 +285,18 @@ void FrameBuffer::drawChunkWithFlags(
 	) {
 		return;
 	}
-	uint8_t pixels[tile_width * tile_height];
+
+	if (glitched) {
+		screen_x += tile_width * 0.125;
+	}
+
+	const auto pixelSize = tile_width * tile_height * (glitched ? 0.75 : 1.0);
+	auto pixels = std::unique_ptr<uint8_t[]>{ new uint8_t[pixelSize] };
 
 	EngineROM_Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
-		(uint8_t *)&pixels,
+		pixels.get(),
 		"Failed to read pixel data"
 	);
 
@@ -310,7 +312,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	if(flip_x == false && flip_y == false && flip_diag == false) {
 		tileToBufferNoXNoYNoZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -323,7 +325,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == true && flip_y == false && flip_diag == false) {
 		tileToBufferYesXNoYNoZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -336,7 +338,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == false && flip_y == true && flip_diag == false) {
 		tileToBufferNoXYesYNoZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -349,7 +351,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == true && flip_y == true && flip_diag == false) {
 		tileToBufferYesXYesYNoZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -362,7 +364,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if(flip_x == false && flip_y == false && flip_diag == true) {
 		tileToBufferNoXNoYYesZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -375,7 +377,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == true && flip_y == false && flip_diag == true) {
 		tileToBufferYesXNoYYesZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -388,7 +390,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == false && flip_y == true && flip_diag == true) {
 		tileToBufferNoXYesYYesZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -401,7 +403,7 @@ void FrameBuffer::drawChunkWithFlags(
 		);
 	} else if (flip_x == true && flip_y == true && flip_diag == true) {
 		tileToBufferYesXYesYYesZ(
-			pixels,
+			pixels.get(),
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -944,8 +946,8 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
-	size_t bufferSize = w*h;
-	uint16_t buf[bufferSize];
+	const size_t bufferSize = w*h;
+	auto buf = std::unique_ptr<uint16_t[]>{new uint16_t[bufferSize]{} };
 	FILE *fd = fopen(filename, "rb");
 	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
 
@@ -956,13 +958,13 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	}
 
 	fclose(fd);
-	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-	drawImage(x, y, w, h, buf);
+	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+	drawImage(x, y, w, h, buf.get());
 }
 
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
-	size_t bufferSize = w*h;
-	uint16_t buf[bufferSize];
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h,  const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
+	const size_t bufferSize = w*h;
+	auto buf = std::unique_ptr<uint16_t[]>{new uint16_t[bufferSize]{} };
 
 	FILE *fd = fopen(filename, "rb");
 	fseek(fd, (pitch*fy+fx)*sizeof(uint16_t), SEEK_SET);
@@ -975,20 +977,18 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 	fclose(fd);
 
-	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-	drawImage(x, y, w, h, buf, transparent_color);
+	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+	drawImage(x, y, w, h, buf.get(), transparent_color);
 }
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename)
 {
-	size_t bufferSize = w * h;
-	uint16_t buf[bufferSize];
+	const size_t bufferSize = w * h;
+	auto buf = std::unique_ptr<uint16_t[]>{new uint16_t[bufferSize]{} };
 	uint32_t offset = 0;
 	m_stop = false;
 
-	FILE *file;
-
-	file = fopen(filename, "rb");
+	FILE *file = fopen(filename, "rb");
 
 	if (file == NULL)
 	{
@@ -1034,7 +1034,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		size_t read = fread(buf, sizeof(uint8_t), size, file);
+		size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
 
 		if (read != size)
 		{
@@ -1043,8 +1043,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-		canvas.drawImage(x, y, w, h, buf);
+		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+		canvas.drawImage(x, y, w, h, buf.get());
 		canvas.blt();
 
 		uint8_t retVal = getButton(false);
@@ -1059,16 +1059,16 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 
 	fclose(file);
 
-	ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-	canvas.drawImage(x, y, w, h, buf);
+	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+	canvas.drawImage(x, y, w, h, buf.get());
 	canvas.blt();
 	return;
 }
 
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
+void FrameBuffer::drawImageFromFile(int x, int y, int w, int h,  const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
-	size_t bufferSize = w * h;
-	uint16_t buf[bufferSize];
+	const size_t bufferSize = w * h;
+	auto buf = std::unique_ptr<uint16_t[]>{new uint16_t[bufferSize]{} };
 	uint32_t offset = 0;
 	m_stop = false;
 
@@ -1120,7 +1120,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		size_t read = fread(buf, sizeof(uint8_t), size, file);
+		size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
 
 		if (read != size)
 		{
@@ -1129,8 +1129,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 			return;
 		}
 
-		ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-		canvas.drawImage(x, y, w, h, buf);
+		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+		canvas.drawImage(x, y, w, h, buf.get());
 		canvas.blt();
 
 		if (p_callback != NULL)
@@ -1151,10 +1151,10 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char *file
 	fclose(file);
 }
 
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename)
+uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h,  const char *filename)
 {
-	size_t bufferSize = w * h;
-	uint16_t buf[bufferSize];
+	const size_t bufferSize = w * h;
+	auto buf = std::unique_ptr<uint16_t[]>{new uint16_t[bufferSize]{} };
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
@@ -1225,7 +1225,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			size_t read = fread(buf, sizeof(uint8_t), size, file);
+			size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
 
 			if (read != size)
 			{
@@ -1234,8 +1234,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-			canvas.drawImage(x, y, w, h, buf);
+			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+			canvas.drawImage(x, y, w, h, buf.get());
 			canvas.blt();
 
 			uint8_t retVal = getButton(false);
@@ -1269,10 +1269,10 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 	return retVal;
 }
 
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
+uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h,  const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data)
 {
 	size_t bufferSize = w * h;
-	uint16_t buf[bufferSize];
+	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
@@ -1304,8 +1304,10 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 		return 0;
 	}
 
-	size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
-	uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
+	size_t size = (size_t)tell_size;
+	if (sizeof(uint16_t) * w * h < size) { size = sizeof(uint16_t) * w * h; }
+	uint16_t frames = 1;
+	if (frames < tell_size / w / h / sizeof(uint16_t)) { frames = tell_size / w / h / sizeof(uint16_t); }
 
 	if (size == 0)
 	{
@@ -1343,7 +1345,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			size_t read = fread(buf, sizeof(uint8_t), size, file);
+			size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
 
 			if (read != size)
 			{
@@ -1352,8 +1354,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 				return 0;
 			}
 
-			ROM_ENDIAN_U2_BUFFER(buf, bufferSize);
-			canvas.drawImage(x, y, w, h, buf);
+			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
+			canvas.drawImage(x, y, w, h, buf.get());
 			canvas.blt();
 
 			if (p_callback != NULL)
@@ -1397,7 +1399,7 @@ void FrameBuffer::drawStop()
 	m_stop = true;
 }
 
-void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
+void FrameBuffer::fillRect(int x, int y, int w, int h,  uint16_t color)
 {
 	if ((x >= WIDTH) || (y >= HEIGHT))
 	{
@@ -1406,21 +1408,15 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 	}
 
 	// Clip to screen
-	if ((x + w) > WIDTH)
-	{
-		w = WIDTH - x;
-	}
-
-	if ((y + h) > HEIGHT)
-	{
-		h = HEIGHT - y;
-	}
-
+	auto right = x + w;
+	if (x + w > WIDTH) { right = WIDTH; }
+	auto bottom = y + h;
+	if (y + h > HEIGHT) { bottom = HEIGHT; }
 	// X
-	for (int i = x; i < (x + w); i++)
+	for (int i = x; i < right; i++)
 	{
 		// Y
-		for (int j = y; j < (y + h); j++)
+		for (int j = y; j < bottom; j++)
 		{
 			int index = i + (WIDTH * j);
 			frame[index] = SCREEN_ENDIAN_U2_VALUE(color);
@@ -1428,7 +1424,7 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 	}
 }
 
-void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color) {
+void FrameBuffer::drawRect(int x, int y, int w, int h,  uint16_t color) {
 	drawHorizontalLine(x, y, x + w, color);
 	drawHorizontalLine(x, y + h, x + w, color);
 	drawVerticalLine(x, y, y + h, color);
@@ -1811,14 +1807,15 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_ra
     if ((x < 0) || (x > WIDTH - w) || (y < 0) || (y > HEIGHT - h))
 	{
         return;
-    }
-	while(ili9341_is_busy()){
+	}
+#ifdef DC801_EMBEDDED
+	while (ili9341_is_busy()) {
 		//wait for previous transfer to complete before starting a new one
 	}
     ili9341_set_addr(x, y, x + w - 1, y + h - 1);
 	uint32_t bytecount = w * h * 2;
 	ili9341_push_colors((uint8_t*)p_raw, bytecount);
-
+#endif
 	/*
 	//Blast data to TFT
 	while (bytecount > 0) {

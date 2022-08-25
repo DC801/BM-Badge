@@ -9,6 +9,9 @@
  *
  */
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+
 #include "main.h"
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
@@ -22,7 +25,7 @@ QSPI qspiControl;
 
 #endif
 
-#include "test.h"
+//#include "test.h"
 
 #ifdef DC801_DESKTOP
 #include <time.h>
@@ -85,7 +88,7 @@ static void rom_init(void){
  * @brief Main app
  * @return Not used
  */
-int main(void){
+int main(int argc, const char* argv[]) {
 
 	#ifdef DC801_DESKTOP
 	EngineWindowFrameInit();
@@ -148,12 +151,13 @@ int main(void){
 	debug_print("advertising user: %s", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
-#endif
-
-	setUpRandomSeed();
+	
 	// Setup LEDs
 	ledInit();
 	ledsOff();
+#endif
+
+	setUpRandomSeed();
 
 	//morse isn't used on this badge yet...
 	//morseInit();

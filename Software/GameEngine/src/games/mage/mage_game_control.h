@@ -235,8 +235,7 @@ public:
 	void UpdateEntities(uint32_t deltaTime);
 
 	void computeEntityYAxisSort(
-		uint8_t *entitySortOrder,
-		uint8_t filteredEntityCountOnThisMap
+		uint8_t *entitySortOrder
 	);
 
 	//this will draw the entities over the current state of the screen

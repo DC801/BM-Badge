@@ -5,14 +5,14 @@
 #include "mage_command_control.h"
 
 //load in the global variables that the scripts will be operating on:
-extern MageGameControl *MageGame;
-extern MageHexEditor *MageHex;
-extern MageDialogControl *MageDialog;
-extern MageScriptControl *MageScript;
-extern MageCommandControl *MageCommand;
-extern MageScriptControl *MageScript;
-extern MageEntity *hackableDataAddress;
-extern FrameBuffer *mage_canvas;
+extern std::unique_ptr<MageGameControl> MageGame;
+extern std::unique_ptr<MageHexEditor> MageHex;
+extern std::unique_ptr<MageDialogControl> MageDialog;
+extern std::unique_ptr<MageScriptControl> MageScript;
+extern std::unique_ptr<MageCommandControl> MageCommand;
+extern std::unique_ptr<MageScriptControl> MageScript;
+extern std::unique_ptr<MageEntity> hackableDataAddress;
+extern std::unique_ptr<FrameBuffer> mage_canvas;
 
 void action_null_action(uint8_t * args, MageScriptState * resumeStateStruct)
 {

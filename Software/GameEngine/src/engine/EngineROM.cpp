@@ -25,10 +25,12 @@ char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
 };
 
 void makeSureSaveFilePathExists() {
-	struct stat st = {0};
+	struct stat st = { 0 };
+	#ifndef WIN32
 	if (stat(DESKTOP_SAVE_FILE_PATH, &st) == -1) {
 		mkdir(DESKTOP_SAVE_FILE_PATH, 0777);
 	}
+	#endif
 }
 #endif //DC801_DESKTOP
 
@@ -653,7 +655,7 @@ bool EngineROM_Write(
 
 uint32_t EngineROM_Verify(
 	uint32_t address,
-	uint32_t length,
+	const uint32_t length,
 	const uint8_t *data,
 	bool throwErrorWithLog = false
 )
@@ -663,11 +665,11 @@ uint32_t EngineROM_Verify(
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 	char debugString[128];
-	uint8_t readBuffer[length];
+	auto readBuffer = std::unique_ptr<uint8_t[]>{ new uint8_t[length]{} };
 	EngineROM_Read(
 		address,
 		length,
-		readBuffer,
+		readBuffer.get(),
 		"Failed to read from Rom in EngineROM_Verify"
 	);
 

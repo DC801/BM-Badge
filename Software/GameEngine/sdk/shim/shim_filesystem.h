@@ -1,12 +1,14 @@
 #ifndef SHIM_FILESYSTEM_H
 #define SHIM_FILESYSTEM_H
 
+#include "sdk_shim.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <dirent.h>
-#include <stdio.h>
+#include <stdint.h>
+
 
 #define FIL FILE
 
@@ -76,7 +78,7 @@ typedef struct {
 #define AM_ARC				0x20	/* Archive */
 
 FRESULT f_open (FIL** fp, const char* path, unsigned char mode);					/* Open or create a file */
-FRESULT f_close (FIL* fp);															/* Close an open file object */
+FRESULT f_close (FIL* fp);							 								/* Close an open file object */
 FRESULT f_read (FIL* fp, void* buff, unsigned int btr, unsigned int* br);			/* Read data from the file */
 FRESULT f_write (FIL* fp, const void* buff, unsigned int btw, unsigned int* bw);	/* Write data to the file */
 FRESULT f_lseek (FIL* fp, FSIZE_t ofs);												/* Move file pointer of the file object */
@@ -85,9 +87,25 @@ FRESULT f_unlink (const char* path);												/* Delete an existing file or di
 
 FSIZE_t f_tell(FIL* fp);
 
-FRESULT f_opendir (DIR** dp, const char* path);										/* Open a directory */
+struct __dirstream
+{
+	void* __fd;
+	char* __data;
+	int __entry_data;
+	char* __ptr;
+	int __entry_ptr;
+	size_t __allocation;
+	size_t __size;
+	//__libc_lock_define(__lock)
+};
+
+typedef struct __dirstream DIR;
+
+#ifndef WIN32
+FRESULT f_opendir(DIR** dp, const char* path);										/* Open a directory */
 FRESULT f_closedir (DIR* dp);														/* Close an open directory */
 FRESULT f_readdir (DIR* dp, FILINFO* fno);											/* Read a directory item */
+#endif
 
 #ifdef __cplusplus
 }

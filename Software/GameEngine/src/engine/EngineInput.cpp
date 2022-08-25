@@ -5,14 +5,15 @@
 //#include "fonts/Monaco9.h"
 
 #ifdef DC801_DESKTOP
-#include <stdio.h>
-#include <unistd.h>
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <cstdio>
+//#include <unistd.h>
 #include "EngineWindowFrame.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 bool running = true;
 bool shouldReloadGameDat = false;
@@ -334,6 +335,4 @@ void EngineTriggerRomReload()
 	shouldReloadGameDat = true;
 }
 
-#ifdef __cplusplus
-}
-#endif
+

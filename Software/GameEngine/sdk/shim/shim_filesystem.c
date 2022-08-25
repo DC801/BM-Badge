@@ -1,16 +1,4 @@
-#include "sdk_shim.h"
-
-#include <stdio.h>
-#include <string.h>
-
-#include <errno.h>
-#include <unistd.h>
-
-#include <sys/stat.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "shim_filesystem.h"
 
 FRESULT f_open (FIL** fp, const char* path, unsigned char mode)
 {
@@ -553,7 +541,7 @@ FRESULT f_stat (const char* path, FILINFO* fno)
 
 	// We have an open file, now it's time to attempt fstat
 	struct stat buffer;
-	int retval = fstat(fileno(fp), &buffer);
+	int retval = fstat(_fileno(fp), &buffer);
 
 	// Returns 0 upon success
 	if (retval == 0)
@@ -702,7 +690,7 @@ FRESULT f_unlink (const char* path)
 	}
 
 	// Attempt unlink
-	int retval = unlink(path);
+	int retval = _unlink(path);
 
 	// Return value 0 means success
 	if (retval == 0)
@@ -816,7 +804,8 @@ FSIZE_t f_tell(FIL* fp)
 	}
 }
 
-FRESULT f_opendir (DIR** dp, const char* path)
+
+FRESULT f_opendir(DIR** dp, const char* path)
 {
 	// Verify arguments aren't null
 	if (path == NULL)
@@ -824,7 +813,9 @@ FRESULT f_opendir (DIR** dp, const char* path)
 		fprintf(stderr, "f_opendir error: Invalid argument\n");
 		return FR_INVALID_PARAMETER;
 	}
-
+#ifdef WIN32
+	return FR_OK;
+#else
 	// Attempt opendir
 	DIR *retval = opendir(path);
 
@@ -880,6 +871,7 @@ FRESULT f_opendir (DIR** dp, const char* path)
 			fprintf(stderr, "f_opendir error: [UNKNOWN] (%d)\n", error);
 			return FR_TIMEOUT;
 	}
+#endif
 }
 
 FRESULT f_closedir (DIR* dp)
@@ -890,7 +882,9 @@ FRESULT f_closedir (DIR* dp)
 		fprintf(stderr, "f_closedir error: Invalid argument\n");
 		return FR_INVALID_PARAMETER;
 	}
-
+#ifdef WIN32
+	return FR_OK;
+#else
 	int retval;
 
 	// Try closedir
@@ -929,6 +923,7 @@ retry:
 			fprintf(stderr, "f_closedir error: [UNKNOWN] (%d)\n", error);
 			return FR_TIMEOUT;
 	}
+#endif
 }
 
 FRESULT f_readdir (DIR* dp, FILINFO* fno)
@@ -940,6 +935,7 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 		return FR_INVALID_PARAMETER;
 	}
 
+#ifndef WIN32
 	// Attempt readdir
 	struct dirent *entry = readdir(dp);
 
@@ -981,7 +977,6 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 		// File name
 		memcpy(fno->fname, entry->d_name, FILENAME_SIZE - 1);
 		fno->fname[FILENAME_SIZE - 1] = 0;
-
 		return FR_OK;
 	}
 
@@ -1013,6 +1008,9 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 			fprintf(stderr, "f_readdir error: [UNKNOWN] (%d)\n", error);
 			return FR_TIMEOUT;
 	}
+#else
+	return FR_OK;
+#endif
 }
 
 bool util_sd_init(void)
@@ -1020,6 +1018,4 @@ bool util_sd_init(void)
 	return true;
 }
 
-#ifdef __cplusplus
-}
-#endif
+

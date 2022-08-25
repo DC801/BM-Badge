@@ -1,12 +1,11 @@
 #ifndef SHIM_SERIAL_H
 #define SHIM_SERIAL_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdbool.h>
-#include <stddef.h>
 
 // UART
 void uart_init(void);

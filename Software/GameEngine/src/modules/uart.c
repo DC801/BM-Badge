@@ -6,7 +6,7 @@
 
 #include <mdk/nrf52840_bitfields.h>
 #include <hal/nrf_uart.h>
-#include "common.h"
+
 #include "uart.h"
 
 #define UART_TX_BUF_SIZE                512                                         /**< UART TX buffer size. */

@@ -27,7 +27,7 @@ static void speaker_init(void);
 static void log_init(void);
 static void rom_init(void);
 
-int main(void);
+int main(int argc, const char* argv[]);
 
 void setUpRandomSeed();
 

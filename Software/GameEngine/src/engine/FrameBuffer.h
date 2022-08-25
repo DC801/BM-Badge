@@ -1,14 +1,10 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-#ifdef __cplusplus
-#include <cstdint>
+#include <stdint.h>
 #include "games/mage/mage_color_palette.h"
-
-#endif
-
-#include "common.h"
 #include "adafruit/gfxfont.h"
+#include "common.h"
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -23,20 +19,20 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
 #pragma pack(push, 1) // exact fit - no padding
-#ifdef IS_LITTLE_ENDIAN
-struct Color_565 {
-	uint8_t b:5;
-	uint8_t alpha:1;
-	uint8_t g:5;
-	uint8_t r:5;
-};
-#endif
+
 #ifdef IS_BIG_ENDIAN
 struct Color_565 {
 	uint8_t r:5;
 	uint8_t g:5;
 	uint8_t alpha:1;
 	uint8_t b:5;
+};
+#else
+struct Color_565 {
+	uint8_t b : 5;
+	uint8_t alpha : 1;
+	uint8_t g : 5;
+	uint8_t r : 5;
 };
 #endif
 union ColorUnion
@@ -260,8 +256,8 @@ public:
 	void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
-
-	void drawImageWithFlags(
+ 
+	void drawImageWithFlags( 
 		int x,
 		int y,
 		int w,
@@ -325,13 +321,9 @@ public:
 extern FrameBuffer canvas;
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 FrameBuffer *p_canvas(void);
-#ifdef __cplusplus
-}
-#endif
+
 
 
 #endif //FRAMEBUFFER_H

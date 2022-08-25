@@ -8,9 +8,7 @@
 #ifndef CMIXER_H
 #define CMIXER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define CM_VERSION "0.1.1"
 
@@ -98,8 +96,6 @@ void cm_play(cm_Source *src);
 void cm_pause(cm_Source *src);
 void cm_stop(cm_Source *src);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

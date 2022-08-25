@@ -1,6 +1,8 @@
 #ifndef SHIM_GPIO_H
 #define SHIM_GPIO_H
 
+#include "sdk_shim.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

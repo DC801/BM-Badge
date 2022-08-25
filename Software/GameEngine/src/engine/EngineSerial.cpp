@@ -5,13 +5,13 @@
 //#include "fonts/Monaco9.h"
 
 #ifdef DC801_DESKTOP
-#include <stdio.h>
+#include <cstdio>
+#ifndef WIN32
 #include <unistd.h>
 #endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
+
+
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;
@@ -30,6 +30,7 @@ void EngineInputDesktopGetCommandStringFromStandardIn ()
 		0,
 		COMMAND_BUFFER_SIZE
 	);
+#ifndef WIN32
 	fcntl(FILE_DESCRIPTOR_STDIN, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
 	ssize_t bytes_read = read(
 		FILE_DESCRIPTOR_STDIN,
@@ -57,6 +58,7 @@ void EngineInputDesktopGetCommandStringFromStandardIn ()
 		);
 		*/
 	}
+#endif
 }
 
 #endif
@@ -115,6 +117,4 @@ void EngineHandleSerialInput ()
 	}
 }
 
-#ifdef __cplusplus
-}
-#endif
+

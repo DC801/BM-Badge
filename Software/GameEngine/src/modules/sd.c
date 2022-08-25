@@ -26,18 +26,13 @@
  * 	Adapted for the dc801 dc26 badge and SDK15 by @hamster
  *****************************************************************************/
 
-// System headers
-#include <ctype.h>
-#include <math.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
-
-#include "common.h"
-#include "EnginePanic.h"
-
+ // System headers
 #include "sd.h"
+
+#include <cstdlib>
+
+#include <sdk/shim/shim_filesystem.h>
+#include "EnginePanic.h"
 
 #ifdef DC801_EMBEDDED
 
@@ -279,11 +274,14 @@ uint8_t util_sd_getnum_files(const char *path, const char *extension){
  * @param extension extension to filter with
  * @return number of files in the directory
  */
+
+#ifdef GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-uint8_t util_sd_getnum_files(const char *path, const char *extension){
-
+#endif
+uint8_t util_sd_getnum_files(const char* path, const char* extension) {
+#ifndef WIN32
 	FRESULT ff_result;
 	DIR *dir;
 	FILINFO *fno;
@@ -315,6 +313,13 @@ uint8_t util_sd_getnum_files(const char *path, const char *extension){
 	f_closedir(dir);
 
 	return counter;
+#else
+	return 0;
+#endif
 }
+
+#ifdef GCC
 #pragma GCC diagnostic pop
+#endif
+
 #endif
