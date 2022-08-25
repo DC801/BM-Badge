@@ -13,7 +13,7 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
-#include "common.h"
+#include "EngineROM.h"
 #include "FrameBuffer.h"
 #include <memory>
 #include <utility>

@@ -2,7 +2,7 @@
 #define SHIM_RNG_H
 
 #include <stdint.h>
-#include "sdk_shim.h"
+#include "shim_err.h"
 
 #ifdef __cplusplus
 extern "C" {

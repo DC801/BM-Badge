@@ -16,7 +16,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	// Endianness conversion
 	tilesetId = ROM_ENDIAN_U2_VALUE(tilesetId);
 
-	// Increment offset2
+	// Increment offset
 	offset += sizeof(tilesetId);
 
 	//read frameCount

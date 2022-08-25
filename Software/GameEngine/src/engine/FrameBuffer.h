@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include "games/mage/mage_color_palette.h"
 #include "adafruit/gfxfont.h"
-#include "common.h"
+#include "modules/gfx.h"
+
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -35,6 +36,7 @@ struct Color_565 {
 	uint8_t r : 5;
 };
 #endif
+
 union ColorUnion
 {
 	Color_565 c;
@@ -256,8 +258,8 @@ public:
 	void drawImage(int x, int y, int w, int h, const uint8_t *data, uint16_t transparent_color);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
- 
-	void drawImageWithFlags( 
+
+	void drawImageWithFlags(
 		int x,
 		int y,
 		int w,

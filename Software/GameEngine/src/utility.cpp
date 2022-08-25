@@ -8,16 +8,20 @@
  *
  */
 
+#include <chrono>
 #include "utility.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
-#include <SDL.h>
+
 
 #ifdef DC801_EMBEDDED
 
 #else
-#include "sdk_shim.h"
+#include "sdk/shim/shim_timer.h"
+#include "sdk/shim/shim_pwm.h"
+#include "modules/adc.h"
+#include "modules/led.h"
 #endif
 
 
@@ -263,7 +267,7 @@ uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 uint32_t millis(void)
 {
 	#ifdef DC801_DESKTOP
-	return SDL_GetTicks();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 	#endif
 	#ifdef DC801_EMBEDDED
 	return(app_timer_cnt_get() / 32.768);

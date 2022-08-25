@@ -1,4 +1,5 @@
 #include "sdk_shim.h"
+#include "shim_err.h"
 
 static NRF_FICR_Type FICR_internal;
 NRF_FICR_Type *NRF_FICR = &FICR_internal;

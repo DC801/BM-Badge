@@ -17,6 +17,9 @@
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
+#include "sdk/shim/shim_err.h"
+#include "sdk/shim/shim_timer.h"
+#include "utility.h"
 
 #ifdef DC801_EMBEDDED
 //only init QSPI if we're in embedded mode:
@@ -151,7 +154,7 @@ int main(int argc, const char* argv[]) {
 	debug_print("advertising user: %s", ble_name);
 	advertising_setUser(ble_name);
 	ble_adv_start();
-	
+
 	// Setup LEDs
 	ledInit();
 	ledsOff();

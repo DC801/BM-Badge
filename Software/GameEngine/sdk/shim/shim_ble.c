@@ -1,5 +1,7 @@
 #include "sdk_shim.h"
 
+#ifndef WIN32
+
 // TODO: Implement this shit
 
 void ble_stack_init(void)
@@ -31,3 +33,5 @@ void advertising_setScore(uint32_t score)
 {
     UNUSED_PARAMETER(score);
 }
+
+#endif

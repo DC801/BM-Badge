@@ -1,8 +1,10 @@
 #ifndef ENGINE_SERIAL_H
 #define ENGINE_SERIAL_H
-#include "common.h"
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define COMMAND_BUFFER_SIZE 1024
 #define COMMAND_RESPONSE_SIZE (COMMAND_BUFFER_SIZE + 128)
@@ -22,6 +24,8 @@ void EngineSerialRegisterEventHandlers (
 );
 void EngineHandleSerialInput();
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

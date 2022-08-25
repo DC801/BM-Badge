@@ -1,14 +1,14 @@
 #ifndef SHIM_FILESYSTEM_H
 #define SHIM_FILESYSTEM_H
 
+
+#include <stdint.h>
+
 #include "sdk_shim.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-
 
 #define FIL FILE
 

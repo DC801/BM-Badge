@@ -31,7 +31,6 @@ set(INCLUDEDIRS
 )
 
 set(SOURCEFILES
-    common.h
     main.cpp
     main.h
     utility.cpp
@@ -111,9 +110,6 @@ set(SOURCEFILES
     modules/qspi.h
 )
 
-# if()
-# else()
-# endif()
 if(WIN32)
     add_executable(game WIN32 ${SOURCEFILES})
 

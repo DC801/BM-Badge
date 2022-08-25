@@ -13,7 +13,9 @@
 #include "EngineWindowFrame.h"
 #endif
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 bool running = true;
 bool shouldReloadGameDat = false;
@@ -336,3 +338,6 @@ void EngineTriggerRomReload()
 }
 
 
+#ifdef __cplusplus
+}
+#endif

@@ -10,12 +10,12 @@
 #ifndef BOOT_H_
 #define BOOT_H_
 
+
 #define VERSION "2.01-flipton"
 #define NORDICSDK "15.3"
 #define SAOSPEC "1.69bis"
 
 #include <stdint.h>
-#include "common.h"
 
 #ifdef DC801_DESKTOP
 #include <signal.h>

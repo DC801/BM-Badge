@@ -12,13 +12,19 @@
 #define UTILITY_H_
 
 #include "adafruit/gfxfont.h"
-#include "common.h"
 
 #ifdef DC801_DESKTOP
-#include "sdk_shim.h"
+#define NRF_LOG_RAW_INFO printf
+#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
 #endif
 
+#ifdef DC801_EMBEDDED
+#define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
+#endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define BUTTON_PRESSED 	0
 #define BUTTON_RELEASED 1
@@ -84,6 +90,8 @@ void util_gfx_init(void);
 
 void check_ram_usage(void);
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* UTILITY_H_ */

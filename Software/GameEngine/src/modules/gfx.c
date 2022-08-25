@@ -49,8 +49,6 @@
 #include "drv_ili9341.h"
 #include "sd.h"
 
-#define PROGMEM
-
 #include "../fonts/computerfont12pt7b.h"
 #include "../fonts/monof55.h"
 #include "../fonts/gameplay.h"
@@ -59,7 +57,9 @@
 #include "../fonts/practical8pt7b.h"
 #include "../fonts/SFAlienEncounters5pt7b.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define PIXEL_BUFFER_COUNT	320
 
@@ -448,7 +448,7 @@ void util_gfx_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t
         _swap_int16_t(x0, x1);
         _swap_int16_t(y0, y1);
     }
-    
+
 	//Horizontal line, draw fast
 	if (y0 == y1) {
 		util_gfx_fill_rect(x0, y0, x1 - x0, 1, color);
@@ -532,12 +532,12 @@ void util_gfx_draw_raw_int16(int16_t x, int16_t y, uint16_t w, uint16_t h, const
 }
 
 void util_gfx_draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t *p_raw) {
-    
+
     //clip
     if (x < 0 || x > GFX_WIDTH - w || y < 0 || y > GFX_HEIGHT - h) {
         return;
     }
-    
+
     //Hang out until LCD is free
     while (ili9341_is_busy()) {
         APP_ERROR_CHECK(sd_app_evt_wait());
@@ -606,12 +606,12 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 
 			//Blast data to TFT
 			while (bytecount > 0) {
-                
+
                 //Hang out until LCD is free
                 while (ili9341_is_busy()) {
                     APP_ERROR_CHECK(sd_app_evt_wait());
                 }
-                
+
 				//Populate the row buffer
 				result = f_read(&raw_file, sdbuffer, MIN(chunk_size, bytecount), &count);
 
@@ -622,7 +622,7 @@ uint8_t util_gfx_draw_raw_file(const char *filename, int16_t x, int16_t y, uint1
 
                 //Push the colors async
 				APP_ERROR_CHECK(ili9341_push_colors_fast(sdbuffer, count));
-                
+
 				bytecount -= count;
 			}
 
@@ -844,4 +844,6 @@ void util_gfx_set_wrap(bool wrap) {
 	m_wrap = wrap;
 }
 
-
+#ifdef __cplusplus
+}
+#endif

@@ -1,13 +1,14 @@
 #ifndef SHIM_PWM_H
 #define SHIM_PWM_H
 
-#include "sdk_shim.h"
+#include <stdint.h>
+#include "shim_err.h"
+#include "shim_timer.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 	
-#include <stdint.h>
 
 typedef enum
 {

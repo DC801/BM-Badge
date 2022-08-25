@@ -6,7 +6,6 @@
 #define I2C_H
 
 #include <stdint.h>
-#include "sdk_shim.h"
 
 #ifdef __cplusplus
 extern "C" {

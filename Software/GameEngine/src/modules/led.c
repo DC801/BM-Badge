@@ -44,7 +44,9 @@
 
 #include "led.h"
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 uint8_t led_states[LED_COUNT] = { 0 };
 
@@ -231,4 +233,6 @@ void ledPwm(LEDID id, uint8_t val) {
     ledSet(id, val);
 }
 
-
+#ifdef __cplusplus
+}
+#endif

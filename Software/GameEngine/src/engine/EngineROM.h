@@ -2,18 +2,36 @@
 #define ENGINE_ROM_H_
 
 #include <stdint.h>
+#include "EnginePanic.h"
+#include "FrameBuffer.h"
+#include "fonts/Monaco9.h"
+#include "games/mage/mage_defines.h"
+
+
+#ifdef DC801_DESKTOP
+#include <errno.h>
+#include <string.h>
+#include <sys/stat.h>
+
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif // EMSCRIPTEN
+
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+
+#endif
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
 
 //This is the smallest page we know how to erase on our chip,
-//because the smaller values provided by nordic are incorrect, 
+//because the smaller values provided by nordic are incorrect,
 //and this is the only one that has worked for us so far
 //262144 bytes = 256KB
 #define ENGINE_ROM_ERASE_PAGE_SIZE 262144
 
 //size of largest single EngineROM_Write data that can be sent at one time:
-//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this 
+//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
 //or you'll lose data.
 #define ENGINE_ROM_WRITE_PAGE_SIZE 512
 
@@ -55,7 +73,7 @@
 #define ENGINE_ROM_SAVE_OFFSET (ENGINE_ROM_MAX_DAT_FILE_SIZE)
 
 //This is a return code indicating that the verification was successful
-//it needs to be a negative number, as the EngineROM_Verify function returns 
+//it needs to be a negative number, as the EngineROM_Verify function returns
 //the failure address which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 

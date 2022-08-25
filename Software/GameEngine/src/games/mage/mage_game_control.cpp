@@ -1611,8 +1611,8 @@ void MageGameControl::DrawEntities()
 	int32_t cameraX = adjustedCameraPosition.x;
 	int32_t cameraY = adjustedCameraPosition.y;
 	//first sort entities by their y values:
-	uint8_t* entitySortOrder{new uint8_t[filteredEntityCountOnThisMap]{} };
-	computeEntityYAxisSort(entitySortOrder);
+	auto entitySortOrder = std::unique_ptr<uint8_t[]>{new uint8_t[filteredEntityCountOnThisMap]{} };
+	computeEntityYAxisSort(entitySortOrder.get());
 
 	uint8_t filteredPlayerEntityIndex = getFilteredEntityId(playerEntityIndex);
 

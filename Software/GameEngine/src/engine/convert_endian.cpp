@@ -1,4 +1,3 @@
-#include "common.h"
 #include "convert_endian.h"
 
 #ifdef IS_BIG_ENDIAN

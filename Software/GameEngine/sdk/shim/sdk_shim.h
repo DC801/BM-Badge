@@ -6,17 +6,6 @@
 #include <errno.h>
 #include <stdbool.h>
 
-#include "shim_err.h"
-#include "shim_gpio.h"
-#include "shim_timer.h"
-#include "shim_pwm.h"
-#include "shim_rng.h"
-#include "shim_serial.h"
-#include "shim_i2c.h"
-#include "shim_adc.h"
-#include "shim_ble.h"
-#include "shim_filesystem.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -24,18 +13,12 @@ extern "C" {
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-#define UNUSED_VARIABLE(X)     ((void)(X))
-#define UNUSED_PARAMETER(X)    UNUSED_VARIABLE(X)
-#define UNUSED_RETURN_VALUE(X) UNUSED_VARIABLE(X)
-
 #define NRF_LOG_INIT(unused) NRF_SUCCESS
 #define NRF_LOG_DEFAULT_BACKENDS_INIT()
 
 #define NRF_LOG_INFO(...)   printf(__VA_ARGS__);printf("\n")
 #define NRF_LOG_ERROR(...)  fprintf(stderr, __VA_ARGS__); fprintf(stderr, "\n")
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) < (b) ? (b) : (a))
 
 #define CRITICAL_REGION_ENTER()
 #define CRITICAL_REGION_EXIT()

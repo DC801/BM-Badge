@@ -1,7 +1,5 @@
 #include <string>
 
-#include "common.h"
-#include "main.h"
 #include "EnginePanic.h"
 
 #include "FrameBuffer.h"

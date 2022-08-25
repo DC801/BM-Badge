@@ -1,21 +1,6 @@
-#include "common.h"
 #include "EngineROM.h"
-#include "EnginePanic.h"
-#include "FrameBuffer.h"
-#include "fonts/Monaco9.h"
-#include "games/mage/mage_defines.h"
 
 #ifdef DC801_DESKTOP
-#include <errno.h>
-#include <string.h>
-#include <sys/stat.h>
-
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
-#endif // EMSCRIPTEN
-
-#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
-
 FILE *romfile = NULL;
 uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = {0};
 char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {

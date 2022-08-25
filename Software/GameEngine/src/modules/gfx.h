@@ -26,6 +26,8 @@
 #ifndef UTIL_GFX_H_
 #define UTIL_GFX_H_
 
+#define PROGMEM
+
 #define GFX_WIDTH			LCD_WIDTH
 #define GFX_HEIGHT			LCD_HEIGHT
 
@@ -65,6 +67,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct {
+	int16_t xs, ys, xe, ye;
+} area_t;
 
 typedef struct {
 	uint8_t width;

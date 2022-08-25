@@ -26,7 +26,7 @@
 #ifndef UTIL_UTIL_SD_H_
 #define UTIL_UTIL_SD_H_
 
-#include "common.h"
+
 
 #ifdef __cplusplus
 extern "C" {

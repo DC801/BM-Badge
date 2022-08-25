@@ -1,6 +1,11 @@
+#include <cstdio>
+
 #include "shim_filesystem.h"
 
-FRESULT f_open (FIL** fp, const char* path, unsigned char mode)
+#ifdef __cplusplus
+extern "C" {
+#endif
+FRESULT f_open(FIL** fp, const char* path, unsigned char mode)
 {
 	// Verify arguments are valid
 	if (path == NULL)
@@ -969,7 +974,7 @@ FRESULT f_readdir (DIR* dp, FILINFO* fno)
 		fno->ftime = 0;
 
 		// File attributes (We only care about directories)
-		if (entry->d_type & DT_DIR)
+		if (entry->d_type & DT _DIR)
 		{
 			fno->fattrib |= AM_DIR;
 		}
@@ -1017,5 +1022,9 @@ bool util_sd_init(void)
 {
 	return true;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 
