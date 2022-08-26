@@ -261,8 +261,8 @@ void FrameBuffer::drawChunkWithFlags(
 	MageColorPalette *colorPaletteOriginal,
 	int32_t screen_x, // top-left corner of screen coordinates to draw at
 	int32_t screen_y, // top-left corner of screen coordinates to draw at
-	const uint16_t tile_width,
-	const uint16_t tile_height,
+	uint16_t tile_width,
+	uint16_t tile_height,
 	uint16_t source_x, // top-left corner of source image coordinates to READ FROM
 	uint16_t source_y, // top-left corner of source image coordinates to READ FROM
 	uint16_t pitch, // The width of the source image in pixels
@@ -280,6 +280,11 @@ void FrameBuffer::drawChunkWithFlags(
 	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
 
+	if (glitched) {
+		screen_x += tile_width * 0.125;
+		tile_height = tile_height * 0.75;
+	}
+
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||
@@ -289,12 +294,7 @@ void FrameBuffer::drawChunkWithFlags(
 		return;
 	}
 
-	if (glitched) {
-		screen_x += tile_width * 0.125;
-	}
-
-	const auto pixelSize = tile_width * tile_height * (glitched ? 0.75 : 1.0);
-	auto pixels = std::unique_ptr<uint8_t[]>{ new uint8_t[pixelSize] };
+	auto pixels = std::unique_ptr<uint8_t[]>{ new uint8_t[tile_width * tile_height] };
 
 	EngineROM_Read(
 		address + ((source_y * pitch) + source_x),
@@ -1461,8 +1461,8 @@ Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 uint16_t FrameBuffer::applyFadeColor(uint16_t color) {
 	uint16_t result = color;
 	if(fadeFraction) {
-		ColorUnion fadeColorUnion;
-		ColorUnion colorUnion;
+		auto fadeColorUnion = ColorUnion{};
+		auto colorUnion = ColorUnion{};
 		fadeColorUnion.i = fadeColor;
 		colorUnion.i = result;
 		colorUnion.c.r = FrameBuffer::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
