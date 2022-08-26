@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(sdk)
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(SDL2 PATHS ../../src/modules/sdl/cmake REQUIRED)
+find_package(SDL2 PATHS ../../src/modules/sdl2/cmake REQUIRED)
 
 set(COMPILEDEFS
     DC801_DESKTOP=1

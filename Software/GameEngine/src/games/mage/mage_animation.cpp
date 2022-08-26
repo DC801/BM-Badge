@@ -1,6 +1,7 @@
 #include "mage_animation.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
+#include "convert_endian.h"
 
 MageAnimation::MageAnimation(uint32_t address)
 {

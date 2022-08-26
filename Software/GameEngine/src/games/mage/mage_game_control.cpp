@@ -1,6 +1,7 @@
 #include "mage_game_control.h"
 
 #include "EngineROM.h"
+#include "EngineInput.h"
 #include "FrameBuffer.h"
 #include "mage_hex.h"
 #include "mage_script_actions.h"

@@ -324,7 +324,7 @@ extern FrameBuffer canvas;
 #endif
 
 
-FrameBuffer *p_canvas(void);
+FrameBuffer* p_canvas(void);
 
 
 

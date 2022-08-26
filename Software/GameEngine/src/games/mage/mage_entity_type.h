@@ -40,7 +40,7 @@ private:
 	MageEntityTypeAnimationDirection south;
 	MageEntityTypeAnimationDirection west;
 public:
-	MageEntityTypeAnimation() : 
+	MageEntityTypeAnimation() :
 		north{MageEntityTypeAnimationDirection(0)},
 		east{MageEntityTypeAnimationDirection(0)},
 		south{MageEntityTypeAnimationDirection(0)},

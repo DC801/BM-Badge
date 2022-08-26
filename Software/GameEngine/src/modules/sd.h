@@ -26,7 +26,7 @@
 #ifndef UTIL_UTIL_SD_H_
 #define UTIL_UTIL_SD_H_
 
-
+#include "sdk/shim/shim_filesystem.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "utility.h"
+#include "convert_endian.h"
 #include "FrameBuffer.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
@@ -15,7 +16,8 @@
 #include <algorithm>
 
 #ifdef DC801_DESKTOP
-	#include "shim_timer.h"
+#include "shim_timer.h"
+#include "shim_err.h"
 	#include "EngineWindowFrame.h"
 #endif
 
@@ -40,6 +42,7 @@ static volatile bool m_stop = false;
 uint16_t frame[FRAMEBUFFER_SIZE];
 FrameBuffer canvas;
 
+FrameBuffer* p_canvas(void) { return &canvas; }
 
 FrameBuffer::FrameBuffer() {
 	fadeFraction = 0.0f;
@@ -276,7 +279,7 @@ void FrameBuffer::drawChunkWithFlags(
 	bool flip_diag = flagSplit.f.diagonal;
 	bool glitched = flagSplit.f.glitched;
 	transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
-	
+
 	if (
 		screen_x + tile_width < 0	||
 		screen_x >= WIDTH			||

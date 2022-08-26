@@ -34,7 +34,9 @@
 #include "begin_code.h"
 
 /* Set up for C function definitions, even when using C++ */
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * Printable format: "%d.%d.%d", MAJOR, MINOR, PATCHLEVEL
@@ -2163,7 +2165,9 @@ extern DECLSPEC IMG_Animation * SDLCALL IMG_LoadGIFAnimation_RW(SDL_RWops *src);
 #define IMG_GetError    SDL_GetError
 
 /* Ends C function definitions when using C++ */
-
+#ifdef __cplusplus
+}
+#endif
 #include "close_code.h"
 
 #endif /* SDL_IMAGE_H_ */

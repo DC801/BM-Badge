@@ -1,6 +1,7 @@
 #ifndef ENGINE_SERIAL_H
 #define ENGINE_SERIAL_H
 
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

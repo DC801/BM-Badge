@@ -1,6 +1,7 @@
 #include "mage_command_control.h"
 #include "mage_game_control.h"
 #include "mage_script_control.h"
+#include "EngineROM.h"
 #include "EngineSerial.h"
 #include <vector>
 

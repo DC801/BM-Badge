@@ -33,6 +33,7 @@
 
 #include <sdk/shim/shim_filesystem.h>
 #include "EnginePanic.h"
+#include "EngineROM.h"
 
 #ifdef DC801_EMBEDDED
 

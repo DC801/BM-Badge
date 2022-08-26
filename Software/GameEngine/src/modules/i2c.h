@@ -5,6 +5,8 @@
 #ifndef I2C_H
 #define I2C_H
 
+#include <stdint.h>
+
 #ifdef DC801_EMBEDDED
 
 #ifdef __cplusplus

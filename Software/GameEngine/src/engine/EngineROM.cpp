@@ -1,4 +1,6 @@
 #include "EngineROM.h"
+#include "games/mage/mage_defines.h"
+#include "utility.h"
 
 #ifdef DC801_DESKTOP
 FILE *romfile = NULL;

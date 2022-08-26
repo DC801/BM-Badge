@@ -10,6 +10,7 @@
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
 
+#define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
 // color palette corruption detection - requires much ram, can only be run on desktop

@@ -1,12 +1,16 @@
 #include <string>
 
 #include "EnginePanic.h"
+#include "EngineInput.h"
+#include "EngineSerial.h"
 
 #include "FrameBuffer.h"
 #include "fonts/Monaco9.h"
 
 #ifdef DC801_EMBEDDED
 #include "nrf52840.h"
+#else
+#include "sdk/shim/shim_timer.h"
 #endif
 
 std::string extract_filename(const char * fullpath) {

@@ -1,4 +1,6 @@
 #include "mage_hex.h"
+#include "EngineInput.h"
+#include "EngineROM.h"
 
 extern std::unique_ptr<FrameBuffer> mage_canvas;
 extern std::unique_ptr<MageGameControl> MageGame;
@@ -44,7 +46,7 @@ uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 void MageHexEditor::toggleHexEditor()
 {
 	hexEditorState = !hexEditorState;
-	//set LED to the state 
+	//set LED to the state
 	ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
 }
 
@@ -195,7 +197,7 @@ void MageHexEditor::applyHexModeInputs()
 			applyMemRecallInputs();
 			//check to see if the page button was pressed and released quickly
 			if(
-				(previousPageButtonState) && 
+				(previousPageButtonState) &&
 				((millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
 			) {
 				//if the page button was pressed and then released fast enough, advance one page.

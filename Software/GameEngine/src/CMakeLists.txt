@@ -5,8 +5,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(../sdk/shim lib/sdk)
 
-find_package(SDL2 PATHS modules/sdl/cmake REQUIRED)
-find_package(SDL2_Image PATHS modules/sdl_image/cmake REQUIRED)
+
+#https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
+
+find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/cmake/ REQUIRED)
+find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/cmake/ REQUIRED)
+
 
 set(COMPILEDEFS
     DC801_DESKTOP=1
@@ -24,7 +28,7 @@ set(COMPILEDEFS
 set(INCLUDEDIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${SDL2_INCLUDE_DIRS}
-    ${SDL2_IMAGE_INCLUDE_DIR}
+    ${SDL2_IMAGE_INCLUDE_DIRS}
     ../
     ../sdk/shim
     engine/
@@ -85,28 +89,28 @@ set(SOURCEFILES
     games/mage/mage.cpp
     games/mage/mage.h
 
-    modules/cmixer/cmixer.c    
+    modules/cmixer/cmixer.c
     modules/cmixer/cmixer.h
-    modules/drv_ili9341.c    
+    modules/drv_ili9341.c
     modules/drv_ili9341.h
-    modules/sd.c    
+    modules/sd.c
     modules/sd.h
-    modules/ble.c    
+    modules/ble.c
     modules/ble.h
-    modules/adc.c    
+    modules/adc.c
     modules/adc.h
-    modules/uart.c    
+    modules/uart.c
     modules/uart.h
-    modules/led.c    
+    modules/led.c
     modules/led.h
-    modules/i2c.c    
+    modules/i2c.c
     modules/i2c.h
-    modules/mutex.c    
+    modules/mutex.c
     modules/mutex.h
-    modules/keyboard.c    
+    modules/keyboard.c
     modules/keyboard.h
-    modules/rc4.c    
-    modules/qspi.cpp    
+    modules/rc4.c
+    modules/qspi.cpp
     modules/qspi.h
 )
 

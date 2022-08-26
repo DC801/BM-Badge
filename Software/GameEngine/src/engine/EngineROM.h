@@ -5,13 +5,15 @@
 #include "EnginePanic.h"
 #include "FrameBuffer.h"
 #include "fonts/Monaco9.h"
-#include "games/mage/mage_defines.h"
 
+#include "convert_endian.h"
+#include "utility.h"
 
 #ifdef DC801_DESKTOP
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>
+#include "sdk/shim/shim_err.h"
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>

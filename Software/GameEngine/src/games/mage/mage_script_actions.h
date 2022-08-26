@@ -6,6 +6,7 @@
 #include "mage_game_control.h"
 #include "mage_hex.h"
 #include "mage_script_control.h"
+#include "EngineInput.h"
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,

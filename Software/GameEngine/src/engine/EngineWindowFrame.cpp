@@ -4,6 +4,8 @@
 
 #include "EngineWindowFrame.h"
 #include "EnginePanic.h"
+#include "modules/led.h"
+#include "convert_endian.h"
 
 #define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 

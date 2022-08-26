@@ -2,11 +2,16 @@
 
 #include "mage.h"
 
-
 #include "mage_defines.h"
 
 #include "EngineROM.h"
+#include "EngineInput.h"
 #include "EnginePanic.h"
+#include "EngineSerial.h"
+
+#ifdef DC801_DESKTOP
+#include "sdk/shim/shim_timer.h"
+#endif
 
 //uncomment to print main game loop timing debug info to terminal or over serial
 //#define TIMING_DEBUG
@@ -25,7 +30,7 @@ std::unique_ptr<MageHexEditor> MageHex;
 std::unique_ptr<MageDialogControl> MageDialog;
 std::unique_ptr<MageScriptControl> MageScript;
 std::unique_ptr<MageCommandControl> MageCommand;
-MageEntity *hackableDataAddress;
+std::unique_ptr<MageEntity> hackableDataAddress;
 std::unique_ptr<FrameBuffer> mage_canvas;
 
 bool engineIsInitialized;
@@ -348,7 +353,7 @@ void EngineInit () {
 	);
 
 	//load in the pointer to the array of MageEntities for use in hex editor mode:
-	hackableDataAddress = MageGame->entities.get();
+	hackableDataAddress = std::unique_ptr <MageEntity>{ MageGame->entities.get() };
 
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);

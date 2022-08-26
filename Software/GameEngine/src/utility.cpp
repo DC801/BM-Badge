@@ -65,6 +65,7 @@ void sysTickHandler(void * p_context){
 	systick++;
 }
 
+uint8_t getButton(bool waitForLongPress) { return 0; }
 
 //SOS RCVED BK MANY HOSTILES BK PLS TRNSMIT CODE 801801 WHEN RDY 4 SUPORT FN
 //...  ---  ...      .-.  -.-.  ...-  .  -..      -...  -.-      --  .-  -.  -.--      ....  ---  ...  -  ..  .-..  .  ...      -...  -.-      .--.  .-..  ...      -  .-.  -.  ...  --  ..  -      -.-.  ---  -..  .      ---..  -----  .----  ---..  -----  .----      .--  ....  .  -.      .-.  -..  -.--      ....-      ...  ..-  .--.  ---  .-.  -      ..-.  -.

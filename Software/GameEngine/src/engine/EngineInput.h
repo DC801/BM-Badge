@@ -2,6 +2,8 @@
 #define ENGINE_INPUT_H
 
 #include "modules/keyboard.h"
+#include <signal.h>
+#include "main.h"
 
 #ifdef __cplusplus
 extern "C" {

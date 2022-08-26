@@ -9,7 +9,6 @@
  *
  */
 
-#define SDL_MAIN_HANDLED
 #include <SDL.h>
 
 #include "main.h"
@@ -91,7 +90,7 @@ static void rom_init(void){
  * @brief Main app
  * @return Not used
  */
-int main(int argc, const char* argv[]) {
+int main(int argc, char* argv[]) {
 
 	#ifdef DC801_DESKTOP
 	EngineWindowFrameInit();

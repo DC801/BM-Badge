@@ -1,8 +1,10 @@
 #include "mage_dialog_control.h"
 
 #include <utility>
+#include "EngineInput.h"
 #include "mage_portrait.h"
 #include "mage_script_actions.h"
+
 extern std::unique_ptr<FrameBuffer> mage_canvas;
 extern std::unique_ptr<MageGameControl> MageGame;
 extern std::unique_ptr<MageScriptControl> MageScript;
@@ -360,6 +362,7 @@ void MageDialogControl::drawDialogBox(
 		offsetY + tileHeight - 2
 	);
 	if (drawArrow) {
+		static const auto TAU = 6.283185307179586;
 		int8_t bounce = cos(((float)cursorPhase / 1000.0) * TAU) * 3;
 		uint8_t flags = 0;
 		if(shouldShowResponses()) {
