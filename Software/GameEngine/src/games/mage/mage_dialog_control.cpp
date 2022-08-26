@@ -12,83 +12,83 @@ extern std::unique_ptr<MageHexEditor> MageHex;
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
-		.text = {
-			.x = 0,
-			.y = 8,
-			.w = 19,
-			.h = 6,
+		{
+			0,
+			8,
+			19,
+			6,
 		},
-		.label = {
-			.x = 0,
-			.y = 6,
-			.w = 7,
-			.h = 3,
+		{
+			0,
+			6,
+			7,
+			3,
 		},
-		.portrait = {
-			.x = 0,
-			.y = 1,
-			.w = 6,
-			.h = 6,
+		{
+			0,
+			1,
+			6,
+			6,
 		}
 	},
 	{ // BOTTOM_RIGHT
-		.text = {
-			.x = 0,
-			.y = 8,
-			.w = 19,
-			.h = 6,
+		{
+			0,
+			8,
+			19,
+			6,
 		},
-		.label = {
-			.x = 12,
-			.y = 6,
-			.w = 7,
-			.h = 3,
+		{
+			12,
+			6,
+			7,
+			3,
 		},
-		.portrait = {
-			.x = 13,
-			.y = 1,
-			.w = 6,
-			.h = 6,
+		{
+			13,
+			1,
+			6,
+			6,
 		}
 	},
 	{ // TOP_LEFT
-		.text = {
-			.x = 0,
-			.y = 0,
-			.w = 19,
-			.h = 6,
+		{
+			0,
+			0,
+			19,
+			6,
 		},
-		.label = {
-			.x = 0,
-			.y = 5,
-			.w = 7,
-			.h = 3,
+		{
+			0,
+			5,
+			7,
+			3,
 		},
-		.portrait = {
-			.x = 0,
-			.y = 7,
-			.w = 6,
-			.h = 6,
+		{
+			0,
+			7,
+			6,
+			6,
 		}
 	},
 	{ // TOP_RIGHT
-		.text = {
-			.x = 0,
-			.y = 0,
-			.w = 19,
-			.h = 6,
+		{
+			0,
+			0,
+			19,
+			6,
 		},
-		.label = {
-			.x = 12,
-			.y = 5,
-			.w = 7,
-			.h = 3,
+		{
+			12,
+			5,
+			7,
+			3,
 		},
-		.portrait = {
-			.x = 13,
-			.y = 7,
-			.w = 6,
-			.h = 6,
+		{
+			13,
+			7,
+			6,
+			6,
 		}
 	}
 };

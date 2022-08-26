@@ -9,15 +9,15 @@
 
 #define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 
-SDL_Window *window = nullptr;
-SDL_Renderer *renderer = nullptr;
-SDL_Surface *frameSurface = nullptr;
-SDL_Texture *frameTexture = nullptr;
-SDL_Surface *frameButtonSurface = nullptr;
-SDL_Texture *frameButtonTexture = nullptr;
-SDL_Surface *frameLEDSurface = nullptr;
-SDL_Texture *frameLEDTexture = nullptr;
-SDL_Texture *gameViewportTexture = nullptr;
+SDL_Window* window = nullptr;
+SDL_Renderer* renderer = nullptr;
+SDL_Surface* frameSurface = nullptr;
+SDL_Texture* frameTexture = nullptr;
+SDL_Surface* frameButtonSurface = nullptr;
+SDL_Texture* frameButtonTexture = nullptr;
+SDL_Surface* frameLEDSurface = nullptr;
+SDL_Texture* frameLEDTexture = nullptr;
+SDL_Texture* gameViewportTexture = nullptr;
 
 int SCREEN_MULTIPLIER = 1;
 int SCREEN_WIDTH = 0;
@@ -25,7 +25,7 @@ int SCREEN_HEIGHT = 0;
 
 void EngineWindowFrameInit()
 {
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		ENGINE_PANIC("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
@@ -68,7 +68,7 @@ void EngineWindowFrameInit()
 		"DC801 MAGE GAME"
 	);
 
-	if(window == nullptr)
+	if (window == nullptr)
 	{
 		ENGINE_PANIC("Failed to create SDL Window\nSDL_Error: %s\n", SDL_GetError());
 	}
@@ -90,16 +90,16 @@ void EngineWindowFrameInit()
 	);
 }
 
-const SDL_Rect gameViewportSrcRect = {0, 0, WIDTH, HEIGHT};
-const SDL_Rect gameViewportDstRect = {112, 56, WIDTH, HEIGHT};
-const SDL_Rect buttonOffSrcRect = {0, 0, 32, 32};
-const SDL_Rect buttonOnSrcRect = {0, 32, 32, 32};
-const SDL_Rect LEDOffSrcRect = {0, 0, 16, 8};
-const SDL_Rect LEDOnSrcRect = {0, 8, 16, 8};
-SDL_Rect buttonTargetRect = {.x = 0, .y = 0, .w = 32, .h = 32};
-SDL_Rect LEDTargetRect = {.x = 0, .y = 0, .w = 16, .h = 8};
-const SDL_Point buttonHalf = {16, 16};
-const SDL_Point LEDHalf = {8, 4};
+const SDL_Rect gameViewportSrcRect = { 0, 0, WIDTH, HEIGHT };
+const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH, HEIGHT };
+const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
+const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
+const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
+const SDL_Rect LEDOnSrcRect = { 0, 8, 16, 8 };
+SDL_Rect buttonTargetRect = { 0, 0, 32, 32 };
+SDL_Rect LEDTargetRect = { .0, 0, 16, 8 };
+const SDL_Point buttonHalf = { 16, 16 };
+const SDL_Point LEDHalf = { 8, 4 };
 
 const SDL_Point buttonDestPoints[] = {
 	{506, 98},
@@ -131,7 +131,7 @@ const SDL_Point buttonDestPoints[] = {
 	{38, 98 - 42},
 };
 
-void drawButtonStates ()
+void drawButtonStates()
 {
 	SDL_Point buttonPoint;
 	bool buttonState;
@@ -172,7 +172,7 @@ const SDL_Point LEDDestPoints[LED_COUNT] = {
 	{468, 112 - 42}, //LED_SD
 };
 
-void drawLEDStates ()
+void drawLEDStates()
 {
 	SDL_Point LEDPoint;
 	uint8_t LEDState;
@@ -189,7 +189,7 @@ void drawLEDStates ()
 			&LEDOffSrcRect,
 			&LEDTargetRect
 		);
-		if(LEDState > 0) {
+		if (LEDState > 0) {
 			SDL_SetTextureAlphaMod(frameLEDTexture, LEDState);
 			SDL_RenderCopy(
 				renderer,
@@ -201,25 +201,25 @@ void drawLEDStates ()
 	}
 }
 
-void EngineWindowFrameGameBlt(uint16_t *frame)
+void EngineWindowFrameGameBlt(uint16_t* frame)
 {
-	void *pixels;
+	void* pixels;
 	int pitch;
 
 	if (frame == nullptr) {
 		return;
 	}
-	uint16_t correctEndianScreenBuffer[FRAMEBUFFER_SIZE] = {0};
+	uint16_t correctEndianScreenBuffer[FRAMEBUFFER_SIZE] = { 0 };
 	memcpy(correctEndianScreenBuffer, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
 	// Sorry for this monster;
 	// The game.dat stores the image buffer data in BigEndian
 	// SDL reads FrameBuffers in Platform Native Endian,
 	// so we need to convert if Desktop is LittleEndian
-	#ifndef IS_SCREEN_BIG_ENDIAN
-		#ifdef IS_LITTLE_ENDIAN
-			convert_endian_u2_buffer(correctEndianScreenBuffer, FRAMEBUFFER_SIZE);
-		#endif
-	#endif
+#ifndef IS_SCREEN_BIG_ENDIAN
+#ifdef IS_LITTLE_ENDIAN
+	convert_endian_u2_buffer(correctEndianScreenBuffer, FRAMEBUFFER_SIZE);
+#endif
+#endif
 	SDL_LockTexture(gameViewportTexture, nullptr, &pixels, &pitch);
 	memcpy(pixels, correctEndianScreenBuffer, FRAMEBUFFER_SIZE * sizeof(uint16_t));
 	SDL_UnlockTexture(gameViewportTexture);

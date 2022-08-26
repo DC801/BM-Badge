@@ -101,11 +101,9 @@ struct __dirstream
 
 typedef struct __dirstream DIR;
 
-#ifndef WIN32
 FRESULT f_opendir(DIR** dp, const char* path);										/* Open a directory */
 FRESULT f_closedir (DIR* dp);														/* Close an open directory */
 FRESULT f_readdir (DIR* dp, FILINFO* fno);											/* Read a directory item */
-#endif
 
 #ifdef __cplusplus
 }

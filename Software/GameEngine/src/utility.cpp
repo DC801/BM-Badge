@@ -33,7 +33,6 @@
 #define EE_VOLT(X) (getVccMillivolts() * (X) / EE_TOTR)
 
 APP_TIMER_DEF(sysTickID);
-
 APP_PWM_INSTANCE(PWM1, 1);
 APP_TIMER_DEF(morseID);
 volatile static uint32_t systick = 0;

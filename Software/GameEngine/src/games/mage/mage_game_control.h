@@ -90,17 +90,11 @@ private:
 	float mageSpeed;
 	bool isMoving;
 
-	Point playerVelocity = {
-		.x = 0,
-		.y = 0,
-	};
-	Point adjustedCameraPosition= {
-		.x = 0,
-		.y = 0,
-	};
+	Point playerVelocity = { 0,0 };
+	Point adjustedCameraPosition = { 0,0 };
 
-	uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
-	uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = {0};
+	uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
+	uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
 
 public:
 	//this is the hackable array of entities that are on the current map
@@ -125,10 +119,7 @@ public:
 	float cameraShakePhase = 0;
 	uint8_t cameraShakeAmplitude = 0;
 	uint8_t cameraFollowEntityId = NO_PLAYER;
-	Point cameraPosition = {
-		.x = 0,
-		.y = 0,
-	};
+	Point cameraPosition = { 0,0 };
 
 	//when the MageGameControl object is created, it will populate all the above variables from ROM.
 	MageGameControl();
@@ -227,16 +218,16 @@ public:
 	);
 
 	void updateEntityRenderableBoxes(
-		MageEntityRenderableData *data,
-		const MageEntity *entity,
-		const MageTileset *tileset
+		MageEntityRenderableData* data,
+		const MageEntity* entity,
+		const MageTileset* tileset
 	) const;
 
 	//this will update the current entities based on the current state of their state variables
 	void UpdateEntities(uint32_t deltaTime);
 
 	void computeEntityYAxisSort(
-		uint8_t *entitySortOrder
+		uint8_t* entitySortOrder
 	);
 
 	//this will draw the entities over the current state of the screen
@@ -248,22 +239,22 @@ public:
 	Point getPushBackFromTilesThatCollideWithPlayer();
 
 	void getRenderableStateFromAnimationDirection(
-		MageEntityRenderableData *data,
-		const MageEntity *entity,
-		const MageEntityTypeAnimationDirection *animationDirection
+		MageEntityRenderableData* data,
+		const MageEntity* entity,
+		const MageEntityTypeAnimationDirection* animationDirection
 	);
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 
-	#ifdef DC801_DESKTOP
+#ifdef DC801_DESKTOP
 	void verifyAllColorPalettes(const char* errorTriggerDescription);
-	#endif //DC801_DESKTOP
+#endif //DC801_DESKTOP
 
 	uint16_t entityTypeCount();
 	uint16_t animationCount();
 	uint16_t tilesetCount();
 
-	void logAllEntityScriptValues(const char *string);
+	void logAllEntityScriptValues(const char* string);
 }; //class MageGameControl
 
 #endif //_MAGE_GAME_CONTROL

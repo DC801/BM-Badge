@@ -60,9 +60,9 @@ typedef app_timer_t * app_timer_id_t;
 
 #define NRF_DRV_TIMER_INSTANCE(id)                           \
 {                                                            \
-    .p_reg            = CONCAT_2(NRF_TIMER, id),             \
-    .instance_id      = CONCAT_3(NRFX_TIMER, id, _INST_IDX), \
-    .cc_channel_count = NRF_TIMER_CC_CHANNEL_COUNT(id),      \
+    CONCAT_2(NRF_TIMER, id),             \
+    CONCAT_3(NRFX_TIMER, id, _INST_IDX), \
+    NRF_TIMER_CC_CHANNEL_COUNT(id),      \
 }
 
 typedef struct {                 /*!< (@ 0x40008000) TIMER0 Structure                                               */

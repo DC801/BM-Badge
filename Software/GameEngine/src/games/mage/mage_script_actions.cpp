@@ -1754,8 +1754,8 @@ void action_walk_entity_to_geometry(uint8_t * args, MageScriptState * resumeStat
 		if(resumeStateStruct->totalLoopsToNextAction == 0) {
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
-				.x = entity->x,
-				.y = entity->y,
+				entity->x,
+				entity->y,
 			};
 			resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(
 				renderable,
@@ -2083,8 +2083,8 @@ void action_pan_camera_to_entity(uint8_t * args, MageScriptState * resumeStateSt
 			MageGame->cameraFollowEntityId = NO_PLAYER;
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
-				.x = MageGame->cameraPosition.x,
-				.y = MageGame->cameraPosition.y,
+				MageGame->cameraPosition.x,
+				MageGame->cameraPosition.y,
 			};
 		}
 		float progress = manageProgressOfAction(
@@ -2094,8 +2094,8 @@ void action_pan_camera_to_entity(uint8_t * args, MageScriptState * resumeStateSt
 		// yes, this is intentional;
 		// if the entity is moving, pan will continue to the entity
 		resumeStateStruct->pointB = {
-			.x = renderable->center.x - HALF_WIDTH,
-			.y = renderable->center.y - HALF_HEIGHT,
+			renderable->center.x - HALF_WIDTH,
+			renderable->center.y - HALF_HEIGHT,
 		};
 		Point betweenPoint = FrameBuffer::lerpPoints(
 			resumeStateStruct->pointA,
@@ -2131,12 +2131,12 @@ void action_pan_camera_to_geometry(uint8_t * args, MageScriptState * resumeState
 		MageGame->cameraFollowEntityId = NO_PLAYER;
 		//this is the points we're interpolating between
 		resumeStateStruct->pointA = {
-			.x = MageGame->cameraPosition.x,
-			.y = MageGame->cameraPosition.y,
+			MageGame->cameraPosition.x,
+			MageGame->cameraPosition.y,
 		};
 		resumeStateStruct->pointB = {
-			.x = geometry.points[0].x - HALF_WIDTH,
-			.y = geometry.points[0].y - HALF_HEIGHT,
+			geometry.points[0].x - HALF_WIDTH,
+			geometry.points[0].y - HALF_HEIGHT,
 		};
 	}
 	float progress = manageProgressOfAction(
@@ -2879,8 +2879,8 @@ Point offsetPointRelativeToEntityCenter(
 	const Point *geometryPoint
 ) {
 	return {
-		.x = geometryPoint->x - (renderable->center.x - entity->x),
-		.y = geometryPoint->y - (renderable->center.y - entity->y),
+		geometryPoint->x - (renderable->center.x - entity->x),
+		geometryPoint->y - (renderable->center.y - entity->y),
 	};
 }
 

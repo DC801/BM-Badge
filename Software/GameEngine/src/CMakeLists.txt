@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(game)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(../sdk/shim lib/sdk)
 
@@ -118,6 +118,7 @@ if(WIN32)
     add_executable(game WIN32 ${SOURCEFILES})
 
     target_link_libraries(game SDL2::SDL2main)
+
 # Include a RC file for windows
 # list(APPEND SRC_FILES ../sample.rc)
 else()
@@ -128,3 +129,10 @@ set_source_files_properties(${SOURCEFILES} PROPERTIES LANGUAGE CXX)
 target_compile_definitions(game PUBLIC ${COMPILEDEFS})
 target_include_directories(game PUBLIC ${INCLUDEDIRS})
 target_link_libraries(game SDL2::SDL2 SDL2_image::SDL2_image sdk)
+
+# add_custom_command(
+#     TARGET game POST_BUILD
+#     COMMAND
+#     ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/../../../SD_Card/MAGE/" "${RUNTIME_OUTPUT_DIRECTORY}/MAGE/"
+#     VERBATIM
+# )

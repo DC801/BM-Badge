@@ -8,7 +8,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-	
+
 
 typedef enum
 {
@@ -24,16 +24,16 @@ typedef enum
     const nrf_drv_timer_t m_pwm_##name##_timer = NRF_DRV_TIMER_INSTANCE(num); \
     app_pwm_cb_t m_pwm_##name##_cb;                                           \
     const app_pwm_t name = {                                                  \
-        .p_cb    = &m_pwm_##name##_cb,                                        \
-        .p_timer = &m_pwm_##name##_timer,                                     \
+        &m_pwm_##name##_cb,                                        \
+        &m_pwm_##name##_timer,                                     \
     }
 
 #define APP_PWM_DEFAULT_CONFIG_1CH(period_in_us, pin)                                  \
     {                                                                                  \
-        .pins            = {pin, APP_PWM_NOPIN},                                       \
-        .pin_polarity    = {APP_PWM_POLARITY_ACTIVE_LOW, APP_PWM_POLARITY_ACTIVE_LOW}, \
-        .num_of_channels = 1,                                                          \
-        .period_us       = period_in_us                                                \
+        {pin, APP_PWM_NOPIN},                                       \
+        {APP_PWM_POLARITY_ACTIVE_LOW, APP_PWM_POLARITY_ACTIVE_LOW}, \
+        1,                                                          \
+        period_in_us                                                \
     }
 
 typedef enum

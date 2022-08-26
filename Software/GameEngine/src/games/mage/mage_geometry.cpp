@@ -344,8 +344,8 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 		for (int spokeIndex = 0; spokeIndex < playerSpokes->pointCount; spokeIndex++) {
 			Point spokePointB = playerSpokes->points[spokeIndex];
 			Point spokeIntersectionPoint = {
-				.x= 0,
-				.y= 0,
+				0,
+				0,
 			};
 			bool collided = getIntersectPointBetweenLineSegments(
 				*spokeCenter,
@@ -372,8 +372,8 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 					COLOR_GREENYELLOW
 				);
 				Point diff = {
-					.x= spokeIntersectionPoint.x - spokePointB.x,
-					.y= spokeIntersectionPoint.y - spokePointB.y,
+					spokeIntersectionPoint.x - spokePointB.x,
+					spokeIntersectionPoint.y - spokePointB.y,
 				};
 				mage_canvas->drawLine(
 					spokeCenter->x,

@@ -1,6 +1,4 @@
-#include "sdk_shim.h"
-
-#ifndef WIN32
+#include "shim_err.h"
 
 // TODO: Implement this shit
 
@@ -33,5 +31,3 @@ void advertising_setScore(uint32_t score)
 {
     UNUSED_PARAMETER(score);
 }
-
-#endif
