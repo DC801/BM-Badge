@@ -1,15 +1,15 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.22)
 
 project(game)
+
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(../sdk/shim lib/sdk)
 
-
 #https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
 
-find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/cmake/ REQUIRED)
-find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/cmake/ REQUIRED)
+find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/ REQUIRED)
+find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/ REQUIRED)
 
 
 set(COMPILEDEFS

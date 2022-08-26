@@ -63,9 +63,9 @@ typedef struct sound
 
 AudioDevice device =
 {
-	.id = 0,
-	.spec = { 0 },
-	.enabled = false
+	0,
+	{ 0 },
+	false
 };
 
 Uint32 soundCount = 0;			// Current number of simultaneous audio samples
@@ -248,7 +248,7 @@ void playAudio(const char *filename, bool loop, double gain)
 
 	// Ask cmixer to load our wave file
 	audio->source = cm_new_source_from_file(filename);
-	
+
 	if (audio->source == NULL)
 	{
 		delete audio;

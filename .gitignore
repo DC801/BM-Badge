@@ -26,12 +26,13 @@ fp-info-cache
 *.csv
 
 _build/
+build/
+output/
 .cproject
 .dep/
 .project
 .settings/
 .vscode/
-build/
 .idea/
 *.tiled-session
 *.code-workspace

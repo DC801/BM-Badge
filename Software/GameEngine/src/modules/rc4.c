@@ -4,6 +4,7 @@
 */
 
 #include <shim_filesystem.h>
+#include <string.h>
 
 #define N 256   // 2^8
 

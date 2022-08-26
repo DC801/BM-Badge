@@ -1,6 +1,9 @@
-#include <cstdio>
-
 #include "shim_filesystem.h"
+#include <filesystem>
+#include <stdint.h>
+#include <sys/stat.h>
+
+#define off_t size_t
 
 #ifdef __cplusplus
 extern "C" {
