@@ -52,8 +52,26 @@ target_compile_definitions(BM-Badge PUBLIC ${COMPILEDEFS})
 
 target_link_libraries(BM-Badge SDL2::SDL2main sdk game)
 
+# add_custom_command(
+#     TARGET BM-Badge POST_BUILD
+#     COMMAND
+#     cmd -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE/ ${RUNTIME_OUTPUT_DIRECTORY}/MAGE/
+# )
+
+set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")
+set(destination "$<TARGET_FILE_DIR:BM-Badge>/MAGE")
 add_custom_command(
     TARGET BM-Badge POST_BUILD
-    COMMAND
-    ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE/" "${RUNTIME_OUTPUT_DIRECTORY}/MAGE/"
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination}
+    DEPENDS ${destination}
+    COMMENT "symbolic link created: ${source} <==> ${destination}"
 )
+
+if(WIN32)
+    add_custom_command(
+        TARGET BM-Badge POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_RUNTIME_DLLS:BM-Badge> $<TARGET_FILE_DIR:BM-Badge>
+        COMMAND_EXPAND_LISTS
+    )
+endif()
