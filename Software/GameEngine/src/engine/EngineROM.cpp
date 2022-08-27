@@ -1,10 +1,16 @@
 #include "EngineROM.h"
 #include "games/mage/mage_defines.h"
 #include "utility.h"
+#include <filesystem>
 
-#ifdef DC801_DESKTOP
-FILE *romfile = NULL;
-uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = {0};
+
+#ifdef DC801_EMBEDDED
+#include "qspi.h"
+extern QSPI qspiControl;
+
+#else
+FILE* romfile = NULL;
+uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = { 0 };
 char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
 	DESKTOP_SAVE_FILE_PATH "save_0.dat",
 	DESKTOP_SAVE_FILE_PATH "save_1.dat",
@@ -12,20 +18,15 @@ char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
 };
 
 void makeSureSaveFilePathExists() {
-	struct stat st = { 0 };
-	#ifndef WIN32
-	if (stat(DESKTOP_SAVE_FILE_PATH, &st) == -1) {
-		mkdir(DESKTOP_SAVE_FILE_PATH, 0777);
+	auto saveFilePath = std::filesystem::path{ DESKTOP_SAVE_FILE_PATH };
+	auto saveDir = std::filesystem::directory_entry{ saveFilePath };
+	if (!saveDir.exists()) {
+		if (!std::filesystem::create_directory(saveDir)) {
+			throw "Couldn't create save directory";
+		}
+		}
 	}
-	#endif
-}
 #endif //DC801_DESKTOP
-
-#ifdef DC801_EMBEDDED
-#include "qspi.h"
-extern QSPI qspiControl;
-
-#endif //DC801_EMBEDDED
 
 void EngineROM_Init()
 {
@@ -173,8 +174,7 @@ void EngineROM_Init()
 	}
 	//close game.dat file when done:
 	result = f_close(&gameDat);
-#endif //DC801_EMBEDDED
-#ifdef DC801_DESKTOP
+#else
 	struct stat stats;
 	size_t romFileSize = 0;
 	if (stat(filename, &stats) == 0) {
@@ -253,7 +253,14 @@ void EngineROM_ReadSaveSlot(
 	size_t length,
 	uint8_t *data
 ) {
-	#ifdef DC801_DESKTOP
+#ifdef DC801_EMBEDDED
+	EngineROM_Read(
+		getSaveSlotAddressByIndex(slotIndex),
+		length,
+		data,
+		"Failed to read saveGame from ROM"
+	);
+#else
 	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
@@ -285,16 +292,7 @@ void EngineROM_ReadSaveSlot(
 		}
 	}
 	fclose(saveFile);
-	#endif //DC801_DESKTOP
-
-	#ifdef DC801_EMBEDDED
-	EngineROM_Read(
-		getSaveSlotAddressByIndex(slotIndex),
-		length,
-		data,
-		"Failed to read saveGame from ROM"
-	);
-	#endif //DC801_EMBEDDED
+	#endif
 }
 
 void EngineROM_EraseSaveSlot(uint8_t slotIndex) {
@@ -316,6 +314,22 @@ void EngineROM_WriteSaveSlot(
 	size_t length,
 	uint8_t *hauntedDataPointer
 ) {
+#ifdef DC801_EMBEDDED
+	uint8_t localUnHauntedSaveDataCopy[length];
+	memcpy(
+		&localUnHauntedSaveDataCopy,
+		hauntedDataPointer,
+		length
+	);
+	EngineROM_EraseSaveSlot(slotIndex);
+	EngineROM_Write(
+		getSaveSlotAddressByIndex(slotIndex),
+		length,
+		// hauntedDataPointer, // DO NOT USE, HAUNTED!!!
+		(uint8_t*)&localUnHauntedSaveDataCopy,
+		"Failed to write currentSave into ROM"
+	);
+#else
 	// Why is this named `hauntedDataPointer`?
 	// Because horrifyingly, depending WHERE you get this pointer FROM,
 	// when you write it to ROM, it MAY be prefixed with extra 2 bytes of data,
@@ -324,7 +338,6 @@ void EngineROM_WriteSaveSlot(
 	// Copy the data from the hauntedDataPointer to a locally scoped stack copy,
 	// and write to ROM from the pointer to the locally scoped stack copy.
 	// This may actually be a compiler bug, or ROM interface black magic.
-	#ifdef DC801_DESKTOP
 	makeSureSaveFilePathExists();
 	char *saveFileName = saveFileSlotNames[slotIndex];
 	FILE *saveFile = fopen(saveFileName, "r+b");
@@ -354,22 +367,6 @@ void EngineROM_WriteSaveSlot(
 
 	#endif // DC801_DESKTOP
 
-	#ifdef DC801_EMBEDDED
-	uint8_t localUnHauntedSaveDataCopy[length];
-	memcpy(
-		&localUnHauntedSaveDataCopy,
-		hauntedDataPointer,
-		length
-	);
-	EngineROM_EraseSaveSlot(slotIndex);
-	EngineROM_Write(
-		getSaveSlotAddressByIndex(slotIndex),
-		length,
-		// hauntedDataPointer, // DO NOT USE, HAUNTED!!!
-		(uint8_t *)&localUnHauntedSaveDataCopy,
-		"Failed to write currentSave into ROM"
-	);
-	#endif // DC801_EMBEDDED
 }
 
 #ifdef DC801_EMBEDDED
@@ -552,8 +549,6 @@ bool EngineROM_SD_Copy(
 #endif //DC801_EMBEDDED
 
 void EngineROM_Deinit() {
-#ifdef DC801_DESKTOP
-#endif // DC801_DESKTOP
 }
 
 bool EngineROM_Read(
@@ -592,8 +587,7 @@ bool EngineROM_Read(
 			data[truncatedAlignedLength+i] = romDataU8[i];
 		}
 	}
-#endif // DC801_EMBEDDED
-#ifdef DC801_DESKTOP
+#else
 	memcpy(data, romDataInDesktopRam + address, length);
 #endif // DC801_DESKTOP
 	return true;
@@ -624,8 +618,7 @@ bool EngineROM_Write(
 		ENGINE_PANIC(errorString);
 	}
 	return true;
-#endif // DC801_EMBEDDED
-#ifdef DC801_DESKTOP
+#else
 	if (romfile == NULL || data == NULL)
 	{
 		ENGINE_PANIC("Game Data file is not open");
@@ -637,7 +630,7 @@ bool EngineROM_Write(
 	}
 
 	return fwrite(data, sizeof(uint8_t), length, romfile) == length;
-#endif // DC801_DESKTOP
+#endif
 }
 
 uint32_t EngineROM_Verify(

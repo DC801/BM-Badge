@@ -112,7 +112,7 @@ done:
 }
 #endif
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 int decryptFile(const char* key, const char* infile, const char* outfile) {
 	unsigned char S[N];
 	unsigned char buff[2048];

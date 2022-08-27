@@ -9,7 +9,7 @@
 #include "convert_endian.h"
 #include "utility.h"
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 #include <errno.h>
 #include <string.h>
 #include <sys/stat.h>

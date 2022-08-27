@@ -151,7 +151,7 @@ namespace DC801_Test
 				break;
 			}
 
-		#ifdef DC801_DESKTOP
+		#ifndef DC801_EMBEDDED
 			if (application_quit != 0)
 			{
 				break;

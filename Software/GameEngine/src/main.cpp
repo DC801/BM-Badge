@@ -25,11 +25,7 @@
 #include "qspi.h"
 QSPI qspiControl;
 
-#endif
-
-//#include "test.h"
-
-#ifdef DC801_DESKTOP
+#else
 #include <time.h>
 #include "EngineWindowFrame.h"
 volatile sig_atomic_t application_quit = 0;
@@ -92,11 +88,11 @@ static void rom_init(void){
  */
 int main(int argc, char* argv[]) {
 
-	#ifdef DC801_DESKTOP
+#if !defined(EMSCRIPTEN) && !defined(DC801_EMBEDDED)
 	EngineWindowFrameInit();
 	signal(SIGINT, sig_handler);
 
-	#endif
+#endif
 
 	// Setup the system
 	log_init();
@@ -178,11 +174,6 @@ int main(int argc, char* argv[]) {
 	MAGE();
 #endif
 
-#ifdef DC801_DESKTOP
-	debug_print("Exiting gracefully...\n");
-	EngineWindowFrameCleanup();
-	return 0;
-#endif
 
 #ifdef DC801_EMBEDDED
 	while (1)
@@ -190,7 +181,12 @@ int main(int argc, char* argv[]) {
 		// If we make it here - we shouldn't - but if, reset the badge
 		NVIC_SystemReset();
 	}
+#else
+	debug_print("Exiting gracefully...\n");
+	EngineWindowFrameCleanup();
+	return 0;
 #endif
+
 }
 
 void setUpRandomSeed() {
@@ -204,9 +200,7 @@ void setUpRandomSeed() {
 		(nrf_rng_random_value_get() << 16) +
 		(nrf_rng_random_value_get() << 24)
 	);
-#endif //DC801_EMBEDDED
-
-#ifdef DC801_DESKTOP
+#else
 	//Set random seed with number of seconds since
 	//unix epoc so two desktops launched the same
 	//second get the same rng, and that totally

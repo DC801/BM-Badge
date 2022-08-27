@@ -13,13 +13,13 @@
 #define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
-// color palette corruption detection - requires much ram, can only be run on desktop
-#ifdef DC801_DESKTOP
-#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) verifyAllColorPalettes((value));
-#endif //DC801_DESKTOP
+
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
-#endif //DC801_EMBEDDED
+#else
+// color palette corruption detection - requires much ram, can only be run on desktop
+#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) verifyAllColorPalettes((value));
+#endif //DC801_DESKTOP
 
 /*
 The MageGameControl object handles several important tasks. It's basically the
@@ -246,9 +246,9 @@ public:
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 	void verifyAllColorPalettes(const char* errorTriggerDescription);
-#endif //DC801_DESKTOP
+#endif
 
 	uint16_t entityTypeCount();
 	uint16_t animationCount();

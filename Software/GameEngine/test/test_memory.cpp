@@ -39,7 +39,7 @@ namespace DC801_Test
 		EngineROM_Init();
 
 		y += yAdvance;
-		
+
 		if (EngineROM_Magic(magic, magicLen) != true)
 		{
 			printMessage("Checking to see ROM exists... Not found", y);
@@ -74,7 +74,7 @@ namespace DC801_Test
 		{
 			printMessage("Verifying magic header... Passed", y);
 		}
-		
+
 		y += yAdvance;
 
 		printMessage("Uninitializing memory", y);
@@ -109,7 +109,7 @@ namespace DC801_Test
 				break;
 			}
 
-		#ifdef DC801_DESKTOP
+		#ifndef DC801_EMBEDDED
 			if (application_quit != 0)
 			{
 				break;

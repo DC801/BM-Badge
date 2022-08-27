@@ -32,6 +32,7 @@
 #include <cstdlib>
 
 #include <sdk/shim/shim_filesystem.h>
+#include <filesystem>
 #include "EnginePanic.h"
 #include "EngineROM.h"
 
@@ -132,9 +133,7 @@ FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 	f_close(&file);
 	return result;
 }
-#endif
-
-#ifdef DC801_DESKTOP
+#else
 FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
 	FIL *file;
 
@@ -176,9 +175,7 @@ FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
     return result;
 
 }
-#endif
-
-#ifdef DC801_DESKTOP
+#else
 FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
     FIL *file;
 
@@ -226,101 +223,28 @@ bool util_sd_recover() {
 
 #endif
 
-#ifdef DC801_EMBEDDED
-/**
- * @param dir Directory to scan
- * @param extension extension to filter with
- * @return number of files in the directory
- */
-uint8_t util_sd_getnum_files(const char *path, const char *extension){
-
-	FRESULT ff_result;
-	DIR dir;
-	FILINFO fno;
-
-	ff_result = f_opendir(&dir, path);
-	if (ff_result) {
-		// Can't open
-		return 0;
-	}
-
-	uint8_t counter = 0;
-	do {
-		ff_result = f_readdir(&dir, &fno);
-		if (ff_result != FR_OK || fno.fname[0] == 0) {
-		    // Break on error or last file
-			break;
-		}
-		if ((fno.fattrib & AM_DIR)) {
-			// Ignore subdirs
-		}
-		else{
-			char *ext = strrchr(fno.fname, '.') + 1;
-			if (strcmp(ext, extension) == 0){
-				counter++;
-			}
-		}
-	} while(counter < 255);
-
-	f_closedir(&dir);
-
-	return counter;
-
-}
-#endif
-
-#ifdef DC801_DESKTOP
 /**
  * @param dir Directory to scan
  * @param extension extension to filter with
  * @return number of files in the directory
  */
 
-#ifdef GCC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
 uint8_t util_sd_getnum_files(const char* path, const char* extension) {
-#ifndef WIN32
-	FRESULT ff_result;
-	DIR *dir;
-	FILINFO *fno;
+	const auto dirPath = std::filesystem::path{ path };
+	uint8_t counter = 0;
 
-	ff_result = f_opendir(&dir, path);
-	if (ff_result) {
-		// Can't open
-		return 0;
+	if (!std::filesystem::directory_entry{ dirPath }.is_directory()) {
+		debug_print("Can't open extras\n");
+		return counter;
 	}
 
-	uint8_t counter = 0;
-	do {
-		ff_result = f_readdir(dir, fno);
-		if (ff_result != FR_OK || fno->fname[0] == 0) {
-		    // Break on error or last file
-			break;
+	for (auto const& dirEntry : std::filesystem::directory_iterator{ dirPath })
+	{
+		if (counter == 255) { break; }
+		if (dirEntry.is_regular_file() && dirEntry.path().extension().compare(extension) == 0) {
+			// Add the file
+			counter++;
 		}
-		if ((fno->fattrib & AM_DIR)) {
-			// Ignore subdirs
-		}
-		else{
-			char *ext = strrchr(fno->fname, '.') + 1;
-			if (strcmp(ext, extension) == 0){
-				counter++;
-			}
-		}
-	} while(counter < 255);
-
-	f_closedir(dir);
-
+	}
 	return counter;
-#else
-	return 0;
-#endif
 }
-
-#ifdef GCC
-#pragma GCC diagnostic pop
-#endif
-
-#endif

@@ -97,7 +97,7 @@ const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
 const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
 const SDL_Rect LEDOnSrcRect = { 0, 8, 16, 8 };
 SDL_Rect buttonTargetRect = { 0, 0, 32, 32 };
-SDL_Rect LEDTargetRect = { .0, 0, 16, 8 };
+SDL_Rect LEDTargetRect = { 0, 0, 16, 8 };
 const SDL_Point buttonHalf = { 16, 16 };
 const SDL_Point LEDHalf = { 8, 4 };
 

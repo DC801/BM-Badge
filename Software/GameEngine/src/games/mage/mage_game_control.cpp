@@ -143,9 +143,9 @@ MageGameControl::MageGameControl()
 	{
 		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
 	}
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 	verifyAllColorPalettes("Right after it was read from ROM");
-#endif //DC801_DESKTOP
+#endif
 
 	mageSpeed = 0;
 	isMoving = false;
@@ -1427,7 +1427,7 @@ void MageGameControl::updateEntityRenderableData(
 		//If the entity has no animations defined, return default:
 		if ((entityTypes[entityTypeId].AnimationCount()) == 0) {
 			//the entity has no animations, so return default values and give up.
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 			fprintf(stderr, "An entityType with no animations exists. Using fallback values.");
 #endif
 			data->tilesetId = MAGE_TILESET_FAILOVER_ID;
@@ -1870,13 +1870,13 @@ std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {
 	entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
 	return entityName;
 }
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription) {
 	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++) {
 		colorPalettes[i].verifyColors(errorTriggerDescription);
 	}
 }
-#endif //DC801_DESKTOP
+#endif
 
 uint16_t MageGameControl::entityTypeCount() {
 	return entityTypeHeader.count();

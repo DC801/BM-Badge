@@ -13,6 +13,7 @@
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
+#include <filesystem>
 
 
 #ifdef DC801_EMBEDDED
@@ -107,100 +108,10 @@ bool morseGetRunning(void){
 	return morse_running;
 }
 
-#ifdef DC801_EMBEDDED
-/**
- * Get a list of files on a path
- * @param files
- * @param path
- * @param fileMax
- * @return
- */
-uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax){
-
-	FRESULT ff_result;
-	DIR dir;
-	FILINFO fno;
-
-	ff_result = f_opendir(&dir, path);
-	if (ff_result) {
-		debug_print("Can't open extras\n");
-		return 0;
-	}
-
-	uint8_t counter = 0;
-	for (uint8_t i = 0; i < fileMax; i++) {
-		ff_result = f_readdir(&dir, &fno);                   /* Read a directory item */
-		if (ff_result != FR_OK || fno.fname[0] == 0) {
-			break;  /* Break on error or end of dir */
-		}
-		if ((fno.fattrib & AM_DIR)) {
-			// Ignore subdirs
-		}
-		else{
-			char *ext = strrchr(fno.fname, '.') + 1;
-			if (strcmp(ext, "RAW") == 0){
-				// Add the file
-				memcpy(&files[counter++], fno.fname, ext - fno.fname - 1);
-			}
-		}
-	}
-	f_closedir(&dir);
-
-	return counter;
-}
-#endif
-
 #if defined(GCC)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-
-#ifdef DC801_DESKTOP
-/**
- * Get a list of files on a path
- * @param files
- * @param path
- * @param fileMax
- * @return
- */
-uint8_t getFiles(char files[][9], const char* path, uint8_t fileMax)
-{
-	#ifndef WIN32
-	FRESULT ff_result;
-	DIR *dir;
-	FILINFO *fno;
-
-	ff_result = f_opendir(&dir, path);
-	if (ff_result) {
-		debug_print("Can't open extras\n");
-		return 0;
-	}
-
-	uint8_t counter = 0;
-	for (uint8_t i = 0; i < fileMax; i++) {
-		ff_result = f_readdir(dir, fno);                   /* Read a directory item */
-		if (ff_result != FR_OK || fno->fname[0] == 0) {
-			break;  /* Break on error or end of dir */
-		}
-		if ((fno->fattrib & AM_DIR)) {
-			// Ignore subdirs
-		}
-		else{
-			char *ext = strrchr(fno->fname, '.') + 1;
-			if (strcmp(ext, "RAW") == 0){
-				// Add the file
-				memcpy(&files[counter++], fno->fname, ext - fno->fname - 1);
-			}
-		}
-	}
-	f_closedir(dir);
-
-	return counter;
-#else
-	return 0;
-#endif
-}
 #endif
 
 #if defined(GCC)
@@ -266,12 +177,11 @@ uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 
 uint32_t millis(void)
 {
-	#ifdef DC801_DESKTOP
-	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-	#endif
-	#ifdef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
 	return(app_timer_cnt_get() / 32.768);
-	#endif
+#else
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+#endif
 }
 
 void EEpwm_init() {

@@ -25,13 +25,13 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
 #define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
 
-//have to have two values since millis() doesn't work right for 801_DESKTOP:
-#ifdef DC801_DESKTOP
-#define HEXED_QUICK_PRESS_TIMEOUT 50
-#define HEXED_TICK_DELAY 1
-#endif
+
 #ifdef DC801_EMBEDDED
 #define HEXED_QUICK_PRESS_TIMEOUT 500
+#define HEXED_TICK_DELAY 1
+#else
+//have to have two values since millis() doesn't work right for 801_DESKTOP:
+#define HEXED_QUICK_PRESS_TIMEOUT 50
 #define HEXED_TICK_DELAY 1
 #endif
 enum HEX_OPS {

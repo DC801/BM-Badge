@@ -295,45 +295,12 @@ static cm_Source* new_source_from_mem(char *data, int size, int ownsdata) {
   return NULL;
 }
 
-#ifdef DC801_DESKTOP
-static char* load_file(const char *filename, int *size) {
-  FILE *fp;
-  char* data;
-  int n;
-
-  fp = fopen(filename, "rb");
-  if (!fp) {
-    return NULL;
-  }
-
-  /* Get size */
-  fseek(fp, 0, SEEK_END);
-  *size = ftell(fp);
-  rewind(fp);
-
-  /* Malloc, read and return data */
-  data = (char*)malloc(*size);
-  if (!data) {
-    fclose(fp);
-    return NULL;
-  }
-  n = fread(data, 1, *size, fp);
-  fclose(fp);
-  if (n != *size) {
-    free(data);
-    return NULL;
-  }
-
-  return data;
-}
-#endif
-
 #ifdef DC801_EMBEDDED
 #undef MIN
 #undef MAX
 
 
-static void* load_file(const char *filename, int *size)
+static void* load_file(const char* filename, int* size)
 {
 	FIL fp;
 	char* data;
@@ -370,7 +337,39 @@ static void* load_file(const char *filename, int *size)
 
 	return data;
 }
+#else
+static char* load_file(const char *filename, int *size) {
+  FILE *fp;
+  char* data;
+  int n;
+
+  fp = fopen(filename, "rb");
+  if (!fp) {
+    return NULL;
+  }
+
+  /* Get size */
+  fseek(fp, 0, SEEK_END);
+  *size = ftell(fp);
+  rewind(fp);
+
+  /* Malloc, read and return data */
+  data = (char*)malloc(*size);
+  if (!data) {
+    fclose(fp);
+    return NULL;
+  }
+  n = fread(data, 1, *size, fp);
+  fclose(fp);
+  if (n != *size) {
+    free(data);
+    return NULL;
+  }
+
+  return data;
+}
 #endif
+
 
 cm_Source* cm_new_source_from_file(const char *filename) {
   int size;

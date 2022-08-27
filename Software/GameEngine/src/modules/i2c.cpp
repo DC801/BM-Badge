@@ -3,6 +3,8 @@
 //
 
 #include "i2c.h"
+#include <stddef.h>
+
 
 #ifdef DC801_EMBEDDED
 static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2C_INSTANCE);

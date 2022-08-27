@@ -5,7 +5,7 @@
 MageTileset::MageTileset(uint8_t index, uint32_t address)
 {
 	offset = address;
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	EngineROM_Read(
 		offset,
 		16,
@@ -13,7 +13,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 		"Failed to load MageTileset property 'name'"
 	);
 	name[TILESET_NAME_SIZE] = 0; // Null terminate
-	#endif // DC801_DESKTOP
+	#endif
 
 	offset += TILESET_NAME_SIZE;
 

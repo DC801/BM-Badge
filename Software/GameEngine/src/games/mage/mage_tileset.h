@@ -13,9 +13,9 @@ in a more accessible way.
 class MageTileset
 {
 private:
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	char name[TILESET_NAME_SIZE + 1];
-	#endif // DC801_DESKTOP
+	#endif
 	uint32_t offset;
 	uint16_t imageId;
 	uint16_t imageWidth;
@@ -28,9 +28,9 @@ private:
 public:
 
 	MageTileset() :
-		#ifdef DC801_DESKTOP
+		#ifndef DC801_EMBEDDED
 		name{""},
-		#endif // DC801_DESKTOP
+		#endif
 		offset{0},
 		imageId{0},
 		imageWidth{0},

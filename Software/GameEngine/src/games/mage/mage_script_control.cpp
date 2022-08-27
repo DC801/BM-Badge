@@ -268,7 +268,7 @@ void MageScriptControl::runAction(
 	//validate actionTypeId:
 	if(actionTypeId >= MageScriptActionTypeId::NUM_ACTIONS)
 	{
-		#ifdef DC801_DESKTOP
+		#ifndef DC801_EMBEDDED
 			fprintf(stderr, "Error in runAction(): actionTypeId (%d) larger than NUM_ACTIONS. Check your scripts.\r\n", actionTypeId);
 		#endif
 		return;

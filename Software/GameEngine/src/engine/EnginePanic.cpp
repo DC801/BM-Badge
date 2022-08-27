@@ -35,7 +35,7 @@ void panic_print(const char *msg, int x, int y)
 		y
 	);
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 	// On desktop, write to stderr as well
 	fprintf(stderr, msg);
 #endif
@@ -59,7 +59,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	const int x = 45;
 	int y = 0;
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 	// Print Banner, File Name, Line Number
 	std::string path = extract_filename(filename);
 	const char *file = path.c_str();
@@ -94,13 +94,13 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 						 "Press Right Joystick to %s...\n"
 						 "---------- DC801 Badge Panic ----------\n\n";
 
-#ifdef DC801_DESKTOP
-	snprintf(panic_message, sizeof(panic_message), reboot, "Exit");
-#endif
 
 #ifdef DC801_EMBEDDED
 	snprintf(panic_message, sizeof(panic_message), reboot, "Reboot");
+#else
+	snprintf(panic_message, sizeof(panic_message), reboot, "Exit");
 #endif
+
 	panic_message[sizeof(panic_message) - 1] = 0;	// Null terminate
 	panic_print(panic_message, x, y);
 
@@ -120,7 +120,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 			break;
 		}
 
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 		canvas.blt(); // Keep the window frame updated
 
 		if (application_quit != 0)
@@ -133,10 +133,6 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 		nrf_delay_ms(50);
 	}
 
-#ifdef DC801_DESKTOP
-	// On the desktop we exit, since reloading isn't an option
-	exit(1);
-#endif
 
 #ifdef DC801_EMBEDDED
 	// On the badge, we issue a software reset and begin again
@@ -144,5 +140,8 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	{
 		NVIC_SystemReset();
 	}
+#else
+	// On the desktop we exit, since reloading isn't an option
+	exit(1);
 #endif
 }

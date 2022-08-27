@@ -100,19 +100,17 @@ all of the old code used as the foundation of this badge.
 //60fps: ~16ms
 //30fps: ~33ms
 //24fps: ~41ms
-#ifdef DC801_DESKTOP
-#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
-#endif
 #ifdef DC801_EMBEDDED
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES 90
+#else
+#define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 
 // color palette corruption detection - requires much ram, can only be run on desktop
-#ifdef DC801_DESKTOP
-#define LOG_COLOR_PALETTE_CORRUPTION(value) MageGame->verifyAllColorPalettes((value));
-#endif //DC801_DESKTOP
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION(value) //(value)
+#else
+#define LOG_COLOR_PALETTE_CORRUPTION(value) MageGame->verifyAllColorPalettes((value));
 #endif //DC801_EMBEDDED
 
 typedef enum : uint8_t {

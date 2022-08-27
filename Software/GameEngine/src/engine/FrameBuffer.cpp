@@ -1,7 +1,3 @@
-#ifdef DC801_DESKTOP
-#include <SDL.h>
-#endif
-
 #include "main.h"
 #include "utility.h"
 #include "convert_endian.h"
@@ -15,7 +11,8 @@
 
 #include <algorithm>
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
+#include <SDL.h>
 #include "shim_timer.h"
 #include "shim_err.h"
 #include "EngineWindowFrame.h"
@@ -1297,7 +1294,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			break;
 		}
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 		if (application_quit != 0)
 		{
 			break;
@@ -1422,7 +1419,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			break;
 		}
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 		if (application_quit != 0)
 		{
 			break;
@@ -1875,10 +1872,9 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_ra
 
 void FrameBuffer::blt()
 {
-#ifdef DC801_DESKTOP
-	EngineWindowFrameGameBlt(frame);
-#endif
 #ifdef DC801_EMBEDDED
 	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
+#else
+	EngineWindowFrameGameBlt(frame);
 #endif
 }

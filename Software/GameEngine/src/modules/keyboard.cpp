@@ -1,6 +1,6 @@
 
 #include "keyboard.h"
-#include <stdint.h>
+#include <stddef.h>
 
 volatile uint32_t keyboard_mask = 0;
 keyboard_evt_handler_t keyboard_evt_handler = NULL;

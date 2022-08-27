@@ -2,9 +2,8 @@ cmake_minimum_required(VERSION 3.24)
 
 project(BM-Badge)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED)
 
-option(DESKTOP_BUILD "Build an executable for the desktop" TRUE)
+option(EMBEDDED_BUILD "Build an executable for the physical device" OFF)
 
 set(COMPILEDEFS
     $<IF:$<STREQUAL:BIG_ENDIAN,${CMAKE_CXX_BYTE_ORDER}>,IS_BIG_ENDIAN=1,IS_LITTLE_ENDIAN=1>
@@ -23,41 +22,72 @@ set(SOURCEFILES
     Software/GameEngine/src/main.h
 )
 
-if(${DESKTOP_BUILD})
-    list(APPEND COMPILEDEFS
-        DC801_DESKTOP=1
-    )
-elseif()
-endif()
-
-find_package(SDL2 PATHS Software/GameEngine/src/modules/sdl2/ REQUIRED)
-find_package(SDL2_image PATHS Software/GameEngine/src/modules/sdl2_image/ REQUIRED)
-
-add_subdirectory(Software/GameEngine/sdk/shim sdk)
-add_subdirectory(Software/GameEngine/src game)
+include(CheckCXXSymbolExists)
+check_cxx_symbol_exists(std::filesystem::path::preferred_separator filesystem cxx17fs)
 
 if(WIN32)
     add_executable(BM-Badge WIN32 ${SOURCEFILES})
-# Include a RC file for windows
-# list(APPEND SRC_FILES ../sample.rc)
 else()
     add_executable(BM-Badge ${SOURCEFILES})
 endif()
 
-target_compile_definitions(sdk PUBLIC ${COMPILEDEFS})
+add_subdirectory(Software/GameEngine/sdk/shim sdk)
+add_subdirectory(Software/GameEngine/src game)
+
+if(EMBEDDED_BUILD)
+    list(APPEND COMPILEDEFS
+        DC801_EMBEDDED=1
+    )
+endif()
+
+if(EMSCRIPTEN)
+    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+
+    find_package(SDL2 REQUIRED)
+
+    set(SCRIPT_FLAGS
+        -sASYNCIFY
+        -sUSE_SDL=2
+        -sUSE_SDL_IMAGE=2
+        -sSDL2_IMAGE_FORMATS=png
+        -sFORCE_FILESYSTEM=1
+        -sASSERTIONS=1
+        -sTOTAL_MEMORY=48MB
+        -sEXPORTED_FUNCTIONS=_main,_EngineTriggerRomReload
+        -sEXPORTED_RUNTIME_METHODS=callMain,ccall,cwrap
+        -lidbfs.js
+        -sDISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR
+        -sERROR_ON_UNDEFINED_SYMBOLS=0
+        -Os
+        -g3
+    )
+    string(JOIN " " USE_FLAGS ${SCRIPT_FLAGS})
+
+    if(MSVC)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /EHsc ${USE_FLAGS}")
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${USE_FLAGS}")
+    endif()
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXECUTABLE_SUFFIX .html)
+else()
+    find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/cmake REQUIRED)
+    find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/cmake REQUIRED)
+endif()
+
+target_compile_features(game PUBLIC cxx_std_17)
 target_compile_definitions(game PUBLIC ${COMPILEDEFS})
+target_compile_definitions(sdk PUBLIC ${COMPILEDEFS})
 target_compile_definitions(BM-Badge PUBLIC ${COMPILEDEFS})
-
-
-
-target_link_libraries(BM-Badge SDL2::SDL2main sdk game)
+target_include_directories(BM-Badge PUBLIC ${SDL2_INCLUDE_DIRECTORIES})
+target_link_libraries(BM-Badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} sdk game )
 
 # add_custom_command(
-#     TARGET BM-Badge POST_BUILD
-#     COMMAND
-#     cmd -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE/ ${RUNTIME_OUTPUT_DIRECTORY}/MAGE/
+# TARGET BM-Badge POST_BUILD
+# COMMAND
+# cmd -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE/ ${RUNTIME_OUTPUT_DIRECTORY}/MAGE/
 # )
-
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")
 set(destination "$<TARGET_FILE_DIR:BM-Badge>/MAGE")
 add_custom_command(

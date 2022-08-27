@@ -8,7 +8,7 @@ extern std::unique_ptr<FrameBuffer> mage_canvas;
 
 MageColorPalette::MageColorPalette(uint32_t address)
 {
-	#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 	// Read name only if we're on Desktop,
 	// Embedded don't got RAM for that
 	EngineROM_Read(
@@ -18,7 +18,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 		"Failed to read ColorPalette.name"
 	);
 	name[32] = 0; //manually set to null
-	#endif //DC801_DESKTOP
+#endif
 	// Regardless of reading/storing it, ALWAYS increment past it
 	address += COLOR_PALETTE_NAME_LENGTH;
 
@@ -43,7 +43,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 		"Failed to read ColorPalette.colors"
 	);
 
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	generatePaletteIntegrityString(colorIntegrityString);
 	//debug_print(
 	//	"%s ROM:%s",
@@ -100,7 +100,7 @@ MageColorPalette::MageColorPalette(
 	}
 }
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 void MageColorPalette::generatePaletteIntegrityString(
 	char *targetString
 ) {

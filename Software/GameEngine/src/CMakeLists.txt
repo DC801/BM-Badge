@@ -2,18 +2,26 @@ cmake_minimum_required(VERSION 3.24)
 
 project(game)
 
-#https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
 
-find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/ REQUIRED)
-find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/ REQUIRED)
+add_library(game STATIC)
 
+if(DESKTOP_BUILD)
+    if(EMSCRIPTEN)
+        find_package(SDL2 REQUIRED)
+    else()
+        find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/cmake/ REQUIRED)
+        find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/cmake/ REQUIRED)
+    endif()
+endif()
+
+# https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
 set(INCLUDEDIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${SDL2_INCLUDE_DIRS}
-    ${SDL2_IMAGE_INCLUDE_DIRS}
-    ../
-    ../sdk/shim
-    engine/
+    ${sdk_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../
+    ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/shim
+    ${CMAKE_CURRENT_SOURCE_DIR}/engine/
 )
 
 set(SOURCEFILES
@@ -32,8 +40,6 @@ set(SOURCEFILES
     engine/EngineROM.h
     engine/EngineSerial.cpp
     engine/EngineSerial.h
-    engine/EngineWindowFrame.cpp
-    engine/EngineWindowFrame.h
     engine/FrameBuffer.cpp
     engine/FrameBuffer.h
 
@@ -94,8 +100,11 @@ set(SOURCEFILES
     modules/qspi.h
 )
 
-add_library(game STATIC)
-
+if (NOT EMSCRIPTEN)
+    list(APPEND SOURCEFILES
+        engine/EngineWindowFrame.cpp
+        engine/EngineWindowFrame.h
+    )
+endif()
 target_sources(game PRIVATE ${SOURCEFILES})
-target_include_directories(game PUBLIC ${INCLUDEDIRS})
-target_link_libraries(game SDL2::SDL2 SDL2_image::SDL2_image sdk)
+target_include_directories(game PUBLIC ${INCLUDEDIRS} )

@@ -4,7 +4,7 @@
 //#include "FrameBuffer.h"
 //#include "fonts/Monaco9.h"
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -53,7 +53,7 @@ bool *buttonBoolPointerArray[] = {
 	&EngineInput_Buttons.hax,
 };
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 {
@@ -273,13 +273,12 @@ void EngineHandleKeyboardInput ()
 {
 	static uint32_t keyboardBitmask = 0x00000000;
 
-#ifdef DC801_DESKTOP
+#ifdef DC801_EMBEDDED
+	keyboardBitmask = get_keyboard_mask();
+#else
 	EngineGetDesktopInputState(&keyboardBitmask);
 #endif
 
-#ifdef DC801_EMBEDDED
-	keyboardBitmask = get_keyboard_mask();
-#endif
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);
 
 	/*

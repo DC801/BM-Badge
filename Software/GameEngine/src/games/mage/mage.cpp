@@ -9,7 +9,7 @@
 #include "EnginePanic.h"
 #include "EngineSerial.h"
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 #include "sdk/shim/shim_timer.h"
 #endif
 
@@ -268,7 +268,7 @@ void EngineMainGameLoop ()
 		);
 	}
 
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	// intentionally corrupt the dialog color palette BEFORE rendering,
 	// just so we can SEE if it works
 	if(
@@ -278,7 +278,7 @@ void EngineMainGameLoop ()
 		MageColorPalette *colorPalette = MageGame->getValidColorPalette(0);
 		colorPalette->colors[0] = 0xDEAD;
 	}
-	#endif //DC801_DESKTOP
+	#endif
 
 	//This renders the game to the screen based on the loop's updated state.
 	GameRender();
@@ -297,7 +297,7 @@ void EngineMainGameLoop ()
 	debug_print("End of Loop Total: %d", fullLoopTime);
 	debug_print("----------------------------------------");
 	#endif
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) {
 		SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
 	}
@@ -358,7 +358,10 @@ void EngineInit () {
 	//set a default hacking option.
 	MageHex->setHexOp(HEX_OPS_XOR);
 
-	#ifdef DC801_DESKTOP
+
+#ifdef DC801_EMBEDDED
+	check_ram_usage();
+#else
 		uint32_t gameSize = MageGame->Size();
 		uint32_t scriptSize = MageScript->size();
 		uint32_t hexSize = MageHex->size();
@@ -386,13 +389,10 @@ void EngineInit () {
 		// messages to come out in the correct order. WHY. WHYYYYYYYYY. WHY.
 		nrf_delay_ms(50);
 	#endif
-	#ifdef DC801_EMBEDDED
-		check_ram_usage();
-	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
 
-	#ifdef DC801_DESKTOP
+	#ifndef DC801_EMBEDDED
 	// don't want to show welcome message until after map has loaded
 	// in case map on_load has a `SET_CONNECT_SERIAL_DIALOG` action
 	was_serial_started = true;

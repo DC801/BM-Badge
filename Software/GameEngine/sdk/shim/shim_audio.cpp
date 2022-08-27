@@ -4,7 +4,7 @@
 #include <iostream>
 #include <mutex>
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 #include <SDL.h>
 
 AudioPlayer audio;

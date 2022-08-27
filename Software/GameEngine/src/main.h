@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 
-#ifdef DC801_DESKTOP
+#ifndef DC801_EMBEDDED
 #include <signal.h>
 #include "sdk_shim.h"
 extern volatile sig_atomic_t application_quit;

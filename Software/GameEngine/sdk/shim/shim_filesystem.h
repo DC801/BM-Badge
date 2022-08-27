@@ -87,23 +87,6 @@ FRESULT f_unlink (const char* path);												/* Delete an existing file or di
 
 FSIZE_t f_tell(FIL* fp);
 
-struct __dirstream
-{
-	void* __fd;
-	char* __data;
-	int __entry_data;
-	char* __ptr;
-	int __entry_ptr;
-	size_t __allocation;
-	size_t __size;
-	//__libc_lock_define(__lock)
-};
-
-typedef struct __dirstream DIR;
-
-FRESULT f_opendir(DIR** dp, const char* path);										/* Open a directory */
-FRESULT f_closedir (DIR* dp);														/* Close an open directory */
-FRESULT f_readdir (DIR* dp, FILINFO* fno);											/* Read a directory item */
 
 #ifdef __cplusplus
 }

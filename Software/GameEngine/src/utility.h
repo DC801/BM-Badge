@@ -11,15 +11,14 @@
 #ifndef UTILITY_H_
 #define UTILITY_H_
 
+#include <stddef.h>
 #include "adafruit/gfxfont.h"
-
-#ifdef DC801_DESKTOP
-#define NRF_LOG_RAW_INFO printf
-#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
-#endif
 
 #ifdef DC801_EMBEDDED
 #define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
+#else
+#define NRF_LOG_RAW_INFO printf
+#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
 #endif
 
 #ifdef __cplusplus
@@ -69,8 +68,6 @@ uint32_t getSystick(void);
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis);
 uint32_t millis();
-
-uint8_t getFiles(char files[][9], const char *path, uint8_t fileMax);
 
 void EEpwm_init();
 void EEpwm_set(int percent);
