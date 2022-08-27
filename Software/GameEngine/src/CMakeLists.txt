@@ -1,29 +1,11 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.24)
 
 project(game)
-
-set(CMAKE_CXX_STANDARD 17)
-
-add_subdirectory(../sdk/shim lib/sdk)
 
 #https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
 
 find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/ REQUIRED)
 find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/ REQUIRED)
-
-
-set(COMPILEDEFS
-    DC801_DESKTOP=1
-    $<IF:$<STREQUAL:BIG_ENDIAN,${CMAKE_CXX_BYTE_ORDER}>,IS_BIG_ENDIAN=1,IS_LITTLE_ENDIAN=1>
-    BOARD_CUSTOM=1
-    CONFIG_NFCT_PINS_AS_GPIOS=1
-    FLOAT_ABI_HARD=1
-    NRF52840_XXAA=1
-    NRF_SD_BLE_API_VERSION=6=1
-    S140=1
-    SOFTDEVICE_PRESENT=1
-    SWI_DISABLE0=1
-)
 
 set(INCLUDEDIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -35,8 +17,6 @@ set(INCLUDEDIRS
 )
 
 set(SOURCEFILES
-    main.cpp
-    main.h
     utility.cpp
     utility.h
 
@@ -89,50 +69,33 @@ set(SOURCEFILES
     games/mage/mage.cpp
     games/mage/mage.h
 
-    modules/cmixer/cmixer.c
+    modules/cmixer/cmixer.cpp
     modules/cmixer/cmixer.h
-    modules/drv_ili9341.c
+    modules/drv_ili9341.cpp
     modules/drv_ili9341.h
-    modules/sd.c
+    modules/sd.cpp
     modules/sd.h
-    modules/ble.c
+    modules/ble.cpp
     modules/ble.h
-    modules/adc.c
+    modules/adc.cpp
     modules/adc.h
-    modules/uart.c
+    modules/uart.cpp
     modules/uart.h
-    modules/led.c
+    modules/led.cpp
     modules/led.h
-    modules/i2c.c
+    modules/i2c.cpp
     modules/i2c.h
-    modules/mutex.c
+    modules/mutex.cpp
     modules/mutex.h
-    modules/keyboard.c
+    modules/keyboard.cpp
     modules/keyboard.h
-    modules/rc4.c
+    modules/rc4.cpp
     modules/qspi.cpp
     modules/qspi.h
 )
 
-if(WIN32)
-    add_executable(game WIN32 ${SOURCEFILES})
+add_library(game STATIC)
 
-    target_link_libraries(game SDL2::SDL2main)
-
-# Include a RC file for windows
-# list(APPEND SRC_FILES ../sample.rc)
-else()
-    add_executable(game ${SOURCEFILES})
-endif()
-
-set_source_files_properties(${SOURCEFILES} PROPERTIES LANGUAGE CXX)
-target_compile_definitions(game PUBLIC ${COMPILEDEFS})
+target_sources(game PRIVATE ${SOURCEFILES})
 target_include_directories(game PUBLIC ${INCLUDEDIRS})
 target_link_libraries(game SDL2::SDL2 SDL2_image::SDL2_image sdk)
-
-# add_custom_command(
-#     TARGET game POST_BUILD
-#     COMMAND
-#     ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/../../../SD_Card/MAGE/" "${RUNTIME_OUTPUT_DIRECTORY}/MAGE/"
-#     VERBATIM
-# )

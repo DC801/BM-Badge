@@ -84,11 +84,11 @@
 
 #define LED_INTENSITY		0x80
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
 
 typedef enum {
         LED_XOR = 0,

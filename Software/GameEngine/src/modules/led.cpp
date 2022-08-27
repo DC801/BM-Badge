@@ -74,7 +74,7 @@ static const uint8_t led_address[LED_COUNT] = {
 
 void ledInit (void){
     int i;
-    
+
     /* Select function page */
 
     ledPageSet (ISSI_PAGE_FUNCTION);
@@ -100,11 +100,11 @@ void ledInit (void){
 
     /* Set pulldowns */
     ledRegSet (ISSI_REG_CSX_PULLDOWN, 0xFF);
-    
+
     /* Set breath speeds */
     ledRegSet(ISSI_REG_ABM1_IN, 0x24); // .42s ramp, .42s hold
     ledRegSet(ISSI_REG_ABM1_OUT, 0x24); // .42s decline, .42s pause
-    
+
     /* Reset timer (also updates breathing values) */
     ledRegSet(ISSI_REG_TIME, 0);
 
@@ -115,11 +115,11 @@ void ledInit (void){
     for (i = 0; i < 0x18; i++) {
         ledRegSet(i, 0xFF);
     }
-    
+
     /* Select PWM register page */
 
     ledPageSet (ISSI_PAGE_PWM);
-    
+
     return;
 }
 
@@ -154,8 +154,8 @@ void ledRegSet (uint8_t reg, uint8_t val){
 
 #ifdef DC801_EMBEDDED
 	i2cMasterTransmit(ISSI_I2C_ADDR, txbuf, 2);
-#endif 
-	
+#endif
+
 	return;
 }
 
@@ -167,11 +167,11 @@ void ledSet (uint8_t index, uint8_t intensity){
     led_states[index] = intensity;
 
     ledPageSet(ISSI_PAGE_PWM);
-    
+
     ledRegSet(led_address[index] , intensity);
-    
+
     ledPageSet(ISSI_PAGE_BREATH);
-    
+
     ledRegSet(led_address[index] , 0);
 
     return;
@@ -212,9 +212,9 @@ void ledPulse(LEDID id) {
     if (id > LED_COUNT) {
         return;
     }
-    
+
     ledPageSet(ISSI_PAGE_BREATH);
-    
+
     ledRegSet(led_address[id] , 1);
 }
 
@@ -222,9 +222,9 @@ void ledPulseFast(LEDID id) {
     if (id > LED_COUNT) {
         return;
     }
-    
+
     ledPageSet(ISSI_PAGE_BREATH);
-    
+
     ledRegSet(led_address[id] , 2);
 }
 

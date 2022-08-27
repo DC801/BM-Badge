@@ -1,12 +1,11 @@
 #ifndef NAU8810_H
 #define NAU8810_H
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
-
 #ifdef DC801_EMBEDDED
 
 #include "nrfx_i2s.h"
