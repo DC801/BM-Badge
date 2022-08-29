@@ -1,33 +1,11 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(game)
-
-
 add_library(game STATIC)
 
-if(DESKTOP_BUILD)
-    if(EMSCRIPTEN)
-        find_package(SDL2 REQUIRED)
-    else()
-        find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2/cmake/ REQUIRED)
-        find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/modules/sdl2_image/cmake/ REQUIRED)
-    endif()
-endif()
-
 # https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
-set(INCLUDEDIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${SDL2_INCLUDE_DIRS}
-    ${sdk_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../sdk/shim
-    ${CMAKE_CURRENT_SOURCE_DIR}/engine/
-)
 
 set(SOURCEFILES
-    utility.cpp
-    utility.h
-
     engine/convert_endian.cpp
     engine/convert_endian.h
     engine/EngineAudio.cpp
@@ -42,6 +20,10 @@ set(SOURCEFILES
     engine/EngineSerial.h
     engine/FrameBuffer.cpp
     engine/FrameBuffer.h
+    engine/EngineWindowFrame.cpp
+    engine/EngineWindowFrame.h
+    engine/utility.cpp
+    engine/utility.h
 
     games/mage/mage_animation.cpp
     games/mage/mage_animation.h
@@ -100,11 +82,4 @@ set(SOURCEFILES
     modules/qspi.h
 )
 
-if (NOT EMSCRIPTEN)
-    list(APPEND SOURCEFILES
-        engine/EngineWindowFrame.cpp
-        engine/EngineWindowFrame.h
-    )
-endif()
-target_sources(game PRIVATE ${SOURCEFILES})
-target_include_directories(game PUBLIC ${INCLUDEDIRS} )
+target_sources(game PUBLIC ${SOURCEFILES})

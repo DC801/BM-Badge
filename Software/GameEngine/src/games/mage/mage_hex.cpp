@@ -25,7 +25,7 @@ uint32_t MageHexEditor::size() const
 		sizeof(lastPageButtonPressTime) +
 		sizeof(isCopying) +
 		sizeof(disableMovementUntilRJoyUpRelease)
-	);
+		);
 	return size;
 }
 
@@ -56,17 +56,17 @@ void MageHexEditor::toggleHexDialog()
 	// bytes_per_page = (bytes_per_page % 192) + HEXED_BYTES_PER_ROW;
 }
 
-void MageHexEditor::setHexOp (enum HEX_OPS op)
+void MageHexEditor::setHexOp(enum HEX_OPS op)
 {
 	currentOp = op;
 	uint8_t led_op_xor = 0x00;
 	uint8_t led_op_add = 0x00;
 	uint8_t led_op_sub = 0x00;
 	switch (op) {
-		case HEX_OPS_XOR: led_op_xor = 0xFF; break;
-		case HEX_OPS_ADD: led_op_add = 0xFF; break;
-		case HEX_OPS_SUB: led_op_sub = 0xFF; break;
-		default: break;
+	case HEX_OPS_XOR: led_op_xor = 0xFF; break;
+	case HEX_OPS_ADD: led_op_add = 0xFF; break;
+	case HEX_OPS_SUB: led_op_sub = 0xFF; break;
+	default: break;
 	}
 	ledSet(LED_XOR, led_op_xor);
 	ledSet(LED_ADD, led_op_add);
@@ -84,8 +84,8 @@ void MageHexEditor::setPageToCursorLocation() {
 
 void MageHexEditor::updateHexLights()
 {
-	const uint8_t currentByte = *(((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
-	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
+	const uint8_t currentByte = *(((uint8_t*)hackableDataAddress.get()) + hexCursorLocation);
+	uint8_t* memOffsets = MageGame->currentSave.memOffsets;
 	uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
@@ -109,11 +109,11 @@ uint16_t MageHexEditor::getCurrentMemPage()
 	//start at the current location.
 	int32_t adjustedMem = hexCursorLocation;
 
-	while(adjustedMem >= 0){
+	while (adjustedMem >= 0) {
 		//subtract a page worth of memory from the memory location
 		adjustedMem -= bytesPerPage;
 		//if the address doesn't get to 0, it must be on a higher page.
-		if(adjustedMem >= 0)
+		if (adjustedMem >= 0)
 		{
 			memPage++;
 		}
@@ -133,20 +133,20 @@ void MageHexEditor::updateHexStateVariables()
 
 void MageHexEditor::applyHexModeInputs()
 {
-	if(EngineInput_Deactivated.rjoy_up) {
+	if (EngineInput_Deactivated.rjoy_up) {
 		disableMovementUntilRJoyUpRelease = false;
 	}
 	//check to see if player input is allowed:
-	if(
+	if (
 		MageDialog->isOpen
 		|| !MageGame->playerHasControl
 		|| !MageGame->playerHasHexEditorControl
 		|| disableMovementUntilRJoyUpRelease
-	) {
+		) {
 		return;
 	}
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
-	uint8_t *memOffsets = MageGame->currentSave.memOffsets;
+	uint8_t* currentByte = (((uint8_t*)hackableDataAddress.get()) + hexCursorLocation);
+	uint8_t* memOffsets = MageGame->currentSave.memOffsets;
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
 	if (EngineInput_Activated.hax) { toggleHexEditor(); }
@@ -160,10 +160,10 @@ void MageHexEditor::applyHexModeInputs()
 			|| EngineInput_Buttons.ljoy_down
 			|| EngineInput_Buttons.rjoy_up // triangle for increment
 			|| EngineInput_Buttons.rjoy_down // x for decrement
-		);
+			);
 		if (EngineInput_Buttons.op_page) {
 			//reset last press time only when the page button switches from unpressed to pressed
-			if(!previousPageButtonState) {
+			if (!previousPageButtonState) {
 				lastPageButtonPressTime = millis();
 			}
 			//change the state to show the button has been pressed.
@@ -173,13 +173,13 @@ void MageHexEditor::applyHexModeInputs()
 			if (
 				EngineInput_Buttons.ljoy_up
 				|| EngineInput_Buttons.ljoy_left
-			) {
+				) {
 				currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
 			}
 			if (
 				EngineInput_Buttons.ljoy_down
 				|| EngineInput_Buttons.ljoy_right
-			) {
+				) {
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
 			//check for memory button presses:
@@ -196,10 +196,10 @@ void MageHexEditor::applyHexModeInputs()
 		{
 			applyMemRecallInputs();
 			//check to see if the page button was pressed and released quickly
-			if(
+			if (
 				(previousPageButtonState) &&
 				((millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
-			) {
+				) {
 				//if the page button was pressed and then released fast enough, advance one page.
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
@@ -207,9 +207,9 @@ void MageHexEditor::applyHexModeInputs()
 			previousPageButtonState = false;
 
 			//check directional inputs and move cursor.
-			if(
+			if (
 				!EngineInput_Buttons.rjoy_right // not if in multi-byte selection mode
-			) {
+				) {
 				if (EngineInput_Buttons.ljoy_left) {
 					//move the cursor left:
 					hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
@@ -255,13 +255,13 @@ void MageHexEditor::applyHexModeInputs()
 				if (EngineInput_Buttons.rjoy_right) {
 					if (EngineInput_Buttons.ljoy_left) {
 						MageGame->currentSave.clipboardLength = MAX(
-							(uint8_t) 1,
+							(uint8_t)1,
 							MageGame->currentSave.clipboardLength - 1
 						);
 					}
 					if (EngineInput_Buttons.ljoy_right) {
 						MageGame->currentSave.clipboardLength = MIN(
-							(uint8_t) sizeof(MageEntity),
+							(uint8_t)sizeof(MageEntity),
 							MageGame->currentSave.clipboardLength + 1
 						);
 					}
@@ -315,25 +315,20 @@ void MageHexEditor::applyMemRecallInputs() {
 	}
 }
 
-void MageHexEditor::getHexStringForByte (uint8_t byte, char* outputString)
-{
-	sprintf(outputString,"%02X", byte);
-}
-
-uint16_t MageHexEditor::getRenderableStringLength(uint8_t *bytes, uint16_t maxLength) {
+uint16_t MageHexEditor::getRenderableStringLength(uint8_t* bytes, uint16_t maxLength) {
 	uint16_t offset = 0;
 	uint16_t renderableLength = 0;
 	uint8_t currentByte = bytes[0];
 	while (
 		currentByte != 0 &&
 		offset < maxLength
-	) {
+		) {
 		offset++;
 		currentByte = bytes[renderableLength];
-		if(
+		if (
 			currentByte >= 32 &&
 			currentByte < 128
-		) {
+			) {
 			renderableLength++;
 		}
 	}
@@ -344,14 +339,14 @@ void MageHexEditor::renderHexHeader()
 {
 	char headerString[128];
 	char clipboardPreview[24];
-	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
-	uint8_t *currentByteAddress = (uint8_t *) hackableDataAddress.get() + hexCursorLocation;
+	char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = { 0 };
+	uint8_t* currentByteAddress = (uint8_t*)hackableDataAddress.get() + hexCursorLocation;
 	uint8_t u1Value = *currentByteAddress;
-	uint16_t u2Value = *(uint16_t *) ((currentByteAddress - (hexCursorLocation % 2)));
+	uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
 	sprintf(
 		headerString,
 		"CurrentPage: %03u              CurrentByte: 0x%04X\n"
-			"TotalPages:  %03u   Entities: %05u    Mem: 0x%04X",
+		"TotalPages:  %03u   Entities: %05u    Mem: 0x%04X",
 		currentMemPage,
 		hexCursorLocation,
 		totalMemPages,
@@ -367,11 +362,11 @@ void MageHexEditor::renderHexHeader()
 	);
 	memcpy(
 		stringPreview,
-		(uint8_t *) hackableDataAddress.get() + hexCursorLocation,
+		(uint8_t*)hackableDataAddress.get() + hexCursorLocation,
 		MAGE_ENTITY_NAME_LENGTH
 	);
 	uint16_t stringPreviewLength = getRenderableStringLength(
-		(uint8_t *) stringPreview,
+		(uint8_t*)stringPreview,
 		MAGE_ENTITY_NAME_LENGTH
 	);
 	// add spaces for padding at the end of the string preview so clipboard stays put
@@ -402,7 +397,7 @@ void MageHexEditor::renderHexHeader()
 				*(MageGame->currentSave.clipboard + i)
 			);
 		}
-		if(MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
+		if (MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
 			sprintf(
 				clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
 				"..."
@@ -425,7 +420,6 @@ void MageHexEditor::renderHexHeader()
 
 void MageHexEditor::renderHexEditor()
 {
-	char currentByteString[2];
 	if ((hexCursorLocation / bytesPerPage) == currentMemPage)
 	{
 		mage_canvas->fillRect(
@@ -449,53 +443,47 @@ void MageHexEditor::renderHexEditor()
 		}
 	}
 	renderHexHeader();
-	for(
-		uint16_t i = 0;
-		(
-			i < bytesPerPage
-			&& (i + (currentMemPage * bytesPerPage)) < memTotal
-		);
-		i++
-	)
+	auto pageOffset = currentMemPage * bytesPerPage;
+
+	constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7',
+						   '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	auto dataPage = (uint8_t*)hackableDataAddress.get() + pageOffset;
+	uint16_t i = 0;
+	std::string s(HEXED_BYTES_PER_ROW * 3, ' ');
+	while (i < bytesPerPage && i + pageOffset < memTotal)
 	{
-		getHexStringForByte(
-			*(((uint8_t *) hackableDataAddress.get()) + (i + (currentMemPage * bytesPerPage))),
-			currentByteString
-		);
-
-		//this bit will color the playerEntity differently than the other entities in the hex editor:
-		uint32_t font_color = 0xffff;
-		if(MageGame->playerEntityIndex != NO_PLAYER)
+		auto color = COLOR_WHITE;
+		if (NO_PLAYER != MageGame->playerEntityIndex
+			&& i + pageOffset >= sizeof(MageEntity) * MageGame->playerEntityIndex
+			&& i + pageOffset < sizeof(MageEntity) * (MageGame->playerEntityIndex + 1))
 		{
-			if(
-				( (uint32_t)(i + (currentMemPage * bytesPerPage)) >= (MageGame->playerEntityIndex * sizeof(MageEntity)) ) &&
-				( (uint32_t)(i + (currentMemPage * bytesPerPage)) <  ((MageGame->playerEntityIndex+1) * sizeof(MageEntity)) )
-			)
-			{
-				font_color = 0xfc10;
-			}
+			color = COLOR_RED;
 		}
-
-		//print the byte:
+		for (uint16_t j = 0; j < HEXED_BYTES_PER_ROW; i++,j++)
+		{
+			s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
+			s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
+		}
 		mage_canvas->printMessage(
-			currentByteString,
+			s.c_str(),
 			Monaco9,
-			font_color,
-			(i % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X,
-			(i / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y
+			color,
+			HEXED_BYTE_OFFSET_X,
+			HEXED_BYTE_OFFSET_Y + ((i-1) / HEXED_BYTES_PER_ROW)* HEXED_BYTE_HEIGHT
 		);
 	}
 }
 
 void MageHexEditor::runHex(uint8_t value)
 {
-	uint8_t *currentByte = (((uint8_t *) hackableDataAddress.get()) + hexCursorLocation);
+	uint8_t* currentByte = (((uint8_t*)hackableDataAddress.get()) + hexCursorLocation);
 	uint8_t changedValue = *currentByte;
 	switch (currentOp) {
-		case HEX_OPS_XOR: changedValue ^= value; break;
-		case HEX_OPS_ADD: changedValue += value; break;
-		case HEX_OPS_SUB: changedValue -= value; break;
-		default: break;
+	case HEX_OPS_XOR: changedValue ^= value; break;
+	case HEX_OPS_ADD: changedValue += value; break;
+	case HEX_OPS_SUB: changedValue -= value; break;
+	default: break;
 	}
 	*currentByte = changedValue;
 }

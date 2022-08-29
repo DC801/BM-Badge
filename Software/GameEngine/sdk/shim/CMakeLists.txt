@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.24)
 
 project(sdkshim)
 
-# find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/../../src/modules/sdl2/cmake REQUIRED)
-
-set(INCLUDEDIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${SDL2_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/modules/cmixer/
-    ${CMAKE_CURRENT_SOURCE_DIR}/../../src/engine/
-)
-
 set(SOURCEFILES
     sdk_shim.cpp
     sdk_shim.h
@@ -42,4 +31,3 @@ set(SOURCEFILES
 
 add_library(sdk STATIC)
 target_sources(sdk PUBLIC ${SOURCEFILES})
-target_include_directories(sdk PUBLIC ${INCLUDEDIRS})

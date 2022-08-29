@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 project(BM-Badge)
 set(CMAKE_CXX_STANDARD 17)
 
-option(EMBEDDED_BUILD "Build an executable for the physical device" OFF)
+option(DC801_EMBEDDED_BUILD "Build an executable for the physical device" OFF)
 
 set(COMPILEDEFS
     $<IF:$<STREQUAL:BIG_ENDIAN,${CMAKE_CXX_BYTE_ORDER}>,IS_BIG_ENDIAN=1,IS_LITTLE_ENDIAN=1>
@@ -61,33 +61,46 @@ if(EMSCRIPTEN)
         -Os
         -g3
     )
-    string(JOIN " " USE_FLAGS ${SCRIPT_FLAGS})
 
     if(MSVC)
+        string(JOIN " " USE_FLAGS ${SCRIPT_FLAGS})
+        string(REPLACE "-" "/" USE_FLAGS ${USE_FLAGS})
+        string(REPLACE "=" ":" USE_FLAGS ${USE_FLAGS})
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17 /EHsc ${USE_FLAGS}")
     else()
+        string(JOIN " " USE_FLAGS ${SCRIPT_FLAGS})
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${USE_FLAGS}")
     endif()
 
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXECUTABLE_SUFFIX .html)
 else()
-    find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/cmake REQUIRED)
-    find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/cmake REQUIRED)
+    find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules REQUIRED)
+    find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules REQUIRED)
 endif()
 
-target_compile_features(game PUBLIC cxx_std_17)
+# https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
+set(INCLUDEDIRS
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/engine
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/cmixer
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/sdk/shim
+    ${SDL2_INCLUDE_DIRS}
+    ${SDL2_IMAGE_INCLUDE_DIRS}
+)
+target_include_directories(game PUBLIC ${INCLUDEDIRS})
+target_include_directories(sdk PUBLIC ${INCLUDEDIRS})
+target_include_directories(BM-Badge PUBLIC ${INCLUDEDIRS})
+
 target_compile_definitions(game PUBLIC ${COMPILEDEFS})
 target_compile_definitions(sdk PUBLIC ${COMPILEDEFS})
 target_compile_definitions(BM-Badge PUBLIC ${COMPILEDEFS})
-target_include_directories(BM-Badge PUBLIC ${SDL2_INCLUDE_DIRECTORIES})
-target_link_libraries(BM-Badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} sdk game )
 
-# add_custom_command(
-# TARGET BM-Badge POST_BUILD
-# COMMAND
-# cmd -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE/ ${RUNTIME_OUTPUT_DIRECTORY}/MAGE/
-# )
+target_link_libraries(BM-Badge ${SDL2_LIBRARIES} SDL2_image::SDL2_image sdk game )
+
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")
 set(destination "$<TARGET_FILE_DIR:BM-Badge>/MAGE")
 add_custom_command(

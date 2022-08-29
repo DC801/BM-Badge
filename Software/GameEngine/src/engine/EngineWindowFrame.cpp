@@ -1,4 +1,8 @@
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 #include <SDL.h>
 #include <SDL_image.h>
 
@@ -54,7 +58,7 @@ void EngineWindowFrameInit()
 	//Create window
 	SCREEN_WIDTH = frameSurface->w * SCREEN_MULTIPLIER;
 	SCREEN_HEIGHT = frameSurface->h * SCREEN_MULTIPLIER;
-
+#ifndef __EMSCRIPTEN__
 	SDL_CreateWindowAndRenderer(
 		SCREEN_WIDTH,
 		SCREEN_HEIGHT,
@@ -62,7 +66,7 @@ void EngineWindowFrameInit()
 		&window,
 		&renderer
 	);
-
+#endif
 	SDL_SetWindowTitle(
 		window,
 		"DC801 MAGE GAME"
@@ -72,8 +76,10 @@ void EngineWindowFrameInit()
 	{
 		ENGINE_PANIC("Failed to create SDL Window\nSDL_Error: %s\n", SDL_GetError());
 	}
+#ifndef __EMSCRIPTEN__
 
 	SDL_RenderSetLogicalSize(renderer, frameSurface->w, frameSurface->h);
+#endif
 
 	frameTexture = SDL_CreateTextureFromSurface(renderer, frameSurface);
 	frameButtonTexture = SDL_CreateTextureFromSurface(renderer, frameButtonSurface);

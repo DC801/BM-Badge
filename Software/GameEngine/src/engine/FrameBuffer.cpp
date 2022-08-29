@@ -279,7 +279,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	if (glitched) {
 		screen_x += tile_width * 0.125;
-		tile_height = tile_height * 0.75;
+		tile_width *= 0.75;
 	}
 
 	if (
@@ -291,7 +291,7 @@ void FrameBuffer::drawChunkWithFlags(
 		return;
 	}
 
-	auto pixels = std::unique_ptr<uint8_t[]>{ new uint8_t[tile_width * tile_height] };
+	auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
 
 	EngineROM_Read(
 		address + ((source_y * pitch) + source_x),
@@ -458,6 +458,7 @@ void FrameBuffer::tileToBufferNoXNoYNoZ(
 		d.x = tile_width;
 		screen_x_start = screen_x;
 	}
+
 	if (screen_y < 0) {
 		a.y = -screen_y;
 		d.y = tile_height;
@@ -986,7 +987,7 @@ void FrameBuffer::tileToBufferYesXYesYYesZ(
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch) {
 	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
 	FILE* fd = fopen(filename, "rb");
 	fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
 
@@ -1003,7 +1004,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color) {
 	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
 
 	FILE* fd = fopen(filename, "rb");
 	fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
@@ -1023,7 +1024,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename)
 {
 	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
+
 	uint32_t offset = 0;
 	m_stop = false;
 
@@ -1107,7 +1109,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
 {
 	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
+
 	uint32_t offset = 0;
 	m_stop = false;
 
@@ -1193,7 +1196,7 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename)
 {
 	const size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 
@@ -1311,7 +1314,7 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
 {
 	size_t bufferSize = w * h;
-	auto buf = std::unique_ptr<uint16_t[]>{ new uint16_t[bufferSize]{} };
+	auto buf = std::make_unique<uint16_t[]>(bufferSize);
 	uint8_t retVal = USER_BUTTON_NONE;
 	m_stop = false;
 

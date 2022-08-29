@@ -9,7 +9,7 @@
             "name": "Debug (Desktop)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/Software/GameEngine/output/bm_badge.out",
+            "program": "${workspaceRoot}/build/BM-Badge.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/Software/GameEngine/output",

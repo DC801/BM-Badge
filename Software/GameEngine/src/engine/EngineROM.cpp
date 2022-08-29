@@ -2,6 +2,7 @@
 #include "games/mage/mage_defines.h"
 #include "utility.h"
 #include <filesystem>
+#include <fstream>
 
 
 #ifdef DC801_EMBEDDED
@@ -24,8 +25,8 @@ void makeSureSaveFilePathExists() {
 		if (!std::filesystem::create_directory(saveDir)) {
 			throw "Couldn't create save directory";
 		}
-		}
 	}
+}
 #endif //DC801_DESKTOP
 
 void EngineROM_Init()
@@ -37,13 +38,13 @@ void EngineROM_Init()
 	FIL gameDat;
 	FRESULT result;
 	UINT count;
-	char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
-	char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] {0};
+	char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
+	char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
 	bool gameDatSDPresent = false;
 	bool eraseWholeRomChip = false;
 	// Look on the SD card to read `game.dat` filesize, OR see if it is present at all:
 	uint32_t gameDatFilesize = util_sd_file_size(filename);
-	if(gameDatFilesize > 0) {
+	if (gameDatFilesize > 0) {
 		// Open magegame.dat file on SD card
 		result = f_open(&gameDat, filename, FA_READ | FA_OPEN_EXISTING);
 		if (result == FR_OK) {
@@ -52,7 +53,7 @@ void EngineROM_Init()
 				// get the gameDatHashSD from the SD card game.dat:
 				result = f_read(
 					&gameDat,
-					(uint8_t *) gameDatHashSD,
+					(uint8_t*)gameDatHashSD,
 					ENGINE_ROM_MAGIC_HASH_LENGTH,
 					&count
 				);
@@ -79,11 +80,11 @@ void EngineROM_Init()
 		EngineROM_Read(
 			0,
 			ENGINE_ROM_MAGIC_HASH_LENGTH,
-			(uint8_t *) gameDatHashROM,
+			(uint8_t*)gameDatHashROM,
 			"Failed to read header hash from ROM"
 		);
-		char gameDatHashSDString[9] = {0};
-		char gameDatHashROMString[9] = {0};
+		char gameDatHashSDString[9] = { 0 };
+		char gameDatHashROMString[9] = { 0 };
 		sprintf(
 			gameDatHashSDString,
 			"%02X%02X%02X%02X",
@@ -113,13 +114,15 @@ void EngineROM_Init()
 				"The file `game.dat` on your SD card does not\n"
 				"match what is on your badge ROM chip."
 			);
-		} else if (EngineInput_Buttons.mem3) {
+		}
+		else if (EngineInput_Buttons.mem3) {
 			sprintf(
 				updateMessagePrefix,
 				"You have held down MEM3 while booting.\n"
 				"You may force update `game.dat` on badge."
 			);
-		} else {
+		}
+		else {
 			// there is no update, and user is not holding MEM3, proceed as normal
 			result = f_close(&gameDat);
 			return;
@@ -169,21 +172,21 @@ void EngineROM_Init()
 			}
 		}
 	}
-	if(!EngineROM_SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip)){
+	if (!EngineROM_SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip)) {
 		ENGINE_PANIC("SD Copy Operation was not successful.");
 	}
 	//close game.dat file when done:
 	result = f_close(&gameDat);
 #else
-	struct stat stats;
-	size_t romFileSize = 0;
-	if (stat(filename, &stats) == 0) {
-		romFileSize = stats.st_size;
+	auto romFileSize = 0;
+	if (std::filesystem::exists(filename)) {
+		romFileSize = std::filesystem::file_size(filename);
 		printf(
 			"EngineROM_Init - romFileSize: %d\n",
 			romFileSize
 		);
-	} else {
+	}
+	else {
 		ENGINE_PANIC(
 			"Desktop build:\n"
 			"    Unable to read ROM file size"
@@ -199,6 +202,8 @@ void EngineROM_Init()
 		);
 	}
 
+	auto file = std::ifstream{filename, std::ios::binary};
+
 	romfile = fopen(filename, "rb");
 	if (romfile == NULL)
 	{
@@ -211,9 +216,7 @@ void EngineROM_Init()
 	}
 
 	/* copy the file into the buffer */
-	bool readFailed = fread(romDataInDesktopRam, romFileSize, 1, romfile) != 1;
-	fclose(romfile);
-	if (readFailed)
+	if (!file.read((char*)romDataInDesktopRam, romFileSize))
 	{
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
@@ -245,13 +248,13 @@ uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
 	return (
 		ENGINE_ROM_SAVE_OFFSET
 		+ (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE)
-	);
+		);
 }
 
 void EngineROM_ReadSaveSlot(
 	uint8_t slotIndex,
 	size_t length,
-	uint8_t *data
+	uint8_t* data
 ) {
 #ifdef DC801_EMBEDDED
 	EngineROM_Read(
@@ -262,8 +265,8 @@ void EngineROM_ReadSaveSlot(
 	);
 #else
 	makeSureSaveFilePathExists();
-	char *saveFileName = saveFileSlotNames[slotIndex];
-	FILE *saveFile = fopen(saveFileName, "r+b");
+	char* saveFileName = saveFileSlotNames[slotIndex];
+	FILE* saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
 		saveFile = fopen(saveFileName, "w+b");
 		if (saveFile == NULL) {
@@ -279,40 +282,41 @@ void EngineROM_ReadSaveSlot(
 		"Save file size: %d\n",
 		saveFileSize
 	);
-	if(saveFileSize) {
+	if (saveFileSize) {
 		if (fread(data, saveFileSize, 1, saveFile) != 1) {
 			fclose(saveFile);
 			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
 		}
-	} else {
+	}
+	else {
 		// The file save_*.dat on disk is empty?
 		// Empty out the destination.
-		for(size_t i = 0; i < length; i++) {
+		for (size_t i = 0; i < length; i++) {
 			data[i] = 0;
 		}
 	}
 	fclose(saveFile);
-	#endif
+#endif
 }
 
 void EngineROM_EraseSaveSlot(uint8_t slotIndex) {
-	#ifdef DC801_EMBEDDED
-	if(!qspiControl.erase(
+#ifdef DC801_EMBEDDED
+	if (!qspiControl.erase(
 		tBlockSize::BLOCK_SIZE_256K,
 		getSaveSlotAddressByIndex(slotIndex)
-	)){
+	)) {
 		ENGINE_PANIC("Failed to send erase command for save slot.");
 	}
-	while(qspiControl.isBusy()){
+	while (qspiControl.isBusy()) {
 		// is very busy
 	}
-	#endif //DC801_EMBEDDED
+#endif //DC801_EMBEDDED
 }
 
 void EngineROM_WriteSaveSlot(
 	uint8_t slotIndex,
 	size_t length,
-	uint8_t *hauntedDataPointer
+	uint8_t* hauntedDataPointer
 ) {
 #ifdef DC801_EMBEDDED
 	uint8_t localUnHauntedSaveDataCopy[length];
@@ -339,8 +343,8 @@ void EngineROM_WriteSaveSlot(
 	// and write to ROM from the pointer to the locally scoped stack copy.
 	// This may actually be a compiler bug, or ROM interface black magic.
 	makeSureSaveFilePathExists();
-	char *saveFileName = saveFileSlotNames[slotIndex];
-	FILE *saveFile = fopen(saveFileName, "r+b");
+	char* saveFileName = saveFileSlotNames[slotIndex];
+	FILE* saveFile = fopen(saveFileName, "r+b");
 	if (saveFile == NULL) {
 		saveFile = fopen(saveFileName, "w+b");
 		if (saveFile == NULL) {
@@ -357,15 +361,15 @@ void EngineROM_WriteSaveSlot(
 	);
 	fclose(saveFile);
 
-	#ifdef EMSCRIPTEN
+#ifdef EMSCRIPTEN
 	// triggers a call to the FS.syncfs, asking IDBFS
 	// "pls actually do your job and save for reals"
 	// It's async, so good luck if you interrupt it
 	// ¯\_(ツ)_/¯
 	emscripten_run_script("Module.persistSaveFiles();");
-	#endif // EMSCRIPTEN
+#endif // EMSCRIPTEN
 
-	#endif // DC801_DESKTOP
+#endif // DC801_DESKTOP
 
 }
 
@@ -375,8 +379,8 @@ bool EngineROM_SD_Copy(
 	uint32_t gameDatFilesize,
 	FIL gameDat,
 	bool eraseWholeRomChip
-){
-	if(gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE){
+) {
+	if (gameDatFilesize > ENGINE_ROM_MAX_DAT_FILE_SIZE) {
 		ENGINE_PANIC(
 			"Your game.dat is larger than %d bytes.\n"
 			"You will need to reduce its size to use it\n"
@@ -389,8 +393,8 @@ bool EngineROM_SD_Copy(
 	UINT count = 0;
 	p_canvas()->clearScreen(COLOR_BLACK);
 	uint32_t currentAddress = 0;
-	uint8_t sdReadBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE] {0};
-	if(eraseWholeRomChip){
+	uint8_t sdReadBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE]{ 0 };
+	if (eraseWholeRomChip) {
 		p_canvas()->printMessage(
 			"Erasing WHOLE ROM chip.\n"
 			"Please be patient, this may take a few minutes",
@@ -400,10 +404,11 @@ bool EngineROM_SD_Copy(
 			96
 		);
 		p_canvas()->blt();
-		if(!qspiControl.chipErase()){
+		if (!qspiControl.chipErase()) {
 			ENGINE_PANIC("Failed to erase WHOLE ROM Chip.");
 		}
-	} else {
+	}
+	else {
 		p_canvas()->printMessage(
 			"Erasing ROM chip",
 			Monaco9,
@@ -414,11 +419,11 @@ bool EngineROM_SD_Copy(
 		p_canvas()->blt();
 		// I mean, you _COULD_ start by erasing the whole chip...
 		// or you could do it one page at a time, so it saves a LOT of time
-		while(currentAddress < gameDatFilesize){
-			if(!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress)){
+		while (currentAddress < gameDatFilesize) {
+			if (!qspiControl.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress)) {
 				ENGINE_PANIC("Failed to send erase command.");
 			}
-			while(qspiControl.isBusy()){
+			while (qspiControl.isBusy()) {
 				// is very busy
 			}
 			//Debug Print:
@@ -448,14 +453,14 @@ bool EngineROM_SD_Copy(
 
 		// erase save games at the end of ROM chip too when copying
 		// because new dat files means new save flags and variables
-		for(uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
+		for (uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
 			EngineROM_EraseSaveSlot(i);
 		}
 	}
 
 	currentAddress = 0;
 	//then write the entire SD card game.dat file to the ROM chip ENGINE_ROM_SD_CHUNK_READ_SIZE bytes at a time.
-	while(currentAddress < gameDatFilesize){
+	while (currentAddress < gameDatFilesize) {
 		uint32_t chunkSize = MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (gameDatFilesize - currentAddress));
 		//seek to the currentAddress on the SD card:
 		result = f_lseek(&gameDat, currentAddress);
@@ -475,32 +480,32 @@ bool EngineROM_SD_Copy(
 		//write the buffer to the ROM chip:
 		uint32_t romPagesToWrite = chunkSize / ENGINE_ROM_WRITE_PAGE_SIZE;
 		uint32_t partialPageBytesLeftOver = chunkSize % ENGINE_ROM_WRITE_PAGE_SIZE;
-		if(partialPageBytesLeftOver){
+		if (partialPageBytesLeftOver) {
 			romPagesToWrite += 1;
 		}
-		for(uint32_t i=0; i<romPagesToWrite; i++)
+		for (uint32_t i = 0; i < romPagesToWrite; i++)
 		{
 			//debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
-			uint32_t romPageOffset = i*ENGINE_ROM_WRITE_PAGE_SIZE;
+			uint32_t romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
 			bool shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
 			uint32_t writeSize = shouldUsePartialBytes
 				? partialPageBytesLeftOver
 				: ENGINE_ROM_WRITE_PAGE_SIZE;
 
-			if(i == (romPagesToWrite - 1)){
+			if (i == (romPagesToWrite - 1)) {
 				debug_print("Write Size at %d is %d", i, writeSize);
 			}
 			EngineROM_Write(
 				currentAddress + romPageOffset,
 				writeSize,
-				(uint8_t *)(sdReadBuffer + romPageOffset),
+				(uint8_t*)(sdReadBuffer + romPageOffset),
 				"Failed to write buffer to ROM chip\nduring ROM copy procedure."
 			);
 			//verify that the data was correctly written or return false.
 			EngineROM_Verify(
 				currentAddress + romPageOffset,
 				writeSize,
-				(uint8_t *)(sdReadBuffer + romPageOffset),
+				(uint8_t*)(sdReadBuffer + romPageOffset),
 				true
 			);
 		}
@@ -554,8 +559,8 @@ void EngineROM_Deinit() {
 bool EngineROM_Read(
 	uint32_t address,
 	uint32_t length,
-	uint8_t *data,
-	const char *errorString
+	uint8_t* data,
+	const char* errorString
 )
 {
 #ifdef DC801_EMBEDDED
@@ -567,24 +572,24 @@ bool EngineROM_Read(
 	//this is the number of whole words to read from the starting adddress:
 	uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
 	//read in all but the last word if aligned data
-	uint32_t *dataU32 = (uint32_t *)data;
+	uint32_t* dataU32 = (uint32_t*)data;
 	//get word-aligned pointers to the ROM:
-	volatile uint32_t *romDataU32 = (volatile uint32_t *)(ROM_START_ADDRESS + address);
-	for(uint32_t i=0; i<truncatedAlignedLength; i++){
+	volatile uint32_t* romDataU32 = (volatile uint32_t*)(ROM_START_ADDRESS + address);
+	for (uint32_t i = 0; i < truncatedAlignedLength; i++) {
 		dataU32[i] = romDataU32[i];
 	}
 	//now we need to convert the word-aligned number of reads back to a uint8_t aligned
 	//value where we will start reading the remaining bytes.
 	truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
 	uint32_t numUnalignedBytes = length - truncatedAlignedLength;
-	if(numUnalignedBytes)
+	if (numUnalignedBytes)
 	{
 		address += truncatedAlignedLength;
 		//get byte-aligned rom data at the new address:
-		volatile uint8_t *romDataU8 = (volatile uint8_t *)(ROM_START_ADDRESS + address);
+		volatile uint8_t* romDataU8 = (volatile uint8_t*)(ROM_START_ADDRESS + address);
 		//fill in the unaligned bytes only and ignore the rest:
-		for(uint8_t i=0; i<numUnalignedBytes; i++){
-			data[truncatedAlignedLength+i] = romDataU8[i];
+		for (uint8_t i = 0; i < numUnalignedBytes; i++) {
+			data[truncatedAlignedLength + i] = romDataU8[i];
 		}
 	}
 #else
@@ -596,11 +601,11 @@ bool EngineROM_Read(
 bool EngineROM_Write(
 	uint32_t address,
 	uint32_t length,
-	uint8_t *data,
-	const char *errorString
+	uint8_t* data,
+	const char* errorString
 )
 {
-	if(length % sizeof(uint32_t)){
+	if (length % sizeof(uint32_t)) {
 		ENGINE_PANIC(
 			"Length of write is not aligned to uint32_t\n"
 			"You can't do this, fix whatever is\n"
@@ -613,7 +618,7 @@ bool EngineROM_Write(
 		ENGINE_PANIC("EngineROM_Write: Null pointer");
 	}
 
-	if(!qspiControl.write(data, length, address))
+	if (!qspiControl.write(data, length, address))
 	{
 		ENGINE_PANIC(errorString);
 	}
@@ -636,7 +641,7 @@ bool EngineROM_Write(
 uint32_t EngineROM_Verify(
 	uint32_t address,
 	const uint32_t length,
-	const uint8_t *data,
+	const uint8_t* data,
 	bool throwErrorWithLog = false
 )
 {
@@ -645,7 +650,7 @@ uint32_t EngineROM_Verify(
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 	char debugString[128];
-	auto readBuffer = std::unique_ptr<uint8_t[]>{ new uint8_t[length]{} };
+	auto readBuffer = std::make_unique<uint8_t[]>(length);
 	EngineROM_Read(
 		address,
 		length,
@@ -653,8 +658,8 @@ uint32_t EngineROM_Verify(
 		"Failed to read from Rom in EngineROM_Verify"
 	);
 
-	for(uint32_t i=0; i<length; i++){
-		if(data[i] != readBuffer[i]){
+	for (uint32_t i = 0; i < length; i++) {
+		if (data[i] != readBuffer[i]) {
 			if (throwErrorWithLog) {
 				sprintf(
 					debugString,
@@ -667,7 +672,7 @@ uint32_t EngineROM_Verify(
 				ENGINE_PANIC(debugString);
 			}
 			//return address in ROM where memory does not match
-			return address+i;
+			return address + i;
 		}
 	}
 	return length;

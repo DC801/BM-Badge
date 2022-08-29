@@ -150,12 +150,8 @@ public:
 
 	void applyMemRecallInputs();
 
-	//This sets a char array starting at the current byte with any printable characters.
-	//The string will terminate when the first non-printable char is found.
-	void getHexStringForByte (uint8_t byte, char* outputString);
-
-	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
-	uint16_t getRenderableStringLength(uint8_t *string, uint16_t maxLength);
+		//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
+	uint16_t getRenderableStringLength(uint8_t* string, uint16_t maxLength);
 
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();

@@ -27,6 +27,7 @@ fp-info-cache
 
 _build/
 build/
+build_web/
 output/
 .cproject
 .dep/
@@ -49,3 +50,4 @@ SD_Card/AUDIO/
 
 # Allow one audio file for testing
 !SD_Card/AUDIO/Movement/Vehicles/sfx_vehicle_plainloop.wav
+SD_Card/MAGE/game.dat
