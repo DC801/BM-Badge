@@ -36,7 +36,7 @@ static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
 
-uint16_t frame[FRAMEBUFFER_SIZE]{0};
+uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
 FrameBuffer canvas{};
 
 FrameBuffer* p_canvas(void) { return &canvas; }
@@ -326,7 +326,7 @@ void FrameBuffer::drawChunkWithFlags(
 	else if (flip_x == true && flip_y == false && flip_diag == false) {
 		tileToBufferYesXNoYNoZ(
 			pixels.get(),
-			
+
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -1481,18 +1481,10 @@ void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
 	drawLine(x2, y2, x0, y0, color);
 }
 
-float FrameBuffer::lerp(float a, float b, float progress) {
-	return ((b - a) * progress) + a;
-}
-
-uint8_t FrameBuffer::lerp(uint8_t a, uint8_t b, float progress) {
-	return ((b - a) * progress) + a;
-}
-
 Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 	Point point = {
-		(int32_t)lerp((float)a.x, (float)b.x, progress),
-		(int32_t)lerp((float)a.y, (float)b.y, progress),
+		lerp(a.x, b.x, progress),
+		lerp(a.y, b.y, progress),
 	};
 	return point;
 }
@@ -1514,26 +1506,99 @@ uint16_t FrameBuffer::applyFadeColor(uint16_t color) {
 }
 
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
-	int dx = x2 - x1;
-	int dy = y2 - y1;
-	uint32_t length = ceil(sqrtf((float)((dx * dx) + (dy * dy))));
-	int x;
-	int y;
-	float progress;
-	for (uint32_t i = 0; i <= length; i++)
-	{
-		progress = ((float)i) / length;
-		x = round(lerp((float)x1, (float)x2, progress));
-		y = round(lerp((float)y1, (float)y2, progress));
-		if ( // crop to screen bounds
-			x >= 0
-			&& x < WIDTH
-			&& y >= 0
-			&& y < HEIGHT
-			) {
-			frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
+	if (x2 < x1) {
+		std::swap(x1, x2);
+		std::swap(y1, y2);
+	}
+
+	auto drawPixelToScreen = [x1, y1, color](bool downward = false) {
+		auto y = (downward ? -1 : 1) * y1 * WIDTH;
+		// crop to screen bounds
+		if (x1 >= 0 && x1 < WIDTH
+			&& y >= 0 && y < HEIGHT)
+		{
+			frame[x1 + y] = SCREEN_ENDIAN_U2_VALUE(color);
+		};
+	};
+
+	// optimization for vertical lines
+	if (x1 == x2) {
+		if (y2 < y1) { std::swap(y1, y2); }
+		while (y1++ != y2)
+		{
+			drawPixelToScreen();
 		}
 	}
+	// optimization for horizontal lines
+	else if (y1 == y2)
+	{
+		while (x1++ != x2)
+		{
+			drawPixelToScreen();
+		}
+	}
+	// Bresenham’s Line Generation Algorithm
+	// with ability to draw downwards
+	else
+	{
+		auto drawDownward = false;
+		if (y2 < y1) {
+			std::swap(y1, y2);
+			drawDownward = true;
+		}
+
+		auto dx = x2 - x1;
+		auto dy = y2 - y1;
+		for (int p = 2 * dy - dx; x1 < x2; x1++)
+		{
+			if (p >= 0)
+			{
+				drawPixelToScreen(drawDownward);
+				y1++;
+				p = p + 2 * dy - 2 * dx;
+			}
+			else
+			{
+				drawPixelToScreen(drawDownward);
+				p = p + 2 * dy;
+			}
+		}
+
+		// advance x, y, or both
+		/*
+plotLine(x0, y0, x1, y1)
+	dx = x1 - x0
+	dy = y1 - y0
+	D = 2*dy - dx
+	y = y0
+
+	for x from x0 to x1
+		plot(x,y)
+		if D > 0
+			y = y + 1
+			D = D - 2*dx
+		end if
+		D = D + 2*dy
+
+
+
+for(auto p=2*dy-dx, auto x = x1;x<x2;x++)
+{
+	if(p>=0)
+	{
+		draw();
+		y++;
+		p=p+2*dy-2*dx;
+	}
+	else
+	{
+		draw();
+		p=p+2*dy;
+	}
+}
+*/
+	}
+
 }
 
 

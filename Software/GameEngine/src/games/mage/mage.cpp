@@ -419,7 +419,7 @@ void MAGE()
 
 	//main game loop:
 	#ifdef EMSCRIPTEN
-	emscripten_set_main_loop(EngineMainGameLoop, 0, 1);
+	emscripten_set_main_loop(EngineMainGameLoop, 24, 1);
 	#else
 	while (EngineIsRunning())
 	{

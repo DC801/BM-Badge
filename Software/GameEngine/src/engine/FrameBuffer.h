@@ -239,8 +239,11 @@ public:
 
 	void drawPixel(int x, int y, uint16_t color);
 
-	static float lerp(float a, float b, float progress);
-	static uint8_t lerp(uint8_t a, uint8_t b, float progress);
+	template <typename T>
+	static T lerp(T a, T b, float progress) {
+		return (T)((b - a) * progress) + a;
+	}
+	
 	static Point lerpPoints(Point a, Point b, float progress);
 	uint16_t applyFadeColor(uint16_t color);
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
