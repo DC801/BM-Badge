@@ -16,7 +16,7 @@ gameCanvas.addEventListener('wheel', function (event) {
 	// so prevent SDL's scroll handling from trapping scroll,
 	// which prevents a user's ability to scroll the page.
 	event.stopImmediatePropagation();
-});
+}, {passive: true});
 
 var loadedDataMap = {};
 var createdPaths = {};
@@ -228,6 +228,6 @@ var handleFileDropIntoPage = function(event) {
 
 // weirdly, if you don't preventDefault on dragover & dragenter,
 // your drop handler will never fire???
-document.body.addEventListener('dragover', handleFileDropIntoPage);
-document.body.addEventListener('dragenter', handleFileDropIntoPage);
-document.body.addEventListener('drop', handleFileDropIntoPage);
+document.body.addEventListener('dragover', handleFileDropIntoPage, {passive: true});
+document.body.addEventListener('dragenter', handleFileDropIntoPage, {passive: true});
+document.body.addEventListener('drop', handleFileDropIntoPage, {passive: true});

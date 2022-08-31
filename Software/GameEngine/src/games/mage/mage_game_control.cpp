@@ -264,7 +264,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 				"engine version. Starting with fresh save."
 			);
 		}
-		debug_print(errorString.c_str());
+		debug_print("%s", errorString.c_str());
 		if (!silenceErrors) {
 			MageDialog->showSaveMessageDialog(errorString);
 		}
@@ -744,12 +744,15 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			if (EngineInput_Buttons.rjoy_up) {
 				handleEntityInteract(true);
 			}
-			if (EngineInput_Buttons.ljoy_center);
-			//no task assigned to ljoy_center in game mode
-			if (EngineInput_Buttons.rjoy_center);
-			//no task assigned to rjoy_center in game mode
-			if (EngineInput_Buttons.op_page);
-			//no task assigned to op_page in game mode
+			if (EngineInput_Buttons.ljoy_center) {
+				//no task assigned to ljoy_center in game mode
+			}
+			if (EngineInput_Buttons.rjoy_center) {
+				//no task assigned to rjoy_center in game mode
+			}
+			if (EngineInput_Buttons.op_page) {
+				//no task assigned to op_page in game mode
+			}
 		}
 
 
@@ -1870,11 +1873,12 @@ std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {
 	entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
 	return entityName;
 }
+
 #ifndef DC801_EMBEDDED
 void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription) {
-	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++) {
-		colorPalettes[i].verifyColors(errorTriggerDescription);
-	}
+	// for (uint32_t i = 0; i < colorPaletteHeader.count(); i++) {
+	// 	colorPalettes[i].verifyColors(errorTriggerDescription);
+	// }
 }
 #endif
 
@@ -1891,7 +1895,7 @@ uint16_t MageGameControl::tilesetCount() {
 }
 
 void MageGameControl::logAllEntityScriptValues(const char* string) {
-	debug_print(string);
+	debug_print("%s", string);
 	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
 		MageEntity* entity = &entities[i];

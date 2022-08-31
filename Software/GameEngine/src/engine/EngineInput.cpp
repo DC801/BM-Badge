@@ -13,6 +13,8 @@
 #include "EngineWindowFrame.h"
 #endif
 
+extern std::unique_ptr<EngineWindowFrame> MainWindow;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -66,7 +68,7 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	SDL_PumpEvents();
 
 	const uint8_t *keys = SDL_GetKeyboardState(nullptr);
-	SDL_Event e;
+	auto e = SDL_Event{};
 
 	while (SDL_PollEvent(&e))
 	{
@@ -99,11 +101,11 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 			}
 			// + or - keys increase or decrease screen size:
 			else if (e.key.keysym.sym == SDLK_MINUS) {
-				EngineWindowFrameResize(-1);
+				MainWindow->Resize(-1);
 				return;
 			}
 			else if (e.key.keysym.sym == SDLK_EQUALS) {
-				EngineWindowFrameResize(1);
+				MainWindow->Resize(1);
 				return;
 			}
 		}

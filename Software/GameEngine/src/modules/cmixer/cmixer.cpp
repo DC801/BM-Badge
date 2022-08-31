@@ -40,42 +40,40 @@
 #define BUFFER_MASK			(CM_BUFFER_SIZE - 1)
 
 static struct {
-  const char *lasterror;        /* Last error message */
-  cm_EventHandler lock;         /* Event handler for lock/unlock events */
-  cm_Source *sources;           /* Linked list of active (playing) sources */
+  const char* lasterror;        /* Last error message */
+  AudioMutex* mutex;         /* Event handler for lock/unlock events */
+  cm_Source* sources;           /* Linked list of active (playing) sources */
   cm_Int32 buffer[CM_BUFFER_SIZE]; /* Internal master buffer */
   int samplerate;               /* Master samplerate */
   int gain;                     /* Master gain (fixed point) */
 } cmixer;
 
 
-static void dummy_handler(cm_Event *e) {
-  UNUSED(e);
-}
-
-
 static void lock(void) {
-  cm_Event e;
-  e.type = CM_EVENT_LOCK;
-  cmixer.lock(&e);
+  if (cmixer.mutex)
+  {
+    cmixer.mutex->lock();
+  }
 }
 
 
 static void unlock(void) {
-  cm_Event e;
-  e.type = CM_EVENT_UNLOCK;
-  cmixer.lock(&e);
+
+  if (cmixer.mutex)
+  {
+    cmixer.mutex->unlock();
+  }
 }
 
 
 const char* cm_get_error(void) {
-  const char *res = cmixer.lasterror;
+  const char* res = cmixer.lasterror;
   cmixer.lasterror = NULL;
   return res;
 }
 
 
-static const char* error(const char *msg) {
+static const char* error(const char* msg) {
   cmixer.lasterror = msg;
   return msg;
 }
@@ -83,14 +81,14 @@ static const char* error(const char *msg) {
 
 void cm_init(int samplerate) {
   cmixer.samplerate = samplerate;
-  cmixer.lock = dummy_handler;
+  cmixer.mutex = nullptr;
   cmixer.sources = NULL;
   cmixer.gain = FX_UNIT;
 }
 
 
-void cm_set_lock(cm_EventHandler lock) {
-  cmixer.lock = lock;
+void cm_set_mutex(AudioMutex* mutex) {
+  cmixer.mutex = mutex;
 }
 
 
@@ -99,7 +97,7 @@ void cm_set_master_gain(double gain) {
 }
 
 
-static void rewind_source(cm_Source *src) {
+static void rewind_source(cm_Source* src) {
   cm_Event e;
   e.type = CM_EVENT_REWIND;
   e.udata = src->udata;
@@ -111,7 +109,7 @@ static void rewind_source(cm_Source *src) {
 }
 
 
-static void fill_source_buffer(cm_Source *src, int offset, int length) {
+static void fill_source_buffer(cm_Source* src, int offset, int length) {
   cm_Event e;
   e.type = CM_EVENT_SAMPLES;
   e.udata = src->udata;
@@ -121,10 +119,10 @@ static void fill_source_buffer(cm_Source *src, int offset, int length) {
 }
 
 
-static void process_source(cm_Source *src, int len) {
+static void process_source(cm_Source* src, int len) {
   int i, n, a, b, p;
   int frame, count;
-  cm_Int32 *dst = cmixer.buffer;
+  cm_Int32* dst = cmixer.buffer;
 
   /* Do rewind if flag is set */
   if (src->rewind) {
@@ -143,7 +141,7 @@ static void process_source(cm_Source *src, int len) {
 
     /* Fill buffer if required */
     if (frame + 3 >= src->nextfill) {
-      fill_source_buffer(src, (src->nextfill*2) & BUFFER_MASK, CM_BUFFER_SIZE/2);
+      fill_source_buffer(src, (src->nextfill * 2) & BUFFER_MASK, CM_BUFFER_SIZE / 2);
       src->nextfill += CM_BUFFER_SIZE / 4;
     }
 
@@ -172,23 +170,24 @@ static void process_source(cm_Source *src, int len) {
       /* Add audio to buffer -- basic */
       n = frame * 2;
       for (i = 0; i < count; i++) {
-        dst[0] += (src->buffer[(n    ) & BUFFER_MASK] * src->lgain) >> FX_BITS;
+        dst[0] += (src->buffer[(n)&BUFFER_MASK] * src->lgain) >> FX_BITS;
         dst[1] += (src->buffer[(n + 1) & BUFFER_MASK] * src->rgain) >> FX_BITS;
         n += 2;
         dst += 2;
       }
       src->position += count * FX_UNIT;
 
-    } else {
+    }
+    else {
       /* Add audio to buffer -- interpolated */
       for (i = 0; i < count; i++) {
         n = (src->position >> FX_BITS) * 2;
         p = src->position & FX_MASK;
-        a = src->buffer[(n    ) & BUFFER_MASK];
+        a = src->buffer[(n)&BUFFER_MASK];
         b = src->buffer[(n + 2) & BUFFER_MASK];
         dst[0] += (FX_LERP(a, b, p) * src->lgain) >> FX_BITS;
         n++;
-        a = src->buffer[(n    ) & BUFFER_MASK];
+        a = src->buffer[(n)&BUFFER_MASK];
         b = src->buffer[(n + 2) & BUFFER_MASK];
         dst[1] += (FX_LERP(a, b, p) * src->rgain) >> FX_BITS;
         src->position += src->rate;
@@ -200,9 +199,9 @@ static void process_source(cm_Source *src, int len) {
 }
 
 
-void cm_process(cm_Int16 *dst, int len) {
+void cm_process(cm_Int16* dst, int len) {
   int i;
-  cm_Source **s;
+  cm_Source** s;
 
   /* Process in chunks of CM_BUFFER_SIZE if `len` is larger than BUFFER_SIZE */
   while (len > CM_BUFFER_SIZE) {
@@ -223,7 +222,8 @@ void cm_process(cm_Int16 *dst, int len) {
     if ((*s)->state != CM_STATE_PLAYING) {
       (*s)->active = 0;
       *s = (*s)->next;
-    } else {
+    }
+    else {
       s = &(*s)->next;
     }
   }
@@ -237,8 +237,8 @@ void cm_process(cm_Int16 *dst, int len) {
 }
 
 
-cm_Source* cm_new_source(const cm_SourceInfo *info) {
-	cm_Source* src = (cm_Source * )calloc(1, sizeof(*src));
+cm_Source* cm_new_source(const cm_SourceInfo* info) {
+  cm_Source* src = (cm_Source*)calloc(1, sizeof(*src));
   if (!src) {
     error("allocation failed");
     return NULL;
@@ -256,21 +256,21 @@ cm_Source* cm_new_source(const cm_SourceInfo *info) {
 }
 
 
-static const char* wav_init(cm_SourceInfo *info, char *data, int len, int ownsdata);
+static const char* wav_init(cm_SourceInfo* info, char* data, int len, int ownsdata);
 
 #ifdef CM_USE_STB_VORBIS
-static const char* ogg_init(cm_SourceInfo *info, char* data, int len, int ownsdata);
+static const char* ogg_init(cm_SourceInfo* info, char* data, int len, int ownsdata);
 #endif
 
 
-static int check_header(char* data, int size, const char *str, int offset) {
+static int check_header(char* data, int size, const char* str, int offset) {
   int len = strlen(str);
-  return (size >= offset + len) && !memcmp((char*) data + offset, str, len);
+  return (size >= offset + len) && !memcmp((char*)data + offset, str, len);
 }
 
 
-static cm_Source* new_source_from_mem(char *data, int size, int ownsdata) {
-  const char *err;
+static cm_Source* new_source_from_mem(char* data, int size, int ownsdata) {
+  const char* err;
   cm_SourceInfo info;
 
   if (check_header(data, size, "WAVE", 8)) {
@@ -286,9 +286,9 @@ static cm_Source* new_source_from_mem(char *data, int size, int ownsdata) {
     err = ogg_init(&info, data, size, ownsdata);
     if (err) {
       return NULL;
-    }
-    return cm_new_source(&info);
   }
+    return cm_new_source(&info);
+}
 #endif
 
   error("unknown format or invalid data");
@@ -302,44 +302,44 @@ static cm_Source* new_source_from_mem(char *data, int size, int ownsdata) {
 
 static void* load_file(const char* filename, int* size)
 {
-	FIL fp;
-	char* data;
-	unsigned int n = 0;
+  FIL fp;
+  char* data;
+  unsigned int n = 0;
 
-	/* Get size */
-	*size = (int)util_sd_file_size(filename);
+  /* Get size */
+  *size = (int)util_sd_file_size(filename);
 
-	FRESULT result = f_open(&fp, filename, FA_READ | FA_OPEN_EXISTING);
+  FRESULT result = f_open(&fp, filename, FA_READ | FA_OPEN_EXISTING);
 
-	if (result != FR_OK)
-	{
-		NRF_LOG_ERROR("Failed to open file %s\n", filename);
-		return NULL;
-	}
+  if (result != FR_OK)
+  {
+    NRF_LOG_ERROR("Failed to open file %s\n", filename);
+    return NULL;
+  }
 
-	/* Malloc, read and return data */
-	data = malloc(*size);
+  /* Malloc, read and return data */
+  data = malloc(*size);
 
-	if (!data)
-	{
-		f_close(&fp);
-		return NULL;
-	}
+  if (!data)
+  {
+    f_close(&fp);
+    return NULL;
+  }
 
-	result = f_read(&fp, data, *size, &n);
-	f_close(&fp);
+  result = f_read(&fp, data, *size, &n);
+  f_close(&fp);
 
-	if ((int)n != *size)
-	{
-		free(data);
-		return NULL;
-	}
+  if ((int)n != *size)
+  {
+    free(data);
+    return NULL;
+  }
 
-	return data;
+  return data;
 }
 #else
-static char* load_file(const char *filename, int *size) {
-  FILE *fp;
+static char* load_file(const char* filename, int* size) {
+  FILE* fp;
   char* data;
   int n;
 
@@ -371,9 +371,9 @@ static char* load_file(const char *filename, int *size) {
 #endif
 
 
-cm_Source* cm_new_source_from_file(const char *filename) {
+cm_Source* cm_new_source_from_file(const char* filename) {
   int size;
-  cm_Source *src;
+  cm_Source* src;
   char* data;
 
   /* Load file into memory */
@@ -399,11 +399,11 @@ cm_Source* cm_new_source_from_mem(char* data, int size) {
 }
 
 
-void cm_destroy_source(cm_Source *src) {
+void cm_destroy_source(cm_Source* src) {
   cm_Event e;
   lock();
   if (src->active) {
-    cm_Source **s = &cmixer.sources;
+    cm_Source** s = &cmixer.sources;
     while (*s) {
       if (*s == src) {
         *s = src->next;
@@ -419,22 +419,22 @@ void cm_destroy_source(cm_Source *src) {
 }
 
 
-double cm_get_length(cm_Source *src) {
-  return src->length / (double) src->samplerate;
+double cm_get_length(cm_Source* src) {
+  return src->length / (double)src->samplerate;
 }
 
 
-double cm_get_position(cm_Source *src) {
-  return ((src->position >> FX_BITS) % src->length) / (double) src->samplerate;
+double cm_get_position(cm_Source* src) {
+  return ((src->position >> FX_BITS) % src->length) / (double)src->samplerate;
 }
 
 
-int cm_get_state(cm_Source *src) {
+int cm_get_state(cm_Source* src) {
   return src->state;
 }
 
 
-static void recalc_source_gains(cm_Source *src) {
+static void recalc_source_gains(cm_Source* src) {
   double l, r;
   double pan = src->pan;
   l = src->gain * (pan <= 0. ? 1. : 1. - pan);
@@ -444,35 +444,36 @@ static void recalc_source_gains(cm_Source *src) {
 }
 
 
-void cm_set_gain(cm_Source *src, double gain) {
+void cm_set_gain(cm_Source* src, double gain) {
   src->gain = gain;
   recalc_source_gains(src);
 }
 
 
-void cm_set_pan(cm_Source *src, double pan) {
+void cm_set_pan(cm_Source* src, double pan) {
   src->pan = CLAMP(pan, -1.0, 1.0);
   recalc_source_gains(src);
 }
 
 
-void cm_set_pitch(cm_Source *src, double pitch) {
+void cm_set_pitch(cm_Source* src, double pitch) {
   double rate;
   if (pitch > 0.) {
-    rate = src->samplerate / (double) cmixer.samplerate * pitch;
-  } else {
+    rate = src->samplerate / (double)cmixer.samplerate * pitch;
+  }
+  else {
     rate = 0.001;
   }
   src->rate = FX_FROM_FLOAT(rate);
 }
 
 
-void cm_set_loop(cm_Source *src, int loop) {
+void cm_set_loop(cm_Source* src, int loop) {
   src->loop = loop;
 }
 
 
-void cm_play(cm_Source *src) {
+void cm_play(cm_Source* src) {
   lock();
   src->state = CM_STATE_PLAYING;
   if (!src->active) {
@@ -484,12 +485,12 @@ void cm_play(cm_Source *src) {
 }
 
 
-void cm_pause(cm_Source *src) {
+void cm_pause(cm_Source* src) {
   src->state = CM_STATE_PAUSED;
 }
 
 
-void cm_stop(cm_Source *src) {
+void cm_stop(cm_Source* src) {
   src->state = CM_STATE_STOPPED;
   src->rewind = 1;
 }
@@ -514,12 +515,12 @@ typedef struct {
 } WavStream;
 
 
-static char* find_subchunk(char *data, int len, const char *id, int *size) {
+static char* find_subchunk(char* data, int len, const char* id, int* size) {
   /* TODO : Error handling on malformed wav file */
   int idlen = strlen(id);
-  char *p = data + 12;
+  char* p = data + 12;
 next:
-  *size = *((cm_UInt32*) (p + 4));
+  *size = *((cm_UInt32*)(p + 4));
   if (memcmp(p, id, idlen)) {
     p += 8 + *size;
     if (p > data + len) return NULL;
@@ -529,10 +530,10 @@ next:
 }
 
 
-static const char* read_wav(Wav *w, char *data, int len) {
+static const char* read_wav(Wav* w, char* data, int len) {
   int bitdepth, channels, samplerate, format;
   int sz;
-  char *p = data;
+  char* p = data;
   memset(w, 0, sizeof(*w));
 
   /* Check header */
@@ -546,10 +547,10 @@ static const char* read_wav(Wav *w, char *data, int len) {
   }
 
   /* Load fmt info */
-  format      = *((cm_UInt16*) (p));
-  channels    = *((cm_UInt16*) (p + 2));
-  samplerate  = *((cm_UInt32*) (p + 4));
-  bitdepth    = *((cm_UInt16*) (p + 14));
+  format = *((cm_UInt16*)(p));
+  channels = *((cm_UInt16*)(p + 2));
+  samplerate = *((cm_UInt32*)(p + 4));
+  bitdepth = *((cm_UInt16*)(p + 14));
   if (format != 1) {
     return error("unsupported format");
   }
@@ -581,65 +582,68 @@ static const char* read_wav(Wav *w, char *data, int len) {
     s->idx++;               \
   }
 
-static void wav_handler(cm_Event *e) {
+static void wav_handler(cm_Event* e) {
   int x, n;
-  cm_Int16 *dst;
-  WavStream* s = (WavStream * )e->udata;
+  cm_Int16* dst;
+  WavStream* s = (WavStream*)e->udata;
   int len;
 
   switch (e->type) {
 
-    case CM_EVENT_DESTROY:
-      free(s->data);
-      free(s);
-      break;
+  case CM_EVENT_DESTROY:
+    free(s->data);
+    free(s);
+    break;
 
-    case CM_EVENT_SAMPLES:
-      dst = e->buffer;
-      len = e->length / 2;
-fill:
-      n = MIN(len, s->wav.length - s->idx);
-      len -= n;
-      if (s->wav.bitdepth == 16 && s->wav.channels == 1) {
-        WAV_PROCESS_LOOP({
-          dst[0] = dst[1] = ((cm_Int16*) s->wav.data)[s->idx];
+  case CM_EVENT_SAMPLES:
+    dst = e->buffer;
+    len = e->length / 2;
+  fill:
+    n = MIN(len, s->wav.length - s->idx);
+    len -= n;
+    if (s->wav.bitdepth == 16 && s->wav.channels == 1) {
+      WAV_PROCESS_LOOP({
+        dst[0] = dst[1] = ((cm_Int16*)s->wav.data)[s->idx];
         });
-      } else if (s->wav.bitdepth == 16 && s->wav.channels == 2) {
-        WAV_PROCESS_LOOP({
-          x = s->idx * 2;
-          dst[0] = ((cm_Int16*) s->wav.data)[x    ];
-          dst[1] = ((cm_Int16*) s->wav.data)[x + 1];
+    }
+    else if (s->wav.bitdepth == 16 && s->wav.channels == 2) {
+      WAV_PROCESS_LOOP({
+        x = s->idx * 2;
+        dst[0] = ((cm_Int16*)s->wav.data)[x];
+        dst[1] = ((cm_Int16*)s->wav.data)[x + 1];
         });
-      } else if (s->wav.bitdepth == 8 && s->wav.channels == 1) {
-        WAV_PROCESS_LOOP({
-          dst[0] = dst[1] = (((cm_UInt8*) s->wav.data)[s->idx] - 128) << 8;
+    }
+    else if (s->wav.bitdepth == 8 && s->wav.channels == 1) {
+      WAV_PROCESS_LOOP({
+        dst[0] = dst[1] = (((cm_UInt8*)s->wav.data)[s->idx] - 128) << 8;
         });
-      } else if (s->wav.bitdepth == 8 && s->wav.channels == 2) {
-        WAV_PROCESS_LOOP({
-          x = s->idx * 2;
-          dst[0] = (((cm_UInt8*) s->wav.data)[x    ] - 128) << 8;
-          dst[1] = (((cm_UInt8*) s->wav.data)[x + 1] - 128) << 8;
+    }
+    else if (s->wav.bitdepth == 8 && s->wav.channels == 2) {
+      WAV_PROCESS_LOOP({
+        x = s->idx * 2;
+        dst[0] = (((cm_UInt8*)s->wav.data)[x] - 128) << 8;
+        dst[1] = (((cm_UInt8*)s->wav.data)[x + 1] - 128) << 8;
         });
-      }
-      /* Loop back and continue filling buffer if we didn't fill the buffer */
-      if (len > 0) {
-        s->idx = 0;
-        goto fill;
-      }
-      break;
-
-    case CM_EVENT_REWIND:
+    }
+    /* Loop back and continue filling buffer if we didn't fill the buffer */
+    if (len > 0) {
       s->idx = 0;
-      break;
+      goto fill;
+    }
+    break;
+
+  case CM_EVENT_REWIND:
+    s->idx = 0;
+    break;
   }
 }
 
 
-static const char* wav_init(cm_SourceInfo *info, char *data, int len, int ownsdata) {
-  WavStream *stream;
+static const char* wav_init(cm_SourceInfo* info, char* data, int len, int ownsdata) {
+  WavStream* stream;
   Wav wav;
 
-  const char *err = read_wav(&wav, data, len);
+  const char* err = read_wav(&wav, data, len);
   if (err != NULL) {
     return err;
   }
@@ -679,50 +683,50 @@ static const char* wav_init(cm_SourceInfo *info, char *data, int len, int ownsda
 #include "stb_vorbis.c"
 
 typedef struct {
-  stb_vorbis *ogg;
+  stb_vorbis* ogg;
   char* data;
 } OggStream;
 
 
-static void ogg_handler(cm_Event *e) {
+static void ogg_handler(cm_Event* e) {
   int n, len;
-  OggStream *s = e->udata;
-  cm_Int16 *buf;
+  OggStream* s = e->udata;
+  cm_Int16* buf;
 
   switch (e->type) {
 
-    case CM_EVENT_DESTROY:
-      stb_vorbis_close(s->ogg);
-      free(s->data);
-      free(s);
-      break;
+  case CM_EVENT_DESTROY:
+    stb_vorbis_close(s->ogg);
+    free(s->data);
+    free(s);
+    break;
 
-    case CM_EVENT_SAMPLES:
-      len = e->length;
-      buf = e->buffer;
-fill:
-      n = stb_vorbis_get_samples_short_interleaved(s->ogg, 2, buf, len);
-      n *= 2;
-      /* rewind and fill remaining buffer if we reached the end of the ogg
-      ** before filling it */
-      if (len != n) {
-        stb_vorbis_seek_start(s->ogg);
-        buf += n;
-        len -= n;
-        goto fill;
-      }
-      break;
-
-    case CM_EVENT_REWIND:
+  case CM_EVENT_SAMPLES:
+    len = e->length;
+    buf = e->buffer;
+  fill:
+    n = stb_vorbis_get_samples_short_interleaved(s->ogg, 2, buf, len);
+    n *= 2;
+    /* rewind and fill remaining buffer if we reached the end of the ogg
+    ** before filling it */
+    if (len != n) {
       stb_vorbis_seek_start(s->ogg);
-      break;
+      buf += n;
+      len -= n;
+      goto fill;
+    }
+    break;
+
+  case CM_EVENT_REWIND:
+    stb_vorbis_seek_start(s->ogg);
+    break;
   }
 }
 
 
-static const char* ogg_init(cm_SourceInfo *info, char* data, int len, int ownsdata) {
-  OggStream *stream;
-  stb_vorbis *ogg;
+static const char* ogg_init(cm_SourceInfo* info, char* data, int len, int ownsdata) {
+  OggStream* stream;
+  stb_vorbis* ogg;
   stb_vorbis_info ogginfo;
   int err;
 

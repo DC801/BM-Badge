@@ -1,4 +1,5 @@
 #include <string>
+#include <filesystem>
 
 #include "EnginePanic.h"
 #include "EngineInput.h"
@@ -13,17 +14,6 @@
 #include "sdk/shim/shim_timer.h"
 #endif
 
-std::string extract_filename(const char * fullpath) {
-	const char * filepart = fullpath;
-	while(*fullpath) {
-		if(*fullpath == '/') {
-			filepart = fullpath + 1;
-		}
-		fullpath += 1;
-  	}
-	return std::string(filepart);
-}
-
 void panic_print(const char *msg, int x, int y)
 {
 	// Write to the screen
@@ -37,7 +27,7 @@ void panic_print(const char *msg, int x, int y)
 
 #ifndef DC801_EMBEDDED
 	// On desktop, write to stderr as well
-	fprintf(stderr, msg);
+	fprintf(stderr, "%s", msg);
 #endif
 }
 
@@ -47,7 +37,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	canvas.clearScreen(COLOR_BSOD);
 
 	// String buffer
-	char panic_message[401];
+	char panic_message[401]{0};
 
 	// y advance value from text
 	const uint8_t yAdvance = Monaco9.yAdvance;
@@ -60,9 +50,8 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	int y = 0;
 
 #ifndef DC801_EMBEDDED
-	// Print Banner, File Name, Line Number
-	std::string path = extract_filename(filename);
-	const char *file = path.c_str();
+	// Print Banner, File Name, Line Number	
+	const char* file = filename;
 #else
 	const char *file = "There is no file...";
 #endif
@@ -75,7 +64,6 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 						 "Error Details:\n";
 
 	snprintf(panic_message, sizeof(panic_message), header, file, lineno);
-	panic_message[sizeof(panic_message) - 1] = 0;	// Null terminate
 	panic_print(panic_message, x, y);
 	y += yAdvance * 6;
 
@@ -83,7 +71,6 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	va_list args;
 	va_start(args, format);
 	vsnprintf(panic_message, sizeof(panic_message), format, args);
-	panic_message[sizeof(panic_message) - 1] = 0;	// Null terminate
 	panic_print(panic_message, x, y);
 
 	y = HEIGHT - (yAdvance * 6);

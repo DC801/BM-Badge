@@ -19,6 +19,10 @@
 #include <emscripten.h>
 #endif // EMSCRIPTEN
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
 #endif
@@ -98,7 +102,7 @@ bool EngineROM_Write(
 );
 uint32_t EngineROM_Verify(
 	uint32_t address,
-	const uint32_t length,
+	uint32_t length,
 	const uint8_t *data,
 	bool throwErrorWithLog
 );
@@ -123,5 +127,11 @@ bool EngineROM_SD_Copy(
 	bool eraseWholeRomChip
 );
 #endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif

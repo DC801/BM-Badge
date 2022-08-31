@@ -1,7 +1,7 @@
 #include "sdk_shim.h"
 #include "shim_err.h"
 
-static NRF_FICR_Type FICR_internal;
+static NRF_FICR_Type FICR_internal{};
 NRF_FICR_Type *NRF_FICR = &FICR_internal;
 
 bool app_usbd_event_queue_process(void)

@@ -373,7 +373,7 @@ void MageHexEditor::renderHexHeader()
 	for (int i = stringPreviewLength; i < MAGE_ENTITY_NAME_LENGTH; i++) {
 		sprintf(
 			stringPreview + i,
-			" \0"
+			" "
 		);
 	}
 	sprintf(

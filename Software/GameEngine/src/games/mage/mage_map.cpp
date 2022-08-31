@@ -193,7 +193,10 @@ MageMap::MageMap(uint32_t address)
 		"Failed to read Map property 'goDirections'"
 	);
 	for (int i = 0; i < goDirectionCount; ++i) {
-		ROM_ENDIAN_U2_VALUE(&goDirections[i].mapLocalScriptId);
+		UNUSED_RETURN_VALUE(
+			ROM_ENDIAN_U2_VALUE(&goDirections[i].mapLocalScriptId)
+		);
+
 	}
 	address += size;
 

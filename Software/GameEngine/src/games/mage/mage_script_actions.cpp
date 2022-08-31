@@ -14,153 +14,6 @@ extern std::unique_ptr<MageScriptControl> MageScript;
 extern std::unique_ptr<MageEntity> hackableDataAddress;
 extern std::unique_ptr<FrameBuffer> mage_canvas;
 
-
-typedef struct {
-	union {
-		struct {
-			uint16_t successScriptId;
-			uint16_t stringId;
-			uint8_t entityId;
-			uint8_t expectedBoolValue;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint16_t expectedValue;
-			uint8_t entityId;
-			uint8_t expectedBool;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint16_t expectedScript;
-			uint8_t entityId;
-			uint8_t expectedBool;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint16_t entityTypeId;
-			uint8_t entityId;
-			uint8_t expectedBool;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint16_t saveFlagOffset;
-			uint8_t expectedBoolValue;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint16_t geometryId;
-			uint8_t entityId;
-			uint8_t expectedBoolValue;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t successScriptId;
-			uint8_t buttonId; //KEYBOARD_KEY enum value
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t scriptId;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint32_t duration; //in ms
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t newValue;
-			uint8_t entityId;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			MageEntityAnimationDirection direction;
-			uint8_t entityId;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint8_t targetEntityId;
-			uint8_t entityId;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			int8_t relativeDirection;
-			uint8_t entityId;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t targetGeometryId;
-			uint8_t entityId;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t saveFlagOffset;
-			uint8_t newBoolValue;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint8_t playerHasControl;
-			uint8_t paddingB;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint16_t byteAddress;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-		struct {
-			uint8_t state;
-			uint8_t paddingB;
-			uint8_t paddingC;
-			uint8_t paddingD;
-			uint8_t paddingE;
-			uint8_t paddingF;
-			uint8_t paddingG;
-		};
-	};
-} ActionCheckEntity;
-
 void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
@@ -177,7 +30,14 @@ void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t stringId;
+		uint8_t entityId;
+		uint8_t expectedBoolValue;
+		uint8_t paddingG;
+	} ActionCheckEntityName;
+	auto* argStruct = (ActionCheckEntityName*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
@@ -201,7 +61,14 @@ void action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityX;
+	auto* argStruct = (ActionCheckEntityX*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -221,7 +88,14 @@ void action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityY;
+	auto* argStruct = (ActionCheckEntityY*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -241,7 +115,14 @@ void action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedScript;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityInteractScript;
+	auto* argStruct = (ActionCheckEntityInteractScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedScript = ROM_ENDIAN_U2_VALUE(argStruct->expectedScript);
@@ -261,7 +142,14 @@ void action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeS
 
 void action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedScript;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityTickScript;
+	auto* argStruct = (ActionCheckEntityTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedScript = ROM_ENDIAN_U2_VALUE(argStruct->expectedScript);
@@ -281,7 +169,14 @@ void action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeState
 
 void action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t entityTypeId;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityType;
+	auto* argStruct = (ActionCheckEntityType*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->entityTypeId = ROM_ENDIAN_U2_VALUE(argStruct->entityTypeId);
@@ -305,7 +200,14 @@ void action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityPrimaryId;
+	auto* argStruct = (ActionCheckEntityPrimaryId*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -330,7 +232,14 @@ void action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateS
 
 void action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntitySecondaryId;
+	auto* argStruct = (ActionCheckEntitySecondaryId*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -358,7 +267,14 @@ void action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStat
 
 void action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityPrimaryIdType;
+	auto* argStruct = (ActionCheckEntityPrimaryIdType*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -378,7 +294,14 @@ void action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeS
 
 void action_check_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityCurrentAnimation;
+	auto* argStruct = (ActionCheckEntityCurrentAnimation*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -397,7 +320,14 @@ void action_check_entity_current_animation(uint8_t* args, MageScriptState* resum
 
 void action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityCurrentFrame;
+	auto* argStruct = (ActionCheckEntityCurrentFrame*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -416,7 +346,14 @@ void action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeSta
 
 void action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityDirection;
+	auto* argStruct = (ActionCheckEntityDirection*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -435,7 +372,15 @@ void action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateSt
 
 void action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckEntityGlitched;
+	auto* argStruct = (ActionCheckEntityGlitched*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -454,7 +399,14 @@ void action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStr
 
 void action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityHackableStateA;
+	auto* argStruct = (ActionCheckEntityHackableStateA*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -473,7 +425,14 @@ void action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resume
 
 void action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityHackableStateB;
+	auto* argStruct = (ActionCheckEntityHackableStateB*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -492,7 +451,14 @@ void action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resume
 
 void action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityHackableStateC;
+	auto* argStruct = (ActionCheckEntityHackableStateC*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -511,7 +477,14 @@ void action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resume
 
 void action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t entityId;
+		uint8_t expectedValue;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityHackableStateD;
+	auto* argStruct = (ActionCheckEntityHackableStateD*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -530,7 +503,13 @@ void action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resume
 
 void action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+	} ActionCheckEntityHackableStateAU2;
+	auto* argStruct = (ActionCheckEntityHackableStateAU2*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -553,7 +532,13 @@ void action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* res
 
 void action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+	} ActionCheckEntityHackableStateCU2;
+	auto* argStruct = (ActionCheckEntityHackableStateCU2*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -576,7 +561,12 @@ void action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* res
 
 void action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint32_t expectedValue;
+		uint16_t successScriptId;
+		uint8_t entityId;
+	} ActionCheckEntityHackableStateAU4;
+	auto* argStruct = (ActionCheckEntityHackableStateAU4*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->expectedValue = ROM_ENDIAN_U4_VALUE(argStruct->expectedValue);
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
@@ -598,7 +588,13 @@ void action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* res
 
 void action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedValue;
+		uint8_t entityId;
+		uint8_t expectedBool;
+	} ActionCheckEntityPath;
+	auto* argStruct = (ActionCheckEntityPath*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
@@ -621,7 +617,14 @@ void action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t saveFlagOffset;
+		uint8_t expectedBoolValue;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSaveFlag;
+	auto* argStruct = (ActionCheckSaveFlag*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
@@ -637,7 +640,14 @@ void action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t geometryId;
+		uint8_t entityId;
+		uint8_t expectedBoolValue;
+		uint8_t paddingG;
+	} ActionCheckifEntityIsInGeometry;
+	auto* argStruct = (ActionCheckifEntityIsInGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
@@ -660,7 +670,15 @@ void action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resum
 
 void action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t buttonId; //KEYBOARD_KEY enum value
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckForButtonPress;
+	auto* argStruct = (ActionCheckForButtonPress*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -676,7 +694,15 @@ void action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateSt
 
 void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t buttonId; //KEYBOARD_KEY enum value
+		uint8_t expectedBoolValue;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckForButtonState;
+	auto* argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
@@ -684,7 +710,7 @@ void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateSt
 		argStruct->buttonId,
 		&EngineInput_Buttons
 	);
-	if (button_state == (bool)((bool)argStruct->expectedBoolValue))
+	if (button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
@@ -692,13 +718,20 @@ void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateSt
 
 void action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t stringId;
+		uint8_t expectedBoolValue;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckWarpState;
+	auto* argStruct = (ActionCheckWarpState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	bool doesWarpStateMatch = MageGame->currentSave.warpState == argStruct->stringId;
-	if (doesWarpStateMatch == (bool)((bool)argStruct->expectedBoolValue))
+	if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
 		MageScript->jumpScriptId = argStruct->successScriptId;
 	}
@@ -706,7 +739,15 @@ void action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_run_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t scriptId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionRunScript;
+	auto* argStruct = (ActionRunScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
@@ -715,7 +756,13 @@ void action_run_script(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint32_t duration; //in ms
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionBlockingDelay;
+	auto* argStruct = (ActionBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
@@ -750,7 +797,13 @@ void action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint32_t duration; //in ms
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionNonBlockingDelay;
+	auto* argStruct = (ActionNonBlockingDelay*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
@@ -762,7 +815,15 @@ void action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct
 
 void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t stringId;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityName;
+	auto* argStruct = (ActionSetEntityName*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
@@ -791,7 +852,15 @@ void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityX;
+	auto* argStruct = (ActionSetEntityX*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -807,7 +876,15 @@ void action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityY;
+	auto* argStruct = (ActionSetEntityY*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -823,7 +900,15 @@ void action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t scriptId;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityInteractScript;
+	auto* argStruct = (ActionSetEntityInteractScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
@@ -839,7 +924,15 @@ void action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeSta
 
 void action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t scriptId;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityTickScript;
+	auto* argStruct = (ActionSetEntityTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
@@ -856,7 +949,15 @@ void action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateSt
 
 void action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t entityTypeId;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityType;
+	auto* argStruct = (ActionSetEntityType*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->entityTypeId = ROM_ENDIAN_U2_VALUE(argStruct->entityTypeId);
 
@@ -873,7 +974,15 @@ void action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityPrimaryId;
+	auto* argStruct = (ActionSetEntityPrimaryId*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -889,7 +998,15 @@ void action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStr
 
 void action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntitySecondaryId;
+	auto* argStruct = (ActionSetEntitySecondaryId*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -905,7 +1022,16 @@ void action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateS
 
 void action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		MageEntityPrimaryIdType newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityPrimaryIdType;
+	auto* argStruct = (ActionSetEntityPrimaryIdType*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -919,7 +1045,16 @@ void action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeSta
 
 void action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityCurrentAnimation;
+	auto* argStruct = (ActionSetEntityCurrentAnimation*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -937,7 +1072,16 @@ void action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeS
 
 void action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityCurrentFrame;
+	auto* argStruct = (ActionSetEntityCurrentFrame*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -954,7 +1098,16 @@ void action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeState
 
 void action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		MageEntityAnimationDirection direction;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityDirection;
+	auto* argStruct = (ActionSetEntityDirection*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -972,7 +1125,16 @@ void action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStru
 
 void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		int8_t relativeDirection;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityDirectionRelative;
+	auto* argStruct = (ActionSetEntityDirectionRelative*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -994,7 +1156,16 @@ void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resume
 
 void action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t targetEntityId;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityDirectionTargetEntity;
+	auto* argStruct = (ActionSetEntityDirectionTargetEntity*)args;
 
 	int16_t targetEntityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->targetEntityId,
@@ -1024,7 +1195,15 @@ void action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* r
 
 void action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t targetGeometryId;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityDirectionTargetGeometry;
+	auto* argStruct = (ActionSetEntityDirectionTargetGeometry*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->targetGeometryId = ROM_ENDIAN_U2_VALUE(argStruct->targetGeometryId);
 
@@ -1077,7 +1256,16 @@ void action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruc
 
 void action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateA;
+	auto* argStruct = (ActionSetEntityHackableStateA*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -1091,7 +1279,16 @@ void action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeSt
 
 void action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateB;
+	auto* argStruct = (ActionSetEntityHackableStateB*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -1105,7 +1302,17 @@ void action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeSt
 
 void action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateC;
+	auto* argStruct = (ActionSetEntityHackableStateC*)args;
+
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
 		MageScript->currentEntityId
@@ -1118,7 +1325,16 @@ void action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeSt
 
 void action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t newValue;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateD;
+	auto* argStruct = (ActionSetEntityHackableStateD*)args;
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
@@ -1132,7 +1348,15 @@ void action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeSt
 
 void action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateAU2;
+	auto* argStruct = (ActionSetEntityHackableStateAU2*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -1148,7 +1372,15 @@ void action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resum
 
 void action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateCU2;
+	auto* argStruct = (ActionSetEntityHackableStateCU2*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -1164,7 +1396,13 @@ void action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resum
 
 void action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint32_t newValue;
+		uint8_t entityId;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityHackableStateAU4;
+	auto* argStruct = (ActionSetEntityHackableStateAU4*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U4_VALUE(argStruct->newValue);
 
@@ -1180,7 +1418,15 @@ void action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resum
 
 void action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t newValue;
+		uint8_t entityId;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityPath;
+	auto* argStruct = (ActionSetEntityPath*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
@@ -1196,7 +1442,15 @@ void action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t saveFlagOffset;
+		uint8_t newBoolValue;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetSaveFlag;
+	auto* argStruct = (ActionSetSaveFlag*)args;
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
@@ -1214,13 +1468,30 @@ void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t playerHasControl;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetPlayerControl;
+	auto* argStruct = (ActionSetPlayerControl*)args;
 	MageGame->playerHasControl = argStruct->playerHasControl;
 }
 
 void action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t scriptId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetMapTickScript;
+	auto* argStruct = (ActionSetMapTickScript*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
@@ -1233,7 +1504,15 @@ void action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruc
 
 void action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t byteAddress;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetHexCursorLocation;
+	auto* argStruct = (ActionSetHexCursorLocation*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->byteAddress = ROM_ENDIAN_U2_VALUE(argStruct->byteAddress);
 
@@ -1242,7 +1521,15 @@ void action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateS
 
 void action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint16_t stringId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetWarpState;
+	auto* argStruct = (ActionSetWarpState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
@@ -1251,7 +1538,16 @@ void action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 
 void action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t state;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetHexEditorState;
+	auto* argStruct = (ActionSetHexEditorState*)args;
 
 	if (MageHex->getHexEditorState() != (bool)argStruct->state)
 	{
@@ -1261,7 +1557,17 @@ void action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStru
 
 void action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeStateStruct)
 {
-	auto* argStruct = (ActionCheckEntity*)args;
+	typedef struct {
+		uint8_t state;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetHexEditorDialogMode;
+	auto* argStruct = (ActionSetHexEditorDialogMode*)args;
+
 	if (MageHex->getHexDialogState() != (bool)argStruct->state)
 	{
 		MageHex->toggleHexDialog();

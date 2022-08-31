@@ -33,7 +33,7 @@ std::unique_ptr<MageCommandControl> MageCommand;
 std::unique_ptr<MageEntity> hackableDataAddress;
 std::unique_ptr<FrameBuffer> mage_canvas;
 
-bool engineIsInitialized;
+bool engineIsInitialized{false};
 
 uint32_t lastTime;
 uint32_t now;

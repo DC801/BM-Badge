@@ -107,7 +107,7 @@ void MageColorPalette::generatePaletteIntegrityString(
 	for (int i = 0; i < colorCount; ++i) {
 		sprintf(
 			targetString + (7 * i),
-			" 0x%04x\0",
+			" 0x%04x",
 			colors[i]
 		);
 	}

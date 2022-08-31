@@ -36,17 +36,13 @@ static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
 
-uint16_t frame[FRAMEBUFFER_SIZE];
-FrameBuffer canvas;
+uint16_t frame[FRAMEBUFFER_SIZE]{0};
+FrameBuffer canvas{};
 
 FrameBuffer* p_canvas(void) { return &canvas; }
 
-FrameBuffer::FrameBuffer() {
-	fadeFraction = 0.0f;
-	isFading = false;
-	fadeColor = 0x0000;
-}
-FrameBuffer::~FrameBuffer() {}
+extern std::unique_ptr<EngineWindowFrame> MainWindow;
+
 
 void FrameBuffer::clearScreen(uint16_t color) {
 	for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
@@ -327,6 +323,7 @@ void FrameBuffer::drawChunkWithFlags(
 	else if (flip_x == true && flip_y == false && flip_diag == false) {
 		tileToBufferYesXNoYNoZ(
 			pixels.get(),
+			
 			colorPalette,
 			screen_x,
 			screen_y,
@@ -1878,6 +1875,6 @@ void FrameBuffer::blt()
 #ifdef DC801_EMBEDDED
 	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 #else
-	EngineWindowFrameGameBlt(frame);
+	MainWindow->GameBlt(frame);
 #endif
 }

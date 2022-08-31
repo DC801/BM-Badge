@@ -235,10 +235,6 @@ public:
 	bool isFading;
 	uint16_t fadeColor;
 
-	FrameBuffer();
-	~FrameBuffer();
-
-
 	void clearScreen(uint16_t color);
 
 	void drawPixel(int x, int y, uint16_t color);

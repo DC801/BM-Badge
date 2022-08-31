@@ -114,7 +114,7 @@ void timer_manager::kill()
 
 }
 
-timer_manager manager;
+timer_manager manager{};
 
 extern "C"
 {

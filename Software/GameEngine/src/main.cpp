@@ -89,7 +89,7 @@ static void rom_init(void){
 int main(int argc, char* argv[]) {
 
 #if !defined(EMSCRIPTEN) && !defined(DC801_EMBEDDED)
-	EngineWindowFrameInit();
+	
 	signal(SIGINT, sig_handler);
 
 #endif
@@ -183,7 +183,7 @@ int main(int argc, char* argv[]) {
 	}
 #else
 	debug_print("Exiting gracefully...\n");
-	EngineWindowFrameCleanup();
+	SDL_Quit();
 	return 0;
 #endif
 

@@ -1,37 +1,40 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
-#include <atomic>
+#include <stdint.h>
+#include "cmixer.h"
 
-// This is the minimal standards-compliant mutex implementation which does not use
-// pure assembly. However, modern C++ std::atomic is extremely optimized under the hood.
-class AudioMutex
+#ifndef DC801_EMBEDDED
+#include <SDL.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+// Contains SDL Audio Device information
+struct AudioDevice
 {
-	std::atomic<bool> flag{false};
+	SDL_AudioDeviceID id;		// SDL Audio Device ID
+	SDL_AudioSpec spec;			// Secifications of our audio
+	bool enabled;				// Whether the audio driver is loaded and ready
+};
 
-public:
-	// When compiled, lock() builds down to ~18 bytes in Thumb mode with -Os
-	// It utilizes the ldrexb/strexb "exclusive" instructions for atomicity.
-	// The largest part of this function is actually the spinlock while loop.
+// The audio player uses a linked list to play up to 25 sounds and one background track simultaneously
+struct Audio
+{
+	Audio(const char* filename)
+		:Audio(cm_new_source_from_file(filename)) { }
+	Audio(cm_Source* source = nullptr)
+		:source(source) { }
+	uint8_t fade{ 0 };					// Sample has been dropped, fade it out
+	bool free{ false };					// Whether to free the cmixer source
+	bool end{ false };					// The sample is done playing, free it
 
-	// This also generates a DMB ISH instruction, which ensures that all
-	// instructions in the "Inner Shareable Region" are executed in order,
-	// ie the atomic operations, comparisons, and branches happen in explicit
-	// order.
-	void lock()
-	{
-		while (flag.exchange(true, std::memory_order_relaxed));
-		std::atomic_thread_fence(std::memory_order_acquire);
-	}
+	cm_Source* source; 		// cmixer audio source
+	SDL_AudioSpec spec{};			// Specifications of the audio sample
 
-	// Compiles down to ~8 bytes. This function does not utilize any exclusive
-	// instructions, because it's not necessary. It loads false, issues a data
-	// barrier, and sets the flag.
-	void unlock()
-	{
-		std::atomic_thread_fence(std::memory_order_release);
-		flag.store(false, std::memory_order_relaxed);
-	}
+	Audio* next{ nullptr };			// Next item in the list
 };
 
 class AudioPlayer
@@ -41,10 +44,37 @@ public:
 	void loop(const char *name, double gain);
 	void stop_loop();
 
+	static void forwardCallback(void* userdata, Uint8* stream, int len)
+	{
+		static_cast<AudioPlayer*>(userdata)->callback(stream, len);
+	}
+
 	AudioPlayer();
 	~AudioPlayer();
+
+private:
+	Audio* head{ new Audio() };
+	
+	void callback(uint8_t* stream, int len);
+	void addAudio(Audio* root, Audio* audio);
+	void playAudio(const char* filename, bool loop, double gain);
+	void fadeAudio(Audio* audio);
+	void lockAudio(cm_Event* e);
+	void freeAudio(Audio* audio);
+
+	uint32_t soundCount = 0;			// Current number of simultaneous audio samples
+	AudioMutex mutex{};
+
+	AudioDevice device{ 0, { 0 }, false };
+
 };
 
 extern AudioPlayer audio;
+
+#ifdef __cplusplus
+}
+#endif
+
+
 
 #endif

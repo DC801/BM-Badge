@@ -19,10 +19,9 @@ char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
 };
 
 void makeSureSaveFilePathExists() {
-	auto saveFilePath = std::filesystem::path{ DESKTOP_SAVE_FILE_PATH };
-	auto saveDir = std::filesystem::directory_entry{ saveFilePath };
+	auto saveDir = std::filesystem::directory_entry{ DESKTOP_SAVE_FILE_PATH };
 	if (!saveDir.exists()) {
-		if (!std::filesystem::create_directory(saveDir)) {
+		if (!std::filesystem::create_directories(saveDir)) {
 			throw "Couldn't create save directory";
 		}
 	}
@@ -32,7 +31,6 @@ void makeSureSaveFilePathExists() {
 void EngineROM_Init()
 {
 	bool isRomPlayable = false;
-	const char filename[] = MAGE_GAME_DAT_PATH;
 #ifdef DC801_EMBEDDED
 	isRomPlayable = EngineROM_Magic();
 	FIL gameDat;
@@ -179,8 +177,8 @@ void EngineROM_Init()
 	result = f_close(&gameDat);
 #else
 	auto romFileSize = 0;
-	if (std::filesystem::exists(filename)) {
-		romFileSize = std::filesystem::file_size(filename);
+	if (std::filesystem::exists(MAGE_GAME_DAT_PATH)) {
+		romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
 		printf(
 			"EngineROM_Init - romFileSize: %d\n",
 			romFileSize
@@ -189,8 +187,9 @@ void EngineROM_Init()
 	else {
 		ENGINE_PANIC(
 			"Desktop build:\n"
-			"    Unable to read ROM file size"
-		);
+			"    Unable to read ROM file size at %s",
+			MAGE_GAME_DAT_PATH
+			);
 	}
 
 	if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE) {
@@ -202,25 +201,26 @@ void EngineROM_Init()
 		);
 	}
 
-	auto file = std::ifstream{filename, std::ios::binary};
-
-	romfile = fopen(filename, "rb");
-	if (romfile == NULL)
-	{
-		int error = errno;
-		fprintf(stderr, "Error: %s\n", strerror(error));
-		ENGINE_PANIC(
-			"Desktop build:\n"
-			"    Unable to open ROM file for reading"
-		);
-	}
-
+	auto file = std::ifstream{ MAGE_GAME_DAT_PATH, std::ios::binary };
+	
 	/* copy the file into the buffer */
 	if (!file.read((char*)romDataInDesktopRam, romFileSize))
 	{
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
-#endif //DC801_DESKTOP
+	file.close();
+	// romfile = fopen(MAGE_GAME_DAT_PATH, "rb");
+	// if (romfile == NULL)
+	// {
+	// 	int error = errno;
+	// 	fprintf(stderr, "Error: %s\n", strerror(error));
+	// 	ENGINE_PANIC(
+	// 		"Desktop build:\n"
+	// 		"    Unable to open ROM file for reading"
+	// 	);
+	// }
+#endif
+
 	// Verify magic string is on ROM when we're done:
 	isRomPlayable = EngineROM_Magic();
 	if (!isRomPlayable) {
@@ -279,7 +279,7 @@ void EngineROM_ReadSaveSlot(
 	size_t saveFileSize = ftell(saveFile);
 	rewind(saveFile);
 	debug_print(
-		"Save file size: %d\n",
+		"Save file size: %zu\n",
 		saveFileSize
 	);
 	if (saveFileSize) {
@@ -593,7 +593,7 @@ bool EngineROM_Read(
 		}
 	}
 #else
-	memcpy(data, romDataInDesktopRam + address, length);
+	memmove(data, romDataInDesktopRam + address, length);
 #endif // DC801_DESKTOP
 	return true;
 }
@@ -640,7 +640,7 @@ bool EngineROM_Write(
 
 uint32_t EngineROM_Verify(
 	uint32_t address,
-	const uint32_t length,
+	uint32_t length,
 	const uint8_t* data,
 	bool throwErrorWithLog = false
 )
@@ -650,25 +650,25 @@ uint32_t EngineROM_Verify(
 		ENGINE_PANIC("EngineROM_Verify: Null pointer");
 	}
 	char debugString[128];
-	auto readBuffer = std::make_unique<uint8_t[]>(length);
-	EngineROM_Read(
-		address,
-		length,
-		readBuffer.get(),
-		"Failed to read from Rom in EngineROM_Verify"
-	);
+	// auto readBuffer = std::make_unique<uint8_t[]>(length);
+	// EngineROM_Read(
+	// 	address,
+	// 	length,
+	// 	readBuffer.get(),
+	// 	"Failed to read from Rom in EngineROM_Verify"
+	// );
 
 	for (uint32_t i = 0; i < length; i++) {
-		if (data[i] != readBuffer[i]) {
+		if (data[i] != romDataInDesktopRam[i]) {
 			if (throwErrorWithLog) {
 				sprintf(
 					debugString,
 					"EngineROM_Verify failed at address %d\nTest: %d\n ROM: %d",
 					address + i,
 					data[i],
-					readBuffer[i]
+					romDataInDesktopRam[i]
 				);
-				debug_print(debugString);
+				debug_print("%s", debugString);
 				ENGINE_PANIC(debugString);
 			}
 			//return address in ROM where memory does not match

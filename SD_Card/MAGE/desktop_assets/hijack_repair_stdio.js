@@ -85,5 +85,5 @@ var createOutputFunction = function (source) {
 var focusParentWindowOnCanvasInteraction = function () {
 	window.focus();
 };
-window.addEventListener('mousedown', focusParentWindowOnCanvasInteraction);
-window.addEventListener('touchstart', focusParentWindowOnCanvasInteraction);
+window.addEventListener('mousedown', focusParentWindowOnCanvasInteraction, {passive: true});
+window.addEventListener('touchstart', focusParentWindowOnCanvasInteraction, {passive: true});
