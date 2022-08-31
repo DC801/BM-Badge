@@ -1563,40 +1563,6 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 				p = p + 2 * dy;
 			}
 		}
-
-		// advance x, y, or both
-		/*
-plotLine(x0, y0, x1, y1)
-	dx = x1 - x0
-	dy = y1 - y0
-	D = 2*dy - dx
-	y = y0
-
-	for x from x0 to x1
-		plot(x,y)
-		if D > 0
-			y = y + 1
-			D = D - 2*dx
-		end if
-		D = D + 2*dy
-
-
-
-for(auto p=2*dy-dx, auto x = x1;x<x2;x++)
-{
-	if(p>=0)
-	{
-		draw();
-		y++;
-		p=p+2*dy-2*dx;
-	}
-	else
-	{
-		draw();
-		p=p+2*dy;
-	}
-}
-*/
 	}
 
 }
