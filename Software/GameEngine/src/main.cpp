@@ -17,7 +17,7 @@
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
 #include "sdk/shim/shim_err.h"
-#include "sdk/shim/shim_timer.h"
+#include "shim_timer.h"
 #include "utility.h"
 
 #ifdef DC801_EMBEDDED

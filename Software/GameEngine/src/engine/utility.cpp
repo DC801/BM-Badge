@@ -16,10 +16,8 @@
 #include <filesystem>
 
 
-#ifdef DC801_EMBEDDED
-
-#else
-#include "sdk/shim/shim_timer.h"
+#ifndef DC801_EMBEDDED
+#include "shim_timer.h"
 #include "sdk/shim/shim_pwm.h"
 #include "modules/adc.h"
 #include "modules/led.h"

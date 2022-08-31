@@ -1,15 +1,19 @@
 #include "mage_geometry.h"
 #include "FrameBuffer.h"
 #include "EngineROM.h"
+#include "convert_endian.h"
+#include "shim_err.h"
 
 extern std::unique_ptr<FrameBuffer> mage_canvas;
+extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageGeometry::MageGeometry(uint32_t address)
 {
 	//skip over name:
 	address += 32;
 	//read typeId:
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(typeId),
 		(uint8_t *)&typeId,
@@ -18,7 +22,7 @@ MageGeometry::MageGeometry(uint32_t address)
 	address += sizeof(typeId);
 
 	//read pointCount:
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(pointCount),
 		(uint8_t *)&pointCount,
@@ -27,7 +31,7 @@ MageGeometry::MageGeometry(uint32_t address)
 	address += sizeof(pointCount);
 
 	//read segmentCount:
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(segmentCount),
 		(uint8_t *)&segmentCount,
@@ -38,7 +42,7 @@ MageGeometry::MageGeometry(uint32_t address)
 	address += 1; //padding
 
 	//read pathLength:
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(pathLength),
 		(uint8_t *)&pathLength,
@@ -55,7 +59,7 @@ MageGeometry::MageGeometry(uint32_t address)
 		uint16_t x;
 		uint16_t y;
 		//get x value:
-		EngineROM_Read(
+		EngineROM->Read(
 			address,
 			sizeof(x),
 			(uint8_t *)&x,
@@ -64,7 +68,7 @@ MageGeometry::MageGeometry(uint32_t address)
 		x = ROM_ENDIAN_U2_VALUE(x);
 		address += sizeof(x);
 		//get y value:
-		EngineROM_Read(
+		EngineROM->Read(
 			address,
 			sizeof(y),
 			(uint8_t *)&y,
@@ -80,7 +84,7 @@ MageGeometry::MageGeometry(uint32_t address)
 	//generate appropriately sized array:
 	segmentLengths = std::make_unique<float[]>(segmentCount);
 
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(float) * segmentCount,
 		(uint8_t *)segmentLengths.get(),

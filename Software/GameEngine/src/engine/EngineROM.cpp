@@ -1,9 +1,13 @@
 #include "EngineROM.h"
+#include "EnginePanic.h"
 #include "games/mage/mage_defines.h"
 #include "utility.h"
 #include <filesystem>
 #include <fstream>
 
+#ifdef EMSCRIPTEN
+#include <emscripten.h>
+#endif // EMSCRIPTEN
 
 #ifdef DC801_EMBEDDED
 #include "qspi.h"
@@ -28,11 +32,11 @@ void makeSureSaveFilePathExists() {
 }
 #endif //DC801_DESKTOP
 
-void EngineROM_Init()
+EngineRom::EngineRom() noexcept
 {
 	bool isRomPlayable = false;
 #ifdef DC801_EMBEDDED
-	isRomPlayable = EngineROM_Magic();
+	isRomPlayable = Magic();
 	FIL gameDat;
 	FRESULT result;
 	UINT count;
@@ -66,7 +70,7 @@ void EngineROM_Init()
 	}
 	else if (!gameDatSDPresent && !isRomPlayable) {
 		// no SD card, rom is invalid - literally unplayable
-		EngineROM_ErrorUnplayable();
+		ErrorUnplayable();
 	}
 	else if (gameDatSDPresent && !isRomPlayable) {
 		// we have SD, rom is invalid - skip directly to the copy operation
@@ -75,7 +79,7 @@ void EngineROM_Init()
 		// we have SD, and the rom seems valid - check if hashes are the same
 
 		// get the gameDatHashROM from the ROM chip:
-		EngineROM_Read(
+		Read(
 			0,
 			ENGINE_ROM_MAGIC_HASH_LENGTH,
 			(uint8_t*)gameDatHashROM,
@@ -170,7 +174,7 @@ void EngineROM_Init()
 			}
 		}
 	}
-	if (!EngineROM_SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip)) {
+	if (!EngineRom::SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip)) {
 		ENGINE_PANIC("SD Copy Operation was not successful.");
 	}
 	//close game.dat file when done:
@@ -180,7 +184,7 @@ void EngineROM_Init()
 	if (std::filesystem::exists(MAGE_GAME_DAT_PATH)) {
 		romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
 		printf(
-			"EngineROM_Init - romFileSize: %d\n",
+			"EngineRom::Init - romFileSize: %d\n",
 			romFileSize
 		);
 	}
@@ -222,13 +226,13 @@ void EngineROM_Init()
 #endif
 
 	// Verify magic string is on ROM when we're done:
-	isRomPlayable = EngineROM_Magic();
+	isRomPlayable = EngineRom::Magic();
 	if (!isRomPlayable) {
-		EngineROM_ErrorUnplayable();
+		EngineRom::ErrorUnplayable();
 	}
 }
 
-void EngineROM_ErrorUnplayable() {
+void EngineRom::ErrorUnplayable() {
 	//let out the magic s̶m̶o̶k̶e̶ goat
 	ENGINE_PANIC(
 		"ROM header invalid. Game cannot start.\n"
@@ -251,13 +255,13 @@ uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
 		);
 }
 
-void EngineROM_ReadSaveSlot(
+void EngineRom::ReadSaveSlot(
 	uint8_t slotIndex,
 	size_t length,
 	uint8_t* data
 ) {
 #ifdef DC801_EMBEDDED
-	EngineROM_Read(
+	Read(
 		getSaveSlotAddressByIndex(slotIndex),
 		length,
 		data,
@@ -299,7 +303,7 @@ void EngineROM_ReadSaveSlot(
 #endif
 }
 
-void EngineROM_EraseSaveSlot(uint8_t slotIndex) {
+void EngineRom::EraseSaveSlot(uint8_t slotIndex) {
 #ifdef DC801_EMBEDDED
 	if (!qspiControl.erase(
 		tBlockSize::BLOCK_SIZE_256K,
@@ -313,7 +317,7 @@ void EngineROM_EraseSaveSlot(uint8_t slotIndex) {
 #endif //DC801_EMBEDDED
 }
 
-void EngineROM_WriteSaveSlot(
+void EngineRom::WriteSaveSlot(
 	uint8_t slotIndex,
 	size_t length,
 	uint8_t* hauntedDataPointer
@@ -325,8 +329,8 @@ void EngineROM_WriteSaveSlot(
 		hauntedDataPointer,
 		length
 	);
-	EngineROM_EraseSaveSlot(slotIndex);
-	EngineROM_Write(
+	EngineRom::EraseSaveSlot(slotIndex);
+	EngineRom::Write(
 		getSaveSlotAddressByIndex(slotIndex),
 		length,
 		// hauntedDataPointer, // DO NOT USE, HAUNTED!!!
@@ -375,7 +379,7 @@ void EngineROM_WriteSaveSlot(
 
 #ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
-bool EngineROM_SD_Copy(
+bool EngineRom::SD_Copy(
 	uint32_t gameDatFilesize,
 	FIL gameDat,
 	bool eraseWholeRomChip
@@ -454,7 +458,7 @@ bool EngineROM_SD_Copy(
 		// erase save games at the end of ROM chip too when copying
 		// because new dat files means new save flags and variables
 		for (uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++) {
-			EngineROM_EraseSaveSlot(i);
+			EngineRom::EraseSaveSlot(i);
 		}
 	}
 
@@ -495,14 +499,14 @@ bool EngineROM_SD_Copy(
 			if (i == (romPagesToWrite - 1)) {
 				debug_print("Write Size at %d is %d", i, writeSize);
 			}
-			EngineROM_Write(
+			EngineRom::Write(
 				currentAddress + romPageOffset,
 				writeSize,
 				(uint8_t*)(sdReadBuffer + romPageOffset),
 				"Failed to write buffer to ROM chip\nduring ROM copy procedure."
 			);
 			//verify that the data was correctly written or return false.
-			EngineROM_Verify(
+			EngineRom::Verify(
 				currentAddress + romPageOffset,
 				writeSize,
 				(uint8_t*)(sdReadBuffer + romPageOffset),
@@ -553,10 +557,7 @@ bool EngineROM_SD_Copy(
 }
 #endif //DC801_EMBEDDED
 
-void EngineROM_Deinit() {
-}
-
-bool EngineROM_Read(
+bool EngineRom::Read(
 	uint32_t address,
 	uint32_t length,
 	uint8_t* data,
@@ -566,7 +567,7 @@ bool EngineROM_Read(
 #ifdef DC801_EMBEDDED
 	if (data == NULL)
 	{
-		ENGINE_PANIC("EngineROM_Read: Null pointer");
+		ENGINE_PANIC("EngineRom::Read: Null pointer");
 	}
 
 	//this is the number of whole words to read from the starting adddress:
@@ -598,7 +599,7 @@ bool EngineROM_Read(
 	return true;
 }
 
-bool EngineROM_Write(
+bool EngineRom::Write(
 	uint32_t address,
 	uint32_t length,
 	uint8_t* data,
@@ -615,7 +616,7 @@ bool EngineROM_Write(
 #ifdef DC801_EMBEDDED
 	if (data == NULL)
 	{
-		ENGINE_PANIC("EngineROM_Write: Null pointer");
+		ENGINE_PANIC("EngineRom::Write: Null pointer");
 	}
 
 	if (!qspiControl.write(data, length, address))
@@ -638,7 +639,7 @@ bool EngineROM_Write(
 #endif
 }
 
-uint32_t EngineROM_Verify(
+uint32_t EngineRom::Verify(
 	uint32_t address,
 	uint32_t length,
 	const uint8_t* data,
@@ -647,15 +648,15 @@ uint32_t EngineROM_Verify(
 {
 	if (data == NULL)
 	{
-		ENGINE_PANIC("EngineROM_Verify: Null pointer");
+		ENGINE_PANIC("EngineRom::Verify: Null pointer");
 	}
 	char debugString[128];
 	// auto readBuffer = std::make_unique<uint8_t[]>(length);
-	// EngineROM_Read(
+	// Read(
 	// 	address,
 	// 	length,
 	// 	readBuffer.get(),
-	// 	"Failed to read from Rom in EngineROM_Verify"
+	// 	"Failed to read from Rom in EngineRom::Verify"
 	// );
 
 	for (uint32_t i = 0; i < length; i++) {
@@ -663,7 +664,7 @@ uint32_t EngineROM_Verify(
 			if (throwErrorWithLog) {
 				sprintf(
 					debugString,
-					"EngineROM_Verify failed at address %d\nTest: %d\n ROM: %d",
+					"EngineRom::Verify failed at address %d\nTest: %d\n ROM: %d",
 					address + i,
 					data[i],
 					romDataInDesktopRam[i]
@@ -678,10 +679,10 @@ uint32_t EngineROM_Verify(
 	return length;
 }
 
-bool EngineROM_Magic() {
+bool EngineRom::Magic() {
 	uint8_t length = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
 	uint8_t magic[] = ENGINE_ROM_GAME_IDENTIFIER_STRING;
-	uint32_t bytesVerified = EngineROM_Verify(
+	uint32_t bytesVerified = EngineRom::Verify(
 		0,
 		length,
 		magic

@@ -1,13 +1,15 @@
 #include "mage_portrait.h"
 #include "EngineROM.h"
 
+extern std::unique_ptr<EngineRom> EngineROM;
+
 MagePortrait::MagePortrait(uint32_t address)
 {
 	address += 32; // name
 	address += sizeof(uint8_t); // paddingA
 	address += sizeof(uint8_t); // paddingB
 	address += sizeof(uint8_t); // paddingC
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(emoteCount),
 		(uint8_t *)&emoteCount,

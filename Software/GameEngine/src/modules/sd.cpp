@@ -35,6 +35,7 @@
 #include <filesystem>
 #include "EnginePanic.h"
 #include "EngineROM.h"
+#include "utility.h"
 
 #ifdef DC801_EMBEDDED
 

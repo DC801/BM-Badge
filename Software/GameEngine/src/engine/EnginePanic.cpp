@@ -11,7 +11,7 @@
 #ifdef DC801_EMBEDDED
 #include "nrf52840.h"
 #else
-#include "sdk/shim/shim_timer.h"
+#include "shim_timer.h"
 #endif
 
 void panic_print(const char *msg, int x, int y)
@@ -36,9 +36,6 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	// BSOD background
 	canvas.clearScreen(COLOR_BSOD);
 
-	// String buffer
-	char panic_message[401]{0};
-
 	// y advance value from text
 	const uint8_t yAdvance = Monaco9.yAdvance;
 
@@ -56,40 +53,35 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	const char *file = "There is no file...";
 #endif
 
-	const char *header = "\n"
-						 "---------- DC801 Badge Panic ----------\n"
-						 "File: %s\n"
-						 "Line: %d\n"
-						 "\n"
-						 "Error Details:\n";
-
-	snprintf(panic_message, sizeof(panic_message), header, file, lineno);
-	panic_print(panic_message, x, y);
-	y += yAdvance * 6;
-
-	// Print Message
-	va_list args;
-	va_start(args, format);
-	vsnprintf(panic_message, sizeof(panic_message), format, args);
-	panic_print(panic_message, x, y);
-
-	y = HEIGHT - (yAdvance * 6);
+	panic_print("\n",x,y);
+	y += yAdvance;
+	panic_print("---------- DC801 Badge Panic ----------\n",x,y);
+	y += yAdvance;
+	panic_print("File: \n",x,y);
+	y += yAdvance;
+	panic_print(file, x, y);
+	y += yAdvance;
+	panic_print("Line: <tbd>\n", x, y);
+	y += yAdvance;
+	panic_print("\n",x,y);
+	y += yAdvance;
+	panic_print("Error Details:\n",x,y);
+	y += yAdvance;
 
 	// Print reboot message
-	const char *reboot = "\n"
-						 "\n"
-						 "Press Right Joystick to %s...\n"
-						 "---------- DC801 Badge Panic ----------\n\n";
-
+	panic_print("\n", x,y);
+	y += yAdvance;
+	panic_print("\n", x,y);
+	y += yAdvance;
 
 #ifdef DC801_EMBEDDED
-	snprintf(panic_message, sizeof(panic_message), reboot, "Reboot");
+	panic_print("Press Right Joystick to Reboot...\n", x, y);
 #else
-	snprintf(panic_message, sizeof(panic_message), reboot, "Exit");
+	panic_print("Press Right Joystick to Exit...\n", x, y);
 #endif
-
-	panic_message[sizeof(panic_message) - 1] = 0;	// Null terminate
-	panic_print(panic_message, x, y);
+	y += yAdvance;
+	panic_print("---------- DC801 Badge Panic ----------\n\n", x,y);
+	y += yAdvance;
 
 	// Push BSOD to screen
 	canvas.blt();

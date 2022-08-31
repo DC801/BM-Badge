@@ -4,14 +4,19 @@
 #include "EngineInput.h"
 #include "mage_script_actions.h"
 #include "mage_command_control.h"
+#include "convert_endian.h"
+#include "shim_err.h"
 
 //load in the global variables that the scripts will be operating on:
+
 extern std::unique_ptr<MageGameControl> MageGame;
 extern std::unique_ptr<MageHexEditor> MageHex;
 extern std::unique_ptr<MageDialogControl> MageDialog;
 extern std::unique_ptr<MageCommandControl> MageCommand;
 extern std::unique_ptr<MageEntity> hackableDataAddress;
 extern std::unique_ptr<FrameBuffer> mage_canvas;
+extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageScriptControl::MageScriptControl()
 {
@@ -132,7 +137,7 @@ void MageScriptControl::processActionQueue(
 	//read the action count from ROM:
 	//skip the name of the script, we don't need it in ram at runtime:
 	//char scriptName[SCRIPT_NAME_LENGTH] = {0};
-	//EngineROM_Read(
+	//EngineROM->Read(
 	//	address,
 	//	SCRIPT_NAME_LENGTH,
 	//	(uint8_t *)scriptName,
@@ -147,7 +152,7 @@ void MageScriptControl::processActionQueue(
 
 	//read the script's action count:
 	uint32_t actionCount = 0;
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(actionCount),
 		(uint8_t *)&actionCount,
@@ -257,7 +262,7 @@ void MageScriptControl::runAction(
 	ActionFunctionPointer actionHandlerFunction;
 
 	//get actionTypeId from ROM:
-	EngineROM_Read(
+	EngineROM->Read(
 		actionMemoryAddress,
 		sizeof(actionTypeId),
 		(uint8_t *)&actionTypeId,
@@ -275,7 +280,7 @@ void MageScriptControl::runAction(
 	}
 
 	//read remaining 7 bytes of argument data into actionArgs
-	EngineROM_Read(
+	EngineROM->Read(
 		actionMemoryAddress,
 		sizeof(actionArgs),
 		(uint8_t *)&actionArgs,

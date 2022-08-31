@@ -2,22 +2,8 @@
 #define ENGINE_ROM_H_
 
 #include <stdint.h>
-#include "EnginePanic.h"
-#include "FrameBuffer.h"
-#include "fonts/Monaco9.h"
-
-#include "convert_endian.h"
-#include "utility.h"
-
-#ifndef DC801_EMBEDDED
-#include <errno.h>
-#include <string.h>
-#include <sys/stat.h>
-#include "sdk/shim/shim_err.h"
-
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
-#endif // EMSCRIPTEN
+#include <stddef.h>
+#include <memory>
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,9 +11,7 @@ extern "C" {
 
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
-#endif
-
-//size of chunk to be read/written when writing game.dat to ROM per loop
+	//size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
 
 //This is the smallest page we know how to erase on our chip,
@@ -36,7 +20,7 @@ extern "C" {
 //262144 bytes = 256KB
 #define ENGINE_ROM_ERASE_PAGE_SIZE 262144
 
-//size of largest single EngineROM_Write data that can be sent at one time:
+//size of largest single Write data that can be sent at one time:
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
 //or you'll lose data.
 #define ENGINE_ROM_WRITE_PAGE_SIZE 512
@@ -79,56 +63,59 @@ extern "C" {
 #define ENGINE_ROM_SAVE_OFFSET (ENGINE_ROM_MAX_DAT_FILE_SIZE)
 
 //This is a return code indicating that the verification was successful
-//it needs to be a negative number, as the EngineROM_Verify function returns
+//it needs to be a negative number, as the Verify function returns
 //the failure address which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
-void EngineROM_Init();
-void EngineROM_Deinit();
-bool EngineROM_Magic();
-void EngineROM_ErrorUnplayable();
 
-bool EngineROM_Read(
-	uint32_t address,
-	uint32_t length,
-	uint8_t *data,
-	const char *errorString
-);
-bool EngineROM_Write(
-	uint32_t address,
-	uint32_t length,
-	uint8_t *data,
-	const char *errorString
-);
-uint32_t EngineROM_Verify(
-	uint32_t address,
-	uint32_t length,
-	const uint8_t *data,
-	bool throwErrorWithLog
-);
-uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex);
-void EngineROM_ReadSaveSlot(
-	uint8_t slotIndex,
-	size_t length,
-	uint8_t *data
-);
-void EngineROM_EraseSaveSlot(uint8_t slotIndex);
-void EngineROM_WriteSaveSlot(
-	uint8_t slotIndex,
-	size_t length,
-	uint8_t *hauntedDataPointer
-);
+	struct EngineRom {
+		EngineRom() noexcept;
+		~EngineRom() = default;
+		
+		bool Magic();
+		void ErrorUnplayable();
 
+		bool Read(
+			uint32_t address,
+			uint32_t length,
+			uint8_t* data,
+			const char* errorString
+		);
+		bool Write(
+			uint32_t address,
+			uint32_t length,
+			uint8_t* data,
+			const char* errorString
+		);
+		uint32_t Verify(
+			uint32_t address,
+			uint32_t length,
+			const uint8_t* data,
+			bool throwErrorWithLog
+		);
+		uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex);
+		void ReadSaveSlot(
+			uint8_t slotIndex,
+			size_t length,
+			uint8_t* data
+		);
+		void EraseSaveSlot(uint8_t slotIndex);
+		void WriteSaveSlot(
+			uint8_t slotIndex,
+			size_t length,
+			uint8_t* hauntedDataPointer
+		);
 #ifdef DC801_EMBEDDED
 
-bool EngineROM_SD_Copy(
-	uint32_t gameDatFilesize,
-	FIL gameDat,
-	bool eraseWholeRomChip
-);
+		bool SD_Copy(
+			uint32_t gameDatFilesize,
+			FIL gameDat,
+			bool eraseWholeRomChip
+		);
 #endif
 
-
+	};
+	
 #ifdef __cplusplus
 }
 #endif

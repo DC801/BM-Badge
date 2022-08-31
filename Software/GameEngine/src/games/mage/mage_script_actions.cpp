@@ -3,9 +3,13 @@
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
+#include "convert_endian.h"
+#include "utility.h"
 
 //load in the global variables that the scripts will be operating on:
 extern std::unique_ptr<MageGameControl> MageGame;
+extern std::unique_ptr<EngineRom> EngineROM;
+
 extern std::unique_ptr<MageHexEditor> MageHex;
 extern std::unique_ptr<MageDialogControl> MageDialog;
 extern std::unique_ptr<MageScriptControl> MageScript;

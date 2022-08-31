@@ -135,61 +135,63 @@ void AudioPlayer::callback(uint8_t* stream, int len)
 {
 	// Capture the root of the list
 	Audio* previous = head;
-	// Pull the first audio sample
-	Audio* audio = previous->next;
+	if (previous) {
+		// Pull the first audio sample
+		Audio* audio = previous->next;
 
-	memset(stream, 0, len);
+		memset(stream, 0, len);
 
-	// Walk the list
-	while (audio != NULL)
-	{
-		cm_Source* source = audio->source;
-
-		// If this sample has remaining data to play
-		if (audio->end == false)
+		// Walk the list
+		while (audio != NULL)
 		{
-			// And the audio is being faded
-			if (audio->fade == 1)
+			cm_Source* source = audio->source;
+
+			// If this sample has remaining data to play
+			if (audio->end == false)
 			{
-				// Fade until gain is zero, then truncate sample to zero length
-				if (source->gain > 0.0)
+				// And the audio is being faded
+				if (audio->fade == 1)
 				{
-					cm_set_gain(source, source->gain - 0.1);
+					// Fade until gain is zero, then truncate sample to zero length
+					if (source->gain > 0.0)
+					{
+						cm_set_gain(source, source->gain - 0.1);
+					}
+					else
+					{
+						audio->end = true;
+					}
 				}
-				else
+
+				// Mix with cmixer
+				cm_process(reinterpret_cast<cm_Int16*>(stream), len / sizeof(cm_Int16));
+
+				// Continue to the next item
+				previous = audio;
+			}
+			// Otherwise, this sample is finished
+			else
+			{
+				// Stop playing
+				cm_stop(audio->source);
+
+				// Unlink the sample
+				previous->next = audio->next;
+				// Offset our sample count for non-looped samples
+				if (audio->source->loop == 0)
 				{
-					audio->end = true;
+					soundCount -= 1;
 				}
+
+				// Unlink the next sample
+				audio->next = NULL;
+				// Free the sample and delete the audio object
+				freeAudio(audio);
 			}
 
-			// Mix with cmixer
-			cm_process(reinterpret_cast<cm_Int16*>(stream), len / sizeof(cm_Int16));
-
-			// Continue to the next item
-			previous = audio;
+			// Iterate to the next sample
+			audio = previous->next;
 		}
-		// Otherwise, this sample is finished
-		else
-		{
-			// Stop playing
-			cm_stop(audio->source);
-
-			// Unlink the sample
-			previous->next = audio->next;
-			// Offset our sample count for non-looped samples
-			if (audio->source->loop == 0)
-			{
-				soundCount -= 1;
-			}
-
-			// Unlink the next sample
-			audio->next = NULL;
-			// Free the sample and delete the audio object
-			freeAudio(audio);
-		}
-
-		// Iterate to the next sample
-		audio = previous->next;
 	}
 }
 

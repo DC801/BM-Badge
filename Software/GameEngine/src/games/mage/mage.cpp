@@ -1,16 +1,20 @@
-#include <SDL.h>
 
-#include "mage.h"
-
-#include "mage_defines.h"
 
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "EnginePanic.h"
 #include "EngineSerial.h"
+#include <SDL.h>
+
+#include "mage.h"
+#include "convert_endian.h"
+#include "utility.h"
+
+
+#include "mage_defines.h"
 
 #ifndef DC801_EMBEDDED
-#include "sdk/shim/shim_timer.h"
+#include "shim_timer.h"
 #endif
 
 //uncomment to print main game loop timing debug info to terminal or over serial
@@ -25,6 +29,7 @@
 #include "mage_script_control.h"
 #include "mage_command_control.h"
 
+std::unique_ptr<EngineRom> EngineROM;
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
 std::unique_ptr<MageDialogControl> MageDialog;
@@ -319,7 +324,7 @@ void EngineInit () {
 	ledsOff();
 
 	// Initialize ROM and reload game.dat if a different version is on the SD card.
-	EngineROM_Init();
+	EngineROM = std::make_unique<EngineRom>();
 
 	// Construct MageGameControl object, loading all headers
 	MageGame = std::make_unique<MageGameControl>();
@@ -414,7 +419,7 @@ void MAGE()
 
 	//main game loop:
 	#ifdef EMSCRIPTEN
-	emscripten_set_main_loop(EngineMainGameLoop, 24, 1);
+	emscripten_set_main_loop(EngineMainGameLoop, 0, 1);
 	#else
 	while (EngineIsRunning())
 	{
@@ -423,7 +428,7 @@ void MAGE()
 	#endif
 
 	// Close rom and any open files
-	EngineROM_Deinit();
+	EngineROM = nullptr;
 
 	EngineSerialRegisterEventHandlers(
 		nullptr,
@@ -431,7 +436,7 @@ void MAGE()
 	);
 
 	LOG_COLOR_PALETTE_CORRUPTION(
-		"EngineROM_Deinit();"
+		"EngineROM->Deinit();"
 	);
 
 }

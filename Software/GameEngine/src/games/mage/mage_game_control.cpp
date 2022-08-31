@@ -1,4 +1,3 @@
-#include "mage_game_control.h"
 
 #include "EngineROM.h"
 #include "EngineInput.h"
@@ -9,8 +8,13 @@
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
 #include <array>
+#include "mage_game_control.h"
+#include "convert_endian.h"
+#include "utility.h"
 
 extern std::unique_ptr<MageHexEditor> MageHex;
+extern std::unique_ptr<EngineRom> EngineROM;
+
 extern std::unique_ptr<MageDialogControl> MageDialog;
 extern std::unique_ptr<MageScriptControl> MageScript;
 extern std::unique_ptr<MageCommandControl> MageCommand;
@@ -25,7 +29,7 @@ MageGameControl::MageGameControl()
 {
 	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
 
-	EngineROM_Read(
+	EngineROM->Read(
 		offset,
 		sizeof(engineVersion),
 		(uint8_t*)&engineVersion,
@@ -44,7 +48,7 @@ MageGameControl::MageGameControl()
 		);
 	}
 
-	EngineROM_Read(
+	EngineROM->Read(
 		offset,
 		sizeof(scenarioDataCRC32),
 		(uint8_t*)&scenarioDataCRC32,
@@ -53,7 +57,7 @@ MageGameControl::MageGameControl()
 	ROM_ENDIAN_U4_BUFFER(&scenarioDataCRC32, 1);
 	offset += sizeof(scenarioDataCRC32);
 
-	EngineROM_Read(
+	EngineROM->Read(
 		offset,
 		sizeof(scenarioDataLength),
 		(uint8_t*)&scenarioDataLength,
@@ -234,7 +238,7 @@ void MageGameControl::setCurrentSaveToFreshState() {
 void MageGameControl::readSaveFromRomIntoRam(
 	bool silenceErrors
 ) {
-	EngineROM_ReadSaveSlot(
+	EngineROM->ReadSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
 		(uint8_t*)&currentSave
@@ -276,7 +280,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 void MageGameControl::saveGameSlotSave() {
 	// do rom writes
 	copyNameToAndFromPlayerAndSave(true);
-	EngineROM_WriteSaveSlot(
+	EngineROM->WriteSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
 		(uint8_t*)&currentSave
@@ -320,7 +324,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		MAGE_ENTITY_NAME_LENGTH,
 		(uint8_t*)entity.name,
@@ -331,7 +335,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += MAGE_ENTITY_NAME_LENGTH;
 
 	// Read entity.x
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.x),
 		(uint8_t*)&entity.x,
@@ -345,7 +349,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.x);
 
 	// Read entity.y
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.y),
 		(uint8_t*)&entity.y,
@@ -359,7 +363,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.y);
 
 	// Read entity.onInteractScriptId
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.onInteractScriptId),
 		(uint8_t*)&entity.onInteractScriptId,
@@ -373,7 +377,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onInteractScriptId);
 
 	// Read entity.onTickScript
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.onTickScriptId),
 		(uint8_t*)&entity.onTickScriptId,
@@ -387,7 +391,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onTickScriptId);
 
 	// Read entity.primaryId
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.primaryId),
 		(uint8_t*)&entity.primaryId,
@@ -401,7 +405,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.primaryId);
 
 	// Read entity.secondaryId
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.secondaryId),
 		(uint8_t*)&entity.secondaryId,
@@ -415,7 +419,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.secondaryId);
 
 	// Read entity.primaryIdType
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.primaryIdType),
 		(uint8_t*)&entity.primaryIdType,
@@ -426,7 +430,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.primaryIdType);
 
 	// Read entity.currentAnimation
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.currentAnimation),
 		(uint8_t*)&entity.currentAnimation,
@@ -437,7 +441,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.currentAnimation);
 
 	// Read entity.currentFrame
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.currentFrame),
 		(uint8_t*)&entity.currentFrame,
@@ -448,7 +452,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.currentFrame);
 
 	// Read entity.direction
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.direction),
 		(uint8_t*)&entity.direction,
@@ -459,7 +463,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.direction);
 
 	// Read entity.hackableStateA
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.hackableStateA),
 		(uint8_t*)&entity.hackableStateA,
@@ -469,7 +473,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateA);
 
 	// Read entity.hackableStateB
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.hackableStateB),
 		(uint8_t*)&entity.hackableStateB,
@@ -479,7 +483,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateB);
 
 	// Read entity.hackableStateC
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.hackableStateC),
 		(uint8_t*)&entity.hackableStateC,
@@ -489,7 +493,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateC);
 
 	// Read entity.hackableStateD
-	EngineROM_Read(
+	EngineROM->Read(
 		address,
 		sizeof(entity.hackableStateD),
 		(uint8_t*)&entity.hackableStateD,
@@ -961,7 +965,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 		}
 		address = layerAddress + (i * sizeof(currentTile));
 
-		EngineROM_Read(
+		EngineROM->Read(
 			address,
 			sizeof(currentTile),
 			(uint8_t*)&currentTile,
@@ -1155,7 +1159,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			}
 			address = layerAddress + (i * sizeof(currentTile));
 
-			EngineROM_Read(
+			EngineROM->Read(
 				address,
 				sizeof(currentTile),
 				(uint8_t*)&currentTile,
@@ -1770,7 +1774,7 @@ std::string MageGameControl::getString(
 	uint32_t length = stringHeader.length(sanitizedIndex);
 	std::string romString(length, '\0');
 	uint8_t* romStringPointer = (uint8_t*)&romString[0];
-	EngineROM_Read(
+	EngineROM->Read(
 		start,
 		length,
 		romStringPointer,

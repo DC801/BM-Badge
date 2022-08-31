@@ -41,7 +41,10 @@ FrameBuffer canvas{};
 
 FrameBuffer* p_canvas(void) { return &canvas; }
 
+
 extern std::unique_ptr<EngineWindowFrame> MainWindow;
+
+extern std::unique_ptr<EngineRom> EngineROM;
 
 
 void FrameBuffer::clearScreen(uint16_t color) {
@@ -289,7 +292,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
 
-	EngineROM_Read(
+	EngineROM->Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
 		pixels.get(),

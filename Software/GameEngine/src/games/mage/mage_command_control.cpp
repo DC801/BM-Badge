@@ -4,9 +4,12 @@
 #include "EngineROM.h"
 #include "EngineSerial.h"
 #include <vector>
+#include "convert_endian.h"
 
 extern std::unique_ptr<MageGameControl> MageGame;
 extern std::unique_ptr<MageScriptControl> MageScript;
+
+extern std::unique_ptr<EngineRom> EngineROM;
 
 void badAsciiLowerCase(std::string *data) {
 	size_t length = data->size();
@@ -238,7 +241,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogId = _serialDialogId;
 	jumpScriptId = MAGE_NO_SCRIPT;
 	uint32_t serialDialogAddress = MageGame->getSerialDialogAddress(serialDialogId);
-	EngineROM_Read(
+	EngineROM->Read(
 		serialDialogAddress,
 		sizeof(serialDialog),
 		(uint8_t *) &serialDialog,
@@ -260,7 +263,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogBuffer += dialogString + "\n";
 	isInputTrapped = serialDialog.serialResponseType != RESPONSE_NONE;
 	serialDialogResponses = std::make_unique<MageSerialDialogResponse[]>(serialDialog.responseCount);
-	EngineROM_Read(
+	EngineROM->Read(
 		serialDialogAddress + sizeof(serialDialog),
 		sizeof(MageSerialDialogResponse) * serialDialog.responseCount,
 		(uint8_t *) serialDialogResponses.get(),

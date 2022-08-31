@@ -1,8 +1,13 @@
 #include "mage_hex.h"
 #include "EngineInput.h"
 #include "EngineROM.h"
+#include "convert_endian.h"
+#include "utility.h"
+#include "shim_err.h"
 
 extern std::unique_ptr<FrameBuffer> mage_canvas;
+extern std::unique_ptr<EngineRom> EngineROM;
+
 extern std::unique_ptr<MageGameControl> MageGame;
 extern std::unique_ptr<MageDialogControl> MageDialog;
 extern std::unique_ptr<MageEntity> hackableDataAddress;

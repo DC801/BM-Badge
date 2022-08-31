@@ -4,11 +4,15 @@
 #include "EngineInput.h"
 #include "mage_portrait.h"
 #include "mage_script_actions.h"
+#include "convert_endian.h"
+
 
 extern std::unique_ptr<FrameBuffer> mage_canvas;
 extern std::unique_ptr<MageGameControl> MageGame;
 extern std::unique_ptr<MageScriptControl> MageScript;
 extern std::unique_ptr<MageHexEditor> MageHex;
+
+extern std::unique_ptr<EngineRom> EngineROM;
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
@@ -150,7 +154,7 @@ void MageDialogControl::load(
 	currentDialogAddress = MageGame->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
-	EngineROM_Read(
+	EngineROM->Read(
 		currentDialogAddress,
 		sizeof(currentDialogScreenCount),
 		(uint8_t *)&currentDialogScreenCount,
@@ -191,7 +195,7 @@ void MageDialogControl::loadNextScreen() {
 		return;
 	}
 	uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
-	EngineROM_Read(
+	EngineROM->Read(
 		currentDialogAddress,
 		sizeOfDialogScreenStruct,
 		(uint8_t *)&currentScreen,
@@ -207,7 +211,7 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
 	messageIds.reset();
 	messageIds = std::make_unique<uint16_t[]>(currentScreen.messageCount);
-	EngineROM_Read(
+	EngineROM->Read(
 		currentDialogAddress,
 		sizeOfScreenMessageIds,
 		(uint8_t *)messageIds.get(),
@@ -223,7 +227,7 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfResponses = sizeOfResponse * currentScreen.responseCount;
 	responses.reset();
 	responses = std::make_unique<MageDialogResponse[]>(currentScreen.responseCount);
-	EngineROM_Read(
+	EngineROM->Read(
 		currentDialogAddress,
 		sizeOfResponses,
 		(uint8_t *)responses.get(),
