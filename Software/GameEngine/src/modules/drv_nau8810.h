@@ -3,9 +3,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 #ifdef DC801_EMBEDDED
 
 #include "nrfx_i2s.h"
@@ -291,8 +289,6 @@ void nau8810_stop(void);
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

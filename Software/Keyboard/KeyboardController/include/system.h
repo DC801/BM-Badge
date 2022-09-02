@@ -41,9 +41,7 @@
 #include "ccp.h"
 #include "port.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 void mcu_init(void)
 {
@@ -65,8 +63,6 @@ void mcu_init(void)
 		*((uint8_t *)&PORTC + 0x10 + i) |= 1 << PORT_PULLUPEN_bp;
 	}
 }
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* SYSTEM_INCLUDED */

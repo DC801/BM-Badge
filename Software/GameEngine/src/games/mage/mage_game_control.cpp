@@ -1,4 +1,4 @@
-
+#include "mage_game_control.h"
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "FrameBuffer.h"
@@ -8,28 +8,19 @@
 #include "mage_dialog_control.h"
 #include "mage_command_control.h"
 #include <array>
-#include "mage_game_control.h"
 #include "convert_endian.h"
 #include "utility.h"
-
-extern std::unique_ptr<MageHexEditor> MageHex;
-extern std::unique_ptr<EngineRom> EngineROM;
-
-extern std::unique_ptr<MageDialogControl> MageDialog;
-extern std::unique_ptr<MageScriptControl> MageScript;
-extern std::unique_ptr<MageCommandControl> MageCommand;
-
-extern std::unique_ptr<FrameBuffer> mage_canvas;
-
 
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
-MageGameControl::MageGameControl()
+MageGameControl::MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr<FrameBuffer> frameBuffer) noexcept
+	: ROM(ROM), frameBuffer(frameBuffer)
 {
+	dialogControl = std::make_unique<MageDialogControl>();
 	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(engineVersion),
 		(uint8_t*)&engineVersion,
@@ -48,7 +39,7 @@ MageGameControl::MageGameControl()
 		);
 	}
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(scenarioDataCRC32),
 		(uint8_t*)&scenarioDataCRC32,
@@ -57,7 +48,7 @@ MageGameControl::MageGameControl()
 	ROM_ENDIAN_U4_BUFFER(&scenarioDataCRC32, 1);
 	offset += sizeof(scenarioDataCRC32);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(scenarioDataLength),
 		(uint8_t*)&scenarioDataLength,
@@ -145,7 +136,7 @@ MageGameControl::MageGameControl()
 
 	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
 	{
-		colorPalettes[i] = MageColorPalette(colorPaletteHeader.offset(i));
+		colorPalettes[i] = MageColorPalette(ROM, colorPaletteHeader.offset(i));
 	}
 #ifndef DC801_EMBEDDED
 	verifyAllColorPalettes("Right after it was read from ROM");
@@ -238,7 +229,7 @@ void MageGameControl::setCurrentSaveToFreshState() {
 void MageGameControl::readSaveFromRomIntoRam(
 	bool silenceErrors
 ) {
-	EngineROM->ReadSaveSlot(
+	ROM->ReadSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
 		(uint8_t*)&currentSave
@@ -270,7 +261,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 		}
 		debug_print("%s", errorString.c_str());
 		if (!silenceErrors) {
-			MageDialog->showSaveMessageDialog(errorString);
+			dialogControl->showSaveMessageDialog(errorString);
 		}
 		setCurrentSaveToFreshState();
 	}
@@ -280,7 +271,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 void MageGameControl::saveGameSlotSave() {
 	// do rom writes
 	copyNameToAndFromPlayerAndSave(true);
-	EngineROM->WriteSaveSlot(
+	ROM->WriteSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
 		(uint8_t*)&currentSave
@@ -324,7 +315,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	MageEntity entity;
 
 	//Read Name
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		MAGE_ENTITY_NAME_LENGTH,
 		(uint8_t*)entity.name,
@@ -335,7 +326,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += MAGE_ENTITY_NAME_LENGTH;
 
 	// Read entity.x
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.x),
 		(uint8_t*)&entity.x,
@@ -349,7 +340,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.x);
 
 	// Read entity.y
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.y),
 		(uint8_t*)&entity.y,
@@ -363,7 +354,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.y);
 
 	// Read entity.onInteractScriptId
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.onInteractScriptId),
 		(uint8_t*)&entity.onInteractScriptId,
@@ -377,7 +368,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onInteractScriptId);
 
 	// Read entity.onTickScript
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.onTickScriptId),
 		(uint8_t*)&entity.onTickScriptId,
@@ -391,7 +382,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.onTickScriptId);
 
 	// Read entity.primaryId
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.primaryId),
 		(uint8_t*)&entity.primaryId,
@@ -405,7 +396,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.primaryId);
 
 	// Read entity.secondaryId
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.secondaryId),
 		(uint8_t*)&entity.secondaryId,
@@ -419,7 +410,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.secondaryId);
 
 	// Read entity.primaryIdType
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.primaryIdType),
 		(uint8_t*)&entity.primaryIdType,
@@ -430,7 +421,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.primaryIdType);
 
 	// Read entity.currentAnimation
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.currentAnimation),
 		(uint8_t*)&entity.currentAnimation,
@@ -441,7 +432,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.currentAnimation);
 
 	// Read entity.currentFrame
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.currentFrame),
 		(uint8_t*)&entity.currentFrame,
@@ -452,7 +443,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.currentFrame);
 
 	// Read entity.direction
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.direction),
 		(uint8_t*)&entity.direction,
@@ -463,7 +454,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.direction);
 
 	// Read entity.hackableStateA
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.hackableStateA),
 		(uint8_t*)&entity.hackableStateA,
@@ -473,7 +464,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateA);
 
 	// Read entity.hackableStateB
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.hackableStateB),
 		(uint8_t*)&entity.hackableStateB,
@@ -483,7 +474,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateB);
 
 	// Read entity.hackableStateC
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.hackableStateC),
 		(uint8_t*)&entity.hackableStateC,
@@ -493,7 +484,7 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	address += sizeof(entity.hackableStateC);
 
 	// Read entity.hackableStateD
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entity.hackableStateD),
 		(uint8_t*)&entity.hackableStateD,
@@ -576,10 +567,10 @@ void MageGameControl::LoadMap(uint16_t index)
 
 	//reset the fade fraction, in case player reset the map
 	//while the fraction was anything other than 0
-	canvas.fadeFraction = 0;
+	frameBuffer->fadeFraction = 0;
 
 	//close any open dialogs and return player control as well:
-	MageDialog->closeDialog();
+	dialogControl->closeDialog();
 	playerHasControl = true;
 
 	copyNameToAndFromPlayerAndSave(true);
@@ -590,16 +581,16 @@ void MageGameControl::LoadMap(uint16_t index)
 	copyNameToAndFromPlayerAndSave(false);
 
 	//logAllEntityScriptValues("InitScripts-Before");
-	MageScript->initializeScriptsOnMapLoad();
+	scriptControl->initializeScriptsOnMapLoad();
 	//logAllEntityScriptValues("InitScripts-After");
 
 	//close hex editor if open:
-	if (MageHex->getHexEditorState()) {
-		MageHex->toggleHexEditor();
+	if (hexEditor->getHexEditorState()) {
+		hexEditor->toggleHexEditor();
 	}
 	if (playerEntityIndex != NO_PLAYER) {
-		MageHex->openToEntityByIndex(playerEntityIndex);
-		MageHex->toggleHexEditor();
+		hexEditor->openToEntityByIndex(playerEntityIndex);
+		hexEditor->toggleHexEditor();
 	}
 }
 
@@ -626,7 +617,7 @@ void MageGameControl::applyUniversalInputs()
 {
 	//make map reload global regardless of player control state:
 	if (EngineInput_Buttons.op_xor && EngineInput_Activated.mem3) {
-		MageScript->mapLoadId = currentSave.currentMapId;
+		scriptControl->mapLoadId = currentSave.currentMapId;
 	}
 	if (
 		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem1) ||
@@ -638,7 +629,7 @@ void MageGameControl::applyUniversalInputs()
 	}
 	//check to see if player input is allowed:
 	if (
-		MageDialog->isOpen
+		dialogControl->isOpen
 		|| !playerHasControl
 		) {
 		return;
@@ -649,17 +640,17 @@ void MageGameControl::applyUniversalInputs()
 	//make sure any button handling in this function can be processed in ANY game mode.
 	//that includes the game mode, hex editor mode, any menus, maps, etc.
 	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
-	if (EngineInput_Activated.op_xor) { MageHex->setHexOp(HEX_OPS_XOR); }
-	if (EngineInput_Activated.op_add) { MageHex->setHexOp(HEX_OPS_ADD); }
-	if (EngineInput_Activated.op_sub) { MageHex->setHexOp(HEX_OPS_SUB); }
-	if (EngineInput_Activated.bit_128) { MageHex->runHex(0b10000000); }
-	if (EngineInput_Activated.bit_64) { MageHex->runHex(0b01000000); }
-	if (EngineInput_Activated.bit_32) { MageHex->runHex(0b00100000); }
-	if (EngineInput_Activated.bit_16) { MageHex->runHex(0b00010000); }
-	if (EngineInput_Activated.bit_8) { MageHex->runHex(0b00001000); }
-	if (EngineInput_Activated.bit_4) { MageHex->runHex(0b00000100); }
-	if (EngineInput_Activated.bit_2) { MageHex->runHex(0b00000010); }
-	if (EngineInput_Activated.bit_1) { MageHex->runHex(0b00000001); }
+	if (inputHandler->ButtonActivated(Button::op_xor)) { hexEditor->setHexOp(HEX_OPS_XOR); }
+	if (inputHandler->ButtonActivated(Button::op_add)) { hexEditor->setHexOp(HEX_OPS_ADD); }
+	if (inputHandler->ButtonActivated(Button::op_sub)) { hexEditor->setHexOp(HEX_OPS_SUB); }
+	if (inputHandler->ButtonActivated(Button::bit_128)) { hexEditor->runHex(0b10000000); }
+	if (inputHandler->ButtonActivated(Button::bit_64)) { hexEditor->runHex(0b01000000); }
+	if (inputHandler->ButtonActivated(Button::bit_32)) { hexEditor->runHex(0b00100000); }
+	if (inputHandler->ButtonActivated(Button::bit_16)) { hexEditor->runHex(0b00010000); }
+	if (inputHandler->ButtonActivated(Button::bit_8)) { hexEditor->runHex(0b00001000); }
+	if (inputHandler->ButtonActivated(Button::bit_4)) { hexEditor->runHex(0b00000100); }
+	if (inputHandler->ButtonActivated(Button::bit_2)) { hexEditor->runHex(0b00000010); }
+	if (inputHandler->ButtonActivated(Button::bit_1)) { hexEditor->runHex(0b00000001); }
 	if (
 		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem0) ||
 		(EngineInput_Activated.mem0 && EngineInput_Buttons.op_xor)
@@ -675,10 +666,10 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 	float howManyMsPerSecond = 1000.0;
 	float whatFractionOfSpeed = moveType / howManyMsPerSecond;
 	mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-	if (MageDialog->isOpen) {
+	if (dialogControl->isOpen) {
 		// If interacting with the dialog this tick has closed the dialog,
 		// return early before the same "advance button press triggers an on_interact below
-		MageDialog->update();
+		dialogControl->update();
 		return;
 	}
 	// if there is a player on the map
@@ -698,7 +689,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		uint16_t tilesetWidth = tilesets[renderableData->tilesetId].TileWidth();
 		uint16_t tilesetHeight = tilesets[renderableData->tilesetId].TileHeight();
 		bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
-		bool acceptPlayerInput = !(MageDialog->isOpen || !playerHasControl);
+		bool acceptPlayerInput = !(dialogControl->isOpen || !playerHasControl);
 
 		isMoving = false;
 
@@ -822,8 +813,8 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
 		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
-		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
-		MageHex->applyMemRecallInputs();
+		if (EngineInput_Activated.hax) { hexEditor->toggleHexEditor(); }
+		hexEditor->applyMemRecallInputs();
 	}
 	else //no player on map
 	{
@@ -837,8 +828,8 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		if (!playerHasHexEditorControl) {
 			return;
 		}
-		if (EngineInput_Activated.hax) { MageHex->toggleHexEditor(); }
-		MageHex->applyMemRecallInputs();
+		if (EngineInput_Activated.hax) { hexEditor->toggleHexEditor(); }
+		hexEditor->applyMemRecallInputs();
 	}
 }
 
@@ -908,12 +899,12 @@ void MageGameControl::handleEntityInteract(
 				targetRenderableData->isInteracting = true;
 				isMoving = false;
 				if (hack && playerHasHexEditorControl) {
-					MageHex->disableMovementUntilRJoyUpRelease = true;
-					MageHex->openToEntityByIndex(i);
+					hexEditor->disableMovementUntilRJoyUpRelease = true;
+					hexEditor->openToEntityByIndex(i);
 				}
 				else if (!hack && targetEntity->onInteractScriptId) {
-					MageScript->initScriptState(
-						MageScript->getEntityInteractResumeState(i),
+					scriptControl->initScriptState(
+						scriptControl->getEntityInteractResumeState(i),
 						targetEntity->onInteractScriptId,
 						true
 					);
@@ -965,7 +956,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 		}
 		address = layerAddress + (i * sizeof(currentTile));
 
-		EngineROM->Read(
+		ROM->Read(
 			address,
 			sizeof(currentTile),
 			(uint8_t*)&currentTile,
@@ -986,7 +977,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 
 		MageColorPalette* colorPalette = getValidColorPalette(tileset.ImageId());
 		address = imageHeader.offset(tileset.ImageId());
-		canvas.drawChunkWithFlags(
+		frameBuffer->drawChunkWithFlags(
 			address,
 			colorPalette,
 			x,
@@ -1078,7 +1069,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 	int32_t x = 0;
 	int32_t y = 0;
 	uint16_t geometryId = 0;
-	MageGeometry geometry;
 	Point pushback = {
 		0,
 		0,
@@ -1127,7 +1117,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			);
 	}
 	if (isCollisionDebugOn) {
-		mage_canvas->drawRect(
+		frameBuffer->drawRect(
 			playerRect.x - cameraPosition.x,
 			playerRect.y - cameraPosition.y,
 			playerRect.w,
@@ -1159,7 +1149,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			}
 			address = layerAddress + (i * sizeof(currentTile));
 
-			EngineROM->Read(
+			ROM->Read(
 				address,
 				sizeof(currentTile),
 				(uint8_t*)&currentTile,
@@ -1208,8 +1198,9 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 						- tileTopLeftPoint.y
 						);
 				}
-				geometryId -= 1;
-				geometry = getGeometryFromGlobalId(geometryId);
+				geometryId--;
+				
+				auto geometry = getGeometryFromGlobalId(geometryId);
 				geometry.flipSelfByFlags(
 					currentTile.flags,
 					tileset.TileWidth(),
@@ -1253,7 +1244,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 	if (collisionCount > 0) {
 		pushback.x /= collisionCount;
 		pushback.y /= collisionCount;
-		mage_canvas->drawLine(
+		frameBuffer->drawLine(
 			playerPoint.x - adjustedCameraPosition.x,
 			playerPoint.y - adjustedCameraPosition.y,
 			playerPoint.x + pushback.x - adjustedCameraPosition.x,
@@ -1645,7 +1636,7 @@ void MageGameControl::DrawEntities()
 		uint16_t source_y = (tileId / cols) * tileHeight;
 		int32_t x = entity->x - cameraX;
 		int32_t y = entity->y - cameraY - tileHeight;
-		canvas.drawChunkWithFlags(
+		frameBuffer->drawChunkWithFlags(
 			address,
 			getValidColorPalette(imageId),
 			x,
@@ -1659,14 +1650,14 @@ void MageGameControl::DrawEntities()
 			renderableData->renderFlags
 		);
 		if (isCollisionDebugOn) {
-			canvas.drawRect(
+			frameBuffer->drawRect(
 				x,
 				y,
 				tileWidth,
 				tileHeight,
 				COLOR_LIGHTGREY
 			);
-			canvas.drawRect(
+			frameBuffer->drawRect(
 				renderableData->hitBox.x - cameraX,
 				renderableData->hitBox.y - cameraY,
 				renderableData->hitBox.w,
@@ -1675,14 +1666,14 @@ void MageGameControl::DrawEntities()
 				? COLOR_RED
 				: COLOR_GREEN
 			);
-			mage_canvas->drawPoint(
+			frameBuffer->drawPoint(
 				renderableData->center.x - cameraX,
 				renderableData->center.y - cameraY,
 				5,
 				COLOR_BLUE
 			);
 			if (entityIndex == filteredPlayerEntityIndex) {
-				canvas.drawRect(
+				frameBuffer->drawRect(
 					renderableData->interactBox.x - cameraX,
 					renderableData->interactBox.y - cameraY,
 					renderableData->interactBox.w,
@@ -1726,7 +1717,7 @@ void MageGameControl::DrawGeometry()
 }
 
 MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
-	return MageGeometry(
+	return MageGeometry(ROM,
 		geometryHeader.offset(
 			map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()
 		)
@@ -1734,7 +1725,7 @@ MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometr
 }
 
 MageGeometry MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
-	return MageGeometry(
+	return MageGeometry(ROM,
 		geometryHeader.offset(
 			globalGeometryId % geometryHeader.count()
 		)
@@ -1774,7 +1765,7 @@ std::string MageGameControl::getString(
 	uint32_t length = stringHeader.length(sanitizedIndex);
 	std::string romString(length, '\0');
 	uint8_t* romStringPointer = (uint8_t*)&romString[0];
-	EngineROM->Read(
+	ROM->Read(
 		start,
 		length,
 		romStringPointer,

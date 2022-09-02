@@ -17,13 +17,13 @@
 void panic_print(const char *msg, int x, int y)
 {
 	// Write to the screen
-	canvas.printMessage(
+	/*frameBuffer->printMessage(
 		msg,
 		Monaco9,
 		COLOR_WHITE,
 		x,
 		y
-	);
+	);*/
 
 #ifndef DC801_EMBEDDED
 	// On desktop, write to stderr as well
@@ -34,7 +34,7 @@ void panic_print(const char *msg, int x, int y)
 void EnginePanic(const char *filename, int lineno, const char *format, ...)
 {
 	// BSOD background
-	canvas.clearScreen(COLOR_BSOD);
+	//frameBuffer->clearScreen(COLOR_BSOD);
 
 	// y advance value from text
 	const uint8_t yAdvance = Monaco9.yAdvance;
@@ -84,33 +84,33 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	y += yAdvance;
 
 	// Push BSOD to screen
-	canvas.blt();
+	//frameBuffer->blt();
 
-	while (EngineInput_Buttons.rjoy_center == false)
-	{
-		// Update EngineInput_Buttons
-		EngineHandleKeyboardInput();
+	//while (EngineInput_Buttons.rjoy_center == false)
+	//{
+	//	// Update EngineInput_Buttons
+	//	inputHandler->HandleKeyboard();
 
-		EngineHandleSerialInput();
+	//	EngineHandleSerialInput();
 
-		// If we manually exit
-		if (EngineIsRunning() == false)
-		{
-			break;
-		}
+	//	// If we manually exit
+	//	if (inputHandler->EngineIsRunning() == false)
+	//	{
+	//		break;
+	//	}
 
-	#ifndef DC801_EMBEDDED
-		canvas.blt(); // Keep the window frame updated
+	//#ifndef DC801_EMBEDDED
+	//	frameBuffer->blt(); // Keep the window frame updated
 
-		if (application_quit != 0)
-		{
-			break;
-		}
-	#endif
+	//	if (application_quit != 0)
+	//	{
+	//		break;
+	//	}
+	//#endif
 
-		// Sleep
-		nrf_delay_ms(50);
-	}
+	//	// Sleep
+	//	nrf_delay_ms(50);
+	//}
 
 
 #ifdef DC801_EMBEDDED

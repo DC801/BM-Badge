@@ -8,6 +8,7 @@ in a more accessible way.
 #define _MAGE_ANIMATION_H
 
 #include "mage_defines.h"
+#include "EngineROM.h"
 
 typedef struct {
 	uint16_t tileId;
@@ -17,13 +18,9 @@ typedef struct {
 
 class MageAnimation
 {
-private:
-	uint16_t tilesetId;
-	uint16_t frameCount;
-	uint32_t offset;
-
 public:
-	MageAnimation() :
+	MageAnimation(std::shared_ptr<EngineROM> ROM) :
+		ROM(ROM),
 		tilesetId{0},
 		frameCount{0}
 	{};
@@ -35,6 +32,13 @@ public:
 	MageAnimationFrame AnimationFrame(uint32_t index) const;
 	uint32_t Size() const;
 	uint32_t end() const;
+
+private:
+	std::shared_ptr<EngineROM> ROM;
+	uint16_t tilesetId;
+	uint16_t frameCount;
+	uint32_t offset;
+
 }; //class MageAnimation
 
 #endif //_MAGE_ANIMATION_H

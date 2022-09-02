@@ -1,9 +1,7 @@
 #ifndef DRV_ILI9341_H_
 #define DRV_ILI9341_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 	
 #ifdef DC801_EMBEDDED
 //#define ST7735_INVERTED_Y_OFFSET	1
@@ -26,8 +24,6 @@ extern void ili9341_update();
 
 #endif
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

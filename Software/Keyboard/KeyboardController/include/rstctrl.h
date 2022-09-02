@@ -38,9 +38,7 @@
 #ifndef RSTCTRL_INCLUDED
 #define RSTCTRL_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <ccp.h>
 
@@ -61,8 +59,6 @@ static inline void RSTCTRL_clear_reset_cause(void)
 	    = RSTCTRL_UPDIRF_bm | RSTCTRL_SWRF_bm | RSTCTRL_WDRF_bm | RSTCTRL_EXTRF_bm | RSTCTRL_BORF_bm | RSTCTRL_PORF_bm;
 }
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* RSTCTRL_INCLUDED */

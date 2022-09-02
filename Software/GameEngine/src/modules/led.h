@@ -86,9 +86,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef enum {
         LED_XOR = 0,
@@ -130,8 +128,6 @@ extern void ledPulseFast(LEDID id);
 extern void ledPwm(LEDID id, uint8_t val);
 extern void ledShow();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif //SOFTWARE_LED_H

@@ -4,9 +4,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define UNUSED_VARIABLE(X)     ((void)(X))
 #define UNUSED_PARAMETER(X)    UNUSED_VARIABLE(X)
@@ -71,8 +69,6 @@ void app_error_handler(ret_code_t error_code);
         }                                           \
     }
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

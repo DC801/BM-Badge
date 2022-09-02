@@ -5,7 +5,6 @@ This class contains all the code related to the hex editor hacking interface.
 #define _MAGE_HEX_H
 
 #include "mage_defines.h"
-#include "mage.h"
 #include "mage_game_control.h"
 #include "mage_dialog_control.h"
 #include "modules/led.h"
@@ -43,69 +42,14 @@ enum HEX_OPS {
 //this class handles the hex editor mode, including input and drawing to the screen.
 class MageHexEditor
 {
-private:
-	//this variable stores the operation that will be preformed when pressing the bit buttons.
-	HEX_OPS currentOp;
-
-	//tells the game if the hex editor should be visible or not.
-	bool hexEditorState;
-
-	//true if there has been any button presses that change the cursor position.
-	bool anyHexMovement;
-
-	//delays all hex input by this many ticks
-	uint8_t hexTickDelay = 0;
-
-	//true if the hex editor screen is reduced in size to allow for a
-	//dialog window to be displayed.
-	bool dialogState;
-
-	//how many bytes are visible per page. Changes depending on dialogOpen state.
-	uint8_t bytesPerPage;
-
-	//this is how many rows of bytes are to be displayed on a page.
-	uint8_t hexRows;
-
-	//this is the total number of bytes that will be accessible to the hex editor.
-	//it updates based on the MageGame map.entityCount()
-	uint16_t memTotal;
-
-	//this holds the current page that is displayed on the hex editor.
-	uint16_t currentMemPage;
-
-	//this holds the total number of pages needed to display memTotal bytes.
-	uint16_t totalMemPages;
-
-	//this is a variable that stores the byte that is currently selected for hacking.
-	uint16_t hexCursorLocation;
-
-	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
-	bool previousPageButtonState; //tracks previous button state
-	uint32_t lastPageButtonPressTime; //tracks time of last press of page button
-
-	//clipboard GUI state
-	bool isCopying;
-
 public:
 	bool disableMovementUntilRJoyUpRelease;
 
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
-	MageHexEditor() : currentOp{HEX_OPS::HEX_OPS_XOR},
-		hexEditorState{false},
-		anyHexMovement{false},
-		hexTickDelay{0},
-		dialogState{false},
-		bytesPerPage{HEXED_DEFAULT_BYTES_PER_PAGE},
-		hexRows{0},
-		memTotal{0},
-		currentMemPage{0},
-		totalMemPages{0},
-		hexCursorLocation{0},
-		previousPageButtonState{false},
-		lastPageButtonPressTime{0},
-		isCopying{false},
-		disableMovementUntilRJoyUpRelease{false}
+	MageHexEditor(
+		std::shared_ptr<MageGameControl> gameControl
+	) : gameControl(gameControl)
 	{};
 
 	//returns the size in RAM of the class variables.
@@ -150,7 +94,7 @@ public:
 
 	void applyMemRecallInputs();
 
-		//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
+	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
 	uint16_t getRenderableStringLength(uint8_t* string, uint16_t maxLength);
 
 	//this writes the header bit of the hex editor screen.
@@ -163,6 +107,52 @@ public:
 	void runHex(uint8_t value);
 
 	void openToEntityByIndex(uint8_t entityIndex);
+
+private:
+	std::shared_ptr<MageGameControl> gameControl;
+
+	//this variable stores the operation that will be preformed when pressing the bit buttons.
+	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };
+
+	//tells the game if the hex editor should be visible or not.
+	bool hexEditorState{ false };
+
+	//true if there has been any button presses that change the cursor position.
+	bool anyHexMovement{ false };
+
+	//delays all hex input by this many ticks
+	uint8_t hexTickDelay{ 0 };
+
+	//true if the hex editor screen is reduced in size to allow for a
+	//dialog window to be displayed.
+	bool dialogState{ false };
+
+	//how many bytes are visible per page. Changes depending on dialogOpen state.
+	uint8_t bytesPerPage{ HEXED_DEFAULT_BYTES_PER_PAGE };
+
+	//this is how many rows of bytes are to be displayed on a page.
+	uint8_t hexRows{ 0 };
+
+	//this is the total number of bytes that will be accessible to the hex editor.
+	//it updates based on the MageGame map.entityCount()
+	uint16_t memTotal{ 0 };
+
+	//this holds the current page that is displayed on the hex editor.
+	uint16_t currentMemPage{ 0 };
+
+	//this holds the total number of pages needed to display memTotal bytes.
+	uint16_t totalMemPages{ 0 };
+
+	//this is a variable that stores the byte that is currently selected for hacking.
+	uint16_t hexCursorLocation{ 0 };
+
+	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
+	bool previousPageButtonState{ false }; //tracks previous button state
+	uint32_t lastPageButtonPressTime{ 0 }; //tracks time of last press of page button
+
+	//clipboard GUI state
+	bool isCopying{ false };
+
 };
 
 #endif //_MAGE_HEX_H

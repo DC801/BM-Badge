@@ -5,9 +5,7 @@
 
 #define off_t size_t
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 FRESULT f_open(FIL** fp, const char* path, unsigned char mode)
 {
 	// Verify arguments are valid
@@ -817,8 +815,6 @@ bool util_sd_init(void)
 	return true;
 }
 
-#ifdef __cplusplus
-}
-#endif
+
 
 

@@ -4,7 +4,7 @@
 #include "convert_endian.h"
 #include "shim_err.h"
 
-extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageMap::MageMap(uint32_t address)
 {
@@ -12,7 +12,7 @@ MageMap::MageMap(uint32_t address)
 	uint32_t tilesPerLayer = 0;
 
 	// Read name
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		16,
 		(uint8_t *)name,
@@ -22,7 +22,7 @@ MageMap::MageMap(uint32_t address)
 	address += 16;
 
 	//read tileWidth
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(tileWidth),
 		(uint8_t *)&tileWidth,
@@ -32,7 +32,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(tileWidth);
 
 	//read tileHeight
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(tileHeight),
 		(uint8_t *)&tileHeight,
@@ -42,7 +42,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(tileHeight);
 
 	//read cols
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(cols),
 		(uint8_t *)&cols,
@@ -52,7 +52,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(cols);
 
 	//read rows
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(rows),
 		(uint8_t *)&rows,
@@ -63,7 +63,7 @@ MageMap::MageMap(uint32_t address)
 	tilesPerLayer = cols * rows;
 
 	//read onLoad
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(onLoad),
 		(uint8_t *)&onLoad,
@@ -73,7 +73,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(onLoad);
 
 	//read onTick
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(onTick),
 		(uint8_t *)&onTick,
@@ -83,7 +83,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(onTick);
 
 	//read onLook
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(onLook),
 		(uint8_t *)&onLook,
@@ -93,7 +93,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(onLook);
 
 	//read layerCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(layerCount),
 		&layerCount,
@@ -102,7 +102,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(layerCount);
 
 	//read playerEntityIndex
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(playerEntityIndex),
 		&playerEntityIndex,
@@ -111,7 +111,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(playerEntityIndex);
 
 	//read entityCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(entityCount),
 		(uint8_t *)&entityCount,
@@ -121,7 +121,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(entityCount);
 
 	//read geometryCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(geometryCount),
 		(uint8_t *)&geometryCount,
@@ -131,7 +131,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(geometryCount);
 
 	//read scriptCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(scriptCount),
 		(uint8_t *)&scriptCount,
@@ -141,7 +141,7 @@ MageMap::MageMap(uint32_t address)
 	address += sizeof(scriptCount);
 
 	//read goDirectionCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(goDirectionCount),
 		(uint8_t *)&goDirectionCount,
@@ -154,7 +154,7 @@ MageMap::MageMap(uint32_t address)
 	//read entityGlobalIds
 	entityGlobalIds = std::make_unique<uint16_t[]>(entityCount);
 	size = sizeof(uint16_t) * entityCount;
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)entityGlobalIds.get(),
@@ -166,7 +166,7 @@ MageMap::MageMap(uint32_t address)
 	//read geometryGlobalIds
 	geometryGlobalIds = std::make_unique<uint16_t[]>(geometryCount);
 	size = sizeof(uint16_t) * geometryCount;
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)geometryGlobalIds.get(),
@@ -178,7 +178,7 @@ MageMap::MageMap(uint32_t address)
 	//read entityGlobalIds
 	scriptGlobalIds = std::make_unique<uint16_t[]>(scriptCount);
 	size = sizeof(uint16_t) * scriptCount;
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)scriptGlobalIds.get(),
@@ -190,7 +190,7 @@ MageMap::MageMap(uint32_t address)
 	//read goDirections
 	goDirections = std::make_unique<MapGoDirection[]>(goDirectionCount);
 	size = sizeof(MapGoDirection) * goDirectionCount;
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)goDirections.get(),

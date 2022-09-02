@@ -23,14 +23,10 @@
 //   Anything beyond 400 characters will be truncated
 #define ENGINE_PANIC(...) EnginePanic(__FILE__, __LINE__, __VA_ARGS__)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 	[[noreturn]] void EnginePanic(const char* filename, int lineno, const char* format, ...);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

@@ -1,15 +1,12 @@
-
-
+#include "mage.h"
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "EnginePanic.h"
 #include "EngineSerial.h"
 #include <SDL.h>
 
-#include "mage.h"
 #include "convert_endian.h"
 #include "utility.h"
-
 
 #include "mage_defines.h"
 
@@ -24,28 +21,7 @@
 #include "emscripten.h"
 #endif
 
-#include "mage_hex.h"
-#include "mage_dialog_control.h"
-#include "mage_script_control.h"
-#include "mage_command_control.h"
-
-std::unique_ptr<EngineRom> EngineROM;
-std::unique_ptr<MageGameControl> MageGame;
-std::unique_ptr<MageHexEditor> MageHex;
-std::unique_ptr<MageDialogControl> MageDialog;
-std::unique_ptr<MageScriptControl> MageScript;
-std::unique_ptr<MageCommandControl> MageCommand;
-std::unique_ptr<MageEntity> hackableDataAddress;
-std::unique_ptr<FrameBuffer> mage_canvas;
-
-bool engineIsInitialized{false};
-
-uint32_t lastTime;
-uint32_t now;
-uint32_t deltaTime;
-uint32_t lastLoopTime;
-
-void handleBlockingDelay()
+void MageGameEngine::handleBlockingDelay()
 {
 	//if a blocking delay was added by any actions, pause before returning to the game loop:
 	if(MageScript->blockingDelayTime)
@@ -57,7 +33,7 @@ void handleBlockingDelay()
 	}
 }
 
-void GameUpdate(uint32_t deltaTime)
+void MageGameEngine::GameUpdate(uint32_t deltaTime)
 {
 	//apply inputs that work all the time
 	MageGame->applyUniversalInputs();
@@ -97,7 +73,7 @@ void GameUpdate(uint32_t deltaTime)
 	}
 }
 
-void GameRender()
+void MageGameEngine::GameRender()
 {
 	#ifdef TIMING_DEBUG
 	uint32_t now = millis();
@@ -213,14 +189,15 @@ void GameRender()
 	#endif
 }
 
-void EngineMainGameLoop ()
+void MageGameEngine::EngineMainGameLoop ()
 {
 	if(!engineIsInitialized) {
 		// Why do this in the game loop instead of before the game loop?
 		// Because Emscripten started throwing a new useless, meaningless,
 		// recoverable runtime error that the client can just ignore, unless
 		// EngineInit is called from inside the game loop. No idea why.
-		EngineInit();
+		
+		//EngineInit();
 		engineIsInitialized = true;
 	}
 	//update timing information at the start of every game loop
@@ -241,8 +218,8 @@ void EngineMainGameLoop ()
 	// lastLoopTime = now;
 	#endif
 
-	//handles hardware inputs and makes their state available
-	EngineHandleKeyboardInput();
+	//handles hardware inputs and makes their state available		
+	inputHandler->HandleKeyboard();
 
 	//on desktop, interact with stdin
 	//on embedded, interact with USBC com port over serial
@@ -308,23 +285,24 @@ void EngineMainGameLoop ()
 	}
 	#endif
 	if (EngineShouldReloadGameDat()) {
-		EngineInit();
+		//EngineInit();
 	}
 }
 
-void onSerialStart () {
+void MageGameEngine::onSerialStart () {
 	MageCommand->handleStart();
 }
-void onSerialCommand (char* commandString) {
+void MageGameEngine::onSerialCommand (char* commandString) {
 	MageCommand->processCommand(commandString);
 }
 
-void EngineInit () {
+MageGameEngine::MageGameEngine() noexcept
+{
 	//turn off LEDs
 	ledsOff();
 
 	// Initialize ROM and reload game.dat if a different version is on the SD card.
-	EngineROM = std::make_unique<EngineRom>();
+	EngineROM = std::make_unique<EngineROM>();
 
 	// Construct MageGameControl object, loading all headers
 	MageGame = std::make_unique<MageGameControl>();
@@ -348,10 +326,10 @@ void EngineInit () {
 
 	//construct MageCommandControl object to handle serial/stdin command parsing
 	MageCommand = std::make_unique<MageCommandControl>();
-	EngineSerialRegisterEventHandlers(
-		onSerialStart,
-		onSerialCommand
-	);
+	//EngineSerialRegisterEventHandlers(
+	//	std::invoke(&MageGameEngine::onSerialStart, this),
+	//	std::invoke(&MageGameEngine::onSerialCommand, this);
+	//);
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"After MageScriptControl constructor"
@@ -412,20 +390,20 @@ void EngineInit () {
 	lastLoopTime = lastTime;
 }
 
-void MAGE()
+void MageGameEngine::Run()
 {
 	//initialize the canvas object for the screen buffer.
 	mage_canvas = std::unique_ptr<FrameBuffer>{ &canvas };
 
 	//main game loop:
-	#ifdef EMSCRIPTEN
+#ifdef EMSCRIPTEN
 	emscripten_set_main_loop(EngineMainGameLoop, 24, 1);
-	#else
+#else
 	while (EngineIsRunning())
 	{
 		EngineMainGameLoop();
 	}
-	#endif
+#endif
 
 	// Close rom and any open files
 	EngineROM = nullptr;

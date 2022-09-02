@@ -12,9 +12,7 @@
 #ifndef DC801_H
 #define DC801_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 //Start address of ROM memoryu addressing
 #define ROM_START_ADDRESS (0x12000000)
@@ -93,8 +91,6 @@ extern "C" {
                                  .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM}
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif // DC801_H

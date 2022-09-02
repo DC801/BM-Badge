@@ -3,13 +3,11 @@
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-extern std::unique_ptr<EngineRom> EngineROM;
-
 MageTileset::MageTileset(uint8_t index, uint32_t address)
 {
 	offset = address;
 	#ifndef DC801_EMBEDDED
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		16,
 		(uint8_t *)name,
@@ -20,7 +18,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 
 	offset += TILESET_NAME_SIZE;
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(imageId),
 		(uint8_t *)&imageId,
@@ -29,7 +27,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	imageId = ROM_ENDIAN_U2_VALUE(imageId);
 	offset += sizeof(imageId);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(imageWidth),
 		(uint8_t *)&imageWidth,
@@ -38,7 +36,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	imageWidth = ROM_ENDIAN_U2_VALUE(imageWidth);
 	offset += sizeof(imageWidth);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(imageHeight),
 		(uint8_t *)&imageHeight,
@@ -47,7 +45,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	imageHeight = ROM_ENDIAN_U2_VALUE(imageHeight);
 	offset += sizeof(imageHeight);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(tileWidth),
 		(uint8_t *)&tileWidth,
@@ -56,7 +54,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
 	offset += sizeof(tileWidth);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(tileHeight),
 		(uint8_t *)&tileHeight,
@@ -65,7 +63,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
 	offset += sizeof(tileHeight);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(cols),
 		(uint8_t *)&cols,
@@ -74,7 +72,7 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	cols = ROM_ENDIAN_U2_VALUE(cols);
 	offset += sizeof(cols);
 
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(rows),
 		(uint8_t *)&rows,
@@ -167,7 +165,7 @@ bool MageTileset::Valid() const
 uint16_t MageTileset::getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
 {
 	uint16_t globalGeometryId = 0;
-	EngineROM->Read(
+	ROM->Read(
 		offset + tileIndex * sizeof(globalGeometryId),
 		sizeof(globalGeometryId),
 		(uint8_t *)&globalGeometryId,

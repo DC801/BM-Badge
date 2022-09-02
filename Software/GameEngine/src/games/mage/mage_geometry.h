@@ -8,121 +8,126 @@ in a more accessible way.
 
 #include "mage_defines.h"
 #include "FrameBuffer.h"
+#include "EngineROM.h"
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
-typedef enum : uint8_t{
-	POINT = 0,
-	POLYLINE = 1,
-	POLYGON = 2,
-	//this tracks how many different geometry types there are:
-	NUM_GEOMETRIES
+typedef enum : uint8_t
+{
+   POINT = 0,
+   POLYLINE = 1,
+   POLYGON = 2,
+   //this tracks how many different geometry types there are:
+   NUM_GEOMETRIES
 } MageGeometryTypeId;
 
-class MageGeometry{
-	private:
-	public:
-		//can be any MageGeometryTypeId:
-		MageGeometryTypeId typeId;
-		//how many points will be in the pointArray:
-		uint8_t pointCount;
-		//how many points will be in the segmentLengths:
-		uint8_t segmentCount;
-		//total length of all segments in the geometry
-		float pathLength;
-		//the array of the actual coordinate points that make up the geometry:
-		std::unique_ptr<Point[]> points;
-		//the array of segment lengths:
-		std::unique_ptr<float[]> segmentLengths;
+class MageGeometry
+{
+public:
+   //can be any MageGeometryTypeId:
+   MageGeometryTypeId typeId;
+   //how many points will be in the pointArray:
+   uint8_t pointCount;
+   //how many points will be in the segmentLengths:
+   uint8_t segmentCount;
+   //total length of all segments in the geometry
+   float pathLength;
+   //the array of the actual coordinate points that make up the geometry:
+   std::unique_ptr<Point[]> points;
+   //the array of segment lengths:
+   std::unique_ptr<float[]> segmentLengths;
 
-		//default constructor returns a point with coordinates 0,0:
-		MageGeometry() :
-			typeId{MageGeometryTypeId::POINT},
-			pointCount{1},
-			segmentCount{0},
-			points{std::make_unique<Point[]>(pointCount)},
-			segmentLengths{std::make_unique<float[]>(segmentCount)}
-		{}
+   //default constructor returns a point with coordinates 0,0:
+   MageGeometry() :
+      typeId{ MageGeometryTypeId::POINT },
+      pointCount{ 1 },
+      segmentCount{ 0 },
+      pathLength{ 0.0f },
+      points{ std::make_unique<Point[]>(pointCount) },
+      segmentLengths{ std::make_unique<float[]>(segmentCount) }
+   {}
 
-		//this constructor allows you to make a geometry of a known type and pointCount.
-		//you'll need to manually fill in the points, though. They all default to 0,0.
-		MageGeometry(
-			MageGeometryTypeId type,
-			uint8_t numPoints
-		);
+   //this constructor allows you to make a geometry of a known type and pointCount.
+   //you'll need to manually fill in the points, though. They all default to 0,0.
+   MageGeometry(
+      MageGeometryTypeId type,
+      uint8_t numPoints
+   );
 
-		//this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
-		MageGeometry(uint32_t address);
+   //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
+   MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
-		//returns the size in RAM of a MageGeometry object.
-		uint32_t size() const;
+   //returns the size in RAM of a MageGeometry object.
+   uint32_t size() const;
 
-		void flipSelfByFlags(
-			uint8_t flags,
-			uint16_t width,
-			uint16_t height
-		);
+   void flipSelfByFlags(
+      uint8_t flags,
+      uint16_t width,
+      uint16_t height
+   );
 
-		//this checks to see if a given point is inside the boundaries of a given geometry:
-		bool isPointInGeometry(
-			Point point
-		);
+   //this checks to see if a given point is inside the boundaries of a given geometry:
+   bool isPointInGeometry(
+      Point point
+   );
 
-		static bool doRectsOverlap(Rect a, Rect b);
+   static bool doRectsOverlap(Rect a, Rect b);
 
-		static Point flipPointByFlags(
-			Point point,
-			uint8_t flags,
-			uint16_t width,
-			uint16_t height
-		);
+   static Point flipPointByFlags(
+      Point point,
+      uint8_t flags,
+      uint16_t width,
+      uint16_t height
+   );
 
-		static Point flipVectorByFlags(
-			Point unflippedPoint,
-			uint8_t flags
-		);
+   static Point flipVectorByFlags(
+      Point unflippedPoint,
+      uint8_t flags
+   );
 
-		static float getVectorLength(
-			Point v
-		);
+   static float getVectorLength(
+      Point v
+   );
 
-		static float getDotProduct(
-			Point a,
-			Point b
-		);
+   static float getDotProduct(
+      Point a,
+      Point b
+   );
 
-		void draw(
-			int32_t cameraX,
-			int32_t cameraY,
-			uint16_t color,
-			int32_t offset_x = 0,
-			int32_t offset_y = 0
-		);
+   void draw(
+      int32_t cameraX,
+      int32_t cameraY,
+      uint16_t color,
+      int32_t offset_x = 0,
+      int32_t offset_y = 0
+   );
 
-		void drawSpokes(
-			Point polyACenter,
-			int32_t cameraX,
-			int32_t cameraY,
-			uint16_t color,
-			int32_t offset_x = 0,
-			int32_t offset_y = 0
-		);
+   void drawSpokes(
+      Point polyACenter,
+      int32_t cameraX,
+      int32_t cameraY,
+      uint16_t color,
+      int32_t offset_x = 0,
+      int32_t offset_y = 0
+   );
 
-		static bool pushADiagonalsVsBEdges(
-			Point *spokeCenter,
-			MageGeometry *playerSpokes,
-			float *maxSpokePushbackLengths,
-			Point *maxSpokePushbackVectors,
-			MageGeometry *tile
-		);
+   static bool pushADiagonalsVsBEdges(
+      Point* spokeCenter,
+      MageGeometry* playerSpokes,
+      float* maxSpokePushbackLengths,
+      Point* maxSpokePushbackVectors,
+      MageGeometry* tile
+   );
 
-		static bool getIntersectPointBetweenLineSegments(
-			const Point &lineAPointA,
-			const Point &lineAPointB,
-			const Point &lineBPointA,
-			const Point &lineBPointB,
-			Point &intersectPoint
-		);
-
+   static bool getIntersectPointBetweenLineSegments(
+      const Point& lineAPointA,
+      const Point& lineAPointB,
+      const Point& lineBPointA,
+      const Point& lineBPointB,
+      Point& intersectPoint
+   );
+private:
+   std::shared_ptr<EngineROM> ROM;
+   std::shared_ptr<FrameBuffer> frameBuffer;
 }; //class MageGeometry
 
 #endif //_MAGE_GEOMETRY_H

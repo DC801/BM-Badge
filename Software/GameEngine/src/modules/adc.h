@@ -5,9 +5,7 @@
 #ifndef DC26_BADGE_ADC_H
 #define DC26_BADGE_ADC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #include <stdint.h>
 
@@ -18,8 +16,6 @@ uint8_t getBatteryPercent(void);
 uint16_t getVccMillivolts(void);
 uint16_t getBattMillivolts(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif //DC26_BADGE_ADC_H

@@ -8,9 +8,7 @@
 #include <SDL.h>
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 // Contains SDL Audio Device information
 struct AudioDevice
@@ -53,7 +51,6 @@ public:
 	~AudioPlayer();
 
 private:
-	Audio* head{ new Audio() };
 	
 	void callback(uint8_t* stream, int len);
 	void addAudio(Audio* root, Audio* audio);
@@ -67,13 +64,12 @@ private:
 
 	AudioDevice device{ 0, { 0 }, false };
 
+	Audio* head{ nullptr };
 };
 
 extern AudioPlayer audio;
 
-#ifdef __cplusplus
-}
-#endif
+
 
 
 

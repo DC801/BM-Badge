@@ -31,14 +31,10 @@
 #include <compiler.h>
 #include <utils_assert.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 int8_t Timer_init();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* RTC_H_INCLUDED */

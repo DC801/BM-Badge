@@ -3,9 +3,7 @@
 
 #include "sdk_shim.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef enum
 {
@@ -33,8 +31,6 @@ typedef int (*nrf_gpio_callback)(uint32_t index, PIN *pin);
 
 void nrf_gpio_set_callback(nrf_gpio_callback *gpio_callback);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

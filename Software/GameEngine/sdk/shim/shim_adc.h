@@ -4,9 +4,7 @@
 #include <stdint.h>
 #include "shim_err.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(PIN_P) \
 {                                                   \
@@ -171,8 +169,6 @@ nrf_err_t nrf_drv_saadc_sample(void);
 nrf_err_t nrf_drv_saadc_buffer_convert(nrf_saadc_value_t * buffer, uint16_t size);
 nrfx_err_t nrf_drv_saadc_channel_init(uint8_t channel, nrf_saadc_channel_config_t const * const p_config);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

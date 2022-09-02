@@ -23,9 +23,7 @@ Copyright (c) 2020 Microchip. All rights reserved.
 #ifndef TOUCH_API_PTC_H
 #define TOUCH_API_PTC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+ // __cplusplus
 
 /*----------------------------------------------------------------------------
  *     include files
@@ -56,8 +54,6 @@ void touch_timer_handler(void);
 void touch_init(void);
 void touch_process(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* TOUCH_API_PTC_H */

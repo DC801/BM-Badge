@@ -36,11 +36,11 @@ namespace DC801_Test
 		int y = 10;
 
 		printMessage("Initializing memory", y);
-		EngineROM->Init();
+		ROM->Init();
 
 		y += yAdvance;
 
-		if (EngineROM->Magic(magic, magicLen) != true)
+		if (ROM->Magic(magic, magicLen) != true)
 		{
 			printMessage("Checking to see ROM exists... Not found", y);
 		}
@@ -51,7 +51,7 @@ namespace DC801_Test
 
 		y += yAdvance;
 
-		if (EngineROM->Write(0, magicLen, magic) != magicLen)
+		if (ROM->Write(0, magicLen, magic) != magicLen)
 		{
 			printMessage("Writing magic header... Failed", y);
 			failed = true;
@@ -64,7 +64,7 @@ namespace DC801_Test
 
 		y += yAdvance;
 
-		if (EngineROM->Magic(magic, magicLen) != true)
+		if (ROM->Magic(magic, magicLen) != true)
 		{
 			printMessage("Verifying magic header... Failed", y);
 			failed = true;
@@ -78,7 +78,7 @@ namespace DC801_Test
 		y += yAdvance;
 
 		printMessage("Uninitializing memory", y);
-		EngineROM->Deinit();
+		ROM->Deinit();
 
 	test_end:
 		y += yAdvance * 2;

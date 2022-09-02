@@ -4,9 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 // UART
 void uart_init(void);
@@ -22,8 +20,6 @@ bool usb_serial_read_line(char* input_buffer, size_t max_len);
 void usb_serial_connect(void);
 size_t usb_serial_write_in(const char *buffer);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

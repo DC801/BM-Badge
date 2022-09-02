@@ -104,7 +104,7 @@ void EngineWindowFrame::drawButtonStates()
 	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
 	{
 		buttonPoint = buttonDestPoints[i];
-		buttonState = *buttonBoolPointerArray[i];
+		buttonState = inputHandler->GetButtonState(i);
 		buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
 		buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
 		SDL_RenderCopy(
@@ -152,6 +152,8 @@ void EngineWindowFrame::GameBlt(uint16_t* frame)
 	if (frame == nullptr) {
 		return;
 	}
+	auto frameBuffer = std::make_unique<uint16_t[]>(FRAMEBUFFER_SIZE);
+
 	// Sorry for this monster;
 	// The game.dat stores the image buffer data in BigEndian
 	// SDL reads FrameBuffers in Platform Native Endian,
@@ -161,9 +163,9 @@ void EngineWindowFrame::GameBlt(uint16_t* frame)
 	convert_endian_u2_buffer(frame, FRAMEBUFFER_SIZE);
 #endif
 #endif
-	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, (void**)&frame, &pitch))
+	auto bufPtr = frameBuffer.get();
+	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, (void**)&bufPtr, &pitch))
 	{
-		memcpy(frame, frame, FRAMEBUFFER_SIZE * sizeof(uint16_t));
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

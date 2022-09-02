@@ -30,14 +30,10 @@
 
 #include <compiler.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 int8_t CLKCTRL_init();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* CLKCTRL_H_INCLUDED */

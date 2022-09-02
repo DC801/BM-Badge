@@ -2,6 +2,8 @@
 #define SOFTWARE_MAGE_COLOR_PALETTE_H
 
 #include <memory>
+#include "EngineROM.h"
+
 #define COLOR_PALETTE_INTEGRITY_STRING_LENGTH 2048
 #define COLOR_PALETTE_NAME_LENGTH 32
 #define COLOR_PALETTE_NAME_SIZE COLOR_PALETTE_NAME_LENGTH + 1
@@ -16,7 +18,7 @@ public:
 	uint8_t colorCount;
 	std::unique_ptr<uint16_t[]> colors;
 
-	MageColorPalette() :
+	MageColorPalette() noexcept :
 #ifndef DC801_EMBEDDED
 		name{ 0 },
 		colorIntegrityString {0},
@@ -25,7 +27,7 @@ public:
 		colors{std::make_unique<uint16_t[]>(colorCount)}
 	{};
 
-	MageColorPalette(uint32_t address);
+	MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept;
 
 	MageColorPalette(
 		MageColorPalette *sourcePalette,

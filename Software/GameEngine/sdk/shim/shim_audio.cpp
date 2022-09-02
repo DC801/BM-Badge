@@ -44,6 +44,7 @@ AudioPlayer audio{};
 //  - Setup the root to the list of audio samples
 //  - Unpause SDL audio (callbacks start now)
 AudioPlayer::AudioPlayer()
+	:head{new Audio()}
 {
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
 	{

@@ -11,9 +11,7 @@
 #include <atomic>
 #include <mutex>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 
 	// This is the minimal standards-compliant mutex implementation which does not use
@@ -137,8 +135,6 @@ extern "C" {
 
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

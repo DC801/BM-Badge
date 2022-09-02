@@ -1,7 +1,8 @@
+#include "FrameBuffer.h"
+
 #include "main.h"
 #include "utility.h"
 #include "convert_endian.h"
-#include "FrameBuffer.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
 #include "EnginePanic.h"
@@ -35,16 +36,6 @@ static area_t m_cursor_area = { 0, 0, WIDTH, HEIGHT };
 static uint16_t m_color = COLOR_WHITE;
 static bool m_wrap = true;
 static volatile bool m_stop = false;
-
-uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
-FrameBuffer canvas{};
-
-FrameBuffer* p_canvas(void) { return &canvas; }
-
-
-extern std::unique_ptr<EngineWindowFrame> MainWindow;
-
-extern std::unique_ptr<EngineRom> EngineROM;
 
 
 void FrameBuffer::clearScreen(uint16_t color) {
@@ -292,7 +283,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
 
-	EngineROM->Read(
+	ROM->Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
 		pixels.get(),
@@ -1085,8 +1076,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 		}
 
 		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-		canvas.drawImage(x, y, w, h, buf.get());
-		canvas.blt();
+		drawImage(x, y, w, h, buf.get());
+		blt();
 
 		uint8_t retVal = getButton(false);
 		if (retVal != USER_BUTTON_NONE || m_stop)
@@ -1101,8 +1092,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 	fclose(file);
 
 	ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-	canvas.drawImage(x, y, w, h, buf.get());
-	canvas.blt();
+	drawImage(x, y, w, h, buf.get());
+	blt();
 	return;
 }
 
@@ -1172,8 +1163,8 @@ void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* file
 		}
 
 		ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-		canvas.drawImage(x, y, w, h, buf.get());
-		canvas.blt();
+		drawImage(x, y, w, h, buf.get());
+		blt();
 
 		if (p_callback != NULL)
 		{
@@ -1277,8 +1268,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			}
 
 			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-			canvas.drawImage(x, y, w, h, buf.get());
-			canvas.blt();
+			drawImage(x, y, w, h, buf.get());
+			blt();
 
 			uint8_t retVal = getButton(false);
 			if (retVal != USER_BUTTON_NONE || m_stop)
@@ -1397,8 +1388,8 @@ uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const cha
 			}
 
 			ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-			canvas.drawImage(x, y, w, h, buf.get());
-			canvas.blt();
+			drawImage(x, y, w, h, buf.get());
+			blt();
 
 			if (p_callback != NULL)
 			{
@@ -1511,7 +1502,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color) {
 		std::swap(y1, y2);
 	}
 
-	auto drawPixelToScreen = [x1, y1, color](bool downward = false) {
+	auto drawPixelToScreen = [this, x1, y1, color](bool downward = false) {
 		auto y = (downward ? -1 : 1) * y1 * WIDTH;
 		// crop to screen bounds
 		if (x1 >= 0 && x1 < WIDTH
@@ -1646,7 +1637,7 @@ void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
 	}
 }
 
-static void __draw_char(
+void FrameBuffer::__draw_char(
 	int16_t x,
 	int16_t y,
 	unsigned char c,
@@ -1696,7 +1687,7 @@ static void __draw_char(
 			if (bits & 0x80) {
 				yyy = y + yo + yy;
 				if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye) {
-					canvas.drawPixel(x + xo + xx, y + yo + yy, SCREEN_ENDIAN_U2_VALUE(color));
+					drawPixel(x + xo + xx, y + yo + yy, SCREEN_ENDIAN_U2_VALUE(color));
 				}
 			}
 			bits <<= 1;
@@ -1868,12 +1859,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16
 		bounds->height = maxy - miny + 1;
 	}
 }
-
-uint8_t FrameBuffer::getFontHeight(GFXfont font)
-{
-	return font.yAdvance;
-}
-
+ 
 void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_raw)
 {
 	//clip
@@ -1909,6 +1895,6 @@ void FrameBuffer::blt()
 #ifdef DC801_EMBEDDED
 	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 #else
-	MainWindow->GameBlt(frame);
+	//MainWindow->GameBlt(frame);
 #endif
 }

@@ -210,33 +210,6 @@ uint32_t hex2dec(uint32_t v) {
 	return val;
 }
 
-void util_sd_error()
-{
-	//ENGINE_PANIC("SD Card Error\nCheck card and reboot");
-	p_canvas()->clearScreen(COLOR_BLUE);
-	p_canvas()->printMessage(
-		"SD Card did not initialize properly.\n\
-		Check Card and Reboot if you\n\
-		want to use the SD Card to reflash\n\
-		the ROM chip with a new mage.dat file.",
-		Monaco9,
-		COLOR_WHITE,
-		32,
-		32
-	);
-	p_canvas()->blt();
-	nrf_delay_ms(5000);
-}
-
-void util_gfx_init()
-{
-	area_t area = { 0, 0, WIDTH, HEIGHT };
-	p_canvas()->setTextArea(&area);
-
-	p_canvas()->clearScreen(COLOR_BLACK);
-
-	p_canvas()->blt();
-}
 
 //this creates one heap variable and one stack variable, and subtracts them
 //to find the free ram where the function was called.

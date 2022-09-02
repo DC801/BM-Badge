@@ -5,9 +5,7 @@
 #include <stddef.h>
 #include <memory>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
@@ -68,9 +66,9 @@ extern "C" {
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 
-	struct EngineRom {
-		EngineRom() noexcept;
-		~EngineRom() = default;
+	struct EngineROM {
+		EngineROM() noexcept;
+		~EngineROM() = default;
 		
 		bool Magic();
 		void ErrorUnplayable();
@@ -116,9 +114,7 @@ extern "C" {
 
 	};
 	
-#ifdef __cplusplus
-}
-#endif
+
 
 
 #endif

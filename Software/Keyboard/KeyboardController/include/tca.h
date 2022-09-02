@@ -30,14 +30,10 @@
 
 #include <compiler.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 int8_t TIMER_0_init();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* TCA_H_INCLUDED */

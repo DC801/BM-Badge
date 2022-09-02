@@ -5,9 +5,7 @@
 //#include "fonts/Monaco9.h"
 #include <iostream>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;
@@ -109,6 +107,4 @@ void EngineHandleSerialInput ()
 	}
 }
 
-#ifdef __cplusplus
-}
-#endif
+

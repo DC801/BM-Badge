@@ -2,10 +2,9 @@
 #define FRAMEBUFFER_H
 
 #include <stdint.h>
-#include "games/mage/mage_color_palette.h"
 #include "adafruit/gfxfont.h"
 #include "modules/gfx.h"
-
+#include "games/mage/mage_color_palette.h"
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -19,7 +18,6 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 
-#pragma pack(push, 1) // exact fit - no padding
 
 #ifdef IS_BIG_ENDIAN
 struct Color_565 {
@@ -56,7 +54,6 @@ union RenderFlagsUnion {
 	RenderFlags f;
 	uint8_t i;
 };
-#pragma pack(pop) //back to whatever the previous packing mode was
 
 // Color definitions
 #define COLOR_BLACK			0x0000	/*   0,   0,   0 */
@@ -130,111 +127,11 @@ public:
 		height{height} {}
 };
 
-#ifdef __cplusplus
 class FrameBuffer {
-private:
-	void tileToBufferNoXNoYNoZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXNoYNoZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXYesYNoZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXYesYNoZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXNoYYesZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXNoYYesZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXYesYYesZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXYesYYesZ(
-		uint8_t * pixels,
-		MageColorPalette * colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
 public:
-	//variables used for screen fading
-	float fadeFraction;
-	bool isFading;
-	uint16_t fadeColor;
-
+	FrameBuffer(std::shared_ptr<EngineROM> ROM) noexcept
+		: ROM(ROM)
+	{}
 	void clearScreen(uint16_t color);
 
 	void drawPixel(int x, int y, uint16_t color);
@@ -294,9 +191,6 @@ public:
 	uint8_t drawLoopImageFromFile(int x, int y, int w, int h, const char *filename, void (*p_callback)(uint8_t frame, void *p_data), void *data);
 	void drawStop();
 
-	void drawBitmapFromFile(const char *filename);
-	void drawBitmapFromFile(int x, int y, int w, int h, const char *filename);
-
 	void fillCircle(int x, int y, int radius, uint16_t color);
 
 	void fillRect(int x, int y, int w, int h, uint16_t color);
@@ -311,20 +205,123 @@ public:
 	void setTextArea(area_t *area);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
-	uint8_t getFontHeight(GFXfont font);
-	uint8_t getFontWidth(GFXfont font);
+
 	void getCursorPosition(cursor_t *cursor);
 
 	void blt();
 
+
+	//variables used for screen fading
+	float fadeFraction;
+	bool isFading;
+	uint16_t fadeColor;
+private:
+	uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
+	std::shared_ptr<EngineROM> ROM;
+	void __draw_char(
+		int16_t x,
+		int16_t y,
+		unsigned char c,
+		uint16_t color,
+		uint16_t bg,
+		GFXfont font
+	);
+
+	void tileToBufferNoXNoYNoZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXNoYNoZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXYesYNoZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXYesYNoZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXNoYYesZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXNoYYesZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferNoXYesYYesZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
+	void tileToBufferYesXYesYYesZ(
+		uint8_t* pixels,
+		MageColorPalette* colorPalette,
+		int32_t screen_x,
+		int32_t screen_y,
+		uint16_t tile_width,
+		uint16_t tile_height,
+		uint16_t source_x,
+		uint16_t source_y,
+		uint16_t pitch,
+		uint16_t transparent_color
+	);
 };
-
-extern FrameBuffer canvas;
-#endif
-
-
-FrameBuffer* p_canvas(void);
-
-
-
 #endif //FRAMEBUFFER_H

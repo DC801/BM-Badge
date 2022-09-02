@@ -11,9 +11,7 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define DATA_SAVE_LEN 16
 
@@ -131,8 +129,6 @@ BADGE_GROUP getBadgeGroupFromAppearance(uint16_t appearance);
 
 #define NUM_BADGES_TO_STORE             16
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* BLE_H_ */

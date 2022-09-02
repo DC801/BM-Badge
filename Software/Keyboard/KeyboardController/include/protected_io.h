@@ -28,9 +28,7 @@
 #ifndef PROTECTED_IO_H
 #define PROTECTED_IO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #if defined(__DOXYGEN__)
 //! \name IAR Memory Model defines.
@@ -76,8 +74,6 @@ extern void protected_write_io(void *addr, uint8_t magic, uint8_t value);
 
 /** @} */
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* PROTECTED_IO_H */

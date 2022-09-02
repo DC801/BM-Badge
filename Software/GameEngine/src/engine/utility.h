@@ -21,9 +21,7 @@
 #define debug_print(...)   printf(__VA_ARGS__); printf("\n")
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define BUTTON_PRESSED 	0
 #define BUTTON_RELEASED 1
@@ -83,12 +81,8 @@ void morseStart(void);
 void morseStop(void);
 bool morseGetRunning(void);
 
-void util_gfx_init(void);
-
 void check_ram_usage(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* UTILITY_H_ */

@@ -1,9 +1,7 @@
 #ifndef MODULE_KEYBOARD_H
 #define MODULE_KEYBOARD_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 	
 #include <stdint.h>
 #define KEYBOARD_DEBOUNCE_TIME 15
@@ -49,8 +47,6 @@ bool is_keyboard_interrupt(void);
 uint32_t get_keyboard_mask(void);
 void keyboard_register_callback(keyboard_evt_handler_t handler);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

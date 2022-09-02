@@ -30,14 +30,10 @@
 
 #include <compiler.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 int8_t CPUINT_init();
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* CPUINT_H_INCLUDED */

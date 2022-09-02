@@ -6,9 +6,7 @@
 
 #include "sdk_shim.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define FIL FILE
 
@@ -88,8 +86,6 @@ FRESULT f_unlink (const char* path);												/* Delete an existing file or di
 FSIZE_t f_tell(FIL* fp);
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

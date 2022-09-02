@@ -3,11 +3,11 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t address)
 {
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(typeId),
 		(uint8_t *)&typeId,
@@ -20,7 +20,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t addr
 	address += sizeof(typeId);
 
 	// Read count
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(type),
 		(uint8_t *)&type,
@@ -31,7 +31,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t addr
 	address += sizeof(type);
 
 	// Read count
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(renderFlags),
 		(uint8_t *)&renderFlags,
@@ -130,7 +130,7 @@ MageEntityType::MageEntityType(uint32_t address)
 	address += sizeof(uint8_t); // paddingB
 
 	// Read portraitId
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(portraitId),
 		(uint8_t *)&portraitId,
@@ -139,7 +139,7 @@ MageEntityType::MageEntityType(uint32_t address)
 	address += sizeof(portraitId);
 
 	// Read animationCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(animationCount),
 		(uint8_t *)&animationCount,

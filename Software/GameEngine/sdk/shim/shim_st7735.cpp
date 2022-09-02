@@ -1,8 +1,6 @@
 #include "shim_err.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 	bool st7735_is_busy()
 	{
@@ -48,6 +46,3 @@ extern "C" {
 		return NRFX_SUCCESS;
 	}
 
-#ifdef __cplusplus
-}
-#endif

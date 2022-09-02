@@ -1,6 +1,9 @@
 #ifndef GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #define GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #include "mage_defines.h"
+#include "EngineROM.h"
+#include "mage_game_control.h"
+#include "mage_script_control.h"
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
@@ -37,6 +40,20 @@ typedef struct {
 
 class MageCommandControl {
 	public:
+		MageCommandControl(
+			std::shared_ptr<MageScriptControl> scriptControl,
+			std::shared_ptr<MageCommandControl> commandControl,
+			std::shared_ptr<MageGameControl> gameControl,
+			std::shared_ptr<EngineROM> ROM
+		) noexcept
+			: scriptControl(scriptControl), commandControl(commandControl), gameControl(gameControl), ROM(ROM)
+		{
+			// EngineSendSerialMessage(
+			// 	"Hello there, the Command Goats are listening for commands.\n"
+			// );
+
+		}
+
 		std::string commandResponseBuffer;
 		std::string serialDialogBuffer;
 		std::string postDialogBuffer;
@@ -47,7 +64,6 @@ class MageCommandControl {
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;
 		bool isInputTrapped = false;
-		MageCommandControl();
 		void handleStart();
 		void processCommand(char *commandString);
 		void processCommandAsVerb(std::string input);
@@ -56,6 +72,20 @@ class MageCommandControl {
 		uint32_t size();
 		void reset();
 		void sendBufferedOutput();
+private:
+	std::shared_ptr<MageScriptControl> scriptControl;
+	std::shared_ptr<MageCommandControl> commandControl;
+	std::shared_ptr<MageGameControl> gameControl;
+	std::shared_ptr<EngineROM> ROM;
+
+	void badAsciiLowerCase(std::string* data)
+	{
+		size_t length = data->size();
+		for (size_t i = 0; i < length; i++)
+		{
+			(*data)[i] = std::tolower((*data)[i]);
+		}
+	}
 };
 
 #endif //GAMEENGINE_MAGE_COMMAND_CONTROL_H

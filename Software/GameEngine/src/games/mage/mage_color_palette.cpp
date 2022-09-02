@@ -2,7 +2,6 @@
 #include "modules/sd.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
-#include "FrameBuffer.h"
 #include "convert_endian.h"
 #include "utility.h"
 
@@ -10,16 +9,12 @@
 #include <emscripten.h>
 #endif // EMSCRIPTEN
 
-extern std::unique_ptr<FrameBuffer> mage_canvas;
-
-extern std::unique_ptr<EngineRom> EngineROM;
-
-MageColorPalette::MageColorPalette(uint32_t address)
+MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept
 {
 #ifndef DC801_EMBEDDED
 	// Read name only if we're on Desktop,
 	// Embedded don't got RAM for that
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		COLOR_PALETTE_NAME_LENGTH,
 		(uint8_t *)name,
@@ -31,7 +26,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 	address += COLOR_PALETTE_NAME_LENGTH;
 
 	// Read colorCount
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(colorCount),
 		(uint8_t *)&colorCount,
@@ -44,7 +39,7 @@ MageColorPalette::MageColorPalette(uint32_t address)
 	colors = std::make_unique<uint16_t[]>(colorCount);
 	// The encoder writes these colors BigEndian because the Screen's
 	// data format is also BigEndian, so just don't convert these.
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		colorCount * sizeof(uint16_t),
 		(uint8_t *)colors.get(),
@@ -95,7 +90,7 @@ MageColorPalette::MageColorPalette(
 			sourceColor = sourcePalette->colors[i];
 			if(sourceColor != transparentColor) {
 				colors[i] = SCREEN_ENDIAN_U2_VALUE(
-					mage_canvas->applyFadeColor(
+					frameBuffer->applyFadeColor(
 						SCREEN_ENDIAN_U2_VALUE(
 							sourceColor
 						)

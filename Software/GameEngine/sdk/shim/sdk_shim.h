@@ -6,9 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
@@ -47,8 +45,6 @@ extern "C" {
 
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif

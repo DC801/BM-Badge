@@ -64,9 +64,7 @@
 #define FONT_PRACTICAL      5
 #define FONT_ALIEN          6
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 typedef struct {
 	int16_t xs, ys, xe, ye;
@@ -357,8 +355,6 @@ extern void util_gfx_set_pixel(int16_t x, int16_t y, uint16_t color);
  */
 extern void util_gfx_set_wrap(bool wrap);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* UTIL_GFX_H_ */

@@ -7,12 +7,12 @@
 #include "convert_endian.h"
 
 
-extern std::unique_ptr<FrameBuffer> mage_canvas;
-extern std::unique_ptr<MageGameControl> MageGame;
-extern std::unique_ptr<MageScriptControl> MageScript;
-extern std::unique_ptr<MageHexEditor> MageHex;
 
-extern std::unique_ptr<EngineRom> EngineROM;
+
+
+
+
+
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
@@ -144,17 +144,17 @@ void MageDialogControl::load(
 	uint16_t dialogId,
 	int16_t currentEntityId
 ) {
-	if(MageHex->getHexEditorState()) {
-		MageHex->toggleHexEditor();
+	if(HexEditor->getHexEditorState()) {
+		HexEditor->toggleHexEditor();
 	}
 	triggeringEntityId = currentEntityId;
 	currentDialogIndex = dialogId;
 	currentScreenIndex = 0;
 	currentResponseIndex = 0;
-	currentDialogAddress = MageGame->getDialogAddress(dialogId);
+	currentDialogAddress = gameControl->getDialogAddress(dialogId);
 	currentDialogAddress += 32; // skip past the name
 
-	EngineROM->Read(
+	ROM->Read(
 		currentDialogAddress,
 		sizeof(currentDialogScreenCount),
 		(uint8_t *)&currentDialogScreenCount,
@@ -195,7 +195,7 @@ void MageDialogControl::loadNextScreen() {
 		return;
 	}
 	uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
-	EngineROM->Read(
+	ROM->Read(
 		currentDialogAddress,
 		sizeOfDialogScreenStruct,
 		(uint8_t *)&currentScreen,
@@ -204,14 +204,14 @@ void MageDialogControl::loadNextScreen() {
 	currentScreen.nameStringIndex = ROM_ENDIAN_U2_VALUE(currentScreen.nameStringIndex);
 	currentScreen.borderTilesetIndex = ROM_ENDIAN_U2_VALUE(currentScreen.borderTilesetIndex);
 	currentDialogAddress += sizeOfDialogScreenStruct;
-	currentEntityName = MageGame->getString(currentScreen.nameStringIndex, triggeringEntityId);
+	currentEntityName = gameControl->getString(currentScreen.nameStringIndex, triggeringEntityId);
 	loadCurrentScreenPortrait();
 
 	uint8_t sizeOfMessageIndex = sizeof(uint16_t);
 	uint32_t sizeOfScreenMessageIds = sizeOfMessageIndex * currentScreen.messageCount;
 	messageIds.reset();
 	messageIds = std::make_unique<uint16_t[]>(currentScreen.messageCount);
-	EngineROM->Read(
+	ROM->Read(
 		currentDialogAddress,
 		sizeOfScreenMessageIds,
 		(uint8_t *)messageIds.get(),
@@ -219,7 +219,7 @@ void MageDialogControl::loadNextScreen() {
 	);
 	ROM_ENDIAN_U2_BUFFER(messageIds.get(), currentScreen.messageCount);
 	currentDialogAddress += sizeOfScreenMessageIds;
-	currentMessage = MageGame->getString(
+	currentMessage = gameControl->getString(
 		messageIds[currentMessageIndex],
 		triggeringEntityId
 	);
@@ -227,7 +227,7 @@ void MageDialogControl::loadNextScreen() {
 	uint32_t sizeOfResponses = sizeOfResponse * currentScreen.responseCount;
 	responses.reset();
 	responses = std::make_unique<MageDialogResponse[]>(currentScreen.responseCount);
-	EngineROM->Read(
+	ROM->Read(
 		currentDialogAddress,
 		sizeOfResponses,
 		(uint8_t *)responses.get(),
@@ -252,9 +252,9 @@ void MageDialogControl::loadNextScreen() {
 	// padding at the end of the screen struct
 	currentDialogAddress += ((currentScreen.messageCount) % 2) * sizeOfMessageIndex;
 
-	currentFrameTileset = MageGame->getValidTileset(currentScreen.borderTilesetIndex);
+	currentFrameTileset = gameControl->getValidTileset(currentScreen.borderTilesetIndex);
 	currentImageIndex = currentFrameTileset->ImageId();
-	currentImageAddress = MageGame->getImageAddress(
+	currentImageAddress = gameControl->getImageAddress(
 		currentImageIndex
 	);
 	currentScreenIndex++;
@@ -267,7 +267,7 @@ void MageDialogControl::advanceMessage() {
 	if (currentMessageIndex >= currentScreen.messageCount) {
 		loadNextScreen();
 	} else {
-		currentMessage = MageGame->getString(
+		currentMessage = gameControl->getString(
 			messageIds[currentMessageIndex],
 			triggeringEntityId
 		);
@@ -285,7 +285,7 @@ void MageDialogControl::update() {
 		EngineInput_Activated.rjoy_down
 		|| EngineInput_Activated.rjoy_left
 		|| EngineInput_Activated.rjoy_right
-		|| (MageScript->mapLoadId != MAGE_NO_MAP)
+		|| (scriptControl->mapLoadId != MAGE_NO_MAP)
 	);
 	if(shouldShowResponses()) {
 		currentResponseIndex += currentScreen.responseCount;
@@ -343,9 +343,9 @@ void MageDialogControl::drawDialogBox(
 			x = offsetX + (i * tileWidth);
 			y = offsetY + (j * tileHeight);
 			tileId = getTileIdFromXY(i, j, box);
-			canvas.drawChunkWithFlags(
+			frameBuffer->drawChunkWithFlags(
 				currentImageAddress,
-				MageGame->getValidColorPalette(currentImageIndex),
+				gameControl->getValidColorPalette(currentImageIndex),
 				x,
 				y,
 				tileWidth,
@@ -358,7 +358,7 @@ void MageDialogControl::drawDialogBox(
 			);
 		}
 	}
-	mage_canvas->printMessage(
+	frameBuffer->printMessage(
 		string.c_str(),
 		Monaco9,
 		0xffff,
@@ -375,8 +375,8 @@ void MageDialogControl::drawDialogBox(
 			y = offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6;
 			// render all of the response labels
 			for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex) {
-				mage_canvas->printMessage(
-					MageGame->getString(
+				frameBuffer->printMessage(
+					gameControl->getString(
 						responses[responseIndex].stringIndex,
 						triggeringEntityId
 					).c_str(),
@@ -391,9 +391,9 @@ void MageDialogControl::drawDialogBox(
 			x = offsetX + ((box.w - 2) * tileWidth);
 			y = offsetY + ((box.h - 2) * tileHeight) + bounce;
 		}
-		canvas.drawChunkWithFlags(
+		frameBuffer->drawChunkWithFlags(
 			currentImageAddress,
-			MageGame->getValidColorPalette(currentImageIndex),
+			gameControl->getValidColorPalette(currentImageIndex),
 			x,
 			y,
 			tileWidth,
@@ -409,11 +409,11 @@ void MageDialogControl::drawDialogBox(
 		x = offsetX + tileWidth;
 		y = offsetY + tileHeight;
 		tileId = currentPortraitRenderableData.tileId;
-		MageTileset* tileset = MageGame->getValidTileset(currentPortraitRenderableData.tilesetId);
+		MageTileset* tileset = gameControl->getValidTileset(currentPortraitRenderableData.tilesetId);
 		uint8_t portraitFlags = currentPortraitRenderableData.renderFlags;
-		canvas.drawChunkWithFlags(
-			MageGame->getImageAddress(tileset->ImageId()),
-			MageGame->getValidColorPalette(tileset->ImageId()),
+		frameBuffer->drawChunkWithFlags(
+			gameControl->getImageAddress(tileset->ImageId()),
+			gameControl->getValidColorPalette(tileset->ImageId()),
 			x,
 			y,
 			tileset->TileWidth(),
@@ -465,23 +465,23 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 			currentScreen.entityIndex,
 			triggeringEntityId
 		);
-		currentEntity = *MageGame->getEntityByMapLocalId(entityIndex);
+		currentEntity = *gameControl->getEntityByMapLocalId(entityIndex);
 		uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
 		if(sanitizedPrimaryType == ENTITY_TYPE) {
-			MageEntityType *entityType = MageGame->getValidEntityType(currentEntity.primaryId);
+			MageEntityType *entityType = gameControl->getValidEntityType(currentEntity.primaryId);
 			currentPortraitId = entityType->PortraitId();
 		}
 	}
 	if(
 		currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT // we have a portrait
 	) {
-		uint32_t portraitAddress = MageGame->getPortraitAddress(currentPortraitId);
+		uint32_t portraitAddress = gameControl->getPortraitAddress(currentPortraitId);
 		MagePortrait* portrait = new MagePortrait(portraitAddress);
 		MageEntityTypeAnimationDirection *animationDirection = portrait->getEmoteById(
 			currentScreen.emoteIndex
 		);
 		currentPortraitRenderableData = {};
-		MageGame->getRenderableStateFromAnimationDirection(
+		gameControl->getRenderableStateFromAnimationDirection(
 			&currentPortraitRenderableData,
 			&currentEntity,
 			animationDirection

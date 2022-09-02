@@ -3,13 +3,13 @@
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageAnimation::MageAnimation(uint32_t address)
 {
 	offset = address;
 	//read tilesetId
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(tilesetId),
 		(uint8_t *)&tilesetId,
@@ -23,7 +23,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	offset += sizeof(tilesetId);
 
 	//read frameCount
-	EngineROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(frameCount),
 		(uint8_t *)&frameCount,
@@ -53,7 +53,7 @@ MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
 	index = index < frameCount
 		? index
 		: frameCount;
-	EngineROM->Read(
+	ROM->Read(
 		offset + (index * sizeof(frame)),
 		sizeof(frame),
 		(uint8_t *)&frame,

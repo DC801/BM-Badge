@@ -9,8 +9,6 @@
  *
  */
 
-#include <SDL.h>
-
 #include "main.h"
 #include "games/mage/mage.h"
 #include "FrameBuffer.h"
@@ -19,6 +17,8 @@
 #include "sdk/shim/shim_err.h"
 #include "shim_timer.h"
 #include "utility.h"
+#include <SDL.h>
+
 
 #ifdef DC801_EMBEDDED
 //only init QSPI if we're in embedded mode:
@@ -119,7 +119,6 @@ int main(int argc, char* argv[]) {
 	// Init the display
 	ili9341_init();
 	ili9341_start();
-	util_gfx_init();
 
 	//Init the SD Card
 	if(!util_sd_init()){
@@ -164,14 +163,15 @@ int main(int argc, char* argv[]) {
 	sysTickStart();
 
 	// Boot! Boot! Boot!
-	debug_print("Booted!\n");
+	debug_print("Booted!\nCreating and started game...\n");
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
+	auto game = std::make_unique<MageGameEngine>();
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
 	break;
 #else
-	MAGE();
+	game->Run();
 #endif
 
 

@@ -46,7 +46,8 @@ enum MageDialogResponseType : uint8_t {
 };
 
 
-typedef struct {
+struct MageDialogScreen
+{
 	// TODO: portraits, after we have some graphics for them
 	uint16_t nameStringIndex;
 	uint16_t borderTilesetIndex;
@@ -58,53 +59,22 @@ typedef struct {
 	uint8_t entityIndex;
 	uint8_t portraitIndex;
 	uint8_t emoteIndex;
-} MageDialogScreen;
+};
 
-typedef struct {
+struct MageDialogResponse
+{
 	uint16_t stringIndex;
 	uint16_t mapLocalScriptIndex;
-} MageDialogResponse;
+};
 
-typedef struct {
+struct MageDialogAlignmentCoords
+{
 	Rect text;
 	Rect label;
 	Rect portrait;
-} MageDialogAlignmentCoords;
+};
 
 class MageDialogControl {
-	private:
-		// char dialogName[32];
-		MageTileset *currentFrameTileset;
-		int16_t triggeringEntityId;
-		int32_t currentDialogIndex;
-		uint32_t currentDialogAddress;
-		uint32_t currentDialogScreenCount;
-		int32_t currentScreenIndex;
-		int32_t currentMessageIndex;
-		uint16_t currentImageIndex;
-		uint32_t currentImageAddress;
-		uint32_t cursorPhase;
-		uint8_t currentResponseIndex;
-		uint8_t currentPortraitId;
-		MageEntityRenderableData currentPortraitRenderableData;
-		MageDialogScreen currentScreen;
-		std::string currentEntityName;
-		std::string currentMessage;
-		std::unique_ptr<uint16_t[]>messageIds;
-		std::unique_ptr<MageDialogResponse[]>responses;
-		uint8_t getTileIdFromXY(
-			uint8_t x,
-			uint8_t y,
-			Rect box
-		);
-		void drawDialogBox(
-			const std::string &string,
-			Rect box,
-			bool drawArrow = false,
-			bool drawPortrait = false
-		);
-		bool shouldShowResponses() const;
-
 	public:
 		bool isOpen;
 		int32_t mapLocalJumpScriptId;
@@ -122,6 +92,40 @@ class MageDialogControl {
 		void draw();
 
 	void loadCurrentScreenPortrait();
+
+private:
+	// char dialogName[32];
+	MageTileset* currentFrameTileset;
+	int16_t triggeringEntityId;
+	int32_t currentDialogIndex;
+	uint32_t currentDialogAddress;
+	uint32_t currentDialogScreenCount;
+	int32_t currentScreenIndex;
+	int32_t currentMessageIndex;
+	uint16_t currentImageIndex;
+	uint32_t currentImageAddress;
+	uint32_t cursorPhase;
+	uint8_t currentResponseIndex;
+	uint8_t currentPortraitId;
+	MageEntityRenderableData currentPortraitRenderableData;
+	MageDialogScreen currentScreen;
+	std::string currentEntityName;
+	std::string currentMessage;
+	std::unique_ptr<uint16_t[]>messageIds;
+	std::unique_ptr<MageDialogResponse[]>responses;
+	uint8_t getTileIdFromXY(
+		uint8_t x,
+		uint8_t y,
+		Rect box
+	);
+	void drawDialogBox(
+		const std::string& string,
+		Rect box,
+		bool drawArrow = false,
+		bool drawPortrait = false
+	);
+	bool shouldShowResponses() const;
+
 };
 
 #endif //MAGE_DIALOG_CONTROL_H

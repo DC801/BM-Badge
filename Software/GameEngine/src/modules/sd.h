@@ -28,9 +28,7 @@
 
 #include "sdk/shim/shim_filesystem.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 extern bool util_sd_available();
 extern uint32_t util_sd_file_size(const char *path);
@@ -43,8 +41,6 @@ extern bool util_sd_recover();
 extern void util_sd_error();
 extern uint8_t util_sd_getnum_files(const char *path, const char *extension);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* UTIL_UTIL_SD_H_ */

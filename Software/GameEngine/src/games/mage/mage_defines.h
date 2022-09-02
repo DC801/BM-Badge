@@ -13,11 +13,12 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
-#include "EngineROM.h"
-#include "FrameBuffer.h"
+#include <stdint.h>
 #include <memory>
 #include <utility>
 #include <string>
+#include "EngineROM.h"
+#include "FrameBuffer.h"
 
 //this is the path to the game.dat file on the SD card.
 //if an SD card is inserted with game.dat in this location
@@ -110,7 +111,7 @@ all of the old code used as the foundation of this badge.
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION(value) //(value)
 #else
-#define LOG_COLOR_PALETTE_CORRUPTION(value) MageGame->verifyAllColorPalettes((value));
+#define LOG_COLOR_PALETTE_CORRUPTION(value) GameControl->verifyAllColorPalettes((value));
 #endif //DC801_EMBEDDED
 
 typedef enum : uint8_t {

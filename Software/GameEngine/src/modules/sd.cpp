@@ -249,3 +249,21 @@ uint8_t util_sd_getnum_files(const char* path, const char* extension) {
 	}
 	return counter;
 }
+//
+//void util_sd_error()
+//{
+//	//ENGINE_PANIC("SD Card Error\nCheck card and reboot");
+//	p_canvas()->clearScreen(COLOR_BLUE);
+//	p_canvas()->printMessage(
+//		"SD Card did not initialize properly.\n\
+//		Check Card and Reboot if you\n\
+//		want to use the SD Card to reflash\n\
+//		the ROM chip with a new mage.dat file.",
+//		Monaco9,
+//		COLOR_WHITE,
+//		32,
+//		32
+//	);
+//	p_canvas()->blt();
+//	nrf_delay_ms(5000);
+//}

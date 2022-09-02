@@ -57,14 +57,10 @@
 
 #include <bod.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 
 void system_init(void);
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* DRIVER_INIT_H_INCLUDED */

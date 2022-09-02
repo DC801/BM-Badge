@@ -5,12 +5,12 @@
 #include "utility.h"
 #include "shim_err.h"
 
-extern std::unique_ptr<FrameBuffer> mage_canvas;
-extern std::unique_ptr<EngineRom> EngineROM;
 
-extern std::unique_ptr<MageGameControl> MageGame;
-extern std::unique_ptr<MageDialogControl> MageDialog;
-extern std::unique_ptr<MageEntity> hackableDataAddress;
+
+
+
+
+
 
 uint32_t MageHexEditor::size() const
 {
@@ -45,7 +45,7 @@ bool MageHexEditor::getHexDialogState()
 }
 uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 {
-	return MageGame->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
+	return gameControl->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
 }
 
 void MageHexEditor::toggleHexEditor()
@@ -90,7 +90,7 @@ void MageHexEditor::setPageToCursorLocation() {
 void MageHexEditor::updateHexLights()
 {
 	const uint8_t currentByte = *(((uint8_t*)hackableDataAddress.get()) + hexCursorLocation);
-	uint8_t* memOffsets = MageGame->currentSave.memOffsets;
+	uint8_t* memOffsets = gameControl->currentSave.memOffsets;
 	uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
 	ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
 	ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
@@ -132,7 +132,7 @@ void MageHexEditor::updateHexStateVariables()
 {
 	bytesPerPage = dialogState ? 64 : 192;
 	hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-	memTotal = MageGame->filteredEntityCountOnThisMap * sizeof(MageEntity);
+	memTotal = gameControl->filteredEntityCountOnThisMap * sizeof(MageEntity);
 	totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
 }
 
@@ -143,15 +143,15 @@ void MageHexEditor::applyHexModeInputs()
 	}
 	//check to see if player input is allowed:
 	if (
-		MageDialog->isOpen
-		|| !MageGame->playerHasControl
-		|| !MageGame->playerHasHexEditorControl
+		DialogControl->isOpen
+		|| !gameControl->playerHasControl
+		|| !gameControl->playerHasHexEditorControl
 		|| disableMovementUntilRJoyUpRelease
 		) {
 		return;
 	}
 	uint8_t* currentByte = (((uint8_t*)hackableDataAddress.get()) + hexCursorLocation);
-	uint8_t* memOffsets = MageGame->currentSave.memOffsets;
+	uint8_t* memOffsets = gameControl->currentSave.memOffsets;
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
 	if (EngineInput_Activated.hax) { toggleHexEditor(); }
@@ -248,10 +248,10 @@ void MageHexEditor::applyHexModeInputs()
 					*currentByte -= 1;
 				}
 			}
-			if (MageGame->playerHasHexEditorControlClipboard) {
+			if (gameControl->playerHasHexEditorControlClipboard) {
 				if (EngineInput_Activated.rjoy_right) {
 					//start copying
-					MageGame->currentSave.clipboardLength = 1;
+					gameControl->currentSave.clipboardLength = 1;
 					isCopying = true;
 				}
 				if (!EngineInput_Buttons.rjoy_right) {
@@ -259,35 +259,35 @@ void MageHexEditor::applyHexModeInputs()
 				}
 				if (EngineInput_Buttons.rjoy_right) {
 					if (EngineInput_Buttons.ljoy_left) {
-						MageGame->currentSave.clipboardLength = MAX(
+						gameControl->currentSave.clipboardLength = MAX(
 							(uint8_t)1,
-							MageGame->currentSave.clipboardLength - 1
+							gameControl->currentSave.clipboardLength - 1
 						);
 					}
 					if (EngineInput_Buttons.ljoy_right) {
-						MageGame->currentSave.clipboardLength = MIN(
+						gameControl->currentSave.clipboardLength = MIN(
 							(uint8_t)sizeof(MageEntity),
-							MageGame->currentSave.clipboardLength + 1
+							gameControl->currentSave.clipboardLength + 1
 						);
 					}
 					memcpy(
-						MageGame->currentSave.clipboard,
+						gameControl->currentSave.clipboard,
 						currentByte,
-						MageGame->currentSave.clipboardLength
+						gameControl->currentSave.clipboardLength
 					);
 				}
 				if (EngineInput_Buttons.rjoy_left) {
 					//paste
 					memcpy(
 						currentByte,
-						MageGame->currentSave.clipboard,
-						MageGame->currentSave.clipboardLength
+						gameControl->currentSave.clipboard,
+						gameControl->currentSave.clipboardLength
 					);
-					MageGame->UpdateEntities(0);
+					gameControl->UpdateEntities(0);
 					memcpy(
 						currentByte,
-						MageGame->currentSave.clipboard,
-						MageGame->currentSave.clipboardLength
+						gameControl->currentSave.clipboard,
+						gameControl->currentSave.clipboardLength
 					);
 				}
 			}
@@ -355,10 +355,10 @@ void MageHexEditor::renderHexHeader()
 		currentMemPage,
 		hexCursorLocation,
 		totalMemPages,
-		MageGame->filteredEntityCountOnThisMap,
+		gameControl->filteredEntityCountOnThisMap,
 		memTotal
 	);
-	mage_canvas->printMessage(
+	frameBuffer->printMessage(
 		headerString,
 		Monaco9,
 		0xffff,
@@ -390,19 +390,19 @@ void MageHexEditor::renderHexHeader()
 		u2Value,
 		stringPreview
 	);
-	if (MageGame->playerHasHexEditorControlClipboard) {
+	if (gameControl->playerHasHexEditorControlClipboard) {
 		uint8_t clipboardPreviewClamp = MIN(
 			(uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
-			MageGame->currentSave.clipboardLength
+			gameControl->currentSave.clipboardLength
 		);
 		for (uint8_t i = 0; i < clipboardPreviewClamp; i++) {
 			sprintf(
 				clipboardPreview + (i * 2),
 				"%02X",
-				*(MageGame->currentSave.clipboard + i)
+				*(gameControl->currentSave.clipboard + i)
 			);
 		}
-		if (MageGame->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
+		if (gameControl->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH) {
 			sprintf(
 				clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
 				"..."
@@ -414,7 +414,7 @@ void MageHexEditor::renderHexHeader()
 			clipboardPreview
 		);
 	}
-	mage_canvas->printMessage(
+	frameBuffer->printMessage(
 		headerString,
 		Monaco9,
 		0xffff,
@@ -427,7 +427,7 @@ void MageHexEditor::renderHexEditor()
 {
 	if ((hexCursorLocation / bytesPerPage) == currentMemPage)
 	{
-		mage_canvas->fillRect(
+		frameBuffer->fillRect(
 			(hexCursorLocation % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
 			(hexCursorLocation % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
 			HEXED_BYTE_WIDTH,
@@ -435,9 +435,9 @@ void MageHexEditor::renderHexEditor()
 			0x38FF
 		);
 		if (isCopying) {
-			for (uint8_t i = 1; i < MageGame->currentSave.clipboardLength; i++) {
+			for (uint8_t i = 1; i < gameControl->currentSave.clipboardLength; i++) {
 				uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
-				mage_canvas->fillRect(
+				frameBuffer->fillRect(
 					(copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
 					(copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
 					HEXED_BYTE_WIDTH,
@@ -459,9 +459,9 @@ void MageHexEditor::renderHexEditor()
 	while (i < bytesPerPage && i + pageOffset < memTotal)
 	{
 		auto color = COLOR_WHITE;
-		if (NO_PLAYER != MageGame->playerEntityIndex
-			&& i + pageOffset >= sizeof(MageEntity) * MageGame->playerEntityIndex
-			&& i + pageOffset < sizeof(MageEntity) * (MageGame->playerEntityIndex + 1))
+		if (NO_PLAYER != gameControl->playerEntityIndex
+			&& i + pageOffset >= sizeof(MageEntity) * gameControl->playerEntityIndex
+			&& i + pageOffset < sizeof(MageEntity) * (gameControl->playerEntityIndex + 1))
 		{
 			color = COLOR_RED;
 		}
@@ -470,7 +470,7 @@ void MageHexEditor::renderHexEditor()
 			s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
 			s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
 		}
-		mage_canvas->printMessage(
+		frameBuffer->printMessage(
 			s.c_str(),
 			Monaco9,
 			color,

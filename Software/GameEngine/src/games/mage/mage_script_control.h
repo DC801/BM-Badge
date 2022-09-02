@@ -1,10 +1,8 @@
 #ifndef _MAGE_SCRIPT_CONTROL_H
 #define _MAGE_SCRIPT_CONTROL_H
 
+#include <stdint.h>
 #include "mage_defines.h"
-#include "mage.h"
-#include "mage_game_control.h"
-#include "mage_hex.h"
 
 #define SCRIPT_NAME_LENGTH 32
 #define COMMAND_STATES_COUNT 5

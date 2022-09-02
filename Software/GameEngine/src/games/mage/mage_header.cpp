@@ -3,14 +3,14 @@
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-extern std::unique_ptr<EngineRom> EngineROM;
+
 
 MageHeader::MageHeader(uint32_t address)
 {
 	uint32_t size = 0;
 
 	// Read count
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		sizeof(counts),
 		(uint8_t *)&counts,
@@ -31,7 +31,7 @@ MageHeader::MageHeader(uint32_t address)
 	size = counts * sizeof(uint32_t);
 
 	// Read arrays
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)offsets.get(),
@@ -41,7 +41,7 @@ MageHeader::MageHeader(uint32_t address)
 	ROM_ENDIAN_U4_BUFFER(offsets.get(), counts);
 	address += counts * sizeof(uint32_t);
 
-	EngineROM->Read(
+	ROM->Read(
 		address,
 		size,
 		(uint8_t *)lengths.get(),
