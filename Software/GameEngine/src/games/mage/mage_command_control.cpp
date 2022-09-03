@@ -95,10 +95,10 @@ void MageCommandControl::processCommandAsVerb(std::string input) {
 		);
 		scriptControl->initScriptState(
 			&scriptControl->resumeStates.commandLook,
-			gameControl->Map().onLook,
+			gameControl->Map()->onLook,
 			true
 		);
-		std::string directionNames = gameControl->Map().getDirectionNames();
+		std::string directionNames = gameControl->Map()->getDirectionNames();
 		if(directionNames.length() > 0) {
 			postDialogBuffer += "Exits are:\n";
 			postDialogBuffer += directionNames;
@@ -116,7 +116,7 @@ void MageCommandControl::processCommandAsVerb(std::string input) {
 			std::string output = "You try to go `";
 			output += subject;
 			output += "`";
-			uint16_t directionScriptId = gameControl->Map().getDirectionScriptId(subject);
+			uint16_t directionScriptId = gameControl->Map()->getDirectionScriptId(subject);
 			if(!directionScriptId) {
 				output += ", but that is not a valid direction\n";
 			} else {

@@ -10,7 +10,6 @@
 
 #include <chrono>
 #include "utility.h"
-#include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
 #include <filesystem>

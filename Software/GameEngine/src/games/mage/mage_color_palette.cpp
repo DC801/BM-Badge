@@ -9,7 +9,9 @@
 #include <emscripten.h>
 #endif // EMSCRIPTEN
 
-MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept
+MageColorPalette::MageColorPalette(
+	std::shared_ptr<EngineROM> ROM, 
+	uint32_t address) noexcept
 {
 #ifndef DC801_EMBEDDED
 	// Read name only if we're on Desktop,

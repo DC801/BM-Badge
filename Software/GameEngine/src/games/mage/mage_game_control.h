@@ -1,6 +1,11 @@
 #ifndef _MAGE_GAME_CONTROL
 #define _MAGE_GAME_CONTROL
 
+
+#include "EngineROM.h"
+#include "EngineInput.h"
+#include "FrameBuffer.h"
+
 #include "mage_defines.h"
 #include "mage_header.h"
 #include "mage_map.h"
@@ -9,7 +14,11 @@
 #include "mage_entity_type.h"
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
+
 #include "mage_hex.h"
+#include "mage_script_actions.h"
+#include "mage_script_control.h"
+#include "mage_command_control.h"
 #include "mage_dialog_control.h"
 
 #define PI 3.141592653589793
@@ -43,7 +52,11 @@
    class MageGameControl
    {
    public:
-      MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr<FrameBuffer> frameBuffer) noexcept;
+      MageGameControl(
+         std::shared_ptr<EngineROM> ROM, 
+         std::shared_ptr<FrameBuffer> frameBuffer, 
+         std::shared_ptr<EngineInput> inputHandler
+      ) noexcept;
       //this is the hackable array of entities that are on the current map
       //the data contained within is the data that can be hacked in the hex editor.
       std::shared_ptr<MageEntity[]> entities;
@@ -53,7 +66,7 @@
       uint8_t playerEntityIndex;
 
       uint8_t currentSaveIndex;
-      MageSaveGame currentSave;
+      std::unique_ptr<MageSaveGame> currentSave;
 
       //this lets us make it so that inputs stop working for the player
       bool playerHasControl;
@@ -86,7 +99,8 @@
       const MageTileset& Tileset(uint32_t index) const;
 
       //this will return the current map object.
-      MageMap& Map();
+      auto Map() { return map; }
+      auto getDialogControl() { return dialogControl; }
 
       //this will fill in an entity structure's data from ROM
       MageEntity LoadEntity(uint32_t address);
@@ -202,12 +216,14 @@
       uint16_t tilesetCount();
 
       void logAllEntityScriptValues(const char* string);
-
+      const auto& getROM() { return ROM; }
+      std::shared_ptr<MageDialogControl> dialogControl;
    private:
+      std::shared_ptr<MageGameControl> self{ this };
       std::shared_ptr<EngineROM> ROM;
       std::shared_ptr<FrameBuffer> frameBuffer;
-      std::shared_ptr<MageDialogControl> dialogControl;
       std::shared_ptr<MageScriptControl> scriptControl;
+      std::shared_ptr<MageScriptActions> scriptActions;
       std::shared_ptr<MageHexEditor> hexEditor;
       std::shared_ptr<EngineInput> inputHandler;
 
@@ -236,7 +252,7 @@
       uint32_t scenarioDataLength;
 
       //this is where the current map data from the ROM is stored.
-      MageMap map;
+      std::shared_ptr<MageMap> map;
 
       //this is an array of the tileset data on the ROM.
       //each entry is an indexed tileset.

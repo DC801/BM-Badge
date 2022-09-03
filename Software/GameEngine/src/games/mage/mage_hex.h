@@ -12,6 +12,7 @@ This class contains all the code related to the hex editor hacking interface.
 #include "fonts/DeterminationMono.h"
 #include "fonts/Scientifica.h"
 #include "FrameBuffer.h"
+#include "EngineInput.h"
 
 #define HEXED_BYTES_PER_ROW 16
 #define HEXED_BYTE_OFFSET_X 12
@@ -48,13 +49,18 @@ public:
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
 	MageHexEditor(
-		std::shared_ptr<MageGameControl> gameControl
-	) : gameControl(gameControl)
+		std::shared_ptr<MageGameEngine> gameEngine,
+		std::shared_ptr<EngineInput> engineInput,
+		std::shared_ptr<MageDialogControl> dialogControl,
+		std::shared_ptr<MageGameControl> gameControl,
+		std::shared_ptr<FrameBuffer> frameBuffer
+	) : 
+		gameEngine(gameEngine),
+		inputHandler(engineInput),
+		gameControl(gameControl),
+		frameBuffer(frameBuffer)
 	{};
-
-	//returns the size in RAM of the class variables.
-	uint32_t size() const;
-
+	
 	//returns true if hex editor is open.
 	bool getHexEditorState();
 
@@ -109,7 +115,11 @@ public:
 	void openToEntityByIndex(uint8_t entityIndex);
 
 private:
+	std::shared_ptr<MageDialogControl> dialogControl;
+	std::shared_ptr<MageGameEngine> gameEngine;
+	std::shared_ptr<EngineInput> inputHandler;
 	std::shared_ptr<MageGameControl> gameControl;
+	std::shared_ptr<FrameBuffer> frameBuffer;
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

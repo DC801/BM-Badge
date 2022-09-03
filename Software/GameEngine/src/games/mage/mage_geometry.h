@@ -24,27 +24,20 @@ class MageGeometry
 {
 public:
    //can be any MageGeometryTypeId:
-   MageGeometryTypeId typeId;
+   MageGeometryTypeId typeId{ MageGeometryTypeId::POINT };
    //how many points will be in the pointArray:
-   uint8_t pointCount;
+   uint8_t pointCount{ 1 };
    //how many points will be in the segmentLengths:
-   uint8_t segmentCount;
+   uint8_t segmentCount{ 0 };
    //total length of all segments in the geometry
-   float pathLength;
+   float pathLength{ 0.0f };
    //the array of the actual coordinate points that make up the geometry:
-   std::unique_ptr<Point[]> points;
+   std::unique_ptr<Point[]> points{ std::make_unique<Point[]>(pointCount) };
    //the array of segment lengths:
-   std::unique_ptr<float[]> segmentLengths;
+   std::unique_ptr<float[]> segmentLengths{ std::make_unique<float[]>(segmentCount) };
 
    //default constructor returns a point with coordinates 0,0:
-   MageGeometry() :
-      typeId{ MageGeometryTypeId::POINT },
-      pointCount{ 1 },
-      segmentCount{ 0 },
-      pathLength{ 0.0f },
-      points{ std::make_unique<Point[]>(pointCount) },
-      segmentLengths{ std::make_unique<float[]>(segmentCount) }
-   {}
+   MageGeometry() = default;
 
    //this constructor allows you to make a geometry of a known type and pointCount.
    //you'll need to manually fill in the points, though. They all default to 0,0.

@@ -6,14 +6,6 @@
 #include "mage_script_actions.h"
 #include "convert_endian.h"
 
-
-
-
-
-
-
-
-
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	{ // BOTTOM_LEFT
 		{
@@ -97,25 +89,6 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 	}
 };
 
-MageDialogControl::MageDialogControl() {
-	isOpen = false;
-	mapLocalJumpScriptId = MAGE_NO_SCRIPT;
-	triggeringEntityId = 0;
-	currentDialogIndex = 0;
-	currentDialogAddress = 0;
-	currentDialogScreenCount = 0;
-	currentScreenIndex = 0;
-	currentMessageIndex = 0;
-	currentImageAddress = 0;
-	cursorPhase = 0;
-	currentResponseIndex = 0;
-	currentPortraitId = DIALOG_SCREEN_NO_PORTRAIT;
-	currentPortraitRenderableData = {};
-	messageIds = std::make_unique<uint16_t[]>(0);
-	responses = std::make_unique<MageDialogResponse[]>(0);
-	currentScreen = {0};
-}
-
 uint32_t MageDialogControl::size() {
 	return (
 		0
@@ -144,8 +117,8 @@ void MageDialogControl::load(
 	uint16_t dialogId,
 	int16_t currentEntityId
 ) {
-	if(HexEditor->getHexEditorState()) {
-		HexEditor->toggleHexEditor();
+	if(hexEditor->getHexEditorState()) {
+		hexEditor->toggleHexEditor();
 	}
 	triggeringEntityId = currentEntityId;
 	currentDialogIndex = dialogId;
@@ -282,15 +255,15 @@ void MageDialogControl::closeDialog() {
 void MageDialogControl::update() {
 	cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
 	bool shouldAdvance = (
-		EngineInput_Activated.rjoy_down
-		|| EngineInput_Activated.rjoy_left
-		|| EngineInput_Activated.rjoy_right
+		inputHandler->GetButtonActivatedState(Button::rjoy_down)
+		|| inputHandler->GetButtonActivatedState(Button::rjoy_left)
+		|| inputHandler->GetButtonActivatedState(Button::rjoy_right)
 		|| (scriptControl->mapLoadId != MAGE_NO_MAP)
 	);
 	if(shouldShowResponses()) {
 		currentResponseIndex += currentScreen.responseCount;
-		if(EngineInput_Activated.ljoy_up) { currentResponseIndex -= 1; }
-		if(EngineInput_Activated.ljoy_down) { currentResponseIndex += 1; }
+		if(inputHandler->GetButtonActivatedState(Button::ljoy_up)) { currentResponseIndex -= 1; }
+		if(inputHandler->GetButtonActivatedState(Button::ljoy_down)) { currentResponseIndex += 1; }
 		currentResponseIndex %= currentScreen.responseCount;
 		if(shouldAdvance) {
 			mapLocalJumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
@@ -461,7 +434,7 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 	MageEntity currentEntity = {};
 	currentPortraitId = currentScreen.portraitIndex;
 	if(currentScreen.entityIndex != NO_PLAYER) {
-		uint8_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		uint8_t entityIndex = scriptActions->getUsefulEntityIndexFromActionEntityId(
 			currentScreen.entityIndex,
 			triggeringEntityId
 		);
@@ -476,7 +449,7 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 		currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT // we have a portrait
 	) {
 		uint32_t portraitAddress = gameControl->getPortraitAddress(currentPortraitId);
-		MagePortrait* portrait = new MagePortrait(portraitAddress);
+		auto portrait = std::make_unique<MagePortrait>(ROM, portraitAddress);
 		MageEntityTypeAnimationDirection *animationDirection = portrait->getEmoteById(
 			currentScreen.emoteIndex
 		);

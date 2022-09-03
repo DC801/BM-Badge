@@ -17,8 +17,6 @@ all of the old code used as the foundation of this badge.
 #include <memory>
 #include <utility>
 #include <string>
-#include "EngineROM.h"
-#include "FrameBuffer.h"
 
 //this is the path to the game.dat file on the SD card.
 //if an SD card is inserted with game.dat in this location
@@ -108,11 +106,71 @@ all of the old code used as the foundation of this badge.
 #endif
 
 // color palette corruption detection - requires much ram, can only be run on desktop
-#ifdef DC801_EMBEDDED
+#ifndef DC801_LOG_PALETTE_CORRUPTION
 #define LOG_COLOR_PALETTE_CORRUPTION(value) //(value)
 #else
 #define LOG_COLOR_PALETTE_CORRUPTION(value) GameControl->verifyAllColorPalettes((value));
 #endif //DC801_EMBEDDED
+
+
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+
+	//size of chunk to be read/written when writing game.dat to ROM per loop
+#define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
+
+//This is the smallest page we know how to erase on our chip,
+//because the smaller values provided by nordic are incorrect,
+//and this is the only one that has worked for us so far
+//262144 bytes = 256KB
+#define ENGINE_ROM_ERASE_PAGE_SIZE 262144
+
+//size of largest single Write data that can be sent at one time:
+//make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
+//or you'll lose data.
+#define ENGINE_ROM_WRITE_PAGE_SIZE 512
+
+//this 'identifier' will appear at the start of game.dat.
+//it is used to verify that the binary file is formatted correctly.
+#define ENGINE_ROM_GAME_IDENTIFIER_STRING {'M','A','G','E','G','A','M','E'}
+
+//this is the 'magic string' that will appear at the start of game.dat.
+//it is used to verify that the binary file is formatted correctly.
+#define ENGINE_ROM_SAVE_IDENTIFIER_STRING {'M','A','G','E','S','A','V','E'}
+
+//this is the length of the 'identifier' at the start of the game.dat file:
+#define ENGINE_ROM_IDENTIFIER_STRING_LENGTH 8
+
+//this is the length of the 'engine rom version number' at the start of the game.dat file:
+//it is to determine if the game rom is compatible with the engine version
+#define ENGINE_ROM_VERSION_NUMBER_LENGTH 4
+
+//this is the length of the crc32 that follows the magic string in game.dat
+//it is used to let us check if we need to re-flash the ROM chip with the file on
+//the SD card.
+#define ENGINE_ROM_CRC32_LENGTH 4
+
+//this is the length of the scenario data from the 0 address to the end
+#define ENGINE_ROM_GAME_LENGTH 4
+
+#define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
+
+#define ENGINE_ROM_MAGIC_HASH_LENGTH (ENGINE_ROM_START_OF_CRC_OFFSET + ENGINE_ROM_CRC32_LENGTH + ENGINE_ROM_GAME_LENGTH)
+
+//this is all the bytes on our ROM chip. We aren't able to write more than this
+//to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
+//which is defined as 2^25 bytes available for writing.
+//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data and the end of rom
+#define ENGINE_ROM_SAVE_GAME_SLOTS 3
+#define ENGINE_ROM_QSPI_CHIP_SIZE 33554432
+#define ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS)
+#define ENGINE_ROM_MAX_DAT_FILE_SIZE (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE)
+#define ENGINE_ROM_SAVE_OFFSET (ENGINE_ROM_MAX_DAT_FILE_SIZE)
+
+//This is a return code indicating that the verification was successful
+//it needs to be a negative number, as the Verify function returns
+//the failure address which is a uint32_t and can include 0
+#define ENGINE_ROM_VERIFY_SUCCESS -1
+
 
 typedef enum : uint8_t {
 	x = 12,
@@ -156,6 +214,15 @@ typedef enum : uint8_t{
 #define RENDER_FLAGS_FLIP_DIAG				0b00000001
 #define RENDER_FLAGS_FLIP_MASK				0b00000111
 #define RENDER_FLAGS_DIRECTION_MASK			0b00000011
+
+
+//this is a point in 2D space.
+typedef struct
+{
+	int32_t x;
+	int32_t y;
+} Point;
+
 
 //this is a structure to hold information about the currently executing scripts so they can resume
 typedef struct{

@@ -1,12 +1,5 @@
 #include "mage_game_control.h"
-#include "EngineROM.h"
-#include "EngineInput.h"
-#include "FrameBuffer.h"
-#include "mage_hex.h"
-#include "mage_script_actions.h"
-#include "mage_script_control.h"
-#include "mage_dialog_control.h"
-#include "mage_command_control.h"
+
 #include <array>
 #include "convert_endian.h"
 #include "utility.h"
@@ -14,10 +7,17 @@
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
-MageGameControl::MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr<FrameBuffer> frameBuffer) noexcept
-	: ROM(ROM), frameBuffer(frameBuffer)
+MageGameControl::MageGameControl(
+	std::shared_ptr<EngineROM> ROM, 
+	std::shared_ptr<FrameBuffer> frameBuffer, 
+	std::shared_ptr<EngineInput> inputHandler
+) noexcept
+	: ROM(ROM), 
+	  frameBuffer(frameBuffer), 
+	  inputHandler(inputHandler)
 {
-	dialogControl = std::make_unique<MageDialogControl>();
+	scriptActions = std::make_shared<MageScriptActions>();
+	dialogControl = std::make_shared<MageDialogControl>(ROM, inputHandler, self, frameBuffer);
 	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
 
 	ROM->Read(
@@ -60,56 +60,56 @@ MageGameControl::MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr
 	currentSaveIndex = 0;
 	setCurrentSaveToFreshState();
 
-	mapHeader = MageHeader(offset);
+	mapHeader = MageHeader{ROM, offset};
 	offset += mapHeader.size();
 
-	tilesetHeader = MageHeader(offset);
+	tilesetHeader = MageHeader{ROM, offset};
 	offset += tilesetHeader.size();
 
-	animationHeader = MageHeader(offset);
+	animationHeader = MageHeader{ROM, offset};
 	offset += animationHeader.size();
 
-	entityTypeHeader = MageHeader(offset);
+	entityTypeHeader = MageHeader{ROM, offset};
 	offset += entityTypeHeader.size();
 
-	entityHeader = MageHeader(offset);
+	entityHeader = MageHeader{ROM, offset};
 	offset += entityHeader.size();
 
-	geometryHeader = MageHeader(offset);
+	geometryHeader = MageHeader{ROM, offset};
 	offset += geometryHeader.size();
 
-	scriptHeader = MageHeader(offset);
+	scriptHeader = MageHeader{ROM, offset};
 	offset += scriptHeader.size();
 
-	portraitHeader = MageHeader(offset);
+	portraitHeader = MageHeader{ROM, offset};
 	offset += portraitHeader.size();
 
-	dialogHeader = MageHeader(offset);
+	dialogHeader = MageHeader{ROM, offset};
 	offset += dialogHeader.size();
 
-	serialDialogHeader = MageHeader(offset);
+	serialDialogHeader = MageHeader{ROM, offset};
 	offset += serialDialogHeader.size();
 
-	colorPaletteHeader = MageHeader(offset);
+	colorPaletteHeader = MageHeader{ROM, offset};
 	offset += colorPaletteHeader.size();
 
-	stringHeader = MageHeader(offset);
+	stringHeader = MageHeader{ROM, offset};
 	offset += stringHeader.size();
 
-	saveFlagHeader = MageHeader(offset);
+	saveFlagHeader = MageHeader{ROM, offset};
 	offset += saveFlagHeader.size();
 
-	variableHeader = MageHeader(offset);
+	variableHeader = MageHeader{ROM, offset};
 	offset += variableHeader.size();
 
-	imageHeader = MageHeader(offset);
+	imageHeader = MageHeader{ROM, offset};
 	offset += imageHeader.size();
 
 	tilesets = std::make_unique<MageTileset[]>(tilesetHeader.count());
 
 	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
 	{
-		tilesets[i] = MageTileset(i, tilesetHeader.offset(i));
+		tilesets[i] = MageTileset(ROM, i, tilesetHeader.offset(i));
 	}
 
 	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
@@ -123,7 +123,7 @@ MageGameControl::MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr
 
 	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
 	{
-		entityTypes[i] = MageEntityType(entityTypeHeader.offset(i));
+		entityTypes[i] = MageEntityType(ROM, entityTypeHeader.offset(i));
 	}
 
 	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
@@ -151,7 +151,7 @@ MageGameControl::MageGameControl(std::shared_ptr<EngineROM> ROM, std::shared_ptr
 	playerHasHexEditorControlClipboard = true;
 
 	//load the map
-	PopulateMapData(currentSave.currentMapId);
+	PopulateMapData(currentSave->currentMapId);
 
 	readSaveFromRomIntoRam(true);
 }
@@ -174,7 +174,7 @@ uint32_t MageGameControl::Size() const
 		saveFlagHeader.size() +
 		variableHeader.size() +
 		imageHeader.size() +
-		map.Size() +
+		map->Size() +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
 		sizeof(playerEntityIndex) +
@@ -221,9 +221,9 @@ uint32_t MageGameControl::Size() const
 }
 
 void MageGameControl::setCurrentSaveToFreshState() {
-	MageSaveGame newSave = {};
-	newSave.scenarioDataCRC32 = scenarioDataCRC32;
-	currentSave = newSave;
+	auto newSave = std::make_unique<MageSaveGame>();
+	newSave->scenarioDataCRC32 = scenarioDataCRC32;
+	currentSave = std::move(newSave);
 }
 
 void MageGameControl::readSaveFromRomIntoRam(
@@ -234,13 +234,13 @@ void MageGameControl::readSaveFromRomIntoRam(
 		sizeof(MageSaveGame),
 		(uint8_t*)&currentSave
 	);
-	ROM_ENDIAN_U4_BUFFER(&currentSave.engineVersion, 1);
-	ROM_ENDIAN_U4_BUFFER(&currentSave.scenarioDataCRC32, 1);
-	ROM_ENDIAN_U4_BUFFER(&currentSave.saveDataLength, 1);
+	ROM_ENDIAN_U4_BUFFER(&currentSave->engineVersion, 1);
+	ROM_ENDIAN_U4_BUFFER(&currentSave->scenarioDataCRC32, 1);
+	ROM_ENDIAN_U4_BUFFER(&currentSave->saveDataLength, 1);
 
-	bool engineIncompatible = currentSave.engineVersion != engineVersion;
-	bool saveLengthIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
-	bool scenarioIncompatible = currentSave.scenarioDataCRC32 != scenarioDataCRC32;
+	bool engineIncompatible = currentSave->engineVersion != engineVersion;
+	bool saveLengthIncompatible = currentSave->saveDataLength != sizeof(MageSaveGame);
+	bool scenarioIncompatible = currentSave->scenarioDataCRC32 != scenarioDataCRC32;
 	if (
 		engineIncompatible
 		|| saveLengthIncompatible
@@ -288,7 +288,7 @@ void MageGameControl::saveGameSlotErase(uint8_t slotIndex) {
 void MageGameControl::saveGameSlotLoad(uint8_t slotIndex) {
 	currentSaveIndex = slotIndex;
 	readSaveFromRomIntoRam();
-	//LoadMap(currentSave.currentMapId);
+	//LoadMap(currentSave->currentMapId);
 }
 
 const MageTileset& MageGameControl::Tileset(uint32_t index) const
@@ -302,11 +302,6 @@ const MageTileset& MageGameControl::Tileset(uint32_t index) const
 	}
 
 	return tileset;
-}
-
-MageMap& MageGameControl::Map()
-{
-	return map;
 }
 
 MageEntity MageGameControl::LoadEntity(uint32_t address)
@@ -498,17 +493,17 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 
 void MageGameControl::PopulateMapData(uint16_t index)
 {
-	currentSave.currentMapId = getValidMapId(index);
+	currentSave->currentMapId = getValidMapId(index);
 
 	//load new map:
-	map = MageMap(mapHeader.offset(currentSave.currentMapId));
+	map = std::make_unique<MageMap>(ROM, mapHeader.offset(currentSave->currentMapId));
 
 
-	if (map.EntityCount() > MAX_ENTITIES_PER_MAP) {
+	if (map->EntityCount() > MAX_ENTITIES_PER_MAP) {
 		char errorString[256];
 		sprintf(
 			errorString,
-			"Error: Game is attempting to load more than %d entities on one map.",
+			"Error: Game is attempting to load more than %d entities on one map->",
 			MAX_ENTITIES_PER_MAP
 		);
 		ENGINE_PANIC(errorString);
@@ -523,10 +518,10 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		mapLocalEntityIds[i] = NO_PLAYER;
 	}
 	filteredEntityCountOnThisMap = 0;
-	for (uint8_t i = 0; i < map.EntityCount(); i++) {
+	for (uint8_t i = 0; i < map->EntityCount(); i++) {
 		//fill in entity data from ROM:
 		MageEntity entity = LoadEntity(
-			entityHeader.offset(map.getGlobalEntityId(i))
+			entityHeader.offset(map->getGlobalEntityId(i))
 		);
 		//debug_print(
 		//	"originalId: %d, filteredId: %d, name: %s",
@@ -551,7 +546,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 		}
 	}
 
-	playerEntityIndex = map.getMapLocalPlayerEntityIndex();
+	playerEntityIndex = map->getMapLocalPlayerEntityIndex();
 	cameraFollowEntityId = playerEntityIndex;
 
 	for (uint32_t i = 0; i < filteredEntityCountOnThisMap; i++) {
@@ -600,7 +595,7 @@ void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {
 	}
 	MageEntity* playerEntity = getEntityByMapLocalId(playerEntityIndex);
 	uint8_t* destination = (uint8_t*)&playerEntity->name;
-	uint8_t* source = (uint8_t*)&currentSave.name;
+	uint8_t* source = (uint8_t*)&currentSave->name;
 	if (intoSaveRam) {
 		uint8_t* temp = destination;
 		destination = source;
@@ -616,15 +611,15 @@ void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {
 void MageGameControl::applyUniversalInputs()
 {
 	//make map reload global regardless of player control state:
-	if (EngineInput_Buttons.op_xor && EngineInput_Activated.mem3) {
-		scriptControl->mapLoadId = currentSave.currentMapId;
+	if (inputHandler->GetButtonState(Button::op_xor) && inputHandler->GetButtonState(Button::mem3)) {
+		scriptControl->mapLoadId = currentSave->currentMapId;
 	}
 	if (
-		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem1) ||
-		(EngineInput_Activated.mem1 && EngineInput_Buttons.op_xor)
+		(inputHandler->GetButtonState(Button::op_xor) && inputHandler->GetButtonState(Button::mem1)) ||
+		(inputHandler->GetButtonState(Button::mem1) && inputHandler->GetButtonState(Button::op_xor))
 		) {
 		isEntityDebugOn = !isEntityDebugOn;
-		LoadMap(currentSave.currentMapId);
+		LoadMap(currentSave->currentMapId);
 		return;
 	}
 	//check to see if player input is allowed:
@@ -639,21 +634,21 @@ void MageGameControl::applyUniversalInputs()
 	}
 	//make sure any button handling in this function can be processed in ANY game mode.
 	//that includes the game mode, hex editor mode, any menus, maps, etc.
-	ledSet(LED_PAGE, EngineInput_Buttons.op_page ? 0xFF : 0x00);
-	if (inputHandler->ButtonActivated(Button::op_xor)) { hexEditor->setHexOp(HEX_OPS_XOR); }
-	if (inputHandler->ButtonActivated(Button::op_add)) { hexEditor->setHexOp(HEX_OPS_ADD); }
-	if (inputHandler->ButtonActivated(Button::op_sub)) { hexEditor->setHexOp(HEX_OPS_SUB); }
-	if (inputHandler->ButtonActivated(Button::bit_128)) { hexEditor->runHex(0b10000000); }
-	if (inputHandler->ButtonActivated(Button::bit_64)) { hexEditor->runHex(0b01000000); }
-	if (inputHandler->ButtonActivated(Button::bit_32)) { hexEditor->runHex(0b00100000); }
-	if (inputHandler->ButtonActivated(Button::bit_16)) { hexEditor->runHex(0b00010000); }
-	if (inputHandler->ButtonActivated(Button::bit_8)) { hexEditor->runHex(0b00001000); }
-	if (inputHandler->ButtonActivated(Button::bit_4)) { hexEditor->runHex(0b00000100); }
-	if (inputHandler->ButtonActivated(Button::bit_2)) { hexEditor->runHex(0b00000010); }
-	if (inputHandler->ButtonActivated(Button::bit_1)) { hexEditor->runHex(0b00000001); }
+	ledSet(LED_PAGE, inputHandler->GetButtonState(Button::op_page) ? 0xFF : 0x00);
+	if (inputHandler->GetButtonState(Button::op_xor)) { hexEditor->setHexOp(HEX_OPS_XOR); }
+	if (inputHandler->GetButtonState(Button::op_add)) { hexEditor->setHexOp(HEX_OPS_ADD); }
+	if (inputHandler->GetButtonState(Button::op_sub)) { hexEditor->setHexOp(HEX_OPS_SUB); }
+	if (inputHandler->GetButtonState(Button::bit_128)) { hexEditor->runHex(0b10000000); }
+	if (inputHandler->GetButtonState(Button::bit_64)) { hexEditor->runHex(0b01000000); }
+	if (inputHandler->GetButtonState(Button::bit_32)) { hexEditor->runHex(0b00100000); }
+	if (inputHandler->GetButtonState(Button::bit_16)) { hexEditor->runHex(0b00010000); }
+	if (inputHandler->GetButtonState(Button::bit_8)) { hexEditor->runHex(0b00001000); }
+	if (inputHandler->GetButtonState(Button::bit_4)) { hexEditor->runHex(0b00000100); }
+	if (inputHandler->GetButtonState(Button::bit_2)) { hexEditor->runHex(0b00000010); }
+	if (inputHandler->GetButtonState(Button::bit_1)) { hexEditor->runHex(0b00000001); }
 	if (
-		(EngineInput_Activated.op_xor && EngineInput_Buttons.mem0) ||
-		(EngineInput_Activated.mem0 && EngineInput_Buttons.op_xor)
+		(inputHandler->GetButtonState(Button::op_xor) && inputHandler->GetButtonState(Button::mem0)) ||
+		(inputHandler->GetButtonState(Button::mem0) && inputHandler->GetButtonState(Button::op_xor))
 		) {
 		isCollisionDebugOn = !isCollisionDebugOn;
 	}
@@ -662,7 +657,7 @@ void MageGameControl::applyUniversalInputs()
 void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 {
 	//set mage speed based on if the right pad down is being pressed:
-	float moveType = EngineInput_Buttons.rjoy_down ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+	float moveType = inputHandler->GetButtonState(Button::rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
 	float howManyMsPerSecond = 1000.0;
 	float whatFractionOfSpeed = moveType / howManyMsPerSecond;
 	mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
@@ -698,7 +693,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 			acceptPlayerInput
 			&& (
 				playerIsActioning
-				|| EngineInput_Buttons.rjoy_left
+				|| inputHandler->GetButtonState(Button::rjoy_left)
 				)
 			) {
 			playerIsActioning = true;
@@ -708,10 +703,10 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		{
 			playerVelocity = { 0,0 };
 			MageEntityAnimationDirection direction = playerEntity->direction;
-			if (EngineInput_Buttons.ljoy_left) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
-			if (EngineInput_Buttons.ljoy_right) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
-			if (EngineInput_Buttons.ljoy_up) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
-			if (EngineInput_Buttons.ljoy_down) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
+			if (inputHandler->GetButtonState(Button::ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
+			if (inputHandler->GetButtonState(Button::ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
+			if (inputHandler->GetButtonState(Button::ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
+			if (inputHandler->GetButtonState(Button::ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
 			if (isMoving) {
 				playerEntity->direction = updateDirectionAndPreserveFlags(
 					direction,
@@ -733,19 +728,19 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 					playerEntity->y += velocityAfterPushback.y;
 				}
 			}
-			if (EngineInput_Activated.rjoy_right) {
+			if (inputHandler->GetButtonActivatedState(Button::rjoy_right)) {
 				handleEntityInteract();
 			}
-			if (EngineInput_Buttons.rjoy_up) {
+			if (inputHandler->GetButtonState(Button::rjoy_up)) {
 				handleEntityInteract(true);
 			}
-			if (EngineInput_Buttons.ljoy_center) {
+			if (inputHandler->GetButtonState(Button::ljoy_center)) {
 				//no task assigned to ljoy_center in game mode
 			}
-			if (EngineInput_Buttons.rjoy_center) {
+			if (inputHandler->GetButtonState(Button::rjoy_center)) {
 				//no task assigned to rjoy_center in game mode
 			}
-			if (EngineInput_Buttons.op_page) {
+			if (inputHandler->GetButtonState(Button::op_page)) {
 				//no task assigned to op_page in game mode
 			}
 		}
@@ -813,7 +808,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 
 		//opening the hex editor is the only button press that will lag actual gameplay by one frame
 		//this is to allow entity scripts to check the hex editor state before it opens to run scripts
-		if (EngineInput_Activated.hax) { hexEditor->toggleHexEditor(); }
+		if (inputHandler->GetButtonActivatedState(Button::hax)) { hexEditor->toggleHexEditor(); }
 		hexEditor->applyMemRecallInputs();
 	}
 	else //no player on map
@@ -821,14 +816,14 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 		if (!playerHasControl) {
 			return;
 		}
-		if (EngineInput_Buttons.ljoy_left) { cameraPosition.x -= mageSpeed; }
-		if (EngineInput_Buttons.ljoy_right) { cameraPosition.x += mageSpeed; }
-		if (EngineInput_Buttons.ljoy_up) { cameraPosition.y -= mageSpeed; }
-		if (EngineInput_Buttons.ljoy_down) { cameraPosition.y += mageSpeed; }
+		if (inputHandler->GetButtonState(Button::ljoy_left)) { cameraPosition.x -= mageSpeed; }
+		if (inputHandler->GetButtonState(Button::ljoy_right)) { cameraPosition.x += mageSpeed; }
+		if (inputHandler->GetButtonState(Button::ljoy_up)) { cameraPosition.y -= mageSpeed; }
+		if (inputHandler->GetButtonState(Button::ljoy_down)) { cameraPosition.y += mageSpeed; }
 		if (!playerHasHexEditorControl) {
 			return;
 		}
-		if (EngineInput_Activated.hax) { hexEditor->toggleHexEditor(); }
+		if (inputHandler->GetButtonActivatedState(Button::hax)) { hexEditor->toggleHexEditor(); }
 		hexEditor->applyMemRecallInputs();
 	}
 }
@@ -919,8 +914,8 @@ void MageGameControl::DrawMap(uint8_t layer)
 {
 	int32_t camera_x = adjustedCameraPosition.x;
 	int32_t camera_y = adjustedCameraPosition.y;
-	uint32_t tilesPerLayer = map.Cols() * map.Rows();
-	uint32_t layerAddress = map.LayerOffset(layer);
+	uint32_t tilesPerLayer = map->Cols() * map->Rows();
+	uint32_t layerAddress = map->LayerOffset(layer);
 	if (layerAddress == 0)
 	{
 		return;
@@ -942,14 +937,14 @@ void MageGameControl::DrawMap(uint8_t layer)
 	Point playerPoint = getEntityRenderableDataByMapLocalId(playerEntityIndex)->center;
 	for (uint32_t i = 0; i < tilesPerLayer; i++)
 	{
-		tile_x = (int32_t)(map.TileWidth() * (i % map.Cols()));
-		tile_y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+		tile_x = (int32_t)(map->TileWidth() * (i % map->Cols()));
+		tile_y = (int32_t)(map->TileHeight() * (i / map->Cols()));
 		x = tile_x - camera_x;
 		y = tile_y - camera_y;
 
-		if ((x < (-map.TileWidth()) ||
+		if ((x < (-map->TileWidth()) ||
 			(x > WIDTH) ||
-			(y < (-map.TileHeight())) ||
+			(y < (-map->TileHeight())) ||
 			(y > HEIGHT)))
 		{
 			continue;
@@ -1039,7 +1034,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 	MageEntityRenderableData* playerRenderableData = getEntityRenderableDataByMapLocalId(
 		playerEntityIndex
 	);
-	uint32_t tilesPerLayer = map.Cols() * map.Rows();
+	uint32_t tilesPerLayer = map->Cols() * map->Rows();
 	uint32_t layerAddress = 0;
 	uint32_t address = 0;
 	Rect playerRect = {
@@ -1131,18 +1126,18 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			COLOR_PURPLE
 		);
 	}
-	uint8_t layerCount = map.LayerCount();
+	uint8_t layerCount = map->LayerCount();
 	for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
-		layerAddress = map.LayerOffset(layerIndex);
+		layerAddress = map->LayerOffset(layerIndex);
 		for (uint32_t i = 0; i < tilesPerLayer; i++) {
-			tileTopLeftPoint.x = (int32_t)(map.TileWidth() * (i % map.Cols()));
-			tileTopLeftPoint.y = (int32_t)(map.TileHeight() * (i / map.Cols()));
+			tileTopLeftPoint.x = (int32_t)(map->TileWidth() * (i % map->Cols()));
+			tileTopLeftPoint.y = (int32_t)(map->TileHeight() * (i / map->Cols()));
 			x = tileTopLeftPoint.x - x0;
 			y = tileTopLeftPoint.y - y0;
 			if (
-				(x < -map.TileWidth() ||
+				(x < -map->TileWidth() ||
 					(x > playerRect.w) ||
-					(y < -map.TileHeight()) ||
+					(y < -map->TileHeight()) ||
 					(y > playerRect.h))
 				) {
 				continue;
@@ -1311,7 +1306,7 @@ MageEntityType* MageGameControl::getValidEntityType(uint16_t entityTypeId) {
 
 uint16_t MageGameControl::getValidMapLocalScriptId(uint16_t scriptId)
 {
-	return scriptId % map.ScriptCount();
+	return scriptId % map->ScriptCount();
 }
 
 uint16_t MageGameControl::getValidGlobalScriptId(uint16_t scriptId)
@@ -1701,7 +1696,7 @@ void MageGameControl::DrawGeometry()
 	else {
 		playerPosition = { 0 };
 	}
-	for (uint16_t i = 0; i < map.GeometryCount(); i++) {
+	for (uint16_t i = 0; i < map->GeometryCount(); i++) {
 		MageGeometry geometry = getGeometryFromMapLocalId(i);
 		if (isPlayerPresent) {
 			isColliding = geometry.isPointInGeometry(*playerPosition);
@@ -1719,7 +1714,7 @@ void MageGameControl::DrawGeometry()
 MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
 	return MageGeometry(ROM,
 		geometryHeader.offset(
-			map.getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()
+			map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()
 		)
 	);
 }
@@ -1737,7 +1732,7 @@ MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId)
 }
 
 uint8_t MageGameControl::getFilteredEntityId(uint8_t mapLocalEntityId) const {
-	return filteredMapLocalEntityIds[mapLocalEntityId % map.EntityCount()];
+	return filteredMapLocalEntityIds[mapLocalEntityId % map->EntityCount()];
 }
 
 uint8_t MageGameControl::getMapLocalEntityId(uint8_t filteredEntityId) const {
@@ -1787,7 +1782,7 @@ std::string MageGameControl::getString(
 			variableStartPosition - (variableEndPosition - 2)
 		);
 		int parsedEntityIndex = std::stoi(variableHolder);
-		int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		int16_t entityIndex = scriptActions->getUsefulEntityIndexFromActionEntityId(
 			parsedEntityIndex,
 			mapLocalEntityId
 		);
@@ -1828,7 +1823,7 @@ std::string MageGameControl::getString(
 			variableStartPosition - (variableEndPosition - 2)
 		);
 		int parsedVariableIndex = std::stoi(variableHolder);
-		uint16_t variableValue = currentSave.scriptVariables[parsedVariableIndex];
+		uint16_t variableValue = currentSave->scriptVariables[parsedVariableIndex];
 		std::string valueString = std::to_string(variableValue);
 		outputString += valueString.c_str();
 		variableStartPosition = variableEndPosition + 1;
@@ -1892,7 +1887,7 @@ uint16_t MageGameControl::tilesetCount() {
 void MageGameControl::logAllEntityScriptValues(const char* string) {
 	debug_print("%s", string);
 	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
-		//Initialize the script ResumeStateStructs to default values for this map.
+		//Initialize the script ResumeStateStructs to default values for this map->
 		MageEntity* entity = &entities[i];
 		debug_print(
 			"Index: %02d; EntityName: %12s; tick: %05d/0x%04X; interact: %05d/0x%04X;",

@@ -6,19 +6,7 @@
 #include "convert_endian.h"
 #include "utility.h"
 
-//load in the global variables that the scripts will be operating on:
-
-
-
-
-
-
-
-
-
-
-
-void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t paddingA;
@@ -32,7 +20,7 @@ void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
 	//nullAction does nothing.
 }
 
-void action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -48,22 +36,22 @@ void action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		std::string romString = GameControl->getString(argStruct->stringId, ScriptControl->currentEntityId);
-		std::string entityName = GameControl->getEntityNameStringById(entityIndex);
+		std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
+		std::string entityName = gameControl->getEntityNameStringById(entityIndex);
 		// DO NOT try to do an == comparison on these two C++ strings because
 		// the extra null values at the end of the entity name cause fail
 		int compare = strcmp(entityName.c_str(), romString.c_str());
 		bool identical = compare == 0;
 		if (identical == (bool)argStruct->expectedBoolValue) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -79,18 +67,18 @@ void action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->x == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -106,18 +94,18 @@ void action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->y == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -133,18 +121,18 @@ void action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -160,18 +148,18 @@ void action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeState
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onTickScriptId == argStruct->expectedScript);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -187,22 +175,22 @@ void action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		uint16_t sanitizedEntityTypeId = GameControl->getValidEntityTypeId(entity->primaryId);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		uint16_t sanitizedEntityTypeId = gameControl->getValidEntityTypeId(entity->primaryId);
 		bool identical = (
 			sanitizedEntityTypeId == argStruct->entityTypeId &&
 			entity->primaryIdType == ENTITY_TYPE
 			);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -218,23 +206,23 @@ void action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t sizeLimit;
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
-		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = GameControl->entityTypeCount(); }
-		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = GameControl->animationCount(); }
-		if (sanitizedPrimaryType == TILESET) { sizeLimit = GameControl->tilesetCount(); }
+		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = gameControl->entityTypeCount(); }
+		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = gameControl->animationCount(); }
+		if (sanitizedPrimaryType == TILESET) { sizeLimit = gameControl->tilesetCount(); }
 		bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -250,26 +238,26 @@ void action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStat
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t sizeLimit;
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = 1; }
 		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = 1; }
 		if (sanitizedPrimaryType == TILESET) {
-			MageTileset* tileset = GameControl->getValidTileset(entity->primaryId);
+			MageTileset* tileset = gameControl->getValidTileset(entity->primaryId);
 			sizeLimit = tileset->Tiles();
 		}
 		bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -284,19 +272,19 @@ void action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 		bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -311,18 +299,18 @@ void action_check_entity_current_animation(uint8_t* args, MageScriptState* resum
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentAnimation == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -337,18 +325,18 @@ void action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentFrame == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -363,18 +351,18 @@ void action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->direction == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -390,18 +378,18 @@ void action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool isGlitched = (entity->direction & RENDER_FLAGS_IS_GLITCHED) != 0;
 		if (isGlitched == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -416,18 +404,18 @@ void action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resume
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateA == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -442,18 +430,18 @@ void action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resume
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateB == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -468,18 +456,18 @@ void action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resume
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateC == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -494,18 +482,18 @@ void action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resume
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateD == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -520,21 +508,21 @@ void action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* res
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -549,21 +537,21 @@ void action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* res
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateC)
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t expectedValue;
@@ -577,20 +565,20 @@ void action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* res
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
 			*(uint32_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		if (u4_value == argStruct->expectedValue) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -605,21 +593,21 @@ void action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t pathId = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		bool identical = (pathId == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -634,15 +622,15 @@ void action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = GameControl->currentSave.saveFlags[byteOffset];
+	uint8_t currentByteValue = gameControl->currentSave->saveFlags[byteOffset];
 	bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
 	if (bitValue == (bool)argStruct->expectedBoolValue) {
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -658,21 +646,21 @@ void action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resum
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 		bool colliding = geometry.isPointInGeometry(renderable->center);
 		if (colliding == (bool)argStruct->expectedBoolValue) {
-			ScriptControl->jumpScriptId = argStruct->successScriptId;
+			scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
 
-void action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -686,17 +674,14 @@ void action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	bool button_activated = getButtonStateFromButtonArray(
-		argStruct->buttonId,
-		&EngineInput_Activated
-	);
+	auto button_activated = inputHandler->GetButtonActivatedState((Button)argStruct->buttonId);
 	if (button_activated)
 	{
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -709,18 +694,14 @@ void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateSt
 	auto* argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	bool button_state = getButtonStateFromButtonArray(
-		argStruct->buttonId,
-		&EngineInput_Buttons
-	);
+	auto button_state = inputHandler->GetButtonState((Button)argStruct->buttonId);
 	if (button_state == (bool)(argStruct->expectedBoolValue))
 	{
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -734,14 +715,14 @@ void action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	bool doesWarpStateMatch = GameControl->currentSave.warpState == argStruct->stringId;
+	bool doesWarpStateMatch = gameControl->currentSave->warpState == argStruct->stringId;
 	if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_run_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_run_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -755,10 +736,10 @@ void action_run_script(uint8_t* args, MageScriptState* resumeStateStruct)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	ScriptControl->jumpScriptId = argStruct->scriptId;
+	scriptControl->jumpScriptId = argStruct->scriptId;
 }
 
-void action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -790,16 +771,16 @@ void action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 		//always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
 		uint16_t totalDelayLoops = 1;
 		//also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->duration:
-		ScriptControl->blockingDelayTime = (ScriptControl->blockingDelayTime < argStruct->duration)
+		scriptControl->blockingDelayTime = (scriptControl->blockingDelayTime < argStruct->duration)
 			? argStruct->duration
-			: ScriptControl->blockingDelayTime;
+			: scriptControl->blockingDelayTime;
 		//now set the resumeStateStruct variables:
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
 	}
 }
 
-void action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -817,7 +798,7 @@ void action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct
 	);
 }
 
-void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t stringId;
@@ -832,14 +813,14 @@ void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	//get the string from the stringId:
-	std::string romString = GameControl->getString(argStruct->stringId, ScriptControl->currentEntityId);
+	std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
 	//Get the entity:
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		//simple loop to set the name:
 		for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++) {
 			entity->name[i] = romString[i];
@@ -854,7 +835,7 @@ void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
 	}
 }
 
-void action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -870,15 +851,15 @@ void action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->x = argStruct->newValue;
 	}
 }
 
-void action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -894,15 +875,15 @@ void action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->y = argStruct->newValue;
 	}
 }
 
-void action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -916,17 +897,17 @@ void action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeSta
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	ScriptControl->setEntityScript(
+	scriptControl->setEntityScript(
 		argStruct->scriptId,
 		getUsefulEntityIndexFromActionEntityId(
 			argStruct->entityId,
-			ScriptControl->currentEntityId
+			scriptControl->currentEntityId
 		),
 		ON_INTERACT
 	);
 }
 
-void action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -942,16 +923,16 @@ void action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
-	ScriptControl->setEntityScript(
+	scriptControl->setEntityScript(
 		argStruct->scriptId,
 		entityIndex,
 		ON_TICK
 	);
 }
 
-void action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t entityTypeId;
@@ -967,16 +948,16 @@ void action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryId = argStruct->entityTypeId;
 		entity->primaryIdType = ENTITY_TYPE;
 	}
 }
 
-void action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -992,15 +973,15 @@ void action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryId = argStruct->newValue;
 	}
 }
 
-void action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -1016,15 +997,15 @@ void action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->secondaryId = argStruct->newValue;
 	}
 }
 
-void action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		MageEntityPrimaryIdType newValue;
@@ -1039,15 +1020,15 @@ void action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
 	}
 }
 
-void action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1062,19 +1043,19 @@ void action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		entity->currentAnimation = argStruct->newValue;
 		entity->currentFrame = 0;
 		renderable->currentFrameTicks = 0;
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1089,18 +1070,18 @@ void action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeState
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		entity->currentFrame = argStruct->newValue;
 		renderable->currentFrameTicks = 0;
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		MageEntityAnimationDirection direction;
@@ -1115,19 +1096,19 @@ void action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStru
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		entity->direction = GameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		entity->direction = gameControl->updateDirectionAndPreserveFlags(
 			argStruct->direction,
 			entity->direction
 		);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		int8_t relativeDirection;
@@ -1142,11 +1123,11 @@ void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resume
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		entity->direction = GameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		entity->direction = gameControl->updateDirectionAndPreserveFlags(
 			(MageEntityAnimationDirection)((
 				entity->direction
 				+ argStruct->relativeDirection
@@ -1154,11 +1135,11 @@ void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resume
 				) % NUM_DIRECTIONS),
 			entity->direction
 		);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t targetEntityId;
@@ -1173,31 +1154,31 @@ void action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* r
 
 	int16_t targetEntityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->targetEntityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (
 		entityIndex != NO_PLAYER
 		&& targetEntityIndex != NO_PLAYER
 		) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* targetRenderable = GameControl->getEntityRenderableDataByMapLocalId(targetEntityIndex);
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		entity->direction = GameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* targetRenderable = gameControl->getEntityRenderableDataByMapLocalId(targetEntityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		entity->direction = gameControl->updateDirectionAndPreserveFlags(
 			getRelativeDirection(
 				renderable->center,
 				targetRenderable->center
 			),
 			entity->direction
 		);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t targetGeometryId;
@@ -1213,25 +1194,25 @@ void action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState*
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
-		entity->direction = GameControl->updateDirectionAndPreserveFlags(
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		entity->direction = gameControl->updateDirectionAndPreserveFlags(
 			getRelativeDirection(
 				renderable->center,
 				geometry.points[0]
 			),
 			entity->direction
 		);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t entityId;
@@ -1246,19 +1227,19 @@ void action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->direction = (MageEntityAnimationDirection)(
 			(entity->direction & RENDER_FLAGS_IS_GLITCHED_MASK)
 			| (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED)
 			);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1273,15 +1254,15 @@ void action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateA = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1296,15 +1277,15 @@ void action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateB = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1319,15 +1300,15 @@ void action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateC = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t newValue;
@@ -1342,15 +1323,15 @@ void action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateD = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -1366,15 +1347,15 @@ void action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resum
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -1390,15 +1371,15 @@ void action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resum
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateC) = argStruct->newValue;
 	}
 }
 
-void action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t newValue;
@@ -1412,15 +1393,15 @@ void action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resum
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint32_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
 
-void action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t newValue;
@@ -1436,15 +1417,15 @@ void action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
 
-void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t saveFlagOffset;
@@ -1458,7 +1439,7 @@ void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = GameControl->currentSave.saveFlags[byteOffset];
+	uint8_t currentByteValue = gameControl->currentSave->saveFlags[byteOffset];
 
 	if (argStruct->newBoolValue) {
 		currentByteValue |= 0x01u << bitOffset;
@@ -1467,10 +1448,10 @@ void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 		// tilde operator inverts all the bits on a byte; Bitwise NOT
 		currentByteValue &= ~(0x01u << bitOffset);
 	}
-	GameControl->currentSave.saveFlags[byteOffset] = currentByteValue;
+	gameControl->currentSave->saveFlags[byteOffset] = currentByteValue;
 }
 
-void action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t playerHasControl;
@@ -1482,10 +1463,10 @@ void action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct
 		uint8_t paddingG;
 	} ActionSetPlayerControl;
 	auto* argStruct = (ActionSetPlayerControl*)args;
-	GameControl->playerHasControl = argStruct->playerHasControl;
+	gameControl->playerHasControl = argStruct->playerHasControl;
 }
 
-void action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -1499,14 +1480,14 @@ void action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruc
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	ScriptControl->setEntityScript(
+	scriptControl->setEntityScript(
 		argStruct->scriptId,
 		MAGE_MAP_ENTITY,
 		ON_TICK
 	);
 }
 
-void action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t byteAddress;
@@ -1520,10 +1501,10 @@ void action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateS
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->byteAddress = ROM_ENDIAN_U2_VALUE(argStruct->byteAddress);
 
-	HexEditor->setHexCursorLocation(argStruct->byteAddress);
+	hexEditor->setHexCursorLocation(argStruct->byteAddress);
 }
 
-void action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t stringId;
@@ -1537,10 +1518,10 @@ void action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	GameControl->currentSave.warpState = argStruct->stringId;
+	gameControl->currentSave->warpState = argStruct->stringId;
 }
 
-void action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t state;
@@ -1553,13 +1534,13 @@ void action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStru
 	} ActionSetHexEditorState;
 	auto* argStruct = (ActionSetHexEditorState*)args;
 
-	if (HexEditor->getHexEditorState() != (bool)argStruct->state)
+	if (hexEditor->getHexEditorState() != (bool)argStruct->state)
 	{
-		HexEditor->toggleHexEditor();
+		hexEditor->toggleHexEditor();
 	}
 }
 
-void action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t state;
@@ -1572,13 +1553,13 @@ void action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeSta
 	} ActionSetHexEditorDialogMode;
 	auto* argStruct = (ActionSetHexEditorDialogMode*)args;
 
-	if (HexEditor->getHexDialogState() != (bool)argStruct->state)
+	if (hexEditor->getHexDialogState() != (bool)argStruct->state)
 	{
-		HexEditor->toggleHexDialog();
+		hexEditor->toggleHexDialog();
 	}
 }
 
-void action_set_hex_editor_control(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_hex_editor_control(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t playerHasHexEditorControl;
@@ -1590,10 +1571,10 @@ void action_set_hex_editor_control(uint8_t* args, MageScriptState* resumeStateSt
 		uint8_t paddingG;
 	} ActionSetHexEditorControl;
 	auto* argStruct = (ActionSetHexEditorControl*)args;
-	GameControl->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
+	gameControl->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
 }
 
-void action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t playerHasHexEditorControlClipboard;
@@ -1605,10 +1586,10 @@ void action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* res
 		uint8_t paddingG;
 	} ActionSetHexEditorControlClipboard;
 	auto* argStruct = (ActionSetHexEditorControlClipboard*)args;
-	GameControl->playerHasHexEditorControlClipboard = argStruct->playerHasHexEditorControlClipboard;
+	gameControl->playerHasHexEditorControlClipboard = argStruct->playerHasHexEditorControlClipboard;
 }
 
-void action_load_map(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_load_map(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t mapId;
@@ -1622,10 +1603,10 @@ void action_load_map(uint8_t* args, MageScriptState* resumeStateStruct)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->mapId = ROM_ENDIAN_U2_VALUE(argStruct->mapId);
 
-	ScriptControl->mapLoadId = GameControl->getValidMapId(argStruct->mapId);
+	scriptControl->mapLoadId = gameControl->getValidMapId(argStruct->mapId);
 }
 
-void action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t dialogId;
@@ -1641,19 +1622,19 @@ void action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
 
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		DialogControl->load(argStruct->dialogId, ScriptControl->currentEntityId);
+		gameControl->dialogControl->load(argStruct->dialogId, scriptControl->currentEntityId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!DialogControl->isOpen) {
+	else if (!gameControl->dialogControl->isOpen) {
 		// will be 0 any time there is no response; no jump
-		if (DialogControl->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
-			ScriptControl->jumpScriptId = DialogControl->mapLocalJumpScriptId;
+		if (gameControl->dialogControl->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
+			scriptControl->jumpScriptId = gameControl->dialogControl->mapLocalJumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
 
-void action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t entityId;
@@ -1668,18 +1649,18 @@ void action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
 			resumeStateStruct->totalLoopsToNextAction = argStruct->playCount;
 			resumeStateStruct->loopsToNextAction = argStruct->playCount;
 			entity->currentAnimation = argStruct->animationId;
 			entity->currentFrame = 0;
 			renderable->currentFrameTicks = 0;
-			GameControl->updateEntityRenderableData(entityIndex);
+			gameControl->updateEntityRenderableData(entityIndex);
 		}
 		else if (
 			// we just reset to 0
@@ -1693,7 +1674,7 @@ void action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStr
 				entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 				entity->currentFrame = 0;
 				renderable->currentFrameTicks = 0;
-				GameControl->updateEntityRenderableData(entityIndex);
+				gameControl->updateEntityRenderableData(entityIndex);
 			}
 		}
 		// this is just a quick and dirty place to hold on to
@@ -1702,7 +1683,7 @@ void action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStr
 	}
 }
 
-void action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t geometryId;
@@ -1718,13 +1699,13 @@ void action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
@@ -1733,11 +1714,11 @@ void action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeSt
 				&geometry.points[0]
 			)
 		);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -1750,13 +1731,13 @@ void action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateS
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
 			//this is the points we're interpolating between
@@ -1769,7 +1750,7 @@ void action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateS
 				entity,
 				&geometry.points[0]
 			);
-			entity->direction = GameControl->updateDirectionAndPreserveFlags(
+			entity->direction = gameControl->updateDirectionAndPreserveFlags(
 				getRelativeDirection(
 					resumeStateStruct->pointA,
 					resumeStateStruct->pointB
@@ -1796,11 +1777,11 @@ void action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateS
 			renderable->currentFrameTicks = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
 		}
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -1814,13 +1795,13 @@ void action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if (geometry.pointCount == 1) {
@@ -1833,7 +1814,7 @@ void action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 					&geometry.points[0]
 				)
 			);
-			GameControl->updateEntityRenderableData(entityIndex);
+			gameControl->updateEntityRenderableData(entityIndex);
 			return;
 		}
 		// and for everything else...
@@ -1909,10 +1890,10 @@ void action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 			entity->currentFrame = 0;
 			renderable->currentFrameTicks = 0;
 		}
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
-void action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -1926,13 +1907,13 @@ void action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if (geometry.pointCount == 1) {
@@ -1945,7 +1926,7 @@ void action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 					&geometry.points[0]
 				)
 			);
-			GameControl->updateEntityRenderableData(entityIndex);
+			gameControl->updateEntityRenderableData(entityIndex);
 			return;
 		}
 		// and for everything else...
@@ -2021,11 +2002,11 @@ void action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeSta
 			progressBetweenPoints
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
-		GameControl->updateEntityRenderableData(entityIndex);
+		gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
-void action_set_camera_to_follow_entity(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_camera_to_follow_entity(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t entityId;
@@ -2039,12 +2020,12 @@ void action_set_camera_to_follow_entity(uint8_t* args, MageScriptState* resumeSt
 	auto* argStruct = (ActionSetCameraToFollowEntity*)args;
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
-	GameControl->cameraFollowEntityId = entityIndex;
+	gameControl->cameraFollowEntityId = entityIndex;
 }
 
-void action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t geometryId;
@@ -2058,15 +2039,15 @@ void action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	MageEntity* entity = GameControl->getEntityByMapLocalId(ScriptControl->currentEntityId);
+	MageEntity* entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
 	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-	MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
-	GameControl->cameraFollowEntityId = NO_PLAYER;
-	GameControl->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
-	GameControl->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
+	MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+	gameControl->cameraFollowEntityId = NO_PLAYER;
+	gameControl->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
+	gameControl->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
 }
 
-void action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2080,18 +2061,18 @@ void action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStru
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = GameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
 
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
-			GameControl->cameraFollowEntityId = NO_PLAYER;
+			gameControl->cameraFollowEntityId = NO_PLAYER;
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
-				GameControl->cameraPosition.x,
-				GameControl->cameraPosition.y,
+				gameControl->cameraPosition.x,
+				gameControl->cameraPosition.y,
 			};
 		}
 		float progress = manageProgressOfAction(
@@ -2109,16 +2090,16 @@ void action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStru
 			resumeStateStruct->pointB,
 			progress
 		);
-		GameControl->cameraPosition.x = betweenPoint.x;
-		GameControl->cameraPosition.y = betweenPoint.y;
+		gameControl->cameraPosition.x = betweenPoint.x;
+		gameControl->cameraPosition.y = betweenPoint.y;
 		if (progress >= 1.0f) {
 			// Moved the camera there, may as well follow the entity now.
-			GameControl->cameraFollowEntityId = entityIndex;
+			gameControl->cameraFollowEntityId = entityIndex;
 		}
 	}
 }
 
-void action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2130,16 +2111,16 @@ void action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateSt
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	MageEntity* entity = GameControl->getEntityByMapLocalId(ScriptControl->currentEntityId);
+	MageEntity* entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
 	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-	MageGeometry geometry = GameControl->getGeometryFromMapLocalId(geometryIndex);
+	MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		GameControl->cameraFollowEntityId = NO_PLAYER;
+		gameControl->cameraFollowEntityId = NO_PLAYER;
 		//this is the points we're interpolating between
 		resumeStateStruct->pointA = {
-			GameControl->cameraPosition.x,
-			GameControl->cameraPosition.y,
+			gameControl->cameraPosition.x,
+			gameControl->cameraPosition.y,
 		};
 		resumeStateStruct->pointB = {
 			geometry.points[0].x - HALF_WIDTH,
@@ -2155,11 +2136,11 @@ void action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateSt
 		resumeStateStruct->pointB,
 		progress
 	);
-	GameControl->cameraPosition.x = betweenPoint.x;
-	GameControl->cameraPosition.y = betweenPoint.y;
+	gameControl->cameraPosition.x = betweenPoint.x;
+	gameControl->cameraPosition.y = betweenPoint.y;
 }
 
-void action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2172,7 +2153,7 @@ void action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStat
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 }
 
-void action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2185,7 +2166,7 @@ void action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeSta
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 }
 
-void action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t duration; //in ms
@@ -2205,9 +2186,9 @@ void action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct)
 	);
 
 	if (progress < 1.0) {
-		GameControl->cameraShaking = true;
-		GameControl->cameraShakeAmplitude = argStruct->amplitude;
-		GameControl->cameraShakePhase = (
+		gameControl->cameraShaking = true;
+		gameControl->cameraShakeAmplitude = argStruct->amplitude;
+		gameControl->cameraShakePhase = (
 			progress /
 			(
 				(float)argStruct->frequency
@@ -2216,12 +2197,12 @@ void action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct)
 			);
 	}
 	else {
-		GameControl->cameraShaking = false;
-		GameControl->cameraShakeAmplitude = 0;
-		GameControl->cameraShakePhase = 0;
+		gameControl->cameraShaking = false;
+		gameControl->cameraShakeAmplitude = 0;
+		gameControl->cameraShakePhase = 0;
 	}
 }
-void action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2244,7 +2225,7 @@ void action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
 		frameBuffer->isFading = true;
 	}
 }
-void action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint32_t duration; //in ms
@@ -2267,7 +2248,7 @@ void action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct)
 	}
 }
 
-void action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t value;
@@ -2280,7 +2261,7 @@ void action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 	auto* argStruct = (ActionMutateVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
-	uint16_t* currentValue = &GameControl->currentSave.scriptVariables[argStruct->variableId];
+	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
 
 	// I wanted to log some stats on how well our random function worked
 	// on desktop and hardware after the new random seed changes.
@@ -2316,7 +2297,7 @@ void action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 	);
 }
 
-void action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t variableId;
@@ -2328,8 +2309,8 @@ void action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct)
 		uint8_t paddingG;
 	} ActionMutateVariables;
 	auto* argStruct = (ActionMutateVariables*)args;
-	uint16_t* currentValue = &GameControl->currentSave.scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = GameControl->currentSave.scriptVariables[argStruct->sourceId];
+	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = gameControl->currentSave->scriptVariables[argStruct->sourceId];
 
 	mutate(
 		argStruct->operation,
@@ -2338,7 +2319,7 @@ void action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct)
 	);
 }
 
-void action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t variableId;
@@ -2351,15 +2332,15 @@ void action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 	} ActionCopyVariable;
 	auto* argStruct = (ActionCopyVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	uint16_t* currentValue = &GameControl->currentSave.scriptVariables[argStruct->variableId];
+	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		ScriptControl->currentEntityId
+		scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = GameControl->getEntityByMapLocalId(entityIndex);
-		uint16_t* variableValue = &GameControl->currentSave.scriptVariables[argStruct->variableId];
+		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		uint16_t* variableValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
 		uint8_t* fieldValue = ((uint8_t*)entity) + argStruct->field;
 
 
@@ -2401,7 +2382,7 @@ void action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 	}
 }
 
-void action_check_variable(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -2415,18 +2396,18 @@ void action_check_variable(uint8_t* args, MageScriptState* resumeStateStruct)
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = GameControl->currentSave.scriptVariables[argStruct->variableId];
+	uint16_t variableValue = gameControl->currentSave->scriptVariables[argStruct->variableId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
 		argStruct->value
 	);
 	if (comparison == (bool)argStruct->expectedBool) {
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_check_variables(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_variables(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -2440,19 +2421,19 @@ void action_check_variables(uint8_t* args, MageScriptState* resumeStateStruct)
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = GameControl->currentSave.scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = GameControl->currentSave.scriptVariables[argStruct->sourceId];
+	uint16_t variableValue = gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = gameControl->currentSave->scriptVariables[argStruct->sourceId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
 		sourceValue
 	);
 	if (comparison == (bool)argStruct->expectedBool) {
-		ScriptControl->jumpScriptId = argStruct->successScriptId;
+		scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
-void action_slot_save(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t paddingA;
@@ -2473,19 +2454,19 @@ void action_slot_save(uint8_t* args, MageScriptState* resumeStateStruct)
 	// with an annoying confirm dialog than allowing them to quietly burn through
 	// the ROM chip's 10000 write cycles.
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		GameControl->saveGameSlotSave();
+		gameControl->saveGameSlotSave();
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		DialogControl->showSaveMessageDialog(
+		gameControl->dialogControl->showSaveMessageDialog(
 			std::string("Save complete.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!DialogControl->isOpen) {
+	else if (!gameControl->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
 
-void action_slot_load(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_slot_load(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t slotIndex;
@@ -2499,15 +2480,15 @@ void action_slot_load(uint8_t* args, MageScriptState* resumeStateStruct)
 	auto* argStruct = (ActionSlotLoad*)args;
 	//delaying until next tick allows for displaying of an error message on read before resuming
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		GameControl->saveGameSlotLoad(argStruct->slotIndex);
+		gameControl->saveGameSlotLoad(argStruct->slotIndex);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!DialogControl->isOpen) {
+	else if (!gameControl->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
 
-void action_slot_erase(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_slot_erase(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t slotIndex;
@@ -2528,19 +2509,19 @@ void action_slot_erase(uint8_t* args, MageScriptState* resumeStateStruct)
 	// with an annoying confirm dialog than allowing them to quietly burn through
 	// the ROM chip's 10000 write cycles.
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		GameControl->saveGameSlotErase(argStruct->slotIndex);
+		gameControl->saveGameSlotErase(argStruct->slotIndex);
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		DialogControl->showSaveMessageDialog(
+		gameControl->dialogControl->showSaveMessageDialog(
 			std::string("Save erased.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!DialogControl->isOpen) {
+	else if (!gameControl->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
 
-void action_set_connect_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_connect_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t serialDialogId;
@@ -2552,10 +2533,10 @@ void action_set_connect_serial_dialog(uint8_t* args, MageScriptState* resumeStat
 	} ActionSetConnectSerialDialog;
 	ActionSetConnectSerialDialog* argStruct = (ActionSetConnectSerialDialog*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
-	CommandControl->connectSerialDialogId = argStruct->serialDialogId;
+	commandControl->connectSerialDialogId = argStruct->serialDialogId;
 }
 
-void action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t serialDialogId;
@@ -2568,24 +2549,24 @@ void action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct
 	auto* argStruct = (ActionShowSerialDialog*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		CommandControl->showSerialDialog(argStruct->serialDialogId);
-		if (CommandControl->isInputTrapped) {
+		commandControl->showSerialDialog(argStruct->serialDialogId);
+		if (commandControl->isInputTrapped) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 		}
 	}
-	else if (!CommandControl->isInputTrapped) {
-		if (CommandControl->jumpScriptId != MAGE_NO_SCRIPT) {
+	else if (!commandControl->isInputTrapped) {
+		if (commandControl->jumpScriptId != MAGE_NO_SCRIPT) {
 			//debug_print(
 			//	"jumpScriptId: %d\n",
-			//	CommandControl->jumpScriptId
+			//	commandControl->jumpScriptId
 			//);
-			ScriptControl->jumpScriptId = CommandControl->jumpScriptId;
+			scriptControl->jumpScriptId = commandControl->jumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
 
-void action_inventory_get(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_inventory_get(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t itemId;
@@ -2600,7 +2581,7 @@ void action_inventory_get(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-void action_inventory_drop(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_inventory_drop(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t itemId;
@@ -2615,7 +2596,7 @@ void action_inventory_drop(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-void action_check_inventory(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_inventory(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -2630,7 +2611,7 @@ void action_check_inventory(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-void action_set_map_look_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_map_look_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -2645,7 +2626,7 @@ void action_set_map_look_script(uint8_t* args, MageScriptState* resumeStateStruc
 	// TODO: implement this
 }
 
-void action_set_entity_look_script(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_entity_look_script(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t scriptId;
@@ -2660,7 +2641,7 @@ void action_set_entity_look_script(uint8_t* args, MageScriptState* resumeStateSt
 	// TODO: implement this
 }
 
-void action_set_teleport_enabled(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_teleport_enabled(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t value;
@@ -2675,7 +2656,7 @@ void action_set_teleport_enabled(uint8_t* args, MageScriptState* resumeStateStru
 	// TODO: implement this
 }
 
-void action_check_map(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_map(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -2690,7 +2671,7 @@ void action_check_map(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-void action_set_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_set_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint8_t bleFlagOffset;
@@ -2705,7 +2686,7 @@ void action_set_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 {
 	typedef struct {
 		uint16_t successScriptId;
@@ -2720,106 +2701,6 @@ void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct)
 	// TODO: implement this
 }
 
-ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
-	&action_null_action,
-	&action_check_entity_name,
-	&action_check_entity_x,
-	&action_check_entity_y,
-	&action_check_entity_interact_script,
-	&action_check_entity_tick_script,
-	&action_check_entity_type,
-	&action_check_entity_primary_id,
-	&action_check_entity_secondary_id,
-	&action_check_entity_primary_id_type,
-	&action_check_entity_current_animation,
-	&action_check_entity_current_frame,
-	&action_check_entity_direction,
-	&action_check_entity_glitched,
-	&action_check_entity_hackable_state_a,
-	&action_check_entity_hackable_state_b,
-	&action_check_entity_hackable_state_c,
-	&action_check_entity_hackable_state_d,
-	&action_check_entity_hackable_state_a_u2,
-	&action_check_entity_hackable_state_c_u2,
-	&action_check_entity_hackable_state_a_u4,
-	&action_check_entity_path,
-	&action_check_save_flag,
-	&action_check_if_entity_is_in_geometry,
-	&action_check_for_button_press,
-	&action_check_for_button_state,
-	&action_check_warp_state,
-	&action_run_script,
-	&action_blocking_delay,
-	&action_non_blocking_delay,
-	&action_set_entity_name,
-	&action_set_entity_x,
-	&action_set_entity_y,
-	&action_set_entity_interact_script,
-	&action_set_entity_tick_script,
-	&action_set_entity_type,
-	&action_set_entity_primary_id,
-	&action_set_entity_secondary_id,
-	&action_set_entity_primary_id_type,
-	&action_set_entity_current_animation,
-	&action_set_entity_current_frame,
-	&action_set_entity_direction,
-	&action_set_entity_direction_relative,
-	&action_set_entity_direction_target_entity,
-	&action_set_entity_direction_target_geometry,
-	&action_set_entity_glitched,
-	&action_set_entity_hackable_state_a,
-	&action_set_entity_hackable_state_b,
-	&action_set_entity_hackable_state_c,
-	&action_set_entity_hackable_state_d,
-	&action_set_entity_hackable_state_a_u2,
-	&action_set_entity_hackable_state_c_u2,
-	&action_set_entity_hackable_state_a_u4,
-	&action_set_entity_path,
-	&action_set_save_flag,
-	&action_set_player_control,
-	&action_set_map_tick_script,
-	&action_set_hex_cursor_location,
-	&action_set_warp_state,
-	&action_set_hex_editor_state,
-	&action_set_hex_editor_dialog_mode,
-	&action_set_hex_editor_control,
-	&action_set_hex_editor_control_clipboard,
-	&action_load_map,
-	&action_show_dialog,
-	&action_play_entity_animation,
-	&action_teleport_entity_to_geometry,
-	&action_walk_entity_to_geometry,
-	&action_walk_entity_along_geometry,
-	&action_loop_entity_along_geometry,
-	&action_set_camera_to_follow_entity,
-	&action_teleport_camera_to_geometry,
-	&action_pan_camera_to_entity,
-	&action_pan_camera_to_geometry,
-	&action_pan_camera_along_geometry,
-	&action_loop_camera_along_geometry,
-	&action_set_screen_shake,
-	&action_screen_fade_out,
-	&action_screen_fade_in,
-	&action_mutate_variable,
-	&action_mutate_variables,
-	&action_copy_variable,
-	&action_check_variable,
-	&action_check_variables,
-	&action_slot_save,
-	&action_slot_load,
-	&action_slot_erase,
-	&action_set_connect_serial_dialog,
-	&action_show_serial_dialog,
-	&action_inventory_get,
-	&action_inventory_drop,
-	&action_check_inventory,
-	&action_set_map_look_script,
-	&action_set_entity_look_script,
-	&action_set_teleport_enabled,
-	&action_check_map,
-	&action_set_ble_flag,
-	&action_check_ble_flag,
-};
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(
 	uint16_t geometryId,
@@ -2944,7 +2825,7 @@ uint16_t getLoopableGeometrySegmentIndex(
 	return result;
 }
 
-void initializeEntityGeometryPath(
+void MageScriptActions::initializeEntityGeometryPath(
 	MageScriptState* resumeStateStruct,
 	MageEntityRenderableData* renderable,
 	MageEntity* entity,
@@ -2962,7 +2843,7 @@ void initializeEntityGeometryPath(
 	);
 }
 
-void setResumeStatePointsAndEntityDirection(
+void MageScriptActions::setResumeStatePointsAndEntityDirection(
 	MageScriptState* resumeStateStruct,
 	MageEntityRenderableData* renderable,
 	MageEntity* entity,
@@ -2980,7 +2861,7 @@ void setResumeStatePointsAndEntityDirection(
 		entity,
 		&geometry->points[pointBIndex]
 	);
-	entity->direction = GameControl->updateDirectionAndPreserveFlags(
+	entity->direction = gameControl->updateDirectionAndPreserveFlags(
 		getRelativeDirection(
 			resumeStateStruct->pointA,
 			resumeStateStruct->pointB
@@ -2989,7 +2870,7 @@ void setResumeStatePointsAndEntityDirection(
 	);
 }
 
-void setEntityPositionToPoint(
+void MageScriptActions::setEntityPositionToPoint(
 	MageEntity* entity,
 	const Point& point
 ) {
@@ -2997,7 +2878,7 @@ void setEntityPositionToPoint(
 	entity->y = point.y;
 }
 
-int16_t getUsefulEntityIndexFromActionEntityId(
+int16_t MageScriptActions::getUsefulEntityIndexFromActionEntityId(
 	uint8_t entityId,
 	int16_t callingEntityId
 )
@@ -3007,12 +2888,12 @@ int16_t getUsefulEntityIndexFromActionEntityId(
 		entityIndex = callingEntityId;
 	}
 	else if (entityIndex == MAGE_ENTITY_PLAYER) {
-		entityIndex = GameControl->playerEntityIndex;
+		entityIndex = gameControl->playerEntityIndex;
 	}
 	if (entityIndex == MAGE_MAP_ENTITY) {
 		//target is the map itself, leave the value alone
 	}
-	else if (entityIndex >= GameControl->filteredEntityCountOnThisMap) {
+	else if (entityIndex >= gameControl->filteredEntityCountOnThisMap) {
 		//if it targets one of the debug entities filtered off the end of the list,
 		//treat it like it's not there:
 		entityIndex = NO_PLAYER;
@@ -3020,7 +2901,7 @@ int16_t getUsefulEntityIndexFromActionEntityId(
 	return entityIndex;
 }
 
-void mutate(
+void MageScriptActions::mutate(
 	MageMutateOperation operation,
 	uint16_t* destination,
 	uint16_t value
@@ -3042,7 +2923,7 @@ void mutate(
 	}
 }
 
-bool compare(
+bool MageScriptActions::compare(
 	MageCheckComparison comparison,
 	uint16_t a,
 	uint16_t b
@@ -3060,27 +2941,4 @@ bool compare(
 		);
 		return false;
 	}
-}
-
-bool getButtonStateFromButtonArray(
-	uint8_t buttonId, // enum KEYBOARD_KEY, but can't use that type as uint8_t it because it's c, not cpp
-	ButtonStates* buttonStates
-) {
-	//get state of button:
-	bool button_activated = false;
-	// For some reason, the value of `KEYBOARD_NUM_KEYS` DOESN'T EXIST IN A USEFUL WAY
-	// unless you set it into an explicitly typed variable. WTF.
-	const uint8_t anyKeyId = KEYBOARD_NUM_KEYS;
-	if (buttonId == anyKeyId) { // checking for the elusive `any` key
-		for (uint8_t i = 0; i < anyKeyId; i++) {
-			button_activated = *(((bool*)buttonStates) + i);
-			if (button_activated == true) {
-				break;
-			}
-		}
-	}
-	else { // all other keys
-		button_activated = *(((bool*)buttonStates) + buttonId);
-	}
-	return button_activated;
 }

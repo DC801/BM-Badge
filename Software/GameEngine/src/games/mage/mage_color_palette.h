@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "EngineROM.h"
+#include "FrameBuffer.h"
 
 #define COLOR_PALETTE_INTEGRITY_STRING_LENGTH 2048
 #define COLOR_PALETTE_NAME_LENGTH 32
@@ -12,20 +13,13 @@ class MageColorPalette
 {
 public:
 #ifndef DC801_EMBEDDED
-	char name[COLOR_PALETTE_NAME_SIZE];
-	char colorIntegrityString[COLOR_PALETTE_INTEGRITY_STRING_LENGTH];
-#endif //DC801_DESKTOP
-	uint8_t colorCount;
-	std::unique_ptr<uint16_t[]> colors;
-
-	MageColorPalette() noexcept :
-#ifndef DC801_EMBEDDED
-		name{ 0 },
-		colorIntegrityString {0},
+	char name[COLOR_PALETTE_NAME_SIZE]{ 0 };
+	char colorIntegrityString[COLOR_PALETTE_INTEGRITY_STRING_LENGTH]{ 0 };
 #endif
-		colorCount {0},
-		colors{std::make_unique<uint16_t[]>(colorCount)}
-	{};
+	uint8_t colorCount{ 0 };
+	std::unique_ptr<uint16_t[]> colors{ std::make_unique<uint16_t[]>(colorCount) };
+
+	MageColorPalette() noexcept = default;
 
 	MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept;
 
@@ -43,6 +37,9 @@ public:
 
 	void verifyColors(const char* errorTriggerDescription);
 	#endif
+
+private: 
+	std::shared_ptr<FrameBuffer> frameBuffer;
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

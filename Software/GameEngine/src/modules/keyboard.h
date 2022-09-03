@@ -1,7 +1,5 @@
 #ifndef MODULE_KEYBOARD_H
 #define MODULE_KEYBOARD_H
-
-
 	
 #include <stdint.h>
 #define KEYBOARD_DEBOUNCE_TIME 15

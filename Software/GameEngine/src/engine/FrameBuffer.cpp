@@ -2,6 +2,7 @@
 
 #include "main.h"
 #include "utility.h"
+#include "games/mage/mage_defines.h"
 #include "convert_endian.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
@@ -1474,8 +1475,8 @@ void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, i
 
 Point FrameBuffer::lerpPoints(Point a, Point b, float progress) {
 	Point point = {
-		lerp(a.x, b.x, progress),
-		lerp(a.y, b.y, progress),
+		FrameBuffer::lerp(a.x, b.x, progress),
+		FrameBuffer::lerp(a.y, b.y, progress),
 	};
 	return point;
 }

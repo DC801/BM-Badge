@@ -1,11 +1,11 @@
 #include "mage_entity_type.h"
-#include "EngineROM.h"
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-
-
-MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(uint32_t address)
+MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(
+	std::shared_ptr<EngineROM> ROM, 
+	uint32_t address
+)
 {
 	ROM->Read(
 		address,
@@ -80,17 +80,18 @@ uint32_t MageEntityTypeAnimationDirection::Size() const
 	return size;
 }
 
-MageEntityTypeAnimation::MageEntityTypeAnimation(uint32_t address)
+MageEntityTypeAnimation::MageEntityTypeAnimation(
+	std::shared_ptr<EngineROM> ROM, 
+	uint32_t address
+)
 {
-	north = MageEntityTypeAnimationDirection(address);
+	north = MageEntityTypeAnimationDirection(ROM, address);
 	address += north.Size();
-	east = MageEntityTypeAnimationDirection(address);
+	east = MageEntityTypeAnimationDirection(ROM, address);
 	address += east.Size();
-	south = MageEntityTypeAnimationDirection(address);
+	south = MageEntityTypeAnimationDirection(ROM, address);
 	address += south.Size();
-	west = MageEntityTypeAnimationDirection(address);
-
-	return;
+	west = MageEntityTypeAnimationDirection(ROM, address);
 }
 
 MageEntityTypeAnimationDirection MageEntityTypeAnimation::North() const
@@ -123,7 +124,10 @@ uint32_t MageEntityTypeAnimation::Size() const
 	return size;
 }
 
-MageEntityType::MageEntityType(uint32_t address)
+MageEntityType::MageEntityType(
+	std::shared_ptr<EngineROM> ROM, 
+	uint32_t address
+)
 {
 	address += 32; // skip over reading the name, no need to hold that in ram
 	address += sizeof(uint8_t); // paddingA
@@ -153,7 +157,7 @@ MageEntityType::MageEntityType(uint32_t address)
 	//increment through animations to fill entityTypeAnimations array:
 	for(uint32_t animationIndex = 0; animationIndex < animationCount; animationIndex++)
 	{
-		entityTypeAnimations[animationIndex] = MageEntityTypeAnimation(address);
+		entityTypeAnimations[animationIndex] = MageEntityTypeAnimation(ROM, address);
 		address += entityTypeAnimations[animationIndex].Size();
 	}
 

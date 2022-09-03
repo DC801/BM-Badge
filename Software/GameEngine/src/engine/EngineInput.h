@@ -3,9 +3,9 @@
 
 #include "modules/keyboard.h"
 #include <signal.h>
-#include "main.h"
+#include <stdint.h>
 
-enum class Button
+enum Button : uint32_t
 {
    mem0,
    mem1,
@@ -36,46 +36,54 @@ enum class Button
    hax,
 };
 
-struct ButtonStates
+union ButtonStates
 {
-   bool mem0;
-   bool mem1;
-   bool mem2;
-   bool mem3;
-   bool bit_128;
-   bool bit_64;
-   bool bit_32;
-   bool bit_16;
-   bool bit_8;
-   bool bit_4;
-   bool bit_2;
-   bool bit_1;
-   bool op_xor;
-   bool op_add;
-   bool op_sub;
-   bool op_page;
-   bool ljoy_center;
-   bool ljoy_up;
-   bool ljoy_down;
-   bool ljoy_left;
-   bool ljoy_right;
-   bool rjoy_center;
-   bool rjoy_up;
-   bool rjoy_down;
-   bool rjoy_left;
-   bool rjoy_right;
-   bool hax;
+   struct
+   {
+      bool mem0 : 1;
+      bool mem1 : 1;
+      bool mem2 : 1;
+      bool mem3 : 1;
+      bool bit_128 : 1;
+      bool bit_64 : 1;
+      bool bit_32 : 1;
+      bool bit_16 : 1;
+      bool bit_8 : 1;
+      bool bit_4 : 1;
+      bool bit_2 : 1;
+      bool bit_1 : 1;
+      bool op_xor : 1;
+      bool op_add : 1;
+      bool op_sub : 1;
+      bool op_page : 1;
+      bool ljoy_center : 1;
+      bool ljoy_up : 1;
+      bool ljoy_down : 1;
+      bool ljoy_left : 1;
+      bool ljoy_right : 1;
+      bool rjoy_center : 1;
+      bool rjoy_up : 1;
+      bool rjoy_down : 1;
+      bool rjoy_left : 1;
+      bool rjoy_right : 1;
+      bool hax : 1;
+   };
+   Button keyboardBitmask;
 };
 
 class EngineInput
 {
 public:
-   EngineInput() {}
 
-   bool GetButtonState(int button)
+   bool GetButtonState(Button button)
    {
-      return *buttonBoolPointerArray[button];
+      return button == (Buttons.keyboardBitmask & button);
    }
+   bool GetButtonActivatedState(Button button)
+   {
+      return button == (Activated.keyboardBitmask & button);
+   }
+
    void HandleKeyboard();
    bool IsRunning();
    bool ShouldReloadGameDat();
@@ -84,42 +92,13 @@ private:
    bool running = true;
    bool shouldReloadGameDat = false;
 
-   ButtonStates EngineInput_Buttons = {};
-   ButtonStates EngineInput_Activated = {};
-   ButtonStates EngineInput_Deactivated = {};
-   void GetDesktopInputState(uint32_t* keyboardBitmask);
-   void SetHardwareBitmaskToButtonStates(uint32_t keyboardBitmask);
+   ButtonStates Buttons = {};
+   ButtonStates Activated = {};
+#ifndef DC801_EMBEDDED
 
-   bool* buttonBoolPointerArray[sizeof(ButtonStates) / sizeof(bool)] = {
-      &EngineInput_Buttons.mem0,
-      &EngineInput_Buttons.mem1,
-      &EngineInput_Buttons.mem2,
-      &EngineInput_Buttons.mem3,
-      &EngineInput_Buttons.bit_128,
-      &EngineInput_Buttons.bit_64,
-      &EngineInput_Buttons.bit_32,
-      &EngineInput_Buttons.bit_16,
-      &EngineInput_Buttons.bit_8,
-      &EngineInput_Buttons.bit_4,
-      &EngineInput_Buttons.bit_2,
-      &EngineInput_Buttons.bit_1,
-      &EngineInput_Buttons.op_xor,
-      &EngineInput_Buttons.op_add,
-      &EngineInput_Buttons.op_sub,
-      &EngineInput_Buttons.op_page,
-      &EngineInput_Buttons.ljoy_center,
-      &EngineInput_Buttons.ljoy_left,
-      &EngineInput_Buttons.ljoy_down,
-      &EngineInput_Buttons.ljoy_up,
-      &EngineInput_Buttons.ljoy_right,
-      &EngineInput_Buttons.rjoy_center,
-      &EngineInput_Buttons.rjoy_left,
-      &EngineInput_Buttons.rjoy_down,
-      &EngineInput_Buttons.rjoy_up,
-      &EngineInput_Buttons.rjoy_right,
-      &EngineInput_Buttons.hax,
-   };
-
+   void GetDesktopInputState();
+   void SetHardwareBitmaskToButtonStates();
+#endif
 };
 
 

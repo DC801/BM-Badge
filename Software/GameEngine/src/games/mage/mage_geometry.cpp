@@ -340,6 +340,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 		Point tileLinePointA = tile->points[tileLinePointIndex];
 		Point tileLinePointB = tile->points[(tileLinePointIndex + 1) % tile->pointCount];
 		bool collidedWithTileLine = false;
+#if false
 		for (int spokeIndex = 0; spokeIndex < playerSpokes->pointCount; spokeIndex++) {
 			Point spokePointB = playerSpokes->points[spokeIndex];
 			Point spokeIntersectionPoint = {
@@ -400,6 +401,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 			? COLOR_RED
 			: COLOR_ORANGE
 		);
+#endif
 	}
 	return collidedWithThisTileAtAll;
 }

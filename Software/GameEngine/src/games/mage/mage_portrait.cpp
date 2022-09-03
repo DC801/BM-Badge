@@ -1,9 +1,8 @@
 #include "mage_portrait.h"
-#include "EngineROM.h"
 
 
 
-MagePortrait::MagePortrait(uint32_t address)
+MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address)
 {
 	address += 32; // name
 	address += sizeof(uint8_t); // paddingA
@@ -19,7 +18,7 @@ MagePortrait::MagePortrait(uint32_t address)
 
 	emotes = std::make_unique<MageEntityTypeAnimationDirection[]>(emoteCount);
 	for(uint32_t i = 0; i < emoteCount; i++) {
-		emotes[i] = MageEntityTypeAnimationDirection(address);
+		emotes[i] = MageEntityTypeAnimationDirection{ ROM, address };
 		address += emotes[i].Size();
 	}
 }

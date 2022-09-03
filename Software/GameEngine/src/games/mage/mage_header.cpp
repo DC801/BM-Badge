@@ -1,11 +1,8 @@
 #include "mage_header.h"
-#include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-
-
-MageHeader::MageHeader(uint32_t address)
+MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t address)
 {
 	uint32_t size = 0;
 

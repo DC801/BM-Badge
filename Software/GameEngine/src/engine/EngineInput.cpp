@@ -1,4 +1,5 @@
 #include "EngineInput.h"
+#include "main.h"
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
@@ -8,7 +9,7 @@
 #include <string>
 #include <regex>
 
-void EngineInput::GetDesktopInputState(uint32_t* keyboardBitmask)
+void EngineInput::GetDesktopInputState()
 {
    if (application_quit != 0)
    {
@@ -130,115 +131,28 @@ void EngineInput::GetDesktopInputState(uint32_t* keyboardBitmask)
    newValue ^= (uint32_t)keys[SDL_SCANCODE_BACKSLASH] << KEYBOARD_KEY_RJOY_UP;
    newValue ^= (uint32_t)keys[SDL_SCANCODE_RETURN] << KEYBOARD_KEY_RJOY_RIGHT;
 
-   *keyboardBitmask = newValue;
+   Buttons.keyboardBitmask = (Button)newValue;
    // debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
 }
 
 #endif
 
-void EngineInput::SetHardwareBitmaskToButtonStates(uint32_t keyboardBitmask)
+void EngineInput::SetHardwareBitmaskToButtonStates()
 {
    uint32_t oneBit = 0x00000001;
 
-   memcpy(&EngineInput_Activated, &EngineInput_Buttons, sizeof(ButtonStates));
-   memcpy(&EngineInput_Deactivated, &EngineInput_Buttons, sizeof(ButtonStates));
-
-   EngineInput_Buttons.mem0 = (oneBit << KEYBOARD_KEY_MEM0) & keyboardBitmask;
-   EngineInput_Buttons.mem1 = (oneBit << KEYBOARD_KEY_MEM1) & keyboardBitmask;
-   EngineInput_Buttons.mem2 = (oneBit << KEYBOARD_KEY_MEM2) & keyboardBitmask;
-   EngineInput_Buttons.mem3 = (oneBit << KEYBOARD_KEY_MEM3) & keyboardBitmask;
-   EngineInput_Buttons.bit_128 = (oneBit << KEYBOARD_KEY_BIT128) & keyboardBitmask;
-   EngineInput_Buttons.bit_64 = (oneBit << KEYBOARD_KEY_BIT64) & keyboardBitmask;
-   EngineInput_Buttons.bit_32 = (oneBit << KEYBOARD_KEY_BIT32) & keyboardBitmask;
-   EngineInput_Buttons.bit_16 = (oneBit << KEYBOARD_KEY_BIT16) & keyboardBitmask;
-   EngineInput_Buttons.bit_8 = (oneBit << KEYBOARD_KEY_BIT8) & keyboardBitmask;
-   EngineInput_Buttons.bit_4 = (oneBit << KEYBOARD_KEY_BIT4) & keyboardBitmask;
-   EngineInput_Buttons.bit_2 = (oneBit << KEYBOARD_KEY_BIT2) & keyboardBitmask;
-   EngineInput_Buttons.bit_1 = (oneBit << KEYBOARD_KEY_BIT1) & keyboardBitmask;
-   EngineInput_Buttons.op_xor = (oneBit << KEYBOARD_KEY_XOR) & keyboardBitmask;
-   EngineInput_Buttons.op_add = (oneBit << KEYBOARD_KEY_ADD) & keyboardBitmask;
-   EngineInput_Buttons.op_sub = (oneBit << KEYBOARD_KEY_SUB) & keyboardBitmask;
-   EngineInput_Buttons.op_page = (oneBit << KEYBOARD_KEY_PAGE) & keyboardBitmask;
-   EngineInput_Buttons.ljoy_center = (oneBit << KEYBOARD_KEY_LJOY_CENTER) & keyboardBitmask;
-   EngineInput_Buttons.ljoy_up = (oneBit << KEYBOARD_KEY_LJOY_UP) & keyboardBitmask;
-   EngineInput_Buttons.ljoy_down = (oneBit << KEYBOARD_KEY_LJOY_DOWN) & keyboardBitmask;
-   EngineInput_Buttons.ljoy_left = (oneBit << KEYBOARD_KEY_LJOY_LEFT) & keyboardBitmask;
-   EngineInput_Buttons.ljoy_right = (oneBit << KEYBOARD_KEY_LJOY_RIGHT) & keyboardBitmask;
-   EngineInput_Buttons.rjoy_center = (oneBit << KEYBOARD_KEY_RJOY_CENTER) & keyboardBitmask;
-   EngineInput_Buttons.rjoy_up = (oneBit << KEYBOARD_KEY_RJOY_UP) & keyboardBitmask;
-   EngineInput_Buttons.rjoy_down = (oneBit << KEYBOARD_KEY_RJOY_DOWN) & keyboardBitmask;
-   EngineInput_Buttons.rjoy_left = (oneBit << KEYBOARD_KEY_RJOY_LEFT) & keyboardBitmask;
-   EngineInput_Buttons.rjoy_right = (oneBit << KEYBOARD_KEY_RJOY_RIGHT) & keyboardBitmask;
-   EngineInput_Buttons.hax = (oneBit << KEYBOARD_KEY_HAX) & keyboardBitmask;
-
-   EngineInput_Activated.mem0 = !EngineInput_Activated.mem0 && EngineInput_Buttons.mem0;
-   EngineInput_Activated.mem1 = !EngineInput_Activated.mem1 && EngineInput_Buttons.mem1;
-   EngineInput_Activated.mem2 = !EngineInput_Activated.mem2 && EngineInput_Buttons.mem2;
-   EngineInput_Activated.mem3 = !EngineInput_Activated.mem3 && EngineInput_Buttons.mem3;
-   EngineInput_Activated.bit_128 = !EngineInput_Activated.bit_128 && EngineInput_Buttons.bit_128;
-   EngineInput_Activated.bit_64 = !EngineInput_Activated.bit_64 && EngineInput_Buttons.bit_64;
-   EngineInput_Activated.bit_32 = !EngineInput_Activated.bit_32 && EngineInput_Buttons.bit_32;
-   EngineInput_Activated.bit_16 = !EngineInput_Activated.bit_16 && EngineInput_Buttons.bit_16;
-   EngineInput_Activated.bit_8 = !EngineInput_Activated.bit_8 && EngineInput_Buttons.bit_8;
-   EngineInput_Activated.bit_4 = !EngineInput_Activated.bit_4 && EngineInput_Buttons.bit_4;
-   EngineInput_Activated.bit_2 = !EngineInput_Activated.bit_2 && EngineInput_Buttons.bit_2;
-   EngineInput_Activated.bit_1 = !EngineInput_Activated.bit_1 && EngineInput_Buttons.bit_1;
-   EngineInput_Activated.op_xor = !EngineInput_Activated.op_xor && EngineInput_Buttons.op_xor;
-   EngineInput_Activated.op_add = !EngineInput_Activated.op_add && EngineInput_Buttons.op_add;
-   EngineInput_Activated.op_sub = !EngineInput_Activated.op_sub && EngineInput_Buttons.op_sub;
-   EngineInput_Activated.op_page = !EngineInput_Activated.op_page && EngineInput_Buttons.op_page;
-   EngineInput_Activated.ljoy_center = !EngineInput_Activated.ljoy_center && EngineInput_Buttons.ljoy_center;
-   EngineInput_Activated.ljoy_up = !EngineInput_Activated.ljoy_up && EngineInput_Buttons.ljoy_up;
-   EngineInput_Activated.ljoy_down = !EngineInput_Activated.ljoy_down && EngineInput_Buttons.ljoy_down;
-   EngineInput_Activated.ljoy_left = !EngineInput_Activated.ljoy_left && EngineInput_Buttons.ljoy_left;
-   EngineInput_Activated.ljoy_right = !EngineInput_Activated.ljoy_right && EngineInput_Buttons.ljoy_right;
-   EngineInput_Activated.rjoy_center = !EngineInput_Activated.rjoy_center && EngineInput_Buttons.rjoy_center;
-   EngineInput_Activated.rjoy_up = !EngineInput_Activated.rjoy_up && EngineInput_Buttons.rjoy_up;
-   EngineInput_Activated.rjoy_down = !EngineInput_Activated.rjoy_down && EngineInput_Buttons.rjoy_down;
-   EngineInput_Activated.rjoy_left = !EngineInput_Activated.rjoy_left && EngineInput_Buttons.rjoy_left;
-   EngineInput_Activated.rjoy_right = !EngineInput_Activated.rjoy_right && EngineInput_Buttons.rjoy_right;
-   EngineInput_Activated.hax = !EngineInput_Activated.hax && EngineInput_Buttons.hax;
-
-   EngineInput_Deactivated.mem0 = EngineInput_Deactivated.mem0 && !EngineInput_Buttons.mem0;
-   EngineInput_Deactivated.mem1 = EngineInput_Deactivated.mem1 && !EngineInput_Buttons.mem1;
-   EngineInput_Deactivated.mem2 = EngineInput_Deactivated.mem2 && !EngineInput_Buttons.mem2;
-   EngineInput_Deactivated.mem3 = EngineInput_Deactivated.mem3 && !EngineInput_Buttons.mem3;
-   EngineInput_Deactivated.bit_128 = EngineInput_Deactivated.bit_128 && !EngineInput_Buttons.bit_128;
-   EngineInput_Deactivated.bit_64 = EngineInput_Deactivated.bit_64 && !EngineInput_Buttons.bit_64;
-   EngineInput_Deactivated.bit_32 = EngineInput_Deactivated.bit_32 && !EngineInput_Buttons.bit_32;
-   EngineInput_Deactivated.bit_16 = EngineInput_Deactivated.bit_16 && !EngineInput_Buttons.bit_16;
-   EngineInput_Deactivated.bit_8 = EngineInput_Deactivated.bit_8 && !EngineInput_Buttons.bit_8;
-   EngineInput_Deactivated.bit_4 = EngineInput_Deactivated.bit_4 && !EngineInput_Buttons.bit_4;
-   EngineInput_Deactivated.bit_2 = EngineInput_Deactivated.bit_2 && !EngineInput_Buttons.bit_2;
-   EngineInput_Deactivated.bit_1 = EngineInput_Deactivated.bit_1 && !EngineInput_Buttons.bit_1;
-   EngineInput_Deactivated.op_xor = EngineInput_Deactivated.op_xor && !EngineInput_Buttons.op_xor;
-   EngineInput_Deactivated.op_add = EngineInput_Deactivated.op_add && !EngineInput_Buttons.op_add;
-   EngineInput_Deactivated.op_sub = EngineInput_Deactivated.op_sub && !EngineInput_Buttons.op_sub;
-   EngineInput_Deactivated.op_page = EngineInput_Deactivated.op_page && !EngineInput_Buttons.op_page;
-   EngineInput_Deactivated.ljoy_center = EngineInput_Deactivated.ljoy_center && !EngineInput_Buttons.ljoy_center;
-   EngineInput_Deactivated.ljoy_up = EngineInput_Deactivated.ljoy_up && !EngineInput_Buttons.ljoy_up;
-   EngineInput_Deactivated.ljoy_down = EngineInput_Deactivated.ljoy_down && !EngineInput_Buttons.ljoy_down;
-   EngineInput_Deactivated.ljoy_left = EngineInput_Deactivated.ljoy_left && !EngineInput_Buttons.ljoy_left;
-   EngineInput_Deactivated.ljoy_right = EngineInput_Deactivated.ljoy_right && !EngineInput_Buttons.ljoy_right;
-   EngineInput_Deactivated.rjoy_center = EngineInput_Deactivated.rjoy_center && !EngineInput_Buttons.rjoy_center;
-   EngineInput_Deactivated.rjoy_up = EngineInput_Deactivated.rjoy_up && !EngineInput_Buttons.rjoy_up;
-   EngineInput_Deactivated.rjoy_down = EngineInput_Deactivated.rjoy_down && !EngineInput_Buttons.rjoy_down;
-   EngineInput_Deactivated.rjoy_left = EngineInput_Deactivated.rjoy_left && !EngineInput_Buttons.rjoy_left;
-   EngineInput_Deactivated.rjoy_right = EngineInput_Deactivated.rjoy_right && !EngineInput_Buttons.rjoy_right;
-   EngineInput_Deactivated.hax = EngineInput_Deactivated.hax && !EngineInput_Buttons.hax;
+   memcpy(&Activated.keyboardBitmask, &Buttons.keyboardBitmask, sizeof(ButtonStates));
 }
 
 void EngineInput::HandleKeyboard()
 {
-   static uint32_t keyboardBitmask = 0x00000000;
-
 #ifdef DC801_EMBEDDED
    keyboardBitmask = get_keyboard_mask();
 #else
-   GetDesktopInputState(&keyboardBitmask);
+   GetDesktopInputState();
 #endif
 
-   SetHardwareBitmaskToButtonStates(keyboardBitmask);
+   SetHardwareBitmaskToButtonStates();
 
    /*
    //screen logging, prints button states to screen:

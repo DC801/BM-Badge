@@ -1,11 +1,13 @@
 #include "mage_tileset.h"
-#include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-MageTileset::MageTileset(uint8_t index, uint32_t address)
+MageTileset::MageTileset(
+	std::shared_ptr<EngineROM> ROM, 
+	uint8_t index, 
+	uint32_t address
+) : ROM(ROM), offset(address)
 {
-	offset = address;
 	#ifndef DC801_EMBEDDED
 	ROM->Read(
 		offset,
@@ -13,7 +15,6 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 		(uint8_t *)name,
 		"Failed to load MageTileset property 'name'"
 	);
-	name[TILESET_NAME_SIZE] = 0; // Null terminate
 	#endif
 
 	offset += TILESET_NAME_SIZE;
@@ -97,70 +98,6 @@ MageTileset::MageTileset(uint8_t index, uint32_t address)
 	}
 }
 
-uint16_t MageTileset::ImageId() const
-{
-	return imageId;
-}
-
-uint16_t MageTileset::ImageWidth() const
-{
-	return imageWidth;
-}
-
-uint16_t MageTileset::ImageHeight() const
-{
-	return imageHeight;
-}
-
-uint16_t MageTileset::TileWidth() const
-{
-	return tileWidth;
-}
-
-uint16_t MageTileset::TileHeight() const
-{
-	return tileHeight;
-}
-
-uint16_t MageTileset::Cols() const
-{
-	return cols;
-}
-
-uint16_t MageTileset::Rows() const
-{
-	return rows;
-}
-
-uint16_t MageTileset::Tiles() const
-{
-	return rows*cols;
-}
-
-uint32_t MageTileset::Size() const {
-	return (
-		sizeof(offset) +
-		sizeof(imageId) +
-		sizeof(imageWidth) +
-		sizeof(imageHeight) +
-		sizeof(tileWidth) +
-		sizeof(tileHeight) +
-		sizeof(cols) +
-		sizeof(rows)
-	);
-}
-
-bool MageTileset::Valid() const
-{
-	if (imageWidth < 1) return false;
-	if (imageHeight < 1) return false;
-	if (tileWidth < 1) return false;
-	if (tileHeight < 1) return false;
-	if (cols < 1) return false;
-	if (rows < 1) return false;
-
-	return true;
-}
 
 uint16_t MageTileset::getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
 {

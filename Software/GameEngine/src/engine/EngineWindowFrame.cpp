@@ -104,7 +104,7 @@ void EngineWindowFrame::drawButtonStates()
 	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
 	{
 		buttonPoint = buttonDestPoints[i];
-		buttonState = inputHandler->GetButtonState(i);
+		buttonState = inputHandler->GetButtonState((Button)i);
 		buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
 		buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
 		SDL_RenderCopy(

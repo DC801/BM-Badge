@@ -7,6 +7,7 @@ in a more accessible way.
 #define _MAGE_MAP_H
 
 #include "mage_defines.h"
+#include "EngineROM.h"
 
 typedef struct {
 	char name[MAP_GO_DIRECTION_NAME_LENGTH];
@@ -18,47 +19,26 @@ class MageMap
 {
 public:
 	char name[17];
-	uint16_t tileWidth;
-	uint16_t tileHeight;
-	uint16_t cols;
-	uint16_t rows;
-	uint16_t onLoad;
-	uint16_t onTick;
-	uint16_t onLook;
-	uint8_t layerCount;
-	uint8_t playerEntityIndex;
-	uint16_t entityCount;
-	uint16_t geometryCount;
-	uint16_t scriptCount;
-	uint8_t goDirectionCount;
-	std::unique_ptr<uint16_t[]> entityGlobalIds;
-	std::unique_ptr<uint16_t[]> geometryGlobalIds;
-	std::unique_ptr<uint16_t[]> scriptGlobalIds;
-	std::unique_ptr<MapGoDirection[]> goDirections;
-	std::unique_ptr<uint32_t[]> mapLayerOffsets;
+	uint16_t tileWidth{0};
+	uint16_t tileHeight{0};
+	uint16_t cols{0};
+	uint16_t rows{0};
+	uint16_t onLoad{0};
+	uint16_t onTick{0};
+	uint16_t onLook{0};
+	uint8_t layerCount{0};
+	uint8_t playerEntityIndex{0};
+	uint16_t entityCount{0};
+	uint16_t geometryCount{0};
+	uint16_t scriptCount{0};
+	uint8_t goDirectionCount{ 0 };
+	std::unique_ptr<uint16_t[]> entityGlobalIds{ std::make_unique<uint16_t[]>(1) };
+	std::unique_ptr<uint16_t[]> geometryGlobalIds{ std::make_unique<uint16_t[]>(1) };
+	std::unique_ptr<uint16_t[]> scriptGlobalIds{ std::make_unique<uint16_t[]>(1) };
+	std::unique_ptr<MapGoDirection[]> goDirections{ std::make_unique<MapGoDirection[]>(1) };
+	std::unique_ptr<uint32_t[]> mapLayerOffsets{ std::make_unique<uint32_t[]>(1) };
 
-	MageMap() : name{0},
-		tileWidth{0},
-		tileHeight{0},
-		cols{0},
-		rows{0},
-		onLoad{0},
-		onTick{0},
-		onLook{0},
-		layerCount{0},
-		playerEntityIndex{0},
-		entityCount{0},
-		geometryCount{0},
-		scriptCount{0},
-		goDirectionCount{0},
-		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
-		geometryGlobalIds{std::make_unique<uint16_t[]>(1)},
-		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
-		goDirections{std::make_unique<MapGoDirection[]>(1)},
-		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
-	{ };
-
-	MageMap(uint32_t address);
+	MageMap(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
 	uint32_t Size() const;
 	std::string Name() const;
@@ -81,6 +61,8 @@ public:
 	uint32_t LayerOffset(uint16_t num) const;
 
 	uint8_t getMapLocalPlayerEntityIndex();
+private:
+	std::shared_ptr<EngineROM> ROM;
 }; //class MageMap
 
 #endif //_MAGE_MAP_H

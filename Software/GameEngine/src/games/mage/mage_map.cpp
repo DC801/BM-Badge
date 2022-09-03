@@ -6,7 +6,8 @@
 
 
 
-MageMap::MageMap(uint32_t address)
+MageMap::MageMap(std::shared_ptr<EngineROM> ROM, uint32_t address)
+	: ROM(ROM)
 {
 	uint32_t size = 0;
 	uint32_t tilesPerLayer = 0;
