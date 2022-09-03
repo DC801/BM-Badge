@@ -2702,7 +2702,7 @@ void MageScriptActions::action_check_ble_flag(uint8_t* args, MageScriptState* re
 }
 
 
-uint16_t getUsefulGeometryIndexFromActionGeometryId(
+uint16_t MageScriptActions::getUsefulGeometryIndexFromActionGeometryId(
 	uint16_t geometryId,
 	MageEntity* entity
 )
@@ -2716,7 +2716,7 @@ uint16_t getUsefulGeometryIndexFromActionGeometryId(
 	return geometryIndex;
 }
 
-float getProgressOfAction(
+float MageScriptActions::getProgressOfAction(
 	const MageScriptState* resumeStateStruct
 ) {
 	return 1.0f - (
@@ -2725,7 +2725,7 @@ float getProgressOfAction(
 		);
 }
 
-float manageProgressOfAction(
+float MageScriptActions::manageProgressOfAction(
 	MageScriptState* resumeStateStruct,
 	uint32_t duration
 ) {
@@ -2746,7 +2746,7 @@ float manageProgressOfAction(
 	return result;
 }
 
-MageEntityAnimationDirection getRelativeDirection(
+MageEntityAnimationDirection MageScriptActions::getRelativeDirection(
 	const Point& pointA,
 	const Point& pointB
 ) {
@@ -2771,7 +2771,7 @@ MageEntityAnimationDirection getRelativeDirection(
 	return direction;
 }
 
-Point offsetPointRelativeToEntityCenter(
+Point MageScriptActions::offsetPointRelativeToEntityCenter(
 	const MageEntityRenderableData* renderable,
 	const MageEntity* entity,
 	const Point* geometryPoint
@@ -2782,7 +2782,7 @@ Point offsetPointRelativeToEntityCenter(
 	};
 }
 
-uint16_t getLoopableGeometryPointIndex(
+uint16_t MageScriptActions::getLoopableGeometryPointIndex(
 	MageGeometry* geometry,
 	uint8_t pointIndex
 ) {
@@ -2803,7 +2803,7 @@ uint16_t getLoopableGeometryPointIndex(
 	return result;
 }
 
-uint16_t getLoopableGeometrySegmentIndex(
+uint16_t MageScriptActions::getLoopableGeometrySegmentIndex(
 	MageGeometry* geometry,
 	uint8_t segmentIndex
 ) {
