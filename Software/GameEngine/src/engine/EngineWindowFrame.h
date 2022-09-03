@@ -27,6 +27,7 @@ extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 class EngineWindowFrame
 {
 public:
+   EngineWindowFrame() noexcept = default;
    EngineWindowFrame(std::shared_ptr<EngineInput> inputHandler) noexcept
       : inputHandler(inputHandler)
    {}

@@ -3,12 +3,13 @@
 #include "convert_endian.h"
 #include "shim_err.h"
 
-MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
+MageGeometry::MageGeometry(std::shared_ptr<MageGameEngine> gameEngine, uint32_t address)
+	: gameEngine(gameEngine)
 {
 	//skip over name:
 	address += 32;
 	//read typeId:
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address,
 		sizeof(typeId),
 		(uint8_t *)&typeId,
@@ -17,7 +18,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	address += sizeof(typeId);
 
 	//read pointCount:
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address,
 		sizeof(pointCount),
 		(uint8_t *)&pointCount,
@@ -26,7 +27,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	address += sizeof(pointCount);
 
 	//read segmentCount:
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address,
 		sizeof(segmentCount),
 		(uint8_t *)&segmentCount,
@@ -37,7 +38,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	address += 1; //padding
 
 	//read pathLength:
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address,
 		sizeof(pathLength),
 		(uint8_t *)&pathLength,
@@ -54,7 +55,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 		uint16_t x;
 		uint16_t y;
 		//get x value:
-		ROM->Read(
+		gameEngine->ROM->Read(
 			address,
 			sizeof(x),
 			(uint8_t *)&x,
@@ -63,7 +64,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 		x = ROM_ENDIAN_U2_VALUE(x);
 		address += sizeof(x);
 		//get y value:
-		ROM->Read(
+		gameEngine->ROM->Read(
 			address,
 			sizeof(y),
 			(uint8_t *)&y,
@@ -79,7 +80,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	//generate appropriately sized array:
 	segmentLengths = std::make_unique<float[]>(segmentCount);
 
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address,
 		sizeof(float) * segmentCount,
 		(uint8_t *)segmentLengths.get(),
@@ -284,7 +285,7 @@ void MageGeometry::draw(
 	Point pointB;
 	if(typeId == POINT) {
 		pointA = points[0];
-		frameBuffer->drawPoint(
+		gameEngine->frameBuffer->drawPoint(
 			pointA.x + offset_x - cameraX,
 			pointA.y + offset_y - cameraY,
 			4,
@@ -296,7 +297,7 @@ void MageGeometry::draw(
 		for (int i = 0; i < segmentCount; i++) {
 			pointA = points[i];
 			pointB = points[(i + 1) % pointCount];
-			frameBuffer->drawLine(
+			gameEngine->frameBuffer->drawLine(
 				pointA.x + offset_x - cameraX,
 				pointA.y + offset_y - cameraY,
 				pointB.x + offset_x - cameraX,
@@ -318,7 +319,7 @@ void MageGeometry::drawSpokes(
 	Point point;
 	for (int i = 0; i < segmentCount; i++) {
 		point = points[i];
-		frameBuffer->drawLine(
+		gameEngine->frameBuffer->drawLine(
 			point.x + offset_x - cameraX,
 			point.y + offset_y - cameraY,
 			polyACenter.x + offset_x - cameraX,
@@ -357,14 +358,14 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 			if (collided) {
 				collidedWithTileLine = true;
 				collidedWithThisTileAtAll = true;
-				frameBuffer->drawLine(
+				gameEngine->frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokePointB.x,
 					spokePointB.y,
 					COLOR_RED
 				);
-				frameBuffer->drawLine(
+				gameEngine->frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokeIntersectionPoint.x,
@@ -375,7 +376,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 					spokeIntersectionPoint.x - spokePointB.x,
 					spokeIntersectionPoint.y - spokePointB.y,
 				};
-				frameBuffer->drawLine(
+				gameEngine->frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokeCenter->x + diff.x,
@@ -392,7 +393,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 				}
 			}
 		}
-		frameBuffer->drawLine(
+		gameEngine->frameBuffer->drawLine(
 			tileLinePointA.x,
 			tileLinePointA.y,
 			tileLinePointB.x,

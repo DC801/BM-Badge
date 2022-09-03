@@ -6,6 +6,7 @@
 #include "EngineInput.h"
 #include "FrameBuffer.h"
 
+#include "mage.h"
 #include "mage_defines.h"
 #include "mage_header.h"
 #include "mage_map.h"
@@ -24,6 +25,7 @@
 #define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
+class MageColorPalette;
 
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
@@ -52,11 +54,7 @@
    class MageGameControl
    {
    public:
-      MageGameControl(
-         std::shared_ptr<EngineROM> ROM, 
-         std::shared_ptr<FrameBuffer> frameBuffer, 
-         std::shared_ptr<EngineInput> inputHandler
-      ) noexcept;
+      MageGameControl(std::shared_ptr<MageGameEngine> gameEngine) noexcept;
       //this is the hackable array of entities that are on the current map
       //the data contained within is the data that can be hacked in the hex editor.
       std::shared_ptr<MageEntity[]> entities;
@@ -100,7 +98,6 @@
 
       //this will return the current map object.
       auto Map() { return map; }
-      auto getDialogControl() { return dialogControl; }
 
       //this will fill in an entity structure's data from ROM
       MageEntity LoadEntity(uint32_t address);
@@ -216,17 +213,8 @@
       uint16_t tilesetCount();
 
       void logAllEntityScriptValues(const char* string);
-      const auto& getROM() { return ROM; }
-      std::shared_ptr<MageDialogControl> dialogControl;
    private:
-      std::shared_ptr<MageGameControl> self{ this };
-      std::shared_ptr<EngineROM> ROM;
-      std::shared_ptr<FrameBuffer> frameBuffer;
-      std::shared_ptr<MageScriptControl> scriptControl;
-      std::shared_ptr<MageScriptActions> scriptActions;
-      std::shared_ptr<MageHexEditor> hexEditor;
-      std::shared_ptr<EngineInput> inputHandler;
-
+      std::shared_ptr<MageGameEngine> gameEngine;
 
       //these header objects store the header information for all datasets on the ROM,
       //including address offsets for each item, and the length of the item in memory.

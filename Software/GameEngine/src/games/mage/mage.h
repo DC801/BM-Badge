@@ -2,15 +2,17 @@
 #define _MAGE_H
 
 #include "mage_color_palette.h"
-#include "mage_command_control.h"
 #include "mage_defines.h"
-#include "mage_dialog_control.h"
-#include "mage_game_control.h"
-#include "mage_hex.h"
-#include "mage_script_control.h"
 
 #include "EngineInput.h"
 
+class FrameBuffer;
+class MageGameControl;
+class MageCommandControl;
+class MageHexEditor;
+class MageDialogControl;
+class MageScriptControl;
+class MageScriptActions;
 
 class MageGameEngine
 {
@@ -34,11 +36,14 @@ public:
    //running the game loop indefinitely until the game is exited.
    void Run();
 
+   std::shared_ptr<MageGameEngine> self{ this };
    std::shared_ptr<EngineROM> ROM;
    std::shared_ptr<MageGameControl> gameControl;
    std::shared_ptr<MageHexEditor> hexEditor;
    std::shared_ptr<MageScriptControl> scriptControl;
+   std::shared_ptr<MageScriptActions> scriptActions;
    std::shared_ptr<MageCommandControl> commandControl;
+   std::shared_ptr<MageDialogControl> dialogControl;
    std::shared_ptr<MageEntity> hackableDataAddress;
    std::shared_ptr<EngineInput> inputHandler;
    std::shared_ptr<FrameBuffer> frameBuffer;

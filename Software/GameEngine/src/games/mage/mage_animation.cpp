@@ -1,15 +1,14 @@
 #include "mage_animation.h"
+#include "mage.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-
-
-MageAnimation::MageAnimation(uint32_t address)
+MageAnimation::MageAnimation(std::shared_ptr<MageGameEngine> gameEngine, uint32_t address)
 {
 	offset = address;
 	//read tilesetId
-	ROM->Read(
+	gameEngine->ROM->Read(
 		offset,
 		sizeof(tilesetId),
 		(uint8_t *)&tilesetId,
@@ -23,7 +22,7 @@ MageAnimation::MageAnimation(uint32_t address)
 	offset += sizeof(tilesetId);
 
 	//read frameCount
-	ROM->Read(
+	gameEngine->ROM->Read(
 		offset,
 		sizeof(frameCount),
 		(uint8_t *)&frameCount,
@@ -53,7 +52,7 @@ MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
 	index = index < frameCount
 		? index
 		: frameCount;
-	ROM->Read(
+	gameEngine->ROM->Read(
 		offset + (index * sizeof(frame)),
 		sizeof(frame),
 		(uint8_t *)&frame,

@@ -82,21 +82,9 @@ class MageDialogControl
 {
 public:
    MageDialogControl(
-      std::shared_ptr<EngineROM> ROM,
-      std::shared_ptr<EngineInput> engineInput,
-      std::shared_ptr<MageGameControl> gameControl,
-      std::shared_ptr<MageScriptControl> scriptControl,
-      std::shared_ptr<MageScriptActions> scriptActions,
-      std::shared_ptr<MageHexEditor> hexEditor,
-      std::shared_ptr<FrameBuffer> frameBuffer
+      std::shared_ptr<MageGameEngine> gameEngine
    ) noexcept
-      : ROM(ROM),
-      inputHandler(engineInput),
-      gameControl(gameControl),
-      scriptControl(scriptControl),
-      scriptActions(scriptActions),
-      hexEditor(hexEditor),
-      frameBuffer(frameBuffer)
+      : gameEngine(gameEngine)
    {}
 
    bool isOpen{ false };
@@ -116,13 +104,7 @@ public:
    void loadCurrentScreenPortrait();
 
 private:
-   std::shared_ptr<EngineROM> ROM;
-   std::shared_ptr<EngineInput> inputHandler;
-   std::shared_ptr<MageGameControl> gameControl;
-   std::shared_ptr<MageScriptControl> scriptControl;
-   std::shared_ptr<MageScriptActions> scriptActions;
-   std::shared_ptr<MageHexEditor> hexEditor;
-   std::shared_ptr<FrameBuffer> frameBuffer;
+   std::shared_ptr<MageGameEngine> gameEngine;
 
    // char dialogName[32];
    MageTileset* currentFrameTileset;

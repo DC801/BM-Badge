@@ -5,7 +5,7 @@
 #include "adafruit/gfxfont.h"
 #include "modules/gfx.h"
 #include "games/mage/mage_defines.h"
-#include "games/mage/mage_color_palette.h"
+#include "games/mage/mage.h"
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -18,7 +18,8 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define FLIPPED_HORIZONTALLY_FLAG 0x04
 
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
-
+class MageColorPalette;
+class MageGameEngine;
 
 #ifdef IS_BIG_ENDIAN
 struct Color_565 {
@@ -124,8 +125,8 @@ public:
 
 class FrameBuffer {
 public:
-	FrameBuffer(std::shared_ptr<EngineROM> ROM) noexcept
-		: ROM(ROM)
+	FrameBuffer(std::shared_ptr<MageGameEngine> gameEngine) noexcept
+		: gameEngine(gameEngine)
 	{}
 	void clearScreen(uint16_t color);
 
@@ -211,6 +212,8 @@ public:
 	bool isFading;
 	uint16_t fadeColor;
 private:
+	std::shared_ptr<MageGameEngine> gameEngine;
+
 	uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
 	std::shared_ptr<EngineROM> ROM;
 	void __draw_char(
@@ -319,4 +322,6 @@ private:
 		uint16_t transparent_color
 	);
 };
+
+
 #endif //FRAMEBUFFER_H

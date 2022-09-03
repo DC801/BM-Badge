@@ -49,16 +49,9 @@ public:
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
 	MageHexEditor(
-		std::shared_ptr<MageGameEngine> gameEngine,
-		std::shared_ptr<EngineInput> engineInput,
-		std::shared_ptr<MageDialogControl> dialogControl,
-		std::shared_ptr<MageGameControl> gameControl,
-		std::shared_ptr<FrameBuffer> frameBuffer
+		std::shared_ptr<MageGameEngine> gameEngine
 	) : 
-		gameEngine(gameEngine),
-		inputHandler(engineInput),
-		gameControl(gameControl),
-		frameBuffer(frameBuffer)
+		gameEngine(gameEngine)
 	{};
 	
 	//returns true if hex editor is open.
@@ -115,11 +108,7 @@ public:
 	void openToEntityByIndex(uint8_t entityIndex);
 
 private:
-	std::shared_ptr<MageDialogControl> dialogControl;
 	std::shared_ptr<MageGameEngine> gameEngine;
-	std::shared_ptr<EngineInput> inputHandler;
-	std::shared_ptr<MageGameControl> gameControl;
-	std::shared_ptr<FrameBuffer> frameBuffer;
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

@@ -92,7 +92,7 @@ MageColorPalette::MageColorPalette(
 			sourceColor = sourcePalette->colors[i];
 			if(sourceColor != transparentColor) {
 				colors[i] = SCREEN_ENDIAN_U2_VALUE(
-					frameBuffer->applyFadeColor(
+					gameEngine->frameBuffer->applyFadeColor(
 						SCREEN_ENDIAN_U2_VALUE(
 							sourceColor
 						)

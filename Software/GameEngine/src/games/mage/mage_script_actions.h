@@ -2,12 +2,8 @@
 #define _MAGE_SCRIPT_ACTIONS_H
 
 #include "mage_defines.h"
-#include "mage.h"
-#include "mage_game_control.h"
-#include "mage_hex.h"
-#include "mage_script_control.h"
-#include "EngineInput.h"
-#include "FrameBuffer.h"
+class MageGeometry;
+class MageGameEngine;
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
@@ -144,19 +140,9 @@ class MageScriptActions
 {
 public:
    MageScriptActions(
-      std::shared_ptr<FrameBuffer> frameBuffer,
-      std::shared_ptr<MageGameControl> gameControl,
-      std::shared_ptr<MageScriptControl> scriptControl,
-      std::shared_ptr<MageCommandControl> commandControl,
-      std::shared_ptr<MageHexEditor> hexEditor,
-      std::shared_ptr<EngineInput> inputHandler
+      std::shared_ptr<MageGameEngine> gameEngine
    ) noexcept
-      : frameBuffer(frameBuffer),
-      gameControl(gameControl),
-      scriptControl(scriptControl),
-      inputHandler(inputHandler),
-      hexEditor(hexEditor),
-      commandControl(commandControl)
+      : gameEngine(gameEngine)
    {}
    //Action Logic Type: I
    void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct);
@@ -549,12 +535,7 @@ public:
    };
 
 private:
-   std::shared_ptr<FrameBuffer> frameBuffer;
-   std::shared_ptr<MageGameControl> gameControl;
-   std::shared_ptr<MageScriptControl> scriptControl;
-   std::shared_ptr<EngineInput> inputHandler;
-   std::shared_ptr<MageHexEditor> hexEditor;
-   std::shared_ptr<MageCommandControl> commandControl;
+   std::shared_ptr<MageGameEngine> gameEngine;
 
    //the actual array of action functions:
 

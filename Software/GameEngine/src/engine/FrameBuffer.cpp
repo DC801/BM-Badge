@@ -3,6 +3,7 @@
 #include "main.h"
 #include "utility.h"
 #include "games/mage/mage_defines.h"
+#include "games/mage/mage_color_palette.h"
 #include "convert_endian.h"
 #include "modules/sd.h"
 #include "config/custom_board.h"
@@ -258,7 +259,6 @@ void FrameBuffer::drawChunkWithFlags(
 	uint8_t flags
 )
 {
-	MageColorPalette colorPaletteFaded;
 	MageColorPalette* colorPalette = colorPaletteOriginal;
 	RenderFlagsUnion flagSplit;
 	flagSplit.i = flags;
@@ -284,7 +284,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
 
-	ROM->Read(
+	gameEngine->ROM->Read(
 		address + ((source_y * pitch) + source_x),
 		tile_width * tile_height,
 		pixels.get(),
@@ -292,13 +292,12 @@ void FrameBuffer::drawChunkWithFlags(
 	);
 
 	if (fadeFraction != 0) {
-		colorPaletteFaded = MageColorPalette(
+		colorPalette = new MageColorPalette(
 			colorPaletteOriginal,
 			transparent_color,
 			fadeColor,
 			fadeFraction
 		);
-		colorPalette = &colorPaletteFaded;
 	}
 
 	if (flip_x == false && flip_y == false && flip_diag == false) {

@@ -40,13 +40,8 @@ typedef struct {
 
 class MageCommandControl {
 	public:
-		MageCommandControl(
-			std::shared_ptr<MageScriptControl> scriptControl,
-			std::shared_ptr<MageCommandControl> commandControl,
-			std::shared_ptr<MageGameControl> gameControl,
-			std::shared_ptr<EngineROM> ROM
-		) noexcept
-			: scriptControl(scriptControl), commandControl(commandControl), gameControl(gameControl), ROM(ROM)
+		MageCommandControl(std::shared_ptr<MageGameEngine> gameEngine) noexcept
+			: gameEngine(gameEngine)
 		{
 			// EngineSendSerialMessage(
 			// 	"Hello there, the Command Goats are listening for commands.\n"
@@ -73,10 +68,7 @@ class MageCommandControl {
 		void reset();
 		void sendBufferedOutput();
 private:
-	std::shared_ptr<MageScriptControl> scriptControl;
-	std::shared_ptr<MageCommandControl> commandControl;
-	std::shared_ptr<MageGameControl> gameControl;
-	std::shared_ptr<EngineROM> ROM;
+	std::shared_ptr<MageGameEngine> gameEngine;
 
 	void badAsciiLowerCase(std::string* data)
 	{

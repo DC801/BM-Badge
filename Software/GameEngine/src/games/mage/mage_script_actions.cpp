@@ -36,17 +36,17 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
-		std::string entityName = gameControl->getEntityNameStringById(entityIndex);
+		std::string romString = gameEngine->gameControl->getString(argStruct->stringId, gameEngine->scriptControl->currentEntityId);
+		std::string entityName = gameEngine->gameControl->getEntityNameStringById(entityIndex);
 		// DO NOT try to do an == comparison on these two C++ strings because
 		// the extra null values at the end of the entity name cause fail
 		int compare = strcmp(entityName.c_str(), romString.c_str());
 		bool identical = compare == 0;
 		if (identical == (bool)argStruct->expectedBoolValue) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -67,13 +67,13 @@ void MageScriptActions::action_check_entity_x(uint8_t* args, MageScriptState* re
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->x == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -94,13 +94,13 @@ void MageScriptActions::action_check_entity_y(uint8_t* args, MageScriptState* re
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->y == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -121,13 +121,13 @@ void MageScriptActions::action_check_entity_interact_script(uint8_t* args, MageS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -148,13 +148,13 @@ void MageScriptActions::action_check_entity_tick_script(uint8_t* args, MageScrip
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->onTickScriptId == argStruct->expectedScript);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -175,17 +175,17 @@ void MageScriptActions::action_check_entity_type(uint8_t* args, MageScriptState*
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		uint16_t sanitizedEntityTypeId = gameControl->getValidEntityTypeId(entity->primaryId);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		uint16_t sanitizedEntityTypeId = gameEngine->gameControl->getValidEntityTypeId(entity->primaryId);
 		bool identical = (
 			sanitizedEntityTypeId == argStruct->entityTypeId &&
 			entity->primaryIdType == ENTITY_TYPE
 			);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -206,18 +206,18 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t sizeLimit;
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
-		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = gameControl->entityTypeCount(); }
-		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = gameControl->animationCount(); }
-		if (sanitizedPrimaryType == TILESET) { sizeLimit = gameControl->tilesetCount(); }
+		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = gameEngine->gameControl->entityTypeCount(); }
+		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = gameEngine->gameControl->animationCount(); }
+		if (sanitizedPrimaryType == TILESET) { sizeLimit = gameEngine->gameControl->tilesetCount(); }
 		bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -238,21 +238,21 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t sizeLimit;
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 		if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = 1; }
 		if (sanitizedPrimaryType == ANIMATION) { sizeLimit = 1; }
 		if (sanitizedPrimaryType == TILESET) {
-			MageTileset* tileset = gameControl->getValidTileset(entity->primaryId);
+			MageTileset* tileset = gameEngine->gameControl->getValidTileset(entity->primaryId);
 			sizeLimit = tileset->Tiles();
 		}
 		bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -272,14 +272,14 @@ void MageScriptActions::action_check_entity_primary_id_type(uint8_t* args, MageS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 		bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -299,13 +299,13 @@ void MageScriptActions::action_check_entity_current_animation(uint8_t* args, Mag
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentAnimation == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -325,13 +325,13 @@ void MageScriptActions::action_check_entity_current_frame(uint8_t* args, MageScr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->currentFrame == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -351,13 +351,13 @@ void MageScriptActions::action_check_entity_direction(uint8_t* args, MageScriptS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->direction == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -378,13 +378,13 @@ void MageScriptActions::action_check_entity_glitched(uint8_t* args, MageScriptSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool isGlitched = (entity->direction & RENDER_FLAGS_IS_GLITCHED) != 0;
 		if (isGlitched == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -404,13 +404,13 @@ void MageScriptActions::action_check_entity_hackable_state_a(uint8_t* args, Mage
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateA == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -430,13 +430,13 @@ void MageScriptActions::action_check_entity_hackable_state_b(uint8_t* args, Mage
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateB == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -456,13 +456,13 @@ void MageScriptActions::action_check_entity_hackable_state_c(uint8_t* args, Mage
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateC == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -482,13 +482,13 @@ void MageScriptActions::action_check_entity_hackable_state_d(uint8_t* args, Mage
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		bool identical = (entity->hackableStateD == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -508,16 +508,16 @@ void MageScriptActions::action_check_entity_hackable_state_a_u2(uint8_t* args, M
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -537,16 +537,16 @@ void MageScriptActions::action_check_entity_hackable_state_c_u2(uint8_t* args, M
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateC)
 		);
 		bool identical = (u2_value == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -565,15 +565,15 @@ void MageScriptActions::action_check_entity_hackable_state_a_u4(uint8_t* args, M
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
 			*(uint32_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		if (u4_value == argStruct->expectedValue) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -593,16 +593,16 @@ void MageScriptActions::action_check_entity_path(uint8_t* args, MageScriptState*
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t pathId = ROM_ENDIAN_U2_VALUE(
 			*(uint16_t*)((uint8_t*)&entity->hackableStateA)
 		);
 		bool identical = (pathId == argStruct->expectedValue);
 		if (identical == (bool)argStruct->expectedBool) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -622,11 +622,11 @@ void MageScriptActions::action_check_save_flag(uint8_t* args, MageScriptState* r
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = gameControl->currentSave->saveFlags[byteOffset];
+	uint8_t currentByteValue = gameEngine->gameControl->currentSave->saveFlags[byteOffset];
 	bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
 	if (bitValue == (bool)argStruct->expectedBoolValue) {
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -646,16 +646,16 @@ void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, Mag
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 		bool colliding = geometry.isPointInGeometry(renderable->center);
 		if (colliding == (bool)argStruct->expectedBoolValue) {
-			scriptControl->jumpScriptId = argStruct->successScriptId;
+			gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 		}
 	}
 }
@@ -674,10 +674,10 @@ void MageScriptActions::action_check_for_button_press(uint8_t* args, MageScriptS
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	auto button_activated = inputHandler->GetButtonActivatedState((Button)argStruct->buttonId);
+	auto button_activated = gameEngine->inputHandler->GetButtonActivatedState((Button)argStruct->buttonId);
 	if (button_activated)
 	{
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -694,10 +694,10 @@ void MageScriptActions::action_check_for_button_state(uint8_t* args, MageScriptS
 	auto* argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-	auto button_state = inputHandler->GetButtonState((Button)argStruct->buttonId);
+	auto button_state = gameEngine->inputHandler->GetButtonState((Button)argStruct->buttonId);
 	if (button_state == (bool)(argStruct->expectedBoolValue))
 	{
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -715,10 +715,10 @@ void MageScriptActions::action_check_warp_state(uint8_t* args, MageScriptState* 
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	bool doesWarpStateMatch = gameControl->currentSave->warpState == argStruct->stringId;
+	bool doesWarpStateMatch = gameEngine->gameControl->currentSave->warpState == argStruct->stringId;
 	if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
 	{
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -736,7 +736,7 @@ void MageScriptActions::action_run_script(uint8_t* args, MageScriptState* resume
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	scriptControl->jumpScriptId = argStruct->scriptId;
+	gameEngine->scriptControl->jumpScriptId = argStruct->scriptId;
 }
 
 void MageScriptActions::action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -771,9 +771,9 @@ void MageScriptActions::action_blocking_delay(uint8_t* args, MageScriptState* re
 		//always a single loop for a blocking delay. On the next action call, (after rendering all current changes) it will continue.
 		uint16_t totalDelayLoops = 1;
 		//also set the blocking delay time to the larger of the current blockingDelayTime, or argStruct->duration:
-		scriptControl->blockingDelayTime = (scriptControl->blockingDelayTime < argStruct->duration)
+		gameEngine->scriptControl->blockingDelayTime = (gameEngine->scriptControl->blockingDelayTime < argStruct->duration)
 			? argStruct->duration
-			: scriptControl->blockingDelayTime;
+			: gameEngine->scriptControl->blockingDelayTime;
 		//now set the resumeStateStruct variables:
 		resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
 		resumeStateStruct->loopsToNextAction = totalDelayLoops;
@@ -813,14 +813,14 @@ void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* r
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
 	//get the string from the stringId:
-	std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
+	std::string romString = gameEngine->gameControl->getString(argStruct->stringId, gameEngine->scriptControl->currentEntityId);
 	//Get the entity:
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		//simple loop to set the name:
 		for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++) {
 			entity->name[i] = romString[i];
@@ -851,10 +851,10 @@ void MageScriptActions::action_set_entity_x(uint8_t* args, MageScriptState* resu
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->x = argStruct->newValue;
 	}
 }
@@ -875,10 +875,10 @@ void MageScriptActions::action_set_entity_y(uint8_t* args, MageScriptState* resu
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->y = argStruct->newValue;
 	}
 }
@@ -897,11 +897,11 @@ void MageScriptActions::action_set_entity_interact_script(uint8_t* args, MageScr
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	scriptControl->setEntityScript(
+	gameEngine->scriptControl->setEntityScript(
 		argStruct->scriptId,
 		getUsefulEntityIndexFromActionEntityId(
 			argStruct->entityId,
-			scriptControl->currentEntityId
+			gameEngine->scriptControl->currentEntityId
 		),
 		ON_INTERACT
 	);
@@ -923,9 +923,9 @@ void MageScriptActions::action_set_entity_tick_script(uint8_t* args, MageScriptS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
-	scriptControl->setEntityScript(
+	gameEngine->scriptControl->setEntityScript(
 		argStruct->scriptId,
 		entityIndex,
 		ON_TICK
@@ -948,10 +948,10 @@ void MageScriptActions::action_set_entity_type(uint8_t* args, MageScriptState* r
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryId = argStruct->entityTypeId;
 		entity->primaryIdType = ENTITY_TYPE;
 	}
@@ -973,10 +973,10 @@ void MageScriptActions::action_set_entity_primary_id(uint8_t* args, MageScriptSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryId = argStruct->newValue;
 	}
 }
@@ -997,10 +997,10 @@ void MageScriptActions::action_set_entity_secondary_id(uint8_t* args, MageScript
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->secondaryId = argStruct->newValue;
 	}
 }
@@ -1020,10 +1020,10 @@ void MageScriptActions::action_set_entity_primary_id_type(uint8_t* args, MageScr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
 	}
 }
@@ -1043,15 +1043,15 @@ void MageScriptActions::action_set_entity_current_animation(uint8_t* args, MageS
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		entity->currentAnimation = argStruct->newValue;
 		entity->currentFrame = 0;
 		renderable->currentFrameTicks = 0;
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1070,14 +1070,14 @@ void MageScriptActions::action_set_entity_current_frame(uint8_t* args, MageScrip
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		entity->currentFrame = argStruct->newValue;
 		renderable->currentFrameTicks = 0;
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1096,15 +1096,15 @@ void MageScriptActions::action_set_entity_direction(uint8_t* args, MageScriptSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		entity->direction = gameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 			argStruct->direction,
 			entity->direction
 		);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1123,11 +1123,11 @@ void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, Mage
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		entity->direction = gameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 			(MageEntityAnimationDirection)((
 				entity->direction
 				+ argStruct->relativeDirection
@@ -1135,7 +1135,7 @@ void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, Mage
 				) % NUM_DIRECTIONS),
 			entity->direction
 		);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1154,27 +1154,27 @@ void MageScriptActions::action_set_entity_direction_target_entity(uint8_t* args,
 
 	int16_t targetEntityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->targetEntityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (
 		entityIndex != NO_PLAYER
 		&& targetEntityIndex != NO_PLAYER
 		) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* targetRenderable = gameControl->getEntityRenderableDataByMapLocalId(targetEntityIndex);
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		entity->direction = gameControl->updateDirectionAndPreserveFlags(
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* targetRenderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(targetEntityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 			getRelativeDirection(
 				renderable->center,
 				targetRenderable->center
 			),
 			entity->direction
 		);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1194,21 +1194,21 @@ void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* arg
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
-		entity->direction = gameControl->updateDirectionAndPreserveFlags(
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+		entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 			getRelativeDirection(
 				renderable->center,
 				geometry.points[0]
 			),
 			entity->direction
 		);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1227,15 +1227,15 @@ void MageScriptActions::action_set_entity_glitched(uint8_t* args, MageScriptStat
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->direction = (MageEntityAnimationDirection)(
 			(entity->direction & RENDER_FLAGS_IS_GLITCHED_MASK)
 			| (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED)
 			);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1254,10 +1254,10 @@ void MageScriptActions::action_set_entity_hackable_state_a(uint8_t* args, MageSc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateA = argStruct->newValue;
 	}
 }
@@ -1277,10 +1277,10 @@ void MageScriptActions::action_set_entity_hackable_state_b(uint8_t* args, MageSc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateB = argStruct->newValue;
 	}
 }
@@ -1300,10 +1300,10 @@ void MageScriptActions::action_set_entity_hackable_state_c(uint8_t* args, MageSc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateC = argStruct->newValue;
 	}
 }
@@ -1323,10 +1323,10 @@ void MageScriptActions::action_set_entity_hackable_state_d(uint8_t* args, MageSc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		entity->hackableStateD = argStruct->newValue;
 	}
 }
@@ -1347,10 +1347,10 @@ void MageScriptActions::action_set_entity_hackable_state_a_u2(uint8_t* args, Mag
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
@@ -1371,10 +1371,10 @@ void MageScriptActions::action_set_entity_hackable_state_c_u2(uint8_t* args, Mag
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateC) = argStruct->newValue;
 	}
 }
@@ -1393,10 +1393,10 @@ void MageScriptActions::action_set_entity_hackable_state_a_u4(uint8_t* args, Mag
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint32_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
@@ -1417,10 +1417,10 @@ void MageScriptActions::action_set_entity_path(uint8_t* args, MageScriptState* r
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		*(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
 	}
 }
@@ -1439,7 +1439,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
 	argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
 	uint16_t byteOffset = argStruct->saveFlagOffset / 8;
 	uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-	uint8_t currentByteValue = gameControl->currentSave->saveFlags[byteOffset];
+	uint8_t currentByteValue = gameEngine->gameControl->currentSave->saveFlags[byteOffset];
 
 	if (argStruct->newBoolValue) {
 		currentByteValue |= 0x01u << bitOffset;
@@ -1448,7 +1448,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
 		// tilde operator inverts all the bits on a byte; Bitwise NOT
 		currentByteValue &= ~(0x01u << bitOffset);
 	}
-	gameControl->currentSave->saveFlags[byteOffset] = currentByteValue;
+	gameEngine->gameControl->currentSave->saveFlags[byteOffset] = currentByteValue;
 }
 
 void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1463,7 +1463,7 @@ void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState
 		uint8_t paddingG;
 	} ActionSetPlayerControl;
 	auto* argStruct = (ActionSetPlayerControl*)args;
-	gameControl->playerHasControl = argStruct->playerHasControl;
+	gameEngine->gameControl->playerHasControl = argStruct->playerHasControl;
 }
 
 void MageScriptActions::action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1480,7 +1480,7 @@ void MageScriptActions::action_set_map_tick_script(uint8_t* args, MageScriptStat
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-	scriptControl->setEntityScript(
+	gameEngine->scriptControl->setEntityScript(
 		argStruct->scriptId,
 		MAGE_MAP_ENTITY,
 		ON_TICK
@@ -1501,7 +1501,7 @@ void MageScriptActions::action_set_hex_cursor_location(uint8_t* args, MageScript
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->byteAddress = ROM_ENDIAN_U2_VALUE(argStruct->byteAddress);
 
-	hexEditor->setHexCursorLocation(argStruct->byteAddress);
+	gameEngine->hexEditor->setHexCursorLocation(argStruct->byteAddress);
 }
 
 void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1518,7 +1518,7 @@ void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* re
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-	gameControl->currentSave->warpState = argStruct->stringId;
+	gameEngine->gameControl->currentSave->warpState = argStruct->stringId;
 }
 
 void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1534,9 +1534,9 @@ void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptSta
 	} ActionSetHexEditorState;
 	auto* argStruct = (ActionSetHexEditorState*)args;
 
-	if (hexEditor->getHexEditorState() != (bool)argStruct->state)
+	if (gameEngine->hexEditor->getHexEditorState() != (bool)argStruct->state)
 	{
-		hexEditor->toggleHexEditor();
+		gameEngine->hexEditor->toggleHexEditor();
 	}
 }
 
@@ -1553,9 +1553,9 @@ void MageScriptActions::action_set_hex_editor_dialog_mode(uint8_t* args, MageScr
 	} ActionSetHexEditorDialogMode;
 	auto* argStruct = (ActionSetHexEditorDialogMode*)args;
 
-	if (hexEditor->getHexDialogState() != (bool)argStruct->state)
+	if (gameEngine->hexEditor->getHexDialogState() != (bool)argStruct->state)
 	{
-		hexEditor->toggleHexDialog();
+		gameEngine->hexEditor->toggleHexDialog();
 	}
 }
 
@@ -1571,7 +1571,7 @@ void MageScriptActions::action_set_hex_editor_control(uint8_t* args, MageScriptS
 		uint8_t paddingG;
 	} ActionSetHexEditorControl;
 	auto* argStruct = (ActionSetHexEditorControl*)args;
-	gameControl->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
+	gameEngine->gameControl->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
 }
 
 void MageScriptActions::action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1586,7 +1586,7 @@ void MageScriptActions::action_set_hex_editor_control_clipboard(uint8_t* args, M
 		uint8_t paddingG;
 	} ActionSetHexEditorControlClipboard;
 	auto* argStruct = (ActionSetHexEditorControlClipboard*)args;
-	gameControl->playerHasHexEditorControlClipboard = argStruct->playerHasHexEditorControlClipboard;
+	gameEngine->gameControl->playerHasHexEditorControlClipboard = argStruct->playerHasHexEditorControlClipboard;
 }
 
 void MageScriptActions::action_load_map(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1603,7 +1603,7 @@ void MageScriptActions::action_load_map(uint8_t* args, MageScriptState* resumeSt
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->mapId = ROM_ENDIAN_U2_VALUE(argStruct->mapId);
 
-	scriptControl->mapLoadId = gameControl->getValidMapId(argStruct->mapId);
+	gameEngine->scriptControl->mapLoadId = gameEngine->gameControl->getValidMapId(argStruct->mapId);
 }
 
 void MageScriptActions::action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1622,13 +1622,13 @@ void MageScriptActions::action_show_dialog(uint8_t* args, MageScriptState* resum
 
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		gameControl->dialogControl->load(argStruct->dialogId, scriptControl->currentEntityId);
+		gameEngine->dialogControl->load(argStruct->dialogId, gameEngine->scriptControl->currentEntityId);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!gameControl->dialogControl->isOpen) {
+	else if (!gameEngine->dialogControl->isOpen) {
 		// will be 0 any time there is no response; no jump
-		if (gameControl->dialogControl->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
-			scriptControl->jumpScriptId = gameControl->dialogControl->mapLocalJumpScriptId;
+		if (gameEngine->dialogControl->mapLocalJumpScriptId != MAGE_NO_SCRIPT) {
+			gameEngine->scriptControl->jumpScriptId = gameEngine->dialogControl->mapLocalJumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
@@ -1649,18 +1649,18 @@ void MageScriptActions::action_play_entity_animation(uint8_t* args, MageScriptSt
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
 			resumeStateStruct->totalLoopsToNextAction = argStruct->playCount;
 			resumeStateStruct->loopsToNextAction = argStruct->playCount;
 			entity->currentAnimation = argStruct->animationId;
 			entity->currentFrame = 0;
 			renderable->currentFrameTicks = 0;
-			gameControl->updateEntityRenderableData(entityIndex);
+			gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 		}
 		else if (
 			// we just reset to 0
@@ -1674,7 +1674,7 @@ void MageScriptActions::action_play_entity_animation(uint8_t* args, MageScriptSt
 				entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
 				entity->currentFrame = 0;
 				renderable->currentFrameTicks = 0;
-				gameControl->updateEntityRenderableData(entityIndex);
+				gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 			}
 		}
 		// this is just a quick and dirty place to hold on to
@@ -1699,13 +1699,13 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 		setEntityPositionToPoint(
 			entity,
 			offsetPointRelativeToEntityCenter(
@@ -1714,7 +1714,7 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
 				&geometry.points[0]
 			)
 		);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1731,13 +1731,13 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
 			//this is the points we're interpolating between
@@ -1750,7 +1750,7 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
 				entity,
 				&geometry.points[0]
 			);
-			entity->direction = gameControl->updateDirectionAndPreserveFlags(
+			entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 				getRelativeDirection(
 					resumeStateStruct->pointA,
 					resumeStateStruct->pointB
@@ -1777,7 +1777,7 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
 			renderable->currentFrameTicks = 0;
 			resumeStateStruct->totalLoopsToNextAction = 0;
 		}
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -1795,13 +1795,13 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if (geometry.pointCount == 1) {
@@ -1814,7 +1814,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
 					&geometry.points[0]
 				)
 			);
-			gameControl->updateEntityRenderableData(entityIndex);
+			gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 			return;
 		}
 		// and for everything else...
@@ -1890,7 +1890,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
 			entity->currentFrame = 0;
 			renderable->currentFrameTicks = 0;
 		}
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1907,13 +1907,13 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 		uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-		MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+		MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 		// handle single point geometries
 		if (geometry.pointCount == 1) {
@@ -1926,7 +1926,7 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
 					&geometry.points[0]
 				)
 			);
-			gameControl->updateEntityRenderableData(entityIndex);
+			gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 			return;
 		}
 		// and for everything else...
@@ -2002,7 +2002,7 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
 			progressBetweenPoints
 		);
 		setEntityPositionToPoint(entity, betweenPoint);
-		gameControl->updateEntityRenderableData(entityIndex);
+		gameEngine->gameControl->updateEntityRenderableData(entityIndex);
 	}
 }
 
@@ -2020,9 +2020,9 @@ void MageScriptActions::action_set_camera_to_follow_entity(uint8_t* args, MageSc
 	auto* argStruct = (ActionSetCameraToFollowEntity*)args;
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
-	gameControl->cameraFollowEntityId = entityIndex;
+	gameEngine->gameControl->cameraFollowEntityId = entityIndex;
 }
 
 void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2039,12 +2039,12 @@ void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageSc
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	MageEntity* entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
+	MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(gameEngine->scriptControl->currentEntityId);
 	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-	MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
-	gameControl->cameraFollowEntityId = NO_PLAYER;
-	gameControl->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
-	gameControl->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
+	MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+	gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
+	gameEngine->gameControl->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
+	gameEngine->gameControl->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
 }
 
 void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2061,18 +2061,18 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntityRenderableData* renderable = gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
+		MageEntityRenderableData* renderable = gameEngine->gameControl->getEntityRenderableDataByMapLocalId(entityIndex);
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
 
 		if (resumeStateStruct->totalLoopsToNextAction == 0) {
-			gameControl->cameraFollowEntityId = NO_PLAYER;
+			gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
 			//this is the points we're interpolating between
 			resumeStateStruct->pointA = {
-				gameControl->cameraPosition.x,
-				gameControl->cameraPosition.y,
+				gameEngine->gameControl->cameraPosition.x,
+				gameEngine->gameControl->cameraPosition.y,
 			};
 		}
 		float progress = manageProgressOfAction(
@@ -2090,11 +2090,11 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
 			resumeStateStruct->pointB,
 			progress
 		);
-		gameControl->cameraPosition.x = betweenPoint.x;
-		gameControl->cameraPosition.y = betweenPoint.y;
+		gameEngine->gameControl->cameraPosition.x = betweenPoint.x;
+		gameEngine->gameControl->cameraPosition.y = betweenPoint.y;
 		if (progress >= 1.0f) {
 			// Moved the camera there, may as well follow the entity now.
-			gameControl->cameraFollowEntityId = entityIndex;
+			gameEngine->gameControl->cameraFollowEntityId = entityIndex;
 		}
 	}
 }
@@ -2111,16 +2111,16 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
 	argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 	argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-	MageEntity* entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
+	MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(gameEngine->scriptControl->currentEntityId);
 	uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-	MageGeometry geometry = gameControl->getGeometryFromMapLocalId(geometryIndex);
+	MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
 
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		gameControl->cameraFollowEntityId = NO_PLAYER;
+		gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
 		//this is the points we're interpolating between
 		resumeStateStruct->pointA = {
-			gameControl->cameraPosition.x,
-			gameControl->cameraPosition.y,
+			gameEngine->gameControl->cameraPosition.x,
+			gameEngine->gameControl->cameraPosition.y,
 		};
 		resumeStateStruct->pointB = {
 			geometry.points[0].x - HALF_WIDTH,
@@ -2136,8 +2136,8 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
 		resumeStateStruct->pointB,
 		progress
 	);
-	gameControl->cameraPosition.x = betweenPoint.x;
-	gameControl->cameraPosition.y = betweenPoint.y;
+	gameEngine->gameControl->cameraPosition.x = betweenPoint.x;
+	gameEngine->gameControl->cameraPosition.y = betweenPoint.y;
 }
 
 void MageScriptActions::action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2186,9 +2186,9 @@ void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* 
 	);
 
 	if (progress < 1.0) {
-		gameControl->cameraShaking = true;
-		gameControl->cameraShakeAmplitude = argStruct->amplitude;
-		gameControl->cameraShakePhase = (
+		gameEngine->gameControl->cameraShaking = true;
+		gameEngine->gameControl->cameraShakeAmplitude = argStruct->amplitude;
+		gameEngine->gameControl->cameraShakePhase = (
 			progress /
 			(
 				(float)argStruct->frequency
@@ -2197,9 +2197,9 @@ void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* 
 			);
 	}
 	else {
-		gameControl->cameraShaking = false;
-		gameControl->cameraShakeAmplitude = 0;
-		gameControl->cameraShakePhase = 0;
+		gameEngine->gameControl->cameraShaking = false;
+		gameEngine->gameControl->cameraShakeAmplitude = 0;
+		gameEngine->gameControl->cameraShakePhase = 0;
 	}
 }
 void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2219,10 +2219,10 @@ void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* r
 		argStruct->duration
 	);
 
-	frameBuffer->fadeColor = argStruct->color;
-	frameBuffer->fadeFraction = progress;
+	gameEngine->frameBuffer->fadeColor = argStruct->color;
+	gameEngine->frameBuffer->fadeFraction = progress;
 	if (progress < 1.0f) {
-		frameBuffer->isFading = true;
+		gameEngine->frameBuffer->isFading = true;
 	}
 }
 void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2241,10 +2241,10 @@ void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* re
 		argStruct->duration
 	);
 
-	frameBuffer->fadeColor = argStruct->color;
-	frameBuffer->fadeFraction = 1.0f - progress;
+	gameEngine->frameBuffer->fadeColor = argStruct->color;
+	gameEngine->frameBuffer->fadeFraction = 1.0f - progress;
 	if (progress < 1.0f) {
-		frameBuffer->isFading = true;
+		gameEngine->frameBuffer->isFading = true;
 	}
 }
 
@@ -2261,7 +2261,7 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
 	auto* argStruct = (ActionMutateVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
-	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
 
 	// I wanted to log some stats on how well our random function worked
 	// on desktop and hardware after the new random seed changes.
@@ -2309,8 +2309,8 @@ void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* 
 		uint8_t paddingG;
 	} ActionMutateVariables;
 	auto* argStruct = (ActionMutateVariables*)args;
-	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = gameControl->currentSave->scriptVariables[argStruct->sourceId];
+	uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->sourceId];
 
 	mutate(
 		argStruct->operation,
@@ -2332,15 +2332,15 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
 	} ActionCopyVariable;
 	auto* argStruct = (ActionCopyVariable*)args;
 	//endianness conversion for arguments larger than 1 byte:
-	uint16_t* currentValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
 
 	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 		argStruct->entityId,
-		scriptControl->currentEntityId
+		gameEngine->scriptControl->currentEntityId
 	);
 	if (entityIndex != NO_PLAYER) {
-		MageEntity* entity = gameControl->getEntityByMapLocalId(entityIndex);
-		uint16_t* variableValue = &gameControl->currentSave->scriptVariables[argStruct->variableId];
+		MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+		uint16_t* variableValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
 		uint8_t* fieldValue = ((uint8_t*)entity) + argStruct->field;
 
 
@@ -2396,14 +2396,14 @@ void MageScriptActions::action_check_variable(uint8_t* args, MageScriptState* re
 	argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t variableValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
 		argStruct->value
 	);
 	if (comparison == (bool)argStruct->expectedBool) {
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -2421,15 +2421,15 @@ void MageScriptActions::action_check_variables(uint8_t* args, MageScriptState* r
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	uint16_t variableValue = gameControl->currentSave->scriptVariables[argStruct->variableId];
-	uint16_t sourceValue = gameControl->currentSave->scriptVariables[argStruct->sourceId];
+	uint16_t variableValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+	uint16_t sourceValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->sourceId];
 	bool comparison = compare(
 		argStruct->comparison,
 		variableValue,
 		sourceValue
 	);
 	if (comparison == (bool)argStruct->expectedBool) {
-		scriptControl->jumpScriptId = argStruct->successScriptId;
+		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
 	}
 }
 
@@ -2454,14 +2454,14 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
 	// with an annoying confirm dialog than allowing them to quietly burn through
 	// the ROM chip's 10000 write cycles.
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		gameControl->saveGameSlotSave();
+		gameEngine->gameControl->saveGameSlotSave();
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		gameControl->dialogControl->showSaveMessageDialog(
+		gameEngine->dialogControl->showSaveMessageDialog(
 			std::string("Save complete.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!gameControl->dialogControl->isOpen) {
+	else if (!gameEngine->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
@@ -2480,10 +2480,10 @@ void MageScriptActions::action_slot_load(uint8_t* args, MageScriptState* resumeS
 	auto* argStruct = (ActionSlotLoad*)args;
 	//delaying until next tick allows for displaying of an error message on read before resuming
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		gameControl->saveGameSlotLoad(argStruct->slotIndex);
+		gameEngine->gameControl->saveGameSlotLoad(argStruct->slotIndex);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!gameControl->dialogControl->isOpen) {
+	else if (!gameEngine->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
@@ -2509,14 +2509,14 @@ void MageScriptActions::action_slot_erase(uint8_t* args, MageScriptState* resume
 	// with an annoying confirm dialog than allowing them to quietly burn through
 	// the ROM chip's 10000 write cycles.
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		gameControl->saveGameSlotErase(argStruct->slotIndex);
+		gameEngine->gameControl->saveGameSlotErase(argStruct->slotIndex);
 		//debug_print("Opening dialog %d\n", argStruct->dialogId);
-		gameControl->dialogControl->showSaveMessageDialog(
+		gameEngine->dialogControl->showSaveMessageDialog(
 			std::string("Save erased.")
 		);
 		resumeStateStruct->totalLoopsToNextAction = 1;
 	}
-	else if (!gameControl->dialogControl->isOpen) {
+	else if (!gameEngine->dialogControl->isOpen) {
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
 }
@@ -2533,7 +2533,7 @@ void MageScriptActions::action_set_connect_serial_dialog(uint8_t* args, MageScri
 	} ActionSetConnectSerialDialog;
 	ActionSetConnectSerialDialog* argStruct = (ActionSetConnectSerialDialog*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
-	commandControl->connectSerialDialogId = argStruct->serialDialogId;
+	gameEngine->commandControl->connectSerialDialogId = argStruct->serialDialogId;
 }
 
 void MageScriptActions::action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2549,18 +2549,18 @@ void MageScriptActions::action_show_serial_dialog(uint8_t* args, MageScriptState
 	auto* argStruct = (ActionShowSerialDialog*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
 	if (resumeStateStruct->totalLoopsToNextAction == 0) {
-		commandControl->showSerialDialog(argStruct->serialDialogId);
-		if (commandControl->isInputTrapped) {
+		gameEngine->commandControl->showSerialDialog(argStruct->serialDialogId);
+		if (gameEngine->commandControl->isInputTrapped) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 		}
 	}
-	else if (!commandControl->isInputTrapped) {
-		if (commandControl->jumpScriptId != MAGE_NO_SCRIPT) {
+	else if (!gameEngine->commandControl->isInputTrapped) {
+		if (gameEngine->commandControl->jumpScriptId != MAGE_NO_SCRIPT) {
 			//debug_print(
 			//	"jumpScriptId: %d\n",
-			//	commandControl->jumpScriptId
+			//	gameEngine->commandControl->jumpScriptId
 			//);
-			scriptControl->jumpScriptId = commandControl->jumpScriptId;
+			gameEngine->scriptControl->jumpScriptId = gameEngine->commandControl->jumpScriptId;
 		}
 		resumeStateStruct->totalLoopsToNextAction = 0;
 	}
@@ -2861,7 +2861,7 @@ void MageScriptActions::setResumeStatePointsAndEntityDirection(
 		entity,
 		&geometry->points[pointBIndex]
 	);
-	entity->direction = gameControl->updateDirectionAndPreserveFlags(
+	entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
 		getRelativeDirection(
 			resumeStateStruct->pointA,
 			resumeStateStruct->pointB
@@ -2888,12 +2888,12 @@ int16_t MageScriptActions::getUsefulEntityIndexFromActionEntityId(
 		entityIndex = callingEntityId;
 	}
 	else if (entityIndex == MAGE_ENTITY_PLAYER) {
-		entityIndex = gameControl->playerEntityIndex;
+		entityIndex = gameEngine->gameControl->playerEntityIndex;
 	}
 	if (entityIndex == MAGE_MAP_ENTITY) {
 		//target is the map itself, leave the value alone
 	}
-	else if (entityIndex >= gameControl->filteredEntityCountOnThisMap) {
+	else if (entityIndex >= gameEngine->gameControl->filteredEntityCountOnThisMap) {
 		//if it targets one of the debug entities filtered off the end of the list,
 		//treat it like it's not there:
 		entityIndex = NO_PLAYER;

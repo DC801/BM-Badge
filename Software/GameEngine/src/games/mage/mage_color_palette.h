@@ -4,6 +4,7 @@
 #include <memory>
 #include "EngineROM.h"
 #include "FrameBuffer.h"
+class MageGameEngine;
 
 #define COLOR_PALETTE_INTEGRITY_STRING_LENGTH 2048
 #define COLOR_PALETTE_NAME_LENGTH 32
@@ -39,7 +40,7 @@ public:
 	#endif
 
 private: 
-	std::shared_ptr<FrameBuffer> frameBuffer;
+	std::shared_ptr<MageGameEngine> gameEngine;
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

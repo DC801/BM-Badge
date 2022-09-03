@@ -41,17 +41,9 @@ class MageScriptControl
 {
 public:
    MageScriptControl(
-      std::shared_ptr<EngineROM> ROM,
-      std::shared_ptr<MageGameControl> gameControl,
-      std::shared_ptr<MageCommandControl> commandControl,
-      std::shared_ptr<MageHexEditor> hexEditor,
-      std::shared_ptr<MageScriptActions> scriptActions
+      std::shared_ptr<MageGameEngine> gameEngine
    ) noexcept
-   :  ROM(ROM),
-      gameControl(gameControl), 
-      commandControl(commandControl),
-      hexEditor(hexEditor),
-      scriptActions(scriptActions)
+   : gameEngine(gameEngine)
    {}
 
    //this allows an I+C action to set the calling map or entity script to match the new script.
@@ -81,7 +73,7 @@ public:
    int32_t mapLoadId{ MAGE_NO_MAP };
 
    //these functions return the specified MageScriptState struct:
-   resumeStatesStruct resumeStates;
+   resumeStatesStruct resumeStates{ 0 };
    MageScriptState* commandStates[COMMAND_STATES_COUNT] = {
       &resumeStates.commandLook,
       &resumeStates.commandGo,
@@ -119,15 +111,11 @@ public:
    void tickScripts();
 
 private:
-   std::shared_ptr<EngineROM> ROM;
-   std::shared_ptr<MageGameControl> gameControl;
-   std::shared_ptr<MageCommandControl> commandControl;
-   std::shared_ptr<MageHexEditor> hexEditor;
-   std::shared_ptr<MageScriptActions> scriptActions;
+   std::shared_ptr<MageGameEngine> gameEngine;
 
    //variables for tracking suspended script states:
-   MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP];
-   MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP];
+   MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ 0 };
+   MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ 0 };
 
    //this will process a script based on the state of the resumeStateStruct passed to it.
    //it should only be called from the 

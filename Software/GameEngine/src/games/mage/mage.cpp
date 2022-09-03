@@ -9,6 +9,8 @@
 #include "utility.h"
 
 #include "mage_defines.h"
+#include "mage_command_control.h"
+#include "mage_game_control.h"
 
 #ifndef DC801_EMBEDDED
 #include "shim_timer.h"
@@ -171,9 +173,9 @@ void MageGameEngine::GameRender()
          now = millis();
 #endif
       }
-      if (gameControl->getDialogControl()->isOpen)
+      if (dialogControl->isOpen)
       {
-         gameControl->getDialogControl()->draw();
+         dialogControl->draw();
 #ifdef TIMING_DEBUG
          diff = millis() - now;
          debug_print("Dialog Time: %d", diff);
@@ -308,27 +310,29 @@ MageGameEngine::MageGameEngine() noexcept
 {
    // Initialize ROM and reload game.dat if a different version is on the SD card.
    ROM = std::make_shared<EngineROM>();
+   dialogControl = std::make_shared<MageDialogControl>(self);
+
    //initialize the canvas object for the screen buffer.
-   frameBuffer = std::make_shared<FrameBuffer>(ROM);
+   frameBuffer = std::make_shared<FrameBuffer>(self);
 
    //turn off LEDs
    ledsOff();
 
    // Construct MageGameControl object, loading all headers
-   gameControl = std::make_shared<MageGameControl>(ROM);
+   gameControl = std::make_shared<MageGameControl>(self);
 
    //construct MageHexEditor object, set hex editor defaults
-   hexEditor = std::make_shared<MageHexEditor>(gameControl);
+   hexEditor = std::make_shared<MageHexEditor>(self);
 
    LOG_COLOR_PALETTE_CORRUPTION(
       "After HexEditor constructor"
    );
 
    //construct MageScriptControl object to handle scripts for the game
-   scriptControl = std::make_shared<MageScriptControl>();
+   scriptControl = std::make_shared<MageScriptControl>(self);
 
    //construct MageCommandControl object to handle serial/stdin command parsing
-   commandControl = std::make_shared<MageCommandControl>();
+   commandControl = std::make_shared<MageCommandControl>(self);
    //EngineSerialRegisterEventHandlers(
    //	std::invoke(&MageGameEngine::onSerialStart, this),
    //	std::invoke(&MageGameEngine::onSerialCommand, this);
