@@ -9,8 +9,6 @@
 // C++ threading and synchronization. More info here:
 // https://developer.arm.com/documentation/dht0008/a/arm-synchronization-primitives/practical-uses/implementing-a-mutex
 
-AudioPlayer audio;
-
 // Frequency of the file
 #define AUDIO_FREQUENCY 48000
 

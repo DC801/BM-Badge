@@ -13,18 +13,36 @@ class MageHeader
 {
 private:
 	uint32_t counts{ 0 };
-	std::unique_ptr<uint32_t[]> offsets{std::make_unique<uint32_t[]>(1)};
-	std::unique_ptr<uint32_t[]> lengths{std::make_unique<uint32_t[]>(1)};
+	std::unique_ptr<uint32_t[]> offsets;
+	std::unique_ptr<uint32_t[]> lengths;
 
 public:
-	MageHeader() = default;
-	MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t address);
+	MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset);
 
-	uint32_t count() const;
-	uint32_t offset(uint32_t num) const;
-	uint32_t length(uint32_t num) const;
-	uint32_t size() const;
-	bool valid() const;
+	constexpr uint32_t count() const { return counts; }
+
+	constexpr uint32_t offset(uint32_t num) const
+	{
+		return offsets && counts > num
+			? offsets[num]
+			: 0;
+	}
+
+	constexpr uint32_t length(uint32_t num) const
+	{
+		return lengths && counts > num
+			? lengths[num]
+			: 0;
+	}
+
+	constexpr uint32_t size() const
+	{
+		return sizeof(counts) + 			// Count
+			counts * sizeof(uint32_t) +   // Offsets
+			counts * sizeof(uint32_t);		// Lengths
+	}
+
+	bool valid() const { return offsets != nullptr && lengths != nullptr;	}
 }; //class MageHeader
 
 #endif //_MAGE_HEADER_H

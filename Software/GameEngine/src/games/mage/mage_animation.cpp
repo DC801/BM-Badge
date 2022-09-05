@@ -1,14 +1,13 @@
 #include "mage_animation.h"
-#include "mage.h"
-#include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-MageAnimation::MageAnimation(std::shared_ptr<MageGameEngine> gameEngine, uint32_t address)
+MageAnimation::MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t address)
+noexcept
 {
 	offset = address;
 	//read tilesetId
-	gameEngine->ROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(tilesetId),
 		(uint8_t *)&tilesetId,
@@ -22,7 +21,7 @@ MageAnimation::MageAnimation(std::shared_ptr<MageGameEngine> gameEngine, uint32_
 	offset += sizeof(tilesetId);
 
 	//read frameCount
-	gameEngine->ROM->Read(
+	ROM->Read(
 		offset,
 		sizeof(frameCount),
 		(uint8_t *)&frameCount,
@@ -34,47 +33,17 @@ MageAnimation::MageAnimation(std::shared_ptr<MageGameEngine> gameEngine, uint32_
 
 	// Increment offset
 	offset += sizeof(frameCount);
-}
 
-uint16_t MageAnimation::TilesetId() const
-{
-	return tilesetId;
-}
-
-uint16_t MageAnimation::FrameCount() const
-{
-	return frameCount;
-}
-
-MageAnimationFrame MageAnimation::AnimationFrame(uint32_t index) const
-{
-	MageAnimationFrame frame = {};
-	index = index < frameCount
-		? index
-		: frameCount;
-	gameEngine->ROM->Read(
-		offset + (index * sizeof(frame)),
-		sizeof(frame),
-		(uint8_t *)&frame,
-		"Failed to read AnimationFrame"
-	);
-	frame.tileId = ROM_ENDIAN_U2_VALUE(frame.tileId);
-	frame.duration = ROM_ENDIAN_U2_VALUE(frame.duration);
-	return frame;
-}
-
-uint32_t MageAnimation::Size() const
-{
-	return (
-		sizeof(tilesetId) +
-		sizeof(frameCount)
-	);
-}
-
-uint32_t MageAnimation::end() const
-{
-	return (
-		Size() +
-		(frameCount * sizeof(MageAnimationFrame))
-	);
+	frames = std::make_unique<MageAnimationFrame[]>(frameCount);
+	for (auto i = 0; i < frameCount; ++i)
+	{
+		ROM->Read(
+			offset + (i * sizeof(MageAnimationFrame)),
+			sizeof(MageAnimationFrame),
+			(uint8_t*)&frames[i],
+			"Failed to read AnimationFrame"
+		);
+		frames[i].tileId = ROM_ENDIAN_U2_VALUE(frames[i].tileId);
+		frames[i].duration = ROM_ENDIAN_U2_VALUE(frames[i].duration);
+	}
 }

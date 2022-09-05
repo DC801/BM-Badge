@@ -5,6 +5,7 @@
 #include "mage_defines.h"
 
 #include "EngineInput.h"
+#include "EngineAudio.h"
 
 class FrameBuffer;
 class MageGameControl;
@@ -13,6 +14,7 @@ class MageHexEditor;
 class MageDialogControl;
 class MageScriptControl;
 class MageScriptActions;
+class EngineWindowFrame;
 
 class MageGameEngine
 {
@@ -35,6 +37,9 @@ public:
    //this runs the actual game, performing initial setup and then
    //running the game loop indefinitely until the game is exited.
    void Run();
+
+   std::unique_ptr<AudioPlayer> audioPlayer;
+   std::unique_ptr<EngineWindowFrame> windowFrame;
 
    std::shared_ptr<MageGameEngine> self{ this };
    std::shared_ptr<EngineROM> ROM;

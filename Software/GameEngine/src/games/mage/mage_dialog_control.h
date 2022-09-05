@@ -119,8 +119,8 @@ private:
    uint32_t cursorPhase;
    uint8_t currentResponseIndex;
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
-   MageEntityRenderableData currentPortraitRenderableData;
-   MageDialogScreen currentScreen;
+   MageEntityRenderableData currentPortraitRenderableData{};
+   MageDialogScreen* currentScreen;
    std::string currentEntityName;
    std::string currentMessage;
    std::unique_ptr<uint16_t[]>messageIds;

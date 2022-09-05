@@ -8,8 +8,6 @@ int SCREEN_MULTIPLIER = 1;
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 
-std::unique_ptr<EngineWindowFrame> MainWindow = std::make_unique<EngineWindowFrame>();
-
 EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents() noexcept
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)

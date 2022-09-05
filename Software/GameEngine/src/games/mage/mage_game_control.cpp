@@ -2,6 +2,7 @@
 
 #include <array>
 #include "convert_endian.h"
+#include "mage_animation.h"
 #include "utility.h"
 
 // Initializer list, default construct values
@@ -54,83 +55,44 @@ MageGameControl::MageGameControl(
 	currentSaveIndex = 0;
 	setCurrentSaveToFreshState();
 
-	mapHeader = MageHeader{gameEngine->ROM, offset};
-	offset += mapHeader.size();
+	mapHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	tilesetHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	animationHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	entityTypeHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	entityHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	geometryHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	scriptHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	portraitHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	dialogHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	serialDialogHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	colorPaletteHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	stringHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	saveFlagHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	variableHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
+	imageHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
 
-	tilesetHeader = MageHeader{gameEngine->ROM, offset};
-	offset += tilesetHeader.size();
-
-	animationHeader = MageHeader{gameEngine->ROM, offset};
-	offset += animationHeader.size();
-
-	entityTypeHeader = MageHeader{gameEngine->ROM, offset};
-	offset += entityTypeHeader.size();
-
-	entityHeader = MageHeader{gameEngine->ROM, offset};
-	offset += entityHeader.size();
-
-	geometryHeader = MageHeader{gameEngine->ROM, offset};
-	offset += geometryHeader.size();
-
-	scriptHeader = MageHeader{gameEngine->ROM, offset};
-	offset += scriptHeader.size();
-
-	portraitHeader = MageHeader{gameEngine->ROM, offset};
-	offset += portraitHeader.size();
-
-	dialogHeader = MageHeader{gameEngine->ROM, offset};
-	offset += dialogHeader.size();
-
-	serialDialogHeader = MageHeader{gameEngine->ROM, offset};
-	offset += serialDialogHeader.size();
-
-	colorPaletteHeader = MageHeader{gameEngine->ROM, offset};
-	offset += colorPaletteHeader.size();
-
-	stringHeader = MageHeader{gameEngine->ROM, offset};
-	offset += stringHeader.size();
-
-	saveFlagHeader = MageHeader{gameEngine->ROM, offset};
-	offset += saveFlagHeader.size();
-
-	variableHeader = MageHeader{gameEngine->ROM, offset};
-	offset += variableHeader.size();
-
-	imageHeader = MageHeader{gameEngine->ROM, offset};
-	offset += imageHeader.size();
-
-	tilesets = std::make_unique<MageTileset[]>(tilesetHeader.count());
-
-	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
+	tilesets = std::vector<MageTileset>{ tilesetHeader->count() };
+	for (uint8_t i = 0; i < tilesetHeader->count(); i++)
 	{
-		tilesets[i] = MageTileset(gameEngine->ROM, i, tilesetHeader.offset(i));
+		tilesets[i] = MageTileset{ gameEngine->ROM, i, tilesetHeader->offset(i) };
 	}
 
-	animations = std::make_unique<MageAnimation[]>(animationHeader.count());
-
-	for (uint32_t i = 0; i < animationHeader.count(); i++)
+	animations = std::vector<MageAnimation>{ animationHeader->count() };
+	for (uint32_t i = 0; i < animationHeader->count(); i++)
 	{
-		animations[i] = MageAnimation(gameEngine, animationHeader.offset(i));
+		animations[i] = MageAnimation{ gameEngine->ROM, animationHeader->offset(i) };
 	}
 
-	entityTypes = std::make_unique<MageEntityType[]>(entityTypeHeader.count());
-
-	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
+	entityTypes = std::vector<MageEntityType>(entityTypeHeader->count());
+	for (uint32_t i = 0; i < entityTypeHeader->count(); i++)
 	{
-		entityTypes[i] = MageEntityType(gameEngine->ROM, entityTypeHeader.offset(i));
+		entityTypes[i] = MageEntityType(gameEngine->ROM, entityTypeHeader->offset(i));
 	}
 
-	entities = std::make_unique<MageEntity[]>(MAX_ENTITIES_PER_MAP);
-
-	playerEntityIndex = NO_PLAYER;
-
-	entityRenderableData = std::make_unique<MageEntityRenderableData[]>(MAX_ENTITIES_PER_MAP);
-
-	colorPalettes = std::make_unique<MageColorPalette[]>(colorPaletteHeader.count());
-
-	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	colorPalettes = std::vector<MageColorPalette>{ colorPaletteHeader->count() };
+	for (uint32_t i = 0; i < colorPaletteHeader->count(); i++)
 	{
-		colorPalettes[i] = MageColorPalette(gameEngine->ROM, colorPaletteHeader.offset(i));
+		colorPalettes[i] = MageColorPalette(gameEngine->ROM, colorPaletteHeader->offset(i));
 	}
 #ifndef DC801_EMBEDDED
 	verifyAllColorPalettes("Right after it was read from gameEngine->ROM");
@@ -153,21 +115,21 @@ MageGameControl::MageGameControl(
 uint32_t MageGameControl::Size() const
 {
 	uint32_t size = (
-		mapHeader.size() +
-		tilesetHeader.size() +
-		animationHeader.size() +
-		entityTypeHeader.size() +
-		entityHeader.size() +
-		geometryHeader.size() +
-		scriptHeader.size() +
-		portraitHeader.size() +
-		dialogHeader.size() +
-		serialDialogHeader.size() +
-		colorPaletteHeader.size() +
-		stringHeader.size() +
-		saveFlagHeader.size() +
-		variableHeader.size() +
-		imageHeader.size() +
+		mapHeader->size() +
+		tilesetHeader->size() +
+		animationHeader->size() +
+		entityTypeHeader->size() +
+		entityHeader->size() +
+		geometryHeader->size() +
+		scriptHeader->size() +
+		portraitHeader->size() +
+		dialogHeader->size() +
+		serialDialogHeader->size() +
+		colorPaletteHeader->size() +
+		stringHeader->size() +
+		saveFlagHeader->size() +
+		variableHeader->size() +
+		imageHeader->size() +
 		map->Size() +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
@@ -191,22 +153,22 @@ uint32_t MageGameControl::Size() const
 		sizeof(MageEntityRenderableData) * MAX_ENTITIES_PER_MAP //entityRenderableData array
 		);
 
-	for (uint32_t i = 0; i < tilesetHeader.count(); i++)
+	for (uint32_t i = 0; i < tilesetHeader->count(); i++)
 	{
 		size += tilesets[i].Size();
 	}
 
-	for (uint32_t i = 0; i < animationHeader.count(); i++)
+	for (uint32_t i = 0; i < animationHeader->count(); i++)
 	{
 		size += animations[i].Size();
 	}
 
-	for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
+	for (uint32_t i = 0; i < entityTypeHeader->count(); i++)
 	{
 		size += entityTypes[i].Size();
 	}
 
-	for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
+	for (uint32_t i = 0; i < colorPaletteHeader->count(); i++)
 	{
 		size += colorPalettes[i].size();
 	}
@@ -226,11 +188,8 @@ void MageGameControl::readSaveFromRomIntoRam(
 	gameEngine->ROM->ReadSaveSlot(
 		currentSaveIndex,
 		sizeof(MageSaveGame),
-		(uint8_t*)&currentSave
+		(uint8_t*)currentSave.get()
 	);
-	ROM_ENDIAN_U4_BUFFER(&currentSave->engineVersion, 1);
-	ROM_ENDIAN_U4_BUFFER(&currentSave->scenarioDataCRC32, 1);
-	ROM_ENDIAN_U4_BUFFER(&currentSave->saveDataLength, 1);
 
 	bool engineIncompatible = currentSave->engineVersion != engineVersion;
 	bool saveLengthIncompatible = currentSave->saveDataLength != sizeof(MageSaveGame);
@@ -283,19 +242,6 @@ void MageGameControl::saveGameSlotLoad(uint8_t slotIndex) {
 	currentSaveIndex = slotIndex;
 	readSaveFromRomIntoRam();
 	//LoadMap(currentSave->currentMapId);
-}
-
-const MageTileset& MageGameControl::Tileset(uint32_t index) const
-{
-	static MageTileset tileset;
-	if (!tilesets) return tileset;
-
-	if (tilesetHeader.count() > index)
-	{
-		return tilesets[index];
-	}
-
-	return tileset;
 }
 
 MageEntity MageGameControl::LoadEntity(uint32_t address)
@@ -490,7 +436,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	currentSave->currentMapId = getValidMapId(index);
 
 	//load new map:
-	map = std::make_unique<MageMap>(gameEngine->ROM, mapHeader.offset(currentSave->currentMapId));
+	map = std::make_unique<MageMap>(gameEngine->ROM, mapHeader->offset(currentSave->currentMapId));
 
 
 	if (map->EntityCount() > MAX_ENTITIES_PER_MAP) {
@@ -515,7 +461,7 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	for (uint8_t i = 0; i < map->EntityCount(); i++) {
 		//fill in entity data from gameEngine->ROM:
 		MageEntity entity = LoadEntity(
-			entityHeader.offset(map->getGlobalEntityId(i))
+			entityHeader->offset(map->getGlobalEntityId(i))
 		);
 		//debug_print(
 		//	"originalId: %d, filteredId: %d, name: %s",
@@ -587,7 +533,7 @@ void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {
 	if (playerEntityIndex == NO_PLAYER) {
 		return;
 	}
-	MageEntity* playerEntity = getEntityByMapLocalId(playerEntityIndex);
+	auto playerEntity = getEntityByMapLocalId(playerEntityIndex);
 	uint8_t* destination = (uint8_t*)&playerEntity->name;
 	uint8_t* source = (uint8_t*)&currentSave->name;
 	if (intoSaveRam) {
@@ -665,7 +611,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 	if (playerEntityIndex != NO_PLAYER) {
 		//get useful variables for below:
 		updateEntityRenderableData(playerEntityIndex);
-		MageEntity* playerEntity = getEntityByMapLocalId(playerEntityIndex);
+		auto playerEntity = getEntityByMapLocalId(playerEntityIndex);
 		MageEntityRenderableData* renderableData = (
 			getEntityRenderableDataByMapLocalId(playerEntityIndex)
 			);
@@ -965,7 +911,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 		const MageTileset& tileset = Tileset(currentTile.tilesetId);
 
 		MageColorPalette* colorPalette = getValidColorPalette(tileset.ImageId());
-		address = imageHeader.offset(tileset.ImageId());
+		address = imageHeader->offset(tileset.ImageId());
 		gameEngine->frameBuffer->drawChunkWithFlags(
 			address,
 			colorPalette,
@@ -1246,7 +1192,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 
 uint16_t MageGameControl::getValidMapId(uint16_t mapId)
 {
-	return mapId % (mapHeader.count());
+	return mapId % (mapHeader->count());
 }
 
 uint8_t MageGameControl::getValidPrimaryIdType(uint8_t primaryIdType)
@@ -1258,7 +1204,7 @@ uint8_t MageGameControl::getValidPrimaryIdType(uint8_t primaryIdType)
 uint16_t MageGameControl::getValidAnimationId(uint16_t animationId)
 {
 	//always return a valid animation ID.
-	return animationId % (animationHeader.count());
+	return animationId % (animationHeader->count());
 }
 
 uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId)
@@ -1274,7 +1220,7 @@ uint16_t MageGameControl::getValidAnimationFrame(uint16_t animationFrame, uint16
 uint16_t MageGameControl::getValidTilesetId(uint16_t tilesetId)
 {
 	//always return a valid tileset ID.
-	return tilesetId % tilesetHeader.count();
+	return tilesetId % tilesetHeader->count();
 }
 
 uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
@@ -1290,7 +1236,7 @@ uint16_t MageGameControl::getValidTileId(uint16_t tileId, uint16_t tilesetId)
 uint16_t MageGameControl::getValidEntityTypeId(uint16_t entityTypeId)
 {
 	//always return a valid entity type for the entityTypeId submitted.
-	return entityTypeId % entityTypeHeader.count();
+	return entityTypeId % entityTypeHeader->count();
 }
 
 MageEntityType* MageGameControl::getValidEntityType(uint16_t entityTypeId) {
@@ -1305,14 +1251,14 @@ uint16_t MageGameControl::getValidMapLocalScriptId(uint16_t scriptId)
 
 uint16_t MageGameControl::getValidGlobalScriptId(uint16_t scriptId)
 {
-	return scriptId % scriptHeader.count();
+	return scriptId % scriptHeader->count();
 }
 
 uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId)
 {
 	//use failover animation if an invalid animationId is submitted to the function.
 	//There's a good chance if that happens, it will break things.
-	entityTypeId = entityTypeId % entityTypeHeader.count();
+	entityTypeId = entityTypeId % entityTypeHeader->count();
 
 	//always return a valid entity type animation ID for the entityTypeAnimationId submitted.
 	return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
@@ -1344,7 +1290,7 @@ uint32_t MageGameControl::getScriptAddressFromGlobalScriptId(uint32_t scriptId)
 	scriptId = getValidGlobalScriptId(scriptId);
 
 	//then return the address offset for that script from the scriptHeader:
-	return scriptHeader.offset(scriptId);
+	return scriptHeader->offset(scriptId);
 }
 
 void MageGameControl::updateEntityRenderableData(
@@ -1620,7 +1566,7 @@ void MageGameControl::DrawEntities()
 		uint16_t tileHeight = tileset->TileHeight();
 		uint16_t cols = tileset->Cols();
 		uint16_t tileId = entityRenderableData[entityIndex].tileId;
-		uint32_t address = imageHeader.offset(imageId);
+		uint32_t address = imageHeader->offset(imageId);
 		uint16_t source_x = (tileId % cols) * tileWidth;
 		uint16_t source_y = (tileId / cols) * tileHeight;
 		int32_t x = entity->x - cameraX;
@@ -1707,22 +1653,22 @@ void MageGameControl::DrawGeometry()
 
 MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
 	return MageGeometry(gameEngine,
-		geometryHeader.offset(
-			map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader.count()
+		geometryHeader->offset(
+			map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader->count()
 		)
 	);
 }
 
 MageGeometry MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
 	return MageGeometry(gameEngine,
-		geometryHeader.offset(
-			globalGeometryId % geometryHeader.count()
+		geometryHeader->offset(
+			globalGeometryId % geometryHeader->count()
 		)
 	);
 }
 
 MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {
-	return &colorPalettes[colorPaletteId % colorPaletteHeader.count()];
+	return &colorPalettes[colorPaletteId % colorPaletteHeader->count()];
 }
 
 uint8_t MageGameControl::getFilteredEntityId(uint8_t mapLocalEntityId) const {
@@ -1737,21 +1683,29 @@ MageEntityRenderableData* MageGameControl::getEntityRenderableDataByMapLocalId(u
 	return &entityRenderableData[getFilteredEntityId(mapLocalEntityId)];
 }
 
-MageEntity* MageGameControl::getEntityByMapLocalId(uint8_t mapLocalEntityId) const {
-	return &entities[getFilteredEntityId(mapLocalEntityId)];
+const MageEntity* MageGameControl::getEntityByMapLocalId(uint8_t mapLocalEntityId) const
+{
+	auto returnVal = &entities[getFilteredEntityId(mapLocalEntityId)];
+	return returnVal;
+}
+
+MageEntity* MageGameControl::getEntityByMapLocalId(uint8_t mapLocalEntityId)
+{
+	auto returnVal = &entities[getFilteredEntityId(mapLocalEntityId)];
+	return returnVal;
 }
 
 MageTileset* MageGameControl::getValidTileset(uint16_t tilesetId) {
-	return &tilesets[tilesetId % tilesetHeader.count()];
+	return &tilesets[tilesetId % tilesetHeader->count()];
 }
 
 std::string MageGameControl::getString(
 	uint16_t stringId,
 	int16_t mapLocalEntityId
 ) {
-	uint16_t sanitizedIndex = stringId % stringHeader.count();
-	uint32_t start = stringHeader.offset(sanitizedIndex);
-	uint32_t length = stringHeader.length(sanitizedIndex);
+	uint16_t sanitizedIndex = stringId % stringHeader->count();
+	uint32_t start = stringHeader->offset(sanitizedIndex);
+	uint32_t length = stringHeader->length(sanitizedIndex);
 	std::string romString(length, '\0');
 	uint8_t* romStringPointer = (uint8_t*)&romString[0];
 	gameEngine->ROM->Read(
@@ -1836,19 +1790,19 @@ std::string MageGameControl::getString(
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
-	return imageHeader.offset(imageId % imageHeader.count());
+	return imageHeader->offset(imageId % imageHeader->count());
 }
 
 uint32_t MageGameControl::getPortraitAddress(uint16_t portraitId) {
-	return portraitHeader.offset(portraitId % portraitHeader.count());
+	return portraitHeader->offset(portraitId % portraitHeader->count());
 }
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
-	return dialogHeader.offset(dialogId % dialogHeader.count());
+	return dialogHeader->offset(dialogId % dialogHeader->count());
 }
 
 uint32_t MageGameControl::getSerialDialogAddress(uint16_t serialDialogId) {
-	return serialDialogHeader.offset(serialDialogId % serialDialogHeader.count());
+	return serialDialogHeader->offset(serialDialogId % serialDialogHeader->count());
 }
 
 std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {
@@ -1860,22 +1814,22 @@ std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {
 
 #ifndef DC801_EMBEDDED
 void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription) {
-	// for (uint32_t i = 0; i < colorPaletteHeader.count(); i++) {
+	// for (uint32_t i = 0; i < colorPaletteHeader->count(); i++) {
 	// 	colorPalettes[i].verifyColors(errorTriggerDescription);
 	// }
 }
 #endif
 
 uint16_t MageGameControl::entityTypeCount() {
-	return entityTypeHeader.count();
+	return entityTypeHeader->count();
 }
 
 uint16_t MageGameControl::animationCount() {
-	return animationHeader.count();
+	return animationHeader->count();
 }
 
 uint16_t MageGameControl::tilesetCount() {
-	return tilesetHeader.count();
+	return tilesetHeader->count();
 }
 
 void MageGameControl::logAllEntityScriptValues(const char* string) {

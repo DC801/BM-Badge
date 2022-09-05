@@ -7,7 +7,7 @@
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
-typedef enum : uint8_t {
+enum MageSerialCommands : uint8_t {
 	COMMAND_NONE = 0,
 	COMMAND_HELP = 1,
 	COMMAND_LOOK = 2,
@@ -17,26 +17,28 @@ typedef enum : uint8_t {
 	COMMAND_INVENTORY = 6,
 	COMMAND_USE = 7,
 	NUM_SERIAL_COMMANDS
-} MageSerialCommands;
+} ;
 
-typedef enum : uint8_t {
+enum MageSerialDialogResponseTypes : uint8_t {
 	RESPONSE_NONE = 0,
 	RESPONSE_ENTER_NUMBER = 1,
 	RESPONSE_ENTER_STRING = 2,
 	NUM_RESPONSE_TYPES
-} MageSerialDialogResponseTypes;
+} ;
 
-typedef struct {
+struct MageSerialDialog
+{
 	char name[32];
 	uint16_t stringId;
 	MageSerialDialogResponseTypes serialResponseType;
 	uint8_t responseCount;
-} MageSerialDialog;
+};
 
-typedef struct {
+ struct MageSerialDialogResponse
+ {
 	uint16_t stringId;
 	uint16_t scriptId;
-} MageSerialDialogResponse;
+};
 
 class MageCommandControl {
 	public:

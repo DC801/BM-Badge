@@ -21,11 +21,15 @@
 #include "mage_script_control.h"
 #include "mage_command_control.h"
 #include "mage_dialog_control.h"
+#include <vector>
 
 #define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
 class MageColorPalette;
+
+
+static MageTileset defaultTileSet{};
 
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
@@ -57,14 +61,14 @@ class MageColorPalette;
       MageGameControl(std::shared_ptr<MageGameEngine> gameEngine) noexcept;
       //this is the hackable array of entities that are on the current map
       //the data contained within is the data that can be hacked in the hex editor.
-      std::shared_ptr<MageEntity[]> entities;
+      std::vector<MageEntity> entities{ MAX_ENTITIES_PER_MAP };
 
       //this is the index value of where the playerEntity is located within
       //the entities[] array and also the offset to it from hackableDataAddress
-      uint8_t playerEntityIndex;
+      uint8_t playerEntityIndex{ NO_PLAYER };
 
       uint8_t currentSaveIndex;
-      std::unique_ptr<MageSaveGame> currentSave;
+      std::unique_ptr<MageSaveGame> currentSave{};
 
       //this lets us make it so that inputs stop working for the player
       bool playerHasControl;
@@ -94,7 +98,14 @@ class MageColorPalette;
       void saveGameSlotLoad(uint8_t slotIndex);
 
       //this will return a specific MageTileset object by index.
-      const MageTileset& Tileset(uint32_t index) const;
+      constexpr const MageTileset& Tileset(uint32_t index) const
+      {
+         if (tilesetHeader->count() > index)
+         {
+            return tilesets[index];
+         }
+         return defaultTileSet;
+      }
 
       //this will return the current map object.
       auto Map() { return map; }
@@ -152,7 +163,8 @@ class MageColorPalette;
       MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
       uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const;
       uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const;
-      MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
+      const MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
+      MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId);
       MageEntityRenderableData* getEntityRenderableDataByMapLocalId(uint8_t mapLocalEntityId);
       std::string getString(
          uint16_t stringId,
@@ -218,21 +230,21 @@ class MageColorPalette;
 
       //these header objects store the header information for all datasets on the ROM,
       //including address offsets for each item, and the length of the item in memory.
-      MageHeader mapHeader;
-      MageHeader tilesetHeader;
-      MageHeader animationHeader;
-      MageHeader entityTypeHeader;
-      MageHeader entityHeader;
-      MageHeader geometryHeader;
-      MageHeader scriptHeader;
-      MageHeader portraitHeader;
-      MageHeader dialogHeader;
-      MageHeader serialDialogHeader;
-      MageHeader colorPaletteHeader;
-      MageHeader stringHeader;
-      MageHeader saveFlagHeader;
-      MageHeader variableHeader;
-      MageHeader imageHeader;
+      std::unique_ptr<MageHeader> mapHeader;
+      std::unique_ptr<MageHeader> tilesetHeader;
+      std::unique_ptr<MageHeader> animationHeader;
+      std::unique_ptr<MageHeader> entityTypeHeader;
+      std::unique_ptr<MageHeader> entityHeader;
+      std::unique_ptr<MageHeader> geometryHeader;
+      std::unique_ptr<MageHeader> scriptHeader;
+      std::unique_ptr<MageHeader> portraitHeader;
+      std::unique_ptr<MageHeader> dialogHeader;
+      std::unique_ptr<MageHeader> serialDialogHeader;
+      std::unique_ptr<MageHeader> colorPaletteHeader;
+      std::unique_ptr<MageHeader> stringHeader;
+      std::unique_ptr<MageHeader> saveFlagHeader;
+      std::unique_ptr<MageHeader> variableHeader;
+      std::unique_ptr<MageHeader> imageHeader;
 
       //used to verify whether a save is compatible with game data
       uint32_t engineVersion;
@@ -244,22 +256,22 @@ class MageColorPalette;
 
       //this is an array of the tileset data on the ROM.
       //each entry is an indexed tileset.
-      std::unique_ptr<MageTileset[]> tilesets;
+      std::vector<MageTileset> tilesets;
 
       //this is an array of the animation data on the ROM
       //each entry is an indexed animation.
-      std::unique_ptr<MageAnimation[]> animations;
+      std::vector<MageAnimation> animations;
 
       //this is an array of the entity types on the ROM
       //each entry is an indexed entity type.
-      std::unique_ptr<MageEntityType[]> entityTypes;
+      std::vector<MageEntityType> entityTypes;
 
       //this is an array storing the most current data needed to draw entities
       //on the screen in their current animation state.
-      std::unique_ptr<MageEntityRenderableData[]> entityRenderableData;
+      std::vector<MageEntityRenderableData> entityRenderableData{ MAX_ENTITIES_PER_MAP };
 
       //this is an array of all the colorPalettes objects in the ROM
-      std::unique_ptr<MageColorPalette[]> colorPalettes;
+      std::vector<MageColorPalette> colorPalettes;
 
       //a couple of state variables for tracking player movement:
       float mageSpeed{ 0.0f };
@@ -270,8 +282,6 @@ class MageColorPalette;
 
       uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
       uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
-
-
    }; //class MageGameControl
 
 

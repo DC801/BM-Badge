@@ -15,7 +15,7 @@ extern QSPI qspiControl;
 
 #else
 FILE* romfile = NULL;
-uint8_t romDataInDesktopRam[ENGINE_ROM_MAX_DAT_FILE_SIZE] = { 0 };
+char* romDataInDesktopRam = new char[ENGINE_ROM_MAX_DAT_FILE_SIZE]{ 0 };
 char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
 	DESKTOP_SAVE_FILE_PATH "save_0.dat",
 	DESKTOP_SAVE_FILE_PATH "save_1.dat",
@@ -34,7 +34,6 @@ void makeSureSaveFilePathExists() {
 
 EngineROM::EngineROM() noexcept
 {
-	bool isRomPlayable = false;
 #ifdef DC801_EMBEDDED
 	isRomPlayable = Magic();
 	FIL gameDat;
@@ -208,7 +207,7 @@ EngineROM::EngineROM() noexcept
 	auto file = std::ifstream{ MAGE_GAME_DAT_PATH, std::ios::binary };
 	
 	/* copy the file into the buffer */
-	if (!file.read((char*)romDataInDesktopRam, romFileSize))
+	if (!file.read(romDataInDesktopRam, romFileSize))
 	{
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
@@ -226,8 +225,7 @@ EngineROM::EngineROM() noexcept
 #endif
 
 	// Verify magic string is on ROM when we're done:
-	isRomPlayable = EngineROM::Magic();
-	if (!isRomPlayable) {
+	if (!EngineROM::Magic()) {
 		EngineROM::ErrorUnplayable();
 	}
 }
@@ -257,7 +255,7 @@ uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
 
 void EngineROM::ReadSaveSlot(
 	uint8_t slotIndex,
-	size_t length,
+	size_t dataLength,
 	uint8_t* data
 ) {
 #ifdef DC801_EMBEDDED
@@ -270,36 +268,34 @@ void EngineROM::ReadSaveSlot(
 #else
 	makeSureSaveFilePathExists();
 	char* saveFileName = saveFileSlotNames[slotIndex];
-	FILE* saveFile = fopen(saveFileName, "r+b");
-	if (saveFile == NULL) {
-		saveFile = fopen(saveFileName, "w+b");
-		if (saveFile == NULL) {
+	auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
+	if (fileDirEntry.exists()) {
+		auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::out | std::ios::binary };
+		if (!saveFile.good()) {
 			int error = errno;
 			fprintf(stderr, "Error: %s\n", strerror(error));
 			ENGINE_PANIC("Desktop build: SAVE file missing");
 		}
-	}
-	fseek(saveFile, 0, SEEK_END);
-	size_t saveFileSize = ftell(saveFile);
-	rewind(saveFile);
-	debug_print(
-		"Save file size: %zu\n",
-		saveFileSize
-	);
-	if (saveFileSize) {
-		if (fread(data, saveFileSize, 1, saveFile) != 1) {
-			fclose(saveFile);
-			ENGINE_PANIC("Desktop build: SAVE file cannot be created");
+		else
+		{
+			auto fileSize = fileDirEntry.file_size();
+
+			debug_print(
+				"Save file size: %zu\n",
+				(uint32_t)fileDirEntry.file_size()
+			);
+			
+			saveFile.read((char*)data, fileSize);
+
+			auto readCount = saveFile.gcount();
+			if (fileSize != readCount)
+			{
+				// The file save_*.dat on disk can't be read?
+				// Empty out the destination.
+				memset(data, 0, dataLength);
+			}
 		}
 	}
-	else {
-		// The file save_*.dat on disk is empty?
-		// Empty out the destination.
-		for (size_t i = 0; i < length; i++) {
-			data[i] = 0;
-		}
-	}
-	fclose(saveFile);
 #endif
 }
 
@@ -595,7 +591,7 @@ bool EngineROM::Read(
 	}
 #else
 	memmove(data, romDataInDesktopRam + address, length);
-#endif // DC801_DESKTOP
+#endif
 	return true;
 }
 
@@ -651,10 +647,10 @@ uint32_t EngineROM::Verify(
 		ENGINE_PANIC("EngineROM::Verify: Null pointer");
 	}
 	char debugString[128];
-	// auto readBuffer = std::make_unique<uint8_t[]>(length);
+	// auto readBuffer = std::make_unique<uint8_t[]>(dataLength);
 	// Read(
 	// 	address,
-	// 	length,
+	// 	dataLength,
 	// 	readBuffer.get(),
 	// 	"Failed to read from Rom in EngineROM::Verify"
 	// );
