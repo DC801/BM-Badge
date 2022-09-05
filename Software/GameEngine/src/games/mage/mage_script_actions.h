@@ -140,7 +140,7 @@ class MageScriptActions
 {
 public:
    MageScriptActions(
-      std::shared_ptr<MageGameEngine> gameEngine
+      MageGameEngine*  gameEngine
    ) noexcept
       : gameEngine(gameEngine)
    {}
@@ -535,7 +535,7 @@ public:
    };
 
 private:
-   std::shared_ptr<MageGameEngine> gameEngine;
+   MageGameEngine*  gameEngine;
 
    //the actual array of action functions:
 

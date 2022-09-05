@@ -293,6 +293,7 @@ void FrameBuffer::drawChunkWithFlags(
 
 	if (fadeFraction != 0) {
 		colorPalette = new MageColorPalette(
+			this,
 			colorPaletteOriginal,
 			transparent_color,
 			fadeColor,
@@ -1895,6 +1896,6 @@ void FrameBuffer::blt()
 #ifdef DC801_EMBEDDED
 	draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 #else
-	//MainWindow->GameBlt(frame);
+	gameEngine->windowFrame->GameBlt(frame);
 #endif
 }

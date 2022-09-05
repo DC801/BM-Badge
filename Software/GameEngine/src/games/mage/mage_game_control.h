@@ -1,33 +1,16 @@
 #ifndef _MAGE_GAME_CONTROL
 #define _MAGE_GAME_CONTROL
 
-
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "FrameBuffer.h"
-
-#include "mage.h"
-#include "mage_defines.h"
-#include "mage_header.h"
-#include "mage_map.h"
-#include "mage_tileset.h"
-#include "mage_animation.h"
-#include "mage_entity_type.h"
-#include "mage_geometry.h"
-#include "mage_color_palette.h"
-
-#include "mage_hex.h"
-#include "mage_script_actions.h"
-#include "mage_script_control.h"
-#include "mage_command_control.h"
-#include "mage_dialog_control.h"
 #include <vector>
 
 #define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
 class MageColorPalette;
-
+class MageGeometry;
 
 static MageTileset defaultTileSet{};
 
@@ -58,7 +41,7 @@ static MageTileset defaultTileSet{};
    class MageGameControl
    {
    public:
-      MageGameControl(std::shared_ptr<MageGameEngine> gameEngine) noexcept;
+      MageGameControl(MageGameEngine*  gameEngine) noexcept;
       //this is the hackable array of entities that are on the current map
       //the data contained within is the data that can be hacked in the hex editor.
       std::vector<MageEntity> entities{ MAX_ENTITIES_PER_MAP };
@@ -226,7 +209,7 @@ static MageTileset defaultTileSet{};
 
       void logAllEntityScriptValues(const char* string);
    private:
-      std::shared_ptr<MageGameEngine> gameEngine;
+      MageGameEngine*  gameEngine;
 
       //these header objects store the header information for all datasets on the ROM,
       //including address offsets for each item, and the length of the item in memory.

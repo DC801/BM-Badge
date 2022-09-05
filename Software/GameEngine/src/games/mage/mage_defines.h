@@ -105,14 +105,6 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 
-// color palette corruption detection - requires much ram, can only be run on desktop
-#ifndef DC801_LOG_PALETTE_CORRUPTION
-#define LOG_COLOR_PALETTE_CORRUPTION(value) //(value)
-#else
-#define LOG_COLOR_PALETTE_CORRUPTION(value) GameControl->verifyAllColorPalettes((value));
-#endif //DC801_EMBEDDED
-
-
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
 	//size of chunk to be read/written when writing game.dat to ROM per loop

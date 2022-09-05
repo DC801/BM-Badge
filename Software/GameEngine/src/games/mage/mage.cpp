@@ -25,101 +25,6 @@
 #endif
 
 
-MageGameEngine::MageGameEngine() noexcept
-{
-   // Initialize ROM and reload game.dat if a different version is on the SD card.
-   audioPlayer = std::make_unique<AudioPlayer>();
-   ROM = std::make_shared<EngineROM>();
-   inputHandler = std::make_shared<EngineInput>();
-   windowFrame = std::make_unique<EngineWindowFrame>(inputHandler);
-
-   dialogControl = std::make_shared<MageDialogControl>(self);
-
-   //initialize the canvas object for the screen buffer.
-   frameBuffer = std::make_shared<FrameBuffer>(self);
-
-   //turn off LEDs
-   ledsOff();
-
-   // Construct MageGameControl object, loading all headers
-   gameControl = std::make_shared<MageGameControl>(self);
-
-   //construct MageHexEditor object, set hex editor defaults
-   hexEditor = std::make_shared<MageHexEditor>(self);
-
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "After HexEditor constructor"
-   );
-
-   //construct MageScriptControl object to handle scripts for the game
-   scriptControl = std::make_shared<MageScriptControl>(self);
-
-   //construct MageCommandControl object to handle serial/stdin command parsing
-   commandControl = std::make_shared<MageCommandControl>(self);
-   //EngineSerialRegisterEventHandlers(
-   //	std::invoke(&MageGameEngine::onSerialStart, this),
-   //	std::invoke(&MageGameEngine::onSerialCommand, this);
-   //);
-
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "After MageScriptControl constructor"
-   );
-
-   //load in the pointer to the array of MageEntities for use in hex editor mode:
-   hackableDataAddress = std::shared_ptr<MageEntity>{ gameControl->entities.data() };
-
-   //set a default hacking option.
-   hexEditor->setHexOp(HEX_OPS_XOR);
-
-
-#ifdef DC801_EMBEDDED
-   check_ram_usage();
-#else
-   uint32_t gameSize = gameControl->Size();
-   uint32_t scriptSize = sizeof(MageScriptControl);
-   uint32_t hexSize = sizeof(MageHexEditor);
-   uint32_t commandSize = sizeof(MageCommandControl);
-   uint32_t frameBufferSize = FRAMEBUFFER_SIZE * sizeof(uint16_t);
-   uint32_t totalSize = (
-      0
-      + gameSize
-      + scriptSize
-      + hexSize
-      + commandSize
-      + frameBufferSize
-      );
-   fprintf(stderr, "MageGameControl RAM use:    %8d bytes.\n", gameSize);
-   fprintf(stderr, "MageScriptControl RAM use:  %8d bytes.\n", scriptSize);
-   fprintf(stderr, "MageHexControl RAM use:     %8d bytes.\n", hexSize);
-   fprintf(stderr, "MageCommandControl RAM use: %8d bytes.\n", commandSize);
-   fprintf(stderr, "FrameBuffer RAM use:        %8d bytes.\n", frameBufferSize);
-   fprintf(stderr, "-------------------------------------------\n");
-   fprintf(stderr, "Minimum RAM overhead use:   %8d bytes.\n", totalSize);
-   fflush(stderr);
-   // for some reason, outputting to stderr and then flushing, this still comes out AFTER
-   // the message output to stdout AFTER THIS, as triggered by `was_serial_started`.
-   // so forcibly delaying by 50 ms on startup actually allows the stderr/stdout
-   // messages to come out in the correct order. WHY. WHYYYYYYYYY. WHY.
-   nrf_delay_ms(50);
-#endif
-
-   gameControl->LoadMap(DEFAULT_MAP);
-
-#ifndef DC801_EMBEDDED
-   // don't want to show welcome message until after map has loaded
-   // in case map on_load has a `SET_CONNECT_SERIAL_DIALOG` action
-   was_serial_started = true;
-#endif
-
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "gameControl->LoadMap(DEFAULT_MAP);"
-   );
-
-   //note the time the first loop is running
-   lastTime = millis();
-   lastLoopTime = lastTime;
-}
-
 void MageGameEngine::Run()
 {
    //main game loop:
@@ -137,10 +42,6 @@ void MageGameEngine::Run()
    EngineSerialRegisterEventHandlers(
       nullptr,
       nullptr
-   );
-
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "EngineROM->Deinit();"
    );
 
 }
@@ -354,16 +255,8 @@ void MageGameEngine::EngineMainGameLoop()
    //on embedded, interact with USBC com port over serial
    EngineHandleSerialInput();
 
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "EngineHandleKeyboardInput();"
-   );
-
    //updates the state of all the things before rendering:
    GameUpdate(deltaTime);
-
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "GameUpdate(deltaTime)"
-   );
 
    //If the loadMap() action has set a new map, we will load it before we render this frame.
    if (scriptControl->mapLoadId != MAGE_NO_MAP)
@@ -374,10 +267,6 @@ void MageGameEngine::EngineMainGameLoop()
       scriptControl->mapLoadId = MAGE_NO_MAP;
       //Update the game for the new map
       GameUpdate(deltaTime);
-
-      LOG_COLOR_PALETTE_CORRUPTION(
-         "scriptControl->mapLoadId != MAGE_NO_MAP"
-      );
    }
 
 #ifndef DC801_EMBEDDED
@@ -394,9 +283,6 @@ void MageGameEngine::EngineMainGameLoop()
    //This renders the game to the screen based on the loop's updated state.
    GameRender();
 
-   LOG_COLOR_PALETTE_CORRUPTION(
-      "GameRender()"
-   );
    uint32_t fullLoopTime = millis() - lastTime;
 
    //this pauses for scriptControl->blockingDelayTime before continuing to the next loop:
@@ -416,7 +302,7 @@ void MageGameEngine::EngineMainGameLoop()
 #endif
    if (inputHandler->ShouldReloadGameDat())
    {
-      //EngineInit();
+      
    }
 }
 

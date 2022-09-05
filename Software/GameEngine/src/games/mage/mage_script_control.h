@@ -41,7 +41,7 @@ class MageScriptControl
 {
 public:
    MageScriptControl(
-      std::shared_ptr<MageGameEngine> gameEngine
+      MageGameEngine*  gameEngine
    ) noexcept
    : gameEngine(gameEngine)
    {}
@@ -111,7 +111,7 @@ public:
    void tickScripts();
 
 private:
-   std::shared_ptr<MageGameEngine> gameEngine;
+   MageGameEngine*  gameEngine;
 
    //variables for tracking suspended script states:
    MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ 0 };

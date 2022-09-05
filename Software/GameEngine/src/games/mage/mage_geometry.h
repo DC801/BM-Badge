@@ -47,7 +47,7 @@ public:
    );
 
    //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
-   MageGeometry(std::shared_ptr<MageGameEngine> gameEngine, uint32_t address);
+   MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
    //returns the size in RAM of a MageGeometry object.
    uint32_t size() const;
@@ -94,15 +94,6 @@ public:
       int32_t offset_y = 0
    );
 
-   void drawSpokes(
-      Point polyACenter,
-      int32_t cameraX,
-      int32_t cameraY,
-      uint16_t color,
-      int32_t offset_x = 0,
-      int32_t offset_y = 0
-   );
-
    static bool pushADiagonalsVsBEdges(
       Point* spokeCenter,
       MageGeometry* playerSpokes,
@@ -118,8 +109,6 @@ public:
       const Point& lineBPointB,
       Point& intersectPoint
    );
-private:
-   std::shared_ptr<MageGameEngine> gameEngine;
-}; //class MageGeometry
+}; 
 
 #endif //_MAGE_GEOMETRY_H

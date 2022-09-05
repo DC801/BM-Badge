@@ -125,7 +125,7 @@ public:
 
 class FrameBuffer {
 public:
-	FrameBuffer(std::shared_ptr<MageGameEngine> gameEngine) noexcept
+	FrameBuffer(MageGameEngine*  gameEngine) noexcept
 		: gameEngine(gameEngine)
 	{}
 	void clearScreen(uint16_t color);
@@ -212,7 +212,7 @@ public:
 	bool isFading;
 	uint16_t fadeColor;
 private:
-	std::shared_ptr<MageGameEngine> gameEngine;
+	MageGameEngine*  gameEngine;
 
 	uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
 	std::shared_ptr<EngineROM> ROM;

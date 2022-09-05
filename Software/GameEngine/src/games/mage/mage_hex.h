@@ -49,7 +49,7 @@ public:
 	//initialize the class with default values.
 	//No need for a constructor with arguments and non-default values.
 	MageHexEditor(
-		std::shared_ptr<MageGameEngine> gameEngine
+		MageGameEngine*  gameEngine
 	) : 
 		gameEngine(gameEngine)
 	{};
@@ -108,7 +108,7 @@ public:
 	void openToEntityByIndex(uint8_t entityIndex);
 
 private:
-	std::shared_ptr<MageGameEngine> gameEngine;
+	MageGameEngine*  gameEngine;
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

@@ -9,7 +9,7 @@
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
 MageGameControl::MageGameControl(
-	std::shared_ptr<MageGameEngine> gameEngine
+	MageGameEngine*  gameEngine
 ) noexcept
 	: gameEngine(gameEngine)
 {
@@ -866,7 +866,6 @@ void MageGameControl::DrawMap(uint8_t layer)
 	int32_t x = 0;
 	int32_t y = 0;
 	uint16_t geometryId = 0;
-	MageGeometry geometry;
 
 	struct MageMapTile {
 		uint16_t tileId = 0;
@@ -930,7 +929,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 			geometryId = tileset.getLocalGeometryIdByTileIndex(currentTile.tileId);
 			if (geometryId) {
 				geometryId -= 1;
-				geometry = getGeometryFromGlobalId(geometryId);
+				auto geometry = getGeometryFromGlobalId(geometryId);
 				geometry.flipSelfByFlags(
 					currentTile.flags,
 					tileset.TileWidth(),
@@ -951,6 +950,34 @@ void MageGameControl::DrawMap(uint8_t layer)
 					isMageInGeometry = geometry.isPointInGeometry(
 						offsetPoint
 					);
+				}
+
+				if (geometry.typeId == POINT)
+				{
+					gameEngine->frameBuffer->drawPoint(
+						geometry.points[0].x + tile_x - camera_x,
+						geometry.points[0].y + tile_y - camera_y,
+						4,
+						isMageInGeometry ? COLOR_RED : COLOR_GREEN
+					);
+				}
+				else
+				{
+					// POLYLINE segmentCount is pointCount - 1
+					// POLYGON segmentCount is same as pointCount
+					for (int i = 0; i < geometry.segmentCount; i++)
+					{
+						auto pointA = geometry.points[i];
+						auto pointB = geometry.points[(i + 1) % geometry.pointCount];
+						gameEngine->frameBuffer->drawLine(
+							pointA.x + tile_x - camera_x,
+							pointA.y + tile_y - camera_y,
+							pointB.x + tile_x - camera_x,
+							pointB.y + tile_y - camera_y,
+							isMageInGeometry ? COLOR_RED : COLOR_GREEN
+
+						);
+					}
 				}
 				geometry.draw(
 					camera_x,
@@ -1059,12 +1086,17 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 			playerRect.h,
 			COLOR_BLUE
 		);
-		mageCollisionSpokes.drawSpokes(
-			playerPoint,
-			adjustedCameraPosition.x,
-			adjustedCameraPosition.y,
-			COLOR_PURPLE
-		);
+		for (int i = 0; i < mageCollisionSpokes.segmentCount; i++)
+		{
+			auto point = mageCollisionSpokes.points[i];
+			gameEngine->frameBuffer->drawLine(
+				point.x - adjustedCameraPosition.x,
+				point.y - adjustedCameraPosition.y,
+				playerPoint.x - adjustedCameraPosition.x,
+				playerPoint.y - adjustedCameraPosition.y,
+				COLOR_PURPLE
+			);
+		}
 	}
 	uint8_t layerCount = map->LayerCount();
 	for (int layerIndex = 0; layerIndex < layerCount; layerIndex++) {
@@ -1652,19 +1684,19 @@ void MageGameControl::DrawGeometry()
 }
 
 MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) {
-	return MageGeometry(gameEngine,
+	return MageGeometry{ gameEngine->ROM,
 		geometryHeader->offset(
 			map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader->count()
 		)
-	);
+	};
 }
 
 MageGeometry MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId) {
-	return MageGeometry(gameEngine,
+	return MageGeometry{ gameEngine->ROM,
 		geometryHeader->offset(
 			globalGeometryId % geometryHeader->count()
 		)
-	);
+	};
 }
 
 MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId) {

@@ -82,7 +82,7 @@ class MageDialogControl
 {
 public:
    MageDialogControl(
-      std::shared_ptr<MageGameEngine> gameEngine
+      MageGameEngine*  gameEngine
    ) noexcept
       : gameEngine(gameEngine)
    {}
@@ -104,7 +104,7 @@ public:
    void loadCurrentScreenPortrait();
 
 private:
-   std::shared_ptr<MageGameEngine> gameEngine;
+   MageGameEngine*  gameEngine;
 
    // char dialogName[32];
    MageTileset* currentFrameTileset;

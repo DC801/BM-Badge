@@ -42,7 +42,7 @@ struct MageSerialDialog
 
 class MageCommandControl {
 	public:
-		MageCommandControl(std::shared_ptr<MageGameEngine> gameEngine) noexcept
+		MageCommandControl(MageGameEngine*  gameEngine) noexcept
 			: gameEngine(gameEngine)
 		{
 			// EngineSendSerialMessage(
@@ -70,7 +70,7 @@ class MageCommandControl {
 		void reset();
 		void sendBufferedOutput();
 private:
-	std::shared_ptr<MageGameEngine> gameEngine;
+	MageGameEngine*  gameEngine;
 
 	void badAsciiLowerCase(std::string* data)
 	{

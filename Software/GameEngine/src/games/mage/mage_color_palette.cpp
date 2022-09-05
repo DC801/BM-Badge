@@ -1,5 +1,6 @@
 #include "mage_color_palette.h"
 #include "modules/sd.h"
+#include "FrameBuffer.h"
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
@@ -68,6 +69,7 @@ uint32_t MageColorPalette::size() const
 }
 
 MageColorPalette::MageColorPalette(
+	FrameBuffer* frameBuffer,
 	MageColorPalette *sourcePalette,
 	uint16_t transparentColor,
 	uint16_t fadeColor,
@@ -92,7 +94,7 @@ MageColorPalette::MageColorPalette(
 			sourceColor = sourcePalette->colors[i];
 			if(sourceColor != transparentColor) {
 				colors[i] = SCREEN_ENDIAN_U2_VALUE(
-					gameEngine->frameBuffer->applyFadeColor(
+					frameBuffer->applyFadeColor(
 						SCREEN_ENDIAN_U2_VALUE(
 							sourceColor
 						)
