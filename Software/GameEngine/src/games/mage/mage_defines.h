@@ -209,11 +209,11 @@ typedef enum : uint8_t{
 
 
 //this is a point in 2D space.
-typedef struct
+struct Point
 {
-	int32_t x;
-	int32_t y;
-} Point;
+	int32_t x{ 0 };
+	int32_t y{ 0 };
+};
 
 
 //this is a structure to hold information about the currently executing scripts so they can resume
@@ -266,7 +266,7 @@ typedef struct {
 typedef struct MageSaveGame {
 	char identifier[ENGINE_ROM_IDENTIFIER_STRING_LENGTH] = ENGINE_ROM_SAVE_IDENTIFIER_STRING;
 	uint32_t engineVersion = ENGINE_VERSION;
-	uint32_t scenarioDataCRC32;
+	uint32_t scenarioDataCRC32{ 0 };
 	uint32_t saveDataLength = sizeof(MageSaveGame);
 	char name[MAGE_ENTITY_NAME_LENGTH] = DEFAULT_PLAYER_NAME;
 	//this stores the byte offsets for the hex memory buttons:

@@ -111,7 +111,7 @@ void MageHexEditor::updateHexStateVariables()
 
 void MageHexEditor::applyHexModeInputs()
 {
-	if (!gameEngine->inputHandler->GetButtonActivatedState(Button::rjoy_up)) {
+	if (!gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_up)) {
 		disableMovementUntilRJoyUpRelease = false;
 	}
 	//check to see if player input is allowed:
@@ -127,19 +127,19 @@ void MageHexEditor::applyHexModeInputs()
 	uint8_t* memOffsets = gameEngine->gameControl->currentSave->memOffsets;
 	//exiting the hex editor by pressing the hax button will happen immediately
 	//before any other input is processed:
-	if (gameEngine->inputHandler->GetButtonActivatedState(Button::hax)) { toggleHexEditor(); }
+	if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Hax)) { toggleHexEditor(); }
 
 	//debounce timer check.
 	if (!hexTickDelay) {
 		anyHexMovement = (
-			gameEngine->inputHandler->GetButtonState(Button::ljoy_left)
-			|| gameEngine->inputHandler->GetButtonState(Button::ljoy_right)
-			|| gameEngine->inputHandler->GetButtonState(Button::ljoy_up)
-			|| gameEngine->inputHandler->GetButtonState(Button::ljoy_down)
-			|| gameEngine->inputHandler->GetButtonState(Button::rjoy_up) // triangle for increment
-			|| gameEngine->inputHandler->GetButtonState(Button::rjoy_down) // x for decrement
+			gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left)
+			|| gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)
+			|| gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)
+			|| gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)
+			|| gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_up) // triangle for increment
+			|| gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_down) // x for decrement
 			);
-		if (gameEngine->inputHandler->GetButtonState(Button::op_page)) {
+		if (gameEngine->inputHandler->GetButtonState(KeyPress::Page)) {
 			//reset last press time only when the page button switches from unpressed to pressed
 			if (!previousPageButtonState) {
 				lastPageButtonPressTime = millis();
@@ -149,23 +149,23 @@ void MageHexEditor::applyHexModeInputs()
 
 			//check to see if there is any directional button action while the page button is pressed
 			if (
-				gameEngine->inputHandler->GetButtonState(Button::ljoy_up)
-				|| gameEngine->inputHandler->GetButtonState(Button::ljoy_left)
+				gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)
+				|| gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left)
 				) {
 				currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
 			}
 			if (
-				gameEngine->inputHandler->GetButtonState(Button::ljoy_down)
-				|| gameEngine->inputHandler->GetButtonState(Button::ljoy_right)
+				gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)
+				|| gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)
 				) {
 				currentMemPage = (currentMemPage + 1) % totalMemPages;
 			}
 			//check for memory button presses:
 			int8_t memIndex = -1;
-			if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem0)) { memIndex = 0; }
-			if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem1)) { memIndex = 1; }
-			if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem2)) { memIndex = 2; }
-			if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem3)) { memIndex = 3; }
+			if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem0)) { memIndex = 0; }
+			if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem1)) { memIndex = 1; }
+			if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem2)) { memIndex = 2; }
+			if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem3)) { memIndex = 3; }
 			if (memIndex != -1) {
 				memOffsets[memIndex] = hexCursorLocation % sizeof(MageEntity);
 			}
@@ -186,58 +186,58 @@ void MageHexEditor::applyHexModeInputs()
 
 			//check directional inputs and move cursor.
 			if (
-				!gameEngine->inputHandler->GetButtonState(Button::rjoy_right) // not if in multi-byte selection mode
+				!gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right) // not if in multi-byte selection mode
 				) {
-				if (gameEngine->inputHandler->GetButtonState(Button::ljoy_left)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left)) {
 					//move the cursor left:
 					hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
 					//change the current page to wherever the cursor is:
 					setPageToCursorLocation();
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::ljoy_right)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)) {
 					//move the cursor right:
 					hexCursorLocation = (hexCursorLocation + 1) % memTotal;
 					//change the current page to wherever the cursor is:
 					setPageToCursorLocation();
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::ljoy_up)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)) {
 					//move the cursor up:
 					hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
 					//change the current page to wherever the cursor is:
 					setPageToCursorLocation();
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::ljoy_down)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)) {
 					//move the cursor down:
 					hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
 					//change the current page to wherever the cursor is:
 					setPageToCursorLocation();
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::rjoy_up)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_up)) {
 					//decrement the value
 					*currentByte += 1;
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::rjoy_down)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_down)) {
 					//decrement the value
 					*currentByte -= 1;
 				}
 			}
 			if (gameEngine->gameControl->playerHasHexEditorControlClipboard) {
-				if (gameEngine->inputHandler->GetButtonActivatedState(Button::rjoy_right)) {
+				if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right)) {
 					//start copying
 					gameEngine->gameControl->currentSave->clipboardLength = 1;
 					isCopying = true;
 				}
-				if (!gameEngine->inputHandler->GetButtonState(Button::rjoy_right)) {
+				if (!gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right)) {
 					isCopying = false;
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::rjoy_right)) {
-					if (gameEngine->inputHandler->GetButtonState(Button::ljoy_left)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right)) {
+					if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left)) {
 						gameEngine->gameControl->currentSave->clipboardLength = MAX(
 							(uint8_t)1,
 							gameEngine->gameControl->currentSave->clipboardLength - 1
 						);
 					}
-					if (gameEngine->inputHandler->GetButtonState(Button::ljoy_right)) {
+					if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)) {
 						gameEngine->gameControl->currentSave->clipboardLength = MIN(
 							(uint8_t)sizeof(MageEntity),
 							gameEngine->gameControl->currentSave->clipboardLength + 1
@@ -249,7 +249,7 @@ void MageHexEditor::applyHexModeInputs()
 						gameEngine->gameControl->currentSave->clipboardLength
 					);
 				}
-				if (gameEngine->inputHandler->GetButtonState(Button::rjoy_left)) {
+				if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left)) {
 					//paste
 					memcpy(
 						currentByte,
@@ -281,10 +281,10 @@ void MageHexEditor::applyMemRecallInputs() {
 	uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntity);
 	//check for memory button presses and set the hex cursor to the memory location
 	int8_t memIndex = -1;
-	if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem0)) { memIndex = 0; }
-	if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem1)) { memIndex = 1; }
-	if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem2)) { memIndex = 2; }
-	if (gameEngine->inputHandler->GetButtonActivatedState(Button::mem3)) { memIndex = 3; }
+	if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem0)) { memIndex = 0; }
+	if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem1)) { memIndex = 1; }
+	if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem2)) { memIndex = 2; }
+	if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem3)) { memIndex = 3; }
 	if (memIndex != -1) {
 		setHexCursorLocation(
 			currentEntityStart

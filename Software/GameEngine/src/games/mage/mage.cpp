@@ -33,12 +33,15 @@ void MageGameEngine::Run()
 #else
    while (inputHandler->IsRunning())
    {
+      if (inputHandler->ShouldReloadGameDat())
+      {
+
+      }
       EngineMainGameLoop();
    }
 #endif
 
    // Close rom and any open files
-
    EngineSerialRegisterEventHandlers(
       nullptr,
       nullptr
@@ -189,7 +192,7 @@ void MageGameEngine::GameRender()
          gameControl->DrawGeometry();
          if (gameControl->playerEntityIndex != NO_PLAYER)
          {
-            gameControl->getPushBackFromTilesThatCollideWithPlayer();
+            auto point = gameControl->getPushBackFromTilesThatCollideWithPlayer();
          }
 #ifdef TIMING_DEBUG
          diff = millis() - now;
@@ -272,8 +275,8 @@ void MageGameEngine::EngineMainGameLoop()
 #ifndef DC801_EMBEDDED
    // intentionally corrupt the dialog color palette BEFORE rendering,
    // just so we can SEE if it works
-   if (inputHandler->GetButtonState(Button::op_page)
-      && inputHandler->GetButtonState(Button::rjoy_center))
+   if (inputHandler->GetButtonState(KeyPress::Page)
+      && inputHandler->GetButtonState(KeyPress::Rjoy_center))
    {
       MageColorPalette* colorPalette = gameControl->getValidColorPalette(0);
       colorPalette->colors[0] = 0xDEAD;
@@ -300,10 +303,6 @@ void MageGameEngine::EngineMainGameLoop()
       SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
    }
 #endif
-   if (inputHandler->ShouldReloadGameDat())
-   {
-      
-   }
 }
 
 void MageGameEngine::onSerialStart()

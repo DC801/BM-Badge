@@ -674,7 +674,7 @@ void MageScriptActions::action_check_for_button_press(uint8_t* args, MageScriptS
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-	auto button_activated = gameEngine->inputHandler->GetButtonActivatedState((Button)argStruct->buttonId);
+	auto button_activated = gameEngine->inputHandler->GetButtonActivatedState((KeyPress)argStruct->buttonId);
 	if (button_activated)
 	{
 		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -694,7 +694,7 @@ void MageScriptActions::action_check_for_button_state(uint8_t* args, MageScriptS
 	auto* argStruct = (ActionCheckForButtonState*)args;
 	//endianness conversion for arguments larger than 1 byte:
 	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-	auto button_state = gameEngine->inputHandler->GetButtonState((Button)argStruct->buttonId);
+	auto button_state = gameEngine->inputHandler->GetButtonState((KeyPress)argStruct->buttonId);
 	if (button_state == (bool)(argStruct->expectedBoolValue))
 	{
 		gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;

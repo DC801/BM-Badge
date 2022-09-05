@@ -265,17 +265,16 @@ void MageDialogControl::closeDialog()
 void MageDialogControl::update()
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-   bool shouldAdvance = (
-      gameEngine->inputHandler->GetButtonActivatedState(Button::rjoy_down)
-      || gameEngine->inputHandler->GetButtonActivatedState(Button::rjoy_left)
-      || gameEngine->inputHandler->GetButtonActivatedState(Button::rjoy_right)
-      || (gameEngine->scriptControl->mapLoadId != MAGE_NO_MAP)
-      );
+   bool shouldAdvance = gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_down)
+                     || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_left)
+                     || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right)
+                     || MAGE_NO_MAP != gameEngine->scriptControl->mapLoadId;
+
    if (shouldShowResponses())
    {
       currentResponseIndex += currentScreen->responseCount;
-      if (gameEngine->inputHandler->GetButtonActivatedState(Button::ljoy_up)) { currentResponseIndex -= 1; }
-      if (gameEngine->inputHandler->GetButtonActivatedState(Button::ljoy_down)) { currentResponseIndex += 1; }
+      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
+      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
       currentResponseIndex %= currentScreen->responseCount;
       if (shouldAdvance)
       {
