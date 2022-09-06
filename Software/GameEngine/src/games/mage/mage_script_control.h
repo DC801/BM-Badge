@@ -40,9 +40,7 @@ struct resumeStatesStruct
 class MageScriptControl
 {
 public:
-   MageScriptControl(
-      MageGameEngine*  gameEngine
-   ) noexcept
+   MageScriptControl(MageGameEngine*  gameEngine) noexcept
    : gameEngine(gameEngine)
    {}
 

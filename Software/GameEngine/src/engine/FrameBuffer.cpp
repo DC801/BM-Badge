@@ -47,10 +47,6 @@ void FrameBuffer::clearScreen(uint16_t color) {
 	}
 }
 
-void FrameBuffer::drawPixel(int x, int y, uint16_t color) {
-	frame[y * WIDTH + x] = SCREEN_ENDIAN_U2_VALUE(color);
-}
-
 void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color) {
 	int s1 = min(x1, x2);
 	int s2 = max(x1, x2);
@@ -1745,12 +1741,6 @@ void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, i
 		}
 	}
 	m_cursor_area.xs = 0;
-}
-
-void FrameBuffer::getCursorPosition(cursor_t* cursor)
-{
-	cursor->x = m_cursor_x;
-	cursor->y = m_cursor_y;
 }
 
 void FrameBuffer::setTextArea(area_t* area)

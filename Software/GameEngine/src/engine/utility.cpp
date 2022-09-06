@@ -8,20 +8,19 @@
  *
  */
 
-#include <chrono>
 #include "utility.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
-#include <filesystem>
-
+#include "modules/adc.h"
+#include "modules/led.h"
 
 #ifndef DC801_EMBEDDED
 #include "shim_timer.h"
 #include "sdk/shim/shim_pwm.h"
-#include "modules/adc.h"
-#include "modules/led.h"
 #endif
 
+#include <chrono>
+#include <filesystem>
 
 #define EE_R1 3900
 #define EE_R2 10000
@@ -104,16 +103,6 @@ void morseStop(void) {
 bool morseGetRunning(void){
 	return morse_running;
 }
-
-#if defined(GCC)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-
-#if defined(GCC)
-#pragma GCC diagnostic pop
-#endif
 
 /**
  * Calculate the CRC on a chunk of memory

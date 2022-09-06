@@ -6,6 +6,7 @@
 #include "modules/gfx.h"
 #include "games/mage/mage_defines.h"
 #include "games/mage/mage.h"
+#include "convert_endian.h"
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -130,12 +131,10 @@ public:
 	{}
 	void clearScreen(uint16_t color);
 
-	void drawPixel(int x, int y, uint16_t color);
+	void drawPixel(int x, int y, uint16_t color) { frame[y * WIDTH + x] = SCREEN_ENDIAN_U2_VALUE(color); }
 
 	template <typename T>
-	static T lerp(T a, T b, float progress) {
-		return (T)((b - a) * progress) + a;
-	}
+	static T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
 	
 	static Point lerpPoints(Point a, Point b, float progress);
 	uint16_t applyFadeColor(uint16_t color);
@@ -202,20 +201,17 @@ public:
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
 
-	void getCursorPosition(cursor_t *cursor);
-
 	void blt();
 
 
 	//variables used for screen fading
-	float fadeFraction;
-	bool isFading;
-	uint16_t fadeColor;
+	float fadeFraction{ 0.0f };
+	bool isFading{ false };
+	uint16_t fadeColor{ 0 };
 private:
 	MageGameEngine*  gameEngine;
 
 	uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
-	std::shared_ptr<EngineROM> ROM;
 	void __draw_char(
 		int16_t x,
 		int16_t y,

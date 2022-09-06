@@ -212,16 +212,6 @@ EngineROM::EngineROM() noexcept
 		ENGINE_PANIC("Desktop build: ROM->RAM read failed");
 	}
 	file.close();
-	// romfile = fopen(MAGE_GAME_DAT_PATH, "rb");
-	// if (romfile == NULL)
-	// {
-	// 	int error = errno;
-	// 	fprintf(stderr, "Error: %s\n", strerror(error));
-	// 	ENGINE_PANIC(
-	// 		"Desktop build:\n"
-	// 		"    Unable to open ROM file for reading"
-	// 	);
-	// }
 #endif
 
 	// Verify magic string is on ROM when we're done:
@@ -247,10 +237,7 @@ void EngineROM::ErrorUnplayable() {
 }
 
 uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) {
-	return (
-		ENGINE_ROM_SAVE_OFFSET
-		+ (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE)
-		);
+	return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
 }
 
 void EngineROM::ReadSaveSlot(
@@ -294,6 +281,7 @@ void EngineROM::ReadSaveSlot(
 				// Empty out the destination.
 				memset(data, 0, dataLength);
 			}
+			saveFile.close();
 		}
 	}
 #endif

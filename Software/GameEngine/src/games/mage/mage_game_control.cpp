@@ -229,7 +229,7 @@ void MageGameControl::saveGameSlotSave()
    gameEngine->ROM->WriteSaveSlot(
       currentSaveIndex,
       sizeof(MageSaveGame),
-      (uint8_t*)&currentSave
+      (uint8_t*)currentSave.get()
    );
    readSaveFromRomIntoRam();
 }
@@ -571,24 +571,15 @@ void MageGameControl::applyUniversalInputs()
    {
       gameEngine->scriptControl->mapLoadId = currentSave->currentMapId;
    }
-   if (
-      (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem1)) ||
-      (gameEngine->inputHandler->GetButtonState(KeyPress::Mem1) && gameEngine->inputHandler->GetButtonState(KeyPress::Xor))
-      )
+   if (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem1)
+    || gameEngine->inputHandler->GetButtonState(KeyPress::Mem1) && gameEngine->inputHandler->GetButtonState(KeyPress::Xor))
    {
       isEntityDebugOn = !isEntityDebugOn;
       LoadMap(currentSave->currentMapId);
       return;
    }
    //check to see if player input is allowed:
-   if (
-      gameEngine->dialogControl->isOpen
-      || !playerHasControl
-      )
-   {
-      return;
-   }
-   if (!playerHasHexEditorControl)
+   if (gameEngine->dialogControl->isOpen || !playerHasControl && !playerHasHexEditorControl)
    {
       return;
    }
@@ -606,10 +597,9 @@ void MageGameControl::applyUniversalInputs()
    if (gameEngine->inputHandler->GetButtonState(KeyPress::Bit4)) { gameEngine->hexEditor->runHex(0b00000100); }
    if (gameEngine->inputHandler->GetButtonState(KeyPress::Bit2)) { gameEngine->hexEditor->runHex(0b00000010); }
    if (gameEngine->inputHandler->GetButtonState(KeyPress::Bit1)) { gameEngine->hexEditor->runHex(0b00000001); }
-   if (
-      (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem0)) ||
-      (gameEngine->inputHandler->GetButtonState(KeyPress::Mem0) && gameEngine->inputHandler->GetButtonState(KeyPress::Xor))
-      )
+
+   if (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem0)
+    || gameEngine->inputHandler->GetButtonState(KeyPress::Mem0) && gameEngine->inputHandler->GetButtonState(KeyPress::Xor))
    {
       isCollisionDebugOn = !isCollisionDebugOn;
    }
@@ -652,12 +642,8 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
       isMoving = false;
 
       //check to see if the mage is pressing the action button, or currently in the middle of an action animation.
-      if (
-         acceptPlayerInput
-         && (
-            playerIsActioning
-            || gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left)
-            )
+      if (acceptPlayerInput
+         && (playerIsActioning || gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left))
          )
       {
          playerIsActioning = true;
@@ -673,10 +659,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
          if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            playerEntity->direction = updateDirectionAndPreserveFlags(
-               direction,
-               playerEntity->direction
-            );
+            playerEntity->direction = updateDirectionAndPreserveFlags(direction, playerEntity->direction);
             Point pushback = getPushBackFromTilesThatCollideWithPlayer();
             Point velocityAfterPushback = {
                playerVelocity.x + pushback.x,
@@ -719,20 +702,16 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
 
       //handle animation assignment for the player:
       //Scenario 1 - preform action:
-      if (
-         playerIsActioning &&
-         hasEntityType &&
-         entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX
-         )
+      if (playerIsActioning 
+         && hasEntityType 
+         && entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX)
       {
          playerEntity->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
       }
       //Scenario 2 - show walk animation:
-      else if (
-         isMoving &&
-         hasEntityType &&
-         entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX
-         )
+      else if (isMoving
+         && hasEntityType
+         && entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
       }
@@ -743,12 +722,11 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
-      bool isPlayingActionButShouldReturnControlToPlayer = (
-         hasEntityType &&
-         (playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX) &&
-         (playerEntity->currentFrame == (renderableData->frameCount - 1)) &&
-         (renderableData->currentFrameTicks + deltaTime >= (renderableData->duration))
-         );
+      bool isPlayingActionButShouldReturnControlToPlayer = 
+         hasEntityType 
+         && (playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX) 
+         && (playerEntity->currentFrame == (renderableData->frameCount - 1)) 
+         && (renderableData->currentFrameTicks + deltaTime >= (renderableData->duration));
 
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
@@ -765,24 +743,21 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
       }
 
       //What scenarios call for an extra renderableData update?
-      if (
-         isMoving
-         || (renderableData->lastTilesetId != renderableData->tilesetId)
-         )
+      if (isMoving || (renderableData->lastTilesetId != renderableData->tilesetId))
       {
          updateEntityRenderableData(playerEntityIndex);
       }
-      if (
-         !acceptPlayerInput
-         || !playerHasHexEditorControl
-         )
+      if (!acceptPlayerInput || !playerHasHexEditorControl)
       {
          return;
       }
 
       //opening the hex editor is the only button press that will lag actual gameplay by one frame
       //this is to allow entity scripts to check the hex editor state before it opens to run scripts
-      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Hax)) { gameEngine->hexEditor->toggleHexEditor(); }
+      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Hax)) 
+      { 
+         gameEngine->hexEditor->toggleHexEditor(); 
+      }
       gameEngine->hexEditor->applyMemRecallInputs();
    }
    else //no player on map
@@ -795,6 +770,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
       if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)) { cameraPosition.x += mageSpeed; }
       if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)) { cameraPosition.y -= mageSpeed; }
       if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)) { cameraPosition.y += mageSpeed; }
+
       if (!playerHasHexEditorControl)
       {
          return;
@@ -839,9 +815,7 @@ void MageGameControl::handleEntityInteract(
    playerRenderableData->interactBox.w = playerRenderableData->hitBox.w;
    playerRenderableData->interactBox.h = playerRenderableData->hitBox.h;
    uint8_t interactLength = 32;
-   MageEntityAnimationDirection direction = getValidEntityTypeDirection(
-      playerEntity->direction
-   );
+   MageEntityAnimationDirection direction = getValidEntityTypeDirection(playerEntity->direction);
    if (direction == NORTH)
    {
       playerRenderableData->interactBox.y -= interactLength;
@@ -908,22 +882,13 @@ void MageGameControl::DrawMap(uint8_t layer)
    {
       return;
    }
-   uint32_t address = layerAddress;
-   int32_t tile_x = 0;
-   int32_t tile_y = 0;
-   int32_t x = 0;
-   int32_t y = 0;
-   uint16_t geometryId = 0;
-
-   auto currentTile = MageMapTile{};
-
    Point playerPoint = getEntityRenderableDataByMapLocalId(playerEntityIndex)->center;
    for (uint32_t i = 0; i < tilesPerLayer; i++)
    {
-      tile_x = (int32_t)(map->TileWidth() * (i % map->Cols()));
-      tile_y = (int32_t)(map->TileHeight() * (i / map->Cols()));
-      x = tile_x - camera_x;
-      y = tile_y - camera_y;
+      auto tile_x = (int32_t)(map->TileWidth() * (i % map->Cols()));
+      auto tile_y = (int32_t)(map->TileHeight() * (i / map->Cols()));
+      auto x = tile_x - camera_x;
+      auto y = tile_y - camera_y;
 
       if ((x < (-map->TileWidth()) ||
          (x > WIDTH) ||
@@ -932,18 +897,17 @@ void MageGameControl::DrawMap(uint8_t layer)
       {
          continue;
       }
-      address = layerAddress + (i * sizeof(currentTile));
+      auto address = layerAddress + (i * sizeof(MageMapTile));
+
+      auto currentTile = MageMapTile{};
 
       gameEngine->ROM->Read(
          address,
-         sizeof(currentTile),
+         sizeof(MageMapTile),
          (uint8_t*)&currentTile,
          "DrawMap Failed to read property 'currentTile'"
       );
-
-
       currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
-
       if (currentTile.tileId == 0)
       {
          continue;
@@ -971,7 +935,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 
       if (isCollisionDebugOn)
       {
-         geometryId = tileset.getLocalGeometryIdByTileIndex(currentTile.tileId);
+         auto geometryId = tileset.getLocalGeometryIdByTileIndex(currentTile.tileId);
          if (geometryId)
          {
             geometryId -= 1;
@@ -1155,11 +1119,11 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
          {
             continue;
          }
-         address = layerAddress + (i * sizeof(currentTile));
+         address = layerAddress + (i * sizeof(MageMapTile));
 
          gameEngine->ROM->Read(
             address,
-            sizeof(currentTile),
+            sizeof(MageMapTile),
             (uint8_t*)&currentTile,
             "getPushBackFromTilesThatCollideWithPlayer Failed to read property 'currentTile'"
          );
@@ -1342,14 +1306,9 @@ uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimati
    return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
 }
 
-MageEntityAnimationDirection MageGameControl::getValidEntityTypeDirection(
-   MageEntityAnimationDirection direction
-)
+MageEntityAnimationDirection MageGameControl::getValidEntityTypeDirection(MageEntityAnimationDirection direction)
 {
-   return (MageEntityAnimationDirection)(
-      (direction & RENDER_FLAGS_DIRECTION_MASK)
-      % NUM_DIRECTIONS
-      );
+   return (MageEntityAnimationDirection)((direction & RENDER_FLAGS_DIRECTION_MASK) % NUM_DIRECTIONS);
 }
 
 MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(

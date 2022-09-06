@@ -126,6 +126,7 @@ void EngineInput::GetDesktopInputState()
    newValue ^= (uint32_t)keys[SDL_SCANCODE_RETURN] << (uint32_t)KeyPress::Rjoy_right;
 
    Buttons.keyboardBitmask = newValue;
+   Activated.keyboardBitmask = ~Activated.keyboardBitmask & newValue;
    // debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
 }
 
@@ -138,7 +139,6 @@ void EngineInput::HandleKeyboard()
 #else
    GetDesktopInputState();
 #endif
-   Activated.keyboardBitmask = ~Activated.keyboardBitmask & Buttons.keyboardBitmask;
 
    /*
    //screen logging, prints button states to screen:

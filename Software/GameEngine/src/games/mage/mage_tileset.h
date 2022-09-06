@@ -14,52 +14,24 @@ in a more accessible way.
 class MageTileset
 {
 public:
+   MageTileset() noexcept = default;
+   MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t address);
 
-   MageTileset() = default;
-   MageTileset(
-      std::shared_ptr<EngineROM> ROM, 
-      uint8_t index, 
-      uint32_t address);
+   constexpr uint16_t ImageId() const { return imageId; }
 
-   uint16_t ImageId() const
-   {
-      return imageId;
-   }
+   constexpr uint16_t ImageWidth() const { return imageWidth; }
 
-   uint16_t ImageWidth() const
-   {
-      return imageWidth;
-   }
+   constexpr uint16_t ImageHeight() const { return imageHeight; }
 
-   uint16_t ImageHeight() const
-   {
-      return imageHeight;
-   }
+   constexpr uint16_t TileWidth() const { return tileWidth; }
 
-   uint16_t TileWidth() const
-   {
-      return tileWidth;
-   }
+   constexpr uint16_t TileHeight() const { return tileHeight; }
 
-   uint16_t TileHeight() const
-   {
-      return tileHeight;
-   }
+   constexpr uint16_t Cols() const { return cols; }
 
-   uint16_t Cols() const
-   {
-      return cols;
-   }
+   constexpr uint16_t Rows() const { return rows; }
 
-   uint16_t Rows() const
-   {
-      return rows;
-   }
-
-   uint16_t Tiles() const
-   {
-      return rows * cols;
-   }
+   uint16_t Tiles() const { return rows * cols; }
 
    uint32_t Size() const
    {
@@ -90,7 +62,7 @@ public:
 private:
    std::shared_ptr<EngineROM> ROM;
 #ifndef DC801_EMBEDDED
-   char name[TILESET_NAME_SIZE + 1]{0};
+   char name[TILESET_NAME_SIZE + 1]{ 0 };
 #endif
    uint32_t offset{ 0 };
    uint16_t imageId{ 0 };

@@ -12,8 +12,6 @@
 class MageColorPalette;
 class MageGeometry;
 
-static MageTileset defaultTileSet{};
-
 #ifdef DC801_EMBEDDED
 #define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
 #else
@@ -73,9 +71,6 @@ public:
    uint8_t cameraFollowEntityId = NO_PLAYER;
    Point cameraPosition = { 0,0 };
 
-   //when the MageGameControl object is created, it will populate all the above variables from ROM.
-   //MageGameControl();
-
    //returns the size in memory of the MageGameControl object.
    uint32_t Size() const;
 
@@ -94,7 +89,7 @@ public:
       {
          return tilesets[index];
       }
-      return defaultTileSet;
+      return tilesets[0];
    }
 
    //this will return the current map object.
@@ -216,6 +211,7 @@ public:
 
    void logAllEntityScriptValues(const char* string);
 private:
+
    MageGameEngine* gameEngine;
 
    //these header objects store the header information for all datasets on the ROM,
