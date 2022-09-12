@@ -1,0 +1,5 @@
+(fp_lib_table
+  (lib (name "lib_fp")(type "KiCad")(uri "${KIPRJMOD}/lib_fp.pretty")(options "")(descr ""))
+  (lib (name "common_fp")(type "KiCad")(uri "C:/Users/hamster/Documents/Development/dc801/BM-Badge/Hardware/common/common_fp.pretty")(options "")(descr ""))
+  (lib (name "kikit")(type "KiCad")(uri "${KIPRJMOD}/kikit.pretty")(options "")(descr ""))
+)
