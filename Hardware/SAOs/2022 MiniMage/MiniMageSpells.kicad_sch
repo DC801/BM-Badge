@@ -289,9 +289,9 @@
   )
 
   (no_connect (at 145.0848 77.9272) (uuid 3e2989c2-0385-40f3-9729-9b995a10779a))
-  (no_connect (at 145.0848 75.3872) (uuid 3e2989c2-0385-40f3-9729-9b995a10779a))
-  (no_connect (at 119.6848 75.3872) (uuid 3e2989c2-0385-40f3-9729-9b995a10779a))
-  (no_connect (at 119.6848 77.9272) (uuid 3e2989c2-0385-40f3-9729-9b995a10779a))
+  (no_connect (at 145.0848 75.3872) (uuid 3e2989c2-0385-40f3-9729-9b995a10779b))
+  (no_connect (at 119.6848 75.3872) (uuid 3e2989c2-0385-40f3-9729-9b995a10779c))
+  (no_connect (at 119.6848 77.9272) (uuid 3e2989c2-0385-40f3-9729-9b995a10779d))
 
   (wire (pts (xy 153.7208 72.8472) (xy 145.0848 72.8472))
     (stroke (width 0) (type default) (color 0 0 0 0))
@@ -541,7 +541,7 @@
     (uuid c16d125a-0138-48f1-b27b-85ca73fbe571)
     (property "Reference" "X1" (id 0) (at 132.3848 66.7344 0))
     (property "Value" "Badgelife_sao_connector_v169bis" (id 1) (at 132.3848 69.2713 0))
-    (property "Footprint" "common_fp:Badgelife-Shitty-v1.69bis" (id 2) (at 137.4648 75.3872 90)
+    (property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical_SMD" (id 2) (at 137.4648 75.3872 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 137.4648 75.3872 90)
@@ -661,7 +661,7 @@
       (reference "R2") (unit 1) (value "R") (footprint "Resistor_SMD:R_0805_2012Metric")
     )
     (path "/c16d125a-0138-48f1-b27b-85ca73fbe571"
-      (reference "X1") (unit 1) (value "Badgelife_sao_connector_v169bis") (footprint "common_fp:Badgelife-Shitty-v1.69bis")
+      (reference "X1") (unit 1) (value "Badgelife_sao_connector_v169bis") (footprint "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical_SMD")
     )
   )
 )
