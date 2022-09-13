@@ -1,0 +1,7 @@
+ kikit panelize ^
+    --layout "grid; rows: 2; cols: 4; vspace: 8mm; hspace: 2mm; hbackbone: 5mm; alternation: rows" ^
+    --tabs annotation ^
+    --source "tolerance: 15mm" ^
+    --cuts "vcuts" ^
+    --post "millradius: 1mm" ^
+   MiniMageSpells.kicad_pcb  MiniMageSpells-panel.kicad_pcb
