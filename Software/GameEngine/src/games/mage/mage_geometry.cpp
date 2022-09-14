@@ -218,16 +218,15 @@ Point MageGeometry::flipPointByFlags(
 ) {
 	Point point = unflippedPoint;
 	if (flags != 0) {
-		RenderFlagsUnion flagsUnion = {};
-		flagsUnion.i = flags;
-		if (flagsUnion.f.diagonal) {
+		RenderFlags flagsUnion = { flags };
+		if (flagsUnion.diagonal) {
 			point.x = unflippedPoint.y;
 			point.y = unflippedPoint.x;
 		}
-		if (flagsUnion.f.horizontal) {
+		if (flagsUnion.horizontal) {
 			point.x = -point.x + width;
 		}
-		if (flagsUnion.f.vertical) {
+		if (flagsUnion.vertical) {
 			point.y = -point.y + height;
 		}
 	}
@@ -240,16 +239,15 @@ Point MageGeometry::flipVectorByFlags(
 ) {
 	Point point = unflippedPoint;
 	if (flags != 0) {
-		RenderFlagsUnion flagsUnion = {};
-		flagsUnion.i = flags;
-		if (flagsUnion.f.diagonal) {
+		RenderFlags flagsUnion = { flags };
+		if (flagsUnion.diagonal) {
 			point.x = point.y;
 			point.y = point.x;
 		}
-		if (flagsUnion.f.horizontal) {
+		if (flagsUnion.horizontal) {
 			point.x = -point.x;
 		}
-		if (flagsUnion.f.vertical) {
+		if (flagsUnion.vertical) {
 			point.y = -point.y;
 		}
 	}
@@ -290,14 +288,15 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 	MageGeometry *playerSpokes,
 	float *maxSpokePushbackLengths,
 	Point *maxSpokePushbackVectors,
-	MageGeometry *tile
+	MageGeometry *tile,
+	FrameBuffer* frameBuffer
 ) {
 	bool collidedWithThisTileAtAll = false;
 	for (int tileLinePointIndex = 0; tileLinePointIndex < tile->pointCount; tileLinePointIndex++) {
 		Point tileLinePointA = tile->points[tileLinePointIndex];
 		Point tileLinePointB = tile->points[(tileLinePointIndex + 1) % tile->pointCount];
 		bool collidedWithTileLine = false;
-#if false
+
 		for (int spokeIndex = 0; spokeIndex < playerSpokes->pointCount; spokeIndex++) {
 			Point spokePointB = playerSpokes->points[spokeIndex];
 			Point spokeIntersectionPoint = {
@@ -314,14 +313,14 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 			if (collided) {
 				collidedWithTileLine = true;
 				collidedWithThisTileAtAll = true;
-				gameEngine->frameBuffer->drawLine(
+				frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokePointB.x,
 					spokePointB.y,
 					COLOR_RED
 				);
-				gameEngine->frameBuffer->drawLine(
+				frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokeIntersectionPoint.x,
@@ -332,7 +331,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 					spokeIntersectionPoint.x - spokePointB.x,
 					spokeIntersectionPoint.y - spokePointB.y,
 				};
-				gameEngine->frameBuffer->drawLine(
+				frameBuffer->drawLine(
 					spokeCenter->x,
 					spokeCenter->y,
 					spokeCenter->x + diff.x,
@@ -349,7 +348,7 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 				}
 			}
 		}
-		gameEngine->frameBuffer->drawLine(
+		frameBuffer->drawLine(
 			tileLinePointA.x,
 			tileLinePointA.y,
 			tileLinePointB.x,
@@ -358,7 +357,6 @@ bool MageGeometry::pushADiagonalsVsBEdges(
 			? COLOR_RED
 			: COLOR_ORANGE
 		);
-#endif
 	}
 	return collidedWithThisTileAtAll;
 }

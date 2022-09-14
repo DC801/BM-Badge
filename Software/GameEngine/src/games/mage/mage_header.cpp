@@ -5,8 +5,7 @@
 MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 {
 	// Read count
-	ROM->Read(
-		offset,
+	ROM->Read(offset,
 		sizeof(counts),
 		(uint8_t*)&counts,
 		"Failed to load Header property 'counts'"
@@ -22,8 +21,7 @@ MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 	offsets = std::make_unique<uint32_t[]>(counts);
 
 	// Read arrays
-	ROM->Read(
-		offset,
+	ROM->Read(offset,
 		counts * sizeof(uint32_t),
 		(uint8_t*)offsets.get(),
 		"Failed to load Header property 'offsets'"
@@ -33,8 +31,7 @@ MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 	offset += counts * sizeof(uint32_t);
 	lengths = std::make_unique<uint32_t[]>(counts);
 
-	ROM->Read(
-		offset,
+	ROM->Read(offset,
 		counts * sizeof(uint32_t),
 		(uint8_t*)lengths.get(),
 		"Failed to load Header property 'lengths'"

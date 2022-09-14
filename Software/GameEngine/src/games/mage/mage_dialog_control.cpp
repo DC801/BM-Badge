@@ -8,116 +8,28 @@
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    { // BOTTOM_LEFT
-      {
-         0,
-         8,
-         19,
-         6,
-      },
-      {
-         0,
-         6,
-         7,
-         3,
-      },
-      {
-         0,
-         1,
-         6,
-         6,
-      }
+      { 0, 8, 19, 6 },
+      { 0, 6, 7, 3 },
+      { 0, 1, 6, 6 }
    },
    { // BOTTOM_RIGHT
-      {
-         0,
-         8,
-         19,
-         6,
-      },
-      {
-         12,
-         6,
-         7,
-         3,
-      },
-      {
-         13,
-         1,
-         6,
-         6,
-      }
+      { 0, 8, 19, 6 },
+      { 12, 6, 7, 3 },
+      { 13, 1, 6, 6 }
    },
    { // TOP_LEFT
-      {
-         0,
-         0,
-         19,
-         6,
-      },
-      {
-         0,
-         5,
-         7,
-         3,
-      },
-      {
-         0,
-         7,
-         6,
-         6,
-      }
+      { 0, 0, 19, 6 },
+      { 0, 5, 7, 3 },
+      { 0, 7, 6, 6 }
    },
    { // TOP_RIGHT
-      {
-         0,
-         0,
-         19,
-         6,
-      },
-      {
-         12,
-         5,
-         7,
-         3,
-      },
-      {
-         13,
-         7,
-         6,
-         6,
-      }
+      { 0, 0, 19, 6 },
+      { 12, 5, 7, 3 },
+      { 13, 7, 6, 6 }
    }
 };
 
-uint32_t MageDialogControl::size()
-{
-   return (
-      0
-      + sizeof(currentFrameTileset)
-      + sizeof(triggeringEntityId)
-      + sizeof(currentDialogIndex)
-      + sizeof(currentDialogAddress)
-      + sizeof(currentDialogScreenCount)
-      + sizeof(currentScreenIndex)
-      + sizeof(currentMessageIndex)
-      + sizeof(currentMessageIndex)
-      + sizeof(currentImageAddress)
-      + sizeof(cursorPhase)
-      + sizeof(currentResponseIndex)
-      + sizeof(currentPortraitId)
-      + sizeof(currentScreen)
-      + sizeof(std::string) // currentEntityName
-      + sizeof(std::string) // currentMessage
-      + sizeof(uint16_t) * currentScreen->messageCount // messageIds
-      + sizeof(MageDialogResponse) * currentScreen->responseCount // responses
-      + sizeof(isOpen)
-      );
-}
-
-void MageDialogControl::load(
-   uint16_t dialogId,
-   int16_t currentEntityId
-)
+void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
    if (gameEngine->hexEditor->getHexEditorState())
    {
@@ -127,7 +39,7 @@ void MageDialogControl::load(
    currentDialogIndex = dialogId;
    currentScreenIndex = 0;
    currentResponseIndex = 0;
-   currentDialogAddress = gameEngine->gameControl->getDialogAddress(dialogId);
+   currentDialogAddress = getDialogAddress(dialogId);
    currentDialogAddress += 32; // skip past the name
 
    gameEngine->ROM->Read(
@@ -266,9 +178,9 @@ void MageDialogControl::update()
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
    bool shouldAdvance = gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_down)
-                     || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_left)
-                     || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right)
-                     || MAGE_NO_MAP != gameEngine->scriptControl->mapLoadId;
+      || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_left)
+      || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right)
+      || MAGE_NO_MAP != gameEngine->scriptControl->mapLoadId;
 
    if (shouldShowResponses())
    {
@@ -496,12 +408,9 @@ void MageDialogControl::loadCurrentScreenPortrait()
       {
          uint32_t portraitAddress = gameEngine->gameControl->getPortraitAddress(currentPortraitId);
          auto portrait = std::make_unique<MagePortrait>(gameEngine->ROM, portraitAddress);
-         MageEntityTypeAnimationDirection* animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
-         gameEngine->gameControl->getRenderableStateFromAnimationDirection(
-            &currentPortraitRenderableData,
-            currentEntity,
-            animationDirection
-         );
+         auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
+
+         currentPortraitRenderableData.getRenderableState(gameEngine->gameControl.get(), currentEntity, animationDirection);
          currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
          currentPortraitRenderableData.renderFlags |= (currentEntity->direction & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
@@ -512,4 +421,9 @@ void MageDialogControl::loadCurrentScreenPortrait()
       }
    }
 
+}
+
+uint32_t MageDialogControl::getDialogAddress(uint16_t dialogId) const
+{
+   return gameEngine->gameControl->dialogHeader->offset(dialogId % gameEngine->gameControl->dialogHeader->count());
 }

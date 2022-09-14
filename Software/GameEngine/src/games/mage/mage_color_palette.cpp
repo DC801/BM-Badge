@@ -59,15 +59,6 @@ MageColorPalette::MageColorPalette(
 	#endif //DC801_DESKTOP
 }
 
-uint32_t MageColorPalette::size() const
-{
-	uint32_t size = (
-		sizeof(colorCount) +
-		(colorCount * sizeof(uint16_t))
-	);
-	return size;
-}
-
 MageColorPalette::MageColorPalette(
 	FrameBuffer* frameBuffer,
 	MageColorPalette *sourcePalette,

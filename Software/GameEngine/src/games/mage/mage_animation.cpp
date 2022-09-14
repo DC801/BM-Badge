@@ -1,5 +1,6 @@
 #include "mage_animation.h"
 #include "EnginePanic.h"
+
 #include "convert_endian.h"
 
 MageAnimation::MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t address)
@@ -7,8 +8,7 @@ noexcept
 {
 	offset = address;
 	//read tilesetId
-	ROM->Read(
-		offset,
+	ROM->Read(offset,
 		sizeof(tilesetId),
 		(uint8_t *)&tilesetId,
 		"Failed to read Animation property 'tilesetId'"
@@ -20,9 +20,9 @@ noexcept
 	// Increment offset
 	offset += sizeof(tilesetId);
 
+	auto frameCount = uint16_t{ 0 };
 	//read frameCount
-	ROM->Read(
-		offset,
+	ROM->Read(offset,
 		sizeof(frameCount),
 		(uint8_t *)&frameCount,
 		"Failed to read Animation property 'frameCount'"
@@ -34,12 +34,11 @@ noexcept
 	// Increment offset
 	offset += sizeof(frameCount);
 
-	frames = std::make_unique<MageAnimationFrame[]>(frameCount);
+	frames = std::vector<MageAnimation::Frame>{ frameCount };
 	for (auto i = 0; i < frameCount; ++i)
 	{
-		ROM->Read(
-			offset + (i * sizeof(MageAnimationFrame)),
-			sizeof(MageAnimationFrame),
+		ROM->Read(offset + (i * sizeof(MageAnimation::Frame)),
+			sizeof(MageAnimation::Frame),
 			(uint8_t*)&frames[i],
 			"Failed to read AnimationFrame"
 		);

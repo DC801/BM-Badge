@@ -95,7 +95,7 @@ void MageCommandControl::processCommandAsVerb(std::string input) {
 		);
 		gameEngine->scriptControl->initScriptState(
 			&gameEngine->scriptControl->resumeStates.commandLook,
-			gameEngine->gameControl->Map()->onLook,
+			gameEngine->gameControl->Map()->GetOnLook(),
 			true
 		);
 		std::string directionNames = gameEngine->gameControl->Map()->getDirectionNames();
@@ -223,8 +223,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogId = _serialDialogId;
 	jumpScriptId = MAGE_NO_SCRIPT;
 	uint32_t serialDialogAddress = gameEngine->gameControl->getSerialDialogAddress(serialDialogId);
-	gameEngine->ROM->Read(
-		serialDialogAddress,
+	gameEngine->ROM->Read(serialDialogAddress,
 		sizeof(serialDialog),
 		(uint8_t *) &serialDialog,
 		"Unable to read MageSerialDialog"
@@ -245,8 +244,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogBuffer += dialogString + "\n";
 	isInputTrapped = serialDialog.serialResponseType != RESPONSE_NONE;
 	serialDialogResponses = std::make_unique<MageSerialDialogResponse[]>(serialDialog.responseCount);
-	gameEngine->ROM->Read(
-		serialDialogAddress + sizeof(serialDialog),
+	gameEngine->ROM->Read(serialDialogAddress + sizeof(serialDialog),
 		sizeof(MageSerialDialogResponse) * serialDialog.responseCount,
 		(uint8_t *) serialDialogResponses.get(),
 		"Unable to read MageSerialDialogResponse"
@@ -263,22 +261,6 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 			);
 		}
 	}
-}
-
-uint32_t MageCommandControl::size() {
-	return (
-		0
-		+ sizeof(commandResponseBuffer)
-		+ sizeof(serialDialogBuffer)
-		+ sizeof(postDialogBuffer)
-		+ sizeof(serialDialog)
-		+ sizeof(serialDialogResponses)
-		+ sizeof(jumpScriptId)
-		+ sizeof(connectSerialDialogId)
-		+ sizeof(serialDialogId)
-		+ sizeof(lastCommandUsed)
-		+ sizeof(isInputTrapped)
-	);
 }
 
 void MageCommandControl::reset() {

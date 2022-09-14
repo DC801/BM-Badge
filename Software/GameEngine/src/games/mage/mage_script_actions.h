@@ -2,6 +2,8 @@
 #define _MAGE_SCRIPT_ACTIONS_H
 
 #include "mage_defines.h"
+#include "mage_entity_type.h"
+
 class MageGeometry;
 class MageGameEngine;
 
@@ -140,7 +142,7 @@ class MageScriptActions
 {
 public:
    MageScriptActions(
-      MageGameEngine*  gameEngine
+      MageGameEngine* gameEngine
    ) noexcept
       : gameEngine(gameEngine)
    {}
@@ -350,12 +352,9 @@ public:
    //Action Logic Type: C
    void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct);
 
-   uint16_t getUsefulGeometryIndexFromActionGeometryId(
-      uint16_t geometryId,
-      MageEntity* entity
-   );
+   uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity* entity);
    Point offsetPointRelativeToEntityCenter(
-      const MageEntityRenderableData* renderable,
+      const MageEntity::RenderableData* renderable,
       const MageEntity* entity,
       const Point* geometryPoint
    );
@@ -382,7 +381,7 @@ public:
    );
    void setResumeStatePointsAndEntityDirection(
       MageScriptState* resumeStateStruct,
-      MageEntityRenderableData* renderable,
+      MageEntity::RenderableData* renderable,
       MageEntity* entity,
       MageGeometry* geometry,
       uint16_t pointAIndex,
@@ -390,7 +389,7 @@ public:
    );
    void initializeEntityGeometryPath(
       MageScriptState* resumeStateStruct,
-      MageEntityRenderableData* renderable,
+      MageEntity::RenderableData* renderable,
       MageEntity* entity,
       MageGeometry* geometry
    );
@@ -535,7 +534,7 @@ public:
    };
 
 private:
-   MageGameEngine*  gameEngine;
+   MageGameEngine* gameEngine;
 
    //the actual array of action functions:
 

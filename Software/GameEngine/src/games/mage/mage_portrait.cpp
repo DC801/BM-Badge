@@ -1,13 +1,13 @@
 #include "mage_portrait.h"
 
-
-
 MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address)
 {
 	address += 32; // name
 	address += sizeof(uint8_t); // paddingA
 	address += sizeof(uint8_t); // paddingB
 	address += sizeof(uint8_t); // paddingC
+
+	auto emoteCount = uint8_t{ 0 };
 	ROM->Read(
 		address,
 		sizeof(emoteCount),
@@ -16,23 +16,8 @@ MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	);
 	address += sizeof(emoteCount);
 
-	emotes = std::make_unique<MageEntityTypeAnimationDirection[]>(emoteCount);
+	emotes = std::vector<MageEntityTypeAnimationDirection>(emoteCount);
 	for(uint32_t i = 0; i < emoteCount; i++) {
 		emotes[i] = MageEntityTypeAnimationDirection{ ROM, address };
-		address += emotes[i].Size();
 	}
-}
-
-uint32_t MagePortrait::size() const
-{
-	uint32_t size = sizeof(emoteCount);
-	for(uint32_t i = 0; i < emoteCount; i++) {
-		size += emotes[i].Size();
-	}
-	return size;
-}
-
-MageEntityTypeAnimationDirection* MagePortrait::getEmoteById(uint8_t emoteId) const
-{
-	return &emotes[emoteId % emoteCount];
 }

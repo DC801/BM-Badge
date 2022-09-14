@@ -4,6 +4,7 @@
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "FrameBuffer.h"
+#include "mage_defines.h"
 #include <vector>
 
 #define PI 3.141592653589793
@@ -45,6 +46,9 @@ struct MageMapTile
 
 class MageGameControl
 {
+   friend class MageScriptControl;
+   friend class MageDialogControl;
+   friend class MageEntity;
 public:
    MageGameControl(MageGameEngine* gameEngine) noexcept;
    //this is the hackable array of entities that are on the current map
@@ -75,28 +79,35 @@ public:
    uint32_t Size() const;
 
    void setCurrentSaveToFreshState();
-   void readSaveFromRomIntoRam(
-      bool silenceErrors = false
-   );
+   void readSaveFromRomIntoRam(bool silenceErrors = false);
    void saveGameSlotSave();
    void saveGameSlotErase(uint8_t slotIndex);
    void saveGameSlotLoad(uint8_t slotIndex);
 
    //this will return a specific MageTileset object by index.
-   constexpr const MageTileset& Tileset(uint32_t index) const
+   constexpr const MageTileset* GetTileset(uint32_t index) const
    {
-      if (tilesetHeader->count() > index)
+      while (tilesetHeader->count() > index)
       {
-         return tilesets[index];
+         const auto offset = tilesetHeader->count() - index;
+         return &tilesets[offset];
       }
-      return tilesets[0];
+      return &tilesets[0];
    }
+
+   constexpr const MageAnimation* getAnimation(uint16_t animationId) const
+   {
+      while (animationHeader->count() > animationId)
+      {
+         animationId -= animationHeader->count();
+         return &animations[animationId];
+      }
+      return &animations[0];
+   }
+
 
    //this will return the current map object.
    auto Map() { return map; }
-
-   //this will fill in an entity structure's data from ROM
-   MageEntity LoadEntity(uint32_t address);
 
    //this takes map data by index and fills all the variables in the map object:
    void PopulateMapData(uint16_t index);
@@ -136,69 +147,31 @@ public:
    uint16_t getValidMapLocalScriptId(uint16_t scriptId);
    uint16_t getValidGlobalScriptId(uint16_t scriptId);
    uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
-   MageEntityAnimationDirection getValidEntityTypeDirection(
-      MageEntityAnimationDirection direction
-   );
-   MageEntityAnimationDirection updateDirectionAndPreserveFlags(
-      MageEntityAnimationDirection desired,
-      MageEntityAnimationDirection previous
-   );
+   MageEntityAnimationDirection getValidEntityTypeDirection(MageEntityAnimationDirection direction);
+   MageEntityAnimationDirection updateDirectionAndPreserveFlags(MageEntityAnimationDirection desired, MageEntityAnimationDirection previous);
    MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
    MageGeometry getGeometryFromGlobalId(uint16_t globalGeometryId);
    MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
-   uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const;
-   uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const;
    const MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
    MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId);
-   MageEntityRenderableData* getEntityRenderableDataByMapLocalId(uint8_t mapLocalEntityId);
-   std::string getString(
-      uint16_t stringId,
-      int16_t mapLocalEntityId
-   );
+   MageEntity::RenderableData* getEntityRenderableDataByMapLocalId(uint8_t mapLocalEntityId);
+   std::string getString(uint16_t stringId, int16_t mapLocalEntityId);
    MageTileset* getValidTileset(uint16_t tilesetId);
    std::string getEntityNameStringById(int8_t mapLocalEntityId);
    uint32_t getImageAddress(uint16_t imageId);
    uint32_t getPortraitAddress(uint16_t portraitId);
-   uint32_t getDialogAddress(uint16_t dialogId);
    uint32_t getSerialDialogAddress(uint16_t serialDialogId);
 
    //this returns the address offset for a specific script Id:
    uint32_t getScriptAddressFromGlobalScriptId(uint32_t scriptId);
 
-   //this calculates the relevant info to be able to draw an entity based on the
-   //current state of the data in MageGameControl and stores the info in entityRenderableData
-   void updateEntityRenderableData(
-      uint8_t mapLocalEntityId,
-      bool skipTilesetCheck = false
-   );
-
-   void updateEntityRenderableBoxes(
-      MageEntityRenderableData* data,
-      const MageEntity* entity,
-      const MageTileset* tileset
-   ) const;
-
    //this will update the current entities based on the current state of their state variables
    void UpdateEntities(uint32_t deltaTime);
-
-   void computeEntityYAxisSort(
-      uint8_t* entitySortOrder
-   );
-
    //this will draw the entities over the current state of the screen
    void DrawEntities();
-
    //this will draw the current map's geometry over the current state of the screen
    void DrawGeometry();
-
    Point getPushBackFromTilesThatCollideWithPlayer();
-
-   void getRenderableStateFromAnimationDirection(
-      MageEntityRenderableData* data,
-      const MageEntity* entity,
-      const MageEntityTypeAnimationDirection* animationDirection
-   );
-
    void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 
 #ifndef DC801_EMBEDDED
@@ -210,6 +183,7 @@ public:
    constexpr uint16_t tilesetCount() const { return tilesetHeader->count(); }
 
    void logAllEntityScriptValues(const char* string);
+   void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck=true);
 private:
 
    MageGameEngine* gameEngine;
@@ -250,7 +224,7 @@ private:
 
    //this is an array storing the most current data needed to draw entities
    //on the screen in their current animation state.
-   std::vector<MageEntityRenderableData> entityRenderableData{ MAX_ENTITIES_PER_MAP };
+   std::vector<MageEntity::RenderableData> entityRenderableData{ MAX_ENTITIES_PER_MAP };
 
    //this is an array of all the colorPalettes objects in the ROM
    std::vector<MageColorPalette> colorPalettes;
@@ -261,9 +235,6 @@ private:
 
    Point playerVelocity = { 0,0 };
    Point adjustedCameraPosition = { 0,0 };
-
-   uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
-   uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP] = { 0 };
 }; //class MageGameControl
 
 

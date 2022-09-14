@@ -14,10 +14,6 @@
 #define HALF_HEIGHT	120
 const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
-#define FLIPPED_DIAGONALLY_FLAG   0x01
-#define FLIPPED_VERTICALLY_FLAG   0x02
-#define FLIPPED_HORIZONTALLY_FLAG 0x04
-
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
 class MageGameEngine;
@@ -43,18 +39,19 @@ union ColorUnion
 	Color_565 c;
 	uint16_t i;
 };
-struct RenderFlags {
-	bool diagonal:1;
-	bool vertical:1;
-	bool horizontal:1;
-	bool paddingA:1;
-	bool paddingB:1;
-	bool paddingC:1;
-	bool debug:1;
-	bool glitched:1;
-};
-union RenderFlagsUnion {
-	RenderFlags f;
+
+union RenderFlags {
+	struct
+	{
+		bool diagonal : 1;
+		bool vertical : 1;
+		bool horizontal : 1;
+		bool paddingA : 1;
+		bool paddingB : 1;
+		bool paddingC : 1;
+		bool debug : 1;
+		bool glitched : 1;
+	};
 	uint8_t i;
 };
 
@@ -150,19 +147,6 @@ public:
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch);
 	void drawImage(int x, int y, int w, int h, const uint16_t *data, int fx, int fy, int pitch, uint16_t transparent_color);
 
-	void drawImageWithFlags(
-		int x,
-		int y,
-		int w,
-		int h,
-		const uint16_t *data,
-		int fx,
-		int fy,
-		int pitch,
-		uint16_t transparent_color,
-		uint8_t flags
-	);
-
 	void drawChunkWithFlags(
 		uint32_t address, //address of first pixel of image in ROM
 		MageColorPalette *colorPaletteFaded, //color palette to lookup image colors from
@@ -200,7 +184,6 @@ public:
 	void setTextArea(area_t *area);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
-
 	void blt();
 
 
@@ -221,7 +204,7 @@ private:
 		GFXfont font
 	);
 
-	void tileToBufferNoXNoYNoZ(
+	void tileToBuffer(
 		uint8_t* pixels,
 		MageColorPalette* colorPalette,
 		int32_t screen_x,
@@ -231,91 +214,8 @@ private:
 		uint16_t source_x,
 		uint16_t source_y,
 		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXNoYNoZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXYesYNoZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXYesYNoZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXNoYYesZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXNoYYesZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferNoXYesYYesZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
-	);
-	void tileToBufferYesXYesYYesZ(
-		uint8_t* pixels,
-		MageColorPalette* colorPalette,
-		int32_t screen_x,
-		int32_t screen_y,
-		uint16_t tile_width,
-		uint16_t tile_height,
-		uint16_t source_x,
-		uint16_t source_y,
-		uint16_t pitch,
-		uint16_t transparent_color
+		uint16_t transparent_color,
+		RenderFlags renderFlags
 	);
 };
 

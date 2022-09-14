@@ -99,7 +99,8 @@ public:
       MageGeometry* playerSpokes,
       float* maxSpokePushbackLengths,
       Point* maxSpokePushbackVectors,
-      MageGeometry* tile
+      MageGeometry* tile,
+      FrameBuffer* frameBuffer
    );
 
    static bool getIntersectPointBetweenLineSegments(

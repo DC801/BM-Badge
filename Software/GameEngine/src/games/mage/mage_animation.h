@@ -9,43 +9,41 @@ in a more accessible way.
 
 #include "mage_defines.h"
 #include "EngineROM.h"
-
-struct MageAnimationFrame{
-	uint16_t tileId;
-	uint16_t duration;
-};
+#include <vector>
 
 class MageGameEngine;
+
+//this is the numerical translation for entity direction.
+enum MageEntityAnimationDirection : uint8_t
+{
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3,
+};
 
 class MageAnimation
 {
 public:
+	struct Frame
+	{
+		uint16_t tileId;
+		uint16_t duration;
+	};
+
 	MageAnimation() noexcept = default;
 	MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept;
 
-	uint16_t TilesetId() const { return tilesetId; }
-
-	uint16_t FrameCount() const { return frameCount; }
-
-	uint32_t Size() const { return sizeof(tilesetId) + sizeof(frameCount);	}
-
-	uint32_t end() const
-	{
-		return Size() + (frameCount * sizeof(MageAnimationFrame));
-	}
-
-	MageAnimationFrame AnimationFrame(uint32_t index) const
-	{
-		return frames[index];
-	}
-
+	constexpr uint16_t TilesetId() const { return tilesetId; }
+	constexpr uint16_t TileId() const { return 0; }
+	uint16_t FrameCount() const { return frames.size(); }
+	MageAnimation::Frame AnimationFrame(uint32_t index) const { return frames[index % frames.size()]; }
 
 private:
 	uint16_t tilesetId{ 0 };
-	uint16_t frameCount{ 0 };
 	uint32_t offset{ 0 };
-	std::unique_ptr<MageAnimationFrame[]> frames;
+	std::vector<MageAnimation::Frame> frames;
 
-}; //class MageAnimation
+};
 
 #endif //_MAGE_ANIMATION_H

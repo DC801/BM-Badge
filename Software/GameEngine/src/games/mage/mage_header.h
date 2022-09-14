@@ -20,28 +20,8 @@ public:
 	MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset);
 
 	constexpr uint32_t count() const { return counts; }
-
-	constexpr uint32_t offset(uint32_t num) const
-	{
-		return offsets && counts > num
-			? offsets[num]
-			: 0;
-	}
-
-	constexpr uint32_t length(uint32_t num) const
-	{
-		return lengths && counts > num
-			? lengths[num]
-			: 0;
-	}
-
-	constexpr uint32_t size() const
-	{
-		return sizeof(counts) + 			// Count
-			counts * sizeof(uint32_t) +   // Offsets
-			counts * sizeof(uint32_t);		// Lengths
-	}
-
+	constexpr uint32_t offset(uint32_t num) const { return (offsets && counts > num) ? offsets[num] : 0; }
+	constexpr uint32_t length(uint32_t num) const { return (lengths && counts > num) ? lengths[num] : 0; }
 	bool valid() const { return offsets != nullptr && lengths != nullptr;	}
 }; //class MageHeader
 

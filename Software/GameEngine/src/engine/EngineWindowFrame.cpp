@@ -150,20 +150,21 @@ void EngineWindowFrame::GameBlt(uint16_t* frame)
 	if (frame == nullptr) {
 		return;
 	}
-	auto frameBuffer = std::make_unique<uint16_t[]>(FRAMEBUFFER_SIZE);
 
-	// Sorry for this monster;
-	// The game.dat stores the image buffer data in BigEndian
-	// SDL reads FrameBuffers in Platform Native Endian,
-	// so we need to convert if Desktop is LittleEndian
+	void* targetPixelBuffer;
+	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
+	{
+		memcpy(targetPixelBuffer, frame, FRAMEBUFFER_SIZE);
+		// Sorry for this monster;
+		// The game.dat stores the image buffer data in BigEndian
+		// SDL reads FrameBuffers in Platform Native Endian,
+		// so we need to convert if Desktop is LittleEndian
 #ifndef IS_SCREEN_BIG_ENDIAN
 #ifdef IS_LITTLE_ENDIAN
-	convert_endian_u2_buffer(frame, FRAMEBUFFER_SIZE);
+		convert_endian_u2_buffer((uint16_t*)targetPixelBuffer, FRAMEBUFFER_SIZE);
 #endif
 #endif
-	auto bufPtr = frameBuffer.get();
-	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, (void**)&bufPtr, &pitch))
-	{
+
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

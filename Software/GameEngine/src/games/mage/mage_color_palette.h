@@ -33,8 +33,6 @@ public:
 		float fadeFraction
 	);
 
-	uint32_t size() const;
-
 	#ifndef DC801_EMBEDDED
 	void generatePaletteIntegrityString(char *targetString);
 

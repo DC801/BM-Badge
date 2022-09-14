@@ -2,19 +2,20 @@
 #define SOFTWARE_MAGE_PORTRAIT_H
 #include "mage_entity_type.h"
 #include "EngineROM.h"
-#include <memory>
+#include <vector>
 
 class MagePortrait {
 public:
-	uint8_t emoteCount{ 0 };
-	std::unique_ptr<MageEntityTypeAnimationDirection[]> emotes{ std::make_unique<MageEntityTypeAnimationDirection[]>(emoteCount) };
 
-	MagePortrait() = default;
+	MagePortrait() noexcept = default;
 	MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
-	uint32_t size() const;
-
-	MageEntityTypeAnimationDirection* getEmoteById(uint8_t emoteId) const;
+	const MageEntityTypeAnimationDirection* getEmoteById(uint8_t emoteId) const
+	{
+		return &emotes[emoteId % emotes.size()];
+	}
+private:
+	std::vector<MageEntityTypeAnimationDirection> emotes{};
 };
 
 

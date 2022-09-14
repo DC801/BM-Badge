@@ -9,6 +9,7 @@
 #include "mage_script_control.h"
 #include "mage_hex.h"
 #include "engine/EngineInput.h"
+#include "mage.h"
 
 #define DIALOG_SCREEN_NO_PORTRAIT 255
 
@@ -81,19 +82,13 @@ struct MageDialogAlignmentCoords
 class MageDialogControl
 {
 public:
-   MageDialogControl(
-      MageGameEngine*  gameEngine
-   ) noexcept
+   MageDialogControl(MageGameEngine* gameEngine) noexcept
       : gameEngine(gameEngine)
    {}
 
    bool isOpen{ false };
    int32_t mapLocalJumpScriptId{ MAGE_NO_SCRIPT };
-   uint32_t size();
-   void load(
-      uint16_t dialogId,
-      int16_t currentEntityId
-   );
+   void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
    void showSaveMessageDialog(std::string messageString);
    void advanceMessage();
@@ -102,9 +97,11 @@ public:
    void draw();
 
    void loadCurrentScreenPortrait();
+   uint32_t getDialogAddress(uint16_t dialogId) const;
+
 
 private:
-   MageGameEngine*  gameEngine;
+   MageGameEngine* gameEngine;
 
    // char dialogName[32];
    MageTileset* currentFrameTileset;
@@ -119,23 +116,14 @@ private:
    uint32_t cursorPhase;
    uint8_t currentResponseIndex;
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
-   MageEntityRenderableData currentPortraitRenderableData{};
+   MageEntity::RenderableData currentPortraitRenderableData{};
    MageDialogScreen* currentScreen;
    std::string currentEntityName;
    std::string currentMessage;
    std::unique_ptr<uint16_t[]>messageIds;
    std::unique_ptr<MageDialogResponse[]>responses;
-   uint8_t getTileIdFromXY(
-      uint8_t x,
-      uint8_t y,
-      Rect box
-   );
-   void drawDialogBox(
-      const std::string& string,
-      Rect box,
-      bool drawArrow = false,
-      bool drawPortrait = false
-   );
+   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box);
+   void drawDialogBox(const std::string& string, Rect box, bool drawArrow = false, bool drawPortrait = false);
    bool shouldShowResponses() const;
 
 };
