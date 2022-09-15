@@ -79,12 +79,9 @@ struct EngineROM
    void EraseSaveSlot(uint8_t slotIndex);
    void WriteSaveSlot(uint8_t slotIndex, size_t length, uint8_t* hauntedDataPointer);
 #ifdef DC801_EMBEDDED
-
-   bool SD_Copy(
-      uint32_t gameDatFilesize, FIL gameDat, bool eraseWholeRomChip
-   );
+   bool SD_Copy(uint32_t gameDatFilesize, FIL gameDat, bool eraseWholeRomChip);
 #endif
-   uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex)
+   constexpr uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) const
    {
       return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
    }

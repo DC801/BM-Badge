@@ -11,20 +11,18 @@ in a more accessible way.
 #include "EngineROM.h"
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
-typedef enum : uint8_t
+enum class MageGeometryType : uint8_t
 {
-   POINT = 0,
-   POLYLINE = 1,
-   POLYGON = 2,
-   //this tracks how many different geometry types there are:
-   NUM_GEOMETRIES
-} MageGeometryTypeId;
+   Point = 0,
+   Polyline = 1,
+   Polygon = 2
+};
 
 class MageGeometry
 {
 public:
-   //can be any MageGeometryTypeId:
-   MageGeometryTypeId typeId{ MageGeometryTypeId::POINT };
+   //can be any MageGeometryType:
+   MageGeometryType typeId{ MageGeometryType::Point };
    //how many points will be in the pointArray:
    uint8_t pointCount{ 1 };
    //how many points will be in the segmentLengths:
@@ -41,29 +39,15 @@ public:
 
    //this constructor allows you to make a geometry of a known type and pointCount.
    //you'll need to manually fill in the points, though. They all default to 0,0.
-   MageGeometry(
-      MageGeometryTypeId type,
-      uint8_t numPoints
-   );
+   MageGeometry(MageGeometryType type, uint8_t numPoints);
 
    //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
    MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
-   //returns the size in RAM of a MageGeometry object.
-   uint32_t size() const;
-
-   void flipSelfByFlags(
-      uint8_t flags,
-      uint16_t width,
-      uint16_t height
-   );
+   void flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height);
 
    //this checks to see if a given point is inside the boundaries of a given geometry:
-   bool isPointInGeometry(
-      Point point
-   );
-
-   static bool doRectsOverlap(Rect a, Rect b);
+   bool isPointInGeometry(Point point);
 
    static Point flipPointByFlags(
       Point point,
@@ -75,15 +59,6 @@ public:
    static Point flipVectorByFlags(
       Point unflippedPoint,
       uint8_t flags
-   );
-
-   static float getVectorLength(
-      Point v
-   );
-
-   static float getDotProduct(
-      Point a,
-      Point b
    );
 
    void draw(
@@ -110,6 +85,6 @@ public:
       const Point& lineBPointB,
       Point& intersectPoint
    );
-}; 
+};
 
 #endif //_MAGE_GEOMETRY_H

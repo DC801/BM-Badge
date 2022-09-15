@@ -406,10 +406,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
                playerVelocity.x + pushback.x,
                playerVelocity.y + pushback.y,
             };
-            float dotProductOfVelocityAndPushback = MageGeometry::getDotProduct(
-               playerVelocity,
-               velocityAfterPushback
-            );
+            float dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
             // false would mean that the pushback is greater than the input velocity,
             // which would glitch the player into geometry really bad, so... don't.
             if (dotProductOfVelocityAndPushback > 0)
@@ -586,10 +583,9 @@ void MageGameControl::handleEntityInteract(
       if (i != playerEntityIndex)
       {
          targetEntity = &entities[i];
-         bool colliding = MageGeometry::doRectsOverlap(
-            targetRenderableData->hitBox,
-            playerRenderableData->interactBox
-         );
+         bool colliding = targetRenderableData->hitBox
+            .Overlaps(playerRenderableData->interactBox);
+          
          if (colliding)
          {
             playerRenderableData->isInteracting = true;
@@ -705,7 +701,7 @@ void MageGameControl::DrawMap(uint8_t layer)
                );
             }
 
-            if (geometry.typeId == POINT)
+            if (geometry.typeId == MageGeometryType::Point)
             {
                gameEngine->frameBuffer->drawPoint(
                   geometry.points[0].x + tile_x - camera_x,
@@ -748,7 +744,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 
 Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
 {
-   MageGeometry mageCollisionSpokes = MageGeometry(POLYGON, MAGE_COLLISION_SPOKE_COUNT);
+   MageGeometry mageCollisionSpokes = MageGeometry(MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT);
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT];
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT];
    auto playerRenderableData = getEntityRenderableDataByMapLocalId(playerEntityIndex);

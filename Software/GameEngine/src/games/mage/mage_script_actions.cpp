@@ -2098,7 +2098,7 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
          //now set the resumeStateStruct variables:
          resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
          resumeStateStruct->loopsToNextAction = totalDelayLoops;
-         resumeStateStruct->length = (geometry.typeId == POLYLINE)
+         resumeStateStruct->length = (geometry.typeId == MageGeometryType::Polyline)
             ? geometry.pathLength * 2
             : geometry.pathLength;
          initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
@@ -3022,11 +3022,11 @@ uint16_t MageScriptActions::getLoopableGeometryPointIndex(
    {
       // handle the derp who made a poly* with 1 point
    }
-   else if (geometry->typeId == POLYGON)
+   else if (geometry->typeId == MageGeometryType::Polygon)
    {
       result = pointIndex % geometry->pointCount;
    }
-   else if (geometry->typeId == POLYLINE)
+   else if (geometry->typeId == MageGeometryType::Polyline)
    {
       // haunted, do not touch
       pointIndex %= (geometry->segmentCount * 2);
@@ -3047,11 +3047,11 @@ uint16_t MageScriptActions::getLoopableGeometrySegmentIndex(
    {
       // handle the derp who made a poly* with 1 point
    }
-   else if (geometry->typeId == POLYGON)
+   else if (geometry->typeId == MageGeometryType::Polygon)
    {
       result = segmentIndex % geometry->segmentCount;
    }
-   else if (geometry->typeId == POLYLINE)
+   else if (geometry->typeId == MageGeometryType::Polyline)
    {
       // haunted, do not touch
       segmentIndex %= (geometry->segmentCount * 2);

@@ -155,6 +155,17 @@ struct Point
 {
    int32_t x{ 0 };
    int32_t y{ 0 };
+   
+   float VectorLength() const 
+   {
+      return sqrt((x * x) + (y * y));
+   };
+
+   constexpr float DotProduct(Point b) const
+   {
+      return (float)x * (float)b.x;
+           + (float)y * (float)b.y;
+   };
 };
 
 struct Rect
@@ -163,6 +174,14 @@ struct Rect
    int32_t y{ 0 };
    int32_t w{ 0 };
    int32_t h{ 0 };
+
+   constexpr bool Overlaps(Rect& other) const
+   {
+      return x <= (other.x + other.w)
+          && (x + w) >= other.x
+          && y <= (other.y + other.h)
+          && (y + h) >= other.y;
+   }
 };
 
 

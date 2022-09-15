@@ -46,11 +46,7 @@ class MageHexEditor
 public:
 	bool disableMovementUntilRJoyUpRelease;
 
-	//initialize the class with default values.
-	//No need for a constructor with arguments and non-default values.
-	MageHexEditor(
-		MageGameEngine*  gameEngine
-	) : 
+	MageHexEditor(MageGameEngine*  gameEngine) : 
 		gameEngine(gameEngine)
 	{};
 	
