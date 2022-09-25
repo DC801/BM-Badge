@@ -1380,5 +1380,16 @@
 			"entity": "%SELF%",
 			"geometry": "%ENTITY_PATH%"
 		}
+	],
+	"mage25-interact": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "mage19-interact",
+			"search_and_replace": {
+				"\"entity_type\":\"bender\"": "\"entity_type\": \"baby_goat\"",
+				"\"entity_type\":\"verthandi\"": "\"entity_type\": \"bert\"",
+				"\"entity_type\":\"mage\"": "\"entity_type\": \"strong_bad\""
+			}
+		}
 	]
 }

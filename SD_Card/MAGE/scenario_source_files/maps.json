@@ -1,4 +1,17 @@
 {
+	"action_testing_01": {
+		"path": "maps/map-action_testing_01.json",
+		"on_tick": "null_script",
+		"on_load": "map-action_testing-load",
+		"on_look": "map-action_testing-look",
+		"directions": {
+			"north": "map-action_testing-go_north",
+			"cleveland": "map-action_testing-go_cleveland",
+			"numbers": "map-action_testing-go_numbers",
+			"sphinx": "map-action_testing-go_sphinx",
+			"hub": "map-action_testing-go_hub"
+		}
+	},
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
@@ -29,19 +42,6 @@
 		"path": "maps/map-flying-toasters.json",
 		"on_tick": "on_tick-flying-toasters",
 		"on_load": "on_load-flying-toasters"
-	},
-	"action_testing_01": {
-		"path": "maps/map-action_testing_01.json",
-		"on_tick": "null_script",
-		"on_load": "map-action_testing-load",
-		"on_look": "map-action_testing-look",
-		"directions": {
-			"north": "map-action_testing-go_north",
-			"cleveland": "map-action_testing-go_cleveland",
-			"numbers": "map-action_testing-go_numbers",
-			"sphinx": "map-action_testing-go_sphinx",
-			"hub": "map-action_testing-go_hub"
-		}
 	},
 	"demo": "maps/map-demo.json",
 	"main": "maps/map-main.json",

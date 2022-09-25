@@ -590,7 +590,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"null_script"
+                         "value":"mage25-interact"
                         }, 
                         {
                          "name":"on_tick",
@@ -913,7 +913,7 @@
          "value":""
         }],
  "renderorder":"right-down",
- "tiledversion":"1.7.0",
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tilesets":[
         {

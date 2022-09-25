@@ -1234,7 +1234,19 @@ var preProcessScript = function(
 					scriptName,
 					scenarioData
 				);
-				var copiedScript = jsonClone(sourceScript);
+				var copiedScriptSource = JSON.stringify(sourceScript);
+				if (action.search_and_replace) {
+					Object.entries(action.search_and_replace).map(function (pair) {
+						var search = pair[0];
+						var replace = pair[1];
+						var regex = new RegExp(search, 'gm');
+						copiedScriptSource = copiedScriptSource.replace(
+							regex,
+							replace
+						);
+					});
+				}
+				var copiedScript = JSON.parse(copiedScriptSource);
 				result = result.concat(copiedScript);
 			} else {
 				result.push(action);
