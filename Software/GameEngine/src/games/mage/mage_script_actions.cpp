@@ -238,7 +238,7 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
       else if (sanitizedPrimaryType == TILESET) { sizeLimit = gameEngine->gameControl->tilesetCount(); }
       else
       {
-         throw std::runtime_error{"Sanitized Primary Type Unknown"};
+         throw std::runtime_error{ "Sanitized Primary Type Unknown" };
       }
       bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -1762,15 +1762,15 @@ void MageScriptActions::action_show_dialog(uint8_t* args, MageScriptState* resum
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameEngine->dialogControl->load(argStruct->dialogId, gameEngine->scriptControl->currentEntityId);
+      gameEngine->gameControl->dialogControl->load(argStruct->dialogId, gameEngine->scriptControl->currentEntityId);
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameEngine->dialogControl->isOpen)
+   else if (!gameEngine->gameControl->dialogControl->isOpen())
    {
       // will be 0 any time there is no response; no jump
-      if (gameEngine->dialogControl->mapLocalJumpScriptId != MAGE_NO_SCRIPT)
+      if (gameEngine->gameControl->dialogControl->getJumpScriptId() != MAGE_NO_SCRIPT)
       {
-         gameEngine->scriptControl->jumpScriptId = gameEngine->dialogControl->mapLocalJumpScriptId;
+         gameEngine->scriptControl->jumpScriptId = gameEngine->gameControl->dialogControl->getJumpScriptId();
       }
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2188,7 +2188,7 @@ void MageScriptActions::action_set_camera_to_follow_entity(uint8_t* args, MageSc
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
-   gameEngine->gameControl->cameraFollowEntityId = entityIndex;
+   gameEngine->gameControl->camera.followEntityId = entityIndex;
 }
 
 void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2209,9 +2209,9 @@ void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageSc
    MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(gameEngine->scriptControl->currentEntityId);
    uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
    MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
-   gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
-   gameEngine->gameControl->cameraPosition.x = geometry.points[0].x - HALF_WIDTH;
-   gameEngine->gameControl->cameraPosition.y = geometry.points[0].y - HALF_HEIGHT;
+   gameEngine->gameControl->camera.followEntityId = NO_PLAYER;
+   gameEngine->gameControl->camera.position.x = geometry.points[0].x - HALF_WIDTH;
+   gameEngine->gameControl->camera.position.y = geometry.points[0].y - HALF_HEIGHT;
 }
 
 void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2238,11 +2238,11 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
 
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
-         gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
+         gameEngine->gameControl->camera.followEntityId = NO_PLAYER;
          //this is the points we're interpolating between
          resumeStateStruct->pointA = {
-            gameEngine->gameControl->cameraPosition.x,
-            gameEngine->gameControl->cameraPosition.y,
+            gameEngine->gameControl->camera.position.x,
+            gameEngine->gameControl->camera.position.y,
          };
       }
       float progress = manageProgressOfAction(
@@ -2260,12 +2260,12 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
          resumeStateStruct->pointB,
          progress
       );
-      gameEngine->gameControl->cameraPosition.x = betweenPoint.x;
-      gameEngine->gameControl->cameraPosition.y = betweenPoint.y;
+      gameEngine->gameControl->camera.position.x = betweenPoint.x;
+      gameEngine->gameControl->camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
-         gameEngine->gameControl->cameraFollowEntityId = entityIndex;
+         gameEngine->gameControl->camera.followEntityId = entityIndex;
       }
    }
 }
@@ -2289,11 +2289,11 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
 
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      gameEngine->gameControl->cameraFollowEntityId = NO_PLAYER;
+      gameEngine->gameControl->camera.followEntityId = NO_PLAYER;
       //this is the points we're interpolating between
       resumeStateStruct->pointA = {
-         gameEngine->gameControl->cameraPosition.x,
-         gameEngine->gameControl->cameraPosition.y,
+         gameEngine->gameControl->camera.position.x,
+         gameEngine->gameControl->camera.position.y,
       };
       resumeStateStruct->pointB = {
          geometry.points[0].x - HALF_WIDTH,
@@ -2309,8 +2309,8 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
       resumeStateStruct->pointB,
       progress
    );
-   gameEngine->gameControl->cameraPosition.x = betweenPoint.x;
-   gameEngine->gameControl->cameraPosition.y = betweenPoint.y;
+   gameEngine->gameControl->camera.position.x = betweenPoint.x;
+   gameEngine->gameControl->camera.position.y = betweenPoint.y;
 }
 
 void MageScriptActions::action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2363,9 +2363,9 @@ void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* 
 
    if (progress < 1.0)
    {
-      gameEngine->gameControl->cameraShaking = true;
-      gameEngine->gameControl->cameraShakeAmplitude = argStruct->amplitude;
-      gameEngine->gameControl->cameraShakePhase = (
+      gameEngine->gameControl->camera.shaking = true;
+      gameEngine->gameControl->camera.shakeAmplitude = argStruct->amplitude;
+      gameEngine->gameControl->camera.shakePhase = (
          progress /
          (
             (float)argStruct->frequency
@@ -2375,9 +2375,9 @@ void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* 
    }
    else
    {
-      gameEngine->gameControl->cameraShaking = false;
-      gameEngine->gameControl->cameraShakeAmplitude = 0;
-      gameEngine->gameControl->cameraShakePhase = 0;
+      gameEngine->gameControl->camera.shaking = false;
+      gameEngine->gameControl->camera.shakeAmplitude = 0;
+      gameEngine->gameControl->camera.shakePhase = 0;
    }
 }
 void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2393,10 +2393,7 @@ void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* r
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
    argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
-   float progress = manageProgressOfAction(
-      resumeStateStruct,
-      argStruct->duration
-   );
+   float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
 
    gameEngine->frameBuffer->fadeColor = argStruct->color;
    gameEngine->frameBuffer->fadeFraction = progress;
@@ -2653,12 +2650,12 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
    {
       gameEngine->gameControl->saveGameSlotSave();
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameEngine->dialogControl->showSaveMessageDialog(
+      gameEngine->gameControl->dialogControl->showSaveMessageDialog(
          std::string("Save complete.")
       );
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameEngine->dialogControl->isOpen)
+   else if (!gameEngine->gameControl->dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2683,7 +2680,7 @@ void MageScriptActions::action_slot_load(uint8_t* args, MageScriptState* resumeS
       gameEngine->gameControl->saveGameSlotLoad(argStruct->slotIndex);
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameEngine->dialogControl->isOpen)
+   else if (!gameEngine->gameControl->dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2714,12 +2711,12 @@ void MageScriptActions::action_slot_erase(uint8_t* args, MageScriptState* resume
    {
       gameEngine->gameControl->saveGameSlotErase(argStruct->slotIndex);
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameEngine->dialogControl->showSaveMessageDialog(
+      gameEngine->gameControl->dialogControl->showSaveMessageDialog(
          std::string("Save erased.")
       );
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameEngine->dialogControl->isOpen)
+   else if (!gameEngine->gameControl->dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -3137,7 +3134,7 @@ int16_t MageScriptActions::getUsefulEntityIndexFromActionEntityId(
    {
       //target is the map itself, leave the value alone
    }
-   else if (entityIndex >= gameEngine->gameControl->filteredEntityCountOnThisMap)
+   else if (entityIndex >= gameEngine->gameControl->Map()->FilteredEntityCount())
    {
       //if it targets one of the debug entities filtered off the end of the list,
       //treat it like it's not there:

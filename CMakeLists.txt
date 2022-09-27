@@ -42,6 +42,8 @@ set(SOURCEFILES
 
     Software/GameEngine/src/games/mage/mage_animation.cpp
     Software/GameEngine/src/games/mage/mage_animation.h
+    Software/GameEngine/src/games/mage/mage_camera.cpp
+    Software/GameEngine/src/games/mage/mage_camera.h
     Software/GameEngine/src/games/mage/mage_color_palette.cpp
     Software/GameEngine/src/games/mage/mage_color_palette.h
     Software/GameEngine/src/games/mage/mage_command_control.cpp

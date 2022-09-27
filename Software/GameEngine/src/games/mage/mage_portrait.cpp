@@ -11,8 +11,7 @@ MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address)
 	ROM->Read(
 		address,
 		sizeof(emoteCount),
-		(uint8_t *)&emoteCount,
-		"Failed to read emoteCount property 'name'"
+		(uint8_t *)&emoteCount
 	);
 	address += sizeof(emoteCount);
 

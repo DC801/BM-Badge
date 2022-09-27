@@ -29,6 +29,11 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    }
 };
 
+MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, uint32_t offset) noexcept
+   : gameEngine(gameEngine),
+   dialogHeader(gameEngine->ROM, offset)
+{}
+
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
    if (gameEngine->hexEditor->getHexEditorState())
@@ -39,22 +44,21 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    currentDialogIndex = dialogId;
    currentScreenIndex = 0;
    currentResponseIndex = 0;
-   currentDialogAddress = getDialogAddress(dialogId);
+   //auto currentDialog = get(dialogId);
    currentDialogAddress += 32; // skip past the name
 
    gameEngine->ROM->Read(
       currentDialogAddress,
       sizeof(currentDialogScreenCount),
-      (uint8_t*)&currentDialogScreenCount,
-      "Failed to read Dialog property 'currentDialogScreenCount'"
+      (uint8_t*)&currentDialogScreenCount
    );
    currentDialogScreenCount = ROM_ENDIAN_U4_VALUE(currentDialogScreenCount);
    currentDialogAddress += sizeof(currentDialogScreenCount);
 
    loadNextScreen();
 
-   isOpen = true;
-   mapLocalJumpScriptId = MAGE_NO_SCRIPT;
+   open = true;
+   jumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::showSaveMessageDialog(std::string messageString)
@@ -68,11 +72,11 @@ void MageDialogControl::showSaveMessageDialog(std::string messageString)
    currentMessage = messageString;
    currentScreen->responseCount = 0;
    currentScreen->messageCount = 1;
-   currentScreen->responseType = NO_RESPONSE;
+   currentScreen->responseType = MageDialogResponseType::NO_RESPONSE;
    responses = std::make_unique<MageDialogResponse[]>(0);
    cursorPhase += 250;
-   isOpen = true;
-   mapLocalJumpScriptId = MAGE_NO_SCRIPT;
+   open = true;
+   jumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::loadNextScreen()
@@ -80,15 +84,14 @@ void MageDialogControl::loadNextScreen()
    currentMessageIndex = 0;
    if ((uint32_t)currentScreenIndex >= currentDialogScreenCount)
    {
-      isOpen = false;
+      open = false;
       return;
    }
    uint8_t sizeOfDialogScreenStruct = sizeof(currentScreen);
    gameEngine->ROM->Read(
       currentDialogAddress,
       sizeOfDialogScreenStruct,
-      (uint8_t*)&currentScreen,
-      "Failed to read Dialog property 'currentScreen'"
+      (uint8_t*)&currentScreen
    );
    currentScreen->nameStringIndex = ROM_ENDIAN_U2_VALUE(currentScreen->nameStringIndex);
    currentScreen->borderTilesetIndex = ROM_ENDIAN_U2_VALUE(currentScreen->borderTilesetIndex);
@@ -103,8 +106,7 @@ void MageDialogControl::loadNextScreen()
    gameEngine->ROM->Read(
       currentDialogAddress,
       sizeOfScreenMessageIds,
-      (uint8_t*)messageIds.get(),
-      "Failed to read Dialog property 'messageIds'"
+      (uint8_t*)messageIds.get()
    );
    ROM_ENDIAN_U2_BUFFER(messageIds.get(), currentScreen->messageCount);
    currentDialogAddress += sizeOfScreenMessageIds;
@@ -119,23 +121,12 @@ void MageDialogControl::loadNextScreen()
    gameEngine->ROM->Read(
       currentDialogAddress,
       sizeOfResponses,
-      (uint8_t*)responses.get(),
-      "Failed to read Dialog property 'responses'"
+      (uint8_t*)responses.get()
    );
    for (int responseIndex = 0; responseIndex < currentScreen->responseCount; ++responseIndex)
    {
       responses[responseIndex].stringIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].stringIndex);
       responses[responseIndex].mapLocalScriptIndex = ROM_ENDIAN_U2_VALUE(responses[responseIndex].mapLocalScriptIndex);
-      // debug_print(
-      // 	"currentDialogIndex: %d\r\n"
-      // 	"responseIndex: %d\r\n"
-      // 	"response.stringIndex: %d\r\n"
-      // 	"response.mapLocalScriptIndex: %d\r\n",
-      // 	currentDialogIndex,
-      // 	responseIndex,
-      // 	responses[responseIndex].stringIndex,
-      // 	responses[responseIndex].mapLocalScriptIndex
-      // );
    }
    currentDialogAddress += sizeOfResponses;
 
@@ -144,9 +135,7 @@ void MageDialogControl::loadNextScreen()
 
    currentFrameTileset = gameEngine->gameControl->getValidTileset(currentScreen->borderTilesetIndex);
    currentImageIndex = currentFrameTileset->ImageId();
-   currentImageAddress = gameEngine->gameControl->getImageAddress(
-      currentImageIndex
-   );
+   currentImageAddress = gameEngine->gameControl->getImageAddress(currentImageIndex);
    currentScreenIndex++;
    cursorPhase += 250;
 }
@@ -170,8 +159,8 @@ void MageDialogControl::advanceMessage()
 
 void MageDialogControl::closeDialog()
 {
-   isOpen = false;
-   mapLocalJumpScriptId = MAGE_NO_SCRIPT;
+   open = false;
+   jumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::update()
@@ -190,8 +179,8 @@ void MageDialogControl::update()
       currentResponseIndex %= currentScreen->responseCount;
       if (shouldAdvance)
       {
-         mapLocalJumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
-         isOpen = false;
+         jumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
+         open = false;
       }
    }
    else if (shouldAdvance)
@@ -202,20 +191,16 @@ void MageDialogControl::update()
 
 bool MageDialogControl::shouldShowResponses() const
 {
-   return (
-      // last page of messages on this screen
-      currentMessageIndex == (currentScreen->messageCount - 1)
-      // and we have responses
-      && (
-         currentScreen->responseType == SELECT_FROM_SHORT_LIST
-         || currentScreen->responseType == SELECT_FROM_LONG_LIST
-         )
-      );
+   // last page of messages on this screen
+   // and we have responses
+   return currentMessageIndex == (currentScreen->messageCount - 1)
+      && (currentScreen->responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
+       || currentScreen->responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
 }
 
 void MageDialogControl::draw()
 {
-   MageDialogAlignmentCoords coords = alignments[currentScreen->alignment];
+   MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen->alignment];
    drawDialogBox(currentMessage, coords.text, true);
    drawDialogBox(currentEntityName, coords.label);
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
@@ -414,16 +399,11 @@ void MageDialogControl::loadCurrentScreenPortrait()
          currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
          currentPortraitRenderableData.renderFlags |= (currentEntity->direction & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
-         if ((currentScreen->alignment % 2) == 1)
+         if (((uint8_t)currentScreen->alignment % 2))
          {
             currentPortraitRenderableData.renderFlags ^= 0x04;
          }
       }
    }
 
-}
-
-uint32_t MageDialogControl::getDialogAddress(uint16_t dialogId) const
-{
-   return gameEngine->gameControl->dialogHeader->offset(dialogId % gameEngine->gameControl->dialogHeader->count());
 }

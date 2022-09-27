@@ -20,8 +20,7 @@ MageColorPalette::MageColorPalette(
 	ROM->Read(
 		address,
 		COLOR_PALETTE_NAME_LENGTH,
-		(uint8_t *)name,
-		"Failed to read ColorPalette.name"
+		(uint8_t *)name
 	);
 	name[32] = 0; //manually set to null
 #endif
@@ -32,8 +31,7 @@ MageColorPalette::MageColorPalette(
 	ROM->Read(
 		address,
 		sizeof(colorCount),
-		(uint8_t *)&colorCount,
-		"Failed to read ColorPalette.colorCount"
+		(uint8_t *)&colorCount
 	);
 	address += sizeof(colorCount);
 	address += 1; // padding
@@ -45,8 +43,7 @@ MageColorPalette::MageColorPalette(
 	ROM->Read(
 		address,
 		colorCount * sizeof(uint16_t),
-		(uint8_t *)colors.get(),
-		"Failed to read ColorPalette.colors"
+		(uint8_t *)colors.get()
 	);
 
 	#ifndef DC801_EMBEDDED

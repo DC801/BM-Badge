@@ -225,8 +225,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	uint32_t serialDialogAddress = gameEngine->gameControl->getSerialDialogAddress(serialDialogId);
 	gameEngine->ROM->Read(serialDialogAddress,
 		sizeof(serialDialog),
-		(uint8_t *) &serialDialog,
-		"Unable to read MageSerialDialog"
+		(uint8_t *) &serialDialog
 	);
 	ROM_ENDIAN_U2_BUFFER(&serialDialog.stringId, 1);
 	std::string dialogString = gameEngine->gameControl->getString(
@@ -246,8 +245,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId) {
 	serialDialogResponses = std::make_unique<MageSerialDialogResponse[]>(serialDialog.responseCount);
 	gameEngine->ROM->Read(serialDialogAddress + sizeof(serialDialog),
 		sizeof(MageSerialDialogResponse) * serialDialog.responseCount,
-		(uint8_t *) serialDialogResponses.get(),
-		"Unable to read MageSerialDialogResponse"
+		(uint8_t *) serialDialogResponses.get()
 	);
 	for(uint8_t i = 0; i < serialDialog.responseCount; i++) {
 		MageSerialDialogResponse *response = &serialDialogResponses[i];

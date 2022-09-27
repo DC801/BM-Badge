@@ -64,7 +64,7 @@ void MageHexEditor::setPageToCursorLocation()
 
 void MageHexEditor::updateHexLights()
 {
-   const uint8_t currentByte = *(((uint8_t*)gameEngine->gameControl->entities.data()) + hexCursorLocation);
+   const uint8_t currentByte = *(((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
    uint8_t* memOffsets = gameEngine->gameControl->currentSave->memOffsets;
    uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
    ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
@@ -108,7 +108,7 @@ void MageHexEditor::updateHexStateVariables()
 {
    bytesPerPage = dialogState ? 64 : 192;
    hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-   memTotal = gameEngine->gameControl->filteredEntityCountOnThisMap * sizeof(MageEntity);
+   memTotal = gameEngine->gameControl->Map()->FilteredEntityCount() * sizeof(MageEntity);
    totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
 }
 
@@ -120,7 +120,7 @@ void MageHexEditor::applyHexModeInputs()
    }
    //check to see if player input is allowed:
    if (
-      gameEngine->dialogControl->isOpen
+      gameEngine->gameControl->dialogControl->isOpen()
       || !gameEngine->gameControl->playerHasControl
       || !gameEngine->gameControl->playerHasHexEditorControl
       || disableMovementUntilRJoyUpRelease
@@ -128,7 +128,7 @@ void MageHexEditor::applyHexModeInputs()
    {
       return;
    }
-   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->entities.data()) + hexCursorLocation);
+   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
    uint8_t* memOffsets = gameEngine->gameControl->currentSave->memOffsets;
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
@@ -345,7 +345,7 @@ void MageHexEditor::renderHexHeader()
    char headerString[128];
    char clipboardPreview[24];
    char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = { 0 };
-   uint8_t* currentByteAddress = (uint8_t*)gameEngine->gameControl->entities.data() + hexCursorLocation;
+   uint8_t* currentByteAddress = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation;
    uint8_t u1Value = *currentByteAddress;
    uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
    sprintf(
@@ -355,7 +355,7 @@ void MageHexEditor::renderHexHeader()
       currentMemPage,
       hexCursorLocation,
       totalMemPages,
-      gameEngine->gameControl->filteredEntityCountOnThisMap,
+      gameEngine->gameControl->Map()->FilteredEntityCount(),
       memTotal
    );
    gameEngine->frameBuffer->printMessage(
@@ -367,7 +367,7 @@ void MageHexEditor::renderHexHeader()
    );
    memcpy(
       stringPreview,
-      (uint8_t*)gameEngine->gameControl->entities.data() + hexCursorLocation,
+      (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation,
       MAGE_ENTITY_NAME_LENGTH
    );
    uint16_t stringPreviewLength = getRenderableStringLength(
@@ -459,7 +459,7 @@ void MageHexEditor::renderHexEditor()
    constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7',
                      '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-   auto dataPage = (uint8_t*)gameEngine->gameControl->entities.data() + pageOffset;
+   auto dataPage = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + pageOffset;
    uint16_t i = 0;
    std::string s(HEXED_BYTES_PER_ROW * 3, ' ');
    while (i < bytesPerPage && i + pageOffset < memTotal)
@@ -488,7 +488,7 @@ void MageHexEditor::renderHexEditor()
 
 void MageHexEditor::runHex(uint8_t value)
 {
-   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->entities.data()) + hexCursorLocation);
+   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
    uint8_t changedValue = *currentByte;
    switch (currentOp)
    {

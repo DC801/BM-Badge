@@ -5,11 +5,12 @@
 #include "EngineInput.h"
 #include "FrameBuffer.h"
 #include "mage_defines.h"
+#include "mage_camera.h"
 #include <vector>
 
-#define PI 3.141592653589793
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
+class MageCamera;
 class MageColorPalette;
 class MageGeometry;
 
@@ -46,14 +47,15 @@ struct MageMapTile
 
 class MageGameControl
 {
+   friend class MageGameEngine;
+   friend class MageScriptActions;
    friend class MageScriptControl;
    friend class MageDialogControl;
    friend class MageEntity;
+   friend class MageMap;
+   friend class MageHexEditor;
 public:
    MageGameControl(MageGameEngine* gameEngine) noexcept;
-   //this is the hackable array of entities that are on the current map
-   //the data contained within is the data that can be hacked in the hex editor.
-   std::vector<MageEntity> entities{ MAX_ENTITIES_PER_MAP };
 
    //this is the index value of where the playerEntity is located within
    //the entities[] array and also the offset to it from hackableDataAddress
@@ -63,17 +65,12 @@ public:
    std::unique_ptr<MageSaveGame> currentSave{};
 
    //this lets us make it so that inputs stop working for the player
-   bool playerHasControl;
-   bool playerHasHexEditorControl;
-   bool playerHasHexEditorControlClipboard;
-   bool isCollisionDebugOn;
-   bool isEntityDebugOn;
-   uint8_t filteredEntityCountOnThisMap;
-   bool cameraShaking = false;
-   float cameraShakePhase = 0;
-   uint8_t cameraShakeAmplitude = 0;
-   uint8_t cameraFollowEntityId = NO_PLAYER;
-   Point cameraPosition = { 0,0 };
+   bool playerHasControl{ false };
+   bool playerHasHexEditorControl{ false };
+   bool playerHasHexEditorControlClipboard{ false };
+   bool isCollisionDebugOn{ false };
+   bool isEntityDebugOn{ false };
+   MageCamera camera;
 
    //returns the size in memory of the MageGameControl object.
    uint32_t Size() const;
@@ -85,32 +82,19 @@ public:
    void saveGameSlotLoad(uint8_t slotIndex);
 
    //this will return a specific MageTileset object by index.
-   constexpr const MageTileset* GetTileset(uint32_t index) const
+   const MageTileset* GetTileset(uint32_t index) const
    {
-      while (tilesetHeader->count() > index)
-      {
-         const auto offset = tilesetHeader->count() - index;
-         return &tilesets[offset];
-      }
-      return &tilesets[0];
+      return &tilesets[index % tilesets.size()];
    }
 
-   constexpr const MageAnimation* getAnimation(uint16_t animationId) const
+   const MageAnimation* getAnimation(uint16_t animationId) const
    {
-      while (animationHeader->count() > animationId)
-      {
-         animationId -= animationHeader->count();
-         return &animations[animationId];
-      }
-      return &animations[0];
+      return &animations[animationId % animations.size()];
    }
 
 
    //this will return the current map object.
    auto Map() { return map; }
-
-   //this takes map data by index and fills all the variables in the map object:
-   void PopulateMapData(uint16_t index);
 
    //this will load a map to be the current map.
    void LoadMap(uint16_t index);
@@ -140,13 +124,41 @@ public:
    uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
    uint16_t getValidTilesetId(uint16_t tilesetId);
    uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
-   uint16_t getValidAnimationId(uint16_t animationId);
-   uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId);
-   uint16_t getValidEntityTypeId(uint16_t entityTypeId);
+
+   uint16_t getValidAnimationId(uint16_t animationId) const
+   {
+      //always return a valid animation ID.
+      return animationId % (animations.size());
+   }
+
+   uint16_t getValidAnimationFrame(uint16_t animationFrame, uint16_t animationId) const
+   {
+      //use failover animation if an invalid animationId is submitted to the function.
+      //There's a good chance if that happens, it will break things.
+      animationId = getValidAnimationId(animationId);
+
+      //always return a valid animation frame for the animationId submitted.
+      return animationFrame % animations[animationId].FrameCount();
+   }
+
+   uint16_t getValidEntityTypeId(uint16_t entityTypeId) const
+   {
+      //always return a valid entity type for the entityTypeId submitted.
+      return entityTypeId % entityTypes.size();
+   }
+
    MageEntityType* getValidEntityType(uint16_t entityTypeId);
    uint16_t getValidMapLocalScriptId(uint16_t scriptId);
    uint16_t getValidGlobalScriptId(uint16_t scriptId);
-   uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId);
+   uint8_t  getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId) const
+   {
+      //use failover animation if an invalid animationId is submitted to the function.
+      //There's a good chance if that happens, it will break things.
+      entityTypeId = entityTypeId % entityTypes.size();
+
+      //always return a valid entity type animation ID for the entityTypeAnimationId submitted.
+      return entityTypeAnimationId % entityTypes[entityTypeId].AnimationCount();
+   }
    MageEntityAnimationDirection getValidEntityTypeDirection(MageEntityAnimationDirection direction);
    MageEntityAnimationDirection updateDirectionAndPreserveFlags(MageEntityAnimationDirection desired, MageEntityAnimationDirection previous);
    MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId);
@@ -178,32 +190,33 @@ public:
    void verifyAllColorPalettes(const char* errorTriggerDescription);
 #endif
 
-   constexpr uint16_t entityTypeCount() const { return entityTypeHeader->count(); }
-   constexpr uint16_t animationCount() const { return animationHeader->count(); }
-   constexpr uint16_t tilesetCount() const { return tilesetHeader->count(); }
+   uint16_t entityTypeCount() const { return entityTypes.size(); }
+   uint16_t animationCount() const { return animations.size(); }
+   uint16_t tilesetCount() const { return tilesets.size(); }
 
    void logAllEntityScriptValues(const char* string);
    void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck=true);
 private:
 
    MageGameEngine* gameEngine;
+   std::unique_ptr<MageDialogControl> dialogControl;
 
    //these header objects store the header information for all datasets on the ROM,
    //including address offsets for each item, and the length of the item in memory.
-   std::unique_ptr<MageHeader> mapHeader;
-   std::unique_ptr<MageHeader> tilesetHeader;
-   std::unique_ptr<MageHeader> animationHeader;
-   std::unique_ptr<MageHeader> entityTypeHeader;
+   //std::unique_ptr<MageHeader> mapHeader;
+   //std::unique_ptr<MageHeader> tilesetHeader;
+   //std::unique_ptr<MageHeader> animationHeader;
+   //std::unique_ptr<MageHeader> entityTypeHeader;
    std::unique_ptr<MageHeader> entityHeader;
    std::unique_ptr<MageHeader> geometryHeader;
-   std::unique_ptr<MageHeader> scriptHeader;
-   std::unique_ptr<MageHeader> portraitHeader;
-   std::unique_ptr<MageHeader> dialogHeader;
-   std::unique_ptr<MageHeader> serialDialogHeader;
-   std::unique_ptr<MageHeader> colorPaletteHeader;
+   //std::unique_ptr<MageHeader> scriptHeader;
+   //std::unique_ptr<MageHeader> portraitHeader;
+   //std::unique_ptr<MageHeader> dialogHeader;
+   //std::unique_ptr<MageHeader> serialDialogHeader;
+   //std::unique_ptr<MageHeader> colorPaletteHeader;
    std::unique_ptr<MageHeader> stringHeader;
-   std::unique_ptr<MageHeader> saveFlagHeader;
-   std::unique_ptr<MageHeader> variableHeader;
+   //std::unique_ptr<MageHeader> saveFlagHeader;
+   //std::unique_ptr<MageHeader> variableHeader;
    std::unique_ptr<MageHeader> imageHeader;
 
 
@@ -234,7 +247,6 @@ private:
    bool isMoving{ false };
 
    Point playerVelocity = { 0,0 };
-   Point adjustedCameraPosition = { 0,0 };
 }; //class MageGameControl
 
 

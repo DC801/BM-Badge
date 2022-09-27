@@ -11,8 +11,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
    ROM->Read(
       address,
       sizeof(typeId),
-      (uint8_t*)&typeId,
-      "Failed to load Geometry property 'typeId'"
+      (uint8_t*)&typeId
    );
    address += sizeof(typeId);
 
@@ -20,8 +19,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
    ROM->Read(
       address,
       sizeof(pointCount),
-      (uint8_t*)&pointCount,
-      "Failed to load Geometry property 'pointCount'"
+      (uint8_t*)&pointCount
    );
    address += sizeof(pointCount);
 
@@ -29,8 +27,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
    ROM->Read(
       address,
       sizeof(segmentCount),
-      (uint8_t*)&segmentCount,
-      "Failed to load Geometry property 'segmentCount'"
+      (uint8_t*)&segmentCount
    );
    address += sizeof(segmentCount);
 
@@ -40,8 +37,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
    ROM->Read(
       address,
       sizeof(pathLength),
-      (uint8_t*)&pathLength,
-      "Failed to load Geometry property 'pathLength'"
+      (uint8_t*)&pathLength
    );
    pathLength = ROM_ENDIAN_F4_VALUE(pathLength);
    address += sizeof(pathLength);
@@ -58,8 +54,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
       ROM->Read(
          address,
          sizeof(x),
-         (uint8_t*)&x,
-         "Failed to load Geometry property 'x'"
+         (uint8_t*)&x
       );
       x = ROM_ENDIAN_U2_VALUE(x);
       address += sizeof(x);
@@ -67,8 +62,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
       ROM->Read(
          address,
          sizeof(y),
-         (uint8_t*)&y,
-         "Failed to load Geometry property 'x'"
+         (uint8_t*)&y
       );
       y = ROM_ENDIAN_U2_VALUE(y);
       address += sizeof(y);
@@ -83,8 +77,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
    ROM->Read(
       address,
       sizeof(float) * segmentCount,
-      (uint8_t*)segmentLengths.get(),
-      "Failed to load Geometry property 'x'"
+      (uint8_t*)segmentLengths.get()
    );
    ROM_ENDIAN_F4_BUFFER(segmentLengths.get(), segmentCount);
 

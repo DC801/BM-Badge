@@ -227,8 +227,7 @@ void FrameBuffer::drawChunkWithFlags(
 
    gameEngine->ROM->Read(address + ((source_y * pitch) + source_x),
       tile_width * tile_height,
-      pixels.get(),
-      "Failed to read pixel data"
+      pixels.get()
    );
 
    if (fadeFraction != 0)

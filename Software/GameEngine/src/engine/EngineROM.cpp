@@ -1,7 +1,6 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "utility.h"
-#include <filesystem>
 #include <fstream>
 #include "games/mage/mage_defines.h"
 
@@ -22,9 +21,9 @@ char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
    DESKTOP_SAVE_FILE_PATH "save_2.dat"
 };
 
-void makeSureSaveFilePathExists()
+std::filesystem::directory_entry EngineROM::makeSureSaveFilePathExists()
 {
-   auto saveDir = std::filesystem::directory_entry{ DESKTOP_SAVE_FILE_PATH };
+   auto saveDir = std::filesystem::directory_entry{ std::filesystem::absolute(DESKTOP_SAVE_FILE_PATH) };
    if (!saveDir.exists())
    {
       if (!std::filesystem::create_directories(saveDir))
@@ -32,6 +31,7 @@ void makeSureSaveFilePathExists()
          throw "Couldn't create save directory";
       }
    }
+   return saveDir;
 }
 #endif //DC801_DESKTOP
 
@@ -91,8 +91,7 @@ EngineROM::EngineROM() noexcept
       Read(
          0,
          ENGINE_ROM_MAGIC_HASH_LENGTH,
-         (uint8_t*)gameDatHashROM,
-         "Failed to read header hash from ROM"
+         (uint8_t*)gameDatHashROM
       );
       char gameDatHashSDString[9] = { 0 };
       char gameDatHashROMString[9] = { 0 };
@@ -266,8 +265,9 @@ void EngineROM::ReadSaveSlot(uint8_t slotIndex, size_t dataLength, uint8_t* data
       "Failed to read saveGame from ROM"
    );
 #else
-   makeSureSaveFilePathExists();
+   auto saveFilePath = makeSureSaveFilePathExists();
    char* saveFileName = saveFileSlotNames[slotIndex];
+   
    auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
    if (fileDirEntry.exists())
    {
@@ -319,52 +319,26 @@ void EngineROM::EraseSaveSlot(uint8_t slotIndex)
 #endif //DC801_EMBEDDED
 }
 
-void EngineROM::WriteSaveSlot(uint8_t slotIndex, size_t length, uint8_t* hauntedDataPointer)
+void EngineROM::WriteSaveSlot(uint8_t slotIndex, size_t length, MageSaveGame* saveData)
 {
 #ifdef DC801_EMBEDDED
-   uint8_t localUnHauntedSaveDataCopy[length];
-   memcpy(
-      &localUnHauntedSaveDataCopy,
-      hauntedDataPointer,
-      length
-   );
-   EngineRom::EraseSaveSlot(slotIndex);
-   EngineRom::Write(
+   EraseSaveSlot(slotIndex);
+   Write(
       getSaveSlotAddressByIndex(slotIndex),
       length,
-      // hauntedDataPointer, // DO NOT USE, HAUNTED!!!
-      (uint8_t*)&localUnHauntedSaveDataCopy,
-      "Failed to write currentSave into ROM"
+      saveData
    );
 #else
-   // Why is this named `hauntedDataPointer`?
-   // Because horrifyingly, depending WHERE you get this pointer FROM,
-   // when you write it to ROM, it MAY be prefixed with extra 2 bytes of data,
-   // likely the registers are being over-written on embedded.
-   // So what's the solution on the embedded version of the code?
-   // Copy the data from the hauntedDataPointer to a locally scoped stack copy,
-   // and write to ROM from the pointer to the locally scoped stack copy.
-   // This may actually be a compiler bug, or ROM interface black magic.
-   makeSureSaveFilePathExists();
-   char* saveFileName = saveFileSlotNames[slotIndex];
-   FILE* saveFile = fopen(saveFileName, "r+b");
-   if (saveFile == NULL)
+   auto saveFilePath = makeSureSaveFilePathExists();
+
+   auto file = std::ofstream{ saveFilePath/saveFileSlotNames[slotIndex], std::ios::binary };
+
+   // copy the save data into the file and close it
+   if (!file.write((const char*)saveData, sizeof(MageSaveGame)))
    {
-      saveFile = fopen(saveFileName, "w+b");
-      if (saveFile == NULL)
-      {
-         int error = errno;
-         fprintf(stderr, "Error: %s\n", strerror(error));
-         ENGINE_PANIC("Desktop build: SAVE file cannot be created");
-      }
+      ENGINE_PANIC("Desktop build: SAVE file cannot be written");
    }
-   fwrite(
-      hauntedDataPointer,
-      sizeof(MageSaveGame),
-      1,
-      saveFile
-   );
-   fclose(saveFile);
+   file.close();
 
 #ifdef EMSCRIPTEN
    // triggers a call to the FS.syncfs, asking IDBFS
@@ -517,11 +491,10 @@ bool EngineRom::SD_Copy(
          EngineRom::Write(
             currentAddress + romPageOffset,
             writeSize,
-            (uint8_t*)(sdReadBuffer + romPageOffset),
-            "Failed to write buffer to ROM chip\nduring ROM copy procedure."
+            (uint8_t*)(sdReadBuffer + romPageOffset)
          );
          //verify that the data was correctly written or return false.
-         EngineRom::Verify(
+         Verify(
             currentAddress + romPageOffset,
             writeSize,
             (uint8_t*)(sdReadBuffer + romPageOffset),
@@ -572,7 +545,7 @@ bool EngineRom::SD_Copy(
 }
 #endif //DC801_EMBEDDED
 
-bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)
+bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data)
 {
    if (data == NULL)
    {
@@ -606,7 +579,7 @@ bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data, const cha
       }
    }
 #else
-   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC(errorString); }
+   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM::Read: address + length exceeds maximum dat file size"); }
    memmove(data, romDataInDesktopRam + address, length);
 #endif
    return true;
@@ -648,48 +621,19 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
 #endif
 }
 
-uint32_t EngineROM::Verify(uint32_t address, uint32_t length, const uint8_t* data, bool throwErrorWithLog = false)
+bool EngineROM::VerifyEqualsAtOffset(uint32_t address, std::string value) const
 {
-   if (data == NULL)
+   if (value.empty())
    {
-      ENGINE_PANIC("EngineROM::Verify: Null pointer");
+      ENGINE_PANIC("EngineROM::VerifyEqualsAtOffset: Empty string");
    }
-   char debugString[128];
-   // auto readBuffer = std::make_unique<uint8_t[]>(dataLength);
-   // Read(
-   // 	address,
-   // 	dataLength,
-   // 	readBuffer.get(),
-   // 	"Failed to read from Rom in EngineROM::Verify"
-   // );
 
-   for (uint32_t i = 0; i < length; i++)
+   for (uint32_t i = 0; i < value.size(); i++)
    {
-      if (data[i] != romDataInDesktopRam[i])
+      if (i >= ENGINE_ROM_MAX_DAT_FILE_SIZE || value[i] != romDataInDesktopRam[i])
       {
-         if (throwErrorWithLog)
-         {
-            sprintf(
-               debugString,
-               "EngineROM::Verify failed at address %d\nTest: %d\n ROM: %d",
-               address + i,
-               data[i],
-               romDataInDesktopRam[i]
-            );
-            debug_print("%s", debugString);
-            ENGINE_PANIC(debugString);
-         }
-         //return address in ROM where memory does not match
-         return address + i;
+         return false;
       }
    }
-   return length;
-}
-
-bool EngineROM::Magic()
-{
-   uint8_t length = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
-   uint8_t magic[] = ENGINE_ROM_GAME_IDENTIFIER_STRING;
-   uint32_t bytesVerified = EngineROM::Verify(0, length, magic);
-   return bytesVerified == length;
+   return true;
 }

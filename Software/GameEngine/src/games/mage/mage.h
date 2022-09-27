@@ -39,6 +39,7 @@ class MageGameEngine
    friend class MageScriptControl;
    friend class MageScriptActions;
    friend class EngineWindowFrame;
+   friend class MageMap;
 
 
 public:
@@ -77,7 +78,6 @@ private:
    std::shared_ptr<EngineInput> inputHandler = std::make_shared<EngineInput>();
    std::unique_ptr<EngineWindowFrame> windowFrame = std::make_unique<EngineWindowFrame>(inputHandler);
    std::shared_ptr<FrameBuffer> frameBuffer = std::make_shared<FrameBuffer>(this);
-   std::shared_ptr<MageDialogControl> dialogControl = std::make_shared<MageDialogControl>(this);
    std::shared_ptr<MageGameControl> gameControl = std::make_shared<MageGameControl>(this);
    std::shared_ptr<MageHexEditor> hexEditor = std::make_shared<MageHexEditor>(this);
    std::shared_ptr<MageScriptControl> scriptControl = std::make_shared<MageScriptControl>(this);

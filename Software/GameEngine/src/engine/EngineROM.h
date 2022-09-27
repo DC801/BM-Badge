@@ -4,7 +4,16 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <memory>
+#include <string>
+#include <filesystem>
 
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+
+//this is the path to the game.dat file on the SD card.
+//if an SD card is inserted with game.dat in this location
+//and its header hash is different from the one in the ROM chip
+//it will automatically be loaded.
+#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
 #define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
@@ -19,14 +28,6 @@
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this
 //or you'll lose data.
 #define ENGINE_ROM_WRITE_PAGE_SIZE 512
-
-//this 'identifier' will appear at the start of game.dat.
-//it is used to verify that the binary file is formatted correctly.
-#define ENGINE_ROM_GAME_IDENTIFIER_STRING {'M','A','G','E','G','A','M','E'}
-
-//this is the 'magic string' that will appear at the start of game.dat.
-//it is used to verify that the binary file is formatted correctly.
-#define ENGINE_ROM_SAVE_IDENTIFIER_STRING {'M','A','G','E','S','A','V','E'}
 
 //this is the length of the 'identifier' at the start of the game.dat file:
 #define ENGINE_ROM_IDENTIFIER_STRING_LENGTH 8
@@ -62,22 +63,35 @@
 //the failure address which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
+class MageSaveGame;
 
 struct EngineROM
 {
+   //this 'identifier' will appear at the start of game.dat.
+   //it is used to verify that the binary file is formatted correctly.
+   static const inline std::string GameIdentifierString{ "MAGEGAME" };
+
+   //this is the 'magic string' that will appear at the start of game.dat.
+   //it is used to verify that the binary file is formatted correctly.
+   static const inline std::string SaveIdentifierString{ "MAGESAVE" };
+
    EngineROM() noexcept;
    ~EngineROM() = default;
 
-   bool Magic();
+   bool Magic() const
+   {
+      return VerifyEqualsAtOffset(0, SaveIdentifierString);
+   }
+
    void ErrorUnplayable();
 
-   bool Read(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
+   bool Read(uint32_t address, uint32_t length, uint8_t* data);
    bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
-   uint32_t Verify(uint32_t address, uint32_t length, const uint8_t* data, bool throwErrorWithLog);
+   bool VerifyEqualsAtOffset(uint32_t address, std::string value) const;
 
    void ReadSaveSlot(uint8_t slotIndex, size_t length, uint8_t* data);
    void EraseSaveSlot(uint8_t slotIndex);
-   void WriteSaveSlot(uint8_t slotIndex, size_t length, uint8_t* hauntedDataPointer);
+   void WriteSaveSlot(uint8_t slotIndex, size_t length, MageSaveGame* dataPointer);
 #ifdef DC801_EMBEDDED
    bool SD_Copy(uint32_t gameDatFilesize, FIL gameDat, bool eraseWholeRomChip);
 #endif
@@ -85,6 +99,9 @@ struct EngineROM
    {
       return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
    }
+
+private:
+   std::filesystem::directory_entry makeSureSaveFilePathExists();
 };
 
 

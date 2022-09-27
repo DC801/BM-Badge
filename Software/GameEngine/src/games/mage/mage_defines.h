@@ -21,12 +21,6 @@ all of the old code used as the foundation of this badge.
 #include <utility>
 #include <string>
 
-//this is the path to the game.dat file on the SD card.
-//if an SD card is inserted with game.dat in this location
-//and its header hash is different from the one in the ROM chip
-//it will automatically be loaded.
-#define MAGE_GAME_DAT_PATH "MAGE/game.dat"
-
 #define ENGINE_VERSION 3
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
@@ -108,9 +102,6 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 
-#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
-
-
 typedef enum : uint8_t
 {
    x = 12,
@@ -163,7 +154,7 @@ struct Point
 
    constexpr float DotProduct(Point b) const
    {
-      return (float)x * (float)b.x;
+      return (float)x * (float)b.x
            + (float)y * (float)b.y;
    };
 };
@@ -213,7 +204,7 @@ struct MageScriptState
 
 struct MageSaveGame
 {
-   char identifier[ENGINE_ROM_IDENTIFIER_STRING_LENGTH] = ENGINE_ROM_SAVE_IDENTIFIER_STRING;
+   const std::string identifier = EngineROM::SaveIdentifierString;
    uint32_t engineVersion{ ENGINE_VERSION };
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };

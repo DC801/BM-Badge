@@ -1,12 +1,9 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+
 #include <stdint.h>
-#include "adafruit/gfxfont.h"
-#include "modules/gfx.h"
-#include "games/mage/mage_defines.h"
-#include "games/mage/mage.h"
-#include "convert_endian.h"
+
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -17,6 +14,12 @@ const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 #define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
 class MageGameEngine;
+
+#include "adafruit/gfxfont.h"
+#include "modules/gfx.h"
+#include "games/mage/mage_defines.h"
+#include "games/mage/mage.h"
+#include "convert_endian.h"
 
 #ifdef IS_BIG_ENDIAN
 struct Color_565 {

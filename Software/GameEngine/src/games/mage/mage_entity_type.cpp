@@ -6,8 +6,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_p
 {
    ROM->Read(offset,
       sizeof(typeId),
-      (uint8_t*)&typeId,
-      "Failed to read EntityTypeAnimationDirection property 'typeId'"
+      (uint8_t*)&typeId
    );
    // Endianness conversion
    typeId = ROM_ENDIAN_U2_VALUE(typeId);
@@ -18,8 +17,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_p
    // Read count
    ROM->Read(offset,
       sizeof(type),
-      (uint8_t*)&type,
-      "Failed to read EntityTypeAnimationDirection property 'type'"
+      (uint8_t*)&type
    );
 
    // Increment offset
@@ -28,8 +26,7 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_p
    // Read count
    ROM->Read(offset,
       sizeof(renderFlags),
-      (uint8_t*)&renderFlags,
-      "Failed to read EntityTypeAnimationDirection property 'typeId'"
+      (uint8_t*)&renderFlags
    );
 }
 
@@ -42,8 +39,7 @@ MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t address)
    // Read portraitId
    ROM->Read(address,
       sizeof(portraitId),
-      (uint8_t*)&portraitId,
-      "Failed to read EntityType property 'name'"
+      (uint8_t*)&portraitId
    );
    address += sizeof(portraitId);
 
@@ -51,8 +47,7 @@ MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t address)
    // Read animationCount
    ROM->Read(address,
       sizeof(animationCount),
-      (uint8_t*)&animationCount,
-      "Failed to read EntityType property 'name'"
+      (uint8_t*)&animationCount
    );
    address += sizeof(animationCount);
 
@@ -75,8 +70,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       MAGE_ENTITY_NAME_LENGTH,
-      (uint8_t*)name,
-      "Failed to read Entity property 'name'"
+      (uint8_t*)name
    );
 
    //increment address
@@ -86,8 +80,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(x),
-      (uint8_t*)&x,
-      "Failed to read Entity property 'x'"
+      (uint8_t*)&x
    );
 
    // Endianness conversion
@@ -100,8 +93,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(y),
-      (uint8_t*)&y,
-      "Failed to read Entity property 'y'"
+      (uint8_t*)&y
    );
 
    // Endianness conversion
@@ -114,8 +106,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(onInteractScriptId),
-      (uint8_t*)&onInteractScriptId,
-      "Failed to read Entity property 'onInteractScriptId'"
+      (uint8_t*)&onInteractScriptId
    );
 
    // Endianness conversion
@@ -128,8 +119,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(onTickScriptId),
-      (uint8_t*)&onTickScriptId,
-      "Failed to read Entity property 'onTickScriptId'"
+      (uint8_t*)&onTickScriptId
    );
 
    // Endianness conversion
@@ -142,8 +132,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(primaryId),
-      (uint8_t*)&primaryId,
-      "Failed to read Entity property 'primaryId'"
+      (uint8_t*)&primaryId
    );
 
    // Endianness conversion
@@ -156,8 +145,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(secondaryId),
-      (uint8_t*)&secondaryId,
-      "Failed to read Entity property 'secondaryId'"
+      (uint8_t*)&secondaryId
    );
 
    // Endianness conversion
@@ -170,8 +158,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(primaryIdType),
-      (uint8_t*)&primaryIdType,
-      "Failed to read Entity property 'primaryIdType'"
+      (uint8_t*)&primaryIdType
    );
 
    //increment address
@@ -181,8 +168,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(currentAnimation),
-      (uint8_t*)&currentAnimation,
-      "Failed to read Entity property 'currentAnimation'"
+      (uint8_t*)&currentAnimation
    );
 
    //increment address
@@ -192,8 +178,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(currentFrameIndex),
-      (uint8_t*)&currentFrameIndex,
-      "Failed to read Entity property 'currentFrame'"
+      (uint8_t*)&currentFrameIndex
    );
 
    //increment address
@@ -203,8 +188,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(direction),
-      (uint8_t*)&direction,
-      "Failed to read Entity property 'direction'"
+      (uint8_t*)&direction
    );
 
    //increment address
@@ -214,8 +198,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(hackableStateA),
-      (uint8_t*)&hackableStateA,
-      "Failed to read Entity property 'hackableStateA'"
+      (uint8_t*)&hackableStateA
    );
    //increment address
    address += sizeof(hackableStateA);
@@ -224,8 +207,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(hackableStateB),
-      (uint8_t*)&hackableStateB,
-      "Failed to read Entity property 'hackableStateB'"
+      (uint8_t*)&hackableStateB
    );
    //increment address
    address += sizeof(hackableStateB);
@@ -234,8 +216,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(hackableStateC),
-      (uint8_t*)&hackableStateC,
-      "Failed to read Entity property 'hackableStateC'"
+      (uint8_t*)&hackableStateC
    );
    //increment address
    address += sizeof(hackableStateC);
@@ -244,8 +225,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(
       address,
       sizeof(hackableStateD),
-      (uint8_t*)&hackableStateD,
-      "Failed to read Entity property 'hackableStateD'"
+      (uint8_t*)&hackableStateD
    );
    //increment address
    address += sizeof(hackableStateD);

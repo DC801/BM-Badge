@@ -142,11 +142,7 @@ void MageGameEngine::GameRender()
 
       if (layerCount > 1)
       {
-         for (
-            uint8_t layerIndex = 0;
-            layerIndex < (layerCount - 1);
-            layerIndex++
-            )
+         for (uint8_t layerIndex = 0; layerIndex < (layerCount - 1); layerIndex++)
          {
             //draw all map layers except the last one before drawing entities.
             gameControl->DrawMap(layerIndex);
@@ -200,9 +196,9 @@ void MageGameEngine::GameRender()
          now = millis();
 #endif
       }
-      if (dialogControl->isOpen)
+      if (gameControl->dialogControl->isOpen())
       {
-         dialogControl->draw();
+         gameControl->dialogControl->draw();
 #ifdef TIMING_DEBUG
          diff = millis() - now;
          debug_print("Dialog Time: %d", diff);
@@ -303,7 +299,7 @@ void MageGameEngine::EngineMainGameLoop()
       SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
    }
 #endif
-}
+      }
 
 void MageGameEngine::onSerialStart()
 {

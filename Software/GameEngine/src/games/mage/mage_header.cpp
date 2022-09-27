@@ -2,13 +2,12 @@
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
-MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
+MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t offset)
 {
 	// Read count
 	ROM->Read(offset,
 		sizeof(counts),
-		(uint8_t*)&counts,
-		"Failed to load Header property 'counts'"
+		(uint8_t*)&counts
 	);
 
 	// Endianness conversion
@@ -23,8 +22,7 @@ MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 	// Read arrays
 	ROM->Read(offset,
 		counts * sizeof(uint32_t),
-		(uint8_t*)offsets.get(),
-		"Failed to load Header property 'offsets'"
+		(uint8_t*)offsets.get()
 	);
 
 	//ROM_ENDIAN_U4_BUFFER(offsets.get(), counts);
@@ -33,8 +31,7 @@ MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 
 	ROM->Read(offset,
 		counts * sizeof(uint32_t),
-		(uint8_t*)lengths.get(),
-		"Failed to load Header property 'lengths'"
+		(uint8_t*)lengths.get()
 	);
 
 	offset += counts * sizeof(uint32_t);

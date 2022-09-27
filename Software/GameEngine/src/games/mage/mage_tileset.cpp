@@ -9,8 +9,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       16,
-      (uint8_t*)name,
-      "Failed to load MageTileset property 'name'"
+      (uint8_t*)name
    );
 #endif
 
@@ -19,8 +18,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(imageId),
-      (uint8_t*)&imageId,
-      "Failed to load MageTileset property 'imageId'"
+      (uint8_t*)&imageId
    );
    imageId = ROM_ENDIAN_U2_VALUE(imageId);
    offset += sizeof(imageId);
@@ -28,8 +26,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(imageWidth),
-      (uint8_t*)&imageWidth,
-      "Failed to load MageTileset property 'imageWidth'"
+      (uint8_t*)&imageWidth
    );
    imageWidth = ROM_ENDIAN_U2_VALUE(imageWidth);
    offset += sizeof(imageWidth);
@@ -37,8 +34,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(imageHeight),
-      (uint8_t*)&imageHeight,
-      "Failed to load MageTileset property 'imageHeight'"
+      (uint8_t*)&imageHeight
    );
    imageHeight = ROM_ENDIAN_U2_VALUE(imageHeight);
    offset += sizeof(imageHeight);
@@ -46,8 +42,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(tileWidth),
-      (uint8_t*)&tileWidth,
-      "Failed to load MageTileset property 'tileWidth'"
+      (uint8_t*)&tileWidth
    );
    tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
    offset += sizeof(tileWidth);
@@ -55,8 +50,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(tileHeight),
-      (uint8_t*)&tileHeight,
-      "Failed to load MageTileset property 'tileHeight'"
+      (uint8_t*)&tileHeight
    );
    tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
    offset += sizeof(tileHeight);
@@ -64,8 +58,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(cols),
-      (uint8_t*)&cols,
-      "Failed to load MageTileset property 'cols'"
+      (uint8_t*)&cols
    );
    cols = ROM_ENDIAN_U2_VALUE(cols);
    offset += sizeof(cols);
@@ -73,8 +66,7 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    ROM->Read(
       offset,
       sizeof(rows),
-      (uint8_t*)&rows,
-      "Failed to load MageTileset property 'rows'"
+      (uint8_t*)&rows
    );
    rows = ROM_ENDIAN_U2_VALUE(rows);
    offset += sizeof(rows);
@@ -103,8 +95,7 @@ uint16_t MageTileset::getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
    ROM->Read(
       offset + tileIndex * sizeof(globalGeometryId),
       sizeof(globalGeometryId),
-      (uint8_t*)&globalGeometryId,
-      "Failed to load MageTileset property 'globalGeometryIds'"
+      (uint8_t*)&globalGeometryId
    );
    globalGeometryId = ROM_ENDIAN_U2_VALUE(globalGeometryId);
    return globalGeometryId;

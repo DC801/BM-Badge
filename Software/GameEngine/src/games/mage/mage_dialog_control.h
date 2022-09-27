@@ -32,16 +32,16 @@
 #define DIALOG_TILES_HIGHLIGHT 14
 #define DIALOG_TILES_ARROW 15
 
-enum MageDialogScreenAlignment : uint8_t
+enum class MageDialogScreenAlignment : uint8_t
 {
    BOTTOM_LEFT = 0,
    BOTTOM_RIGHT = 1,
    TOP_LEFT = 2,
-   TOP_RIGHT = 3,
-   ALIGNMENT_COUNT
+   TOP_RIGHT = 3
 };
+const inline uint8_t ALIGNMENT_COUNT = 4;
 
-enum MageDialogResponseType : uint8_t
+enum class MageDialogResponseType : uint8_t
 {
    NO_RESPONSE = 0,
    SELECT_FROM_SHORT_LIST = 1,
@@ -66,6 +66,35 @@ struct MageDialogScreen
    uint8_t emoteIndex;
 };
 
+/*
+
+struct MageDialogScreen {
+k
+      uint16_t  name_index;
+      uint16_t  border_tileset_index;
+      dialog_screen_alignment_type  alignment;
+      uint8_t  font_index;
+      uint8_t  message_count;
+      dialog_response_type  response_type;
+      uint8_t  response_count;
+      uint8_t  entity_id;
+      uint8_t  portrait_id;
+      uint8_t  emote;
+
+
+      getMessage(uint8_t messageNumber)
+      {
+         return messages[messageNumber % message_count];
+      }
+      private:
+      //uint16  messages[message_count];
+      // dialog_response responses [response_count];
+
+      std::vector<uint16_t> messages;
+      std::vector<dialog_response> responses;
+};
+*/
+
 struct MageDialogResponse
 {
    uint16_t stringIndex;
@@ -79,15 +108,17 @@ struct MageDialogAlignmentCoords
    Rect portrait;
 };
 
+struct MageDialog
+{
+   char name[32];
+   uint32_t screenCount;
+
+};
+
 class MageDialogControl
 {
 public:
-   MageDialogControl(MageGameEngine* gameEngine) noexcept
-      : gameEngine(gameEngine)
-   {}
-
-   bool isOpen{ false };
-   int32_t mapLocalJumpScriptId{ MAGE_NO_SCRIPT };
+   MageDialogControl(MageGameEngine* gameEngine, uint32_t offset) noexcept;
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
    void showSaveMessageDialog(std::string messageString);
@@ -98,12 +129,17 @@ public:
 
    void loadCurrentScreenPortrait();
    uint32_t getDialogAddress(uint16_t dialogId) const;
-
+   constexpr bool isOpen() const { return open; }
+   int32_t getJumpScriptId() const { return jumpScriptId; }
 
 private:
    MageGameEngine* gameEngine;
 
-   // char dialogName[32];
+   MageHeaderFor<MageDialog> dialogHeader;
+   int32_t jumpScriptId{ MAGE_NO_SCRIPT };
+   bool open{ false };
+
+   char dialogName[32];
    MageTileset* currentFrameTileset;
    int16_t triggeringEntityId;
    int32_t currentDialogIndex;

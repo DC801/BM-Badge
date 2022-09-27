@@ -7,6 +7,7 @@ in a more accessible way.
 #define _MAGE_ENTITY_TYPE_H
 
 #include "mage_defines.h"
+#include "mage_header.h"
 #include "EngineROM.h"
 #include <vector>
 
@@ -139,5 +140,17 @@ private:
    RenderableData renderableData{0};
 };
 
+class MageEntityControl
+{
+public:
+   MageEntityControl(
+      MageHeader tilesetHeader,
+      MageHeader animationHeader,
+      MageHeader entityTypeHeader,
+      MageHeader entityHeader, 
+      MageHeader geometryHeader, 
+      MageHeader imageHeader, 
+      MageHeader colorPaletteHeader) noexcept;
+};
 
 #endif //_MAGE_ENTITY_TYPE_H

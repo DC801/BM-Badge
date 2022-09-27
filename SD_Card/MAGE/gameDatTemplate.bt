@@ -1,0 +1,502 @@
+//------------------------------------------------
+//--- 010 Editor v12.0.1 Binary Template
+//
+//      File: gameDateTemplate.bt
+//   Authors: Tawnos
+//   Version: 1.0
+//   Purpose: Parsing DC801's BM-Badge game.dat
+//  Category: Game
+// File Mask: game.dat
+//  ID Bytes: o 
+//   History: 
+//------------------------------------------------
+
+
+enum <uchar> primary_id_type{
+    tileset_id,
+    animation_id,
+    entity_type_id,
+};
+
+enum <uchar> direction_type{
+    north,
+    east,
+    south,
+    west
+};
+
+enum <uchar> action_type{
+    null_action,
+    check_entity_name,
+    check_entity_x,
+    check_entity_y,
+    check_entity_interact_script,
+    check_entity_tick_script,
+    check_entity_type,
+    check_entity_primary_id,
+    check_entity_secondary_id,
+    check_entity_primary_id_type,
+    check_entity_current_animation,
+    check_entity_current_frame,
+    check_entity_direction,
+    check_entity_glitched,
+    check_entity_hackable_state_a,
+    check_entity_hackable_state_b,
+    check_entity_hackable_state_c,
+    check_entity_hackable_state_d,
+    check_entity_hackable_state_a_u2,
+    check_entity_hackable_state_c_u2,
+    check_entity_hackable_state_a_u4,
+    check_entity_path,
+    check_save_flag,
+    check_if_entity_is_in_geometry,
+    check_for_button_press,
+    check_for_button_state,
+    check_warp_state,
+    run_script,
+    blocking_delay,
+    non_blocking_delay,
+    set_entity_name,
+    set_entity_x,
+    set_entity_y,
+    set_entity_interact_script,
+    set_entity_tick_script,
+    set_entity_type,
+    set_entity_primary_id,
+    set_entity_secondary_id,
+    set_entity_primary_id_type,
+    set_entity_current_animation,
+    set_entity_current_frame,
+    set_entity_direction,
+    set_entity_direction_relative,
+    set_entity_direction_target_entity,
+    set_entity_direction_target_geometry,
+    set_entity_glitched,
+    set_entity_hackable_state_a,
+    set_entity_hackable_state_b,
+    set_entity_hackable_state_c,
+    set_entity_hackable_state_d,
+    set_entity_hackable_state_a_u2,
+    set_entity_hackable_state_c_u2,
+    set_entity_hackable_state_a_u4,
+    set_entity_path,
+    set_save_flag,
+    set_player_control,
+    set_map_tick_script,
+    set_hex_cursor_location,
+    set_warp_state,
+    set_hex_editor_state,
+    set_hex_editor_dialog_mode,
+    set_hex_editor_control,
+    set_hex_editor_control_clipboard,
+    load_map,
+    show_dialog,
+    play_entity_animation,
+    teleport_entity_to_geometry,
+    walk_entity_to_geometry,
+    walk_entity_along_geometry,
+    loop_entity_along_geometry,
+    set_camera_to_follow_entity,
+    teleport_camera_to_geometry,
+    pan_camera_to_entity,
+    pan_camera_to_geometry,
+    pan_camera_along_geometry,
+    loop_camera_along_geometry,
+    set_screen_shake,
+    screen_fade_out,
+    screen_fade_in,
+    mutate_variable,
+    mutate_variables,
+    copy_variable,
+    check_variable,
+    check_variables,
+    slot_save,
+    slot_load,
+    slot_erase,
+    set_connect_serial_dialog,
+    show_serial_dialog,
+    inventory_get,
+    inventory_drop,
+    check_inventory,
+    set_map_look_script,
+    set_entity_look_script,
+    set_teleport_enabled,
+    check_map,
+    set_ble_flag,
+    check_ble_flag,
+};
+
+enum <uchar>  dialog_screen_alignment_type{
+    bottom_left,
+    bottom_right,
+    top_left,
+    top_right,
+    bottom_left_with_name,
+    bottom_right_with_name,
+    top_left_with_name,
+    top_right_with_name,
+};
+
+enum  <uchar> dialog_response_type{
+   no_response,
+   select_from_short_list,
+   select_from_long_list,
+   enter_number,
+   enter_alphanumeric,
+};
+
+enum  <uchar> serial_response_type{
+    response_none,
+    response_enter_number,
+    response_enter_string,
+};
+
+
+const uint32 ENGINE_ROM_IDENTIFIER_STRING_LENGTH = 8;
+
+typedef struct
+{
+    uint32 count;
+    uint32 offsets[count];
+    uint32 lengths[count];
+} MageHeader;
+
+const int GoDirectionNameLength =12;
+typedef struct
+{
+  char name[GoDirectionNameLength];
+  uint16 mapLocalScriptId;
+  uint16 padding;
+} GoDirection <read=(name)>;
+
+local int i;
+
+struct RenderFlags
+{
+    uchar glitched: 1;
+    uchar debug: 1;
+    uchar flipX: 1;
+    uchar flipY: 1;
+    uchar flipDiag: 1;
+};
+
+struct EntityRenderFlags
+{
+    uchar glitched: 1;
+    uchar debug: 1;
+    uchar direction:2;
+};
+
+typedef struct {
+      char name[12];
+      uint16  x;
+      uint16  y;
+      uint16  on_interact_script_id;
+      uint16  on_tick_script_id;
+      uint16  primary_id;
+      uint16  secondary_id;
+      primary_id_type  primaryIdType;
+      uchar  current_animation;
+      uchar  current_frame;
+      union { 
+        RenderFlags renderFlags;
+        EntityRenderFlags entityRenderFlags;
+    }flags;
+      uchar  hackable_state_a;
+      uchar  hackable_state_b;
+      uchar  hackable_state_c;
+      uchar  hackable_state_d;
+} entity <read=(name)>;
+
+typedef struct 
+{
+    uint16 id;
+    uchar tilesetId;
+    RenderFlags flags;
+} MapTile;
+
+typedef struct 
+{
+    uint16 width;
+    uint16 height;
+    if (width > 0 && height > 0) {
+        MapTile tiles[width*height];
+    }
+}MapLayer;
+
+typedef struct 
+{
+    char name[16];
+    uint16 image_id;
+    uint16 image_width;
+    uint16 image_height;
+    uint16 tile_width;
+    uint16 tile_height;
+    uint16 cols;
+    uint16 rows;
+    uint16 padding;
+    uint16 tile_global_geometry_ids[cols * rows];
+    if ((rows*cols) % 2) {
+        uint16 tileset_footer_padding;
+    }
+} TileSet <read=(name)>;
+
+typedef struct {
+    uint16 tileset_id;
+    uint16 frame_count;
+
+    struct animation_frame
+    {
+        uint16 tile_id;
+        uint16 duration;
+    } animation_frames[frame_count];
+} AnimationData;
+
+typedef struct
+{
+    char name[16];
+    uint16 tileWidth;
+    uint16 tileHeight;
+    uint16 cols;
+    uint16 rows;
+    uint16 onLoad;
+    uint16 onTick;
+    uint16 onLook;
+    uchar layerCount;
+    uchar playerEntityIndex;
+    uint16 entityCount;
+    uint16 geometryCount;
+    uint16 scriptCount;
+    uchar goDirectionCount;
+    uchar padding;
+
+    uint16 entityGlobalIds[entityCount];
+    if (geometryCount > 0) {
+        uint16 geometryGlobalIds[geometryCount];
+    }
+    uint16 scriptGlobalIds[scriptCount];
+    if (goDirectionCount > 0) {
+        GoDirection goDirections[goDirectionCount];
+    }
+    if ((entityCount + geometryCount + scriptCount) % 2) { FSkip(2); }
+    MapLayer mapLayers[layerCount] <optimize=false>;
+    uchar filteredEntityCountOnThisMap;
+
+
+}  MageMap <read=(name)>;
+
+typedef struct {
+    uint16 type_id;
+    uchar type;
+    uchar render_flags;
+} entity_type_animation_direction;
+
+typedef struct{
+    char name[32];
+    uchar padding_a;
+    uchar padding_b;
+    uchar portrait_index;
+    uchar animation_count;
+    struct entity_type_animation {
+        entity_type_animation_direction north, south, east, west;
+    } entity_type_animations[animation_count] <optimize=true>;
+} entity_type < read=(name) >;
+
+enum <uchar> geometry_type {
+    point,
+    polyline,
+    polygon
+};
+
+typedef struct {
+    uint16 x;
+    uint16 y;
+} Point;
+    
+typedef struct {
+    char name[32];
+    geometry_type geometryType;
+    uchar point_count;
+    uchar segment_count;
+    uchar padding;
+    float path_length;
+    if (point_count > 0) {
+        Point points[point_count];
+    }
+    if (segment_count > 0) {
+        float segment_lengths[segment_count];
+    }
+} geometry <read=(name)>;
+
+typedef struct {
+    action_type type;
+    uchar padding[7];
+} action;
+
+typedef struct {
+    char name[32];
+    uint32 action_count;
+    if (action_count) {
+        action actions[action_count];
+    }
+} script <read=(name)>;
+
+typedef struct {
+    char name[32];
+    uchar padding[3];
+    uchar emote_count;
+    entity_type_animation_direction emotes[emote_count];
+} portrait <read=(name)>;
+
+struct dialog_response {
+    uint16  string_id;
+    uint16  map_local_script_id;
+};
+
+struct dialog_screen {
+      uint16  name_index;
+      uint16  border_tileset_index;
+      dialog_screen_alignment_type  alignment;
+      uchar  font_index;
+      uchar  message_count;
+      dialog_response_type  response_type;
+      uchar  response_count;
+      uchar  entity_id;
+      uchar  portrait_id;
+      uchar  emote;
+    if (message_count) {
+        uint16  messages[message_count];
+    }
+    if (response_count) {
+          dialog_response responses [response_count];
+    }
+    if ((message_count) % 2) {FSkip(2);}
+};
+
+
+typedef struct {
+    char name[32];
+    uint32 screen_count;
+    dialog_screen screens[screen_count] <optimize=false>;
+} dialog <read=(name)>;
+
+typedef struct {
+    char name[32];
+    uint16 string_id;
+    serial_response_type response_type;
+    uchar response_count;
+    dialog_response responses[response_count]<optimize=false>;
+} serial_dialog <read=(name)>;
+
+typedef struct {
+BigEndian();
+    uint16 r: 5;
+    uint16 g: 6;
+    uint16 b: 5;
+LittleEndian();
+}image_color;
+  
+  typedef struct {
+    char name[32];
+    uchar  color_count;
+    uchar  padding;
+
+    image_color colors[color_count];
+    if ((color_count + 1) % 2) {FSkip(2);}
+} image_color_palette < read=(name) >;
+
+typedef struct (uint16 length) {
+    image_color pixels[length];
+} image;
+
+struct
+{
+    char MagicString[ENGINE_ROM_IDENTIFIER_STRING_LENGTH];
+    uint32 EngineVersion;
+    uint32 ScenarioDataCRC32;
+    uint32 ScenarioDataLength;
+
+    struct Headers {
+        MageHeader Map;
+        MageHeader Tileset;
+        MageHeader Animation;
+        MageHeader EntityType;
+        MageHeader Entity;
+        MageHeader Geometry;
+        MageHeader Script;
+        MageHeader Portrait;
+        MageHeader Dialog;
+        MageHeader SerialDialog;
+        MageHeader ColorPalette;
+        MageHeader String;
+        MageHeader SaveFlag;
+        MageHeader Variable;
+        MageHeader Image;
+    } headers;
+
+    for (i = 0; i < this.headers.Map.count; i++) {
+        FSeek(this.headers.Map.offsets[i]);
+        MageMap maps();
+    }
+
+    for (i = 0; i < this.headers.Tileset.count; i++) {
+        FSeek(this.headers.Tileset.offsets[i]);
+        TileSet tilesets();
+    }
+
+    for (i = 0; i < this.headers.Animation.count; i++) {
+        FSeek(this.headers.Animation.offsets[i]);
+        AnimationData animations();
+    }
+    for (i = 0; i < this.headers.EntityType.count; i++) {
+        FSeek(this.headers.EntityType.offsets[i]);
+        entity_type entityTypes();
+    }
+    for (i = 0; i < this.headers.Entity.count; i++) {
+        FSeek(this.headers.Entity.offsets[i]);
+        entity entities();
+    }
+    for (i = 0; i < this.headers.Geometry.count; i++) {
+        FSeek(this.headers.Geometry.offsets[i]);
+        geometry geometries();
+    }
+    for (i = 0; i < this.headers.Script.count; i++) {
+        FSeek(this.headers.Script.offsets[i]);
+        script scripts();
+    }
+    for (i = 0; i < this.headers.Portrait.count; i++) {
+        FSeek(this.headers.Portrait.offsets[i]);
+        portrait portraits();
+    }
+    for (i = 0; i < this.headers.Dialog.count; i++) {
+        FSeek(this.headers.Dialog.offsets[i]);
+        dialog dialogs();
+    }
+    for (i = 0; i < this.headers.SerialDialog.count; i++) {
+        FSeek(this.headers.SerialDialog.offsets[i]);
+        serial_dialog serial_dialogs();
+    }
+    for (i = 0; i < this.headers.ColorPalette.count; i++) {
+        FSeek(this.headers.ColorPalette.offsets[i]);
+        image_color_palette color_palettes();
+    }
+    for (i = 0; i < this.headers.String.count; i++) {
+        FSeek(this.headers.String.offsets[i]);
+        struct{string value();} strings<read=(value)>;
+    }
+    for (i = 0; i < this.headers.SaveFlag.count; i++) {
+        FSeek(this.headers.SaveFlag.offsets[i]);
+        struct{string value();} saveFlags<read=(value)>;
+    }
+    for (i = 0; i < this.headers.Variable.count; i++) {
+        FSeek(this.headers.Variable.offsets[i]);
+        struct{string value();} variables<read=(value)>;
+    }
+    for (i = 0; i < this.headers.Image.count; i++) {
+        FSeek(this.headers.Image.offsets[i]);
+        image images(this.headers.Image.lengths[i]/2);
+    }
+    
+   //[tileset]
+   //animation
+} ROM;

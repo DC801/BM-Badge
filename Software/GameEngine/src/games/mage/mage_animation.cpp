@@ -10,8 +10,7 @@ noexcept
 	//read tilesetId
 	ROM->Read(offset,
 		sizeof(tilesetId),
-		(uint8_t *)&tilesetId,
-		"Failed to read Animation property 'tilesetId'"
+		(uint8_t *)&tilesetId
 	);
 
 	// Endianness conversion
@@ -24,8 +23,7 @@ noexcept
 	//read frameCount
 	ROM->Read(offset,
 		sizeof(frameCount),
-		(uint8_t *)&frameCount,
-		"Failed to read Animation property 'frameCount'"
+		(uint8_t *)&frameCount
 	);
 
 	// Endianness conversion
@@ -39,8 +37,7 @@ noexcept
 	{
 		ROM->Read(offset + (i * sizeof(MageAnimation::Frame)),
 			sizeof(MageAnimation::Frame),
-			(uint8_t*)&frames[i],
-			"Failed to read AnimationFrame"
+			(uint8_t*)&frames[i]
 		);
 		frames[i].tileId = ROM_ENDIAN_U2_VALUE(frames[i].tileId);
 		frames[i].duration = ROM_ENDIAN_U2_VALUE(frames[i].duration);

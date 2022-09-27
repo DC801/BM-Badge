@@ -31,10 +31,10 @@ void MageScriptControl::initializeScriptsOnMapLoad()
          false
       );
    }
-   for (uint8_t i = 0; i < gameEngine->gameControl->filteredEntityCountOnThisMap; i++)
+   for (uint8_t i = 0; i < gameEngine->gameControl->Map()->FilteredEntityCount(); i++)
    {
       //Initialize the script ResumeStateStructs to default values for this map.
-      MageEntity* entity = &gameEngine->gameControl->entities[i];
+      MageEntity* entity = &map->entities[i];
       initScriptState(
          getEntityTickResumeState(i),
          entity->onTickScriptId,
@@ -113,7 +113,6 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
    //	address,
    //	SCRIPT_NAME_LENGTH,
    //	(uint8_t *)scriptName,
-   //	"MageScriptControl::processActionQueue\nFailed to load property 'name'"
    //);
    //debug_print(
    //	"Running script: %s",
@@ -127,8 +126,7 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
    gameEngine->ROM->Read(
       address,
       sizeof(actionCount),
-      (uint8_t*)&actionCount,
-      "MageScriptControl::processActionQueue\nFailed to load property 'actionCount'"
+      (uint8_t*)&actionCount
    );
 
    actionCount = ROM_ENDIAN_U4_VALUE(actionCount);
@@ -235,8 +233,7 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState*
    gameEngine->ROM->Read(
       actionMemoryAddress,
       sizeof(actionTypeId),
-      (uint8_t*)&actionTypeId,
-      "MageScriptControl::runAction\nFailed to load property 'actionTypeId'"
+      (uint8_t*)&actionTypeId
    );
    actionMemoryAddress += sizeof(actionTypeId);
 
@@ -253,8 +250,7 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState*
    gameEngine->ROM->Read(
       actionMemoryAddress,
       sizeof(actionArgs),
-      (uint8_t*)&actionArgs,
-      "MageScriptControl::runAction\nFailed to load property 'actionArgs'"
+      (uint8_t*)&actionArgs
    );
 
    //get the function for actionTypeId, and feed it the actionArgs as args:
@@ -407,7 +403,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
    MageScriptState* scriptState = &entityTickResumeStates[filteredEntityId];
    bool scriptIsRunning = scriptState->scriptIsRunning;
    //we also need to convert the entity's local ScriptId to the global context:
-   uint16_t mapLocalScriptId = gameEngine->gameControl->entities[filteredEntityId].onTickScriptId;
+   uint16_t mapLocalScriptId = gameEngine->gameControl->Map()->entities[filteredEntityId].onTickScriptId;
 
    //if a script isn't already running and you're in hex editor state, don't start any new scripts:
    if (gameEngine->hexEditor->getHexEditorState() && !scriptIsRunning)
@@ -449,7 +445,7 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
 void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 {
    MageScriptState* scriptState = &entityInteractResumeStates[filteredEntityId];
-   uint16_t mapLocalScriptId = gameEngine->gameControl->entities[filteredEntityId].onInteractScriptId;
+   uint16_t mapLocalScriptId = gameEngine->gameControl->Map()->entities[filteredEntityId].onInteractScriptId;
    //if a script is not currently running, do nothing.
    if (!scriptState->scriptIsRunning)
    {
@@ -502,7 +498,7 @@ void MageScriptControl::tickScripts()
       handleCommandScript(commandStates[i]);
       if (mapLoadId != MAGE_NO_MAP) { return; }
    }
-   for (uint8_t i = 0; i < gameEngine->gameControl->filteredEntityCountOnThisMap; i++)
+   for (uint8_t i = 0; i < gameEngine->gameControl->Map()->FilteredEntityCount(); i++)
    {
       //this script will not initiate any new onInteract scripts. It will simply run an
       //onInteract script based on the state of the entityInteractResumeStates[i] struct
