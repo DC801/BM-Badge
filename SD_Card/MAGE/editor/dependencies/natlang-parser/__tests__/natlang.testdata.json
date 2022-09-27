@@ -1,0 +1,3505 @@
+{
+	"lex": {
+		"dialogSettings": {
+			"inputString": "settings for dialog {\nparameters for label PLAYER {\nentity \"%PLAYER%\"\nalignment BR\n/* Saying it the long way (BOTTOM_RIGHT) would be okay, too */\n}\nparameters for global default {\nwrap messages 40 // 42 is default\nalignment BL\n}\n}",
+			"tokens": [
+				{
+					"pos": 0,
+					"type": "bareword",
+					"value": "settings"
+				},
+				{
+					"pos": 9,
+					"type": "bareword",
+					"value": "for"
+				},
+				{
+					"pos": 13,
+					"type": "bareword",
+					"value": "dialog"
+				},
+				{
+					"pos": 20,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 22,
+					"type": "bareword",
+					"value": "parameters"
+				},
+				{
+					"pos": 33,
+					"type": "bareword",
+					"value": "for"
+				},
+				{
+					"pos": 37,
+					"type": "bareword",
+					"value": "label"
+				},
+				{
+					"pos": 43,
+					"type": "bareword",
+					"value": "PLAYER"
+				},
+				{
+					"pos": 50,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 52,
+					"type": "bareword",
+					"value": "entity"
+				},
+				{
+					"pos": 59,
+					"type": "quotedString",
+					"value": "%PLAYER%",
+					"quotationMark": "\""
+				},
+				{
+					"pos": 70,
+					"type": "bareword",
+					"value": "alignment"
+				},
+				{
+					"pos": 80,
+					"type": "bareword",
+					"value": "BR"
+				},
+				{
+					"pos": 146,
+					"type": "operator",
+					"value": "}"
+				},
+				{
+					"pos": 148,
+					"type": "bareword",
+					"value": "parameters"
+				},
+				{
+					"pos": 159,
+					"type": "bareword",
+					"value": "for"
+				},
+				{
+					"pos": 163,
+					"type": "bareword",
+					"value": "global"
+				},
+				{
+					"pos": 170,
+					"type": "bareword",
+					"value": "default"
+				},
+				{
+					"pos": 178,
+					"type": "operator",
+					"value": "{"
+				},
+				{
+					"pos": 180,
+					"type": "bareword",
+					"value": "wrap"
+				},
+				{
+					"pos": 185,
+					"type": "bareword",
+					"value": "messages"
+				},
+				{
+					"pos": 194,
+					"type": "number",
+					"value": 40
+				},
+				{
+					"pos": 214,
+					"type": "bareword",
+					"value": "alignment"
+				},
+				{
+					"pos": 224,
+					"type": "bareword",
+					"value": "BL"
+				},
+				{
+					"pos": 227,
+					"type": "operator",
+					"value": "}"
+				},
+				{
+					"pos": 229,
+					"type": "operator",
+					"value": "}"
+				}
+			]
+		}
+	},
+	"decay": {
+		"barewordGeneric": {
+			"natlang": "settings",
+			"token": {
+				"type": "bareword",
+				"value": "settings",
+				"pos": 0
+			},
+			"decayValues": {
+				"string": "settings",
+				"bareword": "settings"
+			}
+		},
+		"barewordOnce": {
+			"natlang": "once",
+			"token": {
+				"type": "quantity",
+				"value": 1,
+				"barewordValue": "once",
+				"pos": 0
+			},
+			"decayValues": {
+				"string": "once",
+				"bareword": "once",
+				"quantity": 1
+			}
+		},
+		"operator": {
+			"natlang": "{",
+			"token": {
+				"type": "operator",
+				"value": "{",
+				"pos": 0
+			},
+			"decayValues": {
+				"operator": "{"
+			}
+		},
+		"color": {
+			"natlang": "#FFDD00",
+			"token": {
+				"type": "color",
+				"value": "#FFDD00",
+				"barewordValue": "#FFDD00",
+				"pos": 0
+			  },
+			"decayValues": {
+				"string": "#FFDD00",
+				"bareword": "#FFDD00",
+				"color": "#FFDD00"
+			}
+		},
+		"booleanTrue": {
+			"natlang": "true",
+			"token": {
+				"barewordValue": "true",
+				"type": "boolean",
+				"value": true,
+				"pos": 0
+			  },
+			"decayValues": {
+				"string": "true",
+				"bareword": "true",
+				"boolean": true
+			}
+		},
+		"booleanOff": {
+			"natlang": "off",
+			"token": {
+				"barewordValue": "off",
+				"type": "boolean",
+				"value": false,
+				"pos": 0
+			  },
+			"decayValues": {
+				"string": "off",
+				"bareword": "off",
+				"boolean": false
+			}
+		},
+		"quotedStringDouble": {
+			"natlang": "\"Hello, world\"",
+			"token": {
+				"type": "quotedString",
+				"value": "Hello, world",
+				"quotationMark": "\"",
+				"pos": 0
+			  },
+			"decayValues": {
+				"string": "Hello, world",
+				"quotedString": "Hello, world"
+			}
+		},
+		"quotedStringSingle": {
+			"natlang": "'Hello, world!'",
+			"token": {
+				"type": "quotedString",
+				"value": "Hello, world!",
+				"quotationMark": "'",
+				"pos": 0
+			  },
+			"decayValues": {
+				"string": "Hello, world!",
+				"quotedString": "Hello, world!"
+			}
+		},
+		"number": {
+			"natlang": "3",
+			"token": {
+				"type": "number",
+				"value": 3,
+				"pos": 0
+			},
+			"decayValues": {
+				"number": 3,
+				"duration": 3,
+				"distance": 3,
+				"quantity": 3
+			}
+		},
+		"durationMiliseconds": {
+			"natlang": "5000ms",
+			"token": {
+				"type": "duration",
+				"value": 5000,
+				"originalValue": "5000ms",
+				"pos": 0
+			},
+			"decayValues": {
+				"duration": 5000
+			}
+		},
+		"durationSeconds": {
+			"natlang": "5s",
+			"token": {
+				"type": "duration",
+				"value": 5000,
+				"originalValue": "5s",
+				"pos": 0
+			},
+			"decayValues": {
+				"duration": 5000
+			}
+		},
+		"distance": {
+			"natlang": "200px",
+			"token": {
+				"type": "distance",
+				"value": 200,
+				"originalValue": "200px",
+				"pos": 0
+			},
+			"decayValues": {
+				"distance": 200
+			}
+		},
+		"quantity": {
+			"natlang": "2x",
+			"token": {
+				"type": "quantity",
+				"value": 2,
+				"originalValue": "2x",
+				"pos": 0
+			},
+			"decayValues": {
+				"quantity": 2
+			}
+		}
+	},
+	"tryBranchFails": {
+		"scriptNode": {
+			"script {": {
+				"tokenCount": 1,
+				"success": false,
+				"found": "{",
+				"expected": "\"$scriptName:string\""
+			}
+		},
+		"dialogSettingsTarget": {
+			"parameters for {": {
+				"tokenCount": 2,
+				"success": false,
+				"found": "{",
+				"expected": "\"label\", \"entity\", \"global\", \"default\", \"defaults\""
+			}
+		},
+		"dialogIdentifier": {
+			"'lol'": {
+				"tokenCount": 0,
+				"success": false,
+				"found": "lol",
+				"expected": "\"$value:bareword\", \"entity\", \"name\""
+			}
+		},
+		"dialogOption": {
+			"> Choice : goto script scriptname": {
+				"tokenCount": 1,
+				"success": false,
+				"found": "Choice",
+				"expected": "\"$label:quotedString\""
+
+			}
+		}
+	},
+	"tryBranch": {
+		"dialogSettingsNode": {
+			"settings for dialog {": {
+				"tokenCount": 4,
+				"success": true,
+				"captures": {}
+			},
+			"settings dialog {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": {}
+			}
+		},
+		"dialogNode": {
+			"dialog 'test-dialog' {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": { "dialog": "test-dialog" }
+			}
+		},
+		"scriptNode": {
+			"script 'test-script' {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": { "scriptName": "test-script" }
+			},
+			"'test-script' {": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "scriptName": "test-script" }
+			},
+			"test {": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "scriptName": "test" }
+			}
+		},
+		"dialogSettingsTarget": {
+			"parameters for label PLAYER {": {
+				"tokenCount": 5,
+				"success": true,
+				"captures": {
+					"target": "PLAYER"
+				}
+			},
+			"parameters label PLAYER {": {
+				"tokenCount": 4,
+				"success": true,
+				"captures": {
+					"target": "PLAYER"
+				}
+			},
+			"label PLAYER {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": {
+					"target": "PLAYER"
+				}
+			},
+			"entity Sphinx {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": {
+					"target": "Sphinx"
+				}
+			},
+			"parameters for global defaults {": {
+				"tokenCount": 5,
+				"success": true,
+				"captures": {}
+			},
+			"global defaults {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": {}
+			},
+			"default {": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": {}
+			}
+		},
+		"dialogParameter": {
+			"entity Sphinx": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "Sphinx" }
+			},
+			"entity 'Sphinx'": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "Sphinx" }
+			},
+			"entity \"Sphinx\"": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "Sphinx" }
+			},
+			"name Bob": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "Bob" }
+			},
+			"portrait wopr": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "wopr" }
+			},
+			"alignment TR": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "TR" }
+			}
+		},
+		"dialogIdentifier": {
+			"PLAYER": {
+				"tokenCount": 1,
+				"success": true,
+				"captures": { "value": "PLAYER" }
+			},
+			"entity Bender": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "Bender" }
+			},
+			"entity 'single'": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "single" }
+			},
+			"entity \"double\"": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "value": "double" }
+			}
+		},
+		"dialogMessage": {
+			"\"This is a dialog message!\"": {
+				"tokenCount": 1,
+				"success": true,
+				"captures": { "message": "This is a dialog message!" }
+			}
+		},
+		"dialogOption": {
+			"> 'Choice' : goto script scriptname": {
+				"tokenCount": 6,
+				"success": true,
+				"captures": {
+					"label": "Choice",
+					"script": "scriptname"
+				}
+			},
+			"> 'Choice' : goto script 'scriptname'": {
+				"tokenCount": 6,
+				"success": true,
+				"captures": {
+					"label": "Choice",
+					"script": "scriptname"
+				}
+			},
+			"> \"Choice\" : goto \"scriptname\"": {
+				"tokenCount": 5,
+				"success": true,
+				"captures": {
+					"label": "Choice",
+					"script": "scriptname"
+				}
+			},
+			"> \"Choice\" : 'scriptname'": {
+				"tokenCount": 4,
+				"success": true,
+				"captures": {
+					"label": "Choice",
+					"script": "scriptname"
+				}
+			}
+		},
+		"action": {
+			"show dialog 'test-dialog-name' {": {
+				"tokenCount": 4,
+				"success": true,
+				"captures": { "dialog": "test-dialog-name" }
+			},
+			"show dialog 'test-dialog-name'": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": { "dialog": "test-dialog-name" }
+			},
+			"show dialog {": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": {}
+			},
+			"wait 1000": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "duration": 1000 }
+			},
+			"goto script scriptname": {
+				"tokenCount": 3,
+				"success": true,
+				"captures": { "script": "scriptname" }
+			},
+			"goto scriptname": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "script": "scriptname" }
+			},
+			"goto 'script name'": {
+				"tokenCount": 2,
+				"success": true,
+				"captures": { "script": "script name" }
+			}
+		}
+	},
+	"buildDialogFromState": [
+		{
+			"state": {
+				"finalState": {
+					"dialogSettings": [
+						{
+							"type": "label",
+							"value": "PLAYER",
+							"parameters": {
+								"entity": "%PLAYER%",
+								"alignment": "BR"
+							}
+						},
+						{
+							"type": "label",
+							"value": "Sphinx",
+							"parameters": {
+								"entity": "Sphinx"
+							}
+						},
+						{
+							"type": "global",
+							"parameters": {
+								"alignment": "BL",
+								"messageWrap": 20
+							}
+						},
+						{
+							"type": "label",
+							"value": "PLAYER",
+							"parameters": {
+								"alignment": "TR"
+							}
+						}
+					]
+				},
+				"inserts": {
+					"dialogIdentifier": {
+						"type": "label",
+						"value": "PLAYER"
+					},
+					"dialogParameters": {
+						"portrait": "mysteryGoat"
+					},
+					"dialogMessages": [
+						"Wow",
+						"Not sure what to make of that. Is this supposed to wrap? Perhaps...."
+					],
+					"dialogOptions": [
+						{
+							"label": "Unglitch flags",
+							"script": "debug-set-glitch-flags-false"
+						},
+						{
+							"label": "…Never mind",
+							"script": "debug-set-flags-false-no"
+						}
+					]
+				}
+			},
+			"result": {
+				"entity": "%PLAYER%",
+				"portrait": "mysteryGoat",
+				"alignment": "TOP_RIGHT",
+				"messages": [
+					"Wow",
+					"Not sure what to\nmake of that. Is\nthis supposed to\nwrap? Perhaps...."
+				],
+				"response_type": "SELECT_FROM_SHORT_LIST",
+				"options": [
+					{
+						"label": "Unglitch flags",
+						"script": "debug-set-glitch-flags-false"
+					},
+					{
+						"label": "...Never mind",
+						"script": "debug-set-flags-false-no"
+					}
+				]
+			}
+		}
+	],
+	"actionGamut": [
+		{
+			"json": {
+				"action": "BLOCKING_DELAY",
+				"duration": 1000
+			},
+			"natlang": [
+				"block 1000ms",
+				"block 1000"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": false
+			},
+			"natlang": [
+				"close hex editor",
+				"false hex editor",
+				"off hex editor",
+				"no hex editor"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_STATE",
+				"bool_value": true
+			},
+			"natlang": [
+				"open hex editor",
+				"true hex editor",
+				"on hex editor",
+				"yes hex editor"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_DIRECTION_RELATIVE",
+				"entity": "Entity Name",
+				"relative_direction": 2
+			},
+			"natlang": [
+				"rotate entity \"Entity Name\" 2",
+				"rotate entity 'Entity Name' 2"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_DIRECTION_RELATIVE",
+				"entity": "Bob",
+				"relative_direction": -2
+			},
+			"natlang": [
+				"rotate entity Bob -2",
+				"rotate entity \"Bob\" -2",
+				"rotate entity 'Bob' -2"
+			]
+		},
+		{
+			"json": {
+				"action": "SLOT_ERASE",
+				"slot": 2
+			},
+			"natlang": [ "erase slot 2" ]
+		},
+		{
+			"json": {
+				"action": "RUN_SCRIPT",
+				"script": "script-to-run"
+			},
+			"natlang": [
+				"goto script script-to-run",
+				"goto script 'script-to-run'",
+				"goto script \"script-to-run\"",
+				"goto script-to-run",
+				"goto 'script-to-run'",
+				"goto \"script-to-run\""
+			]
+		},
+		{
+			"json": {
+				"action": "RUN_SCRIPT",
+				"script": "Fancy Script"
+			},
+			"natlang": [
+				"goto script \"Fancy Script\"",
+				"goto script 'Fancy Script'",
+				"goto \"Fancy Script\"",
+				"goto 'Fancy Script'"
+			]
+		},
+		{
+			"json": {
+				"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-loop",
+				"duration": 1000
+			},
+			"natlang": [
+				"loop entity \"Entity Name\" along geometry geometry-name-loop over 1000ms",
+				"loop entity 'Entity Name' along geometry geometry-name-loop over 1000ms",
+				"loop entity \"Entity Name\" along geometry 'geometry-name-loop' over 1000ms",
+				"loop entity 'Entity Name' along geometry 'geometry-name-loop' over 1000ms",
+				"loop entity \"Entity Name\" along geometry \"geometry-name-loop\" over 1000ms",
+				"loop entity 'Entity Name' along geometry \"geometry-name-loop\" over 1000ms",
+				"loop entity \"Entity Name\" along geometry geometry-name-loop over 1000",
+				"loop entity 'Entity Name' along geometry geometry-name-loop over 1000",
+				"loop entity \"Entity Name\" along geometry 'geometry-name-loop' over 1000",
+				"loop entity 'Entity Name' along geometry 'geometry-name-loop' over 1000",
+				"loop entity \"Entity Name\" along geometry \"geometry-name-loop\" over 1000",
+				"loop entity 'Entity Name' along geometry \"geometry-name-loop\" over 1000",
+				"loop entity \"Entity Name\" along geometry geometry-name-loop over 1s",
+				"loop entity 'Entity Name' along geometry geometry-name-loop over 1s",
+				"loop entity \"Entity Name\" along geometry 'geometry-name-loop' over 1s",
+				"loop entity 'Entity Name' along geometry 'geometry-name-loop' over 1s",
+				"loop entity \"Entity Name\" along geometry \"geometry-name-loop\" over 1s",
+				"loop entity 'Entity Name' along geometry \"geometry-name-loop\" over 1s"
+			]
+		},
+		{
+			"json": {
+				"action": "LOOP_ENTITY_ALONG_GEOMETRY",
+				"entity": "Bob",
+				"geometry": "Camera 1",
+				"duration": 400
+			},
+			"natlang": [
+				"loop entity Bob along geometry \"Camera 1\" over 400ms",
+				"loop entity Bob along geometry 'Camera 1' over 400ms",
+				"loop entity 'Bob' along geometry \"Camera 1\" over 400ms",
+				"loop entity 'Bob' along geometry 'Camera 1' over 400ms",
+				"loop entity \"Bob\" along geometry \"Camera 1\" over 400ms",
+				"loop entity \"Bob\" along geometry 'Camera 1' over 400ms",
+				"loop entity Bob along geometry \"Camera 1\" over 400",
+				"loop entity Bob along geometry 'Camera 1' over 400",
+				"loop entity 'Bob' along geometry \"Camera 1\" over 400",
+				"loop entity 'Bob' along geometry 'Camera 1' over 400",
+				"loop entity \"Bob\" along geometry \"Camera 1\" over 400",
+				"loop entity \"Bob\" along geometry 'Camera 1' over 400"
+			]
+		},
+		{
+			"json": {
+				"action": "SLOT_SAVE"
+			},
+			"natlang": [ "save slot" ]
+		},
+		{
+			"json": {
+				"action": "SET_SCREEN_SHAKE",
+				"frequency": 100,
+				"amplitude": 30,
+				"duration": 400
+			},
+			"natlang": [
+				"shake camera 100ms 30px for 400ms",
+				"shake camera 100 30px for 400ms",
+				"shake camera 100ms 30 for 400ms",
+				"shake camera 100 30 for 400ms",
+				"shake camera 100ms 30px for 400",
+				"shake camera 100 30px for 400",
+				"shake camera 100ms 30 for 400",
+				"shake camera 100 30 for 400"
+			]
+		},
+		{
+			"json": {
+				"action": "NON_BLOCKING_DELAY",
+				"duration": 2000
+			},
+			"natlang": [
+				"wait 2000ms",
+				"wait 2000",
+				"wait 2s"
+			]
+		},
+		{
+			"json": {
+				"action": "WALK_ENTITY_TO_GEOMETRY",
+				"entity": "Bob",
+				"geometry": "the stick",
+				"duration": 100
+			},
+			"natlang": [
+				"walk entity Bob to geometry \"the stick\" over 100ms",
+				"walk entity 'Bob' to geometry \"the stick\" over 100ms",
+				"walk entity \"Bob\" to geometry \"the stick\" over 100ms",
+				"walk entity Bob to geometry 'the stick' over 100ms",
+				"walk entity 'Bob' to geometry 'the stick' over 100ms",
+				"walk entity \"Bob\" to geometry 'the stick' over 100ms",
+				"walk entity Bob to geometry \"the stick\" over 100",
+				"walk entity 'Bob' to geometry \"the stick\" over 100",
+				"walk entity \"Bob\" to geometry \"the stick\" over 100",
+				"walk entity Bob to geometry 'the stick' over 100",
+				"walk entity 'Bob' to geometry 'the stick' over 100",
+				"walk entity \"Bob\" to geometry 'the stick' over 100"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Bob",
+				"bool_value": true
+			},
+			"natlang": [
+				"make entity Bob glitched",
+				"make entity 'Bob' glitched",
+				"make entity \"Bob\" glitched"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_GLITCHED",
+				"entity": "Bob",
+				"bool_value": false
+			},
+			"natlang": [
+				"make entity Bob unglitched",
+				"make entity 'Bob' unglitched",
+				"make entity \"Bob\" unglitched"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_CAMERA_TO_FOLLOW_ENTITY",
+				"entity": "Entity Name"
+			},
+			"natlang": [
+				"make camera follow entity \"Entity Name\"",
+				"make camera follow entity 'Entity Name'"
+			]
+		},
+		{
+			"json": {
+				"action": "TELEPORT_ENTITY_TO_GEOMETRY",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-teleport"
+			},
+			"natlang": [
+				"teleport entity \"Entity Name\" to geometry geometry-name-teleport",
+				"teleport entity 'Entity Name' to geometry geometry-name-teleport",
+				"teleport entity \"Entity Name\" to geometry 'geometry-name-teleport'",
+				"teleport entity 'Entity Name' to geometry 'geometry-name-teleport'",
+				"teleport entity \"Entity Name\" to geometry \"geometry-name-teleport\"",
+				"teleport entity 'Entity Name' to geometry \"geometry-name-teleport\""
+			]
+		},
+		{
+			"json": {
+				"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+				"geometry": "geometry-name-to-teleport"
+			},
+			"natlang": [
+				"teleport camera to geometry geometry-name-to-teleport",
+				"teleport camera to geometry 'geometry-name-to-teleport'",
+				"teleport camera to geometry \"geometry-name-to-teleport\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"direction": "north"
+			},
+			"natlang": [
+				"turn entity \"Entity Name\" north",
+				"turn entity 'Entity Name' north"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_DIRECTION_TARGET_ENTITY",
+				"entity": "Entity Name",
+				"target_entity": "Target Entity"
+			},
+			"natlang": [
+				"turn entity \"Entity Name\" toward entity \"Target Entity\"",
+				"turn entity 'Entity Name' toward entity \"Target Entity\"",
+				"turn entity \"Entity Name\" toward entity 'Target Entity'",
+				"turn entity 'Entity Name' toward entity 'Target Entity'"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_DIRECTION_TARGET_GEOMETRY",
+				"entity": "Entity Name",
+				"target_geometry": "target-geometry"
+			},
+			"natlang": [
+				"turn entity \"Entity Name\" toward geometry target-geometry",
+				"turn entity 'Entity Name' toward geometry target-geometry",
+				"turn entity \"Entity Name\" toward geometry 'target-geometry'",
+				"turn entity 'Entity Name' toward geometry 'target-geometry'",
+				"turn entity \"Entity Name\" toward geometry \"target-geometry\"",
+				"turn entity 'Entity Name' toward geometry \"target-geometry\""
+			]
+		},
+		{
+			"json": {
+				"action": "PAN_CAMERA_TO_ENTITY",
+				"entity": "Bob",
+				"duration": 1000
+			},
+			"natlang": [
+				"pan camera to entity Bob over 1000ms",
+				"pan camera to entity 'Bob' over 1000ms",
+				"pan camera to entity \"Bob\" over 1000ms",
+				"pan camera to entity Bob over 1000",
+				"pan camera to entity 'Bob' over 1000",
+				"pan camera to entity \"Bob\" over 1000",
+				"pan camera to entity Bob over 1s",
+				"pan camera to entity 'Bob' over 1s",
+				"pan camera to entity \"Bob\" over 1s"
+			]
+		},
+		{
+			"json": {
+				"action": "PAN_CAMERA_TO_GEOMETRY",
+				"geometry": "the stick",
+				"duration": 100
+			},
+			"natlang": [
+				"pan camera to geometry \"the stick\" over 100ms",
+				"pan camera to geometry 'the stick' over 100ms",
+				"pan camera to geometry \"the stick\" over 100",
+				"pan camera to geometry 'the stick' over 100"
+			]
+		},
+		{
+			"json": {
+				"action": "PLAY_ENTITY_ANIMATION",
+				"entity": "Entity Name",
+				"animation": 0,
+				"play_count": 1
+			},
+			"natlang": [
+				"play entity \"Entity Name\" animation 0 once",
+				"play entity \"Entity Name\" animation 0 1x",
+				"play entity 'Entity Name' animation 0 once",
+				"play entity 'Entity Name' animation 0 1x"
+			]
+		},
+		{
+			"json": {
+				"action": "SCREEN_FADE_OUT",
+				"color": "#000000",
+				"duration": 1000
+			},
+			"natlang": [
+				"fade out camera to #000000 over 1000ms",
+				"fade out camera to black over 1000ms",
+				"fade out camera to #000000 over 1000",
+				"fade out camera to black over 1000",
+				"fade out camera to #000000 over 1s",
+				"fade out camera to black over 1s"
+			]
+		},
+		{
+			"json": {
+				"action": "SCREEN_FADE_IN",
+				"color": "#FFFFFF",
+				"duration": 1000
+			},
+			"natlang": [
+				"fade in camera from #FFFFFF over 1000ms",
+				"fade in camera from white over 1000ms",
+				"fade in camera from #FFFFFF over 1000",
+				"fade in camera from white over 1000",
+				"fade in camera from #FFFFFF over 1s",
+				"fade in camera from white over 1s"
+			]
+		},
+		{
+			"json": {
+				"action": "LOAD_MAP",
+				"map": "super-long-map-name"
+			},
+			"natlang": [
+				"load map super-long-map-name",
+				"load map 'super-long-map-name'",
+				"load map \"super-long-map-name\""
+			]
+		},
+		{
+			"json": {
+				"action": "SLOT_LOAD",
+				"slot": 0
+			},
+			"natlang": [ "load slot 0" ]
+		},
+		{
+			"json": {
+				"action": "SHOW_DIALOG",
+				"dialog": "super-long-dialog-name"
+			},
+			"natlang": [
+				"show dialog super-long-dialog-name",
+				"show dialog 'super-long-dialog-name'",
+				"show dialog \"super-long-dialog-name\""
+			]
+		},
+		{
+			"json": {
+				"action": "SHOW_SERIAL_DIALOG",
+				"serial_dialog": "serial-dialog"
+			},
+			"natlang": [
+				"show serial dialog serial-dialog",
+				"show serial dialog 'serial-dialog'",
+				"show serial dialog \"serial-dialog\""
+			]
+		},
+		{
+			"json": {
+				"action": "COPY_SCRIPT",
+				"script": "script-to-copy"
+			},
+			"natlang": [
+				"copy script script-to-copy",
+				"copy script 'script-to-copy'",
+				"copy script \"script-to-copy\"",
+				"copy script-to-copy",
+				"copy 'script-to-copy'",
+				"copy \"script-to-copy\""
+			]
+		},
+		{
+			"json": {
+				"action": "COPY_VARIABLE",
+				"entity": "Entity Name",
+				"field": "x",
+				"inbound": true,
+				"variable": "variable-name-inbound"
+			},
+			"natlang": [
+				"copy entity \"Entity Name\" x into variable variable-name-inbound",
+				"copy entity 'Entity Name' x into variable variable-name-inbound",
+				"copy entity \"Entity Name\" x into variable 'variable-name-inbound'",
+				"copy entity 'Entity Name' x into variable 'variable-name-inbound'",
+				"copy entity \"Entity Name\" x into variable \"variable-name-inbound\"",
+				"copy entity 'Entity Name' x into variable \"variable-name-inbound\""
+			]
+		},
+		{
+			"json": {
+				"action": "COPY_VARIABLE",
+				"entity": "Entity Name",
+				"field": "y",
+				"inbound": false,
+				"variable": "variable-name-outbound"
+			},
+			"natlang": [
+				"copy variable variable-name-outbound into entity \"Entity Name\" y",
+				"copy variable variable-name-outbound into entity 'Entity Name' y",
+				"copy entity \"Entity Name\" y from variable variable-name-outbound",
+				"copy entity 'Entity Name' y from variable variable-name-outbound"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable set",
+				"operation": "SET",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable set\" = 5",
+				"mutate 'variable set' = 5",
+				"mutate \"variable set\" set 5",
+				"mutate 'variable set' set 5",
+				"mutate \"variable set\" SET 5",
+				"mutate 'variable set' SET 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable add",
+				"operation": "ADD",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable add\" + 5",
+				"mutate 'variable add' + 5",
+				"mutate \"variable add\" add 5",
+				"mutate 'variable add' add 5",
+				"mutate \"variable add\" ADD 5",
+				"mutate 'variable add' ADD 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable sub",
+				"operation": "SUB",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable sub\" - 5",
+				"mutate 'variable sub' - 5",
+				"mutate \"variable sub\" sub 5",
+				"mutate 'variable sub' sub 5",
+				"mutate \"variable sub\" SUB 5",
+				"mutate 'variable sub' SUB 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable div",
+				"operation": "DIV",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable div\" / 5",
+				"mutate 'variable div' / 5",
+				"mutate \"variable div\" div 5",
+				"mutate 'variable div' div 5",
+				"mutate \"variable div\" DIV 5",
+				"mutate 'variable div' DIV 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable mul",
+				"operation": "MUL",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable mul\" * 5",
+				"mutate 'variable mul' * 5",
+				"mutate \"variable mul\" mul 5",
+				"mutate 'variable mul' mul 5",
+				"mutate \"variable mul\" MUL 5",
+				"mutate 'variable mul' MUL 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable mod",
+				"operation": "MOD",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable mod\" % 5",
+				"mutate 'variable mod' % 5",
+				"mutate \"variable mod\" mod 5",
+				"mutate 'variable mod' mod 5",
+				"mutate \"variable mod\" MOD 5",
+				"mutate 'variable mod' MOD 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLE",
+				"variable": "variable rng",
+				"operation": "RNG",
+				"value": 5
+			},
+			"natlang": [
+				"mutate \"variable rng\" ? 5",
+				"mutate 'variable rng' ? 5",
+				"mutate \"variable rng\" rng 5",
+				"mutate 'variable rng' rng 5",
+				"mutate \"variable rng\" RNG 5",
+				"mutate 'variable rng' RNG 5"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "SET",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" = \"Source Var\"",
+				"mutate'Target Var' = \"Source Var\"",
+				"mutate \"Target Var\" = 'Source Var'",
+				"mutate'Target Var' = 'Source Var'",
+				"mutate \"Target Var\" SET \"Source Var\"",
+				"mutate'Target Var' SET \"Source Var\"",
+				"mutate \"Target Var\" SET 'Source Var'",
+				"mutate'Target Var' SET 'Source Var'",
+				"mutate \"Target Var\" set \"Source Var\"",
+				"mutate'Target Var' set \"Source Var\"",
+				"mutate \"Target Var\" set 'Source Var'",
+				"mutate'Target Var' set 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "ADD",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" + \"Source Var\"",
+				"mutate'Target Var' + \"Source Var\"",
+				"mutate \"Target Var\" + 'Source Var'",
+				"mutate'Target Var' + 'Source Var'",
+				"mutate \"Target Var\" ADD \"Source Var\"",
+				"mutate'Target Var' ADD \"Source Var\"",
+				"mutate \"Target Var\" ADD 'Source Var'",
+				"mutate'Target Var' ADD 'Source Var'",
+				"mutate \"Target Var\" add \"Source Var\"",
+				"mutate'Target Var' add \"Source Var\"",
+				"mutate \"Target Var\" add 'Source Var'",
+				"mutate'Target Var' add 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "SUB",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" - \"Source Var\"",
+				"mutate'Target Var' - \"Source Var\"",
+				"mutate \"Target Var\" - 'Source Var'",
+				"mutate'Target Var' - 'Source Var'",
+				"mutate \"Target Var\" SUB \"Source Var\"",
+				"mutate'Target Var' SUB \"Source Var\"",
+				"mutate \"Target Var\" SUB 'Source Var'",
+				"mutate'Target Var' SUB 'Source Var'",
+				"mutate \"Target Var\" sub \"Source Var\"",
+				"mutate'Target Var' sub \"Source Var\"",
+				"mutate \"Target Var\" sub 'Source Var'",
+				"mutate'Target Var' sub 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "DIV",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" / \"Source Var\"",
+				"mutate'Target Var' / \"Source Var\"",
+				"mutate \"Target Var\" / 'Source Var'",
+				"mutate'Target Var' / 'Source Var'",
+				"mutate \"Target Var\" DIV \"Source Var\"",
+				"mutate'Target Var' DIV \"Source Var\"",
+				"mutate \"Target Var\" DIV 'Source Var'",
+				"mutate'Target Var' DIV 'Source Var'",
+				"mutate \"Target Var\" div \"Source Var\"",
+				"mutate'Target Var' div \"Source Var\"",
+				"mutate \"Target Var\" div 'Source Var'",
+				"mutate'Target Var' div 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "MUL",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" * \"Source Var\"",
+				"mutate'Target Var' * \"Source Var\"",
+				"mutate \"Target Var\" * 'Source Var'",
+				"mutate'Target Var' * 'Source Var'",
+				"mutate \"Target Var\" MUL \"Source Var\"",
+				"mutate'Target Var' MUL \"Source Var\"",
+				"mutate \"Target Var\" MUL 'Source Var'",
+				"mutate'Target Var' MUL 'Source Var'",
+				"mutate \"Target Var\" mul \"Source Var\"",
+				"mutate'Target Var' mul \"Source Var\"",
+				"mutate \"Target Var\" mul 'Source Var'",
+				"mutate'Target Var' mul 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "MOD",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" % \"Source Var\"",
+				"mutate'Target Var' % \"Source Var\"",
+				"mutate \"Target Var\" % 'Source Var'",
+				"mutate'Target Var' % 'Source Var'",
+				"mutate \"Target Var\" MOD \"Source Var\"",
+				"mutate'Target Var' MOD \"Source Var\"",
+				"mutate \"Target Var\" MOD 'Source Var'",
+				"mutate'Target Var' MOD 'Source Var'",
+				"mutate \"Target Var\" mod \"Source Var\"",
+				"mutate'Target Var' mod \"Source Var\"",
+				"mutate \"Target Var\" mod 'Source Var'",
+				"mutate'Target Var' mod 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "MUTATE_VARIABLES",
+				"variable": "Target Var",
+				"operation": "RNG",
+				"source": "Source Var"
+			},
+			"natlang": [
+				"mutate \"Target Var\" ? \"Source Var\"",
+				"mutate'Target Var' ? \"Source Var\"",
+				"mutate \"Target Var\" ? 'Source Var'",
+				"mutate'Target Var' ? 'Source Var'",
+				"mutate \"Target Var\" RNG \"Source Var\"",
+				"mutate'Target Var' RNG \"Source Var\"",
+				"mutate \"Target Var\" RNG 'Source Var'",
+				"mutate'Target Var' RNG 'Source Var'",
+				"mutate \"Target Var\" rng \"Source Var\"",
+				"mutate'Target Var' rng \"Source Var\"",
+				"mutate \"Target Var\" rng 'Source Var'",
+				"mutate'Target Var' rng 'Source Var'"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_MAP_TICK_SCRIPT",
+				"script": "script name"
+			},
+			"natlang": [
+				"set map tickScript to \"script name\"",
+				"set map tickScript to 'script name'",
+				"set map tickScript \"script name\"",
+				"set map tickScript 'script name'"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_WARP_STATE",
+				"string": "warp-state-string"
+			},
+			"natlang": [
+				"set warp state to warp-state-string",
+				"set warp state to 'warp-state-string'",
+				"set warp state to \"warp-state-string\"",
+				"set warp state warp-state-string",
+				"set warp state 'warp-state-string'",
+				"set warp state \"warp-state-string\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "my flag",
+				"bool_value": true
+			},
+			"natlang": [
+				"set flag \"my flag\" to true",
+				"set flag 'my flag' to true",
+				"set flag \"my flag\" true",
+				"set flag 'my flag' true",
+				"set flag \"my flag\" to on",
+				"set flag 'my flag' to on",
+				"set flag \"my flag\" on",
+				"set flag 'my flag' on",
+				"set flag \"my flag\" to yes",
+				"set flag 'my flag' to yes",
+				"set flag \"my flag\" yes",
+				"set flag 'my flag' yes",
+				"set flag \"my flag\" to open",
+				"set flag 'my flag' to open",
+				"set flag \"my flag\" open",
+				"set flag 'my flag' open"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_SAVE_FLAG",
+				"save_flag": "my flag",
+				"bool_value": false
+			},
+			"natlang": [
+				"set flag \"my flag\" to false",
+				"set flag 'my flag' to false",
+				"set flag \"my flag\" false",
+				"set flag 'my flag' false",
+				"set flag \"my flag\" to off",
+				"set flag 'my flag' to off",
+				"set flag \"my flag\" off",
+				"set flag 'my flag' off",
+				"set flag \"my flag\" to no",
+				"set flag 'my flag' to no",
+				"set flag \"my flag\" no",
+				"set flag 'my flag' no",
+				"set flag \"my flag\" to close",
+				"set flag 'my flag' to close",
+				"set flag \"my flag\" close",
+				"set flag 'my flag' close"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": true
+			},
+			"natlang": [
+				"set player control to on",
+				"set player control on",
+				"set player control to true",
+				"set player control true",
+				"set player control to yes",
+				"set player control yes",
+				"set player control to open",
+				"set player control open"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_PLAYER_CONTROL",
+				"bool_value": false
+			},
+			"natlang": [
+				"set player control to off",
+				"set player control off",
+				"set player control to false",
+				"set player control false",
+				"set player control to no",
+				"set player control no",
+				"set player control to close",
+				"set player control close"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": true
+			},
+			"natlang": [
+				"set hex dialog mode to on",
+				"set hex dialog mode on",
+				"set hex dialog mode to true",
+				"set hex dialog mode true",
+				"set hex dialog mode to yes",
+				"set hex dialog mode yes",
+				"set hex dialog mode to open",
+				"set hex dialog mode open"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_DIALOG_MODE",
+				"bool_value": false
+			},
+			"natlang": [
+				"set hex dialog mode to off",
+				"set hex dialog mode off",
+				"set hex dialog mode to false",
+				"set hex dialog mode false",
+				"set hex dialog mode to no",
+				"set hex dialog mode no",
+				"set hex dialog mode to close",
+				"set hex dialog mode close"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": true
+			},
+			"natlang": [
+				"set hex control to on",
+				"set hex control on",
+				"set hex control to true",
+				"set hex control true",
+				"set hex control to yes",
+				"set hex control yes",
+				"set hex control to open",
+				"set hex control open"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_CONTROL",
+				"bool_value": false
+			},
+			"natlang": [
+				"set hex control to off",
+				"set hex control off",
+				"set hex control to false",
+				"set hex control false",
+				"set hex control to no",
+				"set hex control no",
+				"set hex control to close",
+				"set hex control close"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": true
+			},
+			"natlang": [
+				"set hex clipboard to on",
+				"set hex clipboard on",
+				"set hex clipboard to true",
+				"set hex clipboard true",
+				"set hex clipboard to yes",
+				"set hex clipboard yes",
+				"set hex clipboard to open",
+				"set hex clipboard open"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+				"bool_value": false
+			},
+			"natlang": [
+				"set hex clipboard to off",
+				"set hex clipboard off",
+				"set hex clipboard to false",
+				"set hex clipboard false",
+				"set hex clipboard to no",
+				"set hex clipboard no",
+				"set hex clipboard to close",
+				"set hex clipboard close"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_NAME",
+				"entity": "Entity Name",
+				"string": "New Name"
+			},
+			"natlang": [
+				"set entity \"Entity Name\" name to \"New Name\"",
+				"set entity \"Entity Name\" name \"New Name\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_X",
+				"entity": "Entity Name",
+				"u2_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" x to 128",
+				"set entity \"Entity Name\" x 128"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_Y",
+				"entity": "Entity Name",
+				"u2_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" y to 128",
+				"set entity \"Entity Name\" y 128"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"entity_type": "some-kinda-sheep"
+			},
+			"natlang": [
+				"set entity \"Entity Name\" type to some-kinda-sheep",
+				"set entity \"Entity Name\" type some-kinda-sheep",
+				"set entity \"Entity Name\" type to 'some-kinda-sheep'",
+				"set entity \"Entity Name\" type 'some-kinda-sheep'",
+				"set entity \"Entity Name\" type to \"some-kinda-sheep\"",
+				"set entity \"Entity Name\" type \"some-kinda-sheep\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"u2_value": 1
+			},
+			"natlang": [
+				"set entity \"Entity Name\" primaryID to 1",
+				"set entity \"Entity Name\" primaryID 1"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			"natlang": [
+				"set entity \"Entity Name\" secondaryID to 2",
+				"set entity \"Entity Name\" secondaryID 2"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"byte_value": 0
+			},
+			"natlang": [
+				"set entity \"Entity Name\" primaryIDtype to 0",
+				"set entity \"Entity Name\" primaryIDtype 0"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateA to 128",
+				"set entity \"Entity Name\" hackableStateA 128"
+		]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateB to 128",
+				"set entity \"Entity Name\" hackableStateB 128"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateC to 128",
+				"set entity \"Entity Name\" hackableStateC 128"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"byte_value": 128
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateD to 128",
+				"set entity \"Entity Name\" hackableStateD 128"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateAU2 to 2",
+				"set entity \"Entity Name\" hackableStateAU2 2"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"u2_value": 2
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateCU2 to 2",
+				"set entity \"Entity Name\" hackableStateCU2 2"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
+				"entity": "Entity Name",
+				"u4_value": 4
+			},
+			"natlang": [
+				"set entity \"Entity Name\" hackableStateAU4 to 4",
+				"set entity \"Entity Name\" hackableStateAU4 4"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_PATH",
+				"entity": "Entity Name",
+				"geometry": "geometry-name-entity-path"
+			},
+			"natlang": [
+				"set entity \"Entity Name\" path to geometry-name-entity-path",
+				"set entity \"Entity Name\" path to 'geometry-name-entity-path'",
+				"set entity \"Entity Name\" path to \"geometry-name-entity-path\"",
+				"set entity \"Entity Name\" path geometry-name-entity-path",
+				"set entity \"Entity Name\" path 'geometry-name-entity-path'",
+				"set entity \"Entity Name\" path \"geometry-name-entity-path\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"byte_value": 0
+			},
+			"natlang": [
+				"set entity \"Entity Name\" animation to 0",
+				"set entity \"Entity Name\" animation 0"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"byte_value": 0
+			},
+			"natlang": [
+				"set entity \"Entity Name\" animationFrame to 0",
+				"set entity \"Entity Name\" animationFrame 0"
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-interact"
+			},
+			"natlang": [
+				"set entity \"Entity Name\" interactScript to script-entity-interact",
+				"set entity \"Entity Name\" interactScript to 'script-entity-interact'",
+				"set entity \"Entity Name\" interactScript to \"script-entity-interact\"",
+				"set entity \"Entity Name\" interactScript script-entity-interact",
+				"set entity \"Entity Name\" interactScript 'script-entity-interact'",
+				"set entity \"Entity Name\" interactScript \"script-entity-interact\""
+			]
+		},
+		{
+			"json": {
+				"action": "SET_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"script": "script-entity-tick"
+			},
+			"natlang": [
+				"set entity \"Entity Name\" tickScript to script-entity-tick",
+				"set entity \"Entity Name\" tickScript to 'script-entity-tick'",
+				"set entity \"Entity Name\" tickScript to \"script-entity-tick\"",
+				"set entity \"Entity Name\" tickScript script-entity-tick",
+				"set entity \"Entity Name\" tickScript 'script-entity-tick'",
+				"set entity \"Entity Name\" tickScript \"script-entity-tick\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "my flag",
+				"expected_bool": true,
+				"success_script": "my script"
+			},
+			"natlang": [
+				"if flag \"my flag\" is true then goto script \"my script\"",
+				"if flag \"my flag\" is true then goto script 'my script'",
+				"if flag \"my flag\" is true then goto \"my script\"",
+				"if flag \"my flag\" is true then goto 'my script'",
+				"if flag \"my flag\" is on then goto script \"my script\"",
+				"if flag \"my flag\" is on then goto script 'my script'",
+				"if flag \"my flag\" is on then goto \"my script\"",
+				"if flag \"my flag\" is on then goto 'my script'",
+				"if flag \"my flag\" is open then goto script \"my script\"",
+				"if flag \"my flag\" is open then goto script 'my script'",
+				"if flag \"my flag\" is open then goto \"my script\"",
+				"if flag \"my flag\" is open then goto 'my script'",
+				"if flag \"my flag\" is yes then goto script \"my script\"",
+				"if flag \"my flag\" is yes then goto script 'my script'",
+				"if flag \"my flag\" is yes then goto \"my script\"",
+				"if flag \"my flag\" is yes then goto 'my script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_SAVE_FLAG",
+				"save_flag": "my flag",
+				"expected_bool": false,
+				"success_script": "my script"
+			},
+			"natlang": [
+				"if flag \"my flag\" is false then goto script \"my script\"",
+				"if flag \"my flag\" is false then goto script 'my script'",
+				"if flag \"my flag\" is false then goto \"my script\"",
+				"if flag \"my flag\" is false then goto 'my script'",
+				"if flag \"my flag\" is off then goto script \"my script\"",
+				"if flag \"my flag\" is off then goto script 'my script'",
+				"if flag \"my flag\" is off then goto \"my script\"",
+				"if flag \"my flag\" is off then goto 'my script'",
+				"if flag \"my flag\" is close then goto script \"my script\"",
+				"if flag \"my flag\" is close then goto script 'my script'",
+				"if flag \"my flag\" is close then goto \"my script\"",
+				"if flag \"my flag\" is close then goto 'my script'",
+				"if flag \"my flag\" is no then goto script \"my script\"",
+				"if flag \"my flag\" is no then goto script 'my script'",
+				"if flag \"my flag\" is no then goto \"my script\"",
+				"if flag \"my flag\" is no then goto 'my script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_FOR_BUTTON_PRESS",
+				"button_id": "ANY",
+				"success_script": "script-do-if-button"
+			},
+			"natlang": [
+				"if button ANY then goto script script-do-if-button",
+				"if button ANY then goto script 'script-do-if-button'",
+				"if button ANY then goto script \"script-do-if-button\"",
+				"if button ANY then goto \"script-do-if-button\"",
+				"if button ANY then goto 'script-do-if-button'",
+				"if button ANY then goto script-do-if-button"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_FOR_BUTTON_STATE",
+				"button_id": "ANY",
+				"expected_bool": true,
+				"success_script": "if button state"
+			},
+			"natlang": [
+				"if button ANY is currently pressed then goto script \"if button state\"",
+				"if button ANY is currently pressed then goto script 'if button state'",
+				"if button ANY is currently pressed then goto \"if button state\"",
+				"if button ANY is currently pressed then goto 'if button state'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_WARP_STATE",
+				"expected_bool": true,
+				"string": "warp-state-string",
+				"success_script": "warp state script"
+			},
+			"natlang": [
+				"if warp state is warp-state-string then goto script \"warp state script\"",
+				"if warp state is 'warp-state-string' then goto script \"warp state script\"",
+				"if warp state is \"warp-state-string\" then goto script \"warp state script\"",
+				"if warp state is warp-state-string then goto \"warp state script\"",
+				"if warp state is 'warp-state-string' then goto \"warp state script\"",
+				"if warp state is \"warp-state-string\" then goto \"warp state script\"",
+				"if warp state is warp-state-string then goto script 'warp state script'",
+				"if warp state is 'warp-state-string' then goto script 'warp state script'",
+				"if warp state is \"warp-state-string\" then goto script 'warp state script'",
+				"if warp state is warp-state-string then goto 'warp state script'",
+				"if warp state is 'warp-state-string' then goto 'warp state script'",
+				"if warp state is \"warp-state-string\" then goto 'warp state script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_WARP_STATE",
+				"expected_bool": false,
+				"string": "warp-state-string",
+				"success_script": "warp state script"
+			},
+			"natlang": [
+				"if warp state is not warp-state-string then goto script \"warp state script\"",
+				"if warp state is not 'warp-state-string' then goto script \"warp state script\"",
+				"if warp state is not \"warp-state-string\" then goto script \"warp state script\"",
+				"if warp state is not warp-state-string then goto \"warp state script\"",
+				"if warp state is not 'warp-state-string' then goto \"warp state script\"",
+				"if warp state is not \"warp-state-string\" then goto \"warp state script\"",
+				"if warp state is not warp-state-string then goto script 'warp state script'",
+				"if warp state is not 'warp-state-string' then goto script 'warp state script'",
+				"if warp state is not \"warp-state-string\" then goto script 'warp state script'",
+				"if warp state is not warp-state-string then goto 'warp state script'",
+				"if warp state is not 'warp-state-string' then goto 'warp state script'",
+				"if warp state is not \"warp-state-string\" then goto 'warp state script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLE",
+				"expected_bool": true,
+				"variable": "my variable",
+				"comparison": "==",
+				"value": 15,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is == 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is 15 then goto \"branch script\"",
+				"if variable \"my variable\" is == 15 then goto \"branch script\"",
+				"if variable \"my variable\" is 15 then goto script 'branch script'",
+				"if variable \"my variable\" is == 15 then goto script 'branch script'",
+				"if variable \"my variable\" is 15 then goto 'branch script'",
+				"if variable \"my variable\" is == 15 then goto 'branch script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLE",
+				"variable": "my variable",
+				"expected_bool": true,
+				"comparison": "<",
+				"value": 15,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is < 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is < 15 then goto \"branch script\"",
+				"if variable \"my variable\" is < 15 then goto script 'branch script'",
+				"if variable \"my variable\" is < 15 then goto 'branch script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLE",
+				"variable": "my variable",
+				"comparison": "==",
+				"expected_bool": false,
+				"value": 15,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is not 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is not == 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is not 15 then goto \"branch script\"",
+				"if variable \"my variable\" is not == 15 then goto \"branch script\"",
+				"if variable \"my variable\" is not 15 then goto script 'branch script'",
+				"if variable \"my variable\" is not == 15 then goto script 'branch script'",
+				"if variable \"my variable\" is not 15 then goto 'branch script'",
+				"if variable \"my variable\" is not == 15 then goto 'branch script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLE",
+				"variable": "my variable",
+				"expected_bool": false,
+				"comparison": "<",
+				"value": 15,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is not < 15 then goto script \"branch script\"",
+				"if variable \"my variable\" is not < 15 then goto \"branch script\"",
+				"if variable \"my variable\" is not < 15 then goto script 'branch script'",
+				"if variable \"my variable\" is not < 15 then goto 'branch script'"
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLES",
+				"expected_bool": true,
+				"variable": "my variable",
+				"comparison": "==",
+				"source": "second variable",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is == \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is \"second variable\" then goto \"branch script\"",
+				"if variable \"my variable\" is == \"second variable\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLES",
+				"variable": "my variable",
+				"expected_bool": true,
+				"comparison": "<",
+				"source": "second variable",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is < \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is < \"second variable\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLES",
+				"variable": "my variable",
+				"comparison": "==",
+				"expected_bool": false,
+				"source": "second variable",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is not \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is not == \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is not \"second variable\" then goto \"branch script\"",
+				"if variable \"my variable\" is not == \"second variable\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_VARIABLES",
+				"variable": "my variable",
+				"expected_bool": false,
+				"comparison": "<",
+				"source": "second variable",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if variable \"my variable\" is not < \"second variable\" then goto script \"branch script\"",
+				"if variable \"my variable\" is not < \"second variable\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
+				"entity": "Entity Name",
+				"expected_u4": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateAU4 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateAU4 is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_NAME",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"string": "Checked Name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" name is \"Checked Name\" then goto script \"branch script\"",
+				"if entity \"Entity Name\" name is \"Checked Name\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_X",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 0,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" x is 0 then goto script \"branch script\"",
+				"if entity \"Entity Name\" x is 0 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_script": "name-of-checked-script-interact",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" interactScript is name-of-checked-script-interact then goto script \"branch script\"",
+				"if entity \"Entity Name\" interactScript is name-of-checked-script-interact then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_script": "name-of-checked-script-tick",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" tickScript is name-of-checked-script-tick then goto script \"branch script\"",
+				"if entity \"Entity Name\" tickScript is name-of-checked-script-tick then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"entity_type": "some-kind-of-entity-type",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" type is some-kind-of-entity-type then goto script \"branch script\"",
+				"if entity \"Entity Name\" type is some-kind-of-entity-type then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" primaryID is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primaryID is 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" secondaryID is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" secondaryID is 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" primaryIDtype is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primaryIDtype is 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" animation is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animation is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" animationFrame is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animationFrame is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"direction": "north",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" direction is north then goto script \"branch script\"",
+				"if entity \"Entity Name\" direction is north then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateA is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateA is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateB is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateB is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateC is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateC is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateD is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateD is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateAU2 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateAU2 is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"expected_u2": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateCU2 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateCU2 is 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PATH",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" path is some-kind-of-geometry-name then goto script \"branch script\"",
+				"if entity \"Entity Name\" path is some-kind-of-geometry-name then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_NAME",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"string": "Checked Name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" name is not \"Checked Name\" then goto script \"branch script\"",
+				"if entity \"Entity Name\" name is not \"Checked Name\" then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_X",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 0,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" x is not 0 then goto script \"branch script\"",
+				"if entity \"Entity Name\" x is not 0 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_INTERACT_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_script": "name-of-checked-script-interact",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" interactScript is not name-of-checked-script-interact then goto script \"branch script\"",
+				"if entity \"Entity Name\" interactScript is not name-of-checked-script-interact then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_TICK_SCRIPT",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_script": "name-of-checked-script-tick",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" tickScript is not name-of-checked-script-tick then goto script \"branch script\"",
+				"if entity \"Entity Name\" tickScript is not name-of-checked-script-tick then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"entity_type": "some-kind-of-entity-type",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" type is not some-kind-of-entity-type then goto script \"branch script\"",
+				"if entity \"Entity Name\" type is not some-kind-of-entity-type then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PRIMARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" primaryID is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primaryID is not 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_SECONDARY_ID",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" secondaryID is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" secondaryID is not 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PRIMARY_ID_TYPE",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 16,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" primaryIDtype is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primaryIDtype is not 16 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_CURRENT_ANIMATION",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" animation is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animation is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_CURRENT_FRAME",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" animationFrame is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animationFrame is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_DIRECTION",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"direction": "north",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" direction is not north then goto script \"branch script\"",
+				"if entity \"Entity Name\" direction is not north then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateA is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateA is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateB is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateB is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateC is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateC is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_byte": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateD is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateD is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateAU2 is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateAU2 is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"expected_u2": 1,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" hackableStateCU2 is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackableStateCU2 is not 1 then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_PATH",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" path is not some-kind-of-geometry-name then goto script \"branch script\"",
+				"if entity \"Entity Name\" path is not some-kind-of-geometry-name then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" is glitched then goto script \"branch script\"",
+				"if entity \"Entity Name\" is glitched then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"entity": "Entity Name",
+				"expected_bool": true,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" is inside geometry some-kind-of-geometry-name then goto script \"branch script\"",
+				"if entity \"Entity Name\" is inside geometry some-kind-of-geometry-name then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_ENTITY_GLITCHED",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" is not glitched then goto script \"branch script\"",
+				"if entity \"Entity Name\" is not glitched then goto \"branch script\""
+			]
+		},
+		{
+			"json": {
+				"action": "CHECK_IF_ENTITY_IS_IN_GEOMETRY",
+				"entity": "Entity Name",
+				"expected_bool": false,
+				"geometry": "some-kind-of-geometry-name",
+				"success_script": "branch script"
+			},
+			"natlang": [
+				"if entity \"Entity Name\" is not inside geometry some-kind-of-geometry-name then goto script \"branch script\"",
+				"if entity \"Entity Name\" is not inside geometry some-kind-of-geometry-name then goto \"branch script\""
+			]
+		}
+	],
+	"dialogCircle": {
+		"dialog-lodge-cantleaveyet": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Wait, I can't leave yet!"
+				]
+			}
+		],
+		"dialog-candothis": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Okay. I can do this."
+				]
+			}
+		],
+		"dialog-tuesday-intro1": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Come on in, %PLAYER%!"
+				]
+			}
+		],
+		"dialog-tuesday-intro2": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Uncle Zappy",
+				"messages": [
+					"We'll be right here."
+				]
+			}
+		],
+		"dialog-tuesday-intro3": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Aunt Zippy",
+				"messages": [
+					"Go ahead. You'll do great!"
+				]
+			}
+		],
+		"dialog-tuesday-lunch": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"A Power Bracelet?"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"That is a croissant!",
+					"Is my lunch!"
+				]
+			}
+		],
+		"dialog-tuesday-broom": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Marta",
+				"messages": [
+					"Hey, that broom is mine! How did that end\nup there?"
+				]
+			}
+		],
+		"dialog-zippy-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Go ahead, dear!"
+				]
+			}
+		],
+		"dialog-zappy-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Take your time!"
+				]
+			}
+		],
+		"dialog-verthandi-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Oh, how exciting!"
+				]
+			}
+		],
+		"dialog-smith-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Don't look at me! I don't know how any of\nthis stuff works!"
+				]
+			}
+		],
+		"dialog-max-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Hmm. I've seen better artifacts."
+				]
+			}
+		],
+		"dialog-marta-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"One of those artifacts seems a little\nfamiliar to me...."
+				]
+			}
+		],
+		"dialog-marta-prechoose-broomd": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Marta",
+				"messages": [
+					"I knew I recognized this broom!"
+				]
+			}
+		],
+		"dialog-trekkie-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Oh, me hope it's a good one!"
+				]
+			}
+		],
+		"dialog-shepherd-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Is that old junk really magic?"
+				]
+			}
+		],
+		"dialog-cleo-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Ooh! I bet it's gonna be the one on the\nleft! No, the right! No, the second one!"
+				]
+			}
+		],
+		"dialog-beatrice-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"It's been so long since we've had a new\nmage!"
+				]
+			}
+		],
+		"dialog-baker-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Um, I gotta get back to work, kid. You\nwanna hurry it up a little?"
+				]
+			}
+		],
+		"dialog-jackob-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"(Wait, was this everything?)"
+				]
+			}
+		],
+		"dialog-alfonso-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"*ahem*",
+					"The mage must present themselves to the\nartifacts until one shows interest."
+				]
+			}
+		],
+		"dialog-bert-prechoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Touch each item, please."
+				]
+			}
+		],
+		"dialog-zippy-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"We always knew you were destined for great\nthings!"
+				]
+			}
+		],
+		"dialog-zappy-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"We're both so proud of you!"
+				]
+			}
+		],
+		"dialog-verthandi-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Oh, how exciting!"
+				]
+			}
+		],
+		"dialog-smith-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Sounds like that ring is a big deal.",
+					"Neat."
+				]
+			}
+		],
+		"dialog-max-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Hmm. That ring looks a bit too plain to\nbe the real Ring Zero, doesn't it?"
+				]
+			}
+		],
+		"dialog-marta-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Wow. Never seen a TUESDAY like this\nbefore!"
+				]
+			}
+		],
+		"dialog-trekkie-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Amazing!"
+				]
+			}
+		],
+		"dialog-shepherd-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Neat!"
+				]
+			}
+		],
+		"dialog-cleo-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"It looks so shiny!"
+				]
+			}
+		],
+		"dialog-beatrice-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Oh! I never thought I'd see this day! Oh,\nmy Delmar...!"
+				]
+			}
+		],
+		"dialog-baker-postchoose": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Congratulations, %PLAYER%!"
+				]
+			}
+		],
+		"dialog-tuesday1": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"The day has come!",
+					"You have come of age, and what a joyous\nday it is.",
+					"You may have noticed some aches and pains,\nand hair growing in new places. It's also\npossible --"
+				]
+			}
+		],
+		"dialog-tuesday2": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Uh, that's the wrong speech! It's TUESDAY,\nnot puberty education!"
+				]
+			}
+		],
+		"dialog-tuesday3": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"It Friday."
+				]
+			}
+		],
+		"dialog-tuesday4": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"No, not Tuesday, T.U.E.S.D.A.Y.! You know,\nTraditional and Unambiguous Event of\nSelection Directly Affecting You."
+				]
+			}
+		],
+		"dialog-tuesday5": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"Ah, yes. Right you are."
+				]
+			}
+		],
+		"dialog-tuesday6": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"*Ahem*",
+					"Each mage, upon the day of their 16th\nbirthday, will then be present for their\nTUESDAY.",
+					"Upon the chosen TUESDAY, each mage is\nrecognized by forces beyond our\ncomprehension as ready to wield power\nbestowed upon them by a magical artifact.",
+					"Mages do not choose their own artifacts,\nbut rather are subject to the moods and\ntemperaments of the artifacts.",
+					"(And boy they are moody.)"
+				]
+			}
+		],
+		"dialog-tuesday7": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"The mage must present themselves to the\nartifacts until one shows interest. Mage,\nstep forth."
+				]
+			}
+		],
+		"dialog-ring1": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Well, this is certainly... unexpected.\nWe've never had a dud quite like this one\nbefore."
+				]
+			}
+		],
+		"dialog-ring2": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Why don't we --"
+				]
+			}
+		],
+		"dialog-ring3": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Oh! Oh, good heavens! Is that --"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"It is."
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"It's Ring Zero!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"What?! What is that?"
+				]
+			}
+		],
+		"dialog-ring4": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"It just slipped itself onto my finger!"
+				]
+			}
+		],
+		"dialog-ring5": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Um, it's not coming off. Is that normal?"
+				]
+			}
+		],
+		"dialog-ring6": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Normal? Normal?!",
+					"Nothing about that thing is normal!",
+					"This is --\nThis is unprecedented."
+				]
+			},
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Is it bad?! What's wrong with it?",
+					"Am I... am I gonna die?!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"The ring isn't bad, it's just... powerful."
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"No one has been chosen by this ring\nbefore."
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Oh, but... but perhaps...."
+				]
+			}
+		],
+		"dialog-ring7": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Oh, but this is good news, isn't it?",
+					"This means we can finally fix things!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"Fix the town."
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"Yes....",
+					"Yes!"
+				]
+			}
+		],
+		"dialog-ring8": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"Yes, you can fix things at last!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Fix the town?"
+				]
+			}
+		],
+		"dialog-ring9": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"But the town is all glitchy and hacked!\nHow am I supposed to fix it with this\nthing? Unless...."
+				]
+			}
+		],
+		"dialog-ring10": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Yes, exactly! That ring, Ring Zero --",
+					"That ring gives you the power to hack the\nplanet!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Hack the planet? You mean... all the stuff\nthat's broken?"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Bert",
+				"messages": [
+					"You can fix what the Big Bad broke!"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Jackob",
+				"messages": [
+					"Everything that the Big Bag hacked so\nmany years ago.... Everything that\nscoundrel ruined...."
+				]
+			},
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"This ring gives me the Big Bad's power?",
+					"But I don't know how to hack! How am I\nsupposed to fix anything?"
+				]
+			},
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Yes, well, you see...."
+				]
+			}
+		],
+		"dialog-ring11": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Please come with us, %PLAYER%."
+				]
+			}
+		],
+		"dialog-ring12": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "Alfonso",
+				"messages": [
+					"Into the inner sanctum!"
+				]
+			}
+		],
+		"dialog-maybe-another": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Maybe a different artifact?"
+				]
+			}
+		],
+		"dialog-maybe-none": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Wait. Was that the last one?"
+				]
+			}
+		],
+		"dialog-tuesday-glasses": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"This?","This is clearly a temporary asset that\nhasn't been replaced with anything yet.",
+					"Though....",
+					"(touch)",
+					"Ahh, oh well."
+				]
+			}
+		],
+		"dialog-tuesday-book": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Ugh. Is that an eye on the cover?",
+					"And I don't wanna know what kind of\nleather that is.",
+					"....",
+					"It's not reacting to me, though."
+				]
+			}
+		],
+		"dialog-tuesday-wand1": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Moon Prism Power...."
+				]
+			}
+		],
+		"dialog-tuesday-wand2": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Make Up!"
+				]
+			}
+		],
+		"dialog-tuesday-wand3": [
+			{
+				"alignment": "BOTTOM_RIGHT",
+				"entity": "%PLAYER%",
+				"messages": [
+					"Erm, maybe I had that a bit wrong.","Still, no response."
+				]
+			}
+		],
+		"dialog-murmur1": [
+			{
+				"alignment": "TOP_RIGHT",
+				"entity": "Marta",
+				"messages": [
+					"Did they do it wrong?"
+				]
+			}
+		],
+		"dialog-murmur2": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "Max Swagger",
+				"messages": [
+					"I'm pretty sure %PLAYER% touched\nall of them...."
+				]
+			}
+		],
+		"dialog-murmur3": [
+			{
+				"alignment": "TOP_RIGHT",
+				"entity": "Trekkie",
+				"messages": [
+					"Maybe they missed one."
+				]
+			}
+		],
+		"dialog-lodge_cat": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"...."
+				]
+			}
+		],
+		"dialog-lodge_cat-glitched": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"////////"
+				]
+			}
+		],
+		"dialog-artifacts-touch": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"All artifacts touched."
+				]
+			}
+		],
+		"dialog-timmy-glitched": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Ner ubg qbtf n fnaqjvpu?"
+				]
+			}
+		],
+		"dialog-timmy-start": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Oh, how lovely! It's much easier to read\nlike this!"
+				]
+			}
+		],
+		"dialog-timmy-start-s": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"I've been trying to find books about the\nolympics.",
+					"Gosh, it'd be cool if I could get a gold\nmedal for the high jump!",
+					"I can jump, like, SO high!"
+				]
+			}
+		],
+		"dialog-debug-bypass-tuesday-q": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Bypass TUESDAY?"
+				],
+				"response_type": "SELECT_FROM_SHORT_LIST",
+				"options": [
+					{
+						"label": "Yes",
+						"script": "debug-bypass-tuesday"
+					},
+					{
+						"label": "Yes (but enable hintman cutscene)",
+						"script": "debug-bypass-tuesday-but-enable-hintman"
+					},
+					{
+						"label": "No",
+						"script": "debug-bypass-tuesday-no"
+					}
+				]
+			}
+		],
+		"dialog-debug-disable-tuesday-q": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Disable TUESDAY?"
+				],
+				"response_type": "SELECT_FROM_SHORT_LIST",
+				"options": [
+					{
+						"label": "Completely",
+						"script": "debug-disable-tuesday-complete"
+					},
+					{
+						"label": "Partially",
+						"script": "debug-disable-tuesday-walkup"
+					},
+					{
+						"label": "Un-disable",
+						"script": "debug-undisable-tuesday"
+					},
+					{
+						"label": "Never mind",
+						"script": "debug-disable-tuesday-no"
+					}
+				]
+			}
+		],
+		"dialog-debug-bypass-tuesday": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Tuesday bypassed."
+				]
+			}
+		],
+		"dialog-debug-bypass-tuesday-plus-hintman": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Tuesday bypassed. Prepare for hintman\ncutscene."
+				]
+			}
+		],
+		"dialog-no_debug-disable-tuesday": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Nothing changed."
+				]
+			}
+		],
+		"dialog-debug-undisable-tuesday": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"TUESDAY re-enabled."
+				]
+			}
+		],
+		"dialog-debug-disable-tuesday-complete": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"TUESDAY completely disabled."
+				]
+			}
+		],
+		"dialog-debug-disable-tuesday-walkup": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"TUESDAY partially disabled."
+				]
+			}
+		],
+		"dialog-debug-cutscene-tuesday-q": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Begin TUESDAY cutscene?"
+				],
+				"response_type": "SELECT_FROM_SHORT_LIST",
+				"options": [
+					{
+						"label": "Yes",
+						"script": "debug-cutscene-tuesday"
+					},
+					{
+						"label": "No",
+						"script": "debug-cutscene-tuesday-no"
+					}
+				]
+			}
+		],
+		"dialog-debug-touch-artifacts-q": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Do what to artifacts?"
+				],
+				"response_type": "SELECT_FROM_SHORT_LIST",
+				"options": [
+					{
+						"label": "Touch all artifacts",
+						"script": "debug-touch-artifacts"
+					},
+					{
+						"label": "Finish lecture and lower bookcase",
+						"script": "debug-touch-artifacts-and-aftermath"
+					},
+					{
+						"label": "Teleport to secret room (with cutscene)",
+						"script": "enter-secretroom-with-guaranteed-cutscene"
+					},
+					{
+						"label": "No",
+						"script": "debug-touch-artifacts-no"
+					}
+				]
+			}
+		],
+		"dialog-debug-touch-artifacts": [
+			{
+				"alignment": "BOTTOM_LEFT",
+				"entity": "%SELF%",
+				"messages": [
+					"Artifacts touched."
+				]
+			}
+		],
+		"dialog-sportsbook": [
+			{
+				"alignment": "TOP_LEFT",
+				"entity": "%SELF%",
+				"portrait": "journal",
+				"messages": [
+					"Sports sports sports. This book is about\nsports!","Go, home team!"
+				]
+			}
+		]
+	}
+}
