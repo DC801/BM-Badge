@@ -216,7 +216,7 @@ struct MageScriptState
 
 struct MageSaveGame
 {
-   const std::string identifier = EngineROM::SaveIdentifierString;
+   const char* identifier = EngineROM::SaveIdentifierString;
    uint32_t engineVersion{ ENGINE_VERSION };
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };

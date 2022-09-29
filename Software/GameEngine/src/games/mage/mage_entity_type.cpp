@@ -2,22 +2,10 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
+MageEntityTypeAnimation::Direction::Direction(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 {
    ROM->Read(&typeId, offset);
-   // Endianness conversion
-   typeId = ROM_ENDIAN_U2_VALUE(typeId);
-
-   // Increment offset
-   offset += sizeof(typeId);
-
-   // Read count
    ROM->Read(&type, offset);
-
-   // Increment offset
-   offset += sizeof(type);
-
-   // Read count
    ROM->Read(&renderFlags, offset);
 }
 
@@ -27,133 +15,35 @@ MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t& address
    address += 32; // skip over reading the name, no need to hold that in ram
    address += sizeof(uint8_t) + sizeof(uint8_t); // paddingA + paddingB
 
-   // Read portraitId
    ROM->Read(&portraitId, address);
-   address += sizeof(portraitId);
 
    auto animationCount = uint16_t{ 0 };
-   // Read animationCount
    ROM->Read(&animationCount, address);
-   address += sizeof(animationCount);
 
-   // Construct array
-   entityTypeAnimations = std::vector<MageAnimation>{ animationCount };
-
-   //increment through animations to fill entityTypeAnimations array:
-   for (uint32_t animationIndex = 0; animationIndex < animationCount; animationIndex++)
+   entityTypeAnimations = std::vector<MageEntityTypeAnimation>{ animationCount };
+   for (auto i = 0; i < animationCount; i++)
    {
-      entityTypeAnimations[animationIndex] = MageAnimation{ ROM, address };
-      address += sizeof(MageAnimation);
+      entityTypeAnimations[i] = MageEntityTypeAnimation{ ROM, address };
    }
 }
 
 MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
-   uint32_t size = 0;
-
-   //Read Name
-   ROM->Read(name, address);
-
-   //increment address
-   address += MAGE_ENTITY_NAME_LENGTH;
-
-   // Read x
+   ROM->Read(name, address, MAGE_ENTITY_NAME_LENGTH);
    ROM->Read(&x, address);
-
-   // Endianness conversion
-   x = ROM_ENDIAN_U2_VALUE(x);
-
-   //increment address
-   address += sizeof(x);
-
-   // Read y
    ROM->Read(&y, address);
-
-   // Endianness conversion
-   y = ROM_ENDIAN_U2_VALUE(y);
-
-   //increment address
-   address += sizeof(y);
-
-   // Read onInteractScriptId
    ROM->Read(&onInteractScriptId, address);
-
-   // Endianness conversion
-   onInteractScriptId = ROM_ENDIAN_U2_VALUE(onInteractScriptId);
-
-   //increment address
-   address += sizeof(onInteractScriptId);
-
-   // Read onTickScript
    ROM->Read(&onTickScriptId, address);
-
-   // Endianness conversion
-   onTickScriptId = ROM_ENDIAN_U2_VALUE(onTickScriptId);
-
-   //increment address
-   address += sizeof(onTickScriptId);
-
-   // Read primaryId
    ROM->Read(&primaryId, address);
-
-   // Endianness conversion
-   primaryId = ROM_ENDIAN_U2_VALUE(primaryId);
-
-   //increment address
-   address += sizeof(primaryId);
-
-   // Read secondaryId
    ROM->Read(&secondaryId, address);
-
-   // Endianness conversion
-   secondaryId = ROM_ENDIAN_U2_VALUE(secondaryId);
-
-   //increment address
-   address += sizeof(secondaryId);
-
-   // Read primaryIdType
    ROM->Read(&primaryIdType, address);
-
-   //increment address
-   address += sizeof(primaryIdType);
-
-   // Read currentAnimation
    ROM->Read(&currentAnimation, address);
-
-   //increment address
-   address += sizeof(currentAnimation);
-
-   // Read currentFrameIndex
    ROM->Read(&currentFrameIndex, address);
-
-   //increment address
-   address += sizeof(currentFrameIndex);
-
-   // Read direction
    ROM->Read(&direction, address);
-
-   //increment address
-   address += sizeof(direction);
-
-   // Read hackableStateA
    ROM->Read(&hackableStateA, address);
-   //increment address
-   address += sizeof(hackableStateA);
-
-   // Read hackableStateB
    ROM->Read(&hackableStateB, address);
-   //increment address
-   address += sizeof(hackableStateB);
-
-   // Read hackableStateC
    ROM->Read(&hackableStateC, address);
-   //increment address
-   address += sizeof(hackableStateC);
-
-   // Read hackableStateD
    ROM->Read(&hackableStateD, address);
-   //increment address
-   address += sizeof(hackableStateD);
 }
 
 void MageEntity::updateRenderableData(MageGameControl* gameControl)
@@ -176,10 +66,6 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ANIMATION)
    {
-      //ensure the animationId (in this scenario, the entity's primaryId) is valid.
-      //uint16_t animationId = primaryId;
-      //MageAnimation* animation = &animations[animationId];
-      //MageAnimation::Frame currentFrame = animation->AnimationFrame(currentFrame);
       auto animation = gameControl->getAnimation(primaryId);
       renderableData.tilesetId = animation->TilesetId();
       renderableData.tileId = animation->TileId();
@@ -211,29 +97,27 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
       uint8_t entityTypeAnimationId = currentAnimation;
 
       //make a local copy of the current entity type animation:
-      MageAnimation currentAnimation = gameControl->entityTypes[entityTypeId].EntityTypeAnimation(entityTypeAnimationId);
-
-      //get a valid direction for the animation:
-      uint8_t direction = direction;
+      auto currentAnimation = gameControl->entityTypes[entityTypeId].EntityTypeAnimation(entityTypeAnimationId);
 
       //create a directedAnimation entity based on direction:
-      //auto directedAnimation = getAnimation;
-      //if (direction == MageEntityAnimationDirection::NORTH)
-      //{
-      //   directedAnimation = currentAnimation.North();
-      //}
-      //else if (direction == MageEntityAnimationDirection::EAST)
-      //{
-      //   directedAnimation = currentAnimation.East();
-      //}
-      //else if (direction == MageEntityAnimationDirection::SOUTH)
-      //{
-      //   directedAnimation = currentAnimation.South();
-      //}
-      //else if (direction == MageEntityAnimationDirection::WEST)
-      //{
-      //   directedAnimation = currentAnimation.West();
-      //}
+      auto dirValue = (MageEntityAnimationDirection)direction % NUM_DIRECTIONS;
+      MageEntityTypeAnimation::Direction directedAnimation;
+      if (dirValue == MageEntityAnimationDirection::NORTH)
+      {
+         directedAnimation = currentAnimation.North();
+      }
+      else if (dirValue == MageEntityAnimationDirection::EAST)
+      {
+         directedAnimation = currentAnimation.East();
+      }
+      else if (dirValue == MageEntityAnimationDirection::SOUTH)
+      {
+         directedAnimation = currentAnimation.South();
+      }
+      else if (dirValue == MageEntityAnimationDirection::WEST)
+      {
+         directedAnimation = currentAnimation.West();
+      }
       //renderableData.getRenderableState(entityPointer, currentAnimation);
 
    }
@@ -268,7 +152,7 @@ void MageEntity::RenderableData::updateRenderableBoxes(const MageEntity* entity,
    center.y = hitBox.y + (hitBox.h / 2);
 }
 
-void MageEntity::RenderableData::getRenderableState(MageGameControl* gameControl, const MageEntity* entity, const MageEntityTypeAnimationDirection* animationDirection)
+void MageEntity::RenderableData::getRenderableState(MageGameControl* gameControl, const MageEntity* entity, const MageEntityTypeAnimation::Direction* animationDirection)
 {
    //based on animationDirection.Type(), you can get two different outcomes:
    //Scenario A: Type is 0, TypeID is an animation ID:

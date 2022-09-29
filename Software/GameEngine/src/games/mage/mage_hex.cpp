@@ -18,7 +18,7 @@ bool MageHexEditor::getHexDialogState()
 }
 uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 {
-   return gameEngine->gameControl->currentSave->memOffsets[index % MAGE_NUM_MEM_BUTTONS];
+   return gameEngine->gameControl->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
 }
 
 void MageHexEditor::toggleHexEditor()
@@ -65,7 +65,7 @@ void MageHexEditor::setPageToCursorLocation()
 void MageHexEditor::updateHexLights()
 {
    const uint8_t currentByte = *(((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
-   uint8_t* memOffsets = gameEngine->gameControl->currentSave->memOffsets;
+   uint8_t* memOffsets = gameEngine->gameControl->currentSave.memOffsets;
    uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
    ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
@@ -129,7 +129,7 @@ void MageHexEditor::applyHexModeInputs()
       return;
    }
    uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
-   uint8_t* memOffsets = gameEngine->gameControl->currentSave->memOffsets;
+   uint8_t* memOffsets = gameEngine->gameControl->currentSave.memOffsets;
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
    if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Hax)) { toggleHexEditor(); }
@@ -240,7 +240,7 @@ void MageHexEditor::applyHexModeInputs()
             if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right))
             {
                //start copying
-               gameEngine->gameControl->currentSave->clipboardLength = 1;
+               gameEngine->gameControl->currentSave.clipboardLength = 1;
                isCopying = true;
             }
             if (!gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right))
@@ -251,22 +251,22 @@ void MageHexEditor::applyHexModeInputs()
             {
                if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left))
                {
-                  gameEngine->gameControl->currentSave->clipboardLength = MAX(
+                  gameEngine->gameControl->currentSave.clipboardLength = MAX(
                      (uint8_t)1,
-                     gameEngine->gameControl->currentSave->clipboardLength - 1
+                     gameEngine->gameControl->currentSave.clipboardLength - 1
                   );
                }
                if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right))
                {
-                  gameEngine->gameControl->currentSave->clipboardLength = MIN(
+                  gameEngine->gameControl->currentSave.clipboardLength = MIN(
                      (uint8_t)sizeof(MageEntity),
-                     gameEngine->gameControl->currentSave->clipboardLength + 1
+                     gameEngine->gameControl->currentSave.clipboardLength + 1
                   );
                }
                memcpy(
-                  gameEngine->gameControl->currentSave->clipboard,
+                  gameEngine->gameControl->currentSave.clipboard,
                   currentByte,
-                  gameEngine->gameControl->currentSave->clipboardLength
+                  gameEngine->gameControl->currentSave.clipboardLength
                );
             }
             if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left))
@@ -274,14 +274,14 @@ void MageHexEditor::applyHexModeInputs()
                //paste
                memcpy(
                   currentByte,
-                  gameEngine->gameControl->currentSave->clipboard,
-                  gameEngine->gameControl->currentSave->clipboardLength
+                  gameEngine->gameControl->currentSave.clipboard,
+                  gameEngine->gameControl->currentSave.clipboardLength
                );
                gameEngine->gameControl->UpdateEntities(0);
                memcpy(
                   currentByte,
-                  gameEngine->gameControl->currentSave->clipboard,
-                  gameEngine->gameControl->currentSave->clipboardLength
+                  gameEngine->gameControl->currentSave.clipboard,
+                  gameEngine->gameControl->currentSave.clipboardLength
                );
             }
          }
@@ -395,17 +395,17 @@ void MageHexEditor::renderHexHeader()
    {
       uint8_t clipboardPreviewClamp = MIN(
          (uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
-         gameEngine->gameControl->currentSave->clipboardLength
+         gameEngine->gameControl->currentSave.clipboardLength
       );
       for (uint8_t i = 0; i < clipboardPreviewClamp; i++)
       {
          sprintf(
             clipboardPreview + (i * 2),
             "%02X",
-            *(gameEngine->gameControl->currentSave->clipboard + i)
+            *(gameEngine->gameControl->currentSave.clipboard + i)
          );
       }
-      if (gameEngine->gameControl->currentSave->clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
+      if (gameEngine->gameControl->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
       {
          sprintf(
             clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
@@ -440,7 +440,7 @@ void MageHexEditor::renderHexEditor()
       );
       if (isCopying)
       {
-         for (uint8_t i = 1; i < gameEngine->gameControl->currentSave->clipboardLength; i++)
+         for (uint8_t i = 1; i < gameEngine->gameControl->currentSave.clipboardLength; i++)
          {
             uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
             gameEngine->frameBuffer->fillRect(

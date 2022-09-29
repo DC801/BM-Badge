@@ -269,7 +269,7 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t sizeLimit;
+      uint16_t sizeLimit = 1;
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = 1; }
       if (sanitizedPrimaryType == ANIMATION) { sizeLimit = 1; }
@@ -691,7 +691,7 @@ void MageScriptActions::action_check_save_flag(uint8_t* args, MageScriptState* r
    argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = gameEngine->gameControl->currentSave->saveFlags[byteOffset];
+   uint8_t currentByteValue = gameEngine->gameControl->currentSave.saveFlags[byteOffset];
    bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
    if (bitValue == (bool)argStruct->expectedBoolValue)
@@ -791,7 +791,7 @@ void MageScriptActions::action_check_warp_state(uint8_t* args, MageScriptState* 
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-   bool doesWarpStateMatch = gameEngine->gameControl->currentSave->warpState == argStruct->stringId;
+   bool doesWarpStateMatch = gameEngine->gameControl->currentSave.warpState == argStruct->stringId;
    if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
    {
       gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -1566,7 +1566,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
    argStruct->saveFlagOffset = ROM_ENDIAN_U2_VALUE(argStruct->saveFlagOffset);
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = gameEngine->gameControl->currentSave->saveFlags[byteOffset];
+   uint8_t currentByteValue = gameEngine->gameControl->currentSave.saveFlags[byteOffset];
 
    if (argStruct->newBoolValue)
    {
@@ -1577,7 +1577,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
       // tilde operator inverts all the bits on a byte; Bitwise NOT
       currentByteValue &= ~(0x01u << bitOffset);
    }
-   gameEngine->gameControl->currentSave->saveFlags[byteOffset] = currentByteValue;
+   gameEngine->gameControl->currentSave.saveFlags[byteOffset] = currentByteValue;
 }
 
 void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1651,7 +1651,7 @@ void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* re
    //endianness conversion for arguments larger than 1 byte:
    argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-   gameEngine->gameControl->currentSave->warpState = argStruct->stringId;
+   gameEngine->gameControl->currentSave.warpState = argStruct->stringId;
 }
 
 void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2437,7 +2437,7 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
    auto* argStruct = (ActionMutateVariable*)args;
    //endianness conversion for arguments larger than 1 byte:
    argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
-   uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+   uint16_t* currentValue = &gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
 
    // I wanted to log some stats on how well our random function worked
    // on desktop and hardware after the new random seed changes.
@@ -2486,8 +2486,8 @@ void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionMutateVariables;
    auto* argStruct = (ActionMutateVariables*)args;
-   uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->sourceId];
+   uint16_t* currentValue = &gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
+   uint16_t sourceValue = gameEngine->gameControl->currentSave.scriptVariables[argStruct->sourceId];
 
    mutate(
       argStruct->operation,
@@ -2510,7 +2510,7 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
    } ActionCopyVariable;
    auto* argStruct = (ActionCopyVariable*)args;
    //endianness conversion for arguments larger than 1 byte:
-   uint16_t* currentValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+   uint16_t* currentValue = &gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
 
    int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
@@ -2519,7 +2519,7 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t* variableValue = &gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+      uint16_t* variableValue = &gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
       uint8_t* fieldValue = ((uint8_t*)entity) + argStruct->field;
 
 
@@ -2581,7 +2581,7 @@ void MageScriptActions::action_check_variable(uint8_t* args, MageScriptState* re
    argStruct->value = ROM_ENDIAN_U2_VALUE(argStruct->value);
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   uint16_t variableValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
+   uint16_t variableValue = gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
    bool comparison = compare(
       argStruct->comparison,
       variableValue,
@@ -2608,8 +2608,8 @@ void MageScriptActions::action_check_variables(uint8_t* args, MageScriptState* r
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   uint16_t variableValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = gameEngine->gameControl->currentSave->scriptVariables[argStruct->sourceId];
+   uint16_t variableValue = gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
+   uint16_t sourceValue = gameEngine->gameControl->currentSave.scriptVariables[argStruct->sourceId];
    bool comparison = compare(
       argStruct->comparison,
       variableValue,

@@ -38,37 +38,70 @@ public:
    constexpr uint16_t GeometryCount() const { return geometryCount; }
    constexpr uint16_t ScriptCount() const { return scriptCount; }
 
-   //this returns a global entityId from the local entity index
-   uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const;
-   //this returns a global geometryId from the local geometry index
-   uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
-   //the returns a global mapLocalScriptId from the local script index
-   uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const;
+
+
+   uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
+   {
+      if (entityGlobalIds.empty()) return 0;
+      return entityGlobalIds[mapLocalEntityId % entityGlobalIds.size()];
+   }
+
+   uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
+   {
+      if (geometryGlobalIds.empty()) return 0;
+      return geometryGlobalIds[mapLocalGeometryId % geometryGlobalIds.size()];
+   }
+
+   uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const
+   {
+      if (scriptGlobalIds.empty()) { return 0; }
+      return scriptGlobalIds[mapLocalScriptId % scriptGlobalIds.size()];
+   }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
-      return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
+      if (entityCount == 0) { return 0; }
+      return filteredMapLocalEntityIds[mapLocalEntityId % entityCount];
    }
 
    uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const
    {
-      return mapLocalEntityIds[filteredEntityId % MAX_ENTITIES_PER_MAP];
+      if (filteredEntityCountOnThisMap == 0) { return 0; }
+      return mapLocalEntityIds[filteredEntityId % filteredEntityCountOnThisMap];
    }
-
-   std::string getDirectionNames() const;
-   uint16_t getDirectionScriptId(std::string directionName) const;
 
    uint32_t LayerOffset(uint16_t num) const
    {
-      if (mapLayerOffsets.empty()) return 0;
+      if (mapLayerOffsets.empty() || num >= layerCount) { return 0; }
 
-      if (layerCount > num)
-      {
-         return mapLayerOffsets[num];
-      }
-
-      return 0;
+      return mapLayerOffsets[num];
    }
+
+   std::string getDirectionNames() const
+   {
+      std::string result = "";
+      for (auto& goDirection : goDirections)
+      {
+         result += "\t";
+         result += goDirection.name;
+      }
+      return result;
+   }
+
+   uint16_t getDirectionScriptId(const std::string directionName) const
+   {
+      uint16_t result = 0;
+      for (auto& direction : goDirections)
+      {
+         if (direction.name == directionName)
+         {
+            result = direction.mapLocalScriptId;
+            break;
+         }
+      }
+      return result;
+   }
+
    constexpr uint8_t getPlayerEntityIndex() const { return playerEntityIndex; }
    constexpr uint16_t GetOnLoad() const { return onLoad; }
    constexpr uint16_t GetOnLook() const { return onLook; }
@@ -87,7 +120,7 @@ private:
 
    struct GoDirection
    {
-      std::string name{ MAP_GO_DIRECTION_NAME_LENGTH, 0 };
+      const char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
       uint16_t mapLocalScriptId{ 0 };
       uint16_t padding{ 0 };
    };

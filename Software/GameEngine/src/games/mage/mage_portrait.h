@@ -10,12 +10,12 @@ public:
 	MagePortrait() noexcept = default;
 	MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t& address);
 
-	const MageEntityTypeAnimationDirection* getEmoteById(uint8_t emoteId) const
+	const MageEntityTypeAnimation::Direction* getEmoteById(uint8_t emoteId) const
 	{
 		return &emotes[emoteId % emotes.size()];
 	}
 private:
-	std::vector<MageEntityTypeAnimationDirection> emotes{};
+	std::vector<MageEntityTypeAnimation::Direction> emotes{};
 };
 
 

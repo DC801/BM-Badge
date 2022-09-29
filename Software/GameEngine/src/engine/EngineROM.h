@@ -70,11 +70,11 @@ struct EngineROM
 {
    //this 'identifier' will appear at the start of game.dat.
    //it is used to verify that the binary file is formatted correctly.
-   static const inline std::string GameIdentifierString{ "MAGEGAME" };
+   static inline const char* GameIdentifierString{ "MAGEGAME" };
 
    //this is the 'magic string' that will appear at the start of game.dat.
    //it is used to verify that the binary file is formatted correctly.
-   static const inline std::string SaveIdentifierString{ "MAGESAVE" };
+   static inline const char* SaveIdentifierString{ "MAGESAVE" };
 
    EngineROM() noexcept;
    ~EngineROM() = default;

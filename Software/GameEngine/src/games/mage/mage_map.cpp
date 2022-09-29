@@ -100,49 +100,6 @@ void MageMap::LoadMap(uint16_t index)
    }
 }
 
-uint16_t MageMap::getGlobalEntityId(uint16_t mapLocalEntityId) const
-{
-   if (entityGlobalIds.empty()) return 0;
-   return entityGlobalIds[mapLocalEntityId % entityGlobalIds.size()];
-}
-
-uint16_t MageMap::getGlobalGeometryId(uint16_t mapLocalGeometryId) const
-{
-   if (geometryGlobalIds.empty()) return 0;
-   return geometryGlobalIds[mapLocalGeometryId % geometryGlobalIds.size()];
-}
-
-uint16_t MageMap::getGlobalScriptAddress(uint16_t mapLocalScriptId) const
-{
-   if (scriptGlobalIds.empty()) return 0;
-   return scriptGlobalIds[mapLocalScriptId % scriptGlobalIds.size()];
-}
-
-std::string MageMap::getDirectionNames() const
-{
-   std::string result = "";
-   for (auto& goDirection : goDirections)
-   {
-      result += "\t";
-      result += goDirection.name;
-   }
-   return result;
-}
-
-uint16_t MageMap::getDirectionScriptId(const std::string directionName) const
-{
-   uint16_t result = 0;
-   for (auto& direction : goDirections)
-   {
-      if (direction.name == directionName)
-      {
-         result = direction.mapLocalScriptId;
-         break;
-      }
-   }
-   return result;
-}
-
 void MageMap::DrawEntities(MageGameEngine* gameEngine)
 {
    int32_t cameraX = gameEngine->gameControl->camera.adjustedCameraPosition.x;

@@ -10,8 +10,8 @@ MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 	auto emoteCount = uint8_t{ 0 };
 	ROM->Read(&emoteCount, address);
 
-	emotes = std::vector<MageEntityTypeAnimationDirection>(emoteCount);
+	emotes = std::vector<MageEntityTypeAnimation::Direction>(emoteCount);
 	for(uint32_t i = 0; i < emoteCount; i++) {
-		emotes[i] = MageEntityTypeAnimationDirection{ ROM, address };
+		emotes[i] = MageEntityTypeAnimation::Direction{ ROM, address };
 	}
 }

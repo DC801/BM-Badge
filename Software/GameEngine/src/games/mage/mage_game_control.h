@@ -63,7 +63,7 @@ public:
    uint8_t playerEntityIndex{ NO_PLAYER };
 
    uint8_t currentSaveIndex;
-   std::unique_ptr<MageSaveGame> currentSave{};
+   MageSaveGame currentSave{};
 
    //this lets us make it so that inputs stop working for the player
    bool playerHasControl{ false };

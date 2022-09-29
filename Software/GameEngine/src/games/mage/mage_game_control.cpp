@@ -88,9 +88,9 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
 #endif
 
    //load the map
-   currentSave->currentMapId = currentSave->currentMapId % (mapHeader.count());
+   currentSave.currentMapId = currentSave.currentMapId % (mapHeader.count());
 
-   auto mapOffset = mapHeader.offset(currentSave->currentMapId);
+   auto mapOffset = mapHeader.offset(currentSave.currentMapId);
    map = std::make_unique<MageMap>(gameEngine->ROM, mapOffset, std::move(mapHeader), std::move(entityHeader));
 
    playerEntityIndex = map->getPlayerEntityIndex();
@@ -106,9 +106,9 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
 
 void MageGameControl::setCurrentSaveToFreshState()
 {
-   auto newSave = std::make_unique<MageSaveGame>();
-   newSave->scenarioDataCRC32 = gameEngine->scenarioDataCRC32;
-   currentSave = std::move(newSave);
+   auto newSave = MageSaveGame{};
+   newSave.scenarioDataCRC32 = gameEngine->scenarioDataCRC32;
+   currentSave = newSave;
 }
 
 void MageGameControl::readSaveFromRomIntoRam(bool silenceErrors)
@@ -116,12 +116,12 @@ void MageGameControl::readSaveFromRomIntoRam(bool silenceErrors)
    gameEngine->ROM->ReadSaveSlot(
       currentSaveIndex,
       sizeof(MageSaveGame),
-      (uint8_t*)currentSave.get()
+      (uint8_t*)&currentSave
    );
 
-   bool engineIncompatible = currentSave->engineVersion != gameEngine->engineVersion;
-   bool saveLengthIncompatible = currentSave->saveDataLength != sizeof(MageSaveGame);
-   bool scenarioIncompatible = currentSave->scenarioDataCRC32 != gameEngine->scenarioDataCRC32;
+   bool engineIncompatible = currentSave.engineVersion != gameEngine->engineVersion;
+   bool saveLengthIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
+   bool scenarioIncompatible = currentSave.scenarioDataCRC32 != gameEngine->scenarioDataCRC32;
    if (engineIncompatible
       || saveLengthIncompatible
       || scenarioIncompatible)
@@ -158,7 +158,7 @@ void MageGameControl::saveGameSlotSave()
    gameEngine->ROM->WriteSaveSlot(
       currentSaveIndex,
       sizeof(MageSaveGame),
-      currentSave.get()
+      &currentSave
    );
    readSaveFromRomIntoRam();
 }
@@ -174,7 +174,7 @@ void MageGameControl::saveGameSlotLoad(uint8_t slotIndex)
 {
    currentSaveIndex = slotIndex;
    readSaveFromRomIntoRam();
-   //LoadMap(currentSave->currentMapId);
+   //LoadMap(currentSave.currentMapId);
 }
 
 void MageGameControl::LoadMap(uint16_t index)
@@ -217,9 +217,9 @@ void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const
    {
       return;
    }
-   auto playerEntity = getEntityByMapLocalId(playerEntityIndex);
+   auto playerEntity = &map->entities[map->getPlayerEntityIndex()];
    uint8_t* destination = (uint8_t*)&playerEntity->name;
-   uint8_t* source = (uint8_t*)&currentSave->name;
+   uint8_t* source = (uint8_t*)&currentSave.name;
    if (intoSaveRam)
    {
       uint8_t* temp = destination;
@@ -238,13 +238,13 @@ void MageGameControl::applyUniversalInputs()
    //make map reload global regardless of player control state:
    if (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem3))
    {
-      gameEngine->scriptControl->mapLoadId = currentSave->currentMapId;
+      gameEngine->scriptControl->mapLoadId = currentSave.currentMapId;
    }
    if (gameEngine->inputHandler->GetButtonState(KeyPress::Xor) && gameEngine->inputHandler->GetButtonState(KeyPress::Mem1)
       || gameEngine->inputHandler->GetButtonState(KeyPress::Mem1) && gameEngine->inputHandler->GetButtonState(KeyPress::Xor))
    {
       isEntityDebugOn = !isEntityDebugOn;
-      LoadMap(currentSave->currentMapId);
+      LoadMap(currentSave.currentMapId);
       return;
    }
    //check to see if player input is allowed:
@@ -1081,7 +1081,7 @@ std::string MageGameControl::getString(uint16_t stringId, int16_t mapLocalEntity
          variableStartPosition - (variableEndPosition - 2)
       );
       int parsedVariableIndex = std::stoi(variableHolder);
-      uint16_t variableValue = currentSave->scriptVariables[parsedVariableIndex];
+      uint16_t variableValue = currentSave.scriptVariables[parsedVariableIndex];
       std::string valueString = std::to_string(variableValue);
       outputString += valueString.c_str();
       variableStartPosition = variableEndPosition + 1;
