@@ -64,7 +64,7 @@ class MageEntityType
 {
 public:
    MageEntityType() = default;
-   MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t address);
+   MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t& address);
 
    uint8_t PortraitId() const { return portraitId; }
    uint8_t AnimationCount() const { return entityTypeAnimations.size(); }
@@ -80,7 +80,6 @@ public:
          return *entityTypeAnimations.end();
       }
    }
-   uint32_t Size() const;
 
 private:
    uint8_t portraitId{ 0 };

@@ -21,6 +21,17 @@ enum class MageGeometryType : uint8_t
 class MageGeometry
 {
 public:
+   //default constructor returns a point with coordinates 0,0:
+   MageGeometry() = default;
+
+   //this constructor allows you to make a geometry of a known type and pointCount.
+   //you'll need to manually fill in the points, though. They all default to 0,0.
+   MageGeometry(MageGeometryType type, uint8_t numPoints);
+
+   //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
+   MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address);
+
+
    //can be any MageGeometryType:
    MageGeometryType typeId{ MageGeometryType::Point };
    //how many points will be in the pointArray:
@@ -33,16 +44,6 @@ public:
    std::unique_ptr<Point[]> points{ std::make_unique<Point[]>(pointCount) };
    //the array of segment lengths:
    std::unique_ptr<float[]> segmentLengths{ std::make_unique<float[]>(segmentCount) };
-
-   //default constructor returns a point with coordinates 0,0:
-   MageGeometry() = default;
-
-   //this constructor allows you to make a geometry of a known type and pointCount.
-   //you'll need to manually fill in the points, though. They all default to 0,0.
-   MageGeometry(MageGeometryType type, uint8_t numPoints);
-
-   //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
-   MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address);
 
    void flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height);
 

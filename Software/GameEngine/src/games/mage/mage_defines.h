@@ -20,6 +20,7 @@ all of the old code used as the foundation of this badge.
 #include <memory>
 #include <utility>
 #include <string>
+#include <optional>
 
 #define ENGINE_VERSION 3
 
@@ -85,7 +86,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_SCRIPT_VARIABLE_COUNT 256
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
-#define MAGE_NO_SCRIPT (-1)
+#define MAGE_NO_SCRIPT std::nullopt
 #define MAGE_NO_MAP (-1)
 #define MAGE_NO_WARP_STATE ((uint16_t)-1)
 #define MAGE_NULL_SCRIPT 0
@@ -125,10 +126,9 @@ typedef enum : uint8_t
 {
    TILESET = 0,
    ANIMATION = 1,
-   ENTITY_TYPE = 2,
-   NUM_PRIMARY_ID_TYPES
+   ENTITY_TYPE = 2
 } MageEntityPrimaryIdType;
-
+#define NUM_PRIMARY_ID_TYPES 3
 
 #define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000
@@ -146,8 +146,8 @@ struct Point
 {
    int32_t x{ 0 };
    int32_t y{ 0 };
-   
-   float VectorLength() const 
+
+   float VectorLength() const
    {
       return sqrt((x * x) + (y * y));
    };
@@ -155,7 +155,7 @@ struct Point
    constexpr float DotProduct(Point b) const
    {
       return (float)x * (float)b.x
-           + (float)y * (float)b.y;
+         + (float)y * (float)b.y;
    };
 };
 
@@ -169,9 +169,9 @@ struct Rect
    constexpr bool Overlaps(Rect& other) const
    {
       return x <= (other.x + other.w)
-          && (x + w) >= other.x
-          && y <= (other.y + other.h)
-          && (y + h) >= other.y;
+         && (x + w) >= other.x
+         && y <= (other.y + other.h)
+         && (y + h) >= other.y;
    }
 };
 
@@ -179,6 +179,18 @@ struct Rect
 //this is a structure to hold information about the currently executing scripts so they can resume
 struct MageScriptState
 {
+   MageScriptState() noexcept = default;
+
+   MageScriptState(
+      uint16_t scriptId,
+      bool scriptIsRunning,
+      bool isGlobalExecutionScope = false
+   ) noexcept
+      :currentScriptId(scriptId),
+      scriptIsRunning(scriptIsRunning),
+      isGlobalExecutionScope(isGlobalExecutionScope)
+   {}
+
    //indicated whether or not an active script is running on this MageScriptState
    bool scriptIsRunning{ false };
    bool isGlobalExecutionScope{ false };

@@ -3,85 +3,30 @@
 #include "convert_endian.h"
 #include "shim_err.h"
 
-MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t address)
+MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
    //skip over name:
    address += 32;
-   //read typeId:
-   ROM->Read(
-      address,
-      sizeof(typeId),
-      (uint8_t*)&typeId
-   );
-   address += sizeof(typeId);
-
-   //read pointCount:
-   ROM->Read(
-      address,
-      sizeof(pointCount),
-      (uint8_t*)&pointCount
-   );
+   ROM->Read(&typeId, address);
+   ROM->Read(&pointCount, address);
    address += sizeof(pointCount);
 
    //read segmentCount:
-   ROM->Read(
-      address,
-      sizeof(segmentCount),
-      (uint8_t*)&segmentCount
-   );
-   address += sizeof(segmentCount);
+   ROM->Read(&segmentCount, address);
 
    address += 1; //padding
 
    //read pathLength:
-   ROM->Read(
-      address,
-      sizeof(pathLength),
-      (uint8_t*)&pathLength
-   );
-   pathLength = ROM_ENDIAN_F4_VALUE(pathLength);
-   address += sizeof(pathLength);
+   ROM->Read(&pathLength, address);
 
    //generate appropriately sized point array:
    points = std::make_unique<Point[]>(pointCount);
-
-   //fill array one point at a time:
-   for (int i = 0; i < pointCount; i++)
-   {
-      uint16_t x;
-      uint16_t y;
-      //get x value:
-      ROM->Read(
-         address,
-         sizeof(x),
-         (uint8_t*)&x
-      );
-      x = ROM_ENDIAN_U2_VALUE(x);
-      address += sizeof(x);
-      //get y value:
-      ROM->Read(
-         address,
-         sizeof(y),
-         (uint8_t*)&y
-      );
-      y = ROM_ENDIAN_U2_VALUE(y);
-      address += sizeof(y);
-      //assign values:
-      points[i].x = x;
-      points[i].y = y;
-   }
+   ROM->Read(points.get(), address, pointCount);
 
    //generate appropriately sized array:
    segmentLengths = std::make_unique<float[]>(segmentCount);
 
-   ROM->Read(
-      address,
-      sizeof(float) * segmentCount,
-      (uint8_t*)segmentLengths.get()
-   );
-   ROM_ENDIAN_F4_BUFFER(segmentLengths.get(), segmentCount);
-
-   return;
+   ROM->Read(segmentLengths.get(), address, segmentCount);
 }
 
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)

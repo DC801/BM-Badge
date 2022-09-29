@@ -10,6 +10,7 @@ in a more accessible way.
 #include "mage_entity_type.h"
 #include "EngineROM.h"
 
+#include <array>
 #include <vector>
 
 class MageMap
@@ -18,12 +19,13 @@ class MageMap
    friend class MageScriptControl;
    friend class MageHexEditor;
 public:
-   MageMap(std::shared_ptr<EngineROM> ROM, uint32_t address);
+   MageMap(std::shared_ptr<EngineROM> ROM, uint32_t& address, MageHeader mapHeader, MageHeader entityHeader) noexcept
+      : ROM(ROM), mapHeader(std::move(mapHeader)), entityHeader(std::move(entityHeader))
+      {}
 
    //this takes map data by index and fills all the variables in the map object:
    /*void PopulateMapData(uint16_t index);*/
-
-   void PopulateData(MageGameEngine* gameEngine);
+   void LoadMap(uint16_t index);
    void DrawEntities(MageGameEngine* engine);
 
    std::string Name() const { return std::string(name); }
@@ -41,7 +43,7 @@ public:
    //this returns a global geometryId from the local geometry index
    uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
    //the returns a global mapLocalScriptId from the local script index
-   uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
+   uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const;
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
@@ -75,11 +77,13 @@ public:
    constexpr void SetOnTick(uint16_t tickId) { onTick = tickId; }
 private:
    std::shared_ptr<EngineROM> ROM;
+   MageHeader mapHeader;
+   MageHeader entityHeader;
 
    bool isEntityDebugOn{ false };
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
-   std::vector<MageEntity> entities{ MAX_ENTITIES_PER_MAP };
+   std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
 
    struct GoDirection
    {

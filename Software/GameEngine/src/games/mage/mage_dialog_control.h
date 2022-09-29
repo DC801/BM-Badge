@@ -10,6 +10,7 @@
 #include "mage_hex.h"
 #include "engine/EngineInput.h"
 #include "mage.h"
+#include <optional>
 
 #define DIALOG_SCREEN_NO_PORTRAIT 255
 
@@ -69,7 +70,6 @@ struct MageDialogScreen
 /*
 
 struct MageDialogScreen {
-k
       uint16_t  name_index;
       uint16_t  border_tileset_index;
       dialog_screen_alignment_type  alignment;
@@ -112,7 +112,6 @@ struct MageDialog
 {
    char name[32];
    uint32_t screenCount;
-
 };
 
 class MageDialogControl
@@ -130,13 +129,11 @@ public:
    void loadCurrentScreenPortrait();
    uint32_t getDialogAddress(uint16_t dialogId) const;
    constexpr bool isOpen() const { return open; }
-   int32_t getJumpScriptId() const { return jumpScriptId; }
 
 private:
    MageGameEngine* gameEngine;
 
    MageHeaderFor<MageDialog> dialogHeader;
-   int32_t jumpScriptId{ MAGE_NO_SCRIPT };
    bool open{ false };
 
    char dialogName[32];

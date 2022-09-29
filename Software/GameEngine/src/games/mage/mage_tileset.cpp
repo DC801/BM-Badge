@@ -6,71 +6,18 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
    : ROM(ROM), offset(address)
 {
 #ifndef DC801_EMBEDDED
-   ROM->Read(
-      offset,
-      16,
-      (uint8_t*)name
-   );
+   ROM->Read(name, offset, TILESET_NAME_SIZE);
+#else
+   offset += TILESET_NAME_SIZE;
 #endif
 
-   offset += TILESET_NAME_SIZE;
-
-   ROM->Read(
-      offset,
-      sizeof(imageId),
-      (uint8_t*)&imageId
-   );
-   imageId = ROM_ENDIAN_U2_VALUE(imageId);
-   offset += sizeof(imageId);
-
-   ROM->Read(
-      offset,
-      sizeof(imageWidth),
-      (uint8_t*)&imageWidth
-   );
-   imageWidth = ROM_ENDIAN_U2_VALUE(imageWidth);
-   offset += sizeof(imageWidth);
-
-   ROM->Read(
-      offset,
-      sizeof(imageHeight),
-      (uint8_t*)&imageHeight
-   );
-   imageHeight = ROM_ENDIAN_U2_VALUE(imageHeight);
-   offset += sizeof(imageHeight);
-
-   ROM->Read(
-      offset,
-      sizeof(tileWidth),
-      (uint8_t*)&tileWidth
-   );
-   tileWidth = ROM_ENDIAN_U2_VALUE(tileWidth);
-   offset += sizeof(tileWidth);
-
-   ROM->Read(
-      offset,
-      sizeof(tileHeight),
-      (uint8_t*)&tileHeight
-   );
-   tileHeight = ROM_ENDIAN_U2_VALUE(tileHeight);
-   offset += sizeof(tileHeight);
-
-   ROM->Read(
-      offset,
-      sizeof(cols),
-      (uint8_t*)&cols
-   );
-   cols = ROM_ENDIAN_U2_VALUE(cols);
-   offset += sizeof(cols);
-
-   ROM->Read(
-      offset,
-      sizeof(rows),
-      (uint8_t*)&rows
-   );
-   rows = ROM_ENDIAN_U2_VALUE(rows);
-   offset += sizeof(rows);
-
+   ROM->Read(&imageId, offset);
+   ROM->Read(&imageWidth, offset);
+   ROM->Read(&imageHeight, offset);
+   ROM->Read(&tileWidth, offset);
+   ROM->Read(&tileHeight, offset);
+   ROM->Read(&cols, offset);
+   ROM->Read(&rows, offset);
    offset += sizeof(uint16_t); // u2 padding before the geometry IDs
 
    if (!Valid())
@@ -92,11 +39,8 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
 uint16_t MageTileset::getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
 {
    uint16_t globalGeometryId = 0;
-   ROM->Read(
-      offset + tileIndex * sizeof(globalGeometryId),
-      sizeof(globalGeometryId),
-      (uint8_t*)&globalGeometryId
-   );
+   auto geometryAddress = offset + tileIndex * sizeof(globalGeometryId);
+   ROM->Read(&globalGeometryId, geometryAddress);
    globalGeometryId = ROM_ENDIAN_U2_VALUE(globalGeometryId);
    return globalGeometryId;
 }

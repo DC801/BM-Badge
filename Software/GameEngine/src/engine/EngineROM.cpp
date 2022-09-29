@@ -13,8 +13,6 @@
 extern QSPI qspiControl;
 
 #else
-FILE* romfile = NULL;
-char* romDataInDesktopRam = new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 };
 char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
    DESKTOP_SAVE_FILE_PATH "save_0.dat",
    DESKTOP_SAVE_FILE_PATH "save_1.dat",
@@ -197,10 +195,22 @@ EngineROM::EngineROM() noexcept
    result = f_close(&gameDat);
 #else
    auto romFileSize = 0;
-   if (std::filesystem::exists(MAGE_GAME_DAT_PATH))
+
+   auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
+   if (std::filesystem::exists(filePath))
    {
       romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
-      printf("EngineROM::Init - romFileSize: %d\n", romFileSize);
+
+      if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      {
+         ENGINE_PANIC(
+            "Desktop build:\n"
+            "    Invalid ROM file size!\n"
+            "    This is larger than the hardware's\n"
+            "    ROM chip capacity!\n"
+         );
+      }
+      romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
    }
    else
    {
@@ -211,30 +221,18 @@ EngineROM::EngineROM() noexcept
       );
    }
 
-   if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-   {
-      ENGINE_PANIC(
-         "Desktop build:\n"
-         "    Invalid ROM file size!\n"
-         "    This is larger than the hardware's\n"
-         "    ROM chip capacity!\n"
-      );
-   }
 
-   auto file = std::ifstream{ MAGE_GAME_DAT_PATH, std::ios::binary };
-
-   //] copy the file into the buffer
-   if (!file.read(romDataInDesktopRam, romFileSize))
+   // copy the file into the buffer
+   if (!romFile.read(romDataInDesktopRam.get(), romFileSize))
    {
       ENGINE_PANIC("Desktop build: ROM->RAM read failed");
    }
-   file.close();
 #endif
 
    // Verify magic string is on ROM when we're done:
-   if (!EngineROM::Magic())
+   if (!Magic())
    {
-      EngineROM::ErrorUnplayable();
+      ErrorUnplayable();
    }
 }
 
@@ -488,7 +486,7 @@ bool EngineRom::SD_Copy(
          {
             debug_print("Write Size at %d is %d", i, writeSize);
          }
-         EngineRom::Write(
+         Write(
             currentAddress + romPageOffset,
             writeSize,
             (uint8_t*)(sdReadBuffer + romPageOffset)
@@ -545,45 +543,45 @@ bool EngineRom::SD_Copy(
 }
 #endif //DC801_EMBEDDED
 
-bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data)
-{
-   if (data == NULL)
-   {
-      ENGINE_PANIC("EngineROM::Read: Null pointer");
-   }
-
-#ifdef DC801_EMBEDDED
-   //this is the number of whole words to read from the starting adddress:
-   uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
-   //read in all but the last word if aligned data
-   uint32_t* dataU32 = (uint32_t*)data;
-   //get word-aligned pointers to the ROM:
-   volatile uint32_t* romDataU32 = (volatile uint32_t*)(ROM_START_ADDRESS + address);
-   for (uint32_t i = 0; i < truncatedAlignedLength; i++)
-   {
-      dataU32[i] = romDataU32[i];
-   }
-   //now we need to convert the word-aligned number of reads back to a uint8_t aligned
-   //value where we will start reading the remaining bytes.
-   truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
-   uint32_t numUnalignedBytes = length - truncatedAlignedLength;
-   if (numUnalignedBytes)
-   {
-      address += truncatedAlignedLength;
-      //get byte-aligned rom data at the new address:
-      volatile uint8_t* romDataU8 = (volatile uint8_t*)(ROM_START_ADDRESS + address);
-      //fill in the unaligned bytes only and ignore the rest:
-      for (uint8_t i = 0; i < numUnalignedBytes; i++)
-      {
-         data[truncatedAlignedLength + i] = romDataU8[i];
-      }
-   }
-#else
-   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM::Read: address + length exceeds maximum dat file size"); }
-   memmove(data, romDataInDesktopRam + address, length);
-#endif
-   return true;
-}
+//bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data) const
+//{
+//   if (data == NULL)
+//   {
+//      ENGINE_PANIC("EngineROM::Read: Null pointer");
+//   }
+//
+//#ifdef DC801_EMBEDDED
+//   //this is the number of whole words to read from the starting adddress:
+//   uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
+//   //read in all but the last word if aligned data
+//   uint32_t* dataU32 = (uint32_t*)data;
+//   //get word-aligned pointers to the ROM:
+//   volatile uint32_t* romDataU32 = (volatile uint32_t*)(ROM_START_ADDRESS + address);
+//   for (uint32_t i = 0; i < truncatedAlignedLength; i++)
+//   {
+//      dataU32[i] = romDataU32[i];
+//   }
+//   //now we need to convert the word-aligned number of reads back to a uint8_t aligned
+//   //value where we will start reading the remaining bytes.
+//   truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
+//   uint32_t numUnalignedBytes = length - truncatedAlignedLength;
+//   if (numUnalignedBytes)
+//   {
+//      address += truncatedAlignedLength;
+//      //get byte-aligned rom data at the new address:
+//      volatile uint8_t* romDataU8 = (volatile uint8_t*)(ROM_START_ADDRESS + address);
+//      //fill in the unaligned bytes only and ignore the rest:
+//      for (uint8_t i = 0; i < numUnalignedBytes; i++)
+//      {
+//         data[truncatedAlignedLength + i] = romDataU8[i];
+//      }
+//   }
+//#else
+//   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM::Read: address + length exceeds maximum dat file size"); }
+//   memmove(data, romDataInDesktopRam.get() + address, length);
+//#endif
+//   return true;
+//}
 
 bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)
 {
@@ -607,17 +605,17 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
    }
    return true;
 #else
-   if (romfile == NULL)
+   if (!romFile.good())
    {
       ENGINE_PANIC("Game Data file is not open");
    }
 
-   if (fseek(romfile, address, SEEK_SET) != 0)
+   if (romFile.seekp(address, std::ios_base::beg))
    {
       ENGINE_PANIC("Failed to seek into Game Data");
    }
 
-   return fwrite(data, sizeof(uint8_t), length, romfile) == length;
+   romFile.write((const char*)data, length);
 #endif
 }
 

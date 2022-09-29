@@ -23,7 +23,7 @@ public:
 
 	MageColorPalette() noexcept = default;
 
-	MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept;
+	MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept;
 
 	MageColorPalette(
 		FrameBuffer* frameBuffer,

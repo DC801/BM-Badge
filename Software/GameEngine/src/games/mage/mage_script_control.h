@@ -54,7 +54,7 @@ public:
    //the jumpScriptId variable is used by some actions to indicate that a script should
    //end and immediately begin running a new script.
    //it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
-   int32_t jumpScriptId{ MAGE_NO_SCRIPT };
+   std::optional<uint16_t> jumpScriptId{ MAGE_NO_SCRIPT };
 
    //this is a variable that tracks which entity called an action.
    //If the action was called by the map, the value will be MAGE_MAP_ENTITY.
@@ -71,7 +71,7 @@ public:
    int32_t mapLoadId{ MAGE_NO_MAP };
 
    //these functions return the specified MageScriptState struct:
-   resumeStatesStruct resumeStates{ 0 };
+   resumeStatesStruct resumeStates{ };
    MageScriptState* commandStates[COMMAND_STATES_COUNT] = {
       &resumeStates.commandLook,
       &resumeStates.commandGo,
@@ -87,15 +87,6 @@ public:
    //returns size in RAM of all reserved class variables.
    uint32_t size() const;
 
-   //this resets the values of a MageScriptState struct to default values.
-   //you need to provide a scriptId, and the state of the scriptIsRunning variable
-   //the actionId, and duration variables are always reset to 0 on an init.
-   void initScriptState(
-      MageScriptState* resumeStateStruct,
-      uint16_t scriptId,
-      bool scriptIsRunning,
-      bool isGlobalExecutionScope = false
-   );
    MageScriptState* getEntityInteractResumeState(uint8_t index);
    MageScriptState* getEntityTickResumeState(uint8_t index);
 
@@ -110,10 +101,11 @@ public:
 
 private:
    MageGameEngine*  gameEngine;
+   //MageHeaderFor<MageScript> scriptHeader;
 
    //variables for tracking suspended script states:
-   MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ 0 };
-   MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ 0 };
+   MageScriptState entityInteractResumeStates[MAX_ENTITIES_PER_MAP]{ };
+   MageScriptState entityTickResumeStates[MAX_ENTITIES_PER_MAP]{ };
 
    //this will process a script based on the state of the resumeStateStruct passed to it.
    //it should only be called from the 

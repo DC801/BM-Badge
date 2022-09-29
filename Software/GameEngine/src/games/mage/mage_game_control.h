@@ -49,6 +49,7 @@ class MageGameControl
 {
    friend class MageGameEngine;
    friend class MageScriptActions;
+   friend class MageCommandControl;
    friend class MageScriptControl;
    friend class MageDialogControl;
    friend class MageEntity;
@@ -120,9 +121,9 @@ public:
 
    //the functions below will validate specific properties to see if they are valid.
    //these are used to ensure that we don't get segfaults from using the hacked entity data.
-   uint16_t getValidMapId(uint16_t mapId);
-   uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
-   uint16_t getValidTilesetId(uint16_t tilesetId);
+   //uint16_t getValidMapId(uint16_t mapId);
+   //uint8_t getValidPrimaryIdType(uint8_t primaryIdType);
+   //uint16_t getValidTilesetId(uint16_t tilesetId);
    uint16_t getValidTileId(uint16_t tileId, uint16_t tilesetId);
 
    uint16_t getValidAnimationId(uint16_t animationId) const
@@ -166,13 +167,11 @@ public:
    MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
    const MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
    MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId);
-   MageEntity::RenderableData* getEntityRenderableDataByMapLocalId(uint8_t mapLocalEntityId);
+
    std::string getString(uint16_t stringId, int16_t mapLocalEntityId);
    MageTileset* getValidTileset(uint16_t tilesetId);
    std::string getEntityNameStringById(int8_t mapLocalEntityId);
-   uint32_t getImageAddress(uint16_t imageId);
-   uint32_t getPortraitAddress(uint16_t portraitId);
-   uint32_t getSerialDialogAddress(uint16_t serialDialogId);
+
 
    //this returns the address offset for a specific script Id:
    uint32_t getScriptAddressFromGlobalScriptId(uint32_t scriptId);
@@ -190,10 +189,6 @@ public:
    void verifyAllColorPalettes(const char* errorTriggerDescription);
 #endif
 
-   uint16_t entityTypeCount() const { return entityTypes.size(); }
-   uint16_t animationCount() const { return animations.size(); }
-   uint16_t tilesetCount() const { return tilesets.size(); }
-
    void logAllEntityScriptValues(const char* string);
    void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck=true);
 private:
@@ -207,7 +202,7 @@ private:
    //std::unique_ptr<MageHeader> tilesetHeader;
    //std::unique_ptr<MageHeader> animationHeader;
    //std::unique_ptr<MageHeader> entityTypeHeader;
-   std::unique_ptr<MageHeader> entityHeader;
+   //std::unique_ptr<MageHeader> entityHeader;
    std::unique_ptr<MageHeader> geometryHeader;
    //std::unique_ptr<MageHeader> scriptHeader;
    //std::unique_ptr<MageHeader> portraitHeader;

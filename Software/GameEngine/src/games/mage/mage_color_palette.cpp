@@ -10,41 +10,28 @@
 #include <emscripten.h>
 #endif // EMSCRIPTEN
 
-MageColorPalette::MageColorPalette(
-	std::shared_ptr<EngineROM> ROM, 
-	uint32_t address) noexcept
+MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept
 {
 #ifndef DC801_EMBEDDED
 	// Read name only if we're on Desktop,
 	// Embedded don't got RAM for that
-	ROM->Read(
-		address,
-		COLOR_PALETTE_NAME_LENGTH,
-		(uint8_t *)name
-	);
+	ROM->Read(name, address, COLOR_PALETTE_NAME_LENGTH );
 	name[32] = 0; //manually set to null
-#endif
+	address += 1; // skip null byte
+#else
 	// Regardless of reading/storing it, ALWAYS increment past it
 	address += COLOR_PALETTE_NAME_LENGTH;
+#endif
 
 	// Read colorCount
-	ROM->Read(
-		address,
-		sizeof(colorCount),
-		(uint8_t *)&colorCount
-	);
-	address += sizeof(colorCount);
+	ROM->Read(&colorCount, address);
 	address += 1; // padding
 
 	// Construct array
 	colors = std::make_unique<uint16_t[]>(colorCount);
 	// The encoder writes these colors BigEndian because the Screen's
 	// data format is also BigEndian, so just don't convert these.
-	ROM->Read(
-		address,
-		colorCount * sizeof(uint16_t),
-		(uint8_t *)colors.get()
-	);
+	ROM->Read(colors.get(), address, colorCount);
 
 	#ifndef DC801_EMBEDDED
 	generatePaletteIntegrityString(colorIntegrityString);

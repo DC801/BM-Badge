@@ -165,7 +165,7 @@ void MageGameEngine::GameRender()
       }
 
       //now that the entities are updated, draw them to the screen.
-      gameControl->DrawEntities();
+      gameControl->Map()->DrawEntities(this);
 #ifdef TIMING_DEBUG
       diff = millis() - now;
       debug_print("Entity Time: %d", diff);

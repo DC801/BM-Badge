@@ -4,10 +4,7 @@
 
 MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 {
-   ROM->Read(offset,
-      sizeof(typeId),
-      (uint8_t*)&typeId
-   );
+   ROM->Read(&typeId, offset);
    // Endianness conversion
    typeId = ROM_ENDIAN_U2_VALUE(typeId);
 
@@ -15,40 +12,28 @@ MageEntityTypeAnimationDirection::MageEntityTypeAnimationDirection(std::shared_p
    offset += sizeof(typeId);
 
    // Read count
-   ROM->Read(offset,
-      sizeof(type),
-      (uint8_t*)&type
-   );
+   ROM->Read(&type, offset);
 
    // Increment offset
    offset += sizeof(type);
 
    // Read count
-   ROM->Read(offset,
-      sizeof(renderFlags),
-      (uint8_t*)&renderFlags
-   );
+   ROM->Read(&renderFlags, offset);
 }
 
 
-MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t address)
+MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
    address += 32; // skip over reading the name, no need to hold that in ram
    address += sizeof(uint8_t) + sizeof(uint8_t); // paddingA + paddingB
 
    // Read portraitId
-   ROM->Read(address,
-      sizeof(portraitId),
-      (uint8_t*)&portraitId
-   );
+   ROM->Read(&portraitId, address);
    address += sizeof(portraitId);
 
    auto animationCount = uint16_t{ 0 };
    // Read animationCount
-   ROM->Read(address,
-      sizeof(animationCount),
-      (uint8_t*)&animationCount
-   );
+   ROM->Read(&animationCount, address);
    address += sizeof(animationCount);
 
    // Construct array
@@ -67,21 +52,13 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    uint32_t size = 0;
 
    //Read Name
-   ROM->Read(
-      address,
-      MAGE_ENTITY_NAME_LENGTH,
-      (uint8_t*)name
-   );
+   ROM->Read(name, address);
 
    //increment address
    address += MAGE_ENTITY_NAME_LENGTH;
 
    // Read x
-   ROM->Read(
-      address,
-      sizeof(x),
-      (uint8_t*)&x
-   );
+   ROM->Read(&x, address);
 
    // Endianness conversion
    x = ROM_ENDIAN_U2_VALUE(x);
@@ -90,11 +67,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(x);
 
    // Read y
-   ROM->Read(
-      address,
-      sizeof(y),
-      (uint8_t*)&y
-   );
+   ROM->Read(&y, address);
 
    // Endianness conversion
    y = ROM_ENDIAN_U2_VALUE(y);
@@ -103,11 +76,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(y);
 
    // Read onInteractScriptId
-   ROM->Read(
-      address,
-      sizeof(onInteractScriptId),
-      (uint8_t*)&onInteractScriptId
-   );
+   ROM->Read(&onInteractScriptId, address);
 
    // Endianness conversion
    onInteractScriptId = ROM_ENDIAN_U2_VALUE(onInteractScriptId);
@@ -116,11 +85,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(onInteractScriptId);
 
    // Read onTickScript
-   ROM->Read(
-      address,
-      sizeof(onTickScriptId),
-      (uint8_t*)&onTickScriptId
-   );
+   ROM->Read(&onTickScriptId, address);
 
    // Endianness conversion
    onTickScriptId = ROM_ENDIAN_U2_VALUE(onTickScriptId);
@@ -129,11 +94,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(onTickScriptId);
 
    // Read primaryId
-   ROM->Read(
-      address,
-      sizeof(primaryId),
-      (uint8_t*)&primaryId
-   );
+   ROM->Read(&primaryId, address);
 
    // Endianness conversion
    primaryId = ROM_ENDIAN_U2_VALUE(primaryId);
@@ -142,11 +103,7 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(primaryId);
 
    // Read secondaryId
-   ROM->Read(
-      address,
-      sizeof(secondaryId),
-      (uint8_t*)&secondaryId
-   );
+   ROM->Read(&secondaryId, address);
 
    // Endianness conversion
    secondaryId = ROM_ENDIAN_U2_VALUE(secondaryId);
@@ -155,78 +112,46 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    address += sizeof(secondaryId);
 
    // Read primaryIdType
-   ROM->Read(
-      address,
-      sizeof(primaryIdType),
-      (uint8_t*)&primaryIdType
-   );
+   ROM->Read(&primaryIdType, address);
 
    //increment address
    address += sizeof(primaryIdType);
 
    // Read currentAnimation
-   ROM->Read(
-      address,
-      sizeof(currentAnimation),
-      (uint8_t*)&currentAnimation
-   );
+   ROM->Read(&currentAnimation, address);
 
    //increment address
    address += sizeof(currentAnimation);
 
    // Read currentFrameIndex
-   ROM->Read(
-      address,
-      sizeof(currentFrameIndex),
-      (uint8_t*)&currentFrameIndex
-   );
+   ROM->Read(&currentFrameIndex, address);
 
    //increment address
    address += sizeof(currentFrameIndex);
 
    // Read direction
-   ROM->Read(
-      address,
-      sizeof(direction),
-      (uint8_t*)&direction
-   );
+   ROM->Read(&direction, address);
 
    //increment address
    address += sizeof(direction);
 
    // Read hackableStateA
-   ROM->Read(
-      address,
-      sizeof(hackableStateA),
-      (uint8_t*)&hackableStateA
-   );
+   ROM->Read(&hackableStateA, address);
    //increment address
    address += sizeof(hackableStateA);
 
    // Read hackableStateB
-   ROM->Read(
-      address,
-      sizeof(hackableStateB),
-      (uint8_t*)&hackableStateB
-   );
+   ROM->Read(&hackableStateB, address);
    //increment address
    address += sizeof(hackableStateB);
 
    // Read hackableStateC
-   ROM->Read(
-      address,
-      sizeof(hackableStateC),
-      (uint8_t*)&hackableStateC
-   );
+   ROM->Read(&hackableStateC, address);
    //increment address
    address += sizeof(hackableStateC);
 
    // Read hackableStateD
-   ROM->Read(
-      address,
-      sizeof(hackableStateD),
-      (uint8_t*)&hackableStateD
-   );
+   ROM->Read(&hackableStateD, address);
    //increment address
    address += sizeof(hackableStateD);
 }
@@ -237,7 +162,7 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
    //MageEntity entity = *entityPointer;
 
    //ensure the primaryIdType is valid
-   primaryIdType = (MageEntityPrimaryIdType)gameControl->getValidPrimaryIdType(primaryIdType);
+   primaryIdType =  (MageEntityPrimaryIdType)(primaryIdType % NUM_PRIMARY_ID_TYPES);
 
    //then get valid tileset renderableData based on primaryId type:
    if (primaryIdType == MageEntityPrimaryIdType::TILESET)

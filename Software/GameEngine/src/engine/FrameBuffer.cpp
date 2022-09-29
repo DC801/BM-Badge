@@ -224,11 +224,8 @@ void FrameBuffer::drawChunkWithFlags(
    }
 
    auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
-
-   gameEngine->ROM->Read(address + ((source_y * pitch) + source_x),
-      tile_width * tile_height,
-      pixels.get()
-   );
+   auto pixelOffset = address + ((source_y * pitch) + source_x);
+   gameEngine->ROM->Read(pixels.get(), pixelOffset, tile_width * tile_height);
 
    if (fadeFraction != 0)
    {

@@ -15,13 +15,7 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
 {
    uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
 
-   gameEngine->ROM->Read(
-      offset,
-      sizeof(uint32_t),
-      (uint8_t*)&gameEngine->engineVersion
-   );
-   ROM_ENDIAN_U4_BUFFER(&gameEngine->engineVersion, 1);
-   offset += sizeof(uint32_t);
+   gameEngine->ROM->Read(&gameEngine->engineVersion, offset);
 
    if (gameEngine->engineVersion != ENGINE_VERSION)
    {
@@ -34,32 +28,18 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
       );
    }
 
-   gameEngine->ROM->Read(
-      offset,
-      sizeof(uint32_t),
-      (uint8_t*)&gameEngine->scenarioDataCRC32
-   );
-   ROM_ENDIAN_U4_BUFFER(&gameEngine->scenarioDataCRC32, 1);
-   offset += sizeof(uint32_t);
-
-   gameEngine->ROM->Read(
-      offset,
-      sizeof(uint32_t),
-      (uint8_t*)&gameEngine->scenarioDataLength
-   );
-   ROM_ENDIAN_U4_BUFFER(&gameEngine->scenarioDataLength, 1);
-   offset += sizeof(uint32_t);
+   gameEngine->ROM->Read(&gameEngine->scenarioDataCRC32, offset);
+   gameEngine->ROM->Read(&gameEngine->scenarioDataLength, offset);
 
    currentSaveIndex = 0;
    setCurrentSaveToFreshState();
 
    auto mapHeader = MageHeader{ gameEngine->ROM, offset };
-
    auto tilesetHeader = MageHeader{ gameEngine->ROM, offset };
    auto animationHeader = MageHeader{ gameEngine->ROM, offset };
    auto entityTypeHeader = MageHeader{ gameEngine->ROM, offset };
-   entityHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
-   geometryHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset );
+   auto entityHeader = MageHeader{ gameEngine->ROM, offset };
+   geometryHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
 
    auto scriptHeader = MageHeader{ gameEngine->ROM, offset };
    auto portraitHeader = MageHeader{ gameEngine->ROM, offset };
@@ -70,34 +50,38 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
 
    auto colorPaletteHeader = MageHeader{ gameEngine->ROM, offset };
 
-   stringHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset );
+   stringHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
    auto saveFlagHeader = MageHeader{ gameEngine->ROM, offset };
    auto variableHeader = MageHeader{ gameEngine->ROM, offset };
 
-   imageHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset );
+   imageHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
 
    tilesets = std::vector<MageTileset>{ tilesetHeader.count() };
    for (uint8_t i = 0; i < tilesetHeader.count(); i++)
    {
-      tilesets[i] = MageTileset{ gameEngine->ROM, i, tilesetHeader.offset(i) };
+      auto tilesetOffset = tilesetHeader.offset(i);
+      tilesets[i] = MageTileset{ gameEngine->ROM, i, tilesetOffset };
    }
 
    animations = std::vector<MageAnimation>{ animationHeader.count() };
    for (uint32_t i = 0; i < animationHeader.count(); i++)
    {
-      animations[i] = MageAnimation{ gameEngine->ROM, animationHeader.offset(i) };
+      auto animationOffset = animationHeader.offset(i);
+      animations[i] = MageAnimation{ gameEngine->ROM, animationOffset };
    }
 
    entityTypes = std::vector<MageEntityType>(entityTypeHeader.count());
    for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
    {
-      entityTypes[i] = MageEntityType{ gameEngine->ROM, entityTypeHeader.offset(i) };
+      auto entityOffset = entityTypeHeader.offset(i);
+      entityTypes[i] = MageEntityType{ gameEngine->ROM, entityOffset };
    }
 
    colorPalettes = std::vector<MageColorPalette>{ colorPaletteHeader.count() };
    for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
    {
-      colorPalettes[i] = MageColorPalette{ gameEngine->ROM, colorPaletteHeader.offset(i) };
+      auto colorPaletteOffset = colorPaletteHeader.offset(i);
+      colorPalettes[i] = MageColorPalette{ gameEngine->ROM, colorPaletteOffset };
    }
 #ifndef DC801_EMBEDDED
    verifyAllColorPalettes("Right after it was read from gameEngine->ROM");
@@ -106,9 +90,8 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
    //load the map
    currentSave->currentMapId = currentSave->currentMapId % (mapHeader.count());
 
-   map = std::make_unique<MageMap>(gameEngine->ROM, mapHeader.offset(currentSave->currentMapId));
-
-   map->PopulateData(gameEngine); //PopulateMapData(currentSave->currentMapId);
+   auto mapOffset = mapHeader.offset(currentSave->currentMapId);
+   map = std::make_unique<MageMap>(gameEngine->ROM, mapOffset, std::move(mapHeader), std::move(entityHeader));
 
    playerEntityIndex = map->getPlayerEntityIndex();
    camera.followEntityId = playerEntityIndex;
@@ -208,7 +191,7 @@ void MageGameControl::LoadMap(uint16_t index)
    copyNameToAndFromPlayerAndSave(true);
 
    //get the data for the map:
-   map->PopulateData(gameEngine);// PopulateMapData(index);
+   map->LoadMap(index);
 
    copyNameToAndFromPlayerAndSave(false);
 
@@ -314,7 +297,7 @@ void MageGameControl::applyGameModeInputs(uint32_t deltaTime)
       playerEntity->updateRenderableData(this);
 
       //update renderable info before proceeding:
-      uint16_t playerEntityTypeId = getValidPrimaryIdType(playerEntity->primaryIdType);
+      uint16_t playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
       MageEntityType* entityType = hasEntityType ? &entityTypes[playerEntityTypeId] : nullptr;
       uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
@@ -469,7 +452,7 @@ void MageGameControl::handleEntityInteract(bool hack)
    {
       return;
    }
-   auto playerRenderableData = getEntityRenderableDataByMapLocalId(playerEntityIndex);
+   auto playerRenderableData = map->entities[map->getMapLocalEntityId(playerEntityIndex)].getRenderableData();
    MageEntity::RenderableData* targetRenderableData;
    MageEntity* playerEntity = getEntityByMapLocalId(playerEntityIndex);
    MageEntity* targetEntity;
@@ -522,11 +505,8 @@ void MageGameControl::handleEntityInteract(bool hack)
             }
             else if (!hack && targetEntity->onInteractScriptId)
             {
-               gameEngine->scriptControl->initScriptState(
-                  gameEngine->scriptControl->getEntityInteractResumeState(i),
-                  targetEntity->onInteractScriptId,
-                  true
-               );
+               *gameEngine->scriptControl->getEntityInteractResumeState(i) =
+                  MageScriptState{ targetEntity->onInteractScriptId, true };
             }
             break;
          }
@@ -544,7 +524,9 @@ void MageGameControl::DrawMap(uint8_t layer)
    {
       return;
    }
-   Point playerPoint = getEntityRenderableDataByMapLocalId(playerEntityIndex)->center;
+
+   Point playerPoint = map->entities[map->getMapLocalEntityId(playerEntityIndex)]
+      .getRenderableData()->center;
    for (uint32_t i = 0; i < tilesPerLayer; i++)
    {
       auto tile_x = (int32_t)(map->TileWidth() * (i % map->Cols()));
@@ -563,12 +545,7 @@ void MageGameControl::DrawMap(uint8_t layer)
 
       auto currentTile = MageMapTile{};
 
-      gameEngine->ROM->Read(
-         address,
-         sizeof(MageMapTile),
-         (uint8_t*)&currentTile
-      );
-      currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
+      gameEngine->ROM->Read(&currentTile, address);
       if (currentTile.tileId == 0)
       {
          continue;
@@ -663,7 +640,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
    MageGeometry mageCollisionSpokes = MageGeometry(MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT);
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT];
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT];
-   auto playerRenderableData = getEntityRenderableDataByMapLocalId(playerEntityIndex);
+   auto playerRenderableData = map->entities[map->getMapLocalEntityId(playerEntityIndex)].getRenderableData();
    uint32_t tilesPerLayer = map->Cols() * map->Rows();
    uint32_t layerAddress = 0;
    uint32_t address = 0;
@@ -775,11 +752,7 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
          }
          address = layerAddress + (i * sizeof(MageMapTile));
 
-         gameEngine->ROM->Read(
-            address,
-            sizeof(MageMapTile),
-            (uint8_t*)&currentTile
-         );
+         gameEngine->ROM->Read(&currentTile, address);
 
          currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
 
@@ -885,12 +858,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
    return pushback;
 }
 
-uint8_t MageGameControl::getValidPrimaryIdType(uint8_t primaryIdType)
-{
-   //always return a valid primaryId:
-   return primaryIdType % MageEntityPrimaryIdType::NUM_PRIMARY_ID_TYPES;
-}
-
 MageEntityType* MageGameControl::getValidEntityType(uint16_t entityTypeId)
 {
    //always return a valid entity type for the entityTypeId submitted.
@@ -981,7 +948,7 @@ void MageGameControl::DrawGeometry()
    bool isPlayerPresent = playerEntityIndex != NO_PLAYER;
    if (isPlayerPresent)
    {
-      auto renderable = getEntityRenderableDataByMapLocalId(playerEntityIndex);
+      auto renderable = map->entities[map->getMapLocalEntityId(playerEntityIndex)].getRenderableData();
       playerPosition = &renderable->center;
    }
 
@@ -1004,12 +971,14 @@ void MageGameControl::DrawGeometry()
 
 MageGeometry MageGameControl::getGeometryFromMapLocalId(uint16_t mapLocalGeometryId)
 {
-   return MageGeometry{ gameEngine->ROM, geometryHeader->offset(map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader->count()) };
+   auto geometryOffset = geometryHeader->offset(map->getGlobalGeometryId(mapLocalGeometryId) % geometryHeader->count());
+   return MageGeometry{ gameEngine->ROM, geometryOffset };
 }
 
 MageGeometry MageGameControl::getGeometryFromGlobalId(uint16_t globalGeometryId)
 {
-   return MageGeometry{ gameEngine->ROM, geometryHeader->offset(globalGeometryId % geometryHeader->count()) };
+   auto geometryOffset = geometryHeader->offset(globalGeometryId % geometryHeader->count());
+   return MageGeometry{ gameEngine->ROM, geometryOffset };
 }
 
 MageColorPalette* MageGameControl::getValidColorPalette(uint16_t colorPaletteId)
@@ -1052,11 +1021,7 @@ std::string MageGameControl::getString(uint16_t stringId, int16_t mapLocalEntity
    uint32_t length = stringHeader->length(sanitizedIndex);
    std::string romString(length, '\0');
    uint8_t* romStringPointer = (uint8_t*)&romString[0];
-   gameEngine->ROM->Read(
-      start,
-      length,
-      romStringPointer
-   );
+   gameEngine->ROM->Read(romStringPointer, start, length);
    std::string outputString(0, '\0');
    size_t cursor = 0;
    size_t variableStartPosition = 0;

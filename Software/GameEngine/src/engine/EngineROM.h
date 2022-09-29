@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <filesystem>
+#include <fstream>
 
 #define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
 
@@ -78,14 +79,22 @@ struct EngineROM
    EngineROM() noexcept;
    ~EngineROM() = default;
 
-   bool Magic() const
-   {
-      return VerifyEqualsAtOffset(0, SaveIdentifierString);
-   }
+   bool Magic() const { return VerifyEqualsAtOffset(0, GameIdentifierString); }
 
    void ErrorUnplayable();
 
-   bool Read(uint32_t address, uint32_t length, uint8_t* data);
+   template <typename T>
+   void Read(T* t, uint32_t& address, size_t count = 1, size_t length = sizeof(T)) const
+   {
+      auto dataLength = count * length;
+      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      {
+         throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
+      }
+      memmove(t, romDataInDesktopRam.get() + address, dataLength);
+      address += dataLength;
+   };
+
    bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
    bool VerifyEqualsAtOffset(uint32_t address, std::string value) const;
 
@@ -101,7 +110,11 @@ struct EngineROM
    }
 
 private:
+#ifndef DC801_EMBEDDED
    std::filesystem::directory_entry makeSureSaveFilePathExists();
+   std::unique_ptr<char[]> romDataInDesktopRam{ new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } };
+   std::fstream romFile;
+#endif
 };
 
 

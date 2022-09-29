@@ -32,7 +32,7 @@ public:
 	};
 
 	MageAnimation() noexcept = default;
-	MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t address) noexcept;
+	MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept;
 
 	constexpr uint16_t TilesetId() const { return tilesetId; }
 	constexpr uint16_t TileId() const { return 0; }
@@ -41,7 +41,6 @@ public:
 
 private:
 	uint16_t tilesetId{ 0 };
-	uint32_t offset{ 0 };
 	std::vector<MageAnimation::Frame> frames;
 
 };

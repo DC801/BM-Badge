@@ -8,7 +8,7 @@ class MagePortrait {
 public:
 
 	MagePortrait() noexcept = default;
-	MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t address);
+	MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t& address);
 
 	const MageEntityTypeAnimationDirection* getEmoteById(uint8_t emoteId) const
 	{
