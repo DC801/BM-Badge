@@ -33,7 +33,7 @@ std::filesystem::directory_entry EngineROM::makeSureSaveFilePathExists()
 }
 #endif //DC801_DESKTOP
 
-EngineROM::EngineROM() noexcept
+EngineROM::EngineROM()
 {
 #ifdef DC801_EMBEDDED
    isRomPlayable = Magic();

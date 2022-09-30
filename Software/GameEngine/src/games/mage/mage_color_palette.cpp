@@ -94,33 +94,4 @@ void MageColorPalette::generatePaletteIntegrityString(
 		);
 	}
 }
-
-void MageColorPalette::verifyColors(
-	const char* errorTriggerDescription
-) {
-	char currentString[COLOR_PALETTE_INTEGRITY_STRING_LENGTH];
-	generatePaletteIntegrityString(currentString);
-	if (strcmp(colorIntegrityString, currentString) != 0) {
-		debug_print(
-			"COLOR PALETTE CORRUPTION DETECTED"
-		);
-		debug_print(
-			"%s A:%s",
-			name,
-			colorIntegrityString
-		);
-		debug_print(
-			"%s B:%s",
-			name,
-			currentString
-		);
-		char corruptionLabel[256];
-		sprintf(
-			corruptionLabel,
-			"COLOR PALETTE CORRUPTION DETECTED AFTER:\n%s",
-			errorTriggerDescription
-		);
-		ENGINE_PANIC(corruptionLabel);
-	}
-}
 #endif //DC801_DESKTOP

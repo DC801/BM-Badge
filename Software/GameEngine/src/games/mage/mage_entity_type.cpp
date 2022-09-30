@@ -118,7 +118,7 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
       {
          directedAnimation = currentAnimation.West();
       }
-      //renderableData.getRenderableState(entityPointer, currentAnimation);
+      renderableData.getRenderableState(gameControl, this, &directedAnimation);
 
    }
 

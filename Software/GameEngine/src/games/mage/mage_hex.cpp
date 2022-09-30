@@ -116,14 +116,14 @@ void MageHexEditor::applyHexModeInputs()
 {
    if (!gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_up))
    {
-      disableMovementUntilRJoyUpRelease = false;
+      disableMovement = false;
    }
    //check to see if player input is allowed:
    if (
       gameEngine->gameControl->dialogControl->isOpen()
       || !gameEngine->gameControl->playerHasControl
       || !gameEngine->gameControl->playerHasHexEditorControl
-      || disableMovementUntilRJoyUpRelease
+      || disableMovement
       )
    {
       return;
@@ -342,22 +342,23 @@ uint16_t MageHexEditor::getRenderableStringLength(uint8_t* bytes, uint16_t maxLe
 
 void MageHexEditor::renderHexHeader()
 {
-   char headerString[128];
-   char clipboardPreview[24];
+   char headerString[128]{ " " };
+   char clipboardPreview[24]{ " " };
    char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = { 0 };
    uint8_t* currentByteAddress = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation;
    uint8_t u1Value = *currentByteAddress;
    uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
    sprintf(
       headerString,
-      "CurrentPage: %03u              CurrentByte: 0x%04X\n"
-      "TotalPages:  %03u   Entities: %05u    Mem: 0x%04X",
+      "CurrentPage: %03u\tCurrentByte: 0x%04X\n"
+      "TotalPages:  %03u\tEntities: %05u\tMem: 0x%04X",
       currentMemPage,
       hexCursorLocation,
       totalMemPages,
       gameEngine->gameControl->Map()->FilteredEntityCount(),
       memTotal
    );
+
    gameEngine->frameBuffer->printMessage(
       headerString,
       Monaco9,
@@ -365,22 +366,15 @@ void MageHexEditor::renderHexHeader()
       HEXED_BYTE_OFFSET_X,
       0
    );
-   memcpy(
-      stringPreview,
+   memcpy(stringPreview,
       (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation,
-      MAGE_ENTITY_NAME_LENGTH
-   );
-   uint16_t stringPreviewLength = getRenderableStringLength(
-      (uint8_t*)stringPreview,
-      MAGE_ENTITY_NAME_LENGTH
-   );
+      MAGE_ENTITY_NAME_LENGTH);
+
+   uint16_t stringPreviewLength = getRenderableStringLength((uint8_t*)stringPreview, MAGE_ENTITY_NAME_LENGTH);
    // add spaces for padding at the end of the string preview so clipboard stays put
    for (int i = stringPreviewLength; i < MAGE_ENTITY_NAME_LENGTH; i++)
    {
-      sprintf(
-         stringPreview + i,
-         " "
-      );
+      stringPreview[i] = ' ';
    }
    sprintf(
       headerString,
@@ -391,6 +385,7 @@ void MageHexEditor::renderHexHeader()
       u2Value,
       stringPreview
    );
+
    if (gameEngine->gameControl->playerHasHexEditorControlClipboard)
    {
       uint8_t clipboardPreviewClamp = MIN(
@@ -407,10 +402,10 @@ void MageHexEditor::renderHexHeader()
       }
       if (gameEngine->gameControl->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
       {
-         sprintf(
-            clipboardPreview + (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2),
-            "..."
-         );
+         const auto offset = (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2);
+         clipboardPreview[offset] = '.';
+         clipboardPreview[offset+1] = '.';
+         clipboardPreview[offset+2] = '.';
       }
       sprintf(
          headerString + strlen(headerString),

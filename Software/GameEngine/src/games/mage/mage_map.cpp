@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "mage.h"
 
-void MageMap::LoadMap(uint16_t index)
+void MageMap::Load(uint16_t index)
 {
    auto address = mapHeader.offset(index);
    ROM->Read(name, address, MapNameLength);
@@ -58,13 +58,7 @@ void MageMap::LoadMap(uint16_t index)
 
    if (entityCount > MAX_ENTITIES_PER_MAP)
    {
-      char errorString[256];
-      sprintf(
-         errorString,
-         "Error: Game is attempting to load more than %d entities on one ",
-         MAX_ENTITIES_PER_MAP
-      );
-      ENGINE_PANIC(errorString);
+      ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map",MAX_ENTITIES_PER_MAP);
    }
 
    for (uint8_t i = 0; i < entityCount; i++)

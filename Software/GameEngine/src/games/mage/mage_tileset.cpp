@@ -22,16 +22,13 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t
 
    if (!Valid())
    {
-      char errorString[256] = "";
-      sprintf(
-         errorString,
+      ENGINE_PANIC(
          "Invalid Tileset detected!\n"
          "	Tileset index is: %d\n"
          "	Tileset address is: %d",
          index,
          address
       );
-      ENGINE_PANIC(errorString);
    }
 }
 

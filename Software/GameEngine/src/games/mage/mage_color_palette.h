@@ -35,8 +35,6 @@ public:
 
 	#ifndef DC801_EMBEDDED
 	void generatePaletteIntegrityString(char *targetString);
-
-	void verifyColors(const char* errorTriggerDescription);
 	#endif
 };
 

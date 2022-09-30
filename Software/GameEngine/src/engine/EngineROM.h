@@ -76,7 +76,7 @@ struct EngineROM
    //it is used to verify that the binary file is formatted correctly.
    static inline const char* SaveIdentifierString{ "MAGESAVE" };
 
-   EngineROM() noexcept;
+   EngineROM();
    ~EngineROM() = default;
 
    bool Magic() const { return VerifyEqualsAtOffset(0, GameIdentifierString); }

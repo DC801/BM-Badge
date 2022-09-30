@@ -25,7 +25,7 @@ public:
 
    //this takes map data by index and fills all the variables in the map object:
    /*void PopulateMapData(uint16_t index);*/
-   void LoadMap(uint16_t index);
+   void Load(uint16_t index);
    void DrawEntities(MageGameEngine* engine);
 
    std::string Name() const { return std::string(name); }

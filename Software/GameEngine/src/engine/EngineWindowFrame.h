@@ -48,7 +48,7 @@ private:
    }*/
    struct EngineWindowFrameComponents
    {
-      EngineWindowFrameComponents() noexcept;
+      EngineWindowFrameComponents();
       ~EngineWindowFrameComponents();
 
       SDL_Window* window = nullptr;

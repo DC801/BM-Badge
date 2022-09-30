@@ -14,29 +14,22 @@ class MageCamera;
 class MageColorPalette;
 class MageGeometry;
 
-#ifdef DC801_EMBEDDED
-#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) //(value)
-#else
-// color palette corruption detection - requires much ram, can only be run on desktop
-#define LOG_COLOR_PALETTE_CORRUPTION_INSIDE_MAGE_GAME(value) verifyAllColorPalettes((value));
-#endif //DC801_DESKTOP
+/*
+The MageGameControl object handles several important tasks. It's basically the
+core of the entire MAGE() game, and contains all the important variables that
+track the state of the game.
 
-   /*
-   The MageGameControl object handles several important tasks. It's basically the
-   core of the entire MAGE() game, and contains all the important variables that
-   track the state of the game.
+MageGameControl's first important function is to read all relevant data from
+the ROM chip into RAM, and also to have helper functions to read additional
+ROM data on demand as needed when updating variables.
 
-   MageGameControl's first important function is to read all relevant data from
-   the ROM chip into RAM, and also to have helper functions to read additional
-   ROM data on demand as needed when updating variables.
+MageGameControl also tracks the state of all hackable entities in the game, and
+interprets the data contained in the array when deciding what needs to be drawn
+to the screen.
 
-   MageGameControl also tracks the state of all hackable entities in the game, and
-   interprets the data contained in the array when deciding what needs to be drawn
-   to the screen.
-
-   Finally, MageGameControl handles the actual act of updating the state of the
-   game based on input data and rendering it all to the screen every frame.
-   */
+Finally, MageGameControl handles the actual act of updating the state of the
+game based on input data and rendering it all to the screen every frame.
+*/
 
 struct MageMapTile
 {
@@ -56,7 +49,7 @@ class MageGameControl
    friend class MageMap;
    friend class MageHexEditor;
 public:
-   MageGameControl(MageGameEngine* gameEngine) noexcept;
+   MageGameControl(MageGameEngine* gameEngine);
 
    //this is the index value of where the playerEntity is located within
    //the entities[] array and also the offset to it from hackableDataAddress
@@ -190,7 +183,7 @@ public:
 #endif
 
    void logAllEntityScriptValues(const char* string);
-   void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck=true);
+   void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck = true);
 private:
 
    MageGameEngine* gameEngine;

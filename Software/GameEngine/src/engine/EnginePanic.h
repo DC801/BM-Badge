@@ -21,7 +21,7 @@
 //     (39 + 1) * 10 + 1 = 401
 //
 //   Anything beyond 400 characters will be truncated
-#define ENGINE_PANIC(...) EnginePanic(__FILE__, __LINE__, __VA_ARGS__)
+#define ENGINE_PANIC(s, ...) {char buf[401]; sprintf(buf,"%s %d" s, __FILE__, __LINE__, __VA_ARGS__); throw std::runtime_error(buf);}
 
 
 

@@ -44,7 +44,10 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	bool disableMovementUntilRJoyUpRelease;
+	constexpr void disableMovementUntilRJoyUpRelease()
+	{
+		disableMovement = true;
+	}
 
 	MageHexEditor(MageGameEngine*  gameEngine) : 
 		gameEngine(gameEngine)
@@ -105,6 +108,7 @@ public:
 
 private:
 	MageGameEngine*  gameEngine;
+	bool disableMovement{ false };
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

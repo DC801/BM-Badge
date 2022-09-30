@@ -10,7 +10,7 @@
 // Initializer list, default construct values
 //   Don't waste any resources constructing unique_ptr's
 //   Each header is constructed with offsets from the previous
-MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
+MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    : gameEngine(gameEngine), camera{}
 {
    uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
@@ -83,9 +83,6 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
       auto colorPaletteOffset = colorPaletteHeader.offset(i);
       colorPalettes[i] = MageColorPalette{ gameEngine->ROM, colorPaletteOffset };
    }
-#ifndef DC801_EMBEDDED
-   verifyAllColorPalettes("Right after it was read from gameEngine->ROM");
-#endif
 
    //load the map
    currentSave.currentMapId = currentSave.currentMapId % (mapHeader.count());
@@ -96,6 +93,7 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine) noexcept
    playerEntityIndex = map->getPlayerEntityIndex();
    camera.followEntityId = playerEntityIndex;
 
+   map->Load(currentSave.currentMapId);
    readSaveFromRomIntoRam(true);
 
    playerHasControl = true;
@@ -174,7 +172,7 @@ void MageGameControl::saveGameSlotLoad(uint8_t slotIndex)
 {
    currentSaveIndex = slotIndex;
    readSaveFromRomIntoRam();
-   //LoadMap(currentSave.currentMapId);
+   LoadMap(currentSave.currentMapId);
 }
 
 void MageGameControl::LoadMap(uint16_t index)
@@ -191,7 +189,7 @@ void MageGameControl::LoadMap(uint16_t index)
    copyNameToAndFromPlayerAndSave(true);
 
    //get the data for the map:
-   map->LoadMap(index);
+   map->Load(index);
 
    copyNameToAndFromPlayerAndSave(false);
 
@@ -500,7 +498,7 @@ void MageGameControl::handleEntityInteract(bool hack)
             isMoving = false;
             if (hack && playerHasHexEditorControl)
             {
-               gameEngine->hexEditor->disableMovementUntilRJoyUpRelease = true;
+               gameEngine->hexEditor->disableMovementUntilRJoyUpRelease();
                gameEngine->hexEditor->openToEntityByIndex(i);
             }
             else if (!hack && targetEntity->onInteractScriptId)
@@ -882,18 +880,13 @@ void MageGameControl::updateEntityRenderableData(uint8_t mapLocalEntityId, bool 
 {
    if (mapLocalEntityId >= MAX_ENTITIES_PER_MAP)
    {
-      char errorString[256];
-      sprintf(
-         errorString,
+      ENGINE_PANIC(
          "We somehow have an entity mapLocalEntityId\n"
          "greater than MAX_ENTITIES_PER_MAP:\n"
          "Index:%d\n"
          "MAX_ENTITIES_PER_MAP:%d\n",
          mapLocalEntityId,
          MAX_ENTITIES_PER_MAP
-      );
-      ENGINE_PANIC(
-         errorString
       );
    }
 
@@ -1107,15 +1100,6 @@ std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId)
    entityName.assign(entity->name, MAGE_ENTITY_NAME_LENGTH);
    return entityName;
 }
-
-#ifndef DC801_EMBEDDED
-void MageGameControl::verifyAllColorPalettes(const char* errorTriggerDescription)
-{
-   // for (uint32_t i = 0; i < colorPaletteHeader->count(); i++) {
-   // 	colorPalettes[i].verifyColors(errorTriggerDescription);
-   // }
-}
-#endif
 
 void MageGameControl::logAllEntityScriptValues(const char* string)
 {

@@ -8,7 +8,7 @@ int SCREEN_MULTIPLIER = 1;
 int SCREEN_WIDTH = 0;
 int SCREEN_HEIGHT = 0;
 
-EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents() noexcept
+EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
