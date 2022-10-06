@@ -13,11 +13,13 @@ const is_digit = function(char) {
     return char >= "0" && char <= "9";
 };
 const is_barewordable = function(char) {
-    return char.match(/[-A-Za-z0-9_.$#]/);
+    return char.match(/[-A-Za-z0-9_.$!#]/);
 };
 const OPERATORS_SINGLE = {
 	"{":true,
 	"}":true,
+	"(":true,
+	")":true,
 	"=":true,
 	">":true,
 	"<":true,
@@ -67,7 +69,7 @@ const NUMBER_SUFFIXES = {
     "x": function(num) { return {"type":"quantity","value":num} },
 };
 
-const LONG_OPERATORS = [ "==", ">=", "<=" ];
+const LONG_OPERATORS = [ "==", ">=", "<=", "||" ];
 
 natlang.lex = function (inputString) {
 	let pos = 0;
@@ -103,7 +105,7 @@ natlang.lex = function (inputString) {
                     continue;
                 }
                 else {
-                    errors.push({"pos":startPos,"text":"Unterminated comment"});
+                    errors.push({"pos":startPos,"text":"Lexer: Unterminated comment"});
                     break;
                 }
             }
@@ -127,7 +129,7 @@ natlang.lex = function (inputString) {
             }
             let number = parseInt(numberString);
             if(number+"" != numberString) {
-                errors.push({"pos":startPos,"text":"This number didn't parse, is it perhaps way too big?"});
+                errors.push({"pos":startPos,"text":"Lexer: This number didn't parse, is it perhaps way too big?"});
                 continue; // don't bother trying to check the suffix if this happened
             }
             let suffix = inputString.substring(suffixStartPos, pos);
@@ -162,7 +164,7 @@ natlang.lex = function (inputString) {
 					tokens.push(result);
 					continue;
 				}
-                errors.push({"pos":suffixStartPos,"text":"Unknown numerical suffix"});
+                errors.push({"pos":suffixStartPos,"text":"Lexer: Unknown numerical suffix"});
                 tokens.push({"pos":startPos,"type":"number","value":number});
             }
             continue;
@@ -214,7 +216,7 @@ natlang.lex = function (inputString) {
                             outString += "\n";
                         }
                         else {
-                            errors.push({"pos":pos,"text":"Unrecognized escape sequence"});
+                            errors.push({"pos":pos,"text":"Lexer: Unrecognized escape sequence"});
                             outString += "\uFFFD";
                         }
                     }
@@ -232,7 +234,7 @@ natlang.lex = function (inputString) {
                 }
             }
             if(nextChar != quotationMark) {
-                errors.push({"pos":startPos,"text":"Unterminated quoted string"});
+                errors.push({"pos":startPos,"text":"Lexer: Unterminated quoted string"});
                 break;
             }
             tokens.push({"pos":startPos,"type":"quotedString","value":outString,"quotationMark":quotationMark});

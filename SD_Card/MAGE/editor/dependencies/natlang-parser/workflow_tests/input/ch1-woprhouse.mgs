@@ -1,0 +1,48 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label SELF { entity "%SELF%" }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+on_load-woprhouse {
+	if (flag backdoor-found is false) {
+		set player control to off
+		walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
+		block 400ms
+		set player control to on
+		show dialog {
+			PLAYER "Whoa! It looks like I found some kind of back door."
+		}
+		set flag backdoor-found to true
+	}
+}
+
+on_tick-woprhouse {
+	if entity "%PLAYER%" is inside geometry door-woprhouse-exit then goto leave-woprhouse
+}
+
+leave-woprhouse {
+	set warp state to exit_from-woprhouse
+	load map main
+}
+
+show_dialog-wopr-start {
+	show dialog {
+		SELF portrait wopr
+		"SHALL WE PLAY A GAME?"
+
+		SELF portrait wopr
+		"PLAY?"
+		> "DO NOT PLAY" : goto "restart-wopr"
+	}
+}
+
+show_dialog-woprbooks {
+	show dialog {
+		PLAYER "These shelves are full of Vogon poetry! What an odd sort of thing for a computer to collect."
+	}
+}
+
+restart-wopr {
+	set entity "%SELF%" interact_script to show_dialog-wopr-start
+}

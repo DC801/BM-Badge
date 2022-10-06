@@ -1,22 +1,6 @@
 var fs = require('fs');
 
-var modules = [
-	'../natlang-lex.js',
-	'../natlang-parse.js',
-	'../mgs_natlang_config.js',
-	'../mgs_json_to_natlang.js',
-	'mid.js',
-];
-
-var moduleString = '';
-
-modules.forEach(function (filePath) {
-	moduleString += '\n' + fs.readFileSync(`${__dirname}/${filePath}`);
-})
-
-eval(moduleString); // make real modules soon pls~
-
-// THE REST OF THE OWL
+var mid = require('./mid.js');
 
 var outputFileName = '../README.md';
 

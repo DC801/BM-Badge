@@ -561,12 +561,12 @@ Some of these patterns may also have some hidden parameters built in to the phra
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
 ```
-set entity $entity:string tickScript (to) $string:string 
+set entity $entity:string tick_script (to) $string:string 
 ```
 
 will be satisfied by either of the following:
 
 ```
-set entity "Entity Name" tickScript to scriptName
-set entity "Entity Name" tickScript scriptName
+set entity "Entity Name" tick_script to scriptName
+set entity "Entity Name" tick_script scriptName
 ```
