@@ -1,0 +1,531 @@
+// plain natlang 645 -> zigzagged 537 (17% savings)
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label SELF { entity "%SELF%" }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+/** ------ ON_LOAD ------ **/
+
+on_load-bobsclub1 {
+	if (flag storyflag-bobmoss is false) {
+		teleport entity "Bob Moss" to geometry bobsclub-hidingplace
+		set entity "Bob Moss" name to " "
+		set entity "Bob Moss" interact_script to null_script
+		set entity "Bob Moss" type to exa
+	}
+	if (flag bobsclub-entered is false) {
+		goto show_dialog-bobsclub // JUMP: Bob's club entrance cutscene
+	}
+}
+show_dialog-bobsclub {
+	set player control to off
+	walk entity "%PLAYER%" to geometry bob_path over 500ms
+	wait 800ms
+	show dialog {
+		name "????"
+		"Oh, hello. You must be here for the annual Bobs-Only Party, right?"
+	}
+	walk entity "%PLAYER%" along geometry bob_path over 3500ms
+	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	turn entity "Guardian Bob" toward entity "%PLAYER%"
+	wait 100ms
+	show dialog {
+		entity "Guardian Bob"
+		"Well, I hate to tell you this, but it's canceled this year."
+
+		PLAYER "What? Canceled?"
+
+		entity "Guardian Bob"
+		"Yeah. This time, for real."
+		"I mean, every year they SAY its canceled, but this time it's actually genuinely canceled."
+
+		entity "Strong Bad"
+		"Wait, canceled?!"
+	}
+	wait 300ms
+	pan camera to geometry strongbad_camera over 1200ms
+	wait 150ms
+	turn entity "%PLAYER%" toward entity "Strong Bad"
+	wait 200ms
+	turn entity "Guardian Bob" toward entity "Strong Bad"
+	wait 100ms
+	show dialog {
+		entity "Strong Bad" alignment TL
+		"But what about all the ladies?!"
+
+		PLAYER alignment TR
+		"Ladies? I'm pretty sure Bob is a masculine name, traditionally."
+
+		entity "Strong Bad" alignment TL
+		"Nuh-uh!"
+		"What about Bob... rietta? Bob... velyn?"
+		"Barbara? I mean, Bob-ara?"
+		"They're still gonna come to the party, aren't they?"
+
+		PLAYER alignment TR
+		"Sorry, dude! Not if the party's canceled."
+		"...Also not if none of them are named Bob."
+
+		entity "Strong Bad" alignment TL
+		"Sure, they'll come! I just gotta wait a little more!"
+
+		PLAYER alignment TR
+		"I think you came to the wrong party."
+	}
+	wait 200ms
+	pan camera to entity "%PLAYER%" over 700ms
+	wait 200ms
+	turn entity "Guardian Bob" south
+	show dialog {
+		entity "Guardian Bob"
+		"Well, this place should be full of Bobs... next year."
+	}
+	copy begin-flail
+	show dialog {
+		entity "Strong Bad"
+		"Bob-alina!\nBob-cine!\nBob-quelyn!\nCome baaaack!"
+	}
+	copy end-flail
+	set player control to on
+	set flag bobsclub-entered to true
+	if (flag baker-backstory is false) {
+		goto null_script // end it here
+	}
+	turn entity "%PLAYER%" toward entity "Guardian Bob"
+	turn entity "Guardian Bob" toward entity "%PLAYER%"
+	show dialog {
+		PLAYER
+		"So I guess I can tell the baker to cancel the donut order then, huh?"
+
+		entity "Guardian Bob"
+		"Guess so. Sorry about this."
+	}
+}
+
+/** ------ ON_TICK ------ **/
+
+// bakery
+on_tick-bakery {
+	if entity "%PLAYER%" is inside geometry door-bakery-exit then goto leave-bakery
+}
+leave-bakery {
+	set warp state to exit_from-bakery
+	load map main
+}
+
+// Bob's club
+on_tick-bobsclub {
+	if entity "%PLAYER%" is inside geometry door-bobsclub-exit then goto leave-bobsclub
+}
+leave-bobsclub {
+	set warp state to exit_from-bobsclub
+	load map main
+}
+
+/** ------ CHOREOGRAPHY ------ **/
+
+// bakery
+on_tick-bake {
+	copy add_flour
+	copy add_flour
+	copy add_flour
+	walk entity "%SELF%" to geometry bakery_mid over 200ms
+	walk entity "%SELF%" to geometry pre_sink over 350ms
+	copy wash_hands
+	walk entity "%SELF%" to geometry bakery_ovenzone over 1300ms
+	copy load_bread
+	walk entity "%SELF%" to geometry bakery_ovenzone over 300ms
+	copy load_bread
+	walk entity "%SELF%" to geometry bakery_fridgezone over 1800ms
+	copy check_fridge
+	walk entity "%SELF%" to geometry pre_sink over 700ms
+	copy wash_hands
+	walk entity "%SELF%" to geometry bakery_mid over 450ms
+	walk entity "%SELF%" to geometry bakery_kneading over 250ms
+	wait 600ms
+}
+add_flour {
+	walk entity "%SELF%" to geometry bakery_flour over 600ms
+	walk entity "%SELF%" to geometry bakery_flour_touch over 180ms
+	// bug on 2021/04/10: if duration less than frame rate, baker is yeeted to space
+	turn entity "%SELF%" south
+	wait 400ms
+	walk entity "%SELF%" to geometry bakery_flour over 180ms
+	walk entity "%SELF%" to geometry bakery_kneading over 600ms
+	turn entity "%SELF%" south
+	wait 1200ms
+}
+wash_hands {
+	walk entity "%SELF%" to geometry bakery_sink over 200ms
+	wait 1200ms
+	walk entity "%SELF%" to geometry pre_sink over 200ms
+}
+load_bread {
+	walk entity "%SELF%" to geometry bakery_rack over 200ms
+	wait 600ms
+	walk entity "%SELF%" to geometry bakery_ovenzone over 200ms
+	walk entity "%SELF%" to geometry bakery_pre_oven over 300ms
+	walk entity "%SELF%" to geometry bakery_oven over 200ms
+	wait 800ms
+	walk entity "%SELF%" to geometry bakery_pre_oven over 200ms
+}
+check_fridge {
+	walk entity "%SELF%" to geometry bakery_fridge over 200ms
+	wait 700ms
+	walk entity "%SELF%" to geometry bakery_fridgezone over 200ms
+}
+watch-baker {
+	turn entity "%SELF%" toward entity Baker
+}
+
+// Bob's club
+begin-flail {
+	play entity "Strong Bad" animation 3 once
+	set entity "Strong Bad" animation to 5
+}
+end-flail {
+	play entity "Strong Bad" animation 4 once
+}
+
+/** ------ DIALOG ------ **/
+
+// bakery
+show_dialog-bread {
+	show dialog { PLAYER "Mmmm, fresh bread!" }
+}
+show_dialog-baker-start {
+	set entity "%PLAYER%" tick_script to watch-baker
+	if (entity "%SELF%" is glitched) { // glitched
+		show dialog { SELF "Qacwk, A kmvvwfdq usf'l kww kljsayzl. A ymwkk A kzgmdv uml tsuc gf lzw usxxawfw." }
+	} else if (flag bobsclub-entered is true) { // !glitched && BobsClub
+		if (flag storyflag-baker is false) { // ...but you haven't brought him the news yet
+			// bring him the news
+			show dialog {
+				SELF "Canceled? The party at the Bobs-Only Club was canceled? For real?"
+				PLAYER "That's what Bob said."
+				SELF "Bob? Stone Cold Bob Austin?"
+				PLAYER "Uh... well, it was someone named Bob."
+				SELF "Great. Just great. Just as I was putting everything in the oven. Not gonna pay me either, are they?"
+				"Well, thanks for finding out for me. Now I need to find a way to move four dozen B-shaped donuts."
+			}
+			set flag storyflag-baker to true
+			copy calculate-hint-tracking-series
+			if (variable hint-tracking-check is 2) {
+				copy set-hint-none
+			}
+		} else { // ...but you HAVE brought him the news already
+			// final dialog:
+			show dialog { SELF "Say, you wouldn't want a B-shaped donut, would you? On the house." }
+		}
+	} else  {
+		if (flag baker-backstory is false) { // !glitched && !BobsClub && !backstory
+			// hear backstory
+			show dialog {
+				SELF "Hey, I'm pretty swamped. Can you run an errand for me?"
+				PLAYER "What do you need?"
+				SELF "The Bobs-Only Club placed a huge order for B-shaped donuts, due tonight, but I can't get anyone to confirm the order."
+				"They haven't paid yet, either."
+				"I went over there this morning, but they wouldn't let me in! And Bob wouldn't tell me anything!"
+				"I just want to know whether or not they still want these donuts. I'm running out of time to get everything ready by tonight."
+				"Can you find out for me? Get some answers from Bob? Any Bob?"
+				PLAYER "Sure, I can swing past that way. See what I can find out."
+				SELF "Thanks."
+				"Oh, and happy birthday."
+			}
+		} else { // !glitched && !BobsClub && backstory
+			// hear summary
+			show dialog {
+				SELF "Hear anything from the Bobs-Only Club yet?"
+			}
+		}
+		copy set-hint-baker
+	}
+	set entity "%PLAYER%" tick_script to null_script
+	set entity "%SELF%" interact_script to show_dialog-baker-start
+}
+
+// Bob's club
+show_dialog-bobwall {
+	show dialog {
+		PLAYER "Wall of Bobs: famous Bobs."
+		"Robert Parr, superhero.\nBob Kelso, physician.\nSpongeBob, fry cook.\nSideshow Bob, entertainer."
+		"There sure are a lot of Bobs in the world."
+	}
+}
+show_dialog-balloonbox {
+	show dialog {
+		PLAYER "Just a box of uninflated balloons."
+		"How many balloons does a party need, anyway?"
+	}
+}
+show_dialog-fridge {
+	show dialog {
+		PLAYER "Wow. There's literally nothing but cans of Cactus Cooler in here."
+	}
+}
+
+// Bob Austin
+show_dialog-bobrock-start {
+	copy face-player
+	if (entity "%SELF%" is glitched) { // glitched
+		show dialog { SELF "Sqd'j meha byau jxyi." }
+	} else if (entity "Bob Austin" is not inside geometry bobzone) { // !glitched && !bobzone
+		// teleport him back into bounds
+		set player control to off
+		copy face-player
+		show dialog { SELF "Goin' back to work."}
+		fade out camera to #000000 over 500ms
+		teleport entity "Bob Austin" to geometry bob_point
+		turn entity "Bob Austin" south
+		fade in camera from #000000 over 500ms
+		set player control to on
+	} else if (flag bobrock-backstory is false) { // !glitched && bobzone && !backstory
+		show dialog {
+			SELF "Name's Bob."
+			"Stone Cold %Bob Austin%."
+			"...."
+			"Right, what's yours, then?"
+			PLAYER "You don't know who I am? We've both lived here for years!"
+			SELF "Don't know nobody. All I know is, gotta keep everyone out."
+			"You know, unless their name is Bob."
+			PLAYER "Bob?"
+			SELF "Bob. Camel case.\nNice and plain.\nTraditional."
+			"'Cause this club is Bobs-only. You know, the Bobs-Only Club."
+			PLAYER "Why is it Bobs only?"
+			SELF "Why?\nWhy is it Bobs only?"
+			"Why, it wouldn't be the Bobs-Only Club if I just let anyone in!"
+		}
+		if (flag baker-backstory is true) { // optional dialog
+			show dialog {
+				PLAYER "Well, the baker needs to know whether the club still needs a bunch of B-shaped donuts for tonight."
+				"Do you know if the Bobs still want them? There's gonna be a party tonight, right?"
+				SELF "That's for Bobs to know."
+				"Only Bobs."
+				"Bobs only."
+				PLAYER "I think the baker needs to know, too!"
+				SELF "Well, if his name was Bob, I would've let him in!"
+			}
+		}
+		set flag bobrock-backstory to true
+		copy set-hint-baker
+	} else { // !glitched && bobzone && backstory
+		show dialog { SELF "So, what's your name then?" }
+		if (entity "%PLAYER%" name is not Bob) { // you are NOT Bob
+			if (flag bobsclub-entered is false) { // !Bob && !BobsClub
+				show dialog {
+					PLAYER "Um....\nit's %PLAYER%."
+					SELF "Sorry, can't unlock the door for ya.\nBobs only."
+				}
+				copy set-hint-baker
+			} else { // !Bob && BobsClub
+				show dialog show_dialog-bobrock-start-AGAIN { // (reused)
+					PLAYER "We've been through all this before, you know."
+					SELF "Doesn't matter. It's just the rules.\nBobs only."
+				}
+				show dialog {
+					PLAYER "...." "Fine. I guess I'm not getting in, then."
+					SELF "Damn straight."
+				}
+			}
+		} else { // you ARE Bob
+			if (flag bobsclub-entered is false) { // Bob && !BobsClub
+				show dialog {
+					PLAYER "Why, what luck! My name happens to be Bob!"
+					SELF "Nice. Great name. I'll open it on up."
+				}
+			} else { // Bob && BobsClub
+				show dialog show_dialog-bobrock-start-AGAIN // from above
+				show dialog {
+					PLAYER "Well, my name is Bob! Happy?"
+					SELF "Cool. Great name."
+				}
+			}
+			// Bob Austin unlocks the door:
+			set player control off
+			walk entity "Bob Austin" to geometry "%ENTITY_PATH%" over 400ms
+			turn entity "Bob Austin" toward geometry door-bobsclub-entrance
+			wait 1000ms
+			turn entity "Bob Austin" south
+			show dialog {
+				SELF "Head inside quick, now."
+			}
+			walk entity "%PLAYER%" to geometry predoor-bobsclub over 500ms
+			walk entity "%PLAYER%" to geometry door-bobsclub-entrance over 500ms
+			set player control on
+			load map bobsclub // JUMP
+		}
+	// RESET
+	}
+	set entity "Bob Austin" interact_script to show_dialog-bobrock-start
+}
+
+// Guardian Bob
+show_dialog-bobsclub-bob {
+	copy face-player
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "Gung'f n onq fvta." }
+	} else {
+		show dialog {
+			SELF "They could've told me the party was actually canceled before I made the trip out here."
+			"And it was a long trip, too. I came all the way from the net!"
+			"*sigh*\nOh, well."
+		}
+		if (flag storyflag-bobmoss is false) {
+			set player control off
+			wait 120ms
+			set player control on
+			set entity "Guardian Bob" tick_script to look-left-and-right-fast
+			show dialog {
+				SELF "Wait. Weren't there two Bob golems last year?"
+			}
+			copy set-hint-bobmoss-from-guardian
+			set entity "Guardian Bob" tick_script to null_script
+			turn entity "Guardian Bob" south
+		}
+	}
+	// RESET
+	set entity "Guardian Bob" interact_script to show_dialog-bobsclub-bob
+}
+
+// Strong Bad
+show_dialog-bobsclub-strongbob {
+	if (entity "%SELF%" is glitched) {
+		show dialog { SELF "fhqwhgadshgnsdhjsdbkhsdabkfabkveybvf" }
+	} else {
+		copy face-player
+		if (flag strong_bad-backstory is false) {
+			// hear his "backstory"
+			show dialog {
+				SELF "Why, hello there, fellow Bob!"
+				PLAYER "Your name is Bob?"
+				SELF "Why, it sure is!"
+				PLAYER "You look an awful lot like Strong Bad to me."
+				SELF "Wha-what? STRONG BAD? Never heard of him. Though he sounds like quite the rugged and handsome gentleman."
+				"The name's Strong BOB! Just lookee here at my fake -- I mean real -- ID!"
+				PLAYER "(This ID clearly belongs to \"Bob Newhart,\" but the word Newhart is crossed out.)"
+				"(I guess Bob out front doesn't have very good eyes.)"
+			}
+			set flag strong_bad-backstory to true
+		} else {
+			// hear a "summary"
+			show dialog { SELF "Yessirree! Strong Bob's the name, and partyin's the game!" }
+		}
+	}
+	// RESET
+	set entity "Strong Bad" interact_script to show_dialog-bobsclub-strongbob
+}
+
+/** ------ BOB MOSS ------ **/
+
+show_dialog-bobmoss-start {
+	copy face-player
+	if (entity "%SELF%" is glitched) {
+		copy show_dialog-bobmoss-deglitch
+		set entity "%SELF%" interact_script to show_dialog-bobmoss-start	
+	}
+	if (flag storyflag-bobmoss is true) {
+		goto show_dialog-bobmoss-start-s
+	}
+	show dialog {
+		SELF "Oh, hello, there."
+	}
+	set entity "Bob Moss" tick_script to spin_self_clockwise
+	show dialog {
+		SELF "I was just admiring the forest, with its happy little trees...."
+		"I've made so many squirrel friends, and...."
+	}
+	set entity "Bob Moss" tick_script to null_script
+	copy face-player
+	show dialog {
+		SELF "Oh!"
+		"I didn't realize how late it was getting. I think I might be late for work."
+		"I'd better head out. Hope to see you again."
+	}
+	set player control to off
+	fade out camera to #000000 over 500ms
+	teleport entity "Bob Moss" to geometry catwalk-hide
+	set flag storyflag-bobmoss to true
+	copy calculate-hint-tracking-series
+	if (variable hint-tracking-check is 3) {
+		// if the hint series is the same, reset hint
+		copy set-hint-none
+	}
+	fade in camera from #000000 over 500ms
+	set player control to on
+}
+show_dialog-bobmoss-start-s {
+	// can't zigzag this without editing the Tiled map... TODO later
+	copy face-player
+	if (entity "%SELF%" is glitched) {
+		copy show_dialog-bobmoss-deglitch
+		set entity "%SELF%" interact_script to show_dialog-bobmoss-start-s
+	}
+	show dialog {
+		SELF "Sorry, I can't serve anyone until the party starts."
+		"Help yourself to a Cactus Cooler, though. Plenty in the fridge."
+	}
+	turn entity "%SELF%" south
+}
+show_dialog-bobmoss-deglitch {
+	show dialog {
+		SELF "Well that's no good. I should really try to relax. Loosen up a bit...."
+	}
+	set player control to off
+	fade out camera to #000000 over 500ms
+	make entity "%SELF%" unglitched
+	fade in camera from #000000 over 500ms
+	set player control to on
+	show dialog {
+		SELF "Ahh, that feels nice."
+	}
+	turn entity "%SELF%" south
+}
+
+/* --- DEBUG --- */
+
+debug-begin-flail {
+	copy begin-flail
+	set entity "%SELF%" interact_script to debug-end-flail
+}
+debug-end-flail {
+	copy end-flail
+	set entity "%SELF%" interact_script to debug-begin-flail
+}
+
+debug-bob-q {
+	copy face-player
+	show dialog {
+		SELF
+		"How to Bob?"
+		> "Skip Bob Austin conversation" : goto "debug-bob-skipconvo"
+		> "Above + set name Bob" : goto "debug-bob-also-setnamebob"
+		> "Skip cutscene and teleport" : goto "debug-bob-teleport"
+		> "Never mind" : goto "debug-bob-no"
+	}
+}
+debug-bob-skipconvo {
+	set flag bobrock-backstory to true
+	show dialog {
+		SELF "Bob Austin has been spoken to."
+	}
+	set entity "%SELF%" interact_script to debug-bob-q
+}
+debug-bob-also-setnamebob {
+	set entity "%PLAYER%" name to Bob
+	set flag bobrock-backstory to true
+	show dialog {
+		SELF "Bob Austin has been spoken to, and your name is Bob."
+	}
+	set entity "%SELF%" interact_script to debug-bob-q
+}
+debug-bob-teleport {
+	set flag bobsclub-entered to true
+	show dialog {
+		SELF "Teleportation in progress."
+	}
+	load map bobsclub
+}
+debug-bob-no {
+	set entity "%SELF%" interact_script to debug-bob-q
+}

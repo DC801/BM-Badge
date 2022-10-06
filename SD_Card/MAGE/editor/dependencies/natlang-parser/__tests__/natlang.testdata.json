@@ -1368,10 +1368,10 @@
 				"script": "script name"
 			},
 			"natlang": [
-				"set map tickScript to \"script name\"",
-				"set map tickScript to 'script name'",
-				"set map tickScript \"script name\"",
-				"set map tickScript 'script name'"
+				"set map tick_script to \"script name\"",
+				"set map tick_script to 'script name'",
+				"set map tick_script \"script name\"",
+				"set map tick_script 'script name'"
 			]
 		},
 		{
@@ -1621,8 +1621,8 @@
 				"u2_value": 1
 			},
 			"natlang": [
-				"set entity \"Entity Name\" primaryID to 1",
-				"set entity \"Entity Name\" primaryID 1"
+				"set entity \"Entity Name\" primary_id to 1",
+				"set entity \"Entity Name\" primary_id 1"
 			]
 		},
 		{
@@ -1632,8 +1632,8 @@
 				"u2_value": 2
 			},
 			"natlang": [
-				"set entity \"Entity Name\" secondaryID to 2",
-				"set entity \"Entity Name\" secondaryID 2"
+				"set entity \"Entity Name\" secondary_id to 2",
+				"set entity \"Entity Name\" secondary_id 2"
 			]
 		},
 		{
@@ -1643,8 +1643,8 @@
 				"byte_value": 0
 			},
 			"natlang": [
-				"set entity \"Entity Name\" primaryIDtype to 0",
-				"set entity \"Entity Name\" primaryIDtype 0"
+				"set entity \"Entity Name\" primary_id_type to 0",
+				"set entity \"Entity Name\" primary_id_type 0"
 			]
 		},
 		{
@@ -1654,8 +1654,8 @@
 				"byte_value": 128
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateA to 128",
-				"set entity \"Entity Name\" hackableStateA 128"
+				"set entity \"Entity Name\" hackable_state_a to 128",
+				"set entity \"Entity Name\" hackable_state_a 128"
 		]
 		},
 		{
@@ -1665,8 +1665,8 @@
 				"byte_value": 128
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateB to 128",
-				"set entity \"Entity Name\" hackableStateB 128"
+				"set entity \"Entity Name\" hackable_state_b to 128",
+				"set entity \"Entity Name\" hackable_state_b 128"
 			]
 		},
 		{
@@ -1676,8 +1676,8 @@
 				"byte_value": 128
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateC to 128",
-				"set entity \"Entity Name\" hackableStateC 128"
+				"set entity \"Entity Name\" hackable_state_c to 128",
+				"set entity \"Entity Name\" hackable_state_c 128"
 			]
 		},
 		{
@@ -1687,8 +1687,8 @@
 				"byte_value": 128
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateD to 128",
-				"set entity \"Entity Name\" hackableStateD 128"
+				"set entity \"Entity Name\" hackable_state_d to 128",
+				"set entity \"Entity Name\" hackable_state_d 128"
 			]
 		},
 		{
@@ -1698,8 +1698,8 @@
 				"u2_value": 2
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateAU2 to 2",
-				"set entity \"Entity Name\" hackableStateAU2 2"
+				"set entity \"Entity Name\" hackable_state_au2 to 2",
+				"set entity \"Entity Name\" hackable_state_au2 2"
 			]
 		},
 		{
@@ -1709,8 +1709,8 @@
 				"u2_value": 2
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateCU2 to 2",
-				"set entity \"Entity Name\" hackableStateCU2 2"
+				"set entity \"Entity Name\" hackable_state_cu2 to 2",
+				"set entity \"Entity Name\" hackable_state_cu2 2"
 			]
 		},
 		{
@@ -1720,8 +1720,8 @@
 				"u4_value": 4
 			},
 			"natlang": [
-				"set entity \"Entity Name\" hackableStateAU4 to 4",
-				"set entity \"Entity Name\" hackableStateAU4 4"
+				"set entity \"Entity Name\" hackable_state_au4 to 4",
+				"set entity \"Entity Name\" hackable_state_au4 4"
 			]
 		},
 		{
@@ -1757,8 +1757,8 @@
 				"byte_value": 0
 			},
 			"natlang": [
-				"set entity \"Entity Name\" animationFrame to 0",
-				"set entity \"Entity Name\" animationFrame 0"
+				"set entity \"Entity Name\" animation_frame to 0",
+				"set entity \"Entity Name\" animation_frame 0"
 			]
 		},
 		{
@@ -1768,12 +1768,12 @@
 				"script": "script-entity-interact"
 			},
 			"natlang": [
-				"set entity \"Entity Name\" interactScript to script-entity-interact",
-				"set entity \"Entity Name\" interactScript to 'script-entity-interact'",
-				"set entity \"Entity Name\" interactScript to \"script-entity-interact\"",
-				"set entity \"Entity Name\" interactScript script-entity-interact",
-				"set entity \"Entity Name\" interactScript 'script-entity-interact'",
-				"set entity \"Entity Name\" interactScript \"script-entity-interact\""
+				"set entity \"Entity Name\" interact_script to script-entity-interact",
+				"set entity \"Entity Name\" interact_script to 'script-entity-interact'",
+				"set entity \"Entity Name\" interact_script to \"script-entity-interact\"",
+				"set entity \"Entity Name\" interact_script script-entity-interact",
+				"set entity \"Entity Name\" interact_script 'script-entity-interact'",
+				"set entity \"Entity Name\" interact_script \"script-entity-interact\""
 			]
 		},
 		{
@@ -1783,12 +1783,12 @@
 				"script": "script-entity-tick"
 			},
 			"natlang": [
-				"set entity \"Entity Name\" tickScript to script-entity-tick",
-				"set entity \"Entity Name\" tickScript to 'script-entity-tick'",
-				"set entity \"Entity Name\" tickScript to \"script-entity-tick\"",
-				"set entity \"Entity Name\" tickScript script-entity-tick",
-				"set entity \"Entity Name\" tickScript 'script-entity-tick'",
-				"set entity \"Entity Name\" tickScript \"script-entity-tick\""
+				"set entity \"Entity Name\" tick_script to script-entity-tick",
+				"set entity \"Entity Name\" tick_script to 'script-entity-tick'",
+				"set entity \"Entity Name\" tick_script to \"script-entity-tick\"",
+				"set entity \"Entity Name\" tick_script script-entity-tick",
+				"set entity \"Entity Name\" tick_script 'script-entity-tick'",
+				"set entity \"Entity Name\" tick_script \"script-entity-tick\""
 			]
 		},
 		{
@@ -2056,8 +2056,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateAU4 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateAU4 is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_au4 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_au4 is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2095,8 +2095,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" interactScript is name-of-checked-script-interact then goto script \"branch script\"",
-				"if entity \"Entity Name\" interactScript is name-of-checked-script-interact then goto \"branch script\""
+				"if entity \"Entity Name\" interact_script is name-of-checked-script-interact then goto script \"branch script\"",
+				"if entity \"Entity Name\" interact_script is name-of-checked-script-interact then goto \"branch script\""
 			]
 		},
 		{
@@ -2108,8 +2108,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" tickScript is name-of-checked-script-tick then goto script \"branch script\"",
-				"if entity \"Entity Name\" tickScript is name-of-checked-script-tick then goto \"branch script\""
+				"if entity \"Entity Name\" tick_script is name-of-checked-script-tick then goto script \"branch script\"",
+				"if entity \"Entity Name\" tick_script is name-of-checked-script-tick then goto \"branch script\""
 			]
 		},
 		{
@@ -2134,8 +2134,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" primaryID is 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" primaryID is 16 then goto \"branch script\""
+				"if entity \"Entity Name\" primary_id is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primary_id is 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2147,8 +2147,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" secondaryID is 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" secondaryID is 16 then goto \"branch script\""
+				"if entity \"Entity Name\" secondary_id is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" secondary_id is 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2160,8 +2160,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" primaryIDtype is 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" primaryIDtype is 16 then goto \"branch script\""
+				"if entity \"Entity Name\" primary_id_type is 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primary_id_type is 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2186,8 +2186,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" animationFrame is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" animationFrame is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" animation_frame is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animation_frame is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2212,8 +2212,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateA is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateA is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_a is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_a is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2225,8 +2225,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateB is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateB is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_b is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_b is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2238,8 +2238,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateC is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateC is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_c is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_c is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2251,8 +2251,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateD is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateD is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_d is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_d is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2264,8 +2264,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateAU2 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateAU2 is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_au2 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_au2 is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2277,8 +2277,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateCU2 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateCU2 is 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_cu2 is 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_cu2 is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2329,8 +2329,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" interactScript is not name-of-checked-script-interact then goto script \"branch script\"",
-				"if entity \"Entity Name\" interactScript is not name-of-checked-script-interact then goto \"branch script\""
+				"if entity \"Entity Name\" interact_script is not name-of-checked-script-interact then goto script \"branch script\"",
+				"if entity \"Entity Name\" interact_script is not name-of-checked-script-interact then goto \"branch script\""
 			]
 		},
 		{
@@ -2342,8 +2342,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" tickScript is not name-of-checked-script-tick then goto script \"branch script\"",
-				"if entity \"Entity Name\" tickScript is not name-of-checked-script-tick then goto \"branch script\""
+				"if entity \"Entity Name\" tick_script is not name-of-checked-script-tick then goto script \"branch script\"",
+				"if entity \"Entity Name\" tick_script is not name-of-checked-script-tick then goto \"branch script\""
 			]
 		},
 		{
@@ -2368,8 +2368,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" primaryID is not 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" primaryID is not 16 then goto \"branch script\""
+				"if entity \"Entity Name\" primary_id is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primary_id is not 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2381,8 +2381,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" secondaryID is not 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" secondaryID is not 16 then goto \"branch script\""
+				"if entity \"Entity Name\" secondary_id is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" secondary_id is not 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2394,8 +2394,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" primaryIDtype is not 16 then goto script \"branch script\"",
-				"if entity \"Entity Name\" primaryIDtype is not 16 then goto \"branch script\""
+				"if entity \"Entity Name\" primary_id_type is not 16 then goto script \"branch script\"",
+				"if entity \"Entity Name\" primary_id_type is not 16 then goto \"branch script\""
 			]
 		},
 		{
@@ -2420,8 +2420,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" animationFrame is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" animationFrame is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" animation_frame is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" animation_frame is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2446,8 +2446,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateA is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateA is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_a is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_a is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2459,8 +2459,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateB is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateB is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_b is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_b is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2472,8 +2472,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateC is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateC is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_c is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_c is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2485,8 +2485,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateD is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateD is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_d is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_d is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2498,8 +2498,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateAU2 is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateAU2 is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_au2 is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_au2 is not 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2511,8 +2511,8 @@
 				"success_script": "branch script"
 			},
 			"natlang": [
-				"if entity \"Entity Name\" hackableStateCU2 is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackableStateCU2 is not 1 then goto \"branch script\""
+				"if entity \"Entity Name\" hackable_state_cu2 is not 1 then goto script \"branch script\"",
+				"if entity \"Entity Name\" hackable_state_cu2 is not 1 then goto \"branch script\""
 			]
 		},
 		{

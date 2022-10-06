@@ -1,0 +1,159 @@
+initialize-bling-rotate-max {
+	mutate bling-rotate-max = 2
+}
+
+bling-rotate-state-increment {
+	mutate bling-rotate-state + 1
+	mutate temp = bling-rotate-max
+	mutate temp + 1
+	if variable bling-rotate-state is temp then goto script bling-rotate-state-mutate-0
+	goto script bling-rotate-state-mutate-wrapup
+}
+
+bling-rotate-state-decrement {
+	mutate bling-rotate-state - 1
+	if variable bling-rotate-state is 65535 then goto script bling-rotate-state-mutate-max
+	goto script bling-rotate-state-mutate-wrapup
+}
+
+bling-rotate-state-mutate-0 {
+	mutate bling-rotate-state = 0
+	goto script bling-rotate-state-mutate-wrapup
+}
+
+bling-rotate-state-mutate-max {
+	mutate bling-rotate-state = bling-rotate-max
+	goto script bling-rotate-state-mutate-wrapup
+}
+
+bling-rotate-state-mutate-wrapup {
+	set flag bling-rotate-state-calc-done to true
+	set entity "%SELF%" tick_script to null_script
+}
+
+on_load-bling-mode-map {
+	set hex control to off
+	set player control to off
+	set map tick_script to on_tick-detect-bling-mode
+}
+
+on_tick-detect-bling-mode {
+	if warp state is bling-rotate-manual then goto script on_tick-bling-mode-map-manual-waiting
+	if warp state is bling-rotate-auto then goto script on_tick-bling-mode-map-auto
+	goto script on_tick-bling-mode-no_rotate-haxpress-check
+}
+
+on_tick-bling-mode-no_rotate-haxpress-check {
+	if flag bling-hax-button-only is true then goto script on_tick-bling-listen-haxpress-waiting
+	goto script on_tick-bling-listen-anypress-waiting
+}
+
+on_tick-bling-input-safety-delay {
+	wait 150ms
+}
+
+on_tick-bling-listen-anypress-waiting {
+	copy script on_tick-bling-input-safety-delay
+	goto script on_tick-bling-listen-anypress
+}
+
+on_tick-bling-listen-haxpress-waiting {
+	copy script on_tick-bling-input-safety-delay
+	goto script on_tick-bling-listen-haxpress
+}
+
+on_tick-bling-listen-anypress {
+	if button ANY then goto script on_tick-bling-back-to-menu
+}
+
+on_tick-bling-listen-haxpress {
+	if button HAX then goto script on_tick-bling-back-to-menu
+}
+
+start_bling-rotate-auto {
+	set warp state to bling-rotate-auto
+	mutate bling-rotate-state = 0
+	goto script bling-mode-go-branches
+}
+
+start_bling-rotate-manual {
+	set warp state to bling-rotate-manual
+	mutate bling-rotate-state = 0
+	goto script bling-mode-go-branches
+}
+
+on_tick-bling-mode-map-auto {
+	set entity Timer tick_script to on_tick-bling-timer
+	goto script on_tick-bling-listen-anypress-waiting
+}
+
+on_tick-bling-timer {
+	wait 13000ms
+	set entity Math tick_script to bling-rotate-state-increment
+	goto script on_tick-bling-timer-wait
+}
+
+on_tick-bling-timer-wait {
+	if flag bling-rotate-state-calc-done is true then goto script bling-mode-go-branches
+}
+
+on_tick-bling-mode-map-manual-waiting {
+	copy script on_tick-bling-input-safety-delay
+	goto script on_tick-bling-mode-map-manual
+}
+
+on_tick-bling-mode-map-manual {
+	if button LJOY_LEFT then goto script on_tick-bling-mode-map-manual-left
+	if button RJOY_LEFT then goto script on_tick-bling-mode-map-manual-left
+	if button LJOY_RIGHT then goto script on_tick-bling-mode-map-manual-right
+	if button RJOY_RIGHT then goto script on_tick-bling-mode-map-manual-right
+	if button HAX then goto script on_tick-bling-back-to-menu
+}
+
+on_tick-bling-mode-map-manual-left {
+	set entity Math tick_script to bling-rotate-state-decrement
+	goto script on_tick-bling-timer-wait
+}
+
+on_tick-bling-mode-map-manual-right {
+	set entity Math tick_script to bling-rotate-state-increment
+	goto script on_tick-bling-timer-wait
+}
+
+on_tick-bling-back-to-menu {
+	set warp state to from-bling
+	goto script load-main_menu
+}
+
+bling-mode-go-branches {
+	set flag bling-rotate-state-calc-done to false
+	if variable bling-rotate-state is 0 then goto script start_bling-dc801
+	if variable bling-rotate-state is 1 then goto script start_bling-digi-mage
+	if variable bling-rotate-state is 2 then goto script start_bling-zero
+	goto script on_tick-bling-back-to-menu
+}
+
+start_bling-dc801 {
+	set flag bling-hax-button-only to false
+	load map bling-dc801
+}
+
+start_bling-zero {
+	set flag bling-hax-button-only to false
+	load map bling-zero
+}
+
+start_bling-digi-mage {
+	set flag bling-hax-button-only to false
+	load map bling-digi-mage
+}
+
+start_bling-flying-toasters {
+	set flag bling-hax-button-only to false
+	load map flying-toasters
+}
+
+start_bling-qr {
+	set flag bling-hax-button-only to true
+	load map bling-qr
+}

@@ -99,7 +99,7 @@ mage01-set_entity_name {
 		"Good work, you set my name to '%SELF%'!\nNow I should set my name back to 'Mage 01'\nwhen you close this dialog."
 	}
 	set entity "Mage 01" name to "Mage 01"
-	set entity "Mage 01" interactScript to mage01-check_entity_name
+	set entity "Mage 01" interact_script to mage01-check_entity_name
 }
 
 mage02-check_entity_x {
@@ -123,20 +123,20 @@ mage02-set_entity_xy {
 	}
 	set entity "Mage 02" x to 192
 	set entity "Mage 02" y to 96
-	set entity "Mage 02" interactScript to mage02-check_entity_x
+	set entity "Mage 02" interact_script to mage02-check_entity_x
 }
 
 mage03-check_entity_scripts {
-	if entity "%PLAYER%" interactScript is not null_script then goto script mage03-success_script
+	if entity "%PLAYER%" interact_script is not null_script then goto script mage03-success_script
 	// doc: Mage 03 tests CHECK_ENTITY_(TICK/INTERACT)_SCRIPT and then SET_ENTITY_(TICK/INTERACT)_SCRIPT
-	if entity "%PLAYER%" tickScript is not null_script then goto script mage03-success_script
+	if entity "%PLAYER%" tick_script is not null_script then goto script mage03-success_script
 }
 
 mage03-success_script {
-	set entity "Mage 03" interactScript to mage03-success_prompt
-	set entity "%PLAYER%" tickScript to null_script
-	set entity "%PLAYER%" interactScript to null_script
-	set entity "Mage 03" tickScript to mage03-check_entity_scripts
+	set entity "Mage 03" interact_script to mage03-success_prompt
+	set entity "%PLAYER%" tick_script to null_script
+	set entity "%PLAYER%" interact_script to null_script
+	set entity "Mage 03" tick_script to mage03-check_entity_scripts
 }
 
 mage03-initial_prompt {
@@ -152,11 +152,11 @@ mage03-success_prompt {
 		SELF
 		"Looks like you updated your own\nonTick Script or onInteract Script.\nThey should be reset to their original\nvalues when you close this dialog."
 	}
-	set entity "Mage 03" interactScript to mage03-initial_prompt
+	set entity "Mage 03" interact_script to mage03-initial_prompt
 }
 
 mage04-check_entity_primary_id {
-	if entity "Mage 04" primaryID is 12 then goto script mage04-check_entity_secondary_id
+	if entity "Mage 04" primary_id is 12 then goto script mage04-check_entity_secondary_id
 	// doc: Mage 04 tests CHECK_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) and then SET_ENTITY_(PRIMARY/SECONDARY)_ID(_TYPE) after a successful check to reset itself.
 	show dialog dialog-mage04_1 {
 		SELF
@@ -166,12 +166,12 @@ mage04-check_entity_primary_id {
 }
 
 mage04-check_entity_secondary_id {
-	if entity "Mage 04" secondaryID is 1 then goto script mage04-check_entity_primary_id_type
+	if entity "Mage 04" secondary_id is 1 then goto script mage04-check_entity_primary_id_type
 	show dialog dialog-mage04_1
 }
 
 mage04-check_entity_primary_id_type {
-	if entity "Mage 04" primaryIDtype is 3 then goto script mage04-success_set_ids
+	if entity "Mage 04" primary_id_type is 3 then goto script mage04-success_set_ids
 	show dialog dialog-mage04_1
 }
 
@@ -180,10 +180,10 @@ mage04-success_set_ids {
 		SELF
 		"Good work, you set my primary ID,\nsecondary ID, and primary ID type.\nThey should reset to their original values\n(13, 0, 2) when you close this dialog."
 	}
-	set entity "Mage 04" primaryID to 13
-	set entity "Mage 04" secondaryID to 0
-	set entity "Mage 04" primaryIDtype to 2
-	set entity "Mage 04" interactScript to mage04-check_entity_primary_id
+	set entity "Mage 04" primary_id to 13
+	set entity "Mage 04" secondary_id to 0
+	set entity "Mage 04" primary_id_type to 2
+	set entity "Mage 04" interact_script to mage04-check_entity_primary_id
 }
 
 mage05-check_player_current_animation {
@@ -192,12 +192,12 @@ mage05-check_player_current_animation {
 }
 
 mage05-check_player_current_frame {
-	if entity "%PLAYER%" animationFrame is 4 then goto script mage05-set_success_dialog
+	if entity "%PLAYER%" animation_frame is 4 then goto script mage05-set_success_dialog
 }
 
 mage05-set_success_dialog {
-	set entity "Mage 05" interactScript to mage05-success_prompt
-	set entity "Mage 05" tickScript to mage05-check_player_current_animation
+	set entity "Mage 05" interact_script to mage05-success_prompt
+	set entity "Mage 05" tick_script to mage05-check_player_current_animation
 }
 
 mage05-initial_prompt {
@@ -214,8 +214,8 @@ mage05-success_prompt {
 		"Now I will change my animation to test\nSET_ENTITY_CURRENT_ANIMATION and\nSET_ENTITY_CURRENT_FRAME. I should\nStart on the third frame."
 	}
 	set entity "Mage 05" animation to 2
-	set entity "Mage 05" animationFrame to 2
-	set entity "Mage 05" interactScript to mage05-initial_prompt
+	set entity "Mage 05" animation_frame to 2
+	set entity "Mage 05" interact_script to mage05-initial_prompt
 }
 
 mage06-check_player_entity_type {
@@ -234,7 +234,7 @@ mage06-success_prompt {
 		"Now I will set your EntityType to `mage`\nvia SET_ENTITY_TYPE."
 	}
 	set entity "%PLAYER%" type to mage
-	set entity "Mage 06" interactScript to mage06-check_player_entity_type
+	set entity "Mage 06" interact_script to mage06-check_player_entity_type
 }
 
 mage07-interact {
@@ -326,7 +326,7 @@ mage12-interact {
 }
 
 mage13-reset {
-	set entity "%SELF%" interactScript to mage13-interact
+	set entity "%SELF%" interact_script to mage13-interact
 }
 
 mage13-success-n {
@@ -373,7 +373,7 @@ mage13-interact {
 }
 
 mage14-reset {
-	set entity "%SELF%" interactScript to mage14-interact
+	set entity "%SELF%" interact_script to mage14-interact
 }
 
 "mage14-fail-value-==" {
@@ -475,7 +475,7 @@ mage15-success {
 	mutate entity_type_id = 0
 	copy variable entity_type_id into entity "%SELF%" hackable_state_a
 	copy variable entity_type_id into entity "%SELF%" primary_id
-	set entity "%SELF%" interactScript to mage15-interact
+	set entity "%SELF%" interact_script to mage15-interact
 }
 
 mage15-interact {
@@ -518,7 +518,7 @@ mage17-interact-a {
 		"I test the action SET_HEX_EDITOR_CONTROL.\nI have disabled your ability to hex edit.\nTalk to me again to re-enable hex editing."
 	}
 	set hex control to off
-	set entity "%SELF%" interactScript to mage17-interact-b
+	set entity "%SELF%" interact_script to mage17-interact-b
 }
 
 mage17-interact-b {
@@ -528,7 +528,7 @@ mage17-interact-b {
 		"I test the action SET_HEX_EDITOR_CONTROL.\nI have enabled your ability to hex edit.\nTalk to me again to disable hex editing."
 	}
 	set hex control to on
-	set entity "%SELF%" interactScript to mage17-interact-a
+	set entity "%SELF%" interact_script to mage17-interact-a
 }
 
 mage18-interact {
@@ -549,7 +549,7 @@ response-pet_the_goat {
 		SELF
 		"You have pet the mysterious goat.\n\nThe goat is pleased."
 	}
-	set entity "%SELF%" interactScript to mage18-interact
+	set entity "%SELF%" interact_script to mage18-interact
 }
 
 response-feed_the_goat {
@@ -557,7 +557,7 @@ response-feed_the_goat {
 		SELF
 		"You give some bread to the mysterious goat,\n\nThe goat is pleased, and less hungry."
 	}
-	set entity "%SELF%" interactScript to mage18-interact
+	set entity "%SELF%" interact_script to mage18-interact
 }
 
 response-give_goat_sugar_cube {
@@ -565,7 +565,7 @@ response-give_goat_sugar_cube {
 		SELF
 		"You give a Sugar Cube to mysterious goat.\nThe goat says this to you:\nThanks for the Sugar Cube[TM]!\nNow I can fly! BRB"
 	}
-	set entity "%SELF%" interactScript to mage18-interact
+	set entity "%SELF%" interact_script to mage18-interact
 }
 
 response-do_nothing {
@@ -573,7 +573,7 @@ response-do_nothing {
 		SELF
 		"You do nothing about the mysterious goat.\nYou have lost the game.\n\nGAME OVER"
 	}
-	set entity "%SELF%" interactScript to mage18-interact
+	set entity "%SELF%" interact_script to mage18-interact
 }
 
 mage19-interact {
@@ -654,7 +654,7 @@ mage21-interact-a {
 		"I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have disabled your ability to clipboard.\nTalk to me again to re-enable hex clipboard."
 	}
 	set hex clipboard to off
-	set entity "%SELF%" interactScript to mage21-interact-b
+	set entity "%SELF%" interact_script to mage21-interact-b
 }
 
 mage21-interact-b {
@@ -664,7 +664,7 @@ mage21-interact-b {
 		"I test SET_HEX_EDITOR_CONTROL_CLIPBOARD.\nI have enabled your ability to clipboard.\nTalk to me again to disable hex clipboard."
 	}
 	set hex clipboard to on
-	set entity "%SELF%" interactScript to mage21-interact-a
+	set entity "%SELF%" interact_script to mage21-interact-a
 }
 
 mage22-interact {
@@ -699,11 +699,11 @@ mage23-interact {
 }
 
 mage23-interact-reset {
-	set entity "%SELF%" interactScript to mage23-interact
+	set entity "%SELF%" interact_script to mage23-interact
 }
 
 mage23-tick-reset {
-	set entity "%SELF%" tickScript to null_script
+	set entity "%SELF%" tick_script to null_script
 }
 
 mage23-show_dialog-not_pressed {
@@ -725,27 +725,27 @@ mage23-show_dialog-was_pressed {
 }
 
 mage23-set_tick-press-any {
-	set entity "%SELF%" tickScript to mage23-tick_delay-press-any
+	set entity "%SELF%" tick_script to mage23-tick_delay-press-any
 	copy script mage23-interact-reset
 }
 
 mage23-set_tick-press-page {
-	set entity "%SELF%" tickScript to mage23-tick-press-page
+	set entity "%SELF%" tick_script to mage23-tick-press-page
 	copy script mage23-interact-reset
 }
 
 mage23-set_tick-state-any {
-	set entity "%SELF%" tickScript to mage23-tick-state-any
+	set entity "%SELF%" tick_script to mage23-tick-state-any
 	copy script mage23-interact-reset
 }
 
 mage23-set_tick-state-page {
-	set entity "%SELF%" tickScript to mage23-tick-state-page
+	set entity "%SELF%" tick_script to mage23-tick-state-page
 	copy script mage23-interact-reset
 }
 
 mage23-tick_delay-press-any {
-	set entity "%SELF%" tickScript to mage23-tick-press-any
+	set entity "%SELF%" tick_script to mage23-tick-press-any
 	// doc: We need to force it to wait an extra tick for the `ANY` key, because on_ticks are evaluated after, and on the same tick as on_interacts - and the on_interact's dialog is what triggers this script!
 }
 
@@ -784,7 +784,7 @@ mage24-interact-success {
 		"Great Jeaoarb!"
 	}
 	set entity "%SELF%" path to mage24-geometry-a
-	set entity "%SELF%" interactScript to mage24-interact
+	set entity "%SELF%" interact_script to mage24-interact
 }
 
 mage24-tick {

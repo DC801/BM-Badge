@@ -1,3 +1,5 @@
+var mgs = require('../mgs_json_to_natlang.js');
+
 var actionCategoryText = {
 	"game management": [
 		"Handle the general state of the game, such as loading maps, timing game actions, enabling and disabling player input, and managing save states."
@@ -731,3 +733,5 @@ var mid = Object.keys(actionCategoryText).map(function (actionCategoryName) {
 	result += stringedActions.join('\n\n');
 	return result;
 }).join('\n\n');
+
+module.exports = mid
