@@ -28,19 +28,15 @@ void MageMap::Load(uint16_t index)
 
    address += sizeof(uint8_t); // padding
 
-   entityGlobalIds = std::vector<uint16_t>{ entityCount };
-   ROM->Read(entityGlobalIds.data(), address, entityCount);
+   entityGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[entityCount] };
+   geometryGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[geometryCount] };
+   scriptGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[scriptCount] };
+   goDirections = std::unique_ptr<GoDirection[]>{ new GoDirection[goDirectionCount] };
 
-   geometryGlobalIds = std::vector<uint16_t>{ geometryCount };
-   ROM->Read(geometryGlobalIds.data(), address, geometryCount);
-
-   //read entityGlobalIds
-   scriptGlobalIds = std::vector<uint16_t>{ scriptCount };
-   ROM->Read(scriptGlobalIds.data(), address, scriptCount);
-
-   //read goDirections
-   goDirections = std::vector<GoDirection>{ goDirectionCount };
-   ROM->Read(goDirections.data(), address, goDirectionCount);
+   ROM->Read(entityGlobalIds.get(), address, entityCount);
+   ROM->Read(geometryGlobalIds.get(), address, geometryCount);
+   ROM->Read(scriptGlobalIds.get(), address, scriptCount);
+   ROM->Read(goDirections.get(), address, goDirectionCount);
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
@@ -48,8 +44,7 @@ void MageMap::Load(uint16_t index)
       address += sizeof(uint16_t); // Padding
    }
 
-   mapLayerOffsets = std::vector<uint32_t>(layerCount);
-
+   mapLayerOffsets = std::unique_ptr<uint32_t[]>{ new uint32_t[layerCount] };
    for (uint32_t i = 0; i < layerCount; i++)
    {
       mapLayerOffsets[i] = address;
@@ -85,12 +80,6 @@ void MageMap::Load(uint16_t index)
             filteredEntityCountOnThisMap++;
          }
       }
-   }
-   for (uint32_t i = 0; i < filteredEntityCountOnThisMap; i++)
-   {
-      //other values are filled in when getEntityRenderableData is called:
-      //entities[i].updateRenderableData(this);
-      //updateEntityRenderableData(getMapLocalEntityId(i), true);
    }
 }
 

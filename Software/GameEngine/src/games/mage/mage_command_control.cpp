@@ -286,8 +286,6 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
    for (uint8_t i = 0; i < serialDialog.responseCount; i++)
    {
       MageSerialDialogResponse* response = &serialDialogResponses[i];
-      ROM_ENDIAN_U2_BUFFER(&response->stringId, 1);
-      ROM_ENDIAN_U2_BUFFER(&response->scriptId, 1);
       if (serialDialog.serialResponseType == RESPONSE_ENTER_NUMBER)
       {
          std::string responseLabel = gameEngine->gameControl->getString(response->stringId, NO_PLAYER);

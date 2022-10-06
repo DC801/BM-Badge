@@ -81,7 +81,7 @@ private:
    std::shared_ptr<MageGameControl> gameControl = std::make_shared<MageGameControl>(this);
    std::shared_ptr<MageHexEditor> hexEditor = std::make_shared<MageHexEditor>(this);
    std::shared_ptr<MageScriptControl> scriptControl = std::make_shared<MageScriptControl>(this);
-   std::shared_ptr<MageScriptActions> scriptActions = std::make_shared<MageScriptActions>(this);;
+   std::shared_ptr<MageScriptActions> scriptActions = std::make_shared<MageScriptActions>(this);
    std::shared_ptr<MageCommandControl> commandControl = std::make_shared<MageCommandControl>(this);
 };
 

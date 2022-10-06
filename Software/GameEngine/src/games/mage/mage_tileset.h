@@ -17,7 +17,7 @@ class MageTileset
 {
 public:
    MageTileset() noexcept = default;
-   MageTileset(std::shared_ptr<EngineROM> ROM, uint8_t index, uint32_t address);
+   MageTileset(std::shared_ptr<EngineROM> ROM, uint32_t& offset);
 
    constexpr uint16_t ImageId() const { return imageId; }
    constexpr uint16_t ImageWidth() const { return imageWidth; }
@@ -38,14 +38,21 @@ public:
          && rows >= 1;
    }
 
-   uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const;
+   uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
+   {
+      if (tileIndex >= cols * rows)
+      {
+         return globalGeometryIds[0];
+      }
+      return globalGeometryIds[tileIndex];
+   }
 
 private:
    std::shared_ptr<EngineROM> ROM;
+
 #ifndef DC801_EMBEDDED
-   char name[TILESET_NAME_SIZE + 1]{ 0 };
+   char name[TILESET_NAME_SIZE]{ 0 };
 #endif
-   uint32_t offset{ 0 };
    uint16_t imageId{ 0 };
    uint16_t imageWidth{ 0 };
    uint16_t imageHeight{ 0 };
@@ -53,7 +60,7 @@ private:
    uint16_t tileHeight{ 0 };
    uint16_t cols{ 0 };
    uint16_t rows{ 0 };
-
+   const uint16_t* globalGeometryIds{ nullptr };
 }; //class MageTileset
 
 #endif //_MAGE_TILESET_H

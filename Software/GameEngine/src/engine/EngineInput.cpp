@@ -45,7 +45,7 @@ void EngineInput::GetDesktopInputState()
          // reload the `game.dat` from the filesystem
          else if (KMOD_CTRL == (e.key.keysym.mod & KMOD_CTRL) && e.key.keysym.sym == SDLK_r)
          {
-            shouldReloadGameDat = true;
+            TriggerRomReload();
             return;
          }
          // + or - keys increase or decrease screen size:

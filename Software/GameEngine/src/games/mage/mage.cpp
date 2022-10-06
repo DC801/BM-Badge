@@ -17,9 +17,6 @@
 #include "shim_timer.h"
 #endif
 
-//uncomment to print main game loop timing debug info to terminal or over serial
-//#define TIMING_DEBUG
-
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
 #endif
@@ -74,7 +71,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    hexEditor->updateHexStateVariables();
 
    //either do hax inputs:
-   if (hexEditor->getHexEditorState())
+   if (hexEditor->isHexEditorOn())
    {
       //apply inputs to the hex editor:
       hexEditor->applyHexModeInputs();
@@ -104,38 +101,19 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
 
 void MageGameEngine::GameRender()
 {
-#ifdef TIMING_DEBUG
-   uint32_t now = millis();
-   uint32_t diff = 0;
-#endif
    //make hax do
-   if (hexEditor->getHexEditorState())
+   if (hexEditor->isHexEditorOn())
    {
       //run hex editor if appropriate
       frameBuffer->clearScreen(RGB(0, 0, 0));
-#ifdef TIMING_DEBUG
-      diff = millis() - now;
-      debug_print("screen clear time: %d", diff);
-      now = millis();
-#endif
       hexEditor->renderHexEditor();
-#ifdef TIMING_DEBUG
-      diff = millis() - now;
-      debug_print("hex render time: %d", diff);
-#endif
    }
 
-   //otherwise be boring and normal
+   //otherwise be boring and normal/run mage game:
    else
    {
-      //otherwise run mage game:
       uint16_t backgroundColor = RGB(0, 0, 0);
       frameBuffer->clearScreen(frameBuffer->applyFadeColor(backgroundColor));
-#ifdef TIMING_DEBUG
-      diff = millis() - now;
-      debug_print("screen clear time: %d", diff);
-      now = millis();
-#endif
 
       //then draw the map and entities:
       uint8_t layerCount = gameControl->Map()->LayerCount();
@@ -146,41 +124,21 @@ void MageGameEngine::GameRender()
          {
             //draw all map layers except the last one before drawing entities.
             gameControl->DrawMap(layerIndex);
-#ifdef TIMING_DEBUG
-            diff = millis() - now;
-            debug_print("Layer Time: %d", diff);
-            now = millis();
-#endif
          }
       }
       else
       {
          //if there is only one map layer, it will always be drawn before the entities.
          gameControl->DrawMap(0);
-#ifdef TIMING_DEBUG
-         diff = millis() - now;
-         debug_print("Layer Time: %d", diff);
-         now = millis();
-#endif
       }
 
       //now that the entities are updated, draw them to the screen.
       gameControl->Map()->DrawEntities(this);
-#ifdef TIMING_DEBUG
-      diff = millis() - now;
-      debug_print("Entity Time: %d", diff);
-      now = millis();
-#endif
 
       if (layerCount > 1)
       {
          //draw the final layer above the entities.
          gameControl->DrawMap(layerCount - 1);
-#ifdef TIMING_DEBUG
-         diff = millis() - now;
-         debug_print("Layer n Time: %d", diff);
-         now = millis();
-#endif
       }
 
       if (gameControl->isCollisionDebugOn)
@@ -190,20 +148,10 @@ void MageGameEngine::GameRender()
          {
             auto point = gameControl->getPushBackFromTilesThatCollideWithPlayer();
          }
-#ifdef TIMING_DEBUG
-         diff = millis() - now;
-         debug_print("Geometry Time: %d", diff);
-         now = millis();
-#endif
       }
       if (gameControl->dialogControl->isOpen())
       {
          gameControl->dialogControl->draw();
-#ifdef TIMING_DEBUG
-         diff = millis() - now;
-         debug_print("Dialog Time: %d", diff);
-         now = millis();
-#endif
       }
    }
    //update the state of the LEDs
@@ -211,10 +159,6 @@ void MageGameEngine::GameRender()
 
    //update the screen
    frameBuffer->blt();
-#ifdef TIMING_DEBUG
-   diff = millis() - now;
-   debug_print("blt time: %d", diff);
-#endif
 }
 
 void MageGameEngine::EngineMainGameLoop()
@@ -226,15 +170,12 @@ void MageGameEngine::EngineMainGameLoop()
       // recoverable runtime error that the client can just ignore, unless
       // EngineInit is called from inside the game loop. No idea why.
 
-      //EngineInit();
+      gameControl->Map()->Load(gameControl->currentSave.currentMapId);
       engineIsInitialized = true;
    }
    //update timing information at the start of every game loop
    now = millis();
    deltaTime = now - lastTime;
-#ifdef TIMING_DEBUG
-   debug_print("Current Loop Time: %d", now);
-#endif
    lastTime = now;
 
    //frame limiter code to keep game running at a specific FPS:
@@ -289,10 +230,6 @@ void MageGameEngine::EngineMainGameLoop()
 
    uint32_t updateAndRenderTime = millis() - lastTime;
 
-#ifdef TIMING_DEBUG
-   debug_print("End of Loop Total: %d", fullLoopTime);
-   debug_print("----------------------------------------");
-#endif
 #ifndef DC801_EMBEDDED
    if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES)
    {

@@ -48,147 +48,6 @@ void FrameBuffer::clearScreen(uint16_t color)
    }
 }
 
-void FrameBuffer::drawHorizontalLine(int x1, int y, int x2, uint16_t color)
-{
-   int s1 = min(x1, x2);
-   int s2 = max(x1, x2);
-   if (y < 0 || y >= HEIGHT) { return; }
-   for (int x = s1; x <= s2; ++x)
-   {
-      if (
-         x >= 0
-         && x < WIDTH
-         )
-      {
-         frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
-      }
-   }
-}
-
-void FrameBuffer::drawVerticalLine(int x, int y1, int y2, uint16_t color)
-{
-   int s1 = min(y1, y2);
-   int s2 = max(y1, y2);
-   if (x < 0 || x >= WIDTH) { return; }
-   for (int y = s1; y <= s2; ++y)
-   {
-      if (y >= 0 && y < HEIGHT)
-      {
-         frame[x + (y * WIDTH)] = SCREEN_ENDIAN_U2_VALUE(color);
-      }
-   }
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data)
-{
-   int idx = 0;
-
-   for (int j = y; j < (y + h); ++j)
-   {
-      for (int i = x; i < (x + w); ++i)
-      {
-         frame[j * WIDTH + i] = data[idx++];
-      }
-   }
-
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data, uint16_t transparent_color)
-{
-   int idx = 0;
-
-   for (int j = y; j < (y + h); ++j)
-   {
-      for (int i = x; i < (x + w); ++i)
-      {
-         uint16_t c = data[idx++];
-
-         if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
-         {
-            frame[j * WIDTH + i] = c;
-         }
-      }
-   }
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data)
-{
-   int idx = 0;
-
-   for (int j = y; j < (y + h); ++j)
-   {
-      for (int i = x; i < (x + w); ++i)
-      {
-         uint8_t d1 = data[idx++];
-         uint8_t d2 = data[idx++];
-
-         frame[j * WIDTH + i] = ((uint16_t)d1 << 8) | d2;
-      }
-   }
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint8_t* data, uint16_t transparent_color)
-{
-   int idx = 0;
-
-   for (int j = y; j < (y + h); ++j)
-   {
-      for (int i = x; i < (x + w); ++i)
-      {
-         uint8_t d1 = data[idx++];
-         uint8_t d2 = data[idx++];
-         uint16_t c = ((uint16_t)d1 << 8) | d2;
-
-         if (c != SCREEN_ENDIAN_U2_VALUE(transparent_color))
-         {
-            frame[j * WIDTH + i] = c;
-         }
-      }
-   }
-}
-
-void FrameBuffer::drawImage(int x, int y, int w, int h, const uint16_t* data, int fx, int fy, int pitch)
-{
-   for (int i = 0, idx = pitch * fy + fx; i < h; ++i, idx += pitch)
-   {
-      memcpy(&frame[(y + i) * WIDTH + x], &data[idx], sizeof(uint16_t) * w);
-   }
-}
-
-void FrameBuffer::drawImage(
-   int x,
-   int y,
-   int w,
-   int h,
-   const uint16_t* data,
-   int fx,
-   int fy,
-   int pitch,
-   uint16_t transparent_color
-)
-{
-   int32_t current_x = 0;
-   int32_t current_y = 0;
-   for (int offsetY = 0; (offsetY < h) && (current_y < HEIGHT); ++offsetY)
-   {
-      current_y = offsetY + y;
-      current_x = 0;
-      for (int offsetX = 0; (offsetX < w) && (current_x < WIDTH); ++offsetX)
-      {
-         current_x = offsetX + x;
-         if (current_x >= 0 && current_x < WIDTH
-            && current_y >= 0 && current_y < HEIGHT)
-         {
-            uint16_t color = data[pitch * (fy + offsetY) + offsetX + fx];
-            if (color != SCREEN_ENDIAN_U2_VALUE(transparent_color))
-            {
-               frame[(current_y * WIDTH) + current_x] = color;
-            }
-         }
-      }
-   }
-}
-
 void FrameBuffer::drawChunkWithFlags(
    uint32_t address,
    MageColorPalette* colorPaletteOriginal,
@@ -229,599 +88,29 @@ void FrameBuffer::drawChunkWithFlags(
 
    if (fadeFraction != 0)
    {
-      colorPalette = new MageColorPalette(
+      *colorPalette = MageColorPalette{
          this,
          colorPaletteOriginal,
          transparent_color,
          fadeColor,
          fadeFraction
-      );
+      };
    }
 
-   tileToBuffer(
-      pixels.get(),
-      colorPalette,
-      screen_x,
-      screen_y,
-      tile_width,
-      tile_height,
-      source_x,
-      source_y,
-      pitch,
-      transparent_color,
-      renderFlags);
-}
-
-void FrameBuffer::tileToBuffer(
-   uint8_t* pixels,
-   MageColorPalette* colorPalette,
-   int32_t screen_x,
-   int32_t screen_y,
-   uint16_t tile_width,
-   uint16_t tile_height,
-   uint16_t source_x,
-   uint16_t source_y,
-   uint16_t pitch,
-   uint16_t transparent_color,
-   RenderFlags renderFlags
-)
-{
-   uint16_t color = transparent_color;
-   int32_t screen_x_start = 0;
-   int32_t screen_y_start = 0;
-   uint32_t screen_index = 0;
-   uint32_t tile_index = 0;
-   Point a = { 0,0 };
-   Point d = { 0,0 };
-   if (screen_x < 0)
+   for (auto row = 0; row != tile_height; row++)
    {
-      a.x = -screen_x;
-      d.x = tile_width;
-      screen_x_start = 0;
-   }
-   else if (screen_x + tile_width >= WIDTH)
-   {
-      a.x = 0;
-      d.x = WIDTH - screen_x;
-      screen_x_start = screen_x;
-   }
-   else
-   {
-      a.x = 0;
-      d.x = tile_width;
-      screen_x_start = screen_x;
-   }
-
-   if (screen_y < 0)
-   {
-      a.y = -screen_y;
-      d.y = tile_height;
-      screen_y_start = 0;
-   }
-   else if (screen_y + tile_height >= HEIGHT)
-   {
-      a.y = 0;
-      d.y = HEIGHT - screen_y;
-      screen_y_start = screen_y;
-   }
-   else
-   {
-      a.y = 0;
-      d.y = tile_height;
-      screen_y_start = screen_y;
-   }
-   uint16_t num_rows = d.y - a.y;
-   uint16_t num_cols = d.x - a.x;
-   for (uint16_t row = 0; row < num_rows; row++)
-   {
-      for (uint16_t col = 0; col < num_cols; col++)
+      for (auto col = 0; col != tile_width; col++)
       {
-         screen_index = (
-            (screen_x_start + col) + //x
-            ((screen_y_start + row) * WIDTH) //y
-            );
-         tile_index = (
-            (a.x + col) + //x
-            ((a.y + row) * tile_width) //y
-            );
-         uint8_t color_index = pixels[tile_index];
-         color = colorPalette->colors[color_index];
-         if (color != transparent_color)
-         {
-            frame[screen_index] = color;
-         }
+         auto pixelRow = renderFlags.vertical ? tile_height - row : row;
+         auto pixelCol = renderFlags.horizontal ? tile_width - col : col;
+         auto pixelIndex = (pixelRow * tile_width) + pixelCol;
+
+         uint8_t colorIndex = pixels[pixelIndex];
+         auto color = colorPalette->colors[colorIndex];
+
+         drawPixel(screen_x + pixelCol, screen_y + pixelRow, color);
       }
    }
-
-   //auto screen_x_start = int32_t{ screen_x };
-   //auto screen_y_start = int32_t{ screen_y };
-
-   //auto startRow = int32_t{ 0 };
-   //auto startCol = int32_t{ 0 };
-   //auto endRow = tile_height;
-   //auto endCol = tile_width;
-
-   //auto colIterator = renderFlags.horizontal ? -1 : 1;
-   //auto rowIterator = renderFlags.vertical ? -1 : 1;
-
-   //for (auto row = startRow; row != endRow; row += rowIterator)
-   //{
-   //   for (auto col = startCol; col != endCol; col += colIterator)
-   //   {
-   //      auto pixelIndex = (row * tile_width) + col;
-   //      if (renderFlags.diagonal)
-   //      {
-   //         pixelIndex = ((endRow - col + 1) * tile_width) + (endCol - row + 1);
-   //      }
-   //      uint8_t color_index = pixels[pixelIndex];
-   //      auto color = colorPalette->colors[color_index];
-   //      
-   //      if (color != transparent_color)
-   //      {
-   //         uint32_t screen_index = ((screen_y_start + row) * WIDTH) + (screen_x_start + col);
-
-   //         frame[screen_index] = color;
-   //      }
-   //   }
-   //}
-}
-
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch)
-{
-   const size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-   FILE* fd = fopen(filename, "rb");
-   fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
-
-   for (int i = 0; i < h; ++i)
-   {
-      size_t size = fread(&buf[i * w], sizeof(uint16_t), w, fd);
-      fseek(fd, (pitch - w) * sizeof(uint16_t), SEEK_CUR);
-   }
-
-   fclose(fd);
-   ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-   drawImage(x, y, w, h, buf.get());
-}
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, int fx, int fy, int pitch, uint16_t transparent_color)
-{
-   const size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-
-   FILE* fd = fopen(filename, "rb");
-   fseek(fd, (pitch * fy + fx) * sizeof(uint16_t), SEEK_SET);
-
-   for (int i = 0; i < h; ++i)
-   {
-      size_t size = fread(&buf[i * w], sizeof(uint16_t), w, fd);
-      fseek(fd, (pitch - w) * sizeof(uint16_t), SEEK_CUR);
-   }
-
-   fclose(fd);
-
-   ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-   drawImage(x, y, w, h, buf.get(), transparent_color);
-}
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename)
-{
-   const size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-
-   uint32_t offset = 0;
-   m_stop = false;
-
-   FILE* file = fopen(filename, "rb");
-
-   if (file == NULL)
-   {
-      debug_print("Can't load file %s\n", filename);
-      return;
-   }
-
-   int retval = fseek(file, 0, SEEK_END);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
-      fclose(file);
-      return;
-   }
-
-   long tell_size = ftell(file);
-
-   if (tell_size == -1)
-   {
-      debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
-      fclose(file);
-      return;
-   }
-
-   size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
-   uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return;
-   }
-
-   for (uint16_t i = 0; i < frames; i++)
-   {
-      retval = fseek(file, offset, SEEK_SET);
-
-      if (retval != 0)
-      {
-         debug_print("Failed to seek the file %s\n", filename);
-         fclose(file);
-         return;
-      }
-
-      size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
-
-      if (read != size)
-      {
-         debug_print("Failed to read file %s\n", filename);
-         fclose(file);
-         return;
-      }
-
-      ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-      drawImage(x, y, w, h, buf.get());
-      blt();
-
-      uint8_t retVal = getButton(false);
-      if (retVal != USER_BUTTON_NONE || m_stop)
-      {
-         break;
-      }
-
-      offset += size;
-      nrf_delay_us(7500);
-   }
-
-   fclose(file);
-
-   ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-   drawImage(x, y, w, h, buf.get());
-   blt();
-}
-
-void FrameBuffer::drawImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
-{
-   const size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-
-   uint32_t offset = 0;
-   m_stop = false;
-
-   FILE* file;
-
-   file = fopen(filename, "rb");
-
-   if (file == NULL)
-   {
-      debug_print("Can't load file %s\n", filename);
-      return;
-   }
-
-   int retval = fseek(file, 0, SEEK_END);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
-      fclose(file);
-      return;
-   }
-
-   long tell_size = ftell(file);
-
-   if (tell_size == -1)
-   {
-      debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
-      fclose(file);
-      return;
-   }
-
-   size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
-   uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return;
-   }
-
-   for (uint16_t i = 0; i < frames; i++)
-   {
-      retval = fseek(file, offset, SEEK_SET);
-
-      if (retval != 0)
-      {
-         debug_print("Failed to seek the file %s\n", filename);
-         fclose(file);
-         return;
-      }
-
-      size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
-
-      if (read != size)
-      {
-         debug_print("Failed to read file %s\n", filename);
-         fclose(file);
-         return;
-      }
-
-      ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-      drawImage(x, y, w, h, buf.get());
-      blt();
-
-      if (p_callback != NULL)
-      {
-         p_callback(i, data);
-      }
-
-      uint8_t retVal = getButton(false);
-      if (retVal != USER_BUTTON_NONE || m_stop)
-      {
-         break;
-      }
-
-      offset += size;
-      nrf_delay_us(7500);
-   }
-
-   fclose(file);
-}
-
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename)
-{
-   const size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-   uint8_t retVal = USER_BUTTON_NONE;
-   m_stop = false;
-
-   FILE* file;
-
-   file = fopen(filename, "rb");
-
-   if (file == NULL)
-   {
-      debug_print("Can't load file %s\n", filename);
-      return 0;
-   }
-
-   int retval = fseek(file, 0, SEEK_END);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   long tell_size = ftell(file);
-
-   if (tell_size == -1)
-   {
-      debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   size_t size = min((size_t)tell_size, sizeof(uint16_t) * w * h);
-   uint16_t frames = MAX(tell_size / w / h / sizeof(uint16_t), 1);
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return 0;
-   }
-
-   retval = fseek(file, 0, SEEK_SET);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek start) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return 0;
-   }
-
-   do
-   {
-      uint32_t offset = 0;
-
-      for (uint16_t i = 0; i < frames; i++)
-      {
-         retval = fseek(file, offset, SEEK_SET);
-
-         if (retval != 0)
-         {
-            debug_print("Failed to seek the file %s\n", filename);
-            fclose(file);
-            return 0;
-         }
-
-         size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
-
-         if (read != size)
-         {
-            debug_print("Failed to read file %s\n", filename);
-            fclose(file);
-            return 0;
-         }
-
-         ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-         drawImage(x, y, w, h, buf.get());
-         blt();
-
-         uint8_t retVal = getButton(false);
-         if (retVal != USER_BUTTON_NONE || m_stop)
-         {
-            break;
-         }
-
-         offset += size;
-         nrf_delay_us(7500);
-      }
-
-      //if we're looping give them a way out
-      retVal = getButton(false);
-      if (retVal != USER_BUTTON_NONE || m_stop)
-      {
-         break;
-      }
-
-#ifndef DC801_EMBEDDED
-      if (application_quit != 0)
-      {
-         break;
-      }
-#endif
-
-      nrf_delay_ms(10);
-   } while (m_stop == false);
-
-   fclose(file);
-   return retVal;
-}
-
-uint8_t FrameBuffer::drawLoopImageFromFile(int x, int y, int w, int h, const char* filename, void (*p_callback)(uint8_t frame, void* p_data), void* data)
-{
-   size_t bufferSize = w * h;
-   auto buf = std::make_unique<uint16_t[]>(bufferSize);
-   uint8_t retVal = USER_BUTTON_NONE;
-   m_stop = false;
-
-   FILE* file;
-
-   file = fopen(filename, "rb");
-
-   if (file == NULL)
-   {
-      debug_print("Can't load file %s\n", filename);
-      return 0;
-   }
-
-   int retval = fseek(file, 0, SEEK_END);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek end) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   long tell_size = ftell(file);
-
-   if (tell_size == -1)
-   {
-      debug_print("Failed to get file size: (ftell) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   size_t size = (size_t)tell_size;
-   if (sizeof(uint16_t) * w * h < size) { size = sizeof(uint16_t) * w * h; }
-   uint16_t frames = 1;
-   if (frames < tell_size / w / h / sizeof(uint16_t)) { frames = tell_size / w / h / sizeof(uint16_t); }
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return 0;
-   }
-
-   retval = fseek(file, 0, SEEK_SET);
-
-   if (retval != 0)
-   {
-      debug_print("Failed to get file size: (seek start) on file: %s\n", filename);
-      fclose(file);
-      return 0;
-   }
-
-   if (size == 0)
-   {
-      debug_print("Could not stat %s.\n", filename);
-      return 0;
-   }
-
-   do
-   {
-      uint32_t offset = 0;
-
-      for (uint16_t i = 0; i < frames; i++)
-      {
-         retval = fseek(file, offset, SEEK_SET);
-
-         if (retval != 0)
-         {
-            debug_print("Failed to seek the file %s\n", filename);
-            fclose(file);
-            return 0;
-         }
-
-         size_t read = fread(buf.get(), sizeof(uint8_t), size, file);
-
-         if (read != size)
-         {
-            debug_print("Failed to read file %s\n", filename);
-            fclose(file);
-            return 0;
-         }
-
-         ROM_ENDIAN_U2_BUFFER(buf.get(), bufferSize);
-         drawImage(x, y, w, h, buf.get());
-         blt();
-
-         if (p_callback != NULL)
-         {
-            p_callback(i, data);
-         }
-
-         uint8_t retVal = getButton(false);
-         if (retVal != USER_BUTTON_NONE || m_stop)
-         {
-            break;
-         }
-
-         offset += size;
-         nrf_delay_us(7500);
-      }
-
-      //if we're looping give them a way out
-      retVal = getButton(false);
-      if (retVal != USER_BUTTON_NONE || m_stop)
-      {
-         break;
-      }
-
-#ifndef DC801_EMBEDDED
-      if (application_quit != 0)
-      {
-         break;
-      }
-#endif
-
-      nrf_delay_ms(10);
-   } while (m_stop == false);
-
-   fclose(file);
-   return retVal;
-}
-
-void FrameBuffer::drawStop()
-{
-   m_stop = true;
 }
 
 void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
@@ -836,15 +125,14 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
    auto right = x + w;
    if (right > WIDTH) { right = WIDTH; }
    auto bottom = y + h;
-   if (bottom >= HEIGHT) { bottom = HEIGHT-1; }
+   if (bottom >= HEIGHT) { bottom = HEIGHT - 1; }
    // X
    for (int i = x; i < right; i++)
    {
       // Y
       for (int j = y; j < bottom; j++)
       {
-         int index = i + (WIDTH * j);
-         frame[index] = SCREEN_ENDIAN_U2_VALUE(color);
+         drawPixel(i, j, color);
       }
    }
 }
@@ -855,14 +143,6 @@ void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color)
    drawLine(x, y + h, x + w, y, color);
    drawLine(x, y, x, y + h, color);
    drawLine(x + w, x, y, y + h, color);
-}
-
-void FrameBuffer::drawTriangle(int16_t x0, int16_t y0, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color)
-{
-   color = SCREEN_ENDIAN_U2_VALUE(color);
-   drawLine(x0, y0, x1, y1, color);
-   drawLine(x1, y1, x2, y2, color);
-   drawLine(x2, y2, x0, y0, color);
 }
 
 Point FrameBuffer::lerpPoints(Point a, Point b, float progress)
@@ -900,23 +180,13 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       std::swap(y1, y2);
    }
 
-   auto drawPixelToScreen = [this, x1, y1, color](bool downward = false) {
-      auto y = (downward ? -1 : 1) * y1 * WIDTH;
-      // crop to screen bounds
-      if (x1 >= 0 && x1 < WIDTH
-         && y >= 0 && y < HEIGHT)
-      {
-         frame[x1 + y] = SCREEN_ENDIAN_U2_VALUE(color);
-      };
-   };
-
    // optimization for vertical lines
    if (x1 == x2)
    {
       if (y2 < y1) { std::swap(y1, y2); }
       while (y1++ != y2)
       {
-         drawPixelToScreen();
+         drawPixel(x1, y1, color);
       }
    }
    // optimization for horizontal lines
@@ -924,7 +194,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
    {
       while (x1++ != x2)
       {
-         drawPixelToScreen();
+         drawPixel(x1, y1, color);
       }
    }
    // Bresenham’s Line Generation Algorithm
@@ -944,13 +214,15 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       {
          if (p >= 0)
          {
-            drawPixelToScreen(drawDownward);
+            auto y = drawDownward ? HEIGHT - y1 : y1;
+            drawPixel(x1, y, color);
             y1++;
             p = p + 2 * dy - 2 * dx;
          }
          else
          {
-            drawPixelToScreen(drawDownward);
+            auto y = drawDownward ? HEIGHT - y1 : y1;
+            drawPixel(x1, y, color);
             p = p + 2 * dy;
          }
       }
@@ -975,68 +247,6 @@ void FrameBuffer::drawPoint(int x, int y, uint8_t size, uint16_t color)
       y - size,
       color
    );
-}
-
-void FrameBuffer::fillCircle(int x, int y, int radius, uint16_t color)
-{
-   int rad2 = radius * radius;
-
-   for (int j = (y - radius); j <= (y + radius); ++j)
-   {
-      int yd = fabs(y - j);
-      int radx2 = rad2 - yd * yd;
-
-      for (int i = (x - radius); i <= (x + radius); ++i)
-      {
-         int xd = fabs(x - i);
-         int dist2 = xd * xd;
-
-         if (dist2 <= radx2)
-         {
-            frame[i + j * WIDTH] = SCREEN_ENDIAN_U2_VALUE(color);
-         }
-      }
-   }
-}
-
-void FrameBuffer::mask(int px, int py, int rad1, int rad2, int rad3)
-{
-   int minx = px - rad3;
-   int maxx = px + rad3;
-
-   int miny = py - rad3;
-   int maxy = py + rad3;
-
-   for (int y = 0; y < HEIGHT; ++y)
-   {
-      for (int x = 0; x < WIDTH; ++x)
-      {
-         if ((x < minx) || (x > maxx) || (y < miny) || (y > maxy))
-         {
-            frame[x + y * WIDTH] = 0;
-         }
-         else
-         {
-            int dx = abs(x - px);
-            int dy = abs(y - py);
-
-            int dist = (dx * dx) + (dy * dy);
-
-            if (dist > (rad3 * rad3))
-            {
-               frame[x + y * WIDTH] = 0;
-            }
-            else if (dist > (rad2 * rad2))
-            {
-               frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 2) & SCREEN_ENDIAN_U2_VALUE(0xF9E7); // ???
-            }
-            else if (dist > (rad1 * rad1))
-            {
-               frame[x + y * WIDTH] = (frame[x + y * WIDTH] >> 1) & SCREEN_ENDIAN_U2_VALUE(0xFBEF); // ???
-            }
-         }
-      }
-   }
 }
 
 void FrameBuffer::__draw_char(

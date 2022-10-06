@@ -7,9 +7,9 @@
 #include "mage_game_control.h"
 
 
-bool MageHexEditor::getHexEditorState()
+bool MageHexEditor::isHexEditorOn()
 {
-   return hexEditorState;
+   return hexEditorOn;
 }
 
 bool MageHexEditor::getHexDialogState()
@@ -23,9 +23,9 @@ uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
 
 void MageHexEditor::toggleHexEditor()
 {
-   hexEditorState = !hexEditorState;
+   hexEditorOn = !hexEditorOn;
    //set LED to the state
-   ledSet(LED_HAX, hexEditorState ? 0xff : 0x00);
+   ledSet(LED_HAX, hexEditorOn ? 0xff : 0x00);
 }
 
 void MageHexEditor::toggleHexDialog()

@@ -54,7 +54,7 @@ public:
 	{};
 	
 	//returns true if hex editor is open.
-	bool getHexEditorState();
+	bool isHexEditorOn();
 
 	//returns true if hex editor is open.
 	bool getHexDialogState();
@@ -114,7 +114,7 @@ private:
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };
 
 	//tells the game if the hex editor should be visible or not.
-	bool hexEditorState{ false };
+	bool hexEditorOn{ false };
 
 	//true if there has been any button presses that change the cursor position.
 	bool anyHexMovement{ false };

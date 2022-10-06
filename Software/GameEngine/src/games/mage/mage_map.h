@@ -42,20 +42,20 @@ public:
 
    uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
    {
-      if (entityGlobalIds.empty()) return 0;
-      return entityGlobalIds[mapLocalEntityId % entityGlobalIds.size()];
+      if (entityCount == 0) { return 0; }
+      return entityGlobalIds[mapLocalEntityId % entityCount];
    }
 
    uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
    {
-      if (geometryGlobalIds.empty()) return 0;
-      return geometryGlobalIds[mapLocalGeometryId % geometryGlobalIds.size()];
+      if (geometryCount == 0) { return 0; }
+      return geometryGlobalIds[mapLocalGeometryId % geometryCount];
    }
 
    uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const
    {
-      if (scriptGlobalIds.empty()) { return 0; }
-      return scriptGlobalIds[mapLocalScriptId % scriptGlobalIds.size()];
+      if (scriptCount == 0) { return 0; }
+      return scriptGlobalIds[mapLocalScriptId % scriptCount];
    }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
@@ -72,34 +72,32 @@ public:
 
    uint32_t LayerOffset(uint16_t num) const
    {
-      if (mapLayerOffsets.empty() || num >= layerCount) { return 0; }
+      if (mapLayerOffsetsCount == 0) { return 0; }
 
-      return mapLayerOffsets[num];
+      return mapLayerOffsets[num % mapLayerOffsetsCount];
    }
 
    std::string getDirectionNames() const
    {
       std::string result = "";
-      for (auto& goDirection : goDirections)
+      for (auto i = 0; i < goDirectionsCount; i++)
       {
          result += "\t";
-         result += goDirection.name;
+         result += goDirections[i].name;
       }
       return result;
    }
 
    uint16_t getDirectionScriptId(const std::string directionName) const
    {
-      uint16_t result = 0;
-      for (auto& direction : goDirections)
+      for (auto i = 0; i < goDirectionsCount; i++)
       {
-         if (direction.name == directionName)
+         if (goDirections[i].name == directionName)
          {
-            result = direction.mapLocalScriptId;
-            break;
+            return goDirections[i].mapLocalScriptId;
          }
       }
-      return result;
+      return 0;
    }
 
    constexpr uint8_t getPlayerEntityIndex() const { return playerEntityIndex; }
@@ -142,11 +140,13 @@ private:
    uint16_t entityCount{ 0 };
    uint16_t geometryCount{ 0 };
    uint16_t scriptCount{ 0 };
-   std::vector<uint16_t> entityGlobalIds;
-   std::vector<uint16_t> geometryGlobalIds;
-   std::vector<uint16_t> scriptGlobalIds;
-   std::vector<GoDirection> goDirections;
-   std::vector<uint32_t> mapLayerOffsets;
+   uint16_t goDirectionsCount{ 0 };
+   uint16_t mapLayerOffsetsCount{ 0 };
+   std::unique_ptr<uint16_t[]> entityGlobalIds;
+   std::unique_ptr<uint16_t[]> geometryGlobalIds;
+   std::unique_ptr<uint16_t[]> scriptGlobalIds;
+   std::unique_ptr<GoDirection[]> goDirections;
+   std::unique_ptr<uint32_t[]> mapLayerOffsets;
    uint8_t filteredEntityCountOnThisMap{ 0 };
 
 }; //class MageMap

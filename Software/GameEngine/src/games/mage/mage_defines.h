@@ -181,11 +181,7 @@ struct MageScriptState
 {
    MageScriptState() noexcept = default;
 
-   MageScriptState(
-      uint16_t scriptId,
-      bool scriptIsRunning,
-      bool isGlobalExecutionScope = false
-   ) noexcept
+   MageScriptState(uint16_t scriptId, bool scriptIsRunning, bool isGlobalExecutionScope = false) noexcept
       :currentScriptId(scriptId),
       scriptIsRunning(scriptIsRunning),
       isGlobalExecutionScope(isGlobalExecutionScope)
@@ -194,6 +190,7 @@ struct MageScriptState
    //indicated whether or not an active script is running on this MageScriptState
    bool scriptIsRunning{ false };
    bool isGlobalExecutionScope{ false };
+
    //the script Id to resume, scope determined by isGlobalExecutionScope
    // - if false, should be treated as mapLocalScriptId
    // - if true, should be treated as globalScriptId

@@ -95,6 +95,12 @@ struct EngineROM
       address += dataLength;
    };
 
+   template <typename T>
+   void GetPointerTo(const T*& t, uint32_t offset)
+   {
+      t = (const T*)romDataInDesktopRam.get() + offset;
+   }
+
    bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
    bool VerifyEqualsAtOffset(uint32_t address, std::string value) const;
 

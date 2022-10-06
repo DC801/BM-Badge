@@ -36,7 +36,7 @@ MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, uint32_t offset
 
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
-   if (gameEngine->hexEditor->getHexEditorState())
+   if (gameEngine->hexEditor->isHexEditorOn())
    {
       gameEngine->hexEditor->toggleHexEditor();
    }
@@ -126,7 +126,7 @@ void MageDialogControl::advanceMessage()
 void MageDialogControl::closeDialog()
 {
    open = false;
-   gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+   //gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::update()
@@ -198,6 +198,7 @@ void MageDialogControl::drawDialogBox(
          x = offsetX + (i * tileWidth);
          y = offsetY + (j * tileHeight);
          tileId = getTileIdFromXY(i, j, box);
+
          gameEngine->frameBuffer->drawChunkWithFlags(
             currentImageAddress,
             gameEngine->gameControl->getValidColorPalette(currentImageIndex),
@@ -339,7 +340,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
    currentPortraitId = currentScreen->portraitIndex;
    if (currentScreen->entityIndex != NO_PLAYER)
    {
-      uint8_t entityIndex = gameEngine->scriptActions->getUsefulEntityIndexFromActionEntityId(
+      uint8_t entityIndex = gameEngine->scriptActions->GetUsefulEntityIndexFromActionEntityId(
          currentScreen->entityIndex,
          triggeringEntityId
       );
@@ -352,22 +353,22 @@ void MageDialogControl::loadCurrentScreenPortrait()
             MageEntityType* entityType = gameEngine->gameControl->getValidEntityType(currentEntity->primaryId);
             currentPortraitId = entityType->PortraitId();
          }
-      }
 
-      // only try rendering when we have a portrait
-      if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
-      {
-         uint32_t portraitAddress = gameEngine->gameControl->imageHeader->offset(currentPortraitId);
-         auto portrait = std::make_unique<MagePortrait>(gameEngine->ROM, portraitAddress);
-         auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
-
-         currentPortraitRenderableData.getRenderableState(gameEngine->gameControl.get(), currentEntity, animationDirection);
-         currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
-         currentPortraitRenderableData.renderFlags |= (currentEntity->direction & 0x80);
-         // if the portrait is on the right side of the screen, flip the portrait on the X axis
-         if (((uint8_t)currentScreen->alignment % 2))
+         // only try rendering when we have a portrait
+         if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
          {
-            currentPortraitRenderableData.renderFlags ^= 0x04;
+            uint32_t portraitAddress = gameEngine->gameControl->imageHeader->offset(currentPortraitId);
+            auto portrait = std::make_unique<MagePortrait>(gameEngine->ROM, portraitAddress);
+            auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
+
+            currentPortraitRenderableData.getRenderableState(gameEngine->gameControl.get(), currentEntity, animationDirection);
+            currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
+            currentPortraitRenderableData.renderFlags |= (currentEntity->direction & 0x80);
+            // if the portrait is on the right side of the screen, flip the portrait on the X axis
+            if (((uint8_t)currentScreen->alignment % 2))
+            {
+               currentPortraitRenderableData.renderFlags ^= 0x04;
+            }
          }
       }
    }

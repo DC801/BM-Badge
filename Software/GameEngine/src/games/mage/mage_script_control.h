@@ -84,9 +84,6 @@ public:
 
    void initializeScriptsOnMapLoad();
 
-   //returns size in RAM of all reserved class variables.
-   uint32_t size() const;
-
    MageScriptState* getEntityInteractResumeState(uint8_t index);
    MageScriptState* getEntityTickResumeState(uint8_t index);
 

@@ -6,6 +6,37 @@
 #include "convert_endian.h"
 #include "utility.h"
 
+void MageScriptActions::Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct)
+{
+   auto action = actionFunctions[actionId];
+   (this->*action)(args, resumeStateStruct);
+}
+
+int16_t MageScriptActions::GetUsefulEntityIndexFromActionEntityId(uint8_t entityId, int16_t callingEntityId)
+{
+   int16_t entityIndex = entityId;
+   if (entityIndex == MAGE_ENTITY_SELF)
+   {
+      entityIndex = callingEntityId;
+   }
+   else if (entityIndex == MAGE_ENTITY_PLAYER)
+   {
+      entityIndex = gameEngine->gameControl->playerEntityIndex;
+   }
+   if (entityIndex == MAGE_MAP_ENTITY)
+   {
+      //target is the map itself, leave the value alone
+   }
+   else if (entityIndex >= gameEngine->gameControl->Map()->FilteredEntityCount())
+   {
+      //if it targets one of the debug entities filtered off the end of the list,
+      //treat it like it's not there:
+      entityIndex = NO_PLAYER;
+   }
+   return entityIndex;
+}
+
+
 void MageScriptActions::action_null_action(uint8_t* args, MageScriptState* resumeStateStruct)
 {
    typedef struct
@@ -36,7 +67,7 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->stringId = ROM_ENDIAN_U2_VALUE(argStruct->stringId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -70,7 +101,7 @@ void MageScriptActions::action_check_entity_x(uint8_t* args, MageScriptState* re
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -100,7 +131,7 @@ void MageScriptActions::action_check_entity_y(uint8_t* args, MageScriptState* re
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -130,7 +161,7 @@ void MageScriptActions::action_check_entity_interact_script(uint8_t* args, MageS
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedScript = ROM_ENDIAN_U2_VALUE(argStruct->expectedScript);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -160,7 +191,7 @@ void MageScriptActions::action_check_entity_tick_script(uint8_t* args, MageScrip
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedScript = ROM_ENDIAN_U2_VALUE(argStruct->expectedScript);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -190,7 +221,7 @@ void MageScriptActions::action_check_entity_type(uint8_t* args, MageScriptState*
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->entityTypeId = ROM_ENDIAN_U2_VALUE(argStruct->entityTypeId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -224,7 +255,7 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -262,7 +293,7 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -300,7 +331,7 @@ void MageScriptActions::action_check_entity_primary_id_type(uint8_t* args, MageS
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -330,7 +361,7 @@ void MageScriptActions::action_check_entity_current_animation(uint8_t* args, Mag
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -359,7 +390,7 @@ void MageScriptActions::action_check_entity_current_frame(uint8_t* args, MageScr
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -388,7 +419,7 @@ void MageScriptActions::action_check_entity_direction(uint8_t* args, MageScriptS
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -418,7 +449,7 @@ void MageScriptActions::action_check_entity_glitched(uint8_t* args, MageScriptSt
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -447,7 +478,7 @@ void MageScriptActions::action_check_entity_hackable_state_a(uint8_t* args, Mage
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -476,7 +507,7 @@ void MageScriptActions::action_check_entity_hackable_state_b(uint8_t* args, Mage
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -505,7 +536,7 @@ void MageScriptActions::action_check_entity_hackable_state_c(uint8_t* args, Mage
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -534,7 +565,7 @@ void MageScriptActions::action_check_entity_hackable_state_d(uint8_t* args, Mage
    //endianness conversion for arguments larger than 1 byte:
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -563,7 +594,7 @@ void MageScriptActions::action_check_entity_hackable_state_a_u2(uint8_t* args, M
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -595,7 +626,7 @@ void MageScriptActions::action_check_entity_hackable_state_c_u2(uint8_t* args, M
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -626,7 +657,7 @@ void MageScriptActions::action_check_entity_hackable_state_a_u4(uint8_t* args, M
    argStruct->expectedValue = ROM_ENDIAN_U4_VALUE(argStruct->expectedValue);
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -657,7 +688,7 @@ void MageScriptActions::action_check_entity_path(uint8_t* args, MageScriptState*
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -715,7 +746,7 @@ void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, Mag
    argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
    argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -895,7 +926,7 @@ void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* r
    //get the string from the stringId:
    std::string romString = gameEngine->gameControl->getString(argStruct->stringId, gameEngine->scriptControl->currentEntityId);
    //Get the entity:
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -934,7 +965,7 @@ void MageScriptActions::action_set_entity_x(uint8_t* args, MageScriptState* resu
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -960,7 +991,7 @@ void MageScriptActions::action_set_entity_y(uint8_t* args, MageScriptState* resu
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -988,7 +1019,7 @@ void MageScriptActions::action_set_entity_interact_script(uint8_t* args, MageScr
 
    gameEngine->scriptControl->setEntityScript(
       argStruct->scriptId,
-      getUsefulEntityIndexFromActionEntityId(
+      GetUsefulEntityIndexFromActionEntityId(
          argStruct->entityId,
          gameEngine->scriptControl->currentEntityId
       ),
@@ -1011,7 +1042,7 @@ void MageScriptActions::action_set_entity_tick_script(uint8_t* args, MageScriptS
    //endianness conversion for arguments larger than 1 byte:
    argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1037,7 +1068,7 @@ void MageScriptActions::action_set_entity_type(uint8_t* args, MageScriptState* r
    //endianness conversion for arguments larger than 1 byte:
    argStruct->entityTypeId = ROM_ENDIAN_U2_VALUE(argStruct->entityTypeId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1064,7 +1095,7 @@ void MageScriptActions::action_set_entity_primary_id(uint8_t* args, MageScriptSt
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1090,7 +1121,7 @@ void MageScriptActions::action_set_entity_secondary_id(uint8_t* args, MageScript
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1115,7 +1146,7 @@ void MageScriptActions::action_set_entity_primary_id_type(uint8_t* args, MageScr
    } ActionSetEntityPrimaryIdType;
    auto* argStruct = (ActionSetEntityPrimaryIdType*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1140,7 +1171,7 @@ void MageScriptActions::action_set_entity_current_animation(uint8_t* args, MageS
    } ActionSetEntityCurrentAnimation;
    auto* argStruct = (ActionSetEntityCurrentAnimation*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1169,7 +1200,7 @@ void MageScriptActions::action_set_entity_current_frame(uint8_t* args, MageScrip
    } ActionSetEntityCurrentFrame;
    auto* argStruct = (ActionSetEntityCurrentFrame*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1197,7 +1228,7 @@ void MageScriptActions::action_set_entity_direction(uint8_t* args, MageScriptSta
    } ActionSetEntityDirection;
    auto* argStruct = (ActionSetEntityDirection*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1226,7 +1257,7 @@ void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, Mage
    } ActionSetEntityDirectionRelative;
    auto* argStruct = (ActionSetEntityDirectionRelative*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1259,11 +1290,11 @@ void MageScriptActions::action_set_entity_direction_target_entity(uint8_t* args,
    } ActionSetEntityDirectionTargetEntity;
    auto* argStruct = (ActionSetEntityDirectionTargetEntity*)args;
 
-   int16_t targetEntityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t targetEntityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->targetEntityId,
       gameEngine->scriptControl->currentEntityId
    );
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1302,7 +1333,7 @@ void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* arg
    //endianness conversion for arguments larger than 1 byte:
    argStruct->targetGeometryId = ROM_ENDIAN_U2_VALUE(argStruct->targetGeometryId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1337,7 +1368,7 @@ void MageScriptActions::action_set_entity_glitched(uint8_t* args, MageScriptStat
    } ActionSetEntityGlitched;
    auto* argStruct = (ActionSetEntityGlitched*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1366,7 +1397,7 @@ void MageScriptActions::action_set_entity_hackable_state_a(uint8_t* args, MageSc
    } ActionSetEntityHackableStateA;
    auto* argStruct = (ActionSetEntityHackableStateA*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1391,7 +1422,7 @@ void MageScriptActions::action_set_entity_hackable_state_b(uint8_t* args, MageSc
    } ActionSetEntityHackableStateB;
    auto* argStruct = (ActionSetEntityHackableStateB*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1416,7 +1447,7 @@ void MageScriptActions::action_set_entity_hackable_state_c(uint8_t* args, MageSc
    } ActionSetEntityHackableStateC;
    auto* argStruct = (ActionSetEntityHackableStateC*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1441,7 +1472,7 @@ void MageScriptActions::action_set_entity_hackable_state_d(uint8_t* args, MageSc
    } ActionSetEntityHackableStateD;
    auto* argStruct = (ActionSetEntityHackableStateD*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1467,7 +1498,7 @@ void MageScriptActions::action_set_entity_hackable_state_a_u2(uint8_t* args, Mag
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1493,7 +1524,7 @@ void MageScriptActions::action_set_entity_hackable_state_c_u2(uint8_t* args, Mag
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1517,7 +1548,7 @@ void MageScriptActions::action_set_entity_hackable_state_a_u4(uint8_t* args, Mag
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U4_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
@@ -1540,7 +1571,7 @@ void MageScriptActions::action_set_entity_path(uint8_t* args, MageScriptState* r
    //endianness conversion for arguments larger than 1 byte:
    argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1668,7 +1699,7 @@ void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptSta
    } ActionSetHexEditorState;
    auto* argStruct = (ActionSetHexEditorState*)args;
 
-   if (gameEngine->hexEditor->getHexEditorState() != (bool)argStruct->state)
+   if (gameEngine->hexEditor->isHexEditorOn() != (bool)argStruct->state)
    {
       gameEngine->hexEditor->toggleHexEditor();
    }
@@ -1786,7 +1817,7 @@ void MageScriptActions::action_play_entity_animation(uint8_t* args, MageScriptSt
    } ActionPlayEntityAnimation;
    auto* argStruct = (ActionPlayEntityAnimation*)args;
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1841,7 +1872,7 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
    //endianness conversion for arguments larger than 1 byte:
    argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1875,7 +1906,7 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
    //endianness conversion for arguments larger than 1 byte:
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
    argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -1943,10 +1974,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
    argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-      argStruct->entityId,
-      gameEngine->scriptControl->currentEntityId
-   );
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
@@ -1958,14 +1986,8 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
       if (geometry.pointCount == 1)
       {
          resumeStateStruct->totalLoopsToNextAction = 1;
-         setEntityPositionToPoint(
-            entity,
-            offsetPointRelativeToEntityCenter(
-               renderable,
-               entity,
-               &geometry.points[0]
-            )
-         );
+         auto offsetPoint = offsetPointRelativeToEntityCenter(renderable, entity, &geometry.points[0]);
+         setEntityPositionToPoint(entity, offsetPoint);
          gameEngine->gameControl->updateEntityRenderableData(entityIndex);
          return;
       }
@@ -1983,46 +2005,27 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
          renderable->currentFrameTicks = 0;
       }
       resumeStateStruct->loopsToNextAction--;
-      uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-         &geometry,
-         resumeStateStruct->currentSegmentIndex
-      );
+
+      uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(&geometry, resumeStateStruct->currentSegmentIndex);
       float totalProgress = getProgressOfAction(resumeStateStruct);
       float currentProgressLength = resumeStateStruct->length * totalProgress;
       float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
-      float lengthAtEndOfCurrentSegment = (
-         resumeStateStruct->lengthOfPreviousSegments
-         + currentSegmentLength
-         );
-      float progressBetweenPoints = (
-         (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
-         );
+      float lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+
       if (progressBetweenPoints > 1)
       {
          resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
          resumeStateStruct->currentSegmentIndex++;
-         uint16_t pointAIndex = getLoopableGeometryPointIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex
-         );
-         uint16_t pointBIndex = getLoopableGeometryPointIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex + 1
-         );
-         sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex
-         );
+         uint16_t pointAIndex = getLoopableGeometryPointIndex(&geometry, resumeStateStruct->currentSegmentIndex);
+         uint16_t pointBIndex = getLoopableGeometryPointIndex(&geometry, resumeStateStruct->currentSegmentIndex + 1);
+         sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(&geometry, resumeStateStruct->currentSegmentIndex);
          currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
-         lengthAtEndOfCurrentSegment = (
-            resumeStateStruct->lengthOfPreviousSegments
-            + currentSegmentLength
-            );
-         progressBetweenPoints = (
-            (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
-            );
+         lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+
          setResumeStatePointsAndEntityDirection(
             resumeStateStruct,
             renderable,
@@ -2032,11 +2035,8 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
             pointBIndex
          );
       }
-      Point betweenPoint = FrameBuffer::lerpPoints(
-         resumeStateStruct->pointA,
-         resumeStateStruct->pointB,
-         progressBetweenPoints
-      );
+      
+      Point betweenPoint = FrameBuffer::lerpPoints(resumeStateStruct->pointA, resumeStateStruct->pointB, progressBetweenPoints);
       setEntityPositionToPoint(entity, betweenPoint);
       if (resumeStateStruct->loopsToNextAction == 0)
       {
@@ -2061,7 +2061,7 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
    argStruct->geometryId = ROM_ENDIAN_U2_VALUE(argStruct->geometryId);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -2180,7 +2180,7 @@ void MageScriptActions::action_set_camera_to_follow_entity(uint8_t* args, MageSc
       uint8_t paddingG;
    } ActionSetCameraToFollowEntity;
    auto* argStruct = (ActionSetCameraToFollowEntity*)args;
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -2223,7 +2223,7 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
    //endianness conversion for arguments larger than 1 byte:
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -2512,7 +2512,7 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
    //endianness conversion for arguments larger than 1 byte:
    uint16_t* currentValue = &gameEngine->gameControl->currentSave.scriptVariables[argStruct->variableId];
 
-   int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
       argStruct->entityId,
       gameEngine->scriptControl->currentEntityId
    );
@@ -3102,33 +3102,6 @@ void MageScriptActions::setEntityPositionToPoint(
 {
    entity->x = point.x;
    entity->y = point.y;
-}
-
-int16_t MageScriptActions::getUsefulEntityIndexFromActionEntityId(
-   uint8_t entityId,
-   int16_t callingEntityId
-)
-{
-   int16_t entityIndex = entityId;
-   if (entityIndex == MAGE_ENTITY_SELF)
-   {
-      entityIndex = callingEntityId;
-   }
-   else if (entityIndex == MAGE_ENTITY_PLAYER)
-   {
-      entityIndex = gameEngine->gameControl->playerEntityIndex;
-   }
-   if (entityIndex == MAGE_MAP_ENTITY)
-   {
-      //target is the map itself, leave the value alone
-   }
-   else if (entityIndex >= gameEngine->gameControl->Map()->FilteredEntityCount())
-   {
-      //if it targets one of the debug entities filtered off the end of the list,
-      //treat it like it's not there:
-      entityIndex = NO_PLAYER;
-   }
-   return entityIndex;
 }
 
 void MageScriptActions::mutate(

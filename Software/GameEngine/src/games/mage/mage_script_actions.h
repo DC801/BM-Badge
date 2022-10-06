@@ -122,10 +122,11 @@ typedef enum : uint8_t
    SET_TELEPORT_ENABLED,
    CHECK_MAP,
    SET_BLE_FLAG,
-   CHECK_BLE_FLAG,
-   //this tracks the number of actions we're at:
-   NUM_ACTIONS
+   CHECK_BLE_FLAG
 } MageScriptActionTypeId;
+
+//this tracks the number of actions we're at
+static const inline uint8_t NUM_SCRIPT_ACTIONS = 98;
 
 //the functions below here are the action functions. These are going to be
 //called directly by scripts, and preform their actions based on arguments read from ROM
@@ -141,11 +142,14 @@ typedef enum : uint8_t
 class MageScriptActions
 {
 public:
-   MageScriptActions(
-      MageGameEngine* gameEngine
-   ) noexcept
+   MageScriptActions(MageGameEngine* gameEngine) noexcept
       : gameEngine(gameEngine)
    {}
+
+   void Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct);
+   int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityId, int16_t callingEntityId);
+
+private:
    //Action Logic Type: I
    void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct);
    //Action Logic Type: I+C
@@ -393,10 +397,6 @@ public:
       MageEntity* entity,
       MageGeometry* geometry
    );
-   int16_t getUsefulEntityIndexFromActionEntityId(
-      uint8_t entityId,
-      int16_t callingEntityId
-   );
 
    enum MageMutateOperation : uint8_t
    {
@@ -431,8 +431,9 @@ public:
    );
 
    //typedef for the array of function pointers to script action functions:
-   typedef void(MageScriptActions::* ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
-   ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
+   typedef void (MageScriptActions::*ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
+
+   ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS] = {
       &MageScriptActions::action_null_action,
       &MageScriptActions::action_check_entity_name,
       &MageScriptActions::action_check_entity_x,

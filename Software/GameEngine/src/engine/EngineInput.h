@@ -20,8 +20,8 @@ public:
 
    void HandleKeyboard();
 
-   bool IsRunning() const { return running; }
-   bool ShouldReloadGameDat() const { return shouldReloadGameDat; }
+   constexpr bool IsRunning() const { return running; }
+   constexpr bool ShouldReloadGameDat() const { return shouldReloadGameDat; }
    constexpr void TriggerRomReload() { shouldReloadGameDat = true;}
 private:
    union ButtonStates

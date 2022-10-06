@@ -60,7 +60,7 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    for (uint8_t i = 0; i < tilesetHeader.count(); i++)
    {
       auto tilesetOffset = tilesetHeader.offset(i);
-      tilesets[i] = MageTileset{ gameEngine->ROM, i, tilesetOffset };
+      tilesets[i] = MageTileset{ gameEngine->ROM, tilesetOffset };
    }
 
    animations = std::vector<MageAnimation>{ animationHeader.count() };
@@ -90,16 +90,11 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    auto mapOffset = mapHeader.offset(currentSave.currentMapId);
    map = std::make_unique<MageMap>(gameEngine->ROM, mapOffset, std::move(mapHeader), std::move(entityHeader));
 
-   playerEntityIndex = map->getPlayerEntityIndex();
-   camera.followEntityId = playerEntityIndex;
-
-   map->Load(currentSave.currentMapId);
    readSaveFromRomIntoRam(true);
 
    playerHasControl = true;
    playerHasHexEditorControl = true;
    playerHasHexEditorControlClipboard = true;
-
 }
 
 void MageGameControl::setCurrentSaveToFreshState()
@@ -198,7 +193,7 @@ void MageGameControl::LoadMap(uint16_t index)
    //logAllEntityScriptValues("InitScripts-After");
 
    //close hex editor if open:
-   if (gameEngine->hexEditor->getHexEditorState())
+   if (gameEngine->hexEditor->isHexEditorOn())
    {
       gameEngine->hexEditor->toggleHexEditor();
    }
@@ -1032,7 +1027,7 @@ std::string MageGameControl::getString(uint16_t stringId, int16_t mapLocalEntity
          variableStartPosition - (variableEndPosition - 2)
       );
       int parsedEntityIndex = std::stoi(variableHolder);
-      int16_t entityIndex = gameEngine->scriptActions->getUsefulEntityIndexFromActionEntityId(parsedEntityIndex, mapLocalEntityId);
+      int16_t entityIndex = gameEngine->scriptActions->GetUsefulEntityIndexFromActionEntityId(parsedEntityIndex, mapLocalEntityId);
       if (entityIndex != NO_PLAYER)
       {
          std::string entityName = getEntityNameStringById(entityIndex);
