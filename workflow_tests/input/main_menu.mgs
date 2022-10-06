@@ -1,0 +1,397 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+}
+
+on_load-main_menu {
+	copy script initialize-bling-rotate-max
+}
+
+/* ---------- on_tick scripts ---------- */
+
+// entity listens for a button press, and changes the map's on_tick
+on_tick-button-to-skip {
+	if button ANY then goto script handler-skip-splash
+}
+handler-skip-splash {
+	set map tick_script to begin-main_menu-fade-in
+	goto script null_script
+}
+
+// EVERYTHING ELSE
+
+on_tick-main_menu {
+	goto script on_tick-splash
+}
+
+on_tick-splash {
+	set hex control to off
+	if warp state is from-game then goto script begin-main_menu-fade-in
+	teleport camera to geometry dc801-center
+	fade in camera from #000000 over 800ms
+	wait 2900ms
+	fade out camera to #000000 over 800ms
+	set entity "%PLAYER%" tick_script to null_script
+	goto script begin-main_menu-fade-in
+}
+
+begin-main_menu-fade-in {
+	set hex control to off
+	set entity "%PLAYER%" tick_script to null_script
+	teleport camera to geometry menu-center
+	fade in camera from #000000 over 800ms
+	goto script begin-main_menu
+}
+
+begin-main_menu {
+	set entity "%PLAYER%" tick_script to null_script
+	show dialog dialog-main_menu {
+		name " "
+		border_tileset menu
+		"CHOOSE YOUR FATE"
+		> "Play Game" : goto "show-menu-play-game"
+		> "Play Demo" : goto "load_map-demo_map"
+		> "Bling Mode" : goto "show-menu-bling-mode"
+		> "Credits" : goto "show-menu-credits-choice"
+	}
+}
+
+show-menu-play-game {
+	show dialog dialog-show-menu-play-game {
+		name " "
+		border_tileset menu
+		"PLAY GAME"
+		> "New Game" : goto "show-new_game"
+		> "Load Game" : goto "show-load_game"
+		> "Erase Save" : goto "show-erase_save"
+		> "Back" : goto "begin-main_menu"
+	}
+}
+
+show-menu-bling-mode {
+	show dialog dialog-show-menu-bling-mode {
+		name " "
+		border_tileset menu
+		"SAVE YOUR SCREEN"
+		> "DC801 showcase" : goto "show-menu-bling-dc801-showcase"
+		> "Flying \"Toasters\"" : goto "start_bling-flying-toasters"
+		> "QR Codes" : goto "start_bling-qr"
+		> "Back" : goto "begin-main_menu"
+	}
+}
+
+show-menu-bling-dc801-showcase {
+	show dialog dialog-show-menu-bling-dc801-showcase {
+		name " "
+		border_tileset menu
+		"DC801 SHOWCASE"
+		> "Auto mode" : goto "start_bling-rotate-auto"
+		> "Manual mode" : goto "start_bling-rotate-manual"
+		> "Back" : goto "show-menu-bling-mode"
+	}
+}
+
+show-menu-credits-choice {
+	show dialog dialog-show-menu-credits-choice {
+		name " "
+		border_tileset menu
+		"CREDITS"
+		> "Chapter 1 credits" : goto "show-menu-credits"
+		> "Chapter 2 credits" : goto "show-menu-credits2"
+		> "Back" : goto "begin-main_menu"
+	}
+}
+
+load-start-map {
+	set entity "%PLAYER%" tick_script to count-chapter1-storyflags
+	set map tick_script to main_menu-ch1-storyflag-count-wait
+}
+
+main_menu-ch1-storyflag-count-wait {
+	if flag chapter1-storyflags-tallied is true then goto script main_menu-ch1-storyflag-count-done
+}
+
+main_menu-ch1-storyflag-count-done {
+	set flag chapter1-storyflags-tallied to false
+	show dialog dialog-load-start-map-q {
+		name " "
+		border_tileset menu
+		"PLAY (slot $slot-number$: \"%PLAYER%\")"
+		> "Chapter 1 ($chapter1-storyflag-tally$/11)" : goto "start-chapter1"
+		> "Chapter 2 (X/??)" : goto "start-chapter2-check"
+		> "Back" : goto "show-menu-play-game"
+	}
+}
+
+show-new_game {
+	show dialog dialog-new_game {
+		name " "
+		border_tileset menu
+		"NEW GAME"
+		> "Slot 0" : goto "new_game-0"
+		> "Slot 1" : goto "new_game-1"
+		> "Slot 2" : goto "new_game-2"
+		> "Back" : goto "show-menu-play-game"
+	}
+}
+
+show-load_game {
+	show dialog dialog-load_game {
+		name " "
+		border_tileset menu
+		"LOAD GAME"
+		> "Slot 0" : goto "load_game-0"
+		> "Slot 1" : goto "load_game-1"
+		> "Slot 2" : goto "load_game-2"
+		> "Back" : goto "show-menu-play-game"
+	}
+}
+
+show-erase_save {
+	show dialog dialog-erase_save {
+		name " "
+		border_tileset menu
+		"BOOM TIME!"
+		> "Erase slot 0" : goto "erase_save-0"
+		> "Erase slot 1" : goto "erase_save-1"
+		> "Erase slot 2" : goto "erase_save-2"
+		> "Back" : goto "show-menu-play-game"
+	}
+}
+
+show-save_game {
+	show dialog dialog-save_game {
+		name "Save Game"
+		border_tileset codec
+		portrait floppy
+		"Would you like to save your progress?"
+		> "Yes" : goto "save_game-yes"
+		> "No" : goto "save_game-no"
+		> "Return to Main Menu" : goto "save_game-main_menu"
+	}
+}
+
+save_game-main_menu {
+	set warp state to from-game
+	load map main_menu
+}
+
+save_game-yes {
+	save slot
+	set entity "%SELF%" interact_script to show-save_game
+}
+
+save_game-no {
+	set entity "%SELF%" interact_script to show-save_game
+}
+
+new_game-0 {
+	erase slot 0
+	mutate slot-number = 0
+	goto script set-player-name-q
+}
+
+new_game-1 {
+	erase slot 1
+	mutate slot-number = 1
+	goto script set-player-name-q
+}
+
+new_game-2 {
+	erase slot 2
+	mutate slot-number = 2
+	goto script set-player-name-q
+}
+
+load_game-0 {
+	load slot 0
+	mutate slot-number = 0
+	goto script load-start-map
+}
+
+load_game-1 {
+	load slot 1
+	mutate slot-number = 1
+	goto script load-start-map
+}
+
+load_game-2 {
+	load slot 2
+	mutate slot-number = 2
+	goto script load-start-map
+}
+
+erase_save-0 {
+	erase slot 0
+	goto script show-menu-play-game
+}
+
+erase_save-1 {
+	erase slot 1
+	goto script show-menu-play-game
+}
+
+erase_save-2 {
+	erase slot 2
+	goto script show-menu-play-game
+}
+
+set-player-name-q {
+	show dialog dialog-set-player-name-q {
+		name " "
+		border_tileset menu
+		"NEW GAME: Pick your name."
+		> "Red" : goto "set-player-name-preset1-confirm"
+		> "Bubbles" : goto "set-player-name-preset2-confirm"
+		> "Black Mage" : goto "set-player-name-preset3-confirm"
+		> "Gimme something random" : goto "set-player-name-random-confirm"
+	}
+}
+
+set-player-name-preset1-confirm {
+	set entity "%PLAYER%" name to Red
+	show dialog dialog-set-player-name-confirm {
+		name " "
+		border_tileset menu
+		"Your name is %PLAYER%?"
+		> "Yes" : goto "start-new-game-with-name"
+		> "No" : goto "set-player-name-q"
+	}
+}
+
+set-player-name-preset2-confirm {
+	set entity "%PLAYER%" name to Bubbles
+	show dialog dialog-set-player-name-confirm
+}
+
+set-player-name-preset3-confirm {
+	set entity "%PLAYER%" name to "Black Mage"
+	show dialog dialog-set-player-name-confirm
+}
+
+set-player-name-confirm {
+	show dialog dialog-set-player-name-confirm
+}
+
+set-player-name-random-confirm {
+	goto script get-random-name
+}
+
+set-player-name-random-finish {
+	show dialog dialog-set-player-name-now-random-q
+}
+
+start-new-game-with-name {
+	save slot
+	goto script load-start-map
+}
+
+get-random-name {
+	mutate random-name-count ? 19
+	// The RNG operation returns a value range from 0 to (value - 1). In 17, Out 0~16. In 5, Out 0~4. It's like this because there's a non-zero chance that you're using this value to index into an array, like below.
+	if (variable random-name-count is 1) {
+		set entity "%PLAYER%" name to Chara
+	} else if (variable random-name-count is 2) {
+		set entity "%PLAYER%" name to Buster
+	} else if (variable random-name-count is 3) {
+		set entity "%PLAYER%" name to Tidus
+	} else if (variable random-name-count is 4) {
+		set entity "%PLAYER%" name to Frisk
+	} else if (variable random-name-count is 5) {
+		set entity "%PLAYER%" name to Farnsworth
+	} else if (variable random-name-count is 6) {
+		set entity "%PLAYER%" name to Cloud
+	} else if (variable random-name-count is 7) {
+		set entity "%PLAYER%" name to Ash
+	} else if (variable random-name-count is 8) {
+		set entity "%PLAYER%" name to Crono
+	} else if (variable random-name-count is 9) {
+		set entity "%PLAYER%" name to Terra
+	} else if (variable random-name-count is 10) {
+		set entity "%PLAYER%" name to Kremit
+	} else if (variable random-name-count is 11) {
+		set entity "%PLAYER%" name to Zidane
+	} else if (variable random-name-count is 12) {
+		set entity "%PLAYER%" name to Cecil
+	} else if (variable random-name-count is 13) {
+		set entity "%PLAYER%" name to Squall
+	} else if (variable random-name-count is 14) {
+		set entity "%PLAYER%" name to Roxas
+	} else if (variable random-name-count is 15) {
+		set entity "%PLAYER%" name to "Steamed Hams"
+	} else if (variable random-name-count is 16) {
+		set entity "%PLAYER%" name to Spy
+	} else if (variable random-name-count is 17) {
+		set entity "%PLAYER%" name to "Tom Honks"
+	} else if (variable random-name-count is 18) {
+		set entity "%PLAYER%" name to VeeVee
+	} else { // if it's 0 or any other value -- all the default:
+		set entity "%PLAYER%" name to Bub
+	}
+	show dialog dialog-set-player-name-random-confirm {
+		name " "
+		border_tileset menu
+		"Your name is %PLAYER%?"
+		> "Reroll random name" : goto "set-player-name-random-confirm"
+		> "Yes" : goto "start-new-game-with-name"
+		> "No" : goto "set-player-name-q"
+		// the dialog "options" always results in a jump;
+		// no worries about not this on_tick script zigzagging without explicitly looping
+	}
+}
+
+show-menu-credits {
+	set flag credits-from-menu to true
+	load map credits
+}
+
+show-menu-credits2 {
+	set flag credits-from-menu to true
+	load map credits2
+	// todo: make credits for chapter 2
+}
+
+show_dialog-load-start-map-q {
+	show dialog dialog-load-start-map-q
+}
+
+start-chapter1 {
+	load map main
+}
+
+start-chapter2-check {
+	if (flag wonthedemo is false) {
+		show dialog dialog-start-chapter2-confirm {
+			name " "
+			border_tileset menu
+			"Chapter 1 is unfinished!"
+			> "Play chapter 2 anyway" : goto "start-chapter2"
+			> "Never mind" : goto "show_dialog-load-start-map-q"
+		}	
+	}
+	goto script start-chapter2
+}
+
+start-chapter2 {
+	load map magehouse-birthday
+}
+
+dialog debug-math-orig {
+	Math
+	"orig bling-rotate-state: $bling-rotate-state$"
+}
+dialog debug-math-added {
+	Math
+	"new bling-rotate-state: $bling-rotate-state$"
+}
+dialog debug-math-target-overshot-check {
+	Math
+	"overshot if: $temp$"
+}
+dialog debug-math-target-overshot {
+	Math
+	"Overshot!"
+}
+dialog debug-math-done {
+	Math
+	"Math finished."
+}

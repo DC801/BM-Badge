@@ -79,11 +79,11 @@ on_tick-tuesdayd {
 
 elders-to-secretdoor {
 	wait 100ms
-	set entity "Alfonso" tickScript to "secretdoor-walk"
+	set entity "Alfonso" tick_script to "secretdoor-walk"
 	wait 200ms
-	set entity "Bert" tickScript to "secretdoor-knightsmove-walk"
+	set entity "Bert" tick_script to "secretdoor-knightsmove-walk"
 	wait 400ms
-	set entity "Jackob" tickScript to "secretdoor-knightsmove-walk"
+	set entity "Jackob" tick_script to "secretdoor-knightsmove-walk"
 }
 
 secretdoor-walk {
@@ -260,25 +260,25 @@ secret-door-open {
 }
 
 on_load-lodge-cutscene {
-	set entity "Aunt Zippy" animationFrame to 3
+	set entity "Aunt Zippy" animation_frame to 3
 	goto "cutscene-tuesday"
 }
 
 lodge-watch-player-gradually {
-	set entity "Beatrice" tickScript to "face-player"
-	set entity "Cleo" tickScript to "face-player"
-	set entity "Trekkie" tickScript to "face-player"
+	set entity "Beatrice" tick_script to "face-player"
+	set entity "Cleo" tick_script to "face-player"
+	set entity "Trekkie" tick_script to "face-player"
 	wait 200ms
-	set entity "Max Swagger" tickScript to "face-player"
-	set entity "Verthandi" tickScript to "face-player"
-	set entity "Marta" tickScript to "face-player"
+	set entity "Max Swagger" tick_script to "face-player"
+	set entity "Verthandi" tick_script to "face-player"
+	set entity "Marta" tick_script to "face-player"
 	wait 200ms
-	set entity "Baker" tickScript to "face-player"
-	set entity "Smith" tickScript to "face-player"
-	set entity "Uncle Zappy" tickScript to "face-player"
+	set entity "Baker" tick_script to "face-player"
+	set entity "Smith" tick_script to "face-player"
+	set entity "Uncle Zappy" tick_script to "face-player"
 	wait 200ms
-	set entity "Aunt Zippy" tickScript to "face-player"
-	set entity "Shepherd" tickScript to "face-player"
+	set entity "Aunt Zippy" tick_script to "face-player"
+	set entity "Shepherd" tick_script to "face-player"
 }
 
 cutscene-tuesday {
@@ -398,10 +398,10 @@ artifacts-eval {
 	show dialog "dialog-maybe-none" {
 		Player "Wait. Was that the last one?"
 	}
-	set entity "%PLAYER%" tickScript to "look-left-and-right-fast"
+	set entity "%PLAYER%" tick_script to "look-left-and-right-fast"
 	set player control off
 	wait 900ms
-	set entity "%PLAYER%" tickScript to "null_script"
+	set entity "%PLAYER%" tick_script to "null_script"
 	copy "lodge-murmur"
 	copy "player-ringzero-landing"
 }
@@ -413,43 +413,43 @@ show_dialog-artifacts-eval-bad {
 }
 
 lodge-murmur {
-	set entity "Cleo" tickScript to "gossip-down-player"
-	set entity "Baker" tickScript to "gossip-up-player"
-	set entity "Beatrice" tickScript to "null_script"
+	set entity "Cleo" tick_script to "gossip-down-player"
+	set entity "Baker" tick_script to "gossip-up-player"
+	set entity "Beatrice" tick_script to "null_script"
 	turn entity "Beatrice" toward entity "%PLAYER%"
-	set entity "Shepherd" tickScript to "gossip-left-player"
-	set entity "Trekkie" tickScript to "gossip-right-player"
-	set entity "Marta" tickScript to "gossip-left-player"
-	set entity "Max Swagger" tickScript to "gossip-right-player"
-	set entity "Smith" tickScript to "gossip-left-player"
-	set entity "Verthandi" tickScript to "gossip-up-player"
-	set entity "Aunt Zippy" tickScript to "gossip-down-player"
-	set entity "Uncle Zappy" tickScript to "null_script"
+	set entity "Shepherd" tick_script to "gossip-left-player"
+	set entity "Trekkie" tick_script to "gossip-right-player"
+	set entity "Marta" tick_script to "gossip-left-player"
+	set entity "Max Swagger" tick_script to "gossip-right-player"
+	set entity "Smith" tick_script to "gossip-left-player"
+	set entity "Verthandi" tick_script to "gossip-up-player"
+	set entity "Aunt Zippy" tick_script to "gossip-down-player"
+	set entity "Uncle Zappy" tick_script to "null_script"
 	turn entity "Uncle Zappy" toward entity "%PLAYER%"
 }
 
 lodge-un-murmur {
-	set entity "Cleo" tickScript to "null_script"
+	set entity "Cleo" tick_script to "null_script"
 	turn entity "Cleo" toward entity "%PLAYER%"
-	set entity "Baker" tickScript to "null_script"
+	set entity "Baker" tick_script to "null_script"
 	turn entity "Baker" toward entity "%PLAYER%"
-	set entity "Beatrice" tickScript to "null_script"
+	set entity "Beatrice" tick_script to "null_script"
 	turn entity "Beatrice" toward entity "%PLAYER%"
-	set entity "Shepherd" tickScript to "null_script"
+	set entity "Shepherd" tick_script to "null_script"
 	turn entity "Shepherd" toward entity "%PLAYER%"
-	set entity "Trekkie" tickScript to "null_script"
+	set entity "Trekkie" tick_script to "null_script"
 	turn entity "Trekkie" toward entity "%PLAYER%"
-	set entity "Marta" tickScript to "null_script"
+	set entity "Marta" tick_script to "null_script"
 	turn entity "Marta" toward entity "%PLAYER%"
-	set entity "Max Swagger" tickScript to "null_script"
+	set entity "Max Swagger" tick_script to "null_script"
 	turn entity "Max Swagger" toward entity "%PLAYER%"
-	set entity "Smith" tickScript to "null_script"
+	set entity "Smith" tick_script to "null_script"
 	turn entity "Smith" toward entity "%PLAYER%"
-	set entity "Verthandi" tickScript to "null_script"
+	set entity "Verthandi" tick_script to "null_script"
 	turn entity "Verthandi" toward entity "%PLAYER%"
-	set entity "Aunt Zippy" tickScript to "null_script"
+	set entity "Aunt Zippy" tick_script to "null_script"
 	turn entity "Aunt Zippy" toward entity "%PLAYER%"
-	set entity "Uncle Zappy" tickScript to "null_script"
+	set entity "Uncle Zappy" tick_script to "null_script"
 	turn entity "Uncle Zappy" toward entity "%PLAYER%"
 }
 
@@ -622,7 +622,7 @@ player-ringzero-from6 {
 }
 
 cutscene-artifacts-eval-good {
-	set entity "%PLAYER%" tickScript to "look-left-and-right"
+	set entity "%PLAYER%" tick_script to "look-left-and-right"
 	wait 300ms
 	show dialog "dialog-murmur1" {
 		Marta "Did they do it wrong?"
@@ -636,7 +636,7 @@ cutscene-artifacts-eval-good {
 		Trekkie "Maybe they missed one."
 	}
 	wait 200ms
-	set entity "%PLAYER%" tickScript to "null_script"
+	set entity "%PLAYER%" tick_script to "null_script"
 	turn entity "%PLAYER%" north
 	show dialog "dialog-ring1" {
 		Alfonso "Well, this is certainly... unexpected. We've never had a dud quite like this one before."
@@ -697,7 +697,7 @@ cutscene-artifacts-eval-good {
 		Alfonso
 			"Oh, but... but perhaps...."
 	}
-	set entity "Alfonso" tickScript to "look-left-and-right-fast"
+	set entity "Alfonso" tick_script to "look-left-and-right-fast"
 	show dialog "dialog-ring7" {
 		Alfonso
 			"Oh, but this is good news, isn't it?"
@@ -708,17 +708,17 @@ cutscene-artifacts-eval-good {
 			"Yes...."
 			"Yes!"
 	}
-	set entity "Alfonso" tickScript to "null_script"
+	set entity "Alfonso" tick_script to "null_script"
 	turn entity "Alfonso" south
 	show dialog "dialog-ring8" {
 		Jackob "Yes, you can fix things at last!"
 		Player "Fix the town?"
 	}
-	set entity "%PLAYER%" tickScript to "loiter2"
+	set entity "%PLAYER%" tick_script to "loiter2"
 	show dialog "dialog-ring9" {
 		Player "But the town is all glitchy and hacked! How am I supposed to fix it with this thing? Unless...."
 	}
-	set entity "%PLAYER%" tickScript to "null_script"
+	set entity "%PLAYER%" tick_script to "null_script"
 	turn entity "%PLAYER%" toward entity "Alfonso"
 	show dialog "dialog-ring10" {
 		Alfonso
@@ -758,11 +758,11 @@ cutscene-artifacts-eval-good {
 }
 
 deaden-artifacts {
-	set entity "Broom" interactScript to "null_script"
-	set entity "Glasses" interactScript to "null_script"
-	set entity "Wand" interactScript to "null_script"
-	set entity "Book" interactScript to "null_script"
-	set entity "Bracelet" interactScript to "null_script"
+	set entity "Broom" interact_script to "null_script"
+	set entity "Glasses" interact_script to "null_script"
+	set entity "Wand" interact_script to "null_script"
+	set entity "Book" interact_script to "null_script"
+	set entity "Bracelet" interact_script to "null_script"
 }
 
 alfonso-to-secretdoor-button {
@@ -862,9 +862,9 @@ examine-book {
 
 examine-broom {
 	set player control off
-	set entity "Marta" tickScript to "null_script"
+	set entity "Marta" tick_script to "null_script"
 	walk entity "Marta" to geometry "marta-broom-step-spot" over 500ms
-	set entity "%PLAYER%" tickScript to "watch-marta"
+	set entity "%PLAYER%" tick_script to "watch-marta"
 	show dialog "dialog-tuesday-broom" {
 		Marta "Hey, that broom is mine! How did that end up there?"
 	}
@@ -875,22 +875,22 @@ examine-broom {
 	set entity "Marta" type to "marta_broom"
 	wait 300ms
 	walk entity "Marta" to geometry "marta-broom-watch-spot" over 700ms
-	set entity "Marta" tickScript to "face-player"
+	set entity "Marta" tick_script to "face-player"
 	wait 300ms
 	set flag "artifact-broom-touched" to true
-	set entity "%PLAYER%" tickScript to "null_script"
+	set entity "%PLAYER%" tick_script to "null_script"
 	set player control on
 	goto "artifacts-eval"
 }
 
 examine-wand {
-	set entity "%PLAYER%" tickScript to "spin-around-fast"
+	set entity "%PLAYER%" tick_script to "spin-around-fast"
 	show dialog "dialog-tuesday-wand1" {
 		Player "Moon Prism Power...."
 	}
 	set player control off
 	wait 900ms
-	set entity "%PLAYER%" tickScript to "null_script"
+	set entity "%PLAYER%" tick_script to "null_script"
 	turn entity "%PLAYER%" south
 	show dialog "dialog-tuesday-wand2" {
 		Player "Make Up!"
@@ -994,7 +994,7 @@ show_dialog-marta-prechoose-broomd {
 	show dialog "dialog-marta-prechoose-broomd" {
 		SELF "I knew I recognized this broom!"
 	}
-	set entity "Marta" interactScript to "show_dialog-marta-prechoose"
+	set entity "Marta" interact_script to "show_dialog-marta-prechoose"
 }
 
 show_dialog-trekkie-prechoose {
@@ -1044,11 +1044,11 @@ show_dialog-baker-prechoose {
 
 show_dialog-jackob-prechoose {
 	copy "face-player"
-	set entity "Jackob" tickScript to "look-left-and-right-fast"
+	set entity "Jackob" tick_script to "look-left-and-right-fast"
 	show dialog "dialog-jackob-prechoose" {
 		SELF "(Wait, was this everything?)"
 	}
-	set entity "Jackob" tickScript to "null_script"
+	set entity "Jackob" tick_script to "null_script"
 	turn entity "%SELF%" south
 }
 
@@ -1074,21 +1074,21 @@ show_dialog-zippy-postchoose {
 	show dialog "dialog-zippy-postchoose" {
 		SELF "We always knew you were destined for great things!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-zippy-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-zippy-prechoose"
 }
 
 show_dialog-zappy-postchoose {
 	show dialog "dialog-zappy-postchoose" {
 		SELF "We're both so proud of you!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-zappy-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-zappy-prechoose"
 }
 
 show_dialog-verthandi-postchoose {
 	show dialog "dialog-verthandi-postchoose" {
 		SELF "Oh, how exciting!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-verthandi-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-verthandi-prechoose"
 }
 
 show_dialog-smith-postchoose {
@@ -1097,56 +1097,56 @@ show_dialog-smith-postchoose {
 		"Sounds like that ring is a big deal."
 		"Neat."
 	}
-	set entity "%SELF%" interactScript to "show_dialog-smith-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-smith-prechoose"
 }
 
 show_dialog-max-postchoose {
 	show dialog "dialog-max-postchoose" {
 		SELF "Hmm. That ring looks a bit too plain to be the real Ring Zero, doesn't it?"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-max-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-max-prechoose"
 }
 
 show_dialog-marta-postchoose {
 	show dialog "dialog-marta-postchoose" {
 		SELF "Wow. Never seen a TUESDAY like this before!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-marta-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-marta-prechoose"
 }
 
 show_dialog-trekkie-postchoose {
 	show dialog "dialog-trekkie-postchoose" {
 		SELF "Amazing!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-trekkie-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-trekkie-prechoose"
 }
 
 show_dialog-shepherd-postchoose {
 	show dialog "dialog-shepherd-postchoose" {
 		SELF "Neat!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-shepherd-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-shepherd-prechoose"
 }
 
 show_dialog-cleo-postchoose {
 	show dialog "dialog-cleo-postchoose" {
 		SELF "It looks so shiny!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-cleo-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-cleo-prechoose"
 }
 
 show_dialog-beatrice-postchoose {
 	show dialog "dialog-beatrice-postchoose" {
 		SELF "Oh! I never thought I'd see this day! Oh, my Delmar...!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-beatrice-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-beatrice-prechoose"
 }
 
 show_dialog-baker-postchoose {
 	show dialog "dialog-baker-postchoose" {
 		SELF "Congratulations, %PLAYER%!"
 	}
-	set entity "%SELF%" interactScript to "show_dialog-baker-prechoose"
+	set entity "%SELF%" interact_script to "show_dialog-baker-prechoose"
 }
 
 watch-marta {
@@ -1226,7 +1226,7 @@ lodge_cat-hint-yes {
 }
 
 lodge_cat-wrapup {
-	set entity "%SELF%" interactScript to "show_dialog-lodge_cat"
+	set entity "%SELF%" interact_script to "show_dialog-lodge_cat"
 }
 
 show_dialog-timmy-start {
@@ -1276,7 +1276,7 @@ show_dialog-timmy-start-s {
 
 timmy-wrapup {
 	turn entity "%SELF%" west
-	set entity "%SELF%" interactScript to "show_dialog-timmy-start"
+	set entity "%SELF%" interact_script to "show_dialog-timmy-start"
 }
 
 show_dialog-sportsbook {
@@ -1301,7 +1301,7 @@ demobonus-sportsbook-eval {
 }
 
 dialog-sportsbook-end {
-	set entity "%SELF%" interactScript to "show_dialog-sportsbook"
+	set entity "%SELF%" interact_script to "show_dialog-sportsbook"
 }
 
 show_dialog-timmy-glitched {
@@ -1314,12 +1314,12 @@ show_dialog-timmy-glitched {
 timmy-glitchhint-eval {
 	if flag "timmy-unglitched" is false then
 		goto "timmy-hint-yes"
-	set entity "%SELF%" interactScript to "show_dialog-timmy-start"
+	set entity "%SELF%" interact_script to "show_dialog-timmy-start"
 }
 
 timmy-hint-yes {
 	copy "set-hint-glitch"
-	set entity "%SELF%" interactScript to "show_dialog-timmy-start"
+	set entity "%SELF%" interact_script to "show_dialog-timmy-start"
 }
 
 bypass-tuesday {
@@ -1340,7 +1340,7 @@ debug-disable-tuesday-q {
 
 debug-disable-tuesday-no {
 	show dialog "dialog-no_debug-disable-tuesday"
-	set entity "%SELF%" interactScript to "debug-disable-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-disable-tuesday-q"
 }
 
 debug-disable-tuesday-walkup {
@@ -1351,7 +1351,7 @@ debug-disable-tuesday-walkup {
 		/* doc: was set true above; set to false now so the lodge crowd isn't hidden upon load, so you can voluntarily start the cutscene and it'll look okay */
 	set hex control on
 	show dialog "dialog-debug-disable-tuesday-walkup"
-	set entity "%SELF%" interactScript to "debug-disable-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-disable-tuesday-q"
 }
 
 debug-disable-tuesday-complete {
@@ -1360,7 +1360,7 @@ debug-disable-tuesday-complete {
 	copy "set-tuesday-flags-true"
 	set hex control on
 	show dialog "dialog-debug-disable-tuesday-complete"
-	set entity "%SELF%" interactScript to "debug-disable-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-disable-tuesday-q"
 }
 
 debug-undisable-tuesday {
@@ -1370,7 +1370,7 @@ debug-undisable-tuesday {
 	copy "set-tuesday-flags-false"
 	set hex control off
 	show dialog "dialog-debug-undisable-tuesday"
-	set entity "%SELF%" interactScript to "debug-disable-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-disable-tuesday-q"
 }
 
 debug-bypass-tuesday-q {
@@ -1384,7 +1384,7 @@ debug-bypass-tuesday {
 	copy "set-tuesday-flags-true"
 	show dialog "dialog-debug-bypass-tuesday"
 		/* doc: Tuesday bypassed. */
-	set entity "%SELF%" interactScript to "debug-bypass-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-bypass-tuesday-q"
 }
 
 debug-bypass-tuesday-but-enable-hintman {
@@ -1394,11 +1394,11 @@ debug-bypass-tuesday-but-enable-hintman {
 		/* doc: set to true in above copied script */
 	show dialog "dialog-debug-bypass-tuesday-plus-hintman"
 		/* doc: Tuesday bypassed. Prepare for hintman cutscene. */
-	set entity "%SELF%" interactScript to "debug-bypass-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-bypass-tuesday-q"
 }
 
 debug-bypass-tuesday-no {
-	set entity "%SELF%" interactScript to "debug-bypass-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-bypass-tuesday-q"
 }
 
 debug-cutscene-tuesday-q {
@@ -1409,11 +1409,11 @@ debug-cutscene-tuesday-q {
 
 debug-cutscene-tuesday {
 	copy "cutscene-tuesday"
-	set entity "%SELF%" interactScript to "debug-bypass-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-bypass-tuesday-q"
 }
 
 debug-cutscene-tuesday-no {
-	set entity "%SELF%" interactScript to "debug-bypass-tuesday-q"
+	set entity "%SELF%" interact_script to "debug-bypass-tuesday-q"
 }
 
 debug-touch-artifacts-q {
@@ -1443,11 +1443,11 @@ skip-artifacts {
 }
 
 debug-touch-artifacts-end {
-	set entity "%SELF%" interactScript to "debug-touch-artifacts-q"
+	set entity "%SELF%" interact_script to "debug-touch-artifacts-q"
 }
 
 debug-touch-artifacts-no {
-	set entity "%SELF%" interactScript to "debug-touch-artifacts-q"
+	set entity "%SELF%" interact_script to "debug-touch-artifacts-q"
 }
 
 debug-touch-artifacts-and-aftermath {
@@ -1466,7 +1466,6 @@ debug-touch-artifacts {
 	goto "debug-touch-artifacts-end"
 }
 `;
-
 
 var oldCoupleHouseDialog = {
 	"dialog-delmar-huh": [
@@ -2864,14 +2863,14 @@ on_load-make-delmar-man {
 make-delmar-man {
 	set entity Delmar type to old_man
 	set entity Delmar animation to 3
-	set entity Delmar tickScript to on_tick-delmar-blab-nonman-watch
+	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
 	goto on_load-oldcouplehouse-end
 }
 
 make-delmar-sheep {
 	set entity Delmar type to sheep
 	set entity Delmar animation to 0
-	set entity Delmar tickScript to on_tick-delmar-blab-man-watch
+	set entity Delmar tick_script to on_tick-delmar-blab-man-watch
 	goto on_load-oldcouplehouse-end
 }
 
@@ -2894,14 +2893,14 @@ show_dialog-bea-glitched {
 	show dialog {
 		SELF "Ydy D ymjk ht bgvnnzn? Ocz rjmgy'n bjiz v wdo apuut."
 	}
-	set entity "%SELF%" interactScript to show_dialog-bea-start
+	set entity "%SELF%" interact_script to show_dialog-bea-start
 }
 
 show_dialog-delmar-glitched {
 	show dialog {
 		SELF "Bu, qrne. V zhfg'ir fgbbq hc gbb snfg. Srry n ovg jbbml."
 	}
-	set entity "%SELF%" interactScript to show_dialog-delmar
+	set entity "%SELF%" interact_script to show_dialog-delmar
 }
 
 show_dialog-delmar {
@@ -2923,19 +2922,19 @@ show_dialog-delmar-blab {
 		"Oh, yeah. The important thing was that I had an onion on my belt, which was the style at the time."
 		"They didn't have any white onions, because of the war. The only thing you could get was those big yellow ones...."
 	}
-	set entity Delmar interactScript to show_dialog-delmar
+	set entity Delmar interact_script to show_dialog-delmar
 }
 
 show_dialog-delmar-catchup {
 	show dialog {
 		Delmar "Huh? What's goin' on? What'd I miss?"
 	}
-	set entity Delmar interactScript to show_dialog-delmar
+	set entity Delmar interact_script to show_dialog-delmar
 }
 
 show_dialog-dsheep {
 	show dialog dialog-dsheep
-	set entity Delmar interactScript to show_dialog-delmar
+	set entity Delmar interact_script to show_dialog-delmar
 }
 
 show_dialog-bea-start {
@@ -3168,7 +3167,7 @@ show_dialog-bea2-deja {
 }
 
 bea-wrapup-mini {
-	set entity Beatrice interactScript to show_dialog-bea-start
+	set entity Beatrice interact_script to show_dialog-bea-start
 }
 
 bea1-complete-wrapup {
@@ -3236,7 +3235,7 @@ bea2-incomplete-wrapup {
 	copy script set_tick-watch-player
 	set flag bea2-backstory to true
 	copy script set-hint-bea2
-	set entity Beatrice interactScript to show_dialog-bea-start
+	set entity Beatrice interact_script to show_dialog-bea-start
 }
 
 debug-bea-sequel-q {
@@ -3252,7 +3251,7 @@ debug-bea-sequel-q {
 
 delmar-blab {
 	set entity Delmar animation to 3
-	set entity Delmar tickScript to on_tick-delmar-blab-nonman-watch
+	set entity Delmar tick_script to on_tick-delmar-blab-nonman-watch
 }
 
 on_tick-delmar-blab-nonman-watch {
@@ -3261,7 +3260,7 @@ on_tick-delmar-blab-nonman-watch {
 
 delmar-unblab {
 	set entity Delmar animation to 0
-	set entity Delmar tickScript to on_tick-delmar-blab-man-watch
+	set entity Delmar tick_script to on_tick-delmar-blab-man-watch
 }
 
 on_tick-delmar-blab-man-watch {
@@ -3278,7 +3277,7 @@ debug-bea-sequel-man {
 	show dialog {
 		SELF "Sequel branch activated, and Delmar is a man."
 	}
-	set entity "%SELF%" interactScript to debug-bea-sequel-q
+	set entity "%SELF%" interact_script to debug-bea-sequel-q
 }
 
 debug-bea-sequel-noman {
@@ -3289,16 +3288,113 @@ debug-bea-sequel-noman {
 	show dialog {
 		SELF "Sequel branch activated, and Delmar left alone."
 	}
-	set entity "%SELF%" interactScript to debug-bea-sequel-q
+	set entity "%SELF%" interact_script to debug-bea-sequel-q
 }
 
 debug-bea-sequel-no {
 	show dialog {
 		SELF "Nothing changed."
 	}
-	set entity "%SELF%" interactScript to debug-bea-sequel-q
+	set entity "%SELF%" interact_script to debug-bea-sequel-q
 }
 
 dialog dialog-bea-mandud-s { //where was this supposed to go? lol
 	SELF "Oh, %Delmar%! We'll make you your normal self soon!"
 }`;
+
+// ZIG ZAG TESTS
+
+var zigzagTestStrings = [
+`testScript {
+	action1
+	if ( conditionA || conditionB ) { behaviorAB }
+	action2
+}`,
+`testScript {
+	action1
+	if ( conditionA || conditionB ) { behaviorAB }
+	else { behaviorX }
+	action2
+}`,
+`testScript {
+	action1
+	if ( conditionA || conditionB ) { behaviorAB }
+	else if ( conditionC ) { behaviorC }
+	else { behaviorX1 behaviorX2 }
+	action2
+}`,
+`testScript {
+	action1
+	if ( conditionA || conditionB ) { behaviorAB }
+	else if ( conditionC ) { behaviorC }
+	else if ( conditionD ) { behaviorE }
+	else if ( conditionF ) { behaviorG }
+	else { behaviorX1 behaviorX2 }
+	action2
+}`,
+`testScript {
+	action1
+	if ( conditionA || conditionB ) { behaviorAB }
+	action2
+	if ( conditionC || conditionD ) { behaviorCD }
+	action3
+}`,
+`"bea script" {
+	wait 200ms
+	copy "face-player"
+	if (
+		entity Delmar type is sheep
+		|| entity Delmar type is sheep_helga
+	) {
+		copy script face-player
+		show dialog { Beatrice "He's a sheep!" }
+		wait 500ms
+	} else if ( entity Delmar type is old_man ) {
+		copy script face-player
+		show dialog { Beatrice "He's his old self!" }
+		wait 500ms
+	}
+	else {
+		copy script face-player
+		show dialog { Beatrice "I'm not sure what to make of this...." }
+		wait 500ms
+	}
+	set entity "%SELF%" interact_script to "bea script"
+}`,
+]
+
+var constantsTestStrings = [
+`testScript {
+	const! ($five = 5)
+	wait $five
+}`,
+`const! ($five = 5)
+
+testScript {
+	wait $five
+}`,
+`const!(
+	$five = 5
+	$four = 4
+)
+
+testScript {
+	wait $four
+	wait $five
+}`,
+`const!(
+	$five = 5
+	$four = 4
+)
+
+testScript {
+	wait $four
+	wait $five
+	const!($four = 4000)
+	wait $four
+	wait $five
+}`,
+`testScript {
+	wait $undefinedVar
+}`,
+]

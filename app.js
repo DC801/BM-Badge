@@ -1,9 +1,15 @@
 var app = new Vue({
 	el:' #app',
 	data: {
-		which: 'combo',
+		which: 'constants',
 		origInput: testText,
 		lexOutput: {},
+		zigzagTestStrings: zigzagTestStrings, // for the v-for
+		zigzagOrigInput: zigzagTestStrings[0],
+		zigzagOutput: '',
+		constantsTestStrings: constantsTestStrings, // for the v-for
+		constantsOrigInput: constantsTestStrings[0],
+		constantsOutput: '',
 		combo: {
 			origScript: '{}',
 			origDialog: '{}',
@@ -53,6 +59,70 @@ var app = new Vue({
 		lexInput: function () {
 			this.lexOutput = natlang.lex(this.origInput);
 		},
+		populateZigzagTest: function (index) {
+			this.zigzagOrigInput = zigzagTestStrings[index];
+		},
+		populateConstantsTest: function (index) {
+			this.constantsOrigInput = constantsTestStrings[index];
+		},
+		zigzagInput: function () {
+			var result;
+			var tokenReport = natlang.lex(this.zigzagOrigInput);
+			var tokens = tokenReport.tokens;
+			if (!tokens) {
+				var pos = tokenReport.errors[0].pos
+				var text = tokenReport.errors[0].text
+				var fancyMessage = natlang.getPosContext(this.zigzagOrigInput, pos, text);
+				this.zigzagOutput = "LEX ERROR\n" + fancyMessage;
+				throw new Error(fancyMessage);
+			}
+			var expandedTokens;
+			try {
+				expandedTokens = zigzag.process(tokens);
+			} catch (error) {
+				var errorMessage;
+				if (error.pos) {
+					errorMessage = error.name + '\n' + natlang.getPosContext(this.zigzagOrigInput, error.pos, error.message);
+				} else {
+					errorMessage = error.name + '\n' + error.message + '\n' + error.stack;
+				}
+				this.zigzagOutput = errorMessage;
+				throw new Error(errorMessage);
+			}
+			if (expandedTokens.length) {
+				result = zigzag.log(expandedTokens);
+			}
+			this.zigzagOutput = result.logBody;
+		},
+		constantsInput: function () {
+			var result;
+			var tokenReport = natlang.lex(this.constantsOrigInput);
+			var tokens = tokenReport.tokens;
+			if (!tokens) {
+				var pos = tokenReport.errors[0].pos
+				var text = tokenReport.errors[0].text
+				var fancyMessage = natlang.getPosContext(this.constantsOrigInput, pos, text);
+				this.constantsOutput = "LEX ERROR\n" + fancyMessage;
+				throw new Error(fancyMessage);
+			}
+			var expandedTokens;
+			try {
+				expandedTokens = constants.process(tokens);
+			} catch (error) {
+				var errorMessage;
+				if (error.pos) {
+					errorMessage = error.name + '\n' + natlang.getPosContext(this.constantsOrigInput, error.pos, error.message);
+				} else {
+					errorMessage = error.name + '\n' + error.message + '\n' + error.stack;
+				}
+				this.constantsOutput = errorMessage;
+				throw new Error(errorMessage);
+			}
+			if (expandedTokens.length) {
+				result = constants.log(expandedTokens);
+			}
+			this.constantsOutput = result.logBody + '\n\nRAW:\n\n' + JSON.stringify(result.raw, null, '\t');
+		},
 		makeComboNatlang: function () {
 			this.combo.natlang = mgs.intelligentDualHandler(
 				JSON.parse(this.combo.origScript),
@@ -86,6 +156,13 @@ var app = new Vue({
 		<button
 			@click="changeWhich('split')"
 		>Natlang to JSON pair</button>
+		<button
+			@click="changeWhich('zigzag')"
+		>Zigzag tester</button>
+		<button
+			@click="changeWhich('constants')"
+		>Constants tester</button>
+
 	</p>
 	<hr />
 	<div
@@ -211,12 +288,55 @@ var app = new Vue({
 			rows="20" cols="80"
 			v-model="origInput"
 		></textarea>
-		<p>
+		<h1>
+			<span>Lex!</span>
 			<button
 				@click="lexInput"
-			>LEX!</button>
-		</p>
+			>GO!</button>
+		</h1>
 		<pre>{{lexOutput}}</pre>
+	</div>
+	<div
+		v-if="which === 'zigzag'"
+	>
+		<textarea
+			rows="20" cols="80"
+			v-model="zigzagOrigInput"
+		></textarea>
+		<p>
+			<button
+				v-for="testString, index in zigzagTestStrings"
+				@click="populateZigzagTest(index)"
+			>TestData {{index}}</button>
+		</p>
+		<h1>
+			<span>Zigzag!</span>
+			<button
+				@click="zigzagInput"
+			>GO!</button>
+		</h1>
+		<pre>{{zigzagOutput}}</pre>
+	</div>
+	<div
+		v-if="which === 'constants'"
+	>
+		<textarea
+			rows="20" cols="80"
+			v-model="constantsOrigInput"
+		></textarea>
+		<p>
+			<button
+				v-for="testString, index in constantsTestStrings"
+				@click="populateConstantsTest(index)"
+			>TestData {{index}}</button>
+		</p>
+		<h1>
+			<span>Constants!</span>
+			<button
+				@click="constantsInput"
+			>GO!</button>
+		</h1>
+		<pre>{{constantsOutput}}</pre>
 	</div>
 </div>
 `});

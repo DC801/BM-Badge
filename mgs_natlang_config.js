@@ -4,11 +4,18 @@
 var window = window || {};
 window.natlang = window.natlang || {};
 var natlang = natlang || window.natlang;
+var zigzag = window.zigzag;
 if (typeof module === 'object') {
 	natlang = require('./natlang-parse.js');
+	zigzag = require('./mgs-macro-zigzag.js');
+	constants = require('./mgs-macro-constants.js');
 }
 
 var mgs = {
+	macros: {
+		constants: constants,
+		zigzag: zigzag
+	},
 	blocks: {
 		"root": {
 			branchesLoop: true,
@@ -563,7 +570,7 @@ mgs.actionDictionary = [
 	},
 	{
 		action: "SET_MAP_TICK_SCRIPT",
-		pattern: "set map tickScript ?to $script:string",
+		pattern: "set map tick_script ?to $script:string",
 	},
 	{
 		action: "SET_WARP_STATE",
@@ -675,7 +682,7 @@ mgs.actionDictionary = [
 	},
 	{
 		action: "CHECK_ENTITY_HACKABLE_STATE_A_U4",
-		pattern: "if entity $entity:string hackableStateAU4 is $expected_u4:number then goto ?script $success_script:string",
+		pattern: "if entity $entity:string hackable_state_au4 is $expected_u4:number then goto ?script $success_script:string",
 	},
 	// {
 	// 	action: "CHECK_ENTITY_NAME",
@@ -722,12 +729,12 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperty: "interactScript",
+		natLangProperty: "interact_script",
 		dictionaryRef: ":string",
 	},
 	CHECK_ENTITY_TICK_SCRIPT: {
 		actionProperty: "expected_script",
-		natLangProperty: "tickScript",
+		natLangProperty: "tick_script",
 		dictionaryRef: ":string",
 	},
 	CHECK_ENTITY_TYPE: {
@@ -737,17 +744,17 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_PRIMARY_ID: {
 		actionProperty: "expected_u2",
-		natLangProperty: "primaryID",
+		natLangProperty: "primary_id",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_SECONDARY_ID: {
 		actionProperty: "expected_u2",
-		natLangProperty: "secondaryID",
+		natLangProperty: "secondary_id",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_PRIMARY_ID_TYPE: {
 		actionProperty: "expected_byte",
-		natLangProperty: "primaryIDtype",
+		natLangProperty: "primary_id_type",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_CURRENT_ANIMATION: {
@@ -757,7 +764,7 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_CURRENT_FRAME: {
 		actionProperty: "expected_byte",
-		natLangProperty: "animationFrame",
+		natLangProperty: "animation_frame",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_DIRECTION: {
@@ -767,32 +774,32 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	CHECK_ENTITY_HACKABLE_STATE_A: {
 		actionProperty: "expected_byte",
-		natLangProperty: "hackableStateA",
+		natLangProperty: "hackable_state_a",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_HACKABLE_STATE_B: {
 		actionProperty: "expected_byte",
-		natLangProperty: "hackableStateB",
+		natLangProperty: "hackable_state_b",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_HACKABLE_STATE_C: {
 		actionProperty: "expected_byte",
-		natLangProperty: "hackableStateC",
+		natLangProperty: "hackable_state_c",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_HACKABLE_STATE_D: {
 		actionProperty: "expected_byte",
-		natLangProperty: "hackableStateD",
+		natLangProperty: "hackable_state_d",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_HACKABLE_STATE_A_U2: {
 		actionProperty: "expected_u2",
-		natLangProperty: "hackableStateAU2",
+		natLangProperty: "hackable_state_au2",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_HACKABLE_STATE_C_U2: {
 		actionProperty: "expected_u2",
-		natLangProperty: "hackableStateCU2",
+		natLangProperty: "hackable_state_cu2",
 		dictionaryRef: ":number",
 	},
 	CHECK_ENTITY_PATH: {
@@ -817,12 +824,12 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	SET_ENTITY_INTERACT_SCRIPT: {
 		actionProperty: "script",
-		natLangProperty: "interactScript",
+		natLangProperty: "interact_script",
 		dictionaryRef: ":string",
 	},
 	SET_ENTITY_TICK_SCRIPT: {
 		actionProperty: "script",
-		natLangProperty: "tickScript",
+		natLangProperty: "tick_script",
 		dictionaryRef: ":string",
 	},
 	SET_ENTITY_TYPE: {
@@ -832,17 +839,17 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	SET_ENTITY_PRIMARY_ID: {
 		actionProperty: "u2_value",
-		natLangProperty: "primaryID",
+		natLangProperty: "primary_id",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_SECONDARY_ID: {
 		actionProperty: "u2_value",
-		natLangProperty: "secondaryID",
+		natLangProperty: "secondary_id",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_PRIMARY_ID_TYPE: {
 		actionProperty: "byte_value",
-		natLangProperty: "primaryIDtype",
+		natLangProperty: "primary_id_type",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_CURRENT_ANIMATION: {
@@ -852,42 +859,42 @@ mgs.entityPropertyMap = { // used for the procedural dictionary entries
 	},
 	SET_ENTITY_CURRENT_FRAME: {
 		actionProperty: "byte_value",
-		natLangProperty: "animationFrame",
+		natLangProperty: "animation_frame",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_A: {
 		actionProperty: "byte_value",
-		natLangProperty: "hackableStateA",
+		natLangProperty: "hackable_state_a",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_B: {
 		actionProperty: "byte_value",
-		natLangProperty: "hackableStateB",
+		natLangProperty: "hackable_state_b",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_C: {
 		actionProperty: "byte_value",
-		natLangProperty: "hackableStateC",
+		natLangProperty: "hackable_state_c",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_D: {
 		actionProperty: "byte_value",
-		natLangProperty: "hackableStateD",
+		natLangProperty: "hackable_state_d",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_A_U2: {
 		actionProperty: "u2_value",
-		natLangProperty: "hackableStateAU2",
+		natLangProperty: "hackable_state_au2",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_C_U2: {
 		actionProperty: "u2_value",
-		natLangProperty: "hackableStateCU2",
+		natLangProperty: "hackable_state_cu2",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_HACKABLE_STATE_A_U4: {
 		actionProperty: "u4_value",
-		natLangProperty: "hackableStateAU4",
+		natLangProperty: "hackable_state_au4",
 		dictionaryRef: ":number",
 	},
 	SET_ENTITY_PATH: {

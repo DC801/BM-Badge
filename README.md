@@ -563,14 +563,14 @@ Some of these patterns may also have some hidden parameters built in to the phra
 As a reminder, words in parentheses are optional. For example, the dictionary pattern:
 
 ```
-set entity $entity:string tickScript (to) $string:string 
+set entity $entity:string tick_script (to) $string:string 
 ```
 
 will be satisfied by either of the following:
 
 ```
-set entity "Entity Name" tickScript to scriptName
-set entity "Entity Name" tickScript scriptName
+set entity "Entity Name" tick_script to scriptName
+set entity "Entity Name" tick_script scriptName
 ```
 
 ### Game management actions
@@ -787,14 +787,14 @@ Examples:
 Checks an entity's `on_interact` script (by the script's name).
 
 ```
-if entity $entity:string interactScript is $expected_script:string
+if entity $entity:string interact_script is $expected_script:string
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string interactScript is not $expected_script:string
+if entity $entity:string interact_script is not $expected_script:string
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -802,22 +802,22 @@ if entity $entity:string interactScript is not $expected_script:string
 
 Examples:
 
-- `if entity "Entity Name" interactScript is scriptName then goto successScript`
-- `if entity "Entity Name" interactScript is not scriptName then goto successScript`
+- `if entity "Entity Name" interact_script is scriptName then goto successScript`
+- `if entity "Entity Name" interact_script is not scriptName then goto successScript`
 
 #### CHECK_ENTITY_TICK_SCRIPT
 
 Checks an entity's `on_tick` script (by the script's name).
 
 ```
-if entity $entity:string tickScript is $expected_script:string
+if entity $entity:string tick_script is $expected_script:string
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string tickScript is not $expected_script:string
+if entity $entity:string tick_script is not $expected_script:string
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -825,8 +825,8 @@ if entity $entity:string tickScript is not $expected_script:string
 
 Examples:
 
-- `if entity "Entity Name" tickScript is scriptName then goto successScript`
-- `if entity "Entity Name" tickScript is not scriptName then goto successScript`
+- `if entity "Entity Name" tick_script is scriptName then goto successScript`
+- `if entity "Entity Name" tick_script is not scriptName then goto successScript`
 
 #### CHECK_ENTITY_TYPE
 
@@ -860,14 +860,14 @@ Checks whether an entity has the given `primary_id`.
 [CHECK_ENTITY_TYPE](#check_entity_type) is recommended instead.
 
 ```
-if entity $entity:string primaryID is $expected_u2:number
+if entity $entity:string primary_id is $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string primaryID is not $expected_u2:number
+if entity $entity:string primary_id is not $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -875,8 +875,8 @@ if entity $entity:string primaryID is not $expected_u2:number
 
 Examples:
 
-- `if entity "Entity Name" primaryID is 32 then goto successScript`
-- `if entity "Entity Name" primaryID is not 32 then goto successScript`
+- `if entity "Entity Name" primary_id is 32 then goto successScript`
+- `if entity "Entity Name" primary_id is not 32 then goto successScript`
 
 #### CHECK_ENTITY_SECONDARY_ID
 
@@ -887,14 +887,14 @@ This entity property is only useful on "tile" entities, where the `secondary_id`
 Tiles are referenced by their index, starting at the top and going toward the right (0-indexed). Click on the tile within Tiled to see its ID.
 
 ```
-if entity $entity:string secondaryID is $expected_u2:number
+if entity $entity:string secondary_id is $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string secondaryID is not $expected_u2:number
+if entity $entity:string secondary_id is not $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -902,22 +902,22 @@ if entity $entity:string secondaryID is not $expected_u2:number
 
 Examples:
 
-- `if entity "Entity Name" secondaryID is 32 then goto successScript`
-- `if entity "Entity Name" secondaryID is not 32 then goto successScript`
+- `if entity "Entity Name" secondary_id is 32 then goto successScript`
+- `if entity "Entity Name" secondary_id is not 32 then goto successScript`
 
 #### CHECK_ENTITY_PRIMARY_ID_TYPE
 
 Checks an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) character (sometimes called `entity_type`)
 
 ```
-if entity $entity:string primaryIDtype is $expected_byte:number
+if entity $entity:string primary_id_type is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string primaryIDtype is not $expected_byte:number
+if entity $entity:string primary_id_type is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -925,8 +925,8 @@ if entity $entity:string primaryIDtype is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" primaryIDtype is 2 then goto successScript`
-- `if entity "Entity Name" primaryIDtype is not 2 then goto successScript`
+- `if entity "Entity Name" primary_id_type is 2 then goto successScript`
+- `if entity "Entity Name" primary_id_type is not 2 then goto successScript`
 
 #### CHECK_ENTITY_CURRENT_ANIMATION
 
@@ -956,14 +956,14 @@ Examples:
 Checks the frame (number) of the entity's current animation.
 
 ```
-if entity $entity:string animationFrame is $expected_byte:number
+if entity $entity:string animation_frame is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string animationFrame is not $expected_byte:number
+if entity $entity:string animation_frame is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -971,8 +971,8 @@ if entity $entity:string animationFrame is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" animationFrame is 2 then goto successScript`
-- `if entity "Entity Name" animationFrame is not 2 then goto successScript`
+- `if entity "Entity Name" animation_frame is 2 then goto successScript`
+- `if entity "Entity Name" animation_frame is not 2 then goto successScript`
 
 #### CHECK_ENTITY_DIRECTION
 
@@ -1025,14 +1025,14 @@ Examples:
 Checks the value of an entity's `hackable_state_a` byte. Max value: 255
 
 ```
-if entity $entity:string hackableStateA is $expected_byte:number
+if entity $entity:string hackable_state_a is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateA is not $expected_byte:number
+if entity $entity:string hackable_state_a is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1040,22 +1040,22 @@ if entity $entity:string hackableStateA is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateA is 2 then goto successScript`
-- `if entity "Entity Name" hackableStateA is not 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_a is 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_a is not 2 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_B
 
 Checks the value of an entity's `hackable_state_b` byte. Max value: 255
 
 ```
-if entity $entity:string hackableStateB is $expected_byte:number
+if entity $entity:string hackable_state_b is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateB is not $expected_byte:number
+if entity $entity:string hackable_state_b is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1063,22 +1063,22 @@ if entity $entity:string hackableStateB is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateB is 2 then goto successScript`
-- `if entity "Entity Name" hackableStateB is not 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_b is 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_b is not 2 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_C
 
 Checks the value of an entity's `hackable_state_c` byte. Max value: 255
 
 ```
-if entity $entity:string hackableStateC is $expected_byte:number
+if entity $entity:string hackable_state_c is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateC is not $expected_byte:number
+if entity $entity:string hackable_state_c is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1086,22 +1086,22 @@ if entity $entity:string hackableStateC is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateC is 2 then goto successScript`
-- `if entity "Entity Name" hackableStateC is not 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_c is 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_c is not 2 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_D
 
 Checks the value of an entity's `hackable_state_d` byte. Max value: 255
 
 ```
-if entity $entity:string hackableStateD is $expected_byte:number
+if entity $entity:string hackable_state_d is $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateD is not $expected_byte:number
+if entity $entity:string hackable_state_d is not $expected_byte:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1109,22 +1109,22 @@ if entity $entity:string hackableStateD is not $expected_byte:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateD is 2 then goto successScript`
-- `if entity "Entity Name" hackableStateD is not 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_d is 2 then goto successScript`
+- `if entity "Entity Name" hackable_state_d is not 2 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_A_U2
 
 Checks the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535
 
 ```
-if entity $entity:string hackableStateAU2 is $expected_u2:number
+if entity $entity:string hackable_state_au2 is $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateAU2 is not $expected_u2:number
+if entity $entity:string hackable_state_au2 is not $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1132,22 +1132,22 @@ if entity $entity:string hackableStateAU2 is not $expected_u2:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateAU2 is 32 then goto successScript`
-- `if entity "Entity Name" hackableStateAU2 is not 32 then goto successScript`
+- `if entity "Entity Name" hackable_state_au2 is 32 then goto successScript`
+- `if entity "Entity Name" hackable_state_au2 is not 32 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_C_U2
 
 Checks the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535
 
 ```
-if entity $entity:string hackableStateCU2 is $expected_u2:number
+if entity $entity:string hackable_state_cu2 is $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (true)
 ```
 
 ```
-if entity $entity:string hackableStateCU2 is not $expected_u2:number
+if entity $entity:string hackable_state_cu2 is not $expected_u2:number
 	then goto (script) $success_script:string
 	// Built-in values:
 	// expected_bool (false)
@@ -1155,8 +1155,8 @@ if entity $entity:string hackableStateCU2 is not $expected_u2:number
 
 Examples:
 
-- `if entity "Entity Name" hackableStateCU2 is 32 then goto successScript`
-- `if entity "Entity Name" hackableStateCU2 is not 32 then goto successScript`
+- `if entity "Entity Name" hackable_state_cu2 is 32 then goto successScript`
+- `if entity "Entity Name" hackable_state_cu2 is not 32 then goto successScript`
 
 #### CHECK_ENTITY_HACKABLE_STATE_A_U4
 
@@ -1165,11 +1165,11 @@ Checks the values of an entity's `hackable_state_a` through `hackable_state_d` b
 NOTE: This is the only "check" action that can only check for equality, not inequality. (There aren't enough bytes to spare for the `expected_bool`!)
 
 ```
-if entity $entity:string hackableStateAU4 is $expected_u4:number
+if entity $entity:string hackable_state_au4 is $expected_u4:number
 	then goto (script) $success_script:string
 ```
 
-Example: `if entity "Entity Name" hackableStateAU4 is 9001 then goto successScript`
+Example: `if entity "Entity Name" hackable_state_au4 is 9001 then goto successScript`
 
 #### CHECK_ENTITY_PATH
 
@@ -1442,10 +1442,10 @@ Sets an entity's `primary_id`.
 You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](#set_entity_type).
 
 ```
-set entity $entity:string primaryID (to) $u2_value:number
+set entity $entity:string primary_id (to) $u2_value:number
 ```
 
-Example: `set entity "Entity Name" primaryID to 2`
+Example: `set entity "Entity Name" primary_id to 2`
 
 #### SET_ENTITY_SECONDARY_ID
 
@@ -1454,90 +1454,90 @@ Sets an entity's `secondary_id`.
 This action will not be useful unless the entity is a tile entity (`primary_id_type`: 1).
 
 ```
-set entity $entity:string secondaryID (to) $u2_value:number
+set entity $entity:string secondary_id (to) $u2_value:number
 ```
 
-Example: `set entity "Entity Name" secondaryID to 2`
+Example: `set entity "Entity Name" secondary_id to 2`
 
 #### SET_ENTITY_PRIMARY_ID_TYPE
 
 Sets an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) character (sometimes called `entity_type`)
 
 ```
-set entity $entity:string primaryIDtype (to) $byte_value:number
+set entity $entity:string primary_id_type (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" primaryIDtype to 0`
+Example: `set entity "Entity Name" primary_id_type to 0`
 
 #### SET_ENTITY_HACKABLE_STATE_A
 
 Sets the value of an entity's `hackable_state_a` byte. Max value: 255
 
 ```
-set entity $entity:string hackableStateA (to) $byte_value:number
+set entity $entity:string hackable_state_a (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateA to 0`
+Example: `set entity "Entity Name" hackable_state_a to 0`
 
 #### SET_ENTITY_HACKABLE_STATE_B
 
 Sets the value of an entity's `hackable_state_b` byte. Max value: 255
 
 ```
-set entity $entity:string hackableStateB (to) $byte_value:number
+set entity $entity:string hackable_state_b (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateB to 0`
+Example: `set entity "Entity Name" hackable_state_b to 0`
 
 #### SET_ENTITY_HACKABLE_STATE_C
 
 Sets the value of an entity's `hackable_state_c` byte. Max value: 255
 
 ```
-set entity $entity:string hackableStateC (to) $byte_value:number
+set entity $entity:string hackable_state_c (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateC to 0`
+Example: `set entity "Entity Name" hackable_state_c to 0`
 
 #### SET_ENTITY_HACKABLE_STATE_D
 
 Sets the value of an entity's `hackable_state_d` byte. Max value: 255
 
 ```
-set entity $entity:string hackableStateD (to) $byte_value:number
+set entity $entity:string hackable_state_d (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateD to 0`
+Example: `set entity "Entity Name" hackable_state_d to 0`
 
 #### SET_ENTITY_HACKABLE_STATE_A_U2
 
 Sets the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535
 
 ```
-set entity $entity:string hackableStateAU2 (to) $u2_value:number
+set entity $entity:string hackable_state_au2 (to) $u2_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateAU2 to 2`
+Example: `set entity "Entity Name" hackable_state_au2 to 2`
 
 #### SET_ENTITY_HACKABLE_STATE_C_U2
 
 Sets the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535
 
 ```
-set entity $entity:string hackableStateCU2 (to) $u2_value:number
+set entity $entity:string hackable_state_cu2 (to) $u2_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateCU2 to 2`
+Example: `set entity "Entity Name" hackable_state_cu2 to 2`
 
 #### SET_ENTITY_HACKABLE_STATE_A_U4
 
 Sets the values of an entity's `hackable_state_a` through `hackable_state_d` bytes, interpreted together as if a U4. Max value: …big
 
 ```
-set entity $entity:string hackableStateAU4 (to) $u4_value:number
+set entity $entity:string hackable_state_au4 (to) $u4_value:number
 ```
 
-Example: `set entity "Entity Name" hackableStateAU4 to $u4_value:number`
+Example: `set entity "Entity Name" hackable_state_au4 to $u4_value:number`
 
 ### Set variables actions
 
@@ -1725,10 +1725,10 @@ Set the frame of the current animation.
 This is useful for staggering the animations of entities that have identical animation timings.
 
 ```
-set entity $entity:string animationFrame (to) $byte_value:number
+set entity $entity:string animation_frame (to) $byte_value:number
 ```
 
-Example: `set entity "Entity Name" animationFrame to 0`
+Example: `set entity "Entity Name" animation_frame to 0`
 
 #### SET_ENTITY_DIRECTION
 
@@ -1924,10 +1924,10 @@ Example: `copy scriptName`
 Sets the map's `on_tick` script.
 
 ```
-set map tickScript (to) $script:string
+set map tick_script (to) $script:string
 ```
 
-Example: `set map tickScript to scriptName`
+Example: `set map tick_script to scriptName`
 
 #### SET_ENTITY_INTERACT_SCRIPT
 
@@ -1938,20 +1938,20 @@ If you use this action to change the script slot that is currently running the a
 Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree.
 
 ```
-set entity $entity:string interactScript (to) $script:string
+set entity $entity:string interact_script (to) $script:string
 ```
 
-Example: `set entity "Entity Name" interactScript to scriptName`
+Example: `set entity "Entity Name" interact_script to scriptName`
 
 #### SET_ENTITY_TICK_SCRIPT
 
 Sets an entity's `on_tick` script.
 
 ```
-set entity $entity:string tickScript (to) $script:string
+set entity $entity:string tick_script (to) $script:string
 ```
 
-Example: `set entity "Entity Name" tickScript to scriptName`
+Example: `set entity "Entity Name" tick_script to scriptName`
 
 ## Further Information
 
