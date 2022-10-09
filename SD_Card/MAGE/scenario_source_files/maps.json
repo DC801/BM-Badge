@@ -1,4 +1,5 @@
 {
+	"main_menu": "maps/map-main_menu.json",
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
@@ -8,7 +9,6 @@
 			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
 		}
 	},
-	"main_menu": "maps/map-main_menu.json",
 	"castle-door": {
 		"path": "maps/map-mtn-castle_entrance.json",
 		"on_load": "on_load-mtn-castle_entrance",
@@ -27,8 +27,23 @@
 	},
 	"flying-toasters": {
 		"path": "maps/map-flying-toasters.json",
-		"on_tick": "on_tick-flying-toasters",
 		"on_load": "on_load-flying-toasters"
+	},
+	"bling-zero": {
+		"path": "maps/map-bling-zero.json",
+		"on_load": "on_load-bling-zero"
+	},
+	"bling-qr": {
+		"path": "maps/map-bling-qr.json",
+		"on_load": "on_load-bling-qr"
+	},
+	"bling-digi-mage": {
+		"path": "maps/map-bling-digi-mage.json",
+		"on_load": "on_load-bling-digi-mage"
+	},
+	"bling-dc801": {
+		"path": "maps/map-bling-dc801.json",
+		"on_load": "on_load-bling-dc801"
 	},
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",

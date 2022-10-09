@@ -1,0 +1,407 @@
+{
+    "initialize-bling-rotate-max": [
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-max",
+            "operation": "SET",
+            "value": 2
+        }
+    ],
+    "bling-rotate-state-increment": [
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-state",
+            "operation": "ADD",
+            "value": 1
+        },
+        {
+            "action": "MUTATE_VARIABLES",
+            "variable": "temp",
+            "operation": "SET",
+            "source": "bling-rotate-max"
+        },
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "temp",
+            "operation": "ADD",
+            "value": 1
+        },
+        {
+            "action": "CHECK_VARIABLES",
+            "expected_bool": true,
+            "variable": "bling-rotate-state",
+            "comparison": "==",
+            "source": "temp",
+            "success_script": "bling-rotate-state-mutate-0"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-rotate-state-mutate-wrapup"
+        }
+    ],
+    "bling-rotate-state-decrement": [
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-state",
+            "operation": "SUB",
+            "value": 1
+        },
+        {
+            "action": "CHECK_VARIABLE",
+            "expected_bool": true,
+            "variable": "bling-rotate-state",
+            "comparison": "==",
+            "value": 65535,
+            "success_script": "bling-rotate-state-mutate-max"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-rotate-state-mutate-wrapup"
+        }
+    ],
+    "bling-rotate-state-mutate-0": [
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-state",
+            "operation": "SET",
+            "value": 0
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-rotate-state-mutate-wrapup"
+        }
+    ],
+    "bling-rotate-state-mutate-max": [
+        {
+            "action": "MUTATE_VARIABLES",
+            "variable": "bling-rotate-state",
+            "operation": "SET",
+            "source": "bling-rotate-max"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-rotate-state-mutate-wrapup"
+        }
+    ],
+    "bling-rotate-state-mutate-wrapup": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-rotate-state-calc-done",
+            "bool_value": true
+        },
+        {
+            "action": "SET_ENTITY_TICK_SCRIPT",
+            "entity": "%SELF%",
+            "script": "null_script"
+        }
+    ],
+    "on_load-bling-mode-map": [
+        {
+            "action": "SET_HEX_EDITOR_CONTROL",
+            "bool_value": false
+        },
+        {
+            "action": "SET_PLAYER_CONTROL",
+            "bool_value": false
+        },
+        {
+            "action": "SET_MAP_TICK_SCRIPT",
+            "script": "on_tick-detect-bling-mode"
+        }
+    ],
+    "on_tick-detect-bling-mode": [
+        {
+            "action": "CHECK_WARP_STATE",
+            "expected_bool": true,
+            "string": "bling-rotate-manual",
+            "success_script": "on_tick-bling-mode-map-manual-waiting"
+        },
+        {
+            "action": "CHECK_WARP_STATE",
+            "expected_bool": true,
+            "string": "bling-rotate-auto",
+            "success_script": "on_tick-bling-mode-map-auto"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-mode-no_rotate-haxpress-check"
+        }
+    ],
+    "on_tick-bling-mode-no_rotate-haxpress-check": [
+        {
+            "action": "CHECK_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "expected_bool": true,
+            "success_script": "on_tick-bling-listen-haxpress-waiting"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-listen-anypress-waiting"
+        }
+    ],
+    "on_tick-bling-input-safety-delay": [
+        {
+            "action": "NON_BLOCKING_DELAY",
+            "duration": 150
+        }
+    ],
+    "on_tick-bling-listen-anypress-waiting": [
+        {
+            "action": "COPY_SCRIPT",
+            "script": "on_tick-bling-input-safety-delay"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-listen-anypress"
+        }
+    ],
+    "on_tick-bling-listen-haxpress-waiting": [
+        {
+            "action": "COPY_SCRIPT",
+            "script": "on_tick-bling-input-safety-delay"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-listen-haxpress"
+        }
+    ],
+    "on_tick-bling-listen-anypress": [
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "ANY",
+            "success_script": "on_tick-bling-back-to-menu"
+        }
+    ],
+    "on_tick-bling-listen-haxpress": [
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "HAX",
+            "success_script": "on_tick-bling-back-to-menu"
+        }
+    ],
+    "start_bling-rotate-auto": [
+        {
+            "action": "SET_WARP_STATE",
+            "string": "bling-rotate-auto"
+        },
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-state",
+            "operation": "SET",
+            "value": 0
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-mode-go-branches"
+        }
+    ],
+    "start_bling-rotate-manual": [
+        {
+            "action": "SET_WARP_STATE",
+            "string": "bling-rotate-manual"
+        },
+        {
+            "action": "MUTATE_VARIABLE",
+            "variable": "bling-rotate-state",
+            "operation": "SET",
+            "value": 0
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "bling-mode-go-branches"
+        }
+    ],
+    "on_tick-bling-mode-map-auto": [
+        {
+            "action": "SET_ENTITY_TICK_SCRIPT",
+            "entity": "Timer",
+            "script": "on_tick-bling-timer"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-listen-anypress-waiting"
+        }
+    ],
+    "on_tick-bling-timer": [
+        {
+            "action": "NON_BLOCKING_DELAY",
+            "duration": 13000
+        },
+        {
+            "action": "SET_ENTITY_TICK_SCRIPT",
+            "entity": "Math",
+            "script": "bling-rotate-state-increment"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-timer-wait"
+        }
+    ],
+    "on_tick-bling-timer-wait": [
+        {
+            "action": "CHECK_SAVE_FLAG",
+            "save_flag": "bling-rotate-state-calc-done",
+            "expected_bool": true,
+            "success_script": "bling-mode-go-branches"
+        }
+    ],
+    "on_tick-bling-mode-map-manual-waiting": [
+        {
+            "action": "COPY_SCRIPT",
+            "script": "on_tick-bling-input-safety-delay"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-mode-map-manual"
+        }
+    ],
+    "on_tick-bling-mode-map-manual": [
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "LJOY_LEFT",
+            "success_script": "on_tick-bling-mode-map-manual-left"
+        },
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "RJOY_LEFT",
+            "success_script": "on_tick-bling-mode-map-manual-left"
+        },
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "LJOY_RIGHT",
+            "success_script": "on_tick-bling-mode-map-manual-right"
+        },
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "RJOY_RIGHT",
+            "success_script": "on_tick-bling-mode-map-manual-right"
+        },
+        {
+            "action": "CHECK_FOR_BUTTON_PRESS",
+            "button_id": "HAX",
+            "success_script": "on_tick-bling-back-to-menu"
+        }
+    ],
+    "on_tick-bling-mode-map-manual-left": [
+        {
+            "action": "SET_ENTITY_TICK_SCRIPT",
+            "entity": "Math",
+            "script": "bling-rotate-state-decrement"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-timer-wait"
+        }
+    ],
+    "on_tick-bling-mode-map-manual-right": [
+        {
+            "action": "SET_ENTITY_TICK_SCRIPT",
+            "entity": "Math",
+            "script": "bling-rotate-state-increment"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-timer-wait"
+        }
+    ],
+    "on_tick-bling-back-to-menu": [
+        {
+            "action": "SET_WARP_STATE",
+            "string": "from-bling"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "load-main_menu"
+        }
+    ],
+    "bling-mode-go-branches": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-rotate-state-calc-done",
+            "bool_value": false
+        },
+        {
+            "action": "CHECK_VARIABLE",
+            "expected_bool": true,
+            "variable": "bling-rotate-state",
+            "comparison": "==",
+            "value": 0,
+            "success_script": "start_bling-dc801"
+        },
+        {
+            "action": "CHECK_VARIABLE",
+            "expected_bool": true,
+            "variable": "bling-rotate-state",
+            "comparison": "==",
+            "value": 1,
+            "success_script": "start_bling-digi-mage"
+        },
+        {
+            "action": "CHECK_VARIABLE",
+            "expected_bool": true,
+            "variable": "bling-rotate-state",
+            "comparison": "==",
+            "value": 2,
+            "success_script": "start_bling-zero"
+        },
+        {
+            "action": "RUN_SCRIPT",
+            "script": "on_tick-bling-back-to-menu"
+        }
+    ],
+    "start_bling-dc801": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "bool_value": false
+        },
+        {
+            "action": "LOAD_MAP",
+            "map": "bling-dc801"
+        }
+    ],
+    "start_bling-zero": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "bool_value": false
+        },
+        {
+            "action": "LOAD_MAP",
+            "map": "bling-zero"
+        }
+    ],
+    "start_bling-digi-mage": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "bool_value": false
+        },
+        {
+            "action": "LOAD_MAP",
+            "map": "bling-digi-mage"
+        }
+    ],
+    "start_bling-flying-toasters": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "bool_value": false
+        },
+        {
+            "action": "LOAD_MAP",
+            "map": "flying-toasters"
+        }
+    ],
+    "start_bling-qr": [
+        {
+            "action": "SET_SAVE_FLAG",
+            "save_flag": "bling-hax-button-only",
+            "bool_value": true
+        },
+        {
+            "action": "LOAD_MAP",
+            "map": "bling-qr"
+        }
+    ]
+}

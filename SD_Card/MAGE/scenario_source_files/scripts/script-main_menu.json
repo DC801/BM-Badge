@@ -1,4 +1,10 @@
 {
+	"on_load-main_menu": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "initialize-bling-rotate-max"
+		}
+	],
 	"on_tick-button-to-skip": [
 		{
 			"action": "CHECK_FOR_BUTTON_PRESS",
@@ -109,16 +115,16 @@
 			"dialog": "dialog-show-menu-bling-mode"
 		}
 	],
+	"show-menu-bling-dc801-showcase": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-bling-dc801-showcase"
+		}
+	],
 	"show-menu-credits-choice": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-show-menu-credits-choice"
-		}
-	],
-	"start_bling-flying-toasters": [
-		{
-			"action": "LOAD_MAP",
-			"map": "flying-toasters"
 		}
 	],
 	"load-start-map": [
