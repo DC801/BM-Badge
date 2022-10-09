@@ -29,7 +29,9 @@
 		"scripts/script-debug.json",
 		"scripts/script-woprhouse.json",
 		"scripts/script-max.json",
-		"scripts/script-flying-toasters.json"
+		"scripts/script-bling-mode.json",
+		"scripts/script-flying-toasters.json",
+		"scripts/script-bling-bulk.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-main_menu.json",

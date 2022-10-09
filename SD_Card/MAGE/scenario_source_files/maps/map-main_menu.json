@@ -192,7 +192,7 @@
         {
          "name":"on_load",
          "type":"string",
-         "value":""
+         "value":"on_load-main_menu"
         }, 
         {
          "name":"on_tick",
