@@ -1,0 +1,15 @@
+on_load-mtn-castle_entrance {
+	teleport camera to geometry camera-spot
+	copy boot-out-if-necessary
+	if (flag can-use-hax-in-mtn is false) {
+		copy disable-hax
+	}
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+	goto null_script
+}
+
+on_go-mtn-castle_entrance-to-xa_room-check {
+	goto warp_to-mtn-xa_room
+}
