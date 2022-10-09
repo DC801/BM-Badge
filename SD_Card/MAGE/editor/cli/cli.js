@@ -3,6 +3,8 @@ const path = require('path');
 const window = {
 	fastPng: require(`${__dirname}/../dependencies/fast-png`),
 	omggif: require(`${__dirname}/../dependencies/omggif`),
+	natlang: require(`${__dirname}/../dependencies/natlang-parser/natlang-parse`),
+	mgs: require(`${__dirname}/../dependencies/natlang-parser/mgs_natlang_config`),
 };
 
 var DEFAULT_OUTPUT_PATH = `${__dirname}/../../game.dat`;
@@ -14,6 +16,7 @@ var inputPath = path.resolve(inputPathFromArgs || DEFAULT_SOURCE_PATH);
 var outputPath = path.resolve(outputPathFromArgs || DEFAULT_OUTPUT_PATH);
 
 const modules = [
+	"natlang_mgs",
 	"common",
 	"maps",
 	"tilesets",

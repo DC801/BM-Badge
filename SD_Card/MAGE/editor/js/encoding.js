@@ -100,6 +100,11 @@ var handleScenarioData = function (fileNameMap) {
 			}
 		};
 
+		var natlangMgsPromise = convertMgsFilesIntoScenarioDataConfig(
+			fileNameMap,
+			scenarioData,
+		);
+
 		var mergeScriptDataIntoScenario = mergeNamedJsonIntoScenario(
 			'scriptPaths',
 			'scripts',
@@ -119,11 +124,16 @@ var handleScenarioData = function (fileNameMap) {
 		);
 		return Promise.all([
 			entityTypesPromise,
-			mergeScriptDataIntoScenario(fileNameMap, scenarioData),
-			mergeDialogDataIntoScenario(fileNameMap, scenarioData),
-			mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
+			natlangMgsPromise,
 			mergeMapDataIntoScenario(fileNameMap, scenarioData),
 		])
+			.then(function () {
+				return Promise.all([
+					mergeScriptDataIntoScenario(fileNameMap, scenarioData),
+					mergeDialogDataIntoScenario(fileNameMap, scenarioData),
+					mergeSerialDialogDataIntoScenario(fileNameMap, scenarioData),
+				])
+			})
 			.then(function () {
 				serializeNullScript(
 					fileNameMap,

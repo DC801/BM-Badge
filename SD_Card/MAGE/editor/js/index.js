@@ -1,4 +1,3 @@
-
 window.Vue.component(
 	'inputty',
 	{
@@ -37,15 +36,11 @@ window.vueApp = new window.Vue({
 			if (this.downloadData) {
 				window.URL.revokeObjectURL(this.downloadData.url);
 			}
-			window.Vue.set(
-				this,
-				'downloadData',
-				{
-					href: url,
-					target: '_blank',
-					download: name
-				}
-			);
+			this.downloadData = {
+				href: url,
+				target: '_blank',
+				download: name
+			}
 		},
 		handleChange: function (event) {
 			var fileNameMap = {};
@@ -59,6 +54,8 @@ window.vueApp = new window.Vue({
 			try {
 				if (!scenarioFile) {
 					vm.error = 'No `scenario.json` file detected in folder, nowhere to start!';
+					vm.isLoading = false;
+					vm.closeSuccess();
 				} else {
 					getFileJson(scenarioFile)
 						.then(handleScenarioData(fileNameMap))
@@ -71,17 +68,20 @@ window.vueApp = new window.Vue({
 						.then(generateIndexAndComposite)
 						.then(function (compositeArray) {
 							vm.prepareDownload([compositeArray], 'game.dat');
-							vm.isLoading = false;
 						})
 						.catch(function (error) {
 							console.error(error);
 							vm.error = error.message;
+						})
+						.then(function () {
 							vm.isLoading = false;
+							vm.uniqueEncodeAttempt = Math.random();
 						});
 				}
 			} catch (error) {
 				vm.error = error.message;
 				vm.isLoading = false;
+				vm.uniqueEncodeAttempt = Math.random();
 			}
 		}
 	}

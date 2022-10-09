@@ -1,0 +1,175 @@
+// 221 lines -> 183 lines (83% improvement)
+// logical optimizations found: 2+
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label SELF { entity "%SELF%" }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+show_dialog-shepherd-start {
+	copy face-player
+	if (entity "%SELF%" is glitched) { // if he's glitched
+		show dialog { SELF "Jubn, jung'f tbvat ba?!" }
+	} else if (flag storyflag-shepherd is true) { // if you've solved the puzzle already
+		show dialog { SELF "Thanks a million! I owe you one!" }
+	} else if (
+		entity Baa is not inside geometry sheep-pen
+		|| entity Ram is not inside geometry sheep-pen
+		|| entity Ewe is not inside geometry sheep-pen
+		|| entity Helga is not inside geometry sheep-pen
+	) { // if at least one of the sheep is NOT in the pen... (& puzzle not solved yet)
+		if (flag shepherd-backstory is true) { // ...and you've heard the backstory...
+			if (
+				entity Baa is inside geometry sheep-pen
+				|| entity Ram is inside geometry sheep-pen
+				|| entity Ewe is inside geometry sheep-pen
+				|| entity Helga is inside geometry sheep-pen
+			) { // ...and if at least one IS in the pen
+				// give a "cheer"
+				copy face-player
+				show dialog { SELF "Awesome! Don't stop, now!" }
+				copy set-hint-shepherd-partial
+			} else { // ...and they're ALL still outside
+				// give a reminder
+				show dialog { SELF "Can you help a dude out? Put all four sheep back inside the fence?" }
+				copy set-hint-shepherd
+			}
+		} else { // ...if you HAVEN'T heard the backstory...
+			// ...hear the backstory now
+			copy show_dialog-shepherd-backstory
+			copy set-hint-shepherd
+		}
+		set flag shepherd-backstory to true
+	} else { // all the sheep must be in the pen
+		// you win!
+		if (flag shepherd-backstory is true) { // if you've heard the backstory:
+			// standard ending
+			show dialog {
+				SELF "Thanks a million! I owe you one!"
+			}
+		} else {
+			// "surprised" ending
+			show dialog {
+				SELF "Oh, wow, are the sheep actually back inside the pen? I could've sworn they...."
+				"Hey, did you do that? Did you put them back?"
+				"Wow, thanks a lot! I could've gotten into deep trouble!"
+			}
+			set flag shepherd-backstory to true // (because you talked to him at all)
+		}
+		set flag storyflag-shepherd to true
+		copy calculate-hint-tracking-series
+		if (variable hint-tracking-check is 1) {
+			// if the hint series is the same, reset hint
+			copy set-hint-none
+		}
+	}
+	set entity Shepherd interact_script to show_dialog-shepherd-start
+}
+
+show_dialog-shepherd-backstory {
+	copy face-player
+	show dialog {
+		SELF "...."
+		"I messed up."
+	}
+	copy turn-right-and-left
+	show dialog {
+		SELF "I was supposed to be watching the sheep, but I took a quick nap, and the next thing I know... they were all over the place."
+	}
+	copy turn-right-and-left
+	show dialog {
+		PLAYER "How did they get out? The fence looks fine."
+		SELF "I don't even know. Maybe they were, you know, hacked out. By the Big Bad."
+		PLAYER "But the Big Bad hasn't been around for years. Just how long was this nap?"
+		SELF "It was the shortest nap. Super quick. It was a long blink, really."
+		"A super, tiny, microscopic nap."
+		"...."
+		"I really need this job, man. My last trip to Pigeon-Con, I spent all my rent money on merch."
+		"Can you just help me out? Get them back inside somehow?"
+	}
+}
+
+show_dialog-sheep {
+	show dialog dialog-sheep { SELF name Sheep "...." }
+}
+
+turn-right-and-left {
+	copy face-player
+	set player control off
+	wait 200ms rotate entity "%SELF%" 1
+	wait 500ms rotate entity "%SELF%" -2
+	wait 500ms rotate entity "%SELF%" 1
+	wait 200ms copy face-player
+	set player control on
+}
+
+show_dialog-shepherd-ending {
+	set flag storyflag-shepherd to true
+	set flag shepherd-backstory to true
+	copy calculate-hint-tracking-series
+	if (variable hint-tracking-check is 1) {
+		// if the hint series is the same, reset hint
+		copy set-hint-none
+	}
+	set entity Shepherd interact_script to show_dialog-shepherd-start
+}
+
+loiter-sheep4 {
+	wait 2400ms /**/ play entity "%SELF%" animation 2 once
+	wait 4880ms
+}
+
+loiter-sheep3 {
+	wait 7500ms /**/ play entity "%SELF%" animation 2 once
+	wait 3200ms
+}
+
+loiter-sheep2 {
+	wait 9210ms /**/ play entity "%SELF%" animation 2 once
+	wait 4300ms
+}
+
+loiter-sheep1 {
+	wait 8530ms /**/ play entity "%SELF%" animation 2 once
+}
+
+make-sheep-loiter {
+	wait 200ms /**/ play entity Baa animation 2 once
+	wait 1700ms /**/ play entity Ram animation 2 once
+	wait 300ms /**/ play entity Helga animation 2 once
+	wait 500ms /**/ play entity Ewe animation 2 once
+	wait 1300ms /**/ play entity Baa animation 2 once
+	wait 1800ms /**/ play entity Ram animation 2 once
+	wait 600ms /**/ play entity Baa animation 2 once
+	wait 1200ms /**/ play entity Ewe animation 2 once
+	wait 300ms /**/ play entity Helga animation 2 once
+	wait 1500ms /**/ play entity Baa animation 2 once
+	wait 200ms /**/ play entity Ewe animation 2 once
+	wait 800ms
+}
+
+debug-sheep-q {
+	copy face-player
+	show dialog {
+		SELF "Return sheep to pen?"
+		> "Yes (all)" : goto "debug-sheep-all"
+		> "Yes (three out of four)" : goto "debug-sheep-most"
+		> "No" : goto "debug-sheep-no"
+	}
+}
+debug-sheep-all {
+	copy sheep-in-pen
+	show dialog { SELF "All sheep returned." }
+	set entity "%SELF%" interact_script to debug-sheep-q
+}
+debug-sheep-most {
+	teleport entity Baa to geometry baa_point
+	teleport entity Ram to geometry ram_point
+	teleport entity Ewe to geometry ewe_point
+	show dialog { SELF "Helga remains." }
+	set entity "%SELF%" interact_script to debug-sheep-q
+}
+debug-sheep-no {
+	show dialog { SELF "Nothing changed." }
+	set entity "%SELF%" interact_script to debug-sheep-q
+}
