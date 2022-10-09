@@ -1,5 +1,3 @@
-// 221 lines -> 183 lines (83% improvement)
-// logical optimizations found: 2+
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label SELF { entity "%SELF%" }
