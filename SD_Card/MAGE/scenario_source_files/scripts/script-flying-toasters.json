@@ -1,25 +1,12 @@
 {
-	"on_tick-flying-toasters": [
-		{
-			"action": "NON_BLOCKING_DELAY",
-			"duration": 3000
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "on_tick-flying-toasters-listen"
-		}
-	],
-	"on_tick-flying-toasters-listen": [
-		{
-			"action": "CHECK_FOR_BUTTON_PRESS",
-			"button_id": "ANY",
-			"success_script": "load-main_menu"
-		}
-	],
 	"on_load-flying-toasters": [
 		{
 			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
 			"geometry": "flying-toasters-cam"
+		},
+		{
+			"action": "COPY_SCRIPT",
+			"script": "on_load-bling-mode-map"
 		}
 	],
 	"toasters-do_path-0": [

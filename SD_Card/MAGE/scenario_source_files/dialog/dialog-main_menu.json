@@ -39,12 +39,45 @@
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
 				{
-					"label": "1) Flying Toasters",
+					"label": "DC801 showcase",
+					"script": "show-menu-bling-dc801-showcase"
+				},
+				{
+					"label": "Flying \"Toasters\"",
 					"script": "start_bling-flying-toasters"
+				},
+				{
+					"label": "QR Codes",
+					"script": "start_bling-qr"
 				},
 				{
 					"label": "Back",
 					"script": "begin-main_menu"
+				}
+			]
+		}
+	],
+	"dialog-show-menu-bling-dc801-showcase": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"name": " ",
+			"border_tileset": "menu",
+			"messages": [
+				"DC801 SHOWCASE"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Auto mode",
+					"script": "start_bling-rotate-auto"
+				},
+				{
+					"label": "Manual mode",
+					"script": "start_bling-rotate-manual"
+				},
+				{
+					"label": "Back",
+					"script": "show-menu-bling-mode"
 				}
 			]
 		}
@@ -334,6 +367,51 @@
 					"label": "Never mind",
 					"script": "show_dialog-load-start-map-q"
 				}
+			]
+		}
+	],
+	"debug-math-orig": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Math",
+			"messages": [
+				"orig bling-rotate-state: $bling-rotate-state$"
+			]
+		}
+	],
+	"debug-math-added": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Math",
+			"messages": [
+				"new bling-rotate-state: $bling-rotate-state$"
+			]
+		}
+	],
+	"debug-math-target-overshot-check": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Math",
+			"messages": [
+				"overshot if: $temp$"
+			]
+		}
+	],
+	"debug-math-target-overshot": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Math",
+			"messages": [
+				"Overshot!"
+			]
+		}
+	],
+	"debug-math-done": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "Math",
+			"messages": [
+				"Math finished."
 			]
 		}
 	]

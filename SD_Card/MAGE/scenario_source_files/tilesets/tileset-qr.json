@@ -1,0 +1,14 @@
+{ "columns":21,
+ "image":"tileset-qr.png",
+ "imageheight":352,
+ "imagewidth":672,
+ "margin":0,
+ "name":"tileset-qr",
+ "spacing":0,
+ "tilecount":231,
+ "tiledversion":"1.9.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.8"
+}

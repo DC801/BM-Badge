@@ -507,11 +507,9 @@
 			"messages": [
 				"I found infinity! Take a butcher's!"
 			],
-			"doc": [
-				"Butcher's hook = look",
-				"(Cockney rhyming slang, which was requested by the artist for this character)",
-				"(Something more clever might be used instead; feel free to change)"
-			]
+			"doc1":"Butcher's hook = look",
+			"doc2":"(Cockney rhyming slang, which was requested by the artist for this character)",
+			"doc3":"(Something more clever might be used instead; feel free to change)"
 		}
 	],
 	"dialog-fountain-interact": [
