@@ -106,17 +106,17 @@ public:
    //at run time from the MageEntity class info.
    struct RenderableData
    {
-      Rect hitBox;
-      Rect interactBox;
-      Point center;
-      uint16_t currentFrameTicks;
-      uint16_t tilesetId;
-      uint16_t lastTilesetId;
-      uint16_t tileId;
-      uint32_t duration;
-      uint16_t frameCount;
-      uint8_t renderFlags;
-      bool isInteracting;
+      Rect hitBox{0};
+      Rect interactBox{0};
+      Point center{0};
+      uint16_t currentFrameTicks{0};
+      uint16_t tilesetId{0};
+      uint16_t lastTilesetId{0};
+      uint16_t tileId{0};
+      uint32_t duration{0};
+      uint16_t frameCount{0};
+      uint8_t renderFlags{0};
+      bool isInteracting{0};
 
       //this calculates the relevant info to be able to draw an entity based on the
       //current state of the data in MageGameControl and stores the info in entityRenderableData

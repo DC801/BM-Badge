@@ -268,7 +268,7 @@ typedef struct
     uint16 geometryCount;
     uint16 scriptCount;
     uchar goDirectionCount;
-    uchar padding;
+    FSkip(1);
 
     uint16 entityGlobalIds[entityCount];
     if (geometryCount > 0) {
@@ -280,7 +280,7 @@ typedef struct
     }
     if ((entityCount + geometryCount + scriptCount) % 2) { FSkip(2); }
     MapLayer mapLayers[layerCount] <optimize=false>;
-    uchar filteredEntityCountOnThisMap;
+//    uchar filteredEntityCountOnThisMap;
 
 
 }  MageMap <read=(name)>;
@@ -406,7 +406,7 @@ LittleEndian();
 } image_color_palette < read=(name) >;
 
 typedef struct (uint16 length) {
-    image_color pixels[length];
+    uchar pixels[length];
 } image;
 
 struct

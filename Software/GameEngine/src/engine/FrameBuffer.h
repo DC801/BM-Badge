@@ -1,9 +1,7 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
-
 #include <stdint.h>
-
 
 #define WIDTH		320
 #define HEIGHT		240
@@ -11,7 +9,7 @@
 #define HALF_HEIGHT	120
 const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
-#define RGB(r, g, b) ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
+#define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
 class MageGameEngine;
 
@@ -39,11 +37,12 @@ struct Color_565 {
 
 union ColorUnion
 {
-	Color_565 c;
 	uint16_t i;
+	Color_565 c;
 };
 
 union RenderFlags {
+	uint8_t i;
 	struct
 	{
 		bool diagonal : 1;
@@ -55,7 +54,6 @@ union RenderFlags {
 		bool debug : 1;
 		bool glitched : 1;
 	};
-	uint8_t i;
 };
 
 // Color definitions
@@ -112,7 +110,6 @@ public:
 		: gameEngine(gameEngine)
 	{}
 	void clearScreen(uint16_t color);
-
 	void drawPixel(int x, int y, uint16_t color) 
 	{ 
 		if (x >= WIDTH)
@@ -131,7 +128,7 @@ public:
 	static T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
 	
 	static Point lerpPoints(Point a, Point b, float progress);
-	uint16_t applyFadeColor(uint16_t color);
+	uint16_t applyFadeColor(uint16_t color) const;
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 	void drawPoint(int x, int y, uint8_t size, uint16_t color);
 

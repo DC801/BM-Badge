@@ -29,7 +29,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    }
 };
 
-MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, uint32_t offset) noexcept
+MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, uint32_t& offset) noexcept
    : gameEngine(gameEngine),
    dialogHeader(gameEngine->ROM, offset)
 {}

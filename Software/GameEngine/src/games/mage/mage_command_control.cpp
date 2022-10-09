@@ -299,7 +299,6 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
 
 void MageCommandControl::reset()
 {
-   gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
    isInputTrapped = false;
    // if reset has been run, you're probably on a new map
    // so don't show the postDialogBuffer contents,

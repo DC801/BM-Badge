@@ -117,7 +117,7 @@ struct MageDialog
 class MageDialogControl
 {
 public:
-   MageDialogControl(MageGameEngine* gameEngine, uint32_t offset) noexcept;
+   MageDialogControl(MageGameEngine* gameEngine, uint32_t& offset) noexcept;
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
    void showSaveMessageDialog(std::string messageString);

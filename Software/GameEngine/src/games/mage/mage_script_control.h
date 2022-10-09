@@ -82,7 +82,7 @@ public:
 
    MageScriptControl();
 
-   void initializeScriptsOnMapLoad();
+   void initializeScriptsOnMapLoad(std::shared_ptr<MageMap> map);
 
    MageScriptState* getEntityInteractResumeState(uint8_t index);
    MageScriptState* getEntityTickResumeState(uint8_t index);

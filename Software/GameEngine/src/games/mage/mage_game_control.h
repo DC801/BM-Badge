@@ -55,7 +55,7 @@ public:
    //the entities[] array and also the offset to it from hackableDataAddress
    uint8_t playerEntityIndex{ NO_PLAYER };
 
-   uint8_t currentSaveIndex;
+   uint8_t currentSaveIndex{ 0 };
    MageSaveGame currentSave{};
 
    //this lets us make it so that inputs stop working for the player
@@ -189,22 +189,9 @@ private:
    MageGameEngine* gameEngine;
    std::unique_ptr<MageDialogControl> dialogControl;
 
-   //these header objects store the header information for all datasets on the ROM,
-   //including address offsets for each item, and the length of the item in memory.
-   //std::unique_ptr<MageHeader> mapHeader;
-   //std::unique_ptr<MageHeader> tilesetHeader;
-   //std::unique_ptr<MageHeader> animationHeader;
-   //std::unique_ptr<MageHeader> entityTypeHeader;
-   //std::unique_ptr<MageHeader> entityHeader;
+   //TODO: move all headers away from here
    std::unique_ptr<MageHeader> geometryHeader;
-   //std::unique_ptr<MageHeader> scriptHeader;
-   //std::unique_ptr<MageHeader> portraitHeader;
-   //std::unique_ptr<MageHeader> dialogHeader;
-   //std::unique_ptr<MageHeader> serialDialogHeader;
-   //std::unique_ptr<MageHeader> colorPaletteHeader;
    std::unique_ptr<MageHeader> stringHeader;
-   //std::unique_ptr<MageHeader> saveFlagHeader;
-   //std::unique_ptr<MageHeader> variableHeader;
    std::unique_ptr<MageHeader> imageHeader;
 
 

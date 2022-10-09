@@ -13,6 +13,11 @@ in a more accessible way.
 
 class EngineROM;
 
+class TileManager
+{
+public:
+};
+
 class MageTileset
 {
 public:

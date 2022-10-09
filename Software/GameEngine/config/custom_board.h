@@ -14,7 +14,7 @@
 
 
 
-//Start address of ROM memoryu addressing
+//Start address of ROM memory addressing
 #define ROM_START_ADDRESS (0x12000000)
 
 // Low is active

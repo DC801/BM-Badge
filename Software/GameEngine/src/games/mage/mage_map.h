@@ -13,14 +13,21 @@ in a more accessible way.
 #include <array>
 #include <vector>
 
+struct GoDirection
+{
+   const char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
+   uint16_t mapLocalScriptId{ 0 };
+   uint16_t padding{ 0 };
+};
+
 class MageMap
 {
    friend class MageGameControl;
    friend class MageScriptControl;
    friend class MageHexEditor;
 public:
-   MageMap(std::shared_ptr<EngineROM> ROM, uint32_t& address, MageHeader mapHeader, MageHeader entityHeader) noexcept
-      : ROM(ROM), mapHeader(std::move(mapHeader)), entityHeader(std::move(entityHeader))
+   MageMap(std::shared_ptr<EngineROM> ROM, uint32_t& address, MageHeader mapHeader, MageHeader entityHeader, MageHeader scriptHeader) noexcept
+      : ROM(ROM), mapHeader(std::move(mapHeader)), entityHeader(std::move(entityHeader)), scriptHeader(std::move(scriptHeader))
       {}
 
    //this takes map data by index and fills all the variables in the map object:
@@ -29,39 +36,37 @@ public:
    void DrawEntities(MageGameEngine* engine);
 
    std::string Name() const { return std::string(name); }
-   constexpr uint16_t TileWidth() const { return tileWidth; }
-   constexpr uint16_t TileHeight() const { return tileHeight; }
-   constexpr uint16_t Cols() const { return cols; }
-   constexpr uint16_t Rows() const { return rows; }
-   constexpr uint8_t LayerCount() const { return layerCount; }
-   constexpr uint8_t FilteredEntityCount() const { return filteredEntityCountOnThisMap; }
-   constexpr uint16_t GeometryCount() const { return geometryCount; }
-   constexpr uint16_t ScriptCount() const { return scriptCount; }
-
-
+   uint16_t TileWidth() const { return tileWidth; }
+   uint16_t TileHeight() const { return tileHeight; }
+   uint16_t Cols() const { return cols; }
+   uint16_t Rows() const { return rows; }
+   uint8_t LayerCount() const { return mapLayerOffsets.size(); }
+   uint8_t FilteredEntityCount() const { return filteredEntityCountOnThisMap; }
+   uint16_t GeometryCount() const { return geometryGlobalIds.size(); }
+   uint16_t ScriptCount() const { return scriptGlobalIds.size(); }
 
    uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
    {
-      if (entityCount == 0) { return 0; }
-      return entityGlobalIds[mapLocalEntityId % entityCount];
+      if (entities.empty()) { return 0; }
+      return entityGlobalIds[mapLocalEntityId % entities.size()];
    }
 
    uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
    {
-      if (geometryCount == 0) { return 0; }
-      return geometryGlobalIds[mapLocalGeometryId % geometryCount];
+      if (geometryGlobalIds.empty()) { return 0; }
+      return geometryGlobalIds[mapLocalGeometryId % geometryGlobalIds.size()];
    }
 
    uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const
    {
-      if (scriptCount == 0) { return 0; }
-      return scriptGlobalIds[mapLocalScriptId % scriptCount];
+      auto scriptId = scriptGlobalIds.empty() ? mapLocalScriptId % scriptGlobalIds.size() : 0;
+      return scriptHeader.offset(scriptGlobalIds[scriptId]);
    }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
-      if (entityCount == 0) { return 0; }
-      return filteredMapLocalEntityIds[mapLocalEntityId % entityCount];
+      if (!filteredMapLocalEntityIds) { return 0; }
+      return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
    }
 
    uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const
@@ -72,15 +77,15 @@ public:
 
    uint32_t LayerOffset(uint16_t num) const
    {
-      if (mapLayerOffsetsCount == 0) { return 0; }
+      if (mapLayerOffsets.empty()) { return 0; }
 
-      return mapLayerOffsets[num % mapLayerOffsetsCount];
+      return mapLayerOffsets[num % mapLayerOffsets.size()];
    }
 
    std::string getDirectionNames() const
    {
       std::string result = "";
-      for (auto i = 0; i < goDirectionsCount; i++)
+      for (auto i = 0; i < goDirections.size(); i++)
       {
          result += "\t";
          result += goDirections[i].name;
@@ -90,7 +95,7 @@ public:
 
    uint16_t getDirectionScriptId(const std::string directionName) const
    {
-      for (auto i = 0; i < goDirectionsCount; i++)
+      for (auto i = 0; i < goDirections.size(); i++)
       {
          if (goDirections[i].name == directionName)
          {
@@ -110,18 +115,12 @@ private:
    std::shared_ptr<EngineROM> ROM;
    MageHeader mapHeader;
    MageHeader entityHeader;
+   MageHeader scriptHeader;
 
    bool isEntityDebugOn{ false };
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
    std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
-
-   struct GoDirection
-   {
-      const char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
-      uint16_t mapLocalScriptId{ 0 };
-      uint16_t padding{ 0 };
-   };
 
    uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
    uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
@@ -135,18 +134,12 @@ private:
    uint16_t onLoad{ 0 };
    uint16_t onTick{ 0 };
    uint16_t onLook{ 0 };
-   uint8_t layerCount{ 0 };
    uint8_t playerEntityIndex{ 0 };
-   uint16_t entityCount{ 0 };
-   uint16_t geometryCount{ 0 };
-   uint16_t scriptCount{ 0 };
-   uint16_t goDirectionsCount{ 0 };
-   uint16_t mapLayerOffsetsCount{ 0 };
-   std::unique_ptr<uint16_t[]> entityGlobalIds;
-   std::unique_ptr<uint16_t[]> geometryGlobalIds;
-   std::unique_ptr<uint16_t[]> scriptGlobalIds;
-   std::unique_ptr<GoDirection[]> goDirections;
-   std::unique_ptr<uint32_t[]> mapLayerOffsets;
+   std::vector<uint16_t> entityGlobalIds;
+   std::vector<uint16_t> geometryGlobalIds;
+   std::vector<uint16_t> scriptGlobalIds;
+   std::vector<GoDirection> goDirections;
+   std::vector<uint32_t> mapLayerOffsets;
    uint8_t filteredEntityCountOnThisMap{ 0 };
 
 }; //class MageMap

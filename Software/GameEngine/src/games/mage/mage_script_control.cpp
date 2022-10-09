@@ -9,9 +9,8 @@
 
 //load in the global variables that the scripts will be operating on:
 
-void MageScriptControl::initializeScriptsOnMapLoad()
+void MageScriptControl::initializeScriptsOnMapLoad(std::shared_ptr<MageMap> map)
 {
-   auto map = gameEngine->gameControl->Map();
    //initialize the script ResumeStateStructs:
    resumeStates.mapLoad = MageScriptState{ map->GetOnLoad(), true };
    resumeStates.mapTick = MageScriptState{ map->GetOnTick(), false };
@@ -19,13 +18,14 @@ void MageScriptControl::initializeScriptsOnMapLoad()
    {
       *commandStates[i] = MageScriptState{ 0,false };
    }
-   for (uint8_t i = 0; i < gameEngine->gameControl->Map()->FilteredEntityCount(); i++)
+   for (uint8_t i = 0; i < map->FilteredEntityCount(); i++)
    {
       //Initialize the script ResumeStateStructs to default values for this map.
       MageEntity* entity = &map->entities[i];
       *getEntityTickResumeState(i) = MageScriptState{ entity->onTickScriptId, false };
       *getEntityInteractResumeState(i) = MageScriptState{ entity->onInteractScriptId, false };
    }
+   jumpScriptId = MAGE_NO_SCRIPT;
    gameEngine->commandControl->reset();
    handleMapOnLoadScript(true);
 }
@@ -131,7 +131,7 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState*
    }
 
    //read remaining 7 bytes of argument data into actionArgs
-   gameEngine->ROM->Read(&actionArgs, actionMemoryAddress);
+   gameEngine->ROM->Read(actionArgs, actionMemoryAddress, MAGE_NUM_ACTION_ARGS);
 
    //get the function for actionTypeId, and feed it the actionArgs as args:
    gameEngine->scriptActions->Run(actionTypeId, actionArgs, resumeStateStruct);

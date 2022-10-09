@@ -13,7 +13,8 @@
 MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    : gameEngine(gameEngine), camera{}
 {
-   uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
+   //skip 'MAGEGAME' at front of .dat file
+   uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; 
 
    gameEngine->ROM->Read(&gameEngine->engineVersion, offset);
 
@@ -31,7 +32,6 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    gameEngine->ROM->Read(&gameEngine->scenarioDataCRC32, offset);
    gameEngine->ROM->Read(&gameEngine->scenarioDataLength, offset);
 
-   currentSaveIndex = 0;
    setCurrentSaveToFreshState();
 
    auto mapHeader = MageHeader{ gameEngine->ROM, offset };
@@ -47,7 +47,6 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    dialogControl = std::make_unique<MageDialogControl>(gameEngine, offset);
 
    auto serialDialogHeader = MageHeader{ gameEngine->ROM, offset };
-
    auto colorPaletteHeader = MageHeader{ gameEngine->ROM, offset };
 
    stringHeader = std::make_unique<MageHeader>(gameEngine->ROM, offset);
@@ -70,7 +69,7 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
       animations[i] = MageAnimation{ gameEngine->ROM, animationOffset };
    }
 
-   entityTypes = std::vector<MageEntityType>(entityTypeHeader.count());
+   entityTypes = std::vector<MageEntityType>{ entityTypeHeader.count() };
    for (uint32_t i = 0; i < entityTypeHeader.count(); i++)
    {
       auto entityOffset = entityTypeHeader.offset(i);
@@ -88,7 +87,7 @@ MageGameControl::MageGameControl(MageGameEngine* gameEngine)
    currentSave.currentMapId = currentSave.currentMapId % (mapHeader.count());
 
    auto mapOffset = mapHeader.offset(currentSave.currentMapId);
-   map = std::make_unique<MageMap>(gameEngine->ROM, mapOffset, std::move(mapHeader), std::move(entityHeader));
+   map = std::make_unique<MageMap>(gameEngine->ROM, mapOffset, std::move(mapHeader), std::move(entityHeader), std::move(scriptHeader));
 
    readSaveFromRomIntoRam(true);
 
@@ -188,9 +187,7 @@ void MageGameControl::LoadMap(uint16_t index)
 
    copyNameToAndFromPlayerAndSave(false);
 
-   //logAllEntityScriptValues("InitScripts-Before");
-   gameEngine->scriptControl->initializeScriptsOnMapLoad();
-   //logAllEntityScriptValues("InitScripts-After");
+   gameEngine->scriptControl->initializeScriptsOnMapLoad(map);
 
    //close hex editor if open:
    if (gameEngine->hexEditor->isHexEditorOn())
@@ -746,8 +743,6 @@ Point MageGameControl::getPushBackFromTilesThatCollideWithPlayer()
          address = layerAddress + (i * sizeof(MageMapTile));
 
          gameEngine->ROM->Read(&currentTile, address);
-
-         currentTile.tileId = ROM_ENDIAN_U2_VALUE(currentTile.tileId);
 
          if (currentTile.tileId == 0)
          {

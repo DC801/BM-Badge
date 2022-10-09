@@ -170,7 +170,7 @@ void MageGameEngine::EngineMainGameLoop()
       // recoverable runtime error that the client can just ignore, unless
       // EngineInit is called from inside the game loop. No idea why.
 
-      gameControl->Map()->Load(gameControl->currentSave.currentMapId);
+      gameControl->LoadMap(gameControl->currentSave.currentMapId);
       engineIsInitialized = true;
    }
    //update timing information at the start of every game loop
@@ -212,12 +212,12 @@ void MageGameEngine::EngineMainGameLoop()
 #ifndef DC801_EMBEDDED
    // intentionally corrupt the dialog color palette BEFORE rendering,
    // just so we can SEE if it works
-   if (inputHandler->GetButtonState(KeyPress::Page)
-      && inputHandler->GetButtonState(KeyPress::Rjoy_center))
-   {
-      MageColorPalette* colorPalette = gameControl->getValidColorPalette(0);
-      colorPalette->colors[0] = 0xDEAD;
-   }
+   //if (inputHandler->GetButtonState(KeyPress::Page)
+   //   && inputHandler->GetButtonState(KeyPress::Rjoy_center))
+   //{
+   //   MageColorPalette* colorPalette = gameControl->getValidColorPalette(0);
+   //   colorPalette->colors[0] = 0xDEAD;
+   //}
 #endif
 
    //This renders the game to the screen based on the loop's updated state.

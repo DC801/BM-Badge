@@ -9,6 +9,13 @@
 void MageMap::Load(uint16_t index)
 {
    auto address = mapHeader.offset(index);
+   auto layerCount = uint8_t{ 0 };
+   auto entityCount = uint16_t{ 0 };
+   auto geometryCount = uint16_t{ 0 };
+   auto scriptCount = uint16_t{ 0 };
+   auto goDirectionsCount = uint8_t{ 0 };
+   auto mapLayerOffsetsCount = uint16_t{ 0 };
+
    ROM->Read(name, address, MapNameLength);
    ROM->Read(&tileWidth, address);
    ROM->Read(&tileHeight, address);
@@ -22,21 +29,19 @@ void MageMap::Load(uint16_t index)
    ROM->Read(&entityCount, address);
    ROM->Read(&geometryCount, address);
    ROM->Read(&scriptCount, address);
-
-   uint8_t goDirectionCount{ 0 };
-   ROM->Read(&goDirectionCount, address);
+   ROM->Read(&goDirectionsCount, address);
 
    address += sizeof(uint8_t); // padding
 
-   entityGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[entityCount] };
-   geometryGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[geometryCount] };
-   scriptGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[scriptCount] };
-   goDirections = std::unique_ptr<GoDirection[]>{ new GoDirection[goDirectionCount] };
+   //entityGlobalIds = std::vector<uint16_t>{ entityCount ,};
+   //geometryGlobalIds = std::vector<uint16_t>{ geometryCount };
+   //scriptGlobalIds = std::vector<uint16_t>{ scriptCount };
+   //goDirections = std::vector<GoDirection>{ goDirectionsCount };
 
-   ROM->Read(entityGlobalIds.get(), address, entityCount);
-   ROM->Read(geometryGlobalIds.get(), address, geometryCount);
-   ROM->Read(scriptGlobalIds.get(), address, scriptCount);
-   ROM->Read(goDirections.get(), address, goDirectionCount);
+   entityGlobalIds = ROM->InitializeCollectionOf<uint16_t>(address, entityCount);
+   geometryGlobalIds = ROM->InitializeCollectionOf<uint16_t>(address, geometryCount);
+   scriptGlobalIds = ROM->InitializeCollectionOf<uint16_t>(address, scriptCount);
+   goDirections = ROM->InitializeCollectionOf<GoDirection>(address, goDirectionsCount);
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
@@ -44,10 +49,10 @@ void MageMap::Load(uint16_t index)
       address += sizeof(uint16_t); // Padding
    }
 
-   mapLayerOffsets = std::unique_ptr<uint32_t[]>{ new uint32_t[layerCount] };
+   mapLayerOffsets = std::vector<uint32_t>{ layerCount };
    for (uint32_t i = 0; i < layerCount; i++)
    {
-      mapLayerOffsets[i] = address;
+      mapLayerOffsets.push_back(address);
       address += (rows * cols) * (sizeof(uint16_t) + (2 * sizeof(uint8_t)));
    }
 
@@ -100,8 +105,10 @@ void MageMap::DrawEntities(MageGameEngine* gameEngine)
    //iterate through it and draw the entities one by one:
    for (uint8_t i = 0; i < FilteredEntityCount(); i++)
    {
-      //uint8_t entityIndex = entitySortOrder[i];
       MageEntity* entity = &entities[i];
+      int32_t x = entity->x - cameraX;
+      int32_t y = entity->y - cameraY - tileHeight;
+
       auto renderableData = entity->getRenderableData();
       MageTileset* tileset = &gameEngine->gameControl->tilesets[renderableData->tilesetId];
       uint16_t imageId = tileset->ImageId();
@@ -112,8 +119,6 @@ void MageMap::DrawEntities(MageGameEngine* gameEngine)
       uint32_t address = gameEngine->gameControl->imageHeader->offset(imageId);
       uint16_t source_x = (tileId % cols) * tileWidth;
       uint16_t source_y = (tileId / cols) * tileHeight;
-      int32_t x = entity->x - cameraX;
-      int32_t y = entity->y - cameraY - tileHeight;
       gameEngine->frameBuffer->drawChunkWithFlags(
          address,
          gameEngine->gameControl->getValidColorPalette(imageId),

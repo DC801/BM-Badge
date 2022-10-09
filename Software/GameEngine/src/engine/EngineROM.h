@@ -84,9 +84,9 @@ struct EngineROM
    void ErrorUnplayable();
 
    template <typename T>
-   void Read(T* t, uint32_t& address, size_t count = 1, size_t length = sizeof(T)) const
+   void Read(T* t, uint32_t& address, size_t count = 1) const
    {
-      auto dataLength = count * length;
+      auto dataLength = count * sizeof(T);
       if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
          throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
@@ -96,10 +96,28 @@ struct EngineROM
    };
 
    template <typename T>
-   void GetPointerTo(const T*& t, uint32_t offset)
+   void GetPointerTo(const T*& t, uint32_t& offset, size_t count = 1)
    {
+      auto dataLength = count * sizeof(T);
+      if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      {
+         throw std::runtime_error{ "EngineROM::GetPointerTo: offset + length exceeds maximum dat file size" };
+      }
       t = (const T*)romDataInDesktopRam.get() + offset;
+      offset += sizeof(T) * count;
    }
+
+
+   template <typename T>
+   std::vector<T> InitializeCollectionOf(uint32_t& offset, size_t count)
+   {
+      //static_assert(std::is_trivial<T>::value, "can only use trivial types");
+
+      auto collection = std::vector<T>{ (const T*)(romDataInDesktopRam.get() + offset), (const T*)(romDataInDesktopRam.get() + offset) + count };
+      offset += sizeof(T) * count;
+      return collection;
+   }
+
 
    bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
    bool VerifyEqualsAtOffset(uint32_t address, std::string value) const;

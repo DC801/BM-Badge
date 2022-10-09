@@ -68,7 +68,6 @@ void FrameBuffer::drawChunkWithFlags(
    bool flip_y = renderFlags.vertical;
    bool flip_diag = renderFlags.diagonal;
    bool glitched = renderFlags.glitched;
-   transparent_color = SCREEN_ENDIAN_U2_VALUE(transparent_color);
 
    if (glitched)
    {
@@ -82,9 +81,9 @@ void FrameBuffer::drawChunkWithFlags(
       return;
    }
 
-   auto pixels = std::make_unique<uint8_t[]>(tile_width * tile_height);
    auto pixelOffset = address + ((source_y * pitch) + source_x);
-   gameEngine->ROM->Read(pixels.get(), pixelOffset, tile_width * tile_height);
+   const uint8_t* pixels;
+   gameEngine->ROM->GetPointerTo(pixels, pixelOffset);
 
    if (fadeFraction != 0)
    {
@@ -106,9 +105,9 @@ void FrameBuffer::drawChunkWithFlags(
          auto pixelIndex = (pixelRow * tile_width) + pixelCol;
 
          uint8_t colorIndex = pixels[pixelIndex];
-         auto color = colorPalette->colors[colorIndex];
+         auto color = colorPalette->colorAt(colorIndex);
 
-         drawPixel(screen_x + pixelCol, screen_y + pixelRow, color);
+         drawPixel(screen_x + col, screen_y + row, color);
       }
    }
 }
@@ -154,19 +153,17 @@ Point FrameBuffer::lerpPoints(Point a, Point b, float progress)
    return point;
 }
 
-uint16_t FrameBuffer::applyFadeColor(uint16_t color)
+uint16_t FrameBuffer::applyFadeColor(uint16_t color) const
 {
-   uint16_t result = color;
-   if (fadeFraction)
+   uint16_t result = SCREEN_ENDIAN_U2_VALUE(color);
+   if (fadeFraction > 0.0f)
    {
-      auto fadeColorUnion = ColorUnion{};
-      auto colorUnion = ColorUnion{};
-      fadeColorUnion.i = fadeColor;
-      colorUnion.i = result;
+      auto fadeColorUnion = ColorUnion{ fadeColor };
+      auto colorUnion = ColorUnion{ result };
       colorUnion.c.r = FrameBuffer::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
       colorUnion.c.g = FrameBuffer::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
       colorUnion.c.b = FrameBuffer::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
-      colorUnion.c.alpha = FrameBuffer::lerp(colorUnion.c.alpha, fadeColorUnion.c.alpha, fadeFraction);
+      colorUnion.c.alpha = fadeFraction > 0.5f ? fadeColorUnion.c.alpha : colorUnion.c.alpha;
       result = colorUnion.i;
    }
    return result;

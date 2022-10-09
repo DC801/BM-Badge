@@ -67,21 +67,17 @@ EngineROM::EngineROM()
       }
    }
 
-   if (!gameDatSDPresent && isRomPlayable)
+   if (!gameDatSDPresent)
    {
+      if (!isRomPlayable)
+      {
+         // no SD card, rom is invalid - literally unplayable
+         ErrorUnplayable();
+      }
       // jump right to game
       return;
    }
-   else if (!gameDatSDPresent && !isRomPlayable)
-   {
-      // no SD card, rom is invalid - literally unplayable
-      ErrorUnplayable();
-   }
-   else if (gameDatSDPresent && !isRomPlayable)
-   {
-      // we have SD, rom is invalid - skip directly to the copy operation
-   }
-   else if (gameDatSDPresent && isRomPlayable)
+   else if (isRomPlayable)
    {
       // we have SD, and the rom seems valid - check if hashes are the same
 
@@ -115,22 +111,16 @@ EngineROM::EngineROM()
 
       // handles hardware inputs and makes their state available
       inputHandler->HandleKeyboard();
-      char updateMessagePrefix[128];
+      const char* updateMessagePrefix;
       if (!headerHashMatch)
       {
-         sprintf(
-            updateMessagePrefix,
-            "The file `game.dat` on your SD card does not\n"
-            "match what is on your badge ROM chip."
-         );
+         updateMessagePrefix = "The file `game.dat` on your SD card does not\n"
+            "match what is on your badge ROM chip.";
       }
       else if (EngineInput_Buttons.mem3)
       {
-         sprintf(
-            updateMessagePrefix,
-            "You have held down MEM3 while booting.\n"
-            "You may force update `game.dat` on badge."
-         );
+         updateMessagePrefix = "You have held down MEM3 while booting.\n"
+            "You may force update `game.dat` on badge.";
       }
       else
       {
@@ -143,8 +133,7 @@ EngineROM::EngineROM()
       char debugString[512];
       p_canvas()->clearScreen(COLOR_BLACK);
       //48 chars is a good character width for screen width plus some padding
-      sprintf(
-         debugString,
+      sprintf(debugString,
          "%s\n\n"
          " SD hash: %s\n"
          "ROM hash: %s\n\n"
@@ -155,18 +144,11 @@ EngineROM::EngineROM()
          "    > Press MEM3 to update the ROM",
          updateMessagePrefix,
          gameDatHashSDString,
-         gameDatHashROMString
-      );
-      p_canvas()->printMessage(
-         debugString,
-         Monaco9,
-         0xffff,
-         16,
-         16
-      );
+         gameDatHashROMString);
+      p_canvas()->printMessage(debugString, Monaco9, 0xffff, 16, 16);
       p_canvas()->blt();
-      bool showOptions = true;
-      while (showOptions)
+      
+      do
       {
          nrf_delay_ms(10);
          inputHandler->HandleKeyboard();
@@ -176,22 +158,18 @@ EngineROM::EngineROM()
             p_canvas()->blt();
             return;
          }
-         if (EngineInput_Activated.mem2)
+         else if (EngineInput_Activated.mem2)
          {
             eraseWholeRomChip = true;
-            showOptions = false;
          }
-         if (EngineInput_Activated.mem3)
-         {
-            showOptions = false;
-         }
-      }
+      } while (!EngineInput_Activated.mem2 && !EngineInput_Activated.mem3);
    }
    if (!EngineRom::SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip))
    {
       ENGINE_PANIC("SD Copy Operation was not successful.");
    }
    //close game.dat file when done:
+   // TODO: this can leak in quite a few ways, wrap it
    result = f_close(&gameDat);
 #else
    auto romFileSize = 0;
@@ -603,7 +581,6 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
    {
       ENGINE_PANIC(errorString);
    }
-   return true;
 #else
    if (!romFile.good())
    {
@@ -617,6 +594,7 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
 
    romFile.write((const char*)data, length);
 #endif
+   return true;
 }
 
 bool EngineROM::VerifyEqualsAtOffset(uint32_t address, std::string value) const
