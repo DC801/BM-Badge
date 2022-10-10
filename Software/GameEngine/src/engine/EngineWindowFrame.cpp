@@ -5,8 +5,6 @@
 #define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 
 int SCREEN_MULTIPLIER = 1;
-int SCREEN_WIDTH = 0;
-int SCREEN_HEIGHT = 0;
 
 EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 {
@@ -37,11 +35,9 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 	}
 
 	//Create window
-	SCREEN_WIDTH = frameSurface->w * SCREEN_MULTIPLIER;
-	SCREEN_HEIGHT = frameSurface->h * SCREEN_MULTIPLIER;
 	SDL_CreateWindowAndRenderer(
-		SCREEN_WIDTH,
-		SCREEN_HEIGHT,
+		frameSurface->w * SCREEN_MULTIPLIER,
+		frameSurface->h * SCREEN_MULTIPLIER,
 		SDL_WINDOW_SHOWN,
 		&window,
 		&renderer
@@ -95,7 +91,7 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 	window = nullptr;
 }
 
-void EngineWindowFrame::drawButtonStates()
+void EngineWindowFrame::drawButtonStates() const
 {
 	SDL_Point buttonPoint{};
 	bool buttonState{false};
@@ -103,8 +99,7 @@ void EngineWindowFrame::drawButtonStates()
 	{
 		buttonPoint = buttonDestPoints[i];
 		buttonState = inputHandler->GetButtonState((KeyPress)i);
-		buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
-		buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
+		const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
 		SDL_RenderCopy(
 			components.renderer,
 			components.frameButtonTexture,
@@ -114,7 +109,7 @@ void EngineWindowFrame::drawButtonStates()
 	}
 }
 
-void EngineWindowFrame::drawLEDStates()
+void EngineWindowFrame::drawLEDStates() const
 {
 	SDL_Point LEDPoint{};
 	uint8_t LEDState{0};
@@ -122,8 +117,7 @@ void EngineWindowFrame::drawLEDStates()
 	{
 		LEDPoint = LEDDestPoints[i];
 		LEDState = led_states[i];
-		LEDTargetRect.x = LEDPoint.x - LEDHalf.x;
-		LEDTargetRect.y = LEDPoint.y - LEDHalf.y;
+		const auto LEDTargetRect = SDL_Rect{ LEDPoint.x - LEDHalf.x, LEDPoint.y - LEDHalf.y, 16, 8 };
 		SDL_SetTextureAlphaMod(components.frameLEDTexture, 255);
 		SDL_RenderCopy(
 			components.renderer,
@@ -143,7 +137,7 @@ void EngineWindowFrame::drawLEDStates()
 	}
 }
 
-void EngineWindowFrame::GameBlt(uint16_t* frame)
+void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 {
 	int pitch{0};
 
@@ -154,17 +148,7 @@ void EngineWindowFrame::GameBlt(uint16_t* frame)
 	void* targetPixelBuffer;
 	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
 	{
-		memcpy(targetPixelBuffer, frame, FRAMEBUFFER_SIZE);
-		// Sorry for this monster;
-		// The game.dat stores the image buffer data in BigEndian
-		// SDL reads FrameBuffers in Platform Native Endian,
-		// so we need to convert if Desktop is LittleEndian
-#ifndef IS_SCREEN_BIG_ENDIAN
-#ifdef IS_LITTLE_ENDIAN
-		convert_endian_u2_buffer((uint16_t*)targetPixelBuffer, FRAMEBUFFER_SIZE);
-#endif
-#endif
-
+		memcpy(targetPixelBuffer, frame, FRAMEBUFFER_SIZE*sizeof(uint16_t));
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

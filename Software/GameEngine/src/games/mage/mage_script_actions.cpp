@@ -2319,13 +2319,9 @@ void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* r
 
    float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
 
-   gameEngine->frameBuffer->fadeColor = argStruct->color;
-   gameEngine->frameBuffer->fadeFraction = progress;
-   if (progress < 1.0f)
-   {
-      gameEngine->frameBuffer->isFading = true;
-   }
+   gameEngine->frameBuffer->SetFade(argStruct->color, progress);
 }
+
 void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct)
 {
    typedef struct
@@ -2343,12 +2339,7 @@ void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* re
       argStruct->duration
    );
 
-   gameEngine->frameBuffer->fadeColor = argStruct->color;
-   gameEngine->frameBuffer->fadeFraction = 1.0f - progress;
-   if (progress < 1.0f)
-   {
-      gameEngine->frameBuffer->isFading = true;
-   }
+   gameEngine->frameBuffer->SetFade(argStruct->color, 1.0f - progress);
 }
 
 void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct)

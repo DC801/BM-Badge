@@ -30,12 +30,12 @@ public:
    EngineWindowFrame(std::shared_ptr<EngineInput> inputHandler) noexcept
       : inputHandler(inputHandler)
    {}
-   void GameBlt(uint16_t* frame);
+   void GameBlt(const uint16_t* frame) const;
    void Resize(int change);
 private:
    std::shared_ptr<EngineInput> inputHandler;
-   void drawButtonStates();
-   void drawLEDStates();
+   void drawButtonStates() const;
+   void drawLEDStates() const;
 
    /*void util_gfx_init()
    {
@@ -68,8 +68,6 @@ private:
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
    const SDL_Rect LEDOnSrcRect = { 0, 8, 16, 8 };
-   SDL_Rect buttonTargetRect = { 0, 0, 32, 32 };
-   SDL_Rect LEDTargetRect = { 0, 0, 16, 8 };
    const SDL_Point buttonHalf = { 16, 16 };
    const SDL_Point LEDHalf = { 8, 4 };
 

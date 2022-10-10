@@ -6,18 +6,7 @@ const char endian_label[] = "Big Endian";
 const char endian_label[] = "Little Endian";
 #endif
 
-uint16_t convert_endian_u2_value (uint16_t value)
-{
-	return bswap16(value);
-}
 
-void convert_endian_u2_buffer (uint16_t *buf, size_t bufferSize)
-{
-	for (size_t i = 0; i < bufferSize; i++)
-	{
-		buf[i] = bswap16(buf[i]);
-	}
-}
 
 uint32_t convert_endian_u4_value (uint32_t value)
 {

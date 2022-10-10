@@ -109,19 +109,25 @@ public:
 	FrameBuffer(MageGameEngine*  gameEngine) noexcept
 		: gameEngine(gameEngine)
 	{}
-	void clearScreen(uint16_t color);
-	void drawPixel(int x, int y, uint16_t color) 
-	{ 
-		if (x >= WIDTH)
-		{
-			x = WIDTH - 1;
-		}
-		if (y >= HEIGHT)
-		{
-			y = HEIGHT - 1;
-		}
 
-		frame[y * WIDTH + x] = SCREEN_ENDIAN_U2_VALUE(color); 
+	constexpr void ResetFade() { fadeFraction = 0.0f; }
+	constexpr void SetFade(uint16_t color, float progress)
+	{
+		fadeColor = color;
+		fadeFraction = progress;
+		if (progress < 1.0f)
+		{
+			isFading = true;
+		}
+	}
+
+	void clearScreen(uint16_t color);
+	constexpr void drawPixel(int x, int y, uint16_t color) 
+	{ 
+		if (x < 0 || x >= WIDTH) { return; }
+		if (y < 0 || y >= HEIGHT) { return; }
+
+		frame[y * WIDTH + x] = color; 
 	}
 
 	template <typename T>
@@ -157,15 +163,15 @@ public:
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
 	void blt();
 
+private:
+	MageGameEngine*  gameEngine;
 
 	//variables used for screen fading
 	float fadeFraction{ 0.0f };
 	bool isFading{ false };
 	uint16_t fadeColor{ 0 };
-private:
-	MageGameEngine*  gameEngine;
 
-	uint16_t frame[FRAMEBUFFER_SIZE]{ 0 };
+  static inline std::array<uint16_t, FRAMEBUFFER_SIZE> frame{0};
 	void __draw_char(
 		int16_t x,
 		int16_t y,

@@ -96,9 +96,9 @@ void FrameBuffer::drawChunkWithFlags(
       };
    }
 
-   for (auto row = 0; row != tile_height; row++)
+   for (auto row = 0; row != tile_height && row < HEIGHT; row++)
    {
-      for (auto col = 0; col != tile_width; col++)
+      for (auto col = 0; col != tile_width && col < WIDTH; col++)
       {
          auto pixelRow = renderFlags.vertical ? tile_height - row : row;
          auto pixelCol = renderFlags.horizontal ? tile_width - col : col;
@@ -106,8 +106,10 @@ void FrameBuffer::drawChunkWithFlags(
 
          uint8_t colorIndex = pixels[pixelIndex];
          auto color = colorPalette->colorAt(colorIndex);
-
-         drawPixel(screen_x + col, screen_y + row, color);
+         if (color != transparent_color)
+         {
+            drawPixel(screen_x + col, screen_y + row, color);
+         }
       }
    }
 }
@@ -116,13 +118,12 @@ void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
 {
    if ((x >= WIDTH) || (y >= HEIGHT))
    {
-      debug_print("Rectangle off the screen\n");
       return;
    }
 
    // Clip to screen
    auto right = x + w;
-   if (right > WIDTH) { right = WIDTH; }
+   if (right >= WIDTH) { right = WIDTH - 1; }
    auto bottom = y + h;
    if (bottom >= HEIGHT) { bottom = HEIGHT - 1; }
    // X
@@ -230,20 +231,12 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
 
 void FrameBuffer::drawPoint(int x, int y, uint8_t size, uint16_t color)
 {
-   drawLine(
-      x - size,
-      y - size,
-      x + size,
-      y + size,
-      color
-   );
-   drawLine(
-      x - size,
-      y + size,
-      x + size,
-      y - size,
-      color
-   );
+   drawLine(x - size, y - size,
+            x + size, y + size,
+            color);
+   drawLine(x - size, y + size,
+            x + size, y - size,
+            color);
 }
 
 void FrameBuffer::__draw_char(
@@ -255,7 +248,6 @@ void FrameBuffer::__draw_char(
    GFXfont font
 )
 {
-
    // Character is assumed previously filtered by write() to eliminate
    // newlines, returns, non-printable characters, etc.  Calling drawChar()
    // directly with 'bad' characters of font may cause mayhem!
@@ -302,7 +294,7 @@ void FrameBuffer::__draw_char(
             yyy = y + yo + yy;
             if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye)
             {
-               drawPixel(x + xo + xx, y + yo + yy, SCREEN_ENDIAN_U2_VALUE(color));
+               drawPixel(x + xo + xx, y + yo + yy, color);
             }
          }
          bits <<= 1;
@@ -512,6 +504,6 @@ void FrameBuffer::blt()
 #ifdef DC801_EMBEDDED
    draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 #else
-   gameEngine->windowFrame->GameBlt(frame);
+   gameEngine->windowFrame->GameBlt(frame.data());
 #endif
 }

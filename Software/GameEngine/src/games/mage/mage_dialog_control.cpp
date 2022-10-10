@@ -155,15 +155,6 @@ void MageDialogControl::update()
    }
 }
 
-bool MageDialogControl::shouldShowResponses() const
-{
-   // last page of messages on this screen
-   // and we have responses
-   return currentMessageIndex == (currentScreen->messageCount - 1)
-      && (currentScreen->responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
-       || currentScreen->responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
-}
-
 void MageDialogControl::draw()
 {
    MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen->alignment];
@@ -175,19 +166,13 @@ void MageDialogControl::draw()
    }
 }
 
-void MageDialogControl::drawDialogBox(
-   const std::string& string,
-   Rect box,
-   bool drawArrow,
-   bool drawPortrait
-)
+void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool drawArrow, bool drawPortrait) const
 {
    uint16_t tileWidth = currentFrameTileset->TileWidth();
    uint16_t tileHeight = currentFrameTileset->TileHeight();
    uint16_t offsetX = (box.x * tileWidth) + (tileWidth / 2);
    uint16_t offsetY = (box.y * tileHeight) + (tileHeight / 2);
    uint16_t tilesetColumns = currentFrameTileset->Cols();
-   uint16_t imageWidth = currentFrameTileset->ImageWidth();
    uint16_t x;
    uint16_t y;
    uint8_t tileId;
@@ -208,7 +193,7 @@ void MageDialogControl::drawDialogBox(
             tileHeight,
             (tileId % tilesetColumns) * tileWidth,
             (tileId / tilesetColumns) * tileHeight,
-            imageWidth,
+            currentFrameTileset->ImageWidth(),
             TRANSPARENCY_COLOR,
             0
          );
@@ -261,7 +246,7 @@ void MageDialogControl::drawDialogBox(
          tileHeight,
          (DIALOG_TILES_ARROW % tilesetColumns) * tileWidth,
          (DIALOG_TILES_ARROW / tilesetColumns) * tileHeight,
-         imageWidth,
+         currentFrameTileset->ImageWidth(),
          TRANSPARENCY_COLOR,
          flags
       );
@@ -289,11 +274,7 @@ void MageDialogControl::drawDialogBox(
    }
 }
 
-uint8_t MageDialogControl::getTileIdFromXY(
-   uint8_t x,
-   uint8_t y,
-   Rect box
-)
+uint8_t MageDialogControl::getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const
 {
    uint8_t tileId = DIALOG_TILES_CENTER_REPEAT;
    bool leftEdge = x == 0;

@@ -54,8 +54,18 @@ extern const char endian_label[];
 #define bswap32(value) __builtin_bswap32(value)
 #endif
 
-uint16_t convert_endian_u2_value (uint16_t value);
-void convert_endian_u2_buffer (uint16_t *buf, size_t bufferSize);
+inline uint16_t convert_endian_u2_value(uint16_t value)
+{
+	return bswap16(value);
+}
+
+inline void convert_endian_u2_buffer(uint16_t* buf, size_t bufferSize)
+{
+	for (size_t i = 0; i < bufferSize; i++)
+	{
+		buf[i] = bswap16(buf[i]);
+	}
+}
 
 uint32_t convert_endian_u4_value (uint32_t value);
 void convert_endian_u4_buffer (uint32_t *buf, size_t bufferSize);

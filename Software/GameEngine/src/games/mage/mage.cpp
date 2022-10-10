@@ -236,7 +236,7 @@ void MageGameEngine::EngineMainGameLoop()
       SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
    }
 #endif
-      }
+}
 
 void MageGameEngine::onSerialStart()
 {

@@ -171,10 +171,9 @@ void MageGameControl::saveGameSlotLoad(uint8_t slotIndex)
 
 void MageGameControl::LoadMap(uint16_t index)
 {
-
    //reset the fade fraction, in case player reset the map
    //while the fraction was anything other than 0
-   gameEngine->frameBuffer->fadeFraction = 0;
+   gameEngine->frameBuffer->ResetFade();
 
    //close any open dialogs and return player control as well:
    dialogControl->closeDialog();
@@ -524,10 +523,8 @@ void MageGameControl::DrawMap(uint8_t layer)
       auto x = tile_x - camera_x;
       auto y = tile_y - camera_y;
 
-      if ((x < (-map->TileWidth()) ||
-         (x > WIDTH) ||
-         (y < (-map->TileHeight())) ||
-         (y > HEIGHT)))
+      if (x + map->TileWidth() < 0 || x >= WIDTH
+       || y + map->TileHeight() < 0 || y >= HEIGHT)
       {
          continue;
       }

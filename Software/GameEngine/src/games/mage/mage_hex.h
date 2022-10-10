@@ -18,7 +18,7 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_OFFSET_X 12
 #define HEXED_BYTE_OFFSET_Y 30
 #define HEXED_BYTE_FOOTER_OFFSET_Y 6
-#define HEXED_BYTE_WIDTH 19
+#define HEXED_BYTE_WIDTH 18
 #define HEXED_BYTE_HEIGHT 14
 #define HEXED_BYTE_CURSOR_OFFSET_X -4
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
@@ -92,9 +92,6 @@ public:
 
 	void applyMemRecallInputs();
 
-	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
-	uint16_t getRenderableStringLength(uint8_t* string, uint16_t maxLength);
-
 	//this writes the header bit of the hex editor screen.
 	void renderHexHeader();
 
@@ -109,6 +106,9 @@ public:
 private:
 	MageGameEngine*  gameEngine;
 	bool disableMovement{ false };
+
+	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
+	uint16_t getRenderableStringLength(const char* string, uint16_t maxLength) const;
 
 	//this variable stores the operation that will be preformed when pressing the bit buttons.
 	HEX_OPS currentOp{ HEX_OPS::HEX_OPS_XOR };

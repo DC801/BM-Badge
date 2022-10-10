@@ -136,28 +136,37 @@ private:
    MageHeaderFor<MageDialog> dialogHeader;
    bool open{ false };
 
-   char dialogName[32];
-   MageTileset* currentFrameTileset;
-   int16_t triggeringEntityId;
-   int32_t currentDialogIndex;
-   uint32_t currentDialogAddress;
-   uint32_t currentDialogScreenCount;
-   int32_t currentScreenIndex;
-   int32_t currentMessageIndex;
-   uint16_t currentImageIndex;
-   uint32_t currentImageAddress;
-   uint32_t cursorPhase;
-   uint8_t currentResponseIndex;
+   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const;
+   void drawDialogBox(const std::string& string, Rect box, bool drawArrow = false, bool drawPortrait = false) const;
+
+   constexpr bool shouldShowResponses() const
+   {
+      // last page of messages on this screen
+      // and we have responses
+      return currentMessageIndex == (currentScreen->messageCount - 1)
+         && (currentScreen->responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
+            || currentScreen->responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
+   }
+
+   char dialogName[32]{};
+   MageTileset* currentFrameTileset{};
+   int16_t triggeringEntityId{0};
+   int32_t currentDialogIndex{0};
+   uint32_t currentDialogAddress{0};
+   uint32_t currentDialogScreenCount{0};
+   int32_t currentScreenIndex{0};
+   int32_t currentMessageIndex{0};
+   uint16_t currentImageIndex{0};
+   uint32_t currentImageAddress{0};
+   uint32_t cursorPhase{0};
+   uint8_t currentResponseIndex{0};
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
    MageEntity::RenderableData currentPortraitRenderableData{};
-   MageDialogScreen* currentScreen;
-   std::string currentEntityName;
-   std::string currentMessage;
-   std::unique_ptr<uint16_t[]>messageIds;
-   std::unique_ptr<MageDialogResponse[]>responses;
-   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box);
-   void drawDialogBox(const std::string& string, Rect box, bool drawArrow = false, bool drawPortrait = false);
-   bool shouldShowResponses() const;
+   MageDialogScreen* currentScreen{};
+   std::string currentEntityName{};
+   std::string currentMessage{};
+   std::unique_ptr<uint16_t[]>messageIds{};
+   std::unique_ptr<MageDialogResponse[]>responses{};
 
 };
 

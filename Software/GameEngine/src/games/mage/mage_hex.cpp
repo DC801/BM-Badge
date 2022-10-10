@@ -317,22 +317,16 @@ void MageHexEditor::applyMemRecallInputs()
    }
 }
 
-uint16_t MageHexEditor::getRenderableStringLength(uint8_t* bytes, uint16_t maxLength)
+uint16_t MageHexEditor::getRenderableStringLength(const char* bytes, uint16_t maxLength) const
 {
    uint16_t offset = 0;
    uint16_t renderableLength = 0;
    uint8_t currentByte = bytes[0];
-   while (
-      currentByte != 0 &&
-      offset < maxLength
-      )
+   while (currentByte != 0 && offset < maxLength)
    {
       offset++;
       currentByte = bytes[renderableLength];
-      if (
-         currentByte >= 32 &&
-         currentByte < 128
-         )
+      if (currentByte >= 32 && currentByte < 128)
       {
          renderableLength++;
       }
@@ -344,38 +338,23 @@ void MageHexEditor::renderHexHeader()
 {
    char headerString[128]{ " " };
    char clipboardPreview[24]{ " " };
-   char stringPreview[MAGE_ENTITY_NAME_LENGTH + 1] = { 0 };
    uint8_t* currentByteAddress = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation;
    uint8_t u1Value = *currentByteAddress;
    uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
    sprintf(
       headerString,
-      "CurrentPage: %03u\tCurrentByte: 0x%04X\n"
-      "TotalPages:  %03u\tEntities: %05u\tMem: 0x%04X",
-      currentMemPage,
-      hexCursorLocation,
-      totalMemPages,
-      gameEngine->gameControl->Map()->FilteredEntityCount(),
+      "CurrentPage: %03u  CurrentByte: 0x%04X\n"
+      "TotalPages:  %03u  Entities: %05u  Mem: 0x%04X",
+      currentMemPage, hexCursorLocation,
+      totalMemPages, gameEngine->gameControl->Map()->FilteredEntityCount(),
       memTotal
    );
 
-   gameEngine->frameBuffer->printMessage(
-      headerString,
-      Monaco9,
-      0xffff,
-      HEXED_BYTE_OFFSET_X,
-      0
-   );
-   memcpy(stringPreview,
-      (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation,
-      MAGE_ENTITY_NAME_LENGTH);
+   auto hackableData = (uint8_t*)gameEngine->gameControl->Map()->entities.data();
+   gameEngine->frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
+   auto stringPreview = std::string{ hackableData + hexCursorLocation,
+                                     hackableData + hexCursorLocation + MAGE_ENTITY_NAME_LENGTH };
 
-   uint16_t stringPreviewLength = getRenderableStringLength((uint8_t*)stringPreview, MAGE_ENTITY_NAME_LENGTH);
-   // add spaces for padding at the end of the string preview so clipboard stays put
-   for (int i = stringPreviewLength; i < MAGE_ENTITY_NAME_LENGTH; i++)
-   {
-      stringPreview[i] = ' ';
-   }
    sprintf(
       headerString,
       "%s | uint8: %03d  | uint16: %05d\n"
@@ -383,7 +362,7 @@ void MageHexEditor::renderHexHeader()
       endian_label,
       u1Value,
       u2Value,
-      stringPreview
+      stringPreview.c_str()
    );
 
    if (gameEngine->gameControl->playerHasHexEditorControlClipboard)
@@ -471,13 +450,8 @@ void MageHexEditor::renderHexEditor()
          s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
          s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
       }
-      gameEngine->frameBuffer->printMessage(
-         s.c_str(),
-         Monaco9,
-         color,
-         HEXED_BYTE_OFFSET_X,
-         HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT
-      );
+      gameEngine->frameBuffer->printMessage(s.c_str(), Monaco9, color, 
+         HEXED_BYTE_OFFSET_X, HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT);
    }
 }
 
