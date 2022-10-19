@@ -2,7 +2,6 @@
 #include "EnginePanic.h"
 #include "utility.h"
 #include <fstream>
-#include "games/mage/mage_defines.h"
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
@@ -13,11 +12,6 @@
 extern QSPI qspiControl;
 
 #else
-char saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS][32] = {
-   DESKTOP_SAVE_FILE_PATH "save_0.dat",
-   DESKTOP_SAVE_FILE_PATH "save_1.dat",
-   DESKTOP_SAVE_FILE_PATH "save_2.dat"
-};
 
 std::filesystem::directory_entry EngineROM::makeSureSaveFilePathExists()
 {
@@ -242,7 +236,7 @@ void EngineROM::ReadSaveSlot(uint8_t slotIndex, size_t dataLength, uint8_t* data
    );
 #else
    auto saveFilePath = makeSureSaveFilePathExists();
-   char* saveFileName = saveFileSlotNames[slotIndex];
+   const char* saveFileName = saveFileSlotNames[slotIndex];
    
    auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
    if (fileDirEntry.exists())
@@ -293,39 +287,6 @@ void EngineROM::EraseSaveSlot(uint8_t slotIndex)
       // is very busy
    }
 #endif //DC801_EMBEDDED
-}
-
-void EngineROM::WriteSaveSlot(uint8_t slotIndex, size_t length, MageSaveGame* saveData)
-{
-#ifdef DC801_EMBEDDED
-   EraseSaveSlot(slotIndex);
-   Write(
-      getSaveSlotAddressByIndex(slotIndex),
-      length,
-      saveData
-   );
-#else
-   auto saveFilePath = makeSureSaveFilePathExists();
-
-   auto file = std::ofstream{ saveFilePath/saveFileSlotNames[slotIndex], std::ios::binary };
-
-   // copy the save data into the file and close it
-   if (!file.write((const char*)saveData, sizeof(MageSaveGame)))
-   {
-      ENGINE_PANIC("Desktop build: SAVE file cannot be written");
-   }
-   file.close();
-
-#ifdef EMSCRIPTEN
-   // triggers a call to the FS.syncfs, asking IDBFS
-   // "pls actually do your job and save for reals"
-   // It's async, so good luck if you interrupt it
-   // ¯\_(ツ)_/¯
-   emscripten_run_script("Module.persistSaveFiles();");
-#endif // EMSCRIPTEN
-
-#endif // DC801_DESKTOP
-
 }
 
 #ifdef DC801_EMBEDDED

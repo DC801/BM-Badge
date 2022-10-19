@@ -1,5 +1,6 @@
 #include "mage_command_control.h"
 #include "mage_game_control.h"
+#include "mage_map.h"
 #include "mage_script_control.h"
 #include "EngineROM.h"
 #include "EngineSerial.h"
@@ -263,13 +264,10 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
 {
    serialDialogId = _serialDialogId;
    gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-   uint32_t serialDialogAddress = gameEngine->gameControl->imageHeader->offset(serialDialogId);
-   gameEngine->ROM->Read(&serialDialog, serialDialogAddress);
+   uint32_t serialDialogAddress = gameEngine->gameControl->tileManager->imageHeader.offset(serialDialogId);
+   gameEngine->ROM->Read(serialDialog, serialDialogAddress);
 
-   std::string dialogString = gameEngine->gameControl->getString(
-      serialDialog.stringId,
-      NO_PLAYER
-   );
+   std::string dialogString = gameEngine->gameControl->getString(serialDialog.stringId, NO_PLAYER);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
    // 	"serialDialogAddress: " + std::to_string(serialDialogAddress) + "\n"
@@ -280,9 +278,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
    // );
    serialDialogBuffer += dialogString + "\n";
    isInputTrapped = serialDialog.serialResponseType != RESPONSE_NONE;
-   serialDialogResponses = std::make_unique<MageSerialDialogResponse[]>(serialDialog.responseCount);
-   serialDialogAddress += sizeof(serialDialog);
-   gameEngine->ROM->Read(serialDialogResponses.get(), serialDialogAddress);
+   gameEngine->ROM->InitializeCollectionOf(serialDialogResponses, serialDialogAddress, serialDialog.responseCount);
    for (uint8_t i = 0; i < serialDialog.responseCount; i++)
    {
       MageSerialDialogResponse* response = &serialDialogResponses[i];

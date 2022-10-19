@@ -6,9 +6,13 @@ in a more accessible way.
 #ifndef _MAGE_GEOMETRY_H
 #define _MAGE_GEOMETRY_H
 
-#include "mage_defines.h"
-#include "FrameBuffer.h"
 #include "EngineROM.h"
+#include "FrameBuffer.h"
+#include "mage_defines.h"
+#include <stdint.h>
+#include <memory>
+#include <vector>
+#include <optional>
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
 enum class MageGeometryType : uint8_t
@@ -20,6 +24,7 @@ enum class MageGeometryType : uint8_t
 
 class MageGeometry
 {
+   friend class MageGameControl;
 public:
    //default constructor returns a point with coordinates 0,0:
    MageGeometry() = default;
@@ -31,7 +36,50 @@ public:
    //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
    MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address);
 
+   MageGeometry flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
+   //this checks to see if a given point is inside the boundaries of a given geometry:
+   bool isPointInGeometry(Point point) const;
+
+   static Point flipPointByFlags(Point point, uint8_t flags, uint16_t width, uint16_t height);
+
+   static Point flipVectorByFlags(Point unflippedPoint, uint8_t flags );
+
+   static std::optional<Point> getIntersectPointBetweenLineSegments(
+      const Point& lineAPointA, const Point& lineAPointB,
+      const Point& lineBPointA, const Point& lineBPointB
+   );
+
+   uint16_t getLoopableGeometryPointIndex(uint8_t pointIndex) const;
+   uint16_t GetLoopableGeometrySegmentIndex(uint8_t segmentIndex) const
+   {
+      uint16_t result = 0;
+      if (pointCount == 1)
+      {
+         // handle the derp who made a poly* with 1 point
+      }
+      else if (typeId == MageGeometryType::Polygon)
+      {
+         result = segmentIndex % segmentCount;
+      }
+      else if (typeId == MageGeometryType::Polyline)
+      {
+         segmentIndex %= (segmentCount * 2);
+         uint16_t zeroIndexedSegmentCount = segmentCount - 1;
+         result = (segmentIndex < segmentCount)
+            ? segmentIndex
+            : zeroIndexedSegmentCount + (zeroIndexedSegmentCount - segmentIndex) + 1;
+      }
+      return result;
+   }
+
+   std::vector<Point> getPoints() const { return points; }
+
+   constexpr MageGeometryType GetTypeId() const { return typeId; }
+   constexpr float GetPathLength() const { return pathLength; }
+   float GetSegmentLength(uint16_t index) const { return segmentLengths[index]; }
+
+private:
    //can be any MageGeometryType:
    MageGeometryType typeId{ MageGeometryType::Point };
    //how many points will be in the pointArray:
@@ -41,51 +89,10 @@ public:
    //total length of all segments in the geometry
    float pathLength{ 0.0f };
    //the array of the actual coordinate points that make up the geometry:
-   std::unique_ptr<Point[]> points{ std::make_unique<Point[]>(pointCount) };
+   std::vector<Point> points{};
    //the array of segment lengths:
-   std::unique_ptr<float[]> segmentLengths{ std::make_unique<float[]>(segmentCount) };
+   std::vector<float> segmentLengths{};
 
-   void flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height);
-
-   //this checks to see if a given point is inside the boundaries of a given geometry:
-   bool isPointInGeometry(Point point);
-
-   static Point flipPointByFlags(
-      Point point,
-      uint8_t flags,
-      uint16_t width,
-      uint16_t height
-   );
-
-   static Point flipVectorByFlags(
-      Point unflippedPoint,
-      uint8_t flags
-   );
-
-   void draw(
-      int32_t cameraX,
-      int32_t cameraY,
-      uint16_t color,
-      int32_t offset_x = 0,
-      int32_t offset_y = 0
-   );
-
-   static bool pushADiagonalsVsBEdges(
-      Point* spokeCenter,
-      MageGeometry* playerSpokes,
-      float* maxSpokePushbackLengths,
-      Point* maxSpokePushbackVectors,
-      MageGeometry* tile,
-      FrameBuffer* frameBuffer
-   );
-
-   static bool getIntersectPointBetweenLineSegments(
-      const Point& lineAPointA,
-      const Point& lineAPointB,
-      const Point& lineBPointA,
-      const Point& lineBPointB,
-      Point& intersectPoint
-   );
 };
 
 #endif //_MAGE_GEOMETRY_H

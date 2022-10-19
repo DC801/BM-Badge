@@ -1,4 +1,5 @@
 #include "mage_script_actions.h"
+#include "mage_entity_type.h"
 #include "EngineInput.h"
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
@@ -104,7 +105,7 @@ void MageScriptActions::action_check_entity_x(uint8_t* args, MageScriptState* re
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      bool identical = (entity->x == argStruct->expectedValue);
+      bool identical = (entity->location.x == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
          gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -132,7 +133,7 @@ void MageScriptActions::action_check_entity_y(uint8_t* args, MageScriptState* re
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      bool identical = (entity->y == argStruct->expectedValue);
+      bool identical = (entity->location.y == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
          gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -239,21 +240,16 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
       uint8_t paddingG;
    } ActionCheckEntityPrimaryId;
    auto* argStruct = (ActionCheckEntityPrimaryId*)args;
-   //endianness conversion for arguments larger than 1 byte:
-      
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
-      argStruct->entityId,
-      gameEngine->scriptControl->currentEntityId
-   );
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       uint16_t sizeLimit{ 1 };
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 
-      if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = gameEngine->gameControl->entityTypes.size(); }
-      else if (sanitizedPrimaryType == ANIMATION) { sizeLimit = gameEngine->gameControl->animations.size(); }
-      else if (sanitizedPrimaryType == TILESET) { sizeLimit = gameEngine->gameControl->tilesets.size(); }
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = gameEngine->gameControl->entityTypes.size(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = gameEngine->gameControl->animations.size(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = gameEngine->gameControl->tileManager->getTilesetCount(); }
       else { throw std::runtime_error{ "Sanitized Primary Type Unknown" }; }
 
       bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
@@ -286,11 +282,11 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       uint16_t sizeLimit = 1;
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
-      if (sanitizedPrimaryType == ENTITY_TYPE) { sizeLimit = 1; }
-      if (sanitizedPrimaryType == ANIMATION) { sizeLimit = 1; }
-      if (sanitizedPrimaryType == TILESET)
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
-         MageTileset* tileset = gameEngine->gameControl->getValidTileset(entity->primaryId);
+         auto tileset = gameEngine->gameControl->tileManager->GetTileset(entity->primaryId);
          sizeLimit = tileset->Tiles();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
@@ -435,8 +431,7 @@ void MageScriptActions::action_check_entity_glitched(uint8_t* args, MageScriptSt
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      bool isGlitched = (entity->direction & RENDER_FLAGS_IS_GLITCHED) != 0;
-      if (isGlitched == (bool)argStruct->expectedBool)
+      if (entity->direction & RENDER_FLAGS_IS_GLITCHED)
       {
          gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
       }
@@ -709,18 +704,14 @@ void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, Mag
    } ActionCheckifEntityIsInGeometry;
    auto* argStruct = (ActionCheckifEntityIsInGeometry*)args;
    //endianness conversion for arguments larger than 1 byte:
-      
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
-      argStruct->entityId,
-      gameEngine->scriptControl->currentEntityId
-   );
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
-      bool colliding = geometry.isPointInGeometry(renderable->center);
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
+
+      bool colliding = geometry->isPointInGeometry(renderable->center);
       if (colliding == (bool)argStruct->expectedBoolValue)
       {
          gameEngine->scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -929,7 +920,7 @@ void MageScriptActions::action_set_entity_x(uint8_t* args, MageScriptState* resu
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      entity->x = argStruct->newValue;
+      entity->location.x = argStruct->newValue;
    }
 }
 
@@ -954,7 +945,7 @@ void MageScriptActions::action_set_entity_y(uint8_t* args, MageScriptState* resu
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
-      entity->y = argStruct->newValue;
+      entity->location.y = argStruct->newValue;
    }
 }
 
@@ -1122,10 +1113,7 @@ void MageScriptActions::action_set_entity_current_animation(uint8_t* args, MageS
    } ActionSetEntityCurrentAnimation;
    auto* argStruct = (ActionSetEntityCurrentAnimation*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(
-      argStruct->entityId,
-      gameEngine->scriptControl->currentEntityId
-   );
+   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, gameEngine->scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
@@ -1216,11 +1204,7 @@ void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, Mage
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
-         (MageEntityAnimationDirection)((
-            entity->direction
-            + argStruct->relativeDirection
-            + NUM_DIRECTIONS
-            ) % NUM_DIRECTIONS),
+         (MageEntityAnimationDirection)((entity->direction + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS),
          entity->direction
       );
       gameEngine->gameControl->updateEntityRenderableData(entityIndex);
@@ -1291,12 +1275,12 @@ void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* arg
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->targetGeometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->targetGeometryId);
+
       entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
          getRelativeDirection(
             renderable->center,
-            geometry.points[0]
+            geometry->getPoints()[0]
          ),
          entity->direction
       );
@@ -1820,16 +1804,10 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
-      setEntityPositionToPoint(
-         entity,
-         offsetPointRelativeToEntityCenter(
-            renderable,
-            entity,
-            &geometry.points[0]
-         )
-      );
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
+
+      auto offsetPoint = offsetPointRelativeToEntityCenter(entity, &geometry->getPoints()[0]);
+      entity->SetLocation(offsetPoint);
       gameEngine->gameControl->updateEntityRenderableData(entityIndex);
    }
 }
@@ -1853,42 +1831,24 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
 
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
          //this is the points we're interpolating between
-         resumeStateStruct->pointA = {
-            entity->x,
-            entity->y,
-         };
-         resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(
-            renderable,
-            entity,
-            &geometry.points[0]
-         );
+         resumeStateStruct->pointA = entity->location;
+         resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(entity, &geometry->getPoints()[0]);
          entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
-            getRelativeDirection(
-               resumeStateStruct->pointA,
-               resumeStateStruct->pointB
-            ),
+            getRelativeDirection(resumeStateStruct->pointA, resumeStateStruct->pointB),
             entity->direction
          );
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
       }
-      float progress = manageProgressOfAction(
-         resumeStateStruct,
-         argStruct->duration
-      );
-      Point betweenPoint = FrameBuffer::lerpPoints(
-         resumeStateStruct->pointA,
-         resumeStateStruct->pointB,
-         progress
-      );
-      setEntityPositionToPoint(entity, betweenPoint);
+      float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
+      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
+      entity->SetLocation(betweenPoint);
       if (progress >= 1.0f)
       {
          entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
@@ -1917,15 +1877,14 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
 
       // handle single point geometries
-      if (geometry.pointCount == 1)
+      if (geometry->getPoints().size() == 1)
       {
          resumeStateStruct->totalLoopsToNextAction = 1;
-         auto offsetPoint = offsetPointRelativeToEntityCenter(renderable, entity, &geometry.points[0]);
-         setEntityPositionToPoint(entity, offsetPoint);
+         auto offsetPoint = offsetPointRelativeToEntityCenter(entity, &geometry->getPoints()[0]);
+         entity->SetLocation(offsetPoint);
          gameEngine->gameControl->updateEntityRenderableData(entityIndex);
          return;
       }
@@ -1936,18 +1895,18 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
          //now set the resumeStateStruct variables:
          resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
          resumeStateStruct->loopsToNextAction = totalDelayLoops;
-         resumeStateStruct->length = geometry.pathLength;
-         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
+         resumeStateStruct->length = geometry->GetPathLength();
+         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
       }
       resumeStateStruct->loopsToNextAction--;
 
-      uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(&geometry, resumeStateStruct->currentSegmentIndex);
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
       float totalProgress = getProgressOfAction(resumeStateStruct);
       float currentProgressLength = resumeStateStruct->length * totalProgress;
-      float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
+      float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
       float lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
       float progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
          / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
@@ -1956,10 +1915,10 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
       {
          resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
          resumeStateStruct->currentSegmentIndex++;
-         uint16_t pointAIndex = getLoopableGeometryPointIndex(&geometry, resumeStateStruct->currentSegmentIndex);
-         uint16_t pointBIndex = getLoopableGeometryPointIndex(&geometry, resumeStateStruct->currentSegmentIndex + 1);
-         sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(&geometry, resumeStateStruct->currentSegmentIndex);
-         currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
+         uint16_t pointAIndex = geometry->getLoopableGeometryPointIndex(resumeStateStruct->currentSegmentIndex);
+         uint16_t pointBIndex = geometry->getLoopableGeometryPointIndex(resumeStateStruct->currentSegmentIndex + 1);
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
+         currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
          lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
          progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
             / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
@@ -1968,14 +1927,14 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
             resumeStateStruct,
             renderable,
             entity,
-            &geometry,
+            geometry,
             pointAIndex,
             pointBIndex
          );
       }
       
-      Point betweenPoint = FrameBuffer::lerpPoints(resumeStateStruct->pointA, resumeStateStruct->pointB, progressBetweenPoints);
-      setEntityPositionToPoint(entity, betweenPoint);
+      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
+      entity->SetLocation(betweenPoint);
       if (resumeStateStruct->loopsToNextAction == 0)
       {
          resumeStateStruct->totalLoopsToNextAction = 0;
@@ -2003,24 +1962,17 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
    {
       MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-      MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+      auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
 
       // handle single point geometries
-      if (geometry.pointCount == 1)
+      if (geometry->getPoints().size() == 1)
       {
          resumeStateStruct->totalLoopsToNextAction = 1;
-         setEntityPositionToPoint(
-            entity,
-            offsetPointRelativeToEntityCenter(
-               renderable,
-               entity,
-               &geometry.points[0]
-            )
-         );
+         entity->SetLocation(offsetPointRelativeToEntityCenter(entity, &geometry->getPoints()[0]));
          gameEngine->gameControl->updateEntityRenderableData(entityIndex);
          return;
       }
+
       // and for everything else...
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
@@ -2028,75 +1980,54 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
          //now set the resumeStateStruct variables:
          resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
          resumeStateStruct->loopsToNextAction = totalDelayLoops;
-         resumeStateStruct->length = (geometry.typeId == MageGeometryType::Polyline)
-            ? geometry.pathLength * 2
-            : geometry.pathLength;
-         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
+         resumeStateStruct->length = (geometry->GetTypeId()== MageGeometryType::Polyline)
+            ? geometry->GetPathLength() * 2
+            : geometry->GetPathLength();
+         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
       }
+
       if (resumeStateStruct->loopsToNextAction == 0)
       {
          resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, &geometry);
+         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
       }
       resumeStateStruct->loopsToNextAction--;
-      uint16_t sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-         &geometry,
-         resumeStateStruct->currentSegmentIndex
-      );
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
       float totalProgress = getProgressOfAction(resumeStateStruct);
       float currentProgressLength = resumeStateStruct->length * totalProgress;
-      float currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
-      float lengthAtEndOfCurrentSegment = (
-         resumeStateStruct->lengthOfPreviousSegments
-         + currentSegmentLength
-         );
-      float progressBetweenPoints = (
-         (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
-         );
-      if (progressBetweenPoints > 1)
+      float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
+      float lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+
+      if (progressBetweenPoints > 1.0f)
       {
          resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
          resumeStateStruct->currentSegmentIndex++;
-         uint16_t pointAIndex = getLoopableGeometryPointIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex
-         );
-         uint16_t pointBIndex = getLoopableGeometryPointIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex + 1
-         );
-         sanitizedCurrentSegmentIndex = getLoopableGeometrySegmentIndex(
-            &geometry,
-            resumeStateStruct->currentSegmentIndex
-         );
-         currentSegmentLength = geometry.segmentLengths[sanitizedCurrentSegmentIndex];
-         lengthAtEndOfCurrentSegment = (
-            resumeStateStruct->lengthOfPreviousSegments
-            + currentSegmentLength
-            );
-         progressBetweenPoints = (
-            (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments)
-            );
+         uint16_t pointAIndex = geometry->getLoopableGeometryPointIndex(resumeStateStruct->currentSegmentIndex );
+         uint16_t pointBIndex = geometry->getLoopableGeometryPointIndex(resumeStateStruct->currentSegmentIndex + 1);
+
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
+
+         currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
+         lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+
          setResumeStatePointsAndEntityDirection(
             resumeStateStruct,
             renderable,
             entity,
-            &geometry,
+            geometry,
             pointAIndex,
             pointBIndex
          );
       }
-      Point betweenPoint = FrameBuffer::lerpPoints(
-         resumeStateStruct->pointA,
-         resumeStateStruct->pointB,
-         progressBetweenPoints
-      );
-      setEntityPositionToPoint(entity, betweenPoint);
+      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
+      entity->SetLocation(betweenPoint);
       gameEngine->gameControl->updateEntityRenderableData(entityIndex);
    }
 }
@@ -2136,11 +2067,11 @@ void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageSc
    //endianness conversion for arguments larger than 1 byte:
    
    MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(gameEngine->scriptControl->currentEntityId);
-   uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-   MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+   auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
+
    gameEngine->gameControl->camera.followEntityId = NO_PLAYER;
-   gameEngine->gameControl->camera.position.x = geometry.points[0].x - HALF_WIDTH;
-   gameEngine->gameControl->camera.position.y = geometry.points[0].y - HALF_HEIGHT;
+   const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
+   gameEngine->gameControl->camera.position = geometry->getPoints()[0] - midScreen;
 }
 
 void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2184,11 +2115,7 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
          renderable->center.x - HALF_WIDTH,
          renderable->center.y - HALF_HEIGHT,
       };
-      Point betweenPoint = FrameBuffer::lerpPoints(
-         resumeStateStruct->pointA,
-         resumeStateStruct->pointB,
-         progress
-      );
+      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
       gameEngine->gameControl->camera.position.x = betweenPoint.x;
       gameEngine->gameControl->camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
@@ -2212,8 +2139,8 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
    argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
    
    MageEntity* entity = gameEngine->gameControl->getEntityByMapLocalId(gameEngine->scriptControl->currentEntityId);
-   uint16_t geometryIndex = getUsefulGeometryIndexFromActionGeometryId(argStruct->geometryId, entity);
-   MageGeometry geometry = gameEngine->gameControl->getGeometryFromMapLocalId(geometryIndex);
+   auto geometry = gameEngine->gameControl->getGeometry(argStruct->geometryId);
+
 
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
@@ -2224,19 +2151,13 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
          gameEngine->gameControl->camera.position.y,
       };
       resumeStateStruct->pointB = {
-         geometry.points[0].x - HALF_WIDTH,
-         geometry.points[0].y - HALF_HEIGHT,
+         geometry->getPoints()[0].x - HALF_WIDTH,
+         geometry->getPoints()[0].y - HALF_HEIGHT,
       };
    }
-   float progress = manageProgressOfAction(
-      resumeStateStruct,
-      argStruct->duration
-   );
-   Point betweenPoint = FrameBuffer::lerpPoints(
-      resumeStateStruct->pointA,
-      resumeStateStruct->pointB,
-      progress
-   );
+   float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
+
+   Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
    gameEngine->gameControl->camera.position.x = betweenPoint.x;
    gameEngine->gameControl->camera.position.y = betweenPoint.y;
 }
@@ -2900,74 +2821,17 @@ MageEntityAnimationDirection MageScriptActions::getRelativeDirection(
    return direction;
 }
 
-Point MageScriptActions::offsetPointRelativeToEntityCenter(
-   const MageEntity::RenderableData* renderable,
-   const MageEntity* entity,
-   const Point* geometryPoint
-)
+Point MageScriptActions::offsetPointRelativeToEntityCenter(const MageEntity* entity, const Point* geometryPoint)
 {
-   return {
-      geometryPoint->x - (renderable->center.x - entity->x),
-      geometryPoint->y - (renderable->center.y - entity->y),
-   };
-}
-
-uint16_t MageScriptActions::getLoopableGeometryPointIndex(
-   MageGeometry* geometry,
-   uint8_t pointIndex
-)
-{
-   uint16_t result = 0;
-   if (geometry->pointCount == 1)
-   {
-      // handle the derp who made a poly* with 1 point
-   }
-   else if (geometry->typeId == MageGeometryType::Polygon)
-   {
-      result = pointIndex % geometry->pointCount;
-   }
-   else if (geometry->typeId == MageGeometryType::Polyline)
-   {
-      // haunted, do not touch
-      pointIndex %= (geometry->segmentCount * 2);
-      result = (pointIndex < geometry->pointCount)
-         ? pointIndex
-         : geometry->segmentCount + (geometry->segmentCount - pointIndex);
-   }
-   return result;
-}
-
-uint16_t MageScriptActions::getLoopableGeometrySegmentIndex(
-   MageGeometry* geometry,
-   uint8_t segmentIndex
-)
-{
-   uint16_t result = 0;
-   if (geometry->pointCount == 1)
-   {
-      // handle the derp who made a poly* with 1 point
-   }
-   else if (geometry->typeId == MageGeometryType::Polygon)
-   {
-      result = segmentIndex % geometry->segmentCount;
-   }
-   else if (geometry->typeId == MageGeometryType::Polyline)
-   {
-      // haunted, do not touch
-      segmentIndex %= (geometry->segmentCount * 2);
-      uint16_t zeroIndexedSegmentCount = geometry->segmentCount - 1;
-      result = (segmentIndex < geometry->segmentCount)
-         ? segmentIndex
-         : zeroIndexedSegmentCount + (zeroIndexedSegmentCount - segmentIndex) + 1;
-   }
-   return result;
+   auto renderable = entity->getRenderableData();
+   return *geometryPoint - renderable->center - entity->location;
 }
 
 void MageScriptActions::initializeEntityGeometryPath(
    MageScriptState* resumeStateStruct,
-   MageEntity::RenderableData* renderable,
+   RenderableData* renderable,
    MageEntity* entity,
-   MageGeometry* geometry
+   const MageGeometry* geometry
 )
 {
    resumeStateStruct->lengthOfPreviousSegments = 0;
@@ -2977,29 +2841,27 @@ void MageScriptActions::initializeEntityGeometryPath(
       renderable,
       entity,
       geometry,
-      getLoopableGeometryPointIndex(geometry, 0),
-      getLoopableGeometryPointIndex(geometry, 1)
+      geometry->getLoopableGeometryPointIndex(0),
+      geometry->getLoopableGeometryPointIndex(1)
    );
 }
 
 void MageScriptActions::setResumeStatePointsAndEntityDirection(
    MageScriptState* resumeStateStruct,
-   MageEntity::RenderableData* renderable,
+   RenderableData* renderable,
    MageEntity* entity,
-   MageGeometry* geometry,
+   const MageGeometry* geometry,
    uint16_t pointAIndex,
    uint16_t pointBIndex
 )
 {
    resumeStateStruct->pointA = offsetPointRelativeToEntityCenter(
-      renderable,
       entity,
-      &geometry->points[pointAIndex]
+      &geometry->getPoints()[pointAIndex]
    );
    resumeStateStruct->pointB = offsetPointRelativeToEntityCenter(
-      renderable,
       entity,
-      &geometry->points[pointBIndex]
+      &geometry->getPoints()[pointBIndex]
    );
    entity->direction = gameEngine->gameControl->updateDirectionAndPreserveFlags(
       getRelativeDirection(
@@ -3008,15 +2870,6 @@ void MageScriptActions::setResumeStatePointsAndEntityDirection(
       ),
       entity->direction
    );
-}
-
-void MageScriptActions::setEntityPositionToPoint(
-   MageEntity* entity,
-   const Point& point
-)
-{
-   entity->x = point.x;
-   entity->y = point.y;
 }
 
 void MageScriptActions::mutate(

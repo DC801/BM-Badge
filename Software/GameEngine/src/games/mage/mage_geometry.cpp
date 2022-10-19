@@ -1,4 +1,5 @@
 #include "mage_geometry.h"
+#include "mage_tileset.h"
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 #include "shim_err.h"
@@ -7,101 +8,63 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
    //skip over name:
    address += 32;
-   ROM->Read(&typeId, address);
-   ROM->Read(&pointCount, address);
+   ROM->Read(typeId, address);
+   ROM->Read(pointCount, address);
    address += sizeof(pointCount);
 
    //read segmentCount:
-   ROM->Read(&segmentCount, address);
+   ROM->Read(segmentCount, address);
 
    address += 1; //padding
 
    //read pathLength:
-   ROM->Read(&pathLength, address);
+   ROM->Read(pathLength, address);
 
    //generate appropriately sized point array:
-   points = std::make_unique<Point[]>(pointCount);
-   ROM->Read(points.get(), address, pointCount);
+   ROM->InitializeCollectionOf(points, address, pointCount);
 
    //generate appropriately sized array:
-   segmentLengths = std::make_unique<float[]>(segmentCount);
-
-   ROM->Read(segmentLengths.get(), address, segmentCount);
+   ROM->InitializeCollectionOf(segmentLengths, address, segmentCount);
 }
 
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)
 {
    typeId = type;
    pointCount = numPoints;
-   points = std::make_unique<Point[]>(pointCount);
    segmentCount = typeId == MageGeometryType::Polygon
       ? numPoints
       : numPoints - 1;
    for (uint8_t i = 0; i < pointCount; i++)
    {
-      points[i].x = 0;
-      points[i].y = 0;
+      points.push_back(Point{ 0,0 });
    }
-   segmentLengths = std::make_unique<float[]>(segmentCount);
-}
-
-void MageGeometry::flipSelfByFlags(
-   uint8_t flags,
-   uint16_t width,
-   uint16_t height
-)
-{
-   if (flags == 0)
+   for (uint8_t i = 0; i < segmentCount; i++)
    {
-      return;
-   }
-   for (uint8_t i = 0; i < pointCount; i++)
-   {
-      points[i] = flipPointByFlags(
-         points[i],
-         flags,
-         width,
-         height
-      );
+      segmentLengths.push_back(segmentCount);
    }
 }
 
-bool MageGeometry::isPointInGeometry(
-   Point point
-)
+MageGeometry MageGeometry::flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 {
-   //first check for the case where the geometry is a point:
+   auto geometry = MageGeometry{ *this };
+   if (flags != 0)
+   {
+      for (uint8_t i = 0; i < pointCount; i++)
+      {
+         geometry.points[i] = flipPointByFlags(points[i], flags, width, height);
+      }
+   }
+   return geometry;
+}
+
+bool MageGeometry::isPointInGeometry(Point point) const
+{
    if (typeId == MageGeometryType::Point)
    {
-      return (
-         point.x == points[0].x &&
-         point.y == points[0].y
-         );
+      return point.x == points[0].x && point.y == points[0].y;
    }
-   //if it's a polyline or polygon, do the thing:
-   else if (
-      typeId == MageGeometryType::Polyline ||
-      typeId == MageGeometryType::Polygon
-      )
+   else if (typeId == MageGeometryType::Polyline || typeId == MageGeometryType::Polygon)
    {
-      //refactoring stackoverflow code based on point-in-polygon by James Halliday
-      //https://stackoverflow.com/questions/11716268/point-in-polygon-algorithm
-      /*
-      bool PointInPolygon(Point point, Polygon polygon) {
-         vector<Point> points = polygon.getPoints();
-         int i, j, nvert = points.size();
-         bool c = false;
-
-         for(i = 0, j = nvert - 1; i < nvert; j = i++) {
-            if(( (points[i].y >= point.y ) != (points[j].y >= point.y) ) &&
-               (point.x <= (points[j].x - points[i].x) * (point.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
-            )
-            c = !c;
-         }
-         return c;
-      }
-      */
-      //Tim's version below:
       uint8_t i, j;
       bool c = false;
       for (i = 0, j = pointCount - 1; i < pointCount; j = i++)
@@ -110,30 +73,22 @@ bool MageGeometry::isPointInGeometry(
          Point points_i = points[i];
          Point points_j = points[j];
          //do the fancy check:
-         if (
-            ((points_i.y >= point.y) != (points_j.y >= point.y)) &&
-            (point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)
-            )
+         if ((points_i.y >= point.y) != (points_j.y >= point.y)
+            && point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)
          {
             c = !c;
          }
       }
-      //return the bool, that should be correct:
       return c;
    }
-   //otherwise it's not a known geometry type, so always return false.
    else
    {
+      // it's not a known geometry type, so always return false.
       return false;
    }
 }
 
-Point MageGeometry::flipPointByFlags(
-   Point unflippedPoint,
-   uint8_t flags,
-   uint16_t width,
-   uint16_t height
-)
+Point MageGeometry::flipPointByFlags(Point unflippedPoint, uint8_t flags, uint16_t width, uint16_t height)
 {
    Point point = unflippedPoint;
    if (flags != 0)
@@ -146,20 +101,17 @@ Point MageGeometry::flipPointByFlags(
       }
       if (flagsUnion.horizontal)
       {
-         point.x = -point.x + width;
+         point.x = width - point.x;
       }
       if (flagsUnion.vertical)
       {
-         point.y = -point.y + height;
+         point.y = height - point.y;
       }
    }
    return point;
 };
 
-Point MageGeometry::flipVectorByFlags(
-   Point unflippedPoint,
-   uint8_t flags
-)
+Point MageGeometry::flipVectorByFlags(Point unflippedPoint, uint8_t flags)
 {
    Point point = unflippedPoint;
    if (flags != 0)
@@ -182,112 +134,13 @@ Point MageGeometry::flipVectorByFlags(
    return point;
 };
 
-void MageGeometry::draw(
-   int32_t cameraX,
-   int32_t cameraY,
-   uint16_t color,
-   int32_t offset_x,
-   int32_t offset_y
-)
-{
-   Point pointA;
-   Point pointB;
-
-}
-
-bool MageGeometry::pushADiagonalsVsBEdges(
-   Point* spokeCenter,
-   MageGeometry* playerSpokes,
-   float* maxSpokePushbackLengths,
-   Point* maxSpokePushbackVectors,
-   MageGeometry* tile,
-   FrameBuffer* frameBuffer
-)
-{
-   bool collidedWithThisTileAtAll = false;
-   for (int tileLinePointIndex = 0; tileLinePointIndex < tile->pointCount; tileLinePointIndex++)
-   {
-      Point tileLinePointA = tile->points[tileLinePointIndex];
-      Point tileLinePointB = tile->points[(tileLinePointIndex + 1) % tile->pointCount];
-      bool collidedWithTileLine = false;
-
-      for (int spokeIndex = 0; spokeIndex < playerSpokes->pointCount; spokeIndex++)
-      {
-         Point spokePointB = playerSpokes->points[spokeIndex];
-         Point spokeIntersectionPoint = {
-            0,
-            0,
-         };
-         bool collided = getIntersectPointBetweenLineSegments(
-            *spokeCenter,
-            spokePointB,
-            tileLinePointA,
-            tileLinePointB,
-            spokeIntersectionPoint
-         );
-         if (collided)
-         {
-            collidedWithTileLine = true;
-            collidedWithThisTileAtAll = true;
-            frameBuffer->drawLine(
-               spokeCenter->x,
-               spokeCenter->y,
-               spokePointB.x,
-               spokePointB.y,
-               COLOR_RED
-            );
-            frameBuffer->drawLine(
-               spokeCenter->x,
-               spokeCenter->y,
-               spokeIntersectionPoint.x,
-               spokeIntersectionPoint.y,
-               COLOR_GREENYELLOW
-            );
-            Point diff = {
-               spokeIntersectionPoint.x - spokePointB.x,
-               spokeIntersectionPoint.y - spokePointB.y,
-            };
-            frameBuffer->drawLine(
-               spokeCenter->x,
-               spokeCenter->y,
-               spokeCenter->x + diff.x,
-               spokeCenter->y + diff.y,
-               COLOR_ORANGE
-            );
-            float currentIntersectLength = diff.VectorLength();
-            maxSpokePushbackLengths[spokeIndex] = MAX(
-               currentIntersectLength,
-               maxSpokePushbackLengths[spokeIndex]
-            );
-            if (currentIntersectLength == maxSpokePushbackLengths[spokeIndex])
-            {
-               maxSpokePushbackVectors[spokeIndex] = diff;
-            }
-         }
-      }
-      frameBuffer->drawLine(
-         tileLinePointA.x,
-         tileLinePointA.y,
-         tileLinePointB.x,
-         tileLinePointB.y,
-         collidedWithTileLine
-         ? COLOR_RED
-         : COLOR_ORANGE
-      );
-   }
-   return collidedWithThisTileAtAll;
-}
-
 // Returns true if collision has occurred, and if it has,
 // sets the new value of intersectPoint.
 // Ref: https://stackoverflow.com/a/385355
 // Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-bool MageGeometry::getIntersectPointBetweenLineSegments(
-   const Point& lineAPointA,
-   const Point& lineAPointB,
-   const Point& lineBPointA,
-   const Point& lineBPointB,
-   Point& intersectPoint
+std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
+   const Point& lineAPointA, const Point& lineAPointB,
+   const Point& lineBPointA, const Point& lineBPointB
 )
 {
    float x1 = lineAPointA.x;
@@ -330,11 +183,31 @@ bool MageGeometry::getIntersectPointBetweenLineSegments(
        && x >= lineBXMin && x <= lineBXMax
        && y >= lineBYMin && y <= lineBYMax)
       {
-         intersectPoint.x = x;
-         intersectPoint.y = y;
-         return true;
+         return Point{ (int32_t)x, (int32_t)y };
       }
    }
    // No intersection
-   return false;
+   return std::nullopt;
+}
+
+uint16_t MageGeometry::getLoopableGeometryPointIndex(uint8_t pointIndex) const
+{
+   uint16_t result = 0;
+   if (pointCount == 1)
+   {
+      // handle the derp who made a poly* with 1 point
+   }
+   else if (typeId == MageGeometryType::Polygon)
+   {
+      result = pointIndex % pointCount;
+   }
+   else if (typeId == MageGeometryType::Polyline)
+   {
+      // haunted, do not touch
+      pointIndex %= (segmentCount * 2);
+      result = (pointIndex < pointCount)
+         ? pointIndex
+         : segmentCount + (segmentCount - pointIndex);
+   }
+   return result;
 }

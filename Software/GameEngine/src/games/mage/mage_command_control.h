@@ -55,7 +55,7 @@ class MageCommandControl {
 		std::string serialDialogBuffer;
 		std::string postDialogBuffer;
 		MageSerialDialog serialDialog = {};
-		std::unique_ptr<MageSerialDialogResponse[]> serialDialogResponses = {};
+		std::vector<MageSerialDialogResponse> serialDialogResponses{};
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;

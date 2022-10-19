@@ -1,6 +1,7 @@
-#ifndef ENGINE_ROM_H_
+﻿#ifndef ENGINE_ROM_H_
 #define ENGINE_ROM_H_
 
+#include "EnginePanic.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <memory>
@@ -65,6 +66,11 @@
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 class MageSaveGame;
+static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
+   DESKTOP_SAVE_FILE_PATH "save_0.dat",
+   DESKTOP_SAVE_FILE_PATH "save_1.dat",
+   DESKTOP_SAVE_FILE_PATH "save_2.dat"
+};
 
 struct EngineROM
 {
@@ -84,15 +90,21 @@ struct EngineROM
    void ErrorUnplayable();
 
    template <typename T>
-   void Read(T* t, uint32_t& address, size_t count = 1) const
+   void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
-      auto dataLength = count * sizeof(T);
-      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      auto elementSize = sizeof(std::remove_pointer<T>::type);
+      auto dataLength = count * elementSize;
+      if constexpr (std::is_array<T>())
+      {
+         dataLength = count;
+      }
+      if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
          throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
       }
-      memmove(t, romDataInDesktopRam.get() + address, dataLength);
-      address += dataLength;
+      auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + offset;
+      memmove(&t, dataPointer, dataLength);
+      offset += dataLength;
    };
 
    template <typename T>
@@ -103,19 +115,27 @@ struct EngineROM
       {
          throw std::runtime_error{ "EngineROM::GetPointerTo: offset + length exceeds maximum dat file size" };
       }
-      t = (const T*)romDataInDesktopRam.get() + offset;
+      auto address = romDataInDesktopRam.get() + offset;
+      t = (const T*)address;
       offset += sizeof(T) * count;
    }
 
 
    template <typename T>
-   std::vector<T> InitializeCollectionOf(uint32_t& offset, size_t count)
+   void InitializeCollectionOf(std::vector<T> &collection, uint32_t& offset, size_t count)
    {
-      //static_assert(std::is_trivial<T>::value, "can only use trivial types");
-
-      auto collection = std::vector<T>{ (const T*)(romDataInDesktopRam.get() + offset), (const T*)(romDataInDesktopRam.get() + offset) + count };
-      offset += sizeof(T) * count;
-      return collection;
+      for (auto i = 0; i < count; i++)
+      {
+         if constexpr (std::is_trivially_copyable<T>::value)
+         {
+            collection.push_back(T{ *(const T*)(romDataInDesktopRam.get() + offset) });
+            offset += sizeof(T);
+         }
+         else
+         {
+            collection.push_back(T{ this, offset });
+         }
+      }
    }
 
 
@@ -124,7 +144,41 @@ struct EngineROM
 
    void ReadSaveSlot(uint8_t slotIndex, size_t length, uint8_t* data);
    void EraseSaveSlot(uint8_t slotIndex);
-   void WriteSaveSlot(uint8_t slotIndex, size_t length, MageSaveGame* dataPointer);
+
+   template <typename TSaveData>
+   void WriteSaveSlot(uint8_t slotIndex, size_t length, const TSaveData* saveData)
+   {
+#ifdef DC801_EMBEDDED
+      EraseSaveSlot(slotIndex);
+      Write(
+         getSaveSlotAddressByIndex(slotIndex),
+         length,
+         saveData
+      );
+#else
+      auto saveFilePath = makeSureSaveFilePathExists();
+
+      auto file = std::ofstream{ saveFilePath / saveFileSlotNames[slotIndex], std::ios::binary };
+
+      // copy the save data into the file and close it
+      if (!file.write((const char*)saveData, sizeof(TSaveData)))
+      {
+         ENGINE_PANIC("Desktop build: SAVE file cannot be written");
+      }
+      file.close();
+
+#ifdef EMSCRIPTEN
+      // triggers a call to the FS.syncfs, asking IDBFS
+      // "pls actually do your job and save for reals"
+      // It's async, so good luck if you interrupt it
+      // ¯\_(ツ)_/¯
+      emscripten_run_script("Module.persistSaveFiles();");
+#endif // EMSCRIPTEN
+
+#endif // DC801_DESKTOP
+
+   }
+
 #ifdef DC801_EMBEDDED
    bool SD_Copy(uint32_t gameDatFilesize, FIL gameDat, bool eraseWholeRomChip);
 #endif

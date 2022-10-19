@@ -2,6 +2,7 @@
 #define ENGINE_PANIC_H_
 
 #include <cstdarg>
+#include <stdexcept>
 
 // Capture File Number, Line Number, and Message.
 //   Message should be at most 39 columns by 10 lines

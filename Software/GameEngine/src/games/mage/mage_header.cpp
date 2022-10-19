@@ -4,13 +4,7 @@
 
 MageHeader::MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 {
-	ROM->Read(&counts, offset);
-	counts = ROM_ENDIAN_U4_VALUE(counts);
-
-	// Construct then read the offsets & length arrays based on counts
-	offsets = std::make_unique<uint32_t[]>(counts);
-	ROM->Read(offsets.get(), offset, counts);
-
-	lengths = std::make_unique<uint32_t[]>(counts);
-	ROM->Read(lengths.get(), offset, counts);
+	ROM->Read(counts, offset);
+	ROM->GetPointerTo(offsets, offset, counts);
+	ROM->GetPointerTo(lengths, offset, counts);
 }

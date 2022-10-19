@@ -21,7 +21,7 @@ void MageScriptControl::initializeScriptsOnMapLoad(std::shared_ptr<MageMap> map)
    for (uint8_t i = 0; i < map->FilteredEntityCount(); i++)
    {
       //Initialize the script ResumeStateStructs to default values for this map.
-      MageEntity* entity = &map->entities[i];
+      const MageEntity* entity = map->getEntity(i);
       *getEntityTickResumeState(i) = MageScriptState{ entity->onTickScriptId, false };
       *getEntityInteractResumeState(i) = MageScriptState{ entity->onInteractScriptId, false };
    }
@@ -63,7 +63,7 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
 
    //read the script's action count:
    uint32_t actionCount = 0;
-   gameEngine->ROM->Read(&actionCount, address);
+   gameEngine->ROM->Read(actionCount, address);
 
    //increment the address by the resumeStateStruct->actionOffset*sizeof(uint64_t) to get to the current action:
    address += resumeStateStruct->actionOffset * sizeof(uint64_t);
@@ -119,7 +119,7 @@ void MageScriptControl::runAction(uint32_t actionMemoryAddress, MageScriptState*
    uint8_t actionArgs[MAGE_NUM_ACTION_ARGS]{ 0 };
 
    //get actionTypeId from gameEngine->ROM:
-   gameEngine->ROM->Read(&actionTypeId, actionMemoryAddress);
+   gameEngine->ROM->Read(actionTypeId, actionMemoryAddress);
    
    //validate actionTypeId:
    if (actionTypeId >= NUM_SCRIPT_ACTIONS)

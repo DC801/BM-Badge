@@ -69,6 +69,7 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_script_actions.h
     Software/GameEngine/src/games/mage/mage_script_control.cpp
     Software/GameEngine/src/games/mage/mage_script_control.h
+    Software/GameEngine/src/games/mage/mage_script_state.h
     Software/GameEngine/src/games/mage/mage_tileset.cpp
     Software/GameEngine/src/games/mage/mage_tileset.h
     Software/GameEngine/src/games/mage/mage.cpp

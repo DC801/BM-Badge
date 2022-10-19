@@ -29,10 +29,10 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    }
 };
 
-MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, uint32_t& offset) noexcept
-   : gameEngine(gameEngine),
-   dialogHeader(gameEngine->ROM, offset)
-{}
+MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, MageHeader&& dialogHeader) noexcept
+   : gameEngine(gameEngine)
+{
+}
 
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
@@ -47,7 +47,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    //auto currentDialog = get(dialogId);
    currentDialogAddress += 32; // skip past the name
 
-   gameEngine->ROM->Read(&currentDialogScreenCount, currentDialogAddress);
+   gameEngine->ROM->Read(currentDialogScreenCount, currentDialogAddress);
 
    loadNextScreen();
 
@@ -61,12 +61,12 @@ void MageDialogControl::showSaveMessageDialog(std::string messageString)
    // Saves should always be confirmed. That is my strong opinion.
    currentResponseIndex = 0;
    currentMessageIndex = 0;
-   messageIds = std::make_unique<uint16_t[]>(1);
+   messageIds.clear();
    currentMessage = messageString;
    currentScreen->responseCount = 0;
    currentScreen->messageCount = 1;
    currentScreen->responseType = MageDialogResponseType::NO_RESPONSE;
-   responses = std::make_unique<MageDialogResponse[]>(0);
+   responses.clear();
    cursorPhase += 250;
    open = true;
    gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
@@ -80,28 +80,26 @@ void MageDialogControl::loadNextScreen()
       open = false;
       return;
    }
-   gameEngine->ROM->Read(&currentScreen, currentDialogAddress);
+   gameEngine->ROM->Read(currentScreen, currentDialogAddress);
 
    currentEntityName = gameEngine->gameControl->getString(currentScreen->nameStringIndex, triggeringEntityId);
    loadCurrentScreenPortrait();
 
-   messageIds.reset();
-   messageIds = std::make_unique<uint16_t[]>(currentScreen->messageCount);
-   gameEngine->ROM->Read(messageIds.get(), currentDialogAddress, currentScreen->messageCount);
+   messageIds.clear();
+   gameEngine->ROM->InitializeCollectionOf(messageIds, currentDialogAddress, currentScreen->messageCount);
 
    currentMessage = gameEngine->gameControl->getString(messageIds[currentMessageIndex], triggeringEntityId);
    uint8_t sizeOfResponse = sizeof(MageDialogResponse);
    uint32_t sizeOfResponses = sizeOfResponse * currentScreen->responseCount;
-   responses.reset();
-   responses = std::make_unique<MageDialogResponse[]>(currentScreen->responseCount);
+   responses.clear();
+   gameEngine->ROM->InitializeCollectionOf(responses, currentDialogAddress, currentScreen->responseCount);
 
-   gameEngine->ROM->Read(responses.get(), currentDialogAddress, currentScreen->responseCount);
    // padding at the end of the screen struct when messageCount is odd
    currentDialogAddress += ((currentScreen->messageCount) % 2) * sizeof(uint16_t);
 
-   currentFrameTileset = gameEngine->gameControl->getValidTileset(currentScreen->borderTilesetIndex);
+   currentFrameTileset = gameEngine->gameControl->tileManager->GetTileset(currentScreen->borderTilesetIndex);
    currentImageIndex = currentFrameTileset->ImageId();
-   currentImageAddress = gameEngine->gameControl->imageHeader->offset(currentImageIndex);
+   //currentImageAddress = gameEngine->gameControl->imageHeader->offset(currentImageIndex);
    currentScreenIndex++;
    cursorPhase += 250;
 }
@@ -170,8 +168,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
 {
    uint16_t tileWidth = currentFrameTileset->TileWidth();
    uint16_t tileHeight = currentFrameTileset->TileHeight();
-   uint16_t offsetX = (box.x * tileWidth) + (tileWidth / 2);
-   uint16_t offsetY = (box.y * tileHeight) + (tileHeight / 2);
+   uint16_t offsetX = (box.origin.x * tileWidth) + (tileWidth / 2);
+   uint16_t offsetY = (box.origin.y * tileHeight) + (tileHeight / 2);
    uint16_t tilesetColumns = currentFrameTileset->Cols();
    uint16_t x;
    uint16_t y;
@@ -183,34 +181,15 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          x = offsetX + (i * tileWidth);
          y = offsetY + (j * tileHeight);
          tileId = getTileIdFromXY(i, j, box);
-
-         gameEngine->frameBuffer->drawChunkWithFlags(
-            currentImageAddress,
-            gameEngine->gameControl->getValidColorPalette(currentImageIndex),
-            x,
-            y,
-            tileWidth,
-            tileHeight,
-            (tileId % tilesetColumns) * tileWidth,
-            (tileId / tilesetColumns) * tileHeight,
-            currentFrameTileset->ImageWidth(),
-            TRANSPARENCY_COLOR,
-            0
-         );
+         gameEngine->gameControl->tileManager->DrawTile(currentFrameTileset.get(), tileId, x, y, 0 );
       }
    }
-   gameEngine->frameBuffer->printMessage(
-      string.c_str(),
-      Monaco9,
-      0xffff,
-      offsetX + tileWidth + 8,
-      offsetY + tileHeight - 2
-   );
+   gameEngine->frameBuffer->printMessage(string.c_str(), Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
    if (drawArrow)
    {
       static const auto TAU = 6.283185307179586;
       int8_t bounce = cos(((float)cursorPhase / 1000.0) * TAU) * 3;
-      uint8_t flags = 0;
+      uint8_t flags{ 0 };
       if (shouldShowResponses())
       {
          flags = 0b00000011;
@@ -220,12 +199,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          for (int responseIndex = 0; responseIndex < currentScreen->responseCount; ++responseIndex)
          {
             gameEngine->frameBuffer->printMessage(
-               gameEngine->gameControl->getString(
-                  responses[responseIndex].stringIndex,
-                  triggeringEntityId
-               ).c_str(),
-               Monaco9,
-               0xffff,
+               gameEngine->gameControl->getString(responses[responseIndex].stringIndex, triggeringEntityId).c_str(),
+               Monaco9, 0xffff,
                offsetX + (2 * tileWidth) + 8,
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
@@ -237,40 +212,24 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          x = offsetX + ((box.w - 2) * tileWidth);
          y = offsetY + ((box.h - 2) * tileHeight) + bounce;
       }
-      gameEngine->frameBuffer->drawChunkWithFlags(
-         currentImageAddress,
-         gameEngine->gameControl->getValidColorPalette(currentImageIndex),
-         x,
-         y,
-         tileWidth,
-         tileHeight,
+      gameEngine->gameControl->tileManager->DrawTile(currentFrameTileset.get(), currentImageIndex, x, y, flags);
+      /*gameEngine->frameBuffer->drawChunkWithFlags(
+         currentImageAddress, gameEngine->gameControl->getValidColorPalette(currentImageIndex),
+         x, y, tileWidth, tileHeight,
          (DIALOG_TILES_ARROW % tilesetColumns) * tileWidth,
          (DIALOG_TILES_ARROW / tilesetColumns) * tileHeight,
          currentFrameTileset->ImageWidth(),
-         TRANSPARENCY_COLOR,
          flags
-      );
+      );*/
    }
    if (drawPortrait)
    {
       x = offsetX + tileWidth;
       y = offsetY + tileHeight;
-      tileId = currentPortraitRenderableData.tileId;
-      MageTileset* tileset = gameEngine->gameControl->getValidTileset(currentPortraitRenderableData.tilesetId);
-      uint8_t portraitFlags = currentPortraitRenderableData.renderFlags;
-      gameEngine->frameBuffer->drawChunkWithFlags(
-         gameEngine->gameControl->imageHeader->offset(tileset->ImageId()),
-         gameEngine->gameControl->getValidColorPalette(tileset->ImageId()),
-         x,
-         y,
-         tileset->TileWidth(),
-         tileset->TileHeight(),
-         (tileId % tileset->Cols()) * tileset->TileWidth(),
-         (tileId / tileset->Cols()) * tileset->TileHeight(),
-         tileset->ImageWidth(),
-         TRANSPARENCY_COLOR,
-         portraitFlags
-      );
+      tileId = currentPortraitRenderableData->tileId;
+      auto tileset = gameEngine->gameControl->tileManager->GetTileset(currentPortraitRenderableData->tilesetId);
+
+      gameEngine->gameControl->tileManager->DrawTile(tileset.get(), tileId, x, y, currentPortraitRenderableData->renderFlags);
    }
 }
 
@@ -331,25 +290,25 @@ void MageDialogControl::loadCurrentScreenPortrait()
          uint8_t sanitizedPrimaryType = currentEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            MageEntityType* entityType = gameEngine->gameControl->getValidEntityType(currentEntity->primaryId);
+            const MageEntityType* entityType = gameEngine->gameControl->getValidEntityType(currentEntity->primaryId);
             currentPortraitId = entityType->PortraitId();
          }
 
          // only try rendering when we have a portrait
          if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
          {
-            uint32_t portraitAddress = gameEngine->gameControl->imageHeader->offset(currentPortraitId);
-            auto portrait = std::make_unique<MagePortrait>(gameEngine->ROM, portraitAddress);
-            auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
+            //uint32_t portraitAddress = gameEngine->gameControl->tileManager->offset(currentPortraitId);
+            //auto portrait = std::make_unique<MagePortrait>(gameEngine->ROM, portraitAddress);
+            //auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
 
-            currentPortraitRenderableData.getRenderableState(gameEngine->gameControl.get(), currentEntity, animationDirection);
-            currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags();
-            currentPortraitRenderableData.renderFlags |= (currentEntity->direction & 0x80);
-            // if the portrait is on the right side of the screen, flip the portrait on the X axis
-            if (((uint8_t)currentScreen->alignment % 2))
-            {
-               currentPortraitRenderableData.renderFlags ^= 0x04;
-            }
+            //currentPortraitRenderableData->getRenderableState(gameEngine->gameControl.get(), currentEntity, animationDirection);
+            //currentPortraitRenderableData->renderFlags = animationDirection->RenderFlags();
+            //currentPortraitRenderableData->renderFlags |= (currentEntity->direction & 0x80);
+            //// if the portrait is on the right side of the screen, flip the portrait on the X axis
+            //if (((uint8_t)currentScreen->alignment % 2))
+            //{
+            //   currentPortraitRenderableData->renderFlags ^= 0x04;
+            //}
          }
       }
    }

@@ -148,7 +148,7 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 	void* targetPixelBuffer;
 	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
 	{
-		memcpy(targetPixelBuffer, frame, FRAMEBUFFER_SIZE*sizeof(uint16_t));
+		memmove(targetPixelBuffer, frame, FRAMEBUFFER_SIZE*sizeof(uint16_t));
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

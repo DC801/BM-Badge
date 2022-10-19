@@ -6,12 +6,10 @@
 MageAnimation::MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept
 {
 	//read tilesetId
-	ROM->Read(&tilesetId, address);
+	ROM->Read(tilesetId, address);
 
 	auto frameCount = uint16_t{ 0 };
 	//read frameCount
-	ROM->Read(&frameCount, address);
-
-	frames = std::vector<MageAnimation::Frame>{ frameCount };
-	ROM->Read(frames.data(), address, frameCount);
+	ROM->Read(frameCount, address);
+	ROM->InitializeCollectionOf(frames, address, frameCount);
 }

@@ -13,14 +13,6 @@ in a more accessible way.
 
 class MageGameEngine;
 
-//this is the numerical translation for entity direction.
-enum MageEntityAnimationDirection : uint8_t
-{
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3,
-};
 
 class MageAnimation
 {
@@ -37,7 +29,7 @@ public:
 	constexpr uint16_t TilesetId() const { return tilesetId; }
 	constexpr uint16_t TileId() const { return 0; }
 	uint16_t FrameCount() const { return frames.size(); }
-	MageAnimation::Frame AnimationFrame(uint32_t index) const { return frames[index % frames.size()]; }
+	MageAnimation::Frame GetFrame(uint32_t index) const { return frames[index % frames.size()]; }
 
 private:
 	uint16_t tilesetId{ 0 };

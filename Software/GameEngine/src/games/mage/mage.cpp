@@ -141,14 +141,14 @@ void MageGameEngine::GameRender()
          gameControl->DrawMap(layerCount - 1);
       }
 
-      if (gameControl->isCollisionDebugOn)
+      /*if (gameControl->isCollisionDebugOn)
       {
          gameControl->DrawGeometry();
          if (gameControl->playerEntityIndex != NO_PLAYER)
          {
             auto point = gameControl->getPushBackFromTilesThatCollideWithPlayer();
          }
-      }
+      }*/
       if (gameControl->dialogControl->isOpen())
       {
          gameControl->dialogControl->draw();

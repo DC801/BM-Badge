@@ -19,19 +19,16 @@ public:
    MageColorPalette(
       const FrameBuffer* frameBuffer,
       const MageColorPalette* sourcePalette,
-      uint16_t transparentColor,
       uint16_t fadeColor,
       float fadeFraction);
-   
-   uint16_t colorAt(uint16_t colorIndex) const { return colors[colorIndex % colorCount]; };
+
+   uint16_t colorAt(uint16_t colorIndex) const { return colors[colorIndex % colors.size()]; };
 private:
 #ifndef DC801_EMBEDDED
    char name[COLOR_PALETTE_NAME_SIZE]{ 0 };
    char colorIntegrityString[COLOR_PALETTE_INTEGRITY_STRING_LENGTH]{ 0 };
 #endif
-   uint8_t colorCount{ 0 };
-   std::unique_ptr<uint16_t[]> colors = std::make_unique<uint16_t[]>(colorCount);
-
+   std::vector<uint16_t> colors{};
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

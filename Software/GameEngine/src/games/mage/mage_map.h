@@ -6,8 +6,12 @@ in a more accessible way.
 #ifndef _MAGE_MAP_H
 #define _MAGE_MAP_H
 
+#include "mage.h"
+#include "mage_camera.h"
 #include "mage_defines.h"
 #include "mage_entity_type.h"
+#include "mage_header.h"
+#include "mage_tileset.h"
 #include "EngineROM.h"
 
 #include <array>
@@ -15,7 +19,7 @@ in a more accessible way.
 
 struct GoDirection
 {
-   const char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
+   char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
    uint16_t mapLocalScriptId{ 0 };
    uint16_t padding{ 0 };
 };
@@ -26,13 +30,26 @@ class MageMap
    friend class MageScriptControl;
    friend class MageHexEditor;
 public:
-   MageMap(std::shared_ptr<EngineROM> ROM, uint32_t& address, MageHeader mapHeader, MageHeader entityHeader, MageHeader scriptHeader) noexcept
-      : ROM(ROM), mapHeader(std::move(mapHeader)), entityHeader(std::move(entityHeader)), scriptHeader(std::move(scriptHeader))
+   MageMap(std::shared_ptr<EngineROM> ROM, 
+      std::shared_ptr<FrameBuffer> frameBuffer, 
+      uint32_t& address, 
+      const MageHeader& mapHeader, 
+      const MageHeader& geometryHeader, 
+      const MageHeader& entityHeader, 
+      const MageHeader& scriptHeader) noexcept
+      : ROM(ROM), 
+      frameBuffer(frameBuffer), 
+      mapHeader(mapHeader),
+      geometryHeader(geometryHeader),
+      entityHeader(entityHeader), 
+      scriptHeader(scriptHeader)
       {}
 
    //this takes map data by index and fills all the variables in the map object:
    /*void PopulateMapData(uint16_t index);*/
    void Load(uint16_t index);
+   void Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera& camera, bool isCollisionDebugOn=false);
+   void DrawGeometry(const MageCamera& camera);
    void DrawEntities(MageGameEngine* engine);
 
    std::string Name() const { return std::string(name); }
@@ -61,6 +78,21 @@ public:
    {
       auto scriptId = scriptGlobalIds.empty() ? mapLocalScriptId % scriptGlobalIds.size() : 0;
       return scriptHeader.offset(scriptGlobalIds[scriptId]);
+   }
+
+   const MageEntity* getPlayerEntity() const
+   {
+      return &entities[playerEntityIndex];
+   }
+
+   const MageEntity* getEntity(uint16_t id) const
+   {
+      return &entities[id];
+   }
+
+   MageEntity* getEntity(uint16_t id)
+   {
+      return &entities[id];
    }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
@@ -113,7 +145,9 @@ public:
    constexpr void SetOnTick(uint16_t tickId) { onTick = tickId; }
 private:
    std::shared_ptr<EngineROM> ROM;
+   std::shared_ptr<FrameBuffer> frameBuffer;
    MageHeader mapHeader;
+   MageHeader geometryHeader;
    MageHeader entityHeader;
    MageHeader scriptHeader;
 
@@ -135,11 +169,11 @@ private:
    uint16_t onTick{ 0 };
    uint16_t onLook{ 0 };
    uint8_t playerEntityIndex{ 0 };
-   std::vector<uint16_t> entityGlobalIds;
-   std::vector<uint16_t> geometryGlobalIds;
-   std::vector<uint16_t> scriptGlobalIds;
-   std::vector<GoDirection> goDirections;
-   std::vector<uint32_t> mapLayerOffsets;
+   std::vector<uint16_t> entityGlobalIds{};
+   std::vector<uint16_t> geometryGlobalIds{};
+   std::vector<uint16_t> scriptGlobalIds{};
+   std::vector<GoDirection> goDirections{};
+   std::vector<uint32_t> mapLayerOffsets{};
    uint8_t filteredEntityCountOnThisMap{ 0 };
 
 }; //class MageMap

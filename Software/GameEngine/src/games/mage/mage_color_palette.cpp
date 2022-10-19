@@ -21,16 +21,12 @@ MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& add
    address += COLOR_PALETTE_NAME_LENGTH;
 #endif
 
+   uint8_t colorCount;
    // Read colorCount
-   ROM->Read(&colorCount, address);
+   ROM->Read(colorCount, address);
    address += 1; // padding
 
-   // Construct array
-   colors = std::make_unique<uint16_t[]>(colorCount);
-
-   // The encoder writes these colors BigEndian because the Screen's
-   // data format is also BigEndian, so just don't convert these.
-   ROM->Read(colors.get(), address, colorCount);
+   ROM->InitializeCollectionOf(colors, address, colorCount);
 
 #ifndef DC801_EMBEDDED
    for (int i = 0; i < colorCount; ++i)
@@ -43,37 +39,26 @@ MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& add
 MageColorPalette::MageColorPalette(
    const FrameBuffer* frameBuffer,
    const MageColorPalette* sourcePalette,
-   uint16_t transparentColor,
    uint16_t fadeColor,
    float fadeFraction
 )
 {
-   uint16_t sourceColor;
-   colorCount = sourcePalette->colorCount;
-   colors = std::make_unique<uint16_t[]>(colorCount);
-   if (fadeFraction >= 1.0f)
+
+   for (int i = 0; i < sourcePalette->colors.size(); ++i)
    {
-      for (int i = 0; i < sourcePalette->colorCount; ++i)
+      auto sourceColor = sourcePalette->colors[i];
+      if (sourceColor == TRANSPARENCY_COLOR)
       {
-         sourceColor = sourcePalette->colors[i];
-         colors[i] = sourceColor == transparentColor
-            ? sourceColor
-            : SCREEN_ENDIAN_U2_VALUE(fadeColor);
+         colors[i] = sourceColor;
+      }
+      if (fadeFraction >= 1.0f)
+      {
+         colors[i] =  fadeColor;
+      }
+      else if (fadeFraction > 0.0f)
+      {
+         colors[i] = frameBuffer->applyFadeColor(sourceColor);
       }
    }
-   else if (fadeFraction > 0.0f)
-   {
-      for (int i = 0; i < sourcePalette->colorCount; ++i)
-      {
-         sourceColor = sourcePalette->colors[i];
-         if (sourceColor != transparentColor)
-         {
-            colors[i] = frameBuffer->applyFadeColor(sourceColor);
-         }
-         else
-         {
-            colors[i] = sourceColor;
-         }
-      }
-   }
+   
 }

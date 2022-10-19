@@ -1,23 +1,15 @@
 #ifndef _MAGE_H
 #define _MAGE_H
 
-#include "mage_defines.h"
-#include "mage_color_palette.h"
-#include "mage_defines.h"
-#include "mage_header.h"
-#include "mage_map.h"
-#include "mage_tileset.h"
-#include "mage_animation.h"
-#include "mage_entity_type.h"
-#include "mage_geometry.h"
+
+#include "mage_game_control.h"
 #include "mage_color_palette.h"
 #include "mage_hex.h"
 #include "mage_script_actions.h"
 #include "mage_script_control.h"
-#include "mage_command_control.h"
-#include "mage_dialog_control.h"
 #include <vector>
 
+#include "EngineROM.h"
 #include "EngineInput.h"
 #include "EngineAudio.h"
 #include "utility.h"
@@ -83,41 +75,6 @@ private:
    std::shared_ptr<MageScriptControl> scriptControl = std::make_shared<MageScriptControl>(this);
    std::shared_ptr<MageScriptActions> scriptActions = std::make_shared<MageScriptActions>(this);
    std::shared_ptr<MageCommandControl> commandControl = std::make_shared<MageCommandControl>(this);
-};
-
-// struct MageHeader {
-//    uint32_t Counts; 
-//    uint32_t Offsets[counts]; 
-//    uint32_t Lengths[counts];
-// };
-
-struct MageRom 
-{
-   char MagicString[ENGINE_ROM_IDENTIFIER_STRING_LENGTH];
-   uint32_t EngineVersion;
-   uint32_t ScenarioDataCRC32;
-   uint32_t ScenarioDataLength;
-   struct headerTypes
-   {
-      MageHeader Map;
-      MageHeader Tileset;
-      MageHeader Animation;
-      MageHeader EntityType;
-      MageHeader Entity;
-      MageHeader Geometry;
-      MageHeader Script;
-      MageHeader Portrait;
-      MageHeader Dialog;
-      MageHeader SerialDialog;
-      MageHeader ColorPalette;
-      MageHeader String;
-      MageHeader SaveFlag;
-      MageHeader Variable;
-      MageHeader Image;
-   } Headers;
-
-   //[tileset]
-   //animation
 };
 
 #endif //_MAGE_H

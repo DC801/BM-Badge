@@ -1,16 +1,19 @@
 #ifndef MAGE_DIALOG_CONTROL_H
 #define MAGE_DIALOG_CONTROL_H
 
-#include "engine/EnginePanic.h"
 #include "mage_defines.h"
-#include "mage_tileset.h"
+#include "mage_entity_type.h"
 #include "mage_game_control.h"
-#include "fonts/Monaco9.h"
-#include "mage_script_control.h"
 #include "mage_hex.h"
+#include "mage_script_control.h"
+#include "mage_tileset.h"
+#include "fonts/Monaco9.h"
 #include "engine/EngineInput.h"
-#include "mage.h"
+#include "engine/EnginePanic.h"
 #include <optional>
+
+class MageTileset;
+class RenderableData;
 
 #define DIALOG_SCREEN_NO_PORTRAIT 255
 
@@ -117,7 +120,7 @@ struct MageDialog
 class MageDialogControl
 {
 public:
-   MageDialogControl(MageGameEngine* gameEngine, uint32_t& offset) noexcept;
+   MageDialogControl(MageGameEngine* gameEngine, MageHeader&& dialogHeader) noexcept;
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
    void showSaveMessageDialog(std::string messageString);
@@ -133,7 +136,6 @@ public:
 private:
    MageGameEngine* gameEngine;
 
-   MageHeaderFor<MageDialog> dialogHeader;
    bool open{ false };
 
    uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const;
@@ -149,7 +151,7 @@ private:
    }
 
    char dialogName[32]{};
-   MageTileset* currentFrameTileset{};
+   std::unique_ptr<const MageTileset> currentFrameTileset{};
    int16_t triggeringEntityId{0};
    int32_t currentDialogIndex{0};
    uint32_t currentDialogAddress{0};
@@ -161,12 +163,12 @@ private:
    uint32_t cursorPhase{0};
    uint8_t currentResponseIndex{0};
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
-   MageEntity::RenderableData currentPortraitRenderableData{};
+   RenderableData* currentPortraitRenderableData{};
    MageDialogScreen* currentScreen{};
    std::string currentEntityName{};
    std::string currentMessage{};
-   std::unique_ptr<uint16_t[]>messageIds{};
-   std::unique_ptr<MageDialogResponse[]>responses{};
+   std::vector<uint16_t> messageIds{};
+   std::vector<MageDialogResponse> responses{};
 
 };
 

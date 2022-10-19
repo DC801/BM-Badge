@@ -1,6 +1,7 @@
 #include "FrameBuffer.h"
 
 #include "main.h"
+#include "games/mage/mage.h"
 #include "utility.h"
 #include "games/mage/mage_defines.h"
 #include "games/mage/mage_color_palette.h"
@@ -50,7 +51,7 @@ void FrameBuffer::clearScreen(uint16_t color)
 
 void FrameBuffer::drawChunkWithFlags(
    uint32_t address,
-   MageColorPalette* colorPaletteOriginal,
+   const MageColorPalette* colorPalette,
    int32_t screen_x, // top-left corner of screen coordinates to draw at
    int32_t screen_y, // top-left corner of screen coordinates to draw at
    uint16_t tile_width,
@@ -58,11 +59,19 @@ void FrameBuffer::drawChunkWithFlags(
    uint16_t source_x, // top-left corner of source image coordinates to READ FROM
    uint16_t source_y, // top-left corner of source image coordinates to READ FROM
    uint16_t pitch, // The width of the source image in pixels
-   uint16_t transparent_color,
    uint8_t flags
 )
 {
-   MageColorPalette* colorPalette = colorPaletteOriginal;
+   const auto colors = (fadeFraction != 0) ?
+      &( MageColorPalette{
+         this,
+         colorPalette,
+         fadeColor,
+         fadeFraction
+      })
+      : colorPalette;
+
+   //MageColorPalette* colorPalette = colorPaletteOriginal;
    RenderFlags renderFlags{ flags };
    bool flip_x = renderFlags.horizontal;
    bool flip_y = renderFlags.vertical;
@@ -85,17 +94,6 @@ void FrameBuffer::drawChunkWithFlags(
    const uint8_t* pixels;
    gameEngine->ROM->GetPointerTo(pixels, pixelOffset);
 
-   if (fadeFraction != 0)
-   {
-      *colorPalette = MageColorPalette{
-         this,
-         colorPaletteOriginal,
-         transparent_color,
-         fadeColor,
-         fadeFraction
-      };
-   }
-
    for (auto row = 0; row != tile_height && row < HEIGHT; row++)
    {
       for (auto col = 0; col != tile_width && col < WIDTH; col++)
@@ -105,8 +103,8 @@ void FrameBuffer::drawChunkWithFlags(
          auto pixelIndex = (pixelRow * tile_width) + pixelCol;
 
          uint8_t colorIndex = pixels[pixelIndex];
-         auto color = colorPalette->colorAt(colorIndex);
-         if (color != transparent_color)
+         auto color = colors->colorAt(colorIndex);
+         if (color != TRANSPARENCY_COLOR)
          {
             drawPixel(screen_x + col, screen_y + row, color);
          }
@@ -145,29 +143,19 @@ void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color)
    drawLine(x + w, x, y, y + h, color);
 }
 
-Point FrameBuffer::lerpPoints(Point a, Point b, float progress)
-{
-   Point point = {
-      FrameBuffer::lerp(a.x, b.x, progress),
-      FrameBuffer::lerp(a.y, b.y, progress),
-   };
-   return point;
-}
-
 uint16_t FrameBuffer::applyFadeColor(uint16_t color) const
 {
-   uint16_t result = SCREEN_ENDIAN_U2_VALUE(color);
    if (fadeFraction > 0.0f)
    {
       auto fadeColorUnion = ColorUnion{ fadeColor };
-      auto colorUnion = ColorUnion{ result };
-      colorUnion.c.r = FrameBuffer::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
-      colorUnion.c.g = FrameBuffer::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
-      colorUnion.c.b = FrameBuffer::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
+      auto colorUnion = ColorUnion{ color };
+      colorUnion.c.r = Util::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
+      colorUnion.c.g = Util::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
+      colorUnion.c.b = Util::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
       colorUnion.c.alpha = fadeFraction > 0.5f ? fadeColorUnion.c.alpha : colorUnion.c.alpha;
-      result = colorUnion.i;
+      color = colorUnion.i;
    }
-   return result;
+   return color;
 }
 
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)

@@ -3,9 +3,16 @@
 
 #include "mage_defines.h"
 #include "mage_entity_type.h"
+#include "mage_geometry.h"
+#include "mage_script_state.h"
 
+struct Point;
+struct Rect;
 class MageGeometry;
 class MageGameEngine;
+class MageEntity;
+struct RenderableData;
+enum MageEntityAnimationDirection : uint8_t;
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
@@ -357,45 +364,26 @@ private:
    void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct);
 
    uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity* entity);
-   Point offsetPointRelativeToEntityCenter(
-      const MageEntity::RenderableData* renderable,
-      const MageEntity* entity,
-      const Point* geometryPoint
-   );
-   MageEntityAnimationDirection getRelativeDirection(
-      const Point& pointA,
-      const Point& pointB
-   );
-   void setEntityPositionToPoint(
-      MageEntity* entity,
-      const Point& point
-   );
+   Point offsetPointRelativeToEntityCenter(const MageEntity* entity,  const Point* geometryPoint);
+   MageEntityAnimationDirection getRelativeDirection(const Point& pointA, const Point& pointB);
    float getProgressOfAction(const MageScriptState* resumeStateStruct);
    float manageProgressOfAction(
       MageScriptState* resumeStateStruct,
       uint32_t duration
    );
-   uint16_t getLoopableGeometryPointIndex(
-      MageGeometry* geometry,
-      uint8_t index
-   );
-   uint16_t getLoopableGeometrySegmentIndex(
-      MageGeometry* geometry,
-      uint8_t segmentIndex
-   );
    void setResumeStatePointsAndEntityDirection(
       MageScriptState* resumeStateStruct,
-      MageEntity::RenderableData* renderable,
+      RenderableData* renderable,
       MageEntity* entity,
-      MageGeometry* geometry,
+      const MageGeometry* geometry,
       uint16_t pointAIndex,
       uint16_t pointBIndex
    );
    void initializeEntityGeometryPath(
       MageScriptState* resumeStateStruct,
-      MageEntity::RenderableData* renderable,
+      RenderableData* renderable,
       MageEntity* entity,
-      MageGeometry* geometry
+      const MageGeometry* geometry
    );
 
    enum MageMutateOperation : uint8_t

@@ -15,9 +15,14 @@ class MageGameEngine;
 
 #include "adafruit/gfxfont.h"
 #include "modules/gfx.h"
-#include "games/mage/mage_defines.h"
-#include "games/mage/mage.h"
 #include "convert_endian.h"
+#include <array>
+
+
+namespace Util {
+	template <typename T>
+	static inline T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
+};
 
 #ifdef IS_BIG_ENDIAN
 struct Color_565 {
@@ -39,21 +44,6 @@ union ColorUnion
 {
 	uint16_t i;
 	Color_565 c;
-};
-
-union RenderFlags {
-	uint8_t i;
-	struct
-	{
-		bool diagonal : 1;
-		bool vertical : 1;
-		bool horizontal : 1;
-		bool paddingA : 1;
-		bool paddingB : 1;
-		bool paddingC : 1;
-		bool debug : 1;
-		bool glitched : 1;
-	};
 };
 
 // Color definitions
@@ -86,6 +76,76 @@ union RenderFlags {
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR	0x0020
 
+
+//this is a point in 2D space.
+struct Point
+{
+	int32_t x{ 0 };
+	int32_t y{ 0 };
+
+	float VectorLength() const
+	{
+		return sqrt((x * x) + (y * y));
+	};
+
+	constexpr float DotProduct(Point b) const
+	{
+		return (float)x * (float)b.x
+			+ (float)y * (float)b.y;
+	};
+
+	Point lerp(Point b, float progress) const
+	{
+		Point point = Point{
+			Util::lerp(x, b.x, progress),
+			Util::lerp(y, b.y, progress)
+		};
+		return point;
+	}
+
+	Point& operator-=(const Point& rhs)
+	{
+		this->x -= rhs.x;
+		this->y -= rhs.y;
+		return *this;
+	}
+
+	friend Point operator-(Point lhs, const Point& rhs)
+	{
+		lhs -= rhs;
+		return lhs;
+	}
+
+	Point& operator+=(const Point& rhs)
+	{
+		this->x += rhs.x;
+		this->y += rhs.y;
+		return *this;
+	}
+
+	friend Point operator+(Point lhs, const Point& rhs)
+	{
+		lhs += rhs;
+		return lhs;
+	}
+};
+
+struct Rect
+{
+	Point origin;
+	int32_t w{ 0 };
+	int32_t h{ 0 };
+
+	constexpr bool Overlaps(Rect& other) const
+	{
+		return origin.x <= other.origin.x + other.w
+			&& origin.x + w >= other.origin.x
+			&& origin.y <= other.origin.y + other.h
+			&& origin.y + h >= other.origin.y;
+	}
+};
+
+
 typedef struct {
 	int16_t width;
 	int16_t height;
@@ -95,14 +155,6 @@ typedef struct {
 	int16_t x;
 	int16_t y;
 } cursor_t;
-
-struct Rectangle
-{
-	int16_t x{ 0 };
-	int16_t y{ 0 };
-	uint16_t width{ 0 };
-	uint16_t height{ 0 };
-};
 
 class FrameBuffer {
 public:
@@ -130,17 +182,23 @@ public:
 		frame[y * WIDTH + x] = color; 
 	}
 
-	template <typename T>
-	static T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
-	
-	static Point lerpPoints(Point a, Point b, float progress);
 	uint16_t applyFadeColor(uint16_t color) const;
+
+	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
+	{
+		drawLine(p1.x, p1.y, p2.x, p2.y, color);
+	}
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
+
+	inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
+	{
+		drawPoint(p.x, p.y, size, color);
+	}
 	void drawPoint(int x, int y, uint8_t size, uint16_t color);
 
 	void drawChunkWithFlags(
 		uint32_t address, //address of first pixel of image in ROM
-		MageColorPalette *colorPaletteFaded, //color palette to lookup image colors from
+		const MageColorPalette * colorPalette, //color palette to lookup image colors from
 		int32_t x, //x coordinate of destination pixel on screen
 		int32_t y, //y coordinate of destination pixel on screen
 		uint16_t tile_width, //width of tile being drawn
@@ -148,11 +206,24 @@ public:
 		uint16_t source_x, //coordinates in source image
 		uint16_t source_y, //coordinates in source image
 		uint16_t pitch, //width of source image
-		uint16_t transparent_color, //565 encoded color value
 		uint8_t flags //render flags
 	);
 
+	inline void fillRect(const Point& p, int w, int h, uint16_t color)
+	{
+		fillRect(p.x, p.y, w, h, color);
+	}
 	void fillRect(int x, int y, int w, int h, uint16_t color);
+
+	inline void drawRect(const Rect& p, uint16_t color)
+	{
+		drawRect(p.origin.x, p.origin.y, p.w, p.h, color);
+	}
+
+	inline void drawRect(const Point& p, int w, int h, uint16_t color)
+	{
+		drawRect(p.x, p.y, w, h, color);
+	}
 	void drawRect(int x, int y, int w, int h, uint16_t color);
 
 	void write_char(uint8_t c, GFXfont font);

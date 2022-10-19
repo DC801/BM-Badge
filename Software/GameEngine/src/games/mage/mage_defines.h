@@ -13,15 +13,6 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
-#include "EngineROM.h"
-#include "mage_tileset.h"
-#include "mage_animation.h"
-#include <stdint.h>
-#include <memory>
-#include <utility>
-#include <string>
-#include <optional>
-
 #define ENGINE_VERSION 3
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
@@ -103,32 +94,7 @@ all of the old code used as the foundation of this badge.
 #define MAGE_MIN_MILLIS_BETWEEN_FRAMES (1000 / 24)
 #endif
 
-typedef enum : uint8_t
-{
-   x = 12,
-   y = 14,
-   onInteractScriptId = 16,
-   onTickScriptId = 18,
-   primaryId = 20,
-   secondaryId = 22,
-   primaryIdType = 24,
-   currentAnimation = 25,
-   currentFrame = 26,
-   direction = 27,
-   hackableStateA = 28,
-   hackableStateB = 29,
-   hackableStateC = 30,
-   hackableStateD = 31
-} MageEntityField;
 
-//this contains the possible options for an entity PrimaryIdType value.
-typedef enum : uint8_t
-{
-   TILESET = 0,
-   ANIMATION = 1,
-   ENTITY_TYPE = 2
-} MageEntityPrimaryIdType;
-#define NUM_PRIMARY_ID_TYPES 3
 
 #define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000
@@ -140,100 +106,5 @@ typedef enum : uint8_t
 #define RENDER_FLAGS_DIRECTION_MASK			0b00000011
 #define NUM_DIRECTIONS 4
 
-
-//this is a point in 2D space.
-struct Point
-{
-   int32_t x{ 0 };
-   int32_t y{ 0 };
-
-   float VectorLength() const
-   {
-      return sqrt((x * x) + (y * y));
-   };
-
-   constexpr float DotProduct(Point b) const
-   {
-      return (float)x * (float)b.x
-         + (float)y * (float)b.y;
-   };
-};
-
-struct Rect
-{
-   int32_t x{ 0 };
-   int32_t y{ 0 };
-   int32_t w{ 0 };
-   int32_t h{ 0 };
-
-   constexpr bool Overlaps(Rect& other) const
-   {
-      return x <= (other.x + other.w)
-         && (x + w) >= other.x
-         && y <= (other.y + other.h)
-         && (y + h) >= other.y;
-   }
-};
-
-
-//this is a structure to hold information about the currently executing scripts so they can resume
-struct MageScriptState
-{
-   MageScriptState() noexcept = default;
-
-   MageScriptState(uint16_t scriptId, bool scriptIsRunning, bool isGlobalExecutionScope = false) noexcept
-      :currentScriptId(scriptId),
-      scriptIsRunning(scriptIsRunning),
-      isGlobalExecutionScope(isGlobalExecutionScope)
-   {}
-
-   //indicated whether or not an active script is running on this MageScriptState
-   bool scriptIsRunning{ false };
-   bool isGlobalExecutionScope{ false };
-
-   //the script Id to resume, scope determined by isGlobalExecutionScope
-   // - if false, should be treated as mapLocalScriptId
-   // - if true, should be treated as globalScriptId
-   uint16_t currentScriptId{ 0 };
-   //the action index to resume from - this is the action index for the script above, NOT a global actionTypeId.
-   uint16_t actionOffset{ 0 };
-   //the number of loops until the next action in the script is to run
-   uint16_t loopsToNextAction{ 0 };
-   //the total number of loops from the start of the action until the next action
-   uint16_t totalLoopsToNextAction{ 0 };
-
-   //the below should probably be factored out into another struct at some point
-   //used to store state various geometry things
-   Point pointA{ 0,0 };
-   Point pointB{ 0,0 };
-   float length{ 0.0f };
-   float lengthOfPreviousSegments{ 0.0f };
-   uint8_t currentSegmentIndex{ 0 };
-};
-
-struct MageSaveGame
-{
-   const char* identifier = EngineROM::SaveIdentifierString;
-   uint32_t engineVersion{ ENGINE_VERSION };
-   uint32_t scenarioDataCRC32{ 0 };
-   uint32_t saveDataLength{ sizeof(MageSaveGame) };
-   char name[MAGE_ENTITY_NAME_LENGTH]{ DEFAULT_PLAYER_NAME };
-   //this stores the byte offsets for the hex memory buttons:
-   uint8_t memOffsets[MAGE_NUM_MEM_BUTTONS]{
-      MageEntityField::x,
-      MageEntityField::y,
-      MageEntityField::primaryId, // entityType
-      MageEntityField::direction,
-   };
-   uint16_t currentMapId{ DEFAULT_MAP };
-   uint16_t warpState{ MAGE_NO_WARP_STATE };
-   uint8_t clipboard[1]{ 0 };
-   uint8_t clipboardLength{ 0 };
-   uint8_t paddingA{ 0 };
-   uint8_t paddingB{ 0 };
-   uint8_t paddingC{ 0 };
-   uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] = { 0 };
-   uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] = { 0 };
-};
 
 #endif //_MAGE_DEFINES_H

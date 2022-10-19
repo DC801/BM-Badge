@@ -171,14 +171,14 @@ typedef struct
 
 local int i;
 
-struct RenderFlags
+typedef struct
 {
     uchar glitched: 1;
     uchar debug: 1;
     uchar flipX: 1;
     uchar flipY: 1;
     uchar flipDiag: 1;
-};
+} RenderFlags <read=Str("g: %d d: %d, fx: %d, fy: %d fd: %d", glitched, debug, flipX, flipY, flipDiag)>;
 
 struct EntityRenderFlags
 {
@@ -213,16 +213,7 @@ typedef struct
     uint16 id;
     uchar tilesetId;
     RenderFlags flags;
-} MapTile;
-
-typedef struct 
-{
-    uint16 width;
-    uint16 height;
-    if (width > 0 && height > 0) {
-        MapTile tiles[width*height];
-    }
-}MapLayer;
+} MapTile<read=Str("%d [%d] %u",id,tilesetId,(uchar)flags)>;
 
 typedef struct 
 {
@@ -268,6 +259,7 @@ typedef struct
     uint16 geometryCount;
     uint16 scriptCount;
     uchar goDirectionCount;
+
     FSkip(1);
 
     uint16 entityGlobalIds[entityCount];
@@ -279,7 +271,9 @@ typedef struct
         GoDirection goDirections[goDirectionCount];
     }
     if ((entityCount + geometryCount + scriptCount) % 2) { FSkip(2); }
-    MapLayer mapLayers[layerCount] <optimize=false>;
+    struct MapLayer {
+        MapTile tiles[rows*cols];
+    }mapLayers[layerCount];
 //    uchar filteredEntityCountOnThisMap;
 
 

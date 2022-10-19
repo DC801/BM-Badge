@@ -7,15 +7,20 @@ in a more accessible way.
 #define _MAGE_TILESET_H
 
 #include "EngineROM.h"
+#include "FrameBuffer.h"
+#include "mage_color_palette.h"
+#include "mage_header.h"
+#include "mage_entity_type.h"
 #include <memory>
+#include <vector>
 
 #define TILESET_NAME_SIZE 16
 
-class EngineROM;
-
-class TileManager
+struct MageMapTile
 {
-public:
+   uint16_t tileId{ 0 };
+   uint8_t tilesetId{ 0 };
+   uint8_t flags{ 0 };
 };
 
 class MageTileset
@@ -42,6 +47,7 @@ public:
          && cols >= 1
          && rows >= 1;
    }
+   MageTileset* getValidTileset(uint16_t tilesetId);
 
    uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
    {
@@ -67,5 +73,67 @@ private:
    uint16_t rows{ 0 };
    const uint16_t* globalGeometryIds{ nullptr };
 }; //class MageTileset
+
+class TileManager
+{
+   friend class MageCommandControl;
+public:
+   TileManager(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineROM> ROM, const MageHeader& tilesetHeader, const MageHeader& colorPaletteHeader, const MageHeader& imageHeader);
+
+   
+   const MageColorPalette* getColorPalette(uint16_t colorPaletteId) const
+   {
+      return &colorPalettes[colorPaletteId % colorPalettes.size()];
+   }
+
+   //this will return a specific MageTileset object by index.
+   std::unique_ptr<const MageTileset> GetTileset(uint16_t index) const
+   {
+      auto tilesetOffset = tilesetHeader.offset(index);
+      return std::make_unique<MageTileset>(ROM, tilesetOffset);
+   }
+
+   constexpr uint32_t getTilesetCount() const
+   {
+      return tilesetHeader.count();
+   }
+
+   inline void DrawTile(const MageTileset* tileset, uint16_t tileId, int32_t x, int32_t y, std::optional<uint8_t> flags = std::nullopt) const
+   {
+      auto tileAddress = imageHeader.offset(tileset->ImageId()) + tileId * sizeof(MageMapTile);
+      const MageMapTile* tile;
+      ROM->GetPointerTo(tile, tileAddress);
+      DrawTile(tileset, tile, x, y, flags.value_or(tile->flags));
+   }
+
+   inline void DrawTile(const RenderableData* renderableData, int32_t x, int32_t y) const
+   {
+      const auto tileset = GetTileset(renderableData->tilesetId);
+      auto tileAddress = imageHeader.offset(tileset->ImageId()) + renderableData->tileId * sizeof(MageMapTile);
+      const MageMapTile* tile;
+      ROM->GetPointerTo(tile, tileAddress);
+      DrawTile(tileset.get(), tile, x, y, renderableData->renderFlags);
+   }
+   inline void DrawTile(const MageMapTile* tile, int32_t x, int32_t y) const
+   {
+      DrawTile(GetTileset(tile->tilesetId).get(), tile->tileId, x, y, tile->flags);
+   }
+
+   inline void DrawTile(uint8_t tilesetId, const MageMapTile* tile, int32_t x, int32_t y, std::optional<uint8_t> flags = std::nullopt) const
+   {
+      const auto tileset = GetTileset(tilesetId);
+      DrawTile(tileset.get(), tile, x, y, flags.value_or(tile->flags));
+   }
+   void DrawTile(const MageTileset* tileset, const MageMapTile* tile, int32_t x, int32_t y, uint8_t flags) const;
+
+private:
+   std::shared_ptr<EngineROM> ROM;
+   std::vector<MageColorPalette> colorPalettes;
+   std::shared_ptr<FrameBuffer> frameBuffer;
+
+   MageHeader tilesetHeader;
+   MageHeader colorPaletteHeader;
+   MageHeader imageHeader;
+};
 
 #endif //_MAGE_TILESET_H
