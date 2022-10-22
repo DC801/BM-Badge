@@ -214,7 +214,8 @@ natlang.lex = function (inputString) {
                         // Special meaning
                         if(nextChar == "n") {
                             outString += "\n";
-                        }
+                        } else if(nextChar == "t")
+							outString += "\t";
                         else {
                             errors.push({"pos":pos,"text":"Lexer: Unrecognized escape sequence"});
                             outString += "\uFFFD";
