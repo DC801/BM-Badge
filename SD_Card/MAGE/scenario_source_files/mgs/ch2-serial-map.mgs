@@ -1,0 +1,396 @@
+// draw-serial-map {
+// 	set serial control off
+// 	// ROW 0
+// 	print!("-------------------------------\n")
+
+// 	// ROW 1
+// 	print!("|  ")
+// 	if (flag ch2-seen-room-99 is true) {
+// 		print!("/----\\")
+// 	} else {
+// 		print!("      ")
+// 	}
+// 	print!("      ")
+// 	if (flag ch2-seen-room-14 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	print!("       M A P  |\n")
+
+// 	// ROW 2
+// 	print!("|  ")
+// 	if (flag ch2-seen-room-99 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 99) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("..|")
+// 	} else {
+// 		print!("      ")
+// 	}
+// 	print!("     ")
+// 	if (flag ch2-seen-room-14 is true) {
+// 		print!("/.\\")
+// 	} else {
+// 		print!("   ")
+// 	}
+// 	print!("             |\n")
+
+// 	// ROW 3
+// 	print!("|  ")
+// 	if (flag ch2-seen-room-99 is true) {
+// 		print!("------")
+// 	} else {
+// 		print!("      ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-14 is true) {
+// 		print!("/..")
+// 		if (flag ch2-in-room is 14) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("..\\")
+// 	} else {
+// 		print!("       ")
+// 	}
+// 	print!("           |\n")
+
+// 	// ROW 4
+// 	print!("|           ")
+// 	if (flag ch2-seen-room-14 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-14 is true || flag ch2-seen-room-13 is true) {
+// 		print!("-----")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	if (flag ch2-seen-room-14 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	print!("           |\n")
+
+// 	// ROW 5
+// 	print!("|            ")
+// 	if (flag ch2-seen-room-13 is true) {
+// 		print!("|...|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-33 is true) {
+// 		print!("----")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-34 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-34 is true) {
+// 		print!("--")
+// 	} else {
+// 		print!("  ")
+// 	}
+// 	print!("  |\n")
+
+// 	// ROW 6
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-23 is true) {
+// 		print!("-----")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("    ")
+// 	if (flag ch2-seen-room-13 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 13) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-33 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 33) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-34 is true) {
+// 		print!("|")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-34 is true) {
+// 		if (flag ch2-in-room is 34) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("|")
+// 	} else {
+// 		print!("  ")
+// 	}
+// 	print!("  |\n")
+
+// 	// ROW 7
+// 	print!("|  ")
+// 	if (flag ch2-seen-room-23 is true) {
+// 		print!("/..")
+// 		if (flag ch2-in-room is 23) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("..\\")
+// 	} else {
+// 		print!("       ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-13 is true) {
+// 		print!("|...|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-33 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-32 is true) {
+// 		print!("---")
+// 	} else {
+// 		print!("   ")
+// 	}
+// 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-32 is true || flag ch2-seen-room-34 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-32 is true || flag ch2-seen-room-34 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-34 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	print!("  |\n")
+
+// 	// ROW 8
+// 	print!("|  ")
+// 	if (flag ch2-seen-room-23 is true) {
+// 		print!("\\...../")
+// 	} else {
+// 		print!("       ")
+// 	}
+// 	print!("   ")
+// 	if (flag ch2-seen-room-13 is true) {
+// 		print!("|...|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("    ")
+// 	if (flag ch2-seen-room-32 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 32) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("   |\n")
+
+// 	// ROW 9
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-23 is true) {
+// 		print!("-----")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("    ")
+// 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-13 is true) {
+// 		print!("----")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-13 is true || flag ch2-seen-room-31 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-31 is true) {
+// 		print!("----")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-31 is true || flag ch2-seen-room-32 is true) {
+// 		print!("-----")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("   |\n")
+
+// 	// ROW 10
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-22 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 22) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".|")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	print!("    ")
+// 	if (flag ch2-seen-room-12 is true) {
+// 		print!("|.")
+// 		if (flag ch2-in-room is 12) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
+// 		print!("|")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-31 is true) {
+// 		print!("...")
+// 		if (flag ch2-in-room is 31) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("....|")
+// 	} else {
+// 		print!("         ")
+// 	}
+// 	print!("   |\n")
+
+// 	// ROW 11
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-21 is true) {
+// 		print!("-----")
+// 	} else {
+// 		print!("     ")
+// 	}
+// 	if (flag ch2-seen-room-21 is true) {
+// 		print!("----")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true || flag ch2-seen-room-21 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true) {
+// 		print!("---")
+// 	} else {
+// 		print!("   ")
+// 	}
+// 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
+// 		print!("-")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-31 is true) {
+// 		print!("---------")
+// 	} else {
+// 		print!("         ")
+// 	}
+// 	print!("   |\n")
+
+// 	// ROW 12
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-21 is true) {
+// 		print!("|...")
+// 		if (flag ch2-in-room is 21) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!("....")
+// 	} else {
+// 		print!("         ")
+// 	}
+// 	if (flag ch2-seen-room-21 is true || flag ch2-seen-room-11 is true) {
+// 		print!("|")
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	if (flag ch2-seen-room-11 is true) {
+// 		print!(".")
+// 		if (flag ch2-in-room is 11) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 		print!(".|")
+// 	} else {
+// 		print!("    ")
+// 	}
+// 	print!("            |\n")
+
+// 	// ROW 13
+// 	print!("|   ")
+// 	if (flag ch2-seen-room-21 is true) {
+// 		print!("-------")
+// 	} else {
+// 		print!("       ")
+// 	}
+// 	print!("---------          |\n")
+
+// 	// ROW 14
+// 	print!("|          |...")
+// 	if (flag ch2-seen-room-1 is true) {
+// 		if (flag ch2-in-room is 1) {
+// 			print!("@")
+// 		} else {
+// 			print!(".")
+// 		}
+// 	} else {
+// 		print!(" ")
+// 	}
+// 	print!("...|          |\n")
+
+// 	// ROW 15
+// 	print!("|          ---------          |\n")
+
+// 	// ROW 16
+// 	print!("-------------------------------\n")
+// 	set serial control on
+// 	goto null_script
+// }
