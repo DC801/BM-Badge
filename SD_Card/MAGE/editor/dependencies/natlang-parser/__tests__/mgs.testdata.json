@@ -3300,10 +3300,7 @@
 	],
 	"zigzagTestsFail": [
 		{
-			"inputString": "testScript { action1 if ( conditionA || conditionB ) { behaviorAB ) action2 }",
-			"errorSubstring": "Zigzag processOnce: Cannot close \"{\" with \")\"!"
-		},
-		{
+
 			"inputString": "testScript { action1 if ( conditionA || conditionB ) else { behaviorAB } action2 }",
 			"errorSubstring": "Zigzag parseSingleZig: Expected '{', found 'else'"
 		},
