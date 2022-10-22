@@ -7,18 +7,11 @@ var actionCategoryText = {
 	"hex editor": [
 		"Enable or disable player control of specific game features, and otherwise manage the hex editor state."
 	],
-	"check entity properies": [
-		"These actions check whether one of an entity's properties matches a specific state. If the condition is met (or not met), then the script will abandon any remaining actions and \"goto\" to the named script.",
-		"Tou can use `%SELF%` to target the entity running the script and `%PLAYER%` to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+	"camera control": [
+		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
 	],
-	"check variables": [
-		"Check whether one of the MGE variables matches a specific value. If the condition is met (or not met), then the script will abandon any remaining actions and \"goto\" to the named script."
-	],
-	"set entity properies": [
-		"Set a specific property on a specific entity."
-	],
-	"set variables": [
-		"Manipulate MGE variables or set them to an arbitrary value."
+	"script control": [
+		"Set a specific `on_tick` or `on_interact` script, run another script, or recursively copy the actions inside another script."
 	],
 	"entity choreography": [
 		"Move entities around the map using vector objects placed with Tiled.",
@@ -27,11 +20,18 @@ var actionCategoryText = {
 	"entity appearance": [
 		"Many of these actions (the ones that don't have an explicit duration) will happen instantly. Therefore if several are used back-to-back, they will all resolve on the same frame. If this is not intended behavior, you should pad them with [non-blocking delay](#non_blocking_delay)."
 	],
-	"camera control": [
-		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
+	"set entity properties": [
+		"Set a specific property on a specific entity."
 	],
-	"script control": [
-		"Set a specific `on_tick` or `on_interact` script, run another script, or recursively copy the actions inside another script."
+	"set variables": [
+		"Manipulate MGE variables or set them to an arbitrary value."
+	],
+	"check entity properties": [
+		"These actions check whether one of an entity's properties matches a specific state. If the condition is met (or not met), then the script will abandon any remaining actions and \"goto\" to the named script.",
+		"You can use `%SELF%` to target the entity running the script and `%PLAYER%` to target the player entity. Otherwise, you must use the entity's given name (its name in Tiled).",
+	],
+	"check variables": [
+		"Check whether one of the MGE variables matches a specific value. If the condition is met (or not met), then the script will abandon any remaining actions and \"goto\" the named script."
 	]
 };
 
@@ -197,51 +197,51 @@ var actionText = {
 		]
 	},
 	"CHECK_ENTITY_NAME": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's current `name`.",
 		]
 	},
 	"CHECK_ENTITY_X": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's `x` coordinate.",
 		]
 	},
 	"CHECK_ENTITY_Y": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's `y` coordinate.",
 		]
 	},
 	"CHECK_ENTITY_INTERACT_SCRIPT": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's `on_interact` script (by the script's name).",
 		]
 	},
 	"CHECK_ENTITY_TICK_SCRIPT": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's `on_tick` script (by the script's name).",
 		]
 	},
 	"CHECK_ENTITY_TYPE": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity is currently the given `entity_type`.",
 			"This action is useful because you can check entity types by name, which is easy and convenient (e.g. check if the entity \"Delmar\" is the type \"old_man\"). Otherwise you'd have to use a mix of [CHECK_ENTITY_PRIMARY_ID](#check_entity_primary_id) and [CHECK_ENTITY_PRIMARY_ID_TYPE](#check_entity_primary_it_type) and also know in advance which ints you're checking for."
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity has the given `primary_id`.",
 			"[CHECK_ENTITY_TYPE](#check_entity_type) is recommended instead."
 		]
 	},
 	"CHECK_ENTITY_SECONDARY_ID": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity has the given `secondary_id`.",
 			"This entity property is only useful on \"tile\" entities, where the `secondary_id` determines which tile in the tileset is displayed.",
@@ -249,175 +249,175 @@ var actionText = {
 		]
 	},
 	"CHECK_ENTITY_PRIMARY_ID_TYPE": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) character (sometimes called `entity_type`)"
 		]
 	},
 	"CHECK_ENTITY_CURRENT_ANIMATION": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the id of the entity's current `animation`. (See [entity animations](#entity-animations) for what ids correspond to which animations.)"
 		]
 	},
 	"CHECK_ENTITY_CURRENT_FRAME": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the frame (number) of the entity's current animation."
 		]
 	},
 	"CHECK_ENTITY_DIRECTION": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity is facing one of the four cardinal directions: `north`, `south`, `east`, or `west`."
 		]
 	},
 	"CHECK_ENTITY_GLITCHED": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity currently has it's \"glitched\" render flag set."
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_A": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the value of an entity's `hackable_state_a` byte. Max value: 255"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_B": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the value of an entity's `hackable_state_b` byte. Max value: 255"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_C": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the value of an entity's `hackable_state_c` byte. Max value: 255"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_D": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the value of an entity's `hackable_state_d` byte. Max value: 255"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_A_U2": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_C_U2": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535"
 		]
 	},
 	"CHECK_ENTITY_HACKABLE_STATE_A_U4": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the values of an entity's `hackable_state_a` through `hackable_state_d` bytes, interpreted together as if a U4. Max value: …big",
 			"NOTE: This is the only \"check\" action that can only check for equality, not inequality. (There aren't enough bytes to spare for the `expected_bool`!)"
 		]
 	},
 	"CHECK_ENTITY_PATH": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks the `path` name (geometry) of an entity."
 		]
 	},
 	"CHECK_IF_ENTITY_IS_IN_GEOMETRY": {
-		"category": "check entity properies",
+		"category": "check entity properties",
 		"info": [
 			"Checks whether an entity is inside the named geometry.",
 			"This action can behave erratically if any of the vertices in the geometry object are subject to coordinate underflow."
 		]
 	},
 	"SET_ENTITY_NAME": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `name`."
 		]
 	},
 	"SET_ENTITY_X": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `x` coordinate.",
 			"In practice, you will likely want to use geometry vectors and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_Y": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `y` coordinate.",
 			"In practice, you will likely want to use geometry vectors and teleport actions instead."
 		]
 	},
 	"SET_ENTITY_TYPE": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `entity_type`."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `primary_id`.",
 			"You will overwhelmingly want to set the `entity_type` by name instead with [SET_ENTITY_TYPE](#set_entity_type)."
 		]
 	},
 	"SET_ENTITY_SECONDARY_ID": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `secondary_id`.",
 			"This action will not be useful unless the entity is a tile entity (`primary_id_type`: 1)."
 		]
 	},
 	"SET_ENTITY_PRIMARY_ID_TYPE": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) character (sometimes called `entity_type`)"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_A": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the value of an entity's `hackable_state_a` byte. Max value: 255"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_B": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the value of an entity's `hackable_state_b` byte. Max value: 255"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_C": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the value of an entity's `hackable_state_c` byte. Max value: 255"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_D": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the value of an entity's `hackable_state_d` byte. Max value: 255"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_A_U2": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_C_U2": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535"
 		]
 	},
 	"SET_ENTITY_HACKABLE_STATE_A_U4": {
-		"category": "set entity properies",
+		"category": "set entity properties",
 		"info": [
 			"Sets the values of an entity's `hackable_state_a` through `hackable_state_d` bytes, interpreted together as if a U4. Max value: …big"
 		]
@@ -683,55 +683,128 @@ var makePrintableDictionaryEntry = function (entry) {
 	return string.replace(" then goto",`\n	then goto`);
 };
 
+var capitalizeFirst = function (string) {
+	var splits = string.split('');
+	splits[0] = splits[0].toLocaleUpperCase();
+	return splits.join('');
+}
+
 var mid = Object.keys(actionCategoryText).map(function (actionCategoryName) {
-	var result = `###`;
-	// capitalizing title
-	var titleWords = actionCategoryName.split('');
-	titleWords[0] = titleWords[0].toLocaleUpperCase();
-	var capitalizedTitle = titleWords.join('');
-	result += ` ${capitalizedTitle} actions\n\n`
-	// adding getting category info
-	result += actionCategoryText[actionCategoryName].join('\n\n');
-	result += '\n\n';
+	var chonks = [ `### ${capitalizeFirst(actionCategoryName)} actions` ];
+	// adding category info
+	chonks = chonks.concat(actionCategoryText[actionCategoryName]);
 	// finding actions
-	var filteredActionNames = Object.keys(actionText).filter(function (actionName) {
-		return actionText[actionName].category === actionCategoryName;
-	});
+	var filteredActionNames = Object.keys(actionText)
+		.filter(function (actionName) {
+			return actionText[actionName].category === actionCategoryName;
+		});
 	// for all actions in that category:
-	var stringedActions = filteredActionNames.map(function (actionName) {
+	filteredActionNames.forEach(function (actionName) {
 		// action heading
-		var output = `#### ${actionName}\n\n`
-		actionText[actionName].info.forEach(function (paragraph) {
-			output += paragraph + '\n\n';
-		})
+		var itemChonks = [ `#### ${actionName}` ];
+		// action info paragraphs
+		itemChonks = itemChonks.concat(actionText[actionName].info);
 		// get dictionary entries
 		var dictionaryEntries = mgs.actionDictionary.filter(function (entry) {
 			return entry.action === actionName;
 		})
+		// example syntax
 		var printPatterns = dictionaryEntries.map(function (entry) {
-			return "```\n" + makePrintableDictionaryEntry(entry) + '\n```';
+			return '```\n' + makePrintableDictionaryEntry(entry) + '\n```';
 		})
-		output += printPatterns.join(`\n\n`);
+		itemChonks = itemChonks.concat(printPatterns);
 		// examples (technically optional)
 		if (!actionText[actionName].omitExample) {
-			output += '\n\n';
 			if (dictionaryEntries.length > 1) {
-				output += "Examples:\n\n"
+				itemChonks.push("Examples:");
 				var examples = dictionaryEntries.map(function (entry) {
-					return '- `' + makeExampleFromDictionaryEntry(entry) + '`';
+					return `- \`${makeExampleFromDictionaryEntry(entry)}\``;
 				})
-				output += examples.join('\n');
+				itemChonks = itemChonks.concat(examples.join('\n'));
 			} else if (dictionaryEntries.length === 1) {
 				var example = makeExampleFromDictionaryEntry(dictionaryEntries[0]);
-				output += "Example: `" + example + '`';
+				itemChonks.push(`Example: \`${example}\``);
 			} else {
-				console.warn("No dictionary entries for " + actionName + "???")
+				throw new Error("No dictionary entries for " + actionName + "???");
 			}
 		}
-		return output;
+		chonks = chonks.concat(itemChonks);
 	})
-	result += stringedActions.join('\n\n');
-	return result;
+	return chonks.join('\n\n');
 }).join('\n\n');
+
+// QUICKREF
+
+var makeQuickRefEntryForAction = function (actionName) {
+	// the condition of `if` actions is excised automatically
+	var linky = `[${actionName}](#${actionName.toLocaleLowerCase()})`;
+	var dictionaryEntries = mgs.actionDictionary.filter(function (entry) {
+		return entry.action === actionName;
+	})
+	var examples = dictionaryEntries.map(function (entry) {
+		var example = makeExampleFromDictionaryEntry(entry);
+		if (example.includes(' then ')) {
+			var splits = example.split(' then ');
+			example = splits[0].replace('if ', '');
+		}
+		return `\t- \`${example}\``;
+	})
+	var totals = [ `- ${linky}` ].concat(examples);
+	return totals.join('\n');
+}
+
+var quickRef = [ `### Actions quick reference\n\nSample syntax (with sample values) for each action, grouped by category. Click an action name to jump to the full dictionary entry.` ]
+
+Object.keys(actionCategoryText)
+	.filter(function (actionCategory) {
+		return !actionCategory.includes('check');
+	})
+	.forEach(function (actionCategory) {
+		// header
+		var displayname = capitalizeFirst(actionCategory);
+		var linky = actionCategory.replace(/ /g, '-') + '-actions';
+		var header = `#### [${displayname}](#${linky})`
+		quickRef.push(header);
+		// items
+		var actionNames = Object.keys(actionText).filter(function (actionName) {
+			return actionText[actionName].category === actionCategory;
+		})
+		var list = actionNames.map(function (actionName) {
+			return makeQuickRefEntryForAction(actionName);
+		})
+		quickRef.push(list.join('\n'));
+	})
+
+quickRef.push(`#### Conditional gotos
+
+Consists of actions from the [check entity properies](#check-entity-properies-actions) and [check variables](#check-variables-actions) categories. All "conditions" can be inserted in either of the following patterns:
+
+- Plain action: \`if\` ... \`then goto (script) $success_script:string\`
+- [Zigzag](#zigzag-if--else) macro: \`if (\` ... \`) { }\`
+
+(The example syntax below is the condition part of the pattern alone.)`);
+
+var gotoActions = [];
+
+Object.keys(actionCategoryText)
+	.filter(function (actionCategory) {
+		return actionCategory.includes('check');
+	})
+	.forEach(function (actionCategory) {
+		Object.keys(actionText)
+			.forEach(function (actionName) {
+				if (actionText[actionName].category === actionCategory) {
+					gotoActions.push(actionName);
+				}
+			})
+		})
+	var list = gotoActions.map(function (actionName) {
+		return makeQuickRefEntryForAction(actionName);
+	})
+	quickRef.push(list.join('\n'));
+
+var quickRefSolid = quickRef.join('\n\n');
+
+mid = quickRefSolid + '\n\n' + mid;
 
 module.exports = mid

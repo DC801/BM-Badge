@@ -346,22 +346,12 @@ zigzag.processOnce = function (tokens) {
 				crawledTokens.push(tokens[pos]);
 				pos += 1;
 				continue;
-			} else if (findOpenChar(naiveValue)) {// if you find a closeChar
+			} else if (naiveValue === "}") {// if this token is a block closing
 				if (punctuationStack.length) { // ...and there's chars in the stack
-					var top = punctuationStack[0]; // get the top of the stack
-					var expected = findCloseChar(top);
-					if (naiveValue === expected) { // if found matches expected
-						punctuationStack.shift();
-						crawledTokens.push(tokens[pos]);
-						pos += 1;
-						continue;
-					} else {
-						var errorObject = new Error(`Zigzag processOnce: Cannot close "${top}" with "${naiveValue}"!`)
-						errorObject.tokenIndex = pos;
-						errorObject.token = tokens[pos];
-						errorObject.pos = tokens[pos].pos;
-						throw errorObject;
-					}
+					punctuationStack.shift();
+					crawledTokens.push(tokens[pos]);
+					pos += 1;
+					continue;
 				} else { // ...but there's no chars in the stack
 					var errorObject = new Error(`Zigzag processOnce: Found "${naiveValue}" but no "${top}" to close!`)
 					errorObject.tokenIndex = pos;
