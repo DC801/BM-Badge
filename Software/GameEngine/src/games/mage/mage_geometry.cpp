@@ -3,16 +3,21 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 #include "shim_err.h"
+#include <algorithm>
 
 MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
+#ifndef DC801_EMBEDDED
+   ROM->Read(name, address, 32);
+#else
    //skip over name:
    address += 32;
+#endif
    ROM->Read(typeId, address);
+   uint8_t pointCount;
    ROM->Read(pointCount, address);
-   address += sizeof(pointCount);
 
-   //read segmentCount:
+   uint8_t segmentCount;
    ROM->Read(segmentCount, address);
 
    address += 1; //padding
@@ -21,7 +26,7 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(pathLength, address);
 
    //generate appropriately sized point array:
-   ROM->InitializeCollectionOf(points, address, pointCount);
+   ROM->InitializeCollectionOf(points, address, GetPointCount());
 
    //generate appropriately sized array:
    ROM->InitializeCollectionOf(segmentLengths, address, segmentCount);
@@ -30,18 +35,9 @@ MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)
 {
    typeId = type;
-   pointCount = numPoints;
-   segmentCount = typeId == MageGeometryType::Polygon
-      ? numPoints
-      : numPoints - 1;
-   for (uint8_t i = 0; i < pointCount; i++)
-   {
-      points.push_back(Point{ 0,0 });
-   }
-   for (uint8_t i = 0; i < segmentCount; i++)
-   {
-      segmentLengths.push_back(segmentCount);
-   }
+   auto segmentCount = typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1;
+   segmentLengths.assign(segmentCount, segmentCount);
+   points.assign(numPoints, Point{ 0,0 });
 }
 
 MageGeometry MageGeometry::flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const
@@ -49,9 +45,9 @@ MageGeometry MageGeometry::flipSelfByFlags(uint8_t flags, uint16_t width, uint16
    auto geometry = MageGeometry{ *this };
    if (flags != 0)
    {
-      for (uint8_t i = 0; i < pointCount; i++)
+      for (uint8_t i = 0; i < GetPointCount(); i++)
       {
-         geometry.points[i] = flipPointByFlags(points[i], flags, width, height);
+         geometry.points[i].flipByFlags(flags, width, height);
       }
    }
    return geometry;
@@ -61,17 +57,17 @@ bool MageGeometry::isPointInGeometry(Point point) const
 {
    if (typeId == MageGeometryType::Point)
    {
-      return point.x == points[0].x && point.y == points[0].y;
+      return point == GetPoint(0);
    }
    else if (typeId == MageGeometryType::Polyline || typeId == MageGeometryType::Polygon)
    {
       uint8_t i, j;
       bool c = false;
-      for (i = 0, j = pointCount - 1; i < pointCount; j = i++)
+      for (i = 0, j = GetPointCount() - 1; i < GetPointCount(); j = i++)
       {
          //get the points for i and j:
-         Point points_i = points[i];
-         Point points_j = points[j];
+         Point points_i = GetPoint(i);
+         Point points_j = GetPoint(j);
          //do the fancy check:
          if ((points_i.y >= point.y) != (points_j.y >= point.y)
             && point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)
@@ -87,52 +83,6 @@ bool MageGeometry::isPointInGeometry(Point point) const
       return false;
    }
 }
-
-Point MageGeometry::flipPointByFlags(Point unflippedPoint, uint8_t flags, uint16_t width, uint16_t height)
-{
-   Point point = unflippedPoint;
-   if (flags != 0)
-   {
-      RenderFlags flagsUnion = { flags };
-      if (flagsUnion.diagonal)
-      {
-         point.x = unflippedPoint.y;
-         point.y = unflippedPoint.x;
-      }
-      if (flagsUnion.horizontal)
-      {
-         point.x = width - point.x;
-      }
-      if (flagsUnion.vertical)
-      {
-         point.y = height - point.y;
-      }
-   }
-   return point;
-};
-
-Point MageGeometry::flipVectorByFlags(Point unflippedPoint, uint8_t flags)
-{
-   Point point = unflippedPoint;
-   if (flags != 0)
-   {
-      RenderFlags flagsUnion = { flags };
-      if (flagsUnion.diagonal)
-      {
-         point.x = point.y;
-         point.y = point.x;
-      }
-      if (flagsUnion.horizontal)
-      {
-         point.x = -point.x;
-      }
-      if (flagsUnion.vertical)
-      {
-         point.y = -point.y;
-      }
-   }
-   return point;
-};
 
 // Returns true if collision has occurred, and if it has,
 // sets the new value of intersectPoint.
@@ -193,21 +143,20 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
 uint16_t MageGeometry::getLoopableGeometryPointIndex(uint8_t pointIndex) const
 {
    uint16_t result = 0;
-   if (pointCount == 1)
+   if (GetPointCount() == 1)
    {
       // handle the derp who made a poly* with 1 point
    }
    else if (typeId == MageGeometryType::Polygon)
    {
-      result = pointIndex % pointCount;
+      result = pointIndex % GetPointCount();
    }
    else if (typeId == MageGeometryType::Polyline)
    {
-      // haunted, do not touch
-      pointIndex %= (segmentCount * 2);
-      result = (pointIndex < pointCount)
+      pointIndex %= (segmentLengths.size() * 2);
+      result = (pointIndex < GetPointCount())
          ? pointIndex
-         : segmentCount + (segmentCount - pointIndex);
+         : segmentLengths.size() + (segmentLengths.size() - pointIndex);
    }
    return result;
 }

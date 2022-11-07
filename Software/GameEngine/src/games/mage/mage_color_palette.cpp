@@ -36,14 +36,8 @@ MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& add
 #endif //DC801_DESKTOP
 }
 
-MageColorPalette::MageColorPalette(
-   const FrameBuffer* frameBuffer,
-   const MageColorPalette* sourcePalette,
-   uint16_t fadeColor,
-   float fadeFraction
-)
+MageColorPalette::MageColorPalette(const FrameBuffer* frameBuffer, const MageColorPalette* sourcePalette, uint16_t fadeColor, float fadeFraction)
 {
-
    for (int i = 0; i < sourcePalette->colors.size(); ++i)
    {
       auto sourceColor = sourcePalette->colors[i];
@@ -53,11 +47,17 @@ MageColorPalette::MageColorPalette(
       }
       if (fadeFraction >= 1.0f)
       {
-         colors[i] =  fadeColor;
+         colors[i] = fadeColor;
       }
       else if (fadeFraction > 0.0f)
       {
-         colors[i] = frameBuffer->applyFadeColor(sourceColor);
+         auto fadeColorUnion = ColorUnion{ fadeColor };
+         auto colorUnion = ColorUnion{ colors[i] };
+         colorUnion.c.r = Util::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
+         colorUnion.c.g = Util::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
+         colorUnion.c.b = Util::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
+         colorUnion.c.alpha = fadeFraction > 0.5f ? fadeColorUnion.c.alpha : colorUnion.c.alpha;
+         colors[i] = colorUnion.i;
       }
    }
    

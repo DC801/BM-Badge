@@ -12,9 +12,6 @@
 #include "engine/EnginePanic.h"
 #include <optional>
 
-class MageTileset;
-class RenderableData;
-
 #define DIALOG_SCREEN_NO_PORTRAIT 255
 
 #define DIALOG_TILES_TOP_LEFT 0
@@ -125,13 +122,15 @@ public:
    void loadNextScreen();
    void showSaveMessageDialog(std::string messageString);
    void advanceMessage();
-   void closeDialog();
+
+   constexpr void MageDialogControl::close() { open = false; }
+   constexpr bool isOpen() const { return open; }
+
    void update();
    void draw();
 
    void loadCurrentScreenPortrait();
    uint32_t getDialogAddress(uint16_t dialogId) const;
-   constexpr bool isOpen() const { return open; }
 
 private:
    MageGameEngine* gameEngine;
@@ -151,7 +150,7 @@ private:
    }
 
    char dialogName[32]{};
-   std::unique_ptr<const MageTileset> currentFrameTileset{};
+   const MageTileset* currentFrameTileset{};
    int16_t triggeringEntityId{0};
    int32_t currentDialogIndex{0};
    uint32_t currentDialogAddress{0};
@@ -163,7 +162,7 @@ private:
    uint32_t cursorPhase{0};
    uint8_t currentResponseIndex{0};
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
-   RenderableData* currentPortraitRenderableData{};
+   RenderableData currentPortraitRenderableData{};
    MageDialogScreen* currentScreen{};
    std::string currentEntityName{};
    std::string currentMessage{};

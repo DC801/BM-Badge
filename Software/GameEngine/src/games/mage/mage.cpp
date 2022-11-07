@@ -87,7 +87,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
       gameControl->applyGameModeInputs(deltaTime);
 
       //update the entities based on the current state of their (hackable) data array.
-      gameControl->UpdateEntities(deltaTime);
+      gameControl->Map()->UpdateEntities(deltaTime);
 
       //handle scripts:
       scriptControl->tickScripts();
@@ -113,7 +113,7 @@ void MageGameEngine::GameRender()
    else
    {
       uint16_t backgroundColor = RGB(0, 0, 0);
-      frameBuffer->clearScreen(frameBuffer->applyFadeColor(backgroundColor));
+      frameBuffer->clearScreen(backgroundColor);
 
       //then draw the map and entities:
       uint8_t layerCount = gameControl->Map()->LayerCount();
@@ -208,17 +208,6 @@ void MageGameEngine::EngineMainGameLoop()
       //Update the game for the new map
       GameUpdate(deltaTime);
    }
-
-#ifndef DC801_EMBEDDED
-   // intentionally corrupt the dialog color palette BEFORE rendering,
-   // just so we can SEE if it works
-   //if (inputHandler->GetButtonState(KeyPress::Page)
-   //   && inputHandler->GetButtonState(KeyPress::Rjoy_center))
-   //{
-   //   MageColorPalette* colorPalette = gameControl->getValidColorPalette(0);
-   //   colorPalette->colors[0] = 0xDEAD;
-   //}
-#endif
 
    //This renders the game to the screen based on the loop's updated state.
    GameRender();

@@ -9,21 +9,22 @@
 
 //load in the global variables that the scripts will be operating on:
 
-void MageScriptControl::initializeScriptsOnMapLoad(std::shared_ptr<MageMap> map)
+void MageScriptControl::initializeScriptsOnMapLoad(const MageMap* map)
 {
    //initialize the script ResumeStateStructs:
-   resumeStates.mapLoad = MageScriptState{ map->GetOnLoad(), true };
-   resumeStates.mapTick = MageScriptState{ map->GetOnTick(), false };
    for (uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
    {
       *commandStates[i] = MageScriptState{ 0,false };
    }
+   resumeStates.mapLoad = MageScriptState{ map->GetOnLoad(), true };
+   resumeStates.mapTick = MageScriptState{ map->GetOnTick(), false };
    for (uint8_t i = 0; i < map->FilteredEntityCount(); i++)
    {
       //Initialize the script ResumeStateStructs to default values for this map.
       const MageEntity* entity = map->getEntity(i);
-      *getEntityTickResumeState(i) = MageScriptState{ entity->onTickScriptId, false };
-      *getEntityInteractResumeState(i) = MageScriptState{ entity->onInteractScriptId, false };
+
+      entityTickResumeStates[i] = MageScriptState{ entity->onTickScriptId, false };
+      entityInteractResumeStates[i] = MageScriptState{ entity->onInteractScriptId, false };
    }
    jumpScriptId = MAGE_NO_SCRIPT;
    gameEngine->commandControl->reset();
@@ -54,12 +55,12 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
    //get the memory address for the script:
    uint32_t address = gameEngine->gameControl->Map()->getGlobalScriptAddress(resumeStateStruct->currentScriptId);
 
-   //read the action count from gameEngine->ROM:
-   //skip the name of the script, we don't need it in ram at runtime:
-   char scriptName[SCRIPT_NAME_LENGTH] = {0};
-   gameEngine->ROM->Read(scriptName, address, SCRIPT_NAME_LENGTH );
+#ifndef DC801_EMBEDDED
 
-   //gameEngine->gameControl->logAllEntityScriptValues("processActionQueue-Before");
+   char scriptName[SCRIPT_NAME_LENGTH] = { 0 };
+   gameEngine->ROM->Read(scriptName, address, SCRIPT_NAME_LENGTH);
+
+#endif // !DC801_EMBEDDED
 
    //read the script's action count:
    uint32_t actionCount = 0;
@@ -177,16 +178,6 @@ void MageScriptControl::setEntityScript(uint16_t mapLocalScriptId, uint8_t entit
    }
 }
 
-MageScriptState* MageScriptControl::getEntityInteractResumeState(uint8_t index)
-{
-   return &entityInteractResumeStates[index];
-}
-
-MageScriptState* MageScriptControl::getEntityTickResumeState(uint8_t index)
-{
-   return &entityTickResumeStates[index];
-}
-
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 {
    MageScriptState* resumeState = &resumeStates.mapLoad;
@@ -197,11 +188,7 @@ void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
       //resumeState struct, so we will proceed with the remaining info in the struct as-is.
       //the currentScriptId is contained within the *ResumeState struct so we can call actions:
       //now that the *ResumeState struct is correctly configured, process the script:
-      processScript(
-         resumeState,
-         MAGE_MAP_ENTITY,
-         MageScriptType::ON_LOAD
-      );
+      processScript(resumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
    }
 }
 

@@ -272,17 +272,9 @@ void MageHexEditor::applyHexModeInputs()
             if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left))
             {
                //paste
-               memcpy(
-                  currentByte,
-                  gameEngine->gameControl->currentSave.clipboard,
-                  gameEngine->gameControl->currentSave.clipboardLength
-               );
-               gameEngine->gameControl->UpdateEntities(0);
-               memcpy(
-                  currentByte,
-                  gameEngine->gameControl->currentSave.clipboard,
-                  gameEngine->gameControl->currentSave.clipboardLength
-               );
+               memcpy(currentByte, gameEngine->gameControl->currentSave.clipboard, gameEngine->gameControl->currentSave.clipboardLength);
+               gameEngine->gameControl->Map()->UpdateEntities(0);
+               memcpy(currentByte, gameEngine->gameControl->currentSave.clipboard, gameEngine->gameControl->currentSave.clipboardLength);
             }
          }
       }
@@ -439,9 +431,10 @@ void MageHexEditor::renderHexEditor()
    while (i < bytesPerPage && i + pageOffset < memTotal)
    {
       auto color = COLOR_WHITE;
-      if (NO_PLAYER != gameEngine->gameControl->playerEntityIndex
-         && i + pageOffset >= sizeof(MageEntity) * gameEngine->gameControl->playerEntityIndex
-         && i + pageOffset < sizeof(MageEntity) * (gameEngine->gameControl->playerEntityIndex + 1))
+      auto playerEntityIndex = gameEngine->gameControl->Map()->getPlayerEntityIndex();
+      if (NO_PLAYER != playerEntityIndex
+         && i + pageOffset >= sizeof(MageEntity) * playerEntityIndex
+         && i + pageOffset < sizeof(MageEntity) * (playerEntityIndex + 1))
       {
          color = COLOR_RED;
       }

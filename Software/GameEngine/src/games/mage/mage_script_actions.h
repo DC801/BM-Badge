@@ -5,14 +5,13 @@
 #include "mage_entity_type.h"
 #include "mage_geometry.h"
 #include "mage_script_state.h"
+#include "mage.h"
 
 struct Point;
 struct Rect;
 class MageGeometry;
 class MageGameEngine;
 class MageEntity;
-struct RenderableData;
-enum MageEntityAnimationDirection : uint8_t;
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
@@ -149,8 +148,13 @@ static const inline uint8_t NUM_SCRIPT_ACTIONS = 98;
 class MageScriptActions
 {
 public:
-   MageScriptActions(MageGameEngine* gameEngine) noexcept
-      : gameEngine(gameEngine)
+   MageScriptActions(MageGameControl* gameControl, MageScriptControl* scriptControl, EngineInput* inputHandler, MageCommandControl* commandControl, MageHexEditor* hexEditor, FrameBuffer* frameBuffer) noexcept
+      : gameControl(gameControl),
+      scriptControl(scriptControl),
+      inputHandler(inputHandler),
+      commandControl(commandControl), 
+      hexEditor(hexEditor),
+      frameBuffer(frameBuffer)
    {}
 
    void Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct);
@@ -363,28 +367,19 @@ private:
    //Action Logic Type: C
    void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct);
 
-   uint16_t getUsefulGeometryIndexFromActionGeometryId(uint16_t geometryId, MageEntity* entity);
-   Point offsetPointRelativeToEntityCenter(const MageEntity* entity,  const Point* geometryPoint);
-   MageEntityAnimationDirection getRelativeDirection(const Point& pointA, const Point& pointB);
    float getProgressOfAction(const MageScriptState* resumeStateStruct);
-   float manageProgressOfAction(
-      MageScriptState* resumeStateStruct,
-      uint32_t duration
-   );
-   void setResumeStatePointsAndEntityDirection(
-      MageScriptState* resumeStateStruct,
-      RenderableData* renderable,
-      MageEntity* entity,
-      const MageGeometry* geometry,
-      uint16_t pointAIndex,
-      uint16_t pointBIndex
-   );
-   void initializeEntityGeometryPath(
-      MageScriptState* resumeStateStruct,
-      RenderableData* renderable,
-      MageEntity* entity,
-      const MageGeometry* geometry
-   );
+   float manageProgressOfAction(MageScriptState* resumeStateStruct, uint32_t duration);
+
+   void setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry)
+   {
+      auto entityCenterPoint = -entity->getRenderableData()->center - entity->location;
+      resumeStateStruct->pointA = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex);
+      resumeStateStruct->pointB = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex + 1);
+      auto relativeDirection = resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB);
+      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(relativeDirection, entity->renderFlags);
+   }
+
+   void initializeEntityGeometryPath(MageScriptState* resumeStateStruct, RenderableData* renderable, MageEntity* entity, const MageGeometry* geometry);
 
    enum MageMutateOperation : uint8_t
    {
@@ -406,17 +401,8 @@ private:
       GT
    };
 
-   void mutate(
-      MageMutateOperation operation,
-      uint16_t* destination,
-      uint16_t value
-   );
-
-   bool compare(
-      MageCheckComparison comparison,
-      uint16_t a,
-      uint16_t b
-   );
+   void mutate(MageMutateOperation operation, uint16_t* destination, uint16_t value);
+   bool compare(MageCheckComparison comparison, uint16_t a, uint16_t b);
 
    //typedef for the array of function pointers to script action functions:
    typedef void (MageScriptActions::*ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
@@ -523,8 +509,13 @@ private:
    };
 
 private:
-   MageGameEngine* gameEngine;
-
+   //const MageGameEngine* gameEngine;
+   MageGameControl* gameControl;
+   MageScriptControl* scriptControl;
+   EngineInput* inputHandler;
+   MageCommandControl* commandControl;
+   MageHexEditor* hexEditor;
+   FrameBuffer* frameBuffer;
    //the actual array of action functions:
 
 };

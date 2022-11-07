@@ -18,6 +18,14 @@ class MageGameEngine;
 #include "convert_endian.h"
 #include <array>
 
+//this is the numerical translation for entity direction.
+enum MageEntityAnimationDirection : uint8_t
+{
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3,
+};
 
 namespace Util {
 	template <typename T>
@@ -76,6 +84,22 @@ union ColorUnion
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR	0x0020
 
+union RenderFlags
+{
+	uint8_t i;
+	struct
+	{
+		bool diagonal : 1;
+		bool vertical : 1;
+		bool horizontal : 1;
+		bool paddingA : 1;
+		bool paddingB : 1;
+		bool paddingC : 1;
+		bool debug : 1;
+		bool glitched : 1;
+	};
+};
+
 
 //this is a point in 2D space.
 struct Point
@@ -103,6 +127,28 @@ struct Point
 		return point;
 	}
 
+	void flipByFlags(uint8_t flags, uint16_t width, uint16_t height)
+	{
+		if (flags != 0)
+		{
+			RenderFlags flagsUnion = { flags };
+			if (flagsUnion.diagonal)
+			{
+				auto xTemp = x;
+				x = y;
+				y = xTemp;
+			}
+			if (flagsUnion.horizontal)
+			{
+				x = width - x;
+			}
+			if (flagsUnion.vertical)
+			{
+				y = height - y;
+			}
+		}
+	}
+
 	Point& operator-=(const Point& rhs)
 	{
 		this->x -= rhs.x;
@@ -116,6 +162,11 @@ struct Point
 		return lhs;
 	}
 
+	Point operator-()
+	{
+		return Point{ -x, -y };
+	}
+
 	Point& operator+=(const Point& rhs)
 	{
 		this->x += rhs.x;
@@ -127,6 +178,35 @@ struct Point
 	{
 		lhs += rhs;
 		return lhs;
+	}
+
+	friend bool operator==(Point lhs, const Point& rhs)
+	{
+		return lhs.x == rhs.x && lhs.y == rhs.y;
+	}
+
+	MageEntityAnimationDirection getRelativeDirection(const Point& target) const
+	{
+		float angle = atan2f(target.y - y, target.x - x);
+		float absoluteAngle = abs(angle);
+		MageEntityAnimationDirection direction = SOUTH;
+		if (absoluteAngle > 2.356194)
+		{
+			direction = WEST;
+		}
+		else if (absoluteAngle < 0.785398)
+		{
+			direction = EAST;
+		}
+		else if (angle < 0)
+		{
+			direction = NORTH;
+		}
+		else if (angle > 0)
+		{
+			direction = SOUTH;
+		}
+		return direction;
 	}
 };
 
@@ -182,8 +262,6 @@ public:
 		frame[y * WIDTH + x] = color; 
 	}
 
-	uint16_t applyFadeColor(uint16_t color) const;
-
 	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
 	{
 		drawLine(p1.x, p1.y, p2.x, p2.y, color);
@@ -196,18 +274,19 @@ public:
 	}
 	void drawPoint(int x, int y, uint8_t size, uint16_t color);
 
+	// address: first pixel of image in ROM
+	// colorPalette: translate indexed image colors
+	// target: where to draw on the screen
+	// source: coordinates to offset into base image
+	// source_width: total width of base image
+	// flags: render flags
 	void drawChunkWithFlags(
-		uint32_t address, //address of first pixel of image in ROM
-		const MageColorPalette * colorPalette, //color palette to lookup image colors from
-		int32_t x, //x coordinate of destination pixel on screen
-		int32_t y, //y coordinate of destination pixel on screen
-		uint16_t tile_width, //width of tile being drawn
-		uint16_t tile_height, //height of tile being drawn
-		uint16_t source_x, //coordinates in source image
-		uint16_t source_y, //coordinates in source image
-		uint16_t pitch, //width of source image
-		uint8_t flags //render flags
-	);
+		uint32_t address, 
+		const MageColorPalette* colorPalette,
+		Rect target,
+		Point source,
+		uint16_t source_width,
+		uint8_t flags);
 
 	inline void fillRect(const Point& p, int w, int h, uint16_t color)
 	{

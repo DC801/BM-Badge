@@ -48,11 +48,7 @@ public:
    {}
 
    //this allows an I+C action to set the calling map or entity script to match the new script.
-   void setEntityScript(
-      uint16_t mapLocalScriptId,
-      uint8_t entityId,
-      uint8_t scriptType
-   );
+   void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
    //the jumpScriptId variable is used by some actions to indicate that a script should
    //end and immediately begin running a new script.
@@ -85,10 +81,8 @@ public:
 
    MageScriptControl();
 
-   void initializeScriptsOnMapLoad(std::shared_ptr<MageMap> map);
-
-   MageScriptState* getEntityInteractResumeState(uint8_t index);
-   MageScriptState* getEntityTickResumeState(uint8_t index);
+   void initializeScriptsOnMapLoad(const MageMap* map);
+   constexpr void SetEntityInteractResumeState(uint16_t entityIndex, const MageScriptState& state) { entityInteractResumeStates[entityIndex] = state; }
 
    //these functions will call the appropriate script processing for their script type:
    void handleMapOnLoadScript(bool isFirstRun);
@@ -113,10 +107,7 @@ private:
 
    //this will run through the actions in a script from the state stores in resumeState
    //if a jumpScriptId is called by an action, it will return without processing any further actions.
-   void processActionQueue(
-      MageScriptState* resumeStateStruct,
-      MageScriptType scriptType
-   );
+   void processActionQueue(MageScriptState* resumeStateStruct, MageScriptType scriptType);
 
    //this will get action arguments from ROM memory and call
    //a function based on the ActionTypeId 

@@ -18,7 +18,20 @@
 #define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
 #else
 #define NRF_LOG_RAW_INFO printf
-#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
+template <typename... Ts>
+void debug_print(const char* format, Ts... fmt)
+{
+   printf(format, std::forward<Ts>(fmt)...);
+   printf("\n");
+}
+
+template <typename T>
+void debug_print(T strLike)
+{
+   printf("%s\n", strLike);
+}
+
+//#define debug_print(...)   printf(__VA_ARGS__); printf("\n")
 #endif
 
 

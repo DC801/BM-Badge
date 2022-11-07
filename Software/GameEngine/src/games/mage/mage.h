@@ -12,6 +12,7 @@
 #include "EngineROM.h"
 #include "EngineInput.h"
 #include "EngineAudio.h"
+#include "EngineWindowFrame.h"
 #include "utility.h"
 
 #ifndef DC801_EMBEDDED
@@ -21,9 +22,8 @@
 class MageGameEngine
 {
    friend class FrameBuffer;
+   friend class StringLoader;
    friend class MageColorPalette;
-
-
    friend class MageGameControl;
    friend class MageCommandControl;
    friend class MageHexEditor;
@@ -53,11 +53,6 @@ private:
    //this will handle any blocking delays at the end of the loop
    void handleBlockingDelay();
 
-   //used to verify whether a save is compatible with game data
-   uint32_t engineVersion;
-   uint32_t scenarioDataCRC32;
-   uint32_t scenarioDataLength;
-
    bool engineIsInitialized{ false };
 
    uint32_t lastTime{ millis() };
@@ -70,11 +65,11 @@ private:
    std::shared_ptr<EngineInput> inputHandler = std::make_shared<EngineInput>();
    std::unique_ptr<EngineWindowFrame> windowFrame = std::make_unique<EngineWindowFrame>(inputHandler);
    std::shared_ptr<FrameBuffer> frameBuffer = std::make_shared<FrameBuffer>(this);
-   std::shared_ptr<MageGameControl> gameControl = std::make_shared<MageGameControl>(this);
    std::shared_ptr<MageHexEditor> hexEditor = std::make_shared<MageHexEditor>(this);
    std::shared_ptr<MageScriptControl> scriptControl = std::make_shared<MageScriptControl>(this);
-   std::shared_ptr<MageScriptActions> scriptActions = std::make_shared<MageScriptActions>(this);
    std::shared_ptr<MageCommandControl> commandControl = std::make_shared<MageCommandControl>(this);
+   std::shared_ptr<MageGameControl> gameControl = std::make_shared<MageGameControl>(this);
+   std::shared_ptr<MageScriptActions> scriptActions = std::make_shared<MageScriptActions>(gameControl.get(), scriptControl.get(), inputHandler.get(), commandControl.get(), hexEditor.get(), frameBuffer.get());
 };
 
 #endif //_MAGE_H

@@ -124,6 +124,7 @@ struct EngineROM
    template <typename T>
    void InitializeCollectionOf(std::vector<T> &collection, uint32_t& offset, size_t count)
    {
+      collection.clear();
       for (auto i = 0; i < count; i++)
       {
          if constexpr (std::is_trivially_copyable<T>::value)

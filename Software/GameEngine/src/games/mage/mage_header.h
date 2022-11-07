@@ -33,9 +33,9 @@ class MageHeader
 public:
 	MageHeader(std::shared_ptr<EngineROM> ROM, uint32_t& offset);
 
-	constexpr uint32_t count() const { return counts; }
-   uint32_t offset(uint32_t num) const { return offsets[num % counts]; }
-	uint32_t length(uint32_t num) const { return lengths[num % counts]; }
+	uint32_t count() const { return counts; }
+   uint32_t offset(uint32_t i) const { return offsets[i % counts]; }
+	uint32_t length(uint32_t i) const { return lengths[i % counts]; }
 
 private:
 	uint32_t counts{ 0 };

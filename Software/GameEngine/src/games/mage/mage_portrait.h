@@ -4,19 +4,4 @@
 #include "EngineROM.h"
 #include <vector>
 
-class MagePortrait {
-public:
-
-	MagePortrait() noexcept = default;
-	MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t& address);
-
-	const MageEntityTypeAnimation::Direction* getEmoteById(uint8_t emoteId) const
-	{
-		return &emotes[emoteId % emotes.size()];
-	}
-private:
-	std::vector<MageEntityTypeAnimation::Direction> emotes{};
-};
-
-
 #endif //SOFTWARE_MAGE_PORTRAIT_H

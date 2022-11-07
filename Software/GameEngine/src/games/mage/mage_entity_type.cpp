@@ -4,7 +4,7 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-MageEntityTypeAnimation::Direction::Direction(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
+AnimationDirection::AnimationDirection(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 {
    ROM->Read(typeId, offset);
    ROM->Read(type, offset);
@@ -18,7 +18,6 @@ MageEntityTypeAnimation::MageEntityTypeAnimation(std::shared_ptr<EngineROM> ROM,
    ROM->GetPointerTo(east, address);
    ROM->GetPointerTo(west, address);
 }
-
 
 MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t& address)
 {
@@ -43,7 +42,9 @@ MageEntityType::MageEntityType(std::shared_ptr<EngineROM> ROM, uint32_t& address
    }
 }
 
-MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
+MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address, 
+   MageGameControl* gameControl)
+   : gameControl(gameControl)
 {
    ROM->Read(name, address, MAGE_ENTITY_NAME_LENGTH);
    uint16_t xLoc, yLoc;
@@ -58,25 +59,19 @@ MageEntity::MageEntity(std::shared_ptr<EngineROM> ROM, uint32_t& address)
    ROM->Read(primaryIdType, address);
    ROM->Read(currentAnimation, address);
    ROM->Read(currentFrameIndex, address);
-   ROM->Read(direction, address);
+   ROM->Read(renderFlags, address);
+
    ROM->Read(hackableStateA, address);
    ROM->Read(hackableStateB, address);
    ROM->Read(hackableStateC, address);
    ROM->Read(hackableStateD, address);
 }
 
-void MageEntity::updateRenderableData(MageGameControl* gameControl)
+void MageEntity::updateRenderableData(uint32_t deltaTime)
 {
-   //make a local copy of the entity so the hacked values remain unchanged:
-   //MageEntity entity = *entityPointer;
-
-   //ensure the primaryIdType is valid
-   primaryIdType =  (MageEntityPrimaryIdType)(primaryIdType % NUM_PRIMARY_ID_TYPES);
-
-   //then get valid tileset renderableData based on primaryId type:
+   renderableData.currentFrameTicks += deltaTime;
    if (primaryIdType == MageEntityPrimaryIdType::TILESET)
    {
-      //ensure the tilesetId (in this scenario, the entity's primaryId) is valid.
       renderableData.tilesetId = primaryId;
       renderableData.tileId = secondaryId;
       renderableData.duration = 0; //unused
@@ -85,7 +80,20 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ANIMATION)
    {
-      auto animation = gameControl->getAnimation(primaryId);
+      //check for frame change and adjust if needed:
+      if (renderableData.currentFrameTicks >= renderableData.duration)
+      {
+         //increment frame and reset tick counter:
+         currentFrameIndex++;
+         renderableData.currentFrameTicks = 0;
+
+         //reset animation to first frame after max frame is reached:
+         if (currentFrameIndex >= renderableData.frameCount)
+         {
+            currentFrameIndex = 0;
+         }
+      }
+      auto animation = gameControl->tileManager->GetAnimation(primaryId);
       renderableData.tilesetId = animation->TilesetId();
       renderableData.tileId = animation->TileId();
       renderableData.duration = animation->GetFrame(currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
@@ -94,16 +102,10 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      //ensure the entityType (in this scenario, the entity's primaryId) is valid.
-      uint16_t entityTypeId = gameControl->getValidEntityTypeId(primaryId);
-
+      auto entityType = gameControl->GetEntityType(primaryId);
       //If the entity has no animations defined, return default:
-      if ((gameControl->entityTypes[entityTypeId]->AnimationCount()) == 0)
+      if (entityType->AnimationCount() == 0)
       {
-         //the entity has no animations, so return default values and give up.
-#ifndef DC801_EMBEDDED
-         fprintf(stderr, "An entityType with no animations exists. Using fallback values.");
-#endif
          renderableData.tilesetId = MAGE_TILESET_FAILOVER_ID;
          renderableData.tileId = MAGE_TILE_FAILOVER_ID;
          renderableData.duration = MAGE_ANIMATION_DURATION_FAILOVER_VALUE;
@@ -111,37 +113,43 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
          renderableData.renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
       }
 
-      //get a valid entity type animation ID:
-      //note that entityType was already validated above.
-      uint8_t entityTypeAnimationId = currentAnimation;
-
       //make a local copy of the current entity type animation:
-      auto currentAnimation = gameControl->entityTypes[entityTypeId]->EntityTypeAnimation(entityTypeAnimationId);
+      auto animation = entityType->EntityTypeAnimation(currentAnimation);
 
-      //create a directedAnimation entity based on direction:
-      auto dirValue = (MageEntityAnimationDirection)( direction % NUM_DIRECTIONS );
-      const MageEntityTypeAnimation::Direction* directedAnimation;
-      if (dirValue == MageEntityAnimationDirection::NORTH)
-      {
-         directedAnimation = currentAnimation->North();
-      }
-      else if (dirValue == MageEntityAnimationDirection::EAST)
-      {
-         directedAnimation = currentAnimation->East();
-      }
-      else if (dirValue == MageEntityAnimationDirection::SOUTH)
-      {
-         directedAnimation = currentAnimation->South();
-      }
-      else if (dirValue == MageEntityAnimationDirection::WEST)
-      {
-         directedAnimation = currentAnimation->West();
-      }
-      renderableData.getRenderableState(gameControl, currentFrameIndex, directedAnimation);
+      //create a animationDirection entity based on direction:
+      auto dirValue = (MageEntityAnimationDirection)(direction & RENDER_FLAGS_DIRECTION_MASK);
+      const AnimationDirection* animationDirection =
+         dirValue == MageEntityAnimationDirection::NORTH ? animation->North()
+         : dirValue == MageEntityAnimationDirection::EAST ? animation->East()
+         : dirValue == MageEntityAnimationDirection::SOUTH ? animation->South()
+         : animation->West();
 
+      //based on animationDirection->Type(), you can get two different outcomes:
+      //Scenario A: Type is 0, TypeID is an animation ID:
+      //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
+      if (animationDirection->Type() == 0)
+      {
+         auto animation = gameControl->tileManager->GetAnimation(animationDirection->TypeId());
+         MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
+         renderableData.tilesetId = animation->TilesetId();
+         renderableData.tileId = currentFrame.tileId;
+         renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
+         renderableData.frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection->RenderFlags(); //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags += direction & 0x80;
+      }
+      else
+      {
+         renderableData.tilesetId = animationDirection->Type() - 1;
+         renderableData.tileId = animationDirection->TypeId();
+         renderableData.duration = 0; //does not animate;
+         renderableData.frameCount = 0; //does not animate
+         renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
+      }
    }
 
    auto tileset = gameControl->tileManager->GetTileset(renderableData.tilesetId);
+
    Point oldCenter = { renderableData.center.x, renderableData.center.y };
    // accounting for possible change in tile size due to hacking;
    // adjust entity position so that the center will not change
@@ -154,43 +162,14 @@ void MageEntity::updateRenderableData(MageGameControl* gameControl)
    }
    renderableData.lastTilesetId = renderableData.tilesetId;
 
-   uint16_t width = tileset->TileWidth();
-   uint16_t height = tileset->TileHeight();
-   uint16_t halfWidth = width / 2;
-   uint16_t halfHeight = height / 2;
-   renderableData.hitBox.origin.x = x + (halfWidth / 2);
-   renderableData.hitBox.origin.y = y + (halfHeight)-height;
+   uint16_t halfWidth = tileset->TileWidth() / 2;
+   uint16_t halfHeight = tileset->TileHeight() / 2;
+   renderableData.hitBox.origin.x = x + halfWidth / 2;
+   renderableData.hitBox.origin.y = y + halfHeight - tileset->TileHeight();
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
    renderableData.center.x = renderableData.hitBox.origin.x + (renderableData.hitBox.w / 2);
    renderableData.center.y = renderableData.hitBox.origin.y + (renderableData.hitBox.h / 2);
 }
 
-void RenderableData::getRenderableState(MageGameControl* gameControl, uint8_t currentFrameIndex, const MageEntityTypeAnimation::Direction* animationDirection)
-{
-   //based on animationDirection.Type(), you can get two different outcomes:
-   //Scenario A: Type is 0, TypeID is an animation ID:
-   //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
-   if (animationDirection->Type() == 0)
-   {
-      auto animation = gameControl->getAnimation(animationDirection->TypeId());
-
-      MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
-      tilesetId = animation->TilesetId();
-      tileId = currentFrame.tileId;
-
-      duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
-      frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
-      renderFlags = animationDirection->RenderFlags(); //no need to check, it shouldn't cause a crash.
-      renderFlags += direction & 0x80;
-   }
-   else
-   {
-      tilesetId = animationDirection->Type() - 1;
-      tileId = animationDirection->TypeId();
-      duration = 0; //does not animate;
-      frameCount = 0; //does not animate
-      renderFlags = direction; //no need to check, it shouldn't cause a crash.
-   }
-}
 

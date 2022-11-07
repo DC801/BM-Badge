@@ -15,36 +15,14 @@
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
-class MageEntityType;
-class MageCamera;
-class MageColorPalette;
-class MageGeometry;
-class TileManager;
-enum MageEntityAnimationDirection : uint8_t;
-/*
-The MageGameControl object handles several important tasks. It's basically the
-core of the entire MAGE() game, and contains all the important variables that
-track the state of the game.
-
-MageGameControl's first important function is to read all relevant data from
-the ROM chip into RAM, and also to have helper functions to read additional
-ROM data on demand as needed when updating variables.
-
-MageGameControl also tracks the state of all hackable entities in the game, and
-interprets the data contained in the array when deciding what needs to be drawn
-to the screen.
-
-Finally, MageGameControl handles the actual act of updating the state of the
-game based on input data and rendering it all to the screen every frame.
-*/
-
 struct MageSaveGame
 {
+   MageSaveGame() noexcept : name{ DEFAULT_PLAYER_NAME } {};
    const char* identifier = EngineROM::SaveIdentifierString;
    uint32_t engineVersion{ ENGINE_VERSION };
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };
-   char name[MAGE_ENTITY_NAME_LENGTH]{ DEFAULT_PLAYER_NAME };
+   std::string name{ MAGE_ENTITY_NAME_LENGTH, 0 }; // bob's club
    //this stores the byte offsets for the hex memory buttons:
    uint8_t memOffsets[MAGE_NUM_MEM_BUTTONS]{
       MageEntityField::x,
@@ -63,6 +41,18 @@ struct MageSaveGame
    uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] = { 0 };
 };
 
+class StringLoader
+{
+public:
+   StringLoader(const MageGameEngine* gameEngine, const uint16_t* scriptVariables, const MageHeader& stringHeader) noexcept
+      : gameEngine(gameEngine), scriptVariables(scriptVariables), stringHeader(stringHeader) {}
+
+   std::string getString(uint16_t stringId, int16_t mapLocalEntityId) const;
+private:
+   const MageGameEngine* gameEngine;
+   const uint16_t* scriptVariables;
+   MageHeader stringHeader;
+};
 
 class MageGameControl
 {
@@ -77,11 +67,13 @@ class MageGameControl
 public:
    MageGameControl(MageGameEngine* gameEngine);
 
-   //this is the index value of where the playerEntity is located within
-   //the entities[] array and also the offset to it from hackableDataAddress
-   uint8_t playerEntityIndex{ NO_PLAYER };
-
    uint8_t currentSaveIndex{ 0 };
+
+   //used to verify whether a save is compatible with game data
+   uint32_t engineVersion;
+   uint32_t scenarioDataCRC32;
+   uint32_t scenarioDataLength;
+
    MageSaveGame currentSave{};
 
    //this lets us make it so that inputs stop working for the player
@@ -92,19 +84,11 @@ public:
    bool isEntityDebugOn{ false };
    MageCamera camera;
 
-   //returns the size in memory of the MageGameControl object.
-   uint32_t Size() const;
-
    void setCurrentSaveToFreshState();
    void readSaveFromRomIntoRam(bool silenceErrors = false);
    void saveGameSlotSave();
    void saveGameSlotErase(uint8_t slotIndex);
    void saveGameSlotLoad(uint8_t slotIndex);
-
-   const MageAnimation* getAnimation(uint16_t animationId) const
-   {
-      return animations[animationId % animations.size()];
-   }
 
    //this will return the current map object.
    auto Map() { return map; }
@@ -134,50 +118,54 @@ public:
       return entityTypeId % entityTypes.size();
    }
 
-   const MageEntityType* getValidEntityType(uint16_t entityTypeId) const;
-   uint8_t getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId) const;
-   MageEntityAnimationDirection getValidEntityTypeDirection(MageEntityAnimationDirection direction);
-   MageEntityAnimationDirection updateDirectionAndPreserveFlags(MageEntityAnimationDirection desired, MageEntityAnimationDirection previous);
-   const MageGeometry getGeometryFromMapLocalId(uint16_t mapLocalGeometryId) const;
+   inline const MageEntityType* MageGameControl::GetEntityType(uint16_t entityTypeId) const
+   {
+      //always return a valid entity type for the entityTypeId submitted.
+      return entityTypes[getValidEntityTypeId(entityTypeId)];
+   }
+
+   inline uint8_t MageGameControl::getValidEntityTypeAnimationId(uint8_t entityTypeAnimationId, uint16_t entityTypeId) const
+   {
+      //use failover animation if an invalid animationId is submitted to the function.
+      //There's a good chance if that happens, it will break things.
+      entityTypeId = entityTypeId % entityTypes.size();
+
+      auto animationCount = entityTypes[entityTypeId]->AnimationCount();
+      //always return a valid entity type animation ID for the entityTypeAnimationId submitted.
+      return entityTypeAnimationId % animationCount;
+   }
+
+   inline uint8_t MageGameControl::updateDirectionAndPreserveFlags(uint8_t desired, uint8_t previous) const
+   {
+      return (direction & RENDER_FLAGS_DIRECTION_MASK) 
+         | (previous & (RENDER_FLAGS_IS_DEBUG | RENDER_FLAGS_IS_GLITCHED));
+   }
+
    const MageGeometry* getGeometry(uint16_t globalGeometryId) const;
-   MageColorPalette* getValidColorPalette(uint16_t colorPaletteId);
    const MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId) const;
    MageEntity* getEntityByMapLocalId(uint8_t mapLocalEntityId);
 
-   std::string getString(uint16_t stringId, int16_t mapLocalEntityId);
-   std::string getEntityNameStringById(int8_t mapLocalEntityId);
-
+   std::string getString(uint16_t stringId, int16_t mapLocalEntityId = NO_PLAYER) const;
 
    //this returns the address offset for a specific script Id:
    uint32_t getScriptAddressFromGlobalScriptId(uint32_t scriptId);
 
-   //this will update the current entities based on the current state of their state variables
-   void UpdateEntities(uint32_t deltaTime);
-
    Point getPushBackFromTilesThatCollideWithPlayer();
-   void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
 
 #ifndef DC801_EMBEDDED
    void verifyAllColorPalettes(const char* errorTriggerDescription);
 #endif
 
-   void logAllEntityScriptValues(const char* string);
    void updateEntityRenderableData(uint8_t mapLocalEntityId, bool skipTilesetCheck = true);
 private:
 
    MageGameEngine* gameEngine;
    std::unique_ptr<MageDialogControl> dialogControl;
 
-   //TODO: move all headers away from here
-   std::unique_ptr<MageHeader> stringHeader;
-
+   std::unique_ptr<StringLoader> stringLoader;
    //this is where the current map data from the ROM is stored.
    std::shared_ptr<MageMap> map;
-   std::unique_ptr<TileManager> tileManager;
-
-   //this is an array of the animation data on the ROM
-   //each entry is an indexed animation.
-   std::vector<const MageAnimation*> animations;
+   std::shared_ptr<TileManager> tileManager;
 
    //this is an array of the entity types on the ROM
    //each entry is an indexed entity type.

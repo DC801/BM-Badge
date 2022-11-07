@@ -1,4 +1,5 @@
 #include "mage_tileset.h"
+#include "mage_portrait.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 
@@ -32,27 +33,32 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
    }
 }
 
-TileManager::TileManager(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineROM> ROM, const MageHeader& tilesetHeader, const MageHeader& colorPaletteHeader, const MageHeader& imageHeader)
-   : frameBuffer(frameBuffer), ROM(ROM), tilesetHeader(tilesetHeader), colorPaletteHeader(colorPaletteHeader), imageHeader(imageHeader)
+void TileManager::DrawTile(const RenderableData* renderableData, int32_t x, int32_t y) const
 {
-   for (uint32_t i = 0; i < colorPaletteHeader.count(); i++)
-   {
-      auto colorPaletteOffset = colorPaletteHeader.offset(i);
-      colorPalettes.push_back(MageColorPalette{ ROM, colorPaletteOffset });
-   }
+   const auto tileset = GetTileset(renderableData->tilesetId);
+   auto tileAddress = imageHeader.offset(tileset->ImageId()) + renderableData->tileId * sizeof(MageMapTile);
+   const MageMapTile* tile;
+   ROM->GetPointerTo(tile, tileAddress);
+   DrawTile(tileset, tile, x, y, renderableData->renderFlags);
 }
 
 void TileManager::DrawTile(const MageTileset* tileset, const MageMapTile* tile, int32_t x, int32_t y, uint8_t flags) const
 {
-   frameBuffer->drawChunkWithFlags(
-      imageHeader.offset(tileset->ImageId()),
-      getColorPalette(tileset->ImageId()),
-      x, y,
+   auto imageBase = imageHeader.offset(tileset->ImageId());
+
+   auto offset = colorPaletteHeader.offset(tileset->ImageId());
+   const MageColorPalette* colorPalette;
+   ROM->GetPointerTo(colorPalette, offset);
+
+   const auto targetRect = Rect{ 
+      Point{x,y},
       tileset->TileWidth(),
-      tileset->TileHeight(),
+      tileset->TileHeight() 
+   };
+   const auto sourcePoint = Point{
       tile->tileId % tileset->Cols() * tileset->TileWidth(),
-      tile->tileId / tileset->Cols() * tileset->TileHeight(),
-      tileset->ImageWidth(),
-      flags
-   );
+      tile->tileId / tileset->Cols() * tileset->TileHeight()
+   };
+
+   frameBuffer->drawChunkWithFlags(imageBase, colorPalette, targetRect, sourcePoint, tileset->ImageWidth(), flags);
 }

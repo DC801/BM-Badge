@@ -117,8 +117,7 @@ void MageCommandControl::processCommandAsVerb(std::string input)
       lastCommandUsed = COMMAND_LOOK;
       commandResponseBuffer += "You try to look.\n";
       
-      gameEngine->scriptControl->resumeStates.commandLook 
-         = MageScriptState{gameEngine->gameControl->Map()->GetOnLook(), true };
+      gameEngine->scriptControl->resumeStates.commandLook = MageScriptState{gameEngine->gameControl->Map()->GetOnLook(), true };
 
       std::string directionNames = gameEngine->gameControl->Map()->getDirectionNames();
       if (directionNames.length() > 0)
@@ -203,35 +202,27 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
    MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
    if (responseType == RESPONSE_ENTER_NUMBER)
    {
-      int responseIndex;
       bool errorWhileParsingInt = false;
       try
       {
-         responseIndex = std::stoi(input);
+         auto responseIndex = std::stoi(input);
+         if (responseIndex >= 0 && responseIndex < serialDialog.responseCount)
+         {
+            auto response = serialDialogResponses[responseIndex];
+            std::string responseLabel = gameEngine->gameControl->getString(response.stringId);
+            commandResponseBuffer += "Valid response: " + input + " - " +  responseLabel + "\n";
+            gameEngine->scriptControl->jumpScriptId = response.scriptId;
+            isInputTrapped = false;
+         }
+         else
+         {
+            commandResponseBuffer += "Invalid response: " + input + "\n";
+            showSerialDialog(serialDialogId);
+         }
       }
-      catch (std::exception& err)
+      catch (std::logic_error& err)
       {
-         errorWhileParsingInt = true;
-      }
-      if (
-         !errorWhileParsingInt
-         && responseIndex >= 0
-         && responseIndex < (serialDialog.responseCount)
-         )
-      {
-         MageSerialDialogResponse* response = &serialDialogResponses[responseIndex];
-         std::string responseLabel = gameEngine->gameControl->getString(response->stringId, NO_PLAYER);
-         commandResponseBuffer += (
-            "Valid response: " +
-            input + " - " +
-            responseLabel + "\n"
-            );
-         gameEngine->scriptControl->jumpScriptId = response->scriptId;
-         isInputTrapped = false;
-      }
-      else
-      {
-         commandResponseBuffer += "Invalid response: " + input + "\n";
+         commandResponseBuffer += "Response unparsable: " + input + "\n";
          showSerialDialog(serialDialogId);
       }
    }
@@ -241,7 +232,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
       for (uint8_t i = 0; i < serialDialog.responseCount; i++)
       {
          MageSerialDialogResponse* response = &serialDialogResponses[i];
-         std::string responseLabel = gameEngine->gameControl->getString(response->stringId, NO_PLAYER);
+         std::string responseLabel = gameEngine->gameControl->getString(response->stringId);
          badAsciiLowerCase(&responseLabel);
          if (responseLabel == input)
          {
@@ -267,7 +258,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
    uint32_t serialDialogAddress = gameEngine->gameControl->tileManager->imageHeader.offset(serialDialogId);
    gameEngine->ROM->Read(serialDialog, serialDialogAddress);
 
-   std::string dialogString = gameEngine->gameControl->getString(serialDialog.stringId, NO_PLAYER);
+   std::string dialogString = gameEngine->gameControl->getString(serialDialog.stringId);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
    // 	"serialDialogAddress: " + std::to_string(serialDialogAddress) + "\n"
@@ -284,7 +275,7 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
       MageSerialDialogResponse* response = &serialDialogResponses[i];
       if (serialDialog.serialResponseType == RESPONSE_ENTER_NUMBER)
       {
-         std::string responseLabel = gameEngine->gameControl->getString(response->stringId, NO_PLAYER);
+         std::string responseLabel = gameEngine->gameControl->getString(response->stringId);
          serialDialogBuffer += (
             "\t" + std::to_string(i) + ": " +
             responseLabel + "\n"

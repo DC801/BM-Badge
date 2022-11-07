@@ -52,25 +52,20 @@ void FrameBuffer::clearScreen(uint16_t color)
 void FrameBuffer::drawChunkWithFlags(
    uint32_t address,
    const MageColorPalette* colorPalette,
-   int32_t screen_x, // top-left corner of screen coordinates to draw at
-   int32_t screen_y, // top-left corner of screen coordinates to draw at
-   uint16_t tile_width,
-   uint16_t tile_height,
-   uint16_t source_x, // top-left corner of source image coordinates to READ FROM
-   uint16_t source_y, // top-left corner of source image coordinates to READ FROM
-   uint16_t pitch, // The width of the source image in pixels
-   uint8_t flags
-)
+   Rect target,
+   Point source,
+   uint16_t source_width,
+   uint8_t flags)
 {
-   const auto colors = (fadeFraction != 0) ?
-      &( MageColorPalette{
-         this,
-         colorPalette,
-         fadeColor,
-         fadeFraction
-      })
-      : colorPalette;
-
+   MageColorPalette colors;
+   if (fadeFraction != 0)
+   {
+      colors = MageColorPalette{ this, colorPalette, fadeColor, fadeFraction };
+   }
+   else
+   {
+      colors = *colorPalette;
+   }
    //MageColorPalette* colorPalette = colorPaletteOriginal;
    RenderFlags renderFlags{ flags };
    bool flip_x = renderFlags.horizontal;
@@ -80,33 +75,33 @@ void FrameBuffer::drawChunkWithFlags(
 
    if (glitched)
    {
-      screen_x += tile_width * 0.125;
-      tile_width *= 0.75;
+      target.origin.x += target.w * 0.125;
+      target.w *= 0.75;
    }
 
-   if (screen_x + tile_width < 0 || screen_x >= WIDTH
-      || screen_y + tile_height < 0 || screen_y >= HEIGHT)
+   if (target.origin.x + target.w < 0 || target.origin.x >= WIDTH
+      || target.origin.y + target.h < 0 || target.origin.y >= HEIGHT)
    {
       return;
    }
 
-   auto pixelOffset = address + ((source_y * pitch) + source_x);
+   auto pixelOffset = address + ((source.y * source_width) + source.x);
    const uint8_t* pixels;
    gameEngine->ROM->GetPointerTo(pixels, pixelOffset);
 
-   for (auto row = 0; row != tile_height && row < HEIGHT; row++)
+   for (auto row = 0; row != target.h && row < HEIGHT; row++)
    {
-      for (auto col = 0; col != tile_width && col < WIDTH; col++)
+      for (auto col = 0; col != target.w && col < WIDTH; col++)
       {
-         auto pixelRow = renderFlags.vertical ? tile_height - row : row;
-         auto pixelCol = renderFlags.horizontal ? tile_width - col : col;
-         auto pixelIndex = (pixelRow * tile_width) + pixelCol;
+         auto pixelRow = renderFlags.vertical ? target.h - row : row;
+         auto pixelCol = renderFlags.horizontal ? target.w - col : col;
+         auto pixelIndex = (pixelRow * target.w) + pixelCol;
 
          uint8_t colorIndex = pixels[pixelIndex];
-         auto color = colors->colorAt(colorIndex);
+         auto color = colors.colorAt(colorIndex);
          if (color != TRANSPARENCY_COLOR)
          {
-            drawPixel(screen_x + col, screen_y + row, color);
+            drawPixel(target.origin.x + col, target.origin.y + row, color);
          }
       }
    }
@@ -141,21 +136,6 @@ void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color)
    drawLine(x, y + h, x + w, y, color);
    drawLine(x, y, x, y + h, color);
    drawLine(x + w, x, y, y + h, color);
-}
-
-uint16_t FrameBuffer::applyFadeColor(uint16_t color) const
-{
-   if (fadeFraction > 0.0f)
-   {
-      auto fadeColorUnion = ColorUnion{ fadeColor };
-      auto colorUnion = ColorUnion{ color };
-      colorUnion.c.r = Util::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
-      colorUnion.c.g = Util::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
-      colorUnion.c.b = Util::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
-      colorUnion.c.alpha = fadeFraction > 0.5f ? fadeColorUnion.c.alpha : colorUnion.c.alpha;
-      color = colorUnion.i;
-   }
-   return color;
 }
 
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)

@@ -151,9 +151,6 @@ enum  <uchar> serial_response_type{
     response_enter_string,
 };
 
-
-const uint32 ENGINE_ROM_IDENTIFIER_STRING_LENGTH = 8;
-
 typedef struct
 {
     uint32 count;
@@ -161,10 +158,9 @@ typedef struct
     uint32 lengths[count];
 } MageHeader;
 
-const int GoDirectionNameLength =12;
 typedef struct
 {
-  char name[GoDirectionNameLength];
+  char name[12];
   uint16 mapLocalScriptId;
   uint16 padding;
 } GoDirection <read=(name)>;
@@ -405,7 +401,7 @@ typedef struct (uint16 length) {
 
 struct
 {
-    char MagicString[ENGINE_ROM_IDENTIFIER_STRING_LENGTH];
+    char MagicString[8]; //MAGEGAME
     uint32 EngineVersion;
     uint32 ScenarioDataCRC32;
     uint32 ScenarioDataLength;
@@ -490,7 +486,4 @@ struct
         FSeek(this.headers.Image.offsets[i]);
         image images(this.headers.Image.lengths[i]/2);
     }
-    
-   //[tileset]
-   //animation
 } ROM;

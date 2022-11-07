@@ -30,15 +30,16 @@ class MageMap
    friend class MageScriptControl;
    friend class MageHexEditor;
 public:
-   MageMap(std::shared_ptr<EngineROM> ROM, 
+   MageMap(std::shared_ptr<EngineROM> ROM,
       std::shared_ptr<FrameBuffer> frameBuffer, 
-      uint32_t& address, 
+      MageGameControl* gameControl,
       const MageHeader& mapHeader, 
       const MageHeader& geometryHeader, 
       const MageHeader& entityHeader, 
       const MageHeader& scriptHeader) noexcept
       : ROM(ROM), 
       frameBuffer(frameBuffer), 
+      gameControl(gameControl),
       mapHeader(mapHeader),
       geometryHeader(geometryHeader),
       entityHeader(entityHeader), 
@@ -52,13 +53,15 @@ public:
    void DrawGeometry(const MageCamera& camera);
    void DrawEntities(MageGameEngine* engine);
 
+   void UpdateEntities(uint32_t deltaTime);
+
    std::string Name() const { return std::string(name); }
    uint16_t TileWidth() const { return tileWidth; }
    uint16_t TileHeight() const { return tileHeight; }
    uint16_t Cols() const { return cols; }
    uint16_t Rows() const { return rows; }
    uint8_t LayerCount() const { return mapLayerOffsets.size(); }
-   uint8_t FilteredEntityCount() const { return filteredEntityCountOnThisMap; }
+   constexpr uint8_t FilteredEntityCount() const { return filteredEntityCountOnThisMap; }
    uint16_t GeometryCount() const { return geometryGlobalIds.size(); }
    uint16_t ScriptCount() const { return scriptGlobalIds.size(); }
 
@@ -76,13 +79,18 @@ public:
 
    uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const
    {
-      auto scriptId = scriptGlobalIds.empty() ? mapLocalScriptId % scriptGlobalIds.size() : 0;
+      auto scriptId = scriptGlobalIds.empty() ? 0 : mapLocalScriptId % scriptGlobalIds.size();
       return scriptHeader.offset(scriptGlobalIds[scriptId]);
    }
 
    const MageEntity* getPlayerEntity() const
    {
-      return &entities[playerEntityIndex];
+      return getEntity(playerEntityIndex);
+   }
+
+   MageEntity* getPlayerEntity()
+   {
+      return getEntity(playerEntityIndex);
    }
 
    const MageEntity* getEntity(uint16_t id) const
@@ -137,24 +145,27 @@ public:
       return 0;
    }
 
-   constexpr uint8_t getPlayerEntityIndex() const { return playerEntityIndex; }
-   constexpr uint16_t GetOnLoad() const { return onLoad; }
-   constexpr uint16_t GetOnLook() const { return onLook; }
-   constexpr uint16_t GetOnTick() const { return onTick; }
-   constexpr void SetOnLook(uint16_t lookId) { onLook = lookId; }
-   constexpr void SetOnTick(uint16_t tickId) { onTick = tickId; }
+   uint8_t getPlayerEntityIndex() const { return playerEntityIndex; }
+   uint16_t GetOnLoad() const { return onLoad; }
+   uint16_t GetOnLook() const { return onLook; }
+   uint16_t GetOnTick() const { return onTick; }
+   void SetOnLook(uint16_t lookId) { onLook = lookId; }
+   void SetOnTick(uint16_t tickId) { onTick = tickId; }
 private:
    std::shared_ptr<EngineROM> ROM;
    std::shared_ptr<FrameBuffer> frameBuffer;
-   MageHeader mapHeader;
-   MageHeader geometryHeader;
-   MageHeader entityHeader;
-   MageHeader scriptHeader;
+   MageGameControl* gameControl;
+
+   const MageHeader& mapHeader;
+   const MageHeader& geometryHeader;
+   const MageHeader& entityHeader;
+   const MageHeader& scriptHeader;
 
    bool isEntityDebugOn{ false };
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
-   std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
+   std::vector<MageEntity> entities{};
+   //std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
 
    uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
    uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
