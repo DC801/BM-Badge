@@ -50,7 +50,7 @@ Nethack-like
 	- ITEM: phonograph record needle
 
 // INDUSTRIAL AREA
-21. Backsmith / workshop area
+21. Blacksmith / workshop area
 22. Server room
 23. Geothermal power plant
 	- Needs coolant to increase power output (Cactus Cooler?)
@@ -71,7 +71,7 @@ Nethack-like
 99. Secret room (teleport only)
 	- Secret IT man
 	- Mainframe backup software
-	- XC: intercom with XB (outside) and XA in room 0
+	- XC: intercom with XB (outside) and XA in room 1
 ```
 
 ZONES

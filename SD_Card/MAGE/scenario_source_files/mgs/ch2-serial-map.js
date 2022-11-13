@@ -299,27 +299,27 @@ var makeNatlangMapRow = function (rowArray) {
 			if (printme.includes('@')) {
 				var splits = printme.split('@');
 				if (splits[0].length) {
-					result += `\t\tprint!("${splits[0]}")\n`;
+					result += `\t\tconcat serial dialog {"${splits[0]}"}\n`;
 				}
 				result += `\t\tif (flag ch2-in-room is ${targets[0]}) {\n`;
-				result += `\t\t\tprint!("@")\n`;
+				result += `\t\t\tconcat serial dialog {"@"}\n`;
 				result += `\t\t} else {\n`;
-				result += `\t\t\tprint!(".")\n`;
+				result += `\t\t\tconcat serial dialog {"."}\n`;
 				result += `\t\t}\n`;
 				if (splits[1].length) {
-					result += `\t\tprint!("${splits[1]}")\n`;
+					result += `\t\tconcat serial dialog {"${splits[1]}"}\n`;
 				}
 			} else {
-				result += `\t\tprint!("${printme}")\n`;
+				result += `\t\tconcat serial dialog {"${printme}"}\n`;
 			}
 			result += `\t} else {\n`;
-			result += `\t\tprint!("${blankprintme}")\n`;
+			result += `\t\tconcat serial dialog {"${blankprintme}"}\n`;
 			result += `\t}\n`;
 		} else {
 			if (index === rowArray.length - 1) { // making some assumptions :P
-				result += `\tprint!("${chonk}\\n")\n`;
+				result += `\tconcat serial dialog {"${chonk}\\n"}\n`;
 			} else {
-				result += `\tprint!("${chonk}")\n`;
+				result += `\tconcat serial dialog {"${chonk}"}\n`;
 			}
 		}
 	})

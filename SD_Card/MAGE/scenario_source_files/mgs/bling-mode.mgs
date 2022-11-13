@@ -1,137 +1,124 @@
-initialize-bling-rotate-max {
-	mutate bling-rotate-max = 2
-}
+const!($maxBling = 2)
 
-bling-rotate-state-increment {
-	mutate bling-rotate-state + 1
-	mutate temp = bling-rotate-max
-	mutate temp + 1
-	if variable bling-rotate-state is temp then goto script bling-rotate-state-mutate-0
-	goto script bling-rotate-state-mutate-wrapup
-}
-
-bling-rotate-state-decrement {
-	mutate bling-rotate-state - 1
-	if variable bling-rotate-state is 65535 then goto script bling-rotate-state-mutate-max
-	goto script bling-rotate-state-mutate-wrapup
-}
-
-bling-rotate-state-mutate-0 {
-	mutate bling-rotate-state = 0
-	goto script bling-rotate-state-mutate-wrapup
-}
-
-bling-rotate-state-mutate-max {
-	mutate bling-rotate-state = bling-rotate-max
-	goto script bling-rotate-state-mutate-wrapup
-}
-
-bling-rotate-state-mutate-wrapup {
-	set flag bling-rotate-state-calc-done to true
-	set entity "%SELF%" tick_script to null_script
-}
-
-on_load-bling-mode-map {
-	set hex control to off
-	set player control to off
-	set map tick_script to on_tick-detect-bling-mode
-}
-
-on_tick-detect-bling-mode {
-	if warp state is bling-rotate-manual then goto script on_tick-bling-mode-map-manual-waiting
-	if warp state is bling-rotate-auto then goto script on_tick-bling-mode-map-auto
-	goto script on_tick-bling-mode-no_rotate-haxpress-check
-}
-
-on_tick-bling-mode-no_rotate-haxpress-check {
-	if flag bling-hax-button-only is true then goto script on_tick-bling-listen-haxpress-waiting
-	goto script on_tick-bling-listen-anypress-waiting
-}
-
-on_tick-bling-input-safety-delay {
-	wait 150ms
-}
-
-on_tick-bling-listen-anypress-waiting {
-	copy script on_tick-bling-input-safety-delay
-	goto script on_tick-bling-listen-anypress
-}
-
-on_tick-bling-listen-haxpress-waiting {
-	copy script on_tick-bling-input-safety-delay
-	goto script on_tick-bling-listen-haxpress
-}
-
-on_tick-bling-listen-anypress {
-	if button ANY then goto script on_tick-bling-back-to-menu
-}
-
-on_tick-bling-listen-haxpress {
-	if button HAX then goto script on_tick-bling-back-to-menu
-}
+/* --- Entrypoints from main menu --- */
 
 start_bling-rotate-auto {
 	set warp state to bling-rotate-auto
 	mutate bling-rotate-state = 0
-	goto script bling-mode-go-branches
+	goto script bling-goto-branches
 }
 
 start_bling-rotate-manual {
 	set warp state to bling-rotate-manual
 	mutate bling-rotate-state = 0
-	goto script bling-mode-go-branches
+	goto script bling-goto-branches
 }
 
-on_tick-bling-mode-map-auto {
-	set entity Timer tick_script to on_tick-bling-timer
-	goto script on_tick-bling-listen-anypress-waiting
-}
-
-on_tick-bling-timer {
-	wait 13000ms
-	set entity Math tick_script to bling-rotate-state-increment
-	goto script on_tick-bling-timer-wait
-}
-
-on_tick-bling-timer-wait {
-	if flag bling-rotate-state-calc-done is true then goto script bling-mode-go-branches
-}
-
-on_tick-bling-mode-map-manual-waiting {
-	copy script on_tick-bling-input-safety-delay
-	goto script on_tick-bling-mode-map-manual
-}
-
-on_tick-bling-mode-map-manual {
-	if button LJOY_LEFT then goto script on_tick-bling-mode-map-manual-left
-	if button RJOY_LEFT then goto script on_tick-bling-mode-map-manual-left
-	if button LJOY_RIGHT then goto script on_tick-bling-mode-map-manual-right
-	if button RJOY_RIGHT then goto script on_tick-bling-mode-map-manual-right
-	if button HAX then goto script on_tick-bling-back-to-menu
-}
-
-on_tick-bling-mode-map-manual-left {
-	set entity Math tick_script to bling-rotate-state-decrement
-	goto script on_tick-bling-timer-wait
-}
-
-on_tick-bling-mode-map-manual-right {
-	set entity Math tick_script to bling-rotate-state-increment
-	goto script on_tick-bling-timer-wait
-}
-
-on_tick-bling-back-to-menu {
-	set warp state to from-bling
-	goto script load-main_menu
-}
-
-bling-mode-go-branches {
+bling-goto-branches {
 	set flag bling-rotate-state-calc-done to false
+	// can't zigzag
 	if variable bling-rotate-state is 0 then goto script start_bling-dc801
 	if variable bling-rotate-state is 1 then goto script start_bling-digi-mage
 	if variable bling-rotate-state is 2 then goto script start_bling-zero
-	goto script on_tick-bling-back-to-menu
+	goto script bling-goto-menu
 }
+
+/* --- Common to all bling maps --- */
+
+on_load-bling-mode-map {
+	set hex control to off
+	set player control to off
+	set map tick_script to bling-detect-mode
+}
+
+bling-detect-mode {
+	// delay listening for button presses
+	// otherwise buttons just immediately trigger
+	wait 150ms
+	// detect rotation modes
+	if (warp state is bling-rotate-manual) {
+		goto script loop-bling-listen-manualrotate
+	} else if (warp state is bling-rotate-auto) {
+		// start the timer
+		set entity Timer tick_script to loop-bling_timer
+		goto script loop-bling-listen-any
+	}
+	// not a rotating mode
+	if (flag bling-hax-button-only is true) {
+		goto script loop-bling-listen-hax
+	} else {
+		goto script loop-bling-listen-any
+	}
+}
+
+loop-bling-listen-any {
+	if button ANY then goto script bling-goto-menu
+}
+
+loop-bling-listen-hax {
+	if button HAX then goto script bling-goto-menu
+}
+
+bling-goto-menu {
+	set warp state to from-bling
+	load map main_menu
+}
+
+/* --- for the "Math" entity --- */
+
+bling-rotate-state-increment {
+	mutate bling-rotate-state + 1
+	mutate temp = $maxBling
+	mutate temp + 1
+	if (variable bling-rotate-state is == temp) {
+		mutate bling-rotate-state = 0
+	}
+	set flag bling-rotate-state-calc-done to true
+	set entity "%SELF%" tick_script to null_script
+}
+
+bling-rotate-state-decrement {
+	mutate bling-rotate-state - 1
+	if (variable bling-rotate-state is 65535) { // aka -1
+		mutate bling-rotate-state = $maxBling
+	}
+	set flag bling-rotate-state-calc-done to true
+	set entity "%SELF%" tick_script to null_script
+}
+
+/* --- for the "Timer" entity --- */
+
+loop-bling_timer {
+	wait 13000ms
+	set entity Math tick_script to bling-rotate-state-increment
+	goto script loop-bling_timer-wait
+}
+
+loop-bling_timer-wait {
+	// Waits for entity "Math" to finish
+	if flag bling-rotate-state-calc-done is true
+		then goto script bling-goto-branches
+}
+
+loop-bling-listen-manualrotate {
+	if button LJOY_LEFT then goto script bling-manual-rotate-left
+	if button RJOY_LEFT then goto script bling-manual-rotate-left
+	if button LJOY_RIGHT then goto script bling-manual-rotate-right
+	if button RJOY_RIGHT then goto script bling-manual-rotate-right
+	if button HAX then goto script bling-goto-menu
+}
+
+bling-manual-rotate-left {
+	set entity Math tick_script to bling-rotate-state-decrement
+	goto script loop-bling_timer-wait
+}
+
+bling-manual-rotate-right {
+	set entity Math tick_script to bling-rotate-state-increment
+	goto script loop-bling_timer-wait
+}
+
+/* --- Initializing bling map state (and loading the map) --- */
 
 start_bling-dc801 {
 	set flag bling-hax-button-only to false

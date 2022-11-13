@@ -54,6 +54,24 @@
          "name":"entities",
          "objects":[
                 {
+                 "gid":246,
+                 "height":32,
+                 "id":64,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":355,
+                 "y":191
+                }, 
+                {
                  "gid":389,
                  "height":48,
                  "id":12,
@@ -75,24 +93,6 @@
                  "width":48,
                  "x":446,
                  "y":201
-                }, 
-                {
-                 "gid":246,
-                 "height":32,
-                 "id":64,
-                 "name":"Bub",
-                 "properties":[
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":355,
-                 "y":191
                 }, 
                 {
                  "gid":354,
@@ -201,7 +201,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":9,
+ "nextlayerid":10,
  "nextobjectid":75,
  "orientation":"orthogonal",
  "renderorder":"right-down",

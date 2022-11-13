@@ -1,396 +1,396 @@
 // draw-serial-map {
 // 	set serial control off
 // 	// ROW 0
-// 	print!("-------------------------------\n")
+// 	concat serial dialog {"-------------------------------\n"}
 
 // 	// ROW 1
-// 	print!("|  ")
+// 	concat serial dialog {"|  "}
 // 	if (flag ch2-seen-room-99 is true) {
-// 		print!("/----\\")
+// 		concat serial dialog {"/----\\"}
 // 	} else {
-// 		print!("      ")
+// 		concat serial dialog {"      "}
 // 	}
-// 	print!("      ")
+// 	concat serial dialog {"      "}
 // 	if (flag ch2-seen-room-14 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
-// 	print!("       M A P  |\n")
+// 	concat serial dialog {"       M A P  |\n"}
 
 // 	// ROW 2
-// 	print!("|  ")
+// 	concat serial dialog {"|  "}
 // 	if (flag ch2-seen-room-99 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 99) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("..|")
+// 		concat serial dialog {"..|"}
 // 	} else {
-// 		print!("      ")
+// 		concat serial dialog {"      "}
 // 	}
-// 	print!("     ")
+// 	concat serial dialog {"     "}
 // 	if (flag ch2-seen-room-14 is true) {
-// 		print!("/.\\")
+// 		concat serial dialog {"/.\\"}
 // 	} else {
-// 		print!("   ")
+// 		concat serial dialog {"   "}
 // 	}
-// 	print!("             |\n")
+// 	concat serial dialog {"             |\n"}
 
 // 	// ROW 3
-// 	print!("|  ")
+// 	concat serial dialog {"|  "}
 // 	if (flag ch2-seen-room-99 is true) {
-// 		print!("------")
+// 		concat serial dialog {"------"}
 // 	} else {
-// 		print!("      ")
+// 		concat serial dialog {"      "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-14 is true) {
-// 		print!("/..")
+// 		concat serial dialog {"/.."}
 // 		if (flag ch2-in-room is 14) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("..\\")
+// 		concat serial dialog {"..\\"}
 // 	} else {
-// 		print!("       ")
+// 		concat serial dialog {"       "}
 // 	}
-// 	print!("           |\n")
+// 	concat serial dialog {"           |\n"}
 
 // 	// ROW 4
-// 	print!("|           ")
+// 	concat serial dialog {"|           "}
 // 	if (flag ch2-seen-room-14 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-14 is true || flag ch2-seen-room-13 is true) {
-// 		print!("-----")
+// 		concat serial dialog {"-----"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
 // 	if (flag ch2-seen-room-14 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
-// 	print!("           |\n")
+// 	concat serial dialog {"           |\n"}
 
 // 	// ROW 5
-// 	print!("|            ")
+// 	concat serial dialog {"|            "}
 // 	if (flag ch2-seen-room-13 is true) {
-// 		print!("|...|")
+// 		concat serial dialog {"|...|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-33 is true) {
-// 		print!("----")
+// 		concat serial dialog {"----"}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-34 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-34 is true) {
-// 		print!("--")
+// 		concat serial dialog {"--"}
 // 	} else {
-// 		print!("  ")
+// 		concat serial dialog {"  "}
 // 	}
-// 	print!("  |\n")
+// 	concat serial dialog {"  |\n"}
 
 // 	// ROW 6
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-23 is true) {
-// 		print!("-----")
+// 		concat serial dialog {"-----"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("    ")
+// 	concat serial dialog {"    "}
 // 	if (flag ch2-seen-room-13 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 13) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".|")
+// 		concat serial dialog {".|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-33 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 33) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".")
+// 		concat serial dialog {"."}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-34 is true) {
-// 		print!("|")
+// 		concat serial dialog {"|"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-34 is true) {
 // 		if (flag ch2-in-room is 34) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("|")
+// 		concat serial dialog {"|"}
 // 	} else {
-// 		print!("  ")
+// 		concat serial dialog {"  "}
 // 	}
-// 	print!("  |\n")
+// 	concat serial dialog {"  |\n"}
 
 // 	// ROW 7
-// 	print!("|  ")
+// 	concat serial dialog {"|  "}
 // 	if (flag ch2-seen-room-23 is true) {
-// 		print!("/..")
+// 		concat serial dialog {"/.."}
 // 		if (flag ch2-in-room is 23) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("..\\")
+// 		concat serial dialog {"..\\"}
 // 	} else {
-// 		print!("       ")
+// 		concat serial dialog {"       "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-13 is true) {
-// 		print!("|...|")
+// 		concat serial dialog {"|...|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-33 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-32 is true) {
-// 		print!("---")
+// 		concat serial dialog {"---"}
 // 	} else {
-// 		print!("   ")
+// 		concat serial dialog {"   "}
 // 	}
 // 	if (flag ch2-seen-room-33 is true || flag ch2-seen-room-32 is true || flag ch2-seen-room-34 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-32 is true || flag ch2-seen-room-34 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-34 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
-// 	print!("  |\n")
+// 	concat serial dialog {"  |\n"}
 
 // 	// ROW 8
-// 	print!("|  ")
+// 	concat serial dialog {"|  "}
 // 	if (flag ch2-seen-room-23 is true) {
-// 		print!("\\...../")
+// 		concat serial dialog {"\\...../"}
 // 	} else {
-// 		print!("       ")
+// 		concat serial dialog {"       "}
 // 	}
-// 	print!("   ")
+// 	concat serial dialog {"   "}
 // 	if (flag ch2-seen-room-13 is true) {
-// 		print!("|...|")
+// 		concat serial dialog {"|...|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("    ")
+// 	concat serial dialog {"    "}
 // 	if (flag ch2-seen-room-32 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 32) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".|")
+// 		concat serial dialog {".|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("   |\n")
+// 	concat serial dialog {"   |\n"}
 
 // 	// ROW 9
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-23 is true) {
-// 		print!("-----")
+// 		concat serial dialog {"-----"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("    ")
+// 	concat serial dialog {"    "}
 // 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-13 is true) {
-// 		print!("----")
+// 		concat serial dialog {"----"}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-13 is true || flag ch2-seen-room-31 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-31 is true) {
-// 		print!("----")
+// 		concat serial dialog {"----"}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-31 is true || flag ch2-seen-room-32 is true) {
-// 		print!("-----")
+// 		concat serial dialog {"-----"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("   |\n")
+// 	concat serial dialog {"   |\n"}
 
 // 	// ROW 10
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-22 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 22) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".|")
+// 		concat serial dialog {".|"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
-// 	print!("    ")
+// 	concat serial dialog {"    "}
 // 	if (flag ch2-seen-room-12 is true) {
-// 		print!("|.")
+// 		concat serial dialog {"|."}
 // 		if (flag ch2-in-room is 12) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".")
+// 		concat serial dialog {"."}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
-// 		print!("|")
+// 		concat serial dialog {"|"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-31 is true) {
-// 		print!("...")
+// 		concat serial dialog {"..."}
 // 		if (flag ch2-in-room is 31) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("....|")
+// 		concat serial dialog {"....|"}
 // 	} else {
-// 		print!("         ")
+// 		concat serial dialog {"         "}
 // 	}
-// 	print!("   |\n")
+// 	concat serial dialog {"   |\n"}
 
 // 	// ROW 11
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-22 is true || flag ch2-seen-room-21 is true) {
-// 		print!("-----")
+// 		concat serial dialog {"-----"}
 // 	} else {
-// 		print!("     ")
+// 		concat serial dialog {"     "}
 // 	}
 // 	if (flag ch2-seen-room-21 is true) {
-// 		print!("----")
+// 		concat serial dialog {"----"}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
 // 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true || flag ch2-seen-room-21 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true) {
-// 		print!("---")
+// 		concat serial dialog {"---"}
 // 	} else {
-// 		print!("   ")
+// 		concat serial dialog {"   "}
 // 	}
 // 	if (flag ch2-seen-room-11 is true || flag ch2-seen-room-12 is true || flag ch2-seen-room-31 is true) {
-// 		print!("-")
+// 		concat serial dialog {"-"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-31 is true) {
-// 		print!("---------")
+// 		concat serial dialog {"---------"}
 // 	} else {
-// 		print!("         ")
+// 		concat serial dialog {"         "}
 // 	}
-// 	print!("   |\n")
+// 	concat serial dialog {"   |\n"}
 
 // 	// ROW 12
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-21 is true) {
-// 		print!("|...")
+// 		concat serial dialog {"|..."}
 // 		if (flag ch2-in-room is 21) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!("....")
+// 		concat serial dialog {"...."}
 // 	} else {
-// 		print!("         ")
+// 		concat serial dialog {"         "}
 // 	}
 // 	if (flag ch2-seen-room-21 is true || flag ch2-seen-room-11 is true) {
-// 		print!("|")
+// 		concat serial dialog {"|"}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
 // 	if (flag ch2-seen-room-11 is true) {
-// 		print!(".")
+// 		concat serial dialog {"."}
 // 		if (flag ch2-in-room is 11) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
-// 		print!(".|")
+// 		concat serial dialog {".|"}
 // 	} else {
-// 		print!("    ")
+// 		concat serial dialog {"    "}
 // 	}
-// 	print!("            |\n")
+// 	concat serial dialog {"            |\n"}
 
 // 	// ROW 13
-// 	print!("|   ")
+// 	concat serial dialog {"|   "}
 // 	if (flag ch2-seen-room-21 is true) {
-// 		print!("-------")
+// 		concat serial dialog {"-------"}
 // 	} else {
-// 		print!("       ")
+// 		concat serial dialog {"       "}
 // 	}
-// 	print!("---------          |\n")
+// 	concat serial dialog {"---------          |\n"}
 
 // 	// ROW 14
-// 	print!("|          |...")
+// 	concat serial dialog {"|          |..."}
 // 	if (flag ch2-seen-room-1 is true) {
 // 		if (flag ch2-in-room is 1) {
-// 			print!("@")
+// 			concat serial dialog {"@"}
 // 		} else {
-// 			print!(".")
+// 			concat serial dialog {"."}
 // 		}
 // 	} else {
-// 		print!(" ")
+// 		concat serial dialog {" "}
 // 	}
-// 	print!("...|          |\n")
+// 	concat serial dialog {"...|          |\n"}
 
 // 	// ROW 15
-// 	print!("|          ---------          |\n")
+// 	concat serial dialog {"|          ---------          |\n"}
 
 // 	// ROW 16
-// 	print!("-------------------------------\n")
+// 	concat serial dialog {"-------------------------------\n"}
 // 	set serial control on
 // 	goto null_script
 // }
