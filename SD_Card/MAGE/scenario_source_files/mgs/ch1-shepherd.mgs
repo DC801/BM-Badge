@@ -61,6 +61,7 @@ show_dialog-shepherd-start {
 			copy set-hint-none
 		}
 	}
+	// RESET
 	set entity Shepherd interact_script to show_dialog-shepherd-start
 }
 
@@ -94,10 +95,10 @@ show_dialog-sheep {
 turn-right-and-left {
 	copy face-player
 	set player control off
-	wait 200ms rotate entity "%SELF%" 1
-	wait 500ms rotate entity "%SELF%" -2
-	wait 500ms rotate entity "%SELF%" 1
-	wait 200ms copy face-player
+	wait 200ms /**/ rotate entity "%SELF%" 1
+	wait 500ms /**/ rotate entity "%SELF%" -2
+	wait 500ms /**/ rotate entity "%SELF%" 1
+	wait 200ms /**/ copy face-player
 	set player control on
 }
 

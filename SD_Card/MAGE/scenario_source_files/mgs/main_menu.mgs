@@ -3,7 +3,7 @@ settings for dialog {
 }
 
 on_load-main_menu {
-	copy script initialize-bling-rotate-max
+	goto null_script
 }
 
 /* ---------- on_tick scripts ---------- */

@@ -40,11 +40,11 @@ mtn-birthday-cutscene-start {
 	fade in camera from #000000 over 500ms
 	show dialog {
 		entity "Aunt Zippy" "Now you're an official mage, %PLAYER%!"
-		PLAYER "Blowing out the candle didn't make me a mage, Aunt Zippy!"
+		PLAYER "Blowing out the candle didn't make me a mage, %Aunt Zippy%!"
 		entity "Aunt Zippy" "Well, you're officially sixteen now!"
 		PLAYER "I'm pretty sure I officially turned sixteen at midnight last night."
 		entity "Uncle Zappy" "Well, you're officially our favorite birthday mage!"
-		PLAYER "Aw, thanks, Uncle Zappy!"
+		PLAYER "Aw, thanks, %Uncle Zappy%!"
 		entity "Aunt Zippy" "All right, everyone! Dig in!"
 	}
 	fade out camera to #000000 over 500ms
@@ -100,7 +100,7 @@ mtn-birthday-cutscene-start {
 
 		PLAYER
 		"Yeah."
-		"Good night, Aunt Zippy, Uncle Zappy."
+		"Good night, %Aunt Zippy%, %Uncle Zappy%."
 	}
 	fade out camera to #000000 over 2000ms
 	set flag mtn-birthday-cutscene to true
