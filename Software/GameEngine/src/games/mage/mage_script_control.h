@@ -7,7 +7,6 @@
 #include "mage_hex.h"
 
 #define SCRIPT_NAME_LENGTH 32
-#define COMMAND_STATES_COUNT 5
 
 //these are the types of scripts that can be on a map or entity:
 typedef enum : uint8_t {
@@ -22,11 +21,7 @@ typedef enum : uint8_t {
 struct resumeStatesStruct {
 	MageScriptState mapLoad;
 	MageScriptState mapTick;
-	MageScriptState commandLook;
-	MageScriptState commandGo;
-	MageScriptState commandUse;
-	MageScriptState commandGet;
-	MageScriptState commandDrop;
+	MageScriptState serial;
 };
 
 //this is a class designed to handle all the scripting for the MAGE() game
@@ -84,13 +79,6 @@ class MageScriptControl
 
 		//these functions return the specified MageScriptState struct:
 		resumeStatesStruct resumeStates;
-		MageScriptState* commandStates [COMMAND_STATES_COUNT] = {
-			&resumeStates.commandLook,
-			&resumeStates.commandGo,
-			&resumeStates.commandGet,
-			&resumeStates.commandDrop,
-			&resumeStates.commandUse,
-		};
 
 		MageScriptControl();
 

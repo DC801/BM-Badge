@@ -39,14 +39,11 @@ void MageScriptControl::initializeScriptsOnMapLoad()
 		map->onTick,
 		false
 	);
-	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
-	{
-		initScriptState(
-			commandStates[i],
-			0,
-			false
-		);
-	}
+	initScriptState(
+		&resumeStates.serial,
+		0,
+		false
+	);
 	for (uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++) {
 		//Initialize the script ResumeStateStructs to default values for this map.
 		MageEntity *entity = &MageGame->entities[i];
@@ -509,13 +506,8 @@ void MageScriptControl::tickScripts()
 	//the map's onTick script will run every tick, restarting from the beginning as it completes
 	handleMapOnTickScript();
 	if(mapLoadId != MAGE_NO_MAP) { return; }
-	handleCommandScript(&resumeStates.commandLook);
+	handleCommandScript(&resumeStates.serial);
 	if(mapLoadId != MAGE_NO_MAP) { return; }
-	for(uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
-	{
-		handleCommandScript(commandStates[i]);
-		if(mapLoadId != MAGE_NO_MAP) { return; }
-	}
 	for(uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++)
 	{
 		//this script will not initiate any new onInteract scripts. It will simply run an

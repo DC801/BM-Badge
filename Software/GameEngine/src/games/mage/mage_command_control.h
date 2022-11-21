@@ -1,6 +1,7 @@
 #ifndef GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #define GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #include "mage_defines.h"
+#include <vector>
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
@@ -35,6 +36,14 @@ typedef struct {
 	uint16_t scriptId;
 } MageSerialDialogResponse;
 
+typedef struct {
+	std::string combinedString;
+	uint16_t commandStringId;
+	uint16_t argumentStringId;
+	uint16_t scriptId;
+	bool isFail;
+} MageSerialDialogCommand;
+
 class MageCommandControl {
 	public:
 		std::string commandResponseBuffer;
@@ -42,17 +51,44 @@ class MageCommandControl {
 		std::string postDialogBuffer;
 		MageSerialDialog serialDialog = {};
 		std::unique_ptr<MageSerialDialogResponse[]> serialDialogResponses = {};
+		std::vector<MageSerialDialogCommand> registeredCommands = {};
 		int32_t jumpScriptId = MAGE_NO_SCRIPT;
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;
 		bool isInputTrapped = false;
+		bool isInputEnabled = true;
 		MageCommandControl();
 		void handleStart();
 		void processCommand(char *commandString);
-		void processCommandAsVerb(std::string input);
-		void processCommandAsResponseInput(std::string input);
-		void showSerialDialog(uint16_t serialDialogId);
+		void processInputAsCommand(std::string input);
+		void processInputAsTrappedResponse(std::string input);
+		void showSerialDialog(
+			uint16_t serialDialogId,
+			bool disableNewline = false
+		);
+		void registerCommand(
+			uint16_t commandStringId,
+			uint16_t scriptId,
+			bool isFail
+		);
+		void registerArgument(
+			uint16_t commandStringId,
+			uint16_t argumentStringId,
+			uint16_t scriptId
+		);
+		void unregisterCommand(
+			uint16_t commandStringId,
+			bool isFail
+		);
+		void unregisterArgument(
+			uint16_t commandStringId,
+			uint16_t argumentStringId
+		);
+		MageSerialDialogCommand* searchForCommand(
+			std::string verb,
+			std::string subject
+		);
 		uint32_t size();
 		void reset();
 		void sendBufferedOutput();

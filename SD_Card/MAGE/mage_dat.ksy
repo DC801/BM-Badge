@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 3
+    valid: 4
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -752,6 +752,11 @@ enums:
     95: check_map
     96: set_ble_flag
     97: check_ble_flag
+    98: set_serial_dialog_control
+    99: register_serial_dialog_command
+    100: register_serial_dialog_command_argument
+    101: unregister_serial_dialog_command
+    102: unregister_serial_dialog_command_argument
 
   dialog_screen_alignment_type:
     0: bottom_left

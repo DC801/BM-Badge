@@ -35,18 +35,13 @@ var serializeSerialDialog = function (
 		if (responses.length) {
 			responseType = serialDialogResponseTypeEnum.ENTER_NUMBER;
 		}
-		var textOptionKeys = Object.keys(serialDialog.text_options || {});
-		if (textOptionKeys.length) {
-			responses = textOptionKeys.map(function (key) {
-				return {
-					label: key.toLocaleLowerCase(),
-					script: serialDialog.text_options[key],
-				};
-			});
+		var textOptions = serialDialog.text_options;
+		if (textOptions) {
 			responseType = serialDialogResponseTypeEnum.ENTER_STRING;
+			responses = convertTextOptionsToResponses(textOptions);
 		}
 		if (responses.length > 255) {
-			throw new Error(`SerialDialog named "${serialDialog.name}" is malformed, it has too many options! It should have less than 265 options!!`);
+			throw new Error(`SerialDialog named "${serialDialog.name}" is malformed, it has too many options! It should have less than 256 options!!`);
 		}
 		var headerLength = getPaddedHeaderLength(
 			32 // char[32] name

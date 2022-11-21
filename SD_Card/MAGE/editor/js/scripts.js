@@ -391,6 +391,7 @@ var actionFieldsMap = {
 	],
 	SHOW_SERIAL_DIALOG: [
 		{propertyName: 'serial_dialog', size: 2},
+		{propertyName: 'disable_newline', size: 1},
 	],
 	INVENTORY_GET: [
 		{propertyName: 'item_name', size: 1},
@@ -426,6 +427,27 @@ var actionFieldsMap = {
 		{propertyName: 'success_script', size: 2},
 		{propertyName: 'ble_flag', size: 1},
 		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_SERIAL_DIALOG_CONTROL: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	REGISTER_SERIAL_DIALOG_COMMAND: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'script', size: 2},
+		{propertyName: 'is_fail', size: 1},
+	],
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'argument', size: 2},
+		{propertyName: 'script', size: 2},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'is_fail', size: 1},
+	],
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT: [
+		{propertyName: 'command', size: 2},
+		{propertyName: 'argument', size: 2},
 	],
 };
 
@@ -528,6 +550,11 @@ var actionNames = [
 	'CHECK_MAP',
 	'SET_BLE_FLAG',
 	'CHECK_BLE_FLAG',
+	'SET_SERIAL_DIALOG_CONTROL',
+	'REGISTER_SERIAL_DIALOG_COMMAND',
+	'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND',
+	'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 ];
 
 var specialKeywordsEnum = {
@@ -826,6 +853,20 @@ var getBoolFromAction = function (
 	return value;
 };
 
+var getDefaultFalseBoolFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName] || false;
+	if (typeof value !== 'boolean') {
+		throw new Error(`${action.action} requires a (true | false) value for "${propertyName}"!`);
+	}
+	return value;
+};
+
 var getStringIdFromAction = function (
 	propertyName,
 	action,
@@ -1105,6 +1146,8 @@ var actionPropertyNameToHandlerMap = {
 	success_script: getMapLocalScriptIdFromAction,
 	expected_script: getMapLocalScriptIdFromAction,
 	string: getStringIdFromAction,
+	command: getStringIdFromAction,
+	argument: getStringIdFromAction,
 	save_flag: getSaveFlagIdFromAction,
 	dialog: getDialogIdFromAction,
 	address: getTwoBytesFromAction,
@@ -1126,6 +1169,8 @@ var actionPropertyNameToHandlerMap = {
 	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
+	disable_newline: getDefaultFalseBoolFromAction,
+	is_fail: getDefaultFalseBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
 	source: getVariableIdFromAction,
