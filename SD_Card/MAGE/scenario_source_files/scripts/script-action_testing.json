@@ -1,4 +1,165 @@
 {
+	"map-action_testing-go_register": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command-map"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register"
+		}
+	],
+	"map-action_testing-go_register_fail": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map",
+			"script": "command-map-fail",
+			"is_fail": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_fail"
+		}
+	],
+	"map-action_testing-go_register_arguments": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town",
+			"script": "command-map-town"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon",
+			"script": "command-map-dungeon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_arguments"
+		}
+	],
+	"map-action_testing-go_unregister_arguments": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "town"
+		},
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "map",
+			"argument": "dungeon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_unregister_arguments"
+		}
+	],
+	"map-action_testing-go_unregister": [
+		{
+			"action": "UNREGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "map"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_unregister"
+		}
+	],
+	"command-map": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map"
+		}
+	],
+	"command-map-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-fail"
+		}
+	],
+	"command-map-town": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-town"
+		}
+	],
+	"command-map-dungeon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-dungeon"
+		}
+	],
+	"map-action_testing-go_concat": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-map-action_testing-go_concat"
+		}
+	],
+	"concat_response-goat": [
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-start",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-goat",
+			"disable_newline": true
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"concat-end"
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		}
+	],
+	"concat_response-bird": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "bird",
+				"Goat": "Bird"
+			}
+		}
+	],
+	"concat_response-cat": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "cat",
+				"Goat": "Cat"
+			}
+		}
+	],
+	"concat_response-platypus": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "platypus",
+				"Goat": "Platypus"
+			}
+		}
+	],
+	"concat_response-peregrine_falcon": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "concat_response-goat",
+			"search_and_replace": {
+				"goat": "peregrine_falcon",
+				"Goat": "Peregrine Falcon"
+			}
+		}
+	],
 	"map-action_testing-load": [
 		{
 			"action": "SET_CONNECT_SERIAL_DIALOG",

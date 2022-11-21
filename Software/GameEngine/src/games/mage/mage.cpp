@@ -234,7 +234,9 @@ void EngineMainGameLoop ()
 
 	//on desktop, interact with stdin
 	//on embedded, interact with USBC com port over serial
-	EngineHandleSerialInput();
+	if (MageCommand->isInputEnabled) {
+		EngineHandleSerialInput();
+	}
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"EngineHandleKeyboardInput();"

@@ -1,4 +1,23 @@
 {
+	"action_testing_01": {
+		"path": "maps/map-action_testing_01.json",
+		"on_tick": "null_script",
+		"on_load": "map-action_testing-load",
+		"on_look": "map-action_testing-look",
+		"directions": {
+			"north": "map-action_testing-go_north",
+			"cleveland": "map-action_testing-go_cleveland",
+			"numbers": "map-action_testing-go_numbers",
+			"sphinx": "map-action_testing-go_sphinx",
+			"hub": "map-action_testing-go_hub",
+			"concat": "map-action_testing-go_concat",
+			"reg": "map-action_testing-go_register",
+			"regFail": "map-action_testing-go_register_fail",
+			"regArg": "map-action_testing-go_register_arguments",
+			"unregArg": "map-action_testing-go_unregister_arguments",
+			"unreg": "map-action_testing-go_unregister"
+		}
+	},
 	"main_menu": "maps/map-main_menu.json",
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
@@ -44,19 +63,6 @@
 	"bling-dc801": {
 		"path": "maps/map-bling-dc801.json",
 		"on_load": "on_load-bling-dc801"
-	},
-	"action_testing_01": {
-		"path": "maps/map-action_testing_01.json",
-		"on_tick": "null_script",
-		"on_load": "map-action_testing-load",
-		"on_look": "map-action_testing-look",
-		"directions": {
-			"north": "map-action_testing-go_north",
-			"cleveland": "map-action_testing-go_cleveland",
-			"numbers": "map-action_testing-go_numbers",
-			"sphinx": "map-action_testing-go_sphinx",
-			"hub": "map-action_testing-go_hub"
-		}
 	},
 	"demo": "maps/map-demo.json",
 	"main": "maps/map-main.json",

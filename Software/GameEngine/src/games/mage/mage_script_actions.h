@@ -122,6 +122,11 @@ typedef enum : uint8_t {
 	CHECK_MAP,
 	SET_BLE_FLAG,
 	CHECK_BLE_FLAG,
+	SET_SERIAL_DIALOG_CONTROL,
+	REGISTER_SERIAL_DIALOG_COMMAND,
+	REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
+	UNREGISTER_SERIAL_DIALOG_COMMAND,
+	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -343,6 +348,14 @@ void action_check_map(uint8_t * args, MageScriptState * resumeStateStruct);
 void action_set_ble_flag(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: C
 void action_check_ble_flag(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_set_serial_dialog_control(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_register_serial_dialog_command(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_register_serial_dialog_command_argument(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I
+void action_unregister_serial_dialog_command(uint8_t * args, MageScriptState * resumeStateStruct);
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);

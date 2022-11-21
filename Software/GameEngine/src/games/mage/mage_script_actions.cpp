@@ -2546,7 +2546,7 @@ void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStru
 {
 	typedef struct {
 		uint16_t serialDialogId;
-		uint8_t paddingC;
+		uint8_t disableNewline;
 		uint8_t paddingD;
 		uint8_t paddingE;
 		uint8_t paddingF;
@@ -2555,7 +2555,10 @@ void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStru
 	auto *argStruct = (ActionShowSerialDialog*)args;
 	ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
-		MageCommand->showSerialDialog(argStruct->serialDialogId);
+		MageCommand->showSerialDialog(
+			argStruct->serialDialogId,
+			argStruct->disableNewline
+		);
 		if(MageCommand->isInputTrapped) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
 		}
@@ -2706,6 +2709,95 @@ void action_check_ble_flag(uint8_t * args, MageScriptState * resumeStateStruct)
 	// TODO: implement this
 }
 
+void action_set_serial_dialog_control(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t playerHasControl;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetPlayerControl;
+	auto *argStruct = (ActionSetPlayerControl*)args;
+	MageCommand->isInputEnabled = argStruct->playerHasControl;
+}
+
+void action_register_serial_dialog_command(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint16_t scriptId;
+		uint8_t isFail;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionRegisterSerialDialogVerb;
+	auto *argStruct = (ActionRegisterSerialDialogVerb*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
+	MageCommand->registerCommand(
+		argStruct->commandStringId,
+		argStruct->scriptId,
+		argStruct->isFail
+	);
+}
+
+void action_register_serial_dialog_command_argument(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint16_t argumentStringId;
+		uint16_t scriptId;
+		uint8_t paddingG;
+	} ActionRegisterSerialDialogVerb;
+	auto *argStruct = (ActionRegisterSerialDialogVerb*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->argumentStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
+	MageCommand->registerArgument(
+		argStruct->commandStringId,
+		argStruct->argumentStringId,
+		argStruct->scriptId
+	);
+}
+
+void action_unregister_serial_dialog_command(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint8_t isFail;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionUnregisterSerialDialogVerb;
+	auto *argStruct = (ActionUnregisterSerialDialogVerb*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	MageCommand->unregisterCommand(
+		argStruct->commandStringId,
+		argStruct->isFail
+	);
+}
+
+void action_unregister_serial_dialog_command_argument(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t commandStringId;
+		uint16_t argumentStringId;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionRegisterSerialDialogVerb;
+	auto *argStruct = (ActionRegisterSerialDialogVerb*)args;
+	ROM_ENDIAN_U2_BUFFER(&argStruct->commandStringId, 1);
+	ROM_ENDIAN_U2_BUFFER(&argStruct->argumentStringId, 1);
+	MageCommand->unregisterArgument(
+		argStruct->commandStringId,
+		argStruct->argumentStringId
+	);
+}
+
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
 	&action_check_entity_name,
@@ -2805,6 +2897,11 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_check_map,
 	&action_set_ble_flag,
 	&action_check_ble_flag,
+	&action_set_serial_dialog_control,
+	&action_register_serial_dialog_command,
+	&action_register_serial_dialog_command_argument,
+	&action_unregister_serial_dialog_command,
+	&action_unregister_serial_dialog_command_argument,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

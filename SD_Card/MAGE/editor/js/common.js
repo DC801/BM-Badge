@@ -1,4 +1,4 @@
-var ENGINE_VERSION = 3; // MUST BE BUMPED BY WHOLE NUMBERS WHEN ENGINE CHANGES DATA SHAPES!!!
+var ENGINE_VERSION = 4; // MUST BE BUMPED BY WHOLE NUMBERS WHEN ENGINE CHANGES DATA SHAPES!!!
 var IS_LITTLE_ENDIAN = true;
 var IS_SCREEN_LITTLE_ENDIAN = false;
 var IS_GLITCHED_FLAG = 0b10000000;
@@ -45,6 +45,20 @@ var getPaddedHeaderLength = function (length) {
 			? 4 - mod
 			: 0
 	);
+};
+
+var convertTextOptionsToResponses = function (textOptions) {
+	var result = [];
+	var textOptionKeys = Object.keys(textOptions || {});
+	if (textOptionKeys.length) {
+		result = textOptionKeys.map(function (key) {
+			return {
+				label: key.toLocaleLowerCase(),
+				script: textOptions[key],
+			};
+		});
+	}
+	return result;
 };
 
 var propertyTypeHandlerMap = {

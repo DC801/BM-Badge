@@ -472,7 +472,6 @@
 	- [ ] `SHOW_SERIAL_DIALOG` (serial_dialog_id)
 		- [x] Output text
 		- [x] Sanitize & handle input
-		- [ ] implement a globalJumpScriptId
 	- [ ] `INVENTORY_GET` (item_name)
 	- [ ] `INVENTORY_DROP` (item_name)
 	- [ ] `CHECK_INVENTORY` (item_name, expected_state, success_script)
