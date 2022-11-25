@@ -21,7 +21,9 @@ var mgs = {
 			branchesLoop: true,
 			branches: [
 				{ branch: "dialogSettingsNode", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogSettingsNode", multipleOkay: true, zeroOkay: true },
 				{ branch: "dialogNode", multipleOkay: true, zeroOkay: true },
+				{ branch: "serialDialogNode", multipleOkay: true, zeroOkay: true },
 				{ branch: "scriptNode", multipleOkay: true, zeroOkay: true },
 			]
 		},
@@ -50,6 +52,26 @@ var mgs = {
 				finalState.dialogSettings = finalState.dialogSettings || [];
 				finalState.dialogSettings.push(result);
 			},
+		},
+		"serialDialogSettings": {
+			branches: [
+				{ branch: "serialDialogParameter", multipleOkay: true, zeroOkay: true },
+			],
+			closeChar: "}",
+			onOpen: function (state) {
+				state.finalState.serialDialogParameters =
+					state.finalState.serialDialogParameters || {};
+				state.inserts.serialDialogParameters =
+					state.inserts.serialDialogParameters || {};
+			},
+			onClose: function (state) {
+				var oldParams = state.finalState.serialDialogParameters;
+				var newParams = state.inserts.serialDialogParameters;
+				Object.entries(newParams).forEach(function (item) {
+					oldParams[item[0]] = item[1];
+				});
+				state.inserts.serialDialogParameters = {};
+			}
 		},
 		"dialog": {
 			branchesLoop: true,
@@ -97,6 +119,39 @@ var mgs = {
 				inserts.dialogs = [];
 			},
 		},
+		"serialDialog": {
+			branches: [
+				{ branch: "serialDialogParameter", multipleOkay: true, zeroOkay: true },
+				{
+					branch: "serialDialogMessage",
+					multipleOkay: true,
+					zeroOkay: false,
+					failMessage: "You need at least one serial dialog message!" 
+				},
+				{ branch: "serialDialogOptionFree", multipleOkay: true, zeroOkay: true },
+				// strictly, only either type of option is allowed (not one then the other) but there is no easy means of implementing this (the parser will run with the first type it sees and not take the syntax literally for each option individually)
+				{ branch: "serialDialogOptionFixed", multipleOkay: true, zeroOkay: true },
+			],
+			closeChar: "}",
+			onOpen: function (state) {
+				state.inserts.serialDialogParameters =
+					state.inserts.serialDialogParameters || {};
+			},
+			onClose: function (state) {
+				var inserts = state.inserts;
+				var final = state.finalState;
+				var dialogName = inserts.serialDialogName;
+				var builtDialog = mgs.buildSerialDialogFromState(state);
+				final.serialDialogs = final.serialDialogs || {};
+				final.serialDialogs[dialogName] = builtDialog;
+				// reset
+				inserts.serialDialogParameters = {};
+				inserts.serialDialogMessages = [];
+				inserts.serialDialogOptions = [];
+				inserts.serialOptionType = null;
+				inserts.serialDialogName = null;
+			},
+		},
 		"script": {
 			branches: [
 				{ branch: "action", multipleOkay: true, zeroOkay: true }
@@ -127,12 +182,28 @@ var mgs = {
 					state.startBlock("dialogSettings");
 				}],
 		],
+		serialDialogSettingsNode: [
+			["settings ?for serial ?dialog {",
+				// console.log("    Found 'settings ?for serial ?dialog {'")
+				function (state) {
+					state.startBlock("serialDialogSettings");
+				}],
+		],
 		dialogNode: [
 			["dialog $dialog:string {",
 				function (state) {
 					// console.log("    Found 'dialog $dialog:string {'")
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
+					state.clearCaptures();
+				}],
+		],
+		serialDialogNode: [
+			["serial dialog $serial_dialog:string {",
+				function (state) {
+					// console.log("    Found 'serial dialog $dialog:string {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
 					state.clearCaptures();
 				}],
 		],
@@ -313,10 +384,45 @@ var mgs = {
 					state.clearCaptures();
 				}]
 		],
+		serialDialogParameter: [
+			["wrap ?messages ?to $value:number",
+				function (state) {
+					// console.log("    Found 'wrap ?messages ?to $value:number'")
+					state.processCaptures(
+						"serialDialogParameter",
+						{ parameterName: "messageWrap" }
+					);
+					state.clearCaptures();
+				}],
+		],
+		serialDialogMessage: [
+			["$message:quotedString",
+				function (state) {
+					// console.log("    Found '$message:quotedString'")
+					state.processCaptures("serialDialogMessage");
+					state.clearCaptures();
+				}]
+		],
+		serialDialogOptionFree: [
+			["_ $label:quotedString : ?goto ?script $script:string",
+				function (state) {
+					// console.log("    Found '$message:quotedString'")
+					state.processCaptures("serialDialogOptionFree");
+					state.clearCaptures();
+				}]
+		],
+		serialDialogOptionFixed: [
+			["# $label:quotedString : ?goto ?script $script:string",
+				function (state) {
+					// console.log("    Found '$message:quotedString'")
+					state.processCaptures("serialDialogOptionFixed");
+					state.clearCaptures();
+				}]
+		],
 		action: [
 			["show dialog $dialog:string {",
 				function (state) {
-					// console.log("    Found 'show dialog $dialog:quotedString {'")
+					// console.log("    Found 'show dialog $dialog:string {'")
 					state.startBlock("dialog");
 					state.processCaptures("dialogName");
 					state.processCaptures(
@@ -338,7 +444,84 @@ var mgs = {
 						}
 					);
 					state.clearCaptures();
-				}]
+				}],
+			["show serial dialog $serial_dialog:string {",
+				function (state) {
+					// console.log("    Found 'show serial dialog $serial_dialog:string {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{ action: "SHOW_SERIAL_DIALOG", disable_newline: false }
+					);
+					state.clearCaptures();
+				}],
+			["show serial dialog {",
+				function (state) {
+					// console.log("    Found 'show serial dialog {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{
+							action: "SHOW_SERIAL_DIALOG",
+							disable_newline: false,
+							serial_dialog: state.inserts.serialDialogName
+						}
+					);
+					state.clearCaptures();
+				}],
+			["concat serial dialog $serial_dialog:string {",
+				function (state) {
+					// console.log("    Found 'show serial dialog $serial_dialog:string {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{ action: "SHOW_SERIAL_DIALOG", disable_newline: true }
+					);
+					state.clearCaptures();
+				}],
+			["concat serial dialog {",
+				function (state) {
+					// console.log("    Found 'show serial dialog {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{
+							action: "SHOW_SERIAL_DIALOG",
+							disable_newline: true,
+							serial_dialog: state.inserts.serialDialogName
+						}
+					);
+					state.clearCaptures();
+				}],
+			["set serial connect ?message ?to {",
+				function (state) {
+					// console.log("    Found 'set serial connect message to {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{
+							action: "SET_CONNECT_SERIAL_DIALOG",
+							serial_dialog: state.inserts.serialDialogName
+						}
+					);
+					state.clearCaptures();
+				}],
+			["set serial connect ?message ?to $serial_dialog:string {",
+				function (state) {
+					// console.log("    Found 'set serial connect message to $serial_dialog:string {'")
+					state.startBlock("serialDialog");
+					state.processCaptures("serialDialogName");
+					state.processCaptures(
+						"action",
+						{ action: "SET_CONNECT_SERIAL_DIALOG" }
+					);
+					state.clearCaptures();
+				}],
 			// more are procedurally added
 		],
 	},
@@ -348,6 +531,13 @@ var mgs = {
 				state.inserts.dialogName = state.captures.dialog;
 			} else {
 				state.inserts.dialogName = state.makeAutoIdentifierName();
+			}
+		},
+		serialDialogName: function (state) {
+			if (state.captures.serial_dialog) {
+				state.inserts.serialDialogName = state.captures.serial_dialog;
+			} else {
+				state.inserts.serialDialogName = state.makeAutoIdentifierName();
 			}
 		},
 		scriptName: function (state) {
@@ -378,6 +568,33 @@ var mgs = {
 		dialogOption: function (state) {
 			state.inserts.dialogOptions = state.inserts.dialogOptions || [];
 			state.inserts.dialogOptions.push({
+				label: state.captures.label,
+				script: state.captures.script
+			});
+		},
+		serialDialogParameter: function (state, args) {
+			state.inserts.serialDialogParameters[args.parameterName] = state.captures.value;
+		},
+		serialDialogMessage: function (state) {
+			state.inserts.serialDialogMessages = state.inserts.serialDialogMessages || [];
+			state.inserts.serialDialogMessages.push(state.captures.message);
+		},
+		serialDialogOptionFree: function (state) {
+			if (!state.inserts.serialOptionType) {
+				state.inserts.serialOptionType = 'text_options';
+			}
+			state.inserts.serialDialogOptions = state.inserts.serialDialogOptions || [];
+			state.inserts.serialDialogOptions.push({
+				label: state.captures.label,
+				script: state.captures.script
+			});
+		},
+		serialDialogOptionFixed: function (state) {
+			if (!state.inserts.serialOptionType) {
+				state.inserts.serialOptionType = 'options';
+			}
+			state.inserts.serialDialogOptions = state.inserts.serialDialogOptions || [];
+			state.inserts.serialDialogOptions.push({
 				label: state.captures.label,
 				script: state.captures.script
 			});
@@ -531,6 +748,12 @@ mgs.actionDictionary = [
 	{
 		action: "SHOW_SERIAL_DIALOG",
 		pattern: "show serial dialog $serial_dialog:string",
+		values: { "disable_newline": false },
+	},
+	{
+		action: "SHOW_SERIAL_DIALOG",
+		pattern: "concat serial dialog $serial_dialog:string",
+		values: { "disable_newline": true },
 	},
 	{
 		action: "SET_CONNECT_SERIAL_DIALOG",
@@ -583,6 +806,48 @@ mgs.actionDictionary = [
 	{
 		action: "SET_PLAYER_CONTROL",
 		pattern: "set player control ?to $bool_value:boolean",
+	},
+	{
+		action: "SET_SERIAL_CONTROL",
+		pattern: "set serial control ?to $bool_value:boolean",
+	},
+	{
+		action: "REGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "register ?command $command:string -> ?script $script:string",
+		values: { "is_fail": false },
+	},
+	{
+		action: "REGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "register ?command $command:string fail -> ?script $script:string",
+		values: { "is_fail": true },
+	},
+	{
+		action: "REGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "register ?command $command:string failure -> ?script $script:string",
+		values: { "is_fail": true },
+	},
+	{
+		action: "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+		pattern: "register ?command $command:string + ?arg $argument:string -> ?script $script:string",
+	},
+	{
+		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "unregister ?command $command:string",
+		values: { "is_fail": false },
+	},
+	{
+		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "unregister ?command $command:string fail",
+		values: { "is_fail": true },
+	},
+	{
+		action: "UNREGISTER_SERIAL_DIALOG_COMMAND",
+		pattern: "unregister ?command $command:string failure",
+		values: { "is_fail": true },
+	},
+	{
+		action: "UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+		pattern: "unregister ?command $command:string + ?arg $argument:string",
 	},
 	{
 		action: "SET_HEX_EDITOR_DIALOG_MODE",
@@ -972,7 +1237,7 @@ mgs.actionDictionary.forEach(function (item) {
 	);
 })
 
-/* building MGS dialogs */
+/* ------ building MGS dialogs ------ */
 
 mgs.cleanString = function (inputString) {
 	return inputString
@@ -991,21 +1256,29 @@ mgs.identifyEscapedChar = function (inputString) {
 	}
 };
 
-mgs.countWordChars = function (inputString) {
-	var specialCases = {
-		"%": 12, // entity names: max 12 chars ASCII
-		"$": 5, // integers: max value 65535
-	};
+mgs.dialogWrapSpecials = {
+	"%": { // entity names: max 12 chars ASCII
+		endChar: "%",
+		length: 12,
+	},
+	"$": { // integers: max value 65535
+		endChar: "$",
+		length: 4,
+	},
+};
+
+mgs.countWordChars = function (inputString, _wrapSpecials) {
+	var wrapSpecials = _wrapSpecials || {};
 	var size = 0;
 	var pos = 0;
 	var mode = null;
 	while (pos < inputString.length) {
 		var nextChar = inputString[pos];
 		if (mode) { // we're in a special mode
-			if (nextChar === mode) { // if the mode char matches, end mode
-				mode = null;
-				size += specialCases[nextChar]; // size was arbitrary
+			if (nextChar === mode.endChar) { // if the mode char matches, end mode
+				size += mode.length; // size was arbitrary
 				pos += 1; // pos was not
+				mode = null;
 				continue;
 			}
 			var escaped = mgs.identifyEscapedChar(inputString.substring(pos));
@@ -1030,13 +1303,27 @@ mgs.countWordChars = function (inputString) {
 		}
 		// special char
 		if (
-			specialCases[nextChar]
-			&& inputString[pos+1]
-			&& inputString.substring(pos+1).includes(nextChar)
-		) { // if there's another of the same char later, start mode
-			mode = nextChar;
-			pos += 1;
-			continue;
+			wrapSpecials[nextChar]
+			&& inputString.substring(pos+1)
+				.includes(wrapSpecials[nextChar].endChar)
+		) { // if the end char is in sight, start mode
+			mode = wrapSpecials[nextChar];
+			if (mode.wholeMustMatch) { // if there's limited whole matches allowed
+				var wholeMatch = inputString.substring(pos)
+					.match(mode.wholeMustMatch);
+				if (wholeMatch) { // a whole match is satisfied
+					var matchedStringSize = wholeMatch[0].length;
+					size += mode.length;
+					pos += matchedStringSize;
+					mode = null; // turn off special mode 'cause we're done
+					continue;
+				} else {// it's not a special mode after all
+					mode = null; // turn off special mode because it's normal after all
+				}
+			} else { // wildcard wrap contents; mode will persist
+				pos += 1;
+				continue;
+			}
 		}
 		// all the rest are "normal"
 		size += 1;
@@ -1049,7 +1336,7 @@ mgs.countWordChars = function (inputString) {
 	}
 };
 
-mgs.wrapText = function (inputString, wrapTo) {
+mgs.wrapText = function (inputString, wrapTo, wrapSpecials) {
 	// TODO: hyphenated words?
 	wrapTo = wrapTo || 42; // magic number alert!
 	var stringSplits = inputString.split('\n'); // TODO: more line breaks
@@ -1075,7 +1362,10 @@ mgs.wrapText = function (inputString, wrapTo) {
 				continue;
 			}
 			// things other than spaces
-			var word = mgs.countWordChars(workingString.substring(pos));
+			var word = mgs.countWordChars(
+				workingString.substring(pos),
+				wrapSpecials
+			);
 			if (insertLength + word.size > wrapTo) {
 				var choppedInsert = insert.substring(0, lastSpaceFound);
 				stringsResults.push(choppedInsert);
@@ -1169,7 +1459,7 @@ mgs.buildDialogFromState = function (state) {
 	}
 	result.messages = messages.map(function (string) {
 		var cleanedString = mgs.cleanString(string);
-		return mgs.wrapText(cleanedString, result.messageWrap);
+		return mgs.wrapText(cleanedString, result.messageWrap, mgs.dialogWrapSpecials);
 	});
 	if (options && options.length) {
 		result.response_type = "SELECT_FROM_SHORT_LIST";
@@ -1191,6 +1481,162 @@ mgs.buildDialogFromState = function (state) {
 	}
 	delete result.messageWrap;
 	return result;
+};
+
+/* ------ building MGS serial dialogs ------ */
+
+mgs.buildSerialDialogFromState = function (state) {
+	var messages = state.inserts.serialDialogMessages || [];
+	var options = state.inserts.serialDialogOptions || [];
+	var optionType = state.inserts.serialOptionType || null;
+	var result = {};
+	// wrap amount
+	var globalParams = state.finalState.serialDialogParameters || {};
+	var localParams = state.inserts.serialDialogParameters || {};
+	var wrapTo = 80;
+	if (localParams.messageWrap) {
+		wrapTo = localParams.messageWrap;
+	} else if (globalParams.messageWrap) {
+		wrapTo = globalParams.messageWrap;
+	}	
+	result.messages = messages.map(function (string) {
+		var cleanedString = mgs.cleanString(string);
+		var wrappedString = mgs.wrapText(cleanedString, wrapTo, mgs.serialWrapSpecials);
+		return mgs.replaceTagsWithAnsi(wrappedString);
+	});
+	if (options && options.length) {
+		if (optionType === 'options') { // multiple choice
+			result.options = options.map(function (item) {
+				item.label = mgs.cleanString(mgs.replaceTagsWithAnsi(item.label));
+				return item;
+			});
+		} else if (optionType === 'text_options') { // free choice
+			result.text_options = {};
+			options.forEach(function (item) {
+				var label = mgs.cleanString(item.label);
+				result.text_options[label] = item.script;
+			})
+		}
+	}
+	return result;
+};
+
+mgs.ansiMap = [
+	// bold/bright
+	{
+		natlang: [ 'bold' ],
+		ansi: '\u001B[1m',
+	},
+	// faint/dim
+	{
+		natlang: [ 'dim' ],
+		ansi: '\u001B[2m',
+	},
+	// reset styles
+	{
+		natlang: [ '/', 'reset' ],
+		ansi: '\u001B[0m',
+	},
+	// fg colors
+	{
+		natlang: [ 'k', 'black' ],
+		ansi: '\u001B[30m',
+	},
+	{
+		natlang: [ 'r', 'red' ],
+		ansi: '\u001B[31m',
+	},
+	{
+		natlang: [ 'g', 'green' ],
+		ansi: '\u001B[32m',
+	},
+	{
+		natlang: [ 'y', 'yellow' ],
+		ansi: '\u001B[33m',
+	},
+	{
+		natlang: [ 'b', 'blue' ],
+		ansi: '\u001B[34m',
+	},
+	{
+		natlang: [ 'm', 'magenta' ],
+		ansi: '\u001B[35m',
+	},
+	{
+		natlang: [ 'c', 'cyan' ],
+		ansi: '\u001B[36m',
+	},
+	{
+		natlang: [ 'w', 'white' ],
+		ansi: '\u001B[37m',
+	},
+	// bg colors
+	{
+		natlang: [ 'bg-k', 'bg-black' ],
+		ansi: '\u001B[40m',
+	},
+	{
+		natlang: [ 'bg-r', 'bg-red' ],
+		ansi: '\u001B[41m',
+	},
+	{
+		natlang: [ 'bg-g', 'bg-green' ],
+		ansi: '\u001B[42m',
+	},
+	{
+		natlang: [ 'bg-y', 'bg-yellow' ],
+		ansi: '\u001B[43m',
+	},
+	{
+		natlang: [ 'bg-b', 'bg-blue' ],
+		ansi: '\u001B[44m',
+	},
+	{
+		natlang: [ 'bg-m', 'bg-magenta' ],
+		ansi: '\u001B[45m',
+	},
+	{
+		natlang: [ 'bg-c', 'bg-cyan' ],
+		ansi: '\u001B[46m',
+	},
+	{
+		natlang: [ 'bg-w', 'bg-white' ],
+		ansi: '\u001B[47m',
+	},
+	// Linux-sempai says use only red, or red and cyan, and don't use the others; you have no idea whether they're using a dark or light theme, or what their theme is like and some colors WILL NOT show up, depending
+];
+
+mgs.serialWrapSpecials = {
+	"<": {
+		endChar: ">",
+		length: 0,
+		wholeMustMatch: /^<(reset|\/|bold|dim|(bg-)?(black|red|green|yellow|blue|magenta|cyan|white|k|r|g|y|b|m|c|w))>/,
+	},
+};
+
+mgs.tagToAnsiLookup = {};
+mgs.ansiMap.forEach(function (entry) {
+	entry.natlang.forEach(function (natlangEntry) {
+		mgs.tagToAnsiLookup[natlangEntry] = entry.ansi;
+	});
+});
+
+mgs.replaceTagsWithAnsi = function (string) {
+	var result = string;
+	var tags = Object.keys(mgs.tagToAnsiLookup);
+	tags.forEach(function (tag) {
+		var target = '<' + tag + '>';
+		if (tag === '/') {
+			target = '<\\/>';
+		}
+		var reg = new RegExp(target, 'g');
+		result = result.replace(reg, mgs.tagToAnsiLookup[tag]);
+	});
+	return result;
+};
+
+mgs.stripAnsi = function (string) {
+	return string.replace(/\u001B\[[0-9]{1,2}m/g, '');
 };
 
 window.mgs = mgs;
