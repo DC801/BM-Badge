@@ -1,7 +1,7 @@
 var app = new Vue({
 	el:' #app',
 	data: {
-		which: 'constants',
+		which: 'split',
 		origInput: testText,
 		lexOutput: {},
 		zigzagTestStrings: zigzagTestStrings, // for the v-for
@@ -30,6 +30,7 @@ var app = new Vue({
 			fileName: "untitledFile",
 			script: "",
 			dialog: "",
+			serialDialog: "",
 		}
 	},
 	computed: {
@@ -138,6 +139,7 @@ var app = new Vue({
 				this.split.fileName
 			);
 			this.split.dialog = JSON.stringify(result.dialogs, null, '  ');
+			this.split.serialDialog = JSON.stringify(result.serialDialogs, null, '  ');
 			this.split.script = JSON.stringify(result.scripts, null, '  ');
 		},
 		changeWhich: function (word) {
@@ -155,7 +157,7 @@ var app = new Vue({
 		>JSON pair to natlang</button>
 		<button
 			@click="changeWhich('split')"
-		>Natlang to JSON pair</button>
+		>Natlang to JSON trio</button>
 		<button
 			@click="changeWhich('zigzag')"
 		>Zigzag tester</button>
@@ -279,7 +281,12 @@ var app = new Vue({
 			rows="20" cols="80"
 			v-model="split.dialog"
 		></textarea>
-		<p>(If problems arise, check the console.)</p>
+		<h3>Serial dialog JSON:</h3>
+		<textarea
+			rows="20" cols="80"
+			v-model="split.serialDialog"
+		></textarea>
+		<p>(If problems arise, please check the console.)</p>
 	</div>
 	<div
 		v-if="which === 'lex'"
