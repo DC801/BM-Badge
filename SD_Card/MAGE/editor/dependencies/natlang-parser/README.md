@@ -20,16 +20,24 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 	2. [Syntax definitions](#syntax-definitions)
 	3. [Dialog settings block](#dialog-settings-block)
 	4. [Dialog settings target block](#dialog-settings-target-block)
-	5. [Dialog block](#dialog-block)
-	6. [Script block](#script-block)
-	7. [Show dialog block](#show-dialog-block)
-	8. [Show serial dialog block](#show-serial-dialog-block)
-	9. [Dialog](#dialog)
+	5. [Serial dialog settings block](#serial-dialog-settings-block)
+	6. [Dialog block](#dialog-block)
+	7. [Serial dialog block](#serial-dialog-block)
+	8. [Script block](#script-block)
+	9. [Combination blocks](#combination-blocks)
+		1. [Show dialog block](#show-dialog-block)
+		2. [Show serial dialog block](#show-serial-dialog-block)
+		3. [Set serial connect message block](#set-serial-connect-message-block)
+	10. [Dialog](#dialog)
 		1. [Dialog identifier](#dialog-identifier)
-		2. [Dialog parameter](#dialog-parameters)
+		2. [Dialog parameters](#dialog-parameters)
 		3. [Dialog message](#dialog-message)
 		4. [Dialog option](#dialog-option)
-	10. [Comments](#comments)
+	11. [Serial dialog](#serial-dialog)
+		1. [Serial dialog parameters](#serial-dialog-parameters)
+		2. [Serial dialog message](#serial-dialog-message)
+		3. [Serial dialog option](#serial-dialog-option)
+	12. [Comments](#comments)
 4. [MGS Natlang variables](#mgs-natlang-variables)
 	1. [Variable decay](#variable-decay)
 	2. [Variable types and examples](#variable-types-and-examples)
@@ -54,9 +62,9 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 MGS Natlang is a "natural" language meant to be easy to read and write.
 
-It consists of phrases and patterns that correspond closely to the JSON required by the MGE encoder. Strictly speaking, it is not a full, properly recursive language, but it is much more flexible and compact than writing the equivalent script actions and dialogs in MGE JSON.
+It consists of phrases and patterns that correspond to the JSON required by the MGE encoder. Strictly speaking, it is not a recursive language, but it is much more flexible and compact than writing the equivalent script actions and dialogs in MGE JSON.
 
-All .mgs files are turned into MGE JSON automatically by the MGE encoder. And unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; any .mgs files inside `scenario_source_files` will be imported.
+All .mgs files are turned into MGE JSON by the MGE encoder. And unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; all .mgs files inside `scenario_source_files` will be imported.
 
 ### Syntax Features
 
@@ -122,7 +130,7 @@ While relatively human readable, the above is difficult to write in practice.
 - It's bulky enough that you can't have very much scripting logic on your screen at once.
 - It's easy to lose track of what you're doing as you must constantly reference named scripts and dialogs (and serial dialogs) in different files back and forth.
 - JSON cannot be commented, so it's inconvenient to leave yourself supplementary information, such as the contents of a dialog you're referencing when scripting a cutscene.
-- The parameters for MGE actions are not highly uniform, so it's easy to forget or confuse parameters if you're not copying and pasting actions from nearby.
+- The parameters for MGE actions are not uniform, so it's easy to forget or confuse parameters if you're not copying and pasting actions from nearby.
 
 ### MGS Natlang (script)
 
@@ -130,7 +138,8 @@ While relatively human readable, the above is difficult to write in practice.
 on_tick-greenhouse {
   if entity "%PLAYER%" is inside geometry door-greenhouse
     then goto leave-greenhouse
-  copy script ethernettle-uproot-check // some kind of comment
+  copy script ethernettle-uproot-check
+  // some kind of comment
 }
 ```
 
@@ -231,7 +240,7 @@ Now the dialog's content is no longer separated from its context. The dialog no 
 
 ## Block structure
 
-MGS Natlang currently has several types of blocks, each with their block contents enclosed in a pair of matching curly braces:
+The contents (body) of each block is enclosed in a pair of matching curly braces:
 
 ```
 <BLOCK DECLARATION> { <BLOCK BODY> }
@@ -245,29 +254,39 @@ MGS Natlang currently has several types of blocks, each with their block content
 // etc
 ```
 
-Some block types can (or must) be nested within others, but blocks cannot be nested arbitrarily.
+Some block types can (or must) be nested within others. Note that blocks cannot be nested arbitrarily.
 
 ### Block quick reference
 
-Unless otherwise marked, assume all entries in the following list are allowed in any quantity (including zero). Numbered items must be given in exactly that order, but all other items can occur in any order within their parent block.
+Unless otherwise marked, assume all entries in the following lists are allowed in any quantity (including zero). Numbered items must be given in exactly that order, but all other items can occur in any order within their parent block.
+
+#### Global settings
 
 - **[dialog settings block](#dialog-settings-block)**
 	- **[dialog settings target block](#dialog-settings-target-block)**
 		- **[dialog parameter](#dialog-parameters)**
+- **[serial dialog settings block](#serial-dialog-settings-block)**
+	- **[serial dialog parameter](#serial-dialog-parameters)**
+
+#### Dialog definitions
+
 - **[dialog block](#dialog-block)**
 	- **[dialog](#dialog)**
 		1. **[dialog identifier](#dialog-identifier)** (exactly 1)
 		2. **[dialog parameter](#dialog-parameters)**
 		3. **[dialog message](#dialog-message)** (at least 1)
 		4. **[dialog option](#dialog-option)**
+- **[serial dialog block](#serial-dialog-block)**
+	- **[serial dialog](#serial-dialog)** (exactly 1)
+		1. **[serial dialog parameter](#serial-dialog-parameters)**
+		2. **[serial dialog message](#serial-dialog-message)** (at least 1)
+		3. **[serial dialog option](#serial-dialog-option)**
+
+#### Script definitions
+
 - **[script block](#script-block)**
 	- **[action](#actions)**
-	- **[show dialog block](#show-dialog-block)**
-		- **[dialog](#dialog)**
-			1. **[dialog identifier](#dialog-identifier)** (exactly 1)
-			2. **[dialog parameter](#dialog-parameters)**
-			3. **[dialog message](#dialog-message)** (at least 1)
-			4. **[dialog option](#dialog-option)**
+	- **[combination blocks](#combination-blocks)**
 
 ### Syntax definitions
 
@@ -306,7 +325,6 @@ Several choices for `TARGET`:
 
 - `(global) default(s)`
 	- Describes the default behavior for all dialogs in the same MGS Natlang file.
-	- Of all MGE dialog parameters, only `alignment` is 100% required, so this is a good parameter to include at the global level.
 - `entity $string`
 	- Describes the default dialog settings for a specific entity.
 - `label $bareword`
@@ -329,6 +347,24 @@ parameters for label PLAYER {
 
 This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](#dialog-identifier) for [dialogs](#dialog).
 
+### Serial dialog settings block
+
+```
+settings (for) serial dialog {}
+```
+
+Use these blocks to set global settings for [serial dialogs](#serial-dialog).
+
+These blocks must occur on the root level.
+
+**Block contents**: any number of [serial dialog parameters](#serial-dialog-parameter) in any order.
+
+#### Behavior
+
+Serial dialog settings are applied to serial dialogs in order as the parser encounters them; a serial dialog settings block partway down the file will affect only the serial dialogs afterward, and none before.
+
+Parameters given in a serial dialog's body will override any other settings, however.
+
 ### Dialog block
 
 ```
@@ -341,9 +377,21 @@ As these dialog blocks don't have any baked-in script context, a dialog name is 
 
 These blocks must occur on the root level.
 
-[Show dialog blocks](#show-dialog-block) are similar, except that the latter is used inside a [script block](#script-block) and is not required to have a dialog name.
-
 **Block contents**: any number of [dialogs](#dialogs) in the order they are to be seen in-game.
+
+### Serial dialog block
+
+```
+serial dialog $string {}
+```
+
+Similar to dialog blocks, serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
+
+Again, these blocks don't have any baked-in script context, so a serial dialog name is required. (The name is whatever is given for [string](#string).)
+
+These blocks must occur on the root level.
+
+**Block contents**: a single [serial dialog](#serial-dialog).
 
 ### Script block
 
@@ -351,45 +399,45 @@ These blocks must occur on the root level.
 (script) $string {}
 ```
 
-If the word `script` is absent, any [string](#string) (other than `dialog`, `settings` etc.) will be intepreted as the script name.
+If the word `script` is absent, any [string](#string) (other than `dialog`, `settings` etc.) will be interpreted as the script name.
 
 These blocks must occur on the root level.
 
-**Block contents**: any number of [actions](#actions) in the order they are to be executed in-game. Some of these may be [show dialog blocks](#show-dialog-block). (See the [action dictionary](#action-dictionary) far below for detailed information on each action.)
+**Block contents**: any number of [actions](#actions) or [combination blocks](#combination-blocks) in the order they are to be executed in-game. (See the [action dictionary](#action-dictionary) far below for detailed information on each action.)
 
-### Show dialog block
+### Combination blocks
+
+Inside a [script block](#script-block), some actions can be **combined** with their associated definition block. In other words, you can "call" a [dialog](#dialog) or [serial dialog](#serial-dialog) and define it in place.
+
+For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names for one-offs is recommended to keep things clean.
+
+#### Show dialog block
 
 ```
 show dialog ($string) {}
 ```
 
-This block combines a dialog definition with the [`SHOW_DIALOG`](#show_dialog) action (as opposed to a [dialog block](#dialog-block), which is a dialog definition alone.)
+Combination of a [dialog block](#dialog-block) and the [`SHOW_DIALOG`](#show_dialog) action.
 
-The dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be entirely invisible. Omitting dialog names for one-offs is recommended to keep things clean.
-
-Must be used inside a [script block](#script-block).
-
-**Block contents**: Any number of [dialogs](#dialog) in the order they are to be seen in-game.
-
-#### `SHOW_DIALOG`
-
-A related construction:
+#### Show serial dialog block
 
 ```
-show dialog $string
+show serial dialog ($string) {}
 ```
 
-This plain `SHOW_DIALOG` action can "call" a dialog without having to define it in place.
+Combination of a [serial dialog block](#serial-dialog-block) and the [`SHOW_SERIAL_DIALOG`](#show_serial_dialog) action.
 
-Dialogs being called this way may be defined elsewhere in the file (even further down) or in another file entirely. The MGE encoder, which sees all scripts and all dialogs at the same time, will warn you if you're calling a dialog that doesn't exist.
+#### Set serial connect message block
 
-### Show serial dialog block
+```
+set serial connect (message) (to) ($string) {}
+```
 
-Serial dialog blocks will behave similarly to dialog blocks. (They are not yet implemented in MGS Natlang.)
+Combination of a [serial dialog block](#serial-dialog-block) and the [`SET_CONNECT_SERIAL_DIALOG`](#set_connect_serial_dialog) action.
 
 ### Dialog
 
-Found within [dialog blocks](#dialog-block) or [show dialog blocks](#show-dialog-block).
+Found within [dialog blocks](#dialog-block).
 
 Any number of dialogs can be given back-to-back within their parent block.
 
@@ -400,7 +448,7 @@ Any number of dialogs can be given back-to-back within their parent block.
 3. [Dialog message](#dialog-message): 1+
 4. [Dialog option](#dialog-option): 0-4x
 
-#### Dialog identifier:
+#### Dialog identifier
 
 This identifies the "speaker" of the dialog messages that immediately follow. For most cases, this will be a specific entity (with option #1 or #2), though you could also build up a dialog from its component pieces instead (with option #3).
 
@@ -419,14 +467,14 @@ The three options:
 	- [string](#string): the dialog's display name.
 	- This usage also provides a `name` [parameter](#dialog-parameter) for the dialog.
 
-#### Dialog parameter:
+#### Dialog parameter
 
 Multiple dialog parameters can occur back-to-back.
 
 Syntax for each parameter:
 
 - `entity $string`
-	- [String](#string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is entirely unnecessary and will in fact confuse the MGE encoder.)
+	- [String](#string): the "given name" of the entity (i.e. the entity's name on the Tiled map). (Wrapping this name in `%`s is unnecessary and will in fact confuse the MGE encoder.)
 		- Can be `%PLAYER%` or `%SELF%`, however.
 	- A dialog can inherit a `name` and a `portrait` if given an `entity` parameter. (The entity must be a "character entity" for a portrait to be inherited.)
 	- The inherited `name` is a relative reference; the dialog display name will be whatever that entity's name is at that moment.
@@ -454,7 +502,7 @@ Syntax for each parameter:
 	- [Number](#number): the number of chars to auto wrap the contents of dialog messages.
 	- 42 is default.
 
-#### Dialog message:
+#### Dialog message
 
 Any [quoted string](#quoted-string).
 
@@ -467,7 +515,7 @@ Any [quoted string](#quoted-string).
 	- Words wrapped in `$`s will count as 5 chars when the dialog message is auto-wrapped.
 - Some characters must be escaped in the message body, such as double quote: `\"`
 	- `\t` (tabs) are auto-converted to four spaces.
-	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about explicitly hard wrapping your messages unless you want to put line breaks in arbitrary places.
+	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 	- `%` and `$` are printable characters unless used in pairs within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
 - Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
 
@@ -515,9 +563,138 @@ Note: white space doesn't matter, so the first option above could very well have
 > "Fine. What club?" : goto bobContinueScript
 ```
 
+### Serial dialog
+
+Serial dialogs contain text meant to be shown via the serial console. They are called serial "dialogs" because they are similar to [dialogs](#dialog) in many respects, but they are made up of plaintext alone, and needn't be used for dialog specifically.
+
+Found within a [serial dialog block](#serial-dialog-block).
+
+#### Serial dialog contents
+
+1. [Serial dialog parameter](#serial-dialog-parameter): 0+
+2. [Serial dialog message](#serial-dialog-message): 1+
+3. [Serial dialog option](#serial-dialog-option): 0+
+
+NOTE: unlike with conventional [dialogs](#dialog), serial dialog block contents cannot loop; no serial dialog parameters can be given after a serial dialog message, and nothing can come after a serial dialog option (except more options).
+
+#### Serial dialog parameter
+
+- `wrap (messages) (to) $number`.
+	- [Number](#number): the number of chars to auto wrap the contents of serial dialog messages.
+	- 80 is default.
+
+#### Serial dialog message
+
+Any [quoted string](#quoted-string).
+
+- Each message is printed on its own line.
+- To maximize compatibility, best to limit these to ASCII characters.
+- Some characters must be escaped in the message body, such as double quote: `\"`
+	- `\t` (tabs) are auto-converted to four spaces.
+	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
+- Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
+- These messages may be [styled](#serial-styles).
+
+#### Serial dialog option
+
+Two choices:
+
+1. Numbered option (multiple choice):
+	- `# $label:quotedString : (goto) (script) $script:string`
+	- Each **label** will appear as part of a numbered list in the serial console.
+	- These labels (and only these) may be [styled](#serial-styles).
+	- The player cannot proceed until they enter a valid number, at which point the game will jump to the corresponding script. That means this type of option will *always* result in a script jump.
+2. Free response:
+	- `_ $label:quotedString : (goto) (script) $script:string`
+	- The **label** indicates what the player must type for the game to jump to the indicated script.
+	- There is no explicit prompt for these options, but upon reaching the free response portion of the serial dialog block, the player can type whatever they want into the serial console.
+	- An invalid response will fall through, and the next action down in the same script will execute; therefore, only a valid response will result in a script jump.
+	- The user's response is case insensitive. (The label `"CAT"` will match the user input of `cat`.)
+
+Behaviors in common between the two:
+
+- A single serial dialog can only use *one* of these two types.
+	- The parser will interpret all options within the block using the type of the first option.
+- Unlike [regular dialog options](#dialog-option), the option count for serial dialogs is not limited.
+- The **label** *must* be wrapped in [quotes](#quoted-string).
+- The words `goto` and `script` are optional. Any [string](#string) given after the `:` (other than `goto` and `script`) is assumed to be the script name.
+
+#### Serial styles
+
+A unique feature of serial dialog messages and serial numbered options is styling. Styles, implemented with ANSI escape codes, are turned on and off with tags enclosed in `<` and `>`:
+
+- Foreground colors (letter colors)
+	- Black: `<k>` or `<black>`
+	- Red: `<r>` or `<red>`
+	- Green: `<g>` or `<green>`
+	- Yellow: `<y>` or `<yellow>`
+	- Blue: `<b>` or `<blue>`
+	- Magenta: `<m>` or `<magenta>`
+	- Cyan: `<c>` or `<cyan>`
+	- White: `<w>` or `<white>`
+- Background colors
+	- Black: `<bg-k>` or `<bg-black>`
+	- Red: `<bg-r>` or `<bg-red>`
+	- Green: `<bg-g>` or `<bg-green>`
+	- Yellow: `<bg-y>` or `<bg-yellow>`
+	- Blue: `<bg-b>` or `<bg-blue>`
+	- Magenta: `<bg-m>` or `<bg-magenta>`
+	- Cyan: `<bg-c>` or `<bg-cyan>`
+	- White: `<bg-w>` or `<bg-white>`
+- Emphasis
+	- Bold: `<bold>` (brighter colors and/or greater font weight)
+	- Dim: `<dim>`
+- Reset all styles: `</>` or `<reset>`
+	- Styles can only be turned off all at once, unfortunately.
+	- Styles will stay "on" until you explicitly turn them "off".
+
+Example:
+
+```
+serial dialog grandpaRambling {
+	"That doll is <r>evil</>, I tells ya! <r><bold>EVIL</>!!"
+}
+```
+
+> That doll is <span style="color:#b00;">evil</span>, I tells ya! <span style="color:#f33;font-weight:bold;">EVIL</span>!!
+
+You can also add styles one at a time, and they will accumulate:
+
+```
+serial dialog accumulation {
+	"plain text <r>red text <bold>add bold <bg-b>add blue background</> clear all"
+}
+```
+
+> plain text <span style="color:#b00;">add red </span><span style="color:#f33;font-weight:bold;">add bold </span><span style="color:#f33;font-weight:bold;background-color:#00b">add blue background</span> clear all
+
+The user's color theme affects how styles appear in their serial console, and not all styles are implemented in all themes (or consoles). We therefore recommend using styles for optional flavor only, and not to impart gameplay-critical information.
+
+#### Example serial dialog
+
+```
+serial dialog sample {
+	"Hey, can anyone hear me? Hello?"
+	# "Yes, I can hear you." : goto script sampleYes
+	# "What did you say?" : goto script sampleNo
+}
+```
+
+becomes:
+
+```
+Hey, can anyone hear me? Hello?
+	0: Yes, I can hear you.
+	1: What did you say?
+
+>_
+```
+
+In the above case, the player is locked out of further action until they give the answer `0` or `1`. Failure results in a repeat of the whole serial dialog.
+
 ### Comments
 
-MGS Natlang supports two kinds of comments, which can appear anywhere in an .mgs file and inside any block.
+MGS Natlang supports two kinds of comments. Both can appear anywhere in an .mgs file or inside any block.
 
 #### Inline comment
 
@@ -792,9 +969,9 @@ load_map-castle-2 {
 }
 ```
 
-This gets tiresome quickly when a map's `on_load` script may need a dozen or more of these optional behaviors back-to-back, or when an entity's `on_interact` script branches three or more layers deep.
+This gets tiresome when a map's `on_load` script may need a dozen or more of these optional behaviors back-to-back, or when an entity's `on_interact` script branches three or more layers deep.
 
-Instead, we can use an abstracted `if` / `else` syntax which this macro will expand into isolated scripts automatically.
+Instead, we can use an abstracted `if` / `else` syntax, which this macro will expand into isolated scripts automatically.
 
 Thanks to the zigzag macro, the above scripts could look like this instead:
 
@@ -816,16 +993,16 @@ The zigzag macro will take this much-shorter script and expand it to resemble th
 
 *Any* action with `if`...`then goto` syntax can use this zigzag syntax instead.
 
-Note that the actions `RUN_SCRIPT` (`goto script $string`) and `LOAD_MAP` (`load map $string`) will cause the current script slot to jump to an entirely different script. In such cases, any in-progress zigzags will be aborted.
+Note that the actions `RUN_SCRIPT` (`goto script $string`) and `LOAD_MAP` (`load map $string`) will cause the current script slot to jump to a different script. In such cases, any in-progress zigzags will be aborted.
 
 #### Consequences and drawbacks
 
-1. This macro does not understand MGS Natlang syntax at all, and simply moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make entirely empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
+1. This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
 	- **This is currently a big problem for `on_tick` scripts**, as the game will crash if an empty `on_tick` script is attempted. Several kinds of common `on_tick` behavior will therefore need to be done the old way.
 2. This abstracted syntax obscures the fact that script jumps are happening.
-	- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will actually be copied.
+	- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
 	- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is any zigzagging involved.
-3. Any script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference.
+3. Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference.
 
 #### Syntax
 
@@ -844,7 +1021,7 @@ scriptName {
 ```
 
 - The `if` **condition** is wrapped with parentheses, and the `if` **body** is wrapped with curly braces.
-- The `if` body can contain script actions or additional zigzags.
+- The `if` body may contain additional zigzags.
 - Normal actions can occur before and after the `if`.
 - Actions that occur after the zigzag will happen regardless of whether the `if` condition is met.
 
@@ -863,7 +1040,7 @@ scriptName {
   } else if ( condition-C ) {
     behavior-C
   } else {
-    behavior-X
+    behavior-all-other-conditions
   }
   behavior-2
 }
@@ -914,7 +1091,7 @@ This macro emulates compile-time constants. Its main purpose is to help you avoi
 
 The macro literally replaces each const with the token collected during its original value assignment.
 
-These consts are *not* meant to be used as variables for in-game logic, as the game will never see the const as a variable at all, but will only see the token captured by the macro during the const's value assignment. To emphasize this point, you cannot change the value of a const once you've defined it. If you find yourself wanting to do this, you probably want to be using a MGE variable instead.
+These consts are *not* meant to be used as variables for in-game logic, as the game will never see the const as a variable at all, but will only see the token captured by the macro. To emphasize this point, you cannot change the value of a const once you've defined it. If you find yourself wanting to do this, you probably want to be using a MGE variable instead.
 
 For value assignment:
 
@@ -961,6 +1138,8 @@ The above is what the MGS Natlang syntax parser will actually parse. Syntax erro
 
 `const!` registers and replaces tokens; it does not find-and-replace arbitrary strings. For this reason, you will not be able to use consts inside a [quoted string](#quoted-string), since a quoted string *in its entirety* counts as a single token.
 
+In addition, this macro only captures single tokens; you cannot use a const to represent multiple tokens, e.g. `const!($parade = 76 trombones)` will result in a syntax error.
+
 ## Action dictionary
 
 These dictionary entries use the default JSON action parameter names, e.g. `entity` for an entity's name (syntax: `entity $entity:string`).
@@ -1000,6 +1179,8 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 	- `load slot 2`
 - [SLOT_ERASE](#slot_erase)
 	- `erase slot 2`
+- [SHOW_DIALOG](#show_dialog)
+	- `show dialog dialogName`
 
 #### [Hex editor](#hex-editor-actions)
 
@@ -1009,6 +1190,28 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 	- `set hex control to on`
 - [SET_HEX_EDITOR_CONTROL_CLIPBOARD](#set_hex_editor_control_clipboard)
 	- `set hex clipboard to on`
+
+#### [Serial console](#serial-console-actions)
+
+- [SET_SERIAL_CONTROL](#set_serial_control)
+	- `set serial control to on`
+- [SHOW_SERIAL_DIALOG](#show_serial_dialog)
+	- `show serial dialog serialDialogName`
+	- `concat serial dialog serialDialogName`
+- [SET_CONNECT_SERIAL_DIALOG](#set_connect_serial_dialog)
+	- `set serial connect message to serialDialogName`
+- [REGISTER_SERIAL_DIALOG_COMMAND](#register_serial_dialog_command)
+	- `register command "map" -> scriptName`
+	- `register command "map" fail -> scriptName`
+	- `register command "map" failure -> scriptName`
+- [UNREGISTER_SERIAL_DIALOG_COMMAND](#unregister_serial_dialog_command)
+	- `unregister command "map"`
+	- `unregister command "map" fail`
+	- `unregister command "map" failure`
+- [REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#register_serial_dialog_command_argument)
+	- `register command "map" + arg "castle" -> scriptName`
+- [UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT](#unregister_serial_dialog_command_argument)
+	- `unregister command "map" + arg "castle"`
 
 #### [Camera control](#camera-control-actions)
 
@@ -1106,7 +1309,7 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SET_ENTITY_HACKABLE_STATE_C_U2](#set_entity_hackable_state_c_u2)
 	- `set entity "Entity Name" hackable_state_cu2 to 2`
 - [SET_ENTITY_HACKABLE_STATE_A_U4](#set_entity_hackable_state_a_u4)
-	- `set entity "Entity Name" hackable_state_au4 to $u4_value:number`
+	- `set entity "Entity Name" hackable_state_au4 to 4`
 
 #### [Set variables](#set-variables-actions)
 
@@ -1317,6 +1520,22 @@ erase slot $slot:number
 
 Example: `erase slot 2`
 
+#### SHOW_DIALOG
+
+Plays the named [dialog](#dialog).
+
+A script cannot execute any other actions until the dialog is entirely finished. To give a cutscene sophisticated choreography, you will need to either split the dialog into multiple pieces or prepare additional scripts to manage concurrent behavior.
+
+While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another entity, move, etc.
+
+This action is also available as a [combination block](#combination-blocks).
+
+```
+show dialog $dialog:string
+```
+
+Example: `show dialog dialogName`
+
 ### Hex editor actions
 
 Enable or disable player control of specific game features, and otherwise manage the hex editor state.
@@ -1352,6 +1571,143 @@ set hex clipboard (to) $bool_value:boolean
 ```
 
 Example: `set hex clipboard to on`
+
+### Serial console actions
+
+Manage serial features and create serial output.
+
+#### SET_SERIAL_CONTROL
+
+When `off`, the serial terminal will ignore player input.
+
+This is set to `on` (`true`) by default.
+
+```
+set serial control (to) $bool_value:boolean
+```
+
+Example: `set serial control to on`
+
+#### SHOW_SERIAL_DIALOG
+
+Outputs the named [serial dialog](#serial-dialog) to a connected serial console.
+
+The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_control) first, then turn it back on again when finished.)
+
+This action is also available as a [combination block](#combination-blocks).
+
+```
+show serial dialog $serial_dialog:string
+	// Built-in values:
+	// disable_newline (false)
+```
+
+```
+concat serial dialog $serial_dialog:string
+	// Built-in values:
+	// disable_newline (true)
+```
+
+Examples:
+
+- `show serial dialog serialDialogName`
+- `concat serial dialog serialDialogName`
+
+#### SET_CONNECT_SERIAL_DIALOG
+
+Sets the serial connection message to the named [serial dialog](#serial-dialog). (The connection message is sent whenever a serial console is newly connected to the badge hardware.)
+
+This action is also available as a [combination block](#combination-blocks).
+
+```
+set serial connect (message) (to) $serial_dialog:string
+```
+
+Example: `set serial connect message to serialDialogName`
+
+#### REGISTER_SERIAL_DIALOG_COMMAND
+
+Once a command is registered, the player can enter the command into the serial console and the corresponding script will run in a unique serial script slot.
+
+- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`/`failure`).
+- **Failure variant**: identifies a script for custom "unknown argument" behavior (in the event the player attempts to use an unregistered argument for this command).
+
+Commands must be a single word.
+
+```
+register (command) $command:string -> (script) $script:string
+	// Built-in values:
+	// is_fail (false)
+```
+
+```
+register (command) $command:string fail -> (script) $script:string
+	// Built-in values:
+	// is_fail (true)
+```
+
+```
+register (command) $command:string failure -> (script) $script:string
+	// Built-in values:
+	// is_fail (true)
+```
+
+Examples:
+
+- `register command "map" -> scriptName`
+- `register command "map" fail -> scriptName`
+- `register command "map" failure -> scriptName`
+
+#### UNREGISTER_SERIAL_DIALOG_COMMAND
+
+- **Plain variant**: unregisters the given command *and* all registered arguments for that command (if any).
+- **Failure variant**: only unregisters the `failure` script; other registered arguments (and the plain command itself) will remain intact.
+
+```
+unregister (command) $command:string
+	// Built-in values:
+	// is_fail (false)
+```
+
+```
+unregister (command) $command:string fail
+	// Built-in values:
+	// is_fail (true)
+```
+
+```
+unregister (command) $command:string failure
+	// Built-in values:
+	// is_fail (true)
+```
+
+Examples:
+
+- `unregister command "map"`
+- `unregister command "map" fail`
+- `unregister command "map" failure`
+
+#### REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+
+This action registers an argument (and a script) for an [already-registered serial command](#register_serial_dialog_command).
+
+Arguments must be a single word.
+
+```
+register (command) $command:string + (arg) $argument:string -> (script) $script:string
+```
+
+Example: `register command "map" + arg "castle" -> scriptName`
+
+#### UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT
+
+This action unregisters the specified argument from an [already-registered serial command](#register_serial_dialog_command).
+
+```
+unregister (command) $command:string + (arg) $argument:string
+```
+
+Example: `unregister command "map" + arg "castle"`
 
 ### Camera control actions
 
@@ -1834,7 +2190,7 @@ Sets the values of an entity's `hackable_state_a` through `hackable_state_d` byt
 set entity $entity:string hackable_state_au4 (to) $u4_value:number
 ```
 
-Example: `set entity "Entity Name" hackable_state_au4 to $u4_value:number`
+Example: `set entity "Entity Name" hackable_state_au4 to 4`
 
 ### Set variables actions
 

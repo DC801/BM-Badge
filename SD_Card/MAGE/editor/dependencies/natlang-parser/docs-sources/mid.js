@@ -7,6 +7,9 @@ var actionCategoryText = {
 	"hex editor": [
 		"Enable or disable player control of specific game features, and otherwise manage the hex editor state."
 	],
+	"serial console": [
+		"Manage serial features and create serial output."
+	],
 	"camera control": [
 		"Manipulate the camera's position or perform tricks like shaking the camera or fading the screen in and out to an arbitrary color."
 	],
@@ -93,6 +96,64 @@ var actionText = {
 		"category": "game management",
 		"info": [
 			"This action clears all the save data in the given slot."
+		]
+	},
+	"SHOW_DIALOG": {
+		"category": "game management",
+		"info": [
+			"Plays the named [dialog](#dialog).",
+			"A script cannot execute any other actions until the dialog is entirely finished. To give a cutscene sophisticated choreography, you will need to either split the dialog into multiple pieces or prepare additional scripts to manage concurrent behavior.",
+			"While a dialog screen is showing, the player can only advance to the next dialog message or choose a multiple choice option within that dialog (if any); the player cannot hack, interact with another entity, move, etc.",
+			"This action is also available as a [combination block](#combination-blocks)."
+		]
+	},
+	"SET_SERIAL_CONTROL": {
+		"category": "serial console",
+		"info": [
+			"When `off`, the serial terminal will ignore player input.",
+			"This is set to `on` (`true`) by default."
+		]
+	},
+	"SHOW_SERIAL_DIALOG": {
+		"category": "serial console",
+		"info": [
+			"Outputs the named [serial dialog](#serial-dialog) to a connected serial console.",
+			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_control) first, then turn it back on again when finished.)",
+			"This action is also available as a [combination block](#combination-blocks)."
+		]
+	},
+	"SET_CONNECT_SERIAL_DIALOG": {
+		"category": "serial console",
+		"info": [
+			"Sets the serial connection message to the named [serial dialog](#serial-dialog). (The connection message is sent whenever a serial console is newly connected to the badge hardware.)",
+			"This action is also available as a [combination block](#combination-blocks)."
+		]
+	},
+	"REGISTER_SERIAL_DIALOG_COMMAND": {
+		"category": "serial console",
+		"info": [
+			"Once a command is registered, the player can enter the command into the serial console and the corresponding script will run in a unique serial script slot.",
+			"- **Plain variant**: registers the command in general and identifies the script to run when the command is typed without any additional arguments. This variant must be used before *any* arguments can be registered (including `fail`/`failure`).\n- **Failure variant**: identifies a script for custom \"unknown argument\" behavior (in the event the player attempts to use an unregistered argument for this command).",
+			"Commands must be a single word.",
+		]
+	},
+	"UNREGISTER_SERIAL_DIALOG_COMMAND": {
+		"category": "serial console",
+		"info": [
+			"- **Plain variant**: unregisters the given command *and* all registered arguments for that command (if any).\n- **Failure variant**: only unregisters the `failure` script; other registered arguments (and the plain command itself) will remain intact.",
+		]
+	},
+	"REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {
+		"category": "serial console",
+		"info": [
+			"This action registers an argument (and a script) for an [already-registered serial command](#register_serial_dialog_command).",
+			"Arguments must be a single word."
+		]
+	},
+	"UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT": {
+		"category": "serial console",
+		"info": [
+			"This action unregisters the specified argument from an [already-registered serial command](#register_serial_dialog_command)."
 		]
 	},
 	// "SET_HEX_CURSOR_LOCATION": {
@@ -634,7 +695,10 @@ var docExampleValues = { // some nice default values
 	"$expected_u2:number": "32",
 	"$expected_u4:number": "9001",
 	"$u2_value:number": "2",
+	"$u4_value:number": "4",
 	"$byte_value:number": "0",
+	"$command:string": "\"map\"",
+	"$argument:string": "\"castle\"",
 };
 
 var makeExampleFromDictionaryEntry = function (entry) {
