@@ -107,7 +107,7 @@ var actionText = {
 			"This action is also available as a [combination block](#combination-blocks)."
 		]
 	},
-	"SET_SERIAL_CONTROL": {
+	"SET_SERIAL_DIALOG_CONTROL": {
 		"category": "serial console",
 		"info": [
 			"When `off`, the serial terminal will ignore player input.",
@@ -118,7 +118,7 @@ var actionText = {
 		"category": "serial console",
 		"info": [
 			"Outputs the named [serial dialog](#serial-dialog) to a connected serial console.",
-			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_control) first, then turn it back on again when finished.)",
+			"The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_dialog_control) first, then turn it back on again when finished.)",
 			"This action is also available as a [combination block](#combination-blocks)."
 		]
 	},

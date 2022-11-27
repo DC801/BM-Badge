@@ -16,7 +16,7 @@ mgs.boolPrefs = {
 	SET_HEX_EDITOR_DIALOG_MODE: [ 'on', 'off' ],
 	SET_HEX_EDITOR_CONTROL: [ 'on', 'off' ],
 	SET_HEX_EDITOR_CONTROL_CLIPBOARD: [ 'on', 'off' ],
-	SET_SERIAL_CONTROL: [ 'on', 'off' ],
+	SET_SERIAL_DIALOG_CONTROL: [ 'on', 'off' ],
 	// [ 'true', 'false' ] for everything else
 };
 
