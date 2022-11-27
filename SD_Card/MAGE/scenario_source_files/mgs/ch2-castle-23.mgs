@@ -1,0 +1,64 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-castle-23 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: POWER PLANT on_look text\n "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-23 {
+	// ch2 room state
+	mutate ch2-in-room = 23
+	set flag ch2-seen-room-23 to true
+
+	// entrance text
+	show serial dialog spacer
+	show serial dialog {
+		"Entering POWER PLANT"
+	}
+
+	// misc game state
+	if (flag ch2-ring-zero-restored is false) {
+		copy disable-hax
+	}
+
+	// serial features
+	set serial control on
+
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+
+	// warp-in animation
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-23 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-23 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go-castle-23-south {
+	copy on_exit-ch2-castle-23
+	copy warping-out-fade-out
+	load map ch2-castle-22
+}
