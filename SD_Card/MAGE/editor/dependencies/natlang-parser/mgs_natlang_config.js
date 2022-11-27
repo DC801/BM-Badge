@@ -808,7 +808,7 @@ mgs.actionDictionary = [
 		pattern: "set player control ?to $bool_value:boolean",
 	},
 	{
-		action: "SET_SERIAL_CONTROL",
+		action: "SET_SERIAL_DIALOG_CONTROL",
 		pattern: "set serial control ?to $bool_value:boolean",
 	},
 	{

@@ -1193,7 +1193,7 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 
 #### [Serial console](#serial-console-actions)
 
-- [SET_SERIAL_CONTROL](#set_serial_control)
+- [SET_SERIAL_DIALOG_CONTROL](#set_serial_dialog_control)
 	- `set serial control to on`
 - [SHOW_SERIAL_DIALOG](#show_serial_dialog)
 	- `show serial dialog serialDialogName`
@@ -1576,7 +1576,7 @@ Example: `set hex clipboard to on`
 
 Manage serial features and create serial output.
 
-#### SET_SERIAL_CONTROL
+#### SET_SERIAL_DIALOG_CONTROL
 
 When `off`, the serial terminal will ignore player input.
 
@@ -1592,7 +1592,7 @@ Example: `set serial control to on`
 
 Outputs the named [serial dialog](#serial-dialog) to a connected serial console.
 
-The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_control) first, then turn it back on again when finished.)
+The `concat` variant omits the newline at the end of each message, which can enable complex serial output using only MGE scripting logic. (Turn off [serial control](#set_serial_dialog_control) first, then turn it back on again when finished.)
 
 This action is also available as a [combination block](#combination-blocks).
 
