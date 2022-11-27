@@ -1,0 +1,221 @@
+{ "compressionlevel":-1,
+ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 255, 256, 256, 260, 256, 256, 260, 256, 256, 2147483903, 0,
+            0, 271, 272, 272, 276, 261, 2147483909, 276, 272, 272, 2147483919, 0,
+            0, 287, 288, 289, 288, 288, 288, 288, 288, 288, 2147483935, 0,
+            0, 290, 288, 288, 288, 288, 288, 288, 289, 288, 2147483938, 0,
+            0, 308, 304, 288, 304, 304, 304, 304, 305, 288, 2147483956, 0,
+            0, 324, 288, 288, 304, 305, 305, 305, 305, 288, 2147483972, 0,
+            0, 303, 304, 304, 304, 305, 305, 304, 305, 288, 2147483951, 0,
+            0, 319, 320, 320, 320, 325, 2147483973, 321, 321, 320, 2147483967, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":6,
+         "name":"Floor",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 278, 2147483926, 0, 0, 0, 0, 0,
+            0, 277, 0, 264, 269, 0, 264, 269, 0, 0, 0, 0,
+            0, 293, 0, 0, 311, 0, 0, 311, 0, 0, 0, 0,
+            0, 287, 0, 264, 282, 265, 264, 282, 265, 0, 0, 0,
+            0, 0, 0, 0, 0, 262, 2147483910, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":7,
+         "name":"Floor Doodads",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 309, 2147483957, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":10,
+         "id":8,
+         "name":"Floating Layer",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Entities",
+         "objects":[
+                {
+                 "class":"",
+                 "gid":167,
+                 "height":32,
+                 "id":2,
+                 "name":"Bub",
+                 "properties":[
+                        {
+                         "name":"is_player",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"on_look-player"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":175,
+                 "y":247
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":6,
+                 "name":"warp-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":174
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":32,
+                 "id":19,
+                 "name":"door",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-attempt-door-check"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":176,
+                 "y":95
+                }, 
+                {
+                 "class":"",
+                 "gid":2147483939,
+                 "height":32,
+                 "id":24,
+                 "name":"Torch 4",
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":160
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"Vectors",
+         "objects":[
+                {
+                 "class":"",
+                 "height":24.152,
+                 "id":7,
+                 "name":"south-hitbox",
+                 "rotation":0,
+                 "visible":true,
+                 "width":30,
+                 "x":177.416,
+                 "y":255
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":15,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-154,
+                 "y":462
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":9,
+ "nextobjectid":31,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.9.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"..\/tilesets\/tileset-monstrosity.json"
+        }, 
+        {
+         "firstgid":161,
+         "source":"..\/entities\/entity-mage.json"
+        }, 
+        {
+         "firstgid":209,
+         "source":"..\/entities\/entity-exa.json"
+        }, 
+        {
+         "firstgid":211,
+         "source":"..\/entities\/entity-save_floppy.json"
+        }, 
+        {
+         "firstgid":235,
+         "source":"..\/entities\/entity-bert.json"
+        }, 
+        {
+         "firstgid":253,
+         "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":255,
+         "source":"tileset-castle-interior.json"
+        }, 
+        {
+         "firstgid":351,
+         "source":"..\/tilesets\/tileset-town.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.9",
+ "width":12
+}

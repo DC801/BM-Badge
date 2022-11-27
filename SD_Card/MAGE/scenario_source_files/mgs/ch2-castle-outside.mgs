@@ -1,0 +1,65 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-castle-outside {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: castle room exterior on_look text"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-outside {
+	// serial features
+	if (flag ch2-has-artifact is true) {
+		set serial control on
+	} else {
+		set serial control off // safety
+	}
+	
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+
+	if (warp state is warping) { // warping in
+		copy warping-in-fade-in
+	} else if (warp state is walk_from-north) {
+		set player control to off
+		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
+		set player control to on
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-outside { // LOOPS HERE
+	if entity "%PLAYER%" is inside geometry north-hitbox
+		then goto on_walk-castle-outside-north
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-outside {
+	// universal behavior
+}
+
+// SERIAL: go
+
+on_go-castle-outside-north {
+	copy on_exit-ch2-castle-outside
+	copy warping-out-fade-out
+	load map ch2-castle-1
+}
+
+// WALK
+
+on_walk-castle-outside-north {
+	copy on_exit-ch2-castle-outside
+	set warp state to walk_from-south
+	load map ch2-castle-1
+}

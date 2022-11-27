@@ -1,0 +1,68 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-castle-11 {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: castle room #11 on_look text"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-11 {
+	// ch2 room state
+	mutate ch2-in-room = 11
+	set flag ch2-seen-room-11 to true
+
+	// misc game state
+	if (flag ch2-ring-zero-restored is false) {
+		copy disable-hax
+	}
+
+	// serial features
+	set serial control on
+
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+
+	// warp-in animation
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-11 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-11 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go-castle-11-north {
+	copy on_exit-ch2-castle-1
+	// copy warping-out-fade-out
+	// load map ch2-castle-12
+}
+on_go-castle-11-west {
+	copy on_exit-ch2-castle-1
+	// copy warping-out-fade-out
+	// load map ch2-castle-21
+}
+on_go-castle-11-south {
+	copy on_exit-ch2-castle-1
+	copy warping-out-fade-out
+	load map ch2-castle-1
+}
