@@ -1,0 +1,73 @@
+/* ---------- BERT SECRET CUTSCENE ---------- */
+
+// not currently used (in the live one)
+
+ch2-cutscene-bert-secret-start {
+	set entity "%PLAYER%" animation to 0
+	copy ch2-cutscene-bert-secret
+	// CLEANUP: depends on trigger
+}
+
+watch-bert-lolol {
+	turn entity "%SELF%" toward entity Bert
+}
+
+ch2-cutscene-bert-secret {
+	teleport entity Bert to geometry bert-spot
+	turn entity Bert north
+	show dialog {
+		Bert "%PLAYER%, wait."
+	}
+	set player control to off
+	wait 100ms
+	set entity "%PLAYER%" tick_script to watch-bert-lolol
+	wait 400ms
+	walk entity Bert along geometry bert-spot over 1200ms
+	wait 100ms
+	turn entity Bert toward entity "%PLAYER%"
+	wait 200ms
+	show dialog {
+		PLAYER "Bert? But how did you get in? I thought none of you could pass the gate!"
+		Bert "I remembered back door. But...."
+	}
+	set entity Bert tick_script to spin_self_clockwise
+	wait 400ms
+	show dialog {
+		Bert "No. I can go no further. I could, once. Perhaps."
+	}
+	set entity Bert tick_script to null_script
+	turn entity Bert toward entity "%PLAYER%"
+	show dialog {
+		Bert "%PLAYER%, I must not stay long. But I must tell you this. Is important."
+		"Something is wrong."
+		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
+		"It is only gone today. This morning."
+		PLAYER "What? What are you saying? The book only went missing this morning?"
+		Bert "Yes. I am sure of it."
+		"%PLAYER%, something wants to stop you. Or delay you."
+		PLAYER "Are we too late, then? Is the Big Bad here?"
+		Bert "No. We would know. Big Bad would not hide."
+	}
+	turn entity Bert east
+	show dialog {
+		Bert "But perhaps he can still reach into our village. Small hacks. Subtle things."
+		"Perhaps he left traps. Protocols. Magic that waits for his signal before working."
+		"I once knew more. But I am old, and...."
+		"...."
+		PLAYER "...?"
+	}
+	turn entity Bert south
+	show dialog {
+		Bert "I must go. There is something I must learn. Quickly. But I will return."
+		"Do not wait for me. Go and get artifact."
+		"If I find answer, I will leave message with XA."
+		"Good luck."
+	}
+	set flag ch2-saw-bert-secret to true
+	wait 100ms
+	walk entity Bert to geometry entrance1-path over 600ms
+	wait 80ms
+	teleport entity Bert to geometry hiding-spot
+	set entity "%PLAYER%" tick_script to null_script
+	set player control to on
+}

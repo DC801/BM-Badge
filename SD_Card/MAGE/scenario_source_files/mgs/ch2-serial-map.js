@@ -301,7 +301,7 @@ var makeNatlangMapRow = function (rowArray) {
 				if (splits[0].length) {
 					result += `\t\tconcat serial dialog {"${splits[0]}"}\n`;
 				}
-				result += `\t\tif (flag ch2-in-room is ${targets[0]}) {\n`;
+				result += `\t\tif (variable ch2-in-room is ${targets[0]}) {\n`;
 				result += `\t\t\tconcat serial dialog {"@"}\n`;
 				result += `\t\t} else {\n`;
 				result += `\t\t\tconcat serial dialog {"."}\n`;
@@ -327,7 +327,7 @@ var makeNatlangMapRow = function (rowArray) {
 }
 
 var makeNatlangMap = function () {
-	var result = 'draw-serial-map {\n';
+	var result = 'draw-ch2-serial-map {\n';
 	result += '\tset serial control off\n';
 	lispish.forEach(function (row, index) {
 		if (index !== 0) {

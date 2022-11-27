@@ -12,7 +12,6 @@
 	},
 	"serialDialogPaths": [
 		"serial_dialog/serial_dialog-mtn-looks.json",
-		"serial_dialog/serial_dialog-mtn-common.json",
 		"serial_dialog/serial_dialog-action_testing.json"
 	]
 }

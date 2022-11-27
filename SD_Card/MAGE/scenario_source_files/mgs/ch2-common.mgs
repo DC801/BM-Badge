@@ -1,3 +1,39 @@
+serial dialog spacer { "---" }
+
+/* ---------- INITIALIZING: map command ---------- */
+
+ch2-map-enable {
+	// workaround for local script mapping:
+	register map -> draw-ch2-serial-map-check
+	unregister map
+	// the real mccoy:
+	register map -> draw-ch2-serial-map-check
+}
+
+draw-ch2-serial-map-check {
+	if (variable ch2-in-room is 0) {
+		show serial dialog {
+			"You don't seem to have a map for this place."
+		}
+	} else {
+		goto draw-ch2-serial-map
+	}
+}
+
+/* ---------- INITIALIZING: other ---------- */
+
+disable-hax {
+	set hex control to off
+	set hex clipboard to off
+}
+
+/* ---------- ON_WARP & ON_GO ANIMATION ---------- */
+
+spin-quickly {
+	rotate entity "%SELF%" -1
+	wait 150ms
+}
+
 warping-out-fade-out {
 	set warp state to warping
 	set player control to off
@@ -14,6 +50,8 @@ warping-in-fade-in {
 	set player control to on
 }
 
+/* ---------- why did I make this? ---------- */
+
 boot-out-if-necessary {
 	if variable current-chapter is 1 then goto boot-to-chapter-1
 }
@@ -23,24 +61,18 @@ boot-to-chapter-1 {
 	load map main
 }
 
-disable-hax {
-	set hex control to off
-	set hex clipboard to off
-}
+/* ---------- ALL-IN-ONE WARP LIST ---------- */
 
 warp_to-mtn-xa_room {
 	copy warping-out-fade-out
-	show serial dialog serial_dialog-travel_to-xa_room
+	show serial dialog spacer
+	show serial dialog { "Traveling to 'xa-room'!" }
 	load map xa-room
 }
 
 warp_to-mtn-castle_entrance {
 	copy warping-out-fade-out
-	show serial dialog serial_dialog-travel_to-castle_entrance
+	show serial dialog spacer
+	show serial dialog { "Traveling to 'castle-door'!" }
 	load map castle-door
-}
-
-spin-quickly {
-	rotate entity "%SELF%" -1
-	wait 150ms
 }
