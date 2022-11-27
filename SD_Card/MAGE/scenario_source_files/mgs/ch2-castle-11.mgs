@@ -8,7 +8,7 @@ settings for dialog {
 on_look-ch2-castle-11 {
 	show serial dialog spacer
 	show serial dialog {
-		"   TODO: castle room #11 on_look text"
+		"TODO: FRONT HALLWAY on_look text\n "
 	}
 }
 
@@ -18,6 +18,12 @@ on_load-ch2-castle-11 {
 	// ch2 room state
 	mutate ch2-in-room = 11
 	set flag ch2-seen-room-11 to true
+
+	// entrance text
+	show serial dialog spacer
+	show serial dialog {
+		"Entering FRONT HALLWAY"
+	}
 
 	// misc game state
 	if (flag ch2-ring-zero-restored is false) {
@@ -52,17 +58,17 @@ on_exit-ch2-castle-11 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go-castle-11-north {
-	copy on_exit-ch2-castle-1
+	copy on_exit-ch2-castle-11
 	// copy warping-out-fade-out
 	// load map ch2-castle-12
 }
 on_go-castle-11-west {
-	copy on_exit-ch2-castle-1
-	// copy warping-out-fade-out
-	// load map ch2-castle-21
+	copy on_exit-ch2-castle-11
+	copy warping-out-fade-out
+	load map ch2-castle-21
 }
 on_go-castle-11-south {
-	copy on_exit-ch2-castle-1
+	copy on_exit-ch2-castle-11
 	copy warping-out-fade-out
 	load map ch2-castle-1
 }

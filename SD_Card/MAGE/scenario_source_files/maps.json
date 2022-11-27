@@ -29,6 +29,35 @@
 			"west": "on_go-castle-11-west"
 		}
 	},
+	"ch2-castle-21": {
+		"path": "maps/map-ch2-castle-21.json",
+		"on_load": "on_load-ch2-castle-21",
+		"on_look": "on_look-ch2-castle-21",
+		"on_tick": "on_tick-ch2-castle-21",
+		"directions": {
+			"north": "on_go-castle-21-north",
+			"east": "on_go-castle-21-east"
+		}
+	},
+	"ch2-castle-22": {
+		"path": "maps/map-ch2-castle-22.json",
+		"on_load": "on_load-ch2-castle-22",
+		"on_look": "on_look-ch2-castle-22",
+		"on_tick": "on_tick-ch2-castle-22",
+		"directions": {
+			"north": "on_go-castle-22-north",
+			"south": "on_go-castle-22-south"
+		}
+	},
+	"ch2-castle-23": {
+		"path": "maps/map-ch2-castle-23.json",
+		"on_load": "on_load-ch2-castle-23",
+		"on_look": "on_look-ch2-castle-23",
+		"on_tick": "on_tick-ch2-castle-23",
+		"directions": {
+			"south": "on_go-castle-23-south"
+		}
+	},
 	"action_testing_01": {
 		"path": "maps/map-action_testing_01.json",
 		"on_tick": "null_script",
