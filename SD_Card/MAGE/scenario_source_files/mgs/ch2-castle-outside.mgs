@@ -21,6 +21,14 @@ on_load-ch2-castle-outside {
 	} else {
 		set serial control off // safety
 	}
+	if (flag ch2-has-artifact is true) {
+		set serial control on
+	} else {
+		set serial control off // safety
+	}
+	if (flag ch2-toot-done is true) {
+		copy ch2-register-man
+	}
 	
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable

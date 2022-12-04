@@ -1,0 +1,113 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-castle-99 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: SECRET ROOM on_look text\n "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-99 {
+	// ch2 room state
+	mutate ch2-in-room = 99
+	set flag ch2-seen-room-99 to true
+
+	// entrance text
+	show serial dialog spacer
+	show serial dialog {
+		"Entering SECRET ROOM"
+	}
+
+	// misc game state
+	if (flag ch2-ring-zero-restored is false) {
+		copy disable-hax
+	}
+
+	// serial features
+	set serial control on
+
+	copy ch2-register-man
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+
+	// warp-in animation
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-99 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-99 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+/* ---------- ENTITY THINGS ---------- */
+
+ch2-castle-99-welcome {
+	// player teleports in, and Notakon is there. They turn to each other.
+	show dialog {
+		Notakon "Ahh. Um, welcome to...."
+	}
+	// Notakon turns all around
+	show dialog {
+		Notakon "...well, my lab. Welcome to my lab, I guess."
+		"Sorry. It's just a little strange seeing someone else in here. In the flesh, I mean."
+		"It's been so long. I think. Not sure how long it's been, to be perfectly honest."
+	}
+	// Notakon fidgets
+	show dialog {
+		Notakon "Gosh, I'm so nervous. Um."
+		"Well, um, if you're sure -- if you're really sure -- this will help defeat the Big Bad...."
+	}
+	// He offers something
+	show dialog {
+		Notkan "...then here. Take it. The mainframe's operating system, all ready to go."
+	}
+	// Player takes it.
+	show dialog {
+		Notakan "There you go. All set."
+		"Just plug in that stick and switch the machine on. You'll see some installation instructions. Just do what it says."
+	}
+
+	// (something something)
+
+	show dialog {
+		PLAYER "Oh, you're not coming with me?"
+
+		Notakon "No, I think I'll, um, stay here for now."
+	}
+	// He fidgets
+	show dialog {
+		Notakon "I probably will leave this place, eventually. Soon, even. Just... baby steps, you know?"
+		"I was protecting that software for so long... I'm not sure what to do with myself now. I just need to think for a while."
+		"Yeah. So, um, I can still help you and everything from here, don't worry."
+	}
+	// The player steps away
+	show dialog {
+		Notakon "Listen."
+		"I feel like there's something else, something important that I... well...."
+
+		PLAYER "About the software? The OS?"
+
+		Notakon "Maybe. It must have been terribly important, but I can't seem to...."
+
+		PLAYER "...?"
+
+		Notakon "Well, if I remember it, I'll call you."
+	}
+}

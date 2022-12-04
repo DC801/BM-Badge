@@ -1,4 +1,88 @@
-serial dialog spacer { "---" }
+settings for serial dialog { wrap 60 }
+
+serial dialog spacer { " ""------------"" " }
+
+/* ---------- MAN PAGES ---------- */
+
+ch2-register-man {
+	// the default set
+	register man -> ch2-command-man
+	unregister man
+	register man -> ch2-command-man
+	// BUG: man+man breaks solo man
+	// register man + man -> ch2-man-man
+	// unregister man + man
+	// register man + man -> ch2-man-man
+	register man + look -> ch2-man-look
+	unregister man + look
+	register man + look -> ch2-man-look
+	register man + go -> ch2-man-go
+	unregister man + go
+	register man + go -> ch2-man-go
+	register man + help -> ch2-man-help
+	unregister man + help
+	register man + help -> ch2-man-help
+	register man fail -> ch2-man-fail
+	unregister man fail
+	register man fail -> ch2-man-fail
+}
+
+ch2-man-man {
+	show serial dialog spacer
+	show serial dialog {
+		"MGE General Commands Manual - \"MAN\""
+		" "
+		"Displays manual pages for various MGE serial commands. Type \"MAN\" followed by the name of the command you want to read about, e.g. \"MAN LOOK\""
+		" "
+		"NOTE: Hi, there, birthday mage! I've rigged this thing to call me if you use \"MAN\" as a single word. I \"hacked\" the man page to tell you that!"
+	}
+}
+ch2-man-fail {
+	show serial dialog spacer
+	show serial dialog {
+		"MAN PAGE NOT FOUND: There is no documentation for that command, or that command does not exist."
+	}
+}
+ch2-man-look {
+	show serial dialog spacer
+	show serial dialog {
+		"MGE General Commands Manual - \"LOOK\""
+		" "
+		"Describes the room you're in. Will describe entities instead if an entity name is provided after the word LOOK."
+		" "
+		"Importantly, it can list a room's exits, even if they are invisible."
+	}
+}
+ch2-man-go {
+	show serial dialog spacer
+	show serial dialog {
+		"MGE General Commands Manual - \"GO\""
+		" "
+		"Lets you travel to an adjacent room, even if the actual, physical door is blocked, locked, or hidden. Type \"GO\" followed by the name of the exit, e.g. \"GO NORTH\""
+		" "
+		"To learn the names of the current room's exits, use \"LOOK\"."
+	}
+}
+ch2-man-help {
+	show serial dialog spacer
+	show serial dialog {
+		"MGE General Commands Manual - \"HELP\""
+		" "
+		"Provides general information for the serial terminal, including a list of valid serial commands."
+	}
+}
+ch2-man-map {
+	show serial dialog spacer
+	show serial dialog {
+		"MGE General Commands Manual - \"MAP\""
+		" "
+		"Displays an ASCII map of the castle, though only while you're inside the castle."
+		" "
+		"Rooms are added to the map as you visit them."
+		" "
+		"The \"@\" symbol indicates which room you're in."
+	}
+}
 
 /* ---------- INITIALIZING: map command ---------- */
 
@@ -8,6 +92,11 @@ ch2-map-enable {
 	unregister map
 	// the real mccoy:
 	register map -> draw-ch2-serial-map-check
+
+	// man page
+	register man + map -> ch2-man-map
+	unregister man + map
+	register man + map -> ch2-man-map
 }
 
 draw-ch2-serial-map-check {
