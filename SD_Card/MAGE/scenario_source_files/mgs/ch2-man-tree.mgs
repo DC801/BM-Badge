@@ -1,0 +1,363 @@
+settings for serial dialog { wrap 60 }
+
+ch2-command-man-normal-convo {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: What do you want to know?"
+		" "
+	}
+	goto ch2-notakon-topic-q
+}
+
+ch2-notakon-topic-q {
+	show serial dialog {
+		"(Ask about:)"
+		# "The artifact" : ch2-notakon-topic-artifact
+		# "The mainframe" : ch2-notakon-topic-mainframe
+		# "The castle" : ch2-notakon-topic-castle
+		# "Someone specific" : ch2-notakon-topic-person-start
+		# "(Quit)" : ch2-notakon-topic-nevermind
+	}
+}
+
+ch2-notakon-topic-nevermind {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: I should go."
+		"NOTAKON: No problem! Just let me know if you have a question about anything."
+	}
+}
+
+/* ---------- ARTIFACT ---------- */
+
+ch2-notakon-topic-artifact {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: You had a question about the artifact?"
+		" "
+	}
+	goto ch2-notakon-topic-artifact-q
+}
+
+ch2-notakon-topic-artifact-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Magic words (Commands)" : ch2-notakon-topic-artifact-words
+		# "(Go back)" : ch2-command-man-normal-convo
+	}
+}
+
+ch2-notakon-topic-artifact-words {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: What can you tell me about magic words? You said they were commands?"
+		"NOTAKON: Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use: specific words can cause a specific effect in the world."
+		"\tStrictly speaking, they're just text commands interpreted by the artifact itself, if not the mainframe -- that is, if the mainframe is working, anyway."
+		"\tYou can use the command \"HELP\" to see a list of commands that are valid at the moment. To learn more about a specific command, type \"MAN\" plus the name of the command. For example, type \"MAN LOOK\" to see the manual page for the \"LOOK\" command."
+		" "
+	}
+	goto ch2-notakon-topic-artifact-q
+}
+
+/* ---------- MAINFRAME ---------- */
+
+ch2-notakon-topic-mainframe {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: You had a question about the mainframe?"
+		" "
+	}
+	goto ch2-notakon-topic-mainframe-q
+}
+
+ch2-notakon-topic-mainframe-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Why did you break it?" : ch2-notakon-mainframe-broken
+		# "How broken is it?" : ch2-notakon-mainframe-broken-1
+		# "How do we fix it?" : ch2-notakon-mainframe-fix-1
+		# "(Go back)" : ch2-command-man-normal-convo
+	}
+}
+
+ch2-notakon-mainframe-broken {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Why did you break it?"
+		"NOTAKON: Like I said, I broke it to keep it out of the Big Bad's hands."
+		"\tTODO: more convo"
+		" "
+	}
+	goto ch2-notakon-topic-mainframe-q
+}
+
+ch2-notakon-mainframe-broken-1 {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: What exactly about it is broken?"
+		"NOTAKON: Well, sort of... everything. It's in a million pieces, to be precise."
+		# "Thorough. Nice!" : ch2-notakon-mainframe-broken-1a
+		# "Was that necessary?" : ch2-notakon-mainframe-broken-1a
+	}
+}
+ch2-notakon-mainframe-broken-1a {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: Yeah, so, ahhh... it might not have been necessary, strictly speaking. First I wiped its software. That would've been enough on its own, to be honest...."
+		" "
+	}
+	goto ch2-notakon-topic-mainframe-q
+}
+
+ch2-notakon-mainframe-fix-1 {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: How do we fix it? What do we need?"
+		"NOTAKON: We'll basically have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"\tThere should be enough computer parts scattered throughout the castle. The software though... I'll get back to you about that."
+		" "
+	}
+	goto ch2-notakon-topic-mainframe-q
+}
+
+/* ---------- CASTLE ---------- */
+
+ch2-notakon-topic-castle {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: You had a question about the castle?"
+		" "
+	}
+	goto ch2-notakon-topic-castle-q
+}
+
+ch2-notakon-topic-castle-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Whose castle is this?" : ch2-notakon-castle-who
+		# "The earthquake caused damage?" : ch2-notakon-castle-damage
+		# "(Go back)" : ch2-command-man-normal-convo
+	}
+}
+
+ch2-notakon-castle-who {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Whose castle is this?"
+		"NOTAKON: I'm kind of surprised you didn't know, but it's King Gibson's castle. "
+		"\tTODO: more convo"
+		" "
+	}
+	goto ch2-notakon-topic-castle-q
+}
+ch2-notakon-castle-damage {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: The earthquake caused some damage, then?"
+		"NOTAKON: Oh, for sure. A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
+		" "
+	}
+	goto ch2-notakon-topic-castle-q
+}
+
+/* ---------- PEOPLE ---------- */
+
+ch2-notakon-topic-person-start {
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: Who did you want to ask about?"
+		" "
+	}
+	goto ch2-notakon-topic-person-q
+}
+ch2-notakon-topic-person-s {
+	show serial dialog {
+		"\tUm, did you want to ask about anyone else?"
+		" "
+	}
+	goto ch2-notakon-topic-person-q
+}
+
+ch2-notakon-topic-person-q {
+	show serial dialog {
+		"(Type a name, or type \"CANCEL\" to go back)"
+		
+		_ "BIG BAD" : ch2-notakon-person-big-bad
+
+		_ "ME" : ch2-notakon-person-player
+		_ "BLACK MAGE" : ch2-notakon-person-player
+		_ "MAGE" : ch2-notakon-person-player
+		
+		_ "YOU" : ch2-notakon-person-notakon
+		_ "NOTAKON" : ch2-notakon-person-notakon
+		
+		_ "BOB" : ch2-notakon-person-bob
+
+		_ "CANCEL" : ch2-command-man-normal-convo
+		_ "QUIT" : ch2-command-man-normal-convo
+		_ "STOP" : ch2-command-man-normal-convo
+		_ "NEVER MIND" : ch2-command-man-normal-convo
+		_ "(Go back)" : ch2-command-man-normal-convo
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"NOTAKON: Sorry, not sure who you mean."
+	}
+	goto ch2-notakon-topic-person-q
+}
+
+// The player
+
+ch2-notakon-person-player {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Tell me about me!"
+		"NOTAKON: Oh, um, I don't actually know anything about you."
+		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
+		# "How did you know I'm wearing a hat?" : ch2-notakon-person-player-2
+	}
+}
+ch2-notakon-person-player-2 {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: How did you know I'm wearing a hat?"
+		"NOTAKON: That's, um... that would be because of the... well, the cameras."
+		# "Cameras? That's creepy!" : ch2-notakon-person-player-2a
+		# "Cameras? That's sensible." : ch2-notakon-person-player-2b
+	}
+}
+ch2-notakon-person-player-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Cameras? That's creepy."
+		"NOTAKON: Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense at one point, back when there was a lot more traffic in and out of here, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to...."
+	}
+	goto ch2-notakon-topic-person-s
+}
+ch2-notakon-person-player-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Cameras? That's a sensible measure to take."
+		"NOTAKON: You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		# "It's not that invasive." : ch2-notakon-person-player-3b
+		# "Okay, maybe it's a little invasive" : ch2-notakon-person-player-3a
+	}
+}
+ch2-notakon-person-player-3a {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Okay, maybe it's a little invasive."
+		"NOTAKON: Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
+	}
+	goto ch2-notakon-topic-person-s
+}
+ch2-notakon-person-player-3b {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: It's not that invasive."
+		"NOTAKON: It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
+	}
+	goto ch2-notakon-topic-person-s
+}
+
+// Notakon
+
+ch2-notakon-person-notakon {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Tell me about you!"
+		"NOTAKON: Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+
+ch2-notakon-person-notakon-q {
+	show serial dialog {
+		"(Ask:)"
+		# "Where are you?" : ch2-notakon-person-notakon-where
+		# "How long have you been here?" : ch2-notakon-person-notakon-time
+		# "What's your real name?" : ch2-notakon-person-notakon-name
+		# "(Go back)" : ch2-notakon-topic-person-start
+	}
+}
+ch2-notakon-person-notakon-where {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Where are you?"
+		"TODO: convo"
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+ch2-notakon-person-notakon-time {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: How long have you been here?"
+		"NOTAKON: Where I am now, or at the castle in general?"
+		# "Where you are now." : ch2-notakon-person-notakon-time-2a
+		# "The castle in general." : ch2-notakon-person-notakon-time-2b
+		# "Both." : ch2-notakon-person-notakon-time-2c
+	}
+	goto ch2-notakon-person-notakon-q
+}
+ch2-notakon-person-notakon-time-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Where you are now."
+		"TODO: rest of the convo"
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+ch2-notakon-person-notakon-time-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: The castle in general."
+		"TODO: rest of the convo"
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+ch2-notakon-person-notakon-time-2c {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Both."
+		"TODO: rest of the convo"
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+ch2-notakon-person-notakon-name {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: What's your real name? It's not really \"Notakon,\" is it?"
+		"TODO: rest of the convo"
+		" "
+	}
+	goto ch2-notakon-person-notakon-q
+}
+
+// Big Bad
+
+ch2-notakon-person-big-bad {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Tell me about the Big Bad."
+		"NOTAKON: Oh, um, that's complicated."
+		"TODO: rest of the convo"
+	}
+	goto ch2-notakon-topic-person-s
+}
+
+// Bob
+
+ch2-notakon-person-bob {
+	show serial dialog spacer
+	show serial dialog {
+		"YOU: Tell me about Bob."
+		"NOTAKON: Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+	}
+	goto ch2-notakon-topic-person-s
+}

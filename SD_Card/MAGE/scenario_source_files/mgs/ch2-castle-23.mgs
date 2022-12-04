@@ -33,6 +33,7 @@ on_load-ch2-castle-23 {
 	// serial features
 	set serial control on
 
+	copy ch2-register-man
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable
 	}
