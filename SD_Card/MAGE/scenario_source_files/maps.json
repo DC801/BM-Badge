@@ -1,4 +1,5 @@
 {
+	"main_menu": "maps/map-main_menu.json",
 	"ch2-castle-outside": {
 		"path": "maps/map-ch2-castle-outside.json",
 		"on_load": "on_load-ch2-castle-outside",
@@ -77,7 +78,6 @@
 			"unreg": "map-action_testing-go_unregister"
 		}
 	},
-	"main_menu": "maps/map-main_menu.json",
 	"xa-room": {
 		"path": "maps/map-mtn-xa_room.json",
 		"on_load": "on_load-mtn-xa_room",
@@ -95,14 +95,28 @@
 			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
 		}
 	},
-	"magehouse-birthday": {
+	"ch2-magehouse": {
 		"path": "maps/map-magehouse-birthday.json",
-		"on_load": "on_load-magehouse-birthday"
+		"on_load": "on_load-ch2-magehouse",
+		"on_tick": "on_tick-ch2-magehouse",
+		"on_look": "on_look-ch2-magehouse"
 	},
 	"main2": {
 		"path": "maps/map-main2.json",
-		"on_load": "on_load-main2"
+		"on_load": "on_load-ch2-town",
+		"on_tick": "on_tick-ch2-town",
+		"on_look": "on_look-ch2-town"
 	},
+	"ch2-oldcouplehouse":{
+		"path": "maps/map-ch2-oldcouplehouse.json",
+		"on_tick": "on_tick-ch2-oldcouplehouse",
+		"on_load": "on_load-ch2-oldcouplehouse",
+		"on_look": "on_look-ch2-oldcouplehouse",
+		"directions": {
+			"south": "on_go-ch2-oldcouplehouse-south"
+		}
+	},
+
 	"flying-toasters": {
 		"path": "maps/map-flying-toasters.json",
 		"on_load": "on_load-flying-toasters"

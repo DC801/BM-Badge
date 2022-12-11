@@ -1,0 +1,26 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+on_look-ch2-magehouse {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: mage house text"
+	}
+}
+on_load-ch2-magehouse {
+	if (warp state is cutscene-birthday) {
+		goto ch2-birthday-cutscene
+	}
+}
+
+on_tick-ch2-magehouse {
+	if entity "%PLAYER%" is inside geometry door-magehouse
+		then goto leave-ch2-magehouse
+}
+leave-ch2-magehouse {
+	set warp state to exit_from-magehouse
+	load map main2
+}

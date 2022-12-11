@@ -1,0 +1,58 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+const! (
+	$CALLBACK = 202
+)
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-oldcouplehouse {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Delmar and Beatrice's house text"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-oldcouplehouse {
+	mutate CALLBACK = $CALLBACK
+	goto ch2-noncastle-init
+}
+on_load-ch2-oldcouplehouse-RESUME {
+	mutate CALLBACK = 0
+	if (warp state is warping) { // warping in
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-oldcouplehouse {
+	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
+		then goto on_walk-ch2-oldcouplehouse-south
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-oldcouplehouse-south {
+	copy warping-out-fade-out
+	load map main2
+}
+on_walk-ch2-oldcouplehouse-south {
+	// triggered by map's on_tick
+	set warp state to exit_from-oldcouplehouse
+	load map main2
+}
+
+/* ---------- ENTITIES ---------- */
+
+ch2-interact-beatrice {
+	show dialog {
+		SELF "TODO"
+	}
+}

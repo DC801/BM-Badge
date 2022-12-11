@@ -37,7 +37,7 @@ on_load-ch2-castle-1 {
 	// serial features
 	if (flag ch2-has-artifact is true) {
 		set serial control on
-		copy ch2-register-man
+		copy ch2-register-manual
 	} else {
 		set serial control off // safety
 	}
@@ -408,7 +408,7 @@ ch2-terminal-message-test-success {
 		show dialog {
 			Notakon "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
-		copy ch2-register-man
+		copy ch2-register-manual
 		set flag ch2-toot-done to true // TODO: temporary placement
 		set serial control on
 	} else {

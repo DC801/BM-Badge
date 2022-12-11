@@ -117,7 +117,7 @@ load_map-action_testing_02 {
 }
 
 load_map-chapter2-start {
-	load map magehouse-birthday
+	load map ch2-magehouse
 }
 
 // from script-town_map.json

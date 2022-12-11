@@ -3,19 +3,9 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 }
 
-/* --- Map on_load --- */
-
-on_load-magehouse-birthday {
-	if flag mtn-birthday-cutscene is false then goto script mtn-birthday-cutscene-start
-}
-
-on_load-main2 {
-	if flag mtn-escort-cutscene is false then goto script mtn-escort-cutscene-start
-}
-
 /* --- CUTSCENE: Birthday (house) --- */
 
-mtn-birthday-cutscene-start {
+ch2-birthday-cutscene {
 	set player control to off
 	close hex editor
 	set entity "%PLAYER%" animation to 0
@@ -103,8 +93,9 @@ mtn-birthday-cutscene-start {
 		"Good night, %Aunt Zippy%, %Uncle Zappy%."
 	}
 	fade out camera to #000000 over 2000ms
-	set flag mtn-birthday-cutscene to true
 	wait 400ms
+	set flag ch2-birthday-cutscene to true
+	set warp state to cutscene-escort
 	load map main2
 }
 
@@ -117,7 +108,6 @@ gossip-right-down {
 	turn entity "%SELF%" south
 	wait 400ms
 }
-
 gossip-left-and-right-down {
 	turn entity "%SELF%" west
 	wait 600ms
@@ -126,7 +116,6 @@ gossip-left-and-right-down {
 	turn entity "%SELF%" east
 	wait 360ms
 }
-
 gossip-left-down {
 	wait 200ms
 	turn entity "%SELF%" south
@@ -135,7 +124,7 @@ gossip-left-down {
 	wait 1100ms
 }
 
-mtn-escort-cutscene-start {
+ch2-escort-cutscene {
 	fade out camera to #000000 over 0ms
 	set player control to off
 	close hex editor
@@ -241,11 +230,7 @@ mtn-escort-cutscene-start {
 		Alfonso "Yes! And that is why you must hurry!"
 		PLAYER "All right. Let's not waste any more time."
 	}
-	goto script birthday-escort-cutscene-end
-}
-
-birthday-escort-cutscene-end {
-	set flag mtn-escort-cutscene to true
+	set flag ch2-escort-cutscene to true
 	wait 160ms
 	set entity Jackob tick_script to birthday-march-on-own-path
 	wait 180ms
@@ -254,12 +239,13 @@ birthday-escort-cutscene-end {
 	set entity Bert tick_script to birthday-march-on-own-path
 	set entity "%PLAYER%" tick_script to birthday-march-on-own-path-player
 	fade out camera to #000000 over 2000ms
+	set warp state to cutscene-castle-gates
+	load map ch2-castle-outside
 }
 
 birthday-march-on-own-path {
 	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms
 }
-
 birthday-march-on-own-path-player {
 	wait 200ms
 	walk entity "%PLAYER%" to geometry hesitation-point over 300ms

@@ -22,12 +22,14 @@ bender-happybutt {
 }
 
 on_load-map-main {
+	// if you haven't started ch1 yet
 	if (flag begunthegame is false) {
 		set flag begunthegame to true
 		set hex control to off
 		fade in camera from #000000 over 1ms
 		load map magehouse
 	}
+	// assuming you have ring zero
 	set hex control to on
 	if (flag storyflag-bobmoss is true) {
 		teleport entity "Bob Moss" to geometry catwalk-hide
@@ -57,54 +59,34 @@ on_load-map-main {
 	if (flag walked-to-lodge is false) {
 		goto walk-to-lodge
 	}
+	set player control to off
 	if (flag hintman-explanation is false) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-lodge over 400ms
 		copy hintman-cutscene // see script-elders.json for this
-		set player control to on
 		set flag hintman-explanation to true
 	} else if (warp state is enter_from-east) {
-		goto enter_from-east
+		walk entity "%PLAYER%" along geometry enter_from-east over 1000ms
 	} else if (warp state is enter_from-west) {
-		goto enter_from-west
+		walk entity "%PLAYER%" along geometry enter_from-west over 1000ms
 	} else if (warp state is exit_from-bobsclub) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-bobsclub over 200ms
-		set player control to on
 	} else if (warp state is exit_from-bakery) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-bakery over 200ms
-		set player control to on	
 	} else if (warp state is exit_from-lodge) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-lodge over 200ms
-		set player control to on
 	} else if (warp state is exit_from-greenhouse) {
-		set player control to off
-		teleport entity "%PLAYER%" to geometry enter_from-greenhouse
 		walk entity "%PLAYER%" along geometry enter_from-greenhouse over 200ms
-		set player control to on
 	} else if (warp state is exit_from-magehouse) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-magehouse over 200ms
-		set player control to on
 	} else if (warp state is exit_from-oldcouplehouse) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-oldcouplehouse over 200ms
-		set player control to on
 	} else if (warp state is exit_from-family) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-family over 200ms
-		set player control to on
 	} else if (warp state is exit_from-woprhouse) {
-		set player control to off
 		walk entity "%PLAYER%" along geometry enter_from-woprhouse over 200ms
-		set player control to on
 	} else if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot
-		set player control to off
 		fade in camera from #000000 over 800ms
-		set player control to on
 		if flag wonthedemo is false then goto null_script
 		if flag storyflag-catwork is false then goto null_script
 		if flag storyflag-shepherd is false then goto null_script
@@ -126,6 +108,7 @@ on_load-map-main {
 		}
 		set flag demobonus-jackob-informed to true
 	}
+	set player control to on
 }
 
 /* ---------- on_tick scripts ---------- */

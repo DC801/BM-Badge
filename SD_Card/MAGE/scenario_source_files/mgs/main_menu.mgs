@@ -3,6 +3,7 @@ settings for dialog {
 }
 
 on_load-main_menu {
+	mutate current-chapter = 0
 	goto null_script
 }
 
@@ -355,6 +356,7 @@ show_dialog-load-start-map-q {
 }
 
 start-chapter1 {
+	mutate current-chapter = 1
 	load map main
 }
 
@@ -372,26 +374,27 @@ start-chapter2-check {
 }
 
 start-chapter2 {
-	load map magehouse-birthday
+	mutate current-chapter = 2
+	if (flag ch2-birthday-cutscene is false) {
+		set warp state to cutscene-birthday
+		load map ch2-magehouse
+	} else {
+		load map main2
+	}
 }
 
 dialog debug-math-orig {
-	Math
-	"orig bling-rotate-state: $bling-rotate-state$"
+	Math "orig bling-rotate-state: $bling-rotate-state$"
 }
 dialog debug-math-added {
-	Math
-	"new bling-rotate-state: $bling-rotate-state$"
+	Math "new bling-rotate-state: $bling-rotate-state$"
 }
 dialog debug-math-target-overshot-check {
-	Math
-	"overshot if: $temp$"
+	Math "overshot if: $temp$"
 }
 dialog debug-math-target-overshot {
-	Math
-	"Overshot!"
+	Math "Overshot!"
 }
 dialog debug-math-done {
-	Math
-	"Math finished."
+	Math "Math finished."
 }
