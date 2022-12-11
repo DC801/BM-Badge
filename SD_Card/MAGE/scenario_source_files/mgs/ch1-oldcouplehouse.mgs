@@ -7,7 +7,8 @@ settings for dialog {
 /* --------------- on_tick --------------- */
 
 on_tick-oldcouplehouse {
-	if entity "%PLAYER%" is inside geometry door-oldcouplehouse then goto leave-oldcouplehouse
+	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
+		then goto leave-oldcouplehouse
 }
 leave-oldcouplehouse {
 	set warp state to exit_from-oldcouplehouse

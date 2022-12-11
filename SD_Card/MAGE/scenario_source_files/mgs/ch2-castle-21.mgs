@@ -24,24 +24,9 @@ on_load-ch2-castle-21 {
 	show serial dialog {
 		"Entering WORKSHOP"
 	}
-
-	// misc game state
-	if (flag ch2-ring-zero-restored is false) {
-		copy disable-hax
-	}
-
-	// serial features
-	set serial control on
-
-	copy ch2-register-man
-	if (flag ch2-map-granted is true) {
-		copy ch2-map-enable
-	}
-
-	// warp-in animation
-	if (warp state is warping) {
-		copy warping-in-fade-in
-	}
+	
+	goto ch2-castle-init
+	// use callback pattern to return to this point if needed
 }
 
 /* ---------- ON_TICK ---------- */

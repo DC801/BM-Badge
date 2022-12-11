@@ -3,6 +3,10 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 }
 
+const! (
+	$CALLBACK = 98
+)
+
 /* ---------- LOOK SCRIPTS ---------- */
 
 on_look-ch2-castle-outside {
@@ -15,25 +19,12 @@ on_look-ch2-castle-outside {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-outside {
-	// serial features
-	if (flag ch2-has-artifact is true) {
-		set serial control on
-	} else {
-		set serial control off // safety
-	}
-	if (flag ch2-has-artifact is true) {
-		set serial control on
-	} else {
-		set serial control off // safety
-	}
-	if (flag ch2-toot-done is true) {
-		copy ch2-register-man
-	}
-	
-	if (flag ch2-map-granted is true) {
-		copy ch2-map-enable
-	}
+	mutate CALLBACK = $CALLBACK
+	goto ch2-noncastle-init
+}
 
+on_load-ch2-castle-outside-RESUME {
+	mutate CALLBACK = 0
 	if (warp state is warping) { // warping in
 		copy warping-in-fade-in
 	} else if (warp state is walk_from-north) {

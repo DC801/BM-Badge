@@ -1,0 +1,134 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-town {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Town text"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-town {
+	if (warp state is cutscene-escort) {
+		goto ch2-escort-cutscene
+	}
+	set hex control to on
+	// walking out of doorways:
+	set player control to off
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	} else if (warp state is exit_from-credits) {
+		teleport entity "%PLAYER%" to geometry from-credits-spot
+		fade in camera from #000000 over 800ms
+	} else if (warp state is enter_from-east) {
+		walk entity "%PLAYER%" along geometry enter_from-east over 1000ms
+	} else if (warp state is enter_from-west) {
+		walk entity "%PLAYER%" along geometry enter_from-west over 1000ms
+	} else if (warp state is exit_from-bobsclub) {
+		walk entity "%PLAYER%" along geometry enter_from-bobsclub over 200ms
+	} else if (warp state is exit_from-bakery) {
+		walk entity "%PLAYER%" along geometry enter_from-bakery over 200ms
+	} else if (warp state is exit_from-lodge) {
+		walk entity "%PLAYER%" along geometry enter_from-lodge over 200ms
+	} else if (warp state is exit_from-greenhouse) {
+		walk entity "%PLAYER%" along geometry enter_from-greenhouse over 200ms
+	} else if (warp state is exit_from-magehouse) {
+		walk entity "%PLAYER%" along geometry enter_from-magehouse over 200ms
+	} else if (warp state is exit_from-oldcouplehouse) {
+		walk entity "%PLAYER%" along geometry enter_from-oldcouplehouse over 200ms
+	} else if (warp state is exit_from-family) {
+		walk entity "%PLAYER%" along geometry enter_from-family over 200ms
+	} else if (warp state is exit_from-woprhouse) {
+		walk entity "%PLAYER%" along geometry enter_from-woprhouse over 200ms
+	} else { // in case warp state is something strange
+		goto on_load-ch2-town-fallback
+	}
+	set player control to on
+}
+
+on_load-ch2-town-fallback {
+	set player control to on
+}
+
+/* ---------- ON_TICK ---------- */
+
+// map loading scripts
+
+on_tick-ch2-town {
+	if entity "%PLAYER%" is inside geometry door-bakery-entrance
+		then goto load_map-ch2-bakery
+	if entity "%PLAYER%" is inside geometry door-family-entrance
+		then goto load_map-ch2-family
+	if entity "%PLAYER%" is inside geometry door-greenhouse-entrance
+		then goto load_map-ch2-greenhouse
+	if entity "%PLAYER%" is inside geometry door-magehouse-entrance
+		then goto load_map-ch2-magehouse
+	if entity "%PLAYER%" is inside geometry door-lodge-entrance
+		then goto load_map-ch2-lodge
+	if entity "%PLAYER%" is inside geometry door-oldcouplehouse-entrance
+		then goto load_map-ch2-oldcouplehouse
+	if entity "%PLAYER%" is inside geometry door-woprhouse-entrance
+		then goto load_map-ch2-woprhouse
+	if entity "%PLAYER%" is inside geometry door_to-town-east
+	then goto load_map-ch2-castle
+	if entity "%PLAYER%" is inside geometry door_to-town-west
+	then goto wrap_from-ch2-east
+}
+load_map-ch2-bakery {
+	load map bakery
+}
+load_map-ch2-oldcouplehouse {
+	load map ch2-oldcouplehouse
+}
+load_map-ch2-greenhouse {
+	load map greenhouse
+}
+load_map-ch2-magehouse {
+	load map magehouse
+}
+load_map-ch2-lodge {
+	load map lodge
+}
+load_map-ch2-family {
+	load map family
+}
+load_map-ch2-woprhouse {
+	load map woprhouse
+}
+load_map-ch2-castle {
+	load map ch2-castle-outside
+}
+
+wrap_from-ch2-east {
+	set entity "%PLAYER%" tick_script to on_tick-ch2-wrap_into-east
+	fade out camera to #000000 over 600ms
+	set entity "%PLAYER%" tick_script to on_tick-ch2-wrap_from-east
+	fade in camera from #000000 over 600ms
+	goto on_tick-ch2-town
+}
+on_tick-ch2-wrap_into-east {
+	set player control to off
+	walk entity "%PLAYER%" to geometry exit_to-east over 3500ms
+	goto null_script
+}
+on_tick-ch2-wrap_from-east {
+	walk entity "%PLAYER%" along geometry enter_from-west over 600ms
+	set player control to on
+	goto null_script
+}
+
+/* ---------- ENTITIES ---------- */
+
+ch2-interact-delmar {
+	copy face-player
+	show dialog { SELF "...." }
+	turn entity "%SELF%" north
+}
+

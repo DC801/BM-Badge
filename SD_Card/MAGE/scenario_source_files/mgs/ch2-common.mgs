@@ -1,29 +1,70 @@
 settings for serial dialog { wrap 60 }
 
-serial dialog spacer { " ""------------"" " }
+serial dialog spacer {
+	" "
+	"------------"
+	" "
+}
+
+/* ---------- CASTLE ON_LOAD INIT ---------- */
+// only room 1 does not use this shared behavior
+
+ch2-castle-init {
+	// misc game state
+	if (flag ch2-ring-zero-restored is false) {
+		copy disable-hax
+	}
+	// serial features
+	set serial control on
+	copy ch2-register-manual
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+	// warp-in animation
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- NON-CASTLE ON_LOAD INIT ---------- */
+
+ch2-noncastle-init {
+	// serial features
+	if (flag ch2-has-artifact is true) {
+		set serial control on
+	} else {
+		set serial control off
+	}
+	if (flag ch2-toot-done is true) {
+		copy ch2-register-manual
+	}
+	if (flag ch2-map-granted is true) {
+		copy ch2-map-enable
+	}
+	// CALLBACK MAGIC
+	if (variable CALLBACK is 98) {
+		goto on_load-ch2-castle-outside-RESUME
+	} else if (variable CALLBACK is 202) {
+		goto on_load-ch2-oldcouplehouse-RESUME
+	} else {
+		show serial dialog {
+			"<r>ERROR: invalid callback value ($CALLBACK$)</>"
+			"<r>   script: 'ch2-noncastle-init'</>"
+			"<r>   file: 'ch2-common.mgs'</>"
+		}
+	}
+}
 
 /* ---------- MAN PAGES ---------- */
 
-ch2-register-man {
+ch2-register-manual {
 	// the default set
-	register man -> ch2-command-man
-	unregister man
 	register man -> ch2-command-man
 	// BUG: man+man breaks solo man
 	// register man + man -> ch2-man-man
-	// unregister man + man
-	// register man + man -> ch2-man-man
-	register man + look -> ch2-man-look
-	unregister man + look
 	register man + look -> ch2-man-look
 	register man + go -> ch2-man-go
-	unregister man + go
-	register man + go -> ch2-man-go
 	register man + help -> ch2-man-help
-	unregister man + help
-	register man + help -> ch2-man-help
-	register man fail -> ch2-man-fail
-	unregister man fail
 	register man fail -> ch2-man-fail
 }
 
@@ -151,6 +192,8 @@ boot-to-chapter-1 {
 }
 
 /* ---------- ALL-IN-ONE WARP LIST ---------- */
+
+// to be deprecated (if not already)
 
 warp_to-mtn-xa_room {
 	copy warping-out-fade-out
