@@ -462,6 +462,11 @@ MageSerialDialogCommand* MageCommandControl::searchForCommand(
 void MageCommandControl::reset() {
 	jumpScriptId = MAGE_NO_SCRIPT;
 	isInputTrapped = false;
+
+	// empties out the registeredCommands and frees the memory?
+	registeredCommands.clear();
+	registeredCommands.shrink_to_fit();
+
 	// if reset has been run, you're probably on a new map
 	// so don't show the postDialogBuffer contents,
 	// but we do need to show the commandResponse and dialog
