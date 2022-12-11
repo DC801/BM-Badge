@@ -51,8 +51,8 @@ ch2-notakon-topic-artifact-words {
 	show serial dialog spacer
 	show serial dialog {
 		"YOU: What can you tell me about magic words? You said they were commands?"
-		"NOTAKON: Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use: specific words can cause a specific effect in the world."
-		"\tStrictly speaking, they're just text commands interpreted by the artifact itself, if not the mainframe -- that is, if the mainframe is working, anyway."
+		"NOTAKON: Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use, sure: using the right \"magic\" word or words will cause a specific effect."
+		"\tStrictly speaking, they're just text commands interpreted by the artifact itself, if not the mainframe -- provided the mainframe is working, of course."
 		"\tYou can use the command \"HELP\" to see a list of commands that are valid at the moment. To learn more about a specific command, type \"MAN\" plus the name of the command. For example, type \"MAN LOOK\" to see the manual page for the \"LOOK\" command."
 		" "
 	}
@@ -103,7 +103,8 @@ ch2-notakon-mainframe-broken-1 {
 ch2-notakon-mainframe-broken-1a {
 	show serial dialog spacer
 	show serial dialog {
-		"NOTAKON: Yeah, so, ahhh... it might not have been necessary, strictly speaking. First I wiped its software. That would've been enough on its own, to be honest...."
+		"NOTAKON: Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"\tI don't know. I just wanted to be SURE. I sort of regret it now."
 		" "
 	}
 	goto ch2-notakon-topic-mainframe-q
@@ -113,8 +114,8 @@ ch2-notakon-mainframe-fix-1 {
 	show serial dialog spacer
 	show serial dialog {
 		"YOU: How do we fix it? What do we need?"
-		"NOTAKON: We'll basically have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
-		"\tThere should be enough computer parts scattered throughout the castle. The software though... I'll get back to you about that."
+		"NOTAKON: We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"\tBut there should be enough computer parts scattered throughout the castle. The software though... I'll get back to you about that."
 		" "
 	}
 	goto ch2-notakon-topic-mainframe-q
@@ -284,10 +285,26 @@ ch2-notakon-person-notakon-q {
 }
 ch2-notakon-person-notakon-where {
 	show serial dialog spacer
-	show serial dialog {
-		"YOU: Where are you?"
-		"TODO: convo"
-		" "
+	if (flag ch2-seen-room-99 is false) {
+		show serial dialog {
+			"YOU: Where are you?"
+			"TODO: convo"
+			" "
+		}
+	} else {
+		if (variable ch2-in-room is 99) {
+			show serial dialog {
+				"YOU: Where are you? I mean, where are WE? There aren't any doors here."
+			}
+		} else {
+			show serial dialog {
+				"YOU: Where are you? I mean, spatially, where is that lab of yours? There weren't any doors inside."
+			}
+		}
+		show serial dialog {
+			"NOTAKON: I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
+			" "
+		}
 	}
 	goto ch2-notakon-person-notakon-q
 }
