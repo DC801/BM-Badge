@@ -139,15 +139,51 @@
 			"You're goating to the Hub map now!"
 		]
 	},
-	"serial_dialog-go_register": {"messages": ["Registered Command: 'map'!"]},
-	"serial_dialog-go_register_fail": {"messages": ["Registered Command: 'map' fail fallback!"]},
-	"serial_dialog-go_unregister": {"messages": ["Unregistered Command: 'map'!"]},
-	"serial_dialog-go_register_arguments": {"messages": ["Registered Arguments: 'map' > ['town', 'dungeon']!"]},
-	"serial_dialog-go_unregister_arguments": {"messages": ["Unregistered Arguments: 'map' > ['town', 'dungeon']!"]},
-	"serial_dialog-command-map": {"messages": ["OMG! I can look at maps!! But which one???"]},
-	"serial_dialog-command-map-fail": {"messages": ["I don't have a map named that!!!"]},
-	"serial_dialog-command-map-town": {"messages": ["This map of the Town sure is... existing."]},
-	"serial_dialog-command-map-dungeon": {"messages": ["This map of the Dungeon is AWESOME!!!"]},
+	"serial_dialog-go_register": {
+		"messages": [
+			"Registered Command: 'map'!"
+		]
+	},
+	"serial_dialog-go_register_fail": {
+		"messages": [
+			"Registered Command: 'map' fail fallback!"
+		]
+	},
+	"serial_dialog-go_unregister": {
+		"messages": [
+			"Unregistered Command: 'map'!"
+		]
+	},
+	"serial_dialog-go_register_arguments": {
+		"messages": [
+			"Registered Arguments: 'map' > ['town', 'dungeon']!"
+		]
+	},
+	"serial_dialog-go_unregister_arguments": {
+		"messages": [
+			"Unregistered Arguments: 'map' > ['town', 'dungeon']!"
+		]
+	},
+	"serial_dialog-command-map": {
+		"messages": [
+			"OMG! I can look at maps!! But which one???"
+		]
+	},
+	"serial_dialog-command-map-fail": {
+		"messages": [
+			"I don't have a map named that!!!"
+		]
+	},
+	"serial_dialog-command-map-town": {
+		"messages": [
+			"This map of the Town sure is... existing."
+		]
+	},
+	"serial_dialog-command-map-dungeon": {
+		"messages": [
+			"This map of the Dungeon is AWESOME!!!"
+		]
+	},
 	"serial_dialog-map-action_testing-go_concat": {
 		"messages": [
 			"This is a script about concatenation!",
@@ -176,11 +212,59 @@
 			}
 		]
 	},
-	"concat-start": {"messages": ["This is a story about a "]},
-	"concat-goat": {"messages": ["Goat"]},
-	"concat-bird": {"messages": ["Bird"]},
-	"concat-cat": {"messages": ["Cat"]},
-	"concat-platypus": {"messages": ["Platypus"]},
-	"concat-peregrine_falcon": {"messages": ["Peregrine Falcon"]},
-	"concat-end": {"messages": [" that set out to make the world's most awesome ice-cream!"]}
+	"concat-start": {
+		"messages": [
+			"This is a story about a "
+		]
+	},
+	"concat-goat": {
+		"messages": [
+			"Goat"
+		]
+	},
+	"concat-bird": {
+		"messages": [
+			"Bird"
+		]
+	},
+	"concat-cat": {
+		"messages": [
+			"Cat"
+		]
+	},
+	"concat-platypus": {
+		"messages": [
+			"Platypus"
+		]
+	},
+	"concat-peregrine_falcon": {
+		"messages": [
+			"Peregrine Falcon"
+		]
+	},
+	"concat-end": {
+		"messages": [
+			" that set out to make the world's most awesome ice-cream!"
+		]
+	},
+	"serial_dialog-go_register_moon": {
+		"messages": [
+			"You have registered the verb 'moon' and the verb + argument 'moon moon'"
+		]
+	},
+	"serial_dialog-command-map-moon": {
+		"messages": [
+			"What would you like to moon?"
+		]
+	},
+	"serial_dialog-command-map-moon-fail": {
+		"messages": [
+			"You cannot moon that."
+		]
+	},
+	"serial_dialog-command-map-moon-moon": {
+		"messages": [
+			"You mooned the moon. It blushes."
+		]
+	}
 }
