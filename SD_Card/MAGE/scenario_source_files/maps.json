@@ -75,7 +75,8 @@
 			"regFail": "map-action_testing-go_register_fail",
 			"regArg": "map-action_testing-go_register_arguments",
 			"unregArg": "map-action_testing-go_unregister_arguments",
-			"unreg": "map-action_testing-go_unregister"
+			"unreg": "map-action_testing-go_unregister",
+			"moon": "map-action_testing-go_moon"
 		}
 	},
 	"xa-room": {
