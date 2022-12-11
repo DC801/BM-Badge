@@ -48,19 +48,26 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	// Used to split string around spaces.
 	bool syntaxValid = true;
 	uint8_t wordCount = 0;
-	std::string word = "";
+	std::string word;
 	std::string verb;
 	std::string subject;
 
 	// Traverse through all words
 	// while loop through segments to store in string word
 	while (
-		input.compare(word) != 0
+		input.compare("") != 0
 		&& syntaxValid
 	) {
 		size_t index = input.find_first_of(" ");
-		word = input.substr(0,index);
-		input = input.substr(index+1, input.length());
+		if (index != std::string::npos) {
+			// we found a space
+			word = input.substr(0,index);
+			input = input.substr(index+1, input.length());
+		} else {
+			// no more spaces
+			word = "" + input;
+			input = "";
+		}
 		if (word.length() == 0) {
 			// skip space
 			continue;
@@ -68,9 +75,9 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 
 		wordCount++;
 		if (wordCount == 1) {
-			verb.append(word);
+			verb = "" + word;
 		} else if (wordCount == 2) {
-			subject.append(word);
+			subject = "" + word;
 		} else {
 			// only cases could be wordCount > 2
 			syntaxValid = false;

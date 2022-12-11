@@ -160,10 +160,67 @@
 			}
 		}
 	],
+	"map-action_testing-go_moon": [
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"script": "command-map-moon"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
+			"command": "moon",
+			"is_fail": true,
+			"script": "command-map-moon-fail"
+		},
+		{
+			"action": "REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT",
+			"command": "moon",
+			"argument": "moon",
+			"script": "command-map-moon-moon"
+		},
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-go_register_moon"
+		}
+	],
+	"command-map-moon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon"
+		}
+	],
+	"command-map-moon-fail": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon-fail"
+		}
+	],
+	"command-map-moon-moon": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-command-map-moon-moon"
+		}
+	],
 	"map-action_testing-load": [
 		{
 			"action": "SET_CONNECT_SERIAL_DIALOG",
 			"serial_dialog": "serial_dialog-map-action_testing-on_connect"
+		},
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_SERIAL_DIALOG_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_HEX_EDITOR_CONTROL_CLIPBOARD",
+			"bool_value": true
 		}
 	],
 	"map-action_testing-look": [
