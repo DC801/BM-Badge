@@ -1,3 +1,4 @@
+var convert = new window.ansiToHtml();
 var outputBuffer = document.getElementById('output');
 var inputForm = document.getElementById('input_form');
 var commandInput = document.getElementById('command_input');
@@ -5,7 +6,7 @@ outputBuffer.innerHTML = '';
 var appendMessage = function (input, classname) {
 	var newMessage = document.createElement('div');
 	newMessage.className = classname;
-	newMessage.innerText = input;
+	newMessage.innerHTML = convert.toHtml(input);
 	outputBuffer.appendChild(newMessage);
 	outputBuffer.scrollTo(0, outputBuffer.scrollHeight);
 };
