@@ -9,7 +9,22 @@ on_load-main_menu {
 	register colors + bg -> serial-color-test-bg
 	register colors + bold -> serial-color-test-bold
 	register colors + dim -> serial-color-test-dim
+	copy register-commentary
+	show serial dialog {
+		" "
+		"<c><bold>Serial commentary</> <c>is available for chapter 1!</> (This is off by default.) To enable or disable this commentary, type <c>COMMENTARY ON</> or <c>COMMENTARY OFF</> at the main menu."
+	}
+	/* DEBUG QUICK STUFFS */
+	register debug -> debug
 	goto null_script
+}
+
+debug {
+	set serial control on
+	set flag ch2-has-artifact to true
+	set flag ch2-toot-done to true
+	set flag ch2-map-granted to true
+	load map ch2-castle-outside
 }
 
 serial-color-test {

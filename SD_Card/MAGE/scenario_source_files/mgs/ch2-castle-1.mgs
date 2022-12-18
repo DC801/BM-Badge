@@ -270,7 +270,7 @@ interact-ch2-xa {
 			show dialog {
 				Notakon "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services. It won't work in here."
 				"Normally, XA extends the town's network, bridging the castle with the town...."
-				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let me help you set it up."
+				"You know what? There's a lot to explain, and it might be easier to chat with the artifact itself. Let me help you set it up."
 			}
 			set player control on
 			set flag ch2-has-artifact to true
@@ -386,7 +386,7 @@ ch2-terminal-message-test {
 	}
 	show serial dialog spacer
 	show serial dialog {
-		"NOTAKON: Testing, testing...."
+		"<m>NOTAKON</>: Testing, testing...."
 		"\tCan you see this message?"
 	}
 	show dialog {
@@ -427,7 +427,7 @@ ch2-command-man {
 	if (flag ch2-toot-done is false) {
 		show serial dialog spacer
 		show serial dialog {
-			"NOTAKON: Ahh, this is much more comfortable, isn't it? You can type commands into the console, and interesting things will happen."
+			"<m>NOTAKON</>: Ahh, this is much more comfortable, isn't it? You can type commands into the console, and interesting things will happen."
 			" "
 			""
 		}

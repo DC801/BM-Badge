@@ -6,7 +6,8 @@
 		"on_look": "on_look-ch2-castle-outside",
 		"on_tick": "on_tick-ch2-castle-outside",
 		"directions": {
-			"north": "on_go-castle-outside-north"
+			"north": "on_go-castle-outside-north",
+			"east": "on_go-castle-outside-east"
 		}
 	},
 	"ch2-castle-1": {
@@ -106,7 +107,10 @@
 		"path": "maps/map-main2.json",
 		"on_load": "on_load-ch2-town",
 		"on_tick": "on_tick-ch2-town",
-		"on_look": "on_look-ch2-town"
+		"on_look": "on_look-ch2-town",
+		"directions": {
+			"west": "on_go-ch2-town-west"
+		}
 	},
 	"ch2-oldcouplehouse":{
 		"path": "maps/map-ch2-oldcouplehouse.json",
