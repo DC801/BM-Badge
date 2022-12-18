@@ -31,6 +31,10 @@ on_load-ch2-castle-outside-RESUME {
 		set player control to off
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 		set player control to on
+	} else if (warp state is walk_from-east) {
+		set player control to off
+		walk entity "%PLAYER%" along geometry walk_from-east over 200ms
+		set player control to on
 	}
 }
 
@@ -39,6 +43,8 @@ on_load-ch2-castle-outside-RESUME {
 on_tick-ch2-castle-outside { // LOOPS HERE
 	if entity "%PLAYER%" is inside geometry north-hitbox
 		then goto on_walk-castle-outside-north
+	if entity "%PLAYER%" is inside geometry east-hitbox
+		then goto on_walk-castle-outside-east
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -54,6 +60,11 @@ on_go-castle-outside-north {
 	copy warping-out-fade-out
 	load map ch2-castle-1
 }
+on_go-castle-outside-east {
+	copy on_exit-ch2-castle-outside
+	copy warping-out-fade-out
+	load map main2
+}
 
 // WALK
 
@@ -62,3 +73,10 @@ on_walk-castle-outside-north {
 	set warp state to walk_from-south
 	load map ch2-castle-1
 }
+
+on_walk-castle-outside-east {
+	copy on_exit-ch2-castle-outside
+	set warp state to walk_from-west
+	load map main2
+}
+
