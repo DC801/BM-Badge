@@ -34,7 +34,6 @@
 #include <sdk/shim/shim_filesystem.h>
 #include <filesystem>
 #include "EnginePanic.h"
-#include "EngineROM.h"
 #include "utility.h"
 
 #ifdef DC801_EMBEDDED
@@ -101,12 +100,14 @@ uint32_t util_sd_file_size(const char *path) {
 
 	FRESULT result = f_stat(path, &info);
 	if (result != FR_OK) {
-		util_sd_recover();
+		//TODO FIXME: 
+		// util_sd_recover();
 		result = f_stat(path, &info);
 	}
 
 	if (result != FR_OK) {
-		util_sd_recover();
+		//TODO FIXME: 
+		// util_sd_recover();
 		return 0;
 	}
 

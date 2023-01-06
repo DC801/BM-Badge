@@ -8,7 +8,7 @@ in a more accessible way.
 #define _MAGE_ANIMATION_H
 
 #include "mage_defines.h"
-#include "EngineROM.h"
+#include "mage_rom.h"
 #include <vector>
 
 class MageGameEngine;
@@ -24,7 +24,7 @@ public:
 	};
 
 	MageAnimation() noexcept = default;
-	MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept;
+	MageAnimation(uint32_t& address) noexcept;
 
 	constexpr uint16_t TilesetId() const { return tilesetId; }
 	constexpr uint16_t TileId() const { return 0; }

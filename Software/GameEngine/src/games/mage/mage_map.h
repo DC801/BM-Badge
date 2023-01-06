@@ -1,16 +1,16 @@
 /*
-This class contains the MageMap class and all related subclasses
+This class contains the MapControl class and all related subclasses
 It is a structure used to hold the binary information in the ROM
 in a more accessible way.
 */
 #ifndef _MAGE_MAP_H
 #define _MAGE_MAP_H
 
+#include "mage_rom.h"
 #include "mage.h"
 #include "mage_camera.h"
 #include "mage_defines.h"
 #include "mage_entity_type.h"
-#include "mage_header.h"
 #include "mage_tileset.h"
 #include "EngineROM.h"
 
@@ -24,154 +24,11 @@ struct GoDirection
    uint16_t padding{ 0 };
 };
 
-class MageMap
+struct MapData
 {
-   friend class MageGameControl;
-   friend class MageScriptControl;
-   friend class MageHexEditor;
-public:
-   MageMap(std::shared_ptr<EngineROM> ROM,
-      std::shared_ptr<FrameBuffer> frameBuffer, 
-      MageGameControl* gameControl,
-      const MageHeader& mapHeader, 
-      const MageHeader& geometryHeader, 
-      const MageHeader& entityHeader, 
-      const MageHeader& scriptHeader) noexcept
-      : ROM(ROM), 
-      frameBuffer(frameBuffer), 
-      gameControl(gameControl),
-      mapHeader(mapHeader),
-      geometryHeader(geometryHeader),
-      entityHeader(entityHeader), 
-      scriptHeader(scriptHeader)
-      {}
-
-   //this takes map data by index and fills all the variables in the map object:
-   /*void PopulateMapData(uint16_t index);*/
-   void Load(uint16_t index);
-   void Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera& camera, bool isCollisionDebugOn=false);
-   void DrawGeometry(const MageCamera& camera);
-   void DrawEntities(MageGameEngine* engine);
-
-   void UpdateEntities(uint32_t deltaTime);
-
-   std::string Name() const { return std::string(name); }
-   uint16_t TileWidth() const { return tileWidth; }
-   uint16_t TileHeight() const { return tileHeight; }
-   uint16_t Cols() const { return cols; }
-   uint16_t Rows() const { return rows; }
-   uint8_t LayerCount() const { return mapLayerOffsets.size(); }
-   constexpr uint8_t FilteredEntityCount() const { return filteredEntityCountOnThisMap; }
-   uint16_t GeometryCount() const { return geometryGlobalIds.size(); }
-   uint16_t ScriptCount() const { return scriptGlobalIds.size(); }
-
-   uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
-   {
-      if (entities.empty()) { return 0; }
-      return entityGlobalIds[mapLocalEntityId % entities.size()];
-   }
-
-   uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
-   {
-      if (geometryGlobalIds.empty()) { return 0; }
-      return geometryGlobalIds[mapLocalGeometryId % geometryGlobalIds.size()];
-   }
-
-   uint16_t getGlobalScriptAddress(uint16_t mapLocalScriptId) const
-   {
-      auto scriptId = scriptGlobalIds.empty() ? 0 : mapLocalScriptId % scriptGlobalIds.size();
-      return scriptHeader.offset(scriptGlobalIds[scriptId]);
-   }
-
-   const MageEntity* getPlayerEntity() const
-   {
-      return getEntity(playerEntityIndex);
-   }
-
-   MageEntity* getPlayerEntity()
-   {
-      return getEntity(playerEntityIndex);
-   }
-
-   const MageEntity* getEntity(uint16_t id) const
-   {
-      return &entities[id];
-   }
-
-   MageEntity* getEntity(uint16_t id)
-   {
-      return &entities[id];
-   }
-
-   uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
-   {
-      if (!filteredMapLocalEntityIds) { return 0; }
-      return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
-   }
-
-   uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const
-   {
-      if (filteredEntityCountOnThisMap == 0) { return 0; }
-      return mapLocalEntityIds[filteredEntityId % filteredEntityCountOnThisMap];
-   }
-
-   uint32_t LayerOffset(uint16_t num) const
-   {
-      if (mapLayerOffsets.empty()) { return 0; }
-
-      return mapLayerOffsets[num % mapLayerOffsets.size()];
-   }
-
-   std::string getDirectionNames() const
-   {
-      std::string result = "";
-      for (auto i = 0; i < goDirections.size(); i++)
-      {
-         result += "\t";
-         result += goDirections[i].name;
-      }
-      return result;
-   }
-
-   uint16_t getDirectionScriptId(const std::string directionName) const
-   {
-      for (auto i = 0; i < goDirections.size(); i++)
-      {
-         if (goDirections[i].name == directionName)
-         {
-            return goDirections[i].mapLocalScriptId;
-         }
-      }
-      return 0;
-   }
-
-   uint8_t getPlayerEntityIndex() const { return playerEntityIndex; }
-   uint16_t GetOnLoad() const { return onLoad; }
-   uint16_t GetOnLook() const { return onLook; }
-   uint16_t GetOnTick() const { return onTick; }
-   void SetOnLook(uint16_t lookId) { onLook = lookId; }
-   void SetOnTick(uint16_t tickId) { onTick = tickId; }
-private:
-   std::shared_ptr<EngineROM> ROM;
-   std::shared_ptr<FrameBuffer> frameBuffer;
-   MageGameControl* gameControl;
-
-   const MageHeader& mapHeader;
-   const MageHeader& geometryHeader;
-   const MageHeader& entityHeader;
-   const MageHeader& scriptHeader;
-
-   bool isEntityDebugOn{ false };
-   //this is the hackable array of entities that are on the current map
-   //the data contained within is the data that can be hacked in the hex editor.
-   std::vector<MageEntity> entities{};
-   //std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
-
-   uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
-   uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
-
+   MapData(uint32_t& address, bool isEntityDebugOn=false);
    static const inline int MapNameLength = 16;
-   char name[MapNameLength + 1]{ 0 };
+   char name[MapNameLength]{ 0 };
    uint16_t tileWidth{ 0 };
    uint16_t tileHeight{ 0 };
    uint16_t cols{ 0 };
@@ -185,8 +42,167 @@ private:
    std::vector<uint16_t> scriptGlobalIds{};
    std::vector<GoDirection> goDirections{};
    std::vector<uint32_t> mapLayerOffsets{};
-   uint8_t filteredEntityCountOnThisMap{ 0 };
+   std::vector<MageEntity> entities{};
+};
 
-}; //class MageMap
+class MapControl
+{
+   friend class MageGameEngine;
+   friend class MageScriptControl;
+   friend class MageHexEditor;
+public:
+   MapControl(std::shared_ptr<FrameBuffer> frameBuffer, 
+      std::shared_ptr<TileManager> tileManager) noexcept
+      : frameBuffer(frameBuffer), 
+      tileManager(tileManager)
+   { }
+
+   uint8_t* GetEntityDataPointer() { return (uint8_t*) currentMap->entities.data(); }
+   void Load(uint16_t index, bool isCollisionDebugOn=false, bool isEntityDebugOn=false);
+   void Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn=false);
+   void DrawGeometry(const Point& cameraPosition);
+   void DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn = false);
+
+   void UpdateEntities(uint32_t deltaTime);
+   
+   int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
+   {
+      if (entityIndex >= currentMap->entities.size())
+      {
+         return NO_PLAYER;
+      }
+
+      switch (entityIndex)
+      {
+      default:
+      case MAGE_MAP_ENTITY:
+         return entityIndex;
+
+      case MAGE_ENTITY_SELF:
+         return callingEntityId;
+
+      case MAGE_ENTITY_PLAYER:
+         return currentMap->playerEntityIndex;
+      }
+   }
+
+   std::string Name() const { return std::string(currentMap->name); }
+   uint16_t TileWidth() const { return currentMap->tileWidth; }
+   uint16_t TileHeight() const { return currentMap->tileHeight; }
+   uint16_t Cols() const { return currentMap->cols; }
+   uint16_t Rows() const { return currentMap->rows; }
+   uint8_t LayerCount() const { return currentMap->mapLayerOffsets.size(); }
+   uint8_t FilteredEntityCount() const { return currentMap->entities.size(); }
+   uint16_t GeometryCount() const { return currentMap->geometryGlobalIds.size(); }
+   uint16_t ScriptCount() const { return currentMap->scriptGlobalIds.size(); }
+
+   uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
+   {
+      if (currentMap->entities.empty()) { return 0; }
+      return currentMap->entityGlobalIds[mapLocalEntityId % currentMap->entities.size()];
+   }
+
+   uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
+   {
+      if (currentMap->geometryGlobalIds.empty()) { return 0; }
+      return currentMap->geometryGlobalIds[mapLocalGeometryId % currentMap->geometryGlobalIds.size()];
+   }
+
+   const MageEntity* getPlayerEntity() const
+   {
+      return getEntity(currentMap->playerEntityIndex);
+   }
+
+   MageEntity* getPlayerEntity()
+   {
+      if (currentMap->entities.empty())
+      {
+         return nullptr;
+      }
+      return getEntity(currentMap->playerEntityIndex);
+   }
+
+   const MageEntity* getEntity(uint16_t id) const
+   {
+      return &currentMap->entities[id];
+   }
+
+   MageEntity* getEntity(uint16_t id)
+   {
+      return &currentMap->entities[id];
+   }
+
+   uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
+   {
+      if (!filteredMapLocalEntityIds) { return 0; }
+      return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
+   }
+
+   uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const
+   {
+      if (currentMap->entities.empty()) { return 0; }
+      return mapLocalEntityIds[filteredEntityId % currentMap->entities.size()];
+   }
+
+   const MageEntity* getEntityByMapLocalId(uint16_t mapLocalId) const
+   {
+      return &currentMap->entities[mapLocalId];
+   }
+   MageEntity* getEntityByMapLocalId(uint16_t mapLocalId)
+   {
+      return &currentMap->entities[mapLocalId];
+   }
+
+   uint32_t LayerOffset(uint16_t num) const
+   {
+      if (currentMap->mapLayerOffsets.empty()) { return 0; }
+
+      return currentMap->mapLayerOffsets[num % currentMap->mapLayerOffsets.size()];
+   }
+
+   std::string getDirectionNames() const
+   {
+      std::string result = "";
+      for (auto i = 0; i < currentMap->goDirections.size(); i++)
+      {
+         result += "\t";
+         result += currentMap->goDirections[i].name;
+      }
+      return result;
+   }
+
+   uint16_t getDirectionScriptId(const std::string directionName) const
+   {
+      for (auto i = 0; i < currentMap->goDirections.size(); i++)
+      {
+         if (currentMap->goDirections[i].name == directionName)
+         {
+            return currentMap->goDirections[i].mapLocalScriptId;
+         }
+      }
+      return 0;
+   }
+
+   uint8_t getPlayerEntityIndex() const { return currentMap->playerEntityIndex; }
+   uint16_t GetOnLoad() const { return currentMap->onLoad; }
+   uint16_t GetOnLook() const { return currentMap->onLook; }
+   uint16_t GetOnTick() const { return currentMap->onTick; }
+   void SetOnLook(uint16_t lookId) { currentMap->onLook = lookId; }
+   void SetOnTick(uint16_t tickId) { currentMap->onTick = tickId; }
+private:
+   std::shared_ptr<FrameBuffer> frameBuffer;
+   std::shared_ptr<TileManager> tileManager;
+   std::unique_ptr<MapData> currentMap;
+
+   bool isEntityDebugOn{ false };
+   //this is the hackable array of entities that are on the current map
+   //the data contained within is the data that can be hacked in the hex editor.
+   //std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
+
+   uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
+   uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
+
+
+}; //class MapControl
 
 #endif //_MAGE_MAP_H

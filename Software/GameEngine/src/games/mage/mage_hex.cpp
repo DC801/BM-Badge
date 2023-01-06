@@ -1,24 +1,13 @@
 #include "mage_hex.h"
 #include "EngineInput.h"
-#include "EngineROM.h"
 #include "convert_endian.h"
 #include "utility.h"
 #include "shim_err.h"
-#include "mage_game_control.h"
-
+#include "mage_dialog_control.h"
 
 bool MageHexEditor::isHexEditorOn()
 {
    return hexEditorOn;
-}
-
-bool MageHexEditor::getHexDialogState()
-{
-   return dialogState;
-}
-uint16_t MageHexEditor::getMemoryAddress(uint8_t index)
-{
-   return gameEngine->gameControl->currentSave.memOffsets[index % MAGE_NUM_MEM_BUTTONS];
 }
 
 void MageHexEditor::toggleHexEditor()
@@ -62,10 +51,9 @@ void MageHexEditor::setPageToCursorLocation()
    currentMemPage = getCurrentMemPage();
 }
 
-void MageHexEditor::updateHexLights()
+void MageHexEditor::updateHexLights(uint8_t* entityDataPointer) const
 {
-   const uint8_t currentByte = *(((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
-   uint8_t* memOffsets = gameEngine->gameControl->currentSave.memOffsets;
+   const uint8_t currentByte = *(entityDataPointer + hexCursorLocation);
    uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);
    ledSet(LED_BIT128, ((currentByte >> 7) & 0x01) ? 0xFF : 0x00);
    ledSet(LED_BIT64, ((currentByte >> 6) & 0x01) ? 0xFF : 0x00);
@@ -104,48 +92,38 @@ uint16_t MageHexEditor::getCurrentMemPage()
 
 }
 
-void MageHexEditor::updateHexStateVariables()
+void MageHexEditor::updateHexStateVariables(uint8_t entityCount)
 {
    bytesPerPage = dialogState ? 64 : 192;
    hexRows = ceil((0.0 + bytesPerPage) / (0.0 + HEXED_BYTES_PER_ROW));
-   memTotal = gameEngine->gameControl->Map()->FilteredEntityCount() * sizeof(MageEntity);
+   memTotal = entityCount * sizeof(MageEntity);
    totalMemPages = ceil((0.0 + memTotal) / (0.0 + bytesPerPage));
 }
 
-void MageHexEditor::applyHexModeInputs()
+void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
 {
-   if (!gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_up))
+   currentByte += hexCursorLocation;
+   const auto activatedButton = inputHandler->GetButtonActivatedState();
+   const auto button = inputHandler->GetButtonState();
+   if (!activatedButton.IsPressed(KeyPress::Rjoy_up))
    {
       disableMovement = false;
    }
-   //check to see if player input is allowed:
-   if (
-      gameEngine->gameControl->dialogControl->isOpen()
-      || !gameEngine->gameControl->playerHasControl
-      || !gameEngine->gameControl->playerHasHexEditorControl
-      || disableMovement
-      )
-   {
-      return;
-   }
-   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
-   uint8_t* memOffsets = gameEngine->gameControl->currentSave.memOffsets;
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:
-   if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Hax)) { toggleHexEditor(); }
+   if (activatedButton.IsPressed(KeyPress::Hax)) { toggleHexEditor(); }
 
    //debounce timer check.
    if (!hexTickDelay)
    {
-      anyHexMovement = (
-         gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left)
-         || gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right)
-         || gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)
-         || gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)
-         || gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_up) // triangle for increment
-         || gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_down) // x for decrement
-         );
-      if (gameEngine->inputHandler->GetButtonState(KeyPress::Page))
+      anyHexMovement = button.IsPressed(KeyPress::Ljoy_left)
+         || button.IsPressed(KeyPress::Ljoy_right)
+         || button.IsPressed(KeyPress::Ljoy_up)
+         || button.IsPressed(KeyPress::Ljoy_down)
+         || button.IsPressed(KeyPress::Rjoy_up) // triangle for increment
+         || button.IsPressed(KeyPress::Rjoy_down); // x for decrement
+         
+      if (button.IsPressed(KeyPress::Page))
       {
          //reset last press time only when the page button switches from unpressed to pressed
          if (!previousPageButtonState)
@@ -156,22 +134,22 @@ void MageHexEditor::applyHexModeInputs()
          previousPageButtonState = true;
 
          //check to see if there is any directional button action while the page button is pressed
-         if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up)
-            || gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left))
+         if (button.IsPressed(KeyPress::Ljoy_up)
+            || button.IsPressed(KeyPress::Ljoy_left))
          {
             currentMemPage = (currentMemPage + totalMemPages - 1) % totalMemPages;
          }
-         if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down)
-            || gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right))
+         if (button.IsPressed(KeyPress::Ljoy_down)
+            || button.IsPressed(KeyPress::Ljoy_right))
          {
             currentMemPage = (currentMemPage + 1) % totalMemPages;
          }
          //check for memory button presses:
          int8_t memIndex = -1;
-         if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem0)) { memIndex = 0; }
-         if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem1)) { memIndex = 1; }
-         if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem2)) { memIndex = 2; }
-         if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem3)) { memIndex = 3; }
+         if (activatedButton.IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+         if (activatedButton.IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+         if (activatedButton.IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+         if (activatedButton.IsPressed(KeyPress::Mem3)) { memIndex = 3; }
          if (memIndex != -1)
          {
             memOffsets[memIndex] = hexCursorLocation % sizeof(MageEntity);
@@ -181,10 +159,8 @@ void MageHexEditor::applyHexModeInputs()
       {
          applyMemRecallInputs();
          //check to see if the page button was pressed and released quickly
-         if (
-            (previousPageButtonState) &&
-            ((millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
-            )
+         if (previousPageButtonState
+            && (millis() - lastPageButtonPressTime) < HEXED_QUICK_PRESS_TIMEOUT)
          {
             //if the page button was pressed and then released fast enough, advance one page.
             currentMemPage = (currentMemPage + 1) % totalMemPages;
@@ -193,88 +169,68 @@ void MageHexEditor::applyHexModeInputs()
          previousPageButtonState = false;
 
          //check directional inputs and move cursor.
-         if (!gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right))
+         if (!button.IsPressed(KeyPress::Rjoy_right))
          {
             // not if in multi-byte selection mode
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left))
+            if (button.IsPressed(KeyPress::Ljoy_left))
             {
-               //move the cursor left:
                hexCursorLocation = (hexCursorLocation + memTotal - 1) % memTotal;
-               //change the current page to wherever the cursor is:
                setPageToCursorLocation();
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right))
+            if (button.IsPressed(KeyPress::Ljoy_right))
             {
-               //move the cursor right:
                hexCursorLocation = (hexCursorLocation + 1) % memTotal;
-               //change the current page to wherever the cursor is:
                setPageToCursorLocation();
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_up))
+            if (button.IsPressed(KeyPress::Ljoy_up))
             {
-               //move the cursor up:
                hexCursorLocation = (hexCursorLocation + memTotal - HEXED_BYTES_PER_ROW) % memTotal;
-               //change the current page to wherever the cursor is:
                setPageToCursorLocation();
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_down))
+            if (button.IsPressed(KeyPress::Ljoy_down))
             {
-               //move the cursor down:
                hexCursorLocation = (hexCursorLocation + HEXED_BYTES_PER_ROW) % memTotal;
-               //change the current page to wherever the cursor is:
                setPageToCursorLocation();
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_up))
+            if (button.IsPressed(KeyPress::Rjoy_up))
             {
-               //decrement the value
                *currentByte += 1;
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_down))
+            if (button.IsPressed(KeyPress::Rjoy_down))
             {
-               //decrement the value
                *currentByte -= 1;
             }
          }
-         if (gameEngine->gameControl->playerHasHexEditorControlClipboard)
+         if (playerHasClipboardControl)
          {
-            if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right))
+            if (activatedButton.IsPressed(KeyPress::Rjoy_right))
             {
                //start copying
-               gameEngine->gameControl->currentSave.clipboardLength = 1;
+               clipboardLength = 1;
                isCopying = true;
             }
-            if (!gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right))
+            if (!button.IsPressed(KeyPress::Rjoy_right))
             {
                isCopying = false;
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_right))
+            if (button.IsPressed(KeyPress::Rjoy_right))
             {
-               if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_left))
+               if (button.IsPressed(KeyPress::Ljoy_left))
                {
-                  gameEngine->gameControl->currentSave.clipboardLength = MAX(
-                     (uint8_t)1,
-                     gameEngine->gameControl->currentSave.clipboardLength - 1
-                  );
+                  clipboardLength = MAX(1, clipboardLength - 1);
                }
-               if (gameEngine->inputHandler->GetButtonState(KeyPress::Ljoy_right))
+               if (button.IsPressed(KeyPress::Ljoy_right))
                {
-                  gameEngine->gameControl->currentSave.clipboardLength = MIN(
-                     (uint8_t)sizeof(MageEntity),
-                     gameEngine->gameControl->currentSave.clipboardLength + 1
-                  );
+                  clipboardLength = MIN(sizeof(MageEntity), clipboardLength + 1);
                }
-               memcpy(
-                  gameEngine->gameControl->currentSave.clipboard,
-                  currentByte,
-                  gameEngine->gameControl->currentSave.clipboardLength
-               );
+               memcpy(clipboard, currentByte, clipboardLength);
             }
-            if (gameEngine->inputHandler->GetButtonState(KeyPress::Rjoy_left))
+            if (button.IsPressed(KeyPress::Rjoy_left))
             {
                //paste
-               memcpy(currentByte, gameEngine->gameControl->currentSave.clipboard, gameEngine->gameControl->currentSave.clipboardLength);
-               gameEngine->gameControl->Map()->UpdateEntities(0);
-               memcpy(currentByte, gameEngine->gameControl->currentSave.clipboard, gameEngine->gameControl->currentSave.clipboardLength);
+               memcpy(currentByte, clipboard, clipboardLength);
+               mapControl->UpdateEntities(0);
+               memcpy(currentByte, clipboard, clipboardLength);
             }
          }
       }
@@ -296,16 +252,15 @@ void MageHexEditor::applyMemRecallInputs()
    uint16_t currentEntityStart = currentEntityIndex * sizeof(MageEntity);
    //check for memory button presses and set the hex cursor to the memory location
    int8_t memIndex = -1;
-   if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem0)) { memIndex = 0; }
-   if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem1)) { memIndex = 1; }
-   if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem2)) { memIndex = 2; }
-   if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Mem3)) { memIndex = 3; }
+   const auto activatedButton = inputHandler->GetButtonActivatedState();
+   if (activatedButton.IsPressed(KeyPress::Mem0)) { memIndex = 0; }
+   if (activatedButton.IsPressed(KeyPress::Mem1)) { memIndex = 1; }
+   if (activatedButton.IsPressed(KeyPress::Mem2)) { memIndex = 2; }
+   if (activatedButton.IsPressed(KeyPress::Mem3)) { memIndex = 3; }
    if (memIndex != -1)
    {
-      setHexCursorLocation(
-         currentEntityStart
-         + getMemoryAddress(memIndex)
-      );
+      auto memoryAddress = memOffsets[memIndex % MAGE_NUM_MEM_BUTTONS];
+      setHexCursorLocation(currentEntityStart + memoryAddress);
    }
 }
 
@@ -326,24 +281,18 @@ uint16_t MageHexEditor::getRenderableStringLength(const char* bytes, uint16_t ma
    return renderableLength;
 }
 
-void MageHexEditor::renderHexHeader()
+void MageHexEditor::renderHexHeader(const uint8_t* entityDataPointer)
 {
    char headerString[128]{ " " };
    char clipboardPreview[24]{ " " };
-   uint8_t* currentByteAddress = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + hexCursorLocation;
+   const uint8_t* currentByteAddress = entityDataPointer + hexCursorLocation;
    uint8_t u1Value = *currentByteAddress;
    uint16_t u2Value = *(uint16_t*)((currentByteAddress - (hexCursorLocation % 2)));
-   sprintf(
-      headerString,
-      "CurrentPage: %03u  CurrentByte: 0x%04X\n"
-      "TotalPages:  %03u  Entities: %05u  Mem: 0x%04X",
-      currentMemPage, hexCursorLocation,
-      totalMemPages, gameEngine->gameControl->Map()->FilteredEntityCount(),
-      memTotal
-   );
+   sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05u  Mem: 0x%04X", 
+      currentMemPage, hexCursorLocation, totalMemPages, mapControl->FilteredEntityCount(), memTotal);
 
-   auto hackableData = (uint8_t*)gameEngine->gameControl->Map()->entities.data();
-   gameEngine->frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
+   auto hackableData = (uint8_t*)mapControl->currentMap->entities.data();
+   frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
    auto stringPreview = std::string{ hackableData + hexCursorLocation,
                                      hackableData + hexCursorLocation + MAGE_ENTITY_NAME_LENGTH };
 
@@ -357,59 +306,42 @@ void MageHexEditor::renderHexHeader()
       stringPreview.c_str()
    );
 
-   if (gameEngine->gameControl->playerHasHexEditorControlClipboard)
+   if (playerHasClipboardControl)
    {
       uint8_t clipboardPreviewClamp = MIN(
          (uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
-         gameEngine->gameControl->currentSave.clipboardLength
+         clipboardLength
       );
       for (uint8_t i = 0; i < clipboardPreviewClamp; i++)
       {
-         sprintf(
-            clipboardPreview + (i * 2),
-            "%02X",
-            *(gameEngine->gameControl->currentSave.clipboard + i)
-         );
+         sprintf(clipboardPreview + (i * 2), "%02X", *(clipboard + i));
       }
-      if (gameEngine->gameControl->currentSave.clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
+      if (clipboardLength > HEXED_CLIPBOARD_PREVIEW_LENGTH)
       {
          const auto offset = (HEXED_CLIPBOARD_PREVIEW_LENGTH * 2);
          clipboardPreview[offset] = '.';
          clipboardPreview[offset+1] = '.';
          clipboardPreview[offset+2] = '.';
       }
-      sprintf(
-         headerString + strlen(headerString),
-         " | CP: 0x%s",
-         clipboardPreview
-      );
+      sprintf(headerString + strlen(headerString), " | CP: 0x%s", clipboardPreview);
    }
-   gameEngine->frameBuffer->printMessage(
-      headerString,
-      Monaco9,
-      0xffff,
-      HEXED_BYTE_OFFSET_X,
-      HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2))
-   );
+   frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, HEXED_BYTE_FOOTER_OFFSET_Y + (HEXED_BYTE_HEIGHT * (hexRows + 2)));
 }
 
-void MageHexEditor::renderHexEditor()
+void MageHexEditor::renderHexEditor(uint8_t* entityDataPointer)
 {
    if ((hexCursorLocation / bytesPerPage) == currentMemPage)
    {
-      gameEngine->frameBuffer->fillRect(
+      frameBuffer->fillRect(
          (hexCursorLocation % bytesPerPage % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
          (hexCursorLocation % bytesPerPage / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
-         HEXED_BYTE_WIDTH,
-         HEXED_BYTE_HEIGHT,
-         0x38FF
-      );
+         HEXED_BYTE_WIDTH, HEXED_BYTE_HEIGHT, 0x38FF);
       if (isCopying)
       {
-         for (uint8_t i = 1; i < gameEngine->gameControl->currentSave.clipboardLength; i++)
+         for (uint8_t i = 1; i < clipboardLength; i++)
          {
             uint16_t copyCursorOffset = (hexCursorLocation + i) % bytesPerPage;
-            gameEngine->frameBuffer->fillRect(
+            frameBuffer->fillRect(
                (copyCursorOffset % HEXED_BYTES_PER_ROW) * HEXED_BYTE_WIDTH + HEXED_BYTE_OFFSET_X + HEXED_BYTE_CURSOR_OFFSET_X,
                (copyCursorOffset / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT + HEXED_BYTE_OFFSET_Y + HEXED_BYTE_CURSOR_OFFSET_Y,
                HEXED_BYTE_WIDTH,
@@ -419,19 +351,19 @@ void MageHexEditor::renderHexEditor()
          }
       }
    }
-   renderHexHeader();
+   renderHexHeader(entityDataPointer);
    auto pageOffset = currentMemPage * bytesPerPage;
 
    constexpr char hexmap[] = { '0', '1', '2', '3', '4', '5', '6', '7',
                      '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
-   auto dataPage = (uint8_t*)gameEngine->gameControl->Map()->entities.data() + pageOffset;
+   auto dataPage = entityDataPointer + pageOffset;
    uint16_t i = 0;
    std::string s(HEXED_BYTES_PER_ROW * 3, ' ');
    while (i < bytesPerPage && i + pageOffset < memTotal)
    {
       auto color = COLOR_WHITE;
-      auto playerEntityIndex = gameEngine->gameControl->Map()->getPlayerEntityIndex();
+      auto playerEntityIndex = mapControl->getPlayerEntityIndex();
       if (NO_PLAYER != playerEntityIndex
          && i + pageOffset >= sizeof(MageEntity) * playerEntityIndex
          && i + pageOffset < sizeof(MageEntity) * (playerEntityIndex + 1))
@@ -443,14 +375,14 @@ void MageHexEditor::renderHexEditor()
          s[3 * j] = hexmap[(dataPage[i] & 0xF0) >> 4];
          s[3 * j + 1] = hexmap[dataPage[i] & 0x0F];
       }
-      gameEngine->frameBuffer->printMessage(s.c_str(), Monaco9, color, 
+      frameBuffer->printMessage(s.c_str(), Monaco9, color, 
          HEXED_BYTE_OFFSET_X, HEXED_BYTE_OFFSET_Y + ((i - 1) / HEXED_BYTES_PER_ROW) * HEXED_BYTE_HEIGHT);
    }
 }
 
 void MageHexEditor::runHex(uint8_t value)
 {
-   uint8_t* currentByte = (((uint8_t*)gameEngine->gameControl->Map()->entities.data()) + hexCursorLocation);
+   uint8_t* currentByte = (((uint8_t*)mapControl->currentMap->entities.data()) + hexCursorLocation);
    uint8_t changedValue = *currentByte;
    switch (currentOp)
    {

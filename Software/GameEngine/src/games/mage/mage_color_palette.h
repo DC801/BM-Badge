@@ -2,7 +2,7 @@
 #define SOFTWARE_MAGE_COLOR_PALETTE_H
 
 #include <memory>
-#include "EngineROM.h"
+#include "mage_rom.h"
 
 class FrameBuffer;
 class MageGameEngine;
@@ -15,7 +15,7 @@ class MageColorPalette
 {
 public:
    MageColorPalette() noexcept = default;
-   MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept;
+   MageColorPalette(uint32_t& address) noexcept;
    MageColorPalette(
       const FrameBuffer* frameBuffer,
       const MageColorPalette* sourcePalette,

@@ -3,14 +3,15 @@
 
 #include "mage_defines.h"
 #include "mage_entity_type.h"
-#include "mage_game_control.h"
-#include "mage_hex.h"
-#include "mage_script_control.h"
-#include "mage_tileset.h"
 #include "fonts/Monaco9.h"
 #include "engine/EngineInput.h"
 #include "engine/EnginePanic.h"
 #include <optional>
+
+class MapControl;
+class MageScriptControl;
+class StringLoader;
+class TileManager;
 
 #define DIALOG_SCREEN_NO_PORTRAIT 255
 
@@ -117,11 +118,24 @@ struct MageDialog
 class MageDialogControl
 {
 public:
-   MageDialogControl(MageGameEngine* gameEngine, MageHeader&& dialogHeader) noexcept;
+   MageDialogControl(
+      std::shared_ptr<FrameBuffer> frameBuffer, 
+      std::shared_ptr<EngineInput> inputHandler,
+      std::shared_ptr<TileManager> tileManager, 
+      std::shared_ptr<StringLoader> stringLoader, 
+      std::shared_ptr<MageScriptControl> scriptControl, 
+      std::shared_ptr<MapControl> mapControl) noexcept
+   :  frameBuffer(frameBuffer), 
+      inputHandler(inputHandler),
+      tileManager(tileManager), 
+      stringLoader(stringLoader), 
+      scriptControl(scriptControl),  
+      mapControl(mapControl)
+   {}
+
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
-   void showSaveMessageDialog(std::string messageString);
-   void advanceMessage();
+   void StartModalDialog(std::string messageString);
 
    constexpr void MageDialogControl::close() { open = false; }
    constexpr bool isOpen() const { return open; }
@@ -133,14 +147,18 @@ public:
    uint32_t getDialogAddress(uint16_t dialogId) const;
 
 private:
-   MageGameEngine* gameEngine;
-
+   std::shared_ptr<FrameBuffer> frameBuffer;
+   std::shared_ptr<TileManager> tileManager;
+   std::shared_ptr<StringLoader> stringLoader;
+   std::shared_ptr<MageScriptControl> scriptControl;
+   std::shared_ptr<MapControl> mapControl;
+   std::shared_ptr<EngineInput> inputHandler;
    bool open{ false };
 
    uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const;
    void drawDialogBox(const std::string& string, Rect box, bool drawArrow = false, bool drawPortrait = false) const;
 
-   constexpr bool shouldShowResponses() const
+   bool shouldShowResponses() const
    {
       // last page of messages on this screen
       // and we have responses

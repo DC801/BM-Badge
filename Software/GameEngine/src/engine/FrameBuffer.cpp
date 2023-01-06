@@ -9,7 +9,6 @@
 #include "modules/sd.h"
 #include "config/custom_board.h"
 #include "EnginePanic.h"
-#include "EngineROM.h"
 
 #include "adafruit/gfxfont.h"
 
@@ -33,13 +32,12 @@
 #define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
 
 //Cursor coordinates
-static int16_t m_cursor_x = 0;
-static int16_t m_cursor_y = 0;
-static area_t m_cursor_area = { 0, 0, WIDTH, HEIGHT };
-static uint16_t m_color = COLOR_WHITE;
-static bool m_wrap = true;
-static volatile bool m_stop = false;
-
+static inline int16_t m_cursor_x = 0;
+static inline int16_t m_cursor_y = 0;
+static inline area_t m_cursor_area = { 0, 0, WIDTH, HEIGHT };
+static inline uint16_t m_color = COLOR_WHITE;
+static inline bool m_wrap = true;
+static inline volatile bool m_stop = false;
 
 void FrameBuffer::clearScreen(uint16_t color)
 {
@@ -49,13 +47,7 @@ void FrameBuffer::clearScreen(uint16_t color)
    }
 }
 
-void FrameBuffer::drawChunkWithFlags(
-   uint32_t address,
-   const MageColorPalette* colorPalette,
-   Rect target,
-   Point source,
-   uint16_t source_width,
-   uint8_t flags)
+void FrameBuffer::drawChunkWithFlags(uint32_t address, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
 {
    MageColorPalette colors;
    if (fadeFraction != 0)
@@ -68,10 +60,10 @@ void FrameBuffer::drawChunkWithFlags(
    }
    //MageColorPalette* colorPalette = colorPaletteOriginal;
    RenderFlags renderFlags{ flags };
-   bool flip_x = renderFlags.horizontal;
-   bool flip_y = renderFlags.vertical;
-   bool flip_diag = renderFlags.diagonal;
-   bool glitched = renderFlags.glitched;
+   bool flip_x = renderFlags.rf.d.horizontal;
+   bool flip_y = renderFlags.rf.d.vertical;
+   bool flip_diag = renderFlags.rf.d.diagonal;
+   bool glitched = renderFlags.rf.d.glitched;
 
    if (glitched)
    {
@@ -87,14 +79,14 @@ void FrameBuffer::drawChunkWithFlags(
 
    auto pixelOffset = address + ((source.y * source_width) + source.x);
    const uint8_t* pixels;
-   gameEngine->ROM->GetPointerTo(pixels, pixelOffset);
+   ROM->GetPointerTo(pixels, pixelOffset);
 
    for (auto row = 0; row != target.h && row < HEIGHT; row++)
    {
       for (auto col = 0; col != target.w && col < WIDTH; col++)
       {
-         auto pixelRow = renderFlags.vertical ? target.h - row : row;
-         auto pixelCol = renderFlags.horizontal ? target.w - col : col;
+         auto pixelRow = renderFlags.rf.d.vertical ? target.h - row : row;
+         auto pixelCol = renderFlags.rf.d.horizontal ? target.w - col : col;
          auto pixelIndex = (pixelRow * target.w) + pixelCol;
 
          uint8_t colorIndex = pixels[pixelIndex];
@@ -103,29 +95,6 @@ void FrameBuffer::drawChunkWithFlags(
          {
             drawPixel(target.origin.x + col, target.origin.y + row, color);
          }
-      }
-   }
-}
-
-void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
-{
-   if ((x >= WIDTH) || (y >= HEIGHT))
-   {
-      return;
-   }
-
-   // Clip to screen
-   auto right = x + w;
-   if (right >= WIDTH) { right = WIDTH - 1; }
-   auto bottom = y + h;
-   if (bottom >= HEIGHT) { bottom = HEIGHT - 1; }
-   // X
-   for (int i = x; i < right; i++)
-   {
-      // Y
-      for (int j = y; j < bottom; j++)
-      {
-         drawPixel(i, j, color);
       }
    }
 }
@@ -194,17 +163,6 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       }
    }
 
-}
-
-
-void FrameBuffer::drawPoint(int x, int y, uint8_t size, uint16_t color)
-{
-   drawLine(x - size, y - size,
-            x + size, y + size,
-            color);
-   drawLine(x - size, y + size,
-            x + size, y - size,
-            color);
 }
 
 void FrameBuffer::__draw_char(
@@ -310,7 +268,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
    }
 }
 
-void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, int x, int y)
+void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, int x, int y)
 {
    m_color = SCREEN_ENDIAN_U2_VALUE(color);
    m_cursor_area.xs = x;
@@ -320,7 +278,7 @@ void FrameBuffer::printMessage(const char* text, GFXfont font, uint16_t color, i
    // this prevents crashing if the first character of the string is null
    if (text[0] != '\0')
    {
-      for (uint16_t i = 0; i < strlen(text); i++)
+      for (uint16_t i = 0; i < text.length(); i++)
       {
          write_char(text[i], font);
       }
@@ -467,11 +425,11 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_ra
    */
 }
 
-void FrameBuffer::blt()
+void FrameBuffer::blt(ButtonState button)
 {
 #ifdef DC801_EMBEDDED
    draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
 #else
-   gameEngine->windowFrame->GameBlt(frame.data());
+   windowFrame->GameBlt(frame.data(), button);
 #endif
 }

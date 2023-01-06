@@ -4,8 +4,7 @@
 #include "convert_endian.h"
 
 
-MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
-   : ROM(ROM)
+MageTileset::MageTileset(uint32_t& offset)
 {
 #ifndef DC801_EMBEDDED
    ROM->Read(name, offset, TILESET_NAME_SIZE);
@@ -35,8 +34,8 @@ MageTileset::MageTileset(std::shared_ptr<EngineROM> ROM, uint32_t& offset)
 
 void TileManager::DrawTile(const RenderableData* renderableData, int32_t x, int32_t y) const
 {
-   const auto tileset = GetTileset(renderableData->tilesetId);
-   auto tileAddress = imageHeader.offset(tileset->ImageId()) + renderableData->tileId * sizeof(MageMapTile);
+   const auto tileset = ROM->Get<MageTileset>(renderableData->tilesetId);
+   auto tileAddress = ROM->GetAddress<MageMapTile>(tileset->ImageId()) + renderableData->tileId * sizeof(MageMapTile);
    const MageMapTile* tile;
    ROM->GetPointerTo(tile, tileAddress);
    DrawTile(tileset, tile, x, y, renderableData->renderFlags);
@@ -44,11 +43,12 @@ void TileManager::DrawTile(const RenderableData* renderableData, int32_t x, int3
 
 void TileManager::DrawTile(const MageTileset* tileset, const MageMapTile* tile, int32_t x, int32_t y, uint8_t flags) const
 {
-   auto imageBase = imageHeader.offset(tileset->ImageId());
+   //TODO FIXME:
+   auto imageBase = 0;// imageHeader.offset(tileset->ImageId());
 
-   auto offset = colorPaletteHeader.offset(tileset->ImageId());
-   const MageColorPalette* colorPalette;
-   ROM->GetPointerTo(colorPalette, offset);
+   //auto offset = colorPaletteHeader.offset(tileset->ImageId());
+   const MageColorPalette* colorPalette = ROM->Get<MageColorPalette>(tileset->ImageId());
+   //ROM->GetPointerTo(colorPalette, offset);
 
    const auto targetRect = Rect{ 
       Point{x,y},

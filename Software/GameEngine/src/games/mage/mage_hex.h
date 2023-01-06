@@ -4,15 +4,17 @@ This class contains all the code related to the hex editor hacking interface.
 #ifndef _MAGE_HEX_H
 #define _MAGE_HEX_H
 
+#include "mage_rom.h"
 #include "mage_defines.h"
-#include "mage_game_control.h"
-#include "mage_dialog_control.h"
+#include "mage_map.h"
 #include "modules/led.h"
 #include "fonts/Monaco9.h"
 #include "fonts/DeterminationMono.h"
 #include "fonts/Scientifica.h"
 #include "FrameBuffer.h"
 #include "EngineInput.h"
+
+class MageDialogControl;
 
 #define HEXED_BYTES_PER_ROW 16
 #define HEXED_BYTE_OFFSET_X 12
@@ -24,6 +26,7 @@ This class contains all the code related to the hex editor hacking interface.
 #define HEXED_BYTE_CURSOR_OFFSET_Y 5
 #define HEXED_DEFAULT_BYTES_PER_PAGE 64
 #define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
+#define HEXED_CLIPBOARD_MAX_LENGTH 64
 
 
 #ifdef DC801_EMBEDDED
@@ -44,23 +47,26 @@ enum HEX_OPS {
 class MageHexEditor
 {
 public:
-	constexpr void disableMovementUntilRJoyUpRelease()
+	void disableMovementUntilRJoyUpRelease()
 	{
 		disableMovement = true;
 	}
 
-	MageHexEditor(MageGameEngine*  gameEngine) : 
-		gameEngine(gameEngine)
+	MageHexEditor(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<MapControl>  mapControl, std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets)
+		: frameBuffer(frameBuffer),
+		inputHandler(inputHandler),
+		mapControl(mapControl),
+		memOffsets(memOffsets)
 	{};
 	
 	//returns true if hex editor is open.
 	bool isHexEditorOn();
 
 	//returns true if hex editor is open.
-	bool getHexDialogState();
-
-	//this returns the byte address stored in the memory button at index
-	uint16_t getMemoryAddress(uint8_t index);
+	bool getHexDialogState() const
+	{
+		return dialogState;
+	}
 
 	//this turns the hex editor mode on or off.
 	void toggleHexEditor();
@@ -82,29 +88,39 @@ public:
 
 	//this updates the lights on the badge to match the bit state
 	//of the current byte in the hex editor.
-	void updateHexLights();
+	void updateHexLights(uint8_t* entityDataPointer) const;
 
 	//this updates the variables used by the hex editor when applying inputs and rendering.
-	void updateHexStateVariables();
+	void updateHexStateVariables(uint8_t entityCount);
 
 	//this applies inputs to the hex editor state.
-	void applyHexModeInputs();
+	void applyHexModeInputs(uint8_t* currentByte);
 
 	void applyMemRecallInputs();
 
 	//this writes the header bit of the hex editor screen.
-	void renderHexHeader();
+	void renderHexHeader(const uint8_t* entityDataPointer);
 
 	//this writes all the hex editor data to the screen.
-	void renderHexEditor();
+	void renderHexEditor(uint8_t* entityDataPointer);
 
 	//this applies input to the current byte value based on the state of currentOp.
 	void runHex(uint8_t value);
 
 	void openToEntityByIndex(uint8_t entityIndex);
+	bool IsMovementDisabled() const { return disableMovement; }
+
+	void SetPlayerHasClipboardControl(bool playerHasControl) { playerHasClipboardControl = playerHasControl; }
 
 private:
-	MageGameEngine*  gameEngine;
+	std::shared_ptr<FrameBuffer> frameBuffer;
+	std::shared_ptr<MapControl>  mapControl;
+	std::shared_ptr<EngineInput> inputHandler;
+	std::array<uint8_t, 4> memOffsets;
+
+	uint8_t clipboard[HEXED_CLIPBOARD_MAX_LENGTH]{ 0 };
+	uint8_t clipboardLength{ 0 };
+
 	bool disableMovement{ false };
 
 	//Some byte values are renderable. Some are not. Get length of what our font renderer can display.
@@ -151,6 +167,8 @@ private:
 
 	//clipboard GUI state
 	bool isCopying{ false };
+	bool playerHasClipboardControl{ false };
+
 
 };
 

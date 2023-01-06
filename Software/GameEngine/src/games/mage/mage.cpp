@@ -1,17 +1,12 @@
 #include "mage.h"
-#include "EngineROM.h"
-#include "EngineInput.h"
-#include "EnginePanic.h"
-#include "EngineSerial.h"
-#include "EngineWindowFrame.h"
+
 #include <SDL.h>
 
 #include "convert_endian.h"
 #include "utility.h"
 
 #include "mage_defines.h"
-#include "mage_command_control.h"
-#include "mage_game_control.h"
+#include "mage_script_control.h"
 
 #ifndef DC801_EMBEDDED
 #include "shim_timer.h"
@@ -21,7 +16,6 @@
 #include "emscripten.h"
 #endif
 
-
 void MageGameEngine::Run()
 {
    //main game loop:
@@ -30,22 +24,120 @@ void MageGameEngine::Run()
 #else
    while (inputHandler->IsRunning())
    {
-      if (inputHandler->ShouldReloadGameDat())
+      if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
       {
-
+         scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+         LoadMap(currentSave->currentMapId);
+         engineIsInitialized = true;
       }
       EngineMainGameLoop();
    }
 #endif
 
    // Close rom and any open files
-   EngineSerialRegisterEventHandlers(
-      nullptr,
-      nullptr
-   );
+   EngineSerialRegisterEventHandlers(nullptr, nullptr);
 
 }
 
+void MageGameEngine::handleEntityInteract(bool hack)
+{
+   //interacting is impossible if there is no player entity
+   if (mapControl->getPlayerEntityIndex() == NO_PLAYER) { return; }
+
+   auto playerEntity = mapControl->getPlayerEntity();
+
+   auto playerRenderableData = mapControl->getPlayerEntity()->getRenderableData();
+   playerRenderableData->interactBox = playerRenderableData->hitBox;
+
+   const uint8_t interactLength = 32;
+   auto direction = playerEntity->renderFlags & RENDER_FLAGS_DIRECTION_MASK;
+   if (direction == NORTH)
+   {
+      playerRenderableData->interactBox.origin.y -= interactLength;
+      playerRenderableData->interactBox.h = interactLength;
+   }
+   if (direction == EAST)
+   {
+      playerRenderableData->interactBox.origin.x += playerRenderableData->interactBox.w;
+      playerRenderableData->interactBox.w = interactLength;
+   }
+   if (direction == SOUTH)
+   {
+      playerRenderableData->interactBox.origin.y += playerRenderableData->interactBox.h;
+      playerRenderableData->interactBox.h = interactLength;
+   }
+   if (direction == WEST)
+   {
+      playerRenderableData->interactBox.origin.x -= interactLength;
+      playerRenderableData->interactBox.w = interactLength;
+   }
+
+   for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
+   {
+      // reset all interact states first
+      auto targetEntity = mapControl->getEntity(i);
+      auto targetRenderableData = targetEntity->getRenderableData();
+      targetRenderableData->isInteracting = false;
+
+      if (i != mapControl->getPlayerEntityIndex())
+      {
+         bool colliding = targetRenderableData->hitBox
+            .Overlaps(playerRenderableData->interactBox);
+
+         if (colliding)
+         {
+            playerRenderableData->isInteracting = true;
+            mapControl->getEntity(i)->getRenderableData()->isInteracting = true;
+            isMoving = false;
+            if (hack && playerHasHexEditorControl)
+            {
+               hexEditor->disableMovementUntilRJoyUpRelease();
+               hexEditor->openToEntityByIndex(i);
+            }
+            else if (!hack && targetEntity->onInteractScriptId)
+            {
+               scriptControl->SetEntityInteractResumeState(i, MageScriptState{ targetEntity->onInteractScriptId, true });
+            }
+            break;
+         }
+      }
+   }
+}
+
+void MageGameEngine::LoadMap(uint16_t index)
+{
+   //reset the fade fraction, in case player reset the map
+   //while the fraction was anything other than 0
+   frameBuffer->ResetFade();
+
+   //close any open dialogs and return player control as well:
+   dialogControl->close();
+   playerHasControl = true;
+
+   //memcpy(currentSave->name, mapControl->getPlayerEntity()->name.c_str(), MAGE_ENTITY_NAME_LENGTH <= mapControl->getPlayerEntity()->name.length() ? MAGE_ENTITY_NAME_LENGTH : mapControl->getPlayerEntity()->name.length());
+   //copyNameToAndFromPlayerAndSave(true);
+
+   //get the data for the map:
+   mapControl->Load(index);
+
+   mapControl->getPlayerEntity()->SetName(currentSave->name);
+
+   scriptControl->initializeScriptsOnMapLoad();
+
+   commandControl->reset();
+   scriptControl->handleMapOnLoadScript(true);
+
+   //close hex editor if open:
+   if (hexEditor->isHexEditorOn())
+   {
+      hexEditor->toggleHexEditor();
+   }
+   if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
+   {
+      hexEditor->openToEntityByIndex(mapControl->getPlayerEntityIndex());
+      hexEditor->toggleHexEditor();
+   }
+}
 
 void MageGameEngine::handleBlockingDelay()
 {
@@ -59,43 +151,262 @@ void MageGameEngine::handleBlockingDelay()
    }
 }
 
+void MageGameEngine::applyUniversalInputs()
+{
+   const auto button = inputHandler->GetButtonState();
+
+   if (button.IsPressed(KeyPress::Xor))
+   {
+      if (button.IsPressed(KeyPress::Mem3))
+      {
+         //make map reload global regardless of player control state:
+         scriptControl->mapLoadId = currentSave->currentMapId;
+      }
+      else if (button.IsPressed(KeyPress::Mem1))
+      {
+         mapControl->isEntityDebugOn = !mapControl->isEntityDebugOn;
+         scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+         LoadMap(currentSave->currentMapId);
+         return;
+      }
+   }
+
+   //check to see if player input is allowed:
+   if (dialogControl->isOpen() 
+      || !(playerHasControl  || playerHasHexEditorControl))
+   {
+      return;
+   }
+   //make sure any button handling in this function can be processed in ANY game mode.
+   //that includes the game mode, hex editor mode, any menus, maps, etc.
+   ledSet(LED_PAGE, button.IsPressed(KeyPress::Page) ? 0xFF : 0x00);
+   if (button.IsPressed(KeyPress::Xor)) { hexEditor->setHexOp(HEX_OPS_XOR); }
+   if (button.IsPressed(KeyPress::Add)) { hexEditor->setHexOp(HEX_OPS_ADD); }
+   if (button.IsPressed(KeyPress::Sub)) { hexEditor->setHexOp(HEX_OPS_SUB); }
+   if (button.IsPressed(KeyPress::Bit128)) { hexEditor->runHex(0b10000000); }
+   if (button.IsPressed(KeyPress::Bit64)) { hexEditor->runHex(0b01000000); }
+   if (button.IsPressed(KeyPress::Bit32)) { hexEditor->runHex(0b00100000); }
+   if (button.IsPressed(KeyPress::Bit16)) { hexEditor->runHex(0b00010000); }
+   if (button.IsPressed(KeyPress::Bit8)) { hexEditor->runHex(0b00001000); }
+   if (button.IsPressed(KeyPress::Bit4)) { hexEditor->runHex(0b00000100); }
+   if (button.IsPressed(KeyPress::Bit2)) { hexEditor->runHex(0b00000010); }
+   if (button.IsPressed(KeyPress::Bit1)) { hexEditor->runHex(0b00000001); }
+
+   if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0)
+      || button.IsPressed(KeyPress::Mem0) && button.IsPressed(KeyPress::Xor))
+   {
+      isCollisionDebugOn = !isCollisionDebugOn;
+   }
+}
+
+void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
+{
+   const auto button = inputHandler->GetButtonState();
+   const auto activatedButton = inputHandler->GetButtonActivatedState();
+   //set mage speed based on if the right pad down is being pressed:
+   float moveType = button.IsPressed(KeyPress::Rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+   float howManyMsPerSecond = 1000.0;
+   float whatFractionOfSpeed = moveType / howManyMsPerSecond;
+   mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+   if (dialogControl->isOpen())
+   {
+      // If interacting with the dialog this tick has closed the dialog,
+      // return early before the same "advance button press triggers an on_interact below
+      dialogControl->update();
+      return;
+   }
+   // if there is a player on the map
+   if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
+   {
+      auto playerEntity = mapControl->getPlayerEntity();
+      playerEntity->updateRenderableData();
+
+      //update renderable info before proceeding:
+      uint16_t playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+      bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
+      const MageEntityType* entityType = hasEntityType ? ROM->Get<MageEntityType>(playerEntityTypeId) : nullptr;
+      uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
+      bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+
+      isMoving = false;
+
+      //check to see if the mage is pressing the action button, or currently in the middle of an action animation.
+      if (playerHasControl
+         && (playerIsActioning || button.IsPressed(KeyPress::Rjoy_left)))
+      {
+         playerIsActioning = true;
+      }
+      //if not actioning or resetting, handle all remaining inputs:
+      else if (playerHasControl)
+      {
+         //auto playerVelocity = playerVelocity;
+         playerVelocity = { 0,0 };
+         auto& direction = playerEntity->renderFlags;
+         if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
+         if (isMoving)
+         {
+            playerEntity->renderFlags.updateDirectionAndPreserveFlags(direction);
+            auto pushback = getPushBackFromTilesThatCollideWithPlayer();
+            auto velocityAfterPushback = playerVelocity + pushback;
+            auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
+            // false would mean that the pushback is greater than the input velocity,
+            // which would glitch the player into geometry really bad, so... don't.
+            if (dotProductOfVelocityAndPushback > 0)
+            {
+               playerEntity->location += velocityAfterPushback;
+            }
+         }
+         if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Rjoy_right))
+         {
+            const auto hack = false;
+            handleEntityInteract(hack);
+         }
+         if (button.IsPressed(KeyPress::Rjoy_up))
+         {
+            const auto hack = true;
+            handleEntityInteract(hack);
+         }
+         if (button.IsPressed(KeyPress::Ljoy_center))
+         {
+            //no task assigned to ljoy_center in game mode
+         }
+         if (button.IsPressed(KeyPress::Rjoy_center))
+         {
+            //no task assigned to rjoy_center in game mode
+         }
+         if (button.IsPressed(KeyPress::Page))
+         {
+            //no task assigned to op_page in game mode
+         }
+      }
+
+
+      //handle animation assignment for the player:
+      //Scenario 1 - perform action:
+      if (playerIsActioning && hasEntityType
+         && entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX)
+      {
+         playerEntity->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
+      }
+      //Scenario 2 - show walk animation:
+      else if (isMoving && hasEntityType
+         && entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX)
+      {
+         playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+      }
+      //Scenario 3 - show idle animation:
+      else if (playerHasControl)
+      {
+         playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+      }
+
+      //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
+      bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
+         && (playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+         && (playerEntity->currentFrameIndex == (playerEntity->getRenderableData()->frameCount - 1))
+         && (playerEntity->getRenderableData()->currentFrameTicks + deltaTime >= (playerEntity->getRenderableData()->duration));
+
+      //if the above bool is true, set the player back to their idle animation:
+      if (isPlayingActionButShouldReturnControlToPlayer)
+      {
+         playerEntity->currentFrameIndex = 0;
+         playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+      }
+
+      //if the animation changed since the start of this function, reset to the first frame and restart the timer:
+      if (previousPlayerAnimation != playerEntity->currentAnimation)
+      {
+         playerEntity->currentFrameIndex = 0;
+         playerEntity->getRenderableData()->currentFrameTicks = 0;
+      }
+
+      //What scenarios call for an extra renderableData update?
+      if (isMoving || (playerEntity->getRenderableData()->lastTilesetId != playerEntity->getRenderableData()->tilesetId))
+      {
+         playerEntity->updateRenderableData();
+      }
+      if (!playerHasControl || !playerHasHexEditorControl)
+      {
+         return;
+      }
+
+      //opening the hex editor is the only button press that will lag actual gameplay by one frame
+      //this is to allow entity scripts to check the hex editor state before it opens to run scripts
+      if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Hax))
+      {
+         hexEditor->toggleHexEditor();
+      }
+      hexEditor->applyMemRecallInputs();
+   }
+   else //no player on map
+   {
+      if (!playerHasControl)
+      {
+         return;
+      }
+      if (button.IsPressed(KeyPress::Ljoy_left)) { camera.position.x -= mageSpeed;}
+      if (button.IsPressed(KeyPress::Ljoy_right)) { camera.position.x += mageSpeed; }
+      if (button.IsPressed(KeyPress::Ljoy_up)) { camera.position.y -= mageSpeed; }
+      if (button.IsPressed(KeyPress::Ljoy_down)) { camera.position.y += mageSpeed; }
+
+      if (!playerHasHexEditorControl)
+      {
+         return;
+      }
+      if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Hax)) { hexEditor->toggleHexEditor(); }
+      hexEditor->applyMemRecallInputs();
+   }
+}
+
+
 void MageGameEngine::GameUpdate(uint32_t deltaTime)
 {
    //apply inputs that work all the time
-   gameControl->applyUniversalInputs();
+   applyUniversalInputs();
 
    //check for loadMap:
    if (scriptControl->mapLoadId != MAGE_NO_MAP) { return; }
 
    //update universally used hex editor state variables:
-   hexEditor->updateHexStateVariables();
+   hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
 
-   //either do hax inputs:
-   if (hexEditor->isHexEditorOn())
+   //either do hax inputs if player input is allowed:
+   if (hexEditor->isHexEditorOn() 
+      && !(dialogControl->isOpen()
+         || !playerHasControl
+         || !playerHasHexEditorControl
+         || hexEditor->IsMovementDisabled()))
    {
+
       //apply inputs to the hex editor:
-      hexEditor->applyHexModeInputs();
+      hexEditor->applyHexModeInputs((uint8_t*)mapControl->currentMap->entities.data());
+
 
       //then handle any still-running scripts:
       scriptControl->tickScripts();
+      commandControl->sendBufferedOutput();
    }
 
    //or be boring and normal:
    else
    {
       //this handles buttons and state updates based on button presses in game mode:
-      gameControl->applyGameModeInputs(deltaTime);
+      applyGameModeInputs(deltaTime);
 
       //update the entities based on the current state of their (hackable) data array.
-      gameControl->Map()->UpdateEntities(deltaTime);
+      mapControl->UpdateEntities(deltaTime);
 
       //handle scripts:
       scriptControl->tickScripts();
+      commandControl->sendBufferedOutput();
 
       //check for loadMap:
       if (scriptControl->mapLoadId != MAGE_NO_MAP) { return; }
 
-      gameControl->applyCameraEffects(deltaTime);
+      camera.applyEffects(deltaTime);
    }
 }
 
@@ -106,7 +417,7 @@ void MageGameEngine::GameRender()
    {
       //run hex editor if appropriate
       frameBuffer->clearScreen(RGB(0, 0, 0));
-      hexEditor->renderHexEditor();
+      hexEditor->renderHexEditor(mapControl->GetEntityDataPointer());
    }
 
    //otherwise be boring and normal/run mage game:
@@ -116,63 +427,53 @@ void MageGameEngine::GameRender()
       frameBuffer->clearScreen(backgroundColor);
 
       //then draw the map and entities:
-      uint8_t layerCount = gameControl->Map()->LayerCount();
+      uint8_t layerCount = mapControl->LayerCount();
 
       if (layerCount > 1)
       {
          for (uint8_t layerIndex = 0; layerIndex < (layerCount - 1); layerIndex++)
          {
             //draw all map layers except the last one before drawing entities.
-            gameControl->DrawMap(layerIndex);
+            mapControl->Draw(layerIndex, camera.position);
          }
       }
       else
       {
          //if there is only one map layer, it will always be drawn before the entities.
-         gameControl->DrawMap(0);
+         mapControl->Draw(0, camera.position);
       }
 
       //now that the entities are updated, draw them to the screen.
-      gameControl->Map()->DrawEntities(this);
+      mapControl->DrawEntities(camera.position);
 
       if (layerCount > 1)
       {
          //draw the final layer above the entities.
-         gameControl->DrawMap(layerCount - 1);
+         mapControl->Draw(layerCount - 1, camera.position);
       }
 
-      /*if (gameControl->isCollisionDebugOn)
+      /*if (isCollisionDebugOn)
       {
-         gameControl->DrawGeometry();
-         if (gameControl->playerEntityIndex != NO_PLAYER)
+         DrawGeometry();
+         if (playerEntityIndex != NO_PLAYER)
          {
-            auto point = gameControl->getPushBackFromTilesThatCollideWithPlayer();
+            auto point = getPushBackFromTilesThatCollideWithPlayer();
          }
       }*/
-      if (gameControl->dialogControl->isOpen())
+      if (dialogControl->isOpen())
       {
-         gameControl->dialogControl->draw();
+         dialogControl->draw();
       }
    }
    //update the state of the LEDs
-   hexEditor->updateHexLights();
+   hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
 
    //update the screen
-   frameBuffer->blt();
+   frameBuffer->blt(inputHandler->GetButtonState());
 }
 
 void MageGameEngine::EngineMainGameLoop()
 {
-   if (!engineIsInitialized)
-   {
-      // Why do this in the game loop instead of before the game loop?
-      // Because Emscripten started throwing a new useless, meaningless,
-      // recoverable runtime error that the client can just ignore, unless
-      // EngineInit is called from inside the game loop. No idea why.
-
-      gameControl->LoadMap(gameControl->currentSave.currentMapId);
-      engineIsInitialized = true;
-   }
    //update timing information at the start of every game loop
    now = millis();
    deltaTime = now - lastTime;
@@ -195,19 +496,19 @@ void MageGameEngine::EngineMainGameLoop()
    //on embedded, interact with USBC com port over serial
    EngineHandleSerialInput();
 
-   //updates the state of all the things before rendering:
-   GameUpdate(deltaTime);
-
    //If the loadMap() action has set a new map, we will load it before we render this frame.
    if (scriptControl->mapLoadId != MAGE_NO_MAP)
    {
       //load the new map data into gameControl
-      gameControl->LoadMap(scriptControl->mapLoadId);
+      LoadMap(scriptControl->mapLoadId);
+
       //clear the mapLoadId to prevent infinite reloads
+      scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
       scriptControl->mapLoadId = MAGE_NO_MAP;
-      //Update the game for the new map
-      GameUpdate(deltaTime);
    }
+
+   //updates the state of all the things before rendering:
+   GameUpdate(deltaTime);
 
    //This renders the game to the screen based on the loop's updated state.
    GameRender();
@@ -234,4 +535,182 @@ void MageGameEngine::onSerialStart()
 void MageGameEngine::onSerialCommand(char* commandString)
 {
    commandControl->processCommand(commandString);
+}
+
+Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
+{
+   auto mageCollisionSpokes = MageGeometry{ MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT };
+   float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
+   Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
+   auto playerRenderableData = mapControl->getPlayerEntity()->getRenderableData();
+
+   auto playerRect = playerRenderableData->hitBox;
+   int16_t abs_x = abs(playerVelocity.x);
+   int16_t abs_y = abs(playerVelocity.y);
+   if (abs_x)
+   {
+      playerRect.w += abs_x;
+      if (playerVelocity.x < 0)
+      {
+         playerRect.origin.x += playerVelocity.x;
+      }
+   }
+   if (abs_y)
+   {
+      playerRect.h += abs_y;
+      if (playerVelocity.y < 0)
+      {
+         playerRect.origin.y += playerVelocity.y;
+      }
+   }
+   Point tileTopLeftPoint = { 0, 0 };
+   uint16_t geometryId = 0;
+   auto pushback = Point{};
+   auto currentTile = MageMapTile{};
+   Point playerPoint = playerRenderableData->center;
+   float playerSpokeRadius = playerRenderableData->hitBox.w / 1.5;
+   float angleOffset = atan2(playerVelocity.y, playerVelocity.x)
+      - (PI / 2)
+      + ((PI / MAGE_COLLISION_SPOKE_COUNT) / 2);
+
+   for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
+   {
+      maxSpokePushbackLengths[i] = -INFINITY;
+      maxSpokePushbackVectors[i].x = 0;
+      maxSpokePushbackVectors[i].y = 0;
+      auto spokePoint = mageCollisionSpokes.GetPoint(i);
+      float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
+      spokePoint.x = cos(angle) * playerSpokeRadius + playerVelocity.x + playerPoint.x;
+      spokePoint.y = sin(angle) * playerSpokeRadius + playerVelocity.y + playerPoint.y;
+   }
+
+   if (isCollisionDebugOn)
+   {
+      frameBuffer->drawRect(playerRect.origin - camera.position, playerRect.w, playerRect.h, COLOR_BLUE);
+      for (auto& point: mageCollisionSpokes.GetPoints())
+      //for (int i = 0; i < mageCollisionSpokes.segmentLengths.size(); i++)
+      {
+         frameBuffer->drawLine(point - camera.position, playerPoint - camera.position, COLOR_PURPLE);
+      }
+   }
+
+   uint8_t layerCount = mapControl->LayerCount();
+   for (auto layerIndex = 0u; layerIndex < layerCount; layerIndex++)
+   {
+      auto layerAddress = mapControl->LayerOffset(layerIndex);
+      for (auto i = 0u; i < mapControl->Cols() * mapControl->Rows(); i++)
+      {
+         tileTopLeftPoint.x = (int32_t)(mapControl->TileWidth() * (i % mapControl->Cols()));
+         tileTopLeftPoint.y = (int32_t)(mapControl->TileHeight() * (i / mapControl->Cols()));
+         auto x = tileTopLeftPoint.x - playerRect.origin.x;
+         auto y = tileTopLeftPoint.y - playerRect.origin.y;
+
+         if (x + mapControl->TileWidth() < 0 || x > playerRect.w
+            || y + mapControl->TileHeight() < 0 || y > playerRect.h)
+         {
+            continue;
+         }
+         auto address = layerAddress + (i * sizeof(MageMapTile));
+
+         ROM->Read(currentTile, address);
+
+         if (currentTile.tileId == 0)
+         {
+            continue;
+         }
+
+         currentTile.tileId -= 1;
+
+         auto tileset = ROM->Get<MageTileset>(currentTile.tilesetId);
+
+         if (!tileset->Valid())
+         {
+            continue;
+         }
+         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile.tileId);
+         if (geometryId)
+         {
+            for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
+            {
+               float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
+               Point* spokePoint = &mageCollisionSpokes.GetPoint(i);
+               spokePoint->x = cos(angle) * playerSpokeRadius
+                  + playerVelocity.x + playerPoint.x
+                  - tileTopLeftPoint.x;
+               spokePoint->y = sin(angle) * playerSpokeRadius
+                  + playerVelocity.y + playerPoint.y
+                  - tileTopLeftPoint.y;
+            }
+            geometryId--;
+
+            auto geometry = ROM->Get<MageGeometry>(geometryId)
+               ->flipSelfByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
+
+            Point offsetPoint = { playerPoint.x - tileTopLeftPoint.x, playerPoint.y - tileTopLeftPoint.y };
+            bool isMageInGeometry = false;
+
+            bool collidedWithThisTileAtAll = false;
+            for (int tileLinePointIndex = 0; tileLinePointIndex < geometry.GetPointCount(); tileLinePointIndex++)
+            {
+               Point tileLinePointA = geometry.GetPoint(tileLinePointIndex);
+               Point tileLinePointB = geometry.GetPoint(tileLinePointIndex + 1);
+               bool collidedWithTileLine = false;
+
+               for (auto spokeIndex = 0; spokeIndex < mageCollisionSpokes.GetPointCount(); spokeIndex++)
+               {
+                  auto spokePointB = mageCollisionSpokes.GetPoint(spokeIndex);
+
+                  auto spokeIntersectionPoint = geometry.getIntersectPointBetweenLineSegments(offsetPoint, spokePointB, tileLinePointA, tileLinePointB);
+                  if (spokeIntersectionPoint.has_value())
+                  {
+                     collidedWithTileLine = true;
+                     isMageInGeometry = true;
+                     auto diff = spokeIntersectionPoint.value() - spokePointB;
+
+                     frameBuffer->drawLine(offsetPoint, spokePointB, COLOR_RED);
+                     frameBuffer->drawLine(offsetPoint, spokeIntersectionPoint.value(), COLOR_GREENYELLOW);
+                     frameBuffer->drawLine(offsetPoint, offsetPoint + diff, COLOR_ORANGE);
+                     float currentIntersectLength = diff.VectorLength();
+
+                     maxSpokePushbackLengths[spokeIndex] = std::max(currentIntersectLength, maxSpokePushbackLengths[spokeIndex]);
+                     if (currentIntersectLength == maxSpokePushbackLengths[spokeIndex])
+                     {
+                        maxSpokePushbackVectors[spokeIndex] = diff;
+                     }
+                  }
+               }
+               frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
+            }
+
+            if (isCollisionDebugOn)
+            {
+
+               //geometry.draw(
+               //   camera.adjustedCameraPosition.x,
+               //   camera.adjustedCameraPosition.y,
+               //   isMageInGeometry ? COLOR_RED : COLOR_YELLOW,
+               //   tileTopLeftPoint.x,
+               //   tileTopLeftPoint.y
+               //);
+            }
+         }
+      }
+   }
+   uint8_t collisionCount = 0;
+   for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
+   {
+      if (maxSpokePushbackLengths[i] != -INFINITY)
+      {
+         collisionCount++;
+         pushback.x += maxSpokePushbackVectors[i].x;
+         pushback.y += maxSpokePushbackVectors[i].y;
+      };
+   }
+   if (collisionCount > 0)
+   {
+      pushback.x /= collisionCount;
+      pushback.y /= collisionCount;
+      frameBuffer->drawLine(playerPoint - camera.position, playerPoint + pushback - camera.position, COLOR_RED);
+   }
+   return pushback;
 }

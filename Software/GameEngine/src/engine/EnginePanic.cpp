@@ -5,7 +5,6 @@
 #include "EngineInput.h"
 #include "EngineSerial.h"
 
-#include "FrameBuffer.h"
 #include "fonts/Monaco9.h"
 
 #ifdef DC801_EMBEDDED

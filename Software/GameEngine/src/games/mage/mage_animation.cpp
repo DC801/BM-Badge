@@ -3,7 +3,7 @@
 
 #include "convert_endian.h"
 
-MageAnimation::MageAnimation(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept
+MageAnimation::MageAnimation(uint32_t& address) noexcept
 {
 	//read tilesetId
 	ROM->Read(tilesetId, address);

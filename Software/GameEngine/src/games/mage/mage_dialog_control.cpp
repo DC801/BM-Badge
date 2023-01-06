@@ -1,8 +1,12 @@
 #include "mage_dialog_control.h"
 
 #include "EngineInput.h"
+#include "StringLoader.h"
+#include "mage_map.h"
 #include "mage_portrait.h"
 #include "mage_script_actions.h"
+#include "mage_script_control.h"
+#include "mage_tileset.h"
 #include <utility>
 
 MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
@@ -28,17 +32,8 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
    }
 };
 
-MageDialogControl::MageDialogControl(MageGameEngine* gameEngine, MageHeader&& dialogHeader) noexcept
-   : gameEngine(gameEngine)
-{
-}
-
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
-   if (gameEngine->hexEditor->isHexEditorOn())
-   {
-      gameEngine->hexEditor->toggleHexEditor();
-   }
    triggeringEntityId = currentEntityId;
    currentDialogIndex = dialogId;
    currentScreenIndex = 0;
@@ -46,18 +41,17 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    //auto currentDialog = get(dialogId);
    currentDialogAddress += 32; // skip past the name
 
-   gameEngine->ROM->Read(currentDialogScreenCount, currentDialogAddress);
+   ROM->Read(currentDialogScreenCount, currentDialogAddress);
 
    loadNextScreen();
 
    open = true;
 }
 
-void MageDialogControl::showSaveMessageDialog(std::string messageString)
+void MageDialogControl::StartModalDialog(std::string messageString)
 {
    // Recycle all of the values set by the previous dialog to preserve look and feel
    // If there was no previous dialog... uhhhhhhh good luck with that?
-   // Saves should always be confirmed. That is my strong opinion.
    currentResponseIndex = 0;
    currentMessageIndex = 0;
    messageIds.clear();
@@ -68,7 +62,7 @@ void MageDialogControl::showSaveMessageDialog(std::string messageString)
    responses.clear();
    cursorPhase += 250;
    open = true;
-   gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+   scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::loadNextScreen()
@@ -79,67 +73,63 @@ void MageDialogControl::loadNextScreen()
       open = false;
       return;
    }
-   gameEngine->ROM->Read(currentScreen, currentDialogAddress);
+   ROM->Read(currentScreen, currentDialogAddress);
 
-   currentEntityName = gameEngine->gameControl->getString(currentScreen->nameStringIndex, triggeringEntityId);
+   currentEntityName = stringLoader->getString(currentScreen->nameStringIndex, triggeringEntityId);
    loadCurrentScreenPortrait();
 
    messageIds.clear();
-   gameEngine->ROM->InitializeCollectionOf(messageIds, currentDialogAddress, currentScreen->messageCount);
+   ROM->InitializeCollectionOf(messageIds, currentDialogAddress, currentScreen->messageCount);
 
-   currentMessage = gameEngine->gameControl->getString(messageIds[currentMessageIndex], triggeringEntityId);
+   currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityId);
    uint8_t sizeOfResponse = sizeof(MageDialogResponse);
    uint32_t sizeOfResponses = sizeOfResponse * currentScreen->responseCount;
    responses.clear();
-   gameEngine->ROM->InitializeCollectionOf(responses, currentDialogAddress, currentScreen->responseCount);
+   ROM->InitializeCollectionOf(responses, currentDialogAddress, currentScreen->responseCount);
 
    // padding at the end of the screen struct when messageCount is odd
    currentDialogAddress += ((currentScreen->messageCount) % 2) * sizeof(uint16_t);
 
-   currentFrameTileset = gameEngine->gameControl->tileManager->GetTileset(currentScreen->borderTilesetIndex);
+   currentFrameTileset = ROM->Get<MageTileset>(currentScreen->borderTilesetIndex);
    currentImageIndex = currentFrameTileset->ImageId();
-   //currentImageAddress = gameEngine->gameControl->imageHeader->offset(currentImageIndex);
+   //currentImageAddress = imageHeader->offset(currentImageIndex);
    currentScreenIndex++;
    cursorPhase += 250;
-}
-
-void MageDialogControl::advanceMessage()
-{
-   currentMessageIndex++;
-   cursorPhase = 250;
-   if (currentMessageIndex >= currentScreen->messageCount)
-   {
-      loadNextScreen();
-   }
-   else
-   {
-      currentMessage = gameEngine->gameControl->getString(messageIds[currentMessageIndex], triggeringEntityId);
-   }
 }
 
 void MageDialogControl::update()
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-   bool shouldAdvance = gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_down)
-      || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_left)
-      || gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Rjoy_right)
-      || MAGE_NO_MAP != gameEngine->scriptControl->mapLoadId;
+   auto activatedButton = inputHandler->GetButtonActivatedState();
+   bool shouldAdvance = activatedButton.IsPressed(KeyPress::Rjoy_down)
+      || activatedButton.IsPressed(KeyPress::Rjoy_left)
+      || activatedButton.IsPressed(KeyPress::Rjoy_right)
+      || MAGE_NO_MAP != scriptControl->mapLoadId;
 
    if (shouldShowResponses())
    {
       currentResponseIndex += currentScreen->responseCount;
-      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
-      if (gameEngine->inputHandler->GetButtonActivatedState(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
+      if (activatedButton.IsPressed(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
+      if (activatedButton.IsPressed(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
       currentResponseIndex %= currentScreen->responseCount;
       if (shouldAdvance)
       {
-         gameEngine->scriptControl->jumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
+         scriptControl->jumpScriptId = responses[currentResponseIndex].mapLocalScriptIndex;
          open = false;
       }
    }
    else if (shouldAdvance)
    {
-      advanceMessage();
+      currentMessageIndex++;
+      cursorPhase = 250;
+      if (currentMessageIndex >= currentScreen->messageCount)
+      {
+         loadNextScreen();
+      }
+      else
+      {
+         currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityId);
+      }
    }
 }
 
@@ -171,10 +161,12 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          x = offsetX + (i * tileWidth);
          y = offsetY + (j * tileHeight);
          tileId = getTileIdFromXY(i, j, box);
-         gameEngine->gameControl->tileManager->DrawTile(currentFrameTileset, tileId, x, y, 0 );
+
+         const auto tile = ROM->Get<MageMapTile>(currentFrameTileset->ImageId());
+         tileManager->DrawTile(currentFrameTileset, tile, x, y, 0);
       }
    }
-   gameEngine->frameBuffer->printMessage(string.c_str(), Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
+   frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
    if (drawArrow)
    {
       static const auto TAU = 6.283185307179586;
@@ -188,8 +180,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          // render all of the response labels
          for (int responseIndex = 0; responseIndex < currentScreen->responseCount; ++responseIndex)
          {
-            gameEngine->frameBuffer->printMessage(
-               gameEngine->gameControl->getString(responses[responseIndex].stringIndex, triggeringEntityId).c_str(),
+            frameBuffer->printMessage(
+               stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityId),
                Monaco9, 0xffff,
                offsetX + (2 * tileWidth) + 8,
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
@@ -202,16 +194,18 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          x = offsetX + ((box.w - 2) * tileWidth);
          y = offsetY + ((box.h - 2) * tileHeight) + bounce;
       }
-      gameEngine->gameControl->tileManager->DrawTile(currentFrameTileset, currentImageIndex, x, y, flags);
+
+
+      const auto tile = ROM->Get<MageMapTile>(currentFrameTileset->ImageId());
+      tileManager->DrawTile(currentFrameTileset, tile, x, y, flags);
    }
    if (drawPortrait)
    {
       x = offsetX + tileWidth;
       y = offsetY + tileHeight;
-      tileId = currentPortraitRenderableData.tileId;
-      auto tileset = gameEngine->gameControl->tileManager->GetTileset(currentPortraitRenderableData.tilesetId);
-
-      gameEngine->gameControl->tileManager->DrawTile(tileset, tileId, x, y, currentPortraitRenderableData.renderFlags);
+      auto tileset = ROM->Get<MageTileset>(currentPortraitRenderableData.tilesetId);
+      const auto tile = ROM->Get<MageMapTile>(currentPortraitRenderableData.tileId);
+      tileManager->DrawTile(tileset, tile, x, y, currentPortraitRenderableData.renderFlags);
    }
 }
 
@@ -262,21 +256,21 @@ void MageDialogControl::loadCurrentScreenPortrait()
    currentPortraitId = currentScreen->portraitIndex;
    if (currentScreen->entityIndex != NO_PLAYER)
    {
-      uint8_t entityIndex = gameEngine->scriptActions->GetUsefulEntityIndexFromActionEntityId(currentScreen->entityIndex,triggeringEntityId);
-      auto currentEntity = gameEngine->gameControl->getEntityByMapLocalId(entityIndex);
+      uint8_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(currentScreen->entityIndex, triggeringEntityId);
+      auto currentEntity = mapControl->getEntityByMapLocalId(entityIndex);
       if (currentEntity)
       {
          uint8_t sanitizedPrimaryType = currentEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            const MageEntityType* entityType = gameEngine->gameControl->GetEntityType(currentEntity->primaryId);
+            const MageEntityType* entityType = ROM->Get<MageEntityType>(currentEntity->primaryId);
             currentPortraitId = entityType->PortraitId();
          }
 
          // only try rendering when we have a portrait
          if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
          {
-            auto portrait = gameEngine->gameControl->tileManager->GetPortrait(currentPortraitId);
+            auto portrait = ROM->Get<MagePortrait>(currentPortraitId);
             auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
             currentEntity->SetRenderDirection(animationDirection->RenderFlags());
             currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags() | (currentEntity->renderFlags & 0x80);

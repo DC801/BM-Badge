@@ -107,10 +107,9 @@ typedef enum {
         LED_MEM0,
         LED_USB,
         LED_HAX,
-        LED_SD,
-        LED_COUNT
+        LED_SD
 } LEDID;
-
+#define LED_COUNT 19
 extern uint8_t led_states[LED_COUNT];
 
 void ledSet (uint8_t, uint8_t);

@@ -1,6 +1,6 @@
 #include "mage_portrait.h"
 
-MagePortrait::MagePortrait(std::shared_ptr<EngineROM> ROM, uint32_t& address)
+MagePortrait::MagePortrait(uint32_t& address)
 {
 	address += 32; // name
 	address += sizeof(uint8_t); // paddingA

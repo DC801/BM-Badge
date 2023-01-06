@@ -4,7 +4,6 @@
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
 #include <SDL_image.h>
-#include "EngineWindowFrame.h"
 #include <cstdio>
 #include <string>
 #include <regex>
@@ -125,8 +124,8 @@ void EngineInput::GetDesktopInputState()
    newValue ^= (uint32_t)keys[SDL_SCANCODE_BACKSLASH] << (uint32_t)KeyPress::Rjoy_up;
    newValue ^= (uint32_t)keys[SDL_SCANCODE_RETURN] << (uint32_t)KeyPress::Rjoy_right;
 
-   Buttons.keyboardBitmask = newValue;
-   Activated.keyboardBitmask = ~Activated.keyboardBitmask & newValue;
+   buttons = newValue;
+   activated = ~activated & newValue;
    // debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
 }
 
@@ -139,41 +138,4 @@ void EngineInput::HandleKeyboard()
 #else
    GetDesktopInputState();
 #endif
-
-   /*
-   //screen logging, prints button states to screen:
-   char mask_string[128];
-   uint8_t length = 0;
-   for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
-      length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
-   }
-   p_canvas()->clearScreen(COLOR_DARKBLUE);
-   p_canvas()->printMessage(
-      mask_string,
-      Monaco9,
-      COLOR_WHITE,
-      32,
-      32
-   );
-   //p_canvas()->blt();
-
-   //nrf_delay_ms(500);
-
-   //screen logging:
-   length = 0;
-   for(int k=0; k<KEYBOARD_NUM_KEYS; k++){
-      length += sprintf(mask_string+length, "%d", *buttonBoolPointerArray[k]);
-   }
-   //p_canvas()->clearScreen(COLOR_RED);
-   p_canvas()->printMessage(
-      mask_string,
-      Monaco9,
-      COLOR_RED,
-      32,
-      32
-   );
-   p_canvas()->blt();
-
-   nrf_delay_ms(500);
-   */
 }

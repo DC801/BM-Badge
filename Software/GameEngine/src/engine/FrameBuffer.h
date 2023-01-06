@@ -1,22 +1,18 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include "games/mage/mage_rom.h"
+#include "EngineWindowFrame.h"
+#include "adafruit/gfxfont.h"
+#include "modules/gfx.h"
+#include "convert_endian.h"
+#include <array>
 #include <stdint.h>
-
-#define WIDTH		320
-#define HEIGHT		240
-#define HALF_WIDTH	160
-#define HALF_HEIGHT	120
-const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
 class MageGameEngine;
 
-#include "adafruit/gfxfont.h"
-#include "modules/gfx.h"
-#include "convert_endian.h"
-#include <array>
 
 //this is the numerical translation for entity direction.
 enum MageEntityAnimationDirection : uint8_t
@@ -84,20 +80,58 @@ union ColorUnion
 //this is the color that will appear transparent when drawing tiles:
 #define TRANSPARENCY_COLOR	0x0020
 
-union RenderFlags
+#define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
+#define RENDER_FLAGS_IS_GLITCHED			0b10000000
+#define RENDER_FLAGS_IS_DEBUG				0b01000000
+#define RENDER_FLAGS_FLIP_X					0b00000100
+#define RENDER_FLAGS_FLIP_Y					0b00000010
+#define RENDER_FLAGS_FLIP_DIAG				0b00000001
+#define RENDER_FLAGS_FLIP_MASK				0b00000111
+#define RENDER_FLAGS_DIRECTION_MASK			0b00000011
+#define NUM_DIRECTIONS 4
+
+struct RenderFlags
 {
-	uint8_t i;
-	struct
+	RenderFlags(const RenderFlags& flags) noexcept
 	{
-		bool diagonal : 1;
-		bool vertical : 1;
-		bool horizontal : 1;
-		bool paddingA : 1;
-		bool paddingB : 1;
-		bool paddingC : 1;
-		bool debug : 1;
-		bool glitched : 1;
-	};
+		rf.i = flags.rf.i;
+	}
+
+	RenderFlags(const uint8_t& flags) noexcept
+	{
+		rf.i = flags;
+	}
+
+	inline void updateDirectionAndPreserveFlags(uint8_t desired)
+	{
+		rf.i = (rf.i & RENDER_FLAGS_DIRECTION_MASK)
+			| (rf.i & (RENDER_FLAGS_IS_DEBUG | RENDER_FLAGS_IS_GLITCHED));
+	}
+
+	operator uint8_t()
+	{
+		return rf.i;
+	}
+
+	union rf_u
+	{
+		uint8_t i;
+		struct rf_t
+		{
+			uint8_t diagonal : 1;
+			uint8_t vertical : 1;
+			uint8_t horizontal : 1;
+			uint8_t paddingA : 1;
+			uint8_t paddingB : 1;
+			uint8_t paddingC : 1;
+			uint8_t debug : 1;
+			uint8_t glitched : 1;
+		} d;
+	} rf;
+
+	
+
+
 };
 
 
@@ -127,22 +161,22 @@ struct Point
 		return point;
 	}
 
-	void flipByFlags(uint8_t flags, uint16_t width, uint16_t height)
+	void flipByFlags(RenderFlags flags, uint16_t width, uint16_t height)
 	{
-		if (flags != 0)
+		if (flags.rf.i != 0)
 		{
 			RenderFlags flagsUnion = { flags };
-			if (flagsUnion.diagonal)
+			if (flagsUnion.rf.d.diagonal)
 			{
 				auto xTemp = x;
 				x = y;
 				y = xTemp;
 			}
-			if (flagsUnion.horizontal)
+			if (flagsUnion.rf.d.horizontal)
 			{
 				x = width - x;
 			}
-			if (flagsUnion.vertical)
+			if (flagsUnion.rf.d.vertical)
 			{
 				y = height - y;
 			}
@@ -162,6 +196,19 @@ struct Point
 		return lhs;
 	}
 
+	Point& operator-=(const uint8_t& scale)
+	{
+		this->x -= scale;
+		this->y -= scale;
+		return *this;
+	}
+
+	friend Point operator-(Point lhs, const uint8_t& scale)
+	{
+		lhs -= scale;
+		return lhs;
+	}
+
 	Point operator-()
 	{
 		return Point{ -x, -y };
@@ -177,6 +224,19 @@ struct Point
 	friend Point operator+(Point lhs, const Point& rhs)
 	{
 		lhs += rhs;
+		return lhs;
+	}
+
+	Point& operator+=(const uint8_t& shift)
+	{
+		this->x += shift;
+		this->y += shift;
+		return *this;
+	}
+
+	friend Point operator+(Point lhs, const uint8_t& shift)
+	{
+		lhs += shift;
 		return lhs;
 	}
 
@@ -238,10 +298,6 @@ typedef struct {
 
 class FrameBuffer {
 public:
-	FrameBuffer(MageGameEngine*  gameEngine) noexcept
-		: gameEngine(gameEngine)
-	{}
-
 	constexpr void ResetFade() { fadeFraction = 0.0f; }
 	constexpr void SetFade(uint16_t color, float progress)
 	{
@@ -270,9 +326,13 @@ public:
 
 	inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
 	{
-		drawPoint(p.x, p.y, size, color);
+		const auto topLeft = p - size;
+		const auto bottomRight = p + size;
+		const auto bottomLeft = Point{ p.x - size, p.y + size };
+      const auto topRight = Point{ p.x + size, p.y - size };
+		drawLine(topLeft, bottomRight, color);
+		drawLine(bottomLeft, topRight, color);
 	}
-	void drawPoint(int x, int y, uint8_t size, uint16_t color);
 
 	// address: first pixel of image in ROM
 	// colorPalette: translate indexed image colors
@@ -280,19 +340,35 @@ public:
 	// source: coordinates to offset into base image
 	// source_width: total width of base image
 	// flags: render flags
-	void drawChunkWithFlags(
-		uint32_t address, 
-		const MageColorPalette* colorPalette,
-		Rect target,
-		Point source,
-		uint16_t source_width,
-		uint8_t flags);
+	void drawChunkWithFlags(uint32_t address,  const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags);
 
 	inline void fillRect(const Point& p, int w, int h, uint16_t color)
 	{
 		fillRect(p.x, p.y, w, h, color);
 	}
-	void fillRect(int x, int y, int w, int h, uint16_t color);
+	void fillRect(int x, int y, int w, int h, uint16_t color)
+	{
+
+		if ((x >= WIDTH) || (y >= HEIGHT))
+		{
+			return;
+		}
+
+		// Clip to screen
+		auto right = x + w;
+		if (right >= WIDTH) { right = WIDTH - 1; }
+		auto bottom = y + h;
+		if (bottom >= HEIGHT) { bottom = HEIGHT - 1; }
+		// X
+		for (int i = x; i < right; i++)
+		{
+			// Y
+			for (int j = y; j < bottom; j++)
+			{
+				drawPixel(i, j, color);
+			}
+		}
+	}
 
 	inline void drawRect(const Rect& p, uint16_t color)
 	{
@@ -306,15 +382,15 @@ public:
 	void drawRect(int x, int y, int w, int h, uint16_t color);
 
 	void write_char(uint8_t c, GFXfont font);
-	void printMessage(const char *text, GFXfont font, uint16_t color, int x, int y);
+	void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
 
 	void setTextArea(area_t *area);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
 	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
-	void blt();
+	void blt(ButtonState button);
 
 private:
-	MageGameEngine*  gameEngine;
+	std::unique_ptr<EngineWindowFrame> windowFrame{};
 
 	//variables used for screen fading
 	float fadeFraction{ 0.0f };

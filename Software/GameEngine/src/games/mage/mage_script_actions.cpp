@@ -1,37 +1,24 @@
 #include "mage_script_actions.h"
-#include "mage_entity_type.h"
+
 #include "EngineInput.h"
-#include "mage_script_control.h"
-#include "mage_dialog_control.h"
+#include "mage_camera.h"
 #include "mage_command_control.h"
-#include "convert_endian.h"
+#include "mage_dialog_control.h"
+#include "mage_entity_type.h"
+#include "mage_script_control.h"
+#include "mage_script_state.h"
+
+#include "mage_geometry.h"
+#include "mage_hex.h"
 #include "utility.h"
 
-void MageScriptActions::Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct)
+void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry)
 {
-   auto action = actionFunctions[actionId];
-   (this->*action)(args, resumeStateStruct);
-}
-
-int16_t MageScriptActions::GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId)
-{
-   if (entityIndex >= gameControl->Map()->FilteredEntityCount())
-   {
-      return NO_PLAYER;
-   }
-
-   switch (entityIndex)
-   {
-   default:
-   case MAGE_MAP_ENTITY:
-      return entityIndex;
-
-   case MAGE_ENTITY_SELF:
-      return callingEntityId;
-
-   case MAGE_ENTITY_PLAYER:
-      return gameControl->Map()->getPlayerEntityIndex();
-   }
+   auto entityCenterPoint = -entity->getRenderableData()->center - entity->location;
+   resumeStateStruct->pointA = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex);
+   resumeStateStruct->pointB = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex + 1);
+   auto relativeDirection = resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB);
+   entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
 }
 
 
@@ -61,15 +48,13 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
       uint8_t paddingG;
    } ActionCheckEntityName;
    auto argStruct = (ActionCheckEntityName*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
-      std::string entityName = gameControl->getEntityByMapLocalId(entityIndex)->name;
-      // DO NOT try to do an == comparison on these two C++ strings because
-      // the extra null values at the end of the entity name cause fail
+      std::string romString = stringLoader->getString(argStruct->stringId, scriptControl->currentEntityId);
+      std::string entityName = mapControl->getEntityByMapLocalId(entityIndex)->name;
+
       int compare = strcmp(entityName.c_str(), romString.c_str());
       bool identical = compare == 0;
       if (identical == (bool)argStruct->expectedBoolValue)
@@ -90,12 +75,11 @@ void MageScriptActions::action_check_entity_x(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionCheckEntityX;
    auto argStruct = (ActionCheckEntityX*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->location.x == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -115,12 +99,11 @@ void MageScriptActions::action_check_entity_y(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionCheckEntityY;
    auto argStruct = (ActionCheckEntityY*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->location.y == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -140,12 +123,11 @@ void MageScriptActions::action_check_entity_interact_script(uint8_t* args, MageS
       uint8_t paddingG;
    } ActionCheckEntityInteractScript;
    auto argStruct = (ActionCheckEntityInteractScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -165,12 +147,11 @@ void MageScriptActions::action_check_entity_tick_script(uint8_t* args, MageScrip
       uint8_t paddingG;
    } ActionCheckEntityTickScript;
    auto argStruct = (ActionCheckEntityTickScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->onTickScriptId == argStruct->expectedScript);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -190,14 +171,12 @@ void MageScriptActions::action_check_entity_type(uint8_t* args, MageScriptState*
       uint8_t paddingG;
    } ActionCheckEntityType;
    auto argStruct = (ActionCheckEntityType*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t sanitizedEntityTypeId = gameControl->getValidEntityTypeId(entity->primaryId);
-      bool identical = sanitizedEntityTypeId == argStruct->entityTypeId && entity->primaryIdType == ENTITY_TYPE;
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      bool identical = entity->primaryId == argStruct->entityTypeId && entity->primaryIdType == ENTITY_TYPE;
 
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -217,16 +196,16 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
       uint8_t paddingG;
    } ActionCheckEntityPrimaryId;
    auto argStruct = (ActionCheckEntityPrimaryId*)args;
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       uint16_t sizeLimit{ 1 };
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
-
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = gameControl->entityTypes.size(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = gameControl->tileManager->GetAnimationCount(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = gameControl->tileManager->GetTilesetCount(); }
+      
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM->GetCount<MageEntityType>(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM->GetCount<MageAnimation>(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM->GetCount<MageTileset>(); }
       else { throw std::runtime_error{ "Sanitized Primary Type Unknown" }; }
 
       bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
@@ -248,19 +227,18 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
       uint8_t paddingG;
    } ActionCheckEntitySecondaryId;
    auto argStruct = (ActionCheckEntitySecondaryId*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       uint16_t sizeLimit = 1;
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
-         auto tileset = gameControl->tileManager->GetTileset(entity->primaryId);
+         auto tileset = ROM->Get<MageTileset>(entity->primaryId);
          sizeLimit = tileset->Tiles();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
@@ -282,12 +260,11 @@ void MageScriptActions::action_check_entity_primary_id_type(uint8_t* args, MageS
       uint8_t paddingG;
    } ActionCheckEntityPrimaryIdType;
    auto argStruct = (ActionCheckEntityPrimaryIdType*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -308,12 +285,11 @@ void MageScriptActions::action_check_entity_current_animation(uint8_t* args, Mag
       uint8_t paddingG;
    } ActionCheckEntityCurrentAnimation;
    auto argStruct = (ActionCheckEntityCurrentAnimation*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->currentAnimation == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -333,12 +309,11 @@ void MageScriptActions::action_check_entity_current_frame(uint8_t* args, MageScr
       uint8_t paddingG;
    } ActionCheckEntityCurrentFrame;
    auto argStruct = (ActionCheckEntityCurrentFrame*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->currentFrameIndex == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -358,12 +333,11 @@ void MageScriptActions::action_check_entity_direction(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionCheckEntityDirection;
    auto argStruct = (ActionCheckEntityDirection*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->renderFlags == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -384,12 +358,11 @@ void MageScriptActions::action_check_entity_glitched(uint8_t* args, MageScriptSt
       uint8_t paddingG;
    } ActionCheckEntityGlitched;
    auto argStruct = (ActionCheckEntityGlitched*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       if (entity->renderFlags & RENDER_FLAGS_IS_GLITCHED)
       {
          scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -408,12 +381,11 @@ void MageScriptActions::action_check_entity_hackable_state_a(uint8_t* args, Mage
       uint8_t paddingG;
    } ActionCheckEntityHackableStateA;
    auto argStruct = (ActionCheckEntityHackableStateA*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->hackableStateA == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -433,12 +405,11 @@ void MageScriptActions::action_check_entity_hackable_state_b(uint8_t* args, Mage
       uint8_t paddingG;
    } ActionCheckEntityHackableStateB;
    auto argStruct = (ActionCheckEntityHackableStateB*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->hackableStateB == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -458,12 +429,11 @@ void MageScriptActions::action_check_entity_hackable_state_c(uint8_t* args, Mage
       uint8_t paddingG;
    } ActionCheckEntityHackableStateC;
    auto argStruct = (ActionCheckEntityHackableStateC*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->hackableStateC == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -483,12 +453,11 @@ void MageScriptActions::action_check_entity_hackable_state_d(uint8_t* args, Mage
       uint8_t paddingG;
    } ActionCheckEntityHackableStateD;
    auto argStruct = (ActionCheckEntityHackableStateD*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       bool identical = (entity->hackableStateD == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -507,13 +476,12 @@ void MageScriptActions::action_check_entity_hackable_state_a_u2(uint8_t* args, M
       uint8_t expectedBool;
    } ActionCheckEntityHackableStateAU2;
    auto argStruct = (ActionCheckEntityHackableStateAU2*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateA)         ;
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateA);
       bool identical = (u2_value == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -532,13 +500,12 @@ void MageScriptActions::action_check_entity_hackable_state_c_u2(uint8_t* args, M
       uint8_t expectedBool;
    } ActionCheckEntityHackableStateCU2;
    auto argStruct = (ActionCheckEntityHackableStateCU2*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateC)         ;
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateC);
       bool identical = (u2_value == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -556,16 +523,14 @@ void MageScriptActions::action_check_entity_hackable_state_a_u4(uint8_t* args, M
       uint8_t entityId;
    } ActionCheckEntityHackableStateAU4;
    auto argStruct = (ActionCheckEntityHackableStateAU4*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->expectedValue = ROM_ENDIAN_U4_VALUE(argStruct->expectedValue);
+   argStruct->expectedValue = argStruct->expectedValue;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
-         *(uint32_t*)((uint8_t*)&entity->hackableStateA)
-      );
+         *(uint32_t*)((uint8_t*)&entity->hackableStateA));
       if (u4_value == argStruct->expectedValue)
       {
          scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -583,13 +548,12 @@ void MageScriptActions::action_check_entity_path(uint8_t* args, MageScriptState*
       uint8_t expectedBool;
    } ActionCheckEntityPath;
    auto argStruct = (ActionCheckEntityPath*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t pathId = *(uint16_t*)((uint8_t*)&entity->hackableStateA)         ;
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      uint16_t pathId = *(uint16_t*)((uint8_t*)&entity->hackableStateA);
       bool identical = (pathId == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -609,10 +573,10 @@ void MageScriptActions::action_check_save_flag(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionCheckSaveFlag;
    auto argStruct = (ActionCheckSaveFlag*)args;
-   //endianness conversion for arguments larger than 1 byte:
+   auto currentSave = ROM->GetCurrentSave();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = gameControl->currentSave.saveFlags[byteOffset];
+   uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
    bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
    if (bitValue == (bool)argStruct->expectedBoolValue)
@@ -632,12 +596,11 @@ void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, Mag
       uint8_t paddingG;
    } ActionCheckifEntityIsInGeometry;
    auto argStruct = (ActionCheckifEntityIsInGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = gameControl->getGeometry(argStruct->geometryId);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
       bool colliding = geometry->isPointInGeometry(entity->getRenderableData()->center);
       if (colliding == (bool)argStruct->expectedBoolValue)
@@ -659,10 +622,9 @@ void MageScriptActions::action_check_for_button_press(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionCheckForButtonPress;
    auto argStruct = (ActionCheckForButtonPress*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   auto button_activated = inputHandler->GetButtonActivatedState((KeyPress)argStruct->buttonId);
-   if (button_activated)
+   auto activeButton = inputHandler->GetButtonActivatedState();
+   if (activeButton.IsPressed((KeyPress)argStruct->buttonId))
    {
       scriptControl->jumpScriptId = argStruct->successScriptId;
    }
@@ -680,9 +642,8 @@ void MageScriptActions::action_check_for_button_state(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionCheckForButtonState;
    auto argStruct = (ActionCheckForButtonState*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   auto button_state = inputHandler->GetButtonState((KeyPress)argStruct->buttonId);
-   if (button_state == (bool)(argStruct->expectedBoolValue))
+   auto button = inputHandler->GetButtonState();
+   if ((bool)(argStruct->expectedBoolValue) == button.IsPressed((KeyPress)argStruct->buttonId))
    {
       scriptControl->jumpScriptId = argStruct->successScriptId;
    }
@@ -699,9 +660,9 @@ void MageScriptActions::action_check_warp_state(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionCheckWarpState;
    auto argStruct = (ActionCheckWarpState*)args;
-   //endianness conversion for arguments larger than 1 byte:
+   auto currentSave = ROM->GetCurrentSave();
 
-   bool doesWarpStateMatch = gameControl->currentSave.warpState == argStruct->stringId;
+   bool doesWarpStateMatch = currentSave->warpState == argStruct->stringId;
    if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
    {
       scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -720,7 +681,6 @@ void MageScriptActions::action_run_script(uint8_t* args, MageScriptState* resume
       uint8_t paddingG;
    } ActionRunScript;
    auto argStruct = (ActionRunScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
    scriptControl->jumpScriptId = argStruct->scriptId;
 }
@@ -735,8 +695,7 @@ void MageScriptActions::action_blocking_delay(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionBlockingDelay;
    auto argStruct = (ActionBlockingDelay*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
    //If there's already a total number of loops to next action set, a delay is currently in progress:
    if (resumeStateStruct->totalLoopsToNextAction != 0)
@@ -777,13 +736,11 @@ void MageScriptActions::action_non_blocking_delay(uint8_t* args, MageScriptState
       uint8_t paddingG;
    } ActionNonBlockingDelay;
    auto argStruct = (ActionNonBlockingDelay*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
    manageProgressOfAction(
       resumeStateStruct,
-      argStruct->duration
-   );
+      argStruct->duration);
 }
 
 void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -798,15 +755,14 @@ void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionSetEntityName;
    auto argStruct = (ActionSetEntityName*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
    //get the string from the stringId:
-   std::string romString = gameControl->getString(argStruct->stringId, scriptControl->currentEntityId);
+   std::string romString = stringLoader->getString(argStruct->stringId, scriptControl->currentEntityId);
    //Get the entity:
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       //simple loop to set the name:
       for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
@@ -836,12 +792,11 @@ void MageScriptActions::action_set_entity_x(uint8_t* args, MageScriptState* resu
       uint8_t paddingG;
    } ActionSetEntityX;
    auto argStruct = (ActionSetEntityX*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->location.x = argStruct->newValue;
    }
 }
@@ -858,12 +813,11 @@ void MageScriptActions::action_set_entity_y(uint8_t* args, MageScriptState* resu
       uint8_t paddingG;
    } ActionSetEntityY;
    auto argStruct = (ActionSetEntityY*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->location.y = argStruct->newValue;
    }
 }
@@ -880,16 +834,8 @@ void MageScriptActions::action_set_entity_interact_script(uint8_t* args, MageScr
       uint8_t paddingG;
    } ActionSetEntityInteractScript;
    auto argStruct = (ActionSetEntityInteractScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
-
-   scriptControl->setEntityScript(
-      argStruct->scriptId,
-      GetUsefulEntityIndexFromActionEntityId(
-         argStruct->entityId,
-         scriptControl->currentEntityId
-      ),
-      ON_INTERACT
-   );
+   auto entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   scriptControl->setEntityScript(argStruct->scriptId, entityIndex, ON_INTERACT);
 }
 
 void MageScriptActions::action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -904,14 +850,9 @@ void MageScriptActions::action_set_entity_tick_script(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionSetEntityTickScript;
    auto argStruct = (ActionSetEntityTickScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
-   scriptControl->setEntityScript(
-      argStruct->scriptId,
-      entityIndex,
-      ON_TICK
-   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   scriptControl->setEntityScript(argStruct->scriptId, entityIndex, ON_TICK);
 }
 
 void MageScriptActions::action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -926,12 +867,11 @@ void MageScriptActions::action_set_entity_type(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionSetEntityType;
    auto argStruct = (ActionSetEntityType*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->primaryId = argStruct->entityTypeId;
       entity->primaryIdType = ENTITY_TYPE;
    }
@@ -949,12 +889,11 @@ void MageScriptActions::action_set_entity_primary_id(uint8_t* args, MageScriptSt
       uint8_t paddingG;
    } ActionSetEntityPrimaryId;
    auto argStruct = (ActionSetEntityPrimaryId*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->primaryId = argStruct->newValue;
    }
 }
@@ -971,12 +910,11 @@ void MageScriptActions::action_set_entity_secondary_id(uint8_t* args, MageScript
       uint8_t paddingG;
    } ActionSetEntitySecondaryId;
    auto argStruct = (ActionSetEntitySecondaryId*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->secondaryId = argStruct->newValue;
    }
 }
@@ -995,10 +933,10 @@ void MageScriptActions::action_set_entity_primary_id_type(uint8_t* args, MageScr
    } ActionSetEntityPrimaryIdType;
    auto argStruct = (ActionSetEntityPrimaryIdType*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
    }
 }
@@ -1017,10 +955,10 @@ void MageScriptActions::action_set_entity_current_animation(uint8_t* args, MageS
    } ActionSetEntityCurrentAnimation;
    auto argStruct = (ActionSetEntityCurrentAnimation*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
       entity->currentAnimation = argStruct->newValue;
       entity->currentFrameIndex = 0;
@@ -1043,10 +981,10 @@ void MageScriptActions::action_set_entity_current_frame(uint8_t* args, MageScrip
    } ActionSetEntityCurrentFrame;
    auto argStruct = (ActionSetEntityCurrentFrame*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData()->currentFrameTicks = 0;
       entity->currentFrameIndex = argStruct->newValue;
       entity->updateRenderableData();
@@ -1067,11 +1005,11 @@ void MageScriptActions::action_set_entity_direction(uint8_t* args, MageScriptSta
    } ActionSetEntityDirection;
    auto argStruct = (ActionSetEntityDirection*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(argStruct->direction, entity->renderFlags);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      entity->renderFlags.updateDirectionAndPreserveFlags(argStruct->direction);
       entity->updateRenderableData();
    }
 }
@@ -1090,14 +1028,11 @@ void MageScriptActions::action_set_entity_direction_relative(uint8_t* args, Mage
    } ActionSetEntityDirectionRelative;
    auto argStruct = (ActionSetEntityDirectionRelative*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(
-         (MageEntityAnimationDirection)((entity->renderFlags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS),
-         entity->renderFlags
-      );
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      entity->renderFlags.updateDirectionAndPreserveFlags((MageEntityAnimationDirection)((entity->renderFlags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS));
       entity->updateRenderableData();
    }
 }
@@ -1116,21 +1051,18 @@ void MageScriptActions::action_set_entity_direction_target_entity(uint8_t* args,
    } ActionSetEntityDirectionTargetEntity;
    auto argStruct = (ActionSetEntityDirectionTargetEntity*)args;
 
-   int16_t targetEntityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->targetEntityId, scriptControl->currentEntityId   );
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t targetEntityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->targetEntityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (
       entityIndex != NO_PLAYER
       && targetEntityIndex != NO_PLAYER
       )
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      MageEntity* targetEntity = gameControl->getEntityByMapLocalId(targetEntityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      MageEntity* targetEntity = mapControl->getEntityByMapLocalId(targetEntityIndex);
       auto renderable = entity->getRenderableData();
       auto targetRenderable = targetEntity->getRenderableData();
-      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(
-         renderable->center.getRelativeDirection(targetRenderable->center),
-         entity->renderFlags
-      );
+      entity->renderFlags.updateDirectionAndPreserveFlags(renderable->center.getRelativeDirection(targetRenderable->center));
       entity->updateRenderableData();
    }
 }
@@ -1147,19 +1079,14 @@ void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* arg
       uint8_t paddingG;
    } ActionSetEntityDirectionTargetGeometry;
    auto argStruct = (ActionSetEntityDirectionTargetGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      auto renderable = entity->getRenderableData();
-      auto geometry = gameControl->getGeometry(argStruct->targetGeometryId);
-
-      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(
-         renderable->center.getRelativeDirection(geometry->GetPoint(0)),
-         entity->renderFlags
-      );
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->targetGeometryId);
+      auto relativeDirection = entity->getRenderableData()->center.getRelativeDirection(geometry->GetPoint(0));
+      entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
       entity->updateRenderableData();
    }
 }
@@ -1178,14 +1105,13 @@ void MageScriptActions::action_set_entity_glitched(uint8_t* args, MageScriptStat
    } ActionSetEntityGlitched;
    auto argStruct = (ActionSetEntityGlitched*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->renderFlags = (MageEntityAnimationDirection)(
          (entity->renderFlags & RENDER_FLAGS_IS_GLITCHED_MASK)
-         | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED)
-         );
+         | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED));
       entity->updateRenderableData();
    }
 }
@@ -1204,10 +1130,10 @@ void MageScriptActions::action_set_entity_hackable_state_a(uint8_t* args, MageSc
    } ActionSetEntityHackableStateA;
    auto argStruct = (ActionSetEntityHackableStateA*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->hackableStateA = argStruct->newValue;
    }
 }
@@ -1226,10 +1152,10 @@ void MageScriptActions::action_set_entity_hackable_state_b(uint8_t* args, MageSc
    } ActionSetEntityHackableStateB;
    auto argStruct = (ActionSetEntityHackableStateB*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->hackableStateB = argStruct->newValue;
    }
 }
@@ -1248,10 +1174,10 @@ void MageScriptActions::action_set_entity_hackable_state_c(uint8_t* args, MageSc
    } ActionSetEntityHackableStateC;
    auto argStruct = (ActionSetEntityHackableStateC*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->hackableStateC = argStruct->newValue;
    }
 }
@@ -1270,10 +1196,10 @@ void MageScriptActions::action_set_entity_hackable_state_d(uint8_t* args, MageSc
    } ActionSetEntityHackableStateD;
    auto argStruct = (ActionSetEntityHackableStateD*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       entity->hackableStateD = argStruct->newValue;
    }
 }
@@ -1290,12 +1216,11 @@ void MageScriptActions::action_set_entity_hackable_state_a_u2(uint8_t* args, Mag
       uint8_t paddingG;
    } ActionSetEntityHackableStateAU2;
    auto argStruct = (ActionSetEntityHackableStateAU2*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
 }
@@ -1312,12 +1237,11 @@ void MageScriptActions::action_set_entity_hackable_state_c_u2(uint8_t* args, Mag
       uint8_t paddingG;
    } ActionSetEntityHackableStateCU2;
    auto argStruct = (ActionSetEntityHackableStateCU2*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateC) = argStruct->newValue;
    }
 }
@@ -1332,13 +1256,12 @@ void MageScriptActions::action_set_entity_hackable_state_a_u4(uint8_t* args, Mag
       uint8_t paddingG;
    } ActionSetEntityHackableStateAU4;
    auto argStruct = (ActionSetEntityHackableStateAU4*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->newValue = ROM_ENDIAN_U4_VALUE(argStruct->newValue);
+   argStruct->newValue = argStruct->newValue;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       *(uint32_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
 }
@@ -1355,12 +1278,11 @@ void MageScriptActions::action_set_entity_path(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionSetEntityPath;
    auto argStruct = (ActionSetEntityPath*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
 }
@@ -1377,9 +1299,10 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
       uint8_t paddingG;
    } ActionSetSaveFlag;
    auto argStruct = (ActionSetSaveFlag*)args;
+   auto currentSave = ROM->GetCurrentSave();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = gameControl->currentSave.saveFlags[byteOffset];
+   uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
 
    if (argStruct->newBoolValue)
    {
@@ -1390,7 +1313,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
       // tilde operator inverts all the bits on a byte; Bitwise NOT
       currentByteValue &= ~(0x01u << bitOffset);
    }
-   gameControl->currentSave.saveFlags[byteOffset] = currentByteValue;
+   currentSave->saveFlags[byteOffset] = currentByteValue;
 }
 
 void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1406,7 +1329,7 @@ void MageScriptActions::action_set_player_control(uint8_t* args, MageScriptState
       uint8_t paddingG;
    } ActionSetPlayerControl;
    auto argStruct = (ActionSetPlayerControl*)args;
-   gameControl->playerHasControl = argStruct->playerHasControl;
+   //TODO FIXME: playerHasControl = argStruct->playerHasControl;
 }
 
 void MageScriptActions::action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1421,13 +1344,8 @@ void MageScriptActions::action_set_map_tick_script(uint8_t* args, MageScriptStat
       uint8_t paddingG;
    } ActionSetMapTickScript;
    auto argStruct = (ActionSetMapTickScript*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   scriptControl->setEntityScript(
-      argStruct->scriptId,
-      MAGE_MAP_ENTITY,
-      ON_TICK
-   );
+   scriptControl->setEntityScript(argStruct->scriptId, MAGE_MAP_ENTITY, ON_TICK);
 }
 
 void MageScriptActions::action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1442,7 +1360,6 @@ void MageScriptActions::action_set_hex_cursor_location(uint8_t* args, MageScript
       uint8_t paddingG;
    } ActionSetHexCursorLocation;
    auto argStruct = (ActionSetHexCursorLocation*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
    hexEditor->setHexCursorLocation(argStruct->byteAddress);
 }
@@ -1459,9 +1376,9 @@ void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionSetWarpState;
    auto argStruct = (ActionSetWarpState*)args;
-   //endianness conversion for arguments larger than 1 byte:
+   auto currentSave = ROM->GetCurrentSave();
 
-   gameControl->currentSave.warpState = argStruct->stringId;
+   currentSave->warpState = argStruct->stringId;
 }
 
 void MageScriptActions::action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1517,14 +1434,14 @@ void MageScriptActions::action_set_hex_editor_control(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionSetHexEditorControl;
    auto argStruct = (ActionSetHexEditorControl*)args;
-   gameControl->playerHasHexEditorControl = argStruct->playerHasHexEditorControl;
+   hexEditor->SetPlayerHasClipboardControl(argStruct->playerHasHexEditorControl);
 }
 
 void MageScriptActions::action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct)
 {
    typedef struct
    {
-      uint8_t playerHasHexEditorControlClipboard;
+      uint8_t playerHasClipboardControl;
       uint8_t paddingB;
       uint8_t paddingC;
       uint8_t paddingD;
@@ -1533,7 +1450,7 @@ void MageScriptActions::action_set_hex_editor_control_clipboard(uint8_t* args, M
       uint8_t paddingG;
    } ActionSetHexEditorControlClipboard;
    auto argStruct = (ActionSetHexEditorControlClipboard*)args;
-   gameControl->playerHasHexEditorControlClipboard = argStruct->playerHasHexEditorControlClipboard;
+   hexEditor->SetPlayerHasClipboardControl(argStruct->playerHasClipboardControl);
 }
 
 void MageScriptActions::action_load_map(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1548,8 +1465,6 @@ void MageScriptActions::action_load_map(uint8_t* args, MageScriptState* resumeSt
       uint8_t paddingG;
    } ActionLoadMap;
    auto argStruct = (ActionLoadMap*)args;
-   //endianness conversion for arguments larger than 1 byte:
-
    scriptControl->mapLoadId = argStruct->mapId;
 }
 
@@ -1565,15 +1480,14 @@ void MageScriptActions::action_show_dialog(uint8_t* args, MageScriptState* resum
       uint8_t paddingG;
    } ActionShowDialog;
    auto argStruct = (ActionShowDialog*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameControl->dialogControl->load(argStruct->dialogId, scriptControl->currentEntityId);
+      dialogControl->load(argStruct->dialogId, scriptControl->currentEntityId);
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameControl->dialogControl->isOpen())
+   else if (!dialogControl->isOpen())
    {
       // will be 0 any time there is no response; no jump
       resumeStateStruct->totalLoopsToNextAction = 0;
@@ -1594,10 +1508,10 @@ void MageScriptActions::action_play_entity_animation(uint8_t* args, MageScriptSt
    } ActionPlayEntityAnimation;
    auto argStruct = (ActionPlayEntityAnimation*)args;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
@@ -1640,14 +1554,13 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
       uint8_t paddingG;
    } ActionTeleportEntityToGeometry;
    auto argStruct = (ActionTeleportEntityToGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = gameControl->getGeometry(argStruct->geometryId);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
       auto offsetPoint = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
       entity->SetLocation(offsetPoint);
@@ -1664,24 +1577,20 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
       uint8_t entityId;
    } ActionWalkEntityToGeometry;
    auto argStruct = (ActionWalkEntityToGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   argStruct->duration = argStruct->duration;
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = gameControl->getGeometry(argStruct->geometryId);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
          //this is the points we're interpolating between
          resumeStateStruct->pointA = entity->location;
          resumeStateStruct->pointB = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
-         entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(
-            resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB),
-            entity->renderFlags
-         );
+         entity->renderFlags.updateDirectionAndPreserveFlags(resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB));
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
@@ -1709,14 +1618,13 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
       uint8_t entityId;
    } ActionWalkEntityAlongGeometry;
    auto argStruct = (ActionWalkEntityAlongGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = gameControl->getGeometry(argStruct->geometryId);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1763,8 +1671,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
          setResumeStatePointsAndEntityDirection(
             resumeStateStruct,
             entity,
-            geometry
-         );
+            geometry);
       }
 
       Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
@@ -1788,15 +1695,14 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
       uint8_t entityId;
    } ActionLoopEntityAlongGeometry;
    auto argStruct = (ActionLoopEntityAlongGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = gameControl->getGeometry(argStruct->geometryId);
+      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1870,8 +1776,8 @@ void MageScriptActions::action_set_camera_to_follow_entity(uint8_t* args, MageSc
       uint8_t paddingG;
    } ActionSetCameraToFollowEntity;
    auto argStruct = (ActionSetCameraToFollowEntity*)args;
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
-   gameControl->camera.followEntityId = entityIndex;
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
+   camera.followEntityId = entityIndex;
 }
 
 void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1886,14 +1792,13 @@ void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageSc
       uint8_t paddingG;
    } ActionTeleportCameraToGeometry;
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   const auto entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
-   auto geometry = gameControl->getGeometry(argStruct->geometryId);
+   const auto entity = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId);
+   auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
-   gameControl->camera.followEntityId = NO_PLAYER;
+   camera.followEntityId = NO_PLAYER;
    const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
-   gameControl->camera.position = geometry->GetPoint(0) - midScreen;
+   camera.position = geometry->GetPoint(0) - midScreen;
 }
 
 void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1906,32 +1811,31 @@ void MageScriptActions::action_pan_camera_to_entity(uint8_t* args, MageScriptSta
       uint8_t paddingG;
    } ActionPanCameraToEntity;
    auto argStruct = (ActionPanCameraToEntity*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
 
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
-         gameControl->camera.followEntityId = NO_PLAYER;
+         camera.followEntityId = NO_PLAYER;
          //this is the points we're interpolating between
-         resumeStateStruct->pointA = Point{ gameControl->camera.position.x, gameControl->camera.position.y };
+         resumeStateStruct->pointA = Point{ camera.position.x, camera.position.y };
       }
       float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
       resumeStateStruct->pointB = { renderable->center.x - HALF_WIDTH, renderable->center.y - HALF_HEIGHT };
       Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
-      gameControl->camera.position.x = betweenPoint.x;
-      gameControl->camera.position.y = betweenPoint.y;
+      camera.position.x = betweenPoint.x;
+      camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
-         gameControl->camera.followEntityId = entityIndex;
+         camera.followEntityId = entityIndex;
       }
    }
 }
@@ -1945,20 +1849,19 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
       uint8_t paddingG;
    } ActionPanCameraToGeometry;
    auto argStruct = (ActionPanCameraToGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 
-   const auto entity = gameControl->getEntityByMapLocalId(scriptControl->currentEntityId);
-   auto geometry = gameControl->getGeometry(argStruct->geometryId);
+   const auto entity = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId);
+   auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
 
 
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      gameControl->camera.followEntityId = NO_PLAYER;
+      camera.followEntityId = NO_PLAYER;
       //this is the points we're interpolating between
       resumeStateStruct->pointA = {
-         gameControl->camera.position.x,
-         gameControl->camera.position.y,
+         camera.position.x,
+         camera.position.y,
       };
       resumeStateStruct->pointB = {
          geometry->GetPoint(0).x - HALF_WIDTH,
@@ -1968,8 +1871,8 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
    float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
 
    Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
-   gameControl->camera.position.x = betweenPoint.x;
-   gameControl->camera.position.y = betweenPoint.y;
+   camera.position.x = betweenPoint.x;
+   camera.position.y = betweenPoint.y;
 }
 
 void MageScriptActions::action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1981,8 +1884,7 @@ void MageScriptActions::action_pan_camera_along_geometry(uint8_t* args, MageScri
       uint8_t paddingG;
    } ActionPanCameraAlongGeometry;
    auto argStruct = (ActionPanCameraAlongGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 }
 
 void MageScriptActions::action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -1994,8 +1896,7 @@ void MageScriptActions::action_loop_camera_along_geometry(uint8_t* args, MageScr
       uint8_t paddingG;
    } ActionLoopCameraAlongGeometry;
    auto argStruct = (ActionLoopCameraAlongGeometry*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
 }
 
 void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2009,30 +1910,27 @@ void MageScriptActions::action_set_screen_shake(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionSetScreenShake;
    auto argStruct = (ActionSetScreenShake*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
    float progress = manageProgressOfAction(
       resumeStateStruct,
-      argStruct->duration
-   );
+      argStruct->duration);
 
    if (progress < 1.0)
    {
-      gameControl->camera.shaking = true;
-      gameControl->camera.shakeAmplitude = argStruct->amplitude;
-      gameControl->camera.shakePhase = (
+      camera.shaking = true;
+      camera.shakeAmplitude = argStruct->amplitude;
+      camera.shakePhase = (
          progress /
          (
             (float)argStruct->frequency
             / 1000.0f
-            )
-         );
+            ));
    }
    else
    {
-      gameControl->camera.shaking = false;
-      gameControl->camera.shakeAmplitude = 0;
-      gameControl->camera.shakePhase = 0;
+      camera.shaking = false;
+      camera.shakeAmplitude = 0;
+      camera.shakePhase = 0;
    }
 }
 void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2044,8 +1942,7 @@ void MageScriptActions::action_screen_fade_out(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionScreenFadeOut;
    auto argStruct = (ActionScreenFadeOut*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
    argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
    float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
@@ -2062,13 +1959,11 @@ void MageScriptActions::action_screen_fade_in(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionScreenFadeIn;
    auto argStruct = (ActionScreenFadeIn*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   argStruct->duration = ROM_ENDIAN_U4_VALUE(argStruct->duration);
+   argStruct->duration = argStruct->duration;
    argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
    float progress = manageProgressOfAction(
       resumeStateStruct,
-      argStruct->duration
-   );
+      argStruct->duration);
 
    frameBuffer->SetFade(argStruct->color, 1.0f - progress);
 }
@@ -2085,8 +1980,8 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionMutateVariable;
    auto argStruct = (ActionMutateVariable*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   uint16_t* currentValue = &gameControl->currentSave.scriptVariables[argStruct->variableId];
+   auto currentSave = ROM->GetCurrentSave();
+   uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
    // I wanted to log some stats on how well our random function worked
    // on desktop and hardware after the new random seed changes.
@@ -2104,7 +1999,7 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
    //			argStruct->operation,
    //			&testVar,
    //			argStruct->value
-   //		);
+   //);
    //		values[testVar] += 1;
    //	}
    //	for (int i = 0; i < range; ++i) {
@@ -2112,14 +2007,13 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
    //			"%05d: %05d",
    //			i,
    //			values[i]
-   //		);
+   //);
    //	}
    //}
    mutate(
       argStruct->operation,
       currentValue,
-      argStruct->value
-   );
+      argStruct->value);
 }
 
 void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct)
@@ -2135,8 +2029,9 @@ void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionMutateVariables;
    auto argStruct = (ActionMutateVariables*)args;
-   uint16_t* currentValue = &gameControl->currentSave.scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = gameControl->currentSave.scriptVariables[argStruct->sourceId];
+   auto currentSave = ROM->GetCurrentSave();
+   uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
+   uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
 
    mutate(argStruct->operation, currentValue, sourceValue);
 }
@@ -2147,32 +2042,32 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
    {
       uint8_t variableId;
       uint8_t entityId;
-      MageEntityField field;
+      MageEntityFieldOffset field;
       uint8_t inbound;
       uint8_t paddingE;
       uint8_t paddingF;
       uint8_t paddingG;
    } ActionCopyVariable;
    auto argStruct = (ActionCopyVariable*)args;
-   //endianness conversion for arguments larger than 1 byte:
-   uint16_t* currentValue = &gameControl->currentSave.scriptVariables[argStruct->variableId];
+   auto currentSave = ROM->GetCurrentSave();
+   auto currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
-   int16_t entityIndex = GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId   );
+   int16_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      const auto entity = gameControl->getEntityByMapLocalId(entityIndex);
-      uint16_t* variableValue = &gameControl->currentSave.scriptVariables[argStruct->variableId];
-      uint8_t* fieldValue = ((uint8_t*)entity) + argStruct->field;
+      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto variableValue = &currentSave->scriptVariables[argStruct->variableId];
+      uint8_t* fieldValue = ((uint8_t*)entity) + (uint8_t)argStruct->field;
 
 
       switch (argStruct->field)
       {
-      case x:
-      case y:
-      case onInteractScriptId:
-      case onTickScriptId:
-      case primaryId:
-      case secondaryId:
+      case MageEntityFieldOffset::x:
+      case MageEntityFieldOffset::y:
+      case MageEntityFieldOffset::onInteractScriptId:
+      case MageEntityFieldOffset::onTickScriptId:
+      case MageEntityFieldOffset::primaryId:
+      case MageEntityFieldOffset::secondaryId:
          if (argStruct->inbound)
          {
             *variableValue = (uint16_t)*fieldValue;
@@ -2183,14 +2078,14 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
             *destination = *variableValue;
          }
          break;
-      case primaryIdType:
-      case currentAnimation:
-      case currentFrame:
-      case direction:
-      case hackableStateA:
-      case hackableStateB:
-      case hackableStateC:
-      case hackableStateD:
+      case MageEntityFieldOffset::primaryIdType:
+      case MageEntityFieldOffset::currentAnimation:
+      case MageEntityFieldOffset::currentFrame:
+      case MageEntityFieldOffset::direction:
+      case MageEntityFieldOffset::hackableStateA:
+      case MageEntityFieldOffset::hackableStateB:
+      case MageEntityFieldOffset::hackableStateC:
+      case MageEntityFieldOffset::hackableStateD:
          if (argStruct->inbound)
          {
             *variableValue = (uint8_t)*fieldValue;
@@ -2202,8 +2097,7 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
          break;
       default: debug_print(
          "copyVariable received an invalid field: %d",
-         argStruct->field
-      );
+         argStruct->field);
       }
    }
 }
@@ -2219,14 +2113,9 @@ void MageScriptActions::action_check_variable(uint8_t* args, MageScriptState* re
       uint8_t expectedBool;
    } ActionCheckVariable;
    auto argStruct = (ActionCheckVariable*)args;
-   //endianness conversion for arguments larger than 1 byte:
-
-   uint16_t variableValue = gameControl->currentSave.scriptVariables[argStruct->variableId];
-   bool comparison = compare(
-      argStruct->comparison,
-      variableValue,
-      argStruct->value
-   );
+   auto currentSave = ROM->GetCurrentSave();
+   uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
+   bool comparison = compare(argStruct->comparison, variableValue, argStruct->value);
    if (comparison == (bool)argStruct->expectedBool)
    {
       scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -2245,15 +2134,14 @@ void MageScriptActions::action_check_variables(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionCheckVariables;
    auto argStruct = (ActionCheckVariables*)args;
-   //endianness conversion for arguments larger than 1 byte:
 
-   uint16_t variableValue = gameControl->currentSave.scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = gameControl->currentSave.scriptVariables[argStruct->sourceId];
+   auto currentSave = ROM->GetCurrentSave();
+   uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
+   uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
    bool comparison = compare(
       argStruct->comparison,
       variableValue,
-      sourceValue
-   );
+      sourceValue);
    if (comparison == (bool)argStruct->expectedBool)
    {
       scriptControl->jumpScriptId = argStruct->successScriptId;
@@ -2273,6 +2161,7 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
       uint8_t paddingG;
    } ActionSlotSave;
    auto argStruct = (ActionSlotSave*)args;
+   auto currentSave = ROM->GetCurrentSave();
    // In the case that someone hacks an on_tick script to save, we don't want it
    // just burning through 8 ROM writes per second, our chip would be fried in a
    // matter on minutes. So how do we counter? Throw up a "Save Completed" dialog
@@ -2283,12 +2172,19 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
    // the ROM chip's 10000 write cycles.
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      gameControl->saveGameSlotSave();
+      // do rom writes
+      auto playerName = mapControl->getPlayerEntity()->name;
+      auto currentSave = ROM->GetCurrentSave();
+      memcpy((void*)currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
+      //TODO FIXME: 
+      // ROM->WriteSaveSlot(currentSaveIndex, sizeof(MageSaveGame), currentSave.get());
+      // readSaveFromRomIntoRam(currentSaveIndex);
+
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameControl->dialogControl->showSaveMessageDialog("Save complete.");
+      dialogControl->StartModalDialog("Save complete.");
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameControl->dialogControl->isOpen())
+   else if (!dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2307,13 +2203,17 @@ void MageScriptActions::action_slot_load(uint8_t* args, MageScriptState* resumeS
       uint8_t paddingG;
    } ActionSlotLoad;
    auto argStruct = (ActionSlotLoad*)args;
+   auto currentSave = ROM->GetCurrentSave();
    //delaying until next tick allows for displaying of an error message on read before resuming
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      gameControl->saveGameSlotLoad(argStruct->slotIndex);
+      //TODO FIX: SetSaveGameSlotIndex(argStruct->slotIndex);
+
+      readSaveFromRomIntoRam(argStruct->slotIndex);
+      mapControl->Load(currentSave->currentMapId);
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameControl->dialogControl->isOpen())
+   else if (!dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2342,14 +2242,21 @@ void MageScriptActions::action_slot_erase(uint8_t* args, MageScriptState* resume
    // the ROM chip's 10000 write cycles.
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      gameControl->saveGameSlotErase(argStruct->slotIndex);
+      // TODO FIXME:
+      // setCurrentSaveToFreshState();
+
+      // do rom writes
+      //copyNameToAndFromPlayerAndSave(true);
+      auto playerName = mapControl->getPlayerEntity()->name;
+      //memcpy(currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
+      //ROM->WriteSaveSlot(currentSaveIndex, sizeof(MageSaveGame), &currentSave);
+      readSaveFromRomIntoRam(argStruct->slotIndex);
+
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      gameControl->dialogControl->showSaveMessageDialog(
-         std::string("Save erased.")
-      );
+      dialogControl->StartModalDialog("Save erased.");
       resumeStateStruct->totalLoopsToNextAction = 1;
    }
-   else if (!gameControl->dialogControl->isOpen())
+   else if (!dialogControl->isOpen())
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
    }
@@ -2548,8 +2455,7 @@ float MageScriptActions::getProgressOfAction(
 {
    return 1.0f - (
       (float)resumeStateStruct->loopsToNextAction
-      / (float)resumeStateStruct->totalLoopsToNextAction
-      );
+      / (float)resumeStateStruct->totalLoopsToNextAction);
 }
 
 float MageScriptActions::manageProgressOfAction(
@@ -2566,8 +2472,7 @@ float MageScriptActions::manageProgressOfAction(
    }
    float result = 1.0f - (
       (float)resumeStateStruct->loopsToNextAction
-      / (float)resumeStateStruct->totalLoopsToNextAction
-      );
+      / (float)resumeStateStruct->totalLoopsToNextAction);
    if (result >= 1.0f)
    {
       resumeStateStruct->totalLoopsToNextAction = 0;
@@ -2588,8 +2493,7 @@ void MageScriptActions::initializeEntityGeometryPath(
    setResumeStatePointsAndEntityDirection(
       resumeStateStruct,
       entity,
-      geometry
-   );
+      geometry);
 }
 
 void MageScriptActions::mutate(MageMutateOperation operation, uint16_t* destination, uint16_t value)
@@ -2598,17 +2502,16 @@ void MageScriptActions::mutate(MageMutateOperation operation, uint16_t* destinat
    uint16_t safeValue = value == 0 ? 1 : value;
    switch (operation)
    {
-   case SET: *destination = value; break;
-   case ADD: *destination += value; break;
-   case SUB: *destination -= value; break;
-   case DIV: *destination /= safeValue; break;
-   case MUL: *destination *= value; break;
-   case MOD: *destination %= safeValue; break;
-   case RNG: *destination = rand() % safeValue; break;
+   case MageMutateOperation::SET: *destination = value; break;
+   case MageMutateOperation::ADD: *destination += value; break;
+   case MageMutateOperation::SUB: *destination -= value; break;
+   case MageMutateOperation::DIV: *destination /= safeValue; break;
+   case MageMutateOperation::MUL: *destination *= value; break;
+   case MageMutateOperation::MOD: *destination %= safeValue; break;
+   case MageMutateOperation::RNG: *destination = rand() % safeValue; break;
    default: debug_print(
       "mutateVariable received an invalid operation: %d",
-      operation
-   );
+      operation);
    }
 }
 

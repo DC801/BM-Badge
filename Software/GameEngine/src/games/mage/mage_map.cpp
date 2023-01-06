@@ -1,13 +1,19 @@
 #include "mage_map.h"
-#include "EngineROM.h"
 #include "EnginePanic.h"
 #include "shim_err.h"
 #include <algorithm>
 #include "mage.h"
 
-void MageMap::Load(uint16_t index)
+void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebugOn)
 {
-   auto address = mapHeader.offset(index);
+   auto map = ROM->Get<MapData>(index);
+   currentMap.reset(map);
+}
+
+MapData::MapData(uint32_t& address, bool isEntityDebugOn)
+{
+   //ROM->Get<Map>(index);
+   //auto address = mapHeader.offset(index);
    auto layerCount = uint8_t{ 0 };
    auto entityCount = uint16_t{ 0 };
    auto geometryCount = uint16_t{ 0 };
@@ -56,55 +62,49 @@ void MageMap::Load(uint16_t index)
 
    for (uint8_t i = 0; i < entityCount; i++)
    {
-      auto offset = entityHeader.offset(getGlobalEntityId(i));
-      //fill in entity data from ROM:
-      auto entity = MageEntity{ ROM, offset, gameControl };
-      if (isEntityDebugOn || !entity.isDebug())
+      auto entity = ROM->Get<MageEntity>(i);
+
+      if (isEntityDebugOn || !entity->isDebug())
       {
-         filteredMapLocalEntityIds[i] = filteredEntityCountOnThisMap;
-         mapLocalEntityIds[filteredEntityCountOnThisMap] = i;
-         entities.push_back(std::move(entity));
-         filteredEntityCountOnThisMap++;
+         entities.push_back(*entity);
       }
    }
 }
 
-void MageMap::DrawEntities(MageGameEngine* gameEngine)
+void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn)
 {
-   int32_t cameraX = gameControl->camera.adjustedCameraPosition.x;
-   int32_t cameraY = gameControl->camera.adjustedCameraPosition.y;
+   int32_t cameraX = cameraPosition.x;
+   int32_t cameraY = cameraPosition.y;
    //first sort entities by their y values:
    auto sortByY = [](const MageEntity& entity1, const MageEntity& entity2) { return entity1.location.y < entity2.location.y; };
-   std::sort(entities.begin(), entities.end(), sortByY);
+   std::sort(currentMap->entities.begin(), currentMap->entities.end(), sortByY);
 
-   uint8_t filteredPlayerEntityIndex = getFilteredEntityId(playerEntityIndex);
+   uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
 
    //now that we've got a sorted array with the lowest y values first,
    //iterate through it and draw the entities one by one:
-   for (const auto& entity : entities)
+   for (const auto& entity : currentMap->entities)
    {
       auto renderableData = entity.getRenderableData();
-      gameControl->tileManager->DrawTile(renderableData, x, y);
+      tileManager->DrawTile(renderableData, entity.location.x, entity.location.y);
 
-      if (gameControl->isCollisionDebugOn)
+      if (isCollisionDebugOn)
       {
-         auto tileOrigin = Point{ entity.location.x - cameraX, entity.location.y - cameraY - tileHeight };
-         auto hitboxOrigin = renderableData->hitBox.origin - gameControl->camera.adjustedCameraPosition;
+         auto tileOrigin = Point{ entity.location.x - cameraX, entity.location.y - cameraY - currentMap->tileHeight };
+         auto hitboxOrigin = renderableData->hitBox.origin - cameraPosition;
 
-         frameBuffer->drawRect(tileOrigin, tileWidth, tileHeight, COLOR_LIGHTGREY);
-         frameBuffer->drawRect(hitboxOrigin, renderableData->hitBox.w, renderableData->hitBox.h, 
-            renderableData->isInteracting ? COLOR_RED : COLOR_GREEN );
-         frameBuffer->drawPoint(renderableData->center - gameControl->camera.adjustedCameraPosition, 5, COLOR_BLUE);
+         frameBuffer->drawRect(tileOrigin, currentMap->tileWidth, currentMap->tileHeight, COLOR_LIGHTGREY);
+         frameBuffer->drawRect(hitboxOrigin, renderableData->hitBox.w, renderableData->hitBox.h, renderableData->isInteracting ? COLOR_RED : COLOR_GREEN);
+         frameBuffer->drawPoint(renderableData->center - cameraPosition, 5, COLOR_BLUE);
          if (getPlayerEntityIndex() == filteredPlayerEntityIndex)
          {
-            auto interactBoxOrigin = renderableData->interactBox.origin - gameControl->camera.adjustedCameraPosition;
-            frameBuffer->drawRect(interactBoxOrigin, renderableData->interactBox.w, renderableData->interactBox.h, 
-               renderableData->isInteracting ? COLOR_BLUE : COLOR_YELLOW);
+            auto interactBoxOrigin = renderableData->interactBox.origin - cameraPosition;
+            frameBuffer->drawRect(interactBoxOrigin, renderableData->interactBox.w, renderableData->interactBox.h, renderableData->isInteracting ? COLOR_BLUE : COLOR_YELLOW);
          }
       }
    }
 }
-void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera& camera, bool isCollisionDebugOn)
+void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn)
 {
    const auto layerAddress = LayerOffset(layer);
    if (layerAddress == 0)
@@ -112,16 +112,16 @@ void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera
       return;
    }
 
-   Point playerPoint = entities[getMapLocalEntityId(playerEntityIndex)]
+   Point playerPoint = currentMap->entities[getMapLocalEntityId(currentMap->playerEntityIndex)]
       .getRenderableData()->center;
 
-   for (auto i = 0; i < cols * rows; i++)
+   for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
    {
-      auto tileOrigin = Point{ tileWidth * (i % cols), tileHeight * (i / cols) };
-      auto tileDrawPoint = tileOrigin - camera.adjustedCameraPosition;
+      auto tileOrigin = Point{ currentMap->tileWidth * (i % currentMap->cols), currentMap->tileHeight * (i / currentMap->cols) };
+      auto tileDrawPoint = tileOrigin - cameraPosition;
 
-      if (tileDrawPoint.x + tileWidth < 0 || tileDrawPoint.x >= WIDTH
-         || tileDrawPoint.y + tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
+      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
+         || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
       {
          continue;
       }
@@ -133,26 +133,24 @@ void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera
       if (currentTile->tileId == 0) { continue; }
 
       //currentTile.tileId -= 1;
-      auto tileset = gameControl->tileManager->GetTileset(currentTile->tilesetId);
-      gameControl->tileManager->DrawTile(currentTile, x, y);
-      
+      auto tileset = ROM->Get<MageTileset>(currentTile->tilesetId);
+      tileManager->DrawTile(tileset, currentTile, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
+
       if (isCollisionDebugOn)
       {
-         auto geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId-1);
+         auto geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
          if (geometryId)
          {
             geometryId -= 1;
 
-            auto geometryOffset = geometryHeader.offset(geometryId % geometryHeader.count());
-            const MageGeometry* geometryIn;
-            ROM->GetPointerTo(geometryIn, geometryOffset);
+            auto geometryIn = ROM->Get<MageGeometry>(geometryId);
             auto geometry = geometryIn->flipSelfByFlags(currentTile->flags, tileset->TileWidth(), tileset->TileHeight());
 
             bool isMageInGeometry = false;
-            
-            if (playerEntityIndex != NO_PLAYER
-             && playerPoint.x >= tileDrawPoint.x && playerPoint.x <= tileDrawPoint.x + tileset->TileWidth()
-             && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight())
+
+            if (currentMap->playerEntityIndex != NO_PLAYER
+               && playerPoint.x >= tileDrawPoint.x && playerPoint.x <= tileDrawPoint.x + tileset->TileWidth()
+               && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight())
             {
                auto offsetPoint = playerPoint - tileDrawPoint;
                isMageInGeometry = geometry.isPointInGeometry(offsetPoint);
@@ -160,7 +158,7 @@ void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera
 
             if (geometry.GetTypeId() == MageGeometryType::Point)
             {
-               frameBuffer->drawPoint(geometry.GetPoint(0) + tileDrawPoint - camera.adjustedCameraPosition, 4, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
+               frameBuffer->drawPoint(geometry.GetPoint(0) + tileDrawPoint - cameraPosition, 4, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
             }
             else
             {
@@ -168,8 +166,8 @@ void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera
                // POLYGON segmentCount is same as pointCount
                for (int i = 0; i < geometry.GetPointCount(); i++)
                {
-                  auto pointA = geometry.GetPoint(i) + tileDrawPoint - camera.adjustedCameraPosition;
-                  auto pointB = geometry.GetPoint(i + 1) + tileDrawPoint - camera.adjustedCameraPosition;
+                  auto pointA = geometry.GetPoint(i) + tileDrawPoint - cameraPosition;
+                  auto pointB = geometry.GetPoint(i + 1) + tileDrawPoint - cameraPosition;
                   frameBuffer->drawLine(pointA, pointB, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
                }
             }
@@ -178,34 +176,31 @@ void MageMap::Draw(MageGameControl* gameControl, uint8_t layer, const MageCamera
    }
 }
 
-void MageMap::DrawGeometry(const MageCamera& camera)
+void MapControl::DrawGeometry(const Point& cameraPosition)
 {
    const Point* playerPosition;
    bool isColliding = false;
-   if (playerEntityIndex != NO_PLAYER)
+   if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      auto renderable = entities[getMapLocalEntityId(playerEntityIndex)].getRenderableData();
+      auto renderable = currentMap->entities[getMapLocalEntityId(currentMap->playerEntityIndex)].getRenderableData();
       playerPosition = &renderable->center;
    }
 
-   for (uint16_t i = 0; i < GeometryCount(); i++)
+   if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      auto geometryOffset = geometryHeader.offset(getGlobalGeometryId(i) % geometryHeader.count());
-      const MageGeometry* geometry;
-      ROM->GetPointerTo(geometry, geometryOffset);
-
-      if (playerEntityIndex != NO_PLAYER)
+      for (uint16_t i = 0; i < GeometryCount(); i++)
       {
+         auto geometry = ROM->Get<MageGeometry>(getGlobalGeometryId(i));
          isColliding = geometry->isPointInGeometry(*playerPosition);
+         //geometry.draw(cameraX, cameraY, isColliding ? COLOR_RED : COLOR_GREEN);
       }
-      //geometry.draw(cameraX, cameraY, isColliding ? COLOR_RED : COLOR_GREEN);
    }
 }
 
 
-void MageMap::UpdateEntities(uint32_t deltaTime)
+void MapControl::UpdateEntities(uint32_t deltaTime)
 {
-   for (auto& entity : entities)
+   for (auto& entity : currentMap->entities)
    {
       entity.updateRenderableData(deltaTime);
    }

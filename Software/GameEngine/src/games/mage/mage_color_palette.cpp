@@ -1,7 +1,6 @@
 #include "mage_color_palette.h"
 #include "modules/sd.h"
 #include "FrameBuffer.h"
-#include "EngineROM.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
 #include "utility.h"
@@ -10,7 +9,7 @@
 #include <emscripten.h>
 #endif // EMSCRIPTEN
 
-MageColorPalette::MageColorPalette(std::shared_ptr<EngineROM> ROM, uint32_t& address) noexcept
+MageColorPalette::MageColorPalette(uint32_t& address) noexcept
 {
 #ifndef DC801_EMBEDDED
    // Read name only if we're on Desktop,

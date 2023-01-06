@@ -13,17 +13,13 @@ all of the old code used as the foundation of this badge.
 #ifndef _MAGE_DEFINES_H
 #define _MAGE_DEFINES_H
 
-#define ENGINE_VERSION 3
-
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
+
+#define MAGE_COLLISION_SPOKE_COUNT 6
 
 //this is the most unique entities that can be in any map.
 #define MAX_ENTITIES_PER_MAP 64
 
-//this is the map that will load at the start of the game:
-#define DEFAULT_MAP 0
-
-#define DEFAULT_PLAYER_NAME "Bub"
 
 //this is used to note that no player entity was found within the
 //entities loaded into the map
@@ -32,17 +28,8 @@ all of the old code used as the foundation of this badge.
 //this is a value used to indicate that an action's calling entity was
 //the map, and not actually one of the entities on the map.
 #define MAGE_MAP_ENTITY 255
-
-//this is a value used in the entityId in actions that refers to the
-//entity the script is running on.
 #define MAGE_ENTITY_SELF 254
-
-//this is a value used in the entityId in actions that refers to the
-//current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PLAYER 253
-
-//this is a value used in the entityId in actions that refers to the
-//current playerEntityId for the MageGameControl object.
 #define MAGE_ENTITY_PATH 65535
 
 //these are the failover values that the game will use when an invalid hacked entity state is found:
@@ -68,18 +55,10 @@ all of the old code used as the foundation of this badge.
 //all actions will have this many bytes, even if some are not used by a particular action
 #define MAGE_NUM_ACTION_ARGS 7
 
-#define MAGE_NUM_MEM_BUTTONS 4
-
-//this is the number of chars that are used in the entity struct as part of the entity name
-#define MAGE_ENTITY_NAME_LENGTH 12
-#define MAGE_SAVE_FLAG_COUNT 2048
-#define MAGE_SAVE_FLAG_BYTE_COUNT (MAGE_SAVE_FLAG_COUNT / 8)
-#define MAGE_SCRIPT_VARIABLE_COUNT 256
 
 //these variables are reserved script and action IDs used to indicate when a script or action should not do anything.
 #define MAGE_NO_SCRIPT std::nullopt
 #define MAGE_NO_MAP (-1)
-#define MAGE_NO_WARP_STATE ((uint16_t)-1)
 #define MAGE_NULL_SCRIPT 0
 #define MAGE_NULL_ACTION 0
 

@@ -2,6 +2,8 @@
 #define MONACO9_H
 
 #include "modules/gfx.h"
+#include "adafruit/gfxfont.h"
+
 // Monaco9 in AdaFruit GFXfont format
 
 const uint8_t Monaco9Bitmaps[] PROGMEM = {

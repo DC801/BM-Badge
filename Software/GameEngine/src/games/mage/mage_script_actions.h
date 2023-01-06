@@ -1,17 +1,25 @@
 #ifndef _MAGE_SCRIPT_ACTIONS_H
 #define _MAGE_SCRIPT_ACTIONS_H
 
+#include "FrameBuffer.h"
+#include "mage_rom.h"
+#include "mage_camera.h"
 #include "mage_defines.h"
-#include "mage_entity_type.h"
-#include "mage_geometry.h"
-#include "mage_script_state.h"
-#include "mage.h"
 
+// structs/classes that this class depends on, forward defined:
 struct Point;
 struct Rect;
+struct RenderableData;
+class MageCommandControl;
+class MageDialogControl;
 class MageGeometry;
+class MapControl;
+class MageScriptControl;
+class MageScriptState;
 class MageGameEngine;
+class MageHexEditor;
 class MageEntity;
+class StringLoader;
 
 //this contains all the possible script actions by actionTypeId value.
 //these enum values match the data generated in the binary,
@@ -147,18 +155,21 @@ static const inline uint8_t NUM_SCRIPT_ACTIONS = 98;
 
 class MageScriptActions
 {
+   friend class MageScriptControl;
 public:
-   MageScriptActions(MageGameControl* gameControl, MageScriptControl* scriptControl, EngineInput* inputHandler, MageCommandControl* commandControl, MageHexEditor* hexEditor, FrameBuffer* frameBuffer) noexcept
-      : gameControl(gameControl),
-      scriptControl(scriptControl),
+   MageScriptActions(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler,
+      MageCamera& camera, std::shared_ptr<MapControl> mapControl, std::shared_ptr<MageDialogControl> dialogControl, std::shared_ptr<MageScriptControl> scriptControl,
+      std::shared_ptr<MageCommandControl> commandControl, std::shared_ptr<MageHexEditor> hexEditor, std::shared_ptr<StringLoader> stringLoader) noexcept
+      : frameBuffer(frameBuffer),
       inputHandler(inputHandler),
+      camera(camera),
+      mapControl(mapControl),
+      dialogControl(dialogControl),
+      scriptControl(scriptControl),
       commandControl(commandControl), 
       hexEditor(hexEditor),
-      frameBuffer(frameBuffer)
+      stringLoader(stringLoader)
    {}
-
-   void Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct);
-   int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityId, int16_t callingEntityId);
 
 private:
    //Action Logic Type: I
@@ -370,18 +381,12 @@ private:
    float getProgressOfAction(const MageScriptState* resumeStateStruct);
    float manageProgressOfAction(MageScriptState* resumeStateStruct, uint32_t duration);
 
-   void setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry)
-   {
-      auto entityCenterPoint = -entity->getRenderableData()->center - entity->location;
-      resumeStateStruct->pointA = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex);
-      resumeStateStruct->pointB = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex + 1);
-      auto relativeDirection = resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB);
-      entity->renderFlags = gameControl->updateDirectionAndPreserveFlags(relativeDirection, entity->renderFlags);
-   }
+   void setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry);
 
+   void readSaveFromRomIntoRam(uint8_t currentSaveIndex, bool silenceErrors = false);
    void initializeEntityGeometryPath(MageScriptState* resumeStateStruct, RenderableData* renderable, MageEntity* entity, const MageGeometry* geometry);
 
-   enum MageMutateOperation : uint8_t
+   enum class MageMutateOperation : uint8_t
    {
       SET = 0,
       ADD,
@@ -403,119 +408,17 @@ private:
 
    void mutate(MageMutateOperation operation, uint16_t* destination, uint16_t value);
    bool compare(MageCheckComparison comparison, uint16_t a, uint16_t b);
-
-   //typedef for the array of function pointers to script action functions:
-   typedef void (MageScriptActions::*ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
-
-   ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS] = {
-      &MageScriptActions::action_null_action,
-      &MageScriptActions::action_check_entity_name,
-      &MageScriptActions::action_check_entity_x,
-      &MageScriptActions::action_check_entity_y,
-      &MageScriptActions::action_check_entity_interact_script,
-      &MageScriptActions::action_check_entity_tick_script,
-      &MageScriptActions::action_check_entity_type,
-      &MageScriptActions::action_check_entity_primary_id,
-      &MageScriptActions::action_check_entity_secondary_id,
-      &MageScriptActions::action_check_entity_primary_id_type,
-      &MageScriptActions::action_check_entity_current_animation,
-      &MageScriptActions::action_check_entity_current_frame,
-      &MageScriptActions::action_check_entity_direction,
-      &MageScriptActions::action_check_entity_glitched,
-      &MageScriptActions::action_check_entity_hackable_state_a,
-      &MageScriptActions::action_check_entity_hackable_state_b,
-      &MageScriptActions::action_check_entity_hackable_state_c,
-      &MageScriptActions::action_check_entity_hackable_state_d,
-      &MageScriptActions::action_check_entity_hackable_state_a_u2,
-      &MageScriptActions::action_check_entity_hackable_state_c_u2,
-      &MageScriptActions::action_check_entity_hackable_state_a_u4,
-      &MageScriptActions::action_check_entity_path,
-      &MageScriptActions::action_check_save_flag,
-      &MageScriptActions::action_check_if_entity_is_in_geometry,
-      &MageScriptActions::action_check_for_button_press,
-      &MageScriptActions::action_check_for_button_state,
-      &MageScriptActions::action_check_warp_state,
-      &MageScriptActions::action_run_script,
-      &MageScriptActions::action_blocking_delay,
-      &MageScriptActions::action_non_blocking_delay,
-      &MageScriptActions::action_set_entity_name,
-      &MageScriptActions::action_set_entity_x,
-      &MageScriptActions::action_set_entity_y,
-      &MageScriptActions::action_set_entity_interact_script,
-      &MageScriptActions::action_set_entity_tick_script,
-      &MageScriptActions::action_set_entity_type,
-      &MageScriptActions::action_set_entity_primary_id,
-      &MageScriptActions::action_set_entity_secondary_id,
-      &MageScriptActions::action_set_entity_primary_id_type,
-      &MageScriptActions::action_set_entity_current_animation,
-      &MageScriptActions::action_set_entity_current_frame,
-      &MageScriptActions::action_set_entity_direction,
-      &MageScriptActions::action_set_entity_direction_relative,
-      &MageScriptActions::action_set_entity_direction_target_entity,
-      &MageScriptActions::action_set_entity_direction_target_geometry,
-      &MageScriptActions::action_set_entity_glitched,
-      &MageScriptActions::action_set_entity_hackable_state_a,
-      &MageScriptActions::action_set_entity_hackable_state_b,
-      &MageScriptActions::action_set_entity_hackable_state_c,
-      &MageScriptActions::action_set_entity_hackable_state_d,
-      &MageScriptActions::action_set_entity_hackable_state_a_u2,
-      &MageScriptActions::action_set_entity_hackable_state_c_u2,
-      &MageScriptActions::action_set_entity_hackable_state_a_u4,
-      &MageScriptActions::action_set_entity_path,
-      &MageScriptActions::action_set_save_flag,
-      &MageScriptActions::action_set_player_control,
-      &MageScriptActions::action_set_map_tick_script,
-      &MageScriptActions::action_set_hex_cursor_location,
-      &MageScriptActions::action_set_warp_state,
-      &MageScriptActions::action_set_hex_editor_state,
-      &MageScriptActions::action_set_hex_editor_dialog_mode,
-      &MageScriptActions::action_set_hex_editor_control,
-      &MageScriptActions::action_set_hex_editor_control_clipboard,
-      &MageScriptActions::action_load_map,
-      &MageScriptActions::action_show_dialog,
-      &MageScriptActions::action_play_entity_animation,
-      &MageScriptActions::action_teleport_entity_to_geometry,
-      &MageScriptActions::action_walk_entity_to_geometry,
-      &MageScriptActions::action_walk_entity_along_geometry,
-      &MageScriptActions::action_loop_entity_along_geometry,
-      &MageScriptActions::action_set_camera_to_follow_entity,
-      &MageScriptActions::action_teleport_camera_to_geometry,
-      &MageScriptActions::action_pan_camera_to_entity,
-      &MageScriptActions::action_pan_camera_to_geometry,
-      &MageScriptActions::action_pan_camera_along_geometry,
-      &MageScriptActions::action_loop_camera_along_geometry,
-      &MageScriptActions::action_set_screen_shake,
-      &MageScriptActions::action_screen_fade_out,
-      &MageScriptActions::action_screen_fade_in,
-      &MageScriptActions::action_mutate_variable,
-      &MageScriptActions::action_mutate_variables,
-      &MageScriptActions::action_copy_variable,
-      &MageScriptActions::action_check_variable,
-      &MageScriptActions::action_check_variables,
-      &MageScriptActions::action_slot_save,
-      &MageScriptActions::action_slot_load,
-      &MageScriptActions::action_slot_erase,
-      &MageScriptActions::action_set_connect_serial_dialog,
-      &MageScriptActions::action_show_serial_dialog,
-      &MageScriptActions::action_inventory_get,
-      &MageScriptActions::action_inventory_drop,
-      &MageScriptActions::action_check_inventory,
-      &MageScriptActions::action_set_map_look_script,
-      &MageScriptActions::action_set_entity_look_script,
-      &MageScriptActions::action_set_teleport_enabled,
-      &MageScriptActions::action_check_map,
-      &MageScriptActions::action_set_ble_flag,
-      &MageScriptActions::action_check_ble_flag,
-   };
-
+   
 private:
-   //const MageGameEngine* gameEngine;
-   MageGameControl* gameControl;
-   MageScriptControl* scriptControl;
-   EngineInput* inputHandler;
-   MageCommandControl* commandControl;
-   MageHexEditor* hexEditor;
-   FrameBuffer* frameBuffer;
+   std::shared_ptr<MapControl> mapControl;
+   std::shared_ptr<MageDialogControl> dialogControl;
+   MageCamera& camera;
+   std::shared_ptr<MageScriptControl> scriptControl;
+   std::shared_ptr<EngineInput> inputHandler;
+   std::shared_ptr<MageCommandControl> commandControl;
+   std::shared_ptr<MageHexEditor> hexEditor;
+   std::shared_ptr<FrameBuffer> frameBuffer;
+   std::shared_ptr<StringLoader> stringLoader;
    //the actual array of action functions:
 
 };

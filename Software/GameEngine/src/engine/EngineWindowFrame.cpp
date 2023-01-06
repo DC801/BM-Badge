@@ -91,14 +91,14 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 	window = nullptr;
 }
 
-void EngineWindowFrame::drawButtonStates() const
+void EngineWindowFrame::drawButtonStates(ButtonState button) const
 {
 	SDL_Point buttonPoint{};
 	bool buttonState{false};
 	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
 	{
 		buttonPoint = buttonDestPoints[i];
-		buttonState = inputHandler->GetButtonState((KeyPress)i);
+		buttonState = button.IsPressed((KeyPress)i);
 		const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
 		SDL_RenderCopy(
 			components.renderer,
@@ -137,7 +137,7 @@ void EngineWindowFrame::drawLEDStates() const
 	}
 }
 
-void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
+void EngineWindowFrame::GameBlt(const uint16_t frame[], ButtonState button) const
 {
 	int pitch{0};
 
@@ -166,7 +166,7 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 		&gameViewportDstRect
 	);
 
-	drawButtonStates();
+	drawButtonStates(button);
 	drawLEDStates();
 
 	SDL_RenderPresent(components.renderer);

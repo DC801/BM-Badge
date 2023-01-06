@@ -5,7 +5,7 @@
 #include "shim_err.h"
 #include <algorithm>
 
-MageGeometry::MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address)
+MageGeometry::MageGeometry(uint32_t& address)
 {
 #ifndef DC801_EMBEDDED
    ROM->Read(name, address, 32);

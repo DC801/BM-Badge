@@ -1,9 +1,9 @@
 #include "mage_command_control.h"
-#include "mage_game_control.h"
 #include "mage_map.h"
 #include "mage_script_control.h"
-#include "EngineROM.h"
+
 #include "EngineSerial.h"
+#include "StringLoader.h"
 #include <vector>
 #include "convert_endian.h"
 
@@ -15,13 +15,12 @@ void MageCommandControl::handleStart()
    }
    else
    {
-      commandResponseBuffer += (
+      commandResponseBuffer +=
          "WELCOME TO MAGE NET\n"
          "   __  ______  _________  _  ____________\n"
          "  /  |/  / _ |/ ___/ __/ / |/ / __/_  __/\n"
          " / /|_/ / __ / (_ / _/  /    / _/  / /   \n"
-         "/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n"
-         );
+         "/_/  /_/_/ |_\\___/___/ /_/|_/___/ /_/    \n";
    }
 }
 
@@ -117,9 +116,9 @@ void MageCommandControl::processCommandAsVerb(std::string input)
       lastCommandUsed = COMMAND_LOOK;
       commandResponseBuffer += "You try to look.\n";
       
-      gameEngine->scriptControl->resumeStates.commandLook = MageScriptState{gameEngine->gameControl->Map()->GetOnLook(), true };
+      scriptControl->resumeStates.commandLook = MageScriptState{mapControl->GetOnLook(), true };
 
-      std::string directionNames = gameEngine->gameControl->Map()->getDirectionNames();
+      std::string directionNames = mapControl->getDirectionNames();
       if (directionNames.length() > 0)
       {
          postDialogBuffer += "Exits are:\n";
@@ -142,7 +141,7 @@ void MageCommandControl::processCommandAsVerb(std::string input)
          std::string output = "You try to go `";
          output += subject;
          output += "`";
-         uint16_t directionScriptId = gameEngine->gameControl->Map()->getDirectionScriptId(subject);
+         uint16_t directionScriptId = mapControl->getDirectionScriptId(subject);
          if (!directionScriptId)
          {
             output += ", but that is not a valid direction\n";
@@ -154,7 +153,7 @@ void MageCommandControl::processCommandAsVerb(std::string input)
          commandResponseBuffer += output;
          if (directionScriptId)
          {
-            gameEngine->scriptControl->resumeStates.commandGo = MageScriptState{directionScriptId, true };
+            scriptControl->resumeStates.commandGo = MageScriptState{directionScriptId, true };
          }
       }
    }
@@ -201,7 +200,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
    commandResponseBuffer += "processCommandAsResponseInput: " + input + "\n";
    MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
    if (responseType == RESPONSE_ENTER_NUMBER)
-   {
+   { 
       bool errorWhileParsingInt = false;
       try
       {
@@ -209,9 +208,9 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
          if (responseIndex >= 0 && responseIndex < serialDialog.responseCount)
          {
             auto response = serialDialogResponses[responseIndex];
-            std::string responseLabel = gameEngine->gameControl->getString(response.stringId);
+            std::string responseLabel = stringLoader->getString(response.stringId);
             commandResponseBuffer += "Valid response: " + input + " - " +  responseLabel + "\n";
-            gameEngine->scriptControl->jumpScriptId = response.scriptId;
+            scriptControl->jumpScriptId = response.scriptId;
             isInputTrapped = false;
          }
          else
@@ -231,13 +230,12 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
       bool validResponseFound = false;
       for (uint8_t i = 0; i < serialDialog.responseCount; i++)
       {
-         MageSerialDialogResponse* response = &serialDialogResponses[i];
-         std::string responseLabel = gameEngine->gameControl->getString(response->stringId);
+         std::string responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
          badAsciiLowerCase(&responseLabel);
          if (responseLabel == input)
          {
             commandResponseBuffer += "Valid response: " + input + "\n";
-            gameEngine->scriptControl->jumpScriptId = response->scriptId;
+            scriptControl->jumpScriptId = serialDialogResponses[i].scriptId;
             isInputTrapped = false;
             validResponseFound = true;
             break;
@@ -254,11 +252,11 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
 void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
 {
    serialDialogId = _serialDialogId;
-   gameEngine->scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-   uint32_t serialDialogAddress = gameEngine->gameControl->tileManager->imageHeader.offset(serialDialogId);
-   gameEngine->ROM->Read(serialDialog, serialDialogAddress);
-
-   std::string dialogString = gameEngine->gameControl->getString(serialDialog.stringId);
+   scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+   uint32_t serialDialogAddress =  0;// tileManager->imageHeader.offset(serialDialogId);
+   //ROM->Read(serialDialog, serialDialogAddress);
+   serialDialog = * ROM->Get<MageSerialDialog>(serialDialogId);
+   std::string dialogString = stringLoader->getString(serialDialog.stringId);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
    // 	"serialDialogAddress: " + std::to_string(serialDialogAddress) + "\n"
@@ -269,17 +267,13 @@ void MageCommandControl::showSerialDialog(uint16_t _serialDialogId)
    // );
    serialDialogBuffer += dialogString + "\n";
    isInputTrapped = serialDialog.serialResponseType != RESPONSE_NONE;
-   gameEngine->ROM->InitializeCollectionOf(serialDialogResponses, serialDialogAddress, serialDialog.responseCount);
+   ROM->InitializeCollectionOf(serialDialogResponses, serialDialogAddress, serialDialog.responseCount);
    for (uint8_t i = 0; i < serialDialog.responseCount; i++)
    {
-      MageSerialDialogResponse* response = &serialDialogResponses[i];
       if (serialDialog.serialResponseType == RESPONSE_ENTER_NUMBER)
       {
-         std::string responseLabel = gameEngine->gameControl->getString(response->stringId);
-         serialDialogBuffer += (
-            "\t" + std::to_string(i) + ": " +
-            responseLabel + "\n"
-            );
+         std::string responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
+         serialDialogBuffer += "\t" + std::to_string(i) + ": " + responseLabel + "\n";
       }
    }
 }
@@ -297,27 +291,17 @@ void MageCommandControl::reset()
 
 void MageCommandControl::sendBufferedOutput()
 {
-   std::vector<std::string*> bufferedStrings{
-      &commandResponseBuffer,
-      &serialDialogBuffer,
-      &postDialogBuffer
-   };
    bool anyOutput = false;
-   for (auto currentString : bufferedStrings)
+   for (auto& currentString : { commandResponseBuffer, serialDialogBuffer, postDialogBuffer })
    {
-      if (currentString->length())
+      if (!currentString.empty())
       {
-         EngineSendSerialMessage(
-            currentString->c_str()
-         );
-         *currentString = "";
+         EngineSendSerialMessage(currentString.c_str());
          anyOutput = true;
       }
    }
    if (anyOutput)
    {
-      EngineSendSerialMessage(
-         "> "
-      );
+      EngineSendSerialMessage("> ");
    }
 }

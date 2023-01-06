@@ -68,8 +68,7 @@ uint16_t crc16(uint16_t crcValue, uint8_t newByte, const uint16_t POLYNOM);
 uint8_t getButton(bool waitForLongPress);
 bool isButtonDown(int button);
 void pauseUntilPress(int button);
-//void beep(int duration, int frequency);
-void getString(GFXfont font, char *string, uint8_t chars, bool showScroll);
+
 void setLevelLEDs(LEVEL level);
 void setPowerUpLEDs(POWERUP powerUp);
 

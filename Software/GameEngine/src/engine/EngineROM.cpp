@@ -1,7 +1,6 @@
 #include "EngineROM.h"
 #include "EnginePanic.h"
 #include "utility.h"
-#include <fstream>
 
 #ifdef EMSCRIPTEN
 #include <emscripten.h>
@@ -13,7 +12,8 @@ extern QSPI qspiControl;
 
 #else
 
-std::filesystem::directory_entry EngineROM::makeSureSaveFilePathExists()
+template<typename... THeaders>
+std::filesystem::directory_entry EngineROM<THeaders...>::getOrCreateSaveFilePath() const
 {
    auto saveDir = std::filesystem::directory_entry{ std::filesystem::absolute(DESKTOP_SAVE_FILE_PATH) };
    if (!saveDir.exists())
@@ -27,188 +27,8 @@ std::filesystem::directory_entry EngineROM::makeSureSaveFilePathExists()
 }
 #endif //DC801_DESKTOP
 
-EngineROM::EngineROM()
-{
-#ifdef DC801_EMBEDDED
-   isRomPlayable = Magic();
-   FIL gameDat;
-   FRESULT result;
-   UINT count;
-   char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
-   char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
-   bool gameDatSDPresent = false;
-   bool eraseWholeRomChip = false;
-   // Look on the SD card to read `game.dat` filesize, OR see if it is present at all:
-   uint32_t gameDatFilesize = util_sd_file_size(filename);
-   if (gameDatFilesize > 0)
-   {
-      // Open magegame.dat file on SD card
-      result = f_open(&gameDat, filename, FA_READ | FA_OPEN_EXISTING);
-      if (result == FR_OK)
-      {
-         result = f_lseek(&gameDat, 0);
-         if (result == FR_OK)
-         {
-            // get the gameDatHashSD from the SD card game.dat:
-            result = f_read(
-               &gameDat,
-               (uint8_t*)gameDatHashSD,
-               ENGINE_ROM_MAGIC_HASH_LENGTH,
-               &count
-            );
-            gameDatSDPresent = result == FR_OK;
-         }
-      }
-   }
-
-   if (!gameDatSDPresent)
-   {
-      if (!isRomPlayable)
-      {
-         // no SD card, rom is invalid - literally unplayable
-         ErrorUnplayable();
-      }
-      // jump right to game
-      return;
-   }
-   else if (isRomPlayable)
-   {
-      // we have SD, and the rom seems valid - check if hashes are the same
-
-      // get the gameDatHashROM from the ROM chip:
-      Read(
-         0,
-         ENGINE_ROM_MAGIC_HASH_LENGTH,
-         (uint8_t*)gameDatHashROM
-      );
-      char gameDatHashSDString[9] = { 0 };
-      char gameDatHashROMString[9] = { 0 };
-      sprintf(
-         gameDatHashSDString,
-         "%02X%02X%02X%02X",
-         gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET],
-         gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 1],
-         gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 2],
-         gameDatHashSD[ENGINE_ROM_START_OF_CRC_OFFSET + 3]
-      );
-      sprintf(
-         gameDatHashROMString,
-         "%02X%02X%02X%02X",
-         gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET],
-         gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 1],
-         gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 2],
-         gameDatHashROM[ENGINE_ROM_START_OF_CRC_OFFSET + 3]
-      );
-
-      // compare the two header hashes:
-      bool headerHashMatch = (strcmp(gameDatHashSD, gameDatHashROM) == 0);
-
-      // handles hardware inputs and makes their state available
-      inputHandler->HandleKeyboard();
-      const char* updateMessagePrefix;
-      if (!headerHashMatch)
-      {
-         updateMessagePrefix = "The file `game.dat` on your SD card does not\n"
-            "match what is on your badge ROM chip.";
-      }
-      else if (EngineInput_Buttons.mem3)
-      {
-         updateMessagePrefix = "You have held down MEM3 while booting.\n"
-            "You may force update `game.dat` on badge.";
-      }
-      else
-      {
-         // there is no update, and user is not holding MEM3, proceed as normal
-         result = f_close(&gameDat);
-         return;
-      }
-
-      // show update confirmation
-      char debugString[512];
-      p_canvas()->clearScreen(COLOR_BLACK);
-      //48 chars is a good character width for screen width plus some padding
-      sprintf(debugString,
-         "%s\n\n"
-         " SD hash: %s\n"
-         "ROM hash: %s\n\n"
-         "Would you like to update your scenario data?\n"
-         "------------------------------------------------\n\n\n"
-         "    > Press MEM0 to cancel\n\n"
-         "    > Press MEM2 to erase whole ROM for recovery\n\n"
-         "    > Press MEM3 to update the ROM",
-         updateMessagePrefix,
-         gameDatHashSDString,
-         gameDatHashROMString);
-      p_canvas()->printMessage(debugString, Monaco9, 0xffff, 16, 16);
-      p_canvas()->blt();
-      
-      do
-      {
-         nrf_delay_ms(10);
-         inputHandler->HandleKeyboard();
-         if (EngineInput_Activated.mem0)
-         {
-            p_canvas()->clearScreen(COLOR_BLACK);
-            p_canvas()->blt();
-            return;
-         }
-         else if (EngineInput_Activated.mem2)
-         {
-            eraseWholeRomChip = true;
-         }
-      } while (!EngineInput_Activated.mem2 && !EngineInput_Activated.mem3);
-   }
-   if (!EngineRom::SD_Copy(gameDatFilesize, gameDat, eraseWholeRomChip))
-   {
-      ENGINE_PANIC("SD Copy Operation was not successful.");
-   }
-   //close game.dat file when done:
-   // TODO: this can leak in quite a few ways, wrap it
-   result = f_close(&gameDat);
-#else
-   auto romFileSize = 0;
-
-   auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
-   if (std::filesystem::exists(filePath))
-   {
-      romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
-
-      if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-      {
-         ENGINE_PANIC(
-            "Desktop build:\n"
-            "    Invalid ROM file size!\n"
-            "    This is larger than the hardware's\n"
-            "    ROM chip capacity!\n"
-         );
-      }
-      romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
-   }
-   else
-   {
-      ENGINE_PANIC(
-         "Desktop build:\n"
-         "    Unable to read ROM file size at %s",
-         MAGE_GAME_DAT_PATH
-      );
-   }
-
-
-   // copy the file into the buffer
-   if (!romFile.read(romDataInDesktopRam.get(), romFileSize))
-   {
-      ENGINE_PANIC("Desktop build: ROM->RAM read failed");
-   }
-#endif
-
-   // Verify magic string is on ROM when we're done:
-   if (!Magic())
-   {
-      ErrorUnplayable();
-   }
-}
-
-void EngineROM::ErrorUnplayable()
+template<typename... THeaders>
+void EngineROM<THeaders...>::ErrorUnplayable()
 {
    //let out the magic s̶m̶o̶k̶e̶ goat
    ENGINE_PANIC(
@@ -225,7 +45,8 @@ void EngineROM::ErrorUnplayable()
    );
 }
 
-void EngineROM::ReadSaveSlot(uint8_t slotIndex, size_t dataLength, uint8_t* data)
+template<typename... THeaders>
+MageSaveGame EngineROM<THeaders...>::ReadSaveSlot(uint8_t slotIndex) const
 {
 #ifdef DC801_EMBEDDED
    Read(
@@ -235,13 +56,16 @@ void EngineROM::ReadSaveSlot(uint8_t slotIndex, size_t dataLength, uint8_t* data
       "Failed to read saveGame from ROM"
    );
 #else
-   auto saveFilePath = makeSureSaveFilePathExists();
+   auto saveFilePath = getOrCreateSaveFilePath();
    const char* saveFileName = saveFileSlotNames[slotIndex];
    
    auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
    if (fileDirEntry.exists())
    {
-      auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::out | std::ios::binary };
+      auto fileSize = fileDirEntry.file_size();
+      debug_print("Save file size: %zu\n", (uint32_t)fileDirEntry.file_size());
+
+      auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::binary };
       if (!saveFile.good())
       {
          int error = errno;
@@ -250,29 +74,24 @@ void EngineROM::ReadSaveSlot(uint8_t slotIndex, size_t dataLength, uint8_t* data
       }
       else
       {
-         auto fileSize = fileDirEntry.file_size();
-
-         debug_print(
-            "Save file size: %zu\n",
-            (uint32_t)fileDirEntry.file_size()
-         );
-
-         saveFile.read((char*)data, fileSize);
-
+         const auto saveSize = sizeof(MageSaveGame);
+         saveFile.read((char*)currentSave, saveSize);
          auto readCount = saveFile.gcount();
-         if (fileSize != readCount)
+         if (readCount != saveSize)
          {
             // The file save_*.dat on disk can't be read?
             // Empty out the destination.
-            memset(data, 0, dataLength);
+            saveGame.reset();
          }
          saveFile.close();
       }
    }
 #endif
+   return saveGame;
 }
 
-void EngineROM::EraseSaveSlot(uint8_t slotIndex)
+template<typename... THeaders>
+void EngineROM<THeaders...>::EraseSaveSlot(uint8_t slotIndex)
 {
 #ifdef DC801_EMBEDDED
    if (!qspiControl.erase(
@@ -291,7 +110,7 @@ void EngineROM::EraseSaveSlot(uint8_t slotIndex)
 
 #ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
-bool EngineRom::SD_Copy(
+bool EngineROM<THeaders...>::SD_Copy(
    uint32_t gameDatFilesize,
    FIL gameDat,
    bool eraseWholeRomChip
@@ -351,26 +170,9 @@ bool EngineRom::SD_Copy(
             // is very busy
          }
          //Debug Print:
-         sprintf(
-            debugString,
-            "Erasing currentAddress: %08u\ngameDatFilesize:%08u",
-            currentAddress,
-            gameDatFilesize
-         );
-         p_canvas()->fillRect(
-            0,
-            96,
-            WIDTH,
-            96,
-            COLOR_BLACK
-         );
-         p_canvas()->printMessage(
-            debugString,
-            Monaco9,
-            COLOR_WHITE,
-            16,
-            96
-         );
+         sprintf(debugString, "Erasing currentAddress: %08u\ngameDatFilesize:%08u", currentAddress, gameDatFilesize);
+         p_canvas()->fillRect(0, 96, WIDTH, 96, COLOR_BLACK);
+         p_canvas()->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
          p_canvas()->blt();
          currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
       }
@@ -379,7 +181,7 @@ bool EngineRom::SD_Copy(
       // because new dat files means new save flags and variables
       for (uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++)
       {
-         EngineRom::EraseSaveSlot(i);
+         EngineROM<THeaders...>::EraseSaveSlot(i);
       }
    }
 
@@ -395,12 +197,7 @@ bool EngineRom::SD_Copy(
          ENGINE_PANIC("Error seeking to game.dat position\nduring ROM copy procedure.");
       }
       //then read the next set of bytes into the buffer:
-      result = f_read(
-         &gameDat,
-         sdReadBuffer,
-         chunkSize,
-         &count
-      );
+      result = f_read(&gameDat, sdReadBuffer, chunkSize, &count);
       if (result != FR_OK)
       {
          ENGINE_PANIC("Error reading game.dat from SD card\nduring ROM copy procedure.");
@@ -439,54 +236,25 @@ bool EngineRom::SD_Copy(
          );
       }
       //Debug Print:
-      sprintf(
-         debugString,
-         "Copying currentAddress: %08u\ngameDatFilesize:%08u",
-         currentAddress,
-         gameDatFilesize
-      );
-      p_canvas()->fillRect(
-         0,
-         96,
-         WIDTH,
-         96,
-         COLOR_BLACK
-      );
-      p_canvas()->printMessage(
-         debugString,
-         Monaco9,
-         COLOR_WHITE,
-         16,
-         96
-      );
+      sprintf(debugString, "Copying currentAddress: %08u\ngameDatFilesize:%08u", currentAddress, gameDatFilesize);
+      p_canvas()->fillRect(0, 96, WIDTH, 96, COLOR_BLACK);
+      p_canvas()->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
       p_canvas()->blt();
       currentAddress += chunkSize;
    }
    //print success message:
-   p_canvas()->fillRect(
-      0,
-      96,
-      WIDTH,
-      96,
-      0x0000
-   );
-   p_canvas()->printMessage(
-      "SD -> ROM chip copy success",
-      Monaco9,
-      0xffff,
-      16,
-      96
-   );
+   p_canvas()->fillRect(0, 96, WIDTH, 96, 0x0000);
+   p_canvas()->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
    p_canvas()->blt();
    return true;
 }
 #endif //DC801_EMBEDDED
 
-//bool EngineROM::Read(uint32_t address, uint32_t length, uint8_t* data) const
+//bool EngineROM<THeaders...>::Read(uint32_t address, uint32_t length, uint8_t* data) const
 //{
 //   if (data == NULL)
 //   {
-//      ENGINE_PANIC("EngineROM::Read: Null pointer");
+//      ENGINE_PANIC("EngineROM<THeaders...>::Read: Null pointer");
 //   }
 //
 //#ifdef DC801_EMBEDDED
@@ -516,13 +284,14 @@ bool EngineRom::SD_Copy(
 //      }
 //   }
 //#else
-//   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM::Read: address + length exceeds maximum dat file size"); }
+//   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM<THeaders...>::Read: address + length exceeds maximum dat file size"); }
 //   memmove(data, romDataInDesktopRam.get() + address, length);
 //#endif
 //   return true;
 //}
 
-bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)
+template<typename... THeaders>
+bool EngineROM<THeaders...>::Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)
 {
    if (address % sizeof(uint32_t) || length % sizeof(uint32_t))
    {
@@ -534,7 +303,7 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
    }
    if (data == NULL)
    {
-      ENGINE_PANIC("EngineROM::Write: Null pointer");
+      ENGINE_PANIC("EngineROM<THeaders...>::Write: Null pointer");
    }
 
 #ifdef DC801_EMBEDDED
@@ -555,22 +324,5 @@ bool EngineROM::Write(uint32_t address, uint32_t length, uint8_t* data, const ch
 
    romFile.write((const char*)data, length);
 #endif
-   return true;
-}
-
-bool EngineROM::VerifyEqualsAtOffset(uint32_t address, std::string value) const
-{
-   if (value.empty())
-   {
-      ENGINE_PANIC("EngineROM::VerifyEqualsAtOffset: Empty string");
-   }
-
-   for (uint32_t i = 0; i < value.size(); i++)
-   {
-      if (i >= ENGINE_ROM_MAX_DAT_FILE_SIZE || value[i] != romDataInDesktopRam[i])
-      {
-         return false;
-      }
-   }
    return true;
 }

@@ -6,13 +6,15 @@ in a more accessible way.
 #ifndef _MAGE_GEOMETRY_H
 #define _MAGE_GEOMETRY_H
 
-#include "EngineROM.h"
+#include "mage_rom.h"
 #include "FrameBuffer.h"
 #include "mage_defines.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 #include <optional>
+
+struct Point;
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
 enum class MageGeometryType : uint8_t
@@ -24,7 +26,6 @@ enum class MageGeometryType : uint8_t
 
 class MageGeometry
 {
-   friend class MageGameControl;
 public:
    //default constructor returns a point with coordinates 0,0:
    MageGeometry() = default;
@@ -34,19 +35,14 @@ public:
    MageGeometry(MageGeometryType type, uint8_t numPoints);
 
    //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
-   MageGeometry(std::shared_ptr<EngineROM> ROM, uint32_t& address);
+   MageGeometry(uint32_t& address);
 
    MageGeometry flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
    //this checks to see if a given point is inside the boundaries of a given geometry:
    bool isPointInGeometry(Point point) const;
 
-   void flipByFlags(uint8_t flags, uint16_t width, uint16_t height);
-
-   static std::optional<Point> getIntersectPointBetweenLineSegments(
-      const Point& lineAPointA, const Point& lineAPointB,
-      const Point& lineBPointA, const Point& lineBPointB
-   );
+   static std::optional<Point> getIntersectPointBetweenLineSegments(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
 
    uint16_t getLoopableGeometryPointIndex(uint8_t pointIndex) const;
    uint16_t GetLoopableGeometrySegmentIndex(uint8_t segmentIndex) const
@@ -77,6 +73,11 @@ public:
    MageGeometryType GetTypeId() const { return typeId; }
    float GetPathLength() const { return pathLength; }
    float GetSegmentLength(uint16_t index) const { return segmentLengths.empty() ? 0.0f : segmentLengths[index % segmentLengths.size()]; }
+
+   const std::vector<Point> GetPoints()
+   {
+      return points;
+   }
 
 private:
 #ifndef DC801_EMBEDDED

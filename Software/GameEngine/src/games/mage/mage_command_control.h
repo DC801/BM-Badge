@@ -1,9 +1,13 @@
 #ifndef GAMEENGINE_MAGE_COMMAND_CONTROL_H
 #define GAMEENGINE_MAGE_COMMAND_CONTROL_H
+
+#include "mage_rom.h"
 #include "mage_defines.h"
-#include "EngineROM.h"
-#include "mage_game_control.h"
-#include "mage_script_control.h"
+#include "StringLoader.h"
+
+class MageScriptControl;
+class MapControl;
+class TileManager;
 
 #define COMMAND_NO_CONNECT_DIALOG_ID 0xFFFF
 
@@ -17,7 +21,7 @@ enum MageSerialCommands : uint8_t {
 	COMMAND_INVENTORY = 6,
 	COMMAND_USE = 7,
 	NUM_SERIAL_COMMANDS
-} ;
+};
 
 enum MageSerialDialogResponseTypes : uint8_t {
 	RESPONSE_NONE = 0,
@@ -42,14 +46,9 @@ struct MageSerialDialog
 
 class MageCommandControl {
 	public:
-		MageCommandControl(MageGameEngine*  gameEngine) noexcept
-			: gameEngine(gameEngine)
-		{
-			// EngineSendSerialMessage(
-			// 	"Hello there, the Command Goats are listening for commands.\n"
-			// );
-
-		}
+		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<TileManager> tileManager, std::shared_ptr<MageScriptControl> scriptControl) noexcept
+			: mapControl(mapControl), tileManager(tileManager), scriptControl(scriptControl)
+		{}
 
 		std::string commandResponseBuffer;
 		std::string serialDialogBuffer;
@@ -68,7 +67,10 @@ class MageCommandControl {
 		void reset();
 		void sendBufferedOutput();
 private:
-	MageGameEngine*  gameEngine;
+	std::shared_ptr<MapControl> mapControl;
+	std::shared_ptr<TileManager> tileManager;
+	std::shared_ptr<MageScriptControl> scriptControl;
+	std::shared_ptr<StringLoader> stringLoader;
 
 	void badAsciiLowerCase(std::string* data)
 	{

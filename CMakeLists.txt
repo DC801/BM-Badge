@@ -33,10 +33,13 @@ set(SOURCEFILES
     Software/GameEngine/src/engine/EngineROM.h
     Software/GameEngine/src/engine/EngineSerial.cpp
     Software/GameEngine/src/engine/EngineSerial.h
-    Software/GameEngine/src/engine/FrameBuffer.cpp
-    Software/GameEngine/src/engine/FrameBuffer.h
     Software/GameEngine/src/engine/EngineWindowFrame.cpp
     Software/GameEngine/src/engine/EngineWindowFrame.h
+    Software/GameEngine/src/engine/FrameBuffer.cpp
+    Software/GameEngine/src/engine/FrameBuffer.h
+    Software/GameEngine/src/engine/Header.h
+    Software/GameEngine/src/engine/StringLoader.cpp
+    Software/GameEngine/src/engine/StringLoader.h
     Software/GameEngine/src/engine/utility.cpp
     Software/GameEngine/src/engine/utility.h
 
@@ -53,18 +56,15 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_dialog_control.h
     Software/GameEngine/src/games/mage/mage_entity_type.cpp
     Software/GameEngine/src/games/mage/mage_entity_type.h
-    Software/GameEngine/src/games/mage/mage_game_control.cpp
-    Software/GameEngine/src/games/mage/mage_game_control.h
     Software/GameEngine/src/games/mage/mage_geometry.cpp
     Software/GameEngine/src/games/mage/mage_geometry.h
-    Software/GameEngine/src/games/mage/mage_header.cpp
-    Software/GameEngine/src/games/mage/mage_header.h
     Software/GameEngine/src/games/mage/mage_hex.cpp
     Software/GameEngine/src/games/mage/mage_hex.h
     Software/GameEngine/src/games/mage/mage_map.cpp
     Software/GameEngine/src/games/mage/mage_map.h
     Software/GameEngine/src/games/mage/mage_portrait.cpp
     Software/GameEngine/src/games/mage/mage_portrait.h
+    Software/GameEngine/src/games/mage/mage_rom.h
     Software/GameEngine/src/games/mage/mage_script_actions.cpp
     Software/GameEngine/src/games/mage/mage_script_actions.h
     Software/GameEngine/src/games/mage/mage_script_control.cpp

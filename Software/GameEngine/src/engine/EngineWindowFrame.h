@@ -1,20 +1,20 @@
 #ifndef _ENGINEWINDOWFRAME_H
 #define _ENGINEWINDOWFRAME_H
 
-#include "FrameBuffer.h"
 #include "EngineInput.h"
 #include "modules/keyboard.h"
 #include "modules/led.h"
-
-
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
-#endif
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <memory>
 
+
+#define WIDTH		320
+#define HEIGHT		240
+#define HALF_WIDTH	160
+#define HALF_HEIGHT	120
+const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
 
 #ifndef SDL_CreateWindowAndRenderer
 extern int SDL_CreateWindowAndRenderer(int width, int height, uint32_t window_flags, SDL_Window** window, SDL_Renderer** renderer);
@@ -27,14 +27,10 @@ extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 class EngineWindowFrame
 {
 public:
-   EngineWindowFrame(std::shared_ptr<EngineInput> inputHandler) noexcept
-      : inputHandler(inputHandler)
-   {}
-   void GameBlt(const uint16_t* frame) const;
+   void GameBlt(const uint16_t* frame, ButtonState button) const;
    void Resize(int change);
 private:
-   std::shared_ptr<EngineInput> inputHandler;
-   void drawButtonStates() const;
+   void drawButtonStates(ButtonState button) const;
    void drawLEDStates() const;
 
    /*void util_gfx_init()

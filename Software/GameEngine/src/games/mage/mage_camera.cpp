@@ -1,16 +1,20 @@
 #include "mage_camera.h"
-#include "mage_game_control.h"
 #include "mage_defines.h"
+#include "mage_map.h"
 #include "FrameBuffer.h"
 
-
-void MageCamera::applyCameraEffects(uint32_t deltaTime)
+void MageCamera::applyEffects(uint32_t deltaTime)
 {
-   adjustedCameraPosition.x = position.x;
-   adjustedCameraPosition.y = position.y;
+   if (followEntityId != NO_PLAYER)
+   {
+      auto followEntity = mapControl->getEntity(followEntityId);
+      const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
+      position = followEntity->getRenderableData()->center - midScreen;
+   }
+
    if (shaking)
    {
-      adjustedCameraPosition.x += cos(PI * 2 * shakePhase) * (float)shakeAmplitude;
-      adjustedCameraPosition.y += sin(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
+      position.x += cos(PI * 2 * shakePhase) * (float)shakeAmplitude;
+      position.y += sin(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
    }
 }
