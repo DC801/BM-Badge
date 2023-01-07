@@ -383,7 +383,6 @@ private:
 
    void setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry);
 
-   void readSaveFromRomIntoRam(uint8_t currentSaveIndex, bool silenceErrors = false);
    void initializeEntityGeometryPath(MageScriptState* resumeStateStruct, RenderableData* renderable, MageEntity* entity, const MageGeometry* geometry);
 
    enum class MageMutateOperation : uint8_t

@@ -23,7 +23,7 @@ std::string StringLoader::getString(uint16_t stringId, int16_t mapLocalEntityId)
       auto variableHolder = inputString->substr(variableStartPosition, variableEndPosition - variableStartPosition);
       auto parsedEntityIndex = std::stoi(variableHolder);
 
-      auto entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(parsedEntityIndex, mapLocalEntityId);
+      auto entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(parsedEntityIndex, mapLocalEntityId);
       if (entityIndex != NO_PLAYER)
       {
          auto entity = mapControl->getEntityByMapLocalId(entityIndex);

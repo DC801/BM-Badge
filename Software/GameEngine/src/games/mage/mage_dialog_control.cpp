@@ -256,7 +256,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
    currentPortraitId = currentScreen->portraitIndex;
    if (currentScreen->entityIndex != NO_PLAYER)
    {
-      uint8_t entityIndex = scriptControl->GetUsefulEntityIndexFromActionEntityId(currentScreen->entityIndex, triggeringEntityId);
+      uint8_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(currentScreen->entityIndex, triggeringEntityId);
       auto currentEntity = mapControl->getEntityByMapLocalId(entityIndex);
       if (currentEntity)
       {

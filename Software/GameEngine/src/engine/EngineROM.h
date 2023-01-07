@@ -11,7 +11,7 @@
 #include <filesystem>
 #include <fstream>
 #include <tuple>
-   
+
 enum struct MageEntityFieldOffset : uint8_t
 {
    x = 12,
@@ -46,7 +46,7 @@ enum struct MageEntityFieldOffset : uint8_t
 template <typename TData>
 class Header
 {
- public:
+public:
    Header() noexcept = default;
    Header(const uint8_t* base, uint32_t count, const uint32_t* offsets, const uint32_t* lengths) noexcept
       : count(count), offsets(offsets), lengths(lengths)
@@ -72,7 +72,7 @@ private:
 
 struct MageSaveGame
 {
-   const char identifier[8]{'M', 'A', 'G', 'E', 'S', 'A', 'V', 'E'};
+   const char identifier[8]{ 'M', 'A', 'G', 'E', 'S', 'A', 'V', 'E' };
    uint32_t engineVersion{ ENGINE_VERSION };
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };
@@ -89,8 +89,8 @@ struct MageSaveGame
    uint8_t paddingA{ 0 };
    uint8_t paddingB{ 0 };
    uint8_t paddingC{ 0 };
-   uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT] { 0 };
-   uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT] { 0 };
+   uint8_t saveFlags[MAGE_SAVE_FLAG_BYTE_COUNT]{ 0 };
+   uint16_t scriptVariables[MAGE_SCRIPT_VARIABLE_COUNT]{ 0 };
 };
 
 
@@ -345,9 +345,9 @@ struct EngineROM
    T* Get(uint16_t index) const
    {
       auto offset = (uint32_t)0;// GetHelper<T>::get().offset(index % header.count());
-      //if (std::is_constructible<T, const EngineROM<THeaders...>*, uint32_t>::value)
+      //if (std::is_constructible<T, uint32_t>::value)
       //{
-      //   return T{ this, offset };
+      //   return T{ offset };
       //}
 
       T* t;
@@ -385,7 +385,7 @@ struct EngineROM
    }
 
    template <typename T>
-   void InitializeCollectionOf(std::vector<T> &collection, uint32_t& offset, size_t count) const
+   void InitializeCollectionOf(std::vector<T>& collection, uint32_t& offset, size_t count) const
    {
       collection.clear();
       for (auto i = 0; i < count; i++)
@@ -422,17 +422,74 @@ struct EngineROM
       return true;
    }
 
-   MageSaveGame ReadSaveSlot(uint8_t slotIndex) const;
+   void LoadSaveSlot(uint8_t slotIndex)
+   {
+#ifdef DC801_EMBEDDED
+      Read(
+         getSaveSlotAddressByIndex(slotIndex),
+         length,
+         data,
+         "Failed to read saveGame from ROM"
+      );
+#else
+      auto saveFilePath = getOrCreateSaveFilePath();
+      const char* saveFileName = saveFileSlotNames[slotIndex];
 
-   void EraseSaveSlot(uint8_t slotIndex);
+      auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
+      if (fileDirEntry.exists())
+      {
+         auto fileSize = fileDirEntry.file_size();
+         debug_print("Save file size: %zu\n", (uint32_t)fileDirEntry.file_size());
 
-   void WriteSaveSlot(uint8_t slotIndex, size_t length, const MageSaveGame* saveData) const
+         auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::binary };
+         if (!saveFile.good())
+         {
+            int error = errno;
+            fprintf(stderr, "Error: %s\n", strerror(error));
+            ENGINE_PANIC("Desktop build: SAVE file missing");
+         }
+         else
+         {
+            const auto saveSize = sizeof(MageSaveGame);
+            saveFile.read((char*)currentSave.get(), saveSize);
+            auto readCount = saveFile.gcount();
+            if (readCount != saveSize)
+            {
+               // The file save_*.dat on disk can't be read?
+               // Empty out the destination.
+               currentSave.reset();
+            }
+            saveFile.close();
+         }
+      }
+#endif
+   }
+
+   void EraseSaveSlot(uint8_t slotIndex)
+   {
+#ifdef DC801_EMBEDDED
+      if (!qspiControl.erase(
+         tBlockSize::BLOCK_SIZE_256K,
+         getSaveSlotAddressByIndex(slotIndex)
+      ))
+      {
+         ENGINE_PANIC("Failed to send erase command for save slot.");
+      }
+      while (qspiControl.isBusy())
+      {
+         // is very busy
+      }
+#else
+
+#endif
+   }
+
+   void WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const
    {
 #ifdef DC801_EMBEDDED
       EraseSaveSlot(slotIndex);
       Write(
          getSaveSlotAddressByIndex(slotIndex),
-         length,
          saveData
       );
 #else
@@ -472,14 +529,26 @@ private:
    std::shared_ptr<MageSaveGame> currentSave;
 
 #ifndef DC801_EMBEDDED
-   std::filesystem::directory_entry getOrCreateSaveFilePath() const;
+   std::filesystem::directory_entry getOrCreateSaveFilePath() const
+   {
+      auto saveDir = std::filesystem::directory_entry{ std::filesystem::absolute(DESKTOP_SAVE_FILE_PATH) };
+      if (!saveDir.exists())
+      {
+         if (!std::filesystem::create_directories(saveDir))
+         {
+            throw "Couldn't create save directory";
+         }
+      }
+      return saveDir;
+   }
    std::unique_ptr<char[]> romDataInDesktopRam{ new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } };
    std::fstream romFile;
 #endif
 
 
    template <typename TData>
-   Header<TData>&& getHeader() {
+   Header<TData>&& getHeader()
+   {
       return headers[tuple_element_index_v<TData, std::tuple<Header<THeaders>...>>];
    }
 

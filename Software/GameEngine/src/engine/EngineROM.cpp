@@ -12,19 +12,6 @@ extern QSPI qspiControl;
 
 #else
 
-template<typename... THeaders>
-std::filesystem::directory_entry EngineROM<THeaders...>::getOrCreateSaveFilePath() const
-{
-   auto saveDir = std::filesystem::directory_entry{ std::filesystem::absolute(DESKTOP_SAVE_FILE_PATH) };
-   if (!saveDir.exists())
-   {
-      if (!std::filesystem::create_directories(saveDir))
-      {
-         throw "Couldn't create save directory";
-      }
-   }
-   return saveDir;
-}
 #endif //DC801_DESKTOP
 
 template<typename... THeaders>
@@ -45,68 +32,7 @@ void EngineROM<THeaders...>::ErrorUnplayable()
    );
 }
 
-template<typename... THeaders>
-MageSaveGame EngineROM<THeaders...>::ReadSaveSlot(uint8_t slotIndex) const
-{
-#ifdef DC801_EMBEDDED
-   Read(
-      getSaveSlotAddressByIndex(slotIndex),
-      length,
-      data,
-      "Failed to read saveGame from ROM"
-   );
-#else
-   auto saveFilePath = getOrCreateSaveFilePath();
-   const char* saveFileName = saveFileSlotNames[slotIndex];
-   
-   auto fileDirEntry = std::filesystem::directory_entry{ std::filesystem::absolute(saveFileName) };
-   if (fileDirEntry.exists())
-   {
-      auto fileSize = fileDirEntry.file_size();
-      debug_print("Save file size: %zu\n", (uint32_t)fileDirEntry.file_size());
 
-      auto saveFile = std::fstream{ saveFileName, std::ios::in | std::ios::binary };
-      if (!saveFile.good())
-      {
-         int error = errno;
-         fprintf(stderr, "Error: %s\n", strerror(error));
-         ENGINE_PANIC("Desktop build: SAVE file missing");
-      }
-      else
-      {
-         const auto saveSize = sizeof(MageSaveGame);
-         saveFile.read((char*)currentSave, saveSize);
-         auto readCount = saveFile.gcount();
-         if (readCount != saveSize)
-         {
-            // The file save_*.dat on disk can't be read?
-            // Empty out the destination.
-            saveGame.reset();
-         }
-         saveFile.close();
-      }
-   }
-#endif
-   return saveGame;
-}
-
-template<typename... THeaders>
-void EngineROM<THeaders...>::EraseSaveSlot(uint8_t slotIndex)
-{
-#ifdef DC801_EMBEDDED
-   if (!qspiControl.erase(
-      tBlockSize::BLOCK_SIZE_256K,
-      getSaveSlotAddressByIndex(slotIndex)
-   ))
-   {
-      ENGINE_PANIC("Failed to send erase command for save slot.");
-   }
-   while (qspiControl.isBusy())
-   {
-      // is very busy
-   }
-#endif //DC801_EMBEDDED
-}
 
 #ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.

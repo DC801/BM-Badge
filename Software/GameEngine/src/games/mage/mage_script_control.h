@@ -47,8 +47,6 @@ public:
       scriptActions(std::move(scriptActions))
    {}
 
-   int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityId, int16_t callingEntityId);
-
    //this allows an I+C action to set the calling map or entity script to match the new script.
    void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
 
