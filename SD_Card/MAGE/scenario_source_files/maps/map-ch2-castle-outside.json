@@ -239,6 +239,90 @@
                  "width":0,
                  "x":152.5,
                  "y":127
+                }, 
+                {
+                 "class":"",
+                 "gid":235,
+                 "height":40,
+                 "id":36,
+                 "name":"Bert",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bert-outside"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":321
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":261,
+                 "y":119
+                }, 
+                {
+                 "class":"",
+                 "gid":642,
+                 "height":40,
+                 "id":37,
+                 "name":"Alfonso",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-alfonso-outside"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":319
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":203.5,
+                 "y":112
+                }, 
+                {
+                 "class":"",
+                 "gid":630,
+                 "height":32,
+                 "id":38,
+                 "name":"Jackob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jackob-outside"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
+                        }, 
+                        {
+                         "name":"path",
+                         "type":"object",
+                         "value":320
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":98.5,
+                 "y":114.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -247,7 +331,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -288,6 +372,14 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-village_elder.json"
+        }, 
+        {
+         "firstgid":641,
+         "source":"..\/entities\/entity-alfonso.json"
         }],
  "tilewidth":32,
  "type":"map",

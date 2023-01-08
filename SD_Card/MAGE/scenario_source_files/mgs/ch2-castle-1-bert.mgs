@@ -1,3 +1,5 @@
+settings for serial dialog { wrap 60 }
+
 /* ---------- BERT SECRET CUTSCENE ---------- */
 
 // not currently used (in the live one)
@@ -27,7 +29,7 @@ ch2-cutscene-bert-secret {
 	turn entity Bert toward entity "%PLAYER%"
 	wait 200ms
 	show dialog {
-		PLAYER "Bert? But how did you get in? I thought none of you could pass the gate!"
+		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold!"
 		Bert "I remembered back door. But...."
 	}
 	set entity Bert tick_script to spin_self_clockwise
@@ -38,7 +40,7 @@ ch2-cutscene-bert-secret {
 	set entity Bert tick_script to null_script
 	turn entity Bert toward entity "%PLAYER%"
 	show dialog {
-		Bert "%PLAYER%, I must not stay long. But I must tell you this. Is important."
+		Bert "%PLAYER%, I must not stay long. But I must tell you this."
 		"Something is wrong."
 		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
 		"It is only gone today. This morning."
@@ -70,4 +72,54 @@ ch2-cutscene-bert-secret {
 	teleport entity Bert to geometry hiding-spot
 	set entity "%PLAYER%" tick_script to null_script
 	set player control to on
+	set flag interrupt to true
+}
+
+ch2-bert-secret-notakon-intro {
+	show serial dialog spacer
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>NOTAKON:</> Bert? BERT! Oh my God, Bert! I remember that guy!"
+			" "
+			"<c>YOU:</> What? You know him?"
+		}
+	} else {
+		show serial dialog {
+			"<m>NOTAKON:</> Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			" "
+			"<c>YOU:</> What? You know Bert?"
+		}
+	}
+	show serial dialog {
+		" "
+		"<m>NOTAKON:</> His name was a complete blank until you said it, but I recognized his face!"
+	}
+	if (flag ch2-cameras-explanation is false) {
+		show serial dialog {
+			" "
+			"<c>YOU:</> Wait, how did you see his face?"
+			" "
+			"<m>NOTAKON:</> The cameras! They're all around in -- look, it doesn't matter. The point is...."
+		}
+		set flag ch2-cameras-explanation to true
+	}
+	show serial dialog {
+		"\tAw, man. The two of us? We go way back!"
+		" "
+		# "Should I go back and fetch him?" : ch2-bert-secret-notakon-intro2
+	}
+}
+ch2-bert-secret-notakon-intro2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Should I go back and fetch him? Let you talk to him?"
+		" "
+		"<m>NOTAKON:</> No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"\t...Damn. It's been a while, though."
+		" "
+		"<c>YOU:</> Wow, you know Bert, huh?"
+	}
+	set flag ch2-notakon-bert-prelude to true
+	mutate CALLBACK = 1
+	goto ch2-notakon-bert-q
 }

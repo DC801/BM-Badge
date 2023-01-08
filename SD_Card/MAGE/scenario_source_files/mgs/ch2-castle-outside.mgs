@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 }
 
 const! (
@@ -19,6 +20,9 @@ on_look-ch2-castle-outside {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-outside {
+	if (flag ch2-full-escort-cutseen is false) {
+		// cutscene: leading you inside
+	}
 	mutate CALLBACK = $CALLBACK
 	goto ch2-noncastle-init
 }
@@ -83,5 +87,25 @@ on_walk-castle-outside-east {
 		// borrowing this from town scripts
 	fade out camera to #000000 over 500ms
 	load map main2
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-alfonso-outside {
+	show dialog {
+		SELF "Go on in! You'll do fine!"
+	}
+}
+
+interact-ch2-bert-outside {
+	show dialog {
+		SELF "Only hackers may cross door."
+	}
+}
+
+interact-ch2-jackob-outside {
+	show dialog {
+		SELF "XA will be able to help you on the inside. Good luck!"
+	}
 }
 

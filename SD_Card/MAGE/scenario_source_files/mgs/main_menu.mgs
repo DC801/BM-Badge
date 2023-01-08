@@ -20,6 +20,7 @@ on_load-main_menu {
 	}
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
+	register bert -> bert
 	goto null_script
 }
 
@@ -34,6 +35,12 @@ debug {
 	set hex control on
 	mutate current-chapter = 2
 	load map main2
+}
+
+bert {
+	set flag ch2-notakon-bert-explanation to true
+	set flag interrupt to true
+	goto ch2-bert-secret-notakon-intro
 }
 
 serial-color-test {

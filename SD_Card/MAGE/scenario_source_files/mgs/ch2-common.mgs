@@ -10,6 +10,7 @@ serial dialog spacer {
 // only room 1 does not use this shared behavior
 
 ch2-castle-init {
+	set flag interrupt to false
 	// misc game state
 	if (flag ch2-ring-zero-restored is false) {
 		copy disable-hax
@@ -29,6 +30,7 @@ ch2-castle-init {
 /* ---------- NON-CASTLE ON_LOAD INIT ---------- */
 
 ch2-noncastle-init {
+	set flag interrupt to false
 	// serial features
 	if (flag ch2-has-artifact is true) {
 		set serial control on
