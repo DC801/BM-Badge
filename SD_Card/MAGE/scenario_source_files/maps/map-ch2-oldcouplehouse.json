@@ -173,6 +173,26 @@
                  "width":0,
                  "x":370.90479006505,
                  "y":165.01478415139
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":15,
+                 "name":"walk_from-west",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":18.2313879164203,
+                         "y":-0.171299367435438
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":49.4539720086734,
+                 "y":111.019120835797
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -200,7 +220,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":15,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

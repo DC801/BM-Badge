@@ -43,10 +43,14 @@ on_load-ch2-town {
 	} else if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot
 		fade in camera from #000000 over 800ms
-	} else if (warp state is enter_from-east) {
-		walk entity "%PLAYER%" along geometry enter_from-east over 500ms
+	} else if (warp state is walk_from-east) {
+		set entity "%PLAYER%" path to walk_from-east
+		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadein
+		fade in camera from #000000 over 400ms
 	} else if (warp state is walk_from-west) {
-		walk entity "%PLAYER%" along geometry enter_from-west over 500ms
+		set entity "%PLAYER%" path to walk_from-west
+		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadein
+		fade in camera from #000000 over 400ms
 	} else if (warp state is exit_from-bobsclub) {
 		walk entity "%PLAYER%" along geometry enter_from-bobsclub over 200ms
 	} else if (warp state is exit_from-bakery) {
@@ -92,8 +96,8 @@ on_tick-ch2-town {
 		then goto load_map-ch2-oldcouplehouse
 	if entity "%PLAYER%" is inside geometry door-woprhouse-entrance
 		then goto load_map-ch2-woprhouse
-	if entity "%PLAYER%" is inside geometry door_to-town-west
-		then goto wrap_from-ch2-east
+	if entity "%PLAYER%" is inside geometry east-hitbox
+		then goto on_walk-ch2-town-east
 	if entity "%PLAYER%" is inside geometry west-hitbox
 		then goto on_walk-ch2-town-west
 }
@@ -118,28 +122,17 @@ load_map-ch2-family {
 load_map-ch2-woprhouse {
 	load map woprhouse
 }
-load_map-ch2-castle {
-	load map ch2-castle-outside
-}
 
-wrap_from-ch2-east {
-	set entity "%PLAYER%" tick_script to on_tick-ch2-wrap_into-east
-	fade out camera to #000000 over 600ms
-	set entity "%PLAYER%" tick_script to on_tick-ch2-wrap_from-east
-	fade in camera from #000000 over 600ms
-	goto on_tick-ch2-town
-}
-on_tick-ch2-wrap_into-east {
+on_tick-ch2-town-walkfadeout {
 	set player control to off
-	walk entity "%PLAYER%" to geometry exit_to-east over 3500ms
+	walk entity "%PLAYER%" to geometry "%ENTITY_PATH%" over 3500ms
 	goto null_script
 }
-on_tick-ch2-wrap_from-east {
-	walk entity "%PLAYER%" along geometry enter_from-west over 600ms
+on_tick-ch2-town-walkfadein {
+	walk entity "%PLAYER%" along geometry "%ENTITY_PATH%" over 500ms
 	set player control to on
 	goto null_script
 }
-
 
 /* ---------- EXIT STUFF ---------- */
 
@@ -155,9 +148,19 @@ on_go-ch2-town-west {
 
 //WALK
 
+on_walk-ch2-town-east {
+	set entity "%PLAYER%" path to east-point
+	set warp state to walk_from-west
+	set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+	fade out camera to #000000 over 500ms
+	load map main2
+}
+
 on_walk-ch2-town-west {
-	copy on_exit-ch2-town
+	set entity "%PLAYER%" path to west-point
 	set warp state to walk_from-east
+	set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+	fade out camera to #000000 over 500ms
 	load map ch2-castle-outside
 }
 

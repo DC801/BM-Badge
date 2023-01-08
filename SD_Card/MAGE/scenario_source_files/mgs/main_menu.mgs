@@ -30,7 +30,7 @@ debug {
 	// set flag ch2-map-granted to true
 	// load map ch2-castle-outside
 	set flag ch2-birthday-cutscene to true
-	set warp state to cutscene-escort
+	// set warp state to cutscene-escort
 	set hex control on
 	load map main2
 }
