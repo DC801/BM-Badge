@@ -9,7 +9,7 @@ register-commentary {
 serial-commentary-solo {
 	show serial dialog spacer
 	show serial dialog {
-		"<c><bold>Serial commentary</> <c>is available for chapter 1!</> Play the game normally, and keep your eye on the serial console for behind-the-scenes information!"
+		"<c><bold>Serial commentary</> <c>is available for chapter 1!</> Play the game normally, and keep your eye on the serial console for gameplay tips, behind-the-scenes information, and DC801 lore!"
 		" "
 		"To enable or disable serial commentary, type <c>COMMENTARY ON</> or <c>COMMENTARY OFF</> at the main menu."
 	}

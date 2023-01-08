@@ -120,22 +120,15 @@ ch2-man-map {
 		" "
 		"Rooms are added to the map as you visit them."
 		" "
-		"The <bold>@</> symbol indicates which room you're in."
+		"The <c><bold>@</> symbol indicates which room you're in."
 	}
 }
 
 /* ---------- INITIALIZING: map command ---------- */
 
 ch2-map-enable {
-	// workaround for local script mapping:
 	register map -> draw-ch2-serial-map-check
-	unregister map
-	// the real mccoy:
-	register map -> draw-ch2-serial-map-check
-
 	// man page
-	register man + map -> ch2-man-map
-	unregister man + map
 	register man + map -> ch2-man-map
 }
 

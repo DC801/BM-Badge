@@ -223,39 +223,32 @@ interact-ch2-xa {
 			// picks it up
 			show dialog {
 				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
-
 				Notakon "Yeah, well, it doesn't exactly work right now, so...."
 			}
 			// player turns toward XA
 			show dialog {
 				PLAYER "...Wait, what?"
-				
 				Notakon "That little thing can't do much on its own. The real powerful stuff was handled by the castle mainframe. They were linked wirelessly."
-				"But the mainframe was destroyed."
+				"But the mainframe was crippled."
 			}
 			// player walks closer
 			show dialog {
-				PLAYER "Destroyed? What happened?"
+				PLAYER "Crippled? What happened?"
 
-				Notakon "Well, ahh, I destroyed it."
+				Notakon "Well, ahh, I crippled it."
 			}
 			// player walks closer
 			show dialog {
-				PLAYER "Oh, come on! Why did you do that?"
-
+				PLAYER "What? Why?!"
 				Notakon "I couldn't let the Big Bad have access to it again!"
 				"And we weren't using it for much otherwise...."
-
 				PLAYER "But now no one can use it!"
-
 				Notakon "Frankly, that's a small price to pay for keeping that power out of the Big Bad's hands. Although...."
 				"That was easier to say before the earthquake. The castle's in kind of a bad state now, and with the mainframe down we can't fix anything."
 				"It's why you might as well have the portable interface. You could help out around here while I vet your story."
-
 				PLAYER "Vet my story? You don't believe the village elders sent me?"
-
 				Notakon "Well, um... this is all very complicated. I need to be sure that this isn't a trap."
-				"If it helps, I don't think you're the Big Bad. He would have caused more mischief in that room, even with Ring Zero crippled."
+				"If it helps, I don't think you're the Big Bad. He would have caused more mischief in that room, even with Ring Zero disabled."
 			}
 			if (flag ch2-pretoot-hax-attempted is true) {
 				show dialog {
@@ -263,13 +256,13 @@ interact-ch2-xa {
 				}
 			} else {
 				show dialog {
-					PLAYER "Ring Zero is crippled? Since when?"
+					PLAYER "Ring Zero is disabled? Since when?"
 					Notakon "Since you crossed the threshold."
 				}
 			}
 			show dialog {
-				Notakon "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services. It won't work in here."
-				"Normally, XA extends the town's network, bridging the castle with the town...."
+				Notakon "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services."
+				"Normally, XA bridges the town's network with the castle...."
 				"You know what? There's a lot to explain, and it might be easier to chat with the artifact itself. Let me help you set it up."
 			}
 			set player control on
