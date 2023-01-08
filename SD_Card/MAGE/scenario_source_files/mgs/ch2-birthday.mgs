@@ -258,8 +258,9 @@ birthday-march-on-own-path-player {
 	pan camera to entity "%PLAYER%" over 600ms
 	wait 250ms
 	show dialog {
-		PLAYER "All right. Take a deep breath. You can do it, %PLAYER%."
+		PLAYER "All right. Take a deep breath.\nYou can do it, %PLAYER%."
 	}
+	set warp state to none
 	set entity Jackob tick_script to yeet
 	set entity Alfonso tick_script to yeet
 	set entity Bert tick_script to yeet

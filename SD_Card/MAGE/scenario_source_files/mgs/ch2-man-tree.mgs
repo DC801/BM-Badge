@@ -199,6 +199,8 @@ ch2-notakon-topic-person-q {
 		
 		_ "YOU" : ch2-notakon-person-notakon
 		_ "NOTAKON" : ch2-notakon-person-notakon
+
+		_ "BERT" : ch2-notakon-person-bert
 		
 		_ "BOB" : ch2-notakon-person-bob
 
@@ -225,15 +227,18 @@ ch2-notakon-person-player {
 		" "
 		"<m>NOTAKON:</> Oh, um, I don't actually know anything about you."
 		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
+		" "
 		# "How did you know I'm wearing a hat?" : ch2-notakon-person-player-2
 	}
 }
 ch2-notakon-person-player-2 {
+	set flag ch2-cameras-explanation to true
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> How did you know I'm wearing a hat?"
 		" "
 		"<m>NOTAKON:</> That's, um... that would be because of the... well, the cameras."
+		" "
 		# "Cameras? That's creepy!" : ch2-notakon-person-player-2a
 		# "Cameras? That's sensible." : ch2-notakon-person-player-2b
 	}
@@ -253,6 +258,7 @@ ch2-notakon-person-player-2b {
 		"<c>YOU:</> Cameras? That's a sensible measure to take."
 		" "
 		"<m>NOTAKON:</> You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		" "
 		# "It's not that invasive." : ch2-notakon-person-player-3b
 		# "Okay, maybe it's a little invasive." : ch2-notakon-person-player-3a
 	}
@@ -330,6 +336,7 @@ ch2-notakon-person-notakon-time {
 		"<c>YOU:</> How long have you been here?"
 		" "
 		"<m>NOTAKON:</> Where I am now, or at the castle in general?"
+		" "
 		# "Where you are now." : ch2-notakon-person-notakon-time-2a
 		# "The castle in general." : ch2-notakon-person-notakon-time-2b
 		# "Both." : ch2-notakon-person-notakon-time-2c
@@ -394,6 +401,121 @@ ch2-notakon-person-bob {
 		"<c>YOU:</> Tell me about Bob."
 		" "
 		"<m>NOTAKON:</> Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
 	}
 	goto ch2-notakon-topic-person-s
+}
+
+// Bert
+
+ch2-notakon-person-bert {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> About Bert...."
+	}
+	if (flag ch2-notakon-bert-explanation is true) {
+		goto ch2-notakon-bert-q
+	} else {
+		show serial dialog {
+			" "
+			"<m>NOTAKON:</> Bert? I don't know any Berts."
+		}
+	}
+	goto ch2-notakon-topic-person-s
+}
+
+ch2-notakon-bert-q {
+	show serial dialog {
+		" "
+		"(Ask about:)"
+		# "What is Bert like?" : ch2-notakon-bert-like
+		# "Bert's never mentioned you." : ch2-notakon-bert-mentioned
+		# "What did he mean by 'back door?'" : ch2-notakon-bert-door
+		# "Did Bert leave a message yet?" : ch2-notakon-bert-message
+		# "(Quit)" : ch2-notakon-bert-quit
+	}
+}
+
+ch2-notakon-bert-like {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What is Bert like?"
+		" "
+		"<m>NOTAKON:</> Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
+		"\tBack when... hmmm."
+		" "
+		"<c>YOU:</> What is it?"
+		" "
+		"<m>NOTAKON:</> It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
+	}
+	goto ch2-notakon-bert-q
+}
+ch2-notakon-bert-mentioned {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Bert's never mentioned you."
+		" "
+		"<m>NOTAKON:</> Well... he might not know I'm here. In the castle."
+		" "
+		"<c>YOU:</> But the village elders knew XA was here. In the castle."
+		" "
+		"<m>NOTAKON:</> Yes, well, that's because...."
+		"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
+	}
+	goto ch2-notakon-bert-q
+}
+ch2-notakon-bert-door {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What did Bert mean by 'back door?'"
+		" "
+		"<m>NOTAKON:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
+		" "
+		"<c>YOU:</> But Bert's not a hacker! Or can <bold>anyone</> use a backdoor?"
+		" "
+		"<m>NOTAKON:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required!"
+	}
+	goto ch2-notakon-bert-q
+}
+
+ch2-notakon-bert-message {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Did Bert leave a message yet?"
+		" "
+	}
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>NOTAKON:</> Haha! He's only been gone a moment! Be patient."
+		}
+	} else {
+		show serial dialog {
+			"<m>NOTAKON:</> Nothing so far, sorry...."
+		}
+	}
+	goto ch2-notakon-bert-q
+}
+
+ch2-notakon-bert-quit {
+	if (variable CALLBACK is 1) {
+		mutate CALLBACK = 0
+		show serial dialog spacer
+		show serial dialog {
+			"<m>NOTAKON:</> Yeah, sorry to go off on a long tangent like that when you were probably calling me about something else."
+			"\tDid you have a general question?"
+			" "
+			# "Yes" : ch2-notakon-topic-q
+			# "No" : ch2-notakon-bert-quitquit
+		}
+	} else {
+		goto ch2-notakon-topic-person-s
+	}
+}
+ch2-notakon-bert-quitquit {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Nope, no questions right now."
+		" "
+		"<m>NOTAKON:</> Cool! Just let me know if you want to know something."
+	}
 }
