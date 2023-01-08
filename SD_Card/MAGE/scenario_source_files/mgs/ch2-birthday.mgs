@@ -140,7 +140,7 @@ ch2-escort-cutscene {
 	wait 800ms
 	teleport entity "%PLAYER%" to geometry enter_from-magehouse
 	walk entity "%PLAYER%" along geometry enter_from-magehouse over 400ms
-	wait 1500ms
+	wait 1200ms
 	show dialog {
 		PLAYER "Oh... um...."
 		Alfonso "The time has come to visit the first dungeon, %PLAYER%."
@@ -148,9 +148,9 @@ ch2-escort-cutscene {
 		Alfonso "Ready to go?"
 		PLAYER "Yeah. I mean, no. I mean...."
 	}
-	wait 200ms
+	wait 150ms
 	set entity "%PLAYER%" tick_script to look-left-and-right-fast
-	wait 600ms
+	wait 300ms
 	show dialog {
 		PLAYER "Wait, weren't you supposed to bring me a book this morning? A book about the cereal dungeon?"
 	}
@@ -166,9 +166,9 @@ ch2-escort-cutscene {
 		"More important for you to get started right away."
 		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the dungeon on your own."
 	}
-	wait 200ms
+	wait 100ms
 	set entity "%PLAYER%" tick_script to look-left-and-right-fast
-	wait 600ms
+	wait 200ms
 	show dialog {
 		PLAYER "On my own? You aren't coming inside with me?"
 	}
@@ -179,21 +179,20 @@ ch2-escort-cutscene {
 		Alfonso "Ring Zero should grant you access...."
 		PLAYER "\"Should?\""
 	}
-	wait 200ms
+	wait 150ms
 	turn entity Alfonso south
-	wait 800ms
+	wait 500ms
 	show dialog {
 		Alfonso "If I remember correctly...."
 		PLAYER "You don't know? What kind of wise old men are you?"
 		Jackob "We'll certainly see, won't we?"
 	}
-	wait 200ms
+	wait 100ms
 	turn entity Alfonso toward entity "%PLAYER%"
-	wait 400ms
+	wait 200ms
 	show dialog {
 		PLAYER "That book... what did it say? Can you give me a summary at least?"
 	}
-	wait 200ms
 	set entity Jackob tick_script to gossip-right-down
 	set entity Alfonso tick_script to gossip-left-and-right-down
 	set entity Bert tick_script to gossip-left-down
@@ -238,20 +237,34 @@ ch2-escort-cutscene {
 	wait 90ms
 	set entity Bert tick_script to birthday-march-on-own-path
 	set entity "%PLAYER%" tick_script to birthday-march-on-own-path-player
-	fade out camera to #000000 over 2000ms
-	set warp state to cutscene-castle-gates
-	load map ch2-castle-outside
 }
 
 birthday-march-on-own-path {
-	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 3000ms
+	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 2400ms
+	goto yeet
+}
+yeet {
+	teleport entity "%SELF%" to geometry "hiding-spot"
+	set entity "%SELF%" name to " "
+	goto null_script
 }
 birthday-march-on-own-path-player {
-	wait 200ms
+	wait 300ms
 	walk entity "%PLAYER%" to geometry hesitation-point over 300ms
-	wait 400ms
+	wait 600ms
 	walk entity "%PLAYER%" to geometry birthday-alfonso over 400ms
-	walk entity "%PLAYER%" along geometry birthday-alfonso over 3500ms
+	turn entity "%PLAYER%" west
+	wait 100ms
+	pan camera to entity "%PLAYER%" over 600ms
+	wait 250ms
+	show dialog {
+		PLAYER "All right. Take a deep breath. You can do it, %PLAYER%."
+	}
+	set entity Jackob tick_script to yeet
+	set entity Alfonso tick_script to yeet
+	set entity Bert tick_script to yeet
+	set player control to on
+	goto null_script
 }
 
 /* --- AND THE REST OF THE OWL --- */

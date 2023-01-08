@@ -10,9 +10,13 @@ on_load-main_menu {
 	register colors + bold -> serial-color-test-bold
 	register colors + dim -> serial-color-test-dim
 	copy register-commentary
-	show serial dialog {
-		" "
-		"<c><bold>Serial commentary</> <c>is available for chapter 1!</> (This is off by default.) To enable or disable this commentary, type <c>COMMENTARY ON</> or <c>COMMENTARY OFF</> at the main menu."
+	if (flag ch1-commentary-notice is false) {
+		set flag serial-commentary to true
+		show serial dialog {
+			" "
+			"<c><bold>Serial commentary</> <c>is available for chapter 1!</> (This is on by default.) To enable or disable this commentary, type <c>COMMENTARY ON</> or <c>COMMENTARY OFF</> at the main menu."
+		}
+		set flag ch1-commentary-notice to true
 	}
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
@@ -20,11 +24,15 @@ on_load-main_menu {
 }
 
 debug {
-	set serial control on
-	set flag ch2-has-artifact to true
-	set flag ch2-toot-done to true
-	set flag ch2-map-granted to true
-	load map ch2-castle-outside
+	// set serial control on
+	// set flag ch2-has-artifact to true
+	// set flag ch2-toot-done to true
+	// set flag ch2-map-granted to true
+	// load map ch2-castle-outside
+	set flag ch2-birthday-cutscene to true
+	set warp state to cutscene-escort
+	set hex control on
+	load map main2
 }
 
 serial-color-test {
@@ -453,20 +461,4 @@ start-chapter2 {
 	} else {
 		load map main2
 	}
-}
-
-dialog debug-math-orig {
-	Math "orig bling-rotate-state: $bling-rotate-state$"
-}
-dialog debug-math-added {
-	Math "new bling-rotate-state: $bling-rotate-state$"
-}
-dialog debug-math-target-overshot-check {
-	Math "overshot if: $temp$"
-}
-dialog debug-math-target-overshot {
-	Math "Overshot!"
-}
-dialog debug-math-done {
-	Math "Math finished."
 }
