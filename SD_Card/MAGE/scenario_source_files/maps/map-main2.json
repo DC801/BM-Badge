@@ -1568,7 +1568,7 @@
                  "class":"",
                  "height":0,
                  "id":67,
-                 "name":"enter_from-west",
+                 "name":"walk_from-west",
                  "polyline":[
                         {
                          "x":0,
@@ -1588,7 +1588,7 @@
                  "class":"",
                  "height":0,
                  "id":68,
-                 "name":"enter_from-east",
+                 "name":"walk_from-east",
                  "polyline":[
                         {
                          "x":0,
@@ -1608,7 +1608,7 @@
                  "class":"",
                  "height":0,
                  "id":69,
-                 "name":"west-distant-point",
+                 "name":"west-point",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -1620,7 +1620,7 @@
                  "class":"",
                  "height":0,
                  "id":70,
-                 "name":"exit_to-east",
+                 "name":"east-point",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -1869,7 +1869,7 @@
                  "class":"",
                  "height":0,
                  "id":316,
-                 "name":"door_to-town-west",
+                 "name":"east-hitbox",
                  "polygon":[
                         {
                          "x":0,
