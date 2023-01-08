@@ -225,14 +225,14 @@ settings for dialog {
 }
 show_dialog-wopr-backdoor {
   set player control to off
-  walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
+  walk entity "%PLAYER%" along geometry walk_from-north over 600ms
   wait 400ms
   set player control to on
   show dialog {
     PLAYER
     "Whoa! It looks like I found some kind of back door."
   }
-  set flag backdoor-found to true
+  set flag wopr-backdoor-found to true
 }
 ```
 

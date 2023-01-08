@@ -65,8 +65,8 @@ on_load-ch2-town {
 		walk entity "%PLAYER%" along geometry enter_from-oldcouplehouse over 200ms
 	} else if (warp state is exit_from-family) {
 		walk entity "%PLAYER%" along geometry enter_from-family over 200ms
-	} else if (warp state is exit_from-woprhouse) {
-		walk entity "%PLAYER%" along geometry enter_from-woprhouse over 200ms
+	} else if (warp state is walk_from-woprhouse) {
+		walk entity "%PLAYER%" along geometry walk_from-woprhouse over 200ms
 	} else { // in case warp state is something strange
 		goto on_load-ch2-town-fallback
 	}
@@ -92,9 +92,9 @@ on_tick-ch2-town {
 		then goto load_map-ch2-magehouse
 	if entity "%PLAYER%" is inside geometry door-lodge-entrance
 		then goto load_map-ch2-lodge
-	if entity "%PLAYER%" is inside geometry door-oldcouplehouse-entrance
+	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
 		then goto load_map-ch2-oldcouplehouse
-	if entity "%PLAYER%" is inside geometry door-woprhouse-entrance
+	if entity "%PLAYER%" is inside geometry door-woprhouse
 		then goto load_map-ch2-woprhouse
 	if entity "%PLAYER%" is inside geometry east-hitbox
 		then goto on_walk-ch2-town-east
@@ -120,7 +120,7 @@ load_map-ch2-family {
 	load map family
 }
 load_map-ch2-woprhouse {
-	load map woprhouse
+	load map woprhouse // both chapters use the same map
 }
 
 on_tick-ch2-town-walkfadeout {

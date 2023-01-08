@@ -163,7 +163,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"handler-bender-timer"
+                         "value":""
                         }, 
                         {
                          "name":"path",
@@ -437,29 +437,6 @@
                  "width":48,
                  "x":1334,
                  "y":630
-                }, 
-                {
-                 "class":"",
-                 "gid":2147484450,
-                 "height":48,
-                 "id":91,
-                 "name":"Bender",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"show_dialog-bender-start"
-                        }, 
-                        {
-                         "name":"on_tick",
-                         "type":"string",
-                         "value":"face-player"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":48,
-                 "x":897,
-                 "y":731
                 }, 
                 {
                  "class":"",
@@ -1827,7 +1804,7 @@
                  "class":"",
                  "height":26.9167,
                  "id":240,
-                 "name":"door-oldcouplehouse-entrance",
+                 "name":"door-oldcouplehouse",
                  "rotation":0,
                  "visible":true,
                  "width":28,
@@ -1838,7 +1815,7 @@
                  "class":"",
                  "height":27.5,
                  "id":272,
-                 "name":"door-woprhouse-entrance",
+                 "name":"door-woprhouse",
                  "rotation":0,
                  "visible":true,
                  "width":27.9167,
@@ -1849,7 +1826,7 @@
                  "class":"",
                  "height":0,
                  "id":273,
-                 "name":"enter_from-woprhouse",
+                 "name":"walk_from-woprhouse",
                  "polyline":[
                         {
                          "x":-50,

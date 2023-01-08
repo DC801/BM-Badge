@@ -41,11 +41,13 @@ ch2-noncastle-init {
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable
 	}
-	// CALLBACK MAGIC
+	// CALLBACK "MAGIC"
 	if (variable CALLBACK is 98) {
 		goto on_load-ch2-castle-outside-RESUME
 	} else if (variable CALLBACK is 202) {
 		goto on_load-ch2-oldcouplehouse-RESUME
+	} else if (variable CALLBACK is 299) {
+		goto on_load-woprhouse-RESUME
 	} else {
 		show serial dialog {
 			"<r>ERROR: invalid callback value ($CALLBACK$)</>"
