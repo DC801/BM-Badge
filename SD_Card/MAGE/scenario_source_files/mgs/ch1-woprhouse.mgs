@@ -4,34 +4,61 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 }
 
+const! (
+	$CALLBACK = 299
+)
+
 on_load-woprhouse {
-	if (flag backdoor-found is false) {
+	if (variable current-chapter is 2) {
+		mutate CALLBACK = $CALLBACK
+		goto ch2-noncastle-init
+	}
+	goto on_load-woprhouse-RESUME
+}
+on_load-woprhouse-RESUME {
+	mutate CALLBACK = 0
+	if (warp state is warping) {
+		copy warping-in-fade-in
+	}
+	if (flag wopr-backdoor-found is false) {
 		set player control to off
-		walk entity "%PLAYER%" along geometry wopr-walkin over 600ms
+		if (warp state is not warping) {
+			walk entity "%PLAYER%" along geometry walk_from-north over 600ms
+		}
 		wait 400ms
 		set player control to on
 		show dialog {
 			PLAYER "Whoa! It looks like I found some kind of back door."
 		}
-		set flag backdoor-found to true
+		set flag wopr-backdoor-found to true
 	}
 }
 
 on_tick-woprhouse {
-	if entity "%PLAYER%" is inside geometry door-woprhouse-exit then goto leave-woprhouse
+	if entity "%PLAYER%" is inside geometry door-woprhouse-exit
+		then goto leave-woprhouse
 }
 
 leave-woprhouse {
-	set warp state to exit_from-woprhouse
-	load map main
+	if (variable current-chapter is 1) {
+		set warp state to exit_from-woprhouse
+		load map main
+	} else if (variable current-chapter is 2) {
+		set warp state to walk_from-woprhouse
+		load map main2
+	} else {
+		show serial dialog { "You're in chapter '$current-chapter$'??" }
+	}
 }
 
 show_dialog-wopr-start {
 	show dialog {
-		SELF portrait wopr
+		SELF
+		portrait wopr
 		"SHALL WE PLAY A GAME?"
 
-		SELF portrait wopr
+		SELF
+		portrait wopr
 		"PLAY?"
 		> "DO NOT PLAY" : goto "restart-wopr"
 	}

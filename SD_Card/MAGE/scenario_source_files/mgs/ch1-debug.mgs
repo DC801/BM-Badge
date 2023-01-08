@@ -236,14 +236,14 @@ set-misc-flags-true {
 	set flag bea-sequel-branch to true
 	set flag bobsclub-entered to true
 	set flag glitch-lesson to true
-	set flag backdoor-found to true
+	set flag wopr-backdoor-found to true
 }
 
 set-misc-flags-false {
 	set flag bobsclub-entered to false
 	set flag bea-sequel-branch to false
 	set flag glitch-lesson to false
-	set flag backdoor-found to false
+	set flag wopr-backdoor-found to false
 }
 
 set-begunthegame-flags-true {

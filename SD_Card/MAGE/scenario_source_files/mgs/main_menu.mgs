@@ -32,6 +32,7 @@ debug {
 	set flag ch2-birthday-cutscene to true
 	// set warp state to cutscene-escort
 	set hex control on
+	mutate current-chapter = 2
 	load map main2
 }
 
