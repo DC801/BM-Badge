@@ -5,7 +5,7 @@ settings for dialog {
 
 /* --- CUTSCENE: Birthday (house) --- */
 
-ch2-birthday-cutscene {
+on_load-ch2-magehouse-birthday {
 	set player control to off
 	close hex editor
 	set entity "%PLAYER%" animation to 0
@@ -138,8 +138,8 @@ ch2-escort-cutscene {
 	fade in camera from #000000 over 1000ms
 	turn entity "%PLAYER%" south
 	wait 800ms
-	teleport entity "%PLAYER%" to geometry enter_from-magehouse
-	walk entity "%PLAYER%" along geometry enter_from-magehouse over 400ms
+	teleport entity "%PLAYER%" to geometry walk_from-magehouse
+	walk entity "%PLAYER%" along geometry walk_from-magehouse over 400ms
 	wait 1200ms
 	show dialog {
 		PLAYER "Oh... um...."

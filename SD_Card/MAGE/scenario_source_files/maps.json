@@ -97,11 +97,18 @@
 			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
 		}
 	},
-	"ch2-magehouse": {
+	"ch2-magehouse-birthday": {
 		"path": "maps/map-magehouse-birthday.json",
+		"on_load": "on_load-ch2-magehouse-birthday"
+	},
+	"ch2-magehouse": {
+		"path": "maps/map-ch2-magehouse.json",
 		"on_load": "on_load-ch2-magehouse",
 		"on_tick": "on_tick-ch2-magehouse",
-		"on_look": "on_look-ch2-magehouse"
+		"on_look": "on_look-ch2-magehouse",
+		"directions": {
+			"south": "on_go-ch2-magehouse-south"
+		}
 	},
 	"main2": {
 		"path": "maps/map-main2.json",
@@ -109,7 +116,13 @@
 		"on_tick": "on_tick-ch2-town",
 		"on_look": "on_look-ch2-town",
 		"directions": {
-			"west": "on_go-ch2-town-west"
+			"west": "on_go-ch2-town-west",
+			"home": "on_go-ch2-town-home",
+			"bakery": "on_go-ch2-town-bakery",
+			"greenhouse": "on_go-ch2-town-greenhouse",
+			"smith": "on_go-ch2-town-smith",
+			"beatrice": "on_go-ch2-town-beatrice",
+			"wopr": "on_go-ch2-town-wopr"
 		}
 	},
 	"ch2-oldcouplehouse":{
@@ -119,6 +132,33 @@
 		"on_look": "on_look-ch2-oldcouplehouse",
 		"directions": {
 			"south": "on_go-ch2-oldcouplehouse-south"
+		}
+	},
+	"ch2-smithfamily":{
+		"path": "maps/map-ch2-smithfamily.json",
+		"on_tick": "on_tick-ch2-smithfamily",
+		"on_load": "on_load-ch2-smithfamily",
+		"on_look": "on_look-ch2-smithfamily",
+		"directions": {
+			"south": "on_go-ch2-smithfamily-south"
+		}
+	},
+	"ch2-bakery":{
+		"path": "maps/map-ch2-bakery.json",
+		"on_tick": "on_tick-ch2-bakery",
+		"on_load": "on_load-ch2-bakery",
+		"on_look": "on_look-ch2-bakery",
+		"directions": {
+			"south": "on_go-ch2-bakery-south"
+		}
+	},
+	"ch2-greenhouse":{
+		"path": "maps/map-ch2-greenhouse.json",
+		"on_tick": "on_tick-ch2-greenhouse",
+		"on_load": "on_load-ch2-greenhouse",
+		"on_look": "on_look-ch2-greenhouse",
+		"directions": {
+			"south": "on_go-ch2-greenhouse-south"
 		}
 	},
 
@@ -169,6 +209,11 @@
 	"testbig": "maps/map-testbig.json",
 	"credits": "maps/map-credits.json",
 	"credits2": "maps/map-credits2.json",
-	"woprhouse": "maps/map-woprhouse.json",
+	"woprhouse": {
+		"path": "maps/map-woprhouse.json",
+		"directions": {
+			"north": "on_go-woprhouse-north"
+		}
+	},
 	"action_testing_02": "maps/map-action_testing_02.json"
 }

@@ -73,7 +73,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-beatrice"
+                         "value":"interact-ch2-beatrice"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -85,7 +85,7 @@
                  "class":"",
                  "height":25.8186429930247,
                  "id":3,
-                 "name":"door-oldcouplehouse",
+                 "name":"south-hitbox",
                  "rotation":0,
                  "visible":true,
                  "width":30,
@@ -109,18 +109,6 @@
                  "width":32,
                  "x":64,
                  "y":85
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":10,
-                 "name":"oldcouplehouse-hidingplace",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-36,
-                 "y":-68
                 }, 
                 {
                  "class":"",

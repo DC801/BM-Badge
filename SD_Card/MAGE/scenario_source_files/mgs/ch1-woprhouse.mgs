@@ -22,7 +22,7 @@ on_load-woprhouse-RESUME {
 	}
 	if (flag wopr-backdoor-found is false) {
 		set player control to off
-		if (warp state is not warping) {
+		if (warp state is not warped) {
 			walk entity "%PLAYER%" along geometry walk_from-north over 600ms
 		}
 		wait 400ms
@@ -34,12 +34,22 @@ on_load-woprhouse-RESUME {
 	}
 }
 
+/* ---------- ON_TICK ---------- */
+
 on_tick-woprhouse {
-	if entity "%PLAYER%" is inside geometry door-woprhouse-exit
-		then goto leave-woprhouse
+	if entity "%PLAYER%" is inside geometry north-hitbox
+		then goto on_walk-woprhouse-north
 }
 
-leave-woprhouse {
+/* ---------- EXIT STUFF ---------- */
+
+on_go-woprhouse-north {
+	copy warping-out-fade-out
+	load map main2
+}
+
+on_walk-woprhouse-north {
+	// triggered by map's on_tick
 	if (variable current-chapter is 1) {
 		set warp state to exit_from-woprhouse
 		load map main
@@ -50,6 +60,8 @@ leave-woprhouse {
 		show serial dialog { "You're in chapter '$current-chapter$'??" }
 	}
 }
+
+/* ---------- ENTITIES ---------- */
 
 show_dialog-wopr-start {
 	show dialog {

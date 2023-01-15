@@ -14,6 +14,8 @@ ch2-castle-init {
 	// misc game state
 	if (flag ch2-ring-zero-restored is false) {
 		copy disable-hax
+	} else {
+		set hex control on
 	}
 	// serial features
 	set serial control on
@@ -30,7 +32,9 @@ ch2-castle-init {
 /* ---------- NON-CASTLE ON_LOAD INIT ---------- */
 
 ch2-noncastle-init {
-	set flag interrupt to false
+	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
+	set hex control to on
+
 	// serial features
 	if (flag ch2-has-artifact is true) {
 		set serial control on
@@ -43,11 +47,20 @@ ch2-noncastle-init {
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable
 	}
+
 	// CALLBACK "MAGIC"
 	if (variable CALLBACK is 98) {
 		goto on_load-ch2-castle-outside-RESUME
+	} else if (variable CALLBACK is 201) {
+		goto on_load-ch2-magehouse-RESUME
 	} else if (variable CALLBACK is 202) {
 		goto on_load-ch2-oldcouplehouse-RESUME
+	} else if (variable CALLBACK is 203) {
+		goto on_load-ch2-smithfamily-RESUME
+	} else if (variable CALLBACK is 204) {
+		goto on_load-ch2-bakery-RESUME
+	} else if (variable CALLBACK is 205) {
+		goto on_load-ch2-greenhouse-RESUME
 	} else if (variable CALLBACK is 299) {
 		goto on_load-woprhouse-RESUME
 	} else {
@@ -174,6 +187,7 @@ warping-in-fade-in {
 	set entity "%PLAYER%" tick_script to null_script
 	turn entity "%PLAYER%" south
 	set player control to on
+	set warp state to warped
 }
 
 /* ---------- why did I make this? ---------- */

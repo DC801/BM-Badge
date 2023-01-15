@@ -33,7 +33,7 @@ on_load-ch2-oldcouplehouse-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-oldcouplehouse {
-	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
+	if entity "%PLAYER%" is inside geometry south-hitbox
 		then goto on_walk-ch2-oldcouplehouse-south
 }
 
@@ -51,7 +51,7 @@ on_walk-ch2-oldcouplehouse-south {
 
 /* ---------- ENTITIES ---------- */
 
-ch2-interact-beatrice {
+interact-ch2-beatrice {
 	show dialog {
 		SELF "TODO"
 	}

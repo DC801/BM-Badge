@@ -25,10 +25,10 @@ on_load-main_menu {
 }
 
 debug {
-	// set serial control on
-	// set flag ch2-has-artifact to true
-	// set flag ch2-toot-done to true
-	// set flag ch2-map-granted to true
+	set serial control on
+	set flag ch2-has-artifact to true
+	set flag ch2-toot-done to true
+	set flag ch2-map-granted to true
 	// load map ch2-castle-outside
 	set flag ch2-birthday-cutscene to true
 	// set warp state to cutscene-escort
@@ -464,8 +464,7 @@ start-chapter2-check {
 start-chapter2 {
 	mutate current-chapter = 2
 	if (flag ch2-birthday-cutscene is false) {
-		set warp state to cutscene-birthday
-		load map ch2-magehouse
+		load map ch2-magehouse-birthday
 	} else {
 		load map main2
 	}

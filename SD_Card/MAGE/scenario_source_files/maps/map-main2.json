@@ -723,7 +723,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-interact-delmar"
+                         "value":"interact-ch2-delmar"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1228,18 +1228,6 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":260,
-                 "name":"goose-rescue",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":970,
-                 "y":1503
-                }, 
-                {
-                 "class":"",
-                 "height":0,
                  "id":298,
                  "name":"alfonso-waitspot",
                  "point":true,
@@ -1660,7 +1648,7 @@
                  "class":"",
                  "height":27.5,
                  "id":231,
-                 "name":"door-bakery-entrance",
+                 "name":"door-bakery",
                  "rotation":0,
                  "visible":true,
                  "width":27.9167,
@@ -1671,7 +1659,7 @@
                  "class":"",
                  "height":0,
                  "id":232,
-                 "name":"enter_from-bakery",
+                 "name":"walk_from-bakery",
                  "polyline":[
                         {
                          "x":0,
@@ -1691,7 +1679,7 @@
                  "class":"",
                  "height":0,
                  "id":233,
-                 "name":"enter_from-family",
+                 "name":"walk_from-smithfamily",
                  "polyline":[
                         {
                          "x":0,
@@ -1711,7 +1699,7 @@
                  "class":"",
                  "height":27.3333,
                  "id":234,
-                 "name":"door-family-entrance",
+                 "name":"door-smithfamily",
                  "rotation":0,
                  "visible":true,
                  "width":28,
@@ -1722,7 +1710,7 @@
                  "class":"",
                  "height":0,
                  "id":235,
-                 "name":"enter_from-greenhouse",
+                 "name":"walk_from-greenhouse",
                  "polyline":[
                         {
                          "x":0,
@@ -1742,7 +1730,7 @@
                  "class":"",
                  "height":27.0833,
                  "id":236,
-                 "name":"door-greenhouse-entrance",
+                 "name":"door-greenhouse",
                  "rotation":0,
                  "visible":true,
                  "width":27.5,
@@ -1753,7 +1741,7 @@
                  "class":"",
                  "height":0,
                  "id":237,
-                 "name":"enter_from-magehouse",
+                 "name":"walk_from-magehouse",
                  "polyline":[
                         {
                          "x":0.579999999999927,
@@ -1773,7 +1761,7 @@
                  "class":"",
                  "height":28.25,
                  "id":238,
-                 "name":"door-magehouse-entrance",
+                 "name":"door-magehouse",
                  "rotation":0,
                  "visible":true,
                  "width":28,
@@ -1784,7 +1772,7 @@
                  "class":"",
                  "height":0,
                  "id":239,
-                 "name":"enter_from-oldcouplehouse",
+                 "name":"walk_from-oldcouplehouse",
                  "polyline":[
                         {
                          "x":0,
