@@ -52,15 +52,25 @@ public:
       : count(count), offsets(offsets), lengths(lengths)
    {}
 
-   //const TData* Get(uint32_t index) const
-   //{
-   //	if (0 == count) { return nullptr; }
-   //	return (const T*)base + offset(index % count);
-   //}
+   const TData* Get(uint32_t index) const
+   {
+   	if (0 == count) { return nullptr; }
+      /*if constexpr (std::is_constructible_v<TData, uint32_t&>)
+      {
+         return
+      }*/
+      return reinterpret_cast<const TData*>(base + Offset(index));
+   }
 
-   //uint32_t count() const { return count; }
-   uint32_t offset(uint32_t i) const { return offsets[i % count]; }
-   uint32_t length(uint32_t i) const { return lengths[i % count]; }
+   std::unique_ptr<TData> GetCopy(uint32_t index) const
+   {
+      if (0 == count) { return nullptr; }
+      return std::make_unique<TData>{base + Offset(index)};
+   }
+
+   uint32_t Count() const { return count; }
+   uint32_t Offset(uint16_t i) const { return offsets[i % count]; }
+   uint32_t Length(uint16_t i) const { return lengths[i % count]; }
 
 private:
    const uint8_t* base;
@@ -155,6 +165,27 @@ static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
    DESKTOP_SAVE_FILE_PATH "save_1.dat",
    DESKTOP_SAVE_FILE_PATH "save_2.dat"
 };
+
+/////////////////////////////////////////////////////////////////////////////////
+// https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
+template <class T, std::size_t I, class Tuple>
+constexpr bool match_v = std::is_same_v<T, std::tuple_element_t<I, Tuple>>;
+
+template <class T, class Tuple, class Idxs = std::make_index_sequence<std::tuple_size_v<Tuple>>>
+struct type_index;
+
+template <class T, template <class...> class Tuple, class... Args, std::size_t... Is>
+struct type_index<T, Tuple<Args...>, std::index_sequence<Is...>>
+   : std::integral_constant<std::size_t, ((Is* match_v<T, Is, Tuple<Args...>>) + ... + 0)>
+{
+   static_assert(1 == (match_v<T, Is, Tuple<Args...>> +... + 0), "T doesn't appear once in Tuple");
+};
+
+template <class T, class Tuple>
+constexpr std::size_t type_index_v = type_index<T, Tuple>::value;
+// https://ngathanasiou.wordpress.com/2020/07/09/avoiding-compile-time-recursion/
+/////////////////////////////////////////////////////////////////////////////////
+
 
 template<typename... THeaders>
 struct EngineROM
@@ -319,6 +350,7 @@ struct EngineROM
    template <typename T>
    void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
+      static_assert(std::is_scalar<T>::value || std::is_standard_layout<T>::value, "T must be a scalar or standard-layout type");
       auto elementSize = sizeof(std::remove_pointer<T>::type);
       auto dataLength = count * elementSize;
       if constexpr (std::is_array<T>())
@@ -332,27 +364,27 @@ struct EngineROM
       auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + offset;
       memmove(&t, dataPointer, dataLength);
       offset += dataLength;
-   };
+   }
 
    template <typename T>
-   uint16_t GetAddress(uint16_t index) const
+   uint32_t GetAddress(uint16_t index) const
    {
-      auto address = 0;// GetHelper<T>::get().offset(index % header.count());
+      auto& header = getHeader<T>();
+      auto address = header.Offset(index % header.Count());
       return address;
    }
 
    template <typename T>
-   T* Get(uint16_t index) const
+   const T* Get(uint16_t index) const
    {
-      auto offset = (uint32_t)0;// GetHelper<T>::get().offset(index % header.count());
-      //if (std::is_constructible<T, uint32_t>::value)
-      //{
-      //   return T{ offset };
-      //}
+      return getHeader<T>().Get(index);
+   }
 
-      T* t;
-      GetPointerTo<T>(t, offset);
-      return t;
+   template <typename T>
+   std::unique_ptr<T> GetUniqueCopy(uint16_t index) const
+   {
+      auto offset = getHeader<T>().Offset(index);
+      return std::make_unique<T>(offset);
    }
 
    std::shared_ptr<MageSaveGame> GetCurrentSave() const
@@ -360,28 +392,23 @@ struct EngineROM
       return currentSave;
    }
 
-   //template <typename T, typename... TRest>
-   //const T* Get(uint16_t index) const
-   //{
-   //   return 
-   //}
    template <typename T>
    uint16_t GetCount() const
    {
-      return 0;
+      return getHeader<T>().Count();
    }
 
    template <typename T>
-   void GetPointerTo(T*& t, uint32_t& offset, size_t count = 1) const
+   void GetReadPointerTo(const T*& t, uint32_t& offset, size_t count = 1) const
    {
+      static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
       auto dataLength = count * sizeof(T);
       if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::GetPointerTo: offset + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::GetReadPointerTo: offset + length exceeds maximum dat file size" };
       }
-      auto address = romDataInDesktopRam.get() + offset;
-      t = (T*)address;
-      offset += sizeof(T) * count;
+      t = reinterpret_cast<const T*>(romDataInDesktopRam.get() + offset);
+      offset += dataLength;
    }
 
    template <typename T>
@@ -525,7 +552,7 @@ struct EngineROM
    }
 
 private:
-   static std::tuple<Header<THeaders>...> headers;
+   std::tuple<Header<THeaders>...> headers;
    std::shared_ptr<MageSaveGame> currentSave;
 
 #ifndef DC801_EMBEDDED
@@ -545,11 +572,14 @@ private:
    std::fstream romFile;
 #endif
 
-
    template <typename TData>
-   Header<TData>&& getHeader()
+   const Header<TData>& getHeader() const
    {
-      return headers[tuple_element_index_v<TData, std::tuple<Header<THeaders>...>>];
+      using Tuple = std::tuple<Header<THeaders>...>;
+      
+      static constexpr std::size_t index = type_index_v<Header<TData>, Tuple>;
+      static_assert(index < std::tuple_size_v<Tuple>, "type does not appear in tuple");
+      return std::get<index>(headers);
    }
 
    template <typename T>
@@ -560,8 +590,8 @@ private:
       const uint32_t* lengths;
 
       Read(counts, offset);
-      GetPointerTo(offsets, offset, counts);
-      GetPointerTo(lengths, offset, counts);
+      GetReadPointerTo(offsets, offset, counts);
+      GetReadPointerTo(lengths, offset, counts);
       return Header<T>{(const uint8_t*)romDataInDesktopRam.get(), counts, offsets, lengths};
    }
 

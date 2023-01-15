@@ -16,13 +16,9 @@ class MageColorPalette
 public:
    MageColorPalette() noexcept = default;
    MageColorPalette(uint32_t& address) noexcept;
-   MageColorPalette(
-      const FrameBuffer* frameBuffer,
-      const MageColorPalette* sourcePalette,
-      uint16_t fadeColor,
-      float fadeFraction);
+   MageColorPalette(const FrameBuffer* frameBuffer, const MageColorPalette* sourcePalette, uint16_t fadeColor, float fadeFraction);
 
-   uint16_t colorAt(uint16_t colorIndex) const { return colors[colorIndex % colors.size()]; };
+   uint16_t colorAt(uint8_t colorIndex) const { return colors[colorIndex % colors.size()]; };
 private:
 #ifndef DC801_EMBEDDED
    char name[COLOR_PALETTE_NAME_SIZE]{ 0 };

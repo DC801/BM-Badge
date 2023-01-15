@@ -168,7 +168,7 @@ private:
    }
 
    char dialogName[32]{};
-   const MageTileset* currentFrameTileset{};
+   const MageTileset* currentFrameTileset{nullptr};
    int16_t triggeringEntityId{0};
    int32_t currentDialogIndex{0};
    uint32_t currentDialogAddress{0};

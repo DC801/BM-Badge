@@ -53,7 +53,7 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
    if (entityIndex != NO_PLAYER)
    {
       std::string romString = stringLoader->getString(argStruct->stringId, scriptControl->currentEntityId);
-      std::string entityName = mapControl->getEntityByMapLocalId(entityIndex)->name;
+      std::string entityName = mapControl->getEntityByMapLocalId(entityIndex)->name.data();
 
       int compare = strcmp(entityName.c_str(), romString.c_str());
       bool identical = compare == 0;
@@ -1668,10 +1668,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
          progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
             / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
 
-         setResumeStatePointsAndEntityDirection(
-            resumeStateStruct,
-            entity,
-            geometry);
+         setResumeStatePointsAndEntityDirection(resumeStateStruct, entity, geometry);
       }
 
       Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
@@ -2175,7 +2172,7 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
       // do rom writes
       auto playerName = mapControl->getPlayerEntity()->name;
       auto currentSave = ROM->GetCurrentSave();
-      memcpy((void*)currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
+      memcpy((void*)currentSave->name, playerName.data(), MAGE_ENTITY_NAME_LENGTH < playerName.size() ? MAGE_ENTITY_NAME_LENGTH : playerName.size());
       //TODO FIXME: 
       // ROM->WriteSaveSlot(currentSaveIndex, currentSave.get());
       // readSaveFromRomIntoRam(currentSaveIndex);

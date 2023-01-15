@@ -57,13 +57,14 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
    jumpScriptId = MAGE_NO_SCRIPT;
 
    //get the memory address for the script:
-   auto scriptId = mapControl->ScriptCount() == 0 ? 0 : resumeStateStruct->currentScriptId % mapControl->ScriptCount();
-   uint32_t address = scriptId;// ROM->GetAddress(scriptGlobalIds[scriptId]); mapControl->getGlobalScriptAddress();
-
+   auto scriptId = (uint16_t)mapControl->ScriptCount() == 0 ? 0 : resumeStateStruct->currentScriptId % mapControl->ScriptCount();
+   auto script = ROM->Get<MageScriptState>(scriptId);
 #ifndef DC801_EMBEDDED
 
    char scriptName[SCRIPT_NAME_LENGTH] = { 0 };
-   ROM->Read(scriptName, address, SCRIPT_NAME_LENGTH);
+   //memcpy(scriptName, script->nam
+   //ROM->Read(scriptName, address, SCRIPT_NAME_LENGTH);
+   auto address = ROM->GetAddress<MageScriptState>(scriptId);
 
 #endif // !DC801_EMBEDDED
 

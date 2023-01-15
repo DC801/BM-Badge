@@ -47,7 +47,7 @@ void FrameBuffer::clearScreen(uint16_t color)
    }
 }
 
-void FrameBuffer::drawChunkWithFlags(uint32_t address, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
+void FrameBuffer::drawChunkWithFlags(const MagePixels pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
 {
    MageColorPalette colors;
    if (fadeFraction != 0)
@@ -77,9 +77,7 @@ void FrameBuffer::drawChunkWithFlags(uint32_t address, const MageColorPalette* c
       return;
    }
 
-   auto pixelOffset = address + ((source.y * source_width) + source.x);
-   const uint8_t* pixels;
-   ROM->GetPointerTo(pixels, pixelOffset);
+   auto pixelOffset = pixels + ((source.y * source_width) + source.x);
 
    for (auto row = 0; row != target.h && row < HEIGHT; row++)
    {
@@ -89,7 +87,7 @@ void FrameBuffer::drawChunkWithFlags(uint32_t address, const MageColorPalette* c
          auto pixelCol = renderFlags.rf.d.horizontal ? target.w - col : col;
          auto pixelIndex = (pixelRow * target.w) + pixelCol;
 
-         uint8_t colorIndex = pixels[pixelIndex];
+         auto colorIndex = pixels[pixelIndex];
          auto color = colors.colorAt(colorIndex);
          if (color != TRANSPARENCY_COLOR)
          {

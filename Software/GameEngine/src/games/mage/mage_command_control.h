@@ -32,8 +32,8 @@ enum MageSerialDialogResponseTypes : uint8_t {
 
 struct MageSerialDialog
 {
-	char name[32];
-	uint16_t stringId;
+	std::array<char, 32> name;
+   uint16_t stringId;
 	MageSerialDialogResponseTypes serialResponseType;
 	uint8_t responseCount;
 };
@@ -53,7 +53,7 @@ class MageCommandControl {
 		std::string commandResponseBuffer;
 		std::string serialDialogBuffer;
 		std::string postDialogBuffer;
-		MageSerialDialog serialDialog = {};
+		const MageSerialDialog* serialDialog;
 		std::vector<MageSerialDialogResponse> serialDialogResponses{};
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;

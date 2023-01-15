@@ -42,23 +42,21 @@ private:
 class MageEntityType
 {
 public:
-   MageEntityType() = default;
+   MageEntityType() noexcept = default;
    MageEntityType(uint32_t& address);
 
    uint8_t PortraitId() const { return portraitId; }
    uint8_t AnimationCount() const { return entityTypeAnimations.size(); }
 
-   const MageEntityTypeAnimation* EntityTypeAnimation(uint32_t index) const
+   const MageEntityTypeAnimation& EntityTypeAnimation(uint32_t index) const
    {
       return entityTypeAnimations[index % entityTypeAnimations.size()];
    }
 
 private:
-#ifndef DC801_EMBEDDED
    char name[32]{ 0 };
-#endif
    uint8_t portraitId{ 0 };
-   std::vector<const MageEntityTypeAnimation*> entityTypeAnimations{ };
+   std::vector<MageEntityTypeAnimation> entityTypeAnimations{ };
 };
 
 class MageEntity
@@ -83,16 +81,10 @@ public:
    }
    void updateRenderableData(uint32_t deltaTime = 0);
 
-   inline const MageEntityType* GetEntityType() const
-   {
-      return ROM->Get<MageEntityType>(primaryId);
-      //return entityTypes[primaryId % entityTypes.size()];
-   }
-
    RenderableData* getRenderableData() { return &renderableData; }
    const RenderableData* getRenderableData() const { return &renderableData; }
 
-   std::string name{MAGE_ENTITY_NAME_LENGTH, 0 }; // bob's club
+   std::array<char, MAGE_ENTITY_NAME_LENGTH> name{ 0 }; // bob's club
    // put the sheep back in the pen, rake in the lake
    Point location{ 0 };
    uint16_t onInteractScriptId{ 0 };

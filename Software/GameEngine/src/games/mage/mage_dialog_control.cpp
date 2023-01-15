@@ -162,8 +162,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          y = offsetY + (j * tileHeight);
          tileId = getTileIdFromXY(i, j, box);
 
-         const auto tile = ROM->Get<MageMapTile>(currentFrameTileset->ImageId());
-         tileManager->DrawTile(currentFrameTileset, tile, x, y, 0);
+         tileManager->DrawTile(currentFrameTileset, x, y, (uint8_t)0);
       }
    }
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -195,17 +194,15 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          y = offsetY + ((box.h - 2) * tileHeight) + bounce;
       }
 
-
-      const auto tile = ROM->Get<MageMapTile>(currentFrameTileset->ImageId());
-      tileManager->DrawTile(currentFrameTileset, tile, x, y, flags);
+      tileManager->DrawTile(currentFrameTileset, x, y, flags);
    }
    if (drawPortrait)
    {
       x = offsetX + tileWidth;
       y = offsetY + tileHeight;
-      auto tileset = ROM->Get<MageTileset>(currentPortraitRenderableData.tilesetId);
-      const auto tile = ROM->Get<MageMapTile>(currentPortraitRenderableData.tileId);
-      tileManager->DrawTile(tileset, tile, x, y, currentPortraitRenderableData.renderFlags);
+      auto tileset = ROM->Get<MageTileset>(currentPortraitRenderableData.tilesetId); 
+      //mapControl->GetTile(currentPortraitRenderableData.tileId);
+      tileManager->DrawTile(tileset, x, y, currentPortraitRenderableData.renderFlags);
    }
 }
 
@@ -263,8 +260,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
          uint8_t sanitizedPrimaryType = currentEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            const MageEntityType* entityType = ROM->Get<MageEntityType>(currentEntity->primaryId);
-            currentPortraitId = entityType->PortraitId();
+            currentPortraitId = ROM->Get<MageEntityType>(currentEntity->primaryId)->PortraitId();
          }
 
          // only try rendering when we have a portrait

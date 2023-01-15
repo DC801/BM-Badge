@@ -6,8 +6,8 @@
 
 void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebugOn)
 {
-   auto map = ROM->Get<MapData>(index);
-   currentMap.reset(map);
+   auto map = ROM->GetUniqueCopy<MapData>(index);
+   currentMap = std::move(map);
 }
 
 MapData::MapData(uint32_t& address, bool isEntityDebugOn)
@@ -51,7 +51,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
 
    for (uint32_t i = 0; i < layerCount; i++)
    {
-      mapLayerOffsets.push_back(address);
+      layerAddresses.push_back(address);
       address += rows * cols * sizeof(uint8_t*);
    }
 
@@ -86,6 +86,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
    for (const auto& entity : currentMap->entities)
    {
       auto renderableData = entity.getRenderableData();
+
       tileManager->DrawTile(renderableData, entity.location.x, entity.location.y);
 
       if (isCollisionDebugOn)
@@ -106,7 +107,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
 }
 void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn)
 {
-   const auto layerAddress = LayerOffset(layer);
+   const auto layerAddress = LayerAddress(layer);
    if (layerAddress == 0)
    {
       return;
@@ -120,8 +121,9 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       auto tileOrigin = Point{ currentMap->tileWidth * (i % currentMap->cols), currentMap->tileHeight * (i / currentMap->cols) };
       auto tileDrawPoint = tileOrigin - cameraPosition;
 
+      // don't draw tiles that are entirely outside the screen bounds
       if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
-         || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
+       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
       {
          continue;
       }
@@ -129,12 +131,13 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       auto address = layerAddress + (i * sizeof(MageMapTile));
 
       const MageMapTile* currentTile;
-      ROM->GetPointerTo(currentTile, address);
+      ROM->GetReadPointerTo(currentTile, address);
       if (currentTile->tileId == 0) { continue; }
 
       //currentTile.tileId -= 1;
-      auto tileset = ROM->Get<MageTileset>(currentTile->tilesetId);
-      tileManager->DrawTile(tileset, currentTile, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
+      auto tileset = ROM->Get<MageTileset>(address);
+
+      tileManager->DrawTile(tileset, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
 
       if (isCollisionDebugOn)
       {

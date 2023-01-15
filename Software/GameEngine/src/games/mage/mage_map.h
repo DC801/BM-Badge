@@ -41,8 +41,15 @@ struct MapData
    std::vector<uint16_t> geometryGlobalIds{};
    std::vector<uint16_t> scriptGlobalIds{};
    std::vector<GoDirection> goDirections{};
-   std::vector<uint32_t> mapLayerOffsets{};
+   std::vector<uint32_t> layerAddresses{};
    std::vector<MageEntity> entities{};
+};
+
+struct MageMapTile
+{
+   uint16_t tileId{ 0 };
+   uint8_t tilesetId{ 0 };
+   uint8_t flags{ 0 };
 };
 
 class MapControl
@@ -91,7 +98,7 @@ public:
    uint16_t TileHeight() const { return currentMap->tileHeight; }
    uint16_t Cols() const { return currentMap->cols; }
    uint16_t Rows() const { return currentMap->rows; }
-   uint8_t LayerCount() const { return currentMap->mapLayerOffsets.size(); }
+   uint8_t LayerCount() const { return currentMap->layerAddresses.size(); }
    uint8_t FilteredEntityCount() const { return currentMap->entities.size(); }
    uint16_t GeometryCount() const { return currentMap->geometryGlobalIds.size(); }
    uint16_t ScriptCount() const { return currentMap->scriptGlobalIds.size(); }
@@ -153,11 +160,11 @@ public:
       return &currentMap->entities[mapLocalId];
    }
 
-   uint32_t LayerOffset(uint16_t num) const
+   uint32_t LayerAddress(uint16_t layerIndex) const
    {
-      if (currentMap->mapLayerOffsets.empty()) { return 0; }
+      if (currentMap->layerAddresses.empty()) { return 0; }
 
-      return currentMap->mapLayerOffsets[num % currentMap->mapLayerOffsets.size()];
+      return currentMap->layerAddresses[layerIndex % currentMap->layerAddresses.size()];
    }
 
    std::string getDirectionNames() const

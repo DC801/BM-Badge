@@ -4,19 +4,19 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-AnimationDirection::AnimationDirection(uint32_t& offset)
+AnimationDirection::AnimationDirection(uint32_t& address)
 {
-   ROM->Read(typeId, offset);
-   ROM->Read(type, offset);
-   ROM->Read(renderFlags, offset);
+   ROM->Read(typeId, address);
+   ROM->Read(type, address);
+   ROM->Read(renderFlags, address);
 }
 
 MageEntityTypeAnimation::MageEntityTypeAnimation(uint32_t& address)
 {
-   ROM->GetPointerTo(north, address);
-   ROM->GetPointerTo(south, address);
-   ROM->GetPointerTo(east, address);
-   ROM->GetPointerTo(west, address);
+   ROM->GetReadPointerTo(north, address);
+   ROM->GetReadPointerTo(south, address);
+   ROM->GetReadPointerTo(east, address);
+   ROM->GetReadPointerTo(west, address);
 }
 
 MageEntityType::MageEntityType(uint32_t& address)
@@ -33,13 +33,7 @@ MageEntityType::MageEntityType(uint32_t& address)
 
    auto animationCount = uint16_t{ 0 };
    ROM->Read(animationCount, address);
-
-   for (auto i = 0; i < animationCount; i++)
-   {
-      const MageEntityTypeAnimation* entityTypeAnimation;
-      ROM->GetPointerTo(entityTypeAnimation, address);
-      entityTypeAnimations.push_back(entityTypeAnimation);
-   }
+   ROM->InitializeCollectionOf(entityTypeAnimations, address, animationCount);
 }
 
 MageEntity::MageEntity(uint32_t& address, std::shared_ptr<TileManager> tileManager)
@@ -101,7 +95,8 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = GetEntityType();
+      auto entityType = ROM->Get<MageEntityType>(primaryId);
+
       //If the entity has no animations defined, return default:
       if (entityType->AnimationCount() == 0)
       {
@@ -118,16 +113,17 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       //create a animationDirection entity based on direction:
       auto dirValue = (MageEntityAnimationDirection)(renderFlags & RENDER_FLAGS_DIRECTION_MASK);
       const AnimationDirection* animationDirection =
-         dirValue == MageEntityAnimationDirection::NORTH ? animation->North()
-         : dirValue == MageEntityAnimationDirection::EAST ? animation->East()
-         : dirValue == MageEntityAnimationDirection::SOUTH ? animation->South()
-         : animation->West();
+         dirValue == MageEntityAnimationDirection::NORTH ? animation.North()
+         : dirValue == MageEntityAnimationDirection::EAST ? animation.East()
+         : dirValue == MageEntityAnimationDirection::SOUTH ? animation.South()
+         : animation.West();
 
       //based on animationDirection->Type(), you can get two different outcomes:
       //Scenario A: Type is 0, TypeID is an animation ID:
       //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
       if (animationDirection->Type() == 0)
       {
+         //TODO FIXME:
          //auto animation = ROM->Get<MageAnimation>(animationDirection->TypeId());
          //MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
          //renderableData.tilesetId = animation->TilesetId();
@@ -147,7 +143,9 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       }
    }
 
-   MageTileset* tileset = nullptr;// ROM->Get<MageTileset>(renderableData.tilesetId);
+   auto tileset = ROM->Get<MageTileset>(renderableData.tilesetId);
+   uint16_t halfWidth = tileset->TileWidth() / 2;
+   uint16_t halfHeight = tileset->TileHeight() / 2;
 
    Point oldCenter = { renderableData.center.x, renderableData.center.y };
    // accounting for possible change in tile size due to hacking;
@@ -161,8 +159,6 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    }
    renderableData.lastTilesetId = renderableData.tilesetId;
 
-   uint16_t halfWidth = tileset->TileWidth() / 2;
-   uint16_t halfHeight = tileset->TileHeight() / 2;
    renderableData.hitBox.origin.x = location.x + halfWidth / 2;
    renderableData.hitBox.origin.y = location.y + halfHeight - tileset->TileHeight();
    renderableData.hitBox.w = halfWidth;

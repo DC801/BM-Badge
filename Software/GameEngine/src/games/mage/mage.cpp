@@ -224,7 +224,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-      const MageEntityType* entityType = hasEntityType ? ROM->Get<MageEntityType>(playerEntityTypeId) : nullptr;
+      auto entityType = hasEntityType ? ROM->Get<MageEntityType>(playerEntityTypeId) : nullptr;
       uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
       bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
@@ -566,7 +566,6 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    Point tileTopLeftPoint = { 0, 0 };
    uint16_t geometryId = 0;
    auto pushback = Point{};
-   auto currentTile = MageMapTile{};
    Point playerPoint = playerRenderableData->center;
    float playerSpokeRadius = playerRenderableData->hitBox.w / 1.5;
    float angleOffset = atan2(playerVelocity.y, playerVelocity.x)
@@ -594,10 +593,9 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
       }
    }
 
-   uint8_t layerCount = mapControl->LayerCount();
-   for (auto layerIndex = 0u; layerIndex < layerCount; layerIndex++)
+   for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
-      auto layerAddress = mapControl->LayerOffset(layerIndex);
+      auto layerAddress = mapControl->LayerAddress(layerIndex);
       for (auto i = 0u; i < mapControl->Cols() * mapControl->Rows(); i++)
       {
          tileTopLeftPoint.x = (int32_t)(mapControl->TileWidth() * (i % mapControl->Cols()));
@@ -612,6 +610,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          }
          auto address = layerAddress + (i * sizeof(MageMapTile));
 
+         auto currentTile = MageMapTile{};
          ROM->Read(currentTile, address);
 
          if (currentTile.tileId == 0)

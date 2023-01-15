@@ -36,18 +36,33 @@ struct RenderableData
    bool isInteracting{ 0 };
 };
 
-struct MageMapTile
-{
-   uint16_t tileId{ 0 };
-   uint8_t tilesetId{ 0 };
-   uint8_t flags{ 0 };
-};
-
 class MageTileset
 {
 public:
    MageTileset() noexcept = default;
-   MageTileset(uint32_t& offset);
+   MageTileset(uint32_t& offset)
+   {
+#ifndef DC801_EMBEDDED
+      ROM->Read(name, offset, TILESET_NAME_SIZE);
+#else
+      offset += TILESET_NAME_SIZE;
+#endif
+
+      ROM->Read(imageId, offset);
+      ROM->Read(imageWidth, offset);
+      ROM->Read(imageHeight, offset);
+      ROM->Read(tileWidth, offset);
+      ROM->Read(tileHeight, offset);
+      ROM->Read(cols, offset);
+      ROM->Read(rows, offset);
+      offset += sizeof(uint16_t); // u2 padding before the geometry IDs
+      ROM->GetReadPointerTo(globalGeometryIds, offset);
+
+      if (!Valid())
+      {
+         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset address is: %d", offset);
+      }
+   }
 
    constexpr uint16_t ImageId() const { return imageId; }
    constexpr uint16_t ImageWidth() const { return imageWidth; }
@@ -67,7 +82,6 @@ public:
          && cols >= 1
          && rows >= 1;
    }
-   MageTileset* getValidTileset(uint16_t tilesetId);
 
    uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
    {
@@ -134,10 +148,11 @@ class TileManager
 public:
    TileManager(std::shared_ptr<FrameBuffer> frameBuffer) noexcept
       : frameBuffer(frameBuffer)
-   { }
+   {}
 
-   void DrawTile(const RenderableData* renderableData, int32_t x, int32_t y) const;
-   void DrawTile(const MageTileset* tileset, const MageMapTile* tile, int32_t x, int32_t y, uint8_t flags) const;
+   void DrawTile(const RenderableData* const renderableData, int32_t x, int32_t y) const; 
+
+   void DrawTile(const MageTileset* const tile, uint16_t tileId, int32_t x, int32_t y, uint8_t flags = 0) const;
 
 private:
    std::vector<MageColorPalette> colorPalettes;

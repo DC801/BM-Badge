@@ -7,7 +7,7 @@
 //   Purpose: Parsing DC801's BM-Badge game.dat
 //  Category: Game
 // File Mask: game.dat
-//  ID Bytes: o 
+//  ID Bytes: 4D41474547414D45
 //   History: 
 //------------------------------------------------
 
@@ -269,7 +269,7 @@ typedef struct
     if ((entityCount + geometryCount + scriptCount) % 2) { FSkip(2); }
     struct MapLayer {
         MapTile tiles[rows*cols];
-    }mapLayers[layerCount];
+    }mapLayers[layerCount]<optimize=false>;
 //    uchar filteredEntityCountOnThisMap;
 
 

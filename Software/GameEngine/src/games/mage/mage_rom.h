@@ -19,7 +19,7 @@ struct MageSaveGame;
 
 typedef std::string MageStringValue;
 typedef std::string MageVariableValue;
-typedef uint16_t* MagePixels;
+typedef uint8_t* MagePixels;
 
 typedef EngineROM<
       MapData,
