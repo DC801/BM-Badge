@@ -54,18 +54,18 @@ on_load-ch2-town {
 		fade in camera from #000000 over 400ms
 	} else if (warp state is exit_from-bobsclub) {
 		walk entity "%PLAYER%" along geometry enter_from-bobsclub over 200ms
-	} else if (warp state is exit_from-bakery) {
-		walk entity "%PLAYER%" along geometry enter_from-bakery over 200ms
+	} else if (warp state is walk_from-bakery) {
+		walk entity "%PLAYER%" along geometry walk_from-bakery over 200ms
 	} else if (warp state is exit_from-lodge) {
 		walk entity "%PLAYER%" along geometry enter_from-lodge over 200ms
-	} else if (warp state is exit_from-greenhouse) {
-		walk entity "%PLAYER%" along geometry enter_from-greenhouse over 200ms
-	} else if (warp state is exit_from-magehouse) {
-		walk entity "%PLAYER%" along geometry enter_from-magehouse over 200ms
+	} else if (warp state is walk_from-greenhouse) {
+		walk entity "%PLAYER%" along geometry walk_from-greenhouse over 200ms
+	} else if (warp state is walk_from-magehouse) {
+		walk entity "%PLAYER%" along geometry walk_from-magehouse over 200ms
 	} else if (warp state is walk_from-oldcouplehouse) {
-		walk entity "%PLAYER%" along geometry enter_from-oldcouplehouse over 200ms
-	} else if (warp state is exit_from-family) {
-		walk entity "%PLAYER%" along geometry enter_from-family over 200ms
+		walk entity "%PLAYER%" along geometry walk_from-oldcouplehouse over 200ms
+	} else if (warp state is walk_from-smithfamily) {
+		walk entity "%PLAYER%" along geometry walk_from-smithfamily over 200ms
 	} else if (warp state is walk_from-woprhouse) {
 		walk entity "%PLAYER%" along geometry walk_from-woprhouse over 200ms
 	} else { // in case warp state is something strange
@@ -83,13 +83,13 @@ on_load-ch2-town-fallback {
 // map loading scripts
 
 on_tick-ch2-town {
-	if entity "%PLAYER%" is inside geometry door-bakery-entrance
+	if entity "%PLAYER%" is inside geometry door-bakery
 		then goto load_map-ch2-bakery
-	if entity "%PLAYER%" is inside geometry door-family-entrance
-		then goto load_map-ch2-family
-	if entity "%PLAYER%" is inside geometry door-greenhouse-entrance
+	if entity "%PLAYER%" is inside geometry door-smithfamily
+		then goto load_map-ch2-smithfamily
+	if entity "%PLAYER%" is inside geometry door-greenhouse
 		then goto load_map-ch2-greenhouse
-	if entity "%PLAYER%" is inside geometry door-magehouse-entrance
+	if entity "%PLAYER%" is inside geometry door-magehouse
 		then goto load_map-ch2-magehouse
 	if entity "%PLAYER%" is inside geometry door-lodge-entrance
 		then goto load_map-ch2-lodge
@@ -101,27 +101,6 @@ on_tick-ch2-town {
 		then goto on_walk-ch2-town-east
 	if entity "%PLAYER%" is inside geometry west-hitbox
 		then goto on_walk-ch2-town-west
-}
-load_map-ch2-bakery {
-	load map bakery
-}
-load_map-ch2-oldcouplehouse {
-	load map ch2-oldcouplehouse
-}
-load_map-ch2-greenhouse {
-	load map greenhouse
-}
-load_map-ch2-magehouse {
-	load map magehouse
-}
-load_map-ch2-lodge {
-	load map lodge
-}
-load_map-ch2-family {
-	load map family
-}
-load_map-ch2-woprhouse {
-	load map woprhouse // both chapters use the same map
 }
 
 on_tick-ch2-town-walkfadeout {
@@ -146,6 +125,58 @@ on_go-ch2-town-west {
 	copy warping-out-fade-out
 	load map ch2-castle-outside
 }
+on_go-ch2-town-home {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-magehouse
+}
+on_go-ch2-town-bakery {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-bakery
+}
+on_go-ch2-town-greenhouse {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-greenhouse
+}
+on_go-ch2-town-wopr {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-woprhouse
+}
+on_go-ch2-town-beatrice {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-oldcouplehouse
+}
+on_go-ch2-town-smith {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	goto load_map-ch2-smithfamily
+}
+
+load_map-ch2-bakery {
+	load map ch2-bakery
+}
+load_map-ch2-oldcouplehouse {
+	load map ch2-oldcouplehouse
+}
+load_map-ch2-greenhouse {
+	load map ch2-greenhouse
+}
+load_map-ch2-magehouse {
+	load map ch2-magehouse
+}
+load_map-ch2-lodge {
+	load map lodge
+}
+load_map-ch2-smithfamily {
+	load map ch2-smithfamily
+}
+load_map-ch2-woprhouse {
+	load map woprhouse // both chapters use the same map
+}
 
 //WALK
 
@@ -167,7 +198,7 @@ on_walk-ch2-town-west {
 
 /* ---------- ENTITIES ---------- */
 
-ch2-interact-delmar {
+interact-ch2-delmar {
 	copy face-player
 	show dialog { SELF "...." }
 	turn entity "%SELF%" north

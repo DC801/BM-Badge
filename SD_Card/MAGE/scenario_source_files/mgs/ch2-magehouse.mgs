@@ -4,6 +4,10 @@ settings for dialog {
 	parameters for label SELF { entity "%SELF%" }
 }
 
+const! (
+	$CALLBACK = 201
+)
+
 on_look-ch2-magehouse {
 	show serial dialog spacer
 	show serial dialog {
@@ -11,16 +15,57 @@ on_look-ch2-magehouse {
 	}
 }
 on_load-ch2-magehouse {
-	if (warp state is cutscene-birthday) {
-		goto ch2-birthday-cutscene
+	mutate CALLBACK = $CALLBACK
+	goto ch2-noncastle-init
+}
+on_load-ch2-magehouse-RESUME {
+	mutate CALLBACK = 0
+	if (warp state is warping) { // warping in
+		copy warping-in-fade-in
 	}
 }
 
 on_tick-ch2-magehouse {
-	if entity "%PLAYER%" is inside geometry door-magehouse
-		then goto leave-ch2-magehouse
+	if entity "%PLAYER%" is inside geometry south-hitbox
+		then goto on_walk-ch2-magehouse-south
 }
-leave-ch2-magehouse {
-	set warp state to exit_from-magehouse
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-magehouse-south {
+	copy warping-out-fade-out
 	load map main2
+}
+on_walk-ch2-magehouse-south {
+	// triggered by map's on_tick
+	set warp state to walk_from-magehouse
+	load map main2
+}
+
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-zappy {
+	show dialog {
+		SELF "TODO"
+	}
+}
+interact-ch2-zippy {
+	show dialog {
+		SELF "TODO"
+	}
+}
+interact-ch2-cake {
+	show dialog {
+		SELF "TODO"
+	}
+}
+interact-ch2-magejournal {
+	show dialog {
+		SELF "TODO"
+	}
+}
+interact-ch2-magebox {
+	show dialog {
+		PLAYER "Yeah, I should probably unpack. It's been years...."
+	}
 }
