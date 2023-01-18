@@ -12,9 +12,9 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/modules/mutex.c \
 	$(SRC_ROOT)/modules/keyboard.c \
 	$(SRC_ROOT)/modules/rc4.c \
-	$(SRC_ROOT)/modules/usb.c \
 	$(SRC_ROOT)/modules/qspi.cpp \
 	$(SRC_ROOT)/engine/EngineInput.cpp \
+	$(SRC_ROOT)/engine/EngineSerial.cpp \
 	$(SRC_ROOT)/engine/EngineROM.cpp \
 	$(SRC_ROOT)/engine/EnginePanic.cpp \
 	$(SRC_ROOT)/engine/convert_endian.cpp \
@@ -28,13 +28,23 @@ APP_SRCS := $(SRC_ROOT)/utility.c \
 	$(SRC_ROOT)/games/mage/mage_color_palette.cpp \
 	$(SRC_ROOT)/games/mage/mage_game_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_hex.cpp \
+	$(SRC_ROOT)/games/mage/mage_script_actions.cpp \
 	$(SRC_ROOT)/games/mage/mage_script_control.cpp \
 	$(SRC_ROOT)/games/mage/mage_portrait.cpp \
 	$(SRC_ROOT)/games/mage/mage_dialog_control.cpp \
+	$(SRC_ROOT)/games/mage/mage_command_control.cpp \
 	$(SRC_ROOT)/games/mage/mage.cpp \
 	$(SRC_ROOT)/main.c
 
 APP_INCLUDES := -I$(PRJ_ROOT) -I$(SRC_ROOT) -I$(SRC_ROOT)/modules -I$(SRC_ROOT)/modules/cmixer -I$(SRC_ROOT)/engine
+
+ifdef EMBEDDED
+    ifeq ($(OS),Windows_NT)
+        # Placeholder
+    else
+        APP_SRCS += $(SRC_ROOT)/modules/usb.c
+    endif
+endif
 
 ifdef DESKTOP
     ifeq ($(OS),Windows_NT)

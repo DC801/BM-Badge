@@ -1,11 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":32,
  "infinite":false,
  "layers":[
@@ -831,7 +824,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"debug-hub-q"
+                         "value":"show_dialog-demo-end-dream-q"
                         }],
                  "rotation":0,
                  "type":"",
@@ -992,7 +985,7 @@
          "value":""
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.8.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -1073,6 +1066,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.4,
+ "version":"1.8",
  "width":32
 }

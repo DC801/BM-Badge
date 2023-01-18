@@ -3152,7 +3152,7 @@
 			"doc": "Disable Tuesday?"
 		}
 	],
-	"no_debug-disable-tuesday": [
+	"debug-disable-tuesday-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-disable-tuesday"
@@ -3305,7 +3305,7 @@
 			"script": "debug-bypass-tuesday-q"
 		}
 	],
-	"no_debug-bypass-tuesday": [
+	"debug-bypass-tuesday-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -3334,7 +3334,7 @@
 			"script": "debug-bypass-tuesday-q"
 		}
 	],
-	"no_debug-cutscene-tuesday": [
+	"debug-cutscene-tuesday-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -3390,7 +3390,7 @@
 			"script": "debug-touch-artifacts-q"
 		}
 	],
-	"no_debug-touch-artifacts": [
+	"debug-touch-artifacts-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",

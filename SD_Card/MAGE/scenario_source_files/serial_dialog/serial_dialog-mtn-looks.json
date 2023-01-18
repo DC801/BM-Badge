@@ -1,0 +1,54 @@
+{
+	"serial_dialog-on_look-mtn-xa_room": {
+		"messages": [
+			" ",
+			"You looked around at 'xa-room'.",
+			" ",
+			"XA's room seems to have once functioned as a kind of hub,",
+			"though the doors look less than functional at the moment.",
+			" "
+		]
+	},
+	"serial_dialog-on_look-mtn-castle_entrance": {
+		"messages": [
+			" ",
+			"You looked around at 'castle-door'.",
+			" ",
+			"This place might have been glorious once, but it seems that",
+			"time has not been kind to it. The edges of its banners are",
+			"fraying and grungy, and you're not sure you'll ever get the",
+			"\"used castle smell\" out of your hat.",
+			" "
+		]
+	},
+	"serial_dialog-on_look-player": {
+		"messages": [
+			" ",
+			"You looked at yourself.",
+			" ",
+			"Yikes. You need a haircut.",
+			" "
+		]
+	},
+	"serial_dialog-on_look-xa": {
+		"messages": [
+			" ",
+			"You looked at XA.",
+			" ",
+			"It's some kind of orange, spider-shaped robot. It looks as",
+			"though it might have the power to scoot around without",
+			"actually moving its legs.",
+			" "
+		]
+	},
+	"serial_dialog-on_look-save_floppy": {
+		"messages": [
+			" ",
+			"You looked at the save floppy.",
+			" ",
+			"Wow, someone 3D-printed a save icon. What will they think",
+			"of next?",
+			" "
+		]
+	}
+}

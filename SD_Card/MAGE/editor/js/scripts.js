@@ -386,6 +386,47 @@ var actionFieldsMap = {
 	SLOT_ERASE: [
 		{propertyName: 'slot', size: 1},
 	],
+	SET_CONNECT_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+	],
+	SHOW_SERIAL_DIALOG: [
+		{propertyName: 'serial_dialog', size: 2},
+	],
+	INVENTORY_GET: [
+		{propertyName: 'item_name', size: 1},
+	],
+	INVENTORY_DROP: [
+		{propertyName: 'item_name', size: 1},
+	],
+	CHECK_INVENTORY: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'item_name', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_MAP_LOOK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+	],
+	SET_ENTITY_LOOK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
+	SET_TELEPORT_ENABLED: [
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_MAP: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'map', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	SET_BLE_FLAG: [
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'bool_value', size: 1},
+	],
+	CHECK_BLE_FLAG: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'ble_flag', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 };
 
 var actionNames = [
@@ -476,6 +517,17 @@ var actionNames = [
 	'SLOT_SAVE',
 	'SLOT_LOAD',
 	'SLOT_ERASE',
+	'SET_CONNECT_SERIAL_DIALOG',
+	'SHOW_SERIAL_DIALOG',
+	'INVENTORY_GET',
+	'INVENTORY_DROP',
+	'CHECK_INVENTORY',
+	'SET_MAP_LOOK_SCRIPT',
+	'SET_ENTITY_LOOK_SCRIPT',
+	'SET_TELEPORT_ENABLED',
+	'CHECK_MAP',
+	'SET_BLE_FLAG',
+	'CHECK_BLE_FLAG',
 ];
 
 var specialKeywordsEnum = {
@@ -588,6 +640,43 @@ var getGeometryIndexFromAction = function (
 	return geometry.specialIndex || geometry.mapIndex;
 };
 
+var buttonMap = {
+	MEM0: 0,
+	MEM1: 1,
+	MEM2: 2,
+	MEM3: 3,
+	BIT128: 4,
+	BIT64: 5,
+	BIT32: 6,
+	BIT16: 7,
+	BIT8: 8,
+	BIT4: 9,
+	BIT2: 10,
+	BIT1: 11,
+	XOR: 12,
+	ADD: 13,
+	SUB: 14,
+	PAGE: 15,
+	LJOY_CENTER: 16,
+	LJOY_UP: 17,
+	LJOY_DOWN: 18,
+	LJOY_LEFT: 19,
+	LJOY_RIGHT: 20,
+	RJOY_CENTER: 21,
+	RJOY_UP: 22,
+	RJOY_DOWN: 23,
+	RJOY_LEFT: 24,
+	RJOY_RIGHT: 25,
+	TRIANGLE: 22,
+	X: 23,
+	CROSS: 23,
+	CIRCLE: 24,
+	O: 24,
+	SQUARE: 25,
+	HAX: 26, // Cap Touch
+	ANY: 27, // the elusive `any key`
+};
+
 var getButtonFromAction = function (
 	propertyName,
 	action,
@@ -599,46 +688,10 @@ var getButtonFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
-	var buttons = {
-		MEM0: 0,
-		MEM1: 1,
-		MEM2: 2,
-		MEM3: 3,
-		BIT128: 4,
-		BIT64: 5,
-		BIT32: 6,
-		BIT16: 7,
-		BIT8: 8,
-		BIT4: 9,
-		BIT2: 10,
-		BIT1: 11,
-		XOR: 12,
-		ADD: 13,
-		SUB: 14,
-		PAGE: 15,
-		LJOY_CENTER: 16,
-		LJOY_UP: 17,
-		LJOY_DOWN: 18,
-		LJOY_LEFT: 19,
-		LJOY_RIGHT: 20,
-		RJOY_CENTER: 21,
-		RJOY_UP: 22,
-		RJOY_DOWN: 23,
-		RJOY_LEFT: 24,
-		RJOY_RIGHT: 25,
-		TRIANGLE: 22,
-		X: 23,
-		CROSS: 23,
-		CIRCLE: 24,
-		O: 24,
-		SQUARE: 25,
-		HAX: 26, // Cap Touch
-		ANY: 27, // the elusive `any key`
-	};
-	var button = buttons[value];
+	var button = buttonMap[value];
 	if (button === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(buttons)
+			Object.keys(buttonMap)
 		}`);
 	}
 	return button;
@@ -830,6 +883,22 @@ var getVariableIdFromAction = function (
 	);
 };
 
+var entityFieldMap = {
+	x: 12,
+	y: 14,
+	interact_script_id: 16,
+	tick_script_id: 18,
+	primary_id: 20,
+	secondary_id: 22,
+	primary_id_type: 24,
+	current_animation: 25,
+	current_frame: 26,
+	direction: 27,
+	hackable_state_a: 28,
+	hackable_state_b: 29,
+	hackable_state_c: 30,
+	hackable_state_d: 31,
+};
 var getFieldFromAction = function (
 	propertyName,
 	action,
@@ -841,31 +910,24 @@ var getFieldFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} requires a value for "${propertyName}"`);
 	}
-	var fields = {
-		x: 12,
-		y: 14,
-		interact_script_id: 16,
-		tick_script_id: 18,
-		primary_id: 20,
-		secondary_id: 22,
-		primary_id_type: 24,
-		current_animation: 25,
-		current_frame: 26,
-		direction: 27,
-		hackable_state_a: 28,
-		hackable_state_b: 29,
-		hackable_state_c: 30,
-		hackable_state_d: 31,
-	};
-	var field = fields[value];
+	var field = entityFieldMap[value];
 	if (field === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(fields)
+			Object.keys(entityFieldMap)
 		}`);
 	}
 	return field;
 };
 
+var operationMap = {
+	SET: 0,
+	ADD: 1,
+	SUB: 2,
+	DIV: 3,
+	MUL: 4,
+	MOD: 5,
+	RNG: 6,
+};
 var getOperationFromAction = function (
 	propertyName,
 	action,
@@ -877,24 +939,27 @@ var getOperationFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var operations = {
-		SET: 0,
-		ADD: 1,
-		SUB: 2,
-		DIV: 3,
-		MUL: 4,
-		MOD: 5,
-		RNG: 6,
-	};
-	var operation = operations[value];
+	var operation = operationMap[value];
 	if (operation === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(operations)
+			Object.keys(operationMap)
 		}`);
 	}
 	return operation;
 };
 
+var comparisonMap = {
+	LT  : 0,
+	LTEQ: 1,
+	EQ  : 2,
+	GTEQ: 3,
+	GT  : 4,
+	"<" : 0,
+	"<=": 1,
+	"==": 2,
+	">=": 3,
+	">" : 4,
+};
 var getComparisonFromAction = function (
 	propertyName,
 	action,
@@ -906,22 +971,10 @@ var getComparisonFromAction = function (
 	if (value === undefined) {
 		throw new Error(`${action.action} was given value "${value}", but requires a value for "${propertyName}"`);
 	}
-	var comparisons = {
-		LT  : 0,
-		LTEQ: 1,
-		EQ  : 2,
-		GTEQ: 3,
-		GT  : 4,
-		"<" : 0,
-		"<=": 1,
-		"==": 2,
-		">=": 3,
-		">" : 4,
-	};
-	var comparison = comparisons[value];
+	var comparison = comparisonMap[value];
 	if (comparison === undefined) {
 		throw new Error(`${action.action} requires a valid value for "${propertyName}"; Possible values:\n${
-			Object.keys(comparisons)
+			Object.keys(comparisonMap)
 		}`);
 	}
 	return comparison;
@@ -1007,6 +1060,38 @@ var initActionData = function (action) {
 	}
 };
 
+var getSerialDialogIdFromAction = function (
+	propertyName,
+	action,
+	map,
+	fileNameMap,
+	scenarioData,
+) {
+	var value = action[propertyName];
+	if (typeof value !== 'string') {
+		throw new Error(`${action.action} requires a string value for "${propertyName}"!`);
+	}
+	var serialDialog = scenarioData.serialDialogs[value];
+	if (!serialDialog) {
+		throw new Error(`${action.action} was unable to find a serial_dialog named "${value}"!`);
+	}
+	return serializeSerialDialog(
+		serialDialog,
+		map,
+		fileNameMap,
+		scenarioData,
+	);
+};
+
+var getItemIdFromAction = function () {
+	throw new Error('getItemIdFromAction is not implemented yet!');
+};
+
+var getBleFlagIdFromAction = function () {
+	throw new Error('getBleFlagIdFromAction is not implemented yet!');
+};
+
+
 var actionPropertyNameToHandlerMap = {
 	duration: getNumberFromAction,
 	expected_u4: getNumberFromAction,
@@ -1041,7 +1126,6 @@ var actionPropertyNameToHandlerMap = {
 	relative_direction: getRelativeDirectionFromAction,
 	bool_value: getBoolFromAction,
 	expected_bool: getBoolFromAction,
-	state: getBoolFromAction,
 	value: getTwoBytesFromAction,
 	variable: getVariableIdFromAction,
 	source: getVariableIdFromAction,
@@ -1049,6 +1133,9 @@ var actionPropertyNameToHandlerMap = {
 	inbound: getBoolFromAction,
 	operation: getOperationFromAction,
 	comparison: getComparisonFromAction,
+	serial_dialog: getSerialDialogIdFromAction,
+	item_name: getItemIdFromAction,
+	ble_flag: getBleFlagIdFromAction,
 };
 
 var sizeHandlerMap = [
@@ -1142,7 +1229,7 @@ var preProcessScript = function(
 				var scriptName = getScriptByPropertyName(
 					'script',
 					action,
-				)
+				);
 				var sourceScript = getScriptByName(
 					scriptName,
 					scenarioData
@@ -1305,7 +1392,39 @@ var handleMapEntityScripts = function (
 	});
 };
 
-var possibleMapScripts = ['on_load', 'on_tick'];
+var possibleMapScripts = [
+	'on_load',
+	'on_tick',
+	'on_look',
+];
+
+var collectMapScripts = function (
+	map,
+) {
+	var result = {};
+	// this is the shape if it came from a tiled map file
+	(map.properties || []).forEach(function(property) {
+		if (
+			property.value // because if it's empty, don't bother
+			&& possibleMapScripts.includes(property.name)
+		) {
+			result[property.name] = property.value;
+		}
+	});
+	// this is if it's a property defined in maps.json
+	possibleMapScripts.forEach(function (scriptSlot) {
+		var scriptName = map[scriptSlot];
+		var existingScriptName = result[scriptSlot];
+		if (scriptName) {
+			if (existingScriptName) {
+				throw new Error(`Duplicate "${scriptSlot}" definition on map "${map.name}": Your map has this script defined in the Tiled map, as well as maps.json. Remove one of them to continue.`);
+			} else {
+				result[scriptSlot] = scriptName;
+			}
+		}
+	});
+	return result;
+};
 
 var handleMapScripts = function (
 	map,
@@ -1323,18 +1442,27 @@ var handleMapScripts = function (
 		fileNameMap,
 		scenarioData,
 	);
-	(map.properties || []).forEach(function(property) {
-		if (
-			property.value // because if it's empty, don't bother
-			&& possibleMapScripts.includes(property.name)
-		) {
-			map[property.name] = handleScript(
-				property.value,
-				map,
-				fileNameMap,
-				scenarioData,
-			).mapLocalScriptId;
-		}
+	var mapScripts = collectMapScripts(map);
+	// console.log(`Processing scripts for map: "${map.name}"`);
+	Object.keys(mapScripts).forEach(function (scriptSlot) {
+		var scriptName = mapScripts[scriptSlot];
+		// console.log(`	- ${scriptSlot}:${scriptName}`);
+		map[scriptSlot] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
+	});
+	map.directionScriptIds = {};
+	Object.keys(map.directions || {}).forEach(function (directionName) {
+		var scriptName = map.directions[directionName];
+		map.directionScriptIds[directionName] = handleScript(
+			scriptName,
+			map,
+			fileNameMap,
+			scenarioData,
+		).mapLocalScriptId;
 	});
 	handleMapEntityScripts(
 		map,
@@ -1354,33 +1482,4 @@ var makeVariableLookaheadFunction = function(scenarioData) {
 			}
 		});
 	}
-};
-
-var mergeScriptDataIntoScenario = function(
-	fileNameMap,
-	scenarioData,
-) {
-	var allScripts = {};
-	scenarioData.scripts = allScripts;
-	var lookaheadAndIdentifyAllScriptVariables = makeVariableLookaheadFunction(scenarioData);
-	return Promise.all(
-		scenarioData.scriptPaths.map(function(scriptPath) {
-			var scriptFileName = scriptPath.split('/').pop();
-			var scriptFile = fileNameMap[scriptFileName];
-			return getFileJson(scriptFile)
-				.then(function(scriptFileData) {
-					Object.keys(scriptFileData)
-						.forEach(function(scriptName) {
-							if (allScripts[scriptName]) {
-								throw new Error(`Duplicate script name "${scriptName}" found in ${scriptFileName}!`);
-							}
-							allScripts[scriptName] = scriptFileData[scriptName]
-						})
-				});
-		})
-	)
-		.then(function () {
-			Object.values(allScripts)
-				.forEach(lookaheadAndIdentifyAllScriptVariables);
-		});
 };

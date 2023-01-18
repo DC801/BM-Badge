@@ -9,6 +9,15 @@ in a more accessible way.
 #include "mage_defines.h"
 #include "FrameBuffer.h"
 
+//these are the types of geometries that can be passed from the geometry data in ROM:
+typedef enum : uint8_t{
+	POINT = 0,
+	POLYLINE = 1,
+	POLYGON = 2,
+	//this tracks how many different geometry types there are:
+	NUM_GEOMETRIES
+} MageGeometryTypeId;
+
 class MageGeometry{
 	private:
 	public:

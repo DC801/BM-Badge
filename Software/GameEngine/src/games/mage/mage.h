@@ -8,16 +8,13 @@
 //this will handle any blocking delays at the end of the loop
 void handleBlockingDelay();
 
-//consolidates all script handlers into one function:
-void handleScripts();
-
 //updates the state of all the things before rendering:
 void GameUpdate();
 
 //This renders the game to the screen based on the loop's updated state.
 void GameRender();
 
-void EngineInit ();
+void EngineInit();
 
 //this runs the actual game, performing initial setup and then
 //running the game loop indefinitely until the game is exited.

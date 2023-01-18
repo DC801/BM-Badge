@@ -899,7 +899,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"You've completed $story-flag-count$ out of 11 tasks."
+				"You've completed $chapter1-storyflag-tally$ out of 11 tasks."
 			]
 		}
 	],

@@ -1,6 +1,12 @@
 {
 	"scriptPaths": [
 		"scripts/script-main_menu.json",
+		"scripts/script-admin.json",
+		"scripts/script-magehouse-birthday.json",
+		"scripts/script-mtn-xa_room.json",
+		"scripts/script-mtn-castle_entrance.json",
+		"scripts/script-mtn-common.json",
+		"scripts/script-mtn-looks.json",
 		"scripts/script-demo_map.json",
 		"scripts/script-generic_entity_scripts.json",
 		"scripts/script-test_scripts.json",
@@ -23,10 +29,13 @@
 		"scripts/script-elders.json",
 		"scripts/script-debug.json",
 		"scripts/script-woprhouse.json",
-		"scripts/script-max.json"
+		"scripts/script-max.json",
+		"scripts/script-flying-toasters.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-main_menu.json",
+		"dialog/dialog-mtn-xa_room.json",
+		"dialog/dialog-magehouse-birthday.json",
 		"dialog/dialog-demo_map.json",
 		"dialog/dialog-test_map.json",
 		"dialog/dialog-action_testing.json",
@@ -46,30 +55,14 @@
 		"dialog/dialog-woprhouse.json",
 		"dialog/dialog-max.json"
 	],
-	"maps": {
-		"main_menu": "maps/map-main_menu.json",
-		"demo": "maps/map-demo.json",
-		"main": "maps/map-main.json",
-		"bobsclub": "maps/map-bobsclub.json",
-		"test": "maps/map-test.json",
-		"town": "maps/map-town.json",
-		"oldcouplehouse": "maps/map-oldcouplehouse.json",
-		"bakery": "maps/map-bakery.json",
-		"family": "maps/map-family.json",
-		"magehouse": "maps/map-magehouse.json",
-		"lodge": "maps/map-lodge.json",
-		"greenhouse": "maps/map-greenhouse.json",
-		"secretroom": "maps/map-secretroom.json",
-		"warp_zone": "maps/map-warp_zone.json",
-		"action_testing_01": "maps/map-action_testing_01.json",
-		"testbig": "maps/map-testbig.json",
-		"credits": "maps/map-credits.json",
-		"woprhouse": "maps/map-woprhouse.json",
-		"action_testing_02": "maps/map-action_testing_02.json"
-	},
 	"dialogSkins": {
 		"default": "tilesets/tileset-dialog_moon.json",
 		"codec": "tilesets/tileset-dialog_codec.json",
 		"menu": "tilesets/tileset-dialog_transparent_menu.json"
-	}
+	},
+	"serialDialogPaths": [
+		"serial_dialog/serial_dialog-mtn-looks.json",
+		"serial_dialog/serial_dialog-mtn-common.json",
+		"serial_dialog/serial_dialog-action_testing.json"
+	]
 }

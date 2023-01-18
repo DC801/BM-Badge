@@ -26,6 +26,7 @@ QSPI qspiControl;
 
 #ifdef DC801_DESKTOP
 #include <time.h>
+#include "EngineWindowFrame.h"
 volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
@@ -87,7 +88,7 @@ static void rom_init(void){
 int main(void){
 
 	#ifdef DC801_DESKTOP
-
+	EngineWindowFrameInit();
 	signal(SIGINT, sig_handler);
 
 	#endif
@@ -101,7 +102,7 @@ int main(void){
 #ifdef DC801_EMBEDDED
 
 	//USB serial
-	//usb_serial_init();
+	usb_serial_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
@@ -173,6 +174,7 @@ int main(void){
 
 #ifdef DC801_DESKTOP
 	debug_print("Exiting gracefully...\n");
+	EngineWindowFrameCleanup();
 	return 0;
 #endif
 

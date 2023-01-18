@@ -1,6 +1,14 @@
+#include <string>
+#include <regex>
 #include "EngineInput.h"
-#include "FrameBuffer.h"
-#include "fonts/Monaco9.h"
+//#include "FrameBuffer.h"
+//#include "fonts/Monaco9.h"
+
+#ifdef DC801_DESKTOP
+#include <stdio.h>
+#include <unistd.h>
+#include "EngineWindowFrame.h"
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +92,15 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 				&& (e.key.keysym.mod & KMOD_CTRL)
 			) {
 				shouldReloadGameDat = true;
+				return;
+			}
+			// + or - keys increase or decrease screen size:
+			else if (e.key.keysym.sym == SDLK_MINUS) {
+				EngineWindowFrameResize(-1);
+				return;
+			}
+			else if (e.key.keysym.sym == SDLK_EQUALS) {
+				EngineWindowFrameResize(1);
 				return;
 			}
 		}
@@ -249,7 +266,7 @@ void EngineSetHardwareBitmaskToButtonStates (uint32_t keyboardBitmask)
 	EngineInput_Deactivated.hax = EngineInput_Deactivated.hax && !EngineInput_Buttons.hax;
 }
 
-void EngineHandleInput ()
+void EngineHandleKeyboardInput ()
 {
 	static uint32_t keyboardBitmask = 0x00000000;
 
@@ -258,7 +275,6 @@ void EngineHandleInput ()
 #endif
 
 #ifdef DC801_EMBEDDED
-	app_usbd_event_queue_process();
 	keyboardBitmask = get_keyboard_mask();
 #endif
 	EngineSetHardwareBitmaskToButtonStates(keyboardBitmask);

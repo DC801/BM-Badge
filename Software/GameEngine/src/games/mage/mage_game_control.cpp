@@ -3,12 +3,15 @@
 #include "EngineROM.h"
 #include "FrameBuffer.h"
 #include "mage_hex.h"
+#include "mage_script_actions.h"
 #include "mage_script_control.h"
 #include "mage_dialog_control.h"
+#include "mage_command_control.h"
 
 extern MageHexEditor *MageHex;
 extern MageDialogControl *MageDialog;
 extern MageScriptControl *MageScript;
+extern MageCommandControl *MageCommand;
 
 extern FrameBuffer *mage_canvas;
 
@@ -19,6 +22,25 @@ extern FrameBuffer *mage_canvas;
 MageGameControl::MageGameControl()
 {
 	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH; //skip 'MAGEGAME' + crc32 string at front of .dat file
+
+	EngineROM_Read(
+		offset,
+		sizeof(engineVersion),
+		(uint8_t *)&engineVersion,
+		"Unable to read engineVersion"
+	);
+	ROM_ENDIAN_U4_BUFFER(&engineVersion, 1);
+	offset += sizeof(engineVersion);
+
+	if(engineVersion != ENGINE_VERSION) {
+		ENGINE_PANIC(
+			"game.dat is incompatible with Engine\n\n"
+			"Engine version: %d\n"
+			"game.dat version: %d",
+			ENGINE_VERSION,
+			engineVersion
+		);
+	}
 
 	EngineROM_Read(
 		offset,
@@ -67,6 +89,9 @@ MageGameControl::MageGameControl()
 
 	dialogHeader = MageHeader(offset);
 	offset += dialogHeader.size();
+
+	serialDialogHeader = MageHeader(offset);
+	offset += serialDialogHeader.size();
 
 	colorPaletteHeader = MageHeader(offset);
 	offset += colorPaletteHeader.size();
@@ -146,6 +171,7 @@ uint32_t MageGameControl::Size() const
 		scriptHeader.size() +
 		portraitHeader.size() +
 		dialogHeader.size() +
+		serialDialogHeader.size() +
 		colorPaletteHeader.size() +
 		stringHeader.size() +
 		saveFlagHeader.size() +
@@ -211,14 +237,17 @@ void MageGameControl::readSaveFromRomIntoRam(
 		sizeof(MageSaveGame),
 		(uint8_t *)&currentSave
 	);
+	ROM_ENDIAN_U4_BUFFER(&currentSave.engineVersion, 1);
 	ROM_ENDIAN_U4_BUFFER(&currentSave.scenarioDataCRC32, 1);
 	ROM_ENDIAN_U4_BUFFER(&currentSave.saveDataLength, 1);
 
+	bool engineIncompatible = currentSave.engineVersion != engineVersion;
+	bool saveLengthIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
 	bool scenarioIncompatible = currentSave.scenarioDataCRC32 != scenarioDataCRC32;
-	bool engineIncompatible = currentSave.saveDataLength != sizeof(MageSaveGame);
 	if (
-		scenarioIncompatible
-		|| engineIncompatible
+		engineIncompatible
+		|| saveLengthIncompatible
+		|| scenarioIncompatible
 	) {
 		std::string errorString = std::string("");
 		if (scenarioIncompatible) {
@@ -227,7 +256,7 @@ void MageGameControl::readSaveFromRomIntoRam(
 				"scenario data. Starting with fresh save."
 			);
 		}
-		if (engineIncompatible) {
+		if (engineIncompatible || saveLengthIncompatible) {
 			errorString.assign(
 				"Save data is incompatible with current\n"
 				"engine version. Starting with fresh save."
@@ -535,35 +564,6 @@ void MageGameControl::PopulateMapData(uint16_t index)
 	}
 }
 
-void MageGameControl::initializeScriptsOnMapLoad()
-{
-	//initialize the script ResumeStateStructs:
-	MageScript->initScriptState(
-		MageScript->getMapLoadResumeState(),
-		map.getMapLocalMapOnLoadScriptId(),
-		true
-	);
-	MageScript->initScriptState(
-		MageScript->getMapTickResumeState(),
-		map.getMapLocalMapOnTickScriptId(),
-		false
-	);
-	for (uint8_t i = 0; i < filteredEntityCountOnThisMap; i++) {
-		//Initialize the script ResumeStateStructs to default values for this map.
-		MageEntity *entity = &entities[i];
-		MageScript->initScriptState(
-			MageScript->getEntityTickResumeState(i),
-			entity->onTickScriptId,
-			false
-		);
-		MageScript->initScriptState(
-			MageScript->getEntityInteractResumeState(i),
-			entity->onInteractScriptId,
-			false
-		);
-	}
-}
-
 void MageGameControl::LoadMap(uint16_t index)
 {
 
@@ -583,7 +583,7 @@ void MageGameControl::LoadMap(uint16_t index)
 	copyNameToAndFromPlayerAndSave(false);
 
 	//logAllEntityScriptValues("InitScripts-Before");
-	initializeScriptsOnMapLoad();
+	MageScript->initializeScriptsOnMapLoad();
 	//logAllEntityScriptValues("InitScripts-After");
 
 	//close hex editor if open:
@@ -1348,12 +1348,12 @@ MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(
 	);
 }
 
-uint32_t MageGameControl::getScriptAddress(uint32_t scriptId)
+uint32_t MageGameControl::getScriptAddressFromGlobalScriptId(uint32_t scriptId)
 {
-	//first validate the mapLocalScriptId:
+	//first validate the scriptId:
 	scriptId = getValidGlobalScriptId(scriptId);
 
-	//then return the address offset for thast script from the scriptHeader:
+	//then return the address offset for that script from the scriptHeader:
 	return scriptHeader.offset(scriptId);
 }
 
@@ -1773,23 +1773,23 @@ std::string MageGameControl::getString(
 	volatile size_t variableEndPosition = 0;
 	volatile size_t replaceCount = 0;
 	while ((variableStartPosition = romString.find("%%", variableStartPosition)) != std::string::npos) {
-		outputString.append(romString.substr(
+		outputString += romString.substr(
 			cursor,
 			(variableStartPosition - cursor)
-		));
+		);
 		variableEndPosition = romString.find("%%", variableStartPosition + 1) + 1;
 		std::string variableHolder = romString.substr(
 			variableStartPosition + 2,
 			variableStartPosition - (variableEndPosition - 2)
 		);
 		int parsedEntityIndex = std::stoi(variableHolder);
-		int16_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+		int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 			parsedEntityIndex,
 			mapLocalEntityId
 		);
 		if(entityIndex != NO_PLAYER) {
 			std::string entityName = getEntityNameStringById(entityIndex);
-			outputString.append(entityName.c_str());
+			outputString += entityName.c_str();
 		} else {
 			char missingError[MAGE_ENTITY_NAME_LENGTH + 1];
 			sprintf(
@@ -1797,23 +1797,26 @@ std::string MageGameControl::getString(
 				"MISSING: %d",
 				parsedEntityIndex
 			);
-			outputString.append(missingError);
+			outputString += missingError;
 		}
 		variableStartPosition = variableEndPosition + 1;
 		cursor = variableStartPosition;
 		replaceCount++;
 	}
 	if (replaceCount) {
-		outputString.append(romString.substr(cursor, romString.length() - 1));
+		outputString += romString.substr(cursor, romString.length() - 1);
+		romString = outputString;
+		outputString = "";
 	}
 	cursor = 0;
 	variableStartPosition = 0;
 	variableEndPosition = 0;
+	replaceCount = 0;
 	while ((variableStartPosition = romString.find("$$", variableStartPosition)) != std::string::npos) {
-		outputString.append(romString.substr(
+		outputString +=romString.substr(
 			cursor,
 			(variableStartPosition - cursor)
-		));
+		);
 		variableEndPosition = romString.find("$$", variableStartPosition + 1) + 1;
 		std::string variableHolder = romString.substr(
 			variableStartPosition + 2,
@@ -1822,15 +1825,20 @@ std::string MageGameControl::getString(
 		int parsedVariableIndex = std::stoi(variableHolder);
 		uint16_t variableValue = currentSave.scriptVariables[parsedVariableIndex];
 		std::string valueString = std::to_string(variableValue);
-		outputString.append(valueString.c_str());
+		outputString += valueString.c_str();
 		variableStartPosition = variableEndPosition + 1;
 		cursor = variableStartPosition;
 		replaceCount++;
 	}
 	if (replaceCount) {
-		outputString.append(romString.substr(cursor, romString.length() - 1));
+		outputString += romString.substr(cursor, romString.length() - 1);
+		romString = outputString;
+		outputString = "";
 	}
-	return replaceCount ? outputString : romString;
+	// why wrap it in another string at the end?
+	// Because somehow, extra null bytes were being explicitly stored in the return value's length,
+	// and this should crop them out from the return value
+	return std::string(romString.c_str());
 }
 
 uint32_t MageGameControl::getImageAddress(uint16_t imageId) {
@@ -1843,6 +1851,10 @@ uint32_t MageGameControl::getPortraitAddress(uint16_t portraitId) {
 
 uint32_t MageGameControl::getDialogAddress(uint16_t dialogId) {
 	return dialogHeader.offset(dialogId % dialogHeader.count());
+}
+
+uint32_t MageGameControl::getSerialDialogAddress(uint16_t serialDialogId) {
+	return serialDialogHeader.offset(serialDialogId % serialDialogHeader.count());
 }
 
 std::string MageGameControl::getEntityNameStringById(int8_t mapLocalEntityId) {

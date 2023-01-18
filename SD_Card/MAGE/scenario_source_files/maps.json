@@ -1,0 +1,75 @@
+{
+	"main_menu": "maps/map-main_menu.json",
+	"xa-room": {
+		"path": "maps/map-mtn-xa_room.json",
+		"on_load": "on_load-mtn-xa_room",
+		"on_look": "on_look-mtn-xa_room",
+		"on_tick": "on_tick-mtn-xa_room",
+		"directions": {
+			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
+		}
+	},
+	"castle-door": {
+		"path": "maps/map-mtn-castle_entrance.json",
+		"on_load": "on_load-mtn-castle_entrance",
+		"on_look": "on_look-mtn-castle_entrance",
+		"directions": {
+			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
+		}
+	},
+	"magehouse-birthday": {
+		"path": "maps/map-magehouse-birthday.json",
+		"on_load": "on_load-magehouse-birthday"
+	},
+	"main2": {
+		"path": "maps/map-main2.json",
+		"on_load": "on_load-main2"
+	},
+	"flying-toasters": {
+		"path": "maps/map-flying-toasters.json",
+		"on_tick": "on_tick-flying-toasters",
+		"on_load": "on_load-flying-toasters"
+	},
+	"action_testing_01": {
+		"path": "maps/map-action_testing_01.json",
+		"on_tick": "null_script",
+		"on_load": "map-action_testing-load",
+		"on_look": "map-action_testing-look",
+		"directions": {
+			"north": "map-action_testing-go_north",
+			"cleveland": "map-action_testing-go_cleveland",
+			"numbers": "map-action_testing-go_numbers",
+			"sphinx": "map-action_testing-go_sphinx",
+			"hub": "map-action_testing-go_hub"
+		}
+	},
+	"demo": "maps/map-demo.json",
+	"main": "maps/map-main.json",
+	"bobsclub": "maps/map-bobsclub.json",
+	"test": "maps/map-test.json",
+	"town": "maps/map-town.json",
+	"oldcouplehouse": "maps/map-oldcouplehouse.json",
+	"bakery": "maps/map-bakery.json",
+	"family": "maps/map-family.json",
+	"magehouse": "maps/map-magehouse.json",
+	"lodge": "maps/map-lodge.json",
+	"greenhouse": "maps/map-greenhouse.json",
+	"secretroom": "maps/map-secretroom.json",
+	"warp_zone": {
+		"path": "maps/map-warp_zone.json",
+		"directions": {
+			"main": "load_map-main",
+			"test": "load_map-test",
+			"town": "load_map-town",
+			"demo_map": "load_map-demo_map",
+			"action1": "load_map-action_testing_01",
+			"action2": "load_map-action_testing_02",
+			"testbig": "load_map-testbig"
+		}
+	},
+	"testbig": "maps/map-testbig.json",
+	"credits": "maps/map-credits.json",
+	"credits2": "maps/map-credits2.json",
+	"woprhouse": "maps/map-woprhouse.json",
+	"action_testing_02": "maps/map-action_testing_02.json"
+}

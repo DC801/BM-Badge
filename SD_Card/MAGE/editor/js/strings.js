@@ -94,7 +94,13 @@ var templatizeString = function (
 		var entityLookupString = specialKeywordsEnum[wholeVariable]
 			? wholeVariable
 			: variableName;
-		var entity = getObjectByNameOnMap(entityLookupString, map, templateString)
+		var entity = getObjectByNameOnMap(
+			entityLookupString,
+			map,
+			{
+				action: templateString
+			}
+		)
 		var entityId = (
 			entity.specialIndex
 			|| entity.mapIndex

@@ -6,13 +6,13 @@
 			"doc": "Go to debug map hub?"
 		}
 	],
-	"debug-hub": [
+	"debug-hub-go": [
 		{
 			"action": "RUN_SCRIPT",
 			"script": "load_map-warp_zone"
 		}
 	],
-	"no_debug-hub": [
+	"debug-hub-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -93,7 +93,7 @@
 			"script": "debug-demobonus-q"
 		}
 	],
-	"no_debug-demobonus": [
+	"debug-demobonus-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -284,7 +284,7 @@
 			"script": "debug-set-flags-true-q"
 		}
 	],
-	"no_debug-set-flags-false": [
+	"debug-set-flags-false-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-nothing-changed"
@@ -295,7 +295,7 @@
 			"script": "debug-set-flags-false-q"
 		}
 	],
-	"no_debug-set-flags-true": [
+	"debug-set-flags-true-no": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-no_debug-nothing-changed"

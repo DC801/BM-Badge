@@ -101,7 +101,7 @@ namespace DC801_Test
 			canvas.blt(); // Keep the window frame updated
 
 			// Update EngineInput_Buttons
-			EngineHandleInput();
+			EngineHandleKeyboardInput();
 
 			// If we manually exit
 			if (EngineIsRunning() == false)

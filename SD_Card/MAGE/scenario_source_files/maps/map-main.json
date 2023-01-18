@@ -70,12 +70,12 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"show_dialog-goose-rake"
+                         "value":"show_dialog-goose-mad"
                         }, 
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"goose-mission"
+                         "value":"on_tick-goose-mission"
                         }],
                  "rotation":0,
                  "type":"",

@@ -1,0 +1,78 @@
+{
+	"on_load-mtn-castle_entrance": [
+		{
+			"action": "TELEPORT_CAMERA_TO_GEOMETRY",
+			"geometry": "camera-spot"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-chapter-check"
+		}
+	],
+	"on_load-mtn-castle_entrance-chapter-check": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "boot-out-if-necessary"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-hax-check"
+		}
+	],
+	"on_load-mtn-castle_entrance-hax-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "on_load-mtn-castle_entrance-disable-hax",
+			"save_flag": "can-use-hax-in-mtn",
+			"expected_bool": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-warp-check"
+		}
+	],
+	"on_load-mtn-castle_entrance-disable-hax": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "disable-hax"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-warp-check"
+		}
+	],
+	"on_load-mtn-castle_entrance-warp-check": [
+		{
+			"action": "CHECK_WARP_STATE",
+			"success_script": "on_load-mtn-castle_entrance-warp-in",
+			"string": "warping",
+			"expected_bool": true
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-wrapup"
+		}
+	],
+	"on_load-mtn-castle_entrance-warp-in": [
+		{
+			"action": "COPY_SCRIPT",
+			"script": "warping-in-fade-in"
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "on_load-mtn-castle_entrance-wrapup"
+		}
+	],
+	"on_load-mtn-castle_entrance-wrapup": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "null_script"
+		}
+	],
+	"on_go-mtn-castle_entrance-to-xa_room-check": [
+		{
+			"action": "RUN_SCRIPT",
+			"script": "warp_to-mtn-xa_room"
+		}
+	]
+}

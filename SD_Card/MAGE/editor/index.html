@@ -27,6 +27,35 @@
 			padding: 0;
 			line-height: 0;
 		}
+		.editor-dialog-phase .input-group-text {
+			width: 128px;
+		}
+		.editor-dialog-phase select {
+			display: block;
+			right: 0;
+			left: 128px;
+			position: absolute;
+			height: 100%;
+		}
+		.editor-dialog-phase-preview {
+			position: relative;
+			width: 320px;
+			height: 240px;
+			background-color: #000;
+			border: 1px solid #333;
+		}
+		.font-image {
+			position: absolute;
+		}
+		.font-image-relative {
+			position: relative;
+		}
+		.image_font-monaco_9-6x12 {
+			width: 6px;
+			height: 12px;
+			position: absolute;
+			background-image: url('./dependencies/font-monaco_9-6x12-transparent.png')
+		}
 	</style>
 	<title>MAGE GAME DATA TOOL</title>
 </head>
@@ -118,6 +147,14 @@
 				:file-name-map="fileNameMap"
 				:scenario-data="scenarioData"
 			></entity-type-editor>
+			<editor-scripts
+				v-if="currentData"
+			></editor-scripts>
+			<editor-dialogs
+					v-if="scenarioData"
+					:file-name-map="fileNameMap"
+					:scenario-data="scenarioData"
+			></editor-dialogs>
 		</div>
 	</div>
 	<script
@@ -148,38 +185,12 @@
 		>
 			<div class="card-header">Entity Type Editor</div>
 			<div class="card-body">
-				<div
+				<copy-changes
 					v-if="needsSave"
-					class="
-						alert
-						alert-danger
-						alert-dismissible
-						fade
-						show
-					"
-					role="alert"
-				>
-					<strong>Unsaved changes!</strong>
-					<span>You can click the "Copy" button to the right to put the current state of all entityTypes on your clipboard, then paste it into your `<strong>entity_types.json</strong>` file to save.</span>
-					<button
-						type="button"
-						class="close"
-						title="Copy"
-						@click="copyState"
-					>
-						<span aria-hidden="true">📋</span>
-					</button>
-					<textarea
-						cols="80"
-						rows="16"
-						class="position-absolute"
-						style="
-							font-size: 0;
-							opacity: 0;
-						"
-						ref="copyStateTextArea"
-					>{{ jsonOutput }}</textarea>
-				</div>
+					file-name="entity_types.json"
+					:changes="jsonOutput"
+					resource-name="entityTypes"
+				></copy-changes>
 				<div class="form-group">
 					<label for="currentEntityTypeId">Entity Types:</label>
 					<select
@@ -374,9 +385,14 @@
 			</div>
 		</div>
 	</script>
+
 	<script
-		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.js"
+		data-original-src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"
 		src="./dependencies/vue.js"
+	></script>
+	<script
+		data-original-src="https://cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.js"
+		src="./dependencies/vuex.js"
 	></script>
 	<script
 		data-original-src="https://wzrd.in/standalone/fast-png@5.0.4"
@@ -386,11 +402,11 @@
 		data-original-src="https://wzrd.in/standalone/omggif@1.0.10"
 		src="./dependencies/omggif.js"
 	></script>
-	<script src="js/editor-entity_types.js"></script>
 	<script src="js/common.js"></script>
 	<script src="js/maps.js"></script>
 	<script src="js/tilesets.js"></script>
 	<script src="js/animations.js"></script>
+	<script src="js/editor-copy-changes.js"></script>
 	<script src="js/entity_types.js"></script>
 	<script src="js/portraits.js"></script>
 	<script src="js/entities.js"></script>
@@ -398,8 +414,22 @@
 	<script src="js/strings.js"></script>
 	<script src="js/scripts.js"></script>
 	<script src="js/dialogs.js"></script>
+	<script src="js/serial_dialogs.js"></script>
 	<script src="js/images.js"></script>
 	<script src="js/encoding.js"></script>
+	<script src="js/font-image.js"></script>
+	<script src="js/editor-entity_types.js"></script>
+	<script src="js/editor-scripts.js"></script>
+	<script src="js/editor-script.js"></script>
+	<script src="js/editor-options.js"></script>
+	<script src="js/editor-dialogs.js"></script>
+	<script src="js/editor-dialog.js"></script>
+	<script src="js/editor-dialog-phase.js"></script>
+	<script src="js/editor-dialog-phase-preview.js"></script>
+	<script src="js/editor-dialog-box.js"></script>
+	<script src="js/editor-action.js"></script>
+	<script src="js/component-icon.js"></script>
+	<script src="js/store.js"></script>
 	<script src="js/index.js"></script>
 </body>
 </html>

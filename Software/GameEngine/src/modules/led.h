@@ -122,6 +122,7 @@ extern void ledsOn(void);
 extern void ledsOff(void);
 extern void ledOn(LEDID id);
 extern void ledOff(LEDID id);
+extern void ledInvert(LEDID id);
 extern void ledPulse(LEDID id);
 extern void ledPulseFast(LEDID id);
 extern void ledPwm(LEDID id, uint8_t val);

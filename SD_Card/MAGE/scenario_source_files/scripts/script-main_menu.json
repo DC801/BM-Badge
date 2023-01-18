@@ -9,7 +9,7 @@
 	"handler-skip-splash": [
 		{
 			"action": "SET_MAP_TICK_SCRIPT",
-			"script": "begin-main_menu-intro"
+			"script": "begin-main_menu-fade-in"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -30,7 +30,7 @@
 		{
 			"action": "CHECK_WARP_STATE",
 			"string": "from-game",
-			"success_script": "begin-main_menu-intro",
+			"success_script": "begin-main_menu-fade-in",
 			"expected_bool": true
 		},
 		{
@@ -59,10 +59,10 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu-intro"
+			"script": "begin-main_menu-fade-in"
 		}
 	],
-	"begin-main_menu-intro": [
+	"begin-main_menu-fade-in": [
 		{
 			"action": "SET_HEX_EDITOR_CONTROL",
 			"bool_value": false
@@ -97,10 +97,58 @@
 			"dialog": "dialog-main_menu"
 		}
 	],
-	"load-start-map": [
+	"show-menu-play-game": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-play-game"
+		}
+	],
+	"show-menu-bling-mode": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-bling-mode"
+		}
+	],
+	"show-menu-credits-choice": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-show-menu-credits-choice"
+		}
+	],
+	"start_bling-flying-toasters": [
 		{
 			"action": "LOAD_MAP",
-			"map": "main"
+			"map": "flying-toasters"
+		}
+	],
+	"load-start-map": [
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%PLAYER%",
+			"script": "count-chapter1-storyflags"
+		},
+		{
+			"action": "SET_MAP_TICK_SCRIPT",
+			"script": "main_menu-ch1-storyflag-count-wait"
+		}
+	],
+	"main_menu-ch1-storyflag-count-wait": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "main_menu-ch1-storyflag-count-done",
+			"save_flag": "chapter1-storyflags-tallied",
+			"expected_bool": true
+		}
+	],
+	"main_menu-ch1-storyflag-count-done": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "chapter1-storyflags-tallied",
+			"bool_value": false
+		},
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-load-start-map-q"
 		}
 	],
 	"show-new_game": [
@@ -160,6 +208,12 @@
 			"slot": 0
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 0,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "set-player-name-q"
 		}
@@ -168,6 +222,12 @@
 		{
 			"action": "SLOT_ERASE",
 			"slot": 1
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 1,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -180,6 +240,12 @@
 			"slot": 2
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 2,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "set-player-name-q"
 		}
@@ -188,6 +254,12 @@
 		{
 			"action": "SLOT_LOAD",
 			"slot": 0
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 0,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -200,6 +272,12 @@
 			"slot": 1
 		},
 		{
+			"action": "MUTATE_VARIABLE",
+			"value": 1,
+			"variable": "slot-number",
+			"operation": "SET"
+		},
+		{
 			"action": "RUN_SCRIPT",
 			"script": "load-start-map"
 		}
@@ -208,6 +286,12 @@
 		{
 			"action": "SLOT_LOAD",
 			"slot": 2
+		},
+		{
+			"action": "MUTATE_VARIABLE",
+			"value": 2,
+			"variable": "slot-number",
+			"operation": "SET"
 		},
 		{
 			"action": "RUN_SCRIPT",
@@ -221,7 +305,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"erase_save-1": [
@@ -231,7 +315,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"erase_save-2": [
@@ -241,7 +325,7 @@
 		},
 		{
 			"action": "RUN_SCRIPT",
-			"script": "begin-main_menu"
+			"script": "show-menu-play-game"
 		}
 	],
 	"set-player-name-q": [
@@ -308,6 +392,9 @@
 		}
 	],
 	"start-new-game-with-name": [
+		{
+			"action": "SLOT_SAVE"
+		},
 		{
 			"action": "RUN_SCRIPT",
 			"script": "load-start-map"
@@ -716,6 +803,54 @@
 		{
 			"action": "LOAD_MAP",
 			"map": "credits"
+		}
+	],
+	"show-menu-credits2": [
+		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "credits-from-menu",
+			"bool_value": true
+		},
+		{
+			"action": "LOAD_MAP",
+			"map": "credits2",
+			"todo": "make credits for chapter 2"
+		}
+	],
+	"show_dialog-load-start-map-q": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-load-start-map-q"
+		}
+	],
+	"start-chapter1": [
+		{
+			"action": "LOAD_MAP",
+			"map": "main"
+		}
+	],
+	"start-chapter2-check": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "start-chapter2-confirm",
+			"save_flag": "wonthedemo",
+			"expected_bool": false
+		},
+		{
+			"action": "RUN_SCRIPT",
+			"script": "start-chapter2"
+		}
+	],
+	"start-chapter2-confirm": [
+		{
+			"action": "SHOW_DIALOG",
+			"dialog": "dialog-start-chapter2-confirm"
+		}
+	],
+	"start-chapter2": [
+		{
+			"action": "LOAD_MAP",
+			"map": "magehouse-birthday"
 		}
 	]
 }

@@ -25,6 +25,7 @@ const modules = [
 	"strings",
 	"scripts",
 	"dialogs",
+	"serial_dialogs",
 	"images",
 	"encoding"
 ];

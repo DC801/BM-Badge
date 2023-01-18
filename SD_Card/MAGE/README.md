@@ -1200,6 +1200,9 @@ This JSON file tells the [MGE encoder](#mge-encoder) which files it should be en
 		"dialog/dialog-definitely-an-example.json",
 		"dialog/dialog-examples-for-days.json"
 	],
+	"serialDialogPaths": [
+		"serial_dialog/serial_dialog-example.json"
+	],
 	"maps": {
 		"main_menu": "maps/map-main_menu.json",
 		"main": "maps/map-main.json"
@@ -1212,7 +1215,7 @@ This JSON file tells the [MGE encoder](#mge-encoder) which files it should be en
 }
 ```
 
-`scriptPaths` and `dialogPaths` contain arrays (square brackets). Each array will simply contain a list of all file paths you want the game encoder to see.
+`scriptPaths`, `dialogPaths`, and `serialDialogPaths` contain arrays (square brackets). Each array will simply contain a list of all file paths you want the game encoder to see.
 
 `maps` and `dialogSkins` contain object literals (curly braces), which contain name-value pairs. For those object literals, the "name" is the name of the map/dialogSkin for an action to use, and the "value" is the file path for the appropriate JSON file.
 

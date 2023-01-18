@@ -9,10 +9,6 @@
 //uncomment to print main game loop timing debug info to terminal or over serial
 //#define TIMING_DEBUG
 
-#ifdef DC801_DESKTOP
-#include "EngineWindowFrame.h"
-#endif
-
 #ifdef EMSCRIPTEN
 #include "emscripten.h"
 #endif
@@ -20,13 +16,17 @@
 #include "mage_hex.h"
 #include "mage_dialog_control.h"
 #include "mage_script_control.h"
+#include "mage_command_control.h"
 
 std::unique_ptr<MageGameControl> MageGame;
 std::unique_ptr<MageHexEditor> MageHex;
 std::unique_ptr<MageDialogControl> MageDialog;
 std::unique_ptr<MageScriptControl> MageScript;
+std::unique_ptr<MageCommandControl> MageCommand;
 MageEntity *hackableDataAddress;
 FrameBuffer *mage_canvas;
+
+bool engineIsInitialized;
 
 uint32_t lastTime;
 uint32_t now;
@@ -42,34 +42,6 @@ void handleBlockingDelay()
 		nrf_delay_ms(MageScript->blockingDelayTime);
 		//reset delay time when done so we don't do this every loop.
 		MageScript->blockingDelayTime = 0;
-	}
-}
-
-void handleScripts()
-{
-	//Note: all script handlers check for hex editor mode internally and will only continue
-	//scripts that have already started and are not yet complete when in hex editor mode.
-
-	//the map's onLoad script is called with a false isFirstRun flag. This allows it to
-	//complete any non-blocking actions that were called when the map was first loaded,
-	//but it will not allow it to run the script again once it is completed.
-	MageScript->handleMapOnLoadScript(false);
-	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	//the map's onTick script will run every tick, restarting from the beginning as it completes
-	MageScript->handleMapOnTickScript();
-	if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-	for(uint8_t i = 0; i < MageGame->filteredEntityCountOnThisMap; i++)
-	{
-		//this script will not initiate any new onInteract scripts. It will simply run an
-		//onInteract script based on the state of the entityInteractResumeStates[i] struct
-		//the struct is initialized in MageGame->applyUniversalInputs() when the interact
-		//button is pressed.
-		MageScript->handleEntityOnInteractScript(i);
-		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
-		//handle Entity onTick scripts for the local entity at Id 'i':
-		//these scripts will run every tick, starting from the beginning as they complete.
-		MageScript->handleEntityOnTickScript(i);
-		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
 	}
 }
 
@@ -91,7 +63,7 @@ void GameUpdate(uint32_t deltaTime)
 		MageHex->applyHexModeInputs();
 
 		//then handle any still-running scripts:
-		handleScripts();
+		MageScript->tickScripts();
 	}
 
 	//or be boring and normal:
@@ -104,7 +76,7 @@ void GameUpdate(uint32_t deltaTime)
 		MageGame->UpdateEntities(deltaTime);
 
 		//handle scripts:
-		handleScripts();
+		MageScript->tickScripts();
 
 		//check for loadMap:
 		if(MageScript->mapLoadId != MAGE_NO_MAP) { return; }
@@ -231,6 +203,14 @@ void GameRender()
 
 void EngineMainGameLoop ()
 {
+	if(!engineIsInitialized) {
+		// Why do this in the game loop instead of before the game loop?
+		// Because Emscripten started throwing a new useless, meaningless,
+		// recoverable runtime error that the client can just ignore, unless
+		// EngineInit is called from inside the game loop. No idea why.
+		EngineInit();
+		engineIsInitialized = true;
+	}
 	//update timing information at the start of every game loop
 	now = millis();
 	deltaTime = now - lastTime;
@@ -250,10 +230,14 @@ void EngineMainGameLoop ()
 	#endif
 
 	//handles hardware inputs and makes their state available
-	EngineHandleInput();
+	EngineHandleKeyboardInput();
+
+	//on desktop, interact with stdin
+	//on embedded, interact with USBC com port over serial
+	EngineHandleSerialInput();
 
 	LOG_COLOR_PALETTE_CORRUPTION(
-		"EngineHandleInput();"
+		"EngineHandleKeyboardInput();"
 	);
 
 	//updates the state of all the things before rendering:
@@ -316,6 +300,13 @@ void EngineMainGameLoop ()
 	}
 }
 
+void onSerialStart () {
+	MageCommand->handleStart();
+}
+void onSerialCommand (char* commandString) {
+	MageCommand->processCommand(commandString);
+}
+
 void EngineInit () {
 	//turn off LEDs
 	ledsOff();
@@ -343,6 +334,13 @@ void EngineInit () {
 	//construct MageScriptControl object to handle scripts for the game
 	MageScript = std::make_unique<MageScriptControl>();
 
+	//construct MageCommandControl object to handle serial/stdin command parsing
+	MageCommand = std::make_unique<MageCommandControl>();
+	EngineSerialRegisterEventHandlers(
+		onSerialStart,
+		onSerialCommand
+	);
+
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"After MageScriptControl constructor"
 	);
@@ -354,19 +352,44 @@ void EngineInit () {
 	MageHex->setHexOp(HEX_OPS_XOR);
 
 	#ifdef DC801_DESKTOP
-		fprintf(stderr, "MageGameControl RAM use:   %8d bytes.\r\n", MageGame->Size());
-		fprintf(stderr, "MageScriptControl RAM use: %8d bytes.\r\n", MageScript->size());
-		fprintf(stderr, "MageHexControl RAM use:    %8d bytes.\r\n", MageHex->size());
-		fprintf(stderr, "FrameBuffer RAM use:       %8d bytes.\r\n", FRAMEBUFFER_SIZE * sizeof(uint16_t));
-		fprintf(stderr, "-------------------------------------------\r\n");
-		fprintf(stderr, "Minimum RAM overhead use:  %8d bytes.\r\n",
-			(MageGame->Size() + MageScript->size() + MageHex->size() + (FRAMEBUFFER_SIZE * sizeof(uint16_t))));
+		uint32_t gameSize = MageGame->Size();
+		uint32_t scriptSize = MageScript->size();
+		uint32_t hexSize = MageHex->size();
+		uint32_t commandSize = MageCommand->size();
+		uint32_t frameBufferSize = FRAMEBUFFER_SIZE * sizeof(uint16_t);
+		uint32_t totalSize = (
+			0
+			+ gameSize
+			+ scriptSize
+			+ hexSize
+			+ commandSize
+			+ frameBufferSize
+		);
+		fprintf(stderr, "MageGameControl RAM use:    %8d bytes.\n", gameSize);
+		fprintf(stderr, "MageScriptControl RAM use:  %8d bytes.\n", scriptSize);
+		fprintf(stderr, "MageHexControl RAM use:     %8d bytes.\n", hexSize);
+		fprintf(stderr, "MageCommandControl RAM use: %8d bytes.\n", commandSize);
+		fprintf(stderr, "FrameBuffer RAM use:        %8d bytes.\n", frameBufferSize);
+		fprintf(stderr, "-------------------------------------------\n");
+		fprintf(stderr, "Minimum RAM overhead use:   %8d bytes.\n", totalSize);
+		fflush(stderr);
+		// for some reason, outputting to stderr and then flushing, this still comes out AFTER
+		// the message output to stdout AFTER THIS, as triggered by `was_serial_started`.
+		// so forcibly delaying by 50 ms on startup actually allows the stderr/stdout
+		// messages to come out in the correct order. WHY. WHYYYYYYYYY. WHY.
+		nrf_delay_ms(50);
 	#endif
 	#ifdef DC801_EMBEDDED
 		check_ram_usage();
 	#endif
 
 	MageGame->LoadMap(DEFAULT_MAP);
+
+	#ifdef DC801_DESKTOP
+	// don't want to show welcome message until after map has loaded
+	// in case map on_load has a `SET_CONNECT_SERIAL_DIALOG` action
+	was_serial_started = true;
+	#endif
 
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"MageGame->LoadMap(DEFAULT_MAP);"
@@ -379,13 +402,8 @@ void EngineInit () {
 
 void MAGE()
 {
-	#ifdef DC801_DESKTOP
-		EngineWindowFrameInit();
-	#endif
 	//initialize the canvas object for the screen buffer.
 	mage_canvas = p_canvas();
-
-	EngineInit();
 
 	//main game loop:
 	#ifdef EMSCRIPTEN
@@ -400,14 +418,13 @@ void MAGE()
 	// Close rom and any open files
 	EngineROM_Deinit();
 
+	EngineSerialRegisterEventHandlers(
+		nullptr,
+		nullptr
+	);
+
 	LOG_COLOR_PALETTE_CORRUPTION(
 		"EngineROM_Deinit();"
 	);
 
-	#ifdef DC801_DESKTOP
-		// Clean up
-		EngineWindowFrameDestroy();
-	#endif
-
-	return;
 }

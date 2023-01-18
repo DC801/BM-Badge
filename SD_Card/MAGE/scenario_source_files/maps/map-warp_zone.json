@@ -1,11 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":24,
  "infinite":false,
  "layers":[
@@ -166,7 +159,7 @@
                 {
                  "height":32,
                  "id":18,
-                 "name":"door-demo_map",
+                 "name":"door-episode2",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -212,7 +205,7 @@
          "value":"map_on_tick-doors"
         }],
  "renderorder":"right-down",
- "tiledversion":"1.4.3",
+ "tiledversion":"1.8.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -233,6 +226,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.4,
+ "version":"1.8",
  "width":32
 }

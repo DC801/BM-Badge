@@ -8,9 +8,15 @@ in a more accessible way.
 
 #include "mage_defines.h"
 
+typedef struct {
+	char name[MAP_GO_DIRECTION_NAME_LENGTH];
+	uint16_t mapLocalScriptId;
+	uint16_t padding;
+} MapGoDirection;
+
 class MageMap
 {
-private:
+public:
 	char name[17];
 	uint16_t tileWidth;
 	uint16_t tileHeight;
@@ -18,17 +24,19 @@ private:
 	uint16_t rows;
 	uint16_t onLoad;
 	uint16_t onTick;
+	uint16_t onLook;
 	uint8_t layerCount;
 	uint8_t playerEntityIndex;
 	uint16_t entityCount;
 	uint16_t geometryCount;
 	uint16_t scriptCount;
+	uint8_t goDirectionCount;
 	std::unique_ptr<uint16_t[]> entityGlobalIds;
 	std::unique_ptr<uint16_t[]> geometryGlobalIds;
 	std::unique_ptr<uint16_t[]> scriptGlobalIds;
+	std::unique_ptr<MapGoDirection[]> goDirections;
 	std::unique_ptr<uint32_t[]> mapLayerOffsets;
 
-public:
 	MageMap() : name{0},
 		tileWidth{0},
 		tileHeight{0},
@@ -36,14 +44,17 @@ public:
 		rows{0},
 		onLoad{0},
 		onTick{0},
+		onLook{0},
 		layerCount{0},
 		playerEntityIndex{0},
 		entityCount{0},
 		geometryCount{0},
 		scriptCount{0},
+		goDirectionCount{0},
 		entityGlobalIds{std::make_unique<uint16_t[]>(1)},
 		geometryGlobalIds{std::make_unique<uint16_t[]>(1)},
 		scriptGlobalIds{std::make_unique<uint16_t[]>(1)},
+		goDirections{std::make_unique<MapGoDirection[]>(1)},
 		mapLayerOffsets{std::make_unique<uint32_t[]>(1)}
 	{ };
 
@@ -55,8 +66,6 @@ public:
 	uint16_t TileHeight() const;
 	uint16_t Cols() const;
 	uint16_t Rows() const;
-	uint16_t getMapLocalMapOnLoadScriptId() const;
-	uint16_t getMapLocalMapOnTickScriptId() const;
 	uint8_t LayerCount() const;
 	uint8_t EntityCount() const;
 	uint16_t GeometryCount() const;
@@ -67,10 +76,9 @@ public:
 	uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const;
 	//the returns a global mapLocalScriptId from the local script index
 	uint16_t getGlobalScriptId(uint16_t mapLocalScriptId) const;
+	std::string getDirectionNames() const;
+	uint16_t getDirectionScriptId(std::string directionName) const;
 	uint32_t LayerOffset(uint16_t num) const;
-	//this sets the map's onLoad and onTick script value.
-	void setOnLoad(uint16_t scriptId);
-	void setOnTick(uint16_t scriptId);
 
 	uint8_t getMapLocalPlayerEntityIndex();
 }; //class MageMap

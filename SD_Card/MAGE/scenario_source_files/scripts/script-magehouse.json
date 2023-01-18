@@ -877,7 +877,7 @@
 			"script": "walk-to-lodge"
 		}
 	],
-	"no_debug-walk-to-lodge": [
+	"debug-walk-to-lodge-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",
@@ -916,7 +916,7 @@
 			"script": "prepare-goodmorning-cutscene-plus"
 		}
 	],
-	"no_debug-goodmorning": [
+	"debug-goodmorning-no": [
 		{
 			"action": "SET_ENTITY_INTERACT_SCRIPT",
 			"entity": "%SELF%",

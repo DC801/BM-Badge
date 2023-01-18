@@ -1429,294 +1429,6 @@
 			"script": "show_dialog-jackob-start"
 		}
 	],
-	"count-story-flags": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 0,
-			"operation": "SET",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-catwork"
-		}
-	],
-	"story-eval-catwork": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-catwork",
-			"expected_bool": true,
-			"success_script": "increment-via-catwork"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-shepherd2"
-		}
-	],
-	"increment-via-catwork": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-shepherd2"
-		}
-	],
-	"story-eval-shepherd2": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-shepherd",
-			"expected_bool": true,
-			"success_script": "increment-via-shepherd2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bender2"
-		}
-	],
-	"increment-via-shepherd2": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bender2"
-		}
-	],
-	"story-eval-bender2": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bender",
-			"expected_bool": true,
-			"success_script": "increment-via-bender2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-baker2"
-		}
-	],
-	"increment-via-bender2": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-baker2"
-		}
-	],
-	"story-eval-baker2": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-baker",
-			"expected_bool": true,
-			"success_script": "increment-via-baker2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bobmoss"
-		}
-	],
-	"increment-via-baker2": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bobmoss"
-		}
-	],
-	"story-eval-bobmoss": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bobmoss",
-			"expected_bool": true,
-			"success_script": "increment-via-bobmoss"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bea-happy"
-		}
-	],
-	"increment-via-bobmoss": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bea-happy"
-		}
-	],
-	"story-eval-bea-happy": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bea1",
-			"expected_bool": true,
-			"success_script": "increment-via-bea-happy"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-trekkie2"
-		}
-	],
-	"increment-via-bea-happy": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-trekkie2"
-		}
-	],
-	"story-eval-trekkie2": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-trekkie",
-			"expected_bool": true,
-			"success_script": "increment-via-trekkie2"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-sportskid"
-		}
-	],
-	"increment-via-trekkie2": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-sportskid"
-		}
-	],
-	"story-eval-sportskid": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-sportskid",
-			"expected_bool": true,
-			"success_script": "increment-via-sportskid"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-verthandi"
-		}
-	],
-	"increment-via-sportskid": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-verthandi"
-		}
-	],
-	"story-eval-verthandi": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-verthandi",
-			"expected_bool": true,
-			"success_script": "increment-via-verthandi"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bea-relief"
-		}
-	],
-	"increment-via-verthandi": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-bea-relief"
-		}
-	],
-	"story-eval-bea-relief": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-bea2",
-			"expected_bool": true,
-			"success_script": "increment-via-bea-relief"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-rake"
-		}
-	],
-	"increment-via-bea-relief": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-eval-rake"
-		}
-	],
-	"story-eval-rake": [
-		{
-			"action": "CHECK_SAVE_FLAG",
-			"save_flag": "storyflag-rake",
-			"expected_bool": true,
-			"success_script": "increment-via-rake"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-flags-counted"
-		}
-	],
-	"increment-via-rake": [
-		{
-			"action": "MUTATE_VARIABLE",
-			"variable": "story-flag-count",
-			"value": 1,
-			"operation": "ADD",
-			"doc": "Valid operations: SET, ADD, SUB, DIV, MUL, MOD, RNG"
-		},
-		{
-			"action": "RUN_SCRIPT",
-			"script": "story-flags-counted"
-		}
-	],
 	"show_dialog-alfonso-start": [
 		{
 			"action": "CHECK_ENTITY_GLITCHED",
@@ -1737,18 +1449,41 @@
 			"success_script": "show_dialog-alfonso-wonthedemo"
 		},
 		{
-			"action": "RUN_SCRIPT",
-			"script": "count-story-flags"
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": false
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "Bert",
+			"script": "count-chapter1-storyflags"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "alfonso-ch1-storyflag-count-wait"
 		}
 	],
-	"story-flags-counted": [
+	"alfonso-ch1-storyflag-count-wait": [
+		{
+			"action": "CHECK_SAVE_FLAG",
+			"success_script": "alfonso-ch1-storyflag-count-done",
+			"save_flag": "chapter1-storyflags-tallied",
+			"expected_bool": true
+		}
+	],
+	"alfonso-ch1-storyflag-count-done": [
 		{
 			"action": "SHOW_DIALOG",
 			"dialog": "dialog-alfonso-eval"
 		},
 		{
+			"action": "SET_SAVE_FLAG",
+			"save_flag": "chapter1-storyflags-tallied",
+			"bool_value": false
+		},
+		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 0,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1757,7 +1492,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 1,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1766,7 +1501,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 2,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1775,7 +1510,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 3,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1784,7 +1519,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 4,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1793,7 +1528,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 5,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1802,7 +1537,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 6,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1811,7 +1546,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 7,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1820,7 +1555,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 8,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1829,7 +1564,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 9,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1838,7 +1573,7 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 10,
 			"comparison": "==",
 			"expected_bool": true,
@@ -1847,12 +1582,28 @@
 		},
 		{
 			"action": "CHECK_VARIABLE",
-			"variable": "story-flag-count",
+			"variable": "chapter1-storyflag-tally",
 			"value": 11,
 			"comparison": "==",
 			"expected_bool": true,
 			"doc": "Valid comparisons: <, <=, ==, >=, >",
 			"success_script": "show_dialog-alfonso-eval-done"
+		}
+	],
+	"show_dialog-alfonso-eval-wrapup": [
+		{
+			"action": "SET_PLAYER_CONTROL",
+			"bool_value": true
+		},
+		{
+			"action": "SET_ENTITY_INTERACT_SCRIPT",
+			"entity": "Alfonso",
+			"script": "show_dialog-alfonso-start"
+		},
+		{
+			"action": "SET_ENTITY_TICK_SCRIPT",
+			"entity": "%SELF%",
+			"script": "null_script"
 		}
 	],
 	"show_dialog-alfonso-eval0": [
@@ -1861,9 +1612,8 @@
 			"dialog": "dialog-alfonso-eval0"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval-wrapup"
 		}
 	],
 	"show_dialog-alfonso-eval1": [
@@ -1872,9 +1622,8 @@
 			"dialog": "dialog-alfonso-eval1"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval-wrapup"
 		}
 	],
 	"show_dialog-alfonso-eval-early": [
@@ -1883,9 +1632,8 @@
 			"dialog": "dialog-alfonso-eval-early"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval-wrapup"
 		}
 	],
 	"show_dialog-alfonso-eval-mid": [
@@ -1894,9 +1642,8 @@
 			"dialog": "dialog-alfonso-eval-mid"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval-wrapup"
 		}
 	],
 	"show_dialog-alfonso-eval-late": [
@@ -1905,9 +1652,8 @@
 			"dialog": "dialog-alfonso-eval-late"
 		},
 		{
-			"action": "SET_ENTITY_INTERACT_SCRIPT",
-			"entity": "Alfonso",
-			"script": "show_dialog-alfonso-start"
+			"action": "RUN_SCRIPT",
+			"script": "show_dialog-alfonso-eval-wrapup"
 		}
 	],
 	"show_dialog-alfonso-eval-done": [

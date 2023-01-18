@@ -2,6 +2,7 @@
 
 #include <utility>
 #include "mage_portrait.h"
+#include "mage_script_actions.h"
 extern FrameBuffer *mage_canvas;
 extern MageGameControl *MageGame;
 extern MageScriptControl *MageScript;
@@ -453,7 +454,7 @@ void MageDialogControl::loadCurrentScreenPortrait() {
 	MageEntity currentEntity = {};
 	currentPortraitId = currentScreen.portraitIndex;
 	if(currentScreen.entityIndex != NO_PLAYER) {
-		uint8_t entityIndex = MageScript->getUsefulEntityIndexFromActionEntityId(
+		uint8_t entityIndex = getUsefulEntityIndexFromActionEntityId(
 			currentScreen.entityIndex,
 			triggeringEntityId
 		);
