@@ -7,7 +7,7 @@
 //   Purpose: Parsing DC801's BM-Badge game.dat
 //  Category: Game
 // File Mask: game.dat
-//  ID Bytes: 4D41474547414D45
+//  ID Bytes: 4D41474547414D45 //MAGEGAME
 //   History: 
 //------------------------------------------------
 
@@ -156,7 +156,7 @@ typedef struct
     uint32 count;
     uint32 offsets[count];
     uint32 lengths[count];
-} MageHeader;
+} MageHeader <read=(count)>;
 
 typedef struct
 {

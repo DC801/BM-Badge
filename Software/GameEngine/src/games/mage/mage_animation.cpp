@@ -6,10 +6,10 @@
 MageAnimation::MageAnimation(uint32_t& address) noexcept
 {
 	//read tilesetId
-	ROM->Read(tilesetId, address);
+	ROM()->Read(tilesetId, address);
 
 	auto frameCount = uint16_t{ 0 };
 	//read frameCount
-	ROM->Read(frameCount, address);
-	ROM->InitializeCollectionOf(frames, address, frameCount);
+	ROM()->Read(frameCount, address);
+	ROM()->InitializeCollectionOf(frames, address, frameCount);
 }

@@ -64,6 +64,7 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_map.h
     Software/GameEngine/src/games/mage/mage_portrait.cpp
     Software/GameEngine/src/games/mage/mage_portrait.h
+    Software/GameEngine/src/games/mage/mage_rom.cpp
     Software/GameEngine/src/games/mage/mage_rom.h
     Software/GameEngine/src/games/mage/mage_script_actions.cpp
     Software/GameEngine/src/games/mage/mage_script_actions.h

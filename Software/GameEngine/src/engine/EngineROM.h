@@ -48,35 +48,27 @@ class Header
 {
 public:
    Header() noexcept = default;
-   Header(const uint8_t* base, uint32_t count, const uint32_t* offsets, const uint32_t* lengths) noexcept
-      : count(count), offsets(offsets), lengths(lengths)
-   {}
-
-   const TData* Get(uint32_t index) const
+   Header(uint32_t count, uint32_t& offset) noexcept
+      : count(count), baseAddress(offset)
    {
-   	if (0 == count) { return nullptr; }
-      /*if constexpr (std::is_constructible_v<TData, uint32_t&>)
-      {
-         return
-      }*/
-      return reinterpret_cast<const TData*>(base + Offset(index));
-   }
-
-   std::unique_ptr<TData> GetCopy(uint32_t index) const
-   {
-      if (0 == count) { return nullptr; }
-      return std::make_unique<TData>{base + Offset(index)};
+      offset += 2 * sizeof(uint32_t) * count;
    }
 
    uint32_t Count() const { return count; }
-   uint32_t Offset(uint16_t i) const { return offsets[i % count]; }
-   uint32_t Length(uint16_t i) const { return lengths[i % count]; }
-
+   uint32_t Offset(uint32_t romDataAddress, uint16_t i) const
+   {
+      auto offsets = (const uint32_t*)(romDataAddress + baseAddress);
+      return offsets[i % count];
+   }
+   uint32_t Length(uint32_t romDataAddress, uint16_t i) const
+   {
+      auto lengths = (const uint32_t*)(romDataAddress + baseAddress + sizeof(uint32_t) * count);
+      return lengths[i % count];
+   }
+   
 private:
-   const uint8_t* base;
-   uint32_t count{ 0 };
-   const uint32_t* offsets{ nullptr };
-   const uint32_t* lengths{ nullptr };
+   uint32_t count;
+   uint32_t baseAddress;
 
 }; //class Header
 
@@ -317,18 +309,18 @@ struct EngineROM
          {
             ENGINE_PANIC("Invalid ROM file size: larger than the hardware's ROM chip capacity!");
          }
-         romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
+         auto romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
+
+         // copy the file into the buffer
+         if (!romFile.read(romDataInDesktopRam.get(), romFileSize))
+         {
+            ENGINE_PANIC("Desktop build: ROM->RAM read failed");
+         }
+         romFile.close();
       }
       else
       {
          ENGINE_PANIC("Unable to read ROM file size at %s", MAGE_GAME_DAT_PATH);
-      }
-
-
-      // copy the file into the buffer
-      if (!romFile.read(romDataInDesktopRam.get(), romFileSize))
-      {
-         ENGINE_PANIC("Desktop build: ROM->RAM read failed");
       }
 #endif
 
@@ -338,15 +330,29 @@ struct EngineROM
          ErrorUnplayable();
       }
 
-      auto offset = 0;
+      uint32_t offset = ENGINE_ROM_MAGIC_HASH_LENGTH;
       headers = headersFor<THeaders...>(offset);
    }
    ~EngineROM() = default;
 
    bool Magic() const { return VerifyEqualsAtOffset(0, "MAGEGAME"); }
 
-   void ErrorUnplayable();
-
+   void ErrorUnplayable()
+   {
+      //let out the magic s̶m̶o̶k̶e̶ goat
+      ENGINE_PANIC(
+         "ROM header invalid. Game cannot start.\n"
+         "Goat is sad.   ##### ####     \n"
+         "             ##   #  ##       \n"
+         "            #   (-)    #      \n"
+         "            #+       ######   \n"
+         "            #^             ## \n"
+         "             ###           #  \n"
+         "               #  #      # #  \n"
+         "               ##  ##  ##  #  \n"
+         "               ######  #####  \n"
+      );
+   }
    template <typename T>
    void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
@@ -369,21 +375,27 @@ struct EngineROM
    template <typename T>
    uint32_t GetAddress(uint16_t index) const
    {
-      auto& header = getHeader<T>();
-      auto address = header.Offset(index % header.Count());
+      auto&& header = getHeader<T>();
+      auto address = header.Offset((uint32_t)romDataInDesktopRam.get(), index % header.Count());
       return address;
    }
 
    template <typename T>
    const T* Get(uint16_t index) const
    {
-      return getHeader<T>().Get(index);
+      auto&& header = getHeader<T>();
+      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index);
+      return reinterpret_cast<const T*>((uint8_t*)romDataInDesktopRam.get(), (uint32_t)romDataInDesktopRam.get() + offset);
    }
+
+   template <typename TData>
+   uint16_t GetCount() { return getHeader<TData>().Count(); }
 
    template <typename T>
    std::unique_ptr<T> GetUniqueCopy(uint16_t index) const
    {
-      auto offset = getHeader<T>().Offset(index);
+      auto&& header = getHeader<T>();
+      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index);
       return std::make_unique<T>(offset);
    }
 
@@ -393,21 +405,15 @@ struct EngineROM
    }
 
    template <typename T>
-   uint16_t GetCount() const
-   {
-      return getHeader<T>().Count();
-   }
-
-   template <typename T>
-   void GetReadPointerTo(const T*& t, uint32_t& offset, size_t count = 1) const
+   void SetReadPointerToOffset(const T*& readPointer, uint32_t& offset, size_t count = 1) const
    {
       static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
       auto dataLength = count * sizeof(T);
       if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::GetReadPointerTo: offset + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::SetReadPointerToOffset: offset + length exceeds maximum dat file size" };
       }
-      t = reinterpret_cast<const T*>(romDataInDesktopRam.get() + offset);
+      readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + offset);
       offset += dataLength;
    }
 
@@ -477,10 +483,8 @@ struct EngineROM
          }
          else
          {
-            const auto saveSize = sizeof(MageSaveGame);
-            saveFile.read((char*)currentSave.get(), saveSize);
-            auto readCount = saveFile.gcount();
-            if (readCount != saveSize)
+            saveFile.read((char*)currentSave.get(), sizeof(MageSaveGame));
+            if (saveFile.gcount() != sizeof(MageSaveGame))
             {
                // The file save_*.dat on disk can't be read?
                // Empty out the destination.
@@ -569,36 +573,27 @@ private:
       return saveDir;
    }
    std::unique_ptr<char[]> romDataInDesktopRam{ new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } };
-   std::fstream romFile;
 #endif
 
    template <typename TData>
    const Header<TData>& getHeader() const
    {
-      using Tuple = std::tuple<Header<THeaders>...>;
-      
-      static constexpr std::size_t index = type_index_v<Header<TData>, Tuple>;
-      static_assert(index < std::tuple_size_v<Tuple>, "type does not appear in tuple");
+      static constexpr std::size_t index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
       return std::get<index>(headers);
    }
 
    template <typename T>
-   constexpr Header<T> headerFor(uint32_t offset) const
+   auto headerFor(uint32_t& offset) const
    {
-      uint32_t counts;
-      const uint32_t* offsets;
-      const uint32_t* lengths;
-
-      Read(counts, offset);
-      GetReadPointerTo(offsets, offset, counts);
-      GetReadPointerTo(lengths, offset, counts);
-      return Header<T>{(const uint8_t*)romDataInDesktopRam.get(), counts, offsets, lengths};
+      uint32_t count;
+      Read(count, offset);
+      return Header<T>{count, offset};
    }
 
-   template <typename... DataType>
-   constexpr std::tuple<Header<DataType>...> headersFor(uint32_t offset) const
+   template <typename... TRest>
+   auto headersFor(uint32_t& offset) const
    {
-      return std::make_tuple(headerFor<DataType>(offset)...);
+      return std::tuple<Header<TRest>...>{headerFor<TRest>(offset)...};
    }
 
 };

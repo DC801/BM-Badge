@@ -46,15 +46,15 @@ public:
       //skip 'MAGEGAME' at front of .dat file
       uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
 
-      ROM->Read(engineVersion, offset);
+      ROM()->Read(engineVersion, offset);
 
       if (engineVersion != ENGINE_VERSION)
       {
          throw std::runtime_error{ "game.dat is incompatible with Engine" };// \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
       }
 
-      ROM->Read(scenarioDataCRC32, offset);
-      ROM->Read(scenarioDataLength, offset);
+      ROM()->Read(scenarioDataCRC32, offset);
+      ROM()->Read(scenarioDataLength, offset);
 
       auto newSave = new MageSaveGame{};
       newSave->scenarioDataCRC32 = scenarioDataCRC32;

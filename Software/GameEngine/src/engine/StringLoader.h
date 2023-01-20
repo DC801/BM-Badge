@@ -15,12 +15,11 @@ class StringLoader
 {
 public:
    StringLoader(std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<MapControl> mapControl, const uint16_t* scriptVariables) noexcept
-      : scriptControl(scriptControl), mapControl(mapControl), scriptVariables(scriptVariables)
+      : mapControl(mapControl), scriptVariables(scriptVariables)
    {}
 
-   std::string getString(uint16_t stringId, int16_t mapLocalEntityId = NO_PLAYER) const;
+   std::string getString(uint16_t stringId, std::string triggeringEntityName = "") const;
 private:
-   std::shared_ptr<MageScriptControl> scriptControl;
    std::shared_ptr<MapControl> mapControl;
    const uint16_t* scriptVariables;
 };

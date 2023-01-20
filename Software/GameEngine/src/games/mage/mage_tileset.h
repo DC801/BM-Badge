@@ -43,20 +43,20 @@ public:
    MageTileset(uint32_t& offset)
    {
 #ifndef DC801_EMBEDDED
-      ROM->Read(name, offset, TILESET_NAME_SIZE);
+      ROM()->Read(name, offset, TILESET_NAME_SIZE);
 #else
       offset += TILESET_NAME_SIZE;
 #endif
 
-      ROM->Read(imageId, offset);
-      ROM->Read(imageWidth, offset);
-      ROM->Read(imageHeight, offset);
-      ROM->Read(tileWidth, offset);
-      ROM->Read(tileHeight, offset);
-      ROM->Read(cols, offset);
-      ROM->Read(rows, offset);
+      ROM()->Read(imageId, offset);
+      ROM()->Read(imageWidth, offset);
+      ROM()->Read(imageHeight, offset);
+      ROM()->Read(tileWidth, offset);
+      ROM()->Read(tileHeight, offset);
+      ROM()->Read(cols, offset);
+      ROM()->Read(rows, offset);
       offset += sizeof(uint16_t); // u2 padding before the geometry IDs
-      ROM->GetReadPointerTo(globalGeometryIds, offset);
+      ROM()->SetReadPointerToOffset(globalGeometryIds, offset);
 
       if (!Valid())
       {
@@ -110,9 +110,6 @@ private:
 class AnimationDirection
 {
 public:
-   AnimationDirection() noexcept = default;
-   AnimationDirection(uint32_t& offset);
-
    uint16_t TypeId() const { return typeId; }
    uint8_t Type() const { return type; }
    uint8_t RenderFlags() const { return renderFlags; }

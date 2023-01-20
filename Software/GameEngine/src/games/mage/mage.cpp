@@ -192,8 +192,7 @@ void MageGameEngine::applyUniversalInputs()
    if (button.IsPressed(KeyPress::Bit2)) { hexEditor->runHex(0b00000010); }
    if (button.IsPressed(KeyPress::Bit1)) { hexEditor->runHex(0b00000001); }
 
-   if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0)
-      || button.IsPressed(KeyPress::Mem0) && button.IsPressed(KeyPress::Xor))
+   if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0))
    {
       isCollisionDebugOn = !isCollisionDebugOn;
    }
@@ -224,7 +223,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-      auto entityType = hasEntityType ? ROM->Get<MageEntityType>(playerEntityTypeId) : nullptr;
+      auto entityType = hasEntityType ? ROM()->Get<MageEntityType>(playerEntityTypeId) : nullptr;
       uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
       bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
@@ -611,7 +610,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          auto address = layerAddress + (i * sizeof(MageMapTile));
 
          auto currentTile = MageMapTile{};
-         ROM->Read(currentTile, address);
+         ROM()->Read(currentTile, address);
 
          if (currentTile.tileId == 0)
          {
@@ -620,7 +619,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 
          currentTile.tileId -= 1;
 
-         auto tileset = ROM->Get<MageTileset>(currentTile.tilesetId);
+         auto tileset = ROM()->Get<MageTileset>(currentTile.tilesetId);
 
          if (!tileset->Valid())
          {
@@ -642,7 +641,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             }
             geometryId--;
 
-            auto geometry = ROM->Get<MageGeometry>(geometryId)
+            auto geometry = ROM()->Get<MageGeometry>(geometryId)
                ->flipSelfByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
 
             Point offsetPoint = { playerPoint.x - tileTopLeftPoint.x, playerPoint.y - tileTopLeftPoint.y };

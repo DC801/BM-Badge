@@ -14,7 +14,7 @@ MageColorPalette::MageColorPalette(uint32_t& address) noexcept
 #ifndef DC801_EMBEDDED
    // Read name only if we're on Desktop,
    // Embedded don't got RAM for that
-   ROM->Read(name, address, COLOR_PALETTE_NAME_LENGTH);
+   ROM()->Read(name, address, COLOR_PALETTE_NAME_LENGTH);
 #else
    // Regardless of reading/storing it, ALWAYS increment past it
    address += COLOR_PALETTE_NAME_LENGTH;
@@ -22,10 +22,10 @@ MageColorPalette::MageColorPalette(uint32_t& address) noexcept
 
    uint8_t colorCount;
    // Read colorCount
-   ROM->Read(colorCount, address);
+   ROM()->Read(colorCount, address);
    address += 1; // padding
 
-   ROM->InitializeCollectionOf(colors, address, colorCount);
+   ROM()->InitializeCollectionOf(colors, address, colorCount);
 
 #ifndef DC801_EMBEDDED
    for (int i = 0; i < colorCount; ++i)

@@ -8,7 +8,7 @@ MagePortrait::MagePortrait(uint32_t& address)
 	address += sizeof(uint8_t); // paddingC
 
 	auto emoteCount = uint8_t{ 0 };
-	ROM->Read(emoteCount, address);
+	ROM()->Read(emoteCount, address);
 
-	ROM->InitializeCollectionOf(emotes, address, emoteCount);
+	ROM()->InitializeCollectionOf(emotes, address, emoteCount);
 }

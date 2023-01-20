@@ -58,19 +58,19 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
 
    //get the memory address for the script:
    auto scriptId = (uint16_t)mapControl->ScriptCount() == 0 ? 0 : resumeStateStruct->currentScriptId % mapControl->ScriptCount();
-   auto script = ROM->Get<MageScriptState>(scriptId);
+   auto script = ROM()->Get<MageScriptState>(scriptId);
 #ifndef DC801_EMBEDDED
 
    char scriptName[SCRIPT_NAME_LENGTH] = { 0 };
    //memcpy(scriptName, script->nam
-   //ROM->Read(scriptName, address, SCRIPT_NAME_LENGTH);
-   auto address = ROM->GetAddress<MageScriptState>(scriptId);
+   //ROM()->Read(scriptName, address, SCRIPT_NAME_LENGTH);
+   auto address = ROM()->GetAddress<MageScriptState>(scriptId);
 
 #endif // !DC801_EMBEDDED
 
    //read the script's action count:
    uint32_t actionCount = 0;
-   ROM->Read(actionCount, address);
+   ROM()->Read(actionCount, address);
 
    //increment the address by the resumeStateStruct->actionOffset*sizeof(uint64_t) to get to the current action:
    address += resumeStateStruct->actionOffset * sizeof(uint64_t);
@@ -85,7 +85,7 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
       uint8_t actionArgs[MAGE_NUM_ACTION_ARGS]{ 0 };
 
       //get actionTypeId from ROM:
-      ROM->Read(actionTypeId, address);
+      ROM()->Read(actionTypeId, address);
 
       //validate actionTypeId:
       if (actionTypeId >= NUM_SCRIPT_ACTIONS)
@@ -97,7 +97,7 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
       }
 
       //read remaining 7 bytes of argument data into actionArgs
-      ROM->Read(actionArgs, address, MAGE_NUM_ACTION_ARGS);
+      ROM()->Read(actionArgs, address, MAGE_NUM_ACTION_ARGS);
 
       //get the function for actionTypeId, and feed it the actionArgs as args:
       Run(actionTypeId, actionArgs, resumeStateStruct);
@@ -245,11 +245,14 @@ void MageScriptControl::handleCommandScript(MageScriptState* resumeState)
 
 void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
 {
+   //set the current entity to the current entity index value.
+   currentEntityId = filteredEntityId;
+
    //get a bool to show if a script is already running:
-   MageScriptState* scriptState = &entityTickResumeStates[filteredEntityId];
+   MageScriptState* scriptState = &entityTickResumeStates[currentEntityId];
    bool scriptIsRunning = scriptState->scriptIsRunning;
    //we also need to convert the entity's local ScriptId to the global context:
-   uint16_t mapLocalScriptId = mapControl->getEntity(filteredEntityId)->onTickScriptId;
+   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId)->onTickScriptId;
 
    //if a script isn't already running and you're in hex editor state, don't start any new scripts:
    if (!scriptIsRunning && hexEditor->isHexEditorOn())
@@ -269,24 +272,24 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t filteredEntityId)
    {
       //if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
       //resumeState struct, so we will proceed with the remaining info in the struct as-is.
-      //the currentScriptId is contained within the *ResumeState struct so we can call actions:
+      //the currentScriptId is contained within the 1ResumeState struct so we can call actions:
    }
-   //set the current entity to the current entity index value.
-   currentEntityId = mapControl->getMapLocalEntityId(filteredEntityId);
    //now that the *ResumeState struct is correctly configured, process the script:
    processScript(scriptState, currentEntityId, MageScriptType::ON_TICK);
 }
 
 void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 {
-   MageScriptState* scriptState = &entityInteractResumeStates[filteredEntityId];
-   uint16_t mapLocalScriptId = mapControl->getEntity(filteredEntityId)->onInteractScriptId;
+   currentEntityId = filteredEntityId;
+
+   MageScriptState* scriptState = &entityInteractResumeStates[currentEntityId];
+   uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId)->onInteractScriptId;
    //if a script is not currently running, do nothing.
    if (!scriptState->scriptIsRunning)
    {
       return;
    }
-   //if the entity currentScriptId doesn't match what is in the entityInteractResumeStates[filteredEntityId] struct, re-init it
+   //if the entity currentScriptId doesn't match what is in the entityInteractResumeStates[currentEntityId] struct, re-init it
    //with .scriptIsRunning set to false to stop all current actions.
    else if (scriptState->currentScriptId != mapLocalScriptId)
    {
@@ -299,8 +302,6 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
       //resumeState struct, so we will proceed with the remaining info in the struct as-is.
       //the currentScriptId is contained within the *ResumeState struct so we can call actions:
    }
-   //set the current entity to the current entity index value.
-   currentEntityId = mapControl->getMapLocalEntityId(filteredEntityId);
    //now that the *ResumeState struct is correctly configured, process the script:
    processScript(
       scriptState,

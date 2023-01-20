@@ -169,7 +169,7 @@ private:
 
    char dialogName[32]{};
    const MageTileset* currentFrameTileset{nullptr};
-   int16_t triggeringEntityId{0};
+   std::string triggeringEntityName{};
    int32_t currentDialogIndex{0};
    uint32_t currentDialogAddress{0};
    uint32_t currentDialogScreenCount{0};

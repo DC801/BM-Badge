@@ -34,14 +34,16 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
-   triggeringEntityId = currentEntityId;
+   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId)->name.data();
+
    currentDialogIndex = dialogId;
    currentScreenIndex = 0;
    currentResponseIndex = 0;
    //auto currentDialog = get(dialogId);
+   
    currentDialogAddress += 32; // skip past the name
 
-   ROM->Read(currentDialogScreenCount, currentDialogAddress);
+   ROM()->Read(currentDialogScreenCount, currentDialogAddress);
 
    loadNextScreen();
 
@@ -73,24 +75,24 @@ void MageDialogControl::loadNextScreen()
       open = false;
       return;
    }
-   ROM->Read(currentScreen, currentDialogAddress);
+   ROM()->Read(currentScreen, currentDialogAddress);
 
-   currentEntityName = stringLoader->getString(currentScreen->nameStringIndex, triggeringEntityId);
+   currentEntityName = stringLoader->getString(currentScreen->nameStringIndex, triggeringEntityName);
    loadCurrentScreenPortrait();
 
    messageIds.clear();
-   ROM->InitializeCollectionOf(messageIds, currentDialogAddress, currentScreen->messageCount);
+   ROM()->InitializeCollectionOf(messageIds, currentDialogAddress, currentScreen->messageCount);
 
-   currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityId);
+   currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityName);
    uint8_t sizeOfResponse = sizeof(MageDialogResponse);
    uint32_t sizeOfResponses = sizeOfResponse * currentScreen->responseCount;
    responses.clear();
-   ROM->InitializeCollectionOf(responses, currentDialogAddress, currentScreen->responseCount);
+   ROM()->InitializeCollectionOf(responses, currentDialogAddress, currentScreen->responseCount);
 
    // padding at the end of the screen struct when messageCount is odd
    currentDialogAddress += ((currentScreen->messageCount) % 2) * sizeof(uint16_t);
 
-   currentFrameTileset = ROM->Get<MageTileset>(currentScreen->borderTilesetIndex);
+   currentFrameTileset = ROM()->Get<MageTileset>(currentScreen->borderTilesetIndex);
    currentImageIndex = currentFrameTileset->ImageId();
    //currentImageAddress = imageHeader->offset(currentImageIndex);
    currentScreenIndex++;
@@ -128,7 +130,7 @@ void MageDialogControl::update()
       }
       else
       {
-         currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityId);
+         currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityName);
       }
    }
 }
@@ -180,7 +182,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          for (int responseIndex = 0; responseIndex < currentScreen->responseCount; ++responseIndex)
          {
             frameBuffer->printMessage(
-               stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityId),
+               stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName),
                Monaco9, 0xffff,
                offsetX + (2 * tileWidth) + 8,
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
@@ -200,7 +202,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
    {
       x = offsetX + tileWidth;
       y = offsetY + tileHeight;
-      auto tileset = ROM->Get<MageTileset>(currentPortraitRenderableData.tilesetId); 
+      auto tileset = ROM()->Get<MageTileset>(currentPortraitRenderableData.tilesetId); 
       //mapControl->GetTile(currentPortraitRenderableData.tileId);
       tileManager->DrawTile(tileset, x, y, currentPortraitRenderableData.renderFlags);
    }
@@ -253,20 +255,19 @@ void MageDialogControl::loadCurrentScreenPortrait()
    currentPortraitId = currentScreen->portraitIndex;
    if (currentScreen->entityIndex != NO_PLAYER)
    {
-      uint8_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(currentScreen->entityIndex, triggeringEntityId);
-      auto currentEntity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto currentEntity = mapControl->getEntity(currentScreen->entityIndex);
       if (currentEntity)
       {
          uint8_t sanitizedPrimaryType = currentEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            currentPortraitId = ROM->Get<MageEntityType>(currentEntity->primaryId)->PortraitId();
+            currentPortraitId = ROM()->Get<MageEntityType>(currentEntity->primaryId)->PortraitId();
          }
 
          // only try rendering when we have a portrait
          if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
          {
-            auto portrait = ROM->Get<MagePortrait>(currentPortraitId);
+            auto portrait = ROM()->Get<MagePortrait>(currentPortraitId);
             auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
             currentEntity->SetRenderDirection(animationDirection->RenderFlags());
             currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags() | (currentEntity->renderFlags & 0x80);

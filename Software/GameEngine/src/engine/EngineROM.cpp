@@ -14,26 +14,6 @@ extern QSPI qspiControl;
 
 #endif //DC801_DESKTOP
 
-template<typename... THeaders>
-void EngineROM<THeaders...>::ErrorUnplayable()
-{
-   //let out the magic s̶m̶o̶k̶e̶ goat
-   ENGINE_PANIC(
-      "ROM header invalid. Game cannot start.\n"
-      "Goat is sad.   ##### ####     \n"
-      "             ##   #  ##       \n"
-      "            #   (-)    #      \n"
-      "            #+       ######   \n"
-      "            #^             ## \n"
-      "             ###           #  \n"
-      "               #  #      # #  \n"
-      "               ##  ##  ##  #  \n"
-      "               ######  #####  \n"
-   );
-}
-
-
-
 #ifdef DC801_EMBEDDED
 //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
 bool EngineROM<THeaders...>::SD_Copy(
@@ -175,46 +155,6 @@ bool EngineROM<THeaders...>::SD_Copy(
    return true;
 }
 #endif //DC801_EMBEDDED
-
-//bool EngineROM<THeaders...>::Read(uint32_t address, uint32_t length, uint8_t* data) const
-//{
-//   if (data == NULL)
-//   {
-//      ENGINE_PANIC("EngineROM<THeaders...>::Read: Null pointer");
-//   }
-//
-//#ifdef DC801_EMBEDDED
-//   //this is the number of whole words to read from the starting adddress:
-//   uint32_t truncatedAlignedLength = (length / sizeof(uint32_t));
-//   //read in all but the last word if aligned data
-//   uint32_t* dataU32 = (uint32_t*)data;
-//   //get word-aligned pointers to the ROM:
-//   volatile uint32_t* romDataU32 = (volatile uint32_t*)(ROM_START_ADDRESS + address);
-//   for (uint32_t i = 0; i < truncatedAlignedLength; i++)
-//   {
-//      dataU32[i] = romDataU32[i];
-//   }
-//   //now we need to convert the word-aligned number of reads back to a uint8_t aligned
-//   //value where we will start reading the remaining bytes.
-//   truncatedAlignedLength = (truncatedAlignedLength * sizeof(uint32_t));
-//   uint32_t numUnalignedBytes = length - truncatedAlignedLength;
-//   if (numUnalignedBytes)
-//   {
-//      address += truncatedAlignedLength;
-//      //get byte-aligned rom data at the new address:
-//      volatile uint8_t* romDataU8 = (volatile uint8_t*)(ROM_START_ADDRESS + address);
-//      //fill in the unaligned bytes only and ignore the rest:
-//      for (uint8_t i = 0; i < numUnalignedBytes; i++)
-//      {
-//         data[truncatedAlignedLength + i] = romDataU8[i];
-//      }
-//   }
-//#else
-//   if (address + length > ENGINE_ROM_MAX_DAT_FILE_SIZE) { ENGINE_PANIC("EngineROM<THeaders...>::Read: address + length exceeds maximum dat file size"); }
-//   memmove(data, romDataInDesktopRam.get() + address, length);
-//#endif
-//   return true;
-//}
 
 template<typename... THeaders>
 bool EngineROM<THeaders...>::Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)

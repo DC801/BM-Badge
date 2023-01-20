@@ -8,28 +8,28 @@
 MageGeometry::MageGeometry(uint32_t& address)
 {
 #ifndef DC801_EMBEDDED
-   ROM->Read(name, address, 32);
+   ROM()->Read(name, address, 32);
 #else
    //skip over name:
    address += 32;
 #endif
-   ROM->Read(typeId, address);
+   ROM()->Read(typeId, address);
    uint8_t pointCount;
-   ROM->Read(pointCount, address);
+   ROM()->Read(pointCount, address);
 
    uint8_t segmentCount;
-   ROM->Read(segmentCount, address);
+   ROM()->Read(segmentCount, address);
 
    address += 1; //padding
 
    //read pathLength:
-   ROM->Read(pathLength, address);
+   ROM()->Read(pathLength, address);
 
    //generate appropriately sized point array:
-   ROM->InitializeCollectionOf(points, address, GetPointCount());
+   ROM()->InitializeCollectionOf(points, address, GetPointCount());
 
    //generate appropriately sized array:
-   ROM->InitializeCollectionOf(segmentLengths, address, segmentCount);
+   ROM()->InitializeCollectionOf(segmentLengths, address, segmentCount);
 }
 
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)

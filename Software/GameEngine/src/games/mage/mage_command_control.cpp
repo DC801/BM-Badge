@@ -208,7 +208,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
          if (responseIndex >= 0 && responseIndex < serialDialog->responseCount)
          {
             auto response = serialDialogResponses[responseIndex];
-            std::string responseLabel = stringLoader->getString(response.stringId);
+            auto responseLabel = stringLoader->getString(response.stringId);
             commandResponseBuffer += "Valid response: " + input + " - " +  responseLabel + "\n";
             scriptControl->jumpScriptId = response.scriptId;
             isInputTrapped = false;
@@ -230,7 +230,7 @@ void MageCommandControl::processCommandAsResponseInput(std::string input)
       bool validResponseFound = false;
       for (uint8_t i = 0; i < serialDialog->responseCount; i++)
       {
-         std::string responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
+         auto responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
          badAsciiLowerCase(&responseLabel);
          if (responseLabel == input)
          {
@@ -253,9 +253,9 @@ void MageCommandControl::showSerialDialog(uint16_t serialDialogId)
 {
    scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
    uint32_t serialDialogAddress =  0;// tileManager->imageHeader.offset(serialDialogId);
-   //ROM->Read(serialDialog, serialDialogAddress);
-   serialDialog = ROM->Get<MageSerialDialog>(serialDialogId);
-   std::string dialogString = stringLoader->getString(serialDialog->stringId);
+   //ROM()->Read(serialDialog, serialDialogAddress);
+   serialDialog = ROM()->Get<MageSerialDialog>(serialDialogId);
+   auto dialogString = stringLoader->getString(serialDialog->stringId);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +
    // 	"serialDialogAddress: " + std::to_string(serialDialogAddress) + "\n"
@@ -266,12 +266,12 @@ void MageCommandControl::showSerialDialog(uint16_t serialDialogId)
    // );
    serialDialogBuffer += dialogString + "\n";
    isInputTrapped = serialDialog->serialResponseType != RESPONSE_NONE;
-   ROM->InitializeCollectionOf(serialDialogResponses, serialDialogAddress, serialDialog->responseCount);
+   ROM()->InitializeCollectionOf(serialDialogResponses, serialDialogAddress, serialDialog->responseCount);
    for (uint8_t i = 0; i < serialDialog->responseCount; i++)
    {
       if (serialDialog->serialResponseType == RESPONSE_ENTER_NUMBER)
       {
-         std::string responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
+         auto responseLabel = stringLoader->getString(serialDialogResponses[i].stringId);
          serialDialogBuffer += "\t" + std::to_string(i) + ": " + responseLabel + "\n";
       }
    }

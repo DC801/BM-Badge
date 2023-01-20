@@ -52,10 +52,10 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      std::string romString = stringLoader->getString(argStruct->stringId, scriptControl->currentEntityId);
-      std::string entityName = mapControl->getEntityByMapLocalId(entityIndex)->name.data();
+      auto entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name.data();
+      auto romString = stringLoader->getString(argStruct->stringId, entityName);
 
-      int compare = strcmp(entityName.c_str(), romString.c_str());
+      int compare = strcmp(entityName, romString.c_str());
       bool identical = compare == 0;
       if (identical == (bool)argStruct->expectedBoolValue)
       {
@@ -203,9 +203,9 @@ void MageScriptActions::action_check_entity_primary_id(uint8_t* args, MageScript
       uint16_t sizeLimit{ 1 };
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       
-      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM->GetCount<MageEntityType>(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM->GetCount<MageAnimation>(); }
-      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM->GetCount<MageTileset>(); }
+      if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = ROM()->GetCount<MageEntityType>(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = ROM()->GetCount<MageAnimation>(); }
+      else if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET) { sizeLimit = ROM()->GetCount<MageTileset>(); }
       else { throw std::runtime_error{ "Sanitized Primary Type Unknown" }; }
 
       bool identical = ((entity->primaryId % sizeLimit) == argStruct->expectedValue);
@@ -238,7 +238,7 @@ void MageScriptActions::action_check_entity_secondary_id(uint8_t* args, MageScri
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
-         auto tileset = ROM->Get<MageTileset>(entity->primaryId);
+         auto tileset = ROM()->Get<MageTileset>(entity->primaryId);
          sizeLimit = tileset->Tiles();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
@@ -573,7 +573,7 @@ void MageScriptActions::action_check_save_flag(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionCheckSaveFlag;
    auto argStruct = (ActionCheckSaveFlag*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
    uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
@@ -600,7 +600,7 @@ void MageScriptActions::action_check_if_entity_is_in_geometry(uint8_t* args, Mag
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
       bool colliding = geometry->isPointInGeometry(entity->getRenderableData()->center);
       if (colliding == (bool)argStruct->expectedBoolValue)
@@ -660,7 +660,7 @@ void MageScriptActions::action_check_warp_state(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionCheckWarpState;
    auto argStruct = (ActionCheckWarpState*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
 
    bool doesWarpStateMatch = currentSave->warpState == argStruct->stringId;
    if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
@@ -757,7 +757,8 @@ void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* r
    auto argStruct = (ActionSetEntityName*)args;
 
    //get the string from the stringId:
-   std::string romString = stringLoader->getString(argStruct->stringId, scriptControl->currentEntityId);
+   std::string entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name.data();
+   std::string romString = stringLoader->getString(argStruct->stringId, entityName);
    //Get the entity:
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
@@ -1084,7 +1085,7 @@ void MageScriptActions::action_set_entity_direction_target_geometry(uint8_t* arg
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM->Get<MageGeometry>(argStruct->targetGeometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->targetGeometryId);
       auto relativeDirection = entity->getRenderableData()->center.getRelativeDirection(geometry->GetPoint(0));
       entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
       entity->updateRenderableData();
@@ -1299,7 +1300,7 @@ void MageScriptActions::action_set_save_flag(uint8_t* args, MageScriptState* res
       uint8_t paddingG;
    } ActionSetSaveFlag;
    auto argStruct = (ActionSetSaveFlag*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
    uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
@@ -1376,7 +1377,7 @@ void MageScriptActions::action_set_warp_state(uint8_t* args, MageScriptState* re
       uint8_t paddingG;
    } ActionSetWarpState;
    auto argStruct = (ActionSetWarpState*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
 
    currentSave->warpState = argStruct->stringId;
 }
@@ -1560,7 +1561,7 @@ void MageScriptActions::action_teleport_entity_to_geometry(uint8_t* args, MageSc
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
       auto offsetPoint = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
       entity->SetLocation(offsetPoint);
@@ -1583,7 +1584,7 @@ void MageScriptActions::action_walk_entity_to_geometry(uint8_t* args, MageScript
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
       if (resumeStateStruct->totalLoopsToNextAction == 0)
       {
@@ -1624,7 +1625,7 @@ void MageScriptActions::action_walk_entity_along_geometry(uint8_t* args, MageScr
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1699,7 +1700,7 @@ void MageScriptActions::action_loop_entity_along_geometry(uint8_t* args, MageScr
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1791,7 +1792,7 @@ void MageScriptActions::action_teleport_camera_to_geometry(uint8_t* args, MageSc
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
 
    const auto entity = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId);
-   auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
    camera.followEntityId = NO_PLAYER;
    const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
@@ -1849,7 +1850,7 @@ void MageScriptActions::action_pan_camera_to_geometry(uint8_t* args, MageScriptS
    argStruct->duration = argStruct->duration;
 
    const auto entity = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId);
-   auto geometry = ROM->Get<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
 
 
    if (resumeStateStruct->totalLoopsToNextAction == 0)
@@ -1977,7 +1978,7 @@ void MageScriptActions::action_mutate_variable(uint8_t* args, MageScriptState* r
       uint8_t paddingG;
    } ActionMutateVariable;
    auto argStruct = (ActionMutateVariable*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
    // I wanted to log some stats on how well our random function worked
@@ -2026,7 +2027,7 @@ void MageScriptActions::action_mutate_variables(uint8_t* args, MageScriptState* 
       uint8_t paddingG;
    } ActionMutateVariables;
    auto argStruct = (ActionMutateVariables*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
    uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
 
@@ -2046,7 +2047,7 @@ void MageScriptActions::action_copy_variable(uint8_t* args, MageScriptState* res
       uint8_t paddingG;
    } ActionCopyVariable;
    auto argStruct = (ActionCopyVariable*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    auto currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
@@ -2110,7 +2111,7 @@ void MageScriptActions::action_check_variable(uint8_t* args, MageScriptState* re
       uint8_t expectedBool;
    } ActionCheckVariable;
    auto argStruct = (ActionCheckVariable*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
    bool comparison = compare(argStruct->comparison, variableValue, argStruct->value);
    if (comparison == (bool)argStruct->expectedBool)
@@ -2132,7 +2133,7 @@ void MageScriptActions::action_check_variables(uint8_t* args, MageScriptState* r
    } ActionCheckVariables;
    auto argStruct = (ActionCheckVariables*)args;
 
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
    uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
    bool comparison = compare(
@@ -2158,7 +2159,7 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
       uint8_t paddingG;
    } ActionSlotSave;
    auto argStruct = (ActionSlotSave*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    // In the case that someone hacks an on_tick script to save, we don't want it
    // just burning through 8 ROM writes per second, our chip would be fried in a
    // matter on minutes. So how do we counter? Throw up a "Save Completed" dialog
@@ -2171,10 +2172,10 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
    {
       // do rom writes
       auto playerName = mapControl->getPlayerEntity()->name;
-      auto currentSave = ROM->GetCurrentSave();
+      auto currentSave = ROM()->GetCurrentSave();
       memcpy((void*)currentSave->name, playerName.data(), MAGE_ENTITY_NAME_LENGTH < playerName.size() ? MAGE_ENTITY_NAME_LENGTH : playerName.size());
       //TODO FIXME: 
-      // ROM->WriteSaveSlot(currentSaveIndex, currentSave.get());
+      // ROM()->WriteSaveSlot(currentSaveIndex, currentSave.get());
       // readSaveFromRomIntoRam(currentSaveIndex);
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
@@ -2200,11 +2201,11 @@ void MageScriptActions::action_slot_load(uint8_t* args, MageScriptState* resumeS
       uint8_t paddingG;
    } ActionSlotLoad;
    auto argStruct = (ActionSlotLoad*)args;
-   auto currentSave = ROM->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSave();
    //delaying until next tick allows for displaying of an error message on read before resuming
    if (resumeStateStruct->totalLoopsToNextAction == 0)
    {
-      ROM->LoadSaveSlot(argStruct->slotIndex);
+      ROM()->LoadSaveSlot(argStruct->slotIndex);
       
       mapControl->Load(currentSave->currentMapId);
       resumeStateStruct->totalLoopsToNextAction = 1;
@@ -2245,8 +2246,8 @@ void MageScriptActions::action_slot_erase(uint8_t* args, MageScriptState* resume
       //copyNameToAndFromPlayerAndSave(true);
       auto playerName = mapControl->getPlayerEntity()->name;
       //memcpy(currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
-      //ROM->WriteSaveSlot(argStruct->slotIndex, &currentSave);
-      ROM->LoadSaveSlot(argStruct->slotIndex);
+      //ROM()->WriteSaveSlot(argStruct->slotIndex, &currentSave);
+      ROM()->LoadSaveSlot(argStruct->slotIndex);
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->StartModalDialog("Save erased.");

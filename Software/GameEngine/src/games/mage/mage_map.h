@@ -93,7 +93,7 @@ public:
       }
    }
 
-   std::string Name() const { return std::string(currentMap->name); }
+   std::string Name() const { return currentMap->name; }
    uint16_t TileWidth() const { return currentMap->tileWidth; }
    uint16_t TileHeight() const { return currentMap->tileHeight; }
    uint16_t Cols() const { return currentMap->cols; }
@@ -145,19 +145,14 @@ public:
       return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
    }
 
-   uint8_t getMapLocalEntityId(uint8_t filteredEntityId) const
-   {
-      if (currentMap->entities.empty()) { return 0; }
-      return mapLocalEntityIds[filteredEntityId % currentMap->entities.size()];
-   }
-
    const MageEntity* getEntityByMapLocalId(uint16_t mapLocalId) const
    {
-      return &currentMap->entities[mapLocalId];
+      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
    }
+
    MageEntity* getEntityByMapLocalId(uint16_t mapLocalId)
    {
-      return &currentMap->entities[mapLocalId];
+      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
    }
 
    uint32_t LayerAddress(uint16_t layerIndex) const

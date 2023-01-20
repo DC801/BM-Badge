@@ -11,6 +11,7 @@
 
 #include "main.h"
 #include "games/mage/mage.h"
+#include "games/mage/mage_rom.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
