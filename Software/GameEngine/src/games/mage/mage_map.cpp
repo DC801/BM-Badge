@@ -60,15 +60,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
       ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
    }
 
-   for (uint8_t i = 0; i < entityCount; i++)
-   {
-      auto&& entity = ROM()->GetUniqueCopy<MageEntity>(i);
-
-      if (isEntityDebugOn || !entity->isDebug())
-      {
-         entities.push_back(std::move(entity));
-      }
-   }
+   ROM()->InitializeCollectionOf(entities, address, entityCount);
 }
 
 void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn)
@@ -76,7 +68,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
    int32_t cameraX = cameraPosition.x;
    int32_t cameraY = cameraPosition.y;
    //first sort entities by their y values:
-   auto sortByY = [](const auto& entity1, const auto& entity2) { return entity1->location.y < entity2->location.y; };
+   auto sortByY = [](const auto& entity1, const auto& entity2) { return entity1.location.y < entity2.location.y; };
    std::sort(std::begin(currentMap->entities), std::end(currentMap->entities), sortByY);
 
    uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
@@ -85,13 +77,13 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
    //iterate through it and draw the entities one by one:
    for (const auto& entity : currentMap->entities)
    {
-      auto renderableData = entity->getRenderableData();
+      auto renderableData = entity.getRenderableData();
 
-      tileManager->DrawTile(renderableData, entity->location.x, entity->location.y);
+      tileManager->DrawTile(renderableData, entity.location.x, entity.location.y);
 
       if (isCollisionDebugOn)
       {
-         auto tileOrigin = Point{ entity->location.x - cameraX, entity->location.y - cameraY - currentMap->tileHeight };
+         auto tileOrigin = Point{ entity.location.x - cameraX, entity.location.y - cameraY - currentMap->tileHeight };
          auto hitboxOrigin = renderableData->hitBox.origin - cameraPosition;
 
          frameBuffer->drawRect(tileOrigin, currentMap->tileWidth, currentMap->tileHeight, COLOR_LIGHTGREY);
@@ -204,6 +196,6 @@ void MapControl::UpdateEntities(uint32_t deltaTime)
 {
    for (auto& entity : currentMap->entities)
    {
-      entity->updateRenderableData(deltaTime);
+      entity.updateRenderableData(deltaTime);
    }
 }

@@ -42,7 +42,7 @@ struct MapData
    std::vector<uint16_t> scriptGlobalIds{};
    std::vector<GoDirection> goDirections{};
    std::vector<uint32_t> layerAddresses{};
-   std::vector<std::unique_ptr<MageEntity>> entities{};
+   std::vector<MageEntity> entities{};
 };
 
 struct MageMapTile
@@ -131,12 +131,12 @@ public:
 
    const MageEntity* getEntity(uint16_t id) const
    {
-      return currentMap->entities[id].get();
+      return &currentMap->entities[id];
    }
 
    MageEntity* getEntity(uint16_t id)
    {
-      return currentMap->entities[id].get();
+      return &currentMap->entities[id];
    }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
@@ -147,12 +147,12 @@ public:
 
    const MageEntity* getEntityByMapLocalId(uint16_t mapLocalId) const
    {
-      return currentMap->entities[mapLocalId % currentMap->entities.size()].get();
+      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
    }
 
    MageEntity* getEntityByMapLocalId(uint16_t mapLocalId)
    {
-      return currentMap->entities[mapLocalId % currentMap->entities.size()].get();
+      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
    }
 
    uint32_t LayerAddress(uint16_t layerIndex) const

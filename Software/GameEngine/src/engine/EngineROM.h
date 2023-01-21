@@ -396,6 +396,7 @@ struct EngineROM
    {
       auto&& header = getHeader<T>();
       auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index);
+      static_assert(std::is_constructible_v<T, uint32_t&>, "Must have a constructor accepting a uint32_t& offset");
       return std::make_unique<T>(offset);
    }
 
@@ -430,7 +431,7 @@ struct EngineROM
          }
          else
          {
-            collection.push_back(T{ this, offset });
+            collection.push_back(T{ offset });
          }
       }
    }

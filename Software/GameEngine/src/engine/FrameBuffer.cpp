@@ -49,15 +49,6 @@ void FrameBuffer::clearScreen(uint16_t color)
 
 void FrameBuffer::drawChunkWithFlags(const MagePixels pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
 {
-   MageColorPalette colors;
-   if (fadeFraction != 0)
-   {
-      colors = MageColorPalette{ this, colorPalette, fadeColor, fadeFraction };
-   }
-   else
-   {
-      colors = *colorPalette;
-   }
    //MageColorPalette* colorPalette = colorPaletteOriginal;
    RenderFlags renderFlags{ flags };
    bool flip_x = renderFlags.rf.d.horizontal;
@@ -88,7 +79,7 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels pixels, const MageColorPal
          auto pixelIndex = (pixelRow * target.w) + pixelCol;
 
          auto colorIndex = pixels[pixelIndex];
-         auto color = colors.colorAt(colorIndex);
+         auto color = colorPalette->colorAt(colorIndex, fadeColor, fadeFraction);
          if (color != TRANSPARENCY_COLOR)
          {
             drawPixel(target.origin.x + col, target.origin.y + row, color);

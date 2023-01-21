@@ -8,6 +8,7 @@
 #include "convert_endian.h"
 #include <array>
 #include <stdint.h>
+#include "utility.h"
 
 #define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
@@ -21,33 +22,6 @@ enum MageEntityAnimationDirection : uint8_t
 	EAST = 1,
 	SOUTH = 2,
 	WEST = 3,
-};
-
-namespace Util {
-	template <typename T>
-	static inline T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
-};
-
-#ifdef IS_BIG_ENDIAN
-struct Color_565 {
-	uint8_t r:5;
-	uint8_t g:5;
-	uint8_t alpha:1;
-	uint8_t b:5;
-};
-#else
-struct Color_565 {
-	uint8_t b : 5;
-	uint8_t alpha : 1;
-	uint8_t g : 5;
-	uint8_t r : 5;
-};
-#endif
-
-union ColorUnion
-{
-	uint16_t i;
-	Color_565 c;
 };
 
 // Color definitions
@@ -77,8 +51,6 @@ union ColorUnion
 #define COLOR_NEONPURPLE	0xFD5F
 #define COLOR_BSOD			0x03DA
 
-//this is the color that will appear transparent when drawing tiles:
-#define TRANSPARENCY_COLOR	0x0020
 
 #define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000

@@ -17,6 +17,12 @@
 #ifdef DC801_EMBEDDED
 #define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
 #else
+
+namespace Util {
+   template <typename T>
+   static inline T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
+};
+
 #define NRF_LOG_RAW_INFO printf
 template <typename... Ts>
 void debug_print(const char* format, Ts... fmt)
