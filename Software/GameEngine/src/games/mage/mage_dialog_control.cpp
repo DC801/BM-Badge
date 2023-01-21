@@ -34,7 +34,7 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
-   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId)->name.data();
+   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId)->name;
 
    currentDialogIndex = dialogId;
    currentScreenIndex = 0;
@@ -269,8 +269,8 @@ void MageDialogControl::loadCurrentScreenPortrait()
          {
             auto portrait = ROM()->Get<MagePortrait>(currentPortraitId);
             auto animationDirection = portrait->getEmoteById(currentScreen->emoteIndex);
-            currentEntity->SetRenderDirection(animationDirection->RenderFlags());
-            currentPortraitRenderableData.renderFlags = animationDirection->RenderFlags() | (currentEntity->renderFlags & 0x80);
+            currentEntity->SetRenderDirection(animationDirection->renderFlags);
+            currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity->renderFlags & 0x80);
             // if the portrait is on the right side of the screen, flip the portrait on the X axis
             if (((uint8_t)currentScreen->alignment % 2))
             {

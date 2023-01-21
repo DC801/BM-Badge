@@ -107,17 +107,12 @@ private:
    const uint16_t* globalGeometryIds{ nullptr };
 }; //class MageTileset
 
-class AnimationDirection
+struct AnimationDirection
 {
-public:
-   uint16_t TypeId() const { return typeId; }
-   uint8_t Type() const { return type; }
-   uint8_t RenderFlags() const { return renderFlags; }
    bool FlipX() const { return renderFlags & FLIPPED_HORIZONTALLY_FLAG; }
    bool FlipY() const { return renderFlags & FLIPPED_VERTICALLY_FLAG; }
    bool FlipDiag() const { return renderFlags & FLIPPED_DIAGONALLY_FLAG; }
 
-private:
    uint16_t typeId{ 0 };
    uint8_t type{ 0 };
    uint8_t renderFlags{ 0 };

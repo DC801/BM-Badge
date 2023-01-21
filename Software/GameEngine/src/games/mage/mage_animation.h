@@ -28,12 +28,12 @@ public:
 
 	constexpr uint16_t TilesetId() const { return tilesetId; }
 	constexpr uint16_t TileId() const { return 0; }
-	uint16_t FrameCount() const { return frames.size(); }
-	MageAnimation::Frame GetFrame(uint32_t index) const { return frames[index % frames.size()]; }
+	uint16_t FrameCount() const { return frameCount; }
+	const MageAnimation::Frame* GetFrame(uint32_t index) const { return &((MageAnimation::Frame*)&frameCount + 4)[index % frameCount]; }
 
 private:
 	uint16_t tilesetId{ 0 };
-	std::vector<MageAnimation::Frame> frames;
+	uint16_t frameCount;
 
 };
 

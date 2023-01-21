@@ -52,7 +52,7 @@ void MageScriptActions::action_check_entity_name(uint8_t* args, MageScriptState*
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
    if (entityIndex != NO_PLAYER)
    {
-      auto entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name.data();
+      auto entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name;
       auto romString = stringLoader->getString(argStruct->stringId, entityName);
 
       int compare = strcmp(entityName, romString.c_str());
@@ -757,7 +757,7 @@ void MageScriptActions::action_set_entity_name(uint8_t* args, MageScriptState* r
    auto argStruct = (ActionSetEntityName*)args;
 
    //get the string from the stringId:
-   std::string entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name.data();
+   std::string entityName = mapControl->getEntityByMapLocalId(scriptControl->currentEntityId)->name;
    std::string romString = stringLoader->getString(argStruct->stringId, entityName);
    //Get the entity:
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, scriptControl->currentEntityId);
@@ -2173,7 +2173,20 @@ void MageScriptActions::action_slot_save(uint8_t* args, MageScriptState* resumeS
       // do rom writes
       auto playerName = mapControl->getPlayerEntity()->name;
       auto currentSave = ROM()->GetCurrentSave();
-      memcpy((void*)currentSave->name, playerName.data(), MAGE_ENTITY_NAME_LENGTH < playerName.size() ? MAGE_ENTITY_NAME_LENGTH : playerName.size());
+      for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
+      {
+         if (playerName[i])
+         {
+            currentSave->name[i] = playerName[i];
+         }
+         else
+         {
+            while (i < MAGE_ENTITY_NAME_LENGTH)
+            {
+               currentSave->name[i++] = 0;
+            }
+         }
+      }
       //TODO FIXME: 
       // ROM()->WriteSaveSlot(currentSaveIndex, currentSave.get());
       // readSaveFromRomIntoRam(currentSaveIndex);

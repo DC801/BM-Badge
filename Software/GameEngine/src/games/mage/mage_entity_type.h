@@ -28,15 +28,15 @@ public:
    MageEntityTypeAnimation() = default;
    MageEntityTypeAnimation(uint32_t& address);
 
-   const AnimationDirection* North() const { return north; }
-   const AnimationDirection* East() const { return east; }
-   const AnimationDirection* South() const { return south; }
-   const AnimationDirection* West() const { return west; }
+   const AnimationDirection* North() const { return &north; }
+   const AnimationDirection* East() const { return &east; }
+   const AnimationDirection* South() const { return &south; }
+   const AnimationDirection* West() const { return &west; }
 private:
-   const AnimationDirection* north;
-   const AnimationDirection* east;
-   const AnimationDirection* south;
-   const AnimationDirection* west;
+   const AnimationDirection north;
+   const AnimationDirection east;
+   const AnimationDirection south;
+   const AnimationDirection west;
 };
 
 class MageEntityType
@@ -46,24 +46,26 @@ public:
    MageEntityType(uint32_t& address);
 
    uint8_t PortraitId() const { return portraitId; }
-   uint8_t AnimationCount() const { return entityTypeAnimations.size(); }
+   uint8_t AnimationCount() const { return animationCount; }
 
-   const MageEntityTypeAnimation& EntityTypeAnimation(uint32_t index) const
+   const MageEntityTypeAnimation* GetAnimation(uint32_t index) const
    {
-      return entityTypeAnimations[index % entityTypeAnimations.size()];
+      return &((const MageEntityTypeAnimation *)&animationCount + 1)[index % animationCount];
    }
 
 private:
    char name[32]{ 0 };
+   uint8_t paddingA{ 0 };
+   uint8_t paddingB{ 0 };
    uint8_t portraitId{ 0 };
-   std::vector<MageEntityTypeAnimation> entityTypeAnimations{ };
+   uint8_t animationCount{ 0 };
 };
 
 class MageEntity
 {
 public:
    MageEntity() noexcept = default;
-   MageEntity(uint32_t& address, std::shared_ptr<TileManager> tileManager);
+   MageEntity(uint32_t& address);
 
    void SetLocation(const Point& p) { location = p; }
    void SetName(std::string s)
@@ -84,7 +86,7 @@ public:
    RenderableData* getRenderableData() { return &renderableData; }
    const RenderableData* getRenderableData() const { return &renderableData; }
 
-   std::array<char, MAGE_ENTITY_NAME_LENGTH> name{ 0 }; // bob's club
+   char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
    // put the sheep back in the pen, rake in the lake
    Point location{ 0 };
    uint16_t onInteractScriptId{ 0 };
@@ -99,11 +101,9 @@ public:
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
-   
 
 private:
    RenderableData renderableData{ };
-   std::shared_ptr<TileManager> tileManager;
 };
 
 

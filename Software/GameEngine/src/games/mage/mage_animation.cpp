@@ -11,5 +11,4 @@ MageAnimation::MageAnimation(uint32_t& address) noexcept
 	auto frameCount = uint16_t{ 0 };
 	//read frameCount
 	ROM()->Read(frameCount, address);
-	ROM()->InitializeCollectionOf(frames, address, frameCount);
 }

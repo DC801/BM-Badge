@@ -383,9 +383,9 @@ struct EngineROM
    template <typename T>
    const T* Get(uint16_t index) const
    {
-      auto&& header = getHeader<T>();
-      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index);
-      return reinterpret_cast<const T*>((uint8_t*)romDataInDesktopRam.get(), (uint32_t)romDataInDesktopRam.get() + offset);
+      auto offset = getHeader<T>().Offset((uint32_t)romDataInDesktopRam.get(), index);
+      
+      return reinterpret_cast<const T*>((uint32_t)romDataInDesktopRam.get() + offset);
    }
 
    template <typename TData>
