@@ -161,6 +161,25 @@
 			"south": "on_go-ch2-greenhouse-south"
 		}
 	},
+	"ch2-lodge":{
+		"path": "maps/map-ch2-lodge.json",
+		"on_tick": "on_tick-ch2-lodge",
+		"on_load": "on_load-ch2-lodge",
+		"on_look": "on_look-ch2-lodge",
+		"directions": {
+			"north": "on_go-ch2-lodge-north",
+			"south": "on_go-ch2-lodge-south"
+		}
+	},
+	"ch2-lodge-rtfm":{
+		"path": "maps/map-ch2-lodge-rtfm.json",
+		"on_tick": "on_tick-ch2-lodge-rtfm",
+		"on_load": "on_load-ch2-lodge-rtfm",
+		"on_look": "on_look-ch2-lodge-rtfm",
+		"directions": {
+			"south": "on_go-ch2-lodge-rtfm-south"
+		}
+	},
 
 	"flying-toasters": {
 		"path": "maps/map-flying-toasters.json",
