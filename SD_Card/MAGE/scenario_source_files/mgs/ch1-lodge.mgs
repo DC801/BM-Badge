@@ -10,6 +10,9 @@ settings for dialog {
 
 // zigzag time!
 on_load-lodge {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (flag tuesday-walkedup is false) {
 		set entity "Aunt Zippy" animation_frame to 3
 		// JUMP

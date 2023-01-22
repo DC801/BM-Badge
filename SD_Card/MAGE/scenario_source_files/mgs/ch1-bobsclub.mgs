@@ -7,6 +7,9 @@ settings for dialog {
 /** ------ ON_LOAD ------ **/
 
 on_load-bobsclub1 {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (flag storyflag-bobmoss is false) {
 		teleport entity "Bob Moss" to geometry bobsclub-hidingplace
 		set entity "Bob Moss" name to " "

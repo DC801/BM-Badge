@@ -5,6 +5,9 @@ settings for dialog {
 }
 
 on_load-greenhouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (flag storyflag-trekkie is true) {
 		copy script ch1-ethernettle-restore
 	}

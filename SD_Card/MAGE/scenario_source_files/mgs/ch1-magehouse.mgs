@@ -7,6 +7,9 @@ settings for dialog {
 // on_load scripts
 
 on_load-magehouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	set flag debug-mode to true
 	// doc: this is legacy debug mode stuff -- used to hide/show exas with a save flag
 	// if this flag isn't set to true, the exas will be whisked away

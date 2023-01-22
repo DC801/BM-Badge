@@ -19,6 +19,7 @@ ch2-castle-init {
 	}
 	// serial features
 	set serial control on
+	register rtfm -> serial-rtfm
 	copy ch2-register-manual
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable
@@ -36,6 +37,7 @@ ch2-noncastle-init {
 	set hex control to on
 
 	// serial features
+	register rtfm -> serial-rtfm
 	if (flag ch2-has-artifact is true) {
 		set serial control on
 	} else {
@@ -85,6 +87,7 @@ ch2-register-manual {
 	register man + look -> ch2-man-look
 	register man + go -> ch2-man-go
 	register man + help -> ch2-man-help
+	register man + rtfm -> ch2-man-rtfm
 	register man fail -> ch2-man-fail
 }
 
@@ -130,6 +133,16 @@ ch2-man-help {
 		"<c><bold>MGE GENERAL COMMANDS MANUAL - HELP</>"
 		" "
 		"Provides general information for the serial terminal, including a list of valid serial commands."
+	}
+}
+ch2-man-rtfm {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - RTFM</>"
+		" "
+		"A portable copy of the books and pamphlets kept within the <m>inner sanctum</> at the back of the library. They primarily describe how to use Ring Zero's hex editor, but also contain peripheral information."
+		" "
+		"Fun fact, <bold>RTFM</> stands for \"read the <r>flamin'</> manual.\""
 	}
 }
 ch2-man-map {
