@@ -20,7 +20,7 @@ on_load-main_menu {
 	}
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
-	register bert -> bert
+	register rtfm -> serial-rtfm
 	goto null_script
 }
 
