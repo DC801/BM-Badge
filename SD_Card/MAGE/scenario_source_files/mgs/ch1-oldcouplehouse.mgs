@@ -21,6 +21,9 @@ leave-oldcouplehouse {
 /* --------------- on_load --------------- */
 
 on_load-oldcouplehouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (flag bea-sequel-branch is true) {
 		if (flag storyflag-bea2 is false) {
 			copy make-delmar-man

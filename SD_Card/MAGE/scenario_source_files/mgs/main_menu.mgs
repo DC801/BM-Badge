@@ -21,6 +21,7 @@ on_load-main_menu {
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
 	register rtfm -> serial-rtfm
+	copy ch2-register-manual
 	goto null_script
 }
 

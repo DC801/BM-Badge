@@ -9,7 +9,11 @@ const! (
 )
 
 on_load-woprhouse {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (variable current-chapter is 2) {
+		register rtfm -> serial-rtfm
 		mutate CALLBACK = $CALLBACK
 		goto ch2-noncastle-init
 	}

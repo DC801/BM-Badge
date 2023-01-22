@@ -22,6 +22,9 @@ bender-happybutt {
 }
 
 on_load-map-main {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	// if you haven't started ch1 yet
 	if (flag begunthegame is false) {
 		set flag begunthegame to true

@@ -27,6 +27,9 @@ kid-now-ball {
 }
 
 on_load-family {
+	if (flag tuesdayd is true) {
+		register rtfm -> serial-rtfm
+	}
 	if (flag storyflag-sportskid is true) {
 		set entity Kid type to blitzball
 	}
