@@ -1,0 +1,57 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+const! (
+	$CALLBACK = 207
+)
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+on_look-ch2-lodge-rtfm {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: RTFM room text"
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-lodge-rtfm {
+	mutate CALLBACK = $CALLBACK
+	goto ch2-noncastle-init
+}
+on_load-ch2-lodge-rtfm-RESUME {
+	mutate CALLBACK = 0
+	if (warp state is walk_from-north) {
+		set player control to off
+		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
+		set player control to on
+	} else if (warp state is warping) { // warping in
+		copy warping-in-fade-in
+	}
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-lodge-rtfm {
+	if entity "%PLAYER%" is inside geometry south-hitbox
+		then goto on_walk-ch2-lodge-rtfm-south
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_go-ch2-lodge-rtfm-south {
+	copy warping-out-fade-out
+	load map main2
+}
+
+on_walk-ch2-lodge-rtfm-south {
+	set warp state to walk_from-north
+	load map main2
+}
+
+/* ---------- ENTITIES ---------- */
+

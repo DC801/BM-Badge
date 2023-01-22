@@ -61,6 +61,10 @@ ch2-noncastle-init {
 		goto on_load-ch2-bakery-RESUME
 	} else if (variable CALLBACK is 205) {
 		goto on_load-ch2-greenhouse-RESUME
+	} else if (variable CALLBACK is 206) {
+		goto on_load-ch2-lodge-RESUME
+	} else if (variable CALLBACK is 207) {
+		goto on_load-ch2-lodge-rtfm-RESUME
 	} else if (variable CALLBACK is 299) {
 		goto on_load-woprhouse-RESUME
 	} else {
