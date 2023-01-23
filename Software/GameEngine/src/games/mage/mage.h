@@ -67,7 +67,7 @@ public:
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, scriptControl, mapControl);
       camera = MageCamera{ mapControl };
 
-      scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, scriptControl, commandControl, hexEditor, stringLoader));
+      scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader));
       commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl);
    }
 

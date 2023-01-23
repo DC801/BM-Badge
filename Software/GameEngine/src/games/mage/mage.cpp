@@ -114,9 +114,6 @@ void MageGameEngine::LoadMap(uint16_t index)
    dialogControl->close();
    playerHasControl = true;
 
-   //memcpy(currentSave->name, mapControl->getPlayerEntity()->name.c_str(), MAGE_ENTITY_NAME_LENGTH <= mapControl->getPlayerEntity()->name.length() ? MAGE_ENTITY_NAME_LENGTH : mapControl->getPlayerEntity()->name.length());
-   //copyNameToAndFromPlayerAndSave(true);
-
    //get the data for the map:
    mapControl->Load(index);
 
@@ -142,12 +139,12 @@ void MageGameEngine::LoadMap(uint16_t index)
 void MageGameEngine::handleBlockingDelay()
 {
    //if a blocking delay was added by any actions, pause before returning to the game loop:
-   if (scriptControl->blockingDelayTime)
+   if (inputHandler->blockingDelayTime)
    {
       //delay for the right amount of time
-      nrf_delay_ms(scriptControl->blockingDelayTime);
+      nrf_delay_ms(inputHandler->blockingDelayTime);
       //reset delay time when done so we don't do this every loop.
-      scriptControl->blockingDelayTime = 0;
+      inputHandler->blockingDelayTime = 0;
    }
 }
 

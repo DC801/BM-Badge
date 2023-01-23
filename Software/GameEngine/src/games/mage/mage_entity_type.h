@@ -86,6 +86,8 @@ public:
    RenderableData* getRenderableData() { return &renderableData; }
    const RenderableData* getRenderableData() const { return &renderableData; }
 
+
+
    char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
    // put the sheep back in the pen, rake in the lake
    Point location{ 0 };

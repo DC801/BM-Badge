@@ -14,7 +14,6 @@ class MageCommandControl;
 class MageDialogControl;
 class MageGeometry;
 class MapControl;
-class MageScriptControl;
 class MageScriptState;
 class MageGameEngine;
 class MageHexEditor;
@@ -158,14 +157,13 @@ class MageScriptActions
    friend class MageScriptControl;
 public:
    MageScriptActions(std::shared_ptr<FrameBuffer> frameBuffer, std::shared_ptr<EngineInput> inputHandler,
-      MageCamera& camera, std::shared_ptr<MapControl> mapControl, std::shared_ptr<MageDialogControl> dialogControl, std::shared_ptr<MageScriptControl> scriptControl,
+      MageCamera& camera, std::shared_ptr<MapControl> mapControl, std::shared_ptr<MageDialogControl> dialogControl,
       std::shared_ptr<MageCommandControl> commandControl, std::shared_ptr<MageHexEditor> hexEditor, std::shared_ptr<StringLoader> stringLoader) noexcept
       : frameBuffer(frameBuffer),
       inputHandler(inputHandler),
       camera(camera),
       mapControl(mapControl),
       dialogControl(dialogControl),
-      scriptControl(scriptControl),
       commandControl(commandControl), 
       hexEditor(hexEditor),
       stringLoader(stringLoader)
@@ -173,184 +171,184 @@ public:
 
 private:
    //Action Logic Type: I
-   void action_null_action(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_null_action(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_name(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_x(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_y(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_type(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_entity_path(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_save_flag(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_if_entity_is_in_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_for_button_press(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_for_button_state(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_warp_state(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_run_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_run_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: B
-   void action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_non_blocking_delay(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_name(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_x(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_y(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_interact_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_tick_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_type(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_primary_id(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_secondary_id(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_primary_id_type(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_current_animation(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_current_frame(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_direction(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_direction_relative(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_direction_relative(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_direction_target_entity(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_direction_target_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_glitched(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_a(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_b(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_c(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_d(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_a_u2(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_c_u2(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_hackable_state_a_u4(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_path(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_save_flag(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_player_control(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_map_tick_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_hex_cursor_location(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_warp_state(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_hex_editor_state(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_hex_editor_dialog_mode(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_hex_editor_control(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_hex_editor_control(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_hex_editor_control_clipboard(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I (loadMap will stop all other scripts immediately, loading a new map with new scripts)
-   void action_load_map(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_load_map(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB+C (
    //  note showDialog will render over the main game loop and not return player control until the dialog is concluded
    //  and MAY branch script execution if that dialog presents choices that the user can select from
    //)
-   void action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_show_dialog(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_play_entity_animation(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_teleport_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_walk_entity_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_walk_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NBC
-   void action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_loop_entity_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_camera_to_follow_entity(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_camera_to_follow_entity(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_teleport_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_pan_camera_to_entity(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_pan_camera_to_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_pan_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NBC
-   void action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_loop_camera_along_geometry(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_screen_shake(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_screen_fade_out(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_screen_fade_in(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_mutate_variable(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_mutate_variables(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB
-   void action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_copy_variable(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_variable(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_variable(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I+C
-   void action_check_variables(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_variables(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_slot_save(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_slot_save(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_slot_load(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_slot_load(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_slot_erase(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_slot_erase(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_connect_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_connect_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: NB+C (
    //  showSerialDialog will send a message out over serial
    //  and MAY not return serial control until after a serial response is input
@@ -358,25 +356,25 @@ private:
    //  MAY branch script execution
    //  OR resume current script flow
    //)
-   void action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_show_serial_dialog(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_inventory_get(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_inventory_get(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_inventory_drop(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_inventory_drop(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_check_inventory(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_inventory(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_map_look_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_map_look_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_entity_look_script(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_entity_look_script(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_teleport_enabled(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_teleport_enabled(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: C
-   void action_check_map(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_map(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: I
-   void action_set_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_set_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
    //Action Logic Type: C
-   void action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct);
+   std::optional<uint16_t> action_check_ble_flag(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
 
    float getProgressOfAction(const MageScriptState* resumeStateStruct);
    float manageProgressOfAction(MageScriptState* resumeStateStruct, uint32_t duration);
@@ -412,7 +410,6 @@ private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<MageDialogControl> dialogControl;
    MageCamera& camera;
-   std::shared_ptr<MageScriptControl> scriptControl;
    std::shared_ptr<EngineInput> inputHandler;
    std::shared_ptr<MageCommandControl> commandControl;
    std::shared_ptr<MageHexEditor> hexEditor;

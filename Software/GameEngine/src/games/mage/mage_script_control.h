@@ -47,9 +47,6 @@ public:
       scriptActions(std::move(scriptActions))
    {}
 
-   //this allows an I+C action to set the calling map or entity script to match the new script.
-   void setEntityScript(uint16_t mapLocalScriptId, uint8_t entityId, uint8_t scriptType);
-
    //the jumpScriptId variable is used by some actions to indicate that a script should
    //end and immediately begin running a new script.
    //it should be set to MAGE_NO_SCRIPT unless a new script should be run immediately.
@@ -59,10 +56,6 @@ public:
    //If the action was called by the map, the value will be MAGE_MAP_ENTITY.
    //most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
    uint8_t currentEntityId{ MAGE_MAP_ENTITY };
-
-   //this is a global that holds the amount of millis that a blocking delay will
-   //prevent the main loop from continuing for. It is set by the blockingDelay() action.
-   uint32_t blockingDelayTime{ 0 };
 
    //this is used by the loadMap action to indicate when a new map needs to be loaded.
    //when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
@@ -80,7 +73,7 @@ public:
    };
 
    //typedef for the array of function pointers to script action functions:
-   typedef void (MageScriptActions::* ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct);
+   typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
 
    ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS] = {
       &MageScriptActions::action_null_action,
@@ -186,7 +179,7 @@ public:
    void Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct);
 
    void initializeScriptsOnMapLoad();
-   constexpr void SetEntityInteractResumeState(uint16_t entityIndex, const MageScriptState& state) { entityInteractResumeStates[entityIndex] = state; }
+   constexpr void SetEntityInteractResumeState(uint16_t entityIndex, const MageScriptState&& state) { entityInteractResumeStates[entityIndex] = state; }
 
    //these functions will call the appropriate script processing for their script type:
    void handleMapOnLoadScript(bool isFirstRun);

@@ -28,7 +28,21 @@ using MageVariableValue = StringValue<struct variableTag>;
 using MagePixels = const uint8_t*;
 
 typedef EngineROM<
-MapData,MageTileset,MageAnimation,MageEntityType,MageEntity,MageGeometry,MageScriptState,MagePortrait,MageDialog,MageSerialDialog,MageColorPalette,MageStringValue,MageSaveGame,MageVariableValue,MagePixels   > MageROM;
+   MapData,
+   MageTileset,
+   MageAnimation,
+   MageEntityType,
+   MageEntity,
+   MageGeometry,
+   MageScriptState,
+   MagePortrait,
+   MageDialog,
+   MageSerialDialog,
+   MageColorPalette,
+   MageStringValue,
+   MageSaveGame,
+   MageVariableValue,
+   MagePixels> MageROM;
 
 
 std::unique_ptr<MageROM>& ROM();

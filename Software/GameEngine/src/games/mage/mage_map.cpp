@@ -63,7 +63,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    ROM()->InitializeCollectionOf(entities, address, entityCount);
 }
 
-void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn)
+void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn) const
 {
    int32_t cameraX = cameraPosition.x;
    int32_t cameraY = cameraPosition.y;
@@ -97,7 +97,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
       }
    }
 }
-void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn)
+void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn) const
 {
    const auto layerAddress = LayerAddress(layer);
    if (layerAddress == 0)
@@ -170,7 +170,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
    }
 }
 
-void MapControl::DrawGeometry(const Point& cameraPosition)
+void MapControl::DrawGeometry(const Point& cameraPosition) const
 {
    const Point* playerPosition;
    bool isColliding = false;
