@@ -4,13 +4,13 @@
 #include "convert_endian.h"
 
 
-void TileManager::DrawTile(const RenderableData* const renderableData, int32_t x, int32_t y) const
+void TileManager::DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const
 {
    auto tileset = ROM()->Get<MageTileset>(renderableData->tilesetId);
    DrawTile(tileset, renderableData->tileId, x, y, renderableData->renderFlags);
 }
 
-void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, int32_t x, int32_t y, uint8_t flags) const
+void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags) const
 {
    auto colorPalette = ROM()->Get<MageColorPalette>(tileId);
    auto address = ROM()->GetAddress<MagePixels>(tileId);
@@ -23,8 +23,8 @@ void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, in
       tileset->TileHeight() 
    };
    const auto sourcePoint = Point{
-      tileId % tileset->Cols() * tileset->TileWidth(),
-      tileId / tileset->Cols() * tileset->TileHeight()
+      uint16_t(tileId % tileset->Cols() * tileset->TileWidth()),
+      uint16_t(tileId / tileset->Cols() * tileset->TileHeight())
    };
 
    frameBuffer->drawChunkWithFlags(pixels, colorPalette, targetRect, sourcePoint, tileset->ImageWidth(), flags);

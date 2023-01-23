@@ -83,7 +83,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
 
       if (isCollisionDebugOn)
       {
-         auto tileOrigin = Point{ entity.location.x - cameraX, entity.location.y - cameraY - currentMap->tileHeight };
+         auto tileOrigin = Point{ uint16_t(entity.location.x - cameraX), uint16_t(entity.location.y - cameraY - currentMap->tileHeight) };
          auto hitboxOrigin = renderableData->hitBox.origin - cameraPosition;
 
          frameBuffer->drawRect(tileOrigin, currentMap->tileWidth, currentMap->tileHeight, COLOR_LIGHTGREY);
@@ -109,7 +109,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
 
    for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
    {
-      auto tileOrigin = Point{ currentMap->tileWidth * (i % currentMap->cols), currentMap->tileHeight * (i / currentMap->cols) };
+      auto tileOrigin = Point{ uint16_t(currentMap->tileWidth * (i % currentMap->cols)), uint16_t(currentMap->tileHeight * (i / currentMap->cols)) };
       auto tileDrawPoint = tileOrigin - cameraPosition;
 
       // don't draw tiles that are entirely outside the screen bounds

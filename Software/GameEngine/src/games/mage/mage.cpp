@@ -27,7 +27,7 @@ void MageGameEngine::Run()
       if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
       {
          scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-         LoadMap(currentSave->currentMapId);
+         LoadMap(ROM()->GetCurrentSave()->currentMapId);
          engineIsInitialized = true;
       }
       EngineMainGameLoop();
@@ -117,7 +117,7 @@ void MageGameEngine::LoadMap(uint16_t index)
    //get the data for the map:
    mapControl->Load(index);
 
-   mapControl->getPlayerEntity()->SetName(currentSave->name);
+   mapControl->getPlayerEntity()->SetName(ROM()->GetCurrentSave()->name);
 
    scriptControl->initializeScriptsOnMapLoad();
 
@@ -157,13 +157,13 @@ void MageGameEngine::applyUniversalInputs()
       if (button.IsPressed(KeyPress::Mem3))
       {
          //make map reload global regardless of player control state:
-         scriptControl->mapLoadId = currentSave->currentMapId;
+         scriptControl->mapLoadId = ROM()->GetCurrentSave()->currentMapId;
       }
       else if (button.IsPressed(KeyPress::Mem1))
       {
          mapControl->isEntityDebugOn = !mapControl->isEntityDebugOn;
          scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-         LoadMap(currentSave->currentMapId);
+         LoadMap(ROM()->GetCurrentSave()->currentMapId);
          return;
       }
    }
@@ -641,7 +641,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             auto geometry = ROM()->Get<MageGeometry>(geometryId)
                ->flipSelfByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
 
-            Point offsetPoint = { playerPoint.x - tileTopLeftPoint.x, playerPoint.y - tileTopLeftPoint.y };
+            Point offsetPoint = { uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
             bool isMageInGeometry = false;
 
             bool collidedWithThisTileAtAll = false;

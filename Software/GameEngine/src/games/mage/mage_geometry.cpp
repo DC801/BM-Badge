@@ -26,7 +26,7 @@ MageGeometry::MageGeometry(uint32_t& address)
    ROM()->Read(pathLength, address);
 
    //generate appropriately sized point array:
-   ROM()->InitializeCollectionOf(points, address, GetPointCount());
+   ROM()->InitializeCollectionOf(points, address, pointCount);
 
    //generate appropriately sized array:
    ROM()->InitializeCollectionOf(segmentLengths, address, segmentCount);
@@ -133,7 +133,7 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
        && x >= lineBXMin && x <= lineBXMax
        && y >= lineBYMin && y <= lineBYMax)
       {
-         return Point{ (int32_t)x, (int32_t)y };
+         return Point{ (uint16_t)x, (uint16_t)y };
       }
    }
    // No intersection

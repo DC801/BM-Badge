@@ -405,6 +405,13 @@ struct EngineROM
       return currentSave;
    }
 
+   void SetCurrentSave(uint32_t scenarioDataCRC32)
+   {
+      auto newSave = new MageSaveGame{};
+      newSave->scenarioDataCRC32 = scenarioDataCRC32;
+      currentSave.reset(newSave);
+   }
+
    template <typename T>
    void SetReadPointerToOffset(const T*& readPointer, uint32_t& offset, size_t count = 1) const
    {
@@ -558,7 +565,7 @@ struct EngineROM
 
 private:
    std::tuple<Header<THeaders>...> headers;
-   std::shared_ptr<MageSaveGame> currentSave;
+   std::shared_ptr<MageSaveGame> currentSave{};
 
 #ifndef DC801_EMBEDDED
    std::filesystem::directory_entry getOrCreateSaveFilePath() const

@@ -56,14 +56,12 @@ public:
       ROM()->Read(scenarioDataCRC32, offset);
       ROM()->Read(scenarioDataLength, offset);
 
-      auto newSave = new MageSaveGame{};
-      newSave->scenarioDataCRC32 = scenarioDataCRC32;
-      currentSave.reset(newSave);
+      ROM()->SetCurrentSave(scenarioDataCRC32);
 
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_unique<MapControl>(frameBuffer, tileManager);
-      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, currentSave->memOffsets);
-      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, currentSave->scriptVariables);
+      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave()->memOffsets);
+      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave()->scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, scriptControl, mapControl);
       camera = MageCamera{ mapControl };
 
@@ -119,7 +117,6 @@ private:
    Point playerVelocity = { 0,0 };
 
    uint8_t currentSaveIndex{ 0 };
-   std::shared_ptr<MageSaveGame> currentSave{};
 
    //this lets us make it so that inputs stop working for the player
    bool playerHasControl{ false };

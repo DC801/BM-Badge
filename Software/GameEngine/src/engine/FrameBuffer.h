@@ -110,8 +110,8 @@ struct RenderFlags
 //this is a point in 2D space.
 struct Point
 {
-	int32_t x{ 0 };
-	int32_t y{ 0 };
+	uint16_t x{ 0 };
+	uint16_t y{ 0 };
 
 	float VectorLength() const
 	{
@@ -181,9 +181,10 @@ struct Point
 		return lhs;
 	}
 
+
 	Point operator-()
 	{
-		return Point{ -x, -y };
+		return Point{ (uint16_t)-x, (uint16_t)-y };
 	}
 
 	Point& operator+=(const Point& rhs)
@@ -300,8 +301,8 @@ public:
 	{
 		const auto topLeft = p - size;
 		const auto bottomRight = p + size;
-		const auto bottomLeft = Point{ p.x - size, p.y + size };
-      const auto topRight = Point{ p.x + size, p.y - size };
+		const auto bottomLeft = Point{ (uint16_t)(p.x - size), (uint16_t)(p.y + size) };
+      const auto topRight = Point{ (uint16_t)(p.x + size), (uint16_t)(p.y - size) };
 		drawLine(topLeft, bottomRight, color);
 		drawLine(bottomLeft, topRight, color);
 	}

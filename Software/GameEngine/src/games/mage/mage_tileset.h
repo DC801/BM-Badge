@@ -142,9 +142,9 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(const RenderableData* const renderableData, int32_t x, int32_t y) const; 
+   void DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const;
 
-   void DrawTile(const MageTileset* const tile, uint16_t tileId, int32_t x, int32_t y, uint8_t flags = 0) const;
+   void DrawTile(const MageTileset* const tile, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
 
 private:
    std::vector<MageColorPalette> colorPalettes;

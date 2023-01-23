@@ -1864,7 +1864,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(ui
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
 
    const auto entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->GetUniqueCopy<MageGeometry>(argStruct->geometryId);
 
    camera.followEntityId = NO_PLAYER;
    const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
@@ -1899,7 +1899,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(uint8_t* 
       float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
-      resumeStateStruct->pointB = { renderable->center.x - HALF_WIDTH, renderable->center.y - HALF_HEIGHT };
+      resumeStateStruct->pointB = { uint16_t(renderable->center.x - HALF_WIDTH), uint16_t(renderable->center.y - HALF_HEIGHT) };
       Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
       camera.position.x = betweenPoint.x;
       camera.position.y = betweenPoint.y;
@@ -1936,8 +1936,8 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(uint8_t
          camera.position.y,
       };
       resumeStateStruct->pointB = {
-         geometry->GetPoint(0).x - HALF_WIDTH,
-         geometry->GetPoint(0).y - HALF_HEIGHT,
+         uint16_t(geometry->GetPoint(0).x - HALF_WIDTH),
+         uint16_t(geometry->GetPoint(0).y - HALF_HEIGHT),
       };
    }
    float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
