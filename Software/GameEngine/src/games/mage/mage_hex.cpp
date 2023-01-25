@@ -41,9 +41,9 @@ void MageHexEditor::setHexOp(enum HEX_OPS op)
    ledSet(LED_SUB, led_op_sub);
 }
 
-void MageHexEditor::setHexCursorLocation(uint16_t address)
+void MageHexEditor::setHexCursorLocation(uint16_t offset)
 {
-   hexCursorLocation = address;
+   hexCursorLocation = offset;
 }
 
 void MageHexEditor::setPageToCursorLocation()
@@ -81,7 +81,7 @@ uint16_t MageHexEditor::getCurrentMemPage()
    {
       //subtract a page worth of memory from the memory location
       adjustedMem -= bytesPerPage;
-      //if the address doesn't get to 0, it must be on a higher page.
+      //if the offset doesn't get to 0, it must be on a higher page.
       if (adjustedMem >= 0)
       {
          memPage++;

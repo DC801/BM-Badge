@@ -106,7 +106,7 @@ void MageDialogControl::update()
    bool shouldAdvance = activatedButton.IsPressed(KeyPress::Rjoy_down)
       || activatedButton.IsPressed(KeyPress::Rjoy_left)
       || activatedButton.IsPressed(KeyPress::Rjoy_right)
-      || MAGE_NO_MAP != scriptControl->mapLoadId;
+      || MAGE_NO_MAP != mapControl->mapLoadId;
 
    if (shouldShowResponses())
    {

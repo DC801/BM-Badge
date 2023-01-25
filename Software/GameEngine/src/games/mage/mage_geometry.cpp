@@ -5,49 +5,52 @@
 #include "shim_err.h"
 #include <algorithm>
 
-MageGeometry::MageGeometry(uint32_t& address)
+MageGeometry::MageGeometry(uint32_t& offset)
 {
 #ifndef DC801_EMBEDDED
-   ROM()->Read(name, address, 32);
+   ROM()->Read(name, offset, 32);
 #else
    //skip over name:
-   address += 32;
+   offset += 32;
 #endif
-   ROM()->Read(typeId, address);
-   uint8_t pointCount;
-   ROM()->Read(pointCount, address);
+   ROM()->Read(typeId, offset);
+   ROM()->Read(pointCount, offset);
+   ROM()->Read(segmentCount, offset);
 
-   uint8_t segmentCount;
-   ROM()->Read(segmentCount, address);
-
-   address += 1; //padding
+   offset += 1; //padding
 
    //read pathLength:
-   ROM()->Read(pathLength, address);
+   ROM()->Read(pathLength, offset);
+
+   auto pointArrayPtr = new Point[pointCount]{ 0,0 };
+   auto segmentLengthArrayPtr = new float[segmentCount] {0.0f};
 
    //generate appropriately sized point array:
-   ROM()->InitializeCollectionOf(points, address, pointCount);
+   ROM()->Read(*pointArrayPtr, offset, pointCount);
 
    //generate appropriately sized array:
-   ROM()->InitializeCollectionOf(segmentLengths, address, segmentCount);
+   ROM()->Read(*segmentLengthArrayPtr, offset, segmentCount);
+
+   points.reset(pointArrayPtr);
+   segmentLengths.reset(segmentLengthArrayPtr);
 }
 
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)
 {
    typeId = type;
    auto segmentCount = typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1;
-   segmentLengths.assign(segmentCount, segmentCount);
-   points.assign(numPoints, Point{ 0,0 });
+   points = std::unique_ptr<Point[]>(new Point[numPoints]{ 0,0 });
+   segmentLengths = std::unique_ptr<float[]>(new float[segmentCount] {0.0f});
 }
 
-MageGeometry MageGeometry::flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+MageGeometry MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 {
-   auto geometry = MageGeometry{ *this };
+   auto geometry = MageGeometry{ typeId, pointCount };
    if (flags != 0)
    {
-      for (uint8_t i = 0; i < GetPointCount(); i++)
+      for (uint8_t i = 0; i < pointCount; i++)
       {
-         geometry.points[i].flipByFlags(flags, width, height);
+         const_cast<Point&>(geometry.points[i]) = geometry.points[i].flipByFlags(flags, width, height);
       }
    }
    return geometry;
@@ -153,10 +156,10 @@ uint16_t MageGeometry::getLoopableGeometryPointIndex(uint8_t pointIndex) const
    }
    else if (typeId == MageGeometryType::Polyline)
    {
-      pointIndex %= (segmentLengths.size() * 2);
+      pointIndex %= (segmentCount * 2);
       result = (pointIndex < GetPointCount())
          ? pointIndex
-         : segmentLengths.size() + (segmentLengths.size() - pointIndex);
+         : segmentCount + (segmentCount - pointIndex);
    }
    return result;
 }

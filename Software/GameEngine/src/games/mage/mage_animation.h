@@ -24,7 +24,7 @@ public:
 	};
 
 	MageAnimation() noexcept = default;
-	MageAnimation(uint32_t& address) noexcept;
+	MageAnimation(uint32_t& offset) noexcept;
 
 	constexpr uint16_t TilesetId() const { return tilesetId; }
 	constexpr uint16_t TileId() const { return 0; }

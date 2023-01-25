@@ -47,7 +47,7 @@ typedef enum {
     NRFX_ERROR_TIMEOUT               = (0x0BAD0007), // Operation timed out.
     NRFX_ERROR_FORBIDDEN             = (0x0BAD0008), // Operation is forbidden.
     NRFX_ERROR_NULL                  = (0x0BAD0009), // Null pointer.
-    NRFX_ERROR_INVALID_ADDR          = (0x0BAD000A), // Bad memory address.
+    NRFX_ERROR_INVALID_ADDR          = (0x0BAD000A), // Bad memory offset.
     NRFX_ERROR_BUSY                  = (0x0BAD000B), // Busy.
     NRFX_ERROR_ALREADY_INITIALIZED   = (0x0BAD000C), // Module already initialized.
 

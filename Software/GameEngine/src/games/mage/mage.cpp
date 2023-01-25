@@ -157,7 +157,7 @@ void MageGameEngine::applyUniversalInputs()
       if (button.IsPressed(KeyPress::Mem3))
       {
          //make map reload global regardless of player control state:
-         scriptControl->mapLoadId = ROM()->GetCurrentSave()->currentMapId;
+         mapControl->mapLoadId = ROM()->GetCurrentSave()->currentMapId;
       }
       else if (button.IsPressed(KeyPress::Mem1))
       {
@@ -364,7 +364,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    applyUniversalInputs();
 
    //check for loadMap:
-   if (scriptControl->mapLoadId != MAGE_NO_MAP) { return; }
+   if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
    //update universally used hex editor state variables:
    hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
@@ -400,7 +400,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
       commandControl->sendBufferedOutput();
 
       //check for loadMap:
-      if (scriptControl->mapLoadId != MAGE_NO_MAP) { return; }
+      if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
       camera.applyEffects(deltaTime);
    }
@@ -493,14 +493,14 @@ void MageGameEngine::EngineMainGameLoop()
    EngineHandleSerialInput();
 
    //If the loadMap() action has set a new map, we will load it before we render this frame.
-   if (scriptControl->mapLoadId != MAGE_NO_MAP)
+   if (mapControl->mapLoadId != MAGE_NO_MAP)
    {
       //load the new map data into gameControl
-      LoadMap(scriptControl->mapLoadId);
+      LoadMap(mapControl->mapLoadId);
 
       //clear the mapLoadId to prevent infinite reloads
       scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-      scriptControl->mapLoadId = MAGE_NO_MAP;
+      mapControl->mapLoadId = MAGE_NO_MAP;
    }
 
    //updates the state of all the things before rendering:
@@ -582,7 +582,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    if (isCollisionDebugOn)
    {
       frameBuffer->drawRect(playerRect.origin - camera.position, playerRect.w, playerRect.h, COLOR_BLUE);
-      for (auto& point: mageCollisionSpokes.GetPoints())
+      for (auto& point : std::vector<Point>{ mageCollisionSpokes.GetPoints(), mageCollisionSpokes.GetPoints() + mageCollisionSpokes.GetPointCount() })
       //for (int i = 0; i < mageCollisionSpokes.segmentLengths.size(); i++)
       {
          frameBuffer->drawLine(point - camera.position, playerPoint - camera.position, COLOR_PURPLE);
@@ -604,10 +604,10 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          {
             continue;
          }
-         auto address = layerAddress + (i * sizeof(MageMapTile));
+         auto offset = layerAddress + (i * sizeof(MageMapTile));
 
          auto currentTile = MageMapTile{};
-         ROM()->Read(currentTile, address);
+         ROM()->Read(currentTile, offset);
 
          if (currentTile.tileId == 0)
          {
@@ -628,7 +628,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
             {
                float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
-               Point* spokePoint = &mageCollisionSpokes.GetPoint(i);
+               Point* spokePoint = const_cast<Point*>(&mageCollisionSpokes.GetPoint(i));
                spokePoint->x = cos(angle) * playerSpokeRadius
                   + playerVelocity.x + playerPoint.x
                   - tileTopLeftPoint.x;
@@ -639,7 +639,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             geometryId--;
 
             auto geometry = ROM()->Get<MageGeometry>(geometryId)
-               ->flipSelfByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
+               ->FlipByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
 
             Point offsetPoint = { uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
             bool isMageInGeometry = false;

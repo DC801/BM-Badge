@@ -10,7 +10,7 @@ class MageAnimation;
 class MageEntityType;
 class MageEntity;
 class MageGeometry;
-class MageScriptState;
+class MageScript;
 class MagePortrait;
 class MageDialog;
 class MageSerialDialog;
@@ -34,7 +34,7 @@ typedef EngineROM<
    MageEntityType,
    MageEntity,
    MageGeometry,
-   MageScriptState,
+   MageScript,
    MagePortrait,
    MageDialog,
    MageSerialDialog,

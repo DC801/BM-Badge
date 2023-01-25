@@ -130,7 +130,7 @@ struct MageSaveGame
 //the SD card.
 #define ENGINE_ROM_CRC32_LENGTH 4
 
-//this is the length of the scenario data from the 0 address to the end
+//this is the length of the scenario data from the 0 offset to the end
 #define ENGINE_ROM_GAME_LENGTH 4
 
 #define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
@@ -149,7 +149,7 @@ struct MageSaveGame
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
-//the failure address which is a uint32_t and can include 0
+//the failure offset which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
@@ -353,6 +353,7 @@ struct EngineROM
          "               ######  #####  \n"
       );
    }
+
    template <typename T>
    void Read(T& t, uint32_t& offset, size_t count = 1) const
    {
@@ -365,10 +366,10 @@ struct EngineROM
       }
       if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::Read: offset + length exceeds maximum dat file size" };
       }
       auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + offset;
-      memmove(&t, dataPointer, dataLength);
+      memcpy(&t, dataPointer, dataLength);
       offset += dataLength;
    }
 
@@ -376,8 +377,8 @@ struct EngineROM
    uint32_t GetAddress(uint16_t index) const
    {
       auto&& header = getHeader<T>();
-      auto address = header.Offset((uint32_t)romDataInDesktopRam.get(), index % header.Count());
-      return address;
+      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index % header.Count());
+      return offset;
    }
 
    template <typename T>
@@ -443,10 +444,10 @@ struct EngineROM
       }
    }
 
-   bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
+   bool Write(uint32_t offset, uint32_t length, uint8_t* data, const char* errorString);
 
 
-   bool VerifyEqualsAtOffset(uint32_t address, std::string value) const
+   bool VerifyEqualsAtOffset(uint32_t offset, std::string value) const
    {
       if (value.empty())
       {

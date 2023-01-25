@@ -78,8 +78,8 @@ public:
 	//sets the current operation to be applied when pressing the bit buttons.
 	void setHexOp(enum HEX_OPS op);
 
-	//sets the hex cursor location to address:
-	void setHexCursorLocation(uint16_t address);
+	//sets the hex cursor location to offset:
+	void setHexCursorLocation(uint16_t offset);
 
 	void setPageToCursorLocation();
 

@@ -3,12 +3,12 @@
 
 #include "convert_endian.h"
 
-MageAnimation::MageAnimation(uint32_t& address) noexcept
+MageAnimation::MageAnimation(uint32_t& offset) noexcept
 {
 	//read tilesetId
-	ROM()->Read(tilesetId, address);
+	ROM()->Read(tilesetId, offset);
 
 	auto frameCount = uint16_t{ 0 };
 	//read frameCount
-	ROM()->Read(frameCount, address);
+	ROM()->Read(frameCount, offset);
 }

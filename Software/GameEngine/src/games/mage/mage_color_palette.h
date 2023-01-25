@@ -44,7 +44,7 @@ class MageColorPalette
 {
 public:
    MageColorPalette() noexcept = default;
-   MageColorPalette(uint32_t& address);
+   MageColorPalette(uint32_t& offset);
    uint16_t colorAt(uint8_t colorIndex, uint16_t fadeColor, float fadeFraction = 0.0f) const
    {
       auto sourceColor = ((const uint16_t*)&colorCount + 2)[colorIndex % colorCount];

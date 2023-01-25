@@ -271,7 +271,7 @@ void addSeenBadge(BADGE_ADV badge){
         if (badgeAdvNum != 0) {
             // Check if we have seen this badge yet or not
             for (int i = 0; i < badgeAdvNum; i++) {
-                // Compare mac address
+                // Compare mac offset
                 if(macAddressMatch(badge.mac, badgeAdv[i].mac)){
                     haveBadge = true;
                     break;
@@ -466,7 +466,7 @@ void ble_stack_init(void){
     APP_ERROR_CHECK(err_code);
 
     // Configure the BLE stack using the default settings.
-    // Fetch the start address of the application RAM.
+    // Fetch the start offset of the application RAM.
     uint32_t ram_start = 0;
     err_code = nrf_sdh_ble_default_cfg_set(APP_BLE_CONN_CFG_TAG, &ram_start);
     APP_ERROR_CHECK(err_code);

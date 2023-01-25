@@ -26,7 +26,7 @@ struct GoDirection
 
 struct MapData
 {
-   MapData(uint32_t& address, bool isEntityDebugOn=false);
+   MapData(uint32_t& offset, bool isEntityDebugOn=false);
    static const inline int MapNameLength = 16;
    char name[MapNameLength]{ 0 };
    uint16_t tileWidth{ 0 };
@@ -189,8 +189,15 @@ public:
    uint16_t GetOnLoad() const { return currentMap->onLoad; }
    uint16_t GetOnLook() const { return currentMap->onLook; }
    uint16_t GetOnTick() const { return currentMap->onTick; }
+   void SetOnLoad(uint16_t loadId) { currentMap->onLoad = loadId; }
    void SetOnLook(uint16_t lookId) { currentMap->onLook = lookId; }
    void SetOnTick(uint16_t tickId) { currentMap->onTick = tickId; }
+
+
+   //this is used by the loadMap action to indicate when a new map needs to be loaded.
+   //when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
+   //the new map will be loaded at the beginning of the next tick
+   int32_t mapLoadId{ MAGE_NO_MAP };
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<TileManager> tileManager;

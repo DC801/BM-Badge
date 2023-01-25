@@ -1,14 +1,14 @@
 #include "mage_portrait.h"
 
-MagePortrait::MagePortrait(uint32_t& address)
+MagePortrait::MagePortrait(uint32_t& offset)
 {
-	address += 32; // name
-	address += sizeof(uint8_t); // paddingA
-	address += sizeof(uint8_t); // paddingB
-	address += sizeof(uint8_t); // paddingC
+	offset += 32; // name
+	offset += sizeof(uint8_t); // paddingA
+	offset += sizeof(uint8_t); // paddingB
+	offset += sizeof(uint8_t); // paddingC
 
 	auto emoteCount = uint8_t{ 0 };
-	ROM()->Read(emoteCount, address);
+	ROM()->Read(emoteCount, offset);
 
-	ROM()->InitializeCollectionOf(emotes, address, emoteCount);
+	ROM()->InitializeCollectionOf(emotes, offset, emoteCount);
 }

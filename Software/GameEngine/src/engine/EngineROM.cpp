@@ -157,9 +157,9 @@ bool EngineROM<THeaders...>::SD_Copy(
 #endif //DC801_EMBEDDED
 
 template<typename... THeaders>
-bool EngineROM<THeaders...>::Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString)
+bool EngineROM<THeaders...>::Write(uint32_t offset, uint32_t length, uint8_t* data, const char* errorString)
 {
-   if (address % sizeof(uint32_t) || length % sizeof(uint32_t))
+   if (offset % sizeof(uint32_t) || length % sizeof(uint32_t))
    {
       ENGINE_PANIC(
          "Address or Length of write is not aligned to uint32_t\n"
@@ -173,7 +173,7 @@ bool EngineROM<THeaders...>::Write(uint32_t address, uint32_t length, uint8_t* d
    }
 
 #ifdef DC801_EMBEDDED
-   if (!qspiControl.write(data, length, address))
+   if (!qspiControl.write(data, length, offset))
    {
       ENGINE_PANIC(errorString);
    }
@@ -183,7 +183,7 @@ bool EngineROM<THeaders...>::Write(uint32_t address, uint32_t length, uint8_t* d
       ENGINE_PANIC("Game Data file is not open");
    }
 
-   if (romFile.seekp(address, std::ios_base::beg))
+   if (romFile.seekp(offset, std::ios_base::beg))
    {
       ENGINE_PANIC("Failed to seek into Game Data");
    }

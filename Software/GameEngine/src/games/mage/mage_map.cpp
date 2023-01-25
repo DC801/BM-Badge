@@ -10,10 +10,10 @@ void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebu
    currentMap = std::move(map);
 }
 
-MapData::MapData(uint32_t& address, bool isEntityDebugOn)
+MapData::MapData(uint32_t& offset, bool isEntityDebugOn)
 {
    //ROM()->Get<Map>(index);
-   //auto address = mapHeader.offset(index);
+   //auto offset = mapHeader.offset(index);
    auto layerCount = uint8_t{ 0 };
    auto entityCount = uint16_t{ 0 };
    auto geometryCount = uint16_t{ 0 };
@@ -21,38 +21,38 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    auto goDirectionsCount = uint8_t{ 0 };
    auto mapLayerOffsetsCount = uint16_t{ 0 };
 
-   ROM()->Read(name, address, MapNameLength);
-   ROM()->Read(tileWidth, address);
-   ROM()->Read(tileHeight, address);
-   ROM()->Read(cols, address);
-   ROM()->Read(rows, address);
-   ROM()->Read(onLoad, address);
-   ROM()->Read(onTick, address);
-   ROM()->Read(onLook, address);
-   ROM()->Read(layerCount, address);
-   ROM()->Read(playerEntityIndex, address);
-   ROM()->Read(entityCount, address);
-   ROM()->Read(geometryCount, address);
-   ROM()->Read(scriptCount, address);
-   ROM()->Read(goDirectionsCount, address);
+   ROM()->Read(name, offset, MapNameLength);
+   ROM()->Read(tileWidth, offset);
+   ROM()->Read(tileHeight, offset);
+   ROM()->Read(cols, offset);
+   ROM()->Read(rows, offset);
+   ROM()->Read(onLoad, offset);
+   ROM()->Read(onTick, offset);
+   ROM()->Read(onLook, offset);
+   ROM()->Read(layerCount, offset);
+   ROM()->Read(playerEntityIndex, offset);
+   ROM()->Read(entityCount, offset);
+   ROM()->Read(geometryCount, offset);
+   ROM()->Read(scriptCount, offset);
+   ROM()->Read(goDirectionsCount, offset);
 
-   address += sizeof(uint8_t); // padding
+   offset += sizeof(uint8_t); // padding
 
-   ROM()->InitializeCollectionOf<uint16_t>(entityGlobalIds, address, entityCount);
-   ROM()->InitializeCollectionOf<uint16_t>(geometryGlobalIds, address, geometryCount);
-   ROM()->InitializeCollectionOf<uint16_t>(scriptGlobalIds, address, scriptCount);
-   ROM()->InitializeCollectionOf<GoDirection>(goDirections, address, goDirectionsCount);
+   ROM()->InitializeCollectionOf<uint16_t>(entityGlobalIds, offset, entityCount);
+   ROM()->InitializeCollectionOf<uint16_t>(geometryGlobalIds, offset, geometryCount);
+   ROM()->InitializeCollectionOf<uint16_t>(scriptGlobalIds, offset, scriptCount);
+   ROM()->InitializeCollectionOf<GoDirection>(goDirections, offset, goDirectionsCount);
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
    {
-      address += sizeof(uint16_t); // Padding
+      offset += sizeof(uint16_t); // Padding
    }
 
    for (uint32_t i = 0; i < layerCount; i++)
    {
-      layerAddresses.push_back(address);
-      address += rows * cols * sizeof(uint8_t*);
+      layerAddresses.push_back(offset);
+      offset += rows * cols * sizeof(uint8_t*);
    }
 
    if (entityCount > MAX_ENTITIES_PER_MAP)
@@ -60,7 +60,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
       ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
    }
 
-   ROM()->InitializeCollectionOf(entities, address, entityCount);
+   ROM()->InitializeCollectionOf(entities, offset, entityCount);
 }
 
 void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn) const
@@ -119,14 +119,14 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
          continue;
       }
 
-      auto address = layerAddress + (i * sizeof(MageMapTile));
+      auto offset = layerAddress + (i * sizeof(MageMapTile));
 
       const MageMapTile* currentTile;
-      ROM()->SetReadPointerToOffset(currentTile, address);
+      ROM()->SetReadPointerToOffset(currentTile, offset);
       if (currentTile->tileId == 0) { continue; }
 
       //currentTile.tileId -= 1;
-      auto tileset = ROM()->Get<MageTileset>(address);
+      auto tileset = ROM()->Get<MageTileset>(offset);
 
       tileManager->DrawTile(tileset, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
 
@@ -138,7 +138,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
             geometryId -= 1;
 
             auto geometryIn = ROM()->Get<MageGeometry>(geometryId);
-            auto geometry = geometryIn->flipSelfByFlags(currentTile->flags, tileset->TileWidth(), tileset->TileHeight());
+            auto geometry = geometryIn->FlipByFlags(currentTile->flags, tileset->TileWidth(), tileset->TileHeight());
 
             bool isMageInGeometry = false;
 

@@ -287,7 +287,7 @@ nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
 }
 
 /**
- * Set address window to specific values. This could be more efficient
+ * Set offset window to specific values. This could be more efficient
  * "(3)Terminate commands and data-reads early (e.g. a command to set a screen
  * subregion can be terminated after setting only the lower limit, leaving the
  * upper limit as-is; Reading color data can be terminated after retrieving only

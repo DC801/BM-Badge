@@ -24,17 +24,6 @@ typedef enum : uint8_t
    NUM_SCRIPT_TYPES
 } MageScriptType;
 
-struct resumeStatesStruct
-{
-   MageScriptState mapLoad;
-   MageScriptState mapTick;
-   MageScriptState commandLook;
-   MageScriptState commandGo;
-   MageScriptState commandUse;
-   MageScriptState commandGet;
-   MageScriptState commandDrop;
-};
-
 class MageScriptControl
 {
 public:
@@ -57,13 +46,18 @@ public:
    //most actions will not do anything if an action that uses MAGE_ENTITY_SELF is called from the map's scripts.
    uint8_t currentEntityId{ MAGE_MAP_ENTITY };
 
-   //this is used by the loadMap action to indicate when a new map needs to be loaded.
-   //when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
-   //the new map will be loaded at the beginning of the next tick
-   int32_t mapLoadId{ MAGE_NO_MAP };
-
    //these functions return the specified MageScriptState struct:
-   resumeStatesStruct resumeStates{ };
+   struct resumeStatesStruct
+   {
+      MageScriptState mapLoad;
+      MageScriptState mapTick;
+      MageScriptState commandLook;
+      MageScriptState commandGo;
+      MageScriptState commandUse;
+      MageScriptState commandGet;
+      MageScriptState commandDrop;
+   } resumeStates{ };
+
    MageScriptState* commandStates[COMMAND_STATES_COUNT] = {
       &resumeStates.commandLook,
       &resumeStates.commandGo,
@@ -73,7 +67,7 @@ public:
    };
 
    //typedef for the array of function pointers to script action functions:
-   typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
+   typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
 
    ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS] = {
       &MageScriptActions::action_null_action,
@@ -175,8 +169,6 @@ public:
       &MageScriptActions::action_set_ble_flag,
       &MageScriptActions::action_check_ble_flag,
    };
-
-   void Run(uint8_t actionId, uint8_t* args, MageScriptState* resumeStateStruct);
 
    void initializeScriptsOnMapLoad();
    constexpr void SetEntityInteractResumeState(uint16_t entityIndex, const MageScriptState&& state) { entityInteractResumeStates[entityIndex] = state; }

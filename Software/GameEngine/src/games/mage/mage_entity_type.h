@@ -26,7 +26,7 @@ class MageEntityTypeAnimation
 public:
 
    MageEntityTypeAnimation() = default;
-   MageEntityTypeAnimation(uint32_t& address);
+   MageEntityTypeAnimation(uint32_t& offset);
 
    const AnimationDirection* North() const { return &north; }
    const AnimationDirection* East() const { return &east; }
@@ -43,7 +43,7 @@ class MageEntityType
 {
 public:
    MageEntityType() noexcept = default;
-   MageEntityType(uint32_t& address);
+   MageEntityType(uint32_t& offset);
 
    uint8_t PortraitId() const { return portraitId; }
    uint8_t AnimationCount() const { return animationCount; }
@@ -65,7 +65,7 @@ class MageEntity
 {
 public:
    MageEntity() noexcept = default;
-   MageEntity(uint32_t& address);
+   MageEntity(uint32_t& offset);
 
    void SetLocation(const Point& p) { location = p; }
    void SetName(std::string s)

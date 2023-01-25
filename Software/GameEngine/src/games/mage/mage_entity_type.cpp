@@ -4,45 +4,45 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-MageEntityType::MageEntityType(uint32_t& address)
+MageEntityType::MageEntityType(uint32_t& offset)
 {
 #ifndef DC801_EMBEDDED
-   ROM()->Read(name, address, 32);
+   ROM()->Read(name, offset, 32);
 #else
-   address += 32; // skip over reading the name, no need to hold that in ram
+   offset += 32; // skip over reading the name, no need to hold that in ram
 #endif
 
-   address += sizeof(uint8_t) + sizeof(uint8_t); // paddingA + paddingB
+   offset += sizeof(uint8_t) + sizeof(uint8_t); // paddingA + paddingB
 
-   ROM()->Read(portraitId, address);
+   ROM()->Read(portraitId, offset);
 
    auto animationCount = uint16_t{ 0 };
-   ROM()->Read(animationCount, address);
+   ROM()->Read(animationCount, offset);
 
-   //ROM()->InitializeCollectionOf(animations, address, animationCount);
+   //ROM()->InitializeCollectionOf(animations, offset, animationCount);
 }
 
-MageEntity::MageEntity(uint32_t& address)
+MageEntity::MageEntity(uint32_t& offset)
 {
-   ROM()->Read(name, address, MAGE_ENTITY_NAME_LENGTH);
+   ROM()->Read(name, offset, MAGE_ENTITY_NAME_LENGTH);
    uint16_t xLoc, yLoc;
-   ROM()->Read(xLoc, address);
-   ROM()->Read(yLoc, address);
+   ROM()->Read(xLoc, offset);
+   ROM()->Read(yLoc, offset);
    location = Point{ xLoc, yLoc };
 
-   ROM()->Read(onInteractScriptId, address);
-   ROM()->Read(onTickScriptId, address);
-   ROM()->Read(primaryId, address);
-   ROM()->Read(secondaryId, address);
-   ROM()->Read(primaryIdType, address);
-   ROM()->Read(currentAnimation, address);
-   ROM()->Read(currentFrameIndex, address);
-   ROM()->Read(renderFlags, address);
+   ROM()->Read(onInteractScriptId, offset);
+   ROM()->Read(onTickScriptId, offset);
+   ROM()->Read(primaryId, offset);
+   ROM()->Read(secondaryId, offset);
+   ROM()->Read(primaryIdType, offset);
+   ROM()->Read(currentAnimation, offset);
+   ROM()->Read(currentFrameIndex, offset);
+   ROM()->Read(renderFlags, offset);
 
-   ROM()->Read(hackableStateA, address);
-   ROM()->Read(hackableStateB, address);
-   ROM()->Read(hackableStateC, address);
-   ROM()->Read(hackableStateD, address);
+   ROM()->Read(hackableStateA, offset);
+   ROM()->Read(hackableStateB, offset);
+   ROM()->Read(hackableStateC, offset);
+   ROM()->Read(hackableStateD, offset);
 }
 
 void MageEntity::updateRenderableData(uint32_t deltaTime)

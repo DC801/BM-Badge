@@ -133,26 +133,29 @@ struct Point
 		return point;
 	}
 
-	void flipByFlags(RenderFlags flags, uint16_t width, uint16_t height)
+	Point flipByFlags(RenderFlags flags, uint16_t width, uint16_t height) const
 	{
+		Point point = Point{ x,y };
+
 		if (flags.rf.i != 0)
 		{
 			RenderFlags flagsUnion = { flags };
 			if (flagsUnion.rf.d.diagonal)
 			{
-				auto xTemp = x;
-				x = y;
-				y = xTemp;
+				auto xTemp = point.x;
+				point.x = point.y;
+				point.y = xTemp;
 			}
 			if (flagsUnion.rf.d.horizontal)
 			{
-				x = width - x;
+				point.x = width - point.x;
 			}
 			if (flagsUnion.rf.d.vertical)
 			{
-				y = height - y;
+				point.y = height - point.y;
 			}
 		}
+		return point;
 	}
 
 	Point& operator-=(const Point& rhs)

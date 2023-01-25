@@ -34,10 +34,10 @@ public:
    //you'll need to manually fill in the points, though. They all default to 0,0.
    MageGeometry(MageGeometryType type, uint8_t numPoints);
 
-   //this constructor takes a ROM memory address and returns a MageGeometry object as stored in the ROM data:
-   MageGeometry(uint32_t& address);
+   //this constructor takes a ROM memory offset and returns a MageGeometry object as stored in the ROM data:
+   MageGeometry(uint32_t& offset);
 
-   MageGeometry flipSelfByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
+   MageGeometry FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
    //this checks to see if a given point is inside the boundaries of a given geometry:
    bool isPointInGeometry(Point point) const;
@@ -54,43 +54,43 @@ public:
       }
       else if (typeId == MageGeometryType::Polygon)
       {
-         result = segmentIndex % segmentLengths.size();
+         result = segmentIndex % segmentCount;
       }
       else if (typeId == MageGeometryType::Polyline)
       {
-         segmentIndex %= (segmentLengths.size() * 2);
-         uint16_t zeroIndexedSegmentCount = segmentLengths.size() - 1;
-         result = (segmentIndex < segmentLengths.size())
+         segmentIndex %= (segmentCount * 2);
+         uint16_t zeroIndexedSegmentCount = segmentCount - 1;
+         result = (segmentIndex < segmentCount)
             ? segmentIndex
             : zeroIndexedSegmentCount + (zeroIndexedSegmentCount - segmentIndex) + 1;
       }
       return result;
    }
 
-   Point GetPoint(uint16_t i) const { return points.empty() ? Point{} : points[i % points.size()]; }
-   uint16_t GetPointCount() const { return points.size();  }
+   const Point& GetPoint(uint16_t i) const { return points[i % pointCount]; }
+   uint16_t GetPointCount() const { return pointCount;  }
 
    MageGeometryType GetTypeId() const { return typeId; }
    float GetPathLength() const { return pathLength; }
-   float GetSegmentLength(uint16_t index) const { return segmentLengths.empty() ? 0.0f : segmentLengths[index % segmentLengths.size()]; }
+   float GetSegmentLength(uint16_t index) const { return !segmentCount ? 0.0f : segmentLengths[index % segmentCount]; }
 
-   const std::vector<Point> GetPoints()
+   const Point* GetPoints() const
    {
-      return points;
+      return points.get();
    }
 
 private:
-#ifndef DC801_EMBEDDED
    char name[32]{ 0 };
-#endif
    //can be any MageGeometryType:
    MageGeometryType typeId{ MageGeometryType::Point };
+   uint8_t pointCount{ 0 };
+   uint8_t segmentCount{ 0 };
    //total length of all segments in the geometry
    float pathLength{ 0.0f };
    //the array of the actual coordinate points that make up the geometry:
-   std::vector<Point> points{};
+   std::unique_ptr<Point[]> points;
    //the array of segment lengths:
-   std::vector<float> segmentLengths{};
+   std::unique_ptr<float[]> segmentLengths;
 
 };
 

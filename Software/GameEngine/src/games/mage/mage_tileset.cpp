@@ -13,9 +13,9 @@ void TileManager::DrawTile(const RenderableData* const renderableData, uint16_t 
 void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags) const
 {
    auto colorPalette = ROM()->Get<MageColorPalette>(tileId);
-   auto address = ROM()->GetAddress<MagePixels>(tileId);
+   auto offset = ROM()->GetAddress<MagePixels>(tileId);
    MagePixels pixels{ nullptr };
-   ROM()->SetReadPointerToOffset(pixels, address);
+   ROM()->SetReadPointerToOffset(pixels, offset);
 
    const auto targetRect = Rect{ 
       Point{x,y},

@@ -60,7 +60,7 @@ public:
 
       if (!Valid())
       {
-         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset address is: %d", offset);
+         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset offset is: %d", offset);
       }
    }
 
@@ -123,7 +123,7 @@ class MagePortrait
 public:
 
    MagePortrait() noexcept = default;
-   MagePortrait(uint32_t& address);
+   MagePortrait(uint32_t& offset);
 
    const AnimationDirection* getEmoteById(uint8_t emoteId) const
    {
