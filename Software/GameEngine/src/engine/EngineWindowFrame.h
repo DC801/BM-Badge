@@ -56,8 +56,7 @@ private:
       SDL_Surface* frameLEDSurface = nullptr;
       SDL_Texture* frameLEDTexture = nullptr;
       SDL_Texture* gameViewportTexture = nullptr;
-   };
-   EngineWindowFrameComponents components{};
+   } components{};
    const SDL_Rect gameViewportSrcRect = { 0, 0, WIDTH, HEIGHT };
    const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH, HEIGHT };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };

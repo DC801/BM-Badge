@@ -3,23 +3,26 @@
 
 std::string StringLoader::getString(uint16_t stringId, std::string triggeringEntityName) const
 {
-   auto inputString = ROM()->Get<MageStringValue>(stringId);
+   auto address = ROM()->GetAddress<MageStringValue>(stringId);
+   const char* inputCharPtr;
+   ROM()->SetReadPointerToOffset(inputCharPtr, address);
+   auto inputString = std::string{ inputCharPtr };
    std::string outputString{};
    size_t cursor{ 0 };
    size_t variableStartPosition{ 0 };
    size_t variableEndPosition{ 0 };
    size_t replaceCount{ 0 };
-   while ((variableStartPosition = inputString->value.find("%%", variableStartPosition)) != std::string::npos)
+   while ((variableStartPosition = inputString.find("%%", variableStartPosition)) != std::string::npos)
    {
-      outputString += inputString->value.substr(cursor, variableStartPosition - cursor);
+      outputString += inputString.substr(cursor, variableStartPosition - cursor);
       variableStartPosition += 2;
-      variableEndPosition = inputString->value.find("%%", variableStartPosition);
+      variableEndPosition = inputString.find("%%", variableStartPosition);
       if (variableEndPosition == std::string::npos)
       {
          break;
       }
 
-      auto variableHolder = inputString->value.substr(variableStartPosition, variableEndPosition - variableStartPosition);
+      auto variableHolder = inputString.substr(variableStartPosition, variableEndPosition - variableStartPosition);
       auto parsedEntityIndex = std::stoi(variableHolder);
 
       if (!triggeringEntityName.empty())
@@ -32,7 +35,7 @@ std::string StringLoader::getString(uint16_t stringId, std::string triggeringEnt
    }
    if (replaceCount)
    {
-      outputString += inputString->value.substr(cursor, inputString->value.length() - 1);
+      outputString += inputString.substr(cursor, inputString.length() - 1);
       outputString = "";
    }
 
@@ -40,17 +43,17 @@ std::string StringLoader::getString(uint16_t stringId, std::string triggeringEnt
    variableStartPosition = 0;
    variableEndPosition = 0;
    replaceCount = 0;
-   while ((variableStartPosition = inputString->value.find("$$", variableStartPosition)) != std::string::npos)
+   while ((variableStartPosition = inputString.find("$$", variableStartPosition)) != std::string::npos)
    {
-      outputString += inputString->value.substr(cursor, variableStartPosition - cursor);
+      outputString += inputString.substr(cursor, variableStartPosition - cursor);
       variableStartPosition += 2;
-      variableEndPosition = inputString->value.find("$$", variableStartPosition);
+      variableEndPosition = inputString.find("$$", variableStartPosition);
       if (variableEndPosition == std::string::npos)
       {
          break;
       }
 
-      auto variableHolder = inputString->value.substr(variableStartPosition, variableEndPosition - variableStartPosition);
+      auto variableHolder = inputString.substr(variableStartPosition, variableEndPosition - variableStartPosition);
       auto parsedVariableIndex = std::stoi(variableHolder);
 
       uint16_t variableValue = scriptVariables[parsedVariableIndex];
@@ -62,7 +65,7 @@ std::string StringLoader::getString(uint16_t stringId, std::string triggeringEnt
    }
    if (replaceCount)
    {
-      outputString += inputString->value.substr(cursor, inputString->value.length() - 1);
+      outputString += inputString.substr(cursor, inputString.length() - 1);
    }
    return outputString;
 }

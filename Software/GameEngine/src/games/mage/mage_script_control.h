@@ -67,7 +67,7 @@ public:
    };
 
    //typedef for the array of function pointers to script action functions:
-   typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId);
+   typedef std::optional<uint16_t> (MageScriptActions::* ActionFunctionPointer)(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId);
 
    ActionFunctionPointer actionFunctions[NUM_SCRIPT_ACTIONS] = {
       &MageScriptActions::action_null_action,
@@ -176,7 +176,7 @@ public:
    //these functions will call the appropriate script processing for their script type:
    void handleMapOnLoadScript(bool isFirstRun);
    void handleMapOnTickScript();
-   void handleCommandScript(MageScriptState* resumeState);
+   void handleCommandScript(MageScriptState& resumeState);
    void handleEntityOnTickScript(uint8_t filteredEntityId);
    void handleEntityOnInteractScript(uint8_t filteredEntityId);
 
@@ -192,15 +192,15 @@ private:
 
    //this will process a script based on the state of the resumeStateStruct passed to it.
    //it should only be called from the 
-   void processScript(MageScriptState* resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType);
+   void processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType);
 
    //this will run through the actions in a script from the state stores in resumeState
    //if a jumpScriptId is called by an action, it will return without processing any further actions.
-   void processActionQueue(MageScriptState* resumeStateStruct, MageScriptType scriptType);
+   void processActionQueue(MageScriptState& resumeState, MageScriptType scriptType);
 
    //this will get action arguments from ROM memory and call
    //a function based on the ActionTypeId 
-   void runAction(uint32_t argumentMemoryAddress, MageScriptState* resumeStateStruct);
+   void runAction(uint32_t argumentMemoryAddress, MageScriptState& resumeState);
 
 }; //MageScriptControl
 

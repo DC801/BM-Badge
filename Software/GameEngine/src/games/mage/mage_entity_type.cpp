@@ -71,7 +71,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
             currentFrameIndex = 0;
          }
       }
-      auto animation = ROM()->Get<MageAnimation>(primaryId);
+      auto animation = ROM()->GetReadPointerTo<MageAnimation>(primaryId);
       renderableData.tilesetId = animation->TilesetId();
       renderableData.tileId = animation->TileId();
       renderableData.duration = animation->GetFrame(currentFrameIndex)->duration; //no need to check, it shouldn't cause a crash.
@@ -80,7 +80,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->Get<MageEntityType>(primaryId);
+      auto entityType = ROM()->GetReadPointerTo<MageEntityType>(primaryId);
 
       //If the entity has no animations defined, return default:
       if (entityType->AnimationCount() == 0)
@@ -108,7 +108,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       if (animationDirection->type == 0)
       {
          //TODO FIXME:
-         //auto animation = ROM()->Get<MageAnimation>(animationDirection->TypeId());
+         //auto animation = ROM()->GetReadPointerTo<MageAnimation>(animationDirection->TypeId());
          //MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
          //renderableData.tilesetId = animation->TilesetId();
          //renderableData.tileId = currentFrame.tileId;
@@ -127,7 +127,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       }
    }
 
-   auto tileset = ROM()->Get<MageTileset>(renderableData.tilesetId);
+   auto tileset = ROM()->GetReadPointerTo<MageTileset>(renderableData.tilesetId);
    uint16_t halfWidth = tileset->TileWidth() / 2;
    uint16_t halfHeight = tileset->TileHeight() / 2;
 

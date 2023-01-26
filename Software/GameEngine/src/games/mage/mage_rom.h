@@ -19,9 +19,7 @@ struct MageSaveGame;
 
 template<typename Tag>
 struct StringValue
-{
-   std::string value;
-};
+{};
 
 using MageStringValue = StringValue<struct stringTag>;
 using MageVariableValue = StringValue<struct variableTag>;

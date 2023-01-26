@@ -10,7 +10,7 @@
 
 void MageScriptControl::initializeScriptsOnMapLoad()
 {
-   //initialize the script ResumeStateStructs:
+   //initialize the script resumeStates:
    for (uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
    {
       *commandStates[i] = MageScriptState{ 0, false };
@@ -19,7 +19,7 @@ void MageScriptControl::initializeScriptsOnMapLoad()
    resumeStates.mapTick = MageScriptState{ mapControl->GetOnTick(), false };
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
    {
-      //Initialize the script ResumeStateStructs to default values for this map.
+      //Initialize the script resumeStates to default values for this map.
       const MageEntity* entity = mapControl->getEntity(i);
 
       entityTickResumeStates[i] = MageScriptState{ entity->onTickScriptId, false };
@@ -28,31 +28,31 @@ void MageScriptControl::initializeScriptsOnMapLoad()
    jumpScriptId = MAGE_NO_SCRIPT;
 }
 
-void MageScriptControl::processScript(MageScriptState* resumeStateStruct, uint8_t mapLocalEntityId, MageScriptType scriptType)
+void MageScriptControl::processScript(MageScriptState& resumeState, uint8_t mapLocalEntityId, MageScriptType scriptType)
 {
    //set the current entity to the passed value.
    currentEntityId = mapLocalEntityId;
-   //set the current script type to the passed value.
-   //All script processing from here relies solely on the state of the resumeStateStruct:
-   //Make sure you've got your script states correct in the resumeStateStruct before calling this function:
-   for (jumpScriptId = resumeStateStruct->currentScriptId; jumpScriptId != MAGE_NO_SCRIPT; jumpScriptId = MAGE_NO_SCRIPT)
+
+   //All script processing from here relies solely on the state of the resumeState:
+   //Make sure you've got your script states correct in the resumeState before calling this function:
+   for (jumpScriptId = resumeState.currentScriptId; jumpScriptId != MAGE_NO_SCRIPT; jumpScriptId = MAGE_NO_SCRIPT)
    {
-      processActionQueue(resumeStateStruct, scriptType);
+      processActionQueue(resumeState, scriptType);
       //check for loadMap:
       if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
    }
 }
 
-void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, MageScriptType currentScriptType)
+void MageScriptControl::processActionQueue(MageScriptState& resumeState, MageScriptType currentScriptType)
 {
    //get a read-only pointer to the memory offset for the script:
-   auto script = ROM()->Get<MageScript>(resumeStateStruct->currentScriptId);
+   auto script = ROM()->GetReadPointerTo<MageScript>(resumeState.currentScriptId);
 
    //now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
-   //note we're using the value in resumeStateStruct directly as our index so it will update automatically as we proceed:
-   for (; resumeStateStruct->actionOffset < script->GetActionCount(); resumeStateStruct->actionOffset++)
+   //note we're using the value in resumeState directly as our index so it will update automatically as we proceed:
+   for (; resumeState.actionOffset < script->GetActionCount(); resumeState.actionOffset++)
    {
-      auto action = script->GetAction(resumeStateStruct->actionOffset);
+      auto action = script->GetAction(resumeState.actionOffset);
 
       //validate actionTypeId:
       if (action->TypeId >= NUM_SCRIPT_ACTIONS)
@@ -62,18 +62,18 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
 
       //get the function for actionTypeId, and feed it the actionArgs as args:
       auto actionFunction = actionFunctions[action->TypeId];
-      jumpScriptId = (scriptActions.get()->*actionFunction)(action->Args, resumeStateStruct, currentEntityId);
+      jumpScriptId = (scriptActions.get()->*actionFunction)(action->Args, resumeState, currentEntityId);
 
       //check for loadMap:
       if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
-      //non-blocking action check is based on whether resumeStateStruct->totalLoopsToNextAction is set:
-      if (resumeStateStruct->totalLoopsToNextAction != 0)
+      //non-blocking action check is based on whether resumeState.totalLoopsToNextAction is set:
+      if (resumeState.totalLoopsToNextAction != 0)
       {
          //if this value is not 0, we need to stop the action now and return later when the countdown is complete:
-         //note that resumeStateStruct->actionOffset is set to the NB action's offset since we are using it as an index
+         //note that resumeState.actionOffset is set to the NB action's offset since we are using it as an index
          //on the next loop, it should call the same action again. It is up to the action handler function to decide
-         //how to complete its action and track how much time is left using the resumeStateStruct's values.
+         //how to complete its action and track how much time is left using the resumeState's values.
          return;
       }
 
@@ -82,10 +82,9 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
       {
          //If we have a new jumpScriptId, we want to re-init the resumeState
          //to run the new jumpScriptId from the beginning:
-         //immediately end action processing and return if a jumpScriptId value was set:
-         *resumeStateStruct = MageScriptState{ jumpScriptId.value(), true, resumeStateStruct->isGlobalExecutionScope };
+         resumeState = MageScriptState{ jumpScriptId.value(), true, resumeState.isGlobalExecutionScope };
 
-         if (!resumeStateStruct->isGlobalExecutionScope)
+         if (!resumeState.isGlobalExecutionScope)
          {
             if (currentEntityId == MAGE_MAP_ENTITY)
             {
@@ -114,6 +113,9 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
                }
             }
          }
+
+         //immediately end action processing and return if a jumpScriptId value was set:
+         return;
       }
    }
 
@@ -121,30 +123,28 @@ void MageScriptControl::processActionQueue(MageScriptState* resumeStateStruct, M
    if (jumpScriptId == MAGE_NO_SCRIPT)
    {
       //we can now set resumeState.scriptIsRunning to false and end processing the script:
-      resumeStateStruct->scriptIsRunning = false;
+      resumeState.scriptIsRunning = false;
    }
 }
 
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
 {
-   MageScriptState* resumeState = &resumeStates.mapLoad;
-   //the load script is still running and the resumeStateStruct controls all further actions:
-   if (resumeState->scriptIsRunning)
+   //the load script is still running and the resumeState controls all further actions:
+   if (resumeStates.mapLoad.scriptIsRunning)
    {
       //if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
       //resumeState struct, so we will proceed with the remaining info in the struct as-is.
       //the currentScriptId is contained within the *ResumeState struct so we can call actions:
       //now that the *ResumeState struct is correctly configured, process the script:
-      processScript(resumeState, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
+      processScript(resumeStates.mapLoad, MAGE_MAP_ENTITY, MageScriptType::ON_LOAD);
    }
 }
 
 void MageScriptControl::handleMapOnTickScript()
 {
-   MageScriptState* resumeState = &resumeStates.mapTick;
    uint16_t onTickScriptId = mapControl->GetOnTick();
    //get a bool to show if a script is already running:
-   bool scriptIsRunning = resumeState->scriptIsRunning;
+   bool scriptIsRunning = resumeStates.mapTick.scriptIsRunning;
    //if a script isn't already running and you're in hex editor state, don't start any new scripts:
    if (hexEditor->isHexEditorOn() && !scriptIsRunning)
    {
@@ -153,12 +153,12 @@ void MageScriptControl::handleMapOnTickScript()
    //if a script isn't already running, OR
    //if the resumeState script Id doesn't match the *ResumeState,
    //re-initialize the *ResumeState struct from the currentScriptId
-   else if (!scriptIsRunning || resumeState->currentScriptId != onTickScriptId)
+   else if (!scriptIsRunning || resumeStates.mapTick.currentScriptId != onTickScriptId)
    {
       //populate the MageScriptState struct with appropriate init data
-      *resumeState = MageScriptState{ onTickScriptId, true };
+      resumeStates.mapTick = MageScriptState{ onTickScriptId, true };
    }
-   //otherwise, a script is running and the resumeStateStruct controls all further actions:
+   //otherwise, a script is running and the resumeState controls all further actions:
    else
    {
       //if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
@@ -167,14 +167,14 @@ void MageScriptControl::handleMapOnTickScript()
    }
    //set the current entity to the map entity value.
    currentEntityId = MAGE_MAP_ENTITY;
-   //now that the *ResumeState struct is correctly configured, process the script:
-   processScript(resumeState, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
+   //now that the struct is correctly configured, process the script:
+   processScript(resumeStates.mapTick, MAGE_MAP_ENTITY, MageScriptType::ON_TICK);
 }
 
-void MageScriptControl::handleCommandScript(MageScriptState* resumeState)
+void MageScriptControl::handleCommandScript(MageScriptState& resumeState)
 {
    //this checks to see if the command script should be running:
-   if (resumeState->scriptIsRunning)
+   if (resumeState.scriptIsRunning)
    {
       //now that the *ResumeState struct is correctly configured, process the script:
       processScript(resumeState, MAGE_MAP_ENTITY, MageScriptType::ON_COMMAND);
@@ -186,12 +186,12 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t entityId)
    currentEntityId = entityId;
 
    // Get a pointer to the script state 
-   auto scriptState = &entityTickResumeStates[currentEntityId];
+   auto& scriptState = entityTickResumeStates[currentEntityId];
    // convert the entity's local ScriptId to the global context:
    uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId)->onTickScriptId;
 
    // when there isn't a script running, figure out what to do
-   if (!scriptState->scriptIsRunning)
+   if (!scriptState.scriptIsRunning)
    {
       // don't change anything when hex editor is on
       if (hexEditor->isHexEditorOn())
@@ -199,9 +199,9 @@ void MageScriptControl::handleEntityOnTickScript(uint8_t entityId)
          return;
       }
       // update the script state to match the current script upon change
-      else if (scriptState->currentScriptId != mapLocalScriptId)
+      else if (scriptState.currentScriptId != mapLocalScriptId)
       {
-         *scriptState = MageScriptState{ mapLocalScriptId, true };
+         scriptState = MageScriptState{ mapLocalScriptId, true };
       }
    }
 
@@ -212,18 +212,18 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 {
    currentEntityId = filteredEntityId;
 
-   MageScriptState* scriptState = &entityInteractResumeStates[currentEntityId];
+   auto& scriptState = entityInteractResumeStates[currentEntityId];
    uint16_t mapLocalScriptId = mapControl->getEntity(currentEntityId)->onInteractScriptId;
    //if a script is not currently running, do nothing.
-   if (!scriptState->scriptIsRunning)
+   if (!scriptState.scriptIsRunning)
    {
       return;
    }
    //if the entity currentScriptId doesn't match what is in the entityInteractResumeStates[currentEntityId] struct, re-init it
    //with .scriptIsRunning set to false to stop all current actions.
-   else if (scriptState->currentScriptId != mapLocalScriptId)
+   else if (scriptState.currentScriptId != mapLocalScriptId)
    {
-      *scriptState = MageScriptState{ mapLocalScriptId, false };
+      scriptState = MageScriptState{ mapLocalScriptId, false };
       return;
    }
    else
@@ -249,11 +249,11 @@ void MageScriptControl::tickScripts()
    //the map's onTick script will run every tick, restarting from the beginning as it completes
    handleMapOnTickScript();
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
-   handleCommandScript(&resumeStates.commandLook);
+   handleCommandScript(resumeStates.commandLook);
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
    for (uint8_t i = 0; i < COMMAND_STATES_COUNT; i++)
    {
-      handleCommandScript(commandStates[i]);
+      handleCommandScript(*commandStates[i]);
       if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
    }
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)

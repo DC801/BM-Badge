@@ -19,6 +19,13 @@ in a more accessible way.
 
 struct GoDirection
 {
+   GoDirection() noexcept = default;
+   GoDirection(uint32_t& address)
+   {
+      ROM()->Read(name, address, MAP_GO_DIRECTION_NAME_LENGTH);
+      ROM()->Read(mapLocalScriptId, address);
+      ROM()->Read(padding, address);
+   }
    char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
    uint16_t mapLocalScriptId{ 0 };
    uint16_t padding{ 0 };
@@ -36,13 +43,18 @@ struct MapData
    uint16_t onLoad{ 0 };
    uint16_t onTick{ 0 };
    uint16_t onLook{ 0 };
+   uint8_t layerCount{ 0 };
    uint8_t playerEntityIndex{ 0 };
-   std::vector<uint16_t> entityGlobalIds{};
-   std::vector<uint16_t> geometryGlobalIds{};
-   std::vector<uint16_t> scriptGlobalIds{};
-   std::vector<GoDirection> goDirections{};
-   std::vector<uint32_t> layerAddresses{};
-   std::vector<MageEntity> entities{};
+   uint16_t entityCount{ 0 };
+   uint16_t geometryCount{ 0 };
+   uint16_t scriptCount{ 0 };
+   uint8_t goDirectionsCount{ 0 };
+   std::unique_ptr<uint16_t[]> entityGlobalIds;
+   std::unique_ptr<uint16_t[]> geometryGlobalIds;
+   std::unique_ptr<uint16_t[]> scriptGlobalIds;
+   std::unique_ptr<GoDirection[]> goDirections;
+   std::unique_ptr<uint32_t[]> layerAddresses;
+   std::unique_ptr<MageEntity[]> entities;
 };
 
 struct MageMapTile
@@ -64,7 +76,7 @@ public:
       tileManager(tileManager)
    { }
 
-   uint8_t* GetEntityDataPointer() { return (uint8_t*) currentMap->entities.data(); }
+   uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.get(); }
    void Load(uint16_t index, bool isCollisionDebugOn=false, bool isEntityDebugOn=false);
    void Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn=false) const;
    void DrawGeometry(const Point& cameraPosition) const;
@@ -74,7 +86,7 @@ public:
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
-      if (entityIndex >= currentMap->entities.size())
+      if (entityIndex >= currentMap->entityCount)
       {
          return NO_PLAYER;
       }
@@ -98,21 +110,21 @@ public:
    uint16_t TileHeight() const { return currentMap->tileHeight; }
    uint16_t Cols() const { return currentMap->cols; }
    uint16_t Rows() const { return currentMap->rows; }
-   uint8_t LayerCount() const { return currentMap->layerAddresses.size(); }
-   uint8_t FilteredEntityCount() const { return currentMap->entities.size(); }
-   uint16_t GeometryCount() const { return currentMap->geometryGlobalIds.size(); }
-   uint16_t ScriptCount() const { return currentMap->scriptGlobalIds.size(); }
+   uint8_t LayerCount() const { return currentMap->layerCount; }
+   uint8_t FilteredEntityCount() const { return currentMap->entityCount; }
+   uint16_t GeometryCount() const { return currentMap->geometryCount; }
+   uint16_t ScriptCount() const { return currentMap->scriptCount; }
 
    uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
    {
-      if (currentMap->entities.empty()) { return 0; }
-      return currentMap->entityGlobalIds[mapLocalEntityId % currentMap->entities.size()];
+      if (currentMap->entityCount == 0) { return 0; }
+      return currentMap->entityGlobalIds[mapLocalEntityId % currentMap->entityCount];
    }
 
    uint16_t getGlobalGeometryId(uint16_t mapLocalGeometryId) const
    {
-      if (currentMap->geometryGlobalIds.empty()) { return 0; }
-      return currentMap->geometryGlobalIds[mapLocalGeometryId % currentMap->geometryGlobalIds.size()];
+      if (currentMap->geometryCount == 0) { return 0; }
+      return currentMap->geometryGlobalIds[mapLocalGeometryId % currentMap->geometryCount];
    }
 
    const MageEntity* getPlayerEntity() const
@@ -122,7 +134,7 @@ public:
 
    MageEntity* getPlayerEntity()
    {
-      if (currentMap->entities.empty())
+      if (currentMap->entityCount == 0)
       {
          return nullptr;
       }
@@ -147,25 +159,25 @@ public:
 
    const MageEntity* getEntityByMapLocalId(uint16_t mapLocalId) const
    {
-      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
+      return &currentMap->entities[mapLocalId % currentMap->entityCount];
    }
 
    MageEntity* getEntityByMapLocalId(uint16_t mapLocalId)
    {
-      return &currentMap->entities[mapLocalId % currentMap->entities.size()];
+      return &currentMap->entities[mapLocalId % currentMap->entityCount];
    }
 
    uint32_t LayerAddress(uint16_t layerIndex) const
    {
-      if (currentMap->layerAddresses.empty()) { return 0; }
+      if (currentMap->layerCount) { return 0; }
 
-      return currentMap->layerAddresses[layerIndex % currentMap->layerAddresses.size()];
+      return currentMap->layerAddresses[layerIndex % currentMap->layerCount];
    }
 
    std::string getDirectionNames() const
    {
       std::string result = "";
-      for (auto i = 0; i < currentMap->goDirections.size(); i++)
+      for (auto i = 0; i < currentMap->goDirectionsCount; i++)
       {
          result += "\t";
          result += currentMap->goDirections[i].name;
@@ -175,7 +187,7 @@ public:
 
    uint16_t getDirectionScriptId(const std::string directionName) const
    {
-      for (auto i = 0; i < currentMap->goDirections.size(); i++)
+      for (auto i = 0; i < currentMap->goDirectionsCount; i++)
       {
          if (currentMap->goDirections[i].name == directionName)
          {

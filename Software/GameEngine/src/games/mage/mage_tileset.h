@@ -109,6 +109,13 @@ private:
 
 struct AnimationDirection
 {
+   AnimationDirection() noexcept = default;
+   AnimationDirection(uint32_t& address)
+   {
+      ROM()->Read(typeId, address);
+      ROM()->Read(type, address);
+      ROM()->Read(renderFlags, address);
+   }
    bool FlipX() const { return renderFlags & FLIPPED_HORIZONTALLY_FLAG; }
    bool FlipY() const { return renderFlags & FLIPPED_VERTICALLY_FLAG; }
    bool FlipDiag() const { return renderFlags & FLIPPED_DIAGONALLY_FLAG; }

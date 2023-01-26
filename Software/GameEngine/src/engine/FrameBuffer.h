@@ -366,7 +366,7 @@ public:
 	void blt(ButtonState button);
 
 private:
-	std::unique_ptr<EngineWindowFrame> windowFrame{};
+	std::unique_ptr<EngineWindowFrame> windowFrame{std::make_unique<EngineWindowFrame>()};
 
 	//variables used for screen fading
 	float fadeFraction{ 0.0f };

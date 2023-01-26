@@ -48,14 +48,14 @@ class Header
 {
 public:
    Header() noexcept = default;
-   Header(uint32_t count, uint32_t& offset) noexcept
-      : count(count), baseAddress(offset)
+   Header(uint32_t count, uint32_t& address) noexcept
+      : count(count), baseAddress(address)
    {
-      offset += 2 * sizeof(uint32_t) * count;
+      address += 2 * sizeof(uint32_t) * count;
    }
 
    uint32_t Count() const { return count; }
-   uint32_t Offset(uint32_t romDataAddress, uint16_t i) const
+   uint32_t address(uint32_t romDataAddress, uint16_t i) const
    {
       auto offsets = (const uint32_t*)(romDataAddress + baseAddress);
       return offsets[i % count];
@@ -130,7 +130,7 @@ struct MageSaveGame
 //the SD card.
 #define ENGINE_ROM_CRC32_LENGTH 4
 
-//this is the length of the scenario data from the 0 offset to the end
+//this is the length of the scenario data from the 0 address to the end
 #define ENGINE_ROM_GAME_LENGTH 4
 
 #define ENGINE_ROM_START_OF_CRC_OFFSET (ENGINE_ROM_IDENTIFIER_STRING_LENGTH + ENGINE_ROM_VERSION_NUMBER_LENGTH)
@@ -149,7 +149,7 @@ struct MageSaveGame
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
-//the failure offset which is a uint32_t and can include 0
+//the failure address which is a uint32_t and can include 0
 #define ENGINE_ROM_VERIFY_SUCCESS -1
 
 static const char* saveFileSlotNames[ENGINE_ROM_SAVE_GAME_SLOTS] = {
@@ -330,8 +330,8 @@ struct EngineROM
          ErrorUnplayable();
       }
 
-      uint32_t offset = ENGINE_ROM_MAGIC_HASH_LENGTH;
-      headers = headersFor<THeaders...>(offset);
+      uint32_t address = ENGINE_ROM_MAGIC_HASH_LENGTH;
+      headers = headersFor<THeaders...>(address);
    }
    ~EngineROM() = default;
 
@@ -355,7 +355,7 @@ struct EngineROM
    }
 
    template <typename T>
-   void Read(T& t, uint32_t& offset, size_t count = 1) const
+   void Read(T& t, uint32_t& address, size_t count = 1) const
    {
       static_assert(std::is_scalar<T>::value || std::is_standard_layout<T>::value, "T must be a scalar or standard-layout type");
       auto elementSize = sizeof(std::remove_pointer<T>::type);
@@ -364,29 +364,29 @@ struct EngineROM
       {
          dataLength = count;
       }
-      if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::Read: offset + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
       }
-      auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + offset;
+      auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + address;
       memcpy(&t, dataPointer, dataLength);
-      offset += dataLength;
+      address += dataLength;
    }
 
    template <typename T>
    uint32_t GetAddress(uint16_t index) const
    {
       auto&& header = getHeader<T>();
-      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index % header.Count());
-      return offset;
+      auto address = header.address((uint32_t)romDataInDesktopRam.get(), index % header.Count());
+      return address;
    }
 
    template <typename T>
-   const T* Get(uint16_t index) const
+   const T* GetReadPointerTo(uint16_t index) const
    {
-      auto offset = getHeader<T>().Offset((uint32_t)romDataInDesktopRam.get(), index);
+      auto address = getHeader<T>().address((uint32_t)romDataInDesktopRam.get(), index);
       
-      return reinterpret_cast<const T*>((uint32_t)romDataInDesktopRam.get() + offset);
+      return reinterpret_cast<const T*>((uint32_t)romDataInDesktopRam.get() + address);
    }
 
    template <typename TData>
@@ -395,10 +395,10 @@ struct EngineROM
    template <typename T>
    std::unique_ptr<T> GetUniqueCopy(uint16_t index) const
    {
-      auto&& header = getHeader<T>();
-      auto offset = header.Offset((uint32_t)romDataInDesktopRam.get(), index);
-      static_assert(std::is_constructible_v<T, uint32_t&>, "Must have a constructor accepting a uint32_t& offset");
-      return std::make_unique<T>(offset);
+      static_assert(std::is_constructible_v<T, uint32_t&>, "Must have a constructor accepting a uint32_t& address");
+      auto address = getHeader<T>().address((uint32_t)romDataInDesktopRam.get(), index);
+
+      return std::make_unique<T>(address);
    }
 
    std::shared_ptr<MageSaveGame> GetCurrentSave() const
@@ -414,40 +414,43 @@ struct EngineROM
    }
 
    template <typename T>
-   void SetReadPointerToOffset(const T*& readPointer, uint32_t& offset, size_t count = 1) const
+   void SetReadPointerToOffset(const T*& readPointer, uint32_t& address, size_t count = 1) const
    {
       static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
       auto dataLength = count * sizeof(T);
-      if (offset + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::SetReadPointerToOffset: offset + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::SetReadPointerToOffset: address + length exceeds maximum dat file size" };
       }
-      readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + offset);
-      offset += dataLength;
+      readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + address);
+      address += dataLength;
    }
 
    template <typename T>
-   void InitializeCollectionOf(std::vector<T>& collection, uint32_t& offset, size_t count) const
+   void InitializeCollectionOf(std::vector<T>& v, uint32_t& address, size_t count) const
    {
-      collection.clear();
+      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_scalar_v<T>, "Must be constructible from an address or a trivially copyable type");
+      v.clear();
       for (auto i = 0; i < count; i++)
       {
-         if constexpr (std::is_trivially_copyable<T>::value)
+         if constexpr (std::is_scalar_v<T>)
          {
-            collection.push_back(T{ *(const T*)(romDataInDesktopRam.get() + offset) });
-            offset += sizeof(T);
+            T value = *(const T*)(romDataInDesktopRam.get() + address);
+            v.push_back(T{ value });
+            address += sizeof(T);
          }
          else
          {
-            collection.push_back(T{ offset });
+            auto value = T{ address };
+            v.push_back(value);
          }
       }
    }
 
-   bool Write(uint32_t offset, uint32_t length, uint8_t* data, const char* errorString);
+   bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
 
 
-   bool VerifyEqualsAtOffset(uint32_t offset, std::string value) const
+   bool VerifyEqualsAtOffset(uint32_t address, std::string value) const
    {
       if (value.empty())
       {
@@ -592,17 +595,17 @@ private:
    }
 
    template <typename T>
-   auto headerFor(uint32_t& offset) const
+   auto headerFor(uint32_t& address) const
    {
       uint32_t count;
-      Read(count, offset);
-      return Header<T>{count, offset};
+      Read(count, address);
+      return Header<T>{count, address};
    }
 
    template <typename... TRest>
-   auto headersFor(uint32_t& offset) const
+   auto headersFor(uint32_t& address) const
    {
-      return std::tuple<Header<TRest>...>{headerFor<TRest>(offset)...};
+      return std::tuple<Header<TRest>...>{headerFor<TRest>(address)...};
    }
 
 };

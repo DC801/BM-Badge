@@ -12,17 +12,17 @@
 #include "mage_hex.h"
 #include "utility.h"
 
-void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState* resumeStateStruct, MageEntity* entity, const MageGeometry* geometry)
+void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, MageEntity* entity, const MageGeometry* geometry)
 {
    auto entityCenterPoint = -entity->getRenderableData()->center - entity->location;
-   resumeStateStruct->pointA = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex);
-   resumeStateStruct->pointB = entityCenterPoint + geometry->GetPoint(resumeStateStruct->currentSegmentIndex + 1);
-   auto relativeDirection = resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB);
+   resumeState.pointA = entityCenterPoint + geometry->GetPoint(resumeState.currentSegmentIndex);
+   resumeState.pointB = entityCenterPoint + geometry->GetPoint(resumeState.currentSegmentIndex + 1);
+   auto relativeDirection = resumeState.pointA.getRelativeDirection(resumeState.pointB);
    entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
 }
 
 
-std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -38,7 +38,7 @@ std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* arg
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -66,7 +66,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -91,7 +91,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -116,7 +116,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -141,7 +141,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(c
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -166,7 +166,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -192,7 +192,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -224,7 +224,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -246,7 +246,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
-         auto tileset = ROM()->Get<MageTileset>(entity->primaryId);
+         auto tileset = ROM()->GetReadPointerTo<MageTileset>(entity->primaryId);
          sizeLimit = tileset->Tiles();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
@@ -258,7 +258,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -284,7 +284,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(c
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -309,7 +309,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -334,7 +334,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(con
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -359,7 +359,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -384,7 +384,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const ui
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -409,7 +409,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -434,7 +434,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -459,7 +459,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -484,7 +484,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -509,7 +509,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -534,7 +534,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -559,7 +559,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -584,7 +584,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -608,7 +608,7 @@ std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -623,7 +623,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
 
       bool colliding = geometry->isPointInGeometry(entity->getRenderableData()->center);
       if (colliding == (bool)argStruct->expectedBoolValue)
@@ -634,7 +634,7 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -655,7 +655,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_press(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -675,7 +675,7 @@ std::optional<uint16_t> MageScriptActions::action_check_for_button_state(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -696,7 +696,7 @@ std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -712,7 +712,7 @@ std::optional<uint16_t> MageScriptActions::action_run_script(const uint8_t* args
    return argStruct->scriptId;
 }
 
-std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -725,16 +725,16 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
    argStruct->duration = argStruct->duration;
 
    //If there's already a total number of loops to next action set, a delay is currently in progress:
-   if (resumeStateStruct->totalLoopsToNextAction != 0)
+   if (resumeState.totalLoopsToNextAction != 0)
    {
       //decrement the number of loops to the end of the delay:
-      resumeStateStruct->loopsToNextAction--;
+      resumeState.loopsToNextAction--;
       //if we've reached the end:
-      if (resumeStateStruct->loopsToNextAction <= 0)
+      if (resumeState.loopsToNextAction <= 0)
       {
          //reset the variables and return, the delay is complete.
-         resumeStateStruct->totalLoopsToNextAction = 0;
-         resumeStateStruct->loopsToNextAction = 0;
+         resumeState.totalLoopsToNextAction = 0;
+         resumeState.loopsToNextAction = 0;
          return std::nullopt;
       }
    }
@@ -748,14 +748,14 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
       {
          inputHandler->blockingDelayTime = argStruct->duration;
       }
-      //now set the resumeStateStruct variables:
-      resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-      resumeStateStruct->loopsToNextAction = totalDelayLoops;
+      //now set the resumeState variables:
+      resumeState.totalLoopsToNextAction = totalDelayLoops;
+      resumeState.loopsToNextAction = totalDelayLoops;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -767,13 +767,11 @@ std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8
    auto argStruct = (ActionNonBlockingDelay*)args;
    argStruct->duration = argStruct->duration;
 
-   manageProgressOfAction(
-      resumeStateStruct,
-      argStruct->duration);
+   manageProgressOfAction(resumeState, argStruct->duration);
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -812,7 +810,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -834,7 +832,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* ar
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -856,7 +854,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* ar
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -873,7 +871,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(con
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -891,7 +889,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -914,7 +912,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -936,7 +934,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const ui
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -958,7 +956,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -981,7 +979,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(con
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1008,7 +1006,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(c
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1033,7 +1031,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1057,7 +1055,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uin
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1081,7 +1079,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_entity(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1112,7 +1110,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1129,7 +1127,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->Get<MageGeometry>(argStruct->targetGeometryId);
+      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->targetGeometryId);
       auto relativeDirection = entity->getRenderableData()->center.getRelativeDirection(geometry->GetPoint(0));
       entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
       entity->updateRenderableData();
@@ -1137,7 +1135,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1163,7 +1161,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1186,7 +1184,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1209,7 +1207,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1232,7 +1230,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1255,7 +1253,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1277,7 +1275,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1299,7 +1297,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1320,7 +1318,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1342,7 +1340,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1372,7 +1370,7 @@ std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* a
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1389,7 +1387,7 @@ std::optional<uint16_t> MageScriptActions::action_set_player_control(const uint8
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1406,7 +1404,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_tick_script(const uint
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1423,7 +1421,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_cursor_location(const 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1441,7 +1439,7 @@ std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1462,7 +1460,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_state(const uin
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1483,7 +1481,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_dialog_mode(con
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1500,7 +1498,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboard(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1517,7 +1515,7 @@ std::optional<uint16_t> MageScriptActions::action_set_hex_editor_control_clipboa
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1533,7 +1531,7 @@ std::optional<uint16_t> MageScriptActions::action_load_map(const uint8_t* args, 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1546,21 +1544,21 @@ std::optional<uint16_t> MageScriptActions::action_show_dialog(const uint8_t* arg
    } ActionShowDialog;
    auto argStruct = (ActionShowDialog*)args;
 
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->load(argStruct->dialogId, entityId);
-      resumeStateStruct->totalLoopsToNextAction = 1;
+      resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
    {
       // will be 0 any time there is no response; no jump
-      resumeStateStruct->totalLoopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1579,23 +1577,23 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      if (resumeStateStruct->totalLoopsToNextAction == 0)
+      if (resumeState.totalLoopsToNextAction == 0)
       {
-         resumeStateStruct->totalLoopsToNextAction = argStruct->playCount;
-         resumeStateStruct->loopsToNextAction = argStruct->playCount;
+         resumeState.totalLoopsToNextAction = argStruct->playCount;
+         resumeState.loopsToNextAction = argStruct->playCount;
          entity->currentAnimation = argStruct->animationId;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
          entity->updateRenderableData();
       }
-      else if (entity->currentFrameIndex == 0 && resumeStateStruct->currentSegmentIndex == renderable->frameCount - 1)
+      else if (entity->currentFrameIndex == 0 && resumeState.currentSegmentIndex == renderable->frameCount - 1)
       {
          // we just reset to 0
          // the previously rendered frame was the last in the animation
-         resumeStateStruct->loopsToNextAction--;
-         if (resumeStateStruct->loopsToNextAction == 0)
+         resumeState.loopsToNextAction--;
+         if (resumeState.loopsToNextAction == 0)
          {
-            resumeStateStruct->totalLoopsToNextAction = 0;
+            resumeState.totalLoopsToNextAction = 0;
             entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
             entity->currentFrameIndex = 0;
             renderable->currentFrameTicks = 0;
@@ -1604,12 +1602,12 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
       }
       // this is just a quick and dirty place to hold on to
       // the last frame that was rendered for this entity
-      resumeStateStruct->currentSegmentIndex = entity->currentFrameIndex;
+      resumeState.currentSegmentIndex = entity->currentFrameIndex;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1636,7 +1634,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1651,34 +1649,34 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
 
-      if (resumeStateStruct->totalLoopsToNextAction == 0)
+      if (resumeState.totalLoopsToNextAction == 0)
       {
          //this is the points we're interpolating between
-         resumeStateStruct->pointA = entity->location;
-         resumeStateStruct->pointB = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
-         entity->renderFlags.updateDirectionAndPreserveFlags(resumeStateStruct->pointA.getRelativeDirection(resumeStateStruct->pointB));
+         resumeState.pointA = entity->location;
+         resumeState.pointB = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
+         entity->renderFlags.updateDirectionAndPreserveFlags(resumeState.pointA.getRelativeDirection(resumeState.pointB));
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
       }
-      float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
-      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
+      float progress = manageProgressOfAction(resumeState, argStruct->duration);
+      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
       entity->SetLocation(betweenPoint);
       if (progress >= 1.0f)
       {
          entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
-         resumeStateStruct->totalLoopsToNextAction = 0;
+         resumeState.totalLoopsToNextAction = 0;
       }
       entity->updateRenderableData();
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1693,58 +1691,58 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    if (entityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
       {
-         resumeStateStruct->totalLoopsToNextAction = 1;
+         resumeState.totalLoopsToNextAction = 1;
          auto offsetPoint = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
          entity->SetLocation(offsetPoint);
          entity->updateRenderableData();
          return std::nullopt;
       }
       // and for everything else...
-      if (resumeStateStruct->totalLoopsToNextAction == 0)
+      if (resumeState.totalLoopsToNextAction == 0)
       {
          uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-         //now set the resumeStateStruct variables:
-         resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-         resumeStateStruct->loopsToNextAction = totalDelayLoops;
-         resumeStateStruct->length = geometry->GetPathLength();
-         initializeEntityGeometryPath(resumeStateStruct, entity->getRenderableData(), entity, geometry);
+         //now set the resumeState variables:
+         resumeState.totalLoopsToNextAction = totalDelayLoops;
+         resumeState.loopsToNextAction = totalDelayLoops;
+         resumeState.length = geometry->GetPathLength();
+         initializeEntityGeometryPath(resumeState, entity->getRenderableData(), entity, geometry);
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          entity->getRenderableData()->currentFrameTicks = 0;
       }
-      resumeStateStruct->loopsToNextAction--;
+      resumeState.loopsToNextAction--;
 
-      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
-      float totalProgress = getProgressOfAction(resumeStateStruct);
-      float currentProgressLength = resumeStateStruct->length * totalProgress;
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+      float totalProgress = getProgressOfAction(resumeState);
+      float currentProgressLength = resumeState.length * totalProgress;
       float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-      float lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
-      float progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+      float lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
 
       if (progressBetweenPoints > 1)
       {
-         resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
-         resumeStateStruct->currentSegmentIndex++;
-         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
+         resumeState.lengthOfPreviousSegments += currentSegmentLength;
+         resumeState.currentSegmentIndex++;
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
          currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-         lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
-         progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+         lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
 
-         setResumeStatePointsAndEntityDirection(resumeStateStruct, entity, geometry);
+         setResumeStatePointsAndEntityDirection(resumeState, entity, geometry);
       }
 
-      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
+      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progressBetweenPoints);
       entity->SetLocation(betweenPoint);
-      if (resumeStateStruct->loopsToNextAction == 0)
+      if (resumeState.loopsToNextAction == 0)
       {
-         resumeStateStruct->totalLoopsToNextAction = 0;
+         resumeState.totalLoopsToNextAction = 0;
          entity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          entity->getRenderableData()->currentFrameTicks = 0;
@@ -1753,7 +1751,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    }
    return std::nullopt;
 }
-std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1769,69 +1767,69 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
    {
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
       {
-         resumeStateStruct->totalLoopsToNextAction = 1;
+         resumeState.totalLoopsToNextAction = 1;
          entity->SetLocation(geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location);
          entity->updateRenderableData();
          return std::nullopt;
       }
 
       // and for everything else...
-      if (resumeStateStruct->totalLoopsToNextAction == 0)
+      if (resumeState.totalLoopsToNextAction == 0)
       {
          uint16_t totalDelayLoops = argStruct->duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-         //now set the resumeStateStruct variables:
-         resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-         resumeStateStruct->loopsToNextAction = totalDelayLoops;
-         resumeStateStruct->length = (geometry->GetTypeId() == MageGeometryType::Polyline)
+         //now set the resumeState variables:
+         resumeState.totalLoopsToNextAction = totalDelayLoops;
+         resumeState.loopsToNextAction = totalDelayLoops;
+         resumeState.length = (geometry->GetTypeId() == MageGeometryType::Polyline)
             ? geometry->GetPathLength() * 2
             : geometry->GetPathLength();
-         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+         initializeEntityGeometryPath(resumeState, renderable, entity, geometry);
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;
       }
 
-      if (resumeStateStruct->loopsToNextAction == 0)
+      if (resumeState.loopsToNextAction == 0)
       {
-         resumeStateStruct->loopsToNextAction = resumeStateStruct->totalLoopsToNextAction;
-         initializeEntityGeometryPath(resumeStateStruct, renderable, entity, geometry);
+         resumeState.loopsToNextAction = resumeState.totalLoopsToNextAction;
+         initializeEntityGeometryPath(resumeState, renderable, entity, geometry);
       }
-      resumeStateStruct->loopsToNextAction--;
-      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
-      float totalProgress = getProgressOfAction(resumeStateStruct);
-      float currentProgressLength = resumeStateStruct->length * totalProgress;
+      resumeState.loopsToNextAction--;
+      uint16_t sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
+      float totalProgress = getProgressOfAction(resumeState);
+      float currentProgressLength = resumeState.length * totalProgress;
       float currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-      float lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
-      float progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-         / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+      float lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
+      float progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
+         / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
 
       if (progressBetweenPoints > 1.0f)
       {
-         resumeStateStruct->lengthOfPreviousSegments += currentSegmentLength;
-         resumeStateStruct->currentSegmentIndex++;
+         resumeState.lengthOfPreviousSegments += currentSegmentLength;
+         resumeState.currentSegmentIndex++;
 
-         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeStateStruct->currentSegmentIndex);
+         sanitizedCurrentSegmentIndex = geometry->GetLoopableGeometrySegmentIndex(resumeState.currentSegmentIndex);
 
          currentSegmentLength = geometry->GetSegmentLength(sanitizedCurrentSegmentIndex);
-         lengthAtEndOfCurrentSegment = resumeStateStruct->lengthOfPreviousSegments + currentSegmentLength;
-         progressBetweenPoints = (currentProgressLength - resumeStateStruct->lengthOfPreviousSegments)
-            / (lengthAtEndOfCurrentSegment - resumeStateStruct->lengthOfPreviousSegments);
+         lengthAtEndOfCurrentSegment = resumeState.lengthOfPreviousSegments + currentSegmentLength;
+         progressBetweenPoints = (currentProgressLength - resumeState.lengthOfPreviousSegments)
+            / (lengthAtEndOfCurrentSegment - resumeState.lengthOfPreviousSegments);
 
-         setResumeStatePointsAndEntityDirection(resumeStateStruct, entity, geometry);
+         setResumeStatePointsAndEntityDirection(resumeState, entity, geometry);
       }
-      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progressBetweenPoints);
+      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progressBetweenPoints);
       entity->SetLocation(betweenPoint);
       entity->updateRenderableData();
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1849,7 +1847,7 @@ std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1871,7 +1869,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1889,17 +1887,17 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
       const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
       auto renderable = entity->getRenderableData();
 
-      if (resumeStateStruct->totalLoopsToNextAction == 0)
+      if (resumeState.totalLoopsToNextAction == 0)
       {
          camera.followEntityId = NO_PLAYER;
          //this is the points we're interpolating between
-         resumeStateStruct->pointA = Point{ camera.position.x, camera.position.y };
+         resumeState.pointA = Point{ camera.position.x, camera.position.y };
       }
-      float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
+      float progress = manageProgressOfAction(resumeState, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
-      resumeStateStruct->pointB = { uint16_t(renderable->center.x - HALF_WIDTH), uint16_t(renderable->center.y - HALF_HEIGHT) };
-      Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
+      resumeState.pointB = { uint16_t(renderable->center.x - HALF_WIDTH), uint16_t(renderable->center.y - HALF_HEIGHT) };
+      Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
       camera.position.x = betweenPoint.x;
       camera.position.y = betweenPoint.y;
       if (progress >= 1.0f)
@@ -1911,7 +1909,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1923,31 +1921,31 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    argStruct->duration = argStruct->duration;
 
    const auto entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->Get<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
 
 
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       camera.followEntityId = NO_PLAYER;
       //this is the points we're interpolating between
-      resumeStateStruct->pointA = {
+      resumeState.pointA = {
          camera.position.x,
          camera.position.y,
       };
-      resumeStateStruct->pointB = {
+      resumeState.pointB = {
          uint16_t(geometry->GetPoint(0).x - HALF_WIDTH),
          uint16_t(geometry->GetPoint(0).y - HALF_HEIGHT),
       };
    }
-   float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
+   float progress = manageProgressOfAction(resumeState, argStruct->duration);
 
-   Point betweenPoint = resumeStateStruct->pointA.lerp(resumeStateStruct->pointB, progress);
+   Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
    camera.position.x = betweenPoint.x;
    camera.position.y = betweenPoint.y;
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1960,7 +1958,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(cons
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1973,7 +1971,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(con
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -1986,7 +1984,7 @@ std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t
    auto argStruct = (ActionSetScreenShake*)args;
 
    float progress = manageProgressOfAction(
-      resumeStateStruct,
+      resumeState,
       argStruct->duration);
 
    if (progress < 1.0)
@@ -2008,7 +2006,7 @@ std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t
    }
    return std::nullopt;
 }
-std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2020,13 +2018,13 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t*
    argStruct->duration = argStruct->duration;
    argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
-   float progress = manageProgressOfAction(resumeStateStruct, argStruct->duration);
+   float progress = manageProgressOfAction(resumeState, argStruct->duration);
 
    frameBuffer->SetFade(argStruct->color, progress);
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2038,14 +2036,14 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* 
    argStruct->duration = argStruct->duration;
    argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
    float progress = manageProgressOfAction(
-      resumeStateStruct,
+      resumeState,
       argStruct->duration);
 
    frameBuffer->SetFade(argStruct->color, 1.0f - progress);
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2094,7 +2092,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2115,7 +2113,7 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2182,7 +2180,7 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2203,7 +2201,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2230,7 +2228,7 @@ std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2252,7 +2250,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    // their board to get out of that dialog lock. Better to protect the player
    // with an annoying confirm dialog than allowing them to quietly burn through
    // the ROM chip's 10000 write cycles.
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       // do rom writes
       auto playerName = mapControl->getPlayerEntity()->name;
@@ -2277,16 +2275,16 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->StartModalDialog("Save complete.");
-      resumeStateStruct->totalLoopsToNextAction = 1;
+      resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
    {
-      resumeStateStruct->totalLoopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2301,21 +2299,21 @@ std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args,
    auto argStruct = (ActionSlotLoad*)args;
    auto currentSave = ROM()->GetCurrentSave();
    //delaying until next tick allows for displaying of an error message on read before resuming
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       ROM()->LoadSaveSlot(argStruct->slotIndex);
 
       mapControl->Load(currentSave->currentMapId);
-      resumeStateStruct->totalLoopsToNextAction = 1;
+      resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
    {
-      resumeStateStruct->totalLoopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2336,7 +2334,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
    // their board to get out of that dialog lock. Better to protect the player
    // with an annoying confirm dialog than allowing them to quietly burn through
    // the ROM chip's 10000 write cycles.
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       // TODO FIXME:
       // setCurrentSaveToFreshState();
@@ -2350,16 +2348,16 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       dialogControl->StartModalDialog("Save erased.");
-      resumeStateStruct->totalLoopsToNextAction = 1;
+      resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
    {
-      resumeStateStruct->totalLoopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2376,7 +2374,7 @@ std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(cons
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2389,22 +2387,22 @@ std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8
    } ActionShowSerialDialog;
    auto argStruct = (ActionShowSerialDialog*)args;
    ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       commandControl->showSerialDialog(argStruct->serialDialogId);
       if (commandControl->isInputTrapped)
       {
-         resumeStateStruct->totalLoopsToNextAction = 1;
+         resumeState.totalLoopsToNextAction = 1;
       }
    }
    else if (!commandControl->isInputTrapped)
    {
-      resumeStateStruct->totalLoopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
    }
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2421,7 +2419,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_get(const uint8_t* a
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2438,7 +2436,7 @@ std::optional<uint16_t> MageScriptActions::action_inventory_drop(const uint8_t* 
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2455,7 +2453,7 @@ std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t*
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2472,7 +2470,7 @@ std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2489,7 +2487,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const u
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2506,7 +2504,7 @@ std::optional<uint16_t> MageScriptActions::action_set_teleport_enabled(const uin
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2523,7 +2521,7 @@ std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args,
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2540,7 +2538,7 @@ std::optional<uint16_t> MageScriptActions::action_set_ble_flag(const uint8_t* ar
    return std::nullopt;
 }
 
-std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* args, MageScriptState* resumeStateStruct, uint8_t entityId)
+std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
    {
@@ -2558,48 +2556,48 @@ std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* 
 }
 
 float MageScriptActions::getProgressOfAction(
-   const MageScriptState* resumeStateStruct
+   const MageScriptState& resumeState
 )
 {
    return 1.0f - (
-      (float)resumeStateStruct->loopsToNextAction
-      / (float)resumeStateStruct->totalLoopsToNextAction);
+      (float)resumeState.loopsToNextAction
+      / (float)resumeState.totalLoopsToNextAction);
 }
 
 float MageScriptActions::manageProgressOfAction(
-   MageScriptState* resumeStateStruct,
+   MageScriptState& resumeState,
    uint32_t duration
 )
 {
-   resumeStateStruct->loopsToNextAction--;
-   if (resumeStateStruct->totalLoopsToNextAction == 0)
+   resumeState.loopsToNextAction--;
+   if (resumeState.totalLoopsToNextAction == 0)
    {
       uint16_t totalDelayLoops = duration / MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-      resumeStateStruct->totalLoopsToNextAction = totalDelayLoops;
-      resumeStateStruct->loopsToNextAction = totalDelayLoops;
+      resumeState.totalLoopsToNextAction = totalDelayLoops;
+      resumeState.loopsToNextAction = totalDelayLoops;
    }
    float result = 1.0f - (
-      (float)resumeStateStruct->loopsToNextAction
-      / (float)resumeStateStruct->totalLoopsToNextAction);
+      (float)resumeState.loopsToNextAction
+      / (float)resumeState.totalLoopsToNextAction);
    if (result >= 1.0f)
    {
-      resumeStateStruct->totalLoopsToNextAction = 0;
-      resumeStateStruct->loopsToNextAction = 0;
+      resumeState.totalLoopsToNextAction = 0;
+      resumeState.loopsToNextAction = 0;
    }
    return result;
 }
 
 void MageScriptActions::initializeEntityGeometryPath(
-   MageScriptState* resumeStateStruct,
+   MageScriptState& resumeState,
    RenderableData* renderable,
    MageEntity* entity,
    const MageGeometry* geometry
 )
 {
-   resumeStateStruct->lengthOfPreviousSegments = 0;
-   resumeStateStruct->currentSegmentIndex = 0;
+   resumeState.lengthOfPreviousSegments = 0;
+   resumeState.currentSegmentIndex = 0;
    setResumeStatePointsAndEntityDirection(
-      resumeStateStruct,
+      resumeState,
       entity,
       geometry);
 }

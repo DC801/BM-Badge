@@ -23,27 +23,6 @@ enum MageSerialCommands : uint8_t {
 	NUM_SERIAL_COMMANDS
 };
 
-enum MageSerialDialogResponseTypes : uint8_t {
-	RESPONSE_NONE = 0,
-	RESPONSE_ENTER_NUMBER = 1,
-	RESPONSE_ENTER_STRING = 2,
-	NUM_RESPONSE_TYPES
-} ;
-
-struct MageSerialDialog
-{
-	std::array<char, 32> name;
-   uint16_t stringId;
-	MageSerialDialogResponseTypes serialResponseType;
-	uint8_t responseCount;
-};
-
- struct MageSerialDialogResponse
- {
-	uint16_t stringId;
-	uint16_t scriptId;
-};
-
 class MageCommandControl {
 	public:
 		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<TileManager> tileManager, std::shared_ptr<MageScriptControl> scriptControl) noexcept
@@ -53,8 +32,6 @@ class MageCommandControl {
 		std::string commandResponseBuffer;
 		std::string serialDialogBuffer;
 		std::string postDialogBuffer;
-		const MageSerialDialog* serialDialog;
-		std::vector<MageSerialDialogResponse> serialDialogResponses{};
 		uint16_t connectSerialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		uint16_t serialDialogId = COMMAND_NO_CONNECT_DIALOG_ID;
 		MageSerialCommands lastCommandUsed = COMMAND_NONE;
@@ -71,6 +48,8 @@ private:
 	std::shared_ptr<TileManager> tileManager;
 	std::shared_ptr<MageScriptControl> scriptControl;
 	std::shared_ptr<StringLoader> stringLoader;
+
+	std::unique_ptr<MageSerialDialog> serialDialog;
 
 	void badAsciiLowerCase(std::string* data)
 	{
