@@ -357,20 +357,19 @@ struct EngineROM
    template <typename T>
    void Read(T& t, uint32_t& address, size_t count = 1) const
    {
-      static_assert(std::is_scalar<T>::value || std::is_standard_layout<T>::value, "T must be a scalar or standard-layout type");
-      auto elementSize = sizeof(std::remove_pointer<T>::type);
+      static_assert(std::is_scalar_v<T> || std::is_standard_layout_v<T>, "T must be a scalar or standard-layout type");
+      auto elementSize = sizeof(std::remove_all_extents_t<T>);
       auto dataLength = count * elementSize;
-      if constexpr (std::is_array<T>())
-      {
-         dataLength = count;
-      }
+
       if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
          throw std::runtime_error{ "EngineROM::Read: address + length exceeds maximum dat file size" };
       }
+
       auto dataPointer = (uint8_t*)romDataInDesktopRam.get() + address;
       memcpy(&t, dataPointer, dataLength);
       address += dataLength;
+      
    }
 
    template <typename T>

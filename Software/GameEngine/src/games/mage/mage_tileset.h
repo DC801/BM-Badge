@@ -40,27 +40,29 @@ class MageTileset
 {
 public:
    MageTileset() noexcept = default;
-   MageTileset(uint32_t& offset)
+   MageTileset(uint32_t& address)
    {
 #ifndef DC801_EMBEDDED
-      ROM()->Read(name, offset, TILESET_NAME_SIZE);
+      ROM()->Read(name, address, TILESET_NAME_SIZE);
 #else
-      offset += TILESET_NAME_SIZE;
+      address += TILESET_NAME_SIZE;
 #endif
 
-      ROM()->Read(imageId, offset);
-      ROM()->Read(imageWidth, offset);
-      ROM()->Read(imageHeight, offset);
-      ROM()->Read(tileWidth, offset);
-      ROM()->Read(tileHeight, offset);
-      ROM()->Read(cols, offset);
-      ROM()->Read(rows, offset);
-      offset += sizeof(uint16_t); // u2 padding before the geometry IDs
-      ROM()->SetReadPointerToOffset(globalGeometryIds, offset);
+      ROM()->Read(imageId, address);
+      ROM()->Read(imageWidth, address);
+      ROM()->Read(imageHeight, address);
+      ROM()->Read(tileWidth, address);
+      ROM()->Read(tileHeight, address);
+      ROM()->Read(cols, address);
+      ROM()->Read(rows, address);
+      address += sizeof(uint16_t); // u2 padding before the geometry IDs
+      globalGeometryIds = std::unique_ptr<uint16_t[]>{ new uint16_t[cols*rows] };
+      ROM()->Read(*globalGeometryIds.get(), address, cols * rows);
+
 
       if (!Valid())
       {
-         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset offset is: %d", offset);
+         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset address is: %d", address);
       }
    }
 
@@ -94,9 +96,7 @@ public:
 
 private:
 
-#ifndef DC801_EMBEDDED
    char name[TILESET_NAME_SIZE]{ 0 };
-#endif
    uint16_t imageId{ 0 };
    uint16_t imageWidth{ 0 };
    uint16_t imageHeight{ 0 };
@@ -104,7 +104,7 @@ private:
    uint16_t tileHeight{ 0 };
    uint16_t cols{ 0 };
    uint16_t rows{ 0 };
-   const uint16_t* globalGeometryIds{ nullptr };
+   std::unique_ptr<uint16_t[]> globalGeometryIds;
 }; //class MageTileset
 
 struct AnimationDirection
@@ -130,7 +130,7 @@ class MagePortrait
 public:
 
    MagePortrait() noexcept = default;
-   MagePortrait(uint32_t& offset);
+   MagePortrait(uint32_t& address);
 
    const AnimationDirection* getEmoteById(uint8_t emoteId) const
    {
@@ -151,7 +151,7 @@ public:
 
    void DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const;
 
-   void DrawTile(const MageTileset* const tile, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
+   void DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
 
 private:
    std::vector<MageColorPalette> colorPalettes;

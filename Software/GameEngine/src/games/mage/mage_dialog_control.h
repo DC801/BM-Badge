@@ -80,25 +80,28 @@ struct MageDialogScreen
       ROM()->Read(entityIndex, address);
       ROM()->Read(portraitIndex, address);
       ROM()->Read(emoteIndex, address);
-      messages = std::unique_ptr<uint16_t[]>{ new uint16_t[messageCount] };
-      responses = std::unique_ptr<MageDialogResponse[]>{ new MageDialogResponse[responseCount] };
+      auto messagesData = new uint16_t[messageCount];
+      auto responsesData = new MageDialogResponse[responseCount];
 
-      ROM()->Read(*messages.get(), address, messageCount);
-      ROM()->Read(*responses.get(), address, responseCount);
+      ROM()->Read(*messagesData, address, messageCount);
+      ROM()->Read(*responsesData, address, responseCount);
+
+      messages = std::unique_ptr<uint16_t[]>{ messagesData };
+      responses = std::unique_ptr<MageDialogResponse[]>{ responsesData };
    }
    // TODO: portraits, after we have some graphics for them
-   uint16_t nameStringIndex;
-   uint16_t borderTilesetIndex;
-   MageDialogScreenAlignment alignment;
-   uint8_t fontIndex;
-   uint8_t messageCount;
-   MageDialogResponseType responseType;
-   uint8_t responseCount;
-   uint8_t entityIndex;
-   uint8_t portraitIndex;
-   uint8_t emoteIndex;
-   std::unique_ptr<uint16_t[]> messages;
-   std::unique_ptr<MageDialogResponse[]> responses;
+   uint16_t nameStringIndex{ 0 };
+   uint16_t borderTilesetIndex{0};
+   MageDialogScreenAlignment alignment{0};
+   uint8_t fontIndex{0};
+   uint8_t messageCount{0};
+   MageDialogResponseType responseType{0};
+   uint8_t responseCount{0};
+   uint8_t entityIndex{0};
+   uint8_t portraitIndex{0};
+   uint8_t emoteIndex{0};
+   std::unique_ptr<uint16_t[]> messages{};
+   std::unique_ptr<MageDialogResponse[]> responses{};
 };
 
 
@@ -108,8 +111,11 @@ struct MageDialog
    {
       ROM()->Read(name, address, 32);
       ROM()->Read(ScreenCount, address);
-      auto screenData = new MageDialogScreen[ScreenCount]{};
-      ROM()->Read(*screenData, address, ScreenCount);
+      auto screenData = new MageDialogScreen[ScreenCount];
+      for (auto i = 0; i < ScreenCount; i++)
+      {
+         screenData[i] = MageDialogScreen{ address };
+      }
       screens = std::unique_ptr<MageDialogScreen[]>{ screenData };
    }
    char name[32];

@@ -104,7 +104,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       return;
    }
 
-   Point playerPoint = getPlayerEntity()->getRenderableData()->center;
+   Point playerPoint = getPlayerEntity().getRenderableData()->center;
 
    for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
    {
@@ -175,7 +175,7 @@ void MapControl::DrawGeometry(const Point& cameraPosition) const
    bool isColliding = false;
    if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      auto renderable = getPlayerEntity()->getRenderableData();
+      auto renderable = getPlayerEntity().getRenderableData();
       playerPosition = &renderable->center;
    }
 

@@ -68,6 +68,7 @@ public:
    }
 
    const Point& GetPoint(uint16_t i) const { return points[i % pointCount]; }
+   Point& GetPoint(uint16_t i) { return points[i % pointCount]; }
    uint16_t GetPointCount() const { return pointCount;  }
 
    MageGeometryType GetTypeId() const { return typeId; }

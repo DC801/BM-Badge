@@ -867,7 +867,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(con
    } ActionSetEntityInteractScript;
    auto argStruct = (ActionSetEntityInteractScript*)args;
    auto entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   mapControl->getEntity(entityIndex)->onInteractScriptId = argStruct->scriptId;
+   mapControl->getEntity(entityIndex).onInteractScriptId = argStruct->scriptId;
    return std::nullopt;
 }
 
@@ -885,7 +885,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    auto argStruct = (ActionSetEntityTickScript*)args;
 
    int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   mapControl->getEntity(entityIndex)->onTickScriptId = argStruct->scriptId;
+   mapControl->getEntity(entityIndex).onTickScriptId = argStruct->scriptId;
    return std::nullopt;
 }
 
@@ -2253,7 +2253,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    if (resumeState.totalLoopsToNextAction == 0)
    {
       // do rom writes
-      auto playerName = mapControl->getPlayerEntity()->name;
+      auto playerName = mapControl->getPlayerEntity().name;
       auto currentSave = ROM()->GetCurrentSave();
       for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
@@ -2341,7 +2341,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
 
       // do rom writes
       //copyNameToAndFromPlayerAndSave(true);
-      auto playerName = mapControl->getPlayerEntity()->name;
+      auto playerName = mapControl->getPlayerEntity().name;
       //memcpy(currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
       //ROM()->WriteSaveSlot(argStruct->slotIndex, &currentSave);
       ROM()->LoadSaveSlot(argStruct->slotIndex);

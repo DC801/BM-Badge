@@ -9,7 +9,7 @@ void MageCamera::applyEffects(uint32_t deltaTime)
    {
       auto followEntity = mapControl->getEntity(followEntityId);
       const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };
-      position = followEntity->getRenderableData()->center - midScreen;
+      position = followEntity.getRenderableData()->center - midScreen;
    }
 
    if (shaking)

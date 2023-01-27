@@ -39,7 +39,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    currentScreenIndex = 0;
    currentResponseIndex = 0;
    currentDialog = ROM()->GetUniqueCopy<MageDialog>(dialogId);
-   
+
    loadNextScreen();
 
    open = true;
@@ -145,8 +145,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
          x = offsetX + (i * tileWidth);
          y = offsetY + (j * tileHeight);
          tileId = getTileIdFromXY(i, j, box);
-
-         tileManager->DrawTile(currentFrameTileset, x, y, (uint8_t)0);
+         tileManager->DrawTile(currentFrameTileset, tileId, x, y);
       }
    }
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -184,9 +183,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
    {
       x = offsetX + tileWidth;
       y = offsetY + tileHeight;
-      auto tileset = ROM()->GetReadPointerTo<MageTileset>(currentPortraitRenderableData.tilesetId); 
       //mapControl->GetTile(currentPortraitRenderableData.tileId);
-      tileManager->DrawTile(tileset, x, y, currentPortraitRenderableData.renderFlags);
+      tileManager->DrawTile(&currentPortraitRenderableData, x, y);
    }
 }
 
@@ -235,31 +233,29 @@ uint8_t MageDialogControl::getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const
 void MageDialogControl::loadCurrentScreenPortrait()
 {
    currentPortraitId = currentScreen().portraitIndex;
-   if (currentScreen().entityIndex != NO_PLAYER)
+   // only try rendering when we have a portrait
+   if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
    {
-      auto currentEntity = mapControl->getEntity(currentScreen().entityIndex);
-      if (currentEntity)
+      if (currentScreen().entityIndex != NO_PLAYER)
       {
-         uint8_t sanitizedPrimaryType = currentEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+         auto currentEntity = mapControl->getEntity(currentScreen().entityIndex);
+         uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            currentPortraitId = ROM()->GetReadPointerTo<MageEntityType>(currentEntity->primaryId)->PortraitId();
+            currentPortraitId = ROM()->GetReadPointerTo<MageEntityType>(currentEntity.primaryId)->PortraitId();
          }
 
-         // only try rendering when we have a portrait
-         if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
+         auto portrait = ROM()->GetReadPointerTo<MagePortrait>(currentPortraitId);
+         auto animationDirection = portrait->getEmoteById(currentScreen().emoteIndex);
+         currentEntity.SetRenderDirection(animationDirection->renderFlags);
+         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.renderFlags & 0x80);
+         // if the portrait is on the right side of the screen, flip the portrait on the X axis
+         if (((uint8_t)currentScreen().alignment % 2))
          {
-            auto portrait = ROM()->GetReadPointerTo<MagePortrait>(currentPortraitId);
-            auto animationDirection = portrait->getEmoteById(currentScreen().emoteIndex);
-            currentEntity->SetRenderDirection(animationDirection->renderFlags);
-            currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity->renderFlags & 0x80);
-            // if the portrait is on the right side of the screen, flip the portrait on the X axis
-            if (((uint8_t)currentScreen().alignment % 2))
-            {
-               currentPortraitRenderableData.renderFlags ^= 0x04;
-            }
+            currentPortraitRenderableData.renderFlags ^= 0x04;
          }
       }
+
    }
 
 }

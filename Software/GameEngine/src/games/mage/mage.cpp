@@ -46,11 +46,11 @@ void MageGameEngine::handleEntityInteract(bool hack)
 
    auto playerEntity = mapControl->getPlayerEntity();
 
-   auto playerRenderableData = mapControl->getPlayerEntity()->getRenderableData();
+   auto playerRenderableData = mapControl->getPlayerEntity().getRenderableData();
    playerRenderableData->interactBox = playerRenderableData->hitBox;
 
    const uint8_t interactLength = 32;
-   auto direction = playerEntity->renderFlags & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = playerEntity.renderFlags & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
       playerRenderableData->interactBox.origin.y -= interactLength;
@@ -76,7 +76,7 @@ void MageGameEngine::handleEntityInteract(bool hack)
    {
       // reset all interact states first
       auto targetEntity = mapControl->getEntity(i);
-      auto targetRenderableData = targetEntity->getRenderableData();
+      auto targetRenderableData = targetEntity.getRenderableData();
       targetRenderableData->isInteracting = false;
 
       if (i != mapControl->getPlayerEntityIndex())
@@ -87,16 +87,16 @@ void MageGameEngine::handleEntityInteract(bool hack)
          if (colliding)
          {
             playerRenderableData->isInteracting = true;
-            mapControl->getEntity(i)->getRenderableData()->isInteracting = true;
+            mapControl->getEntity(i).getRenderableData()->isInteracting = true;
             isMoving = false;
             if (hack && playerHasHexEditorControl)
             {
                hexEditor->disableMovementUntilRJoyUpRelease();
                hexEditor->openToEntityByIndex(i);
             }
-            else if (!hack && targetEntity->onInteractScriptId)
+            else if (!hack && targetEntity.onInteractScriptId)
             {
-               scriptControl->SetEntityInteractResumeState(i, MageScriptState{ targetEntity->onInteractScriptId, true });
+               scriptControl->SetEntityInteractResumeState(i, MageScriptState{ targetEntity.onInteractScriptId, true });
             }
             break;
          }
@@ -117,7 +117,7 @@ void MageGameEngine::LoadMap(uint16_t index)
    //get the data for the map:
    mapControl->Load(index);
 
-   mapControl->getPlayerEntity()->SetName(ROM()->GetCurrentSave()->name);
+   mapControl->getPlayerEntity().SetName(ROM()->GetCurrentSave()->name);
 
    scriptControl->initializeScriptsOnMapLoad();
 
@@ -215,14 +215,14 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
    {
       auto playerEntity = mapControl->getPlayerEntity();
-      playerEntity->updateRenderableData();
+      playerEntity.updateRenderableData();
 
       //update renderable info before proceeding:
-      uint16_t playerEntityTypeId = playerEntity->primaryIdType % NUM_PRIMARY_ID_TYPES;
+      uint16_t playerEntityTypeId = playerEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
       auto entityType = hasEntityType ? ROM()->GetReadPointerTo<MageEntityType>(playerEntityTypeId) : nullptr;
-      uint8_t previousPlayerAnimation = playerEntity->currentAnimation;
-      bool playerIsActioning = playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
+      uint8_t previousPlayerAnimation = playerEntity.currentAnimation;
+      bool playerIsActioning = playerEntity.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
       isMoving = false;
 
@@ -237,14 +237,14 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       {
          //auto playerVelocity = playerVelocity;
          playerVelocity = { 0,0 };
-         auto& direction = playerEntity->renderFlags;
+         auto& direction = playerEntity.renderFlags;
          if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            playerEntity->renderFlags.updateDirectionAndPreserveFlags(direction);
+            playerEntity.renderFlags.updateDirectionAndPreserveFlags(direction);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
@@ -252,7 +252,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
             // which would glitch the player into geometry really bad, so... don't.
             if (dotProductOfVelocityAndPushback > 0)
             {
-               playerEntity->location += velocityAfterPushback;
+               playerEntity.location += velocityAfterPushback;
             }
          }
          if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Rjoy_right))
@@ -285,44 +285,44 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       if (playerIsActioning && hasEntityType
          && entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX)
       {
-         playerEntity->currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
+         playerEntity.currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
       }
       //Scenario 2 - show walk animation:
       else if (isMoving && hasEntityType
          && entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX)
       {
-         playerEntity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+         playerEntity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
       }
       //Scenario 3 - show idle animation:
       else if (playerHasControl)
       {
-         playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
       bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
-         && (playerEntity->currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (playerEntity->currentFrameIndex == (playerEntity->getRenderableData()->frameCount - 1))
-         && (playerEntity->getRenderableData()->currentFrameTicks + deltaTime >= (playerEntity->getRenderableData()->duration));
+         && (playerEntity.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
+         && (playerEntity.currentFrameIndex == (playerEntity.getRenderableData()->frameCount - 1))
+         && (playerEntity.getRenderableData()->currentFrameTicks + deltaTime >= (playerEntity.getRenderableData()->duration));
 
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
       {
-         playerEntity->currentFrameIndex = 0;
-         playerEntity->currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+         playerEntity.currentFrameIndex = 0;
+         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
 
       //if the animation changed since the start of this function, reset to the first frame and restart the timer:
-      if (previousPlayerAnimation != playerEntity->currentAnimation)
+      if (previousPlayerAnimation != playerEntity.currentAnimation)
       {
-         playerEntity->currentFrameIndex = 0;
-         playerEntity->getRenderableData()->currentFrameTicks = 0;
+         playerEntity.currentFrameIndex = 0;
+         playerEntity.getRenderableData()->currentFrameTicks = 0;
       }
 
       //What scenarios call for an extra renderableData update?
-      if (isMoving || (playerEntity->getRenderableData()->lastTilesetId != playerEntity->getRenderableData()->tilesetId))
+      if (isMoving || (playerEntity.getRenderableData()->lastTilesetId != playerEntity.getRenderableData()->tilesetId))
       {
-         playerEntity->updateRenderableData();
+         playerEntity.updateRenderableData();
       }
       if (!playerHasControl || !playerHasHexEditorControl)
       {
@@ -538,7 +538,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    auto mageCollisionSpokes = MageGeometry{ MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT };
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
-   auto playerRenderableData = mapControl->getPlayerEntity()->getRenderableData();
+   auto playerRenderableData = mapControl->getPlayerEntity().getRenderableData();
 
    auto playerRect = playerRenderableData->hitBox;
    int16_t abs_x = abs(playerVelocity.x);
@@ -573,7 +573,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
       maxSpokePushbackLengths[i] = -INFINITY;
       maxSpokePushbackVectors[i].x = 0;
       maxSpokePushbackVectors[i].y = 0;
-      auto spokePoint = mageCollisionSpokes.GetPoint(i);
+      auto& spokePoint = mageCollisionSpokes.GetPoint(i);
       float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
       spokePoint.x = cos(angle) * playerSpokeRadius + playerVelocity.x + playerPoint.x;
       spokePoint.y = sin(angle) * playerSpokeRadius + playerVelocity.y + playerPoint.y;
@@ -616,7 +616,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 
          currentTile.tileId -= 1;
 
-         auto tileset = ROM()->GetReadPointerTo<MageTileset>(currentTile.tilesetId);
+         auto tileset = ROM()->GetUniqueCopy<MageTileset>(currentTile.tilesetId);
 
          if (!tileset->Valid())
          {

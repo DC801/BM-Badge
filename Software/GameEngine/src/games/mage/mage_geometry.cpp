@@ -36,6 +36,7 @@ MageGeometry::MageGeometry(uint32_t& offset)
 }
 
 MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)
+   : pointCount(numPoints)
 {
    typeId = type;
    auto segmentCount = typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1;

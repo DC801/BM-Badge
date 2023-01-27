@@ -127,28 +127,24 @@ public:
       return currentMap->geometryGlobalIds[mapLocalGeometryId % currentMap->geometryCount];
    }
 
-   const MageEntity* getPlayerEntity() const
+   const MageEntity& getPlayerEntity() const
    {
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   MageEntity* getPlayerEntity()
+   MageEntity& getPlayerEntity()
    {
-      if (currentMap->entityCount == 0)
-      {
-         return nullptr;
-      }
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   const MageEntity* getEntity(uint16_t id) const
+   const MageEntity& getEntity(uint16_t id) const
    {
-      return &currentMap->entities[id];
+      return currentMap->entities[id];
    }
 
-   MageEntity* getEntity(uint16_t id)
+   MageEntity& getEntity(uint16_t id)
    {
-      return &currentMap->entities[id];
+      return currentMap->entities[id];
    }
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
