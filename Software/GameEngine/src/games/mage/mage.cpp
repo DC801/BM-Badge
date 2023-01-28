@@ -606,23 +606,20 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          }
          auto offset = layerAddress + (i * sizeof(MageMapTile));
 
-         auto currentTile = MageMapTile{};
-         ROM()->Read(currentTile, offset);
+         auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(offset);
 
-         if (currentTile.tileId == 0)
+         if (currentTile->tileId == 0)
          {
             continue;
          }
 
-         currentTile.tileId -= 1;
-
-         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile.tilesetId);
+         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
 
          if (!tileset->Valid())
          {
             continue;
          }
-         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile.tileId);
+         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
          if (geometryId)
          {
             for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
@@ -639,7 +636,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             geometryId--;
 
             auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId)
-               ->FlipByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
+               ->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
             Point offsetPoint = { uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
             bool isMageInGeometry = false;

@@ -39,73 +39,37 @@ struct RenderableData
 class MageTileset
 {
 public:
-   MageTileset() noexcept = default;
-   MageTileset(uint32_t& address)
-   {
-#ifndef DC801_EMBEDDED
-      ROM()->Read(name, address, TILESET_NAME_SIZE);
-#else
-      address += TILESET_NAME_SIZE;
-#endif
-
-      ROM()->Read(imageId, address);
-      ROM()->Read(imageWidth, address);
-      ROM()->Read(imageHeight, address);
-      ROM()->Read(tileWidth, address);
-      ROM()->Read(tileHeight, address);
-      ROM()->Read(cols, address);
-      ROM()->Read(rows, address);
-      address += sizeof(uint16_t); // u2 padding before the geometry IDs
-      globalGeometryIds = std::unique_ptr<uint16_t[]>{ new uint16_t[cols*rows] };
-      ROM()->Read(*globalGeometryIds.get(), address, cols * rows);
-
-
-      if (!Valid())
-      {
-         ENGINE_PANIC("Invalid Tileset detected!\n	Tileset address is: %d", address);
-      }
-   }
-
-   constexpr uint16_t ImageId() const { return imageId; }
-   constexpr uint16_t ImageWidth() const { return imageWidth; }
-   constexpr uint16_t ImageHeight() const { return imageHeight; }
-   constexpr uint16_t TileWidth() const { return tileWidth; }
-   constexpr uint16_t TileHeight() const { return tileHeight; }
-   constexpr uint16_t Cols() const { return cols; }
-   constexpr uint16_t Rows() const { return rows; }
-   constexpr uint16_t Tiles() const { return rows * cols; }
+   constexpr uint16_t TileCount() const { return Rows * Cols; }
 
    constexpr bool Valid() const
    {
-      return imageWidth >= 1
-         && imageHeight >= 1
-         && tileWidth >= 1
-         && tileHeight >= 1
-         && cols >= 1
-         && rows >= 1;
+      return   ImageWidth >= 1
+            && ImageHeight >= 1
+            && TileWidth >= 1
+            && TileHeight >= 1
+            && Cols >= 1
+            && Rows >= 1;
    }
 
    uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
    {
-      if (tileIndex >= cols * rows)
+      auto geometriesPtr = (&Rows + 2);
+      if (tileIndex >= Cols * Rows)
       {
-         return globalGeometryIds[0];
+         return geometriesPtr[0];
       }
-      return globalGeometryIds[tileIndex];
+      return geometriesPtr[tileIndex];
    }
 
-private:
-
-   char name[TILESET_NAME_SIZE]{ 0 };
-   uint16_t imageId{ 0 };
-   uint16_t imageWidth{ 0 };
-   uint16_t imageHeight{ 0 };
-   uint16_t tileWidth{ 0 };
-   uint16_t tileHeight{ 0 };
-   uint16_t cols{ 0 };
-   uint16_t rows{ 0 };
-   std::unique_ptr<uint16_t[]> globalGeometryIds;
-}; //class MageTileset
+   char     Name[TILESET_NAME_SIZE]{ 0 };
+   uint16_t ImageId{ 0 };
+   uint16_t ImageWidth{ 0 };
+   uint16_t ImageHeight{ 0 };
+   uint16_t TileWidth{ 0 };
+   uint16_t TileHeight{ 0 };
+   uint16_t Cols{ 0 };
+   uint16_t Rows{ 0 };
+}; 
 
 struct AnimationDirection
 {

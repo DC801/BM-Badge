@@ -158,8 +158,6 @@ public:
 
    uint32_t LayerAddress(uint16_t layerIndex) const
    {
-      if (currentMap->layerCount) { return 0; }
-
       return currentMap->layerAddresses[layerIndex % currentMap->layerCount];
    }
 

@@ -109,8 +109,8 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    }
 
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
-   uint16_t halfWidth = tileset->TileWidth() / 2;
-   uint16_t halfHeight = tileset->TileHeight() / 2;
+   uint16_t halfWidth = tileset->TileWidth / 2;
+   uint16_t halfHeight = tileset->TileHeight / 2;
 
    Point oldCenter = { renderableData.center.x, renderableData.center.y };
    // accounting for possible change in tile size due to hacking;
@@ -125,7 +125,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    renderableData.lastTilesetId = renderableData.tilesetId;
 
    renderableData.hitBox.origin.x = location.x + halfWidth / 2;
-   renderableData.hitBox.origin.y = location.y + halfHeight - tileset->TileHeight();
+   renderableData.hitBox.origin.y = location.y + halfHeight - tileset->TileHeight;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
    renderableData.center.x = renderableData.hitBox.origin.x + (renderableData.hitBox.w / 2);

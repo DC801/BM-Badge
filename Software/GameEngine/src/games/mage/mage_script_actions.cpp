@@ -247,7 +247,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
          auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(entity->primaryId);
-         sizeLimit = tileset->Tiles();
+         sizeLimit = tileset->TileCount();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)

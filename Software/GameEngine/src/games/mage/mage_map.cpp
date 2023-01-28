@@ -121,7 +121,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       if (currentTile->tileId == 0) { continue; }
 
       //currentTile.tileId -= 1;
-      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(address);
+      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
 
       tileManager->DrawTile(tileset, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
 
@@ -133,13 +133,13 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
             geometryId -= 1;
 
             auto geometryIn = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
-            auto geometry = geometryIn->FlipByFlags(currentTile->flags, tileset->TileWidth(), tileset->TileHeight());
+            auto geometry = geometryIn->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
             bool isMageInGeometry = false;
 
             if (currentMap->playerEntityIndex != NO_PLAYER
-               && playerPoint.x >= tileDrawPoint.x && playerPoint.x <= tileDrawPoint.x + tileset->TileWidth()
-               && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight())
+               && playerPoint.x >= tileDrawPoint.x && playerPoint.x <= tileDrawPoint.x + tileset->TileWidth
+               && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight)
             {
                auto offsetPoint = playerPoint - tileDrawPoint;
                isMageInGeometry = geometry.isPointInGeometry(offsetPoint);
