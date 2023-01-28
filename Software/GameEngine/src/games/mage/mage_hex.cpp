@@ -291,7 +291,7 @@ void MageHexEditor::renderHexHeader(const uint8_t* entityDataPointer)
    sprintf(headerString, "CurrentPage: %03u  CurrentByte: 0x%04X\n""TotalPages:  %03u  Entities: %05u  Mem: 0x%04X", 
       currentMemPage, hexCursorLocation, totalMemPages, mapControl->FilteredEntityCount(), memTotal);
 
-   auto hackableData = (uint8_t*)mapControl->currentMap->entities.get();
+   auto hackableData = (uint8_t*)mapControl->currentMap->entities.data();
    frameBuffer->printMessage(headerString, Monaco9, 0xffff, HEXED_BYTE_OFFSET_X, 0);
    auto stringPreview = std::string{ hackableData + hexCursorLocation,
                                      hackableData + hexCursorLocation + MAGE_ENTITY_NAME_LENGTH };
@@ -382,7 +382,7 @@ void MageHexEditor::renderHexEditor(uint8_t* entityDataPointer)
 
 void MageHexEditor::runHex(uint8_t value)
 {
-   uint8_t* currentByte = (((uint8_t*)mapControl->currentMap->entities.get()) + hexCursorLocation);
+   uint8_t* currentByte = (((uint8_t*)mapControl->currentMap->entities.data()) + hexCursorLocation);
    uint8_t changedValue = *currentByte;
    switch (currentOp)
    {

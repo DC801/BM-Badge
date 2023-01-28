@@ -4,24 +4,6 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-MageEntityType::MageEntityType(uint32_t& offset)
-{
-#ifndef DC801_EMBEDDED
-   ROM()->Read(name, offset, 32);
-#else
-   offset += 32; // skip over reading the name, no need to hold that in ram
-#endif
-
-   offset += sizeof(uint8_t) + sizeof(uint8_t); // paddingA + paddingB
-
-   ROM()->Read(portraitId, offset);
-
-   auto animationCount = uint16_t{ 0 };
-   ROM()->Read(animationCount, offset);
-
-   //ROM()->InitializeCollectionOf(animations, offset, animationCount);
-}
-
 MageEntity::MageEntity(uint32_t& offset)
 {
    ROM()->Read(name, offset, MAGE_ENTITY_NAME_LENGTH);
@@ -71,7 +53,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
             currentFrameIndex = 0;
          }
       }
-      auto animation = ROM()->GetReadPointerTo<MageAnimation>(primaryId);
+      auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(primaryId);
       renderableData.tilesetId = animation->TilesetId();
       renderableData.tileId = animation->TileId();
       renderableData.duration = animation->GetFrame(currentFrameIndex)->duration; //no need to check, it shouldn't cause a crash.
@@ -80,7 +62,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
-      auto entityType = ROM()->GetReadPointerTo<MageEntityType>(primaryId);
+      auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(primaryId);
 
       //If the entity has no animations defined, return default:
       if (entityType->AnimationCount() == 0)
@@ -97,10 +79,10 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       //create a animationDirection entity based on direction:
       auto dirValue = (MageEntityAnimationDirection)(renderFlags & RENDER_FLAGS_DIRECTION_MASK);
       const AnimationDirection* animationDirection =
-         dirValue == MageEntityAnimationDirection::NORTH ? animation->North()
-         : dirValue == MageEntityAnimationDirection::EAST ? animation->East()
-         : dirValue == MageEntityAnimationDirection::SOUTH ? animation->South()
-         : animation->West();
+         dirValue == MageEntityAnimationDirection::NORTH ? &animation->North
+         : dirValue == MageEntityAnimationDirection::EAST ? &animation->East
+         : dirValue == MageEntityAnimationDirection::SOUTH ? &animation->South
+         : &animation->West;
 
       //based on animationDirection->Type(), you can get two different outcomes:
       //Scenario A: Type is 0, TypeID is an animation ID:
@@ -108,7 +90,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       if (animationDirection->type == 0)
       {
          //TODO FIXME:
-         //auto animation = ROM()->GetReadPointerTo<MageAnimation>(animationDirection->TypeId());
+         //auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->TypeId());
          //MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
          //renderableData.tilesetId = animation->TilesetId();
          //renderableData.tileId = currentFrame.tileId;
@@ -127,7 +109,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       }
    }
 
-   auto tileset = ROM()->GetReadPointerTo<MageTileset>(renderableData.tilesetId);
+   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
    uint16_t halfWidth = tileset->TileWidth() / 2;
    uint16_t halfHeight = tileset->TileHeight() / 2;
 

@@ -21,49 +21,51 @@ struct Color_565
 {
    uint8_t r : 5;
    uint8_t g : 5;
-   uint8_t alpha : 1;
+   uint8_t a : 1;
    uint8_t b : 5;
 };
 #else
 struct Color_565
 {
+   Color_565(uint16_t color) noexcept 
+      : r((color & 0b0000000011111000) >> 3),
+        g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
+        b((color & 0b0001111100000000) >> 8),
+        a((color & 0b0010000000000000) >> 13)
+   {}
+
+   operator uint16_t() const { return r << 14 | g << 9 | a << 5 | b; }
    uint8_t b : 5;
-   uint8_t alpha : 1;
+   uint8_t a : 1;
    uint8_t g : 5;
    uint8_t r : 5;
 };
 #endif
 
-union ColorUnion
-{
-   uint16_t i;
-   Color_565 c;
-};
-
 class MageColorPalette
 {
 public:
    MageColorPalette() noexcept = default;
-   MageColorPalette(uint32_t& offset);
-   uint16_t colorAt(uint8_t colorIndex, uint16_t fadeColor, float fadeFraction = 0.0f) const
+   uint16_t colorAt(uint8_t colorIndex, uint16_t fadeColorValue, float fadeFraction = 0.0f) const
    {
-      auto sourceColor = ((const uint16_t*)&colorCount + 2)[colorIndex % colorCount];
+      auto colorData = (const uint16_t*)(&colorCount + 2);
+      auto sourceColor = colorData[colorIndex % colorCount];
+
+      auto color = Color_565{ sourceColor };
 
       if (fadeFraction >= 1.0f)
       {
-         return fadeColor;
+         return fadeColorValue;
       }
       else if (fadeFraction > 0.0f)
       {
-         auto fadeColorUnion = ColorUnion{ fadeColor };
-         auto colorUnion = ColorUnion{ sourceColor };
-         colorUnion.c.r = Util::lerp(colorUnion.c.r, fadeColorUnion.c.r, fadeFraction);
-         colorUnion.c.g = Util::lerp(colorUnion.c.g, fadeColorUnion.c.g, fadeFraction);
-         colorUnion.c.b = Util::lerp(colorUnion.c.b, fadeColorUnion.c.b, fadeFraction);
-         colorUnion.c.alpha = fadeFraction > 0.5f ? fadeColorUnion.c.alpha : colorUnion.c.alpha;
-         return colorUnion.i;
+         auto fadeColor = Color_565{ fadeColorValue };
+         color.r = Util::lerp(color.r, fadeColor.r, fadeFraction);
+         color.g = Util::lerp(color.g, fadeColor.g, fadeFraction);
+         color.b = Util::lerp(color.b, fadeColor.b, fadeFraction);
+         color.a = fadeFraction > 0.5f ? fadeColor.a : color.a;
       }
-      return sourceColor;
+      return color;
    }
 
 private:

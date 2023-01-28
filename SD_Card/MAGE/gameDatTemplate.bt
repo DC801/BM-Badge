@@ -267,9 +267,9 @@ typedef struct
         GoDirection goDirections[goDirectionCount];
     }
     if ((entityCount + geometryCount + scriptCount) % 2) { FSkip(2); }
-    struct MapLayer {
+    struct {
         MapTile tiles[rows*cols];
-    }mapLayers[layerCount]<optimize=false>;
+    } layers[layerCount]<optimize=false>;
 //    uchar filteredEntityCountOnThisMap;
 
 
@@ -381,7 +381,8 @@ typedef struct {
 typedef struct {
 BigEndian();
     uint16 r: 5;
-    uint16 g: 6;
+    uint16 g: 5;
+    uint16 a: 1;
     uint16 b: 5;
 LittleEndian();
 }image_color;
@@ -406,7 +407,7 @@ struct
     uint32 ScenarioDataCRC32;
     uint32 ScenarioDataLength;
 
-    struct Headers {
+    struct {
         MageHeader Map;
         MageHeader Tileset;
         MageHeader Animation;
@@ -424,66 +425,108 @@ struct
         MageHeader Image;
     } headers;
 
-    for (i = 0; i < this.headers.Map.count; i++) {
-        FSeek(this.headers.Map.offsets[i]);
-        MageMap maps();
-    }
+    struct {
+        for (i = 0; i < parentof(this).headers.Map.count; i++) {
+            FSeek(parentof(this).headers.Map.offsets[i]);
+            MageMap map();
+        }
+    } maps;
 
-    for (i = 0; i < this.headers.Tileset.count; i++) {
-        FSeek(this.headers.Tileset.offsets[i]);
-        TileSet tilesets();
-    }
+    struct {
+        for (i = 0; i < parentof(this).headers.Tileset.count; i++) {
+            FSeek(parentof(this).headers.Tileset.offsets[i]);
+            TileSet tileset();
+        }
+    } tilesets;
 
-    for (i = 0; i < this.headers.Animation.count; i++) {
-        FSeek(this.headers.Animation.offsets[i]);
-        AnimationData animations();
-    }
-    for (i = 0; i < this.headers.EntityType.count; i++) {
-        FSeek(this.headers.EntityType.offsets[i]);
-        entity_type entityTypes();
-    }
-    for (i = 0; i < this.headers.Entity.count; i++) {
-        FSeek(this.headers.Entity.offsets[i]);
-        entity entities();
-    }
-    for (i = 0; i < this.headers.Geometry.count; i++) {
-        FSeek(this.headers.Geometry.offsets[i]);
-        geometry geometries();
-    }
-    for (i = 0; i < this.headers.Script.count; i++) {
-        FSeek(this.headers.Script.offsets[i]);
-        script scripts();
-    }
-    for (i = 0; i < this.headers.Portrait.count; i++) {
-        FSeek(this.headers.Portrait.offsets[i]);
-        portrait portraits();
-    }
-    for (i = 0; i < this.headers.Dialog.count; i++) {
-        FSeek(this.headers.Dialog.offsets[i]);
-        dialog dialogs();
-    }
-    for (i = 0; i < this.headers.SerialDialog.count; i++) {
-        FSeek(this.headers.SerialDialog.offsets[i]);
-        serial_dialog serial_dialogs();
-    }
-    for (i = 0; i < this.headers.ColorPalette.count; i++) {
-        FSeek(this.headers.ColorPalette.offsets[i]);
-        image_color_palette color_palettes();
-    }
-    for (i = 0; i < this.headers.String.count; i++) {
-        FSeek(this.headers.String.offsets[i]);
-        struct{string value();} strings<read=(value)>;
-    }
-    for (i = 0; i < this.headers.SaveFlag.count; i++) {
-        FSeek(this.headers.SaveFlag.offsets[i]);
-        struct{string value();} saveFlags<read=(value)>;
-    }
-    for (i = 0; i < this.headers.Variable.count; i++) {
-        FSeek(this.headers.Variable.offsets[i]);
-        struct{string value();} variables<read=(value)>;
-    }
-    for (i = 0; i < this.headers.Image.count; i++) {
-        FSeek(this.headers.Image.offsets[i]);
-        image images(this.headers.Image.lengths[i]/2);
-    }
+    struct {
+        for (i = 0; i < parentof(this).headers.Animation.count; i++) {
+            FSeek(parentof(this).headers.Animation.offsets[i]);
+            AnimationData animation();
+        }
+    } animations;
+    
+    struct {
+        for (i = 0; i < parentof(this).headers.EntityType.count; i++) {
+            FSeek(parentof(this).headers.EntityType.offsets[i]);
+            entity_type entityType();
+        }
+    } entityTypes;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Entity.count; i++) {
+            FSeek(parentof(this).headers.Entity.offsets[i]);
+            entity e() <name="entity">;
+        }
+    } entities;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Geometry.count; i++) {
+            FSeek(parentof(this).headers.Geometry.offsets[i]);
+            geometry g() <name="geometry">;
+        }
+    } geometries;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Script.count; i++) {
+            FSeek(parentof(this).headers.Script.offsets[i]);
+            script s() <name="script">;
+        }
+    } scripts;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Portrait.count; i++) {
+            FSeek(parentof(this).headers.Portrait.offsets[i]);
+            portrait p() <name="portrait">;
+        }
+    } portraits;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Dialog.count; i++) {
+            FSeek(parentof(this).headers.Dialog.offsets[i]);
+            dialog d() <name="dialog">;
+        }
+    } dialogs;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.SerialDialog.count; i++) {
+            FSeek(parentof(this).headers.SerialDialog.offsets[i]);
+            serial_dialog serialDialog();
+        }
+    } serialDialogs;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.ColorPalette.count; i++) {
+            FSeek(parentof(this).headers.ColorPalette.offsets[i]);
+            image_color_palette colorPalette();
+        }
+    } colorPalettes;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.String.count; i++) {
+            FSeek(parentof(this).headers.String.offsets[i]);
+            struct{string value();} stringVal<read=(value)>;
+        }
+    } strings;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.SaveFlag.count; i++) {
+            FSeek(parentof(this).headers.SaveFlag.offsets[i]);
+            struct{string value();} saveFlag<read=(value)>;
+        }
+    } saveFlags;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Variable.count; i++) {
+            FSeek(parentof(this).headers.Variable.offsets[i]);
+            struct{string value();} variable<read=(value)>;
+        }
+    } variables;
+
+    struct {
+        for (i = 0; i < parentof(this).headers.Image.count; i++) {
+            FSeek(parentof(this).headers.Image.offsets[i]);
+            image img(parentof(this).headers.Image.lengths[i]/2) <name="image">;
+        }
+    } images;
 } ROM;

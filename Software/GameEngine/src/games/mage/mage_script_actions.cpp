@@ -50,8 +50,8 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_name(const uint8_
    } ActionCheckEntityName;
    auto argStruct = (ActionCheckEntityName*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
       auto entityName = mapControl->getEntityByMapLocalId(entityId)->name;
       auto romString = stringLoader->getString(argStruct->stringId, entityName);
@@ -78,10 +78,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_x(const uint8_t* 
    } ActionCheckEntityX;
    auto argStruct = (ActionCheckEntityX*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->location.x == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -103,10 +103,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_y(const uint8_t* 
    } ActionCheckEntityY;
    auto argStruct = (ActionCheckEntityY*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->location.y == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -128,10 +128,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_interact_script(c
    } ActionCheckEntityInteractScript;
    auto argStruct = (ActionCheckEntityInteractScript*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->onInteractScriptId == argStruct->expectedScript);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -153,10 +153,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_tick_script(const
    } ActionCheckEntityTickScript;
    auto argStruct = (ActionCheckEntityTickScript*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->onTickScriptId == argStruct->expectedScript);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -178,10 +178,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_type(const uint8_
    } ActionCheckEntityType;
    auto argStruct = (ActionCheckEntityType*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = entity->primaryId == argStruct->entityTypeId && entity->primaryIdType == ENTITY_TYPE;
 
       if (identical == (bool)argStruct->expectedBool)
@@ -203,10 +203,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id(const 
       uint8_t paddingG;
    } ActionCheckEntityPrimaryId;
    auto argStruct = (ActionCheckEntityPrimaryId*)args;
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t sizeLimit{ 1 };
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
 
@@ -236,17 +236,17 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_secondary_id(cons
    } ActionCheckEntitySecondaryId;
    auto argStruct = (ActionCheckEntitySecondaryId*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t sizeLimit = 1;
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ENTITY_TYPE) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::ANIMATION) { sizeLimit = 1; }
       if (sanitizedPrimaryType == MageEntityPrimaryIdType::TILESET)
       {
-         auto tileset = ROM()->GetReadPointerTo<MageTileset>(entity->primaryId);
+         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(entity->primaryId);
          sizeLimit = tileset->Tiles();
       }
       bool identical = ((entity->secondaryId % sizeLimit) == argStruct->expectedValue);
@@ -270,10 +270,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_primary_id_type(c
    } ActionCheckEntityPrimaryIdType;
    auto argStruct = (ActionCheckEntityPrimaryIdType*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint8_t sanitizedPrimaryType = entity->primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool identical = (sanitizedPrimaryType == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -296,10 +296,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_animation
    } ActionCheckEntityCurrentAnimation;
    auto argStruct = (ActionCheckEntityCurrentAnimation*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->currentAnimation == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -321,10 +321,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_current_frame(con
    } ActionCheckEntityCurrentFrame;
    auto argStruct = (ActionCheckEntityCurrentFrame*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->currentFrameIndex == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -346,10 +346,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_direction(const u
    } ActionCheckEntityDirection;
    auto argStruct = (ActionCheckEntityDirection*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->renderFlags == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -372,10 +372,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_glitched(const ui
    } ActionCheckEntityGlitched;
    auto argStruct = (ActionCheckEntityGlitched*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       if (entity->renderFlags & RENDER_FLAGS_IS_GLITCHED)
       {
          return argStruct->successScriptId;
@@ -396,10 +396,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a(
    } ActionCheckEntityHackableStateA;
    auto argStruct = (ActionCheckEntityHackableStateA*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->hackableStateA == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -421,10 +421,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_b(
    } ActionCheckEntityHackableStateB;
    auto argStruct = (ActionCheckEntityHackableStateB*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->hackableStateB == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -446,10 +446,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c(
    } ActionCheckEntityHackableStateC;
    auto argStruct = (ActionCheckEntityHackableStateC*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->hackableStateC == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -471,10 +471,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_d(
    } ActionCheckEntityHackableStateD;
    auto argStruct = (ActionCheckEntityHackableStateD*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       bool identical = (entity->hackableStateD == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
       {
@@ -495,10 +495,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    } ActionCheckEntityHackableStateAU2;
    auto argStruct = (ActionCheckEntityHackableStateAU2*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateA);
       bool identical = (u2_value == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -520,10 +520,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_c_
    } ActionCheckEntityHackableStateCU2;
    auto argStruct = (ActionCheckEntityHackableStateCU2*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t u2_value = *(uint16_t*)((uint8_t*)&entity->hackableStateC);
       bool identical = (u2_value == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -545,10 +545,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    auto argStruct = (ActionCheckEntityHackableStateAU4*)args;
    argStruct->expectedValue = argStruct->expectedValue;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
          *(uint32_t*)((uint8_t*)&entity->hackableStateA));
       if (u4_value == argStruct->expectedValue)
@@ -570,10 +570,10 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_path(const uint8_
    } ActionCheckEntityPath;
    auto argStruct = (ActionCheckEntityPath*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       uint16_t pathId = *(uint16_t*)((uint8_t*)&entity->hackableStateA);
       bool identical = (pathId == argStruct->expectedValue);
       if (identical == (bool)argStruct->expectedBool)
@@ -619,11 +619,11 @@ std::optional<uint16_t> MageScriptActions::action_check_if_entity_is_in_geometry
       uint8_t paddingG;
    } ActionCheckifEntityIsInGeometry;
    auto argStruct = (ActionCheckifEntityIsInGeometry*)args;
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
       bool colliding = geometry->isPointInGeometry(entity->getRenderableData()->center);
       if (colliding == (bool)argStruct->expectedBoolValue)
@@ -788,10 +788,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_name(const uint8_t*
    std::string entityName = mapControl->getEntityByMapLocalId(entityId)->name;
    std::string romString = stringLoader->getString(argStruct->stringId, entityName);
    //Get the entity:
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       //simple loop to set the name:
       for (int i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
@@ -823,10 +823,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_x(const uint8_t* ar
    } ActionSetEntityX;
    auto argStruct = (ActionSetEntityX*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->location.x = argStruct->newValue;
    }
    return std::nullopt;
@@ -845,10 +845,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_y(const uint8_t* ar
    } ActionSetEntityY;
    auto argStruct = (ActionSetEntityY*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->location.y = argStruct->newValue;
    }
    return std::nullopt;
@@ -866,8 +866,8 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_interact_script(con
       uint8_t paddingG;
    } ActionSetEntityInteractScript;
    auto argStruct = (ActionSetEntityInteractScript*)args;
-   auto entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   mapControl->getEntity(entityIndex).onInteractScriptId = argStruct->scriptId;
+   auto sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   mapControl->getEntity(sourceEntityIndex).onInteractScriptId = argStruct->scriptId;
    return std::nullopt;
 }
 
@@ -884,8 +884,8 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_tick_script(const u
    } ActionSetEntityTickScript;
    auto argStruct = (ActionSetEntityTickScript*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   mapControl->getEntity(entityIndex).onTickScriptId = argStruct->scriptId;
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   mapControl->getEntity(sourceEntityIndex).onTickScriptId = argStruct->scriptId;
    return std::nullopt;
 }
 
@@ -902,10 +902,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_type(const uint8_t*
    } ActionSetEntityType;
    auto argStruct = (ActionSetEntityType*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->primaryId = argStruct->entityTypeId;
       entity->primaryIdType = ENTITY_TYPE;
    }
@@ -925,10 +925,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id(const ui
    } ActionSetEntityPrimaryId;
    auto argStruct = (ActionSetEntityPrimaryId*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->primaryId = argStruct->newValue;
    }
    return std::nullopt;
@@ -947,10 +947,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_secondary_id(const 
    } ActionSetEntitySecondaryId;
    auto argStruct = (ActionSetEntitySecondaryId*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->secondaryId = argStruct->newValue;
    }
    return std::nullopt;
@@ -970,10 +970,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_primary_id_type(con
    } ActionSetEntityPrimaryIdType;
    auto argStruct = (ActionSetEntityPrimaryIdType*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->primaryIdType = (MageEntityPrimaryIdType)(argStruct->newValue % NUM_PRIMARY_ID_TYPES);
    }
    return std::nullopt;
@@ -993,10 +993,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_animation(c
    } ActionSetEntityCurrentAnimation;
    auto argStruct = (ActionSetEntityCurrentAnimation*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
       entity->currentAnimation = argStruct->newValue;
       entity->currentFrameIndex = 0;
@@ -1020,10 +1020,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_current_frame(const
    } ActionSetEntityCurrentFrame;
    auto argStruct = (ActionSetEntityCurrentFrame*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData()->currentFrameTicks = 0;
       entity->currentFrameIndex = argStruct->newValue;
       entity->updateRenderableData();
@@ -1045,10 +1045,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uin
    } ActionSetEntityDirection;
    auto argStruct = (ActionSetEntityDirection*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->renderFlags.updateDirectionAndPreserveFlags(argStruct->direction);
       entity->updateRenderableData();
    }
@@ -1069,10 +1069,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(
    } ActionSetEntityDirectionRelative;
    auto argStruct = (ActionSetEntityDirectionRelative*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->renderFlags.updateDirectionAndPreserveFlags((MageEntityAnimationDirection)((entity->renderFlags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS));
       entity->updateRenderableData();
    }
@@ -1094,14 +1094,11 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
    auto argStruct = (ActionSetEntityDirectionTargetEntity*)args;
 
    int16_t targetEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->targetEntityId, entityId);
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (
-      entityIndex != NO_PLAYER
-      && targetEntityIndex != NO_PLAYER
-      )
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER && targetEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      MageEntity* targetEntity = mapControl->getEntityByMapLocalId(targetEntityIndex);
+      auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto targetEntity = mapControl->getEntityByMapLocalId(targetEntityIndex);
       auto renderable = entity->getRenderableData();
       auto targetRenderable = targetEntity->getRenderableData();
       entity->renderFlags.updateDirectionAndPreserveFlags(renderable->center.getRelativeDirection(targetRenderable->center));
@@ -1123,11 +1120,11 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    } ActionSetEntityDirectionTargetGeometry;
    auto argStruct = (ActionSetEntityDirectionTargetGeometry*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->targetGeometryId);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->targetGeometryId);
       auto relativeDirection = entity->getRenderableData()->center.getRelativeDirection(geometry->GetPoint(0));
       entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
       entity->updateRenderableData();
@@ -1149,10 +1146,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_glitched(const uint
    } ActionSetEntityGlitched;
    auto argStruct = (ActionSetEntityGlitched*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->renderFlags = (MageEntityAnimationDirection)(
          (entity->renderFlags & RENDER_FLAGS_IS_GLITCHED_MASK)
          | (argStruct->isGlitched * RENDER_FLAGS_IS_GLITCHED));
@@ -1175,10 +1172,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a(co
    } ActionSetEntityHackableStateA;
    auto argStruct = (ActionSetEntityHackableStateA*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->hackableStateA = argStruct->newValue;
    }
    return std::nullopt;
@@ -1198,10 +1195,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_b(co
    } ActionSetEntityHackableStateB;
    auto argStruct = (ActionSetEntityHackableStateB*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->hackableStateB = argStruct->newValue;
    }
    return std::nullopt;
@@ -1221,10 +1218,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c(co
    } ActionSetEntityHackableStateC;
    auto argStruct = (ActionSetEntityHackableStateC*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->hackableStateC = argStruct->newValue;
    }
    return std::nullopt;
@@ -1244,10 +1241,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_d(co
    } ActionSetEntityHackableStateD;
    auto argStruct = (ActionSetEntityHackableStateD*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       entity->hackableStateD = argStruct->newValue;
    }
    return std::nullopt;
@@ -1266,10 +1263,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u2
    } ActionSetEntityHackableStateAU2;
    auto argStruct = (ActionSetEntityHackableStateAU2*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
    return std::nullopt;
@@ -1288,10 +1285,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_c_u2
    } ActionSetEntityHackableStateCU2;
    auto argStruct = (ActionSetEntityHackableStateCU2*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateC) = argStruct->newValue;
    }
    return std::nullopt;
@@ -1309,10 +1306,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4
    auto argStruct = (ActionSetEntityHackableStateAU4*)args;
    argStruct->newValue = argStruct->newValue;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint32_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
    return std::nullopt;
@@ -1331,10 +1328,10 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_path(const uint8_t*
    } ActionSetEntityPath;
    auto argStruct = (ActionSetEntityPath*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       *(uint16_t*)((uint8_t*)&entity->hackableStateA) = argStruct->newValue;
    }
    return std::nullopt;
@@ -1572,10 +1569,10 @@ std::optional<uint16_t> MageScriptActions::action_play_entity_animation(const ui
    } ActionPlayEntityAnimation;
    auto argStruct = (ActionPlayEntityAnimation*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
       if (resumeState.totalLoopsToNextAction == 0)
       {
@@ -1620,10 +1617,10 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    } ActionTeleportEntityToGeometry;
    auto argStruct = (ActionTeleportEntityToGeometry*)args;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
       auto geometry = ROM()->GetUniqueCopy<MageGeometry>(argStruct->geometryId);
 
@@ -1644,12 +1641,12 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
    } ActionWalkEntityToGeometry;
    auto argStruct = (ActionWalkEntityToGeometry*)args;
    argStruct->duration = argStruct->duration;
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
       if (resumeState.totalLoopsToNextAction == 0)
       {
@@ -1687,11 +1684,11 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
    auto argStruct = (ActionWalkEntityAlongGeometry*)args;
    argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
-      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1762,12 +1759,12 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
    auto argStruct = (ActionLoopEntityAlongGeometry*)args;
    argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
       // handle single point geometries
       if (geometry->GetPointCount() == 1)
@@ -1842,8 +1839,8 @@ std::optional<uint16_t> MageScriptActions::action_set_camera_to_follow_entity(co
       uint8_t paddingG;
    } ActionSetCameraToFollowEntity;
    auto argStruct = (ActionSetCameraToFollowEntity*)args;
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   camera.followEntityId = entityIndex;
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   camera.followEntityId = sourceEntityIndex;
    return std::nullopt;
 }
 
@@ -1881,10 +1878,10 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
    auto argStruct = (ActionPanCameraToEntity*)args;
    argStruct->duration = argStruct->duration;
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
 
       if (resumeState.totalLoopsToNextAction == 0)
@@ -1903,7 +1900,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
       if (progress >= 1.0f)
       {
          // Moved the camera there, may as well follow the entity now.
-         camera.followEntityId = entityIndex;
+         camera.followEntityId = sourceEntityIndex;
       }
    }
    return std::nullopt;
@@ -1921,7 +1918,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
    argStruct->duration = argStruct->duration;
 
    const auto entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->GetReadPointerTo<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
 
    if (resumeState.totalLoopsToNextAction == 0)
@@ -2129,10 +2126,10 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
    auto currentSave = ROM()->GetCurrentSave();
    auto currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
-   int16_t entityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
-   if (entityIndex != NO_PLAYER)
+   int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
+   if (sourceEntityIndex != NO_PLAYER)
    {
-      const auto entity = mapControl->getEntityByMapLocalId(entityIndex);
+      const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto variableValue = &currentSave->scriptVariables[argStruct->variableId];
       uint8_t* fieldValue = ((uint8_t*)entity) + (uint8_t)argStruct->field;
 

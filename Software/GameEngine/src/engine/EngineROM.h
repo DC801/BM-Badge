@@ -381,7 +381,7 @@ struct EngineROM
    }
 
    template <typename T>
-   const T* GetReadPointerTo(uint16_t index) const
+   const T* GetReadPointerByIndex(uint16_t index) const
    {
       auto address = getHeader<T>().address((uint32_t)romDataInDesktopRam.get(), index);
       
@@ -413,35 +413,34 @@ struct EngineROM
    }
 
    template <typename T>
-   void SetReadPointerToOffset(const T*& readPointer, uint32_t& address, size_t count = 1) const
+   const T* GetReadPointerToAddress(uint32_t& address, size_t count = 1) const
    {
       static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
       auto dataLength = count * sizeof(T);
       if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
       {
-         throw std::runtime_error{ "EngineROM::SetReadPointerToOffset: address + length exceeds maximum dat file size" };
+         throw std::runtime_error{ "EngineROM::GetReadPointerToAddress: address + length exceeds maximum dat file size" };
       }
-      readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + address);
+      auto readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + address);
       address += dataLength;
+      return readPointer;
    }
 
    template <typename T>
-   void InitializeCollectionOf(std::vector<T>& v, uint32_t& address, size_t count) const
+   void InitializeVectorFrom(std::vector<T>& v, uint32_t& address, size_t count) const
    {
-      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_scalar_v<T>, "Must be constructible from an address or a trivially copyable type");
+      static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
       v.clear();
       for (auto i = 0; i < count; i++)
       {
-         if constexpr (std::is_scalar_v<T>)
+         if constexpr (std::is_standard_layout_v<T>)
          {
-            T value = *(const T*)(romDataInDesktopRam.get() + address);
-            v.push_back(T{ value });
+            v.push_back(*(const T*)(romDataInDesktopRam.get() + address));
             address += sizeof(T);
          }
          else
          {
-            auto value = T{ address };
-            v.push_back(value);
+            v.push_back(T{ address });
          }
       }
    }

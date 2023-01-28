@@ -80,14 +80,9 @@ struct MageDialogScreen
       ROM()->Read(entityIndex, address);
       ROM()->Read(portraitIndex, address);
       ROM()->Read(emoteIndex, address);
-      auto messagesData = new uint16_t[messageCount];
-      auto responsesData = new MageDialogResponse[responseCount];
-
-      ROM()->Read(*messagesData, address, messageCount);
-      ROM()->Read(*responsesData, address, responseCount);
-
-      messages = std::unique_ptr<uint16_t[]>{ messagesData };
-      responses = std::unique_ptr<MageDialogResponse[]>{ responsesData };
+      
+      messages = ROM()->GetReadPointerToAddress<uint16_t>(address, messageCount);
+      responses = ROM()->GetReadPointerToAddress<MageDialogResponse>(address, responseCount);
    }
    // TODO: portraits, after we have some graphics for them
    uint16_t nameStringIndex{ 0 };
@@ -100,8 +95,8 @@ struct MageDialogScreen
    uint8_t entityIndex{0};
    uint8_t portraitIndex{0};
    uint8_t emoteIndex{0};
-   std::unique_ptr<uint16_t[]> messages{};
-   std::unique_ptr<MageDialogResponse[]> responses{};
+   const uint16_t* messages{};
+   const MageDialogResponse* responses{};
 };
 
 
@@ -193,7 +188,6 @@ private:
    std::unique_ptr<MageDialog> currentDialog;
    std::string currentEntityName{};
    std::string currentMessage{};
-   std::vector<uint16_t> messageIds{};
    std::vector<MageDialogResponse> responses{};
 
 };

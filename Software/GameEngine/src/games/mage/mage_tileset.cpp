@@ -6,16 +6,15 @@
 
 void TileManager::DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const
 {
-   auto tileset = ROM()->GetReadPointerTo<MageTileset>(renderableData->tilesetId);
+   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData->tilesetId);
    DrawTile(tileset, renderableData->tileId, x, y, renderableData->renderFlags);
 }
 
 void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags) const
 {
-   auto colorPalette = ROM()->GetReadPointerTo<MageColorPalette>(tileId);
-   auto offset = ROM()->GetAddress<MagePixels>(tileId);
-   MagePixels pixels{ nullptr };
-   ROM()->SetReadPointerToOffset(pixels, offset);
+   auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tileId);
+   auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tileId);
+   //auto pixels = ROM()->GetReadPointerToAddress<uint8_t>(address);
 
    const auto targetRect = Rect{ 
       Point{x,y},

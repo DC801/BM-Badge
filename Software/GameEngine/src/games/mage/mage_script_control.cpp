@@ -46,7 +46,7 @@ void MageScriptControl::processScript(MageScriptState& resumeState, uint8_t mapL
 void MageScriptControl::processActionQueue(MageScriptState& resumeState, MageScriptType currentScriptType)
 {
    //get a read-only pointer to the memory offset for the script:
-   auto script = ROM()->GetReadPointerTo<MageScript>(resumeState.currentScriptId);
+   auto script = ROM()->GetReadPointerByIndex<MageScript>(resumeState.currentScriptId);
 
    //now iterate through the actions, starting with the actionIndexth action, calling the appropriate functions:
    //note we're using the value in resumeState directly as our index so it will update automatically as we proceed:

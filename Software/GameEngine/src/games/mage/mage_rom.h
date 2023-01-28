@@ -18,12 +18,12 @@ class MageColorPalette;
 struct MageSaveGame;
 
 template<typename Tag>
-struct StringValue
+struct TaggedType
 {};
 
-using MageStringValue = StringValue<struct stringTag>;
-using MageVariableValue = StringValue<struct variableTag>;
-using MagePixels = const uint8_t*;
+using MageStringValue = TaggedType<struct stringTag>;
+using MageVariableValue = TaggedType<struct variableTag>;
+using MagePixels = uint8_t;
 
 typedef EngineROM<
    MapData,

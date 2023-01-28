@@ -220,7 +220,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
       bool hasEntityType = playerEntityTypeId == ENTITY_TYPE;
-      auto entityType = hasEntityType ? ROM()->GetReadPointerTo<MageEntityType>(playerEntityTypeId) : nullptr;
+      auto entityType = hasEntityType ? ROM()->GetReadPointerByIndex<MageEntityType>(playerEntityTypeId) : nullptr;
       uint8_t previousPlayerAnimation = playerEntity.currentAnimation;
       bool playerIsActioning = playerEntity.currentAnimation == MAGE_ACTION_ANIMATION_INDEX;
 
@@ -378,7 +378,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    {
 
       //apply inputs to the hex editor:
-      hexEditor->applyHexModeInputs((uint8_t*)mapControl->currentMap->entities.get());
+      hexEditor->applyHexModeInputs((uint8_t*)mapControl->currentMap->entities.data());
 
 
       //then handle any still-running scripts:
@@ -638,7 +638,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             }
             geometryId--;
 
-            auto geometry = ROM()->GetReadPointerTo<MageGeometry>(geometryId)
+            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId)
                ->FlipByFlags(currentTile.flags, tileset->TileWidth(), tileset->TileHeight());
 
             Point offsetPoint = { uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };

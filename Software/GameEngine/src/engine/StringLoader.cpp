@@ -4,8 +4,7 @@
 std::string StringLoader::getString(uint16_t stringId, std::string triggeringEntityName) const
 {
    auto address = ROM()->GetAddress<MageStringValue>(stringId);
-   const char* inputCharPtr;
-   ROM()->SetReadPointerToOffset(inputCharPtr, address);
+   auto inputCharPtr = ROM()->GetReadPointerToAddress<char>(address);
    auto inputString = std::string{ inputCharPtr };
    std::string outputString{};
    size_t cursor{ 0 };

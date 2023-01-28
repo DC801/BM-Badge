@@ -27,38 +27,29 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    ROM()->Read(scriptCount, address);
    ROM()->Read(goDirectionsCount, address);
 
-   address += sizeof(uint8_t); // padding
+   if (entityCount > MAX_ENTITIES_PER_MAP)
+   {
+      ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
+   }
 
-   entityGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[entityCount] };
-   geometryGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[geometryCount] };
-   scriptGlobalIds = std::unique_ptr<uint16_t[]>{ new uint16_t[scriptCount] };
-   goDirections = std::unique_ptr<GoDirection[]>{ new GoDirection[goDirectionsCount] };
-   layerAddresses = std::unique_ptr<uint32_t[]>{ new uint32_t[layerCount] };
-   entities = std::unique_ptr<MageEntity[]>{ new MageEntity[entityCount] };
+   address += sizeof(uint8_t); // padding for 4-byte alignment
 
-   ROM()->Read(*entityGlobalIds.get(), address, entityCount);
-   ROM()->Read(*geometryGlobalIds.get(), address, geometryCount);
-   ROM()->Read(*scriptGlobalIds.get(), address, scriptCount);
-   ROM()->Read(*goDirections.get(), address, goDirectionsCount);
+   ROM()->InitializeVectorFrom(entityGlobalIds, address, entityCount);
+   ROM()->InitializeVectorFrom(geometryGlobalIds, address, geometryCount);
+   ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
+   ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
 
+   for (uint32_t i = 0; i < layerCount; i++)
+   {
+      layerAddresses.push_back(address);
+      address += rows * cols * sizeof(uint8_t*);
+   }
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
    {
       address += sizeof(uint16_t); // Padding
    }
-
-   for (uint32_t i = 0; i < layerCount; i++)
-   {
-      layerAddresses[i] = address;
-      address += rows * cols * sizeof(uint8_t*);
-   }
-
-   if (entityCount > MAX_ENTITIES_PER_MAP)
-   {
-      ENGINE_PANIC("Error: Game is attempting to load more than %d entities on one map", MAX_ENTITIES_PER_MAP);
-   }
-
 }
 
 void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn) const
@@ -67,7 +58,7 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
    int32_t cameraY = cameraPosition.y;
    //first sort entities by their y values:
    auto sortByY = [](const auto& entity1, const auto& entity2) { return entity1.location.y < entity2.location.y; };
-   std::sort(currentMap->entities.get(), currentMap->entities.get() + currentMap->entityCount, sortByY);
+   std::sort(currentMap->entities.data(), currentMap->entities.data() + currentMap->entityCount, sortByY);
 
    uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
 
@@ -120,12 +111,11 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
 
       auto address = layerAddress + (i * sizeof(MageMapTile));
 
-      const MageMapTile* currentTile;
-      ROM()->SetReadPointerToOffset(currentTile, address);
+      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(address);
       if (currentTile->tileId == 0) { continue; }
 
       //currentTile.tileId -= 1;
-      auto tileset = ROM()->GetReadPointerTo<MageTileset>(address);
+      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(address);
 
       tileManager->DrawTile(tileset, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
 
@@ -136,7 +126,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
          {
             geometryId -= 1;
 
-            auto geometryIn = ROM()->GetReadPointerTo<MageGeometry>(geometryId);
+            auto geometryIn = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
             auto geometry = geometryIn->FlipByFlags(currentTile->flags, tileset->TileWidth(), tileset->TileHeight());
 
             bool isMageInGeometry = false;
@@ -183,7 +173,7 @@ void MapControl::DrawGeometry(const Point& cameraPosition) const
    {
       for (uint16_t i = 0; i < GeometryCount(); i++)
       {
-         auto geometry = ROM()->GetReadPointerTo<MageGeometry>(getGlobalGeometryId(i));
+         auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
          isColliding = geometry->isPointInGeometry(*playerPosition);
          //geometry.draw(cameraX, cameraY, isColliding ? COLOR_RED : COLOR_GREEN);
       }

@@ -47,9 +47,8 @@ void FrameBuffer::clearScreen(uint16_t color)
    }
 }
 
-void FrameBuffer::drawChunkWithFlags(const MagePixels pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
+void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
 {
-   //MageColorPalette* colorPalette = colorPaletteOriginal;
    RenderFlags renderFlags{ flags };
    bool flip_x = renderFlags.rf.d.horizontal;
    bool flip_y = renderFlags.rf.d.vertical;
@@ -68,7 +67,7 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels pixels, const MageColorPal
       return;
    }
 
-   auto pixelOffset = pixels + ((source.y * source_width) + source.x);
+   pixels += ((source.y * source_width) + source.x);
 
    for (auto row = 0; row != target.h && row < HEIGHT; row++)
    {

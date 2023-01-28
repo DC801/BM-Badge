@@ -21,30 +21,17 @@ typedef enum : uint8_t
 #define NUM_PRIMARY_ID_TYPES 3
 
 
-class MageEntityTypeAnimation
+struct MageEntityTypeAnimation
 {
-public:
-
-   MageEntityTypeAnimation() = default;
-   MageEntityTypeAnimation(uint32_t& offset);
-
-   const AnimationDirection* North() const { return &north; }
-   const AnimationDirection* East() const { return &east; }
-   const AnimationDirection* South() const { return &south; }
-   const AnimationDirection* West() const { return &west; }
-private:
-   const AnimationDirection north;
-   const AnimationDirection east;
-   const AnimationDirection south;
-   const AnimationDirection west;
+   const AnimationDirection North;
+   const AnimationDirection East;
+   const AnimationDirection South;
+   const AnimationDirection West;
 };
 
 class MageEntityType
 {
 public:
-   MageEntityType() noexcept = default;
-   MageEntityType(uint32_t& offset);
-
    uint8_t PortraitId() const { return portraitId; }
    uint8_t AnimationCount() const { return animationCount; }
 
@@ -84,12 +71,8 @@ public:
    void updateRenderableData(uint32_t deltaTime = 0);
 
    RenderableData* getRenderableData() { return &renderableData; }
-   const RenderableData* getRenderableData() const { return &renderableData; }
 
-
-
-   char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
-   // put the sheep back in the pen, rake in the lake
+   char name[MAGE_ENTITY_NAME_LENGTH]{ 0 };
    Point location{ 0 };
    uint16_t onInteractScriptId{ 0 };
    uint16_t onTickScriptId{ 0 };
@@ -103,9 +86,6 @@ public:
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
-
-private:
-   RenderableData renderableData{ };
 };
 
 

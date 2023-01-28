@@ -316,7 +316,7 @@ public:
 	// source: coordinates to offset into base image
 	// source_width: total width of base image
 	// flags: render flags
-	void drawChunkWithFlags(const MagePixels pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags);
+	void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags);
 
 	inline void fillRect(const Point& p, int w, int h, uint16_t color)
 	{

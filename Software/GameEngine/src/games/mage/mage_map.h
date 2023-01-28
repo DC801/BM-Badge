@@ -19,13 +19,6 @@ in a more accessible way.
 
 struct GoDirection
 {
-   GoDirection() noexcept = default;
-   GoDirection(uint32_t& address)
-   {
-      ROM()->Read(name, address, MAP_GO_DIRECTION_NAME_LENGTH);
-      ROM()->Read(mapLocalScriptId, address);
-      ROM()->Read(padding, address);
-   }
    char name[MAP_GO_DIRECTION_NAME_LENGTH]{ 0 };
    uint16_t mapLocalScriptId{ 0 };
    uint16_t padding{ 0 };
@@ -49,12 +42,12 @@ struct MapData
    uint16_t geometryCount{ 0 };
    uint16_t scriptCount{ 0 };
    uint8_t goDirectionsCount{ 0 };
-   std::unique_ptr<uint16_t[]> entityGlobalIds;
-   std::unique_ptr<uint16_t[]> geometryGlobalIds;
-   std::unique_ptr<uint16_t[]> scriptGlobalIds;
-   std::unique_ptr<GoDirection[]> goDirections;
-   std::unique_ptr<uint32_t[]> layerAddresses;
-   std::unique_ptr<MageEntity[]> entities;
+   std::vector<uint16_t> entityGlobalIds{};
+   std::vector<uint16_t> geometryGlobalIds{};
+   std::vector<uint16_t> scriptGlobalIds{};
+   std::vector<GoDirection> goDirections{};
+   std::vector<uint32_t> layerAddresses{};
+   std::vector<MageEntity> entities{};
 };
 
 struct MageMapTile
@@ -76,7 +69,7 @@ public:
       tileManager(tileManager)
    { }
 
-   uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.get(); }
+   uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.data(); }
    void Load(uint16_t index, bool isCollisionDebugOn=false, bool isEntityDebugOn=false);
    void Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn=false) const;
    void DrawGeometry(const Point& cameraPosition) const;
@@ -214,7 +207,7 @@ private:
    bool isEntityDebugOn{ false };
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
-   //std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
+   std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
 
    uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
    uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };

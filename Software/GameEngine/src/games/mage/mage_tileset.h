@@ -109,13 +109,6 @@ private:
 
 struct AnimationDirection
 {
-   AnimationDirection() noexcept = default;
-   AnimationDirection(uint32_t& address)
-   {
-      ROM()->Read(typeId, address);
-      ROM()->Read(type, address);
-      ROM()->Read(renderFlags, address);
-   }
    bool FlipX() const { return renderFlags & FLIPPED_HORIZONTALLY_FLAG; }
    bool FlipY() const { return renderFlags & FLIPPED_VERTICALLY_FLAG; }
    bool FlipDiag() const { return renderFlags & FLIPPED_DIAGONALLY_FLAG; }
@@ -125,19 +118,15 @@ struct AnimationDirection
    uint8_t renderFlags{ 0 };
 };
 
-class MagePortrait
+struct MagePortrait
 {
-public:
-
-   MagePortrait() noexcept = default;
-   MagePortrait(uint32_t& address);
-
    const AnimationDirection* getEmoteById(uint8_t emoteId) const
    {
-      return &emotes[emoteId % emotes.size()];
+      auto animationPtr = (const AnimationDirection*)&emoteCount + 4;
+      return &animationPtr[emoteId % emoteCount];
    }
-private:
-   std::vector<AnimationDirection> emotes{};
+   char portrait[32];
+   uint8_t emoteCount{ 0 };
 };
 
 
@@ -150,11 +139,8 @@ public:
    {}
 
    void DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const;
-
    void DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
-
 private:
-   std::vector<MageColorPalette> colorPalettes;
    std::shared_ptr<FrameBuffer> frameBuffer;
 };
 

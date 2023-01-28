@@ -51,7 +51,6 @@ void MageDialogControl::StartModalDialog(std::string messageString)
    // If there was no previous dialog... uhhhhhhh good luck with that?
    currentResponseIndex = 0;
    currentMessageIndex = 0;
-   messageIds.clear();
    currentMessage = messageString;
    currentScreen().responseCount = 0;
    currentScreen().messageCount = 1;
@@ -75,7 +74,7 @@ void MageDialogControl::loadNextScreen()
    loadCurrentScreenPortrait();
 
    currentMessage = stringLoader->getString(currentScreen().messages[currentMessageIndex % currentScreen().messageCount], triggeringEntityName);
-   currentFrameTileset = ROM()->GetReadPointerTo<MageTileset>(currentScreen().borderTilesetIndex);
+   currentFrameTileset = ROM()->GetReadPointerByIndex<MageTileset>(currentScreen().borderTilesetIndex);
    currentImageIndex = currentFrameTileset->ImageId();
    currentScreenIndex++;
    cursorPhase += 250;
@@ -112,13 +111,20 @@ void MageDialogControl::update()
       }
       else
       {
-         currentMessage = stringLoader->getString(messageIds[currentMessageIndex], triggeringEntityName);
+         auto currentMessageId = currentScreen().messages[currentMessageIndex];
+         currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
       }
    }
 }
 
 void MageDialogControl::draw()
 {
+   if ((uint32_t)currentScreenIndex >= currentDialog->ScreenCount)
+   {
+      open = false;
+      return;
+   }
+
    MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen().alignment];
    drawDialogBox(currentMessage, coords.text, true);
    drawDialogBox(currentEntityName, coords.label);
@@ -242,10 +248,10 @@ void MageDialogControl::loadCurrentScreenPortrait()
          uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            currentPortraitId = ROM()->GetReadPointerTo<MageEntityType>(currentEntity.primaryId)->PortraitId();
+            currentPortraitId = ROM()->GetReadPointerByIndex<MageEntityType>(currentEntity.primaryId)->PortraitId();
          }
 
-         auto portrait = ROM()->GetReadPointerTo<MagePortrait>(currentPortraitId);
+         auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
          auto animationDirection = portrait->getEmoteById(currentScreen().emoteIndex);
          currentEntity.SetRenderDirection(animationDirection->renderFlags);
          currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.renderFlags & 0x80);
