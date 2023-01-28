@@ -89,7 +89,6 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
       if (animationDirection->type == 0)
       {
-         //TODO FIXME:
          auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->typeId);
          auto currentFrame = animation->GetFrame(currentFrameIndex);
          renderableData.tilesetId = animation->TilesetId();

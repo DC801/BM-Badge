@@ -18,7 +18,7 @@ void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& 
    resumeState.pointA = entityCenterPoint + geometry->GetPoint(resumeState.currentSegmentIndex);
    resumeState.pointB = entityCenterPoint + geometry->GetPoint(resumeState.currentSegmentIndex + 1);
    auto relativeDirection = resumeState.pointA.getRelativeDirection(resumeState.pointB);
-   entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
+   entity->renderFlags |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
 }
 
 
@@ -1049,7 +1049,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction(const uin
    if (sourceEntityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      entity->renderFlags.updateDirectionAndPreserveFlags(argStruct->direction);
+      entity->renderFlags |= (argStruct->direction & RENDER_FLAGS_DIRECTION_MASK);
       entity->updateRenderableData();
    }
    return std::nullopt;
@@ -1073,7 +1073,8 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_relative(
    if (sourceEntityIndex != NO_PLAYER)
    {
       const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      entity->renderFlags.updateDirectionAndPreserveFlags((MageEntityAnimationDirection)((entity->renderFlags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS));
+      auto newDirection = (entity->renderFlags + argStruct->relativeDirection + NUM_DIRECTIONS) % NUM_DIRECTIONS;
+      entity->renderFlags |= (newDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity->updateRenderableData();
    }
    return std::nullopt;
@@ -1101,7 +1102,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_en
       auto targetEntity = mapControl->getEntityByMapLocalId(targetEntityIndex);
       auto renderable = entity->getRenderableData();
       auto targetRenderable = targetEntity->getRenderableData();
-      entity->renderFlags.updateDirectionAndPreserveFlags(renderable->center.getRelativeDirection(targetRenderable->center));
+      entity->renderFlags |= (renderable->center.getRelativeDirection(targetRenderable->center) & RENDER_FLAGS_DIRECTION_MASK);
       entity->updateRenderableData();
    }
    return std::nullopt;
@@ -1126,7 +1127,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
       const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->targetGeometryId);
       auto relativeDirection = entity->getRenderableData()->center.getRelativeDirection(geometry->GetPoint(0));
-      entity->renderFlags.updateDirectionAndPreserveFlags(relativeDirection);
+      entity->renderFlags |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity->updateRenderableData();
    }
    return std::nullopt;
@@ -1653,7 +1654,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
          //this is the points we're interpolating between
          resumeState.pointA = entity->location;
          resumeState.pointB = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
-         entity->renderFlags.updateDirectionAndPreserveFlags(resumeState.pointA.getRelativeDirection(resumeState.pointB));
+         entity->renderFlags |= (resumeState.pointA.getRelativeDirection(resumeState.pointB) & RENDER_FLAGS_DIRECTION_MASK);
          entity->currentAnimation = MAGE_WALK_ANIMATION_INDEX;
          entity->currentFrameIndex = 0;
          renderable->currentFrameTicks = 0;

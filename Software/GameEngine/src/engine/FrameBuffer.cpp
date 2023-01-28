@@ -49,11 +49,10 @@ void FrameBuffer::clearScreen(uint16_t color)
 
 void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags)
 {
-   RenderFlags renderFlags{ flags };
-   bool flip_x = renderFlags.rf.d.horizontal;
-   bool flip_y = renderFlags.rf.d.vertical;
-   bool flip_diag = renderFlags.rf.d.diagonal;
-   bool glitched = renderFlags.rf.d.glitched;
+   bool flip_x = flags & RENDER_FLAGS_FLIP_X;
+   bool flip_y = flags & RENDER_FLAGS_FLIP_Y;
+   bool flip_diag = flags & RENDER_FLAGS_FLIP_DIAG;
+   bool glitched = flags & RENDER_FLAGS_IS_GLITCHED;
 
    if (glitched)
    {
@@ -71,10 +70,10 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPa
 
    for (auto row = 0; row != target.h && row < HEIGHT; row++)
    {
+      auto pixelRow = flip_y ? target.h - row : row;
       for (auto col = 0; col != target.w && col < WIDTH; col++)
       {
-         auto pixelRow = renderFlags.rf.d.vertical ? target.h - row : row;
-         auto pixelCol = renderFlags.rf.d.horizontal ? target.w - col : col;
+         auto pixelCol = flip_x ? target.w - col : col;
          auto pixelIndex = (pixelRow * target.w) + pixelCol;
 
          auto colorIndex = pixels[pixelIndex];

@@ -63,7 +63,7 @@ public:
       }
    }
 
-   bool isDebug() const { return renderFlags.rf.i & RENDER_FLAGS_IS_DEBUG; }
+   bool isDebug() const { return renderFlags & RENDER_FLAGS_IS_DEBUG; }
    void SetRenderDirection(uint8_t renderFlags)
    {
       this->renderFlags = renderFlags;
@@ -85,7 +85,7 @@ public:
    uint8_t primaryIdType{ 0 };
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
-   RenderFlags renderFlags{ 0 };
+   uint8_t renderFlags{ 0 };
    uint8_t hackableStateA{ 0 };
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };

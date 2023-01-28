@@ -244,7 +244,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
          if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            playerEntity.renderFlags.updateDirectionAndPreserveFlags(direction);
+            playerEntity.renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
@@ -379,7 +379,6 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
 
       //apply inputs to the hex editor:
       hexEditor->applyHexModeInputs((uint8_t*)mapControl->currentMap->entities.data());
-
 
       //then handle any still-running scripts:
       scriptControl->tickScripts();

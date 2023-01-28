@@ -52,59 +52,48 @@ enum MageEntityAnimationDirection : uint8_t
 #define COLOR_BSOD			0x03DA
 
 
-#define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
+#define RENDER_FLAGS_IS_GLITCHED_MASK	0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000
 #define RENDER_FLAGS_IS_DEBUG				0b01000000
-#define RENDER_FLAGS_FLIP_X					0b00000100
-#define RENDER_FLAGS_FLIP_Y					0b00000010
-#define RENDER_FLAGS_FLIP_DIAG				0b00000001
-#define RENDER_FLAGS_FLIP_MASK				0b00000111
-#define RENDER_FLAGS_DIRECTION_MASK			0b00000011
+#define RENDER_FLAGS_FLIP_X				0b00000100
+#define RENDER_FLAGS_FLIP_Y				0b00000010
+#define RENDER_FLAGS_FLIP_DIAG			0b00000001
+
+#define RENDER_FLAGS_FLIP_MASK			0b00000111
+#define RENDER_FLAGS_DIRECTION_MASK		0b00000011
 #define NUM_DIRECTIONS 4
 
-struct RenderFlags
-{
-	RenderFlags(const RenderFlags& flags) noexcept
-	{
-		rf.i = flags.rf.i;
-	}
-
-	RenderFlags(const uint8_t& flags) noexcept
-	{
-		rf.i = flags;
-	}
-
-	inline void updateDirectionAndPreserveFlags(uint8_t desired)
-	{
-		rf.i = (rf.i & RENDER_FLAGS_DIRECTION_MASK)
-			| (rf.i & (RENDER_FLAGS_IS_DEBUG | RENDER_FLAGS_IS_GLITCHED));
-	}
-
-	operator uint8_t()
-	{
-		return rf.i;
-	}
-
-	union rf_u
-	{
-		uint8_t i;
-		struct rf_t
-		{
-			uint8_t diagonal : 1;
-			uint8_t vertical : 1;
-			uint8_t horizontal : 1;
-			uint8_t paddingA : 1;
-			uint8_t paddingB : 1;
-			uint8_t paddingC : 1;
-			uint8_t debug : 1;
-			uint8_t glitched : 1;
-		} d;
-	} rf;
-
-	
-
-
-};
+//struct RenderFlags
+//{
+//	inline void updateDirectionAndPreserveFlags(uint8_t desired)
+//	{
+//		auto directionMask = (desired & RENDER_FLAGS_DIRECTION_MASK);
+//		
+//			| (rf.i & (RENDER_FLAGS_IS_DEBUG | RENDER_FLAGS_IS_GLITCHED));
+//	}
+//
+//	operator uint8_t()
+//	{
+//		return (uint8_t)
+//			diagonal
+//			| vertical << 1
+//			| horizontal << 2
+//			| paddingA << 3
+//			| paddingB << 4
+//			| paddingC << 5
+//			| debug << 6
+//			| glitched << 7;
+//	}
+//
+//	bool diagonal : 1;
+//	bool vertical : 1;
+//	bool horizontal : 1;
+//	bool paddingA : 1;
+//	bool paddingB : 1;
+//	bool paddingC : 1;
+//	bool debug : 1;
+//	bool glitched : 1;
+//};
 
 
 //this is a point in 2D space.
@@ -133,24 +122,23 @@ struct Point
 		return point;
 	}
 
-	Point flipByFlags(RenderFlags flags, uint16_t width, uint16_t height) const
+	Point flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 	{
 		Point point = Point{ x,y };
 
-		if (flags.rf.i != 0)
+		if (flags)
 		{
-			RenderFlags flagsUnion = { flags };
-			if (flagsUnion.rf.d.diagonal)
+			if (flags & RENDER_FLAGS_FLIP_DIAG)
 			{
 				auto xTemp = point.x;
 				point.x = point.y;
 				point.y = xTemp;
 			}
-			if (flagsUnion.rf.d.horizontal)
+			if (flags & RENDER_FLAGS_FLIP_X)
 			{
 				point.x = width - point.x;
 			}
-			if (flagsUnion.rf.d.vertical)
+			if (flags & RENDER_FLAGS_FLIP_Y)
 			{
 				point.y = height - point.y;
 			}
