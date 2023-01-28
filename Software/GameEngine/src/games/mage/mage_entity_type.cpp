@@ -90,14 +90,13 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       if (animationDirection->type == 0)
       {
          //TODO FIXME:
-         //auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->TypeId());
-         //MageAnimation::Frame currentFrame = animation->GetFrame(currentFrameIndex);
-         //renderableData.tilesetId = animation->TilesetId();
-         //renderableData.tileId = currentFrame.tileId;
-         //renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
-         //renderableData.frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
-         //renderableData.renderFlags = animationDirection->RenderFlags(); //no need to check, it shouldn't cause a crash.
-         //renderableData.renderFlags += direction & 0x80;
+         auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->typeId);
+         auto currentFrame = animation->GetFrame(currentFrameIndex);
+         renderableData.tilesetId = animation->TilesetId();
+         renderableData.tileId = currentFrame->tileId;
+         renderableData.duration = currentFrame->duration; //no need to check, it shouldn't cause a crash.
+         renderableData.frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection->renderFlags; //no need to check, it shouldn't cause a crash.
       }
       else
       {

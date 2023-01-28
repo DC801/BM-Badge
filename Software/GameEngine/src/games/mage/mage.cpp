@@ -616,7 +616,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 
          currentTile.tileId -= 1;
 
-         auto tileset = ROM()->GetUniqueCopy<MageTileset>(currentTile.tilesetId);
+         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile.tilesetId);
 
          if (!tileset->Valid())
          {

@@ -1622,7 +1622,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    {
       const auto entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto renderable = entity->getRenderableData();
-      auto geometry = ROM()->GetUniqueCopy<MageGeometry>(argStruct->geometryId);
+      auto geometry = ROM()->InitializeRAMCopy<MageGeometry>(argStruct->geometryId);
 
       auto offsetPoint = geometry->GetPoint(0) - entity->getRenderableData()->center - entity->location;
       entity->SetLocation(offsetPoint);
@@ -1858,7 +1858,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
 
    const auto entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->GetUniqueCopy<MageGeometry>(argStruct->geometryId);
+   auto geometry = ROM()->InitializeRAMCopy<MageGeometry>(argStruct->geometryId);
 
    camera.followEntityId = NO_PLAYER;
    const auto midScreen = Point{ HALF_WIDTH, HALF_HEIGHT };

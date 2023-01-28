@@ -254,7 +254,7 @@ void MageCommandControl::showSerialDialog(uint16_t serialDialogId)
    scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
    uint32_t serialDialogAddress =  0;// tileManager->imageHeader.offset(serialDialogId);
    //ROM()->Read(serialDialog, serialDialogAddress);
-   serialDialog = ROM()->GetUniqueCopy<MageSerialDialog>(serialDialogId);
+   serialDialog = ROM()->InitializeRAMCopy<MageSerialDialog>(serialDialogId);
    auto dialogString = stringLoader->getString(serialDialog->stringId);
    // serialDialogBuffer += (
    // 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +

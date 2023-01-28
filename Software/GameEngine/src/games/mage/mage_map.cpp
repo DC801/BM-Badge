@@ -6,7 +6,7 @@
 
 void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebugOn)
 {
-   auto map = ROM()->GetUniqueCopy<MapData>(index);
+   auto map = ROM()->InitializeRAMCopy<MapData>(index);
    currentMap = std::move(map);
 }
 
@@ -38,8 +38,14 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    ROM()->InitializeVectorFrom(geometryGlobalIds, address, geometryCount);
    ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
    ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
+   
+   for (auto i = 0; i < entityCount; i++)
+   {
+      auto entityAddress = ROM()->GetAddress<MageEntity>(entityGlobalIds[i]);
+      entities.push_back(MageEntity{ entityAddress });
+   }
 
-   for (uint32_t i = 0; i < layerCount; i++)
+   for (auto i = 0; i < layerCount; i++)
    {
       layerAddresses.push_back(address);
       address += rows * cols * sizeof(uint8_t*);
@@ -48,7 +54,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
    {
-      address += sizeof(uint16_t); // Padding
+      address += sizeof(uint16_t);
    }
 }
 

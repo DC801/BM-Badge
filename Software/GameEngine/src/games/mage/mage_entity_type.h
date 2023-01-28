@@ -71,8 +71,12 @@ public:
    void updateRenderableData(uint32_t deltaTime = 0);
 
    RenderableData* getRenderableData() { return &renderableData; }
+   const RenderableData* getRenderableData() const { return &renderableData; }
 
-   char name[MAGE_ENTITY_NAME_LENGTH]{ 0 };
+
+
+   char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
+   // put the sheep back in the pen, rake in the lake
    Point location{ 0 };
    uint16_t onInteractScriptId{ 0 };
    uint16_t onTickScriptId{ 0 };
@@ -86,6 +90,9 @@ public:
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
+
+private:
+   RenderableData renderableData{};
 };
 
 

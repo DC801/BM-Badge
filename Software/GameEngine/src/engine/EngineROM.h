@@ -392,7 +392,7 @@ struct EngineROM
    uint16_t GetCount() { return getHeader<TData>().Count(); }
 
    template <typename T>
-   std::unique_ptr<T> GetUniqueCopy(uint16_t index) const
+   std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
       static_assert(std::is_constructible_v<T, uint32_t&>, "Must have a constructor accepting a uint32_t& address");
       auto address = getHeader<T>().address((uint32_t)romDataInDesktopRam.get(), index);
@@ -430,7 +430,6 @@ struct EngineROM
    void InitializeVectorFrom(std::vector<T>& v, uint32_t& address, size_t count) const
    {
       static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
-      v.clear();
       for (auto i = 0; i < count; i++)
       {
          if constexpr (std::is_standard_layout_v<T>)

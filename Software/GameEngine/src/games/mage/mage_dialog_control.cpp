@@ -38,7 +38,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 
    currentScreenIndex = 0;
    currentResponseIndex = 0;
-   currentDialog = ROM()->GetUniqueCopy<MageDialog>(dialogId);
+   currentDialog = ROM()->InitializeRAMCopy<MageDialog>(dialogId);
 
    loadNextScreen();
 
