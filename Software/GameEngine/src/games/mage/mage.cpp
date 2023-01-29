@@ -46,48 +46,48 @@ void MageGameEngine::handleEntityInteract(bool hack)
 
    auto playerEntity = mapControl->getPlayerEntity();
 
-   auto playerRenderableData = mapControl->getPlayerEntity().getRenderableData();
-   playerRenderableData->interactBox = playerRenderableData->hitBox;
+   auto playerRenderableData = mapControl->getPlayerEntityRenderableData();
+   playerRenderableData.interactBox = playerRenderableData.hitBox;
 
    const uint8_t interactLength = 32;
-   auto direction = playerEntity.renderFlags & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = playerRenderableData.renderFlags & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
-      playerRenderableData->interactBox.origin.y -= interactLength;
-      playerRenderableData->interactBox.h = interactLength;
+      playerRenderableData.interactBox.origin.y -= interactLength;
+      playerRenderableData.interactBox.h = interactLength;
    }
    if (direction == EAST)
    {
-      playerRenderableData->interactBox.origin.x += playerRenderableData->interactBox.w;
-      playerRenderableData->interactBox.w = interactLength;
+      playerRenderableData.interactBox.origin.x += playerRenderableData.interactBox.w;
+      playerRenderableData.interactBox.w = interactLength;
    }
    if (direction == SOUTH)
    {
-      playerRenderableData->interactBox.origin.y += playerRenderableData->interactBox.h;
-      playerRenderableData->interactBox.h = interactLength;
+      playerRenderableData.interactBox.origin.y += playerRenderableData.interactBox.h;
+      playerRenderableData.interactBox.h = interactLength;
    }
    if (direction == WEST)
    {
-      playerRenderableData->interactBox.origin.x -= interactLength;
-      playerRenderableData->interactBox.w = interactLength;
+      playerRenderableData.interactBox.origin.x -= interactLength;
+      playerRenderableData.interactBox.w = interactLength;
    }
 
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
    {
       // reset all interact states first
-      auto targetEntity = mapControl->getEntity(i);
-      auto targetRenderableData = targetEntity.getRenderableData();
-      targetRenderableData->isInteracting = false;
+      auto& targetEntity = mapControl->getEntity(i);
+      auto& targetRenderableData = mapControl->getEntityRenderableData(i);
+      targetRenderableData.isInteracting = false;
 
       if (i != mapControl->getPlayerEntityIndex())
       {
-         bool colliding = targetRenderableData->hitBox
-            .Overlaps(playerRenderableData->interactBox);
+         bool colliding = targetRenderableData.hitBox
+            .Overlaps(playerRenderableData.interactBox);
 
          if (colliding)
          {
-            playerRenderableData->isInteracting = true;
-            mapControl->getEntity(i).getRenderableData()->isInteracting = true;
+            playerRenderableData.isInteracting = true;
+            mapControl->getEntityRenderableData(i).isInteracting = true;
             isMoving = false;
             if (hack && playerHasHexEditorControl)
             {
@@ -214,8 +214,8 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    // if there is a player on the map
    if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
    {
-      auto playerEntity = mapControl->getPlayerEntity();
-      playerEntity.updateRenderableData();
+      auto& playerEntity = mapControl->getPlayerEntity();
+      playerEntity.updateRenderableData(mapControl->getPlayerEntityRenderableData());
 
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
@@ -237,14 +237,14 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       {
          //auto playerVelocity = playerVelocity;
          playerVelocity = { 0,0 };
-         auto& direction = playerEntity.renderFlags;
+         auto& direction = mapControl->getPlayerEntityRenderableData().renderFlags;
          if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            playerEntity.renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
+            mapControl->getPlayerEntityRenderableData().renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
@@ -302,8 +302,8 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
       bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
          && (playerEntity.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (playerEntity.currentFrameIndex == (playerEntity.getRenderableData()->frameCount - 1))
-         && (playerEntity.getRenderableData()->currentFrameTicks + deltaTime >= (playerEntity.getRenderableData()->duration));
+         && (playerEntity.currentFrameIndex == (mapControl->getPlayerEntityRenderableData().frameCount - 1))
+         && (mapControl->getPlayerEntityRenderableData().currentFrameTicks + deltaTime >= (mapControl->getPlayerEntityRenderableData().duration));
 
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
@@ -316,13 +316,13 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       if (previousPlayerAnimation != playerEntity.currentAnimation)
       {
          playerEntity.currentFrameIndex = 0;
-         playerEntity.getRenderableData()->currentFrameTicks = 0;
+         mapControl->getPlayerEntityRenderableData().currentFrameTicks = 0;
       }
 
       //What scenarios call for an extra renderableData update?
-      if (isMoving || (playerEntity.getRenderableData()->lastTilesetId != playerEntity.getRenderableData()->tilesetId))
+      if (isMoving || (mapControl->getPlayerEntityRenderableData().lastTilesetId != mapControl->getPlayerEntityRenderableData().tilesetId))
       {
-         playerEntity.updateRenderableData();
+         playerEntity.updateRenderableData(mapControl->getPlayerEntityRenderableData());
       }
       if (!playerHasControl || !playerHasHexEditorControl)
       {
@@ -378,7 +378,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    {
 
       //apply inputs to the hex editor:
-      hexEditor->applyHexModeInputs((uint8_t*)mapControl->currentMap->entities.data());
+      hexEditor->applyHexModeInputs(mapControl->GetEntityDataPointer());
 
       //then handle any still-running scripts:
       scriptControl->tickScripts();
@@ -537,9 +537,9 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    auto mageCollisionSpokes = MageGeometry{ MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT };
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
-   auto playerRenderableData = mapControl->getPlayerEntity().getRenderableData();
+   auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
 
-   auto playerRect = playerRenderableData->hitBox;
+   auto playerRect = playerRenderableData.hitBox;
    int16_t abs_x = abs(playerVelocity.x);
    int16_t abs_y = abs(playerVelocity.y);
    if (abs_x)
@@ -561,8 +561,8 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    Point tileTopLeftPoint = { 0, 0 };
    uint16_t geometryId = 0;
    auto pushback = Point{};
-   Point playerPoint = playerRenderableData->center;
-   float playerSpokeRadius = playerRenderableData->hitBox.w / 1.5;
+   Point playerPoint = playerRenderableData.center;
+   float playerSpokeRadius = playerRenderableData.hitBox.w / 1.5;
    float angleOffset = atan2(playerVelocity.y, playerVelocity.x)
       - (PI / 2)
       + ((PI / MAGE_COLLISION_SPOKE_COUNT) / 2);
@@ -581,16 +581,16 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    if (isCollisionDebugOn)
    {
       frameBuffer->drawRect(playerRect.origin - camera.position, playerRect.w, playerRect.h, COLOR_BLUE);
-      for (auto& point : std::vector<Point>{ mageCollisionSpokes.GetPoints(), mageCollisionSpokes.GetPoints() + mageCollisionSpokes.GetPointCount() })
-      //for (int i = 0; i < mageCollisionSpokes.segmentLengths.size(); i++)
+      for (int i = 0; i < mageCollisionSpokes.GetPointCount(); i++)
       {
+         auto& point = mageCollisionSpokes.GetPoint(i);
          frameBuffer->drawLine(point - camera.position, playerPoint - camera.position, COLOR_PURPLE);
       }
    }
 
    for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
-      auto layerAddress = mapControl->LayerAddress(layerIndex);
+      const auto layerAddress = mapControl->LayerAddress(layerIndex);
       for (auto i = 0u; i < mapControl->Cols() * mapControl->Rows(); i++)
       {
          tileTopLeftPoint.x = (int32_t)(mapControl->TileWidth() * (i % mapControl->Cols()));
@@ -624,34 +624,34 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
             {
                float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
-               Point* spokePoint = const_cast<Point*>(&mageCollisionSpokes.GetPoint(i));
-               spokePoint->x = cos(angle) * playerSpokeRadius
+               auto& spokePoint = mageCollisionSpokes.GetPoint(i);
+               spokePoint.x = cos(angle) * playerSpokeRadius
                   + playerVelocity.x + playerPoint.x
                   - tileTopLeftPoint.x;
-               spokePoint->y = sin(angle) * playerSpokeRadius
+               spokePoint.y = sin(angle) * playerSpokeRadius
                   + playerVelocity.y + playerPoint.y
                   - tileTopLeftPoint.y;
             }
             geometryId--;
 
-            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId)
+            auto geometryPoints = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId)
                ->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
-            Point offsetPoint = { uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
+            auto offsetPoint = Point{ uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
             bool isMageInGeometry = false;
 
             bool collidedWithThisTileAtAll = false;
-            for (int tileLinePointIndex = 0; tileLinePointIndex < geometry.GetPointCount(); tileLinePointIndex++)
+            for (int tileLinePointIndex = 0; tileLinePointIndex < geometryPoints.size(); tileLinePointIndex++)
             {
-               Point tileLinePointA = geometry.GetPoint(tileLinePointIndex);
-               Point tileLinePointB = geometry.GetPoint(tileLinePointIndex + 1);
+               auto& tileLinePointA = geometryPoints[tileLinePointIndex];
+               auto& tileLinePointB = geometryPoints[tileLinePointIndex + 1];
                bool collidedWithTileLine = false;
 
                for (auto spokeIndex = 0; spokeIndex < mageCollisionSpokes.GetPointCount(); spokeIndex++)
                {
                   auto spokePointB = mageCollisionSpokes.GetPoint(spokeIndex);
 
-                  auto spokeIntersectionPoint = geometry.getIntersectPointBetweenLineSegments(offsetPoint, spokePointB, tileLinePointA, tileLinePointB);
+                  auto spokeIntersectionPoint = MageGeometry::getIntersectPointBetweenLineSegments(offsetPoint, spokePointB, tileLinePointA, tileLinePointB);
                   if (spokeIntersectionPoint.has_value())
                   {
                      collidedWithTileLine = true;

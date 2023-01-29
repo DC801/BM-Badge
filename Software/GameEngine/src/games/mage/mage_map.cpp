@@ -2,11 +2,25 @@
 #include "EnginePanic.h"
 #include "shim_err.h"
 #include <algorithm>
+#include <numeric>
 #include "mage.h"
 
 void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebugOn)
 {
    auto map = ROM()->InitializeRAMCopy<MapData>(index);
+   
+   for (auto i = 0; i < MAX_ENTITIES_PER_MAP; i++)
+   {
+      if (i < map->entityCount)
+      {
+         auto entityAddress = ROM()->GetAddress<MageEntity>(map->entityGlobalIds[i]);
+         ROM()->Read(entities[i], entityAddress);
+      }
+      else
+      {
+         entities[i] = {};
+      }
+   }
    currentMap = std::move(map);
 }
 
@@ -39,12 +53,6 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
    ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
    
-   for (auto i = 0; i < entityCount; i++)
-   {
-      auto entityAddress = ROM()->GetAddress<MageEntity>(entityGlobalIds[i]);
-      entities.push_back(MageEntity{ entityAddress });
-   }
-
    for (auto i = 0; i < layerCount; i++)
    {
       layerAddresses.push_back(address);
@@ -63,32 +71,33 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
    int32_t cameraX = cameraPosition.x;
    int32_t cameraY = cameraPosition.y;
    //first sort entities by their y values:
-   auto sortByY = [](const auto& entity1, const auto& entity2) { return entity1.location.y < entity2.location.y; };
-   std::sort(currentMap->entities.data(), currentMap->entities.data() + currentMap->entityCount, sortByY);
-
-   uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
+   std::vector<size_t> entityDrawOrder(currentMap->entityCount);
+   std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
+   auto sortByY = [&](size_t i1, size_t i2) { return entities[i1].location.y < entities[i2].location.y; };
+   std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
    //iterate through it and draw the entities one by one:
-   for (auto i = 0; i < currentMap->entityCount; i++)
+   for (auto& entityIndex: entityDrawOrder)
    {
-      auto& entity = currentMap->entities[i];
-      auto renderableData = entity.getRenderableData();
+      auto& entity = entities[entityIndex];
+      auto& renderableData = entityRenderableData[entityIndex];
 
       tileManager->DrawTile(renderableData, entity.location.x, entity.location.y);
 
       if (isCollisionDebugOn)
       {
          auto tileOrigin = Point{ uint16_t(entity.location.x - cameraX), uint16_t(entity.location.y - cameraY - currentMap->tileHeight) };
-         auto hitboxOrigin = renderableData->hitBox.origin - cameraPosition;
+         auto hitboxOrigin = renderableData.hitBox.origin - cameraPosition;
 
          frameBuffer->drawRect(tileOrigin, currentMap->tileWidth, currentMap->tileHeight, COLOR_LIGHTGREY);
-         frameBuffer->drawRect(hitboxOrigin, renderableData->hitBox.w, renderableData->hitBox.h, renderableData->isInteracting ? COLOR_RED : COLOR_GREEN);
-         frameBuffer->drawPoint(renderableData->center - cameraPosition, 5, COLOR_BLUE);
+         frameBuffer->drawRect(hitboxOrigin, renderableData.hitBox.w, renderableData.hitBox.h, renderableData.isInteracting ? COLOR_RED : COLOR_GREEN);
+         frameBuffer->drawPoint(renderableData.center - cameraPosition, 5, COLOR_BLUE);
+         uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
          if (getPlayerEntityIndex() == filteredPlayerEntityIndex)
          {
-            auto interactBoxOrigin = renderableData->interactBox.origin - cameraPosition;
-            frameBuffer->drawRect(interactBoxOrigin, renderableData->interactBox.w, renderableData->interactBox.h, renderableData->isInteracting ? COLOR_BLUE : COLOR_YELLOW);
+            auto interactBoxOrigin = renderableData.interactBox.origin - cameraPosition;
+            frameBuffer->drawRect(interactBoxOrigin, renderableData.interactBox.w, renderableData.interactBox.h, renderableData.isInteracting ? COLOR_BLUE : COLOR_YELLOW);
          }
       }
    }
@@ -101,11 +110,11 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       return;
    }
 
-   Point playerPoint = getPlayerEntity().getRenderableData()->center;
+   Point playerPoint = entityRenderableData[currentMap->playerEntityIndex].center;
 
    for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
    {
-      auto tileOrigin = Point{ uint16_t(currentMap->tileWidth * (i % currentMap->cols)), uint16_t(currentMap->tileHeight * (i / currentMap->cols)) };
+      auto tileOrigin = Point{ uint16_t(currentMap->tileWidth * (i % currentMap->cols)), uint16_t(currentMap->tileHeight * (i / currentMap->rows)) };
       auto tileDrawPoint = tileOrigin - cameraPosition;
 
       // don't draw tiles that are entirely outside the screen bounds
@@ -132,8 +141,8 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
          {
             geometryId -= 1;
 
-            auto geometryIn = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
-            auto geometry = geometryIn->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
+            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
+            auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
             bool isMageInGeometry = false;
 
@@ -142,21 +151,21 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
                && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight)
             {
                auto offsetPoint = playerPoint - tileDrawPoint;
-               isMageInGeometry = geometry.isPointInGeometry(offsetPoint);
+               isMageInGeometry = geometry->isPointInGeometry(offsetPoint);
             }
 
-            if (geometry.GetTypeId() == MageGeometryType::Point)
+            if (geometry->GetTypeId() == MageGeometryType::Point)
             {
-               frameBuffer->drawPoint(geometry.GetPoint(0) + tileDrawPoint - cameraPosition, 4, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
+               frameBuffer->drawPoint(geometryPoints[0] + tileDrawPoint - cameraPosition, 4, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
             }
             else
             {
                // POLYLINE segmentCount is pointCount - 1
                // POLYGON segmentCount is same as pointCount
-               for (int i = 0; i < geometry.GetPointCount(); i++)
+               for (int i = 0; i < geometryPoints.size(); i++)
                {
-                  auto pointA = geometry.GetPoint(i) + tileDrawPoint - cameraPosition;
-                  auto pointB = geometry.GetPoint(i + 1) + tileDrawPoint - cameraPosition;
+                  auto& pointA = geometryPoints[i] + tileDrawPoint - cameraPosition;
+                  auto& pointB = geometryPoints[i + 1] + tileDrawPoint - cameraPosition;
                   frameBuffer->drawLine(pointA, pointB, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
                }
             }
@@ -167,20 +176,15 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
 
 void MapControl::DrawGeometry(const Point& cameraPosition) const
 {
-   const Point* playerPosition;
+   Point playerPosition;
    bool isColliding = false;
    if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      auto renderable = getPlayerEntity().getRenderableData();
-      playerPosition = &renderable->center;
-   }
-
-   if (currentMap->playerEntityIndex != NO_PLAYER)
-   {
+      playerPosition = entityRenderableData[currentMap->playerEntityIndex].center;
       for (uint16_t i = 0; i < GeometryCount(); i++)
       {
          auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
-         isColliding = geometry->isPointInGeometry(*playerPosition);
+         isColliding = geometry->isPointInGeometry(playerPosition);
          //geometry.draw(cameraX, cameraY, isColliding ? COLOR_RED : COLOR_GREEN);
       }
    }
@@ -191,7 +195,8 @@ void MapControl::UpdateEntities(uint32_t deltaTime)
 {
    for (auto i = 0; i < currentMap->entityCount; i++)
    {
-      auto& entity = currentMap->entities[i];
-      entity.updateRenderableData(deltaTime);
+      auto& entity = entities[i];
+      auto& renderableData = entityRenderableData[i];
+      entity.updateRenderableData(renderableData, deltaTime);
    }
 }

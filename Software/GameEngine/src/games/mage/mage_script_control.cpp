@@ -100,7 +100,7 @@ void MageScriptControl::processActionQueue(MageScriptState& resumeState, MageScr
             //target is an entity
             else
             {
-               auto entity = mapControl->getEntity(currentEntityId);// -> = jumpScriptId.value();
+               auto& entity = mapControl->getEntity(currentEntityId);
 
                //if it's not a map script, set the appropriate entity's script value:
                if (currentScriptType == MageScriptType::ON_INTERACT)

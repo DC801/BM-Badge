@@ -47,7 +47,6 @@ struct MapData
    std::vector<uint16_t> scriptGlobalIds{};
    std::vector<GoDirection> goDirections{};
    std::vector<uint32_t> layerAddresses{};
-   std::vector<MageEntity> entities{};
 };
 
 struct MageMapTile
@@ -69,7 +68,7 @@ public:
       tileManager(tileManager)
    { }
 
-   uint8_t* GetEntityDataPointer() { return (uint8_t*)currentMap->entities.data(); }
+   uint8_t* GetEntityDataPointer() { return (uint8_t*)entities.data(); }
    void Load(uint16_t index, bool isCollisionDebugOn=false, bool isEntityDebugOn=false);
    void Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn=false) const;
    void DrawGeometry(const Point& cameraPosition) const;
@@ -130,30 +129,42 @@ public:
       return getEntity(currentMap->playerEntityIndex);
    }
 
+   RenderableData& getPlayerEntityRenderableData()
+   {
+      return getEntityRenderableData(currentMap->playerEntityIndex);
+   }
+
+
    const MageEntity& getEntity(uint16_t id) const
    {
-      return currentMap->entities[id];
+      return entities[id];
    }
 
    MageEntity& getEntity(uint16_t id)
    {
-      return currentMap->entities[id];
+      return entities[id];
    }
+
+   RenderableData& getEntityRenderableData(uint16_t id)
+   {
+      return entityRenderableData[id];
+   }
+
 
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
-      if (!filteredMapLocalEntityIds) { return 0; }
       return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
    }
 
-   const MageEntity* getEntityByMapLocalId(uint16_t mapLocalId) const
+   const MageEntity& getEntityByMapLocalId(uint16_t mapLocalId) const
    {
-      return &currentMap->entities[mapLocalId % currentMap->entityCount];
+      auto entityId = currentMap->entityGlobalIds[mapLocalId % currentMap->entityCount];
+      return entities[entityId];
    }
 
-   MageEntity* getEntityByMapLocalId(uint16_t mapLocalId)
+   MageEntity& getEntityByMapLocalId(uint16_t mapLocalId)
    {
-      return &currentMap->entities[mapLocalId % currentMap->entityCount];
+      return entities[mapLocalId % currentMap->entityCount];
    }
 
    uint32_t LayerAddress(uint16_t layerIndex) const
@@ -206,10 +217,10 @@ private:
    //this is the hackable array of entities that are on the current map
    //the data contained within is the data that can be hacked in the hex editor.
    std::array<MageEntity, MAX_ENTITIES_PER_MAP> entities{  };
+   std::array<RenderableData, MAX_ENTITIES_PER_MAP> entityRenderableData{  };
 
    uint8_t filteredMapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
    uint8_t mapLocalEntityIds[MAX_ENTITIES_PER_MAP]{ NO_PLAYER };
-
 
 }; //class MapControl
 

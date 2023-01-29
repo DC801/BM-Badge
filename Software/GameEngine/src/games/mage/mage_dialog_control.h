@@ -202,7 +202,7 @@ enum MageSerialDialogResponseTypes : uint8_t
 
 struct MageSerialDialog
 {
-   MageSerialDialog() noexcept = default;
+   //MageSerialDialog() noexcept = default;
    MageSerialDialog(uint32_t& address)
    {
       ROM()->Read(name, address, 32);

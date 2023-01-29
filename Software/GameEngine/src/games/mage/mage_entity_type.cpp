@@ -4,30 +4,7 @@
 #include "FrameBuffer.h"
 #include "convert_endian.h"
 
-MageEntity::MageEntity(uint32_t& offset)
-{
-   ROM()->Read(name, offset, MAGE_ENTITY_NAME_LENGTH);
-   uint16_t xLoc, yLoc;
-   ROM()->Read(xLoc, offset);
-   ROM()->Read(yLoc, offset);
-   location = Point{ xLoc, yLoc };
-
-   ROM()->Read(onInteractScriptId, offset);
-   ROM()->Read(onTickScriptId, offset);
-   ROM()->Read(primaryId, offset);
-   ROM()->Read(secondaryId, offset);
-   ROM()->Read(primaryIdType, offset);
-   ROM()->Read(currentAnimation, offset);
-   ROM()->Read(currentFrameIndex, offset);
-   ROM()->Read(renderFlags, offset);
-
-   ROM()->Read(hackableStateA, offset);
-   ROM()->Read(hackableStateB, offset);
-   ROM()->Read(hackableStateC, offset);
-   ROM()->Read(hackableStateD, offset);
-}
-
-void MageEntity::updateRenderableData(uint32_t deltaTime)
+void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t deltaTime)
 {
    renderableData.currentFrameTicks += deltaTime;
    if (primaryIdType == MageEntityPrimaryIdType::TILESET)
@@ -77,7 +54,7 @@ void MageEntity::updateRenderableData(uint32_t deltaTime)
       auto animation = entityType->GetAnimation(currentAnimation);
 
       //create a animationDirection entity based on direction:
-      auto dirValue = (MageEntityAnimationDirection)(renderFlags & RENDER_FLAGS_DIRECTION_MASK);
+      auto dirValue = (MageEntityAnimationDirection)(renderableData.renderFlags & RENDER_FLAGS_DIRECTION_MASK);
       const AnimationDirection* animationDirection =
          dirValue == MageEntityAnimationDirection::NORTH ? &animation->North
          : dirValue == MageEntityAnimationDirection::EAST ? &animation->East

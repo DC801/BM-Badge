@@ -379,9 +379,9 @@ private:
    float getProgressOfAction(const MageScriptState& resumeState);
    float manageProgressOfAction(MageScriptState& resumeState, uint32_t duration);
 
-   void setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, MageEntity* entity, const MageGeometry* geometry);
+   void setResumeStatePointsAndEntityDirection(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry);
 
-   void initializeEntityGeometryPath(MageScriptState& resumeState, RenderableData* renderable, MageEntity* entity, const MageGeometry* geometry);
+   void initializeEntityGeometryPath(MageScriptState& resumeState, uint16_t sourceEntityIndex, const MageGeometry* geometry);
 
    enum class MageMutateOperation : uint8_t
    {

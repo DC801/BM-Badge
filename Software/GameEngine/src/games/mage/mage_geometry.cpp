@@ -5,59 +5,26 @@
 #include "shim_err.h"
 #include <algorithm>
 
-MageGeometry::MageGeometry(uint32_t& offset)
+std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 {
-#ifndef DC801_EMBEDDED
-   ROM()->Read(name, offset, 32);
-#else
-   //skip over name:
-   offset += 32;
-#endif
-   ROM()->Read(typeId, offset);
-   ROM()->Read(pointCount, offset);
-   ROM()->Read(segmentCount, offset);
+   auto points = std::vector<Point>{ pointCount };
 
-   offset += 1; //padding
-
-   //read pathLength:
-   ROM()->Read(pathLength, offset);
-
-   auto pointArrayPtr = new Point[pointCount]{ 0,0 };
-   auto segmentLengthArrayPtr = new float[segmentCount] {0.0f};
-
-   //generate appropriately sized point array:
-   ROM()->Read(*pointArrayPtr, offset, pointCount);
-
-   //generate appropriately sized array:
-   ROM()->Read(*segmentLengthArrayPtr, offset, segmentCount);
-
-   points.reset(pointArrayPtr);
-   segmentLengths.reset(segmentLengthArrayPtr);
-}
-
-MageGeometry::MageGeometry(MageGeometryType type, uint8_t numPoints)
-   : pointCount(numPoints)
-{
-   typeId = type;
-   auto segmentCount = typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1;
-   points = std::unique_ptr<Point[]>(new Point[numPoints]{ 0,0 });
-   segmentLengths = std::unique_ptr<float[]>(new float[segmentCount] {0.0f});
-}
-
-MageGeometry MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
-{
-   auto geometry = MageGeometry{ typeId, pointCount };
-   if (flags != 0)
+   for (uint8_t i = 0; i < pointCount; i++)
    {
-      for (uint8_t i = 0; i < pointCount; i++)
+      auto& point = GetPoint(i);
+      if (flags == 0)
       {
-         const_cast<Point&>(geometry.points[i]) = geometry.points[i].flipByFlags(flags, width, height);
+         points.push_back(point);
+      }
+      else
+      {
+         points.push_back(point.flipByFlags(flags, width, height));
       }
    }
-   return geometry;
+   return points;
 }
 
-bool MageGeometry::isPointInGeometry(Point point) const
+bool MageGeometry::isPointInGeometry(const Point& point) const
 {
    if (typeId == MageGeometryType::Point)
    {
@@ -70,8 +37,8 @@ bool MageGeometry::isPointInGeometry(Point point) const
       for (i = 0, j = GetPointCount() - 1; i < GetPointCount(); j = i++)
       {
          //get the points for i and j:
-         Point points_i = GetPoint(i);
-         Point points_j = GetPoint(j);
+         auto& points_i = GetPoint(i);
+         auto& points_j = GetPoint(j);
          //do the fancy check:
          if ((points_i.y >= point.y) != (points_j.y >= point.y)
             && point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)
@@ -133,9 +100,9 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
 
       // Determine if the intersection is inside the bounds of lineA AND lineB
       if (x >= lineAXMin && x <= lineAXMax
-       && y >= lineAYMin && y <= lineAYMax 
-       && x >= lineBXMin && x <= lineBXMax
-       && y >= lineBYMin && y <= lineBYMax)
+         && y >= lineAYMin && y <= lineAYMax
+         && x >= lineBXMin && x <= lineBXMax
+         && y >= lineBYMin && y <= lineBYMax)
       {
          return Point{ (uint16_t)x, (uint16_t)y };
       }

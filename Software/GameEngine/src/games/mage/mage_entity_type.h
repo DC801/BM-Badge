@@ -48,33 +48,8 @@ private:
    uint8_t animationCount{ 0 };
 };
 
-class MageEntity
+struct MageEntity
 {
-public:
-   MageEntity() noexcept = default;
-   MageEntity(uint32_t& offset);
-
-   void SetLocation(const Point& p) { location = p; }
-   void SetName(std::string s)
-   {
-      for (auto i = 0; i < s.length() && i < MAGE_ENTITY_NAME_LENGTH; i++)
-      {
-         name[i] = s[i];
-      }
-   }
-
-   bool isDebug() const { return renderFlags & RENDER_FLAGS_IS_DEBUG; }
-   void SetRenderDirection(uint8_t renderFlags)
-   {
-      this->renderFlags = renderFlags;
-   }
-   void updateRenderableData(uint32_t deltaTime = 0);
-
-   RenderableData* getRenderableData() { return &renderableData; }
-   const RenderableData* getRenderableData() const { return &renderableData; }
-
-
-
    char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
    // put the sheep back in the pen, rake in the lake
    Point location{ 0 };
@@ -91,8 +66,16 @@ public:
    uint8_t hackableStateC{ 0 };
    uint8_t hackableStateD{ 0 };
 
-private:
-   RenderableData renderableData{};
+   void SetName(std::string s)
+   {
+      for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
+      {
+         name[i] = i < s.length() ? s[i] : 0;
+      }
+   }
+
+   bool isDebug() const { return renderFlags & RENDER_FLAGS_IS_DEBUG; }
+   void updateRenderableData(RenderableData& renderableData, uint32_t deltaTime = 0);
 };
 
 

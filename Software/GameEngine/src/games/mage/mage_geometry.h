@@ -28,19 +28,21 @@ class MageGeometry
 {
 public:
    //default constructor returns a point with coordinates 0,0:
-   MageGeometry() = default;
+   MageGeometry() noexcept = default;
 
    //this constructor allows you to make a geometry of a known type and pointCount.
    //you'll need to manually fill in the points, though. They all default to 0,0.
-   MageGeometry(MageGeometryType type, uint8_t numPoints);
+   MageGeometry(MageGeometryType type, uint8_t numPoints)
+      : pointCount(numPoints),
+      typeId(type),
+      segmentCount(typeId == MageGeometryType::Polygon ? numPoints : numPoints - 1)
+   {
+   }
 
-   //this constructor takes a ROM memory offset and returns a MageGeometry object as stored in the ROM data:
-   MageGeometry(uint32_t& offset);
-
-   MageGeometry FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
+   std::vector<Point> FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const;
 
    //this checks to see if a given point is inside the boundaries of a given geometry:
-   bool isPointInGeometry(Point point) const;
+   bool isPointInGeometry(const Point& point) const;
 
    static std::optional<Point> getIntersectPointBetweenLineSegments(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
 
@@ -67,17 +69,17 @@ public:
       return result;
    }
 
-   const Point& GetPoint(uint16_t i) const { return points[i % pointCount]; }
-   Point& GetPoint(uint16_t i) { return points[i % pointCount]; }
+   Point GetPoint(uint16_t i) const { 
+      auto points = (Point*)((uint8_t*)&pathLength + sizeof(float));
+      return points[i % pointCount]; 
+   }
    uint16_t GetPointCount() const { return pointCount;  }
 
    MageGeometryType GetTypeId() const { return typeId; }
    float GetPathLength() const { return pathLength; }
-   float GetSegmentLength(uint16_t index) const { return !segmentCount ? 0.0f : segmentLengths[index % segmentCount]; }
-
-   const Point* GetPoints() const
-   {
-      return points.get();
+   float GetSegmentLength(uint16_t index) const { 
+      auto segmentLengths = (float*)((uint8_t*)&pathLength + sizeof(float) + pointCount * sizeof(Point));
+      return !segmentCount ? 0.0f : segmentLengths[index % segmentCount]; 
    }
 
 private:
@@ -88,10 +90,6 @@ private:
    uint8_t segmentCount{ 0 };
    //total length of all segments in the geometry
    float pathLength{ 0.0f };
-   //the array of the actual coordinate points that make up the geometry:
-   std::unique_ptr<Point[]> points;
-   //the array of segment lengths:
-   std::unique_ptr<float[]> segmentLengths;
 
 };
 

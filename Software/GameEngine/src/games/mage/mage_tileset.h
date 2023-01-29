@@ -102,7 +102,7 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(const RenderableData* const renderableData, uint16_t x, uint16_t y) const;
+   void DrawTile(const RenderableData& renderableData, uint16_t x, uint16_t y) const;
    void DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;

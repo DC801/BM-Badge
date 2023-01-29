@@ -34,14 +34,13 @@ MageDialogAlignmentCoords alignments[ALIGNMENT_COUNT] = {
 
 void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 {
-   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId)->name;
+   triggeringEntityName = mapControl->getEntityByMapLocalId(currentEntityId).name;
 
    currentScreenIndex = 0;
    currentResponseIndex = 0;
    currentDialog = ROM()->InitializeRAMCopy<MageDialog>(dialogId);
 
    loadNextScreen();
-
    open = true;
 }
 
@@ -175,8 +174,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
    }
    if (drawPortrait)
    {
-      //mapControl->GetTile(currentPortraitRenderableData.tileId);
-      tileManager->DrawTile(&currentPortraitRenderableData, offsetX + tileWidth, offsetY + tileHeight);
+      tileManager->DrawTile(currentPortraitRenderableData, offsetX + tileWidth, offsetY + tileHeight);
    }
 }
 
@@ -230,7 +228,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
    {
       if (currentScreen().entityIndex != NO_PLAYER)
       {
-         auto currentEntity = mapControl->getEntity(currentScreen().entityIndex);
+         auto& currentEntity = mapControl->getEntity(currentScreen().entityIndex);
          uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
@@ -239,7 +237,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
          auto animationDirection = portrait->getEmoteById(currentScreen().emoteIndex);
-         currentEntity.SetRenderDirection(animationDirection->renderFlags);
+         currentEntity.renderFlags = animationDirection->renderFlags;
          currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.renderFlags & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
          if (((uint8_t)currentScreen().alignment % 2))
