@@ -88,7 +88,7 @@ public:
 
 	//this updates the lights on the badge to match the bit state
 	//of the current byte in the hex editor.
-	void updateHexLights(uint8_t* entityDataPointer) const;
+	void updateHexLights(const uint8_t* entityDataPointer) const;
 
 	//this updates the variables used by the hex editor when applying inputs and rendering.
 	void updateHexStateVariables(uint8_t entityCount);

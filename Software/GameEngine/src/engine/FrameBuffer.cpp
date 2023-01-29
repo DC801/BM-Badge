@@ -43,7 +43,7 @@ void FrameBuffer::clearScreen(uint16_t color)
 {
    for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
    {
-      frame[i] = SCREEN_ENDIAN_U2_VALUE(color);
+      frame[i] = color;
    }
 }
 

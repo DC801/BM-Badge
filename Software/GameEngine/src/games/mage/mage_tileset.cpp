@@ -20,8 +20,8 @@ void TileManager::DrawTile(const MageTileset* const tileset, uint16_t tileId, ui
       tileset->TileHeight 
    };
    const auto sourcePoint = Point{
-      uint16_t(tileId % tileset->Cols * tileset->TileWidth),
-      uint16_t(tileId / tileset->Cols * tileset->TileHeight)
+      uint16_t(tileId % (tileset->Cols * tileset->TileWidth)),
+      uint16_t(tileId / (tileset->Cols * tileset->TileHeight))
    };
 
    frameBuffer->drawChunkWithFlags(pixels, colorPalette, targetRect, sourcePoint, tileset->ImageWidth, flags);

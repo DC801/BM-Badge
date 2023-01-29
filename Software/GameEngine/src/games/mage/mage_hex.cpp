@@ -51,7 +51,7 @@ void MageHexEditor::setPageToCursorLocation()
    currentMemPage = getCurrentMemPage();
 }
 
-void MageHexEditor::updateHexLights(uint8_t* entityDataPointer) const
+void MageHexEditor::updateHexLights(const uint8_t* entityDataPointer) const
 {
    const uint8_t currentByte = *(entityDataPointer + hexCursorLocation);
    uint8_t entityRelativeMemOffset = hexCursorLocation % sizeof(MageEntity);

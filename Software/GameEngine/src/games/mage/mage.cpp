@@ -320,10 +320,12 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       }
 
       //What scenarios call for an extra renderableData update?
-      if (isMoving || (mapControl->getPlayerEntityRenderableData().lastTilesetId != mapControl->getPlayerEntityRenderableData().tilesetId))
+      auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
+      if (isMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
       {
-         playerEntity.updateRenderableData(mapControl->getPlayerEntityRenderableData());
+         playerEntity.updateRenderableData(playerRenderableData);
       }
+
       if (!playerHasControl || !playerHasHexEditorControl)
       {
          return;
