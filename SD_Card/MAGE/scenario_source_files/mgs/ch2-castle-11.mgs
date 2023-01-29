@@ -44,7 +44,7 @@ on_exit-ch2-castle-11 { // sanitize ch2 room state
 // SERIAL: go
 
 on_go-castle-11-north {
-	copy on_exit-ch2-castle-11
+	// copy on_exit-ch2-castle-11
 	// copy warping-out-fade-out
 	// load map ch2-castle-12
 }
