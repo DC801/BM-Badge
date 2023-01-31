@@ -7,6 +7,7 @@
 #include "engine/EngineInput.h"
 #include "engine/EnginePanic.h"
 #include <optional>
+#include <array>
 
 class MapControl;
 class MageScriptControl;
@@ -159,8 +160,8 @@ private:
    std::shared_ptr<EngineInput> inputHandler;
    bool open{ false };
 
-   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const;
-   void drawDialogBox(const std::string& string, Rect box, bool drawArrow = false, bool drawPortrait = false) const;
+   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, const Rect& box) const;
+   void drawDialogBox(const std::string& string, const Rect& box, bool drawArrow = false, bool drawPortrait = false) const;
    
    inline MageDialogScreen& currentScreen() const
    {
@@ -175,11 +176,10 @@ private:
             || currentScreen().responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
    }
 
-   const MageTileset* currentFrameTileset{nullptr};
    std::string triggeringEntityName{};
    int32_t currentScreenIndex{0};
    int32_t currentMessageIndex{0};
-   uint16_t currentImageIndex{0};
+   uint16_t currentFrameTilesetIndex{ 0 };
    uint32_t cursorPhase{0};
    uint8_t currentResponseIndex{0};
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };

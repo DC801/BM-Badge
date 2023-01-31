@@ -169,8 +169,8 @@ void MageGameEngine::applyUniversalInputs()
    }
 
    //check to see if player input is allowed:
-   if (dialogControl->isOpen() 
-      || !(playerHasControl  || playerHasHexEditorControl))
+   if (dialogControl->isOpen()
+      || !(playerHasControl || playerHasHexEditorControl))
    {
       return;
    }
@@ -345,10 +345,22 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       {
          return;
       }
-      if (button.IsPressed(KeyPress::Ljoy_left)) { camera.position.x -= mageSpeed;}
-      if (button.IsPressed(KeyPress::Ljoy_right)) { camera.position.x += mageSpeed; }
-      if (button.IsPressed(KeyPress::Ljoy_up)) { camera.position.y -= mageSpeed; }
-      if (button.IsPressed(KeyPress::Ljoy_down)) { camera.position.y += mageSpeed; }
+      if (button.IsPressed(KeyPress::Ljoy_left))
+      {
+         camera.position.x -= mageSpeed;
+      }
+      if (button.IsPressed(KeyPress::Ljoy_right))
+      {
+         camera.position.x += mageSpeed;
+      }
+      if (button.IsPressed(KeyPress::Ljoy_up))
+      {
+         camera.position.y -= mageSpeed;
+      }
+      if (button.IsPressed(KeyPress::Ljoy_down))
+      {
+         camera.position.y += mageSpeed;
+      }
 
       if (!playerHasHexEditorControl)
       {
@@ -372,7 +384,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
 
    //either do hax inputs if player input is allowed:
-   if (hexEditor->isHexEditorOn() 
+   if (hexEditor->isHexEditorOn()
       && !(dialogControl->isOpen()
          || !playerHasControl
          || !playerHasHexEditorControl

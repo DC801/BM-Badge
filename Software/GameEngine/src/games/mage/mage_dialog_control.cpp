@@ -73,8 +73,7 @@ void MageDialogControl::loadNextScreen()
    loadCurrentScreenPortrait();
 
    currentMessage = stringLoader->getString(currentScreen().messages[currentMessageIndex % currentScreen().messageCount], triggeringEntityName);
-   currentFrameTileset = ROM()->GetReadPointerByIndex<MageTileset>(currentScreen().borderTilesetIndex);
-   currentImageIndex = currentFrameTileset->ImageId;
+   currentFrameTilesetIndex = currentScreen().borderTilesetIndex;
    currentScreenIndex++;
    cursorPhase += 250;
 }
@@ -133,18 +132,19 @@ void MageDialogControl::draw()
    }
 }
 
-void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool drawArrow, bool drawPortrait) const
+void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box, bool drawArrow, bool drawPortrait) const
 {
-   uint16_t tileWidth = currentFrameTileset->TileWidth;
-   uint16_t tileHeight = currentFrameTileset->TileHeight;
-   uint16_t offsetX = (box.origin.x * tileWidth) + (tileWidth / 2);
-   uint16_t offsetY = (box.origin.y * tileHeight) + (tileHeight / 2);
+   auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentFrameTilesetIndex);
+   auto tileWidth = tileset->TileWidth;
+   auto tileHeight = tileset->TileHeight;
+   auto offsetX = (box.origin.x * tileWidth) + (tileWidth / 2);
+   auto offsetY = (box.origin.y * tileHeight) + (tileHeight / 2);
    for (uint8_t i = 0; i < box.w; ++i)
    {
       for (uint8_t j = 0; j < box.h; ++j)
       {
          auto tileId = getTileIdFromXY(i, j, box);
-         tileManager->DrawTile(currentFrameTileset, tileId, offsetX + (i * tileWidth), offsetY + (j * tileHeight));
+         tileManager->DrawTile(currentFrameTilesetIndex, tileId, Point{ uint16_t(offsetX + (i * tileWidth)), uint16_t(offsetY + (j * tileHeight)) });
       }
    }
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -164,12 +164,14 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
          }
-         tileManager->DrawTile(currentFrameTileset, offsetX + tileWidth + bounce, offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6, 0b00000011);
+         auto targetPoint = Point{ uint16_t(offsetX + tileWidth + bounce), uint16_t(offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6) };
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_DIRECTION_MASK);
       }
       else
       {
+         auto targetPoint = Point{ uint16_t(offsetX + ((box.w - 2) * tileWidth)), uint16_t(offsetY + ((box.h - 2) * tileHeight) + bounce)};
          // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTileset, offsetX + ((box.w - 2) * tileWidth), offsetY + ((box.h - 2) * tileHeight) + bounce, 0);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, 0);
       }
    }
    if (drawPortrait)
@@ -178,7 +180,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, Rect box, bool 
    }
 }
 
-uint8_t MageDialogControl::getTileIdFromXY(uint8_t x, uint8_t y, Rect box) const
+uint8_t MageDialogControl::getTileIdFromXY(uint8_t x, uint8_t y, const Rect& box) const
 {
    uint8_t tileId = DIALOG_TILES_CENTER_REPEAT;
    bool leftEdge = x == 0;

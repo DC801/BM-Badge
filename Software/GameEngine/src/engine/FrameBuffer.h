@@ -99,6 +99,7 @@ enum MageEntityAnimationDirection : uint8_t
 //this is a point in 2D space.
 struct Point
 {
+
 	uint16_t x{ 0 };
 	uint16_t y{ 0 };
 
@@ -279,7 +280,7 @@ public:
 		if (x < 0 || x >= WIDTH) { return; }
 		if (y < 0 || y >= HEIGHT) { return; }
 
-		frame[y * WIDTH + x] = color; 
+		frame[y * WIDTH + x] = color;
 	}
 
 	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
@@ -304,7 +305,7 @@ public:
 	// source: coordinates to offset into base image
 	// source_width: total width of base image
 	// flags: render flags
-	void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect target, Point source, uint16_t source_width, uint8_t flags);
+	void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, Rect&& source, uint8_t flags);
 
 	inline void fillRect(const Point& p, int w, int h, uint16_t color)
 	{

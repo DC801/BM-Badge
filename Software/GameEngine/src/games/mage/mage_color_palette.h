@@ -27,14 +27,23 @@ struct Color_565
 #else
 struct Color_565
 {
-   Color_565(uint16_t color) noexcept 
+   #ifdef IS_BIG_ENDIAN
+   Color_565(uint16_t color) noexcept
       : r((color & 0b0000000011111000) >> 3),
-        g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
-        b((color & 0b0001111100000000) >> 8),
-        a((color & 0b0010000000000000) >> 13)
+      g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
+      b((color & 0b0001111100000000) >> 8),
+      a((color & 0b0010000000000000) >> 13)
    {}
+   #else
+      Color_565(uint16_t color) noexcept
+         : r((color & 0b0000000011111000) >> 3),
+         g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
+         b((color & 0b0001111100000000) >> 8),
+         a((color & 0b0010000000000000) >> 13)
+      {}
+   #endif
 
-   operator uint16_t() const { return r << 14 | g << 9 | a << 5 | b; }
+   uint16_t RGBA() const { return r << 12 | g << 6 | b << 1 | a; }
    uint8_t b : 5;
    uint8_t a : 1;
    uint8_t g : 5;
@@ -65,7 +74,7 @@ public:
          color.b = Util::lerp(color.b, fadeColor.b, fadeFraction);
          color.a = fadeFraction > 0.5f ? fadeColor.a : color.a;
       }
-      return color;
+      return color.RGBA();
    }
 
 private:

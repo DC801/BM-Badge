@@ -23,7 +23,6 @@ void MageScriptActions::setResumeStatePointsAndEntityDirection(MageScriptState& 
    entity.renderFlags |= relativeDirection;
 }
 
-
 std::optional<uint16_t> MageScriptActions::action_null_action(const uint8_t* args, MageScriptState& resumeState, uint8_t entityId)
 {
    typedef struct
@@ -545,7 +544,6 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
       uint8_t entityId;
    } ActionCheckEntityHackableStateAU4;
    auto argStruct = (ActionCheckEntityHackableStateAU4*)args;
-   argStruct->expectedValue = argStruct->expectedValue;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
@@ -724,7 +722,6 @@ std::optional<uint16_t> MageScriptActions::action_blocking_delay(const uint8_t* 
       uint8_t paddingG;
    } ActionBlockingDelay;
    auto argStruct = (ActionBlockingDelay*)args;
-   argStruct->duration = argStruct->duration;
 
    //If there's already a total number of loops to next action set, a delay is currently in progress:
    if (resumeState.totalLoopsToNextAction != 0)
@@ -767,7 +764,6 @@ std::optional<uint16_t> MageScriptActions::action_non_blocking_delay(const uint8
       uint8_t paddingG;
    } ActionNonBlockingDelay;
    auto argStruct = (ActionNonBlockingDelay*)args;
-   argStruct->duration = argStruct->duration;
 
    manageProgressOfAction(resumeState, argStruct->duration);
    return std::nullopt;
@@ -1305,7 +1301,6 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_hackable_state_a_u4
       uint8_t paddingG;
    } ActionSetEntityHackableStateAU4;
    auto argStruct = (ActionSetEntityHackableStateAU4*)args;
-   argStruct->newValue = argStruct->newValue;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
@@ -1639,7 +1634,7 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_to_geometry(const 
       uint8_t entityId;
    } ActionWalkEntityToGeometry;
    auto argStruct = (ActionWalkEntityToGeometry*)args;
-   argStruct->duration = argStruct->duration;
+
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
    {
@@ -1681,7 +1676,6 @@ std::optional<uint16_t> MageScriptActions::action_walk_entity_along_geometry(con
       uint8_t entityId;
    } ActionWalkEntityAlongGeometry;
    auto argStruct = (ActionWalkEntityAlongGeometry*)args;
-   argStruct->duration = argStruct->duration;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
@@ -1756,7 +1750,6 @@ std::optional<uint16_t> MageScriptActions::action_loop_entity_along_geometry(con
       uint8_t entityId;
    } ActionLoopEntityAlongGeometry;
    auto argStruct = (ActionLoopEntityAlongGeometry*)args;
-   argStruct->duration = argStruct->duration;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
@@ -1874,7 +1867,6 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
       uint8_t paddingG;
    } ActionPanCameraToEntity;
    auto argStruct = (ActionPanCameraToEntity*)args;
-   argStruct->duration = argStruct->duration;
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
@@ -1913,11 +1905,9 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
       uint8_t paddingG;
    } ActionPanCameraToGeometry;
    auto argStruct = (ActionPanCameraToGeometry*)args;
-   argStruct->duration = argStruct->duration;
 
    auto& entity = mapControl->getEntityByMapLocalId(entityId);
    auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
-
 
    if (resumeState.totalLoopsToNextAction == 0)
    {
@@ -1949,7 +1939,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_along_geometry(cons
       uint8_t paddingG;
    } ActionPanCameraAlongGeometry;
    auto argStruct = (ActionPanCameraAlongGeometry*)args;
-   argStruct->duration = argStruct->duration;
+
    return std::nullopt;
 }
 
@@ -1962,7 +1952,7 @@ std::optional<uint16_t> MageScriptActions::action_loop_camera_along_geometry(con
       uint8_t paddingG;
    } ActionLoopCameraAlongGeometry;
    auto argStruct = (ActionLoopCameraAlongGeometry*)args;
-   argStruct->duration = argStruct->duration;
+
    return std::nullopt;
 }
 
@@ -2010,8 +2000,6 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_out(const uint8_t*
       uint8_t paddingG;
    } ActionScreenFadeOut;
    auto argStruct = (ActionScreenFadeOut*)args;
-   argStruct->duration = argStruct->duration;
-   argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
 
    float progress = manageProgressOfAction(resumeState, argStruct->duration);
 
@@ -2028,8 +2016,6 @@ std::optional<uint16_t> MageScriptActions::action_screen_fade_in(const uint8_t* 
       uint8_t paddingG;
    } ActionScreenFadeIn;
    auto argStruct = (ActionScreenFadeIn*)args;
-   argStruct->duration = argStruct->duration;
-   argStruct->color = SCREEN_ENDIAN_U2_VALUE(argStruct->color);
    float progress = manageProgressOfAction(
       resumeState,
       argStruct->duration);
@@ -2130,7 +2116,6 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
       auto variableValue = &currentSave->scriptVariables[argStruct->variableId];
       uint8_t* fieldValue = ((uint8_t*)&entity) + (uint8_t)argStruct->field;
-
 
       switch (argStruct->field)
       {
@@ -2364,7 +2349,6 @@ std::optional<uint16_t> MageScriptActions::action_set_connect_serial_dialog(cons
       uint8_t paddingG;
    } ActionSetConnectSerialDialog;
    ActionSetConnectSerialDialog* argStruct = (ActionSetConnectSerialDialog*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
    commandControl->connectSerialDialogId = argStruct->serialDialogId;
    return std::nullopt;
 }
@@ -2381,7 +2365,6 @@ std::optional<uint16_t> MageScriptActions::action_show_serial_dialog(const uint8
       uint8_t paddingG;
    } ActionShowSerialDialog;
    auto argStruct = (ActionShowSerialDialog*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->serialDialogId, 1);
    if (resumeState.totalLoopsToNextAction == 0)
    {
       commandControl->showSerialDialog(argStruct->serialDialogId);
@@ -2443,7 +2426,6 @@ std::optional<uint16_t> MageScriptActions::action_check_inventory(const uint8_t*
       uint8_t paddingG;
    } ActionCheckInventory;
    auto argStruct = (ActionCheckInventory*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
    // TODO: implement this
    return std::nullopt;
 }
@@ -2460,7 +2442,6 @@ std::optional<uint16_t> MageScriptActions::action_set_map_look_script(const uint
       uint8_t paddingG;
    } ActionSetMapLookScript;
    auto argStruct = (ActionSetMapLookScript*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
    // TODO: implement this
    return std::nullopt;
 }
@@ -2477,7 +2458,6 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_look_script(const u
       uint8_t paddingG;
    } ActionSetEntityLookScript;
    auto argStruct = (ActionSetEntityLookScript*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
    // TODO: implement this
    return std::nullopt;
 }
@@ -2510,8 +2490,6 @@ std::optional<uint16_t> MageScriptActions::action_check_map(const uint8_t* args,
       uint8_t paddingG;
    } ActionCheckMap;
    auto argStruct = (ActionCheckMap*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
-   ROM_ENDIAN_U2_BUFFER(&argStruct->mapId, 1);
    // TODO: implement this
    return std::nullopt;
 }
@@ -2545,7 +2523,6 @@ std::optional<uint16_t> MageScriptActions::action_check_ble_flag(const uint8_t* 
       uint8_t paddingG;
    } ActionCheckBleFlag;
    auto argStruct = (ActionCheckBleFlag*)args;
-   ROM_ENDIAN_U2_BUFFER(&argStruct->successScriptId, 1);
    // TODO: implement this
    return std::nullopt;
 }

@@ -53,7 +53,7 @@ public:
 
    uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
    {
-      auto geometriesPtr = (&Rows + 2);
+      auto geometriesPtr = (uint8_t*)&Rows + sizeof(uint16_t);
       if (tileIndex >= Cols * Rows)
       {
          return geometriesPtr[0];
@@ -102,8 +102,34 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(const RenderableData& renderableData, uint16_t x, uint16_t y) const;
-   void DrawTile(const MageTileset* const tileset, uint16_t tileId, uint16_t x, uint16_t y, uint8_t flags = 0) const;
+   void DrawTile(const RenderableData& renderableData, uint16_t x, uint16_t y) const
+   {
+      DrawTile(renderableData.tilesetId, renderableData.tileId, Point{ x, y }, renderableData.renderFlags);
+   }
+
+   void DrawTile(uint16_t tilesetId, uint16_t tileId, Point& tileDrawPoint, uint8_t flags = 0) const
+   {
+      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
+      auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tileId);
+      auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tileId);
+      
+      //for (auto i = 0; i < tileset->TileWidth/tileset->ImageWidth
+      frameBuffer->drawChunkWithFlags(
+         pixels, 
+         colorPalette, 
+         Rect{
+            Point{ 0,0 },
+            tileset->ImageWidth,
+            tileset->ImageHeight
+         },
+         Rect{
+            Point{tileDrawPoint.x, tileDrawPoint.y},
+            tileset->TileWidth,
+            tileset->TileHeight
+         },
+         flags);
+   }
+
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;
 };

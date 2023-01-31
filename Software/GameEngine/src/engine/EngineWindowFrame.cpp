@@ -148,7 +148,7 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[], ButtonState button) cons
 	void* targetPixelBuffer;
 	if (0 == SDL_LockTexture(components.gameViewportTexture, nullptr, &targetPixelBuffer, &pitch))
 	{
-		memmove(targetPixelBuffer, frame, FRAMEBUFFER_SIZE*sizeof(uint16_t));
+		memcpy(targetPixelBuffer, frame, FRAMEBUFFER_SIZE*sizeof(uint16_t));
 		SDL_UnlockTexture(components.gameViewportTexture);
 	}
 

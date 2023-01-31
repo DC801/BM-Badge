@@ -354,6 +354,9 @@ struct EngineROM
       );
    }
 
+   template <typename TData>
+   uint16_t GetCount() { return getHeader<TData>().Count(); }
+
    template <typename T>
    void Read(T& t, uint32_t& address, size_t count = 1) const
    {
@@ -388,8 +391,19 @@ struct EngineROM
       return reinterpret_cast<const T*>((uint32_t)romDataInDesktopRam.get() + address);
    }
 
-   template <typename TData>
-   uint16_t GetCount() { return getHeader<TData>().Count(); }
+   template <typename T>
+   const T* GetReadPointerToAddress(uint32_t& address, size_t count = 1) const
+   {
+      static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
+      auto dataLength = count * sizeof(T);
+      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      {
+         throw std::runtime_error{ "EngineROM::GetReadPointerToAddress: address + length exceeds maximum dat file size" };
+      }
+      auto readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + address);
+      address += dataLength;
+      return readPointer;
+   }
 
    template <typename T>
    std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
@@ -410,20 +424,6 @@ struct EngineROM
       auto newSave = new MageSaveGame{};
       newSave->scenarioDataCRC32 = scenarioDataCRC32;
       currentSave.reset(newSave);
-   }
-
-   template <typename T>
-   const T* GetReadPointerToAddress(uint32_t& address, size_t count = 1) const
-   {
-      static_assert(std::is_standard_layout<T>::value, "Must use a standard layout type");
-      auto dataLength = count * sizeof(T);
-      if (address + dataLength > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-      {
-         throw std::runtime_error{ "EngineROM::GetReadPointerToAddress: address + length exceeds maximum dat file size" };
-      }
-      auto readPointer = reinterpret_cast<const T*>(romDataInDesktopRam.get() + address);
-      address += dataLength;
-      return readPointer;
    }
 
    template <typename T>

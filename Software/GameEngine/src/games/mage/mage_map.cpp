@@ -110,67 +110,26 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisi
       return;
    }
 
-   Point playerPoint = entityRenderableData[currentMap->playerEntityIndex].center;
-
    for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
    {
-      auto tileOrigin = Point{ uint16_t(currentMap->tileWidth * (i % currentMap->cols)), uint16_t(currentMap->tileHeight * (i / currentMap->rows)) };
-      auto tileDrawPoint = tileOrigin - cameraPosition;
+      auto tileDrawPoint = Point{
+         static_cast<uint16_t>(currentMap->tileWidth * (i % currentMap->cols)), 
+         static_cast<uint16_t>(currentMap->tileHeight * (i / currentMap->rows)) 
+      };
+      tileDrawPoint = tileDrawPoint - cameraPosition;
 
-      // don't draw tiles that are entirely outside the screen bounds
-      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
+      auto address = layerAddress + (i * sizeof(MageMapTile));
+
+      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(address);
+      // don't draw null tiles or those that are entirely outside the screen bounds
+      if (currentTile->tileId == 0
+         || tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
          || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
       {
          continue;
       }
 
-      auto address = layerAddress + (i * sizeof(MageMapTile));
-
-      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(address);
-      if (currentTile->tileId == 0) { continue; }
-
-      //currentTile.tileId -= 1;
-      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
-
-      tileManager->DrawTile(tileset, tileDrawPoint.x, tileDrawPoint.y, currentTile->flags);
-
-      if (isCollisionDebugOn)
-      {
-         auto geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
-         if (geometryId)
-         {
-            geometryId -= 1;
-
-            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
-            auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
-
-            bool isMageInGeometry = false;
-
-            if (currentMap->playerEntityIndex != NO_PLAYER
-               && playerPoint.x >= tileDrawPoint.x && playerPoint.x <= tileDrawPoint.x + tileset->TileWidth
-               && playerPoint.y >= tileDrawPoint.y && playerPoint.y <= tileDrawPoint.y + tileset->TileHeight)
-            {
-               auto offsetPoint = playerPoint - tileDrawPoint;
-               isMageInGeometry = geometry->isPointInGeometry(offsetPoint);
-            }
-
-            if (geometry->GetTypeId() == MageGeometryType::Point)
-            {
-               frameBuffer->drawPoint(geometryPoints[0] + tileDrawPoint - cameraPosition, 4, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
-            }
-            else
-            {
-               // POLYLINE segmentCount is pointCount - 1
-               // POLYGON segmentCount is same as pointCount
-               for (int i = 0; i < geometryPoints.size(); i++)
-               {
-                  auto& pointA = geometryPoints[i] + tileDrawPoint - cameraPosition;
-                  auto& pointB = geometryPoints[i + 1] + tileDrawPoint - cameraPosition;
-                  frameBuffer->drawLine(pointA, pointB, isMageInGeometry ? COLOR_RED : COLOR_GREEN);
-               }
-            }
-         }
-      }
+      tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId, tileDrawPoint, currentTile->flags);
    }
 }
 
