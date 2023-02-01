@@ -23,7 +23,11 @@ void EngineWindowFrameInit()
 		ENGINE_PANIC("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 
+#ifdef DC801_STEAMDECK
+	frameSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame_steamdeck.png");
+#else
 	frameSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame.png");
+#endif
 
 	if (!frameSurface)
 	{
@@ -56,6 +60,13 @@ void EngineWindowFrameInit()
 		&renderer
 	);
 
+#ifdef DC801_STEAMDECK
+	SDL_SetWindowFullscreen(
+		window,
+		SDL_WINDOW_FULLSCREEN
+	);
+#endif
+
 	SDL_SetWindowTitle(
 		window,
 		"DC801 MAGE GAME"
@@ -82,9 +93,14 @@ void EngineWindowFrameInit()
 		HEIGHT
 	);
 }
+#ifdef DC801_STEAMDECK
+	const int drawOffset = 48;
+#else
+	const int drawOffset = 0;
+#endif
 
 const SDL_Rect gameViewportSrcRect = {0, 0, WIDTH, HEIGHT};
-const SDL_Rect gameViewportDstRect = {112, 56, WIDTH, HEIGHT};
+const SDL_Rect gameViewportDstRect = {drawOffset + 112, 56, WIDTH, HEIGHT};
 const SDL_Rect buttonOffSrcRect = {0, 0, 32, 32};
 const SDL_Rect buttonOnSrcRect = {0, 32, 32, 32};
 const SDL_Rect LEDOffSrcRect = {0, 0, 16, 8};
@@ -95,33 +111,33 @@ const SDL_Point buttonHalf = {16, 16};
 const SDL_Point LEDHalf = {8, 4};
 
 const SDL_Point buttonDestPoints[] = {
-	{506, 98},
-	{506, 98 + 42},
-	{506, 98 + 42 + 42},
-	{506, 98 + 42 + 42 + 42},
-	{126, 364},
-	{126 + 42, 364},
-	{126 + 42 + 42, 364},
-	{126 + 42 + 42 + 42, 364},
-	{126 + 42 + 42 + 42 + 42, 364},
-	{126 + 42 + 42 + 42 + 42 + 42, 364},
-	{126 + 42 + 42 + 42 + 42 + 42 + 42, 364},
-	{126 + 42 + 42 + 42 + 42 + 42 + 42 + 42, 364},
-	{38, 98},
-	{38, 98 + 42},
-	{38, 98 + 42 + 42},
-	{38, 98 + 42 + 42 + 42},
-	{54, 344},
-	{54 - 32, 344},
-	{54, 344 + 32},
-	{54, 344 - 32},
-	{54 + 32, 344},
-	{490, 344},
-	{490 - 32, 344},
-	{490, 344 + 32},
-	{490, 344 - 32},
-	{490 + 32, 344},
-	{38, 98 - 42},
+	{drawOffset + 506, 98},
+	{drawOffset + 506, 98 + 42},
+	{drawOffset + 506, 98 + 42 + 42},
+	{drawOffset + 506, 98 + 42 + 42 + 42},
+	{drawOffset + 126, 364},
+	{drawOffset + 126 + 42, 364},
+	{drawOffset + 126 + 42 + 42, 364},
+	{drawOffset + 126 + 42 + 42 + 42, 364},
+	{drawOffset + 126 + 42 + 42 + 42 + 42, 364},
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42, 364},
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42 + 42, 364},
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42 + 42 + 42, 364},
+	{drawOffset + 38, 98},
+	{drawOffset + 38, 98 + 42},
+	{drawOffset + 38, 98 + 42 + 42},
+	{drawOffset + 38, 98 + 42 + 42 + 42},
+	{drawOffset + 54, 344},
+	{drawOffset + 54 - 32, 344},
+	{drawOffset + 54, 344 + 32},
+	{drawOffset + 54, 344 - 32},
+	{drawOffset + 54 + 32, 344},
+	{drawOffset + 490, 344},
+	{drawOffset + 490 - 32, 344},
+	{drawOffset + 490, 344 + 32},
+	{drawOffset + 490, 344 - 32},
+	{drawOffset + 490 + 32, 344},
+	{drawOffset + 38, 98 - 42},
 };
 
 void drawButtonStates ()
@@ -144,25 +160,25 @@ void drawButtonStates ()
 }
 
 const SDL_Point LEDDestPoints[LED_COUNT] = {
-	{76, 112}, //LED_XOR
-	{76, 112 + 42}, //LED_ADD
-	{76, 112 + 42 + 42}, //LED_SUB
-	{76, 112 + 42 + 42 + 42}, //LED_PAGE
-	{126, 328}, //LED_BIT128
-	{126 + 42, 328}, //LED_BIT64
-	{126 + 42 + 42, 328}, //LED_BIT32
-	{126 + 42 + 42 + 42, 328}, //LED_BIT16
-	{126 + 42 + 42 + 42 + 42, 328}, //LED_BIT8
-	{126 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT4
-	{126 + 42 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT2
-	{126 + 42 + 42 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT1
-	{468, 112 + 42 + 42 + 42}, //LED_MEM3
-	{468, 112 + 42 + 42}, //LED_MEM2
-	{468, 112 + 42}, //LED_MEM1
-	{468, 112}, //LED_MEM0
-	{468, 112 - 42 - 21}, //LED_USB
-	{76, 112 - 42}, //LED_HAX
-	{468, 112 - 42}, //LED_SD
+	{drawOffset + 76, 112}, //LED_XOR
+	{drawOffset + 76, 112 + 42}, //LED_ADD
+	{drawOffset + 76, 112 + 42 + 42}, //LED_SUB
+	{drawOffset + 76, 112 + 42 + 42 + 42}, //LED_PAGE
+	{drawOffset + 126, 328}, //LED_BIT128
+	{drawOffset + 126 + 42, 328}, //LED_BIT64
+	{drawOffset + 126 + 42 + 42, 328}, //LED_BIT32
+	{drawOffset + 126 + 42 + 42 + 42, 328}, //LED_BIT16
+	{drawOffset + 126 + 42 + 42 + 42 + 42, 328}, //LED_BIT8
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT4
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT2
+	{drawOffset + 126 + 42 + 42 + 42 + 42 + 42 + 42 + 42, 328}, //LED_BIT1
+	{drawOffset + 468, 112 + 42 + 42 + 42}, //LED_MEM3
+	{drawOffset + 468, 112 + 42 + 42}, //LED_MEM2
+	{drawOffset + 468, 112 + 42}, //LED_MEM1
+	{drawOffset + 468, 112}, //LED_MEM0
+	{drawOffset + 468, 112 - 42 - 21}, //LED_USB
+	{drawOffset + 76, 112 - 42}, //LED_HAX
+	{drawOffset + 468, 112 - 42}, //LED_SD
 };
 
 void drawLEDStates ()
