@@ -206,10 +206,10 @@ typedef struct {
 
 typedef struct 
 {
-    uint16 id;
+    uint16 tileId;
     uchar tilesetId;
     RenderFlags flags;
-} MapTile<read=Str("%d [%d] %u",id,tilesetId,(uchar)flags)>;
+} MapTile<read=Str("tileset %d [%d]",tilesetId, tileId)>;
 
 typedef struct 
 {

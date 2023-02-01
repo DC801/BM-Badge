@@ -31,10 +31,10 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
          }
       }
       auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(primaryId);
-      renderableData.tilesetId = animation->TilesetId();
-      renderableData.tileId = animation->TileId();
-      renderableData.duration = animation->GetFrame(currentFrameIndex)->duration; //no need to check, it shouldn't cause a crash.
-      renderableData.frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
+      renderableData.tilesetId = animation->tilesetId;
+      renderableData.tileId = animation->GetFrame(currentFrameIndex).tileId;
+      renderableData.duration = animation->GetFrame(currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
+      renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
       renderableData.renderFlags = renderFlags; //no need to check, it shouldn't cause a crash.
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
@@ -67,11 +67,11 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       if (animationDirection->type == 0)
       {
          auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->typeId);
-         auto currentFrame = animation->GetFrame(currentFrameIndex);
-         renderableData.tilesetId = animation->TilesetId();
-         renderableData.tileId = currentFrame->tileId;
-         renderableData.duration = currentFrame->duration; //no need to check, it shouldn't cause a crash.
-         renderableData.frameCount = animation->FrameCount(); //no need to check, it shouldn't cause a crash.
+         auto& currentFrame = animation->GetFrame(currentFrameIndex);
+         renderableData.tilesetId = animation->tilesetId;
+         renderableData.tileId = currentFrame.tileId;
+         renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
+         renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
          renderableData.renderFlags = animationDirection->renderFlags; //no need to check, it shouldn't cause a crash.
       }
       else
@@ -92,7 +92,6 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
    // accounting for possible change in tile size due to hacking;
    // adjust entity position so that the center will not change
    // from the previous tileset to the new tileset.
-
    if (renderableData.lastTilesetId != renderableData.tilesetId)
    {
       //get the difference between entity centers:

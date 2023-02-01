@@ -144,6 +144,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
       for (uint8_t j = 0; j < box.h; ++j)
       {
          auto tileId = getTileIdFromXY(i, j, box);
+
          tileManager->DrawTile(currentFrameTilesetIndex, tileId, Point{ uint16_t(offsetX + (i * tileWidth)), uint16_t(offsetY + (j * tileHeight)) });
       }
    }
@@ -171,12 +172,13 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
       {
          auto targetPoint = Point{ uint16_t(offsetX + ((box.w - 2) * tileWidth)), uint16_t(offsetY + ((box.h - 2) * tileHeight) + bounce)};
          // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, 0);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
    }
    if (drawPortrait)
    {
-      tileManager->DrawTile(currentPortraitRenderableData, offsetX + tileWidth, offsetY + tileHeight);
+      auto portraitDrawPoint = Point{ uint16_t(offsetX + tileWidth), uint16_t(offsetY + tileHeight) };
+      tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, portraitDrawPoint, currentPortraitRenderableData.renderFlags );
    }
 }
 

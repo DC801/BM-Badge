@@ -43,7 +43,7 @@ struct Color_565
       {}
    #endif
 
-   uint16_t RGBA() const { return r << 12 | g << 6 | b << 1 | a; }
+   uint16_t RGBA() const { return r << 11 | g << 6 | b | a << 5; }
    uint8_t b : 5;
    uint8_t a : 1;
    uint8_t g : 5;

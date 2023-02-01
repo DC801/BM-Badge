@@ -5,7 +5,7 @@
 #include <numeric>
 #include "mage.h"
 
-void MapControl::Load(uint16_t index, bool isCollisionDebugOn, bool isEntityDebugOn)
+void MapControl::Load(uint16_t index)
 {
    auto map = ROM()->InitializeRAMCopy<MapData>(index);
    
@@ -66,7 +66,7 @@ MapData::MapData(uint32_t& address, bool isEntityDebugOn)
    }
 }
 
-void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn) const
+void MapControl::DrawEntities(const Point& cameraPosition) const
 {
    int32_t cameraX = cameraPosition.x;
    int32_t cameraY = cameraPosition.y;
@@ -83,47 +83,28 @@ void MapControl::DrawEntities(const Point& cameraPosition, bool isCollisionDebug
       auto& entity = entities[entityIndex];
       auto& renderableData = entityRenderableData[entityIndex];
 
-      tileManager->DrawTile(renderableData, entity.location.x, entity.location.y);
-
-      if (isCollisionDebugOn)
-      {
-         auto tileOrigin = Point{ uint16_t(entity.location.x - cameraX), uint16_t(entity.location.y - cameraY - currentMap->tileHeight) };
-         auto hitboxOrigin = renderableData.hitBox.origin - cameraPosition;
-
-         frameBuffer->drawRect(tileOrigin, currentMap->tileWidth, currentMap->tileHeight, COLOR_LIGHTGREY);
-         frameBuffer->drawRect(hitboxOrigin, renderableData.hitBox.w, renderableData.hitBox.h, renderableData.isInteracting ? COLOR_RED : COLOR_GREEN);
-         frameBuffer->drawPoint(renderableData.center - cameraPosition, 5, COLOR_BLUE);
-         uint8_t filteredPlayerEntityIndex = getFilteredEntityId(currentMap->playerEntityIndex);
-         if (getPlayerEntityIndex() == filteredPlayerEntityIndex)
-         {
-            auto interactBoxOrigin = renderableData.interactBox.origin - cameraPosition;
-            frameBuffer->drawRect(interactBoxOrigin, renderableData.interactBox.w, renderableData.interactBox.h, renderableData.isInteracting ? COLOR_BLUE : COLOR_YELLOW);
-         }
-      }
+      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, entity.location, renderableData.renderFlags);
    }
 }
-void MapControl::Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn) const
+
+void MapControl::Draw(uint8_t layer, const Point& cameraPosition) const
 {
    const auto layerAddress = LayerAddress(layer);
-   if (layerAddress == 0)
-   {
-      return;
-   }
 
-   for (auto i = 0; i < currentMap->cols * currentMap->rows; i++)
+   for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
+   for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
    {
+      auto tileAddress = layerAddress + (mapTileCol * mapTileRow * sizeof(MageMapTile));
+      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(tileAddress);
+
       auto tileDrawPoint = Point{
-         static_cast<uint16_t>(currentMap->tileWidth * (i % currentMap->cols)), 
-         static_cast<uint16_t>(currentMap->tileHeight * (i / currentMap->rows)) 
+         static_cast<uint16_t>(currentMap->tileWidth * mapTileRow), 
+         static_cast<uint16_t>(currentMap->tileHeight * mapTileCol) 
       };
       tileDrawPoint = tileDrawPoint - cameraPosition;
-
-      auto address = layerAddress + (i * sizeof(MageMapTile));
-
-      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(address);
-      // don't draw null tiles or those that are entirely outside the screen bounds
-      if (currentTile->tileId == 0
-         || tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
+      
+      // don't draw tiles that are entirely outside the screen bounds
+      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
          || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
       {
          continue;

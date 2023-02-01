@@ -14,27 +14,22 @@ in a more accessible way.
 class MageGameEngine;
 
 
-class MageAnimation
+struct MageAnimation
 {
-public:
 	struct Frame
 	{
 		uint16_t tileId;
 		uint16_t duration;
 	};
 
-	MageAnimation() noexcept = default;
-	MageAnimation(uint32_t& offset) noexcept;
+	const MageAnimation::Frame& GetFrame(uint32_t index) const noexcept
+	{ 
+		auto frames = (MageAnimation::Frame*)((uint8_t*)&frameCount + sizeof(uint16_t));
+		return frames[index % frameCount]; 
+	}
 
-	constexpr uint16_t TilesetId() const { return tilesetId; }
-	constexpr uint16_t TileId() const { return 0; }
-	uint16_t FrameCount() const { return frameCount; }
-	const MageAnimation::Frame* GetFrame(uint32_t index) const { return &((MageAnimation::Frame*)&frameCount + 4)[index % frameCount]; }
-
-private:
 	uint16_t tilesetId{ 0 };
-	uint16_t frameCount;
-
+	uint16_t frameCount{ 1 };
 };
 
 #endif //_MAGE_ANIMATION_H

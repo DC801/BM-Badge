@@ -69,10 +69,10 @@ public:
    { }
 
    uint8_t* GetEntityDataPointer() { return (uint8_t*)entities.data(); }
-   void Load(uint16_t index, bool isCollisionDebugOn=false, bool isEntityDebugOn=false);
-   void Draw(uint8_t layer, const Point& cameraPosition, bool isCollisionDebugOn=false) const;
+   void Load(uint16_t index);
+   void Draw(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
-   void DrawEntities(const Point& cameraPosition, bool isCollisionDebugOn = false) const;
+   void DrawEntities(const Point& cameraPosition) const;
 
    void UpdateEntities(uint32_t deltaTime);
    

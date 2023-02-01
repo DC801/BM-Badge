@@ -44,11 +44,11 @@ public:
    constexpr bool Valid() const
    {
       return   ImageWidth >= 1
-            && ImageHeight >= 1
-            && TileWidth >= 1
-            && TileHeight >= 1
-            && Cols >= 1
-            && Rows >= 1;
+         && ImageHeight >= 1
+         && TileWidth >= 1
+         && TileHeight >= 1
+         && Cols >= 1
+         && Rows >= 1;
    }
 
    uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
@@ -69,7 +69,7 @@ public:
    uint16_t TileHeight{ 0 };
    uint16_t Cols{ 0 };
    uint16_t Rows{ 0 };
-}; 
+};
 
 struct AnimationDirection
 {
@@ -102,31 +102,23 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(const RenderableData& renderableData, uint16_t x, uint16_t y) const
-   {
-      DrawTile(renderableData.tilesetId, renderableData.tileId, Point{ x, y }, renderableData.renderFlags);
-   }
-
-   void DrawTile(uint16_t tilesetId, uint16_t tileId, Point& tileDrawPoint, uint8_t flags = 0) const
+   void DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags = 0) const
    {
       auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
-      auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tileId);
-      auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tileId);
+      auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
+      auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
+
+      pixels += tileId *tileset->TileWidth* tileset->TileHeight;
       
-      //for (auto i = 0; i < tileset->TileWidth/tileset->ImageWidth
       frameBuffer->drawChunkWithFlags(
-         pixels, 
-         colorPalette, 
+         pixels,
+         colorPalette,
          Rect{
-            Point{ 0,0 },
-            tileset->ImageWidth,
-            tileset->ImageHeight
-         },
-         Rect{
-            Point{tileDrawPoint.x, tileDrawPoint.y},
+            Point{ tileDrawPoint.x, tileDrawPoint.y },
             tileset->TileWidth,
             tileset->TileHeight
          },
+         tileset->ImageWidth,
          flags);
    }
 
