@@ -158,7 +158,7 @@ void ledRegSet (uint8_t reg, uint8_t val){
 }
 
 void ledSet (uint8_t index, uint8_t intensity){
-    if (index > LED_COUNT) {
+    if (index >= LED_COUNT) {
         return;
     }
 

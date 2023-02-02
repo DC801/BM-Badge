@@ -93,12 +93,10 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 
 void EngineWindowFrame::drawButtonStates(ButtonState button) const
 {
-	SDL_Point buttonPoint{};
-	bool buttonState{false};
 	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
 	{
-		buttonPoint = buttonDestPoints[i];
-		buttonState = button.IsPressed((KeyPress)i);
+		auto& buttonPoint = buttonDestPoints[i];
+		auto buttonState = button.IsPressed((KeyPress)i);
 		const auto buttonTargetRect = SDL_Rect{ buttonPoint.x - buttonHalf.x, buttonPoint.y - buttonHalf.y, 32, 32 };
 		SDL_RenderCopy(
 			components.renderer,

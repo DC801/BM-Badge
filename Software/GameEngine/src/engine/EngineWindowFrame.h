@@ -58,7 +58,7 @@ private:
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
    const SDL_Rect gameViewportSrcRect = { 0, 0, WIDTH, HEIGHT };
-   const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH, HEIGHT };
+   const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH-112, HEIGHT-56 };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };
@@ -89,19 +89,19 @@ private:
        {38, 98 + 42 + 42},
        {38, 98 + 42 + 42 + 42},
 
-       // ljoy UDLR
+       // ljoy CUDLR
        {54, 344},
+       {54, 344 - 32},
+       {54, 344 + 32},
        {54 - 32, 344},
        {54 + 32, 344},
-       {54, 344 + 32},
-       {54, 344 - 32},
 
-       // rjoy UDLR
+       // rjoy CUDLR
        {490, 344},
+       {490, 344 - 32},
+       {490, 344 + 32},
        {490 - 32, 344},
        {490 + 32, 344},
-       {490, 344 + 32},
-       {490, 344 - 32},
 
        // hax
        {38, 98 - 42},

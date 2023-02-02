@@ -44,9 +44,8 @@ void MageGameEngine::handleEntityInteract(bool hack)
    //interacting is impossible if there is no player entity
    if (mapControl->getPlayerEntityIndex() == NO_PLAYER) { return; }
 
-   auto playerEntity = mapControl->getPlayerEntity();
-
-   auto playerRenderableData = mapControl->getPlayerEntityRenderableData();
+   auto& playerEntity = mapControl->getPlayerEntity();
+   auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
    playerRenderableData.interactBox = playerRenderableData.hitBox;
 
    const uint8_t interactLength = 32;
@@ -215,7 +214,8 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
    {
       auto& playerEntity = mapControl->getPlayerEntity();
-      playerEntity.updateRenderableData(mapControl->getPlayerEntityRenderableData());
+      auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
+      playerEntity.updateRenderableData(playerRenderableData);
 
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
@@ -235,16 +235,15 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //if not actioning or resetting, handle all remaining inputs:
       else if (playerHasControl)
       {
-         //auto playerVelocity = playerVelocity;
          playerVelocity = { 0,0 };
-         auto& direction = mapControl->getPlayerEntityRenderableData().renderFlags;
+         auto& direction = playerRenderableData.renderFlags;
          if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            mapControl->getPlayerEntityRenderableData().renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
+            playerRenderableData.renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
@@ -283,13 +282,13 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //handle animation assignment for the player:
       //Scenario 1 - perform action:
       if (playerIsActioning && hasEntityType
-         && entityType->AnimationCount() >= MAGE_ACTION_ANIMATION_INDEX)
+         && entityType->animationCount >= MAGE_ACTION_ANIMATION_INDEX)
       {
          playerEntity.currentAnimation = MAGE_ACTION_ANIMATION_INDEX;
       }
       //Scenario 2 - show walk animation:
       else if (isMoving && hasEntityType
-         && entityType->AnimationCount() >= MAGE_WALK_ANIMATION_INDEX)
+         && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerEntity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
       }
@@ -302,8 +301,8 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
       bool isPlayingActionButShouldReturnControlToPlayer = hasEntityType
          && (playerEntity.currentAnimation == MAGE_ACTION_ANIMATION_INDEX)
-         && (playerEntity.currentFrameIndex == (mapControl->getPlayerEntityRenderableData().frameCount - 1))
-         && (mapControl->getPlayerEntityRenderableData().currentFrameTicks + deltaTime >= (mapControl->getPlayerEntityRenderableData().duration));
+         && (playerEntity.currentFrameIndex == (playerRenderableData.frameCount - 1))
+         && (playerRenderableData.currentFrameTicks + deltaTime >= (playerRenderableData.duration));
 
       //if the above bool is true, set the player back to their idle animation:
       if (isPlayingActionButShouldReturnControlToPlayer)
@@ -316,11 +315,10 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       if (previousPlayerAnimation != playerEntity.currentAnimation)
       {
          playerEntity.currentFrameIndex = 0;
-         mapControl->getPlayerEntityRenderableData().currentFrameTicks = 0;
+         playerRenderableData.currentFrameTicks = 0;
       }
 
       //What scenarios call for an extra renderableData update?
-      auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
       if (isMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
       {
          playerEntity.updateRenderableData(playerRenderableData);
@@ -383,14 +381,13 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    //update universally used hex editor state variables:
    hexEditor->updateHexStateVariables(mapControl->FilteredEntityCount());
 
-   //either do hax inputs if player input is allowed:
+   // turn on hax inputs if player input is allowed or be boring and normal
    if (hexEditor->isHexEditorOn()
       && !(dialogControl->isOpen()
          || !playerHasControl
          || !playerHasHexEditorControl
          || hexEditor->IsMovementDisabled()))
    {
-
       //apply inputs to the hex editor:
       hexEditor->applyHexModeInputs(mapControl->GetEntityDataPointer());
 
@@ -398,8 +395,6 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
       scriptControl->tickScripts();
       commandControl->sendBufferedOutput();
    }
-
-   //or be boring and normal:
    else
    {
       //this handles buttons and state updates based on button presses in game mode:
@@ -438,18 +433,10 @@ void MageGameEngine::GameRender()
       //then draw the map and entities:
       uint8_t layerCount = mapControl->LayerCount();
 
-      if (layerCount > 1)
+      for (uint8_t layerIndex = 0; layerCount == 1 || layerIndex < (layerCount - 1); layerIndex++)
       {
-         for (uint8_t layerIndex = 0; layerIndex < (layerCount - 1); layerIndex++)
-         {
-            //draw all map layers except the last one before drawing entities.
-            mapControl->Draw(layerIndex, camera.position);
-         }
-      }
-      else
-      {
-         //if there is only one map layer, it will always be drawn before the entities.
-         mapControl->Draw(0, camera.position);
+         //draw all map layers except the last one before drawing entities.
+         mapControl->Draw(layerIndex, camera.position);
       }
 
       //now that the entities are updated, draw them to the screen.
@@ -553,7 +540,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
 
-   auto playerRect = playerRenderableData.hitBox;
+   auto& playerRect = playerRenderableData.hitBox;
    int16_t abs_x = abs(playerVelocity.x);
    int16_t abs_y = abs(playerVelocity.y);
    if (abs_x)

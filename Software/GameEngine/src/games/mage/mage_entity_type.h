@@ -29,23 +29,19 @@ struct MageEntityTypeAnimation
    const AnimationDirection West;
 };
 
-class MageEntityType
+struct MageEntityType
 {
-public:
-   uint8_t PortraitId() const { return portraitId; }
-   uint8_t AnimationCount() const { return animationCount; }
-
-   const MageEntityTypeAnimation* GetAnimation(uint32_t index) const
-   {
-      return &((const MageEntityTypeAnimation *)&animationCount + 1)[index % animationCount];
-   }
-
-private:
    char name[32]{ 0 };
    uint8_t paddingA{ 0 };
    uint8_t paddingB{ 0 };
    uint8_t portraitId{ 0 };
    uint8_t animationCount{ 0 };
+
+   const MageEntityTypeAnimation& GetAnimation(uint32_t index) const
+   {
+      auto animations = (const MageEntityTypeAnimation*)((uint8_t*)&animationCount + 1);
+      return animations[index % animationCount];
+   }
 };
 
 struct MageEntity

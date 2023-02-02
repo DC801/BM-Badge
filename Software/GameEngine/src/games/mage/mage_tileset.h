@@ -73,9 +73,9 @@ public:
 
 struct AnimationDirection
 {
-   bool FlipX() const { return renderFlags & FLIPPED_HORIZONTALLY_FLAG; }
-   bool FlipY() const { return renderFlags & FLIPPED_VERTICALLY_FLAG; }
-   bool FlipDiag() const { return renderFlags & FLIPPED_DIAGONALLY_FLAG; }
+   uint8_t FlipX() const { return renderFlags ^ FLIPPED_HORIZONTALLY_FLAG; }
+   uint8_t FlipY() const { return renderFlags ^ FLIPPED_VERTICALLY_FLAG; }
+   uint8_t FlipDiag() const { return renderFlags ^ FLIPPED_DIAGONALLY_FLAG; }
 
    uint16_t typeId{ 0 };
    uint8_t type{ 0 };
@@ -84,13 +84,15 @@ struct AnimationDirection
 
 struct MagePortrait
 {
+   char portrait[32];
+   char padding[3]{ 0 };
+   uint8_t emoteCount{ 0 };
+
    const AnimationDirection* getEmoteById(uint8_t emoteId) const
    {
-      auto animationPtr = (const AnimationDirection*)&emoteCount + 4;
+      auto animationPtr = (const AnimationDirection*)((uint8_t*)&emoteCount + sizeof(uint8_t));
       return &animationPtr[emoteId % emoteCount];
    }
-   char portrait[32];
-   uint8_t emoteCount{ 0 };
 };
 
 

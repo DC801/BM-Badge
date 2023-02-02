@@ -42,7 +42,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       auto entityType = ROM()->GetReadPointerByIndex<MageEntityType>(primaryId);
 
       //If the entity has no animations defined, return default:
-      if (entityType->AnimationCount() == 0)
+      if (entityType->animationCount == 0)
       {
          renderableData.tilesetId = MAGE_TILESET_FAILOVER_ID;
          renderableData.tileId = MAGE_TILE_FAILOVER_ID;
@@ -51,33 +51,33 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
          renderableData.renderFlags = MAGE_RENDER_FLAGS_FAILOVER_VALUE;
       }
 
-      auto animation = entityType->GetAnimation(currentAnimation);
+      auto& animation = entityType->GetAnimation(currentAnimation);
 
       //create a animationDirection entity based on direction:
       auto dirValue = (MageEntityAnimationDirection)(renderableData.renderFlags & RENDER_FLAGS_DIRECTION_MASK);
-      const AnimationDirection* animationDirection =
-         dirValue == MageEntityAnimationDirection::NORTH ? &animation->North
-         : dirValue == MageEntityAnimationDirection::EAST ? &animation->East
-         : dirValue == MageEntityAnimationDirection::SOUTH ? &animation->South
-         : &animation->West;
+      auto& animationDirection =
+         dirValue == MageEntityAnimationDirection::NORTH ? animation.North
+         : dirValue == MageEntityAnimationDirection::EAST ? animation.East
+         : dirValue == MageEntityAnimationDirection::SOUTH ? animation.South
+         : animation.West;
 
-      //based on animationDirection->Type(), you can get two different outcomes:
+      //based on animationDirection.type, you can get two different outcomes:
       //Scenario A: Type is 0, TypeID is an animation ID:
       //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
-      if (animationDirection->type == 0)
+      if (animationDirection.type == 0)
       {
-         auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection->typeId);
+         auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection.typeId);
          auto& currentFrame = animation->GetFrame(currentFrameIndex);
          renderableData.tilesetId = animation->tilesetId;
          renderableData.tileId = currentFrame.tileId;
          renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
          renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-         renderableData.renderFlags = animationDirection->renderFlags; //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection.renderFlags; //no need to check, it shouldn't cause a crash.
       }
       else
       {
-         renderableData.tilesetId = animationDirection->type - 1;
-         renderableData.tileId = animationDirection->typeId;
+         renderableData.tilesetId = animationDirection.type - 1;
+         renderableData.tileId = animationDirection.typeId;
          renderableData.duration = 0; //does not animate;
          renderableData.frameCount = 0; //does not animate
          renderableData.renderFlags = renderFlags; //no need to check, it shouldn't cause a crash.

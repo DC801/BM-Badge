@@ -236,7 +236,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
          uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
-            currentPortraitId = ROM()->GetReadPointerByIndex<MageEntityType>(currentEntity.primaryId)->PortraitId();
+            currentPortraitId = ROM()->GetReadPointerByIndex<MageEntityType>(currentEntity.primaryId)->portraitId;
          }
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
