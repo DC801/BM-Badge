@@ -13,7 +13,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       renderableData.tileId = secondaryId;
       renderableData.duration = 0; //unused
       renderableData.frameCount = 0; //unused
-      renderableData.renderFlags = renderFlags; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ANIMATION)
    {
@@ -35,7 +35,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       renderableData.tileId = animation->GetFrame(currentFrameIndex).tileId;
       renderableData.duration = animation->GetFrame(currentFrameIndex).duration; //no need to check, it shouldn't cause a crash.
       renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-      renderableData.renderFlags = renderFlags; //no need to check, it shouldn't cause a crash.
+      renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
    }
    else if (primaryIdType == MageEntityPrimaryIdType::ENTITY_TYPE)
    {
@@ -54,7 +54,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       auto& animation = entityType->GetAnimation(currentAnimation);
 
       //create a animationDirection entity based on direction:
-      auto dirValue = (MageEntityAnimationDirection)(renderableData.renderFlags & RENDER_FLAGS_DIRECTION_MASK);
+      auto dirValue = (MageEntityAnimationDirection)(direction & RENDER_FLAGS_DIRECTION_MASK);
       auto& animationDirection =
          dirValue == MageEntityAnimationDirection::NORTH ? animation.North
          : dirValue == MageEntityAnimationDirection::EAST ? animation.East
@@ -72,7 +72,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
          renderableData.tileId = currentFrame.tileId;
          renderableData.duration = currentFrame.duration; //no need to check, it shouldn't cause a crash.
          renderableData.frameCount = animation->frameCount; //no need to check, it shouldn't cause a crash.
-         renderableData.renderFlags = animationDirection.renderFlags; //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = animationDirection.renderFlags | (direction & 0x80); //no need to check, it shouldn't cause a crash.
       }
       else
       {
@@ -80,27 +80,29 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
          renderableData.tileId = animationDirection.typeId;
          renderableData.duration = 0; //does not animate;
          renderableData.frameCount = 0; //does not animate
-         renderableData.renderFlags = renderFlags; //no need to check, it shouldn't cause a crash.
+         renderableData.renderFlags = direction; //no need to check, it shouldn't cause a crash.
       }
    }
 
    auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(renderableData.tilesetId);
-   uint16_t halfWidth = tileset->TileWidth / 2;
-   uint16_t halfHeight = tileset->TileHeight / 2;
+   auto halfWidth = tileset->TileWidth / 2;
+   auto halfHeight = tileset->TileHeight / 2;
 
-   Point oldCenter = { renderableData.center.x, renderableData.center.y };
+   auto oldCenter = Point{ renderableData.center.x, renderableData.center.y };
    // accounting for possible change in tile size due to hacking;
    // adjust entity position so that the center will not change
    // from the previous tileset to the new tileset.
    if (renderableData.lastTilesetId != renderableData.tilesetId)
    {
       //get the difference between entity centers:
-      location += oldCenter - renderableData.center;
+      auto adjustmentPoint = oldCenter - renderableData.center;
+      x += adjustmentPoint.x;
+      y += adjustmentPoint.y;
    }
    renderableData.lastTilesetId = renderableData.tilesetId;
 
-   renderableData.hitBox.origin.x = location.x + halfWidth / 2;
-   renderableData.hitBox.origin.y = location.y + halfHeight - tileset->TileHeight;
+   renderableData.hitBox.origin.x = x + halfWidth / 2;
+   renderableData.hitBox.origin.y = y + halfHeight - tileset->TileHeight;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
    renderableData.center.x = renderableData.hitBox.origin.x + (renderableData.hitBox.w / 2);

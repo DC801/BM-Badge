@@ -73,10 +73,6 @@ public:
 
 struct AnimationDirection
 {
-   uint8_t FlipX() const { return renderFlags ^ FLIPPED_HORIZONTALLY_FLAG; }
-   uint8_t FlipY() const { return renderFlags ^ FLIPPED_VERTICALLY_FLAG; }
-   uint8_t FlipDiag() const { return renderFlags ^ FLIPPED_DIAGONALLY_FLAG; }
-
    uint16_t typeId{ 0 };
    uint8_t type{ 0 };
    uint8_t renderFlags{ 0 };

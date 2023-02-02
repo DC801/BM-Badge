@@ -24,7 +24,7 @@ void MapControl::Load(uint16_t index)
    currentMap = std::move(map);
 }
 
-MapData::MapData(uint32_t& address, bool isEntityDebugOn)
+MapData::MapData(uint32_t& address)
 {
    ROM()->Read(name, address, MapNameLength);
    ROM()->Read(tileWidth, address);
@@ -73,7 +73,7 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
    //first sort entities by their y values:
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-   auto sortByY = [&](size_t i1, size_t i2) { return entities[i1].location.y < entities[i2].location.y; };
+   auto sortByY = [&](size_t i1, size_t i2) { return entities[i1].y < entities[i2].y; };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
@@ -83,7 +83,7 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
       auto& entity = entities[entityIndex];
       auto& renderableData = entityRenderableData[entityIndex];
 
-      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, entity.location, renderableData.renderFlags);
+      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, Point{ entity.x, entity.y }, renderableData.renderFlags);
    }
 }
 
@@ -98,8 +98,8 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition) const
       auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(tileAddress);
 
       auto tileDrawPoint = Point{
-         static_cast<uint16_t>(currentMap->tileWidth * mapTileRow), 
-         static_cast<uint16_t>(currentMap->tileHeight * mapTileCol) 
+         currentMap->tileWidth * mapTileRow, 
+         currentMap->tileHeight * mapTileCol
       };
       tileDrawPoint = tileDrawPoint - cameraPosition;
       
@@ -114,7 +114,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition) const
    }
 }
 
-void MapControl::DrawGeometry(const Point& cameraPosition) const
+void MapControl::DrawGeometry(const Point& camera) const
 {
    Point playerPosition;
    bool isColliding = false;
@@ -125,7 +125,7 @@ void MapControl::DrawGeometry(const Point& cameraPosition) const
       {
          auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
          isColliding = geometry->isPointInGeometry(playerPosition);
-         //geometry.draw(cameraX, cameraY, isColliding ? COLOR_RED : COLOR_GREEN);
+         //geometry->draw(camera.x, camera.y, isColliding ? COLOR_RED : COLOR_GREEN);
       }
    }
 }

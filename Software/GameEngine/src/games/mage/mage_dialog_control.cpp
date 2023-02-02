@@ -38,8 +38,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
 
    currentScreenIndex = 0;
    currentResponseIndex = 0;
-   currentDialog = ROM()->InitializeRAMCopy<MageDialog>(dialogId);
-
+   currentDialogId = dialogId;
    loadNextScreen();
    open = true;
 }
@@ -51,9 +50,6 @@ void MageDialogControl::StartModalDialog(std::string messageString)
    currentResponseIndex = 0;
    currentMessageIndex = 0;
    currentMessage = messageString;
-   currentScreen().responseCount = 0;
-   currentScreen().messageCount = 1;
-   currentScreen().responseType = MageDialogResponseType::NO_RESPONSE;
    responses.clear();
    cursorPhase += 250;
    open = true;
@@ -62,6 +58,7 @@ void MageDialogControl::StartModalDialog(std::string messageString)
 
 void MageDialogControl::loadNextScreen()
 {
+   currentDialog = ROM()->GetReadPointerByIndex<MageDialog>(currentDialogId++);
    currentMessageIndex = 0;
    if ((uint32_t)currentScreenIndex >= currentDialog->ScreenCount)
    {
@@ -69,11 +66,13 @@ void MageDialogControl::loadNextScreen()
       return;
    }
 
-   currentEntityName = stringLoader->getString(currentScreen().nameStringIndex, triggeringEntityName);
+   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
+   currentEntityName = stringLoader->getString(currentScreen.nameStringIndex, triggeringEntityName);
    loadCurrentScreenPortrait();
-
-   currentMessage = stringLoader->getString(currentScreen().messages[currentMessageIndex % currentScreen().messageCount], triggeringEntityName);
-   currentFrameTilesetIndex = currentScreen().borderTilesetIndex;
+   
+   auto messageId = currentScreen.GetMessage(currentMessageIndex);
+   currentMessage = stringLoader->getString(messageId, triggeringEntityName);
+   currentFrameTilesetIndex = currentScreen.borderTilesetIndex;
    currentScreenIndex++;
    cursorPhase += 250;
 }
@@ -87,12 +86,13 @@ void MageDialogControl::update()
       || activatedButton.IsPressed(KeyPress::Rjoy_right)
       || MAGE_NO_MAP != mapControl->mapLoadId;
 
+   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
    if (shouldShowResponses())
    {
-      currentResponseIndex += currentScreen().responseCount;
+      currentResponseIndex += currentScreen.responseCount;
       if (activatedButton.IsPressed(KeyPress::Ljoy_up)) { currentResponseIndex -= 1; }
       if (activatedButton.IsPressed(KeyPress::Ljoy_down)) { currentResponseIndex += 1; }
-      currentResponseIndex %= currentScreen().responseCount;
+      currentResponseIndex %= currentScreen.responseCount;
       if (shouldAdvance)
       {
          scriptControl->jumpScriptId = responses[currentResponseIndex].scriptIndex;
@@ -103,13 +103,13 @@ void MageDialogControl::update()
    {
       currentMessageIndex++;
       cursorPhase = 250;
-      if (currentMessageIndex >= currentScreen().messageCount)
+      if (currentMessageIndex >= currentScreen.messageCount)
       {
          loadNextScreen();
       }
       else
       {
-         auto currentMessageId = currentScreen().messages[currentMessageIndex];
+         auto currentMessageId = currentScreen.GetMessage(currentMessageIndex);
          currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
       }
    }
@@ -123,7 +123,8 @@ void MageDialogControl::draw()
       return;
    }
 
-   MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen().alignment];
+   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
+   MageDialogAlignmentCoords coords = alignments[(uint8_t)currentScreen.alignment % ALIGNMENT_COUNT];
    drawDialogBox(currentMessage, coords.text, true);
    drawDialogBox(currentEntityName, coords.label);
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
@@ -145,7 +146,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
       {
          auto tileId = getTileIdFromXY(i, j, box);
 
-         tileManager->DrawTile(currentFrameTilesetIndex, tileId, Point{ uint16_t(offsetX + (i * tileWidth)), uint16_t(offsetY + (j * tileHeight)) });
+         auto target = Point{ offsetX + (i * tileWidth), offsetY + (j * tileHeight) };
+         tileManager->DrawTile(currentFrameTilesetIndex, tileId, target);
       }
    }
    frameBuffer->printMessage(string, Monaco9, 0xffff, offsetX + tileWidth + 8, offsetY + tileHeight - 2);
@@ -155,8 +157,9 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
       int8_t bounce = cos(((float)cursorPhase / 1000.0) * TAU) * 3;
       if (shouldShowResponses())
       {
+         auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
          // render all of the response labels
-         for (int responseIndex = 0; responseIndex < currentScreen().responseCount; ++responseIndex)
+         for (int responseIndex = 0; responseIndex < currentScreen.responseCount; ++responseIndex)
          {
             frameBuffer->printMessage(
                stringLoader->getString(responses[responseIndex].stringIndex, triggeringEntityName),
@@ -165,19 +168,19 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
          }
-         auto targetPoint = Point{ uint16_t(offsetX + tileWidth + bounce), uint16_t(offsetY + ((currentResponseIndex + 2) * tileHeight * 0.75) + 6) };
+         auto targetPoint = Point{ offsetX + tileWidth + bounce, offsetY + ((currentResponseIndex + 2) * (tileHeight/2 + tileHeight/4)) + 6 };
          tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_DIRECTION_MASK);
       }
       else
       {
-         auto targetPoint = Point{ uint16_t(offsetX + ((box.w - 2) * tileWidth)), uint16_t(offsetY + ((box.h - 2) * tileHeight) + bounce)};
+         auto targetPoint = Point{ offsetX + ((box.w - 2) * tileWidth), offsetY + ((box.h - 2) * tileHeight) + bounce};
          // bounce the arrow at the bottom
          tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
    }
    if (drawPortrait)
    {
-      auto portraitDrawPoint = Point{ uint16_t(offsetX + tileWidth), uint16_t(offsetY + tileHeight) };
+      auto portraitDrawPoint = Point{ offsetX + tileWidth, offsetY + tileHeight };
       tileManager->DrawTile(currentPortraitRenderableData.tilesetId, currentPortraitRenderableData.tileId, portraitDrawPoint, currentPortraitRenderableData.renderFlags );
    }
 }
@@ -226,13 +229,14 @@ uint8_t MageDialogControl::getTileIdFromXY(uint8_t x, uint8_t y, const Rect& box
 
 void MageDialogControl::loadCurrentScreenPortrait()
 {
-   currentPortraitId = currentScreen().portraitIndex;
+   auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
+   currentPortraitId = currentScreen.portraitIndex;
    // only try rendering when we have a portrait
    if (currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT)
    {
-      if (currentScreen().entityIndex != NO_PLAYER)
+      if (currentScreen.entityIndex != NO_PLAYER)
       {
-         auto& currentEntity = mapControl->getEntity(currentScreen().entityIndex);
+         auto& currentEntity = mapControl->getEntity(currentScreen.entityIndex);
          uint8_t sanitizedPrimaryType = currentEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
          if (sanitizedPrimaryType == ENTITY_TYPE)
          {
@@ -240,13 +244,13 @@ void MageDialogControl::loadCurrentScreenPortrait()
          }
 
          auto portrait = ROM()->GetReadPointerByIndex<MagePortrait>(currentPortraitId);
-         auto animationDirection = portrait->getEmoteById(currentScreen().emoteIndex);
-         currentEntity.renderFlags = animationDirection->renderFlags;
-         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.renderFlags & 0x80);
+         auto animationDirection = portrait->getEmoteById(currentScreen.emoteIndex);
+         currentEntity.direction = animationDirection->renderFlags;
+         currentPortraitRenderableData.renderFlags = animationDirection->renderFlags | (currentEntity.direction & 0x80);
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
-         if (((uint8_t)currentScreen().alignment % 2))
+         if (((uint8_t)currentScreen.alignment % 2))
          {
-            currentPortraitRenderableData.renderFlags ^= 0x04;
+            currentPortraitRenderableData.renderFlags ^= RENDER_FLAGS_FLIP_X;
          }
       }
 

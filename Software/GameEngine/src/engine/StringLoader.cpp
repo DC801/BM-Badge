@@ -6,7 +6,7 @@ std::string StringLoader::getString(uint16_t stringId, std::string triggeringEnt
    auto address = ROM()->GetAddress<MageStringValue>(stringId);
    auto inputCharPtr = ROM()->GetReadPointerToAddress<char>(address);
    auto inputString = std::string{ inputCharPtr };
-   std::string outputString{};
+   std::string outputString = inputString;
    size_t cursor{ 0 };
    size_t variableStartPosition{ 0 };
    size_t variableEndPosition{ 0 };

@@ -48,7 +48,8 @@ struct MageEntity
 {
    char name[MAGE_ENTITY_NAME_LENGTH]{ 0 }; // bob's club
    // put the sheep back in the pen, rake in the lake
-   Point location{ 0 };
+   uint16_t x{ 0 };
+   uint16_t y{ 0 };
    uint16_t onInteractScriptId{ 0 };
    uint16_t onTickScriptId{ 0 };
    uint16_t primaryId{ 0 };
@@ -56,7 +57,7 @@ struct MageEntity
    uint8_t primaryIdType{ 0 };
    uint8_t currentAnimation{ 0 };
    uint8_t currentFrameIndex{ 0 };
-   uint8_t renderFlags{ 0 };
+   uint8_t direction{ 0 };
    uint8_t hackableStateA{ 0 };
    uint8_t hackableStateB{ 0 };
    uint8_t hackableStateC{ 0 };
@@ -70,8 +71,8 @@ struct MageEntity
       }
    }
 
-   bool isDebug() const { return renderFlags & RENDER_FLAGS_IS_DEBUG; }
-   void updateRenderableData(RenderableData& renderableData, uint32_t deltaTime = 0);
+   bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
+   void updateRenderableData(RenderableData& renderableData, uint32_t deltaTime);
 };
 
 

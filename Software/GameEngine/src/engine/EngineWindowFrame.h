@@ -58,7 +58,7 @@ private:
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
    const SDL_Rect gameViewportSrcRect = { 0, 0, WIDTH, HEIGHT };
-   const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH-112, HEIGHT-56 };
+   const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH, HEIGHT };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };

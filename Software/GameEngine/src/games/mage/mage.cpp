@@ -49,7 +49,7 @@ void MageGameEngine::handleEntityInteract(bool hack)
    playerRenderableData.interactBox = playerRenderableData.hitBox;
 
    const uint8_t interactLength = 32;
-   auto direction = playerRenderableData.renderFlags & RENDER_FLAGS_DIRECTION_MASK;
+   auto direction = playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
       playerRenderableData.interactBox.origin.y -= interactLength;
@@ -190,7 +190,6 @@ void MageGameEngine::applyUniversalInputs()
 
    if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0))
    {
-      isCollisionDebugOn = !isCollisionDebugOn;
    }
 }
 
@@ -215,7 +214,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    {
       auto& playerEntity = mapControl->getPlayerEntity();
       auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
-      playerEntity.updateRenderableData(playerRenderableData);
+      playerEntity.updateRenderableData(playerRenderableData, 0);
 
       //update renderable info before proceeding:
       uint16_t playerEntityTypeId = playerEntity.primaryIdType % NUM_PRIMARY_ID_TYPES;
@@ -236,14 +235,14 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       else if (playerHasControl)
       {
          playerVelocity = { 0,0 };
-         auto& direction = playerRenderableData.renderFlags;
+         auto& direction = playerEntity.direction;
          if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
          if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
          if (isMoving)
          {
-            playerRenderableData.renderFlags |= (direction & RENDER_FLAGS_DIRECTION_MASK);
+            playerEntity.direction |= (direction & RENDER_FLAGS_DIRECTION_MASK);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
@@ -251,7 +250,8 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
             // which would glitch the player into geometry really bad, so... don't.
             if (dotProductOfVelocityAndPushback > 0)
             {
-               playerEntity.location += velocityAfterPushback;
+               playerEntity.x += velocityAfterPushback.x;
+               playerEntity.y += velocityAfterPushback.y;
             }
          }
          if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Rjoy_right))
@@ -321,7 +321,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       //What scenarios call for an extra renderableData update?
       if (isMoving || (playerRenderableData.lastTilesetId != playerRenderableData.tilesetId))
       {
-         playerEntity.updateRenderableData(playerRenderableData);
+         playerEntity.updateRenderableData(playerRenderableData, 0);
       }
 
       if (!playerHasControl || !playerHasHexEditorControl)
@@ -448,21 +448,13 @@ void MageGameEngine::GameRender()
          mapControl->Draw(layerCount - 1, camera.position);
       }
 
-      /*if (isCollisionDebugOn)
-      {
-         DrawGeometry();
-         if (playerEntityIndex != NO_PLAYER)
-         {
-            auto point = getPushBackFromTilesThatCollideWithPlayer();
-         }
-      }*/
       if (dialogControl->isOpen())
       {
          dialogControl->draw();
       }
    }
    //update the state of the LEDs
-   hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
+;   hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
 
    //update the screen
    frameBuffer->blt(inputHandler->GetButtonState());
@@ -579,16 +571,6 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
       spokePoint.y = sin(angle) * playerSpokeRadius + playerVelocity.y + playerPoint.y;
    }
 
-   if (isCollisionDebugOn)
-   {
-      frameBuffer->drawRect(playerRect.origin - camera.position, playerRect.w, playerRect.h, COLOR_BLUE);
-      for (int i = 0; i < mageCollisionSpokes.GetPointCount(); i++)
-      {
-         auto& point = mageCollisionSpokes.GetPoint(i);
-         frameBuffer->drawLine(point - camera.position, playerPoint - camera.position, COLOR_PURPLE);
-      }
-   }
-
    for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       const auto layerAddress = mapControl->LayerAddress(layerIndex);
@@ -672,18 +654,6 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
                   }
                }
                frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
-            }
-
-            if (isCollisionDebugOn)
-            {
-
-               //geometry.draw(
-               //   camera.adjustedCameraPosition.x,
-               //   camera.adjustedCameraPosition.y,
-               //   isMageInGeometry ? COLOR_RED : COLOR_YELLOW,
-               //   tileTopLeftPoint.x,
-               //   tileTopLeftPoint.y
-               //);
             }
          }
       }

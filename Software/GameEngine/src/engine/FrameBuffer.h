@@ -63,45 +63,11 @@ enum MageEntityAnimationDirection : uint8_t
 #define RENDER_FLAGS_DIRECTION_MASK		0b00000011
 #define NUM_DIRECTIONS 4
 
-//struct RenderFlags
-//{
-//	inline void updateDirectionAndPreserveFlags(uint8_t desired)
-//	{
-//		auto directionMask = (desired & RENDER_FLAGS_DIRECTION_MASK);
-//		
-//			| (rf.i & (RENDER_FLAGS_IS_DEBUG | RENDER_FLAGS_IS_GLITCHED));
-//	}
-//
-//	operator uint8_t()
-//	{
-//		return (uint8_t)
-//			diagonal
-//			| vertical << 1
-//			| horizontal << 2
-//			| paddingA << 3
-//			| paddingB << 4
-//			| paddingC << 5
-//			| debug << 6
-//			| glitched << 7;
-//	}
-//
-//	bool diagonal : 1;
-//	bool vertical : 1;
-//	bool horizontal : 1;
-//	bool paddingA : 1;
-//	bool paddingB : 1;
-//	bool paddingC : 1;
-//	bool debug : 1;
-//	bool glitched : 1;
-//};
-
-
 //this is a point in 2D space.
 struct Point
 {
-
-	uint16_t x{ 0 };
-	uint16_t y{ 0 };
+	int32_t x{ 0 };
+	int32_t y{ 0 };
 
 	float VectorLength() const
 	{
@@ -176,7 +142,7 @@ struct Point
 
 	Point operator-()
 	{
-		return Point{ (uint16_t)-x, (uint16_t)-y };
+		return Point{ -x, -y };
 	}
 
 	Point& operator+=(const Point& rhs)
@@ -293,8 +259,8 @@ public:
 	{
 		const auto topLeft = p - size;
 		const auto bottomRight = p + size;
-		const auto bottomLeft = Point{ (uint16_t)(p.x - size), (uint16_t)(p.y + size) };
-      const auto topRight = Point{ (uint16_t)(p.x + size), (uint16_t)(p.y - size) };
+		const auto bottomLeft = Point{ p.x - size, p.y + size };
+      const auto topRight = Point{ p.x + size, p.y - size };
 		drawLine(topLeft, bottomRight, color);
 		drawLine(bottomLeft, topRight, color);
 	}

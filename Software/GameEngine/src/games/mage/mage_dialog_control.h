@@ -68,23 +68,6 @@ struct MageDialogAlignmentCoords
 
 struct MageDialogScreen
 {
-   MageDialogScreen() noexcept = default;
-   MageDialogScreen(uint32_t& address)
-   {
-      ROM()->Read(nameStringIndex, address);
-      ROM()->Read(borderTilesetIndex, address);
-      ROM()->Read(alignment, address);
-      ROM()->Read(fontIndex, address);
-      ROM()->Read(messageCount, address);
-      ROM()->Read(responseType, address);
-      ROM()->Read(responseCount, address);
-      ROM()->Read(entityIndex, address);
-      ROM()->Read(portraitIndex, address);
-      ROM()->Read(emoteIndex, address);
-      
-      messages = ROM()->GetReadPointerToAddress<uint16_t>(address, messageCount);
-      responses = ROM()->GetReadPointerToAddress<MageDialogResponse>(address, responseCount);
-   }
    // TODO: portraits, after we have some graphics for them
    uint16_t nameStringIndex{ 0 };
    uint16_t borderTilesetIndex{0};
@@ -96,27 +79,31 @@ struct MageDialogScreen
    uint8_t entityIndex{0};
    uint8_t portraitIndex{0};
    uint8_t emoteIndex{0};
-   const uint16_t* messages{};
-   const MageDialogResponse* responses{};
+
+   uint16_t GetMessage(uint8_t messageId) const
+   {
+      auto messages = (const uint16_t*)(&emoteIndex + sizeof(uint8_t));
+      return messages[messageId % messageCount];
+   }
+
+   const MageDialogResponse& GetResponse(uint8_t responseId) const
+   {
+      auto responses = (const MageDialogResponse*)(&emoteIndex + sizeof(uint8_t) + messageCount * sizeof(uint16_t));
+      return responses[responseId % responseCount];
+   }
 };
 
 
 struct MageDialog
 {
-   MageDialog(uint32_t& address)
-   {
-      ROM()->Read(name, address, 32);
-      ROM()->Read(ScreenCount, address);
-      auto screenData = new MageDialogScreen[ScreenCount];
-      for (auto i = 0; i < ScreenCount; i++)
-      {
-         screenData[i] = MageDialogScreen{ address };
-      }
-      screens = std::unique_ptr<MageDialogScreen[]>{ screenData };
-   }
-   char name[32];
+   char Name[32];
    uint32_t ScreenCount;
-   std::unique_ptr<MageDialogScreen[]> screens;
+
+   const MageDialogScreen& GetScreen(uint32_t screenId) const
+   {
+      auto screens = (MageDialogScreen*)((uint8_t*)&ScreenCount + sizeof(uint32_t));
+      return screens[screenId % ScreenCount];
+   }
 };
 
 
@@ -162,18 +149,14 @@ private:
 
    uint8_t getTileIdFromXY(uint8_t x, uint8_t y, const Rect& box) const;
    void drawDialogBox(const std::string& string, const Rect& box, bool drawArrow = false, bool drawPortrait = false) const;
-   
-   inline MageDialogScreen& currentScreen() const
-   {
-      return currentDialog->screens[currentScreenIndex];
-   }
 
    bool shouldShowResponses() const
    {
+      auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);
       // last page of messages on this screen and we have responses
-      return currentMessageIndex == (currentScreen().messageCount - 1)
-         && (currentScreen().responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
-            || currentScreen().responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
+      return currentMessageIndex == (currentScreen.messageCount - 1)
+         && (currentScreen.responseType == MageDialogResponseType::SELECT_FROM_SHORT_LIST
+            || currentScreen.responseType == MageDialogResponseType::SELECT_FROM_LONG_LIST);
    }
 
    std::string triggeringEntityName{};
@@ -185,7 +168,8 @@ private:
    uint8_t currentPortraitId{ DIALOG_SCREEN_NO_PORTRAIT };
    RenderableData currentPortraitRenderableData{};
 
-   std::unique_ptr<MageDialog> currentDialog;
+   uint8_t currentDialogId{ 0 };
+   const MageDialog* currentDialog{ nullptr };
    std::string currentEntityName{};
    std::string currentMessage{};
    std::vector<MageDialogResponse> responses{};

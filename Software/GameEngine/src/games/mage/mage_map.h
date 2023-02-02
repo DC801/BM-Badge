@@ -26,7 +26,7 @@ struct GoDirection
 
 struct MapData
 {
-   MapData(uint32_t& offset, bool isEntityDebugOn=false);
+   MapData(uint32_t& offset);
    static const inline int MapNameLength = 16;
    char name[MapNameLength]{ 0 };
    uint16_t tileWidth{ 0 };
@@ -73,12 +73,11 @@ public:
    void Draw(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
    void DrawEntities(const Point& cameraPosition) const;
-
    void UpdateEntities(uint32_t deltaTime);
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
-      if (entityIndex >= currentMap->entityCount)
+      if (entityIndex >= currentMap->entityCount && entityIndex != MAGE_MAP_ENTITY)
       {
          return NO_PLAYER;
       }
