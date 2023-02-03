@@ -101,8 +101,20 @@ struct MageDialog
 
    const MageDialogScreen& GetScreen(uint32_t screenId) const
    {
-      auto screens = (MageDialogScreen*)((uint8_t*)&ScreenCount + sizeof(uint32_t));
-      return screens[screenId % ScreenCount];
+      auto screens = (uint8_t*)&ScreenCount + sizeof(uint32_t);
+      for (auto i = 0; i < screenId; i++)
+      {
+         auto screenPtr = ((const MageDialogScreen*)screens);
+         screens += sizeof(MageDialogScreen);
+         screens += screenPtr->messageCount * sizeof(uint16_t);
+         screens += screenPtr->responseCount * sizeof(MageDialogResponse);
+         if (screenPtr->messageCount % 2)
+         {
+            screens += 2;
+         }
+      }
+      auto screenPtr = ((const MageDialogScreen*)screens);
+      return *screenPtr;
    }
 };
 
@@ -147,7 +159,6 @@ private:
    std::shared_ptr<EngineInput> inputHandler;
    bool open{ false };
 
-   uint8_t getTileIdFromXY(uint8_t x, uint8_t y, const Rect& box) const;
    void drawDialogBox(const std::string& string, const Rect& box, bool drawArrow = false, bool drawPortrait = false) const;
 
    bool shouldShowResponses() const
