@@ -301,7 +301,7 @@ enum <uchar> geometry_type {
 typedef struct {
     uint16 x;
     uint16 y;
-} Point;
+} Point <read=Str("%d, %d", x,y)>;
     
 typedef struct {
     char name[32];

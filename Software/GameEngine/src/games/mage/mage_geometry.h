@@ -70,8 +70,8 @@ public:
    }
 
    Point GetPoint(uint16_t i) const { 
-      auto points = (Point*)((uint8_t*)&pathLength + sizeof(float));
-      return points[i % pointCount]; 
+      auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
+      return Point{ points[2*i], points[2*i + 1] };
    }
    uint16_t GetPointCount() const { return pointCount;  }
 

@@ -133,7 +133,7 @@ private:
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<StringLoader> stringLoader;
 
-   MageCamera camera{};
+   MageCamera camera;
 };
 
 #endif //_MAGE_H

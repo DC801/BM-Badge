@@ -52,24 +52,22 @@ MapData::MapData(uint32_t& address)
    ROM()->InitializeVectorFrom(geometryGlobalIds, address, geometryCount);
    ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
    ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
-   
-   for (auto i = 0; i < layerCount; i++)
-   {
-      layerAddresses.push_back(address);
-      address += rows * cols * sizeof(uint8_t*);
-   }
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
    {
       address += sizeof(uint16_t);
    }
+
+   for (auto i = 0; i < layerCount; i++)
+   {
+      layerAddresses.push_back(address);
+      address += rows * cols * sizeof(uint8_t*);
+   }
 }
 
 void MapControl::DrawEntities(const Point& cameraPosition) const
 {
-   int32_t cameraX = cameraPosition.x;
-   int32_t cameraY = cameraPosition.y;
    //first sort entities by their y values:
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
@@ -87,21 +85,25 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
    }
 }
 
-void MapControl::Draw(uint8_t layer, const Point& cameraPosition) const
+void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
 {
-   const auto layerAddress = LayerAddress(layer);
+   auto layerAddress = LayerAddress(layer);
+   auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
 
    for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
    for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
    {
-      auto tileAddress = layerAddress + (mapTileCol * mapTileRow * sizeof(MageMapTile));
-      auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(tileAddress);
+      auto currentTile = &layers[mapTileCol * mapTileRow];
+
+      if (!currentTile->tileId)
+      {
+         continue;
+      }
 
       auto tileDrawPoint = Point{
-         currentMap->tileWidth * mapTileRow, 
-         currentMap->tileHeight * mapTileCol
+         currentMap->tileWidth * mapTileRow - cameraPosition.x,
+         currentMap->tileHeight * mapTileCol - cameraPosition.y
       };
-      tileDrawPoint = tileDrawPoint - cameraPosition;
       
       // don't draw tiles that are entirely outside the screen bounds
       if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
@@ -110,7 +112,7 @@ void MapControl::Draw(uint8_t layer, const Point& cameraPosition) const
          continue;
       }
 
-      tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId, tileDrawPoint, currentTile->flags);
+      tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
    }
 }
 

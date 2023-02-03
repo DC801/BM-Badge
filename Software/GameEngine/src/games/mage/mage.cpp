@@ -436,7 +436,7 @@ void MageGameEngine::GameRender()
       for (uint8_t layerIndex = 0; layerCount == 1 || layerIndex < (layerCount - 1); layerIndex++)
       {
          //draw all map layers except the last one before drawing entities.
-         mapControl->Draw(layerIndex, camera.position);
+         mapControl->DrawLayer(layerIndex, camera.position);
       }
 
       //now that the entities are updated, draw them to the screen.
@@ -445,7 +445,7 @@ void MageGameEngine::GameRender()
       if (layerCount > 1)
       {
          //draw the final layer above the entities.
-         mapControl->Draw(layerCount - 1, camera.position);
+         mapControl->DrawLayer(layerCount - 1, camera.position);
       }
 
       if (dialogControl->isOpen())
@@ -601,7 +601,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          {
             continue;
          }
-         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
+         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId);
          if (geometryId)
          {
             for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
@@ -617,14 +617,14 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             }
             geometryId--;
 
-            auto geometryPoints = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId)
-               ->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
+            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
+            auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
             auto offsetPoint = Point{ uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
             bool isMageInGeometry = false;
 
             bool collidedWithThisTileAtAll = false;
-            for (int tileLinePointIndex = 0; tileLinePointIndex < geometryPoints.size(); tileLinePointIndex++)
+            for (int tileLinePointIndex = 0; tileLinePointIndex < geometryPoints.size() - 1; tileLinePointIndex++)
             {
                auto& tileLinePointA = geometryPoints[tileLinePointIndex];
                auto& tileLinePointB = geometryPoints[tileLinePointIndex + 1];

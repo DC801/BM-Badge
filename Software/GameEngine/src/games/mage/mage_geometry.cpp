@@ -14,11 +14,11 @@ std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint
       auto& point = GetPoint(i);
       if (flags == 0)
       {
-         points.push_back(point);
+         points[i] = point;
       }
       else
       {
-         points.push_back(point.flipByFlags(flags, width, height));
+         points[i] = point.flipByFlags(flags, width, height);
       }
    }
    return points;

@@ -56,7 +56,7 @@ public:
       auto geometriesPtr = (uint8_t*)&Rows + sizeof(uint16_t);
       if (tileIndex >= Cols * Rows)
       {
-         return geometriesPtr[0];
+         return 0;
       }
       return geometriesPtr[tileIndex];
    }
