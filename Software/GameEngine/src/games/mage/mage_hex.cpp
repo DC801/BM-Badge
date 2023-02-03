@@ -105,9 +105,13 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
    currentByte += hexCursorLocation;
    const auto activatedButton = inputHandler->GetButtonActivatedState();
    const auto button = inputHandler->GetButtonState();
-   if (!activatedButton.IsPressed(KeyPress::Rjoy_up))
+   if (!button.IsPressed(KeyPress::Rjoy_up))
    {
       disableMovement = false;
+   }
+   if (disableMovement)
+   {
+      return;
    }
    //exiting the hex editor by pressing the hax button will happen immediately
    //before any other input is processed:

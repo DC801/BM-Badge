@@ -23,12 +23,12 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
          //increment frame and reset tick counter:
          currentFrameIndex++;
          renderableData.currentFrameTicks = 0;
+      }
 
-         //reset animation to first frame after max frame is reached:
-         if (currentFrameIndex >= renderableData.frameCount)
-         {
-            currentFrameIndex = 0;
-         }
+      //reset animation to first frame after max frame is reached:
+      if (currentFrameIndex >= renderableData.frameCount)
+      {
+         currentFrameIndex = 0;
       }
       auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(primaryId);
       renderableData.tilesetId = animation->tilesetId;
@@ -66,6 +66,19 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       //Scenario B: Type is not 0, so Type is a tileset(you will need to subtract 1 to get it 0-indexed), and TypeId is the tileId.
       if (animationDirection.type == 0)
       {
+         //check for frame change and adjust if needed:
+         if (renderableData.currentFrameTicks >= renderableData.duration)
+         {
+            //increment frame and reset tick counter:
+            currentFrameIndex++;
+            renderableData.currentFrameTicks = 0;
+         }
+
+         //reset animation to first frame after max frame is reached:
+         if (currentFrameIndex >= renderableData.frameCount)
+         {
+            currentFrameIndex = 0;
+         }
          auto animation = ROM()->GetReadPointerByIndex<MageAnimation>(animationDirection.typeId);
          auto& currentFrame = animation->GetFrame(currentFrameIndex);
          renderableData.tilesetId = animation->tilesetId;
@@ -88,7 +101,7 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
    auto halfWidth = tileset->TileWidth / 2;
    auto halfHeight = tileset->TileHeight / 2;
 
-   auto oldCenter = Point{ renderableData.center.x, renderableData.center.y };
+   auto oldCenter = renderableData.center;
    // accounting for possible change in tile size due to hacking;
    // adjust entity position so that the center will not change
    // from the previous tileset to the new tileset.
@@ -98,8 +111,8 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       auto adjustmentPoint = oldCenter - renderableData.center;
       x += adjustmentPoint.x;
       y += adjustmentPoint.y;
+      renderableData.lastTilesetId = renderableData.tilesetId;
    }
-   renderableData.lastTilesetId = renderableData.tilesetId;
 
    renderableData.hitBox.origin.x = x + halfWidth / 2;
    renderableData.hitBox.origin.y = y + halfHeight - tileset->TileHeight;

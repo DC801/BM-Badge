@@ -149,7 +149,6 @@ public:
       return entityRenderableData[id];
    }
 
-
    uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
       return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
