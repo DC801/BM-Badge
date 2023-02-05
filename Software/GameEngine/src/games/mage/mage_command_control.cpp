@@ -219,9 +219,10 @@ void MageCommandControl::processInputAsTrappedResponse(std::string input) {
 	if (responseType == RESPONSE_ENTER_NUMBER) {
 		int responseIndex;
 		bool errorWhileParsingInt = false;
-		try {
-			responseIndex = std::stoi(input);
-		} catch(std::exception &err) {
+		if (sscanf(input.c_str(), "%d", &responseIndex) == 1) {
+			// commandResponseBuffer += "Parse string as number success";
+		} else {
+			// commandResponseBuffer += "Parse string as number FAIL!!!";
 			errorWhileParsingInt = true;
 		}
 		if (
