@@ -126,7 +126,6 @@ void EngineInput::GetDesktopInputState()
 
    buttons = newValue;
    activated = ~activated & newValue;
-   // debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
 }
 
 #endif

@@ -209,7 +209,7 @@ typedef struct
     uint16 tileId;
     uchar tilesetId;
     RenderFlags flags;
-} MapTile<read=Str("tileset %d [%d]",tilesetId, tileId)>;
+} MapTile<read=Str("tileset %d [%d] %s",tilesetId, tileId, Str(flags))>;
 
 typedef struct 
 {
@@ -321,7 +321,7 @@ typedef struct {
 typedef struct {
     action_type type;
     uchar padding[7];
-} action;
+} action <read=(type)>;
 
 typedef struct {
     char name[32];

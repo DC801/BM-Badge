@@ -235,17 +235,18 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       else if (playerHasControl)
       {
          playerVelocity = { 0,0 };
-         auto& direction = playerEntity.direction;
-         if (button.IsPressed(KeyPress::Ljoy_left)) { playerVelocity.x -= mageSpeed; direction = WEST; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_right)) { playerVelocity.x += mageSpeed; direction = EAST; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_up)) { playerVelocity.y -= mageSpeed; direction = NORTH; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_down)) { playerVelocity.y += mageSpeed; direction = SOUTH; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_left))   { playerVelocity.x -= mageSpeed; playerEntity.direction = WEST; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_right))  { playerVelocity.x += mageSpeed; playerEntity.direction = EAST; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_up))     { playerVelocity.y -= mageSpeed; playerEntity.direction = NORTH; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_down))   { playerVelocity.y += mageSpeed; playerEntity.direction = SOUTH; isMoving = true; }
+
          if (isMoving)
          {
-            playerEntity.direction |= (direction & RENDER_FLAGS_DIRECTION_MASK);
+            playerEntity.direction = (playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK);
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
+            //
             // false would mean that the pushback is greater than the input velocity,
             // which would glitch the player into geometry really bad, so... don't.
             if (dotProductOfVelocityAndPushback > 0)
@@ -538,10 +539,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    if (abs_x)
    {
       playerRect.w += abs_x;
-      if (playerVelocity.x < 0)
-      {
-         playerRect.origin.x += playerVelocity.x;
-      }
+      if (playerVelocity.x < 0) { playerRect.origin.x += playerVelocity.x; }
    }
    if (abs_y)
    {
@@ -574,19 +572,21 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       const auto layerAddress = mapControl->LayerAddress(layerIndex);
-      for (auto i = 0u; i < mapControl->Cols() * mapControl->Rows(); i++)
+      for (auto row = 0; row < mapControl->Rows(); row++)
+         for (auto col = 0; col < mapControl->Cols(); col++)
       {
-         tileTopLeftPoint.x = (int32_t)(mapControl->TileWidth() * (i % mapControl->Cols()));
-         tileTopLeftPoint.y = (int32_t)(mapControl->TileHeight() * (i / mapControl->Cols()));
-         auto x = tileTopLeftPoint.x - playerRect.origin.x;
-         auto y = tileTopLeftPoint.y - playerRect.origin.y;
+         tileTopLeftPoint = Point{ 
+            mapControl->TileWidth() * row,
+            mapControl->TileHeight() * col
+         };
 
-         if (x + mapControl->TileWidth() < 0 || x > playerRect.w
-            || y + mapControl->TileHeight() < 0 || y > playerRect.h)
+         auto playerOffset = tileTopLeftPoint - playerRect.origin;
+         if (playerOffset.x + mapControl->TileWidth() < 0 || playerOffset.x > playerRect.w
+            || playerOffset.y + mapControl->TileHeight() < 0 || playerOffset.y > playerRect.h)
          {
             continue;
          }
-         auto offset = layerAddress + (i * sizeof(MageMapTile));
+         auto offset = layerAddress + sizeof(MageMapTile) * (row * mapControl->Cols() + col);
 
          auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(offset);
 
@@ -620,7 +620,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
             auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
-            auto offsetPoint = Point{ uint16_t(playerPoint.x - tileTopLeftPoint.x), uint16_t(playerPoint.y - tileTopLeftPoint.y) };
+            auto offsetPoint = Point{ playerPoint.x - tileTopLeftPoint.x, playerPoint.y - tileTopLeftPoint.y };
             bool isMageInGeometry = false;
 
             bool collidedWithThisTileAtAll = false;

@@ -93,23 +93,22 @@ struct Point
 	{
 		Point point = Point{ x,y };
 
-		if (flags)
+		if (flags & RENDER_FLAGS_FLIP_X)
 		{
-			if (flags & RENDER_FLAGS_FLIP_DIAG)
-			{
-				auto xTemp = point.x;
-				point.x = point.y;
-				point.y = xTemp;
-			}
-			if (flags & RENDER_FLAGS_FLIP_X)
-			{
-				point.x = width - point.x;
-			}
-			if (flags & RENDER_FLAGS_FLIP_Y)
-			{
-				point.y = height - point.y;
-			}
+			point.x = width - point.x;
 		}
+		if (flags & RENDER_FLAGS_FLIP_Y)
+		{
+			point.y = height - point.y;
+		}
+
+		if (flags & RENDER_FLAGS_FLIP_DIAG)
+		{
+			auto xTemp = point.x;
+			point.x = point.y;
+			point.y = xTemp;
+		}
+		
 		return point;
 	}
 
@@ -243,10 +242,10 @@ public:
 	void clearScreen(uint16_t color);
 	constexpr void drawPixel(int x, int y, uint16_t color) 
 	{ 
-		if (x < 0 || x >= WIDTH) { return; }
-		if (y < 0 || y >= HEIGHT) { return; }
+		if (x < 0 || x >= DrawWidth) { return; }
+		if (y < 0 || y >= DrawHeight) { return; }
 
-		frame[y * WIDTH + x] = color;
+		frame[y * DrawWidth + x] = color;
 	}
 
 	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
@@ -280,16 +279,16 @@ public:
 	void fillRect(int x, int y, int w, int h, uint16_t color)
 	{
 
-		if ((x >= WIDTH) || (y >= HEIGHT))
+		if ((x >= DrawWidth) || (y >= DrawHeight))
 		{
 			return;
 		}
 
 		// Clip to screen
 		auto right = x + w;
-		if (right >= WIDTH) { right = WIDTH - 1; }
+		if (right >= DrawWidth) { right = DrawWidth - 1; }
 		auto bottom = y + h;
-		if (bottom >= HEIGHT) { bottom = HEIGHT - 1; }
+		if (bottom >= DrawHeight) { bottom = DrawHeight - 1; }
 		// X
 		for (int i = x; i < right; i++)
 		{
@@ -328,7 +327,7 @@ private:
 	bool isFading{ false };
 	uint16_t fadeColor{ 0 };
 
-  static inline std::array<uint16_t, FRAMEBUFFER_SIZE> frame{0};
+  static inline std::array<uint16_t, FramebufferSize> frame{0};
 	void __draw_char(
 		int16_t x,
 		int16_t y,

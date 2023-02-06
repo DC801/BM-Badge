@@ -9,12 +9,11 @@
 #include <SDL_image.h>
 #include <memory>
 
-
-#define WIDTH		320
-#define HEIGHT		240
-#define HALF_WIDTH	160
-#define HALF_HEIGHT	120
-const uint32_t FRAMEBUFFER_SIZE = HEIGHT * WIDTH;
+static const inline auto DrawWidth = 320;
+static const inline auto DrawHeight = 240;
+static const inline auto DrawWidthHalf = DrawWidth/2;
+static const inline auto DrawHeightHalf = DrawHeight/2;
+static const inline uint32_t FramebufferSize = DrawWidth * DrawHeight;
 
 #ifndef SDL_CreateWindowAndRenderer
 extern int SDL_CreateWindowAndRenderer(int width, int height, uint32_t window_flags, SDL_Window** window, SDL_Renderer** renderer);
@@ -35,7 +34,7 @@ private:
 
    /*void util_gfx_init()
    {
-      area_t area = { 0, 0, WIDTH, HEIGHT };
+      area_t area = { 0, 0, DrawWidth, DrawHeight };
       p_canvas()->setTextArea(&area);
 
       p_canvas()->clearScreen(COLOR_BLACK);
@@ -57,8 +56,8 @@ private:
       SDL_Texture* frameLEDTexture = nullptr;
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
-   const SDL_Rect gameViewportSrcRect = { 0, 0, WIDTH, HEIGHT };
-   const SDL_Rect gameViewportDstRect = { 112, 56, WIDTH, HEIGHT };
+   const SDL_Rect gameViewportSrcRect = { 0, 0, DrawWidth, DrawHeight };
+   const SDL_Rect gameViewportDstRect = { 112, 56, DrawWidth, DrawHeight };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };

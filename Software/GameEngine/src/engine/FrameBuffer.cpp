@@ -34,17 +34,14 @@
 //Cursor coordinates
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
-static inline area_t m_cursor_area = { 0, 0, WIDTH, HEIGHT };
+static inline area_t m_cursor_area = { 0, 0, DrawWidth, DrawHeight };
 static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
 
 void FrameBuffer::clearScreen(uint16_t color)
 {
-   for (uint32_t i = 0; i < FRAMEBUFFER_SIZE; ++i)
-   {
-      frame[i] = color;
-   }
+   frame.fill(color);
 }
 
 void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags)
@@ -61,15 +58,15 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPa
    }
 
    // skip any chunks that aren't drawn to the frame buffer
-   if (target.origin.x + target.w < 0 || target.origin.x >= WIDTH
-      || target.origin.y + target.h < 0 || target.origin.y >= HEIGHT)
+   if (target.origin.x + target.w < 0 || target.origin.x >= DrawWidth
+      || target.origin.y + target.h < 0 || target.origin.y >= DrawHeight)
    {
       return;
    }
 
    // draw to the target pixel by pixel, read from the source based on flags:
-   for (auto row = 0; row != target.h && row < HEIGHT; row++)
-   for (auto col = 0; col != target.w && col < WIDTH; col++)
+   for (auto row = 0; row < target.h && row < DrawHeight; row++)
+   for (auto col = 0; col < target.w && col < DrawWidth; col++)
    {
       // for a flip in the y-axis, get the last indexable row of the source
       auto pixelRow = row;
@@ -82,6 +79,12 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPa
       if (flip_x)
       {
          pixelCol = target.w - col - 1;
+      }
+
+      if (flip_diag)
+      {
+         pixelRow = target.h - pixelRow - 1;
+         pixelCol = target.w - pixelCol - 1;
       }
 
       // compute the source pixel offset from the pixels pointer
@@ -148,14 +151,14 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       {
          if (p >= 0)
          {
-            auto y = drawDownward ? HEIGHT - y1 : y1;
+            auto y = drawDownward ? DrawHeight - y1 : y1;
             drawPixel(x1, y, color);
             y1++;
             p = p + 2 * dy - 2 * dx;
          }
          else
          {
-            auto y = drawDownward ? HEIGHT - y1 : y1;
+            auto y = drawDownward ? DrawHeight - y1 : y1;
             drawPixel(x1, y, color);
             p = p + 2 * dy;
          }
@@ -314,8 +317,8 @@ void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16
    uint8_t gw, gh, xa;
    int8_t xo, yo;
 
-   int16_t minx = WIDTH;
-   int16_t miny = HEIGHT;
+   int16_t minx = DrawWidth;
+   int16_t miny = DrawHeight;
 
    int16_t maxx = -1;
    int16_t maxy = -1;
@@ -340,7 +343,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16
             xo = glyph.xOffset;
             yo = glyph.yOffset;
 
-            if (m_wrap && ((x + ((int16_t)xo + gw)) >= WIDTH))
+            if (m_wrap && ((x + ((int16_t)xo + gw)) >= DrawWidth))
             {
                // Line wrap
                x = 0;
@@ -396,7 +399,7 @@ void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16
 void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_raw)
 {
    //clip
-   if ((x < 0) || (x > WIDTH - w) || (y < 0) || (y > HEIGHT - h))
+   if ((x < 0) || (x > DrawWidth - w) || (y < 0) || (y > DrawHeight - h))
    {
       return;
    }
@@ -427,7 +430,7 @@ void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_ra
 void FrameBuffer::blt(ButtonState button)
 {
 #ifdef DC801_EMBEDDED
-   draw_raw_async(0, 0, WIDTH, HEIGHT, frame);
+   draw_raw_async(0, 0, DrawWidth, DrawHeight, frame);
 #else
    windowFrame->GameBlt(frame.data(), button);
 #endif

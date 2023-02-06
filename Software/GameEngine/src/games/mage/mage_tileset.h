@@ -106,13 +106,13 @@ public:
       auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
       auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-      pixels += tileId *tileset->TileWidth* tileset->TileHeight;
+      pixels += tileId * tileset->TileWidth * tileset->TileHeight;
       
       frameBuffer->drawChunkWithFlags(
          pixels,
          colorPalette,
          Rect{
-            Point{ tileDrawPoint.x, tileDrawPoint.y },
+            tileDrawPoint,
             tileset->TileWidth,
             tileset->TileHeight
          },

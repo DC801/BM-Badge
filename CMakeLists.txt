@@ -166,11 +166,12 @@ if(EMSCRIPTEN)
         -Wno-register
         --disable-nls
         -fsanitize=undefined
+        -m32
     )
 
     set_source_files_properties(${SOURCEFILES}
         PROPERTIES
-        COMPILE_FLAGS "-fsanitize=undefined -fno-inline  -felide-constructors -fno-rtti -O3")
+        COMPILE_FLAGS "-fsanitize=undefined -fno-inline  -felide-constructors -fno-rtti -O3 -m32")
 
     string(JOIN " " USE_FLAGS ${LINK_DEFS})
     set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS})

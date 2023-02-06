@@ -227,7 +227,7 @@ void MageDialogControl::loadCurrentScreenPortrait()
          // if the portrait is on the right side of the screen, flip the portrait on the X axis
          if (((uint8_t)currentScreen.alignment % 2))
          {
-            currentPortraitRenderableData.renderFlags ^= RENDER_FLAGS_FLIP_X;
+            currentPortraitRenderableData.renderFlags |= RENDER_FLAGS_FLIP_X;
          }
       }
 

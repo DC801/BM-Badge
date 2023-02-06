@@ -78,10 +78,9 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex: entityDrawOrder)
    {
-      auto& entity = entities[entityIndex];
       auto& renderableData = entityRenderableData[entityIndex];
 
-      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, Point{ entity.x, entity.y }, renderableData.renderFlags);
+      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.hitBox.origin + cameraPosition, renderableData.renderFlags);
    }
 }
 
@@ -90,10 +89,11 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
    auto layerAddress = LayerAddress(layer);
    auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
 
-   for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
    for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
+   for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
    {
-      auto currentTile = &layers[mapTileCol * mapTileRow];
+      auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+      auto currentTile = &layers[tileIndex];
 
       if (!currentTile->tileId)
       {
@@ -101,18 +101,18 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
       }
 
       auto tileDrawPoint = Point{
-         currentMap->tileWidth * mapTileRow - cameraPosition.x,
-         currentMap->tileHeight * mapTileCol - cameraPosition.y
+         currentMap->tileWidth  * mapTileCol,
+         currentMap->tileHeight * mapTileRow
       };
       
       // don't draw tiles that are entirely outside the screen bounds
-      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= WIDTH
-         || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= HEIGHT)
+      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
+       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight)
       {
          continue;
       }
 
-      tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
+      tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId-1, tileDrawPoint, currentTile->flags);
    }
 }
 

@@ -29,12 +29,12 @@ enum struct MageEntityFieldOffset : uint8_t
    hackableStateC = 30,
    hackableStateD = 31
 };
-#define ENGINE_VERSION 3
-#define MAGE_ENTITY_NAME_LENGTH 12
-#define DEFAULT_PLAYER_NAME "Bub"
-#define MAGE_NUM_MEM_BUTTONS 4
-#define DEFAULT_MAP 0
-#define MAGE_NO_WARP_STATE ((uint16_t)-1)
+
+static const inline auto ENGINE_VERSION = 3;
+static const inline auto MAGE_ENTITY_NAME_LENGTH = 12;
+static const inline auto MAGE_NUM_MEM_BUTTONS = 4;
+static const inline auto DEFAULT_MAP = 0;
+static const inline auto MAGE_NO_WARP_STATE = ((uint16_t)-1);
 
 //this is the number of chars that are used in the entity struct as part of the entity name
 #define MAGE_SAVE_FLAG_COUNT 2048
@@ -78,7 +78,7 @@ struct MageSaveGame
    uint32_t engineVersion{ ENGINE_VERSION };
    uint32_t scenarioDataCRC32{ 0 };
    uint32_t saveDataLength{ sizeof(MageSaveGame) };
-   char name[MAGE_ENTITY_NAME_LENGTH]{ DEFAULT_PLAYER_NAME };
+   char name[MAGE_ENTITY_NAME_LENGTH]{ "Bub" };
    //this stores the byte offsets for the hex memory buttons:
    std::array<uint8_t, MAGE_NUM_MEM_BUTTONS> memOffsets{
       (uint8_t)MageEntityFieldOffset::x,

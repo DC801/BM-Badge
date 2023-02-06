@@ -41,7 +41,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	// Starting point for text
 	// Frame size (x, y):
 	//   (45, 0)
-	//   (WIDTH - 45, HEIGHT - (yAdvance * 2))
+	//   (DrawWidth - 45, DrawHeight - (yAdvance * 2))
 	const int x = 45;
 	int y = 0;
 
