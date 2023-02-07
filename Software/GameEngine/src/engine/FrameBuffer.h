@@ -2,6 +2,7 @@
 #define FRAMEBUFFER_H
 
 #include "games/mage/mage_rom.h"
+#include "games/mage/mage_color_palette.h"
 #include "EngineWindowFrame.h"
 #include "adafruit/gfxfont.h"
 #include "modules/gfx.h"
@@ -132,6 +133,32 @@ struct Point
 		return *this;
 	}
 
+	friend Point operator*(Point lhs, const int32_t& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	Point& operator*=(const int32_t& scale)
+	{
+		this->x *= scale;
+		this->y *= scale;
+		return *this;
+	}
+
+	friend Point operator/(Point lhs, const int32_t& rhs)
+	{
+		lhs /= rhs;
+		return lhs;
+	}
+
+	Point& operator/=(const int32_t& scale)
+	{
+		this->x /= scale;
+		this->y /= scale;
+		return *this;
+	}
+
 	friend Point operator-(Point lhs, const uint8_t& scale)
 	{
 		lhs -= scale;
@@ -242,8 +269,10 @@ public:
 	void clearScreen(uint16_t color);
 	constexpr void drawPixel(int x, int y, uint16_t color) 
 	{ 
-		if (x < 0 || x >= DrawWidth) { return; }
-		if (y < 0 || y >= DrawHeight) { return; }
+		if (x < 0 || x >= DrawWidth
+		 || y < 0 || y >= DrawHeight
+		 || color == TRANSPARENCY_COLOR) 
+		{ return; }
 
 		frame[y * DrawWidth + x] = color;
 	}

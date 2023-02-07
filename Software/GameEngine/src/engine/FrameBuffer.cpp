@@ -46,59 +46,48 @@ void FrameBuffer::clearScreen(uint16_t color)
 
 void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags)
 {
-   bool flip_x = flags & RENDER_FLAGS_FLIP_X;
-   bool flip_y = flags & RENDER_FLAGS_FLIP_Y;
-   bool flip_diag = flags & RENDER_FLAGS_FLIP_DIAG;
-   bool glitched = flags & RENDER_FLAGS_IS_GLITCHED;
-
-   if (glitched)
+   if (flags & RENDER_FLAGS_IS_GLITCHED)
    {
-      //target.origin.x += target.w * 0.125;
-      //target.w *= 0.75;
+      target.origin.x += target.w * 0.125;
+      target.w *= 0.75;
    }
 
    // skip any chunks that aren't drawn to the frame buffer
    if (target.origin.x + target.w < 0 || target.origin.x >= DrawWidth
       || target.origin.y + target.h < 0 || target.origin.y >= DrawHeight)
-   {
-      return;
-   }
+   { return; }
 
    // draw to the target pixel by pixel, read from the source based on flags:
    for (auto row = 0; row < target.h && row < DrawHeight; row++)
    for (auto col = 0; col < target.w && col < DrawWidth; col++)
    {
-      // for a flip in the y-axis, get the last indexable row of the source
       auto pixelRow = row;
       auto pixelCol = col;
-      if (flip_y)
-      {
-         pixelRow = target.h - row - 1;
+
+      // for a flip in the y-axis, get the last indexable row of the source
+      if (flags & RENDER_FLAGS_FLIP_X) 
+      { 
+         pixelCol = source_width - col - 1;
       }
       // for a flip in the x-axis, get the last indexable column of the source
-      if (flip_x)
-      {
-         pixelCol = target.w - col - 1;
+      if (flags & RENDER_FLAGS_FLIP_Y) 
+      { 
+         pixelRow = source_width - row - 1;
       }
-
-      if (flip_diag)
+      // for a diagonal flip, invert both row and column
+      if (flags & RENDER_FLAGS_FLIP_DIAG)
       {
          pixelRow = target.h - pixelRow - 1;
          pixelCol = target.w - pixelCol - 1;
       }
-
       // compute the source pixel offset from the pixels pointer
       auto pixelIndex = (pixelRow * source_width) + pixelCol;
       
       // use the pixels pointer to get the color from the palette
       auto& colorIndex = pixels[pixelIndex];
       auto color = colorPalette->colorAt(colorIndex, fadeColor, fadeFraction);
-      if (color != TRANSPARENCY_COLOR)
-      {
-         drawPixel(target.origin.x + col, target.origin.y + row, color);
-      }
+      drawPixel(target.origin.x + col, target.origin.y + row, color);
    }
-
 }
 
 void FrameBuffer::drawRect(int x, int y, int w, int h, uint16_t color)

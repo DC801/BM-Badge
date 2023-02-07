@@ -235,10 +235,30 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       else if (playerHasControl)
       {
          playerVelocity = { 0,0 };
-         if (button.IsPressed(KeyPress::Ljoy_left))   { playerVelocity.x -= mageSpeed; playerEntity.direction = WEST; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_right))  { playerVelocity.x += mageSpeed; playerEntity.direction = EAST; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_up))     { playerVelocity.y -= mageSpeed; playerEntity.direction = NORTH; isMoving = true; }
-         if (button.IsPressed(KeyPress::Ljoy_down))   { playerVelocity.y += mageSpeed; playerEntity.direction = SOUTH; isMoving = true; }
+         if (button.IsPressed(KeyPress::Ljoy_left))
+         {
+            playerVelocity.x -= mageSpeed; 
+            playerEntity.direction = WEST; 
+            isMoving = true;
+         }
+         if (button.IsPressed(KeyPress::Ljoy_right))
+         {
+            playerVelocity.x += mageSpeed; 
+            playerEntity.direction = EAST; 
+            isMoving = true;
+         }
+         if (button.IsPressed(KeyPress::Ljoy_up))
+         {
+            playerVelocity.y -= mageSpeed; 
+            playerEntity.direction = NORTH; 
+            isMoving = true;
+         }
+         if (button.IsPressed(KeyPress::Ljoy_down))
+         {
+            playerVelocity.y += mageSpeed; 
+            playerEntity.direction = SOUTH; 
+            isMoving = true;
+         }
 
          if (isMoving)
          {
@@ -528,27 +548,23 @@ void MageGameEngine::onSerialCommand(char* commandString)
 
 Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 {
-   auto mageCollisionSpokes = MageGeometry{ MageGeometryType::Polygon, MAGE_COLLISION_SPOKE_COUNT };
+   Point mageCollisionSpokes[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
 
    auto& playerRect = playerRenderableData.hitBox;
-   int16_t abs_x = abs(playerVelocity.x);
-   int16_t abs_y = abs(playerVelocity.y);
-   if (abs_x)
+   playerRect.w += abs(playerVelocity.x);
+   if (playerVelocity.x < 0)
    {
-      playerRect.w += abs_x;
-      if (playerVelocity.x < 0) { playerRect.origin.x += playerVelocity.x; }
+      playerRect.origin.x += playerVelocity.x;
    }
-   if (abs_y)
+   playerRect.h += abs(playerVelocity.y);
+   if (playerVelocity.y < 0)
    {
-      playerRect.h += abs_y;
-      if (playerVelocity.y < 0)
-      {
-         playerRect.origin.y += playerVelocity.y;
-      }
+      playerRect.origin.y += playerVelocity.y;
    }
+   
    Point tileTopLeftPoint = { 0, 0 };
    uint16_t geometryId = 0;
    auto pushback = Point{};
@@ -563,34 +579,27 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
       maxSpokePushbackLengths[i] = -INFINITY;
       maxSpokePushbackVectors[i].x = 0;
       maxSpokePushbackVectors[i].y = 0;
-      auto& spokePoint = mageCollisionSpokes.GetPoint(i);
       float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
-      spokePoint.x = cos(angle) * playerSpokeRadius + playerVelocity.x + playerPoint.x;
-      spokePoint.y = sin(angle) * playerSpokeRadius + playerVelocity.y + playerPoint.y;
+      mageCollisionSpokes[i] = Point{ (int32_t)cos(angle), (int32_t)sin(angle) } * playerSpokeRadius + playerVelocity + playerPoint;
    }
 
    for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
-      const auto layerAddress = mapControl->LayerAddress(layerIndex);
+      auto layerAddress = mapControl->LayerAddress(layerIndex);
+      auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
+
       for (auto row = 0; row < mapControl->Rows(); row++)
-         for (auto col = 0; col < mapControl->Cols(); col++)
+      for (auto col = 0; col < mapControl->Cols(); col++)
       {
-         tileTopLeftPoint = Point{ 
-            mapControl->TileWidth() * row,
-            mapControl->TileHeight() * col
-         };
+         auto tileIndex = row + (col * mapControl->Cols());
+         auto currentTile = &layers[tileIndex];
 
-         auto playerOffset = tileTopLeftPoint - playerRect.origin;
-         if (playerOffset.x + mapControl->TileWidth() < 0 || playerOffset.x > playerRect.w
-            || playerOffset.y + mapControl->TileHeight() < 0 || playerOffset.y > playerRect.h)
-         {
-            continue;
-         }
-         auto offset = layerAddress + sizeof(MageMapTile) * (row * mapControl->Cols() + col);
+         if (!currentTile->tileId) { continue; }
 
-         auto currentTile = ROM()->GetReadPointerToAddress<MageMapTile>(offset);
+         auto tileDrawPoint = Point{ mapControl->TileWidth() * col, mapControl->TileHeight() * row };
 
-         if (currentTile->tileId == 0)
+         if (tileDrawPoint.x + mapControl->TileWidth() < 0 || tileDrawPoint.x >= DrawWidth
+            || tileDrawPoint.y + mapControl->TileHeight() < 0 || tileDrawPoint.y >= DrawHeight)
          {
             continue;
          }
@@ -601,38 +610,28 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          {
             continue;
          }
-         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId);
+
+         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
          if (geometryId)
          {
-            for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
-            {
-               float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
-               auto& spokePoint = mageCollisionSpokes.GetPoint(i);
-               spokePoint.x = cos(angle) * playerSpokeRadius
-                  + playerVelocity.x + playerPoint.x
-                  - tileTopLeftPoint.x;
-               spokePoint.y = sin(angle) * playerSpokeRadius
-                  + playerVelocity.y + playerPoint.y
-                  - tileTopLeftPoint.y;
-            }
             geometryId--;
 
             auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
             auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
 
-            auto offsetPoint = Point{ playerPoint.x - tileTopLeftPoint.x, playerPoint.y - tileTopLeftPoint.y };
+            auto offsetPoint = playerPoint - tileTopLeftPoint;
             bool isMageInGeometry = false;
-
             bool collidedWithThisTileAtAll = false;
+
             for (int tileLinePointIndex = 0; tileLinePointIndex < geometryPoints.size() - 1; tileLinePointIndex++)
             {
                auto& tileLinePointA = geometryPoints[tileLinePointIndex];
                auto& tileLinePointB = geometryPoints[tileLinePointIndex + 1];
                bool collidedWithTileLine = false;
 
-               for (auto spokeIndex = 0; spokeIndex < mageCollisionSpokes.GetPointCount(); spokeIndex++)
+               for (auto spokeIndex = 0; spokeIndex < MAGE_COLLISION_SPOKE_COUNT; spokeIndex++)
                {
-                  auto spokePointB = mageCollisionSpokes.GetPoint(spokeIndex);
+                  auto& spokePointB = mageCollisionSpokes[spokeIndex];
 
                   auto spokeIntersectionPoint = MageGeometry::getIntersectPointBetweenLineSegments(offsetPoint, spokePointB, tileLinePointA, tileLinePointB);
                   if (spokeIntersectionPoint.has_value())
@@ -664,14 +663,12 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
       if (maxSpokePushbackLengths[i] != -INFINITY)
       {
          collisionCount++;
-         pushback.x += maxSpokePushbackVectors[i].x;
-         pushback.y += maxSpokePushbackVectors[i].y;
+         pushback += maxSpokePushbackVectors[i];
       };
    }
    if (collisionCount > 0)
    {
-      pushback.x /= collisionCount;
-      pushback.y /= collisionCount;
+      pushback /= collisionCount;
       frameBuffer->drawLine(playerPoint - camera.position, playerPoint + pushback - camera.position, COLOR_RED);
    }
    return pushback;

@@ -1865,8 +1865,8 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
    } ActionTeleportCameraToGeometry;
    auto argStruct = (ActionTeleportCameraToGeometry*)args;
 
-   auto& entity = mapControl->getEntityByMapLocalId(entityId);
-   auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
+   auto globalGeometryIndex = mapControl->getGlobalGeometryId(argStruct->geometryId);
+   auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(globalGeometryIndex);
 
    camera.followEntityId = NO_PLAYER;
    const auto midScreen = Point{ DrawWidthHalf, DrawHeightHalf };
