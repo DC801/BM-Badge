@@ -33,8 +33,7 @@ on_load-ch2-greenhouse-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-greenhouse {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-greenhouse-south
+	// ethernettle interference checks
 	if entity EtherNettle1 is not inside geometry EtherNettle1Origin
 		then goto on_tick-fix-ethernettle
 	if entity EtherNettle2 is not inside geometry EtherNettle2Origin
@@ -51,6 +50,12 @@ on_tick-ch2-greenhouse {
 		then goto on_tick-fix-ethernettle
 	if entity EtherNettle8 is not inside geometry EtherNettle8Origin
 		then goto on_tick-fix-ethernettle
+	// normal door stuff
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-greenhouse
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-greenhouse // reset
 }
 on_tick-fix-ethernettle {
 	show dialog {
@@ -76,8 +81,6 @@ on_go-ch2-greenhouse-south {
 }
 on_walk-ch2-greenhouse-south {
 	// triggered by map's on_tick
-	set warp state to walk_from-greenhouse
-	load map main2
 }
 
 /* ---------- ENTITIES ---------- */

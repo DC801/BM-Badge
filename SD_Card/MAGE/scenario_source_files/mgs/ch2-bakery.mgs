@@ -33,19 +33,17 @@ on_load-ch2-bakery-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-bakery {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-bakery-south
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-bakery
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-bakery
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-bakery-south {
 	copy warping-out-fade-out
-	load map main2
-}
-on_walk-ch2-bakery-south {
-	// triggered by map's on_tick
-	set warp state to walk_from-bakery
 	load map main2
 }
 

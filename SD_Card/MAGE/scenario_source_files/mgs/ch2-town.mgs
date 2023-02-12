@@ -83,24 +83,42 @@ on_load-ch2-town-fallback {
 // map loading scripts
 
 on_tick-ch2-town {
-	if entity "%PLAYER%" is inside geometry door-bakery
-		then goto load_map-ch2-bakery
-	if entity "%PLAYER%" is inside geometry door-smithfamily
-		then goto load_map-ch2-smithfamily
-	if entity "%PLAYER%" is inside geometry door-greenhouse
-		then goto load_map-ch2-greenhouse
-	if entity "%PLAYER%" is inside geometry door-magehouse
-		then goto load_map-ch2-magehouse
-	if entity "%PLAYER%" is inside geometry door-lodge
-		then goto load_map-ch2-lodge
-	if entity "%PLAYER%" is inside geometry door-oldcouplehouse
-		then goto load_map-ch2-oldcouplehouse
-	if entity "%PLAYER%" is inside geometry door-woprhouse
-		then goto load_map-ch2-woprhouse
-	if entity "%PLAYER%" is inside geometry east-hitbox
-		then goto on_walk-ch2-town-east
-	if entity "%PLAYER%" is inside geometry west-hitbox
-		then goto on_walk-ch2-town-west
+	if (entity "%PLAYER%" is inside geometry door-bakery) {
+		load map ch2-bakery
+	}
+	if (entity "%PLAYER%" is inside geometry door-smithfamily) {
+		load map ch2-smithfamily
+	}
+	if (entity "%PLAYER%" is inside geometry door-greenhouse) {
+		load map ch2-greenhouse
+	}
+	if (entity "%PLAYER%" is inside geometry door-magehouse) {
+		load map ch2-magehouse
+	}
+	if (entity "%PLAYER%" is inside geometry door-lodge) {
+		load map ch2-lodge
+	}
+	if (entity "%PLAYER%" is inside geometry door-oldcouplehouse) {
+		load map ch2-oldcouplehouse
+	}
+	if (entity "%PLAYER%" is inside geometry door-woprhouse) {
+		load map woprhouse // both chapters use the same map
+	}
+	if (entity "%PLAYER%" is inside geometry east-hitbox) {
+		set entity "%PLAYER%" path to east-point
+		set warp state to walk_from-west
+		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+		fade out camera to #000000 over 500ms
+		load map main2
+	}
+	if (entity "%PLAYER%" is inside geometry west-hitbox) {
+		set entity "%PLAYER%" path to west-point
+		set warp state to walk_from-east
+		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+		fade out camera to #000000 over 500ms
+		load map ch2-castle-outside
+	}
+	set map tick_script to on_tick-ch2-town // reset
 }
 
 on_tick-ch2-town-walkfadeout {
@@ -128,72 +146,32 @@ on_go-ch2-town-west {
 on_go-ch2-town-home {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-magehouse
+	load map ch2-magehouse
 }
 on_go-ch2-town-bakery {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-bakery
+	load map ch2-bakery
 }
 on_go-ch2-town-greenhouse {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-greenhouse
+	load map ch2-greenhouse
 }
 on_go-ch2-town-wopr {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-woprhouse
+	load map woprhouse // both chapters use the same map
 }
 on_go-ch2-town-beatrice {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-oldcouplehouse
+	load map ch2-oldcouplehouse
 }
 on_go-ch2-town-smith {
 	copy on_exit-ch2-town
 	copy warping-out-fade-out
-	goto load_map-ch2-smithfamily
-}
-
-load_map-ch2-bakery {
-	load map ch2-bakery
-}
-load_map-ch2-oldcouplehouse {
-	load map ch2-oldcouplehouse
-}
-load_map-ch2-greenhouse {
-	load map ch2-greenhouse
-}
-load_map-ch2-magehouse {
-	load map ch2-magehouse
-}
-load_map-ch2-lodge {
-	load map ch2-lodge
-}
-load_map-ch2-smithfamily {
 	load map ch2-smithfamily
-}
-load_map-ch2-woprhouse {
-	load map woprhouse // both chapters use the same map
-}
-
-//WALK
-
-on_walk-ch2-town-east {
-	set entity "%PLAYER%" path to east-point
-	set warp state to walk_from-west
-	set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
-	fade out camera to #000000 over 500ms
-	load map main2
-}
-
-on_walk-ch2-town-west {
-	set entity "%PLAYER%" path to west-point
-	set warp state to walk_from-east
-	set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
-	fade out camera to #000000 over 500ms
-	load map ch2-castle-outside
 }
 
 /* ---------- ENTITIES ---------- */

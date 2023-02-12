@@ -26,19 +26,17 @@ on_load-ch2-magehouse-RESUME {
 }
 
 on_tick-ch2-magehouse {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-magehouse-south
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-magehouse
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-magehouse // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-magehouse-south {
 	copy warping-out-fade-out
-	load map main2
-}
-on_walk-ch2-magehouse-south {
-	// triggered by map's on_tick
-	set warp state to walk_from-magehouse
 	load map main2
 }
 

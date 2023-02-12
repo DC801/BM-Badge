@@ -37,20 +37,18 @@ on_load-ch2-lodge-rtfm-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-lodge-rtfm {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-lodge-rtfm-south
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-north
+		load map ch2-lodge
+	}
+	set map tick_script to on_tick-ch2-lodge-rtfm // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-lodge-rtfm-south {
 	copy warping-out-fade-out
-	load map main2
-}
-
-on_walk-ch2-lodge-rtfm-south {
-	set warp state to walk_from-north
-	load map main2
+	load map ch2-lodge
 }
 
 /* ---------- ENTITIES ---------- */
