@@ -67,6 +67,9 @@ var handleScenarioData = function (fileNameMap) {
 					scenarioData[pathPropertyName].map(function(filePath) {
 						var fileName = filePath.split('/').pop();
 						var fileObject = fileNameMap[fileName];
+						if (!fileObject) {
+							throw new Error(`File listed in 'scenario.json' not found: '${fileName}'`);
+						}
 						return getFileJson(fileObject)
 							.then(function(fileData) {
 								Object.keys(fileData)
