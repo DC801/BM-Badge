@@ -151,3 +151,9 @@ button_success_script {
 	set hex dialog mode to off
 	goto test_tick_script
 }
+
+yeet {
+	teleport entity "%SELF%" to geometry "hiding-spot"
+	set entity "%SELF%" name to " "
+	goto null_script
+}

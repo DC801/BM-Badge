@@ -10,7 +10,7 @@ ch2-cutscene-bert-secret-start {
 	// CLEANUP: depends on trigger
 }
 
-watch-bert-lolol {
+watch-bert {
 	turn entity "%SELF%" toward entity Bert
 }
 
@@ -22,7 +22,7 @@ ch2-cutscene-bert-secret {
 	}
 	set player control to off
 	wait 100ms
-	set entity "%PLAYER%" tick_script to watch-bert-lolol
+	set entity "%PLAYER%" tick_script to watch-bert
 	wait 400ms
 	walk entity Bert along geometry bert-spot over 1200ms
 	wait 100ms

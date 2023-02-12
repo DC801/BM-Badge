@@ -17,12 +17,14 @@ on_look-ch2-castle-21 {
 on_load-ch2-castle-21 {
 	// ch2 room state
 	mutate ch2-in-room = 21
-	set flag ch2-seen-room-21 to true
 
 	// entrance text
 	show serial dialog spacer
-	show serial dialog {
-		"Entering WORKSHOP"
+	if (flag ch2-seen-room-21 is false) {
+		show serial dialog { "Discovered <bold><c>WORKSHOP</>! Room added to map!" }
+		set flag ch2-seen-room-21 to true
+	} else {
+		show serial dialog { "Entering <bold>WORKSHOP</>..." }
 	}
 	
 	goto ch2-castle-init

@@ -142,7 +142,7 @@ ch2-man-rtfm {
 		" "
 		"A portable copy of the books and pamphlets kept within the <m>inner sanctum</> at the back of the library. They primarily describe how to use Ring Zero's hex editor, but also contain peripheral information."
 		" "
-		"Fun fact, <bold>RTFM</> stands for \"read the <r>flamin'</> manual.\""
+		"Fun fact, <bold><c>RTFM</> stands for \"read the <r>flamin'</> manual.\""
 	}
 }
 ch2-man-map {
@@ -191,6 +191,7 @@ spin-quickly {
 }
 
 warping-out-fade-out {
+	set serial control off
 	set warp state to warping
 	set player control to off
 	set entity "%PLAYER%" tick_script to spin-quickly
@@ -204,5 +205,6 @@ warping-in-fade-in {
 	set entity "%PLAYER%" tick_script to null_script
 	turn entity "%PLAYER%" south
 	set player control to on
+	set serial control on
 	set warp state to warped
 }
