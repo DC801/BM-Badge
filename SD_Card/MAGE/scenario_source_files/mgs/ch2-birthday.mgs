@@ -1,6 +1,8 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label ZIPPY { entity "Aunt Zippy" }
+	parameters for label ZAPPY { entity "Uncle Zappy" }
 }
 
 /* --- CUTSCENE: Birthday (house) --- */
@@ -17,8 +19,8 @@ on_load-ch2-magehouse-birthday {
 	fade in camera from #000000 over 1000ms
 	wait 500ms
 	show dialog {
-		name " "
-		border_tileset menu
+		name " " // blank dialog label
+		border_tileset menu // TODO: change to one without a pink "next" arrow
 		"Happy birthday to you!\nHappy birthday to you!"
 		"Happy birthday, dear %PLAYER%!\nHappy birthday to you!"
 	}
@@ -29,13 +31,13 @@ on_load-ch2-magehouse-birthday {
 	teleport camera to geometry cake-camera-2
 	fade in camera from #000000 over 500ms
 	show dialog {
-		entity "Aunt Zippy" "Now you're an official mage, %PLAYER%!"
+		ZIPPY "Now you're an official mage, %PLAYER%!"
 		PLAYER "Blowing out the candle didn't make me a mage, %Aunt Zippy%!"
-		entity "Aunt Zippy" "Well, you're officially sixteen now!"
+		ZIPPY "Well, you're officially sixteen now!"
 		PLAYER "I'm pretty sure I officially turned sixteen at midnight last night."
-		entity "Uncle Zappy" "Well, you're officially our favorite birthday mage!"
+		ZAPPY "Well, you're officially our favorite birthday mage!"
 		PLAYER "Aw, thanks, %Uncle Zappy%!"
-		entity "Aunt Zippy" "All right, everyone! Dig in!"
+		ZIPPY "All right, everyone! Dig in!"
 	}
 	fade out camera to #000000 over 500ms
 	set entity Cake animation to 4
@@ -46,7 +48,7 @@ on_load-ch2-magehouse-birthday {
 	}
 	fade in camera from #000000 over 1000ms
 	show dialog {
-		entity "Uncle Zappy"
+		ZAPPY
 		"How was your day, %PLAYER%? Are you getting used to Ring Zero?"
 
 		PLAYER
@@ -54,11 +56,8 @@ on_load-ch2-magehouse-birthday {
 		"I changed the color of some ether nettle blossoms, teleported some sheep, and impersonated a cat!"
 		"Oh, and I changed my name to Bob and drank some cactus cooler with a stone golem."
 
-		entity "Aunt Zippy"
-		"I love that the water feature in the center of town is unglitched again. It really feels like old times."
-
-		entity "Uncle Zappy"
-		"But then that earthquake hit. That was like old times, too."
+		ZIPPY "I love that the water feature in the center of town is unglitched again. It really feels like old times."
+		ZAPPY "But then that earthquake hit. That was like old times, too."
 
 		PLAYER
 		"...Yeah, that was scary."
@@ -68,11 +67,8 @@ on_load-ch2-magehouse-birthday {
 	turn entity "%PLAYER%" south
 	wait 400ms
 	show dialog {
-		PLAYER
-		"First thing tomorrow, I'm supposed to meet the village elders and visit the mountain dungeon."
-
-		entity "Uncle Zappy"
-		"They're really sending you to get the artifacts, then?"
+		PLAYER "First thing tomorrow, I'm supposed to meet the village elders and visit the mountain dungeon."
+		ZAPPY "They're really sending you to get the artifacts, then?"
 	}
 	wait 200ms
 	turn entity "%PLAYER%" east
@@ -81,11 +77,11 @@ on_load-ch2-magehouse-birthday {
 		PLAYER
 		"I guess so. The village elders say the artifacts are the only thing that can stop the Big Bad for good."
 
-		entity "Aunt Zippy"
+		ZIPPY
 		"It's a lot to ask a sixteen year old, but if Ring Zero chose you...."
 		"Well, perhaps you're exactly the right mage for the job."
 
-		entity "Uncle Zappy"
+		ZAPPY
 		"In which case we'd best get to bed soon. You'll need a good night's rest."
 
 		PLAYER
@@ -101,6 +97,7 @@ on_load-ch2-magehouse-birthday {
 
 /* --- CUTSCENE: Birthday (elders) --- */
 
+// helper scripts
 gossip-right-down {
 	wait 600ms
 	turn entity "%SELF%" east
@@ -124,6 +121,7 @@ gossip-left-down {
 	wait 1100ms
 }
 
+// cutscene
 ch2-escort-cutscene {
 	fade out camera to #000000 over 0ms
 	set player control to off
@@ -157,13 +155,18 @@ ch2-escort-cutscene {
 	set entity "%PLAYER%" tick_script to null_script
 	turn entity "%PLAYER%" south
 	show dialog {
-		Jackob "The serial dungeon, yes. We did have a book about that."
+		Jackob
+		"The serial dungeon, yes. We did have a book about that."
 		"But... it's gone."
+
 		PLAYER "Gone? You lost the book?"
 		Alfonso "No, not lost! It's just missing!"
 		PLAYER "But you're in charge of the library! How did you lose a whole book?"
-		Bert "We will keep looking for it. But first you go."
+		
+		Bert
+		"We will keep looking for it. But first you go."
 		"More important for you to get started right away."
+		
 		Alfonso "You have demonstrated incredible competence with what you've already done with Ring Zero, so we are confident you can work your way through the dungeon on your own."
 	}
 	wait 100ms
@@ -216,14 +219,20 @@ ch2-escort-cutscene {
 		Jackob "I can't remember."
 		Alfonso "Something about rooms... and magic words...."
 		PLAYER "Ho boy."
-		Jackob "We had hoped that book would give you a leg up, but ultimately, I doubt it was that important, %PLAYER%."
+		
+		Jackob
+		"We had hoped that book would give you a leg up, but ultimately, I doubt it was that important, %PLAYER%."
 		"Instead you will need to rely on XA, who will be able to provide you with a great deal of information."
+		
 		PLAYER "Exay?"
 		Bert "XA sits just inside. Is robot."
 		Alfonso "It literally has insider information about the place."
-		Jackob "I realize it's disappointing that we cannot help you very much in this chapter of your journey as a mage."
+		
+		Jackob
+		"I realize it's disappointing that we cannot help you very much in this chapter of your journey as a mage."
 		"But we promise you, %PLAYER%, that you will not be entirely on your own."
 		"Trust us. You'll be just fine."
+
 		Alfonso "You will not be in danger at any point!"
 		Bert "Unless Big Bad comes back."
 		Alfonso "Yes! And that is why you must hurry!"
@@ -238,15 +247,9 @@ ch2-escort-cutscene {
 	set entity Bert tick_script to birthday-march-on-own-path
 	set entity "%PLAYER%" tick_script to birthday-march-on-own-path-player
 }
-
 birthday-march-on-own-path {
 	walk entity "%SELF%" along geometry "%ENTITY_PATH%" over 2400ms
 	goto yeet
-}
-yeet {
-	teleport entity "%SELF%" to geometry "hiding-spot"
-	set entity "%SELF%" name to " "
-	goto null_script
 }
 birthday-march-on-own-path-player {
 	wait 300ms

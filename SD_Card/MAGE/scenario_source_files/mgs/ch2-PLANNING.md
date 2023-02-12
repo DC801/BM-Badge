@@ -34,4 +34,6 @@
 		- The player (the color of mage's robe)
 		- Inline serial commands (these should also be all caps)
 		- Any calls to action for the player
+		- The castle rooms (ch2 dungeon) (?)
+			- Only the warp names are colored?
 - In the web serial console, a styled section of text loses its styles after a newline character. As a workaround, reapply the style at the beginning of the first word that lost its styles.
