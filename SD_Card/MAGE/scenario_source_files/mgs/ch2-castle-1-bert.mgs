@@ -75,51 +75,51 @@ ch2-cutscene-bert-secret {
 	set flag interrupt to true
 }
 
-ch2-bert-secret-notakon-intro {
+ch2-bert-secret-lambda-intro {
 	show serial dialog spacer
 	if (flag interrupt is true) {
 		show serial dialog {
-			"<m>NOTAKON:</> Bert? BERT! Oh my God, Bert! I remember that guy!"
+			"<m>LAMBDA:</> Bert? BERT! Oh my God, Bert! I remember that guy!"
 			" "
 			"<c>YOU:</> What? You know him?"
 		}
 	} else {
 		show serial dialog {
-			"<m>NOTAKON:</> Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			"<m>LAMBDA:</> Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
 			" "
 			"<c>YOU:</> What? You know Bert?"
 		}
 	}
 	show serial dialog {
 		" "
-		"<m>NOTAKON:</> His name was a complete blank until you said it, but I recognized his face!"
+		"<m>LAMBDA:</> His name was a complete blank until you said it, but I recognized his face!"
 	}
 	if (flag ch2-cameras-explanation is false) {
 		show serial dialog {
 			" "
 			"<c>YOU:</> Wait, how did you see his face?"
 			" "
-			"<m>NOTAKON:</> The cameras! They're all around in -- look, it doesn't matter. The point is...."
+			"<m>LAMBDA:</> The cameras! They're all around in -- look, it doesn't matter. The point is...."
 		}
 		set flag ch2-cameras-explanation to true
 	}
 	show serial dialog {
 		"\tAw, man. The two of us? We go way back!"
 		" "
-		# "Should I go back and fetch him?" : ch2-bert-secret-notakon-intro2
+		# "Should I go back and fetch him?" : ch2-bert-secret-lambda-intro2
 	}
 }
-ch2-bert-secret-notakon-intro2 {
+ch2-bert-secret-lambda-intro2 {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Should I go back and fetch him? Let you talk to him?"
 		" "
-		"<m>NOTAKON:</> No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"<m>LAMBDA:</> No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
 		"\t...Damn. It's been a while, though."
 		" "
 		"<c>YOU:</> Wow, you know Bert, huh?"
 	}
-	set flag ch2-notakon-bert-prelude to true
+	set flag ch2-lambda-bert-prelude to true
 	mutate CALLBACK = 1
-	goto ch2-notakon-bert-q
+	goto ch2-lambda-bert-q
 }
