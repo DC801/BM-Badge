@@ -80,23 +80,6 @@
 			"moon": "map-action_testing-go_moon"
 		}
 	},
-	"xa-room": {
-		"path": "maps/map-mtn-xa_room.json",
-		"on_load": "on_load-mtn-xa_room",
-		"on_look": "on_look-mtn-xa_room",
-		"on_tick": "on_tick-mtn-xa_room",
-		"directions": {
-			"castle-door": "on_go-mtn-xa_room-to-castle_entrance-check"
-		}
-	},
-	"castle-door": {
-		"path": "maps/map-mtn-castle_entrance.json",
-		"on_load": "on_load-mtn-castle_entrance",
-		"on_look": "on_look-mtn-castle_entrance",
-		"directions": {
-			"xa-room": "on_go-mtn-castle_entrance-to-xa_room-check"
-		}
-	},
 	"ch2-magehouse-birthday": {
 		"path": "maps/map-magehouse-birthday.json",
 		"on_load": "on_load-ch2-magehouse-birthday"

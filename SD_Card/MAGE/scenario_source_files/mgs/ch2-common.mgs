@@ -206,32 +206,3 @@ warping-in-fade-in {
 	set player control to on
 	set warp state to warped
 }
-
-/* ---------- why did I make this? ---------- */
-
-boot-out-if-necessary {
-	if variable current-chapter is 1 then goto boot-to-chapter-1
-}
-
-boot-to-chapter-1 {
-	set warp state to was-booted
-	load map main
-}
-
-/* ---------- ALL-IN-ONE WARP LIST ---------- */
-
-// to be deprecated (if not already)
-
-warp_to-mtn-xa_room {
-	copy warping-out-fade-out
-	show serial dialog spacer
-	show serial dialog { "Traveling to 'xa-room'!" }
-	load map xa-room
-}
-
-warp_to-mtn-castle_entrance {
-	copy warping-out-fade-out
-	show serial dialog spacer
-	show serial dialog { "Traveling to 'castle-door'!" }
-	load map castle-door
-}
