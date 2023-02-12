@@ -26,7 +26,7 @@
 - Color symbols in ch2:
 	- Magenta:
 		- The village elders (the color of their robes)
-		- Notakon
+		- Lambda
 	- Red:
 		- The Big Bad
 		- Anything unambiguously evil

@@ -3,206 +3,206 @@ settings for serial dialog { wrap 60 }
 ch2-command-man-normal-convo {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> What do you want to know?"
+		"<m>LAMBDA:</> What do you want to know?"
 		" "
 	}
-	goto ch2-notakon-topic-q
+	goto ch2-lambda-topic-q
 }
 
-ch2-notakon-topic-q {
+ch2-lambda-topic-q {
 	show serial dialog {
 		"(Ask about:)"
-		# "The artifact" : ch2-notakon-topic-artifact
-		# "The mainframe" : ch2-notakon-topic-mainframe
-		# "The castle" : ch2-notakon-topic-castle
-		# "Someone specific" : ch2-notakon-topic-person-start
-		# "(Quit)" : ch2-notakon-topic-nevermind
+		# "The artifact" : ch2-lambda-topic-artifact
+		# "The mainframe" : ch2-lambda-topic-mainframe
+		# "The castle" : ch2-lambda-topic-castle
+		# "Someone specific" : ch2-lambda-topic-person-start
+		# "(Quit)" : ch2-lambda-topic-nevermind
 	}
 }
 
-ch2-notakon-topic-nevermind {
+ch2-lambda-topic-nevermind {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> I should go."
 		" "
-		"<m>NOTAKON:</> No problem! Just let me know if you have a question about anything."
+		"<m>LAMBDA:</> No problem! Just let me know if you have a question about anything."
 	}
 }
 
 /* ---------- ARTIFACT ---------- */
 
-ch2-notakon-topic-artifact {
+ch2-lambda-topic-artifact {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> You had a question about the artifact?"
+		"<m>LAMBDA:</> You had a question about the artifact?"
 		" "
 	}
-	goto ch2-notakon-topic-artifact-q
+	goto ch2-lambda-topic-artifact-q
 }
 
-ch2-notakon-topic-artifact-q {
+ch2-lambda-topic-artifact-q {
 		show serial dialog {
 		"(Ask about:)"
-		# "Magic words (Commands)" : ch2-notakon-topic-artifact-words
+		# "Magic words (Commands)" : ch2-lambda-topic-artifact-words
 		# "(Go back)" : ch2-command-man-normal-convo
 	}
 }
 
-ch2-notakon-topic-artifact-words {
+ch2-lambda-topic-artifact-words {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What can you tell me about magic words? You said they were commands?"
 		" "
-		"<m>NOTAKON:</> Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use, sure: using the right \"magic\" word or words will cause a specific effect."
+		"<m>LAMBDA:</> Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use, sure: using the right \"magic\" word or words will cause a specific effect."
 		"\tStrictly speaking, they're just text commands interpreted by the artifact itself, if not the mainframe -- provided the mainframe is working, of course."
 		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
 		" "
 	}
-	goto ch2-notakon-topic-artifact-q
+	goto ch2-lambda-topic-artifact-q
 }
 
 /* ---------- MAINFRAME ---------- */
 
-ch2-notakon-topic-mainframe {
+ch2-lambda-topic-mainframe {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> You had a question about the mainframe?"
+		"<m>LAMBDA:</> You had a question about the mainframe?"
 		" "
 	}
-	goto ch2-notakon-topic-mainframe-q
+	goto ch2-lambda-topic-mainframe-q
 }
 
-ch2-notakon-topic-mainframe-q {
+ch2-lambda-topic-mainframe-q {
 		show serial dialog {
 		"(Ask about:)"
-		# "Why did you break it?" : ch2-notakon-mainframe-broken
-		# "How broken is it?" : ch2-notakon-mainframe-broken-1
-		# "How do we fix it?" : ch2-notakon-mainframe-fix-1
+		# "Why did you break it?" : ch2-lambda-mainframe-broken
+		# "How broken is it?" : ch2-lambda-mainframe-broken-1
+		# "How do we fix it?" : ch2-lambda-mainframe-fix-1
 		# "(Go back)" : ch2-command-man-normal-convo
 	}
 }
 
-ch2-notakon-mainframe-broken {
+ch2-lambda-mainframe-broken {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Why did you break it?"
 		" "
-		"<m>NOTAKON:</> Like I said, I broke it to keep it out of the Big Bad's hands."
+		"<m>LAMBDA:</> Like I said, I broke it to keep it out of the Big Bad's hands."
 		"\tTODO: more convo"
 		" "
 	}
-	goto ch2-notakon-topic-mainframe-q
+	goto ch2-lambda-topic-mainframe-q
 }
 
-ch2-notakon-mainframe-broken-1 {
+ch2-lambda-mainframe-broken-1 {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What exactly about it is broken?"
 		" "
-		"<m>NOTAKON:</> Well, sort of... everything. It's in a million pieces, to be precise."
-		# "Thorough. Nice!" : ch2-notakon-mainframe-broken-1a
-		# "Was that necessary?" : ch2-notakon-mainframe-broken-1a
+		"<m>LAMBDA:</> Well, sort of... everything. It's in a million pieces, to be precise."
+		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-1a
+		# "Was that necessary?" : ch2-lambda-mainframe-broken-1a
 	}
 }
-ch2-notakon-mainframe-broken-1a {
+ch2-lambda-mainframe-broken-1a {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"<m>LAMBDA:</> Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
 		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
 		" "
 	}
-	goto ch2-notakon-topic-mainframe-q
+	goto ch2-lambda-topic-mainframe-q
 }
 
-ch2-notakon-mainframe-fix-1 {
+ch2-lambda-mainframe-fix-1 {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> How do we fix it? What do we need?"
 		" "
-		"<m>NOTAKON:</> We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"<m>LAMBDA:</> We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
 		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. The software though... I'll get back to you about that."
 		" "
 	}
-	goto ch2-notakon-topic-mainframe-q
+	goto ch2-lambda-topic-mainframe-q
 }
 
 /* ---------- CASTLE ---------- */
 
-ch2-notakon-topic-castle {
+ch2-lambda-topic-castle {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> You had a question about the castle?"
+		"<m>LAMBDA:</> You had a question about the castle?"
 		" "
 	}
-	goto ch2-notakon-topic-castle-q
+	goto ch2-lambda-topic-castle-q
 }
 
-ch2-notakon-topic-castle-q {
+ch2-lambda-topic-castle-q {
 		show serial dialog {
 		"(Ask about:)"
-		# "Whose castle is this?" : ch2-notakon-castle-who
-		# "The earthquake caused damage?" : ch2-notakon-castle-damage
+		# "Whose castle is this?" : ch2-lambda-castle-who
+		# "The earthquake caused damage?" : ch2-lambda-castle-damage
 		# "(Go back)" : ch2-command-man-normal-convo
 	}
 }
 
-ch2-notakon-castle-who {
+ch2-lambda-castle-who {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Whose castle is this?"
 		" "
-		"<m>NOTAKON:</> I'm kind of surprised you didn't know, but it's King Gibson's castle. "
+		"<m>LAMBDA:</> I'm kind of surprised you didn't know, but it's King Gibson's castle. "
 		"\tTODO: more convo"
 		" "
 	}
-	goto ch2-notakon-topic-castle-q
+	goto ch2-lambda-topic-castle-q
 }
-ch2-notakon-castle-damage {
+ch2-lambda-castle-damage {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> The earthquake caused some damage, then?"
 		" "
-		"<m>NOTAKON:</> Oh, for sure. A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"<m>LAMBDA:</> Oh, for sure. A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
 		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
 		" "
 	}
-	goto ch2-notakon-topic-castle-q
+	goto ch2-lambda-topic-castle-q
 }
 
 /* ---------- PEOPLE ---------- */
 
-ch2-notakon-topic-person-start {
+ch2-lambda-topic-person-start {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> Who did you want to ask about?"
+		"<m>LAMBDA:</> Who did you want to ask about?"
 		" "
 	}
-	goto ch2-notakon-topic-person-q
+	goto ch2-lambda-topic-person-q
 }
-ch2-notakon-topic-person-s {
+ch2-lambda-topic-person-s {
 	show serial dialog {
 		"\tUm, did you want to ask about anyone else?"
 		" "
 	}
-	goto ch2-notakon-topic-person-q
+	goto ch2-lambda-topic-person-q
 }
 
-ch2-notakon-topic-person-q {
+ch2-lambda-topic-person-q {
 	show serial dialog {
 		"(Type a name, or type <c>CANCEL</> to go back)"
 		
-		_ "BIG BAD" : ch2-notakon-person-big-bad
+		_ "BIG BAD" : ch2-lambda-person-big-bad
 
-		_ "ME" : ch2-notakon-person-player
-		_ "BLACK MAGE" : ch2-notakon-person-player
-		_ "MAGE" : ch2-notakon-person-player
+		_ "ME" : ch2-lambda-person-player
+		_ "BLACK MAGE" : ch2-lambda-person-player
+		_ "MAGE" : ch2-lambda-person-player
 		
-		_ "YOU" : ch2-notakon-person-notakon
-		_ "NOTAKON" : ch2-notakon-person-notakon
+		_ "YOU" : ch2-lambda-person-lambda
+		_ "LAMBDA" : ch2-lambda-person-lambda
 
-		_ "BERT" : ch2-notakon-person-bert
+		_ "BERT" : ch2-lambda-person-bert
 		
-		_ "BOB" : ch2-notakon-person-bob
+		_ "BOB" : ch2-lambda-person-bob
 
 		_ "CANCEL" : ch2-command-man-normal-convo
 		_ "QUIT" : ch2-command-man-normal-convo
@@ -212,99 +212,99 @@ ch2-notakon-topic-person-q {
 	}
 	show serial dialog spacer
 	show serial dialog {
-		"<m>NOTAKON:</> Sorry, not sure who you mean."
+		"<m>LAMBDA:</> Sorry, not sure who you mean."
 		" "
 	}
-	goto ch2-notakon-topic-person-q
+	goto ch2-lambda-topic-person-q
 }
 
 // The player
 
-ch2-notakon-person-player {
+ch2-lambda-person-player {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Tell me about me!"
 		" "
-		"<m>NOTAKON:</> Oh, um, I don't actually know anything about you."
+		"<m>LAMBDA:</> Oh, um, I don't actually know anything about you."
 		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
 		" "
-		# "How did you know I'm wearing a hat?" : ch2-notakon-person-player-2
+		# "How did you know I'm wearing a hat?" : ch2-lambda-person-player-2
 	}
 }
-ch2-notakon-person-player-2 {
+ch2-lambda-person-player-2 {
 	set flag ch2-cameras-explanation to true
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> How did you know I'm wearing a hat?"
 		" "
-		"<m>NOTAKON:</> That's, um... that would be because of the... well, the cameras."
+		"<m>LAMBDA:</> That's, um... that would be because of the... well, the cameras."
 		" "
-		# "Cameras? That's creepy!" : ch2-notakon-person-player-2a
-		# "Cameras? That's sensible." : ch2-notakon-person-player-2b
+		# "Cameras? That's creepy!" : ch2-lambda-person-player-2a
+		# "Cameras? That's sensible." : ch2-lambda-person-player-2b
 	}
 }
-ch2-notakon-person-player-2a {
+ch2-lambda-person-player-2a {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Cameras? That's creepy."
 		" "
-		"<m>NOTAKON:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense at one point, back when there was a lot more traffic in and out of here, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to...."
+		"<m>LAMBDA:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense at one point, back when there was a lot more traffic in and out of here, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to...."
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
-ch2-notakon-person-player-2b {
+ch2-lambda-person-player-2b {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Cameras? That's a sensible measure to take."
 		" "
-		"<m>NOTAKON:</> You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		"<m>LAMBDA:</> You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
 		" "
-		# "It's not that invasive." : ch2-notakon-person-player-3b
-		# "Okay, maybe it's a little invasive." : ch2-notakon-person-player-3a
+		# "It's not that invasive." : ch2-lambda-person-player-3b
+		# "Okay, maybe it's a little invasive." : ch2-lambda-person-player-3a
 	}
 }
-ch2-notakon-person-player-3a {
+ch2-lambda-person-player-3a {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Okay, maybe it's a little invasive."
 		" "
-		"<m>NOTAKON:</> Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
+		"<m>LAMBDA:</> Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
-ch2-notakon-person-player-3b {
+ch2-lambda-person-player-3b {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> It's not that invasive."
 		" "
-		"<m>NOTAKON:</> It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
+		"<m>LAMBDA:</> It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
 
-// Notakon
+// Lambda
 
-ch2-notakon-person-notakon {
+ch2-lambda-person-lambda {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Tell me about you!"
 		" "
-		"<m>NOTAKON:</> Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
+		"<m>LAMBDA:</> Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
 		" "
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
 
-ch2-notakon-person-notakon-q {
+ch2-lambda-person-lambda-q {
 	show serial dialog {
 		"(Ask:)"
-		# "Where are you?" : ch2-notakon-person-notakon-where
-		# "How long have you been here?" : ch2-notakon-person-notakon-time
-		# "What's your real name?" : ch2-notakon-person-notakon-name
-		# "(Go back)" : ch2-notakon-topic-person-start
+		# "Where are you?" : ch2-lambda-person-lambda-where
+		# "How long have you been here?" : ch2-lambda-person-lambda-time
+		# "What's your real name?" : ch2-lambda-person-lambda-name
+		# "(Go back)" : ch2-lambda-topic-person-start
 	}
 }
-ch2-notakon-person-notakon-where {
+ch2-lambda-person-lambda-where {
 	show serial dialog spacer
 	if (flag ch2-seen-room-99 is false) {
 		show serial dialog {
@@ -324,161 +324,161 @@ ch2-notakon-person-notakon-where {
 		}
 		show serial dialog {
 			" "
-			"<m>NOTAKON:</> I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
+			"<m>LAMBDA:</> I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
 			" "
 		}
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
-ch2-notakon-person-notakon-time {
+ch2-lambda-person-lambda-time {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> How long have you been here?"
 		" "
-		"<m>NOTAKON:</> Where I am now, or at the castle in general?"
+		"<m>LAMBDA:</> Where I am now, or at the castle in general?"
 		" "
-		# "Where you are now." : ch2-notakon-person-notakon-time-2a
-		# "The castle in general." : ch2-notakon-person-notakon-time-2b
-		# "Both." : ch2-notakon-person-notakon-time-2c
+		# "Where you are now." : ch2-lambda-person-lambda-time-2a
+		# "The castle in general." : ch2-lambda-person-lambda-time-2b
+		# "Both." : ch2-lambda-person-lambda-time-2c
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
-ch2-notakon-person-notakon-time-2a {
+ch2-lambda-person-lambda-time-2a {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Where you are now."
 		"TODO: rest of the convo"
 		" "
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
-ch2-notakon-person-notakon-time-2b {
+ch2-lambda-person-lambda-time-2b {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> The castle in general."
 		"TODO: rest of the convo"
 		" "
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
-ch2-notakon-person-notakon-time-2c {
+ch2-lambda-person-lambda-time-2c {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Both."
 		"TODO: rest of the convo"
 		" "
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
-ch2-notakon-person-notakon-name {
+ch2-lambda-person-lambda-name {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> What's your real name? It's not really \"Notakon,\" is it?"
+		"<c>YOU:</> What's your real name? It's not really \"Lambda,\" is it?"
 		"TODO: rest of the convo"
 		" "
 	}
-	goto ch2-notakon-person-notakon-q
+	goto ch2-lambda-person-lambda-q
 }
 
 // Big Bad
 
-ch2-notakon-person-big-bad {
+ch2-lambda-person-big-bad {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Tell me about the Big Bad."
 		" "
-		"<m>NOTAKON:</> Oh, um, that's complicated."
+		"<m>LAMBDA:</> Oh, um, that's complicated."
 		"TODO: rest of the convo"
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
 
 // Bob
 
-ch2-notakon-person-bob {
+ch2-lambda-person-bob {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Tell me about Bob."
 		" "
-		"<m>NOTAKON:</> Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"<m>LAMBDA:</> Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
 		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
 
 // Bert
 
-ch2-notakon-person-bert {
+ch2-lambda-person-bert {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> About Bert...."
 	}
-	if (flag ch2-notakon-bert-explanation is true) {
-		goto ch2-notakon-bert-q
+	if (flag ch2-lambda-bert-explanation is true) {
+		goto ch2-lambda-bert-q
 	} else {
 		show serial dialog {
 			" "
-			"<m>NOTAKON:</> Bert? I don't know any Berts."
+			"<m>LAMBDA:</> Bert? I don't know any Berts."
 		}
 	}
-	goto ch2-notakon-topic-person-s
+	goto ch2-lambda-topic-person-s
 }
 
-ch2-notakon-bert-q {
+ch2-lambda-bert-q {
 	show serial dialog {
 		" "
 		"(Ask about:)"
-		# "What is Bert like?" : ch2-notakon-bert-like
-		# "Bert's never mentioned you." : ch2-notakon-bert-mentioned
-		# "What did he mean by 'back door?'" : ch2-notakon-bert-door
-		# "Did Bert leave a message yet?" : ch2-notakon-bert-message
-		# "(Quit)" : ch2-notakon-bert-quit
+		# "What is Bert like?" : ch2-lambda-bert-like
+		# "Bert's never mentioned you." : ch2-lambda-bert-mentioned
+		# "What did he mean by 'back door?'" : ch2-lambda-bert-door
+		# "Did Bert leave a message yet?" : ch2-lambda-bert-message
+		# "(Quit)" : ch2-lambda-bert-quit
 	}
 }
 
-ch2-notakon-bert-like {
+ch2-lambda-bert-like {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What is Bert like?"
 		" "
-		"<m>NOTAKON:</> Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
+		"<m>LAMBDA:</> Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
 		"\tBack when... hmmm."
 		" "
 		"<c>YOU:</> What is it?"
 		" "
-		"<m>NOTAKON:</> It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
+		"<m>LAMBDA:</> It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
 	}
-	goto ch2-notakon-bert-q
+	goto ch2-lambda-bert-q
 }
-ch2-notakon-bert-mentioned {
+ch2-lambda-bert-mentioned {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Bert's never mentioned you."
 		" "
-		"<m>NOTAKON:</> Well... he might not know I'm here. In the castle."
+		"<m>LAMBDA:</> Well... he might not know I'm here. In the castle."
 		" "
 		"<c>YOU:</> But the village elders knew XA was here. In the castle."
 		" "
-		"<m>NOTAKON:</> Yes, well, that's because...."
+		"<m>LAMBDA:</> Yes, well, that's because...."
 		"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
 	}
-	goto ch2-notakon-bert-q
+	goto ch2-lambda-bert-q
 }
-ch2-notakon-bert-door {
+ch2-lambda-bert-door {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What did Bert mean by 'back door?'"
 		" "
-		"<m>NOTAKON:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
+		"<m>LAMBDA:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
 		" "
 		"<c>YOU:</> But Bert's not a hacker! Or can <bold>anyone</> use a backdoor?"
 		" "
-		"<m>NOTAKON:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required!"
+		"<m>LAMBDA:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required!"
 	}
-	goto ch2-notakon-bert-q
+	goto ch2-lambda-bert-q
 }
 
-ch2-notakon-bert-message {
+ch2-lambda-bert-message {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Did Bert leave a message yet?"
@@ -486,36 +486,36 @@ ch2-notakon-bert-message {
 	}
 	if (flag interrupt is true) {
 		show serial dialog {
-			"<m>NOTAKON:</> Haha! He's only been gone a moment! Be patient."
+			"<m>LAMBDA:</> Haha! He's only been gone a moment! Be patient."
 		}
 	} else {
 		show serial dialog {
-			"<m>NOTAKON:</> Nothing so far, sorry...."
+			"<m>LAMBDA:</> Nothing so far, sorry...."
 		}
 	}
-	goto ch2-notakon-bert-q
+	goto ch2-lambda-bert-q
 }
 
-ch2-notakon-bert-quit {
+ch2-lambda-bert-quit {
 	if (variable CALLBACK is 1) {
 		mutate CALLBACK = 0
 		show serial dialog spacer
 		show serial dialog {
-			"<m>NOTAKON:</> Yeah, sorry to go off on a long tangent like that when you were probably calling me about something else."
+			"<m>LAMBDA:</> Yeah, sorry to go off on a long tangent like that when you were probably calling me about something else."
 			"\tDid you have a general question?"
 			" "
-			# "Yes" : ch2-notakon-topic-q
-			# "No" : ch2-notakon-bert-quitquit
+			# "Yes" : ch2-lambda-topic-q
+			# "No" : ch2-lambda-bert-quitquit
 		}
 	} else {
-		goto ch2-notakon-topic-person-s
+		goto ch2-lambda-topic-person-s
 	}
 }
-ch2-notakon-bert-quitquit {
+ch2-lambda-bert-quitquit {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Nope, no questions right now."
 		" "
-		"<m>NOTAKON:</> Cool! Just let me know if you want to know something."
+		"<m>LAMBDA:</> Cool! Just let me know if you want to know something."
 	}
 }
