@@ -45,11 +45,22 @@ on_load-ch2-castle-outside-RESUME {
 
 /* ---------- ON_TICK ---------- */
 
-on_tick-ch2-castle-outside { // LOOPS HERE
-	if entity "%PLAYER%" is inside geometry north-hitbox
-		then goto on_walk-castle-outside-north
-	if entity "%PLAYER%" is inside geometry east-hitbox
-		then goto on_walk-castle-outside-east
+on_tick-ch2-castle-outside {
+	if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		copy on_exit-ch2-castle-outside
+		set warp state to walk_from-south
+		load map ch2-castle-1
+	}
+	if (entity "%PLAYER%" is inside geometry east-hitbox) {
+		copy on_exit-ch2-castle-outside
+		set warp state to walk_from-west
+		set entity "%PLAYER%" path to east-point
+		set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
+			// borrowing this from town scripts
+		fade out camera to #000000 over 500ms
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-castle-outside // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -68,24 +79,6 @@ on_go-castle-outside-north {
 on_go-castle-outside-east {
 	copy on_exit-ch2-castle-outside
 	copy warping-out-fade-out
-	load map main2
-}
-
-// WALK
-
-on_walk-castle-outside-north {
-	copy on_exit-ch2-castle-outside
-	set warp state to walk_from-south
-	load map ch2-castle-1
-}
-
-on_walk-castle-outside-east {
-	copy on_exit-ch2-castle-outside
-	set warp state to walk_from-west
-	set entity "%PLAYER%" path to east-point
-	set entity "%PLAYER%" tick_script to on_tick-ch2-town-walkfadeout
-		// borrowing this from town scripts
-	fade out camera to #000000 over 500ms
 	load map main2
 }
 

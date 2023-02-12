@@ -31,6 +31,7 @@ ch2-castle-init {
 }
 
 /* ---------- NON-CASTLE ON_LOAD INIT ---------- */
+// the town (overworld) has its own version
 
 ch2-noncastle-init {
 	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet

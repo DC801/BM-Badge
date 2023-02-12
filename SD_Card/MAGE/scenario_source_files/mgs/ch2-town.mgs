@@ -26,6 +26,7 @@ on_load-ch2-town {
 	} else {
 		set serial control off
 	}
+	register rtfm -> serial-rtfm
 	if (flag ch2-toot-done is true) {
 		copy ch2-register-manual
 	}
