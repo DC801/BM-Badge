@@ -9,6 +9,7 @@ settings for dialog {
 
 on_load-ch2-magehouse-birthday {
 	set player control to off
+	register skip -> cutscene-ch2-birthday-exit // this shows up twice if put first in the script O.o
 	close hex editor
 	set entity "%PLAYER%" animation to 0
 	fade out camera to #000000 over 0ms
@@ -90,6 +91,10 @@ on_load-ch2-magehouse-birthday {
 	}
 	fade out camera to #000000 over 2000ms
 	wait 400ms
+	goto cutscene-ch2-birthday-exit
+}
+cutscene-ch2-birthday-exit {
+	unregister skip
 	set flag ch2-birthday-cutscene to true
 	set warp state to cutscene-escort
 	load map main2
@@ -123,6 +128,7 @@ gossip-left-down {
 
 // cutscene
 ch2-escort-cutscene {
+	register skip -> cutscene-ch2-escort-exit
 	fade out camera to #000000 over 0ms
 	set player control to off
 	close hex editor
@@ -269,6 +275,10 @@ birthday-march-on-own-path-player {
 	set entity Bert tick_script to yeet
 	set player control to on
 	goto null_script
+}
+cutscene-ch2-escort-exit {
+	set warp state to walk_from-east
+	load map ch2-castle-outside
 }
 
 /* --- AND THE REST OF THE OWL --- */
