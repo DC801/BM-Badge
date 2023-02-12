@@ -11,7 +11,6 @@
 		"menu": "tilesets/tileset-dialog_transparent_menu.json"
 	},
 	"serialDialogPaths": [
-		"serial_dialog/serial_dialog-mtn-looks.json",
 		"serial_dialog/serial_dialog-action_testing.json"
 	]
 }

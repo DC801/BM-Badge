@@ -1,19 +1,31 @@
-on_look-mtn-xa_room {
-	show serial dialog serial_dialog-on_look-mtn-xa_room
-}
-
-on_look-mtn-castle_entrance {
-	show serial dialog serial_dialog-on_look-mtn-castle_entrance
-}
-
 on_look-player {
-	show serial dialog serial_dialog-on_look-player
+	show serial dialog {
+		"You looked at yourself."
+		" "
+		"Yikes. You need a haircut."
+	}
 }
 
 on_look-xa {
-	show serial dialog serial_dialog-on_look-xa
+	show serial dialog {
+		"You looked at XA."
+		" "
+		"It's some kind of orange, spider-shaped robot. It looks as though it might have the power to scoot around without actually moving its legs."
+		}
 }
 
 on_look-save_floppy {
-	show serial dialog serial_dialog-on_look-save_floppy
+	show serial dialog {
+		"You looked at the save floppy."
+		" "
+		"Wow, someone 3D-printed a save icon. What will they think up next?"
+	}
+}
+
+serial dialog on_look-castle-door {
+	"This place might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
+}
+
+serial dialog on_look-xa_room {
+	"XA's room seems to have once functioned as a kind of hub, though the doors look less than functional at the moment."
 }
