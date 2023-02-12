@@ -37,10 +37,15 @@ on_load-ch2-lodge-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-lodge {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-lodge-south
-	if entity "%PLAYER%" is inside geometry north-hitbox
-		then goto on_walk-ch2-lodge-north
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-lodge
+		load map main2
+	}
+	if (entity "%PLAYER%" is inside geometry north-hitbox) {
+		set warp state to walk_from-south
+		load map ch2-lodge-rtfm
+	}
+	set map tick_script to on_tick-ch2-lodge // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -51,15 +56,6 @@ on_go-ch2-lodge-south {
 }
 on_go-ch2-lodge-north {
 	copy warping-out-fade-out
-	load map ch2-lodge-rtfm
-}
-
-on_walk-ch2-lodge-south {
-	set warp state to walk_from-lodge
-	load map main2
-}
-on_walk-ch2-lodge-north {
-	set warp state to walk_from-south
 	load map ch2-lodge-rtfm
 }
 

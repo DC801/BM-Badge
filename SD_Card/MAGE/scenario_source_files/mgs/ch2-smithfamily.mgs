@@ -33,19 +33,17 @@ on_load-ch2-smithfamily-RESUME {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-smithfamily {
-	if entity "%PLAYER%" is inside geometry south-hitbox
-		then goto on_walk-ch2-smithfamily-south
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to walk_from-smithfamily
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-smithfamily
 }
 
 /* ---------- EXIT STUFF ---------- */
 
 on_go-ch2-smithfamily-south {
 	copy warping-out-fade-out
-	load map main2
-}
-on_walk-ch2-smithfamily-south {
-	// triggered by map's on_tick
-	set warp state to walk_from-smithfamily
 	load map main2
 }
 

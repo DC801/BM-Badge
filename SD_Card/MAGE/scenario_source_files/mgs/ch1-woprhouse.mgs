@@ -47,11 +47,6 @@ on_tick-woprhouse {
 
 /* ---------- EXIT STUFF ---------- */
 
-on_go-woprhouse-north {
-	copy warping-out-fade-out
-	load map main2
-}
-
 on_walk-woprhouse-north {
 	// triggered by map's on_tick
 	if (variable current-chapter is 1) {
@@ -63,6 +58,11 @@ on_walk-woprhouse-north {
 	} else {
 		show serial dialog { "You're in chapter '$current-chapter$'??" }
 	}
+}
+
+on_go-woprhouse-north {
+	copy warping-out-fade-out
+	load map main2
 }
 
 /* ---------- ENTITIES ---------- */
@@ -79,13 +79,12 @@ show_dialog-wopr-start {
 		> "DO NOT PLAY" : goto "restart-wopr"
 	}
 }
+restart-wopr {
+	set entity "%SELF%" interact_script to show_dialog-wopr-start
+}
 
 show_dialog-woprbooks {
 	show dialog {
 		PLAYER "These shelves are full of Vogon poetry! What an odd sort of thing for a computer to collect."
 	}
-}
-
-restart-wopr {
-	set entity "%SELF%" interact_script to show_dialog-wopr-start
 }
