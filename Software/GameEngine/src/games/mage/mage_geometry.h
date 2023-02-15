@@ -7,14 +7,218 @@ in a more accessible way.
 #define _MAGE_GEOMETRY_H
 
 #include "mage_rom.h"
-#include "FrameBuffer.h"
 #include "mage_defines.h"
+#include "utility.h"
 #include <stdint.h>
 #include <memory>
 #include <vector>
 #include <optional>
 
-struct Point;
+#define RENDER_FLAGS_IS_GLITCHED_MASK	0b01111111
+#define RENDER_FLAGS_IS_GLITCHED			0b10000000
+#define RENDER_FLAGS_IS_DEBUG				0b01000000
+#define RENDER_FLAGS_FLIP_X				0b00000100
+#define RENDER_FLAGS_FLIP_Y				0b00000010
+#define RENDER_FLAGS_FLIP_DIAG			0b00000001
+
+#define RENDER_FLAGS_FLIP_MASK			0b00000111
+#define RENDER_FLAGS_DIRECTION_MASK		0b00000011
+#define NUM_DIRECTIONS 4
+
+//this is the numerical translation for entity direction.
+enum MageEntityAnimationDirection : uint8_t
+{
+	NORTH = 0,
+	EAST = 1,
+	SOUTH = 2,
+	WEST = 3,
+};
+
+
+//this is a point in 2D space.
+struct Point
+{
+	int32_t x{ 0 };
+	int32_t y{ 0 };
+
+	float VectorLength() const
+	{
+		return sqrt((x * x) + (y * y));
+	};
+
+	constexpr float DotProduct(Point b) const
+	{
+		return (float)x * (float)b.x
+			+ (float)y * (float)b.y;
+	};
+
+	Point lerp(Point b, float progress) const
+	{
+		Point point = Point{
+			Util::lerp(x, b.x, progress),
+			Util::lerp(y, b.y, progress)
+		};
+		return point;
+	}
+
+	Point flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
+	{
+		Point point = Point{ x,y };
+
+		if (flags & RENDER_FLAGS_FLIP_X)
+		{
+			point.x = width - point.x;
+		}
+		if (flags & RENDER_FLAGS_FLIP_Y)
+		{
+			point.y = height - point.y;
+		}
+
+		if (flags & RENDER_FLAGS_FLIP_DIAG)
+		{
+			auto xTemp = point.x;
+			point.x = point.y;
+			point.y = xTemp;
+		}
+
+		return point;
+	}
+
+	Point& operator-=(const Point& rhs)
+	{
+		this->x -= rhs.x;
+		this->y -= rhs.y;
+		return *this;
+	}
+
+	friend Point operator-(Point lhs, const Point& rhs)
+	{
+		lhs -= rhs;
+		return lhs;
+	}
+
+	Point& operator-=(const uint8_t& scale)
+	{
+		this->x -= scale;
+		this->y -= scale;
+		return *this;
+	}
+
+	friend Point operator*(Point lhs, const int32_t& rhs)
+	{
+		lhs *= rhs;
+		return lhs;
+	}
+
+	Point& operator*=(const int32_t& scale)
+	{
+		this->x *= scale;
+		this->y *= scale;
+		return *this;
+	}
+
+	friend Point operator/(Point lhs, const int32_t& rhs)
+	{
+		lhs /= rhs;
+		return lhs;
+	}
+
+	Point& operator/=(const int32_t& scale)
+	{
+		this->x /= scale;
+		this->y /= scale;
+		return *this;
+	}
+
+	friend Point operator-(Point lhs, const uint8_t& scale)
+	{
+		lhs -= scale;
+		return lhs;
+	}
+
+
+	Point operator-()
+	{
+		return Point{ -x, -y };
+	}
+
+	Point& operator+=(const Point& rhs)
+	{
+		this->x += rhs.x;
+		this->y += rhs.y;
+		return *this;
+	}
+
+	friend Point operator+(Point lhs, const Point& rhs)
+	{
+		lhs += rhs;
+		return lhs;
+	}
+
+	Point& operator+=(const uint8_t& shift)
+	{
+		this->x += shift;
+		this->y += shift;
+		return *this;
+	}
+
+	friend Point operator+(Point lhs, const uint8_t& shift)
+	{
+		lhs += shift;
+		return lhs;
+	}
+
+	friend bool operator==(Point lhs, const Point& rhs)
+	{
+		return lhs.x == rhs.x && lhs.y == rhs.y;
+	}
+
+	MageEntityAnimationDirection getRelativeDirection(const Point& target) const
+	{
+		float angle = atan2f(target.y - y, target.x - x);
+		float absoluteAngle = abs(angle);
+		MageEntityAnimationDirection direction = SOUTH;
+		if (absoluteAngle > 2.356194)
+		{
+			direction = WEST;
+		}
+		else if (absoluteAngle < 0.785398)
+		{
+			direction = EAST;
+		}
+		else if (angle < 0)
+		{
+			direction = NORTH;
+		}
+		else if (angle > 0)
+		{
+			direction = SOUTH;
+		}
+		return direction;
+	}
+};
+
+struct Line
+{
+	Point A;
+	Point B;
+};
+
+struct Rect
+{
+	Point origin;
+	int32_t w{ 0 };
+	int32_t h{ 0 };
+
+	constexpr bool Overlaps(Rect& other) const
+	{
+		return origin.x <= other.origin.x + other.w
+			&& origin.x + w >= other.origin.x
+			&& origin.y <= other.origin.y + other.h
+			&& origin.y + h >= other.origin.y;
+	}
+};
+
 
 //these are the types of geometries that can be passed from the geometry data in ROM:
 enum class MageGeometryType : uint8_t
@@ -60,11 +264,7 @@ public:
       }
       else if (typeId == MageGeometryType::Polyline)
       {
-         segmentIndex %= (segmentCount * 2);
-         uint16_t zeroIndexedSegmentCount = segmentCount - 1;
-         result = (segmentIndex < segmentCount)
-            ? segmentIndex
-            : zeroIndexedSegmentCount + (zeroIndexedSegmentCount - segmentIndex) + 1;
+         result = (segmentIndex * 2) % segmentCount;
       }
       return result;
    }

@@ -68,7 +68,7 @@ MapData::MapData(uint32_t& address)
 
 void MapControl::DrawEntities(const Point& cameraPosition) const
 {
-   //first sort entity indices by the entity y values:
+   //sort entity indices by the entity y values:
    std::vector<size_t> entityDrawOrder(currentMap->entityCount);
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
    auto sortByY = [&](size_t i1, size_t i2) { return entities[i1].y < entities[i2].y; };
@@ -101,8 +101,8 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
       auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
       
       // don't draw tiles that are entirely outside the screen bounds
-      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
-       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight) 
+      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= ScreenWidth
+       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= ScreenHeight) 
       { continue; }
 
       tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId-1, tileDrawPoint, currentTile->flags);

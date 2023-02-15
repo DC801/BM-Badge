@@ -64,8 +64,8 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 		renderer,
 		SDL_PIXELFORMAT_RGB565,
 		SDL_TEXTUREACCESS_STREAMING,
-		DrawWidth,
-		DrawHeight
+		ScreenWidth,
+		ScreenHeight
 	);
 }
 

@@ -77,7 +77,7 @@ bool EngineROM<THeaders...>::SD_Copy(
          }
          //Debug Print:
          sprintf(debugString, "Erasing currentAddress: %08u\ngameDatFilesize:%08u", currentAddress, gameDatFilesize);
-         p_canvas()->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
+         p_canvas()->fillRect(0, 96, ScreenWidth, 96, COLOR_BLACK);
          p_canvas()->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
          p_canvas()->blt();
          currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE;
@@ -143,13 +143,13 @@ bool EngineROM<THeaders...>::SD_Copy(
       }
       //Debug Print:
       sprintf(debugString, "Copying currentAddress: %08u\ngameDatFilesize:%08u", currentAddress, gameDatFilesize);
-      p_canvas()->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
+      p_canvas()->fillRect(0, 96, ScreenWidth, 96, COLOR_BLACK);
       p_canvas()->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
       p_canvas()->blt();
       currentAddress += chunkSize;
    }
    //print success message:
-   p_canvas()->fillRect(0, 96, DrawWidth, 96, 0x0000);
+   p_canvas()->fillRect(0, 96, ScreenWidth, 96, 0x0000);
    p_canvas()->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
    p_canvas()->blt();
    return true;

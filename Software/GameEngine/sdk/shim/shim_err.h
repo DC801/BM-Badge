@@ -3,15 +3,14 @@
 
 
 #include <stdint.h>
-
-
+#include <algorithm>
 
 #define UNUSED_VARIABLE(X)     ((void)(X))
 #define UNUSED_PARAMETER(X)    UNUSED_VARIABLE(X)
 #define UNUSED_RETURN_VALUE(X) UNUSED_VARIABLE(X)
 
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) < (b) ? (b) : (a))
+#define MIN(a, b) std::min(a,b)
+#define MAX(a, b) std::max(a,b)
 
 typedef enum {
     NRF_SUCCESS                      = (0x00), // Successful command

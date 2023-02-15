@@ -1,10 +1,11 @@
 #ifndef MAGE_CAMERA_H
 #define MAGE_CAMERA_H
 
-#define PI 3.141592653589793
 #include "mage_defines.h"
 #include "mage_geometry.h"
 #include <stdint.h>
+
+static inline const float PI = 3.141592653589793;
 
 struct Point;
 class MapControl;

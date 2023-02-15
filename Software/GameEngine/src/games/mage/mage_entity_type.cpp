@@ -1,8 +1,4 @@
 #include "mage_entity_type.h"
-#include "mage_animation.h"
-#include "mage.h"
-#include "FrameBuffer.h"
-#include "convert_endian.h"
 
 void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t deltaTime)
 {
@@ -114,8 +110,8 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       renderableData.lastTilesetId = renderableData.tilesetId;
    }
 
-   renderableData.hitBox.origin.x = x + halfWidth / 2;
-   renderableData.hitBox.origin.y = y + halfHeight - tileset->TileHeight;
+   renderableData.hitBox.origin.x = x;
+   renderableData.hitBox.origin.y = y;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
    renderableData.center.x = renderableData.hitBox.origin.x + (renderableData.hitBox.w / 2);

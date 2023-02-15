@@ -225,7 +225,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
                }
                if (button.IsPressed(KeyPress::Ljoy_right))
                {
-                  clipboardLength = MIN(sizeof(MageEntity), clipboardLength + 1);
+                  clipboardLength = std::min<uint8_t>(sizeof(MageEntity), clipboardLength + 1);
                }
                memcpy(clipboard, currentByte, clipboardLength);
             }

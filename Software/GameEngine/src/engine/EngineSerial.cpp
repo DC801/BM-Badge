@@ -1,8 +1,6 @@
 #include <string>
 #include <regex>
 #include "EngineSerial.h"
-//#include "FrameBuffer.h"
-//#include "fonts/Monaco9.h"
 #include <iostream>
 
 char command_buffer[COMMAND_BUFFER_SIZE];

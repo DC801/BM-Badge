@@ -1,6 +1,5 @@
 #include "mage_geometry.h"
 #include "mage_tileset.h"
-#include "FrameBuffer.h"
 #include "convert_endian.h"
 #include "shim_err.h"
 #include <algorithm>
@@ -104,7 +103,7 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
          && x >= lineBXMin && x <= lineBXMax
          && y >= lineBYMin && y <= lineBYMax)
       {
-         return Point{ (uint16_t)x, (uint16_t)y };
+         return Point{ static_cast<int32_t>(x), static_cast<int32_t>(y) };
       }
    }
    // No intersection

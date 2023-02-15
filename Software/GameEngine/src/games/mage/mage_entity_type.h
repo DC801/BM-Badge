@@ -2,7 +2,6 @@
 #define _MAGE_ENTITY_TYPE_H
 
 #include "mage_rom.h"
-#include "FrameBuffer.h"
 #include "mage_geometry.h"
 #include "mage_tileset.h"
 #include <stdint.h>

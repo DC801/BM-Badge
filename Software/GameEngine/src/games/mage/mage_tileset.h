@@ -13,11 +13,7 @@ in a more accessible way.
 #include <memory>
 #include <vector>
 
-#define FLIPPED_DIAGONALLY_FLAG   0x01
-#define FLIPPED_VERTICALLY_FLAG   0x02
-#define FLIPPED_HORIZONTALLY_FLAG 0x04
-
-#define TILESET_NAME_SIZE 16
+constexpr auto TilesetNameLength = 16;
 
 //this is info needed to render entities that can be determined
 //at run time from the MageEntity class info.
@@ -51,17 +47,14 @@ public:
          && Rows >= 1;
    }
 
-   uint16_t getLocalGeometryIdByTileIndex(uint16_t tileIndex) const
+   const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const
    {
-      auto geometriesPtr = (uint8_t*)&Rows + sizeof(uint16_t);
-      if (tileIndex >= Cols * Rows)
-      {
-         return 0;
-      }
-      return geometriesPtr[tileIndex];
+      if (tileIndex >= Cols * Rows) { return nullptr; }
+      auto geometriesPtr = (uint16_t*)((uint8_t*)&Rows + sizeof(uint16_t));
+      return ROM()->GetReadPointerByIndex<MageGeometry>(geometriesPtr[tileIndex] - 1);
    }
 
-   char     Name[TILESET_NAME_SIZE]{ 0 };
+   char     Name[TilesetNameLength]{ 0 };
    uint16_t ImageId{ 0 };
    uint16_t ImageWidth{ 0 };
    uint16_t ImageHeight{ 0 };
@@ -111,17 +104,26 @@ public:
       frameBuffer->drawChunkWithFlags(
          pixels,
          colorPalette,
-         Rect{
-            tileDrawPoint,
-            tileset->TileWidth,
-            tileset->TileHeight
-         },
+         Rect { tileDrawPoint, tileset->TileWidth, tileset->TileHeight },
          tileset->ImageWidth,
-         flags);
+         flags
+      );
+
+      if (drawGeometry)
+      {
+         frameBuffer->drawRect(Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
+      }
+
+   }
+
+   void ToggleDrawGeometry()
+   {
+      drawGeometry = !drawGeometry;
    }
 
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;
+   bool drawGeometry{ false };
 };
 
 #endif //_MAGE_TILESET_H

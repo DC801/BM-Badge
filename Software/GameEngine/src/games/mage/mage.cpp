@@ -190,6 +190,7 @@ void MageGameEngine::applyUniversalInputs()
 
    if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0))
    {
+      tileManager->ToggleDrawGeometry();
    }
 }
 
@@ -202,13 +203,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    float howManyMsPerSecond = 1000.0;
    float whatFractionOfSpeed = moveType / howManyMsPerSecond;
    mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
-   if (dialogControl->isOpen())
-   {
-      // If interacting with the dialog this tick has closed the dialog,
-      // return early before the same "advance button press triggers an on_interact below
-      dialogControl->update();
-      return;
-   }
+
    // if there is a player on the map
    if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
    {
@@ -266,7 +261,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
             auto pushback = getPushBackFromTilesThatCollideWithPlayer();
             auto velocityAfterPushback = playerVelocity + pushback;
             auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
-            //
+            
             // false would mean that the pushback is greater than the input velocity,
             // which would glitch the player into geometry really bad, so... don't.
             if (dotProductOfVelocityAndPushback > 0)
@@ -418,8 +413,15 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    }
    else
    {
-      //this handles buttons and state updates based on button presses in game mode:
-      applyGameModeInputs(deltaTime);
+      if (dialogControl->isOpen()) 
+      { 
+         dialogControl->update(deltaTime); 
+      }
+      else
+      {
+         //this handles buttons and state updates based on button presses in game mode:
+         applyGameModeInputs(deltaTime);
+      }
 
       //update the entities based on the current state of their (hackable) data array.
       mapControl->UpdateEntities(deltaTime);
@@ -548,128 +550,48 @@ void MageGameEngine::onSerialCommand(char* commandString)
 
 Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 {
-   Point mageCollisionSpokes[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
    float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
-   Point maxSpokePushbackVectors[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
-   auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
+   auto& playerOrigin = mapControl->getPlayerEntityRenderableData().hitBox.origin;
+   auto afterMoveOrigin = playerOrigin + playerVelocity;
+   auto row = afterMoveOrigin.y / mapControl->TileHeight(); 
+   auto col = afterMoveOrigin.x / mapControl->TileWidth();
+   auto tileIndex = row + (col * mapControl->Cols());
+   auto tilePoint = Point{ col * mapControl->TileWidth(), row * mapControl->TileHeight() };
 
-   auto& playerRect = playerRenderableData.hitBox;
-   playerRect.w += abs(playerVelocity.x);
-   if (playerVelocity.x < 0)
-   {
-      playerRect.origin.x += playerVelocity.x;
-   }
-   playerRect.h += abs(playerVelocity.y);
-   if (playerVelocity.y < 0)
-   {
-      playerRect.origin.y += playerVelocity.y;
-   }
-   
-   Point tileTopLeftPoint = { 0, 0 };
-   uint16_t geometryId = 0;
-   auto pushback = Point{};
-   Point playerPoint = playerRenderableData.center;
-   float playerSpokeRadius = playerRenderableData.hitBox.w / 1.5;
-   float angleOffset = atan2(playerVelocity.y, playerVelocity.x)
-      - (PI / 2)
-      + ((PI / MAGE_COLLISION_SPOKE_COUNT) / 2);
-
-   for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
-   {
-      maxSpokePushbackLengths[i] = -INFINITY;
-      maxSpokePushbackVectors[i].x = 0;
-      maxSpokePushbackVectors[i].y = 0;
-      float angle = (float)i * (PI / MAGE_COLLISION_SPOKE_COUNT) + angleOffset;
-      mageCollisionSpokes[i] = Point{ (int32_t)cos(angle), (int32_t)sin(angle) } * playerSpokeRadius + playerVelocity + playerPoint;
-   }
-
-   for (auto layerIndex = 0u; layerIndex < mapControl->LayerCount(); layerIndex++)
+   auto point = Point{ 0,0 };
+   for (auto layerIndex = 0; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       auto layerAddress = mapControl->LayerAddress(layerIndex);
       auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
-
-      for (auto row = 0; row < mapControl->Rows(); row++)
-      for (auto col = 0; col < mapControl->Cols(); col++)
+      auto currentTile = &layers[tileIndex];
+      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
+      auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
+      if (geometry)
       {
-         auto tileIndex = row + (col * mapControl->Cols());
-         auto currentTile = &layers[tileIndex];
+         auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
+         auto isMageInGeometry = false;
+         auto collidedWithThisTileAtAll = false;
 
-         if (!currentTile->tileId) { continue; }
-
-         auto tileDrawPoint = Point{ mapControl->TileWidth() * col, mapControl->TileHeight() * row };
-
-         if (tileDrawPoint.x + mapControl->TileWidth() < 0 || tileDrawPoint.x >= DrawWidth
-            || tileDrawPoint.y + mapControl->TileHeight() < 0 || tileDrawPoint.y >= DrawHeight)
+         for (auto i = 0; i < geometryPoints.size() - 1; i++)
          {
-            continue;
-         }
+            auto tileLinePointA = tilePoint + geometryPoints[i];
+            auto tileLinePointB = tilePoint + geometryPoints[i + 1];
+            auto collidedWithTileLine = false;
 
-         auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
-
-         if (!tileset->Valid())
-         {
-            continue;
-         }
-
-         geometryId = tileset->getLocalGeometryIdByTileIndex(currentTile->tileId - 1);
-         if (geometryId)
-         {
-            geometryId--;
-
-            auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(geometryId);
-            auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
-
-            auto offsetPoint = playerPoint - tileTopLeftPoint;
-            bool isMageInGeometry = false;
-            bool collidedWithThisTileAtAll = false;
-
-            for (int tileLinePointIndex = 0; tileLinePointIndex < geometryPoints.size() - 1; tileLinePointIndex++)
+            auto spokeIntersectionPoint = MageGeometry::getIntersectPointBetweenLineSegments(playerOrigin, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            if (spokeIntersectionPoint.has_value())
             {
-               auto& tileLinePointA = geometryPoints[tileLinePointIndex];
-               auto& tileLinePointB = geometryPoints[tileLinePointIndex + 1];
-               bool collidedWithTileLine = false;
-
-               for (auto spokeIndex = 0; spokeIndex < MAGE_COLLISION_SPOKE_COUNT; spokeIndex++)
+               collidedWithTileLine = true;
+               isMageInGeometry = true;
+               auto diff = spokeIntersectionPoint.value() - afterMoveOrigin;
+               if (diff.VectorLength() > point.VectorLength())
                {
-                  auto& spokePointB = mageCollisionSpokes[spokeIndex];
-
-                  auto spokeIntersectionPoint = MageGeometry::getIntersectPointBetweenLineSegments(offsetPoint, spokePointB, tileLinePointA, tileLinePointB);
-                  if (spokeIntersectionPoint.has_value())
-                  {
-                     collidedWithTileLine = true;
-                     isMageInGeometry = true;
-                     auto diff = spokeIntersectionPoint.value() - spokePointB;
-
-                     frameBuffer->drawLine(offsetPoint, spokePointB, COLOR_RED);
-                     frameBuffer->drawLine(offsetPoint, spokeIntersectionPoint.value(), COLOR_GREENYELLOW);
-                     frameBuffer->drawLine(offsetPoint, offsetPoint + diff, COLOR_ORANGE);
-                     float currentIntersectLength = diff.VectorLength();
-
-                     maxSpokePushbackLengths[spokeIndex] = std::max(currentIntersectLength, maxSpokePushbackLengths[spokeIndex]);
-                     if (currentIntersectLength == maxSpokePushbackLengths[spokeIndex])
-                     {
-                        maxSpokePushbackVectors[spokeIndex] = diff;
-                     }
-                  }
+                  point = diff;
                }
-               frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
             }
+            frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
          }
       }
    }
-   uint8_t collisionCount = 0;
-   for (uint8_t i = 0; i < MAGE_COLLISION_SPOKE_COUNT; i++)
-   {
-      if (maxSpokePushbackLengths[i] != -INFINITY)
-      {
-         collisionCount++;
-         pushback += maxSpokePushbackVectors[i];
-      };
-   }
-   if (collisionCount > 0)
-   {
-      pushback /= collisionCount;
-      frameBuffer->drawLine(playerPoint - camera.position, playerPoint + pushback - camera.position, COLOR_RED);
-   }
-   return pushback;
+   return point;
 }

@@ -3,6 +3,7 @@
 
 #include "games/mage/mage_rom.h"
 #include "games/mage/mage_color_palette.h"
+#include "games/mage/mage_geometry.h"
 #include "EngineWindowFrame.h"
 #include "adafruit/gfxfont.h"
 #include "modules/gfx.h"
@@ -15,15 +16,6 @@
 class MageColorPalette;
 class MageGameEngine;
 
-
-//this is the numerical translation for entity direction.
-enum MageEntityAnimationDirection : uint8_t
-{
-	NORTH = 0,
-	EAST = 1,
-	SOUTH = 2,
-	WEST = 3,
-};
 
 // Color definitions
 #define COLOR_BLACK			0x0000	/*   0,   0,   0 */
@@ -52,197 +44,6 @@ enum MageEntityAnimationDirection : uint8_t
 #define COLOR_NEONPURPLE	0xFD5F
 #define COLOR_BSOD			0x03DA
 
-
-#define RENDER_FLAGS_IS_GLITCHED_MASK	0b01111111
-#define RENDER_FLAGS_IS_GLITCHED			0b10000000
-#define RENDER_FLAGS_IS_DEBUG				0b01000000
-#define RENDER_FLAGS_FLIP_X				0b00000100
-#define RENDER_FLAGS_FLIP_Y				0b00000010
-#define RENDER_FLAGS_FLIP_DIAG			0b00000001
-
-#define RENDER_FLAGS_FLIP_MASK			0b00000111
-#define RENDER_FLAGS_DIRECTION_MASK		0b00000011
-#define NUM_DIRECTIONS 4
-
-//this is a point in 2D space.
-struct Point
-{
-	int32_t x{ 0 };
-	int32_t y{ 0 };
-
-	float VectorLength() const
-	{
-		return sqrt((x * x) + (y * y));
-	};
-
-	constexpr float DotProduct(Point b) const
-	{
-		return (float)x * (float)b.x
-			+ (float)y * (float)b.y;
-	};
-
-	Point lerp(Point b, float progress) const
-	{
-		Point point = Point{
-			Util::lerp(x, b.x, progress),
-			Util::lerp(y, b.y, progress)
-		};
-		return point;
-	}
-
-	Point flipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
-	{
-		Point point = Point{ x,y };
-
-		if (flags & RENDER_FLAGS_FLIP_X)
-		{
-			point.x = width - point.x;
-		}
-		if (flags & RENDER_FLAGS_FLIP_Y)
-		{
-			point.y = height - point.y;
-		}
-
-		if (flags & RENDER_FLAGS_FLIP_DIAG)
-		{
-			auto xTemp = point.x;
-			point.x = point.y;
-			point.y = xTemp;
-		}
-		
-		return point;
-	}
-
-	Point& operator-=(const Point& rhs)
-	{
-		this->x -= rhs.x;
-		this->y -= rhs.y;
-		return *this;
-	}
-
-	friend Point operator-(Point lhs, const Point& rhs)
-	{
-		lhs -= rhs;
-		return lhs;
-	}
-
-	Point& operator-=(const uint8_t& scale)
-	{
-		this->x -= scale;
-		this->y -= scale;
-		return *this;
-	}
-
-	friend Point operator*(Point lhs, const int32_t& rhs)
-	{
-		lhs *= rhs;
-		return lhs;
-	}
-
-	Point& operator*=(const int32_t& scale)
-	{
-		this->x *= scale;
-		this->y *= scale;
-		return *this;
-	}
-
-	friend Point operator/(Point lhs, const int32_t& rhs)
-	{
-		lhs /= rhs;
-		return lhs;
-	}
-
-	Point& operator/=(const int32_t& scale)
-	{
-		this->x /= scale;
-		this->y /= scale;
-		return *this;
-	}
-
-	friend Point operator-(Point lhs, const uint8_t& scale)
-	{
-		lhs -= scale;
-		return lhs;
-	}
-
-
-	Point operator-()
-	{
-		return Point{ -x, -y };
-	}
-
-	Point& operator+=(const Point& rhs)
-	{
-		this->x += rhs.x;
-		this->y += rhs.y;
-		return *this;
-	}
-
-	friend Point operator+(Point lhs, const Point& rhs)
-	{
-		lhs += rhs;
-		return lhs;
-	}
-
-	Point& operator+=(const uint8_t& shift)
-	{
-		this->x += shift;
-		this->y += shift;
-		return *this;
-	}
-
-	friend Point operator+(Point lhs, const uint8_t& shift)
-	{
-		lhs += shift;
-		return lhs;
-	}
-
-	friend bool operator==(Point lhs, const Point& rhs)
-	{
-		return lhs.x == rhs.x && lhs.y == rhs.y;
-	}
-
-	MageEntityAnimationDirection getRelativeDirection(const Point& target) const
-	{
-		float angle = atan2f(target.y - y, target.x - x);
-		float absoluteAngle = abs(angle);
-		MageEntityAnimationDirection direction = SOUTH;
-		if (absoluteAngle > 2.356194)
-		{
-			direction = WEST;
-		}
-		else if (absoluteAngle < 0.785398)
-		{
-			direction = EAST;
-		}
-		else if (angle < 0)
-		{
-			direction = NORTH;
-		}
-		else if (angle > 0)
-		{
-			direction = SOUTH;
-		}
-		return direction;
-	}
-};
-
-struct Rect
-{
-	Point origin;
-	int32_t w{ 0 };
-	int32_t h{ 0 };
-
-	constexpr bool Overlaps(Rect& other) const
-	{
-		return origin.x <= other.origin.x + other.w
-			&& origin.x + w >= other.origin.x
-			&& origin.y <= other.origin.y + other.h
-			&& origin.y + h >= other.origin.y;
-	}
-};
-
-
 typedef struct {
 	int16_t width;
 	int16_t height;
@@ -269,12 +70,12 @@ public:
 	void clearScreen(uint16_t color);
 	constexpr void drawPixel(int x, int y, uint16_t color) 
 	{ 
-		if (x < 0 || x >= DrawWidth
-		 || y < 0 || y >= DrawHeight
+		if (x < 0 || x >= ScreenWidth
+		 || y < 0 || y >= ScreenHeight
 		 || color == TRANSPARENCY_COLOR) 
 		{ return; }
 
-		frame[y * DrawWidth + x] = color;
+		frame[y * ScreenWidth + x] = color;
 	}
 
 	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
@@ -305,19 +106,19 @@ public:
 	{
 		fillRect(p.x, p.y, w, h, color);
 	}
+
 	void fillRect(int x, int y, int w, int h, uint16_t color)
 	{
-
-		if ((x >= DrawWidth) || (y >= DrawHeight))
+		if ((x >= ScreenWidth) || (y >= ScreenHeight))
 		{
 			return;
 		}
 
 		// Clip to screen
 		auto right = x + w;
-		if (right >= DrawWidth) { right = DrawWidth - 1; }
+		if (right >= ScreenWidth) { right = ScreenWidth - 1; }
 		auto bottom = y + h;
-		if (bottom >= DrawHeight) { bottom = DrawHeight - 1; }
+		if (bottom >= ScreenHeight) { bottom = ScreenHeight - 1; }
 		// X
 		for (int i = x; i < right; i++)
 		{
@@ -329,16 +130,20 @@ public:
 		}
 	}
 
-	inline void drawRect(const Rect& p, uint16_t color)
+	inline void drawRect(const Rect& r, uint16_t color)
 	{
-		drawRect(p.origin.x, p.origin.y, p.w, p.h, color);
+		auto x = r.origin.x;
+		auto y = r.origin.y;
+		// top
+		drawLine(x, y, x + r.w, y, color);
+		// left
+		drawLine(x, y, x, y + r.h, color);
+		// right
+		drawLine(x + r.w, y, x + r.w, y + r.h, color);
+		// bottom
+		drawLine(x, y + r.h, x + r.w, y + r.h, color);
 	}
 
-	inline void drawRect(const Point& p, int w, int h, uint16_t color)
-	{
-		drawRect(p.x, p.y, w, h, color);
-	}
-	void drawRect(int x, int y, int w, int h, uint16_t color);
 
 	void write_char(uint8_t c, GFXfont font);
 	void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);

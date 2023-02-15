@@ -144,7 +144,7 @@ public:
    constexpr void MageDialogControl::close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
-   void update();
+   void update(uint32_t deltaTime);
    void draw();
 
    void loadCurrentScreenPortrait();
@@ -171,8 +171,8 @@ private:
    }
 
    std::string triggeringEntityName{};
-   int32_t currentScreenIndex{0};
-   int32_t currentMessageIndex{0};
+   uint32_t currentScreenIndex{0};
+   uint32_t currentMessageIndex{0};
    uint16_t currentFrameTilesetIndex{ 0 };
    uint32_t cursorPhase{0};
    uint8_t currentResponseIndex{0};

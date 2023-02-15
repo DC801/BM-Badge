@@ -60,7 +60,7 @@ void MageDialogControl::loadNextScreen()
 {
    currentDialog = ROM()->GetReadPointerByIndex<MageDialog>(currentDialogId);
    currentMessageIndex = 0;
-   if ((uint32_t)currentScreenIndex >= currentDialog->ScreenCount)
+   if (currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
       return;
@@ -77,7 +77,7 @@ void MageDialogControl::loadNextScreen()
    cursorPhase += 250;
 }
 
-void MageDialogControl::update()
+void MageDialogControl::update(uint32_t deltaTime)
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
    auto activatedButton = inputHandler->GetButtonActivatedState();
@@ -102,7 +102,7 @@ void MageDialogControl::update()
    else if (shouldAdvance)
    {
       currentMessageIndex++;
-      cursorPhase = 250;
+      cursorPhase = 0;
       if (currentMessageIndex >= currentScreen.messageCount)
       {
          loadNextScreen();
@@ -117,7 +117,7 @@ void MageDialogControl::update()
 
 void MageDialogControl::draw()
 {
-   if ((uint32_t)currentScreenIndex >= currentDialog->ScreenCount)
+   if (currentScreenIndex >= currentDialog->ScreenCount)
    {
       open = false;
       return;
@@ -186,7 +186,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
                offsetY + ((responseIndex + 2) * tileHeight * 0.75) + 2
             );
          }
-         auto targetPoint = Point{ offsetX + tileWidth + bounce, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6 };
+         auto targetPoint = Point{ offsetX + tileWidth, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6  + bounce};
          tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_DIRECTION_MASK);
       }
       else
