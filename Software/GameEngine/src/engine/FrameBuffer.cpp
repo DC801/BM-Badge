@@ -21,14 +21,6 @@
 #include "EngineWindowFrame.h"
 #endif
 
-#ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
-#endif
-
-#ifndef max
-#define max(a,b) ((a)>(b)?(a):(b))
-#endif
-
 #define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
 
 //Cursor coordinates
@@ -145,17 +137,9 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
          }
       }
    }
-
 }
 
-void FrameBuffer::__draw_char(
-   int16_t x,
-   int16_t y,
-   unsigned char c,
-   uint16_t color,
-   uint16_t bg,
-   GFXfont font
-)
+void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t color, uint16_t bg, GFXfont font)
 {
    // Character is assumed previously filtered by write() to eliminate
    // newlines, returns, non-printable characters, etc.  Calling drawChar()

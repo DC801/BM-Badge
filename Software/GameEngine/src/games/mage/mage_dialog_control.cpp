@@ -4,8 +4,6 @@
 #include "StringLoader.h"
 #include "mage_map.h"
 #include "mage_portrait.h"
-#include "mage_script_actions.h"
-#include "mage_script_control.h"
 #include "mage_tileset.h"
 #include <utility>
 
@@ -43,7 +41,7 @@ void MageDialogControl::load(uint16_t dialogId, int16_t currentEntityId)
    open = true;
 }
 
-void MageDialogControl::StartModalDialog(std::string messageString)
+std::optional<uint16_t> MageDialogControl::StartModalDialog(std::string messageString)
 {
    // Recycle all of the values set by the previous dialog to preserve look and feel
    // If there was no previous dialog... uhhhhhhh good luck with that?
@@ -53,7 +51,7 @@ void MageDialogControl::StartModalDialog(std::string messageString)
    responses.clear();
    cursorPhase += 250;
    open = true;
-   scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+   return MAGE_NO_SCRIPT;
 }
 
 void MageDialogControl::loadNextScreen()
@@ -77,7 +75,7 @@ void MageDialogControl::loadNextScreen()
    cursorPhase += 250;
 }
 
-void MageDialogControl::update(uint32_t deltaTime)
+std::optional<uint16_t> MageDialogControl::update(uint32_t deltaTime)
 {
    cursorPhase += MAGE_MIN_MILLIS_BETWEEN_FRAMES;
    auto activatedButton = inputHandler->GetButtonActivatedState();
@@ -95,8 +93,8 @@ void MageDialogControl::update(uint32_t deltaTime)
       currentResponseIndex %= currentScreen.responseCount;
       if (shouldAdvance)
       {
-         scriptControl->jumpScriptId = responses[currentResponseIndex].scriptIndex;
          open = false;
+         return responses[currentResponseIndex].scriptIndex;
       }
    }
    else if (shouldAdvance)
@@ -113,6 +111,7 @@ void MageDialogControl::update(uint32_t deltaTime)
          currentMessage = stringLoader->getString(currentMessageId, triggeringEntityName);
       }
    }
+   return std::nullopt;
 }
 
 void MageDialogControl::draw()
@@ -187,13 +186,13 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
             );
          }
          auto targetPoint = Point{ offsetX + tileWidth, offsetY + ((currentResponseIndex + 2) * (tileHeight / 2 + tileHeight / 4)) + 6  + bounce};
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_DIRECTION_MASK);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
       else
       {
          auto targetPoint = Point{ offsetX + ((box.w - 2) * tileWidth), offsetY + ((box.h - 2) * tileHeight) + bounce };
          // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_FLIP_X | RENDER_FLAGS_FLIP_Y | RENDER_FLAGS_FLIP_DIAG);
       }
    }
 

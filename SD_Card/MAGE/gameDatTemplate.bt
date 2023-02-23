@@ -209,7 +209,7 @@ typedef struct
     uint16 tileId;
     uchar tilesetId;
     RenderFlags flags;
-} MapTile<read=Str("tileset %d [%d] %s",tilesetId, tileId, Str(flags))>;
+} MapTile<read=Str("tileset %d [%d] %s",tilesetId, tileId, Str("flip [x, y, diag]: [%d, %d, %d]", flags.flipX, flags.flipY, flags.flipDiag))>;
 
 typedef struct 
 {

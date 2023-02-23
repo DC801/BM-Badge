@@ -78,10 +78,7 @@ void MapControl::DrawEntities(const Point& cameraPosition) const
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex: entityDrawOrder)
    {
-      auto& renderableData = entityRenderableData[entityIndex];
-      auto entityDrawPosition = renderableData.hitBox.origin - cameraPosition;
-      entityDrawPosition.y -= TileHeight();
-      tileManager->DrawTile(renderableData.tilesetId, renderableData.tileId, entityDrawPosition, renderableData.renderFlags);
+      tileManager->DrawTile(entityRenderableData[entityIndex], cameraPosition, getGlobalGeometryId(entityIndex));
    }
 }
 
@@ -111,11 +108,10 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
 
 void MapControl::DrawGeometry(const Point& camera) const
 {
-   Point playerPosition;
    bool isColliding = false;
    if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      playerPosition = entityRenderableData[currentMap->playerEntityIndex].center;
+      auto playerPosition = entityRenderableData[currentMap->playerEntityIndex].center;
       for (uint16_t i = 0; i < GeometryCount(); i++)
       {
          auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
@@ -125,8 +121,7 @@ void MapControl::DrawGeometry(const Point& camera) const
    }
 }
 
-
-void MapControl::UpdateEntities(uint32_t deltaTime)
+void MapControl::UpdateEntities(uint32_t deltaTime, const Point& cameraPosition)
 {
    for (auto i = 0; i < currentMap->entityCount; i++)
    {

@@ -1118,7 +1118,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
 {
    typedef struct
    {
-      uint16_t targetGeometryId;
+      uint16_t geometryId;
       uint8_t entityId;
       uint8_t paddingD;
       uint8_t paddingE;
@@ -1131,7 +1131,7 @@ std::optional<uint16_t> MageScriptActions::action_set_entity_direction_target_ge
    if (sourceEntityIndex != NO_PLAYER)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->targetGeometryId);
+      auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
       auto relativeDirection = mapControl->getEntityRenderableData(sourceEntityIndex).center.getRelativeDirection(geometry->GetPoint(0));
       entity.direction |= (relativeDirection & RENDER_FLAGS_DIRECTION_MASK);
       entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
@@ -1626,12 +1626,13 @@ std::optional<uint16_t> MageScriptActions::action_teleport_entity_to_geometry(co
    if (sourceEntityIndex != NO_PLAYER)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
+      auto& renderable = mapControl->getEntityRenderableData(sourceEntityIndex);
       auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(argStruct->geometryId);
 
-      auto offsetPoint = geometry->GetPoint(0) - mapControl->getEntityRenderableData(sourceEntityIndex).center - Point{ entity.x, entity.y };
+      auto offsetPoint = geometry->GetPoint(0);
       entity.x = offsetPoint.x;
       entity.y = offsetPoint.y;
-      entity.updateRenderableData(mapControl->getEntityRenderableData(sourceEntityIndex), 0);
+      entity.updateRenderableData(renderable, 0);
    }
    return std::nullopt;
 }
@@ -2271,8 +2272,9 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
       // readSaveFromRomIntoRam(currentSaveIndex);
 
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
-      dialogControl->StartModalDialog("Save complete.");
+      auto jumpScriptId = dialogControl->StartModalDialog("Save complete.");
       resumeState.totalLoopsToNextAction = 1;
+      return jumpScriptId;
    }
    else if (!dialogControl->isOpen())
    {

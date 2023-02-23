@@ -84,7 +84,7 @@ public:
 	}
 	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 
-	inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
+	/*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
 	{
 		const auto topLeft = p - size;
 		const auto bottomRight = p + size;
@@ -92,7 +92,7 @@ public:
       const auto topRight = Point{ p.x + size, p.y - size };
 		drawLine(topLeft, bottomRight, color);
 		drawLine(bottomLeft, topRight, color);
-	}
+	}*/
 
 	// pixels: pointer to first pixel of image in ROM, unmodifiable
 	// colorPalette: translate indexed image colors, unmodifiable

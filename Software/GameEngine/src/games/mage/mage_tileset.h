@@ -19,9 +19,9 @@ constexpr auto TilesetNameLength = 16;
 //at run time from the MageEntity class info.
 struct RenderableData
 {
-   Rect hitBox{ 0 };
-   Rect interactBox{ 0 };
+   Point origin{ 0 };
    Point center{ 0 };
+   Rect hitBox{ 0 };
    uint16_t currentFrameTicks{ 0 };
    uint16_t tilesetId{ 0 };
    uint16_t lastTilesetId{ 0 };
@@ -49,9 +49,11 @@ public:
 
    const MageGeometry* GetGeometryForTile(uint16_t tileIndex) const
    {
-      if (tileIndex >= Cols * Rows) { return nullptr; }
       auto geometriesPtr = (uint16_t*)((uint8_t*)&Rows + sizeof(uint16_t));
-      return ROM()->GetReadPointerByIndex<MageGeometry>(geometriesPtr[tileIndex] - 1);
+      tileIndex += 1;
+      if (tileIndex >= Cols * Rows || !geometriesPtr[tileIndex]) { return nullptr; }
+      auto geometryIndex = geometriesPtr[tileIndex];
+      return ROM()->GetReadPointerByIndex<MageGeometry>(geometryIndex - 1);
    }
 
    char     Name[TilesetNameLength]{ 0 };
@@ -93,33 +95,11 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags = 0) const
-   {
-      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
-      auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
-      auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
+   void DrawTile(const RenderableData& renderableData, const Point& cameraPosition, uint16_t geometryId = 0) const;
 
-      pixels += tileId * tileset->TileWidth * tileset->TileHeight;
-      
-      frameBuffer->drawChunkWithFlags(
-         pixels,
-         colorPalette,
-         Rect { tileDrawPoint, tileset->TileWidth, tileset->TileHeight },
-         tileset->ImageWidth,
-         flags
-      );
+   void DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags = 0) const;
 
-      if (drawGeometry)
-      {
-         frameBuffer->drawRect(Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);
-      }
-
-   }
-
-   void ToggleDrawGeometry()
-   {
-      drawGeometry = !drawGeometry;
-   }
+   inline void ToggleDrawGeometry() { drawGeometry = !drawGeometry; }
 
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;

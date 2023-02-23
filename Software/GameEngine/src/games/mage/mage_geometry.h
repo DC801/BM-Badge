@@ -46,7 +46,7 @@ struct Point
 		return sqrt((x * x) + (y * y));
 	};
 
-	constexpr float DotProduct(Point b) const
+	constexpr float DotProduct(const Point& b) const
 	{
 		return (float)x * (float)b.x
 			+ (float)y * (float)b.y;
@@ -86,8 +86,8 @@ struct Point
 
 	Point& operator-=(const Point& rhs)
 	{
-		this->x -= rhs.x;
-		this->y -= rhs.y;
+		x -= rhs.x;
+		y -= rhs.y;
 		return *this;
 	}
 
@@ -95,13 +95,6 @@ struct Point
 	{
 		lhs -= rhs;
 		return lhs;
-	}
-
-	Point& operator-=(const uint8_t& scale)
-	{
-		this->x -= scale;
-		this->y -= scale;
-		return *this;
 	}
 
 	friend Point operator*(Point lhs, const int32_t& rhs)
@@ -130,11 +123,19 @@ struct Point
 		return *this;
 	}
 
-	friend Point operator-(Point lhs, const uint8_t& scale)
-	{
-		lhs -= scale;
-		return lhs;
-	}
+	//Point& operator-=(const uint8_t& scale)
+	//{
+	//	this->x -= scale;
+	//	this->y -= scale;
+	//	return *this;
+	//}
+
+
+	//friend Point operator-(Point lhs, const uint8_t& scale)
+	//{
+	//	lhs -= scale;
+	//	return lhs;
+	//}
 
 
 	Point operator-()
@@ -268,6 +269,16 @@ public:
       }
       return result;
    }
+
+	std::vector<Point> MageGeometry::GetPoints() const
+	{
+		auto points = std::vector<Point>{ pointCount };
+		for (auto i = 0; i < pointCount; i++)
+		{
+			points[i] = GetPoint(i);
+		}
+		return points;
+	}
 
    Point GetPoint(uint16_t i) const { 
       auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));

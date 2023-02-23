@@ -20,7 +20,7 @@ void MageGameEngine::Run()
 {
    //main game loop:
 #ifdef EMSCRIPTEN
-   emscripten_set_main_loop(EngineMainGameLoop, 24, 1);
+   emscripten_set_main_loop(GameLoop, 24, 1);
 #else
    while (inputHandler->IsRunning())
    {
@@ -30,7 +30,7 @@ void MageGameEngine::Run()
          LoadMap(ROM()->GetCurrentSave()->currentMapId);
          engineIsInitialized = true;
       }
-      EngineMainGameLoop();
+      GameLoop();
    }
 #endif
 
@@ -46,29 +46,29 @@ void MageGameEngine::handleEntityInteract(bool hack)
 
    auto& playerEntity = mapControl->getPlayerEntity();
    auto& playerRenderableData = mapControl->getPlayerEntityRenderableData();
-   playerRenderableData.interactBox = playerRenderableData.hitBox;
+   auto interactBox = playerRenderableData.hitBox;
 
    const uint8_t interactLength = 32;
    auto direction = playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK;
    if (direction == NORTH)
    {
-      playerRenderableData.interactBox.origin.y -= interactLength;
-      playerRenderableData.interactBox.h = interactLength;
+      interactBox.origin.y -= interactLength;
+      interactBox.h = interactLength;
    }
    if (direction == EAST)
    {
-      playerRenderableData.interactBox.origin.x += playerRenderableData.interactBox.w;
-      playerRenderableData.interactBox.w = interactLength;
+      interactBox.origin.x += interactBox.w;
+      interactBox.w = interactLength;
    }
    if (direction == SOUTH)
    {
-      playerRenderableData.interactBox.origin.y += playerRenderableData.interactBox.h;
-      playerRenderableData.interactBox.h = interactLength;
+      interactBox.origin.y += interactBox.h;
+      interactBox.h = interactLength;
    }
    if (direction == WEST)
    {
-      playerRenderableData.interactBox.origin.x -= interactLength;
-      playerRenderableData.interactBox.w = interactLength;
+      interactBox.origin.x -= interactLength;
+      interactBox.w = interactLength;
    }
 
    for (uint8_t i = 0; i < mapControl->FilteredEntityCount(); i++)
@@ -81,7 +81,7 @@ void MageGameEngine::handleEntityInteract(bool hack)
       if (i != mapControl->getPlayerEntityIndex())
       {
          bool colliding = targetRenderableData.hitBox
-            .Overlaps(playerRenderableData.interactBox);
+            .Overlaps(interactBox);
 
          if (colliding)
          {
@@ -415,7 +415,11 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    {
       if (dialogControl->isOpen()) 
       { 
-         dialogControl->update(deltaTime); 
+         auto jumpScriptId = dialogControl->update(deltaTime);
+         if (jumpScriptId != MAGE_NO_SCRIPT)
+         {
+            scriptControl->jumpScriptId = jumpScriptId;
+         }
       }
       else
       {
@@ -424,7 +428,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
       }
 
       //update the entities based on the current state of their (hackable) data array.
-      mapControl->UpdateEntities(deltaTime);
+      mapControl->UpdateEntities(deltaTime, camera.position);
 
       //handle scripts:
       scriptControl->tickScripts();
@@ -456,7 +460,7 @@ void MageGameEngine::GameRender()
       //then draw the map and entities:
       uint8_t layerCount = mapControl->LayerCount();
 
-      for (uint8_t layerIndex = 0; layerCount == 1 || layerIndex < (layerCount - 1); layerIndex++)
+      for (uint8_t layerIndex = 0; layerIndex == 0 || layerIndex < (layerCount - 1); layerIndex++)
       {
          //draw all map layers except the last one before drawing entities.
          mapControl->DrawLayer(layerIndex, camera.position);
@@ -483,7 +487,7 @@ void MageGameEngine::GameRender()
    frameBuffer->blt(inputHandler->GetButtonState());
 }
 
-void MageGameEngine::EngineMainGameLoop()
+void MageGameEngine::GameLoop()
 {
    //update timing information at the start of every game loop
    now = millis();
@@ -539,26 +543,16 @@ void MageGameEngine::EngineMainGameLoop()
 #endif
 }
 
-void MageGameEngine::onSerialStart()
-{
-   commandControl->handleStart();
-}
-void MageGameEngine::onSerialCommand(char* commandString)
-{
-   commandControl->processCommand(commandString);
-}
-
 Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 {
-   float maxSpokePushbackLengths[MAGE_COLLISION_SPOKE_COUNT]{ 0 };
-   auto& playerOrigin = mapControl->getPlayerEntityRenderableData().hitBox.origin;
+   auto point = Point{ 0,0 };
+   /*auto& playerOrigin = mapControl->getPlayerEntityRenderableData().hitBox.origin;
    auto afterMoveOrigin = playerOrigin + playerVelocity;
    auto row = afterMoveOrigin.y / mapControl->TileHeight(); 
    auto col = afterMoveOrigin.x / mapControl->TileWidth();
    auto tileIndex = row + (col * mapControl->Cols());
    auto tilePoint = Point{ col * mapControl->TileWidth(), row * mapControl->TileHeight() };
 
-   auto point = Point{ 0,0 };
    for (auto layerIndex = 0; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       auto layerAddress = mapControl->LayerAddress(layerIndex);
@@ -593,5 +587,6 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          }
       }
    }
+   */
    return point;
 }

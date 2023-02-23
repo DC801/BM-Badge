@@ -110,12 +110,13 @@ void MageEntity::updateRenderableData(RenderableData& renderableData, uint32_t d
       renderableData.lastTilesetId = renderableData.tilesetId;
    }
 
-   renderableData.hitBox.origin.x = x;
-   renderableData.hitBox.origin.y = y;
+   renderableData.origin.x = x;
+   renderableData.origin.y = y - tileset->TileHeight;
+   renderableData.hitBox.origin.x = x + halfWidth / 2;
+   renderableData.hitBox.origin.y = y - halfHeight;
    renderableData.hitBox.w = halfWidth;
    renderableData.hitBox.h = halfHeight;
-   renderableData.center.x = renderableData.hitBox.origin.x + (renderableData.hitBox.w / 2);
-   renderableData.center.y = renderableData.hitBox.origin.y + (renderableData.hitBox.h / 2);
+   renderableData.center = renderableData.hitBox.origin + (renderableData.hitBox.w / 2);
 }
 
 

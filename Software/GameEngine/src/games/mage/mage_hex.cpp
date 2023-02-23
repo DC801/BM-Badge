@@ -233,7 +233,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             {
                //paste
                memcpy(currentByte, clipboard, clipboardLength);
-               mapControl->UpdateEntities(0);
+               mapControl->UpdateEntities(0, Point{ 0,0 });
                memcpy(currentByte, clipboard, clipboardLength);
             }
          }

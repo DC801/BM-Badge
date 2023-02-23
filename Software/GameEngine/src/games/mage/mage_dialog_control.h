@@ -10,7 +10,6 @@
 #include <array>
 
 class MapControl;
-class MageScriptControl;
 class StringLoader;
 class TileManager;
 
@@ -127,24 +126,22 @@ public:
       std::shared_ptr<EngineInput> inputHandler,
       std::shared_ptr<TileManager> tileManager, 
       std::shared_ptr<StringLoader> stringLoader, 
-      std::shared_ptr<MageScriptControl> scriptControl, 
       std::shared_ptr<MapControl> mapControl) noexcept
    :  frameBuffer(frameBuffer), 
       inputHandler(inputHandler),
       tileManager(tileManager), 
       stringLoader(stringLoader), 
-      scriptControl(scriptControl),  
       mapControl(mapControl)
    {}
 
    void load(uint16_t dialogId, int16_t currentEntityId);
    void loadNextScreen();
-   void StartModalDialog(std::string messageString);
+   std::optional<uint16_t> StartModalDialog(std::string messageString);
 
    constexpr void MageDialogControl::close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
-   void update(uint32_t deltaTime);
+   std::optional<uint16_t> update(uint32_t deltaTime);
    void draw();
 
    void loadCurrentScreenPortrait();
@@ -154,7 +151,6 @@ private:
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<TileManager> tileManager;
    std::shared_ptr<StringLoader> stringLoader;
-   std::shared_ptr<MageScriptControl> scriptControl;
    std::shared_ptr<MapControl> mapControl;
    std::shared_ptr<EngineInput> inputHandler;
    bool open{ false };

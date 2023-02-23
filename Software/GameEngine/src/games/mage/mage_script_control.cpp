@@ -1,5 +1,4 @@
 #include "mage_script_control.h"
-#include "mage_dialog_control.h"
 #include "EngineInput.h"
 #include "mage_script_actions.h"
 #include "mage_command_control.h"

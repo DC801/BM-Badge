@@ -73,7 +73,7 @@ public:
    void DrawLayer(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
    void DrawEntities(const Point& cameraPosition) const;
-   void UpdateEntities(uint32_t deltaTime);
+   void UpdateEntities(uint32_t deltaTime, const Point& cameraPosition);
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {
@@ -206,6 +206,7 @@ public:
    //when set to a value other than MAGE_NO_MAP, it will cause all scripts to stop and 
    //the new map will be loaded at the beginning of the next tick
    int32_t mapLoadId{ MAGE_NO_MAP };
+
 private:
    std::shared_ptr<FrameBuffer> frameBuffer;
    std::shared_ptr<TileManager> tileManager;

@@ -62,10 +62,11 @@ public:
       mapControl = std::make_unique<MapControl>(frameBuffer, tileManager);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave()->memOffsets);
       stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave()->scriptVariables);
-      dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, scriptControl, mapControl);
+      dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
       camera = MageCamera{ mapControl };
 
-      scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader));
+      auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
+      scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
       commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl);
    }
 
@@ -74,10 +75,7 @@ public:
 
    //This renders the game to the screen based on the loop's updated state.
    void GameRender();
-
-   void EngineMainGameLoop();
-   void onSerialStart();
-   void onSerialCommand(char* commandString);
+   void GameLoop();
 
    //this will load a map to be the current map.
    void LoadMap(uint16_t index);
