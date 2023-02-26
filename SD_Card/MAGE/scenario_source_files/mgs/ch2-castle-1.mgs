@@ -37,6 +37,7 @@ on_load-ch2-castle-1 {
 
 	// serial features
 	register rtfm -> serial-rtfm
+	register inventory -> ch2-report-inventory
 	if (flag ch2-has-artifact is true) {
 		set serial control on
 		copy ch2-register-manual

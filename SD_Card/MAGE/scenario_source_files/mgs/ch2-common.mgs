@@ -20,6 +20,7 @@ ch2-castle-init {
 	// serial features
 	set serial control on
 	register rtfm -> serial-rtfm
+	register inventory -> ch2-report-inventory
 	copy ch2-register-manual
 	if (flag ch2-map-granted is true) {
 		copy ch2-map-enable
@@ -39,6 +40,7 @@ ch2-noncastle-init {
 
 	// serial features
 	register rtfm -> serial-rtfm
+	register inventory -> ch2-report-inventory
 	if (flag ch2-has-artifact is true) {
 		set serial control on
 	} else {
