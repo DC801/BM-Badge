@@ -63,11 +63,11 @@ ch2-castle-99-welcome {
 	}
 	// He offers something
 	show dialog {
-		Notkan "...then here. Take it. The mainframe's operating system, all ready to go."
+		Lambda "...then here. Take it. The mainframe's operating system, all ready to go."
 	}
 	// Player takes it.
 	show dialog {
-		Notakan "There you go. All set."
+		Lambda "There you go. All set."
 		"Just plug in that stick and switch the machine on. You'll see some installation instructions. Just do what it says."
 	}
 

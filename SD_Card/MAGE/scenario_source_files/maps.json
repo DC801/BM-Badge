@@ -31,6 +31,36 @@
 			"west": "on_go-castle-11-west"
 		}
 	},
+	"ch2-castle-12": {
+		"path": "maps/map-ch2-castle-12.json",
+		"on_load": "on_load-ch2-castle-12",
+		"on_look": "on_look-ch2-castle-12",
+		"on_tick": "on_tick-ch2-castle-12",
+		"directions": {
+			"north": "on_go-castle-12-north",
+			"south": "on_go-castle-12-south",
+			"east": "on_go-castle-12-east"
+		}
+	},
+	"ch2-castle-13": {
+		"path": "maps/map-ch2-castle-13.json",
+		"on_load": "on_load-ch2-castle-13",
+		"on_look": "on_look-ch2-castle-13",
+		"on_tick": "on_tick-ch2-castle-13",
+		"directions": {
+			"north": "on_go-castle-13-north",
+			"south": "on_go-castle-13-south"
+		}
+	},
+	"ch2-castle-14": {
+		"path": "maps/map-ch2-castle-14.json",
+		"on_load": "on_load-ch2-castle-14",
+		"on_look": "on_look-ch2-castle-14",
+		"on_tick": "on_tick-ch2-castle-14",
+		"directions": {
+			"south": "on_go-castle-14-south"
+		}
+	},
 	"ch2-castle-21": {
 		"path": "maps/map-ch2-castle-21.json",
 		"on_load": "on_load-ch2-castle-21",
@@ -58,6 +88,45 @@
 		"on_tick": "on_tick-ch2-castle-23",
 		"directions": {
 			"south": "on_go-castle-23-south"
+		}
+	},
+	"ch2-castle-31": {
+		"path": "maps/map-ch2-castle-31.json",
+		"on_load": "on_load-ch2-castle-31",
+		"on_look": "on_look-ch2-castle-31",
+		"on_tick": "on_tick-ch2-castle-31",
+		"directions": {
+			"north": "on_go-castle-31-north",
+			"west": "on_go-castle-31-west"
+		}
+	},
+	"ch2-castle-32": {
+		"path": "maps/map-ch2-castle-32.json",
+		"on_load": "on_load-ch2-castle-32",
+		"on_look": "on_look-ch2-castle-32",
+		"on_tick": "on_tick-ch2-castle-32",
+		"directions": {
+			"northeast": "on_go-castle-32-northeast",
+			"northwest": "on_go-castle-32-northwest",
+			"south": "on_go-castle-32-south"
+		}
+	},
+	"ch2-castle-33": {
+		"path": "maps/map-ch2-castle-33.json",
+		"on_load": "on_load-ch2-castle-33",
+		"on_look": "on_look-ch2-castle-33",
+		"on_tick": "on_tick-ch2-castle-33",
+		"directions": {
+			"south": "on_go-castle-33-south"
+		}
+	},
+	"ch2-castle-34": {
+		"path": "maps/map-ch2-castle-34.json",
+		"on_load": "on_load-ch2-castle-34",
+		"on_look": "on_look-ch2-castle-34",
+		"on_tick": "on_tick-ch2-castle-34",
+		"directions": {
+			"south": "on_go-castle-34-south"
 		}
 	},
 	"action_testing_01": {
