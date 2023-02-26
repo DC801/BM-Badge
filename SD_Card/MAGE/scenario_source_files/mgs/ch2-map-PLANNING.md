@@ -39,42 +39,52 @@ Nethack-like
 1. Exa room
 	- XA: intercom with XB (outside) and XC in room 99
 	- Save floppy
+	- ITEM: computer enclosure + motherboard
 
 // MAIN BRANCH
-11. Main entrance
-	- Someone trapped; needs to go to kitchen
-12. Rock slide puzzle
-	- must clear the way for person in #11
-13. Throne room / reception area
+11. Front hallway
+12. Back hallway
+13. Throne room
+	- the royal advisor (a goldfish, ruling in King Gibson's absence)
+	- ITEM: goldfish (CPU item 1)
 14. King Gibson's bedroom
-	- ITEM: phonograph record needle
+	- ITEM: grandfather clock
 
 // INDUSTRIAL AREA
 21. Blacksmith / workshop area
+	- ITEM: abacus (CPU item 2)
+	- (will combine goldfish with abacus)
 22. Server room
+	- ITEM: power supply
 23. Geothermal power plant
-	- Needs coolant to increase power output (Cactus Cooler?)
+	- Deliver Cactus Cooler to them to receive ITEM
+	- ITEM: Heat sink
 
 // FOOD STUFFS
 31. Grand hall
 	- Copy Pasta bar
 	- Vending machine
 	- Rock band
-		- ITEM: keyboard
+		- ITEM: keyboard (or possibly keytar)
 32. Kitchen
+	- ITEM: RAM chips (from vending machine)
 33. Hydroponics area
+	- ITEM: mouse (an actual rodent)
 34. Pantry
-	- ITEM: mouse
-	- ITEM: plates
+	- ITEM: SSD/HD (plates)
 
 // THE END
 99. Secret room (teleport only)
-	- Secret IT man
-	- Mainframe backup software
+	- Lambda
 	- XC: intercom with XB (outside) and XA in room 1
+	- ITEM: mainframe OS
+
+// TOWN
+- ITEM: sea moss (CMOS) (?)
+- ITEM: cactus cooler (needed for heat sink)
 ```
 
-ZONES
+## ZONES
 
 ```
  0-------------------------------
@@ -95,3 +105,21 @@ ZONES
 15|          ---------          |
 16-------------------------------
 ```
+
+## STORY FLAGS
+
+Starting item: enclosure/motherboard (room 1)
+
+1. `clock` (grandfather clock) (room 14)
+2. `cpu`
+	- `goldfish` (room 13)
+	- `abacus` (room 21)
+3. `heatsink` (room 23)
+	- `cactuscooler` (Bob's club)
+4. `powersupply` (room 22)
+5. `ramchips` (room 32)
+6. `hd` (plates) (room 34)
+7. `keyboard` (room 31)
+8. `mouse` (rodent) (room 33)
+9. `monitor` (room ?)
+10. `mainframeos` (room 99)

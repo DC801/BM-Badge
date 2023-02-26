@@ -26,7 +26,12 @@ on_load-ch2-castle-14 {
 	} else {
 		show serial dialog { "Entering <bold>KING GIBSON'S BEDROOM</>..." }
 	}
-	
+	if (
+		flag ch2-storyflag-clock is true
+		|| flag ch2-have-clock is true
+	) {
+		copy script ch2-hide-clock
+	}
 	goto ch2-castle-init
 	// use callback pattern to return to this point if needed
 }
@@ -49,4 +54,29 @@ on_go-castle-14-south {
 	copy on_exit-ch2-castle-14
 	copy warping-out-fade-out
 	load map ch2-castle-13
+}
+
+/* ---------- CLOCK (ADMIN) ---------- */
+
+ch2-hide-clock {
+	teleport entity Clock to geometry hiding-spot
+	set entity Clock name to " "
+}
+
+ch2-get-clock {
+	show dialog {
+		name " " "You pick up the clock!"
+	}
+	copy script ch2-hide-clock
+	set flag ch2-have-clock to true
+}
+ch2-install-clock {
+	set flag ch2-have-clock to false
+	set flag ch2-storyflag-clock to true
+}
+on_look-clock {
+	show serial dialog spacer
+	show serial dialog {
+		"A giant grandfather clock that's very definitely larger than you. Never mind how it fits in your pocket."
+	}
 }

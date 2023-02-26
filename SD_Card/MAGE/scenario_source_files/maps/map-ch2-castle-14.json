@@ -83,6 +83,24 @@
                  "width":32,
                  "x":175.814771143745,
                  "y":252.376031729017
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":33,
+                 "name":"Clock",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-get-clock"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":287,
+                 "y":125
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -127,6 +145,18 @@
                  "width":0,
                  "x":-154,
                  "y":462
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":34,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-20,
+                 "y":-21
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -135,7 +165,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":33,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -172,6 +202,10 @@
         {
          "firstgid":351,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":607,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

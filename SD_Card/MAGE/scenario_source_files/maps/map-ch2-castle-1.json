@@ -197,6 +197,24 @@
                  "width":32,
                  "x":32,
                  "y":160
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":29,
+                 "name":"Mainframe",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-interact-mainframe"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":284,
+                 "y":251
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -239,7 +257,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":29,
+ "nextobjectid":30,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -276,6 +294,10 @@
         {
          "firstgid":351,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":607,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",
