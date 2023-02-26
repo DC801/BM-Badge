@@ -89,8 +89,8 @@ on_load-ch2-magehouse-birthday {
 		"Yeah."
 		"Good night, %Aunt Zippy%, %Uncle Zappy%."
 	}
-	fade out camera to #000000 over 2000ms
-	wait 400ms
+	fade out camera to #000000 over 1200ms
+	wait 200ms
 	goto cutscene-ch2-birthday-exit
 }
 cutscene-ch2-birthday-exit {
