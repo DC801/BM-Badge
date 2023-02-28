@@ -12,7 +12,8 @@ ch2-command-man-normal-convo {
 ch2-lambda-topic-q {
 	show serial dialog {
 		"(Ask about:)"
-		# "The artifact" : ch2-lambda-topic-artifact
+		# "Component list" : ch2-lambda-topic-parts
+		# "Using the artifact" : ch2-lambda-topic-artifact
 		# "The mainframe" : ch2-lambda-topic-mainframe
 		# "The castle" : ch2-lambda-topic-castle
 		# "Someone specific" : ch2-lambda-topic-person-start
@@ -30,6 +31,56 @@ ch2-lambda-topic-nevermind {
 }
 
 /* ---------- ARTIFACT ---------- */
+
+ch2-lambda-topic-parts {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> These are the components we still need:"
+	}
+	set flag temp to false
+	if (flag ch2-installed-clock is false) {
+		show serial dialog { "\t- clock" }
+		set flag temp to true
+	}
+	if (flag temp is false) {
+		goto ch2-lambda-topic-parts-finished
+	}
+	set flag temp to false
+	goto ch2-lambda-topic-parts-q
+}
+
+ch2-lambda-topic-parts-q {
+	show serial dialog {
+		" "
+		"(Type the name of a component for more info, or <c>QUIT</> to go back)"
+
+		_ "Q" : ch2-command-man-normal-convo
+		_ "QUIT" : ch2-command-man-normal-convo
+
+		_ "CLOCK" : ch2-lambda-parts-clock
+	}
+}
+
+ch2-lambda-parts-clock {
+	show serial dialog spacer
+	if (flag ch2-installed-clock is false) {
+		show serial dialog {
+			"<m>LAMBDA:</> The mainframe is going to need a <c>CLOCK</>. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
+			"\tIn our case... well, we don't have a lot of options, but I do know <m>King Gibson has a very nice grandfather clock <m>in his bedroom</>. Maybe ask him if you can use it."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> The clock's installed already. It's just... you know... clocking away."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+ch2-lambda-topic-parts-finished {
+	show serial dialog {
+		"\tOh, wait, is that everything? (TODO)"
+	}
+}
 
 ch2-lambda-topic-artifact {
 	show serial dialog spacer
@@ -87,7 +138,7 @@ ch2-lambda-mainframe-broken {
 	show serial dialog {
 		"<c>YOU:</> Why did you break it?"
 		" "
-		"<m>LAMBDA:</> Like I said, I broke it to keep it out of the Big Bad's hands."
+		"<m>LAMBDA:</> Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
 		"\tTODO: more convo"
 		" "
 	}
@@ -290,13 +341,13 @@ ch2-lambda-person-lambda {
 		"<c>YOU:</> Tell me about you!"
 		" "
 		"<m>LAMBDA:</> Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
-		" "
 	}
 	goto ch2-lambda-person-lambda-q
 }
 
 ch2-lambda-person-lambda-q {
 	show serial dialog {
+		" "
 		"(Ask:)"
 		# "Where are you?" : ch2-lambda-person-lambda-where
 		# "How long have you been here?" : ch2-lambda-person-lambda-time
@@ -310,7 +361,6 @@ ch2-lambda-person-lambda-where {
 		show serial dialog {
 			"<c>YOU:</> Where are you?"
 			"TODO: convo"
-			" "
 		}
 	} else {
 		if (variable ch2-in-room is 99) {
@@ -325,7 +375,6 @@ ch2-lambda-person-lambda-where {
 		show serial dialog {
 			" "
 			"<m>LAMBDA:</> I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
-			" "
 		}
 	}
 	goto ch2-lambda-person-lambda-q
@@ -348,7 +397,6 @@ ch2-lambda-person-lambda-time-2a {
 	show serial dialog {
 		"<c>YOU:</> Where you are now."
 		"TODO: rest of the convo"
-		" "
 	}
 	goto ch2-lambda-person-lambda-q
 }
@@ -357,7 +405,6 @@ ch2-lambda-person-lambda-time-2b {
 	show serial dialog {
 		"<c>YOU:</> The castle in general."
 		"TODO: rest of the convo"
-		" "
 	}
 	goto ch2-lambda-person-lambda-q
 }
@@ -366,7 +413,6 @@ ch2-lambda-person-lambda-time-2c {
 	show serial dialog {
 		"<c>YOU:</> Both."
 		"TODO: rest of the convo"
-		" "
 	}
 	goto ch2-lambda-person-lambda-q
 }
@@ -374,10 +420,103 @@ ch2-lambda-person-lambda-name {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What's your real name? It's not really \"Lambda,\" is it?"
-		"TODO: rest of the convo"
 		" "
+		"<m>LAMBDA:</> Well, no. But you see... this is a little embarrassing, but...."
+		"\tI... sort of... don't remember my real name."
+		" "
+		# "Are you kidding? You can't expect me to believe that." : ch2-lambda-person-lambda-name-2a
+		# "How could you forget your own name? What happened?" : ch2-lambda-person-lambda-name-2b
 	}
-	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-name-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Are you kidding? You can't expect me to believe that."
+		" "
+		"<m>LAMBDA:</> You have to understand... this place, our memories... it's all ones and zeroes."
+		"\tWhen everything is digital, it is <bold>absolutely</> possible for information to disappear permanently. In my case...."
+	}
+	goto ch2-lambda-person-lambda-name-2c
+}
+ch2-lambda-person-lambda-name-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How could you forget your own name? What happened?"
+		" "
+		"<m>LAMBDA:</> Our world is entirely digital. All ones and zeroes. Even you and me. So what happened was...."
+	}
+	goto ch2-lambda-person-lambda-name-2c
+}
+ch2-lambda-person-lambda-name-2c {
+	show serial dialog {
+		"\t...I found the place in the world where my name linked to my data as an entity... and destroyed it."
+		" "
+		# "What? But why?" : ch2-lambda-person-lambda-name-3
+	}
+}
+ch2-lambda-person-lambda-name-3 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What? But why?"
+		" "
+		"<m>LAMBDA:</> I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
+		"\tI severed more than I intended, but...."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup {
+	show serial dialog {
+		" "
+		"(Ask a followup question:)"
+		# "What else was severed?" : ch2-lambda-person-lambda-name-followup-severed
+		# "Is that why the Big Bad doesn't have a name?" : ch2-lambda-person-lambda-name-followup-bigbad
+		# "Does a nickname not count as a name?" : ch2-lambda-person-lambda-name-followup-nickname
+		# "Why \"Lambda\" though?" : ch2-lambda-person-lambda-name-followup-lambda
+		# "(Quit)" : ch2-lambda-person-lambda-q
+	}
+}
+
+ch2-lambda-person-lambda-name-followup-severed {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What else was severed?"
+		" "
+		"<m>LAMBDA:</> There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
+		"\tIt's a lot harder to remember people, for a start. My skills seem to be intact, but I feel... disconnected. It's like everything I <bold>can</> remember is stripped of context."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup-bigbad {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Is that why the <r>Big Bad</> doesn't have a name? Did he destroy his name, too, so that other hackers can't target him for hacks?"
+		" "
+		"<m>LAMBDA:</> Probably. Good insight."
+		"\tIn his case, though, I think he likes the mystique, too."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup-nickname {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Does a nickname not count as a name? I've been calling you \"Lambda,\" after all. Isn't that a name?"
+		" "
+		"<m>LAMBDA:</> No, by \"name\" I don't mean the label on my messages, or what someone calls me."
+		"\tI destroyed my <m>name</>, which is to say I damaged the world's mechanism of referring to me at all. If someone else's memories link to me, that link has been severed, because my name is now a broken reference. I am an unreachable entity."
+		"\tI've since learned that many links go in two directions...."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+
+ch2-lambda-person-lambda-name-followup-lambda {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Why \"Lambda\" though?"
+		" "
+		"<m>LAMBDA:</> I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
+		"\tNo? Oh, um... yeah, never mind."
+	}
+	goto ch2-lambda-person-lambda-name-followup
 }
 
 // Big Bad
@@ -385,7 +524,7 @@ ch2-lambda-person-lambda-name {
 ch2-lambda-person-big-bad {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> Tell me about the Big Bad."
+		"<c>YOU:</> Tell me about the <r>Big Bad</>."
 		" "
 		"<m>LAMBDA:</> Oh, um, that's complicated."
 		"TODO: rest of the convo"

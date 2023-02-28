@@ -1,23 +1,23 @@
 ch2-report-inventory {
-	set flag any to false
+	set flag temp to false
 	show serial dialog spacer
 	show serial dialog {
 		"You are currently carrying:"
 	}
-	if (flag ch2-have-clock is true) {
+	if (flag ch2-carrying-clock is true) {
 		show serial dialog { "\tclock" }
-		set flag any to true
+		set flag temp to true
 	}
-	if (flag any is false) {
+	if (flag temp is false) {
 		show serial dialog { "\t(nothing)" }
 	}
-	set flag any to false
+	set flag temp to false
 }
 
 ch2-count-flags {
 	set flag ch2-storyflags-tallied to false
 	mutate ch2-storyflags-tally = 0
-	if (flag ch2-storyflag-clock is true) {
+	if (flag ch2-installed-clock is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	set flag ch2-storyflags-tallied to true
@@ -25,22 +25,22 @@ ch2-count-flags {
 }
 
 ch2-interact-mainframe {
-	set flag any to false
-	if (flag ch2-storyflag-clock is false) {
-		if (flag ch2-have-clock is true) {
+	set flag temp to false
+	if (flag ch2-installed-clock is false) {
+		if (flag ch2-carrying-clock is true) {
 			show dialog {
 				name " " "Now installing... the grandfather clock!"
 				"Somehow, that enormous, analog relic works great for a CPU clock!"
 			}
-			set flag any to true
+			set flag temp to true
 			copy ch2-install-clock
 		}
 	}
-	if (flag any is false) {
+	if (flag temp is false) {
 		show dialog {
 			name " " "You don't have any components to install."
 		}
 	}
-	set flag any to false
+	set flag temp to false
 	set entity "%SELF%" interact_script to ch2-interact-mainframe
 }
