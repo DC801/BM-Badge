@@ -51,3 +51,5 @@ SD_Card/AUDIO/
 # Allow one audio file for testing
 !SD_Card/AUDIO/Movement/Vehicles/sfx_vehicle_plainloop.wav
 SD_Card/MAGE/game.dat
+CMakeFiles/
+CMakeCache.txt

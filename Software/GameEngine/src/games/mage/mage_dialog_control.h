@@ -138,7 +138,7 @@ public:
    void loadNextScreen();
    std::optional<uint16_t> StartModalDialog(std::string messageString);
 
-   constexpr void MageDialogControl::close() { open = false; }
+   constexpr void close() { open = false; }
    constexpr bool isOpen() const { return open; }
 
    std::optional<uint16_t> update(uint32_t deltaTime);

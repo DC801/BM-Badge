@@ -1,8 +1,9 @@
 #ifndef ENGINE_PANIC_H_
 #define ENGINE_PANIC_H_
 
-#include <cstdarg>
+#include <cstring>
 #include <stdexcept>
+#include <utility>
 
 // Capture File Number, Line Number, and Message.
 //   Message should be at most 39 columns by 10 lines
@@ -22,8 +23,22 @@
 //     (39 + 1) * 10 + 1 = 401
 //
 //   Anything beyond 400 characters will be truncated
-#define ENGINE_PANIC(s, ...) {char buf[401]; sprintf(buf,"%s %d" s, __FILE__, __LINE__, __VA_ARGS__); throw std::runtime_error(buf);}
+template<typename... Ts>
+static inline void ENGINE_PANIC(const char* s, Ts... fmt)
+{
+	char buf[401];
+	sprintf(buf, "%s %d", __FILE__, __LINE__);
+	sprintf(buf + strlen(__FILE__) + __LINE__ / 10, s, std::forward<Ts>(fmt)...);
+	throw std::runtime_error(buf);
+}
 
+static inline void ENGINE_PANIC(const char* s)
+{
+	char buf[401];
+	sprintf(buf, "%s %d", __FILE__, __LINE__);
+	sprintf(buf + strlen(__FILE__) + __LINE__ / 10, "%s", s);
+	throw std::runtime_error(buf);
+}
 
 
 	[[noreturn]] void EnginePanic(const char* filename, int lineno, const char* format, ...);

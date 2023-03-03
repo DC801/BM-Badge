@@ -10,7 +10,7 @@ std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint
 
    for (uint8_t i = 0; i < pointCount; i++)
    {
-      auto& point = GetPoint(i);
+      auto point = GetPoint(i);
       if (flags == 0)
       {
          points[i] = point;
@@ -36,8 +36,8 @@ bool MageGeometry::isPointInGeometry(const Point& point) const
       for (i = 0, j = GetPointCount() - 1; i < GetPointCount(); j = i++)
       {
          //get the points for i and j:
-         auto& points_i = GetPoint(i);
-         auto& points_j = GetPoint(j);
+         auto points_i = GetPoint(i);
+         auto points_j = GetPoint(j);
          //do the fancy check:
          if ((points_i.y >= point.y) != (points_j.y >= point.y)
             && point.x <= (points_j.x - points_i.x) * (point.y - points_i.y) / (points_j.y - points_i.y) + points_i.x)

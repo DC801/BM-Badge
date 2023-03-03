@@ -10,6 +10,7 @@ in a more accessible way.
 #include "mage_defines.h"
 #include "utility.h"
 #include <stdint.h>
+#include <cmath>
 #include <memory>
 #include <vector>
 #include <optional>
@@ -270,7 +271,7 @@ public:
       return result;
    }
 
-	std::vector<Point> MageGeometry::GetPoints() const
+	std::vector<Point> GetPoints() const
 	{
 		auto points = std::vector<Point>{ pointCount };
 		for (auto i = 0; i < pointCount; i++)
@@ -280,8 +281,9 @@ public:
 		return points;
 	}
 
-   Point GetPoint(uint16_t i) const { 
-      auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
+	Point GetPoint(uint16_t i) const
+	{
+		auto points = (uint16_t*)((uint8_t*)&pathLength + sizeof(float));
       return Point{ points[2*i], points[2*i + 1] };
    }
    uint16_t GetPointCount() const { return pointCount;  }

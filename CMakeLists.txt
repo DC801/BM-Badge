@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.24)
 
 project(bm_badge)
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_LIBRARY_ARCHITECTURE 17)
+set(CMAKE_CXX_FLAGS -m32)
+set(CMAKE_C_FLAGS -m32)
+set(LINK_OPTIONS -m32)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/cmake/;${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/cmake/)
 
 option(DC801_EMBEDDED_BUILD "Build an executable for the physical device" OFF)
+option(EMSCRIPTEN "Build a web page" OFF)
 
 set(COMPILEDEFS
     $<IF:$<STREQUAL:BIG_ENDIAN,${CMAKE_CXX_BYTE_ORDER}>,IS_BIG_ENDIAN=1,IS_LITTLE_ENDIAN=1>
@@ -15,6 +21,7 @@ set(COMPILEDEFS
     S140=1
     SOFTDEVICE_PRESENT=1
     SWI_DISABLE0=1
+    CMAKE_SYSTEM_PROCESSOR=i386
 )
 
 set(SOURCEFILES
@@ -166,7 +173,6 @@ if(EMSCRIPTEN)
         -Wno-register
         --disable-nls
         -fsanitize=undefined
-        -m32
     )
 
     set_source_files_properties(${SOURCEFILES}
@@ -177,8 +183,8 @@ if(EMSCRIPTEN)
     set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS})
     list(APPEND CXX_DEFINES ${LINK_DEFS})
 else()
-    find_package(SDL2 PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules REQUIRED)
-    find_package(SDL2_image PATHS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules REQUIRED)
+    find_package(SDL2 MODULE REQUIRED )
+    find_package(SDL2_image MODULE REQUIRED)
 endif()
 
 # https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
@@ -199,7 +205,7 @@ target_compile_definitions(bm_badge PUBLIC ${COMPILEDEFS})
 if (EMSCRIPTEN)
     target_link_libraries(bm_badge ${SDL2_LIBRARIES})
 else()
-    target_link_libraries(bm_badge ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
+    target_link_libraries(bm_badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")
