@@ -12,6 +12,8 @@
 #define UTILITY_H_
 
 #include <stddef.h>
+#include <cstdio>
+#include <utility>
 #include "adafruit/gfxfont.h"
 
 #ifdef DC801_EMBEDDED
@@ -25,14 +27,13 @@ namespace Util {
 
 #define NRF_LOG_RAW_INFO printf
 template <typename... Ts>
-void debug_print(const char* format, Ts... fmt)
+static inline void debug_print(const char* format, Ts... fmt)
 {
    printf(format, std::forward<Ts>(fmt)...);
    printf("\n");
 }
 
-template <typename T>
-void debug_print(T strLike)
+static inline void debug_print(const char* strLike)
 {
    printf("%s\n", strLike);
 }

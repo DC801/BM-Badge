@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "cmixer.h"
+#include <memory>
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>

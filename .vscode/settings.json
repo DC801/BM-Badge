@@ -74,5 +74,9 @@
 		"stop_token": "cpp",
 		"cfenv": "cpp",
 		"typeindex": "cpp"
-	}
+	},
+	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+    "cmake.configureSettings": {
+      "CMAKE_TOOLCHAIN_FILE": "Software/GameEngine/cmake/toolchain-gcc_x86.cmake"
+    }
 }

@@ -4,6 +4,7 @@
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
+#include <cstring>
 
 /*
 

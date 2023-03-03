@@ -3,14 +3,16 @@
 
 #include "Header.h"
 #include "EnginePanic.h"
+#include "utility.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <array>
 #include <memory>
-#include <string>
+#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <tuple>
+#include <vector>
 
 enum struct MageEntityFieldOffset : uint8_t
 {
@@ -444,7 +446,42 @@ struct EngineROM
       }
    }
 
-   bool Write(uint32_t address, uint32_t length, uint8_t* data, const char* errorString);
+   
+//    bool Write(uint32_t offset, uint32_t length, uint8_t* data, const char* errorString)
+//    {
+//       if (offset % sizeof(uint32_t) || length % sizeof(uint32_t))
+//       {
+//          ENGINE_PANIC(
+//             "Address or Length of write is not aligned to uint32_t\n"
+//             "You can't do this, fix whatever is\n"
+//             "sending an unaligned write."
+//          );
+//       }
+//       if (data == NULL)
+//       {
+//          ENGINE_PANIC("EngineROM<THeaders...>::Write: Null pointer");
+//       }
+
+// #ifdef DC801_EMBEDDED
+//       if (!qspiControl.write(data, length, offset))
+//       {
+//          ENGINE_PANIC(errorString);
+//       }
+// #else
+//       if (!romFile.good())
+//       {
+//          ENGINE_PANIC("Game Data file is not open");
+//       }
+
+//       if (romFile.seekp(offset, std::ios_base::beg))
+//       {
+//          ENGINE_PANIC("Failed to seek into Game Data");
+//       }
+
+//       romFile.write((const char*)data, length);
+// #endif
+//       return true;
+//    }
 
 
    bool VerifyEqualsAtOffset(uint32_t address, std::string value) const
