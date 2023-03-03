@@ -585,7 +585,7 @@ private:
 #endif
 
    template <typename TData>
-   const Header<TData>& getHeader() const
+   constexpr const Header<TData>& getHeader() const
    {
       static constexpr std::size_t index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
       return std::get<index>(headers);
