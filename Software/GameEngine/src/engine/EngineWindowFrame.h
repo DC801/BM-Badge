@@ -6,7 +6,7 @@
 #include "modules/led.h"
 
 #include <SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 #include <memory>
 
 static const inline auto ScreenWidth = 320;

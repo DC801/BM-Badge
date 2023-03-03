@@ -1,7 +1,7 @@
 #include "EngineWindowFrame.h"
 #include "EnginePanic.h"
 #include "convert_endian.h"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 #define FRAME_ASSETS_PATH "MAGE/desktop_assets"
 
