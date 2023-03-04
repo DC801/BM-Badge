@@ -1,0 +1,85 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 19,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+        "name": "core",
+        "hidden": true,
+        "binaryDir": "./build/",
+        "cacheVariables": {
+            "CMAKE_CXX_STANDARD": "17",
+            "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17"
+        }
+    },
+    {
+        "name": "debug",
+        "hidden": true,
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug"
+        },
+        "inherits": 
+        [
+            "core"
+        ]
+    },
+    {
+        "name": "release",
+        "hidden": true,
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Release"
+        },
+        "inherits": 
+        [
+            "core"
+        ]
+    },
+    {
+        "name": "msvc",
+        "hidden": true,
+        "architecture": "win32",
+        "cacheVariables": {
+            "CMAKE_C_COMPILER": "cl.exe",
+            "CMAKE_CXX_COMPILER": "cl.exe"
+        }
+    },
+    {
+        "name": "gcc",
+        "hidden": true,
+        "cacheVariables": {
+            "CMAKE_C_COMPILER": "gcc",
+            "CMAKE_CXX_COMPILER": "g++",
+            "CMAKE_C_FLAGS": "-m32",
+            "CMAKE_CXX_FLAGS": "-m32"
+        }
+    },
+    {
+      "name": "gcc-debug",
+      "displayName": "Linux 32-bit config",
+      "description": "Build using Unix Makefile generator",
+      "generator": "Unix Makefile",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "Software/GameEngine/cmake/toolchain-gcc_x86.cmake"
+      },
+      "inherits": 
+      [
+          "debug",
+          "gcc"
+      ]
+    },
+    {
+      "name": "msvc-debug",
+      "displayName": "Windows 32-bit config",
+      "description": "Build using Visual Studio generator",
+      "generator": "Visual Studio 17 2022",
+      "inherits": 
+      [
+          "debug",
+          "msvc"
+      ]
+    }
+  ]
+}

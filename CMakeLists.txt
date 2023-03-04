@@ -1,12 +1,9 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(bm_badge)
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_LIBRARY_ARCHITECTURE 17)
-set(CMAKE_CXX_FLAGS -m32)
-set(CMAKE_C_FLAGS -m32)
-set(LINK_OPTIONS -m32)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/cmake/;${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/cmake/)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/cmake/)
+set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/)
+set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
 
 option(DC801_EMBEDDED_BUILD "Build an executable for the physical device" OFF)
 option(EMSCRIPTEN "Build a web page" OFF)
@@ -21,7 +18,6 @@ set(COMPILEDEFS
     S140=1
     SOFTDEVICE_PRESENT=1
     SWI_DISABLE0=1
-    CMAKE_SYSTEM_PROCESSOR=i386
 )
 
 set(SOURCEFILES
@@ -152,10 +148,10 @@ if(EMBEDDED_BUILD)
     )
 endif()
 
-if(EMSCRIPTEN)
-    set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 
-    find_package(SDL2 REQUIRED)
+find_package(SDL2 MODULE REQUIRED)
+
+if(EMSCRIPTEN)
 
     set(LINK_DEFS
         -sASYNCIFY
@@ -177,14 +173,16 @@ if(EMSCRIPTEN)
 
     set_source_files_properties(${SOURCEFILES}
         PROPERTIES
-        COMPILE_FLAGS "-fsanitize=undefined -fno-inline  -felide-constructors -fno-rtti -O3 -m32")
+        COMPILE_FLAGS "-fsanitize=undefined -fno-inline  -felide-constructors -fno-rtti -O3")
 
     string(JOIN " " USE_FLAGS ${LINK_DEFS})
     set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS})
     list(APPEND CXX_DEFINES ${LINK_DEFS})
-else()
-    find_package(SDL2 MODULE REQUIRED )
+
+else()    
+
     find_package(SDL2_image MODULE REQUIRED)
+
 endif()
 
 # https://github.com/libsdl-org/SDL/releases/download/release-2.24.0/SDL2-devel-2.24.0-VC.zip
@@ -218,10 +216,9 @@ add_custom_command(
 )
 
 if(WIN32)
-    add_custom_command(
-        TARGET bm_badge POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_RUNTIME_DLLS:bm_badge> $<TARGET_FILE_DIR:bm_badge>
+    add_custom_command(TARGET bm_badge POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/lib/x86/SDL2.dll $<TARGET_FILE_DIR:bm_badge>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/lib/x86/SDL2_image.dll $<TARGET_FILE_DIR:bm_badge>
         COMMAND_EXPAND_LISTS
     )
 endif()

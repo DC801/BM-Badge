@@ -12,7 +12,6 @@ void (*on_command_function_pointer)(char *commandString) = nullptr;
 
 
 #ifndef DC801_EMBEDDED
-#define FILE_DESCRIPTOR_STDIN 0
 void EngineInputDesktopGetCommandStringFromStandardIn()
 {
     memset(
@@ -20,7 +19,6 @@ void EngineInputDesktopGetCommandStringFromStandardIn()
         0,
         COMMAND_BUFFER_SIZE
     );
-#ifndef WIN32
 
     std::ios_base::sync_with_stdio(false);
     auto inChar = char{ 0 };
@@ -59,7 +57,6 @@ void EngineInputDesktopGetCommandStringFromStandardIn()
         }
     } while (charsRead != 0 && !lineRead);
     was_command_entered = command_buffer_length > 0;
-#endif
 }
 
 #endif

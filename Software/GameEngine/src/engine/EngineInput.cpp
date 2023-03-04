@@ -3,7 +3,7 @@
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 #include <cstdio>
 #include <string>
 #include <regex>

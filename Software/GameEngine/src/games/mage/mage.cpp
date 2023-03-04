@@ -546,47 +546,56 @@ void MageGameEngine::GameLoop()
 Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
 {
    auto point = Point{ 0,0 };
-   /*auto& playerOrigin = mapControl->getPlayerEntityRenderableData().hitBox.origin;
-   auto afterMoveOrigin = playerOrigin + playerVelocity;
+   auto& hitBox = mapControl->getPlayerEntityRenderableData().hitBox;
+   auto afterMoveOrigin = hitBox.origin + playerVelocity;
    auto row = afterMoveOrigin.y / mapControl->TileHeight(); 
    auto col = afterMoveOrigin.x / mapControl->TileWidth();
-   auto tileIndex = row + (col * mapControl->Cols());
+   auto tileIndex = col + (row * mapControl->Cols());
    auto tilePoint = Point{ col * mapControl->TileWidth(), row * mapControl->TileHeight() };
-
+   
+   //if (row != (afterMoveOrigin.y + hitBox.h) / mapControl->TileHeight()) {}
+   //if (col != (afterMoveOrigin.x + hitBox.w) / mapControl->TileWidth()) {}
    for (auto layerIndex = 0; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       auto layerAddress = mapControl->LayerAddress(layerIndex);
       auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
       auto currentTile = &layers[tileIndex];
       auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
-      auto geometry = tileset->GetGeometryForTile(currentTile->tileId);
+      auto geometry = tileset->GetGeometryForTile(currentTile->tileId-1);
       if (geometry)
       {
          auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
          auto isMageInGeometry = false;
          auto collidedWithThisTileAtAll = false;
 
-         for (auto i = 0; i < geometryPoints.size() - 1; i++)
+         for (auto i = 0; i < geometryPoints.size(); i++)
          {
             auto tileLinePointA = tilePoint + geometryPoints[i];
-            auto tileLinePointB = tilePoint + geometryPoints[i + 1];
+            auto tileLinePointB = tilePoint + geometryPoints[(i + 1) % geometryPoints.size()];
             auto collidedWithTileLine = false;
 
-            auto spokeIntersectionPoint = MageGeometry::getIntersectPointBetweenLineSegments(playerOrigin, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            if (spokeIntersectionPoint.has_value())
-            {
-               collidedWithTileLine = true;
-               isMageInGeometry = true;
-               auto diff = spokeIntersectionPoint.value() - afterMoveOrigin;
-               if (diff.VectorLength() > point.VectorLength())
-               {
-                  point = diff;
-               }
-            }
+            const auto topLeft = hitBox.origin;
+            const auto topRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y };
+            const auto bottomLeft = Point{ hitBox.origin.x, hitBox.origin.y + hitBox.h };
+            const auto bottomRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y + hitBox.h};
+
+            auto intersectionPointTopLeft = MageGeometry::getIntersectPointBetweenLineSegments(topLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            auto intersectionPointTopRight = MageGeometry::getIntersectPointBetweenLineSegments(topRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            auto intersectionPointBottomLeft = MageGeometry::getIntersectPointBetweenLineSegments(bottomLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            auto intersectionPointBottomRight = MageGeometry::getIntersectPointBetweenLineSegments(bottomRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            //if (spokeIntersectionPoint.has_value())
+            //{
+            //   collidedWithTileLine = true;
+            //   isMageInGeometry = true;
+            //   auto diff = spokeIntersectionPoint.value() - afterMoveOrigin;
+            //   if (diff.VectorLength() > point.VectorLength())
+            //   {
+            //      point = diff;
+            //   }
+            //}
             frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
          }
       }
    }
-   */
    return point;
 }
