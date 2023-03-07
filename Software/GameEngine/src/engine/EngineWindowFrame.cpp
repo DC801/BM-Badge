@@ -3,7 +3,7 @@
 #include "convert_endian.h"
 #include <SDL_image.h>
 
-#define FRAME_ASSETS_PATH "MAGE/desktop_assets"
+#define FRAME_ASSETS_PATH "./MAGE/desktop_assets/"
 
 int SCREEN_MULTIPLIER = 1;
 
@@ -14,21 +14,21 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 		ENGINE_PANIC("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	}
 
-	frameSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame.png");
+	frameSurface = IMG_Load( FRAME_ASSETS_PATH "window_frame.png");
 
 	if (!frameSurface)
 	{
 		ENGINE_PANIC("Failed to load Window Frame\nIMG_Load: %s\n", IMG_GetError());
 	}
 
-	frameButtonSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-button.png");
+	frameButtonSurface = IMG_Load(FRAME_ASSETS_PATH "window_frame-button.png");
 
 	if (!frameButtonSurface)
 	{
 		ENGINE_PANIC("Failed to load Window Frame Button\nIMG_Load: %s\n", IMG_GetError());
 	}
 
-	frameLEDSurface = IMG_Load(FRAME_ASSETS_PATH "/window_frame-led.png");
+	frameLEDSurface = IMG_Load(FRAME_ASSETS_PATH "window_frame-led.png");
 
 	if (!frameLEDSurface)
 	{

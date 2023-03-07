@@ -42,8 +42,15 @@
         "hidden": true,
         "architecture": "win32",
         "cacheVariables": {
-            "CMAKE_C_COMPILER": "cl.exe",
-            "CMAKE_CXX_COMPILER": "cl.exe"
+          "CMAKE_C_COMPILER": "cl.exe",
+          "CMAKE_CXX_COMPILER": "cl.exe",
+          "CMAKE_BUILD_TYPE": "Debug",
+          "VS_DEBUGGER_WORKING_DIRECTORY": "$<TARGET_FILE_DIR:bm_badge>"
+        },
+        "vendor": {
+          "microsoft.com/VisualStudioSettings/CMake/1.0": {
+            "hostOS": [ "Windows" ]
+          }
         }
     },
     {
