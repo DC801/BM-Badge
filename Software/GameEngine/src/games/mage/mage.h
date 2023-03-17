@@ -76,6 +76,7 @@ public:
    //This renders the game to the screen based on the loop's updated state.
    void GameRender();
    void GameLoop();
+   void ProcessInputs();
 
    //this will load a map to be the current map.
    void LoadMap(uint16_t index);

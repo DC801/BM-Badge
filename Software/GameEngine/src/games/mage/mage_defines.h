@@ -41,8 +41,8 @@ all of the old code used as the foundation of this badge.
 
 //these are used for setting player speed
 //speed is in x/y units per update
-#define MAGE_RUNNING_SPEED 200
-#define MAGE_WALKING_SPEED 100
+#define MAGE_RUNNING_SPEED float{ 200 }
+#define MAGE_WALKING_SPEED float{ 100 }
 
 //these are the agreed-upon indices for entity_type entity animations
 //If you import entities that don't use this convention, their animations may

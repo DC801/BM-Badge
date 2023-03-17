@@ -37,7 +37,7 @@ public:
 
    bool IsRunning() const { return running; }
    bool ShouldReloadGameDat() const { return shouldReloadGameDat; }
-   void TriggerRomReload() { shouldReloadGameDat = true;}
+   void TriggerRomReload() { shouldReloadGameDat = true; }
 
    //this is a global that holds the amount of millis that a blocking delay will
    //prevent the main loop from continuing for. It is set by the blockingDelay() action.
@@ -47,13 +47,11 @@ private:
    bool running = true;
    bool shouldReloadGameDat = false;
 
-   uint32_t buttons = {};
-   uint32_t activated = {};
-
-
+   uint32_t buttons{ 0 };
+   uint32_t activated{ 0 };
 
 #ifndef DC801_EMBEDDED
-   void GetDesktopInputState();
+   uint32_t GetDesktopInputState();
 #endif
 };
 

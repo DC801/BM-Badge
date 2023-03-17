@@ -8,12 +8,12 @@
 #include <string>
 #include <regex>
 
-void EngineInput::GetDesktopInputState()
+uint32_t EngineInput::GetDesktopInputState()
 {
    if (application_quit != 0)
    {
       running = false;
-      return;
+      return 0;
    }
 
    SDL_PumpEvents();
@@ -26,7 +26,7 @@ void EngineInput::GetDesktopInputState()
       if (e.type == SDL_QUIT)
       {
          running = false;
-         return;
+         return 0;
       }
 
       if (e.type == SDL_KEYDOWN)
@@ -38,14 +38,14 @@ void EngineInput::GetDesktopInputState()
          if (KMOD_ALT == (e.key.keysym.mod & KMOD_ALT) && e.key.keysym.sym == SDLK_F4)
          {
             running = false;
-            return;
+            return 0;
          }
          // ctrl-r should cause the desktop version of the game to
          // reload the `game.dat` from the filesystem
          else if (KMOD_CTRL == (e.key.keysym.mod & KMOD_CTRL) && e.key.keysym.sym == SDLK_r)
          {
             TriggerRomReload();
-            return;
+            return 0;
          }
          // + or - keys increase or decrease screen size:
 //TODO: MOVE THIS
@@ -124,8 +124,7 @@ void EngineInput::GetDesktopInputState()
    newValue |= (uint32_t)keys[SDL_SCANCODE_BACKSLASH] << (uint32_t)KeyPress::Rjoy_up;
    newValue |= (uint32_t)keys[SDL_SCANCODE_RETURN] << (uint32_t)KeyPress::Rjoy_right;
 
-   buttons = newValue;
-   activated = ~activated & newValue;
+   return newValue;
 }
 
 #endif
@@ -133,8 +132,11 @@ void EngineInput::GetDesktopInputState()
 void EngineInput::HandleKeyboard()
 {
 #ifdef DC801_EMBEDDED
-   keyboardBitmask = get_keyboard_mask();
+   auto newValue = get_keyboard_mask();
 #else
-   GetDesktopInputState();
+   auto newValue = GetDesktopInputState();
 #endif
+
+   buttons = newValue;
+   activated = ~activated & newValue;
 }

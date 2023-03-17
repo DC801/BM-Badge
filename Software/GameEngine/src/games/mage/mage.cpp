@@ -135,21 +135,10 @@ void MageGameEngine::LoadMap(uint16_t index)
    }
 }
 
-void MageGameEngine::handleBlockingDelay()
-{
-   //if a blocking delay was added by any actions, pause before returning to the game loop:
-   if (inputHandler->blockingDelayTime)
-   {
-      //delay for the right amount of time
-      nrf_delay_ms(inputHandler->blockingDelayTime);
-      //reset delay time when done so we don't do this every loop.
-      inputHandler->blockingDelayTime = 0;
-   }
-}
-
 void MageGameEngine::applyUniversalInputs()
 {
    const auto button = inputHandler->GetButtonState();
+   const auto activatedButton = inputHandler->GetButtonActivatedState();
 
    if (button.IsPressed(KeyPress::Xor))
    {
@@ -157,6 +146,7 @@ void MageGameEngine::applyUniversalInputs()
       {
          //make map reload global regardless of player control state:
          mapControl->mapLoadId = ROM()->GetCurrentSave()->currentMapId;
+         return;
       }
       else if (button.IsPressed(KeyPress::Mem1))
       {
@@ -188,10 +178,25 @@ void MageGameEngine::applyUniversalInputs()
    if (button.IsPressed(KeyPress::Bit2)) { hexEditor->runHex(0b00000010); }
    if (button.IsPressed(KeyPress::Bit1)) { hexEditor->runHex(0b00000001); }
 
-   if (button.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0))
+   // only trigger on the first activation of XOR MEM0, regardless of order it is pressed
+   if (button.IsPressed(KeyPress::Xor) && activatedButton.IsPressed(KeyPress::Mem0)
+      || activatedButton.IsPressed(KeyPress::Xor) && button.IsPressed(KeyPress::Mem0))
    {
       tileManager->ToggleDrawGeometry();
    }
+}
+
+void MageGameEngine::ProcessInputs()
+{
+   //apply inputs that work all the time
+   applyUniversalInputs();
+
+   //handles hardware inputs and makes their state available		
+   inputHandler->HandleKeyboard();
+
+   //on desktop, interact with stdin
+   //on embedded, interact with USBC com port over serial
+   EngineHandleSerialInput();
 }
 
 void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
@@ -199,10 +204,9 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
    const auto button = inputHandler->GetButtonState();
    const auto activatedButton = inputHandler->GetButtonActivatedState();
    //set mage speed based on if the right pad down is being pressed:
-   float moveType = button.IsPressed(KeyPress::Rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
-   float howManyMsPerSecond = 1000.0;
-   float whatFractionOfSpeed = moveType / howManyMsPerSecond;
-   mageSpeed = whatFractionOfSpeed * MAGE_MIN_MILLIS_BETWEEN_FRAMES;
+   const auto moveSpeedPerSecond = button.IsPressed(KeyPress::Rjoy_down) ? MAGE_RUNNING_SPEED : MAGE_WALKING_SPEED;
+   const auto amountMovedThisFrame = float{ 1000.0f / deltaTime };
+   mageSpeed = float{ moveSpeedPerSecond / amountMovedThisFrame };
 
    // if there is a player on the map
    if (mapControl->getPlayerEntityIndex() != NO_PLAYER)
@@ -270,12 +274,12 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
                playerEntity.y += velocityAfterPushback.y;
             }
          }
-         if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Rjoy_right))
+         if (activatedButton.IsPressed(KeyPress::Rjoy_right))
          {
             const auto hack = false;
             handleEntityInteract(hack);
          }
-         if (button.IsPressed(KeyPress::Rjoy_up))
+         if (activatedButton.IsPressed(KeyPress::Rjoy_up))
          {
             const auto hack = true;
             handleEntityInteract(hack);
@@ -380,7 +384,11 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       {
          return;
       }
-      if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Hax)) { hexEditor->toggleHexEditor(); }
+
+      if (activatedButton.IsPressed(KeyPress::Hax)) 
+      { 
+         hexEditor->toggleHexEditor(); 
+      }
       hexEditor->applyMemRecallInputs();
    }
 }
@@ -388,9 +396,6 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
 
 void MageGameEngine::GameUpdate(uint32_t deltaTime)
 {
-   //apply inputs that work all the time
-   applyUniversalInputs();
-
    //check for loadMap:
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
 
@@ -447,16 +452,12 @@ void MageGameEngine::GameRender()
    if (hexEditor->isHexEditorOn())
    {
       //run hex editor if appropriate
-      frameBuffer->clearScreen(RGB(0, 0, 0));
       hexEditor->renderHexEditor(mapControl->GetEntityDataPointer());
    }
 
    //otherwise be boring and normal/run mage game:
    else
    {
-      uint16_t backgroundColor = RGB(0, 0, 0);
-      frameBuffer->clearScreen(backgroundColor);
-
       //then draw the map and entities:
       uint8_t layerCount = mapControl->LayerCount();
 
@@ -481,7 +482,7 @@ void MageGameEngine::GameRender()
       }
    }
    //update the state of the LEDs
-;   hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
+   hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
 
    //update the screen
    frameBuffer->blt(inputHandler->GetButtonState());
@@ -491,8 +492,21 @@ void MageGameEngine::GameLoop()
 {
    //update timing information at the start of every game loop
    now = millis();
-   deltaTime = now - lastTime;
-   lastTime = now;
+
+   frameBuffer->clearScreen(RGB(0, 0, 0));
+
+   ProcessInputs();
+
+   // If a map is set to (re)load, do so before rendering
+   if (mapControl->mapLoadId != MAGE_NO_MAP)
+   {
+      //load the new map data into gameControl
+      LoadMap(mapControl->mapLoadId);
+
+      //clear the mapLoadId to prevent infinite reloads
+      scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+      mapControl->mapLoadId = MAGE_NO_MAP;
+   }
 
    //frame limiter code to keep game running at a specific FPS:
    //only do this on the real hardware:
@@ -504,23 +518,8 @@ void MageGameEngine::GameLoop()
 // lastLoopTime = now;
 #endif
 
-//handles hardware inputs and makes their state available		
-   inputHandler->HandleKeyboard();
-
-   //on desktop, interact with stdin
-   //on embedded, interact with USBC com port over serial
-   EngineHandleSerialInput();
-
-   //If the loadMap() action has set a new map, we will load it before we render this frame.
-   if (mapControl->mapLoadId != MAGE_NO_MAP)
-   {
-      //load the new map data into gameControl
-      LoadMap(mapControl->mapLoadId);
-
-      //clear the mapLoadId to prevent infinite reloads
-      scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-      mapControl->mapLoadId = MAGE_NO_MAP;
-   }
+   deltaTime = now - lastTime;
+   lastTime = now;
 
    //updates the state of all the things before rendering:
    GameUpdate(deltaTime);
@@ -530,8 +529,14 @@ void MageGameEngine::GameLoop()
 
    uint32_t fullLoopTime = millis() - lastTime;
 
-   //this pauses for scriptControl->blockingDelayTime before continuing to the next loop:
-   handleBlockingDelay();
+   // if a blocking delay was added by any actions, pause before returning to the game loop:
+   if (inputHandler->blockingDelayTime)
+   {
+      //delay for the right amount of time
+      nrf_delay_ms(inputHandler->blockingDelayTime);
+      //reset delay time when done so we don't do this every loop.
+      inputHandler->blockingDelayTime = 0;
+   }
 
    uint32_t updateAndRenderTime = millis() - lastTime;
 
@@ -548,18 +553,20 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
    auto point = Point{ 0,0 };
    auto& hitBox = mapControl->getPlayerEntityRenderableData().hitBox;
    auto afterMoveOrigin = hitBox.origin + playerVelocity;
-   auto row = afterMoveOrigin.y / mapControl->TileHeight(); 
-   auto col = afterMoveOrigin.x / mapControl->TileWidth();
-   auto tileIndex = col + (row * mapControl->Cols());
-   auto tilePoint = Point{ col * mapControl->TileWidth(), row * mapControl->TileHeight() };
-   
+   auto getTile = [&](const MageMapTile* layers, auto x, auto y)
+   {
+      auto col = x / mapControl->TileWidth();
+      auto row = y / mapControl->TileHeight();
+      auto tileIndex = col + (row * mapControl->Cols());
+      return &layers[tileIndex];
+   };
    //if (row != (afterMoveOrigin.y + hitBox.h) / mapControl->TileHeight()) {}
    //if (col != (afterMoveOrigin.x + hitBox.w) / mapControl->TileWidth()) {}
    for (auto layerIndex = 0; layerIndex < mapControl->LayerCount(); layerIndex++)
    {
       auto layerAddress = mapControl->LayerAddress(layerIndex);
       auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
-      auto currentTile = &layers[tileIndex];
+      auto currentTile = getTile(layers, afterMoveOrigin.x, afterMoveOrigin.y);
       auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
       auto geometry = tileset->GetGeometryForTile(currentTile->tileId-1);
       if (geometry)
@@ -568,21 +575,28 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
          auto isMageInGeometry = false;
          auto collidedWithThisTileAtAll = false;
 
-         for (auto i = 0; i < geometryPoints.size(); i++)
+         for (auto i = 0; i < geometryPoints.size(); i+=2)
          {
-            auto tileLinePointA = tilePoint + geometryPoints[i];
-            auto tileLinePointB = tilePoint + geometryPoints[(i + 1) % geometryPoints.size()];
+            auto tileLinePointA = afterMoveOrigin + geometryPoints[i];
+            auto tileLinePointB = afterMoveOrigin + geometryPoints[(i + 1) % geometryPoints.size()];
             auto collidedWithTileLine = false;
 
-            const auto topLeft = hitBox.origin;
-            const auto topRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y };
-            const auto bottomLeft = Point{ hitBox.origin.x, hitBox.origin.y + hitBox.h };
-            const auto bottomRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y + hitBox.h};
-
-            auto intersectionPointTopLeft = MageGeometry::getIntersectPointBetweenLineSegments(topLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            auto intersectionPointTopRight = MageGeometry::getIntersectPointBetweenLineSegments(topRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            auto intersectionPointBottomLeft = MageGeometry::getIntersectPointBetweenLineSegments(bottomLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            auto intersectionPointBottomRight = MageGeometry::getIntersectPointBetweenLineSegments(bottomRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            const auto topLeft = hitBox.origin - camera.position;
+            const auto topRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y } - camera.position;
+            const auto bottomLeft = Point{ hitBox.origin.x, hitBox.origin.y + hitBox.h } - camera.position;
+            const auto bottomRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y + hitBox.h} - camera.position;
+            frameBuffer->drawLine(topLeft, topRight, COLOR_CYAN);
+            frameBuffer->drawLine(topRight, bottomRight, COLOR_CYAN);
+            frameBuffer->drawLine(bottomLeft, bottomRight, COLOR_CYAN);
+            frameBuffer->drawLine(topLeft, bottomLeft, COLOR_CYAN);
+            //auto intersectionPointTopLeft = MageGeometry::getIntersectPointBetweenLineSegments(topLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            //auto intersectionPointTopRight = MageGeometry::getIntersectPointBetweenLineSegments(topRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            //auto intersectionPointBottomLeft = MageGeometry::getIntersectPointBetweenLineSegments(bottomLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            //auto intersectionPointBottomRight = MageGeometry::getIntersectPointBetweenLineSegments(bottomRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
+            //if (intersectionPointTopLeft.has_value()) { frameBuffer->drawLine(intersectionPointTopLeft.value(), tileLinePointB, COLOR_RED); }
+            //if (intersectionPointTopRight.has_value()) { frameBuffer->drawLine(intersectionPointTopRight.value(), tileLinePointB, COLOR_RED); }
+            //if (intersectionPointBottomLeft.has_value()) { frameBuffer->drawLine(intersectionPointBottomLeft.value(), tileLinePointB, COLOR_RED); }
+            //if (intersectionPointBottomRight.has_value()) { frameBuffer->drawLine(intersectionPointBottomRight.value(), tileLinePointB, COLOR_RED); }
             //if (spokeIntersectionPoint.has_value())
             //{
             //   collidedWithTileLine = true;
@@ -593,7 +607,7 @@ Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
             //      point = diff;
             //   }
             //}
-            frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
+            //frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
          }
       }
    }
