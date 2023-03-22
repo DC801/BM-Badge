@@ -121,7 +121,7 @@ void MapControl::DrawGeometry(const Point& camera) const
    }
 }
 
-void MapControl::UpdateEntities(uint32_t deltaTime, const Point& cameraPosition)
+void MapControl::UpdateEntities(uint32_t deltaTime)
 {
    for (auto i = 0; i < currentMap->entityCount; i++)
    {

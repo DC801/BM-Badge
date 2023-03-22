@@ -73,7 +73,7 @@ public:
    void DrawLayer(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
    void DrawEntities(const Point& cameraPosition) const;
-   void UpdateEntities(uint32_t deltaTime, const Point& cameraPosition);
+   void UpdateEntities(uint32_t deltaTime);
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {

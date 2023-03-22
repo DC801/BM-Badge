@@ -11,7 +11,7 @@ void TileManager::DrawTile(const RenderableData& renderableData, const Point& ca
 
     if (drawGeometry)
     {
-        frameBuffer->drawRect(Rect{ renderableData.hitBox.origin - cameraPosition, renderableData.hitBox.w, renderableData.hitBox.h }, COLOR_ORANGE);
+        //frameBuffer->drawRect(Rect{ renderableData.hitBox.origin - cameraPosition, renderableData.hitBox.w, renderableData.hitBox.h }, COLOR_ORANGE);
 
         if (geometryId)
         {

@@ -225,79 +225,44 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
       isMoving = false;
 
       //check to see if the mage is pressing the action button, or currently in the middle of an action animation.
-      if (playerHasControl
-         && (playerIsActioning || button.IsPressed(KeyPress::Rjoy_left)))
+      if (playerHasControl)
       {
-         playerIsActioning = true;
-      }
-      //if not actioning or resetting, handle all remaining inputs:
-      else if (playerHasControl)
-      {
-         playerVelocity = { 0,0 };
-         if (button.IsPressed(KeyPress::Ljoy_left))
+         if (playerIsActioning || button.IsPressed(KeyPress::Rjoy_left))
          {
-            playerVelocity.x -= mageSpeed; 
-            playerEntity.direction = WEST; 
-            isMoving = true;
+            playerIsActioning = true;
          }
-         if (button.IsPressed(KeyPress::Ljoy_right))
+         //if not actioning or resetting, handle all remaining inputs:
+         else
          {
-            playerVelocity.x += mageSpeed; 
-            playerEntity.direction = EAST; 
-            isMoving = true;
-         }
-         if (button.IsPressed(KeyPress::Ljoy_up))
-         {
-            playerVelocity.y -= mageSpeed; 
-            playerEntity.direction = NORTH; 
-            isMoving = true;
-         }
-         if (button.IsPressed(KeyPress::Ljoy_down))
-         {
-            playerVelocity.y += mageSpeed; 
-            playerEntity.direction = SOUTH; 
-            isMoving = true;
-         }
+            movePlayer(playerEntity, button);
 
-         if (isMoving)
-         {
-            playerEntity.direction = (playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK);
-            auto pushback = getPushBackFromTilesThatCollideWithPlayer();
-            auto velocityAfterPushback = playerVelocity + pushback;
-            auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
-            
-            // false would mean that the pushback is greater than the input velocity,
-            // which would glitch the player into geometry really bad, so... don't.
-            if (dotProductOfVelocityAndPushback > 0)
+            if (activatedButton.IsPressed(KeyPress::Rjoy_right))
             {
-               playerEntity.x += velocityAfterPushback.x;
-               playerEntity.y += velocityAfterPushback.y;
+               const auto hack = false;
+               handleEntityInteract(hack);
+            }
+            if (activatedButton.IsPressed(KeyPress::Rjoy_up))
+            {
+               const auto hack = true;
+               handleEntityInteract(hack);
+            }
+            if (button.IsPressed(KeyPress::Ljoy_center))
+            {
+               //no task assigned to ljoy_center in game mode
+            }
+            if (button.IsPressed(KeyPress::Rjoy_center))
+            {
+               //no task assigned to rjoy_center in game mode
+            }
+            if (button.IsPressed(KeyPress::Page))
+            {
+               //no task assigned to op_page in game mode
             }
          }
-         if (activatedButton.IsPressed(KeyPress::Rjoy_right))
-         {
-            const auto hack = false;
-            handleEntityInteract(hack);
-         }
-         if (activatedButton.IsPressed(KeyPress::Rjoy_up))
-         {
-            const auto hack = true;
-            handleEntityInteract(hack);
-         }
-         if (button.IsPressed(KeyPress::Ljoy_center))
-         {
-            //no task assigned to ljoy_center in game mode
-         }
-         if (button.IsPressed(KeyPress::Rjoy_center))
-         {
-            //no task assigned to rjoy_center in game mode
-         }
-         if (button.IsPressed(KeyPress::Page))
-         {
-            //no task assigned to op_page in game mode
-         }
-      }
 
+         // set default animation state to idle and handle other options below
+         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
+      }
 
       //handle animation assignment for the player:
       //Scenario 1 - perform action:
@@ -311,11 +276,6 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerEntity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
-      }
-      //Scenario 3 - show idle animation:
-      else if (playerHasControl)
-      {
-         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
@@ -351,7 +311,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
 
       //opening the hex editor is the only button press that will lag actual gameplay by one frame
       //this is to allow entity scripts to check the hex editor state before it opens to run scripts
-      if (inputHandler->GetButtonActivatedState().IsPressed(KeyPress::Hax))
+      if (activatedButton.IsPressed(KeyPress::Hax))
       {
          hexEditor->toggleHexEditor();
       }
@@ -433,7 +393,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
       }
 
       //update the entities based on the current state of their (hackable) data array.
-      mapControl->UpdateEntities(deltaTime, camera.position);
+      mapControl->UpdateEntities(deltaTime);
 
       //handle scripts:
       scriptControl->tickScripts();
@@ -546,6 +506,51 @@ void MageGameEngine::GameLoop()
       SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
    }
 #endif
+}
+
+void MageGameEngine::movePlayer(MageEntity& playerEntity, ButtonState button)
+{
+   playerVelocity = { 0,0 };
+   if (button.IsPressed(KeyPress::Ljoy_left))
+   {
+      playerVelocity.x -= mageSpeed;
+      playerEntity.direction = WEST;
+      isMoving = true;
+   }
+   if (button.IsPressed(KeyPress::Ljoy_right))
+   {
+      playerVelocity.x += mageSpeed;
+      playerEntity.direction = EAST;
+      isMoving = true;
+   }
+   if (button.IsPressed(KeyPress::Ljoy_up))
+   {
+      playerVelocity.y -= mageSpeed;
+      playerEntity.direction = NORTH;
+      isMoving = true;
+   }
+   if (button.IsPressed(KeyPress::Ljoy_down))
+   {
+      playerVelocity.y += mageSpeed;
+      playerEntity.direction = SOUTH;
+      isMoving = true;
+   }
+
+   if (isMoving)
+   {
+      playerEntity.direction = (playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK);
+      auto pushback = getPushBackFromTilesThatCollideWithPlayer();
+      auto velocityAfterPushback = playerVelocity + pushback;
+      auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
+
+      // false would mean that the pushback is greater than the input velocity,
+      // which would glitch the player into geometry really bad, so... don't.
+      if (dotProductOfVelocityAndPushback > 0)
+      {
+         playerEntity.x += velocityAfterPushback.x;
+         playerEntity.y += velocityAfterPushback.y;
+      }
+   }
 }
 
 Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
