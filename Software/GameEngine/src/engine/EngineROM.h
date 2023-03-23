@@ -388,7 +388,9 @@ struct EngineROM
    template <typename T>
    const T* GetReadPointerByIndex(uint16_t index) const
    {
-      auto address = getHeader<T>().address((uint32_t)romDataInDesktopRam.get(), index);
+      static_assert(sizeof(romDataInDesktopRam.get()) == 4, "Expected 32-bit pointers");
+      auto&& header = getHeader<T>();
+      auto address = header.address((uint32_t)romDataInDesktopRam.get(), index);
       
       return reinterpret_cast<const T*>((uint32_t)romDataInDesktopRam.get() + address);
    }
@@ -624,7 +626,7 @@ private:
    template <typename TData>
    constexpr const Header<TData>& getHeader() const
    {
-      static constexpr std::size_t index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
+      constexpr std::size_t index = type_index_v<Header<TData>, std::tuple<Header<THeaders>...>>;
       return std::get<index>(headers);
    }
 
