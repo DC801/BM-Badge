@@ -44,7 +44,6 @@
         "cacheVariables": {
           "CMAKE_C_COMPILER": "cl.exe",
           "CMAKE_CXX_COMPILER": "cl.exe",
-          "CMAKE_BUILD_TYPE": "Debug",
           "VS_DEBUGGER_WORKING_DIRECTORY": "$<TARGET_FILE_DIR:bm_badge>"
         },
         "vendor": {
@@ -56,21 +55,19 @@
     {
         "name": "gcc",
         "hidden": true,
+        "generator": "Unix Makefiles",
         "cacheVariables": {
             "CMAKE_C_COMPILER": "gcc",
             "CMAKE_CXX_COMPILER": "g++",
             "CMAKE_C_FLAGS": "-m32",
-            "CMAKE_CXX_FLAGS": "-m32"
+            "CMAKE_CXX_FLAGS": "-m32",
+            "CMAKE_TOOLCHAIN_FILE": "Software/GameEngine/cmake/toolchain-gcc_x86.cmake"
         }
     },
     {
       "name": "gcc-debug",
       "displayName": "Linux 32-bit config",
-      "description": "Build using Unix Makefile generator",
-      "generator": "Unix Makefile",
-      "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "Software/GameEngine/cmake/toolchain-gcc_x86.cmake"
-      },
+      "description": "Build using Unix Makefiles generator",
       "inherits": 
       [
           "debug",

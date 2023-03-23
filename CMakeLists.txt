@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.24)
 
 project(bm_badge)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/cmake/)
-set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/)
-set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
+# set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/)
+# set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
 
 option(DC801_EMBEDDED_BUILD "Build an executable for the physical device" OFF)
 option(EMSCRIPTEN "Build a web page" OFF)
