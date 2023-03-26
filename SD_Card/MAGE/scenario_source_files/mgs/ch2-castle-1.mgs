@@ -22,11 +22,11 @@ on_load-ch2-castle-1 {
 	// ch2 room state
 	mutate ch2-in-room = 1
 	set flag interrupt to false
+	set flag ch2-seen-room-1 to true
 	
 	// entrance text
 	if (flag ch2-has-artifact is true) {
 		show serial dialog spacer
-		set flag ch2-seen-room-1 to true
 		show serial dialog { "Entering <bold>FOYER</>..." }
 	}
 
@@ -396,13 +396,15 @@ ch2-terminal-message-test-success {
 		copy ch2-register-manual
 		// set flag ch2-toot-done to true // DEBUG
 		set serial control on
+		show serial dialog spacer
+		show serial dialog {
+			"(Type <c>MAN</> to resume your conversation with Lambda.)"
+		}
 	} else {
 		show dialog {
 			Lambda "Excellent! You're all set!"
 		}
 	}
-	set flag ch2-map-granted to true
-	copy ch2-map-enable
 	set entity "%SELF%" interact_script to interact-ch2-xa
 }
 
@@ -414,18 +416,12 @@ ch2-command-man {
 			goto ch2-bert-secret-lambda-intro
 		}
 	}
-	if (flag ch2-toot-done is false) {
-		show serial dialog spacer
-		show serial dialog {
-			"<m>LAMBDA</>: Ahh, this is much more comfortable, isn't it? You can type commands into the console, and interesting things will happen."
-			"\tIt's really quite powerful."
-			" "
-			""
-		}
-		// TEMP
-		set flag ch2-toot-done to true
+	
+	if (flag ch2-toot-done is true) {
 		goto ch2-command-man-normal-convo
-	} else {
-		goto ch2-command-man-normal-convo // see other file
 	}
+
+	// You're talking to Lambda over serial for the first time:
+	// (You need to finish the toot)
+	goto ch2-toot-check
 }

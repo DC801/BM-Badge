@@ -29,14 +29,15 @@ on_load-main_menu {
 debug {
 	set serial control on
 	set flag ch2-has-artifact to true
-	set flag ch2-toot-done to true
-	set flag ch2-map-granted to true
-	// load map ch2-castle-outside
-	set flag ch2-birthday-cutscene to true
-	// set warp state to cutscene-escort
+	// set flag ch2-toot-done to true
+	// set flag ch2-map-granted to true
+	// // load map ch2-castle-outside
+	// set flag ch2-birthday-cutscene to true
+	// // set warp state to cutscene-escort
 	set hex control on
 	mutate current-chapter = 2
-	load map main2
+	load map ch2-castle-1
+	// load map main2
 }
 
 bert {

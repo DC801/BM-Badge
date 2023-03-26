@@ -12,7 +12,7 @@ ch2-command-man-normal-convo {
 ch2-lambda-topic-q {
 	show serial dialog {
 		"(Ask about:)"
-		# "Component list" : ch2-lambda-topic-parts
+		# "Parts list" : ch2-lambda-topic-parts
 		# "Using the artifact" : ch2-lambda-topic-artifact
 		# "The mainframe" : ch2-lambda-topic-mainframe
 		# "The castle" : ch2-lambda-topic-castle
@@ -35,7 +35,7 @@ ch2-lambda-topic-nevermind {
 ch2-lambda-topic-parts {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>LAMBDA:</> These are the components we still need:"
+		"<m>LAMBDA:</> These are the parts we need:"
 	}
 	set flag temp to false
 	if (flag ch2-installed-clock is false) {
@@ -52,7 +52,7 @@ ch2-lambda-topic-parts {
 ch2-lambda-topic-parts-q {
 	show serial dialog {
 		" "
-		"(Type the name of a component for more info, or <c>QUIT</> to go back)"
+		"(Type the part name for more info, or <c>QUIT</> to go back)"
 
 		_ "Q" : ch2-command-man-normal-convo
 		_ "QUIT" : ch2-command-man-normal-convo
@@ -78,7 +78,7 @@ ch2-lambda-parts-clock {
 
 ch2-lambda-topic-parts-finished {
 	show serial dialog {
-		"\tOh, wait, is that everything? (TODO)"
+		"\tOh, wait, is that everything? Huzzah! (TODO)"
 	}
 }
 
@@ -102,10 +102,9 @@ ch2-lambda-topic-artifact-q {
 ch2-lambda-topic-artifact-words {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> What can you tell me about magic words? You said they were commands?"
+		"<c>YOU:</> What can you tell me about \"magic words?\" You said they were commands?"
 		" "
-		"<m>LAMBDA:</> Yeah, so, um, nothing about the artifact is magic, but if it makes the artifact easier to use, sure: using the right \"magic\" word or words will cause a specific effect."
-		"\tStrictly speaking, they're just text commands interpreted by the artifact itself, if not the mainframe -- provided the mainframe is working, of course."
+		"<m>LAMBDA:</> Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
 		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
 		" "
 	}
@@ -171,7 +170,7 @@ ch2-lambda-mainframe-fix-1 {
 		"<c>YOU:</> How do we fix it? What do we need?"
 		" "
 		"<m>LAMBDA:</> We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
-		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. The software though... I'll get back to you about that."
+		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
 		" "
 	}
 	goto ch2-lambda-topic-mainframe-q

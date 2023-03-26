@@ -170,6 +170,11 @@ ch2-map-enable {
 }
 
 draw-ch2-serial-map-check {
+	// for ch2-toot:
+	if (variable ch2-map-test is 1) {
+		mutate ch2-map-test = 2
+	}
+	// normal stuff
 	if (variable ch2-in-room is 0) {
 		show serial dialog {
 			"You don't seem to have a map for this place."
