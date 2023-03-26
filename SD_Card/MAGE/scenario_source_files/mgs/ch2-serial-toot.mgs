@@ -1,0 +1,314 @@
+settings for serial dialog { wrap 60 }
+
+ch2-toot-check {
+	if (variable ch2-toot-level is 0) {
+		goto ch2-toot-intro
+	} else if (variable ch2-toot-level is 3) {
+		goto ch2-toot-step3-check
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
+	}
+	if (variable ch2-toot-level is 1) {
+		goto ch2-toot-step1-start
+	} else if (variable ch2-toot-level is 2) {
+		goto ch2-toot-step2-start
+	} else if (variable ch2-toot-level is 4) {
+		goto ch2-toot-step4-start
+	} else {
+		show serial dialog {
+			"<r><bold>DEBUG</>: Welp, you've done something strange!"
+			"\tVariable 'ch2-toot-level' is $ch2-toot-level$"
+			"\tScript: 'ch2-toot-check'"
+		}
+	}
+
+}
+
+// Normal intro
+
+ch2-toot-intro {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Ahh, this is much more comfortable, isn't it?"
+		"\tSo, yeah. You can type things into the console, and interesting things will happen. First, let's try something basic."
+	}
+	mutate ch2-toot-level = 1
+	goto ch2-toot-step1-start
+}
+
+// Part 1
+
+ch2-toot-step1-start {
+	show serial dialog {
+		"\tTry to choose one of the following options with the keyboard."
+		" "
+	}
+	goto ch2-toot-step1-q
+}
+
+ch2-toot-step1-q {
+	show serial dialog {
+		"(Type one of the numbers shown to choose that dialog option.)"
+		# "Okay, I'll try." : ch2-toot-step1-okay
+		# "Make me." : ch2-toot-step1-notokay
+	}
+}
+
+ch2-toot-step1-okay {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Good job!"
+	}
+	goto ch2-toot-step1-end
+}
+
+ch2-toot-step1-notokay {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: ...Haha, well, that was a little aggressive, but well done."
+	}
+	goto ch2-toot-step1-end
+}
+
+ch2-toot-step1-end {
+	show serial dialog {
+		"\tNote that dialog options begin with \"0\" instead of \"1\". That's for <bold>computer reasons</>...."
+	}
+	mutate ch2-toot-level = 2
+	goto ch2-toot-step2-start
+}
+
+// Part 2
+
+ch2-toot-step2-start {
+	show serial dialog {
+		"\tSo, um, the second type of dialog response is more \"free form\". For these, you can type whatever you want to advance the conversation, but only some responses will have a useful result."
+		"\tDoes that make sense?"
+		" "
+	}
+	goto ch2-toot-step2-q
+}
+
+ch2-toot-step2-q {
+	show serial dialog {
+		"(Type <c>YES</> or <c>NO</>)"
+		_ "YES" : ch2-toot-step2-yes
+		_ "Y" : ch2-toot-step2-yes-extra
+		_ "NO" : ch2-toot-step2-no
+		_ "N" : ch2-toot-step2-no-extra
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Sorry, that wasn't one of the choices! Want to try again?"
+		" "
+	}
+	goto ch2-toot-step2-q
+}
+
+ch2-toot-step2-yes {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Excellent! You've got it!"
+	}
+	goto ch2-toot-step2-end
+}
+
+ch2-toot-step2-yes-extra {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Excellent! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>Y</> instead of <c>YES</>."
+	}
+	goto ch2-toot-step2-end
+}
+
+ch2-toot-step2-no {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Haha, you say that, but you clearly understand! Good job!"
+	}
+	goto ch2-toot-step2-end
+}
+
+ch2-toot-step2-no-extra {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Well, you seem to understand, anyway! You've also discovered that sometimes you can type something a little different and still achieve your goal, like typing <c>N</> instead of <c>NO</>."
+	}
+	goto ch2-toot-step2-end
+}
+
+ch2-toot-step2-end {
+	show serial dialog {
+		"\tSome free response options are left entirely undisclosed, so feel free to experiment when given a free response prompt."
+	}
+	mutate ch2-toot-level = 3
+	goto ch2-toot-step3-start
+}
+
+// Part 3
+
+ch2-toot-step3-start {
+	show serial dialog {
+		"\tLastly, when you're not in a conversation with someone else, you can use the artifact to run simple commands. You might think of them as \"magic words.\""
+		" "
+		"(Choose an option:)"
+		# "\"Magic words?\" Neat!" : ch2-toot-step3-magic
+		# "\"Magic words?\" That's a bit ridiculous." : ch2-toot-step3-nomagic
+	}
+}
+
+ch2-toot-step3-magic {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> \"Magic words?\" Neat!"
+		" "
+		"<m>LAMBDA:</> Yeah! Computers are nothing more than melted sand, rocks, and tiny bits of lightning, yet we can make them perform math and send words and images to someone else far away! It really <bold>is</> like magic, isn't it?"
+	}
+	goto ch2-toot-step3-halftime
+}
+
+ch2-toot-step3-nomagic {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> \"Magic words?\" That's a bit ridiculous."
+		" "
+		"<m>LAMBDA:</> ...Sorry, that probably sounded patronizing. Yeah, they're not really magic words, but thinking of them that way can make the artifact feel more magical, don't you think?"
+	}
+	goto ch2-toot-step3-halftime
+}
+
+ch2-toot-step3-halftime {
+	show serial dialog {
+		"\tAnyway, for the final demonstration, I'll end our conversation so you can try using the magic word <c>MAP</>. Here, I'll grant you permission to use the map program."
+		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
+		" "
+		"(Lambda appears to have \"hung up\")"
+	}
+	set flag ch2-map-granted to true
+	mutate ch2-map-test = 1
+	copy ch2-map-enable
+}
+
+ch2-toot-step3-check {
+	if (variable ch2-map-test is 0) {
+		// you haven't seen the map toot intro
+		goto ch2-toot-step3-start
+	} else if (variable ch2-map-test is 1) {
+		// you've seen the intro but haven't seen the map yet
+		goto ch2-toot-step3-summary
+	} else if (variable ch2-map-test is 2) {
+		// you've seen the intro and seen the map; toot ends
+		goto ch2-toot-step3-end
+	} else {
+		show serial dialog {
+			"<r><bold>DEBUG</>: Welp, you've done something strange!"
+			"\tVariable 'ch2-map-test' is $ch2-map-test$"
+			"\tScript: 'ch2-toot-step3-check'"
+		}
+	}
+}
+
+ch2-toot-step3-summary {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Try running the <c>MAP</> command using the artifact."
+		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
+		" "
+		"(Lambda appears to have \"hung up\")"
+	}
+}
+
+ch2-toot-step3-end {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Way to go! I hope you'll enjoy the <c>MAP</>. It's one of my favorite personal projects."
+		"\tRemember, to use any of the magic words, you can't be in a conversation already."
+		"\tThe command <c>HELP</> will show you what commands are available to you at the moment. To learn about what a command does, type <c>MAN</> followed by the name of a command."
+		" "
+		# "Wait, I thought <c>MAN</> was how I talk to <bold>you</>." : ch2-toot-step3-end2
+	}
+}
+
+ch2-toot-step3-end2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Wait, I thought <c>MAN</> was how I talk to <bold>you</>."
+		" "
+		"<m>LAMBDA:</> Yeah, I set it up that way because I thought it would be easy to remember. \"Man\" is short for \"manual,\" so think of <c>MAN</> as being for times you need long form help."
+	}
+	mutate ch2-map-test = 0
+	mutate ch2-toot-level = 4
+	goto ch2-toot-step4-start
+}
+
+ch2-toot-step4-start {
+	show serial dialog {
+		"\tSo, um, now that you know the basics of using the artifact... I think maybe we should work together to fix the castle mainframe. I'm still not sure whether I can trust you, but... well, now that the castle is half wrecked, I think the mainframe could help clean up some of the damage, if nothing else."
+		" "
+		# "How do we fix the mainframe?" : ch2-toot-step4a
+	}
+}
+ch2-toot-step4a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How do we fix the mainframe?"
+		" "
+		"<m>LAMBDA:</> We'll have to <c>build a new computer from scratch</>. There's items around the castle we could... um, McGuyver... to build something functional. Most of the parts are less than ideal, but we have little choice right now. I can put together a parts list."
+		" "
+		# "But I don't know how to build a computer!" : ch2-toot-step4b-noob
+		# "This'll be a sinch!" : ch2-toot-step4b-pro
+	}
+}
+
+ch2-toot-step4b-noob {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> But I don't know how to build a computer!"
+		" "
+		"<m>LAMBDA:</> Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
+	}
+	goto ch2-toot-step4c
+}
+
+ch2-toot-step4b-pro {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> This'll be a sinch!"
+		" "
+		"<m>LAMBDA:</> Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
+	}
+	goto ch2-toot-step4c
+}
+ch2-toot-step4c {
+	// state must be set first because the serial dialog branches
+	mutate ch2-toot-level = 99
+	set flag ch2-toot-done to true
+	// actual convo
+	show serial dialog {
+		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
+		" "
+		# "Let's do it!" : ch2-toot-step4-end
+		# "Actually, I had a question." : ch2-toot-step4-continue
+	}
+}
+
+ch2-toot-step4-end {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Yeah, let's do it!"
+		" "
+		"<m>LAMBDA:</> Good luck! And don't forget you can reach me from anywhere with <c>MAN</> if you have a question or if you want to see the parts list."
+	}
+}
+
+ch2-toot-step4-continue {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Actually, I had a question."
+		" "
+		"<m>LAMBDA:</> Sure. What did you want to know?"
+	}
+	goto ch2-lambda-topic-q
+}
