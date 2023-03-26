@@ -4,8 +4,6 @@
 
 MageHeader::MageHeader(uint32_t address)
 {
-	uint32_t size = 0;
-
 	// Read count
 	EngineROM_Read(
 		address,
@@ -20,33 +18,8 @@ MageHeader::MageHeader(uint32_t address)
 	// Increment offset
 	address += sizeof(counts);
 
-	// Construct arrays
-	offsets = std::make_unique<uint32_t[]>(counts);
-	lengths = std::make_unique<uint32_t[]>(counts);
+	start = address;
 
-	// Size of array in bytes
-	size = counts * sizeof(uint32_t);
-
-	// Read arrays
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)offsets.get(),
-		"Failed to load Header property 'offsets'"
-	);
-
-	ROM_ENDIAN_U4_BUFFER(offsets.get(), counts);
-	address += counts * sizeof(uint32_t);
-
-	EngineROM_Read(
-		address,
-		size,
-		(uint8_t *)lengths.get(),
-		"Failed to load Header property 'lengths'"
-	);
-
-	ROM_ENDIAN_U4_BUFFER(lengths.get(), counts);
-	return;
 }
 
 uint32_t MageHeader::count() const
@@ -56,11 +29,22 @@ uint32_t MageHeader::count() const
 
 uint32_t MageHeader::offset(uint32_t num) const
 {
-	if (!offsets) return 0;
+	if (!start) return 0;
 
 	if (counts > num)
 	{
-		return offsets[num];
+		uint32_t offset = 0;
+		EngineROM_Read(
+			(
+				start +
+				(sizeof(uint32_t) * num)
+			),
+			sizeof(offset),
+			(uint8_t *) &offset,
+			"Could not read header length"
+		);
+		offset = ROM_ENDIAN_U4_VALUE(offset);
+		return offset;
 	}
 
 	return 0;
@@ -68,11 +52,23 @@ uint32_t MageHeader::offset(uint32_t num) const
 
 uint32_t MageHeader::length(uint32_t num) const
 {
-	if (!lengths) return 0;
+	if (!start) return 0;
 
 	if (counts > num)
 	{
-		return lengths[num];
+		uint32_t offset = 0;
+		EngineROM_Read(
+			(
+				start +
+				(sizeof(uint32_t) * counts) +
+				(sizeof(uint32_t) * num)
+			),
+			sizeof(offset),
+			(uint8_t *) &offset,
+			"Could not read header length"
+		);
+		offset = ROM_ENDIAN_U4_VALUE(offset);
+		return offset;
 	}
 
 	return 0;
@@ -87,7 +83,7 @@ uint32_t MageHeader::size() const
 
 bool MageHeader::valid() const
 {
-	if (offsets == nullptr || lengths == nullptr)
+	if (!start)
 	{
 		return false;
 	}
