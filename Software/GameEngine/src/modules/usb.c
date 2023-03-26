@@ -74,6 +74,8 @@ static char echo_buffer[ECHO_BUFFER_SIZE];
 uint16_t echo_buffer_length = 0;
 bool is_echo_buffer_populated = false;
 
+bool is_serial_connected = false;
+
 static void handle_serial_character(char value) {
 	if (
 		// handle newlines
@@ -137,11 +139,13 @@ static void cdc_acm_user_ev_handler(
 			);
 			UNUSED_VARIABLE(ret);
 			was_serial_started = true;
+			is_serial_connected = true;
 			break;
 		}
 		case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
 			//bsp_board_led_off(LED_CDC_ACM_OPEN);
 			//ledOff(LED_BIT1);
+			is_serial_connected = false;
 			break;
 		case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
 			// bsp_board_led_invert(LED_CDC_ACM_TX);
@@ -260,6 +264,12 @@ void send_serial_message_with_length(
 	const char *message,
 	size_t message_length
 ) {
+	if (!is_serial_connected) {
+		// if you call `app_usbd_cdc_acm_write`
+		// WHEN THE DEVICE IS NOT ACTUALLY CONNECTED, YOU'RE GONNA HAVE A BAD TIME.
+		// So just don't.
+		return;
+	}
 	// Turns out that calling `app_usbd_cdc_acm_write` with message_length
 	// greater than NRF_DRV_USBD_EPSIZE/64 totally corrupts all output,
 	// so we have to break it into NRF buffer size friendly chunks
