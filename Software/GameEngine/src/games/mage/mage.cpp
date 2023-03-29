@@ -259,9 +259,6 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
                //no task assigned to op_page in game mode
             }
          }
-
-         // set default animation state to idle and handle other options below
-         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
 
       //handle animation assignment for the player:
@@ -276,6 +273,11 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
          && entityType->animationCount >= MAGE_WALK_ANIMATION_INDEX)
       {
          playerEntity.currentAnimation = MAGE_WALK_ANIMATION_INDEX;
+      }
+      //Scenario 3 - show idle animation:
+      else if (playerHasControl)
+      {
+         playerEntity.currentAnimation = MAGE_IDLE_ANIMATION_INDEX;
       }
 
       //this checks to see if the player is currently animating, and if the animation is the last frame of the animation:
@@ -510,111 +512,48 @@ void MageGameEngine::GameLoop()
 
 void MageGameEngine::movePlayer(MageEntity& playerEntity, ButtonState button)
 {
-   playerVelocity = { 0,0 };
-   if (button.IsPressed(KeyPress::Ljoy_left))
-   {
-      playerVelocity.x -= mageSpeed;
-      playerEntity.direction = WEST;
-      isMoving = true;
-   }
-   if (button.IsPressed(KeyPress::Ljoy_right))
-   {
-      playerVelocity.x += mageSpeed;
-      playerEntity.direction = EAST;
-      isMoving = true;
-   }
-   if (button.IsPressed(KeyPress::Ljoy_up))
-   {
-      playerVelocity.y -= mageSpeed;
-      playerEntity.direction = NORTH;
-      isMoving = true;
-   }
-   if (button.IsPressed(KeyPress::Ljoy_down))
-   {
-      playerVelocity.y += mageSpeed;
-      playerEntity.direction = SOUTH;
-      isMoving = true;
-   }
+   auto playerVelocity = Point { 0,0 };
 
+   // moving when there's at least one button not being counteracted
+   isMoving = (
+      (button.IsPressed(KeyPress::Ljoy_left) || button.IsPressed(KeyPress::Ljoy_right))
+         && button.IsPressed(KeyPress::Ljoy_left) != button.IsPressed(KeyPress::Ljoy_right))
+      || ((button.IsPressed(KeyPress::Ljoy_up) || button.IsPressed(KeyPress::Ljoy_down))
+         && button.IsPressed(KeyPress::Ljoy_up) != button.IsPressed(KeyPress::Ljoy_down));
+      
    if (isMoving)
    {
-      playerEntity.direction = (playerEntity.direction & RENDER_FLAGS_DIRECTION_MASK);
-      auto pushback = getPushBackFromTilesThatCollideWithPlayer();
-      auto velocityAfterPushback = playerVelocity + pushback;
-      auto dotProductOfVelocityAndPushback = playerVelocity.DotProduct(velocityAfterPushback);
-
-      // false would mean that the pushback is greater than the input velocity,
-      // which would glitch the player into geometry really bad, so... don't.
-      if (dotProductOfVelocityAndPushback > 0)
+      if (button.IsPressed(KeyPress::Ljoy_left))
       {
-         playerEntity.x += velocityAfterPushback.x;
-         playerEntity.y += velocityAfterPushback.y;
+         playerVelocity.x -= mageSpeed;
+         playerEntity.direction = WEST;
       }
-   }
-}
-
-Point MageGameEngine::getPushBackFromTilesThatCollideWithPlayer()
-{
-   auto point = Point{ 0,0 };
-   auto& hitBox = mapControl->getPlayerEntityRenderableData().hitBox;
-   auto afterMoveOrigin = hitBox.origin + playerVelocity;
-   auto getTile = [&](const MageMapTile* layers, auto x, auto y)
-   {
-      auto col = x / mapControl->TileWidth();
-      auto row = y / mapControl->TileHeight();
-      auto tileIndex = col + (row * mapControl->Cols());
-      return &layers[tileIndex];
-   };
-   //if (row != (afterMoveOrigin.y + hitBox.h) / mapControl->TileHeight()) {}
-   //if (col != (afterMoveOrigin.x + hitBox.w) / mapControl->TileWidth()) {}
-   for (auto layerIndex = 0; layerIndex < mapControl->LayerCount(); layerIndex++)
-   {
-      auto layerAddress = mapControl->LayerAddress(layerIndex);
-      auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
-      auto currentTile = getTile(layers, afterMoveOrigin.x, afterMoveOrigin.y);
-      auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(currentTile->tilesetId);
-      auto geometry = tileset->GetGeometryForTile(currentTile->tileId-1);
-      if (geometry)
+      else if (button.IsPressed(KeyPress::Ljoy_right))
       {
-         auto geometryPoints = geometry->FlipByFlags(currentTile->flags, tileset->TileWidth, tileset->TileHeight);
-         auto isMageInGeometry = false;
-         auto collidedWithThisTileAtAll = false;
-
-         for (auto i = 0; i < geometryPoints.size(); i+=2)
-         {
-            auto tileLinePointA = afterMoveOrigin + geometryPoints[i];
-            auto tileLinePointB = afterMoveOrigin + geometryPoints[(i + 1) % geometryPoints.size()];
-            auto collidedWithTileLine = false;
-
-            const auto topLeft = hitBox.origin - camera.position;
-            const auto topRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y } - camera.position;
-            const auto bottomLeft = Point{ hitBox.origin.x, hitBox.origin.y + hitBox.h } - camera.position;
-            const auto bottomRight = Point{ hitBox.origin.x + hitBox.w, hitBox.origin.y + hitBox.h} - camera.position;
-            frameBuffer->drawLine(topLeft, topRight, COLOR_CYAN);
-            frameBuffer->drawLine(topRight, bottomRight, COLOR_CYAN);
-            frameBuffer->drawLine(bottomLeft, bottomRight, COLOR_CYAN);
-            frameBuffer->drawLine(topLeft, bottomLeft, COLOR_CYAN);
-            //auto intersectionPointTopLeft = MageGeometry::getIntersectPointBetweenLineSegments(topLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            //auto intersectionPointTopRight = MageGeometry::getIntersectPointBetweenLineSegments(topRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            //auto intersectionPointBottomLeft = MageGeometry::getIntersectPointBetweenLineSegments(bottomLeft, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            //auto intersectionPointBottomRight = MageGeometry::getIntersectPointBetweenLineSegments(bottomRight, afterMoveOrigin, tileLinePointA, tileLinePointB);
-            //if (intersectionPointTopLeft.has_value()) { frameBuffer->drawLine(intersectionPointTopLeft.value(), tileLinePointB, COLOR_RED); }
-            //if (intersectionPointTopRight.has_value()) { frameBuffer->drawLine(intersectionPointTopRight.value(), tileLinePointB, COLOR_RED); }
-            //if (intersectionPointBottomLeft.has_value()) { frameBuffer->drawLine(intersectionPointBottomLeft.value(), tileLinePointB, COLOR_RED); }
-            //if (intersectionPointBottomRight.has_value()) { frameBuffer->drawLine(intersectionPointBottomRight.value(), tileLinePointB, COLOR_RED); }
-            //if (spokeIntersectionPoint.has_value())
-            //{
-            //   collidedWithTileLine = true;
-            //   isMageInGeometry = true;
-            //   auto diff = spokeIntersectionPoint.value() - afterMoveOrigin;
-            //   if (diff.VectorLength() > point.VectorLength())
-            //   {
-            //      point = diff;
-            //   }
-            //}
-            //frameBuffer->drawLine(tileLinePointA, tileLinePointB, collidedWithTileLine ? COLOR_RED : COLOR_ORANGE);
-         }
+         playerVelocity.x += mageSpeed;
+         playerEntity.direction = EAST;
       }
+
+      if (button.IsPressed(KeyPress::Ljoy_up))
+      {
+         playerVelocity.y -= mageSpeed;
+         playerEntity.direction = NORTH;
+      }
+      else if (button.IsPressed(KeyPress::Ljoy_down))
+      {
+         playerVelocity.y += mageSpeed;
+         playerEntity.direction = SOUTH;
+      }
+
+      if (playerVelocity.x && playerVelocity.y)
+      {
+         // normalize this by scaling using known information about the data structure
+         // namely, this case is normally a move of 4,4 which gives a total speed of 5.65 diagonally
+         // using 3,3 instead gives a total speed of 4.24, still faster than up and down, but by a much smaller amount
+         playerVelocity = playerVelocity * 3 / 4;
+      }
+
+      mapControl->TryMovePlayer(playerVelocity);
    }
-   return point;
+
 }

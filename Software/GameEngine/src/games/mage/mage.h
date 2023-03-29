@@ -98,7 +98,6 @@ private:
    void applyUniversalInputs();
    void handleEntityInteract(bool hack);
    void movePlayer(MageEntity& playerEntity, ButtonState button);
-   Point getPushBackFromTilesThatCollideWithPlayer();
 
    bool engineIsInitialized{ false };
 
@@ -114,7 +113,6 @@ private:
 
    float mageSpeed{ 0.0f };
    bool isMoving{ false };
-   Point playerVelocity = { 0,0 };
 
    uint8_t currentSaveIndex{ 0 };
 

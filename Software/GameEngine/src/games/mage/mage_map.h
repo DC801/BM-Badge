@@ -74,6 +74,8 @@ public:
    void DrawGeometry(const Point& cameraPosition) const;
    void DrawEntities(const Point& cameraPosition) const;
    void UpdateEntities(uint32_t deltaTime);
+
+   void TryMovePlayer(const Point& playerVelocity);
    
    int16_t GetUsefulEntityIndexFromActionEntityId(uint8_t entityIndex, int16_t callingEntityId) const
    {

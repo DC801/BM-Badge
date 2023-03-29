@@ -42,11 +42,6 @@ struct Point
 	int32_t x{ 0 };
 	int32_t y{ 0 };
 
-	float VectorLength() const
-	{
-		return sqrt((x * x) + (y * y));
-	};
-
 	constexpr float DotProduct(const Point& b) const
 	{
 		return (float)x * (float)b.x
@@ -251,6 +246,8 @@ public:
    bool isPointInGeometry(const Point& point) const;
 
    static std::optional<Point> getIntersectPointBetweenLineSegments(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
+
+	static float VectorLength(const int32_t& x, const int32_t& y) { return sqrt((x * x) + (y * y)); };
 
    uint16_t getLoopableGeometryPointIndex(uint8_t pointIndex) const;
    uint16_t GetLoopableGeometrySegmentIndex(uint8_t segmentIndex) const
