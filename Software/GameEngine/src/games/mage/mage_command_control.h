@@ -25,8 +25,8 @@ enum MageSerialCommands : uint8_t {
 
 class MageCommandControl {
 	public:
-		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<TileManager> tileManager, std::shared_ptr<MageScriptControl> scriptControl) noexcept
-			: mapControl(mapControl), tileManager(tileManager), scriptControl(scriptControl)
+		MageCommandControl(std::shared_ptr<MapControl> mapControl, std::shared_ptr<TileManager> tileManager, std::shared_ptr<MageScriptControl> scriptControl, std::shared_ptr<StringLoader> stringLoader) noexcept
+			: mapControl(mapControl), tileManager(tileManager), scriptControl(scriptControl), stringLoader(stringLoader)
 		{}
 
 		std::string commandResponseBuffer;

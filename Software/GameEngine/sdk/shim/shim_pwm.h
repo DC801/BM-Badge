@@ -1,6 +1,11 @@
 #ifndef SHIM_PWM_H
 #define SHIM_PWM_H
 
+
+#ifdef DC801_EMBEDDED
+#include <app_pwm.h>
+#else
+
 #include <stdint.h>
 #include "shim_err.h"
 #include "shim_timer.h"
@@ -116,5 +121,5 @@ void app_pwm_enable(app_pwm_t const * const p_instance);
 ret_code_t app_pwm_channel_duty_set(app_pwm_t const * const p_instance, uint8_t channel, app_pwm_duty_t duty);
 
 
-
+#endif //DC801_EMBEDDED
 #endif

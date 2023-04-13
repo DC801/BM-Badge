@@ -1,6 +1,10 @@
 #ifndef SHIM_ERR_H
 #define SHIM_ERR_H
 
+#ifdef DC801_EMBEDDED
+#include <app_error.h>
+#include <nrfx.h>
+#else
 
 #include <stdint.h>
 #include <algorithm>
@@ -8,9 +12,6 @@
 #define UNUSED_VARIABLE(X)     ((void)(X))
 #define UNUSED_PARAMETER(X)    UNUSED_VARIABLE(X)
 #define UNUSED_RETURN_VALUE(X) UNUSED_VARIABLE(X)
-
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 typedef enum {
     NRF_SUCCESS                      = (0x00), // Successful command
@@ -70,4 +71,5 @@ void app_error_handler(ret_code_t error_code);
 
 
 
-#endif
+#endif //DC801_EMBEDDED
+#endif //SHIM_ERR_H

@@ -28,6 +28,8 @@ fp-info-cache
 _build/
 build/
 build_web/
+build_hw/
+nordic-sdk*/
 output/
 .cproject
 .dep/

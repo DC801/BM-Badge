@@ -1,10 +1,12 @@
 #ifndef SHIM_ADC_H
 #define SHIM_ADC_H
 
+#ifdef DC801_EMBEDDED
+#include <nrfx_saadc.h>
+#else
+
 #include <stdint.h>
 #include "shim_err.h"
-
-
 
 #define NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(PIN_P) \
 {                                                   \
@@ -171,4 +173,5 @@ nrfx_err_t nrf_drv_saadc_channel_init(uint8_t channel, nrf_saadc_channel_config_
 
 
 
-#endif
+#endif //DC801_EMBEDDED
+#endif //SHIM_ADC_H

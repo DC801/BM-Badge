@@ -1,8 +1,13 @@
 #include "mage_geometry.h"
 #include "mage_tileset.h"
 #include "convert_endian.h"
-#include "shim_err.h"
 #include <algorithm>
+
+#ifndef DC801_EMBEDDED
+#include "shim_err.h"
+#else
+#include <nrf_error.h>
+#endif
 
 std::vector<Point> MageGeometry::FlipByFlags(uint8_t flags, uint16_t width, uint16_t height) const
 {

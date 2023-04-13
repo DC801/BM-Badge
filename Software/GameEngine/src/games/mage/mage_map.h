@@ -26,7 +26,7 @@ struct GoDirection
 
 struct MapData
 {
-   MapData(uint32_t& offset);
+   MapData(uint32_t& address);
    static const inline int MapNameLength = 16;
    char name[MapNameLength]{ 0 };
    uint16_t tileWidth{ 0 };

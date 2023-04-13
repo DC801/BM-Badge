@@ -1,6 +1,10 @@
 #ifndef SHIM_RNG_H
 #define SHIM_RNG_H
 
+#ifdef DC801_EMBEDDED
+#include <nrf_rng.h>
+#include <nrf_drv_rng.h>
+#else
 #include <stdint.h>
 #include "shim_err.h"
 
@@ -18,4 +22,5 @@ ret_code_t nrf_drv_rng_init(nrf_drv_rng_config_t const * p_config);
 
 
 
-#endif
+#endif //SHIM_RNG_H
+#endif //DC801_EMBEDDED

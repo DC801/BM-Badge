@@ -1,19 +1,20 @@
 #ifndef _ENGINEWINDOWFRAME_H
 #define _ENGINEWINDOWFRAME_H
 
-#include "EngineInput.h"
-#include "modules/keyboard.h"
-#include "modules/led.h"
-
-#include <SDL.h>
-#include <SDL_image.h>
-#include <memory>
-
 static const inline auto ScreenWidth = 320;
 static const inline auto ScreenHeight = 240;
 static const inline auto DrawWidthHalf = ScreenWidth/2;
 static const inline auto DrawHeightHalf = ScreenHeight/2;
 static const inline uint32_t FramebufferSize = ScreenWidth * ScreenHeight;
+
+#include "EngineInput.h"
+#include "modules/keyboard.h"
+#include "modules/led.h"
+#ifndef DC801_EMBEDDED
+
+#include <SDL.h>
+#include <SDL_image.h>
+#include <memory>
 
 #ifndef SDL_CreateWindowAndRenderer
 extern int SDL_CreateWindowAndRenderer(int width, int height, uint32_t window_flags, SDL_Window** window, SDL_Renderer** renderer);
@@ -32,15 +33,6 @@ private:
    void drawButtonStates(ButtonState button) const;
    void drawLEDStates() const;
 
-   /*void util_gfx_init()
-   {
-      area_t area = { 0, 0, ScreenWidth, ScreenHeight };
-      p_canvas()->setTextArea(&area);
-
-      p_canvas()->clearScreen(COLOR_BLACK);
-
-      p_canvas()->blt();
-   }*/
    struct EngineWindowFrameComponents
    {
       EngineWindowFrameComponents();
@@ -56,6 +48,7 @@ private:
       SDL_Texture* frameLEDTexture = nullptr;
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
+   
    const SDL_Rect gameViewportSrcRect = { 0, 0, ScreenWidth, ScreenHeight };
    const SDL_Rect gameViewportDstRect = { 112, 56, ScreenWidth, ScreenHeight };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
@@ -132,5 +125,5 @@ private:
 
 };
 
-
+#endif //  DC801_EMBEDDED
 #endif //_ENGINEWINDOWFRAME_H

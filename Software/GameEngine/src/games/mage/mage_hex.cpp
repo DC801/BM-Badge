@@ -2,8 +2,14 @@
 #include "EngineInput.h"
 #include "convert_endian.h"
 #include "utility.h"
-#include "shim_err.h"
 #include "mage_dialog_control.h"
+#include <fonts/Monaco9.h>
+
+#ifndef DC801_EMBEDDED
+#include "shim_err.h"
+#else
+#include <nrf_error.h>
+#endif
 
 bool MageHexEditor::isHexEditorOn()
 {

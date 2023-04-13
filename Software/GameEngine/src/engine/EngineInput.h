@@ -8,7 +8,7 @@
 class ButtonState
 {
 public:
-   ButtonState(uint32_t buttons) :buttons(buttons) {}
+   ButtonState(uint32_t state) :buttons(state) {}
 
    bool IsPressed(KeyPress key) const
    {

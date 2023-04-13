@@ -5,12 +5,8 @@
 #ifndef DC26_BADGE_UART_H
 #define DC26_BADGE_UART_H
 
-
-
 void uart_init(void);
 
 bool jumpToGame(void);
-
-
 
 #endif //DC26_BADGE_UART_H

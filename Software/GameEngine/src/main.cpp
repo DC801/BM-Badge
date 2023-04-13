@@ -9,16 +9,33 @@
  *
  */
 
+#if __cplusplus > 199711L
+#define register      // Deprecated in C++11.
+#endif  // #if __cplusplus > 199711L
+
 #include "main.h"
 #include "games/mage/mage.h"
 #include "games/mage/mage_rom.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
-#include "sdk/shim/shim_err.h"
-#include "shim_timer.h"
 #include "utility.h"
+
+#include <modules/ble.h>
+#include <modules/drv_ili9341.h>
+#include <modules/i2c.h>
+#include <modules/sd.h>
+#include <modules/usb.h>
+
+#include "sdk_shim.h"
+#include "shim_timer.h"
+#include "shim_err.h"
+#include "shim_rng.h"
+#include "shim_rng.h"
+
+#ifndef DC801_EMBEDDED
 #include <SDL.h>
+#endif
 
 
 #ifdef DC801_EMBEDDED
@@ -27,6 +44,7 @@
 QSPI qspiControl;
 
 #else
+
 #include <time.h>
 #include "EngineWindowFrame.h"
 volatile sig_atomic_t application_quit = 0;
@@ -41,16 +59,6 @@ void sig_handler(int signo)
 }
 
 #endif
-
-#define XVAL(x) #x
-#define VAL(x)  XVAL(x)
-
-/*
-#pragma message ("TIMER_ENABLED=" VAL(TIMER_ENABLED))
-#pragma message ("TIMER1_ENABLED=" VAL(TIMER1_ENABLED))
-#pragma message ("NRFX_TIMER_ENABLED=" VAL(NRFX_TIMER_ENABLED))
-#pragma message ("NRFX_TIMER1_ENABLED=" VAL(NRFX_TIMER1_ENABLED))
-*/
 
 /**
  * Initialize the speaker
@@ -70,17 +78,6 @@ static void log_init(void){
 	NRF_LOG_INFO("--------------SYSTEM REBOOTED--------------");
 	NRF_LOG_ERROR("Error Logging to hardware UART enabled.");
 	NRF_LOG_INFO("Debug Logging to hardware UART enabled.");
-}
-
-/**
- * Initialize the QSPI ROM object
- */
-static void rom_init(void){
-	#ifdef DC801_EMBEDDED
-	if(!qspiControl.init()){
-		ENGINE_PANIC("Failed to init qspiControl.");
-	}
-	#endif
 }
 
 /**
@@ -128,7 +125,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	//QSPI ROM Chip
-	rom_init();
+	if (!qspiControl.init())
+	{
+		ENGINE_PANIC("Failed to init qspiControl.");
+	}
 
 	// Init the random number generator
 	nrf_drv_rng_init(NULL);
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
 	ledInit();
 	ledsOff();
 #endif
-
+	
 	setUpRandomSeed();
 
 	//morse isn't used on this badge yet...
@@ -167,7 +167,26 @@ int main(int argc, char* argv[]) {
 	debug_print("Booted!\nCreating and started game...\n");
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
-	auto game = std::make_unique<MageGameEngine>();
+	static auto audioPlayer = std::make_shared<AudioPlayer>();
+	static auto inputHandler = std::make_shared<EngineInput>();
+	static auto frameBuffer = std::make_shared<FrameBuffer>();
+
+	//skip 'MAGEGAME' at front of .dat file
+	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
+
+	// ROM()->Read(engineVersion, offset);
+
+	// if (engineVersion != ENGINE_VERSION)
+	// {
+	// 	throw std::runtime_error{ "game.dat is incompatible with Engine" };// \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
+	// }
+
+	// ROM()->Read(scenarioDataCRC32, offset);
+	// ROM()->Read(scenarioDataLength, offset);
+
+	auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
+
+	auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer, currentSave);
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
 	break;
@@ -176,10 +195,10 @@ int main(int argc, char* argv[]) {
 #endif
 
 
+// If we make it here - we shouldn't - but if, reset the badge/exit
 #ifdef DC801_EMBEDDED
 	while (1)
 	{
-		// If we make it here - we shouldn't - but if, reset the badge
 		NVIC_SystemReset();
 	}
 #else

@@ -1,8 +1,11 @@
 // System headers
-#ifdef DC801_EMBEDDED
 
-
-#include "drv_ili9341.h"
+#include <stdint.h>
+#include <config/custom_board.h>
+#include <nrf_delay.h>
+#include <drv_ili9341.h>
+#include <nrf_gpio.h>
+#include <nrfx_spim.h>
 
 //size of chunk to transfer each interrupt
 #define ILI_TRANSFER_CHUNK_SIZE (254)
@@ -24,7 +27,7 @@ static volatile bool m_busy = false;
 
 static bool m_large_tx = false;
 static uint32_t m_large_tx_size = 0;
-static uint8_t *p_large_tx_data = NULL;
+static uint8_t *p_large_tx_data = nullptr;
 
 /**
  * Handler for unblocked SPI transfers that assumes the transfer is complete
@@ -59,7 +62,7 @@ static void __spim_event_handler(nrfx_spim_evt_t const * p_event, void * context
  */
 static void inline __writeCommand(uint8_t command) {
 	nrf_spim_tx_buffer_set(SPIM(LCD_SPIM_INSTANCE), &command, 1);
-	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), NULL, 0);
+	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -82,7 +85,7 @@ static void inline __writeCommand(uint8_t command) {
  */
 static void inline __writeData(uint8_t data) {
 	nrf_spim_tx_buffer_set(SPIM(LCD_SPIM_INSTANCE), &data, 1);
-	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), NULL, 0);
+	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -100,7 +103,7 @@ static void inline __writeData(uint8_t data) {
 static inline void __writeData16(uint16_t data) {
 	data = SWAP(data);
 //	nrf_spim_tx_buffer_set(LCD_SPIM, (uint8_t *) &data, 2);
-//	nrf_spim_rx_buffer_set(LCD_SPIM, NULL, 0);
+//	nrf_spim_rx_buffer_set(LCD_SPIM, nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -212,7 +215,7 @@ void ili9341_init() {
     spi_config.ss_active_high = false;
 
 	APP_ERROR_CHECK(
-			nrfx_spim_init(&lcd_spim, &spi_config, __spim_event_handler, NULL)
+			nrfx_spim_init(&lcd_spim, &spi_config, __spim_event_handler, nullptr)
 	);
 
 	
@@ -452,5 +455,3 @@ void ili9341_start() {
 	CRITICAL_REGION_EXIT();
 
 }
-
-#endif

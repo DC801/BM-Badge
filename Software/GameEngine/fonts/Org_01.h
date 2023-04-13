@@ -51,7 +51,7 @@
 
 #define TOMTHUMB_USE_EXTENDED 0
 
-static const uint8_t TomThumbBitmaps[] PROGMEM = {
+static const uint8_t TomThumbBitmaps[]  = {
     0x00,                                /* 0x20 space */
     0x80, 0x80, 0x80, 0x00, 0x80,        /* 0x21 exclam */
     0xA0, 0xA0,                          /* 0x22 quotedbl */
@@ -262,7 +262,7 @@ static const uint8_t TomThumbBitmaps[] PROGMEM = {
 
 
 /* {offset, width, height, advance cursor, x offset, y offset} */
-static const GFXglyph TomThumbGlyphs[] PROGMEM = {
+static const GFXglyph TomThumbGlyphs[]  = {
     { 0, 8, 1, 2, 0, -5 },    /* 0x20 space */
     { 1, 8, 5, 2, 0, -5 },    /* 0x21 exclam */
     { 6, 8, 2, 4, 0, -5 },    /* 0x22 quotedbl */
@@ -471,7 +471,7 @@ static const GFXglyph TomThumbGlyphs[] PROGMEM = {
 #endif /* (TOMTHUMB_USE_EXTENDED) */
 };
 
-static const GFXfont TomThumb PROGMEM = {
+static const GFXfont TomThumb  = {
     (uint8_t  *)TomThumbBitmaps,
     (GFXglyph *)TomThumbGlyphs,
     0x20, 0x7E, 6 };

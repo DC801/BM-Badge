@@ -170,8 +170,8 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
 
    if (drawArrow)
    {
-      static const auto TAU = 6.283185307179586;
-      int8_t bounce = cos(((float)cursorPhase / 1000.0) * TAU) * 3;
+      static const auto TAU = 6.283185307179586f;
+      int8_t bounce = cos(((float)cursorPhase / 1000.0f) * TAU) * 3;
       if (shouldShowResponses())
       {
          auto& currentScreen = currentDialog->GetScreen(currentScreenIndex);

@@ -16,7 +16,10 @@
 
 #ifndef DC801_EMBEDDED
 #include "shim_timer.h"
-#include "sdk/shim/shim_pwm.h"
+#include "shim_pwm.h"
+#else
+#include <app_timer.h>
+#include <app_pwm.h>
 #endif
 
 #include <chrono>

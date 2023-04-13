@@ -6,12 +6,11 @@
  * @date 12/24/2020
  *
  */
-
-
-#ifdef DC801_EMBEDDED
-
-
 #include "qspi.h"
+
+#include <nrfx_qspi.h>
+#include <nrfx_errors.h>
+#include "utility.h"
 
 /**
  * Handler for the qspi interrupt
@@ -249,5 +248,3 @@ bool QSPI::read(void *data, size_t len, uint32_t startAddress){
 
 	return false;
 }
-
-#endif

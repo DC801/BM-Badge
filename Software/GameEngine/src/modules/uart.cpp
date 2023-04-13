@@ -4,8 +4,9 @@
 
 #ifdef DC801_EMBEDDED
 
+#include <config/custom_board.h>
 #include <mdk/nrf52840_bitfields.h>
-#include <hal/nrf_uart.h>
+#include <app_uart.h>
 
 #include "uart.h"
 

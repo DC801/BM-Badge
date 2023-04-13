@@ -1,6 +1,5 @@
-#ifdef DC801_EMBEDDED
+#ifndef DC801_EMBEDDED
 
-#include <common.h>
 #include "EngineAudio.h"
 
 #include "cmixer.h"
@@ -27,16 +26,16 @@ uint32_t soundCount = 0;
 
 AudioMutex audio_mutex;
 
-typedef struct sound
-{
-	bool fade;
-	bool free;
-	bool end;
+// typedef struct sound
+// {
+// 	bool fade;
+// 	bool free;
+// 	bool end;
 
-	cm_Source *source;
+// 	cm_Source *source;
 
-	struct sound *next;
-} Audio;
+// 	struct sound *next;
+// } Audio;
 
 Audio head;
 
@@ -76,7 +75,7 @@ void freeAudio(Audio *audio)
 	}
 }
 
-void callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
+void AudioPlayer::callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
 {
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{

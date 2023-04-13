@@ -31,12 +31,13 @@
 
 #include <cstdlib>
 
-#include <sdk/shim/shim_filesystem.h>
 #include <filesystem>
+#include <fstream>
 #include "EnginePanic.h"
 #include "utility.h"
 
 #ifdef DC801_EMBEDDED
+#include <diskio_blkdev.h>
 
 /**
  * @brief  SDC block device definition
@@ -93,137 +94,63 @@ bool util_sd_init() {
 	return true;
 }
 
-#endif
-
 uint32_t util_sd_file_size(const char *path) {
 	FILINFO info;
 
 	FRESULT result = f_stat(path, &info);
 	if (result != FR_OK) {
-		//TODO FIXME: 
-		// util_sd_recover();
+		util_sd_recover();
 		result = f_stat(path, &info);
 	}
 
 	if (result != FR_OK) {
-		//TODO FIXME: 
-		// util_sd_recover();
+		util_sd_recover();
 		return 0;
 	}
 
 	return info.fsize;
 }
 
-#ifdef DC801_EMBEDDED
-/**
- * Read a file completely into memory, careful!
- */
-FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
-	FIL file;
-
+#endif
+void util_sd_load_file(const char* path, char* p_buffer, uint32_t count)
+{
+	
     debug_print("Try to load %s\n", path);
 
-	FRESULT result = f_open(&file, path, FA_READ | FA_OPEN_EXISTING);
-	if (result != FR_OK) {
+	auto file = std::fstream{ path, std::ios_base::in| std::ios_base::binary };
+
+	// copy the file into the buffer
+	if (!file || !file.read(p_buffer, count))
+	{
 		debug_print("Can't load file %s\n", path);
-		return result;
 	}
-
-	UINT bytesread = 0;
-	result = f_read(&file, p_buffer, count, &bytesread);
-
-	f_close(&file);
-	return result;
+	file.close();
 }
-#else
-FRESULT util_sd_load_file(const char *path, uint8_t *p_buffer, uint32_t count) {
-	FIL *file;
 
-    debug_print("Try to load %s\n", path);
+FRESULT util_sd_store_file(const char* path, char* p_buffer, uint32_t count)
+{
+	auto file = std::fstream{ path, std::ios_base::out | std::ios_base::binary };
 
-	FRESULT result = f_open(&file, path, FA_READ | FA_OPEN_EXISTING);
-	if (result != FR_OK) {
-		debug_print("Can't load file %s\n", path);
-		return result;
+	// copy the file into the buffer
+	if (!file || !file.write(p_buffer, count))
+	{
+		debug_print("Can't write file %s\n", path);
 	}
-
-	UINT bytesread = 0;
-	result = f_read(file, p_buffer, count, &bytesread);
-
-	f_close(file);
-	return result;
-}
-#endif
-
-#ifdef DC801_EMBEDDED
-/**
- * Store some data
- * @param p_file
- * @return
- */
-FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
-    FIL file;
-
-    FRESULT result = f_open(&file, path, FA_WRITE | FA_OPEN_ALWAYS);
-    if(result != FR_OK){
-        return result;
-    }
-
-    UINT byteswritten = 0;
-    result = f_write(&file, p_buffer, count, &byteswritten);
-
-	f_close(&file);
-
-    return result;
+	file.close();
 
 }
-#else
-FRESULT util_sd_store_file(const char *path, uint8_t *p_buffer, uint32_t count){
-    FIL *file;
 
-    FRESULT result = f_open(&file, path, FA_WRITE | FA_OPEN_ALWAYS);
-    if(result != FR_OK){
-        return result;
-    }
 
-    UINT byteswritten = 0;
-    result = f_write(file, p_buffer, count, &byteswritten);
-
-	f_close(file);
-
-    return result;
-
-}
-#endif
-
-uint16_t util_sd_read_16(FIL *p_file) {
-	uint16_t result;
-	UINT count;
-	f_read(p_file, &result, 2, &count);
-	return result;
-}
-
-uint32_t util_sd_read_32(FIL *p_file) {
-	uint32_t result;
-	UINT count;
-	f_read(p_file, &result, 4, &count);
-	return result;
-}
-
-#ifdef DC801_EMBEDDED
 
 bool util_sd_recover() {
+#ifdef DC801_EMBEDDED
 	disk_uninitialize(0);
 	return util_sd_init();
-}
-
 #else
-
-bool util_sd_recover() {
 	return true;
+#endif
 }
 
-#endif
 
 /**
  * @param dir Directory to scan

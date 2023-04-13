@@ -2,6 +2,7 @@
 #include <regex>
 #include "EngineSerial.h"
 #include <iostream>
+#include <usb.h>
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;

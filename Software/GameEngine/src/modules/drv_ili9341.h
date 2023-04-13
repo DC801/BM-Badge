@@ -1,9 +1,10 @@
 #ifndef DRV_ILI9341_H_
 #define DRV_ILI9341_H_
 
+#include <nrf_error.h>
+#include <app_error.h>
+#include <nrf_drv_spi.h>
 
-	
-#ifdef DC801_EMBEDDED
 //#define ST7735_INVERTED_Y_OFFSET	1
 
 extern uint16_t ili9341_color565(uint8_t r, uint8_t g, uint8_t b);
@@ -21,9 +22,5 @@ extern void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16
  * Force and update of the display, update inverted status and redraw from internal memory
  */
 extern void ili9341_update();
-
-#endif
-
-
 
 #endif

@@ -11,6 +11,10 @@
 
 #ifdef DC801_EMBEDDED
 #include <softdevice/s132/headers/ble_gap.h>
+#include <app_timer.h>
+#include <bsp.h>
+#include <nrf_sdh_ble.h>
+#include <sdk_config.h>
 #else
 #include "sdk_shim.h"
 #endif
