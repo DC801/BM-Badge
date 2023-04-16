@@ -21,37 +21,15 @@ on_look-ch2-castle-1 {
 on_load-ch2-castle-1 {
 	// ch2 room state
 	mutate ch2-in-room = 1
-	set flag interrupt to false
 	set flag ch2-seen-room-1 to true
-	
+
 	// entrance text
 	if (flag ch2-has-artifact is true) {
 		show serial dialog spacer
 		show serial dialog { "Entering <bold>FOYER</>..." }
 	}
 
-	// misc game state
-	if (flag ch2-ring-zero-restored is false) {
-		copy disable-hax
-	}
-
-	// serial features
-	register rtfm -> serial-rtfm
-	register inventory -> ch2-report-inventory
-	if (flag ch2-has-artifact is true) {
-		set serial control on
-		copy ch2-register-manual
-	} else {
-		set serial control off // safety
-	}
-	if (flag ch2-map-granted is true) {
-		copy ch2-map-enable
-	}
-
-	// warp-in animation
-	if (warp state is warping) {
-		copy warping-in-fade-in
-	}
+	goto ch2-castle-init
 }
 
 /* ---------- ON_TICK ---------- */
@@ -394,7 +372,6 @@ ch2-terminal-message-test-success {
 			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
 		}
 		copy ch2-register-manual
-		// set flag ch2-toot-done to true // DEBUG
 		set serial control on
 		show serial dialog spacer
 		show serial dialog {
