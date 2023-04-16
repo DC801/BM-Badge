@@ -36,8 +36,12 @@ ch2-castle-init {
 	}
 	
 	// warp-in animation
-	if (warp state is warping) {
-		copy warping-in-fade-in
+	if (flag ch2-manual-warp is true) { // workaround for WOPR
+		set flag ch2-manual-warp to false
+	} else {
+		if (warp state is warping) {
+			copy warping-in-fade-in
+		}
 	}
 	set player control on
 
@@ -69,8 +73,6 @@ ch2-noncastle-init {
 	// CALLBACK "MAGIC"
 	if (variable CALLBACK is 98) {
 		goto on_load-ch2-castle-outside-RESUME
-	} else if (variable CALLBACK is 299) {
-		goto on_load-woprhouse-RESUME
 	} else {
 		show serial dialog {
 			"<r>ERROR: invalid callback value ($CALLBACK$)</>"

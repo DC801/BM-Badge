@@ -16,34 +16,19 @@ on_look-ch2-town {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-town {
+	// cutscene interrupt:
 	if (warp state is cutscene-escort) {
 		goto ch2-escort-cutscene
 	}
-	mutate CALLBACK = 0
-	// SERIAL STUFF (in lockstep with "ch2-common.mgs")
-	if (flag ch2-has-artifact is true) {
-		set serial control on
-	} else {
-		set serial control off
-	}
-	register rtfm -> serial-rtfm
-	register inventory -> ch2-report-inventory
-	if (flag ch2-toot-done is true) {
-		copy ch2-register-manual
-	}
-	if (flag ch2-map-granted is true) {
-		copy ch2-map-enable
-	}
-	// NORMAL STUFF
-	set hex control to on
+
+	// map state:
 	set entity Jackob tick_script to yeet
 	set entity Alfonso tick_script to yeet
 	set entity Bert tick_script to yeet
+
 	// walking out of doorways:
 	set player control to off
-	if (warp state is warping) {
-		copy warping-in-fade-in
-	} else if (warp state is exit_from-credits) {
+	if (warp state is exit_from-credits) {
 		teleport entity "%PLAYER%" to geometry from-credits-spot
 		fade in camera from #000000 over 800ms
 	} else if (warp state is walk_from-east) {
@@ -70,14 +55,8 @@ on_load-ch2-town {
 		walk entity "%PLAYER%" along geometry walk_from-smithfamily over 200ms
 	} else if (warp state is walk_from-woprhouse) {
 		walk entity "%PLAYER%" along geometry walk_from-woprhouse over 200ms
-	} else { // in case warp state is something strange
-		goto on_load-ch2-town-fallback
 	}
-	set player control to on
-}
-
-on_load-ch2-town-fallback {
-	set player control to on
+	goto ch2-castle-init
 }
 
 /* ---------- ON_TICK ---------- */

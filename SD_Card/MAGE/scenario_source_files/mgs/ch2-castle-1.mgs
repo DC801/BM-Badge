@@ -388,6 +388,26 @@ ch2-terminal-message-test-success {
 /* ---------- LAMBDA INTRO CONVO PART II ---------- */
 
 ch2-command-man {
+	if (
+		flag ch2-ring-zero-restored is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `man` works normally
+		goto ch2-command-man-normal
+	} else {
+		// otherwise, `man` cannot reach Lambda
+		show serial dialog spacer
+		show serial dialog {
+			"<bold><r>ERROR:</> <bold>lambda-talk</> timed out"
+			" "
+			"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
+			" "
+			"<bold>lambda-talk</> exited with code 1"
+		}
+	}
+}
+
+ch2-command-man-normal {
 	if (flag ch2-saw-bert-secret is true) {
 		if (flag ch2-lambda-bert-prelude is false) {
 			goto ch2-bert-secret-lambda-intro
