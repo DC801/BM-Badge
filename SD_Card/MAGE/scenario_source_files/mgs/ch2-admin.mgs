@@ -1,8 +1,14 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+}
+settings for serial dialog { wrap 60 }
+
 ch2-report-inventory {
 	set flag temp to false
 	show serial dialog spacer
 	show serial dialog {
-		"You are currently carrying:"
+		"<c>INVENTORY:</>"
 	}
 	if (flag ch2-carrying-clock is true) {
 		show serial dialog { "\tclock" }
@@ -29,8 +35,8 @@ ch2-interact-mainframe {
 	if (flag ch2-installed-clock is false) {
 		if (flag ch2-carrying-clock is true) {
 			show dialog {
-				name " " "Now installing... the grandfather clock!"
-				"Somehow, that enormous, analog relic works great for a CPU clock!"
+				name "" "(Now installing... the grandfather clock!)"
+				"(Somehow, that enormous, analog relic works great for a CPU clock!)"
 			}
 			set flag temp to true
 			copy ch2-install-clock
@@ -38,7 +44,7 @@ ch2-interact-mainframe {
 	}
 	if (flag temp is false) {
 		show dialog {
-			name " " "You don't have any components to install."
+			name "" "(You don't have any components to install.)"
 		}
 	}
 	set flag temp to false

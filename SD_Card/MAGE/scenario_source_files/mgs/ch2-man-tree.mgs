@@ -61,13 +61,14 @@ ch2-lambda-topic-parts-q {
 	}
 }
 
+ch2-describe-clock {
+	show serial dialog ch2-describe-clock
+}
+
 ch2-lambda-parts-clock {
 	show serial dialog spacer
 	if (flag ch2-installed-clock is false) {
-		show serial dialog {
-			"<m>LAMBDA:</> The mainframe is going to need a <c>CLOCK</>. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
-			"\tIn our case... well, we don't have a lot of options, but I do know <m>King Gibson has a very nice grandfather clock <m>in his bedroom</>. Maybe ask him if you can use it."
-		}
+		copy ch2-describe-clock
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> The clock's installed already. It's just... you know... clocking away."
