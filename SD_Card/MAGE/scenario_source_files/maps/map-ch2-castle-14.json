@@ -94,7 +94,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-get-clock"
+                         "value":"ch2-touch-clock"
                         }],
                  "rotation":0,
                  "visible":true,

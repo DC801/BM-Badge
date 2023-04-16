@@ -63,13 +63,44 @@ ch2-hide-clock {
 	set entity Clock name to " "
 }
 
-ch2-get-clock {
+ch2-touch-clock {
+	if (flag ch2-clock-firstlook is false) {
+		show dialog {
+			PLAYER "Wow, this thing looks like it's a million years old."
+		}
+		set flag ch2-clock-firstlook to true
+	}
 	show dialog {
-		name " " "You pick up the clock!"
+		PLAYER "What a robust ticking ambience."
+	}
+	// if (flag ch2-clock-permission is false) { // TODO make this a thing
+	// 	show dialog {
+	// 		PLAYER "Can I just take this, though? Maybe I should ask the king first...."
+	// 	}
+	// } else {
+		show dialog {
+			name "" "(Pick up the clock?)"
+			> "Yes" : ch2-touch-clock-yes
+			> "No" : ch2-touch-clock-no
+		}
+	// }
+	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
+}
+ch2-touch-clock-yes {
+	show dialog {
+		name "" "(You pick up the clock!)"
 	}
 	copy script ch2-hide-clock
 	set flag ch2-carrying-clock to true
+	set entity "%SELF%" interact_script to null_script
 }
+ch2-touch-clock-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
+}
+
 ch2-install-clock {
 	set flag ch2-carrying-clock to false
 	set flag ch2-installed-clock to true
@@ -77,6 +108,6 @@ ch2-install-clock {
 on_look-clock {
 	show serial dialog spacer
 	show serial dialog {
-		"A giant grandfather clock that's very definitely larger than you. Never mind how it fits in your pocket."
+		"A giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."
 	}
 }

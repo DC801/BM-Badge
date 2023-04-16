@@ -269,7 +269,7 @@ ch2-toot-step4b-noob {
 		" "
 		"<m>LAMBDA:</> Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
 	}
-	goto ch2-toot-step4c
+	goto ch2-toot-step5a
 }
 
 ch2-toot-step4b-pro {
@@ -278,23 +278,55 @@ ch2-toot-step4b-pro {
 		"<c>YOU:</> This'll be a sinch!"
 		" "
 		"<m>LAMBDA:</> Yeah! Building a new computer is never as hard as it sounds. And it looks like... yeah, I think we can scavenge just enough parts to make this really work."
+		" "
+		# "Really?" : ch2-toot-step5a
 	}
-	goto ch2-toot-step4c
 }
-ch2-toot-step4c {
+
+ch2-toot-step5a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Really? Around here? Parts like what?"
+		" "
+	}
+	goto ch2-toot-step5b
+}
+
+serial dialog ch2-describe-clock {
+	// NOTE: These must be written generically enough to be seen in isolation
+	"<m>LAMBDA:</> We'll need a <c>CLOCK</>. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
+	"\tIn our case... well, we don't have a lot of options, but I do know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+}
+ch2-toot-step5b {
+	show serial dialog ch2-describe-clock
+	show serial dialog {
+		" "
+		# "And?" : ch2-toot-step5c
+	}
+}
+
+ch2-toot-step5c {
+	goto ch2-toot-step6
+}
+
+ch2-toot-step6 {
 	// state must be set first because the serial dialog branches
 	mutate ch2-toot-level = 99
 	set flag ch2-toot-done to true
 	// actual convo
+	show serial dialog spacer
 	show serial dialog {
+		"<c>YOU:</> And?"
+		" "
+		"<m>LAMBDA:</> And... that might be it."
 		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
 		" "
-		# "Let's do it!" : ch2-toot-step4-end
-		# "Actually, I had a question." : ch2-toot-step4-continue
+		# "Let's do it!" : ch2-toot-step6-end
+		# "Actually, I had a question." : ch2-toot-step6-continue
 	}
 }
 
-ch2-toot-step4-end {
+ch2-toot-step6-end {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Yeah, let's do it!"
@@ -303,7 +335,7 @@ ch2-toot-step4-end {
 	}
 }
 
-ch2-toot-step4-continue {
+ch2-toot-step6-continue {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Actually, I had a question."

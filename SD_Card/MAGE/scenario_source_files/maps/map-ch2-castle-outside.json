@@ -253,6 +253,11 @@
                          "value":"interact-ch2-bert-outside"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"on_look-bert"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"null_script"
@@ -281,6 +286,11 @@
                          "value":"interact-ch2-alfonso-outside"
                         }, 
                         {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"on_look-alfonso"
+                        }, 
+                        {
                          "name":"on_tick",
                          "type":"string",
                          "value":"null_script"
@@ -307,6 +317,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-jackob-outside"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"on_look-jackob"
                         }, 
                         {
                          "name":"on_tick",

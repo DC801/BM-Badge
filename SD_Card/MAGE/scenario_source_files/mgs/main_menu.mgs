@@ -20,10 +20,15 @@ on_load-main_menu {
 	}
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
+	register hub -> hub
 	register ch2 -> start-chapter2
 	register rtfm -> serial-rtfm
 	copy ch2-register-manual
 	goto null_script
+}
+
+hub {
+	load map warp_zone
 }
 
 debug {
