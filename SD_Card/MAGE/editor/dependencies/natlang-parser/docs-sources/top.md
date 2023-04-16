@@ -480,7 +480,7 @@ Syntax for each parameter:
 	- [String](#string): a fixed string of no more than 12 ASCII characters. For a relative name instead, wrap a specific entity's name in `%`s.
 		- Can be `%PLAYER%` or `%SELF%`.
 	- Overrides names inherited via the `entity` parameter.
-	- A dialog name is required, either via this parameter or the `entity` parameter.
+	- If this string is empty, the dialog label will be absent entirely. (An empty string must be wrapped in quotes!)
 - `portrait $string`
 	- [String](#string): the name of a MGE portrait.
 	- Overrides portraits inherited via the `entity` parameter.
