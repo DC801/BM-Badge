@@ -268,8 +268,9 @@ ch2-toot-step4b-noob {
 		"<c>YOU:</> But I don't know how to build a computer!"
 		" "
 		"<m>LAMBDA:</> Don't worry, I've done it a hundred times. I walk you through the whole thing one part at a time. It's not as hard as it sounds."
+		" "
+		# "Really?" : ch2-toot-step5a
 	}
-	goto ch2-toot-step5a
 }
 
 ch2-toot-step4b-pro {
@@ -301,7 +302,7 @@ ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
 	show serial dialog {
 		" "
-		# "And?" : ch2-toot-step5c
+		# "What else?" : ch2-toot-step5c
 	}
 }
 
@@ -316,7 +317,7 @@ ch2-toot-step6 {
 	// actual convo
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> And?"
+		"<c>YOU:</> What else?"
 		" "
 		"<m>LAMBDA:</> And... that might be it."
 		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"

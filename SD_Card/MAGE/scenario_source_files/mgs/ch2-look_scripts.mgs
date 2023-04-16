@@ -48,7 +48,3 @@ on_look-save_floppy {
 		"Wow, someone 3D-printed a save icon. What will they think up next?"
 	}
 }
-
-serial dialog on_look-xa_room {
-	"XA's room seems to have once functioned as a kind of hub, though the doors look less than functional at the moment."
-}

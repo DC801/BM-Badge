@@ -4,9 +4,7 @@ settings for dialog {
 	parameters for label SELF { entity "%SELF%" }
 }
 
-const! (
-	$CALLBACK = 201
-)
+/* ---------- LOOK SCRIPTS ---------- */
 
 on_look-ch2-magehouse {
 	show serial dialog spacer
@@ -14,16 +12,15 @@ on_look-ch2-magehouse {
 		"TODO: mage house text"
 	}
 }
+
+/* ---------- ON_LOAD ---------- */
+
 on_load-ch2-magehouse {
-	mutate CALLBACK = $CALLBACK
-	goto ch2-noncastle-init
+	// do unique stuff first (but turn serial / player control off first, if you do)
+	goto ch2-castle-init
 }
-on_load-ch2-magehouse-RESUME {
-	mutate CALLBACK = 0
-	if (warp state is warping) { // warping in
-		copy warping-in-fade-in
-	}
-}
+
+/* ---------- ON_TICK ---------- */
 
 on_tick-ch2-magehouse {
 	if (entity "%PLAYER%" is inside geometry south-hitbox) {

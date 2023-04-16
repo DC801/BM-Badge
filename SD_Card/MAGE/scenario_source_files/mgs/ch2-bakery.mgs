@@ -4,10 +4,6 @@ settings for dialog {
 	parameters for label SELF { entity "%SELF%" }
 }
 
-const! (
-	$CALLBACK = 204
-)
-
 /* ---------- LOOK SCRIPTS ---------- */
 
 on_look-ch2-bakery {
@@ -20,14 +16,8 @@ on_look-ch2-bakery {
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bakery {
-	mutate CALLBACK = $CALLBACK
-	goto ch2-noncastle-init
-}
-on_load-ch2-bakery-RESUME {
-	mutate CALLBACK = 0
-	if (warp state is warping) { // warping in
-		copy warping-in-fade-in
-	}
+	// do unique stuff first (but turn serial / player control off first, if you do)
+	goto ch2-castle-init
 }
 
 /* ---------- ON_TICK ---------- */
