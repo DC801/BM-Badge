@@ -4,25 +4,14 @@ settings for dialog {
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
 }
 
-const! (
-	$CALLBACK = 299
-)
-
 on_load-woprhouse {
 	if (flag tuesdayd is true) {
 		register rtfm -> serial-rtfm
 	}
-	if (variable current-chapter is 2) {
-		register rtfm -> serial-rtfm
-		mutate CALLBACK = $CALLBACK
-		goto ch2-noncastle-init
-	}
-	goto on_load-woprhouse-RESUME
-}
-on_load-woprhouse-RESUME {
-	mutate CALLBACK = 0
 	if (warp state is warping) {
+		// this is here because the "backdoor" dialog must come after the warp-in thing
 		copy warping-in-fade-in
+		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
 	}
 	if (flag wopr-backdoor-found is false) {
 		set player control to off
@@ -30,11 +19,14 @@ on_load-woprhouse-RESUME {
 			walk entity "%PLAYER%" along geometry walk_from-north over 600ms
 		}
 		wait 400ms
-		set player control to on
 		show dialog {
 			PLAYER "Whoa! It looks like I found some kind of back door."
 		}
 		set flag wopr-backdoor-found to true
+	}
+	set player control on
+	if (variable current-chapter is 2) {
+		goto ch2-castle-init // JUMP TO SHARED BEHAVIOR
 	}
 }
 
