@@ -311,7 +311,9 @@ bool MageDialogControl::shouldShowResponses() const {
 void MageDialogControl::draw() {
 	MageDialogAlignmentCoords coords = alignments[currentScreen.alignment];
 	drawDialogBox(currentMessage, coords.text, true);
-	drawDialogBox(currentEntityName, coords.label);
+	if (currentEntityName != "") {
+		drawDialogBox(currentEntityName, coords.label);
+	}
 	if(currentPortraitId != DIALOG_SCREEN_NO_PORTRAIT) {
 		drawDialogBox("", coords.portrait, false, true);
 	}

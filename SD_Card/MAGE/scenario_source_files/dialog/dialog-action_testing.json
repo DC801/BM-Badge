@@ -532,7 +532,6 @@
 		{
 			"alignment": "BOTTOM_LEFT",
 			"border_tileset": "codec",
-			"name": "GAME OVER?",
 			"messages": [
 				"GAME OVER"
 			]
