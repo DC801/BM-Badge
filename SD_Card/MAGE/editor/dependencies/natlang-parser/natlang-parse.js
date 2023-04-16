@@ -272,7 +272,7 @@ natlang.tryBranch = function (tokens, tokenPos, branch) {
 					}
 					if (captureMatch === null) {
 						var decayedValue = natlang.decayTo[captureType](token);
-						if (decayedValue) {
+						if (decayedValue !== undefined) {
 							captureMatch = decayedValue;
 						}
 					}
