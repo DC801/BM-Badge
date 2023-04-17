@@ -1,8 +1,8 @@
-#include <string>
-#include <regex>
 #include "EngineSerial.h"
+#include "modules/usb.h"
 #include <iostream>
-#include <usb.h>
+#include <regex>
+#include <string>
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;
@@ -15,11 +15,7 @@ void (*on_command_function_pointer)(char *commandString) = nullptr;
 #ifndef DC801_EMBEDDED
 void EngineInputDesktopGetCommandStringFromStandardIn()
 {
-    memset(
-        command_buffer,
-        0,
-        COMMAND_BUFFER_SIZE
-    );
+    memset(command_buffer, 0, COMMAND_BUFFER_SIZE);
 
     std::ios_base::sync_with_stdio(false);
     auto inChar = char{ 0 };

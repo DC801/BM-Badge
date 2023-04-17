@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(bm_badge)
+
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(std::filesystem::path::preferred_separator filesystem cxx17fs)
 
@@ -119,35 +120,53 @@ set(SOURCEFILES
     Software/GameEngine/src/games/mage/mage_tileset.h
     Software/GameEngine/src/games/mage/mage.cpp
     Software/GameEngine/src/games/mage/mage.h
+        
+	Software/GameEngine/sdk/shim/sdk_shim.cpp
+	Software/GameEngine/sdk/shim/sdk_shim.h
+	Software/GameEngine/sdk/shim/shim_adc.cpp
+	Software/GameEngine/sdk/shim/shim_adc.h
+	Software/GameEngine/sdk/shim/shim_audio.cpp
+	Software/GameEngine/sdk/shim/shim_ble.cpp
+	Software/GameEngine/sdk/shim/shim_ble.h
+	Software/GameEngine/sdk/shim/shim_err.cpp
+	Software/GameEngine/sdk/shim/shim_err.h
+	Software/GameEngine/sdk/shim/shim_gpio.cpp
+	Software/GameEngine/sdk/shim/shim_gpio.h
+	Software/GameEngine/sdk/shim/shim_i2c.cpp
+	Software/GameEngine/sdk/shim/shim_i2c.h
+	Software/GameEngine/sdk/shim/shim_pwm.cpp
+	Software/GameEngine/sdk/shim/shim_pwm.h
+	Software/GameEngine/sdk/shim/shim_rng.cpp
+	Software/GameEngine/sdk/shim/shim_rng.h
+	Software/GameEngine/sdk/shim/shim_serial.cpp
+	Software/GameEngine/sdk/shim/shim_serial.h
+	Software/GameEngine/sdk/shim/shim_st7735.cpp
+	Software/GameEngine/sdk/shim/shim_timer.h
+	Software/GameEngine/sdk/shim/shim_timer.cpp
+    
+        Software/GameEngine/src/modules/cmixer/cmixer.h
+        Software/GameEngine/src/modules/drv_ili9341.h
+        Software/GameEngine/src/modules/sd.h
+        Software/GameEngine/src/modules/uart.h
+        Software/GameEngine/src/modules/led.h
+        Software/GameEngine/src/modules/mutex.h
+        Software/GameEngine/src/modules/keyboard.h
+        Software/GameEngine/src/modules/qspi.h
+        
+        Software/GameEngine/src/modules/cmixer/cmixer.cpp
+        Software/GameEngine/src/modules/drv_ili9341.cpp
+        Software/GameEngine/src/modules/sd.cpp
+        Software/GameEngine/src/modules/uart.cpp
+        Software/GameEngine/src/modules/led.cpp
+        Software/GameEngine/src/modules/mutex.cpp
+        Software/GameEngine/src/modules/keyboard.cpp
+        Software/GameEngine/src/modules/qspi.cpp
 )
 
 if(NOT EMBEDDED_BUILD)
     set(SOURCEFILES ${SOURCEFILES}
         Software/GameEngine/src/engine/EngineWindowFrame.cpp
         Software/GameEngine/src/engine/EngineWindowFrame.h
-        
-        Software/GameEngine/src/modules/cmixer/cmixer.cpp
-        Software/GameEngine/src/modules/cmixer/cmixer.h
-        Software/GameEngine/src/modules/drv_ili9341.cpp
-        Software/GameEngine/src/modules/drv_ili9341.h
-        Software/GameEngine/src/modules/sd.cpp
-        Software/GameEngine/src/modules/sd.h
-        Software/GameEngine/src/modules/ble.cpp
-        Software/GameEngine/src/modules/ble.h
-        Software/GameEngine/src/modules/adc.cpp
-        Software/GameEngine/src/modules/adc.h
-        Software/GameEngine/src/modules/uart.cpp
-        Software/GameEngine/src/modules/uart.h
-        Software/GameEngine/src/modules/led.cpp
-        Software/GameEngine/src/modules/led.h
-        Software/GameEngine/src/modules/i2c.cpp
-        Software/GameEngine/src/modules/i2c.h
-        Software/GameEngine/src/modules/mutex.cpp
-        Software/GameEngine/src/modules/mutex.h
-        Software/GameEngine/src/modules/keyboard.cpp
-        Software/GameEngine/src/modules/keyboard.h
-        Software/GameEngine/src/modules/qspi.cpp
-        Software/GameEngine/src/modules/qspi.h
     )
 endif()
 
@@ -156,6 +175,7 @@ if(WIN32)
 else()
     add_executable(bm_badge ${SOURCEFILES})
 endif()
+set_property(TARGET bm_badge PROPERTY CXX_STANDARD 17)
 
 target_include_directories(bm_badge PUBLIC ${INCLUDEDIRS})
 target_compile_definitions(bm_badge PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})
@@ -164,6 +184,9 @@ if (EMSCRIPTEN)
     target_link_libraries(bm_badge ${SDL2_LIBRARIES})
 else()
     target_link_libraries(bm_badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+    if(EMBEDDED_BUILD)
+        set_target_properties(bm_badge PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
+    endif()
 endif()
 
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")

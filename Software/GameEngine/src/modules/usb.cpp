@@ -29,17 +29,17 @@
  *
  */
 
-/**
- * @brief Enable power USB detection
- *
- * Configure if example supports USB port connection
- */
+ /**
+  * @brief Enable power USB detection
+  *
+  * Configure if example supports USB port connection
+  */
 #ifndef USBD_POWER_DETECTION
 #define USBD_POWER_DETECTION false
 #endif
 
 static void cdc_acm_user_ev_handler(
-	app_usbd_class_inst_t const * p_inst,
+	app_usbd_class_inst_t const* p_inst,
 	app_usbd_cdc_acm_user_event_t event
 );
 
@@ -74,20 +74,25 @@ static char echo_buffer[ECHO_BUFFER_SIZE];
 uint16_t echo_buffer_length = 0;
 bool is_echo_buffer_populated = false;
 
-static void handle_serial_character(char value) {
+static void handle_serial_character(char value)
+{
 	if (
 		// handle newlines
 		value == '\r'
 		|| value == '\n'
-	) {
+		)
+	{
 		was_command_entered = true;
-	} else if (
+	}
+	else if (
 		// handle delete
 		value == '\b'
 		|| value == 127
-	) {
+		)
+	{
 		// prevents deleting past the allowed input start offset
-		if (command_buffer_length > 0) {
+		if (command_buffer_length > 0)
+		{
 			command_buffer_length--;
 			command_buffer[(command_buffer_length + COMMAND_BUFFER_SIZE) % COMMAND_BUFFER_SIZE] = '\0';
 			echo_buffer[(echo_buffer_length + ECHO_BUFFER_SIZE) % ECHO_BUFFER_SIZE] = 127;
@@ -98,11 +103,13 @@ static void handle_serial_character(char value) {
 			echo_buffer_length++;
 			is_echo_buffer_populated = true;
 		}
-	} else if (
+	}
+	else if (
 		// it's a renderable character
 		value >= 32
 		&& command_buffer_length < COMMAND_BUFFER_MAX_READ // don't allow input larger than the buffer
-	) {
+		)
+	{
 		command_buffer[command_buffer_length % COMMAND_BUFFER_SIZE] = value;
 		echo_buffer[echo_buffer_length % ECHO_BUFFER_SIZE] = value;
 		command_buffer_length++;
@@ -117,70 +124,72 @@ static void handle_serial_character(char value) {
  * @brief User event handler @ref app_usbd_cdc_acm_user_ev_handler_t (headphones)
  * */
 static void cdc_acm_user_ev_handler(
-	app_usbd_class_inst_t const * p_inst,
+	app_usbd_class_inst_t const* p_inst,
 	app_usbd_cdc_acm_user_event_t event
-) {
-	app_usbd_cdc_acm_t const * p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
+)
+{
+	app_usbd_cdc_acm_t const* p_cdc_acm = app_usbd_cdc_acm_class_get(p_inst);
 
 	switch (event)
 	{
-		case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
-		{
-			//bsp_board_led_on(LED_CDC_ACM_OPEN);
-			//ledOn(LED_BIT1);
+	case APP_USBD_CDC_ACM_USER_EVT_PORT_OPEN:
+	{
+		//bsp_board_led_on(LED_CDC_ACM_OPEN);
+		//ledOn(LED_BIT1);
 
-			/*Setup first transfer*/
-			ret_code_t ret = app_usbd_cdc_acm_read(
+		/*Setup first transfer*/
+		ret_code_t ret = app_usbd_cdc_acm_read(
+			&m_app_cdc_acm,
+			m_rx_buffer,
+			READ_SIZE
+		);
+		UNUSED_VARIABLE(ret);
+		was_serial_started = true;
+		break;
+	}
+	case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
+		//bsp_board_led_off(LED_CDC_ACM_OPEN);
+		//ledOff(LED_BIT1);
+		break;
+	case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
+		// bsp_board_led_invert(LED_CDC_ACM_TX);
+		//ledInvert(LED_BIT64);
+		break;
+	case APP_USBD_CDC_ACM_USER_EVT_RX_DONE:
+	{
+		ret_code_t ret;
+		debug_print("Bytes waiting: %d", app_usbd_cdc_acm_bytes_stored(p_cdc_acm));
+		do
+		{
+			/*Get amount of data transfered*/
+			size_t size = app_usbd_cdc_acm_rx_size(p_cdc_acm);
+			char value = m_rx_buffer[0];
+			/*
+			debug_print(
+				"RX: size: %lu char: %c code: %d",
+				size,
+				value,
+				value
+			);
+			*/
+			handle_serial_character(value);
+			/* Fetch data until internal buffer is empty */
+			ret = app_usbd_cdc_acm_read(
 				&m_app_cdc_acm,
 				m_rx_buffer,
 				READ_SIZE
 			);
-			UNUSED_VARIABLE(ret);
-			was_serial_started = true;
-			break;
-		}
-		case APP_USBD_CDC_ACM_USER_EVT_PORT_CLOSE:
-			//bsp_board_led_off(LED_CDC_ACM_OPEN);
-			//ledOff(LED_BIT1);
-			break;
-		case APP_USBD_CDC_ACM_USER_EVT_TX_DONE:
-			// bsp_board_led_invert(LED_CDC_ACM_TX);
-			//ledInvert(LED_BIT64);
-			break;
-		case APP_USBD_CDC_ACM_USER_EVT_RX_DONE:
-		{
-			ret_code_t ret;
-			debug_print("Bytes waiting: %d", app_usbd_cdc_acm_bytes_stored(p_cdc_acm));
-			do
-			{
-				/*Get amount of data transfered*/
-				size_t size = app_usbd_cdc_acm_rx_size(p_cdc_acm);
-				char value = m_rx_buffer[0];
-				/*
-				debug_print(
-					"RX: size: %lu char: %c code: %d",
-					size,
-					value,
-					value
-				);
-				*/
-				handle_serial_character(value);
-				/* Fetch data until internal buffer is empty */
-				ret = app_usbd_cdc_acm_read(
-					&m_app_cdc_acm,
-					m_rx_buffer,
-					READ_SIZE
-				);
-			} while (ret == NRF_SUCCESS);
+		} while (ret == NRF_SUCCESS);
 
-			//bsp_board_led_invert(LED_CDC_ACM_RX);
-			//ledInvert(LED_BIT128);
-			break;
-		}
-		default:
-			break;
+		//bsp_board_led_invert(LED_CDC_ACM_RX);
+		//ledInvert(LED_BIT128);
+		break;
 	}
-	if (was_command_entered) {
+	default:
+		break;
+	}
+	if (was_command_entered)
+	{
 		send_serial_message("\r\n");
 	}
 }
@@ -189,40 +198,40 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
 {
 	switch (event)
 	{
-		case APP_USBD_EVT_DRV_SUSPEND:
-			//bsp_board_led_off(LED_USB_RESUME);
-			//ledOff(LED_BIT2);
-			break;
-		case APP_USBD_EVT_DRV_RESUME:
-			//bsp_board_led_on(LED_USB_RESUME);
-			//ledOn(LED_BIT2);
-			break;
-		case APP_USBD_EVT_STARTED:
-			//ledOn(LED_BIT4);
-			break;
-		case APP_USBD_EVT_STOPPED:
-			app_usbd_disable();
-			//bsp_board_leds_off();
-			//ledsOff();
-			break;
-		case APP_USBD_EVT_POWER_DETECTED:
-			debug_print("USB power detected");
+	case APP_USBD_EVT_DRV_SUSPEND:
+		//bsp_board_led_off(LED_USB_RESUME);
+		//ledOff(LED_BIT2);
+		break;
+	case APP_USBD_EVT_DRV_RESUME:
+		//bsp_board_led_on(LED_USB_RESUME);
+		//ledOn(LED_BIT2);
+		break;
+	case APP_USBD_EVT_STARTED:
+		//ledOn(LED_BIT4);
+		break;
+	case APP_USBD_EVT_STOPPED:
+		app_usbd_disable();
+		//bsp_board_leds_off();
+		//ledsOff();
+		break;
+	case APP_USBD_EVT_POWER_DETECTED:
+		debug_print("USB power detected");
 
-			if (!nrf_drv_usbd_is_enabled())
-			{
-				app_usbd_enable();
-			}
-			break;
-		case APP_USBD_EVT_POWER_REMOVED:
-			debug_print("USB power removed");
-			app_usbd_stop();
-			break;
-		case APP_USBD_EVT_POWER_READY:
-			debug_print("USB ready");
-			app_usbd_start();
-			break;
-		default:
-			break;
+		if (!nrf_drv_usbd_is_enabled())
+		{
+			app_usbd_enable();
+		}
+		break;
+	case APP_USBD_EVT_POWER_REMOVED:
+		debug_print("USB power removed");
+		app_usbd_stop();
+		break;
+	case APP_USBD_EVT_POWER_READY:
+		debug_print("USB ready");
+		app_usbd_start();
+		break;
+	default:
+		break;
 	}
 }
 
@@ -239,7 +248,7 @@ void usb_serial_init()
 	APP_ERROR_CHECK(ret);
 	debug_print("USBD CDC ACM example started.");
 
-	app_usbd_class_inst_t const * class_cdc_acm = app_usbd_cdc_acm_class_inst_get(&m_app_cdc_acm);
+	app_usbd_class_inst_t const* class_cdc_acm = app_usbd_cdc_acm_class_inst_get(&m_app_cdc_acm);
 	ret = app_usbd_class_append(class_cdc_acm);
 	APP_ERROR_CHECK(ret);
 
@@ -257,19 +266,22 @@ void usb_serial_init()
 }
 
 void send_serial_message_with_length(
-	const char *message,
+	const char* message,
 	size_t message_length
-) {
+)
+{
 	// Turns out that calling `app_usbd_cdc_acm_write` with message_length
 	// greater than NRF_DRV_USBD_EPSIZE/64 totally corrupts all output,
 	// so we have to break it into NRF buffer size friendly chunks
 	size_t page_size_max = NRF_DRV_USBD_EPSIZE;
 	size_t pages = message_length / page_size_max;
 	size_t remainder = message_length % page_size_max;
-	if (remainder > 0) {
+	if (remainder > 0)
+	{
 		pages++;
 	}
-	for (size_t i = 0; i < pages; i++) {
+	for (size_t i = 0; i < pages; i++)
+	{
 		size_t offset = i * page_size_max;
 		size_t page_size = (message_length - offset) > page_size_max
 			? page_size_max
@@ -300,17 +312,20 @@ void send_serial_message_with_length(
 }
 
 void send_serial_message(
-	const char *message
-) {
+	const char* message
+)
+{
 	size_t message_length = strlen(message);
 	send_serial_message_with_length(message, message_length);
 }
 
-void handle_usb_serial_input() {
-	while(app_usbd_event_queue_process()) {
+void handle_usb_serial_input()
+{
+	while (app_usbd_event_queue_process())
+	{
 		// handle ALL of the events until there are no more events
 	}
-	if(is_echo_buffer_populated)
+	if (is_echo_buffer_populated)
 	{
 		// Why use this instead of send_serial_message?
 		// because if you're doing weird ASCII control code shit,

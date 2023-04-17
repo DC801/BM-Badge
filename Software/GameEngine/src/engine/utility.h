@@ -14,9 +14,12 @@
 #include <stddef.h>
 #include <cstdio>
 #include <utility>
+#include "sdk_shim.h"
 
 #ifdef DC801_EMBEDDED
-#include <nrf_log.h>
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
 #define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
 #else
 
@@ -82,10 +85,6 @@ uint32_t getSystick(void);
 
 uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis);
 uint32_t millis();
-
-void EEpwm_init();
-void EEpwm_set(int percent);
-void EEget_milliVolts(int percent, int *v1, int *v2, int *v3);
 
 uint32_t hex2dec(uint32_t v);
 

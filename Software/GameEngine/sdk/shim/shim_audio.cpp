@@ -1,7 +1,7 @@
+#ifndef DC801_EMBEDDED
 #include <EngineAudio.h>
 #include <cstring>
 #include <iostream>
-#include <SDL.h>
 
 /*
 
@@ -269,3 +269,4 @@ void AudioPlayer::stop_loop()
 		}
 	}
 }
+#endif //DC801_EMBEDDED

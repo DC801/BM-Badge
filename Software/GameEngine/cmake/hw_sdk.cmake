@@ -13,6 +13,8 @@ endif ()
 
 set(SDK_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/config/sdk_config.h
+	${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S 
+	${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c 
 	${SDK_ROOT}/components/ble/ble_advertising/ble_advertising.c 
 	${SDK_ROOT}/components/ble/ble_db_discovery/ble_db_discovery.c 
 	${SDK_ROOT}/components/ble/ble_services/ble_lbs/ble_lbs.c 
@@ -37,6 +39,7 @@ set(SDK_SRCS
 	${SDK_ROOT}/components/libraries/atomic_fifo/nrf_atfifo.c 
 	${SDK_ROOT}/components/libraries/atomic_flags/nrf_atflags.c 
 	${SDK_ROOT}/components/libraries/balloc/nrf_balloc.c 
+	${SDK_ROOT}/components/libraries/block_dev/sdc/nrf_block_dev_sdc.h
 	${SDK_ROOT}/components/libraries/block_dev/sdc/nrf_block_dev_sdc.c 
 	${SDK_ROOT}/components/libraries/bsp/bsp.c 
 	${SDK_ROOT}/components/libraries/button/app_button.c 
@@ -47,11 +50,19 @@ set(SDK_SRCS
 	${SDK_ROOT}/components/libraries/fstorage/nrf_fstorage_sd.c 
 	${SDK_ROOT}/components/libraries/hardfault/hardfault_implementation.c 
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_backend_rtt.c 
+	${SDK_ROOT}/components/libraries/log/nrf_log_backend_rtt.h
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_backend_serial.c 
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_backend_uart.c 
+	${SDK_ROOT}/components/libraries/log/nrf_log_backend_uart.h
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_default_backends.c 
+	${SDK_ROOT}/components/libraries/log/nrf_log_default_backends.h
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_frontend.c 
+	${SDK_ROOT}/components/libraries/log/nrf_log.h
 	${SDK_ROOT}/components/libraries/log/src/nrf_log_str_formatter.c 
+	${SDK_ROOT}/components/libraries/log/nrf_log_str_formatter.h
+	${SDK_ROOT}/components/libraries/log/nrf_log_ctrl.h
+	${SDK_ROOT}/components/libraries/log/nrf_log_instance.h
+	${SDK_ROOT}/components/libraries/log/nrf_log_types.h
 	${SDK_ROOT}/components/libraries/memobj/nrf_memobj.c 
 	${SDK_ROOT}/components/libraries/pwm/app_pwm.c 
 	${SDK_ROOT}/components/libraries/pwr_mgmt/nrf_pwr_mgmt.c 
@@ -108,8 +119,6 @@ set(SDK_SRCS
 	${SDK_ROOT}/modules/nrfx/drivers/src/prs/nrfx_prs.c 
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_i2s.c 
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_qspi.c 
-	${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S 
-	${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c 
 	${SDK_ROOT}/modules/nrfx/soc/nrfx_atomic.c
 )
 

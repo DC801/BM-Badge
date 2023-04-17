@@ -26,32 +26,23 @@
  * 	Adapted for the dc801 dc26 badge and SDK15 by @hamster
  *****************************************************************************/
 
- // System headers
+#ifdef DC801_EMBEDDED
+
 #include "sd.h"
 
-#include <cstdlib>
-
-#include <filesystem>
-#include <fstream>
-#include "EnginePanic.h"
-#include "utility.h"
-
-#ifdef DC801_EMBEDDED
-#include <diskio_blkdev.h>
-
-/**
- * @brief  SDC block device definition
- * */
-
-NRF_BLOCK_DEV_SDC_DEFINE(
-		m_block_dev_sdc,
-		NRF_BLOCK_DEV_SDC_CONFIG(
-				SDC_SECTOR_SIZE,
-				APP_SDCARD_CONFIG(SDC_MOSI_PIN, SDC_MISO_PIN, SDC_SCK_PIN, SDC_CS_PIN) ),
-		NFR_BLOCK_DEV_INFO_CONFIG("Nordic", "SDC", "1.00"));
-
 static FATFS m_fs;
-bool m_sd_available = false;
+static bool m_sd_available = false;
+
+static nrf_block_dev_sdc_work_t m_block_dev_sdc_work{};
+static const auto m_block_dev_sdc = nrf_block_dev_sdc_t
+{
+		nrf_block_dev_t{
+			reinterpret_cast<const nrf_block_dev_s::nrf_block_dev_ops_s*>(& nrf_block_device_sdc_ops)
+		},
+		nrf_block_dev_info_strings_t{"Nordic", "SDC", "1.00"},
+		nrf_block_dev_sdc_config_t{SDC_SECTOR_SIZE, app_sdc_config_t{SDC_MOSI_PIN, SDC_MISO_PIN, SDC_SCK_PIN, SDC_CS_PIN}},
+		&m_block_dev_sdc_work
+};
 
 bool util_sd_available() {
 	return m_sd_available;
@@ -63,9 +54,7 @@ bool util_sd_init() {
 	DSTATUS disk_state = STA_NOINIT;
 
 	// Initialize FATFS disk I/O interface by providing the block device.
-	static diskio_blkdev_t drives[] = {
-	DISKIO_BLOCKDEV_CONFIG(NRF_BLOCKDEV_BASE_ADDR(m_block_dev_sdc, block_dev), NULL)
-			};
+	static diskio_blkdev_t drives[] = { DISKIO_BLOCKDEV_CONFIG(NRF_BLOCKDEV_BASE_ADDR(m_block_dev_sdc, block_dev), NULL) };
 
 	diskio_blockdev_register(drives, ARRAY_SIZE(drives));
 
@@ -94,24 +83,7 @@ bool util_sd_init() {
 	return true;
 }
 
-uint32_t util_sd_file_size(const char *path) {
-	FILINFO info;
-
-	FRESULT result = f_stat(path, &info);
-	if (result != FR_OK) {
-		util_sd_recover();
-		result = f_stat(path, &info);
-	}
-
-	if (result != FR_OK) {
-		util_sd_recover();
-		return 0;
-	}
-
-	return info.fsize;
-}
-
-#endif
+#endif //DC801_EMBEDDED
 void util_sd_load_file(const char* path, char* p_buffer, uint32_t count)
 {
 	
@@ -127,7 +99,7 @@ void util_sd_load_file(const char* path, char* p_buffer, uint32_t count)
 	file.close();
 }
 
-FRESULT util_sd_store_file(const char* path, char* p_buffer, uint32_t count)
+void util_sd_store_file(const char* path, char* p_buffer, uint32_t count)
 {
 	auto file = std::fstream{ path, std::ios_base::out | std::ios_base::binary };
 
@@ -139,8 +111,6 @@ FRESULT util_sd_store_file(const char* path, char* p_buffer, uint32_t count)
 	file.close();
 
 }
-
-
 
 bool util_sd_recover() {
 #ifdef DC801_EMBEDDED

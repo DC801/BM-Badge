@@ -6,16 +6,20 @@
  * @date 12/24/2020
  *
  */
-#ifdef DC801_EMBEDDED
-
-#include <nrfx_qspi.h>
-#else
-
-#ifdef NRFX_QSPI_DEFAULT_CONFIG
-#undef NRFX_QSPI_DEFAULT_CONFIG
-#endif
+#ifndef QSPI_H
+#define QSPI_H
 
 #include <stdint.h>
+
+#ifdef DC801_EMBEDDED
+
+#include "config/custom_board.h"
+#include <nrf_gpio.h>
+#include <nrfx_qspi.h>
+#include <nrf_drv_qspi.h>
+#include <nrf_error.h>
+#else
+
 #define NRFX_QSPI_DEFAULT_CONFIG                                        \
 {                                                                       \
 	.xip_offset  = NRFX_QSPI_CONFIG_XIP_OFFSET,                         \
@@ -42,7 +46,12 @@
 	.irq_priority   = (uint8_t)NRFX_QSPI_CONFIG_IRQ_PRIORITY            \
 }
 
+
+#ifdef NRFX_QSPI_DEFAULT_CONFIG
+#undef NRFX_QSPI_DEFAULT_CONFIG
 #endif
+
+#endif // DC801_EMBEDDED
 
 typedef enum
 {
@@ -74,3 +83,5 @@ class QSPI
 		inline static volatile bool ready = false;
 		static void qspi_handler(nrfx_qspi_evt_t event, void * p_context);
 };
+
+#endif //QSPI_H

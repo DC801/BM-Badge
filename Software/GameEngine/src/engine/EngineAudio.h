@@ -24,8 +24,8 @@
 // Max number of sounds that can be in the audio queue at anytime, stops too much mixing
 #define AUDIO_MAX_SOUNDS 25
 
-
 #ifndef DC801_EMBEDDED
+
 // Contains SDL Audio Device information
 struct AudioDevice
 {
@@ -85,9 +85,6 @@ public:
 		static_cast<AudioPlayer*>(userdata)->callback(stream, len);
 	}
 
-	AudioPlayer();
-	~AudioPlayer();
-
 private:
 	void callback(uint8_t* stream, int len);
 	void addAudio(Audio* root, std::unique_ptr<Audio> audio);
@@ -115,4 +112,4 @@ private:
 	std::unique_ptr<Audio> head;
 };
 
-#endif
+#endif //AUDIO_H

@@ -44,7 +44,7 @@
 
 #include "led.h"
 
-
+#include <shim_i2c.h>
 
 uint8_t led_states[LED_COUNT] = { 0 };
 

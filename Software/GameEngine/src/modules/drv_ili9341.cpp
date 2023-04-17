@@ -1,11 +1,5 @@
-// System headers
 
-#include <stdint.h>
-#include <config/custom_board.h>
-#include <nrf_delay.h>
-#include <drv_ili9341.h>
-#include <nrf_gpio.h>
-#include <nrfx_spim.h>
+#include "drv_ili9341.h"
 
 //size of chunk to transfer each interrupt
 #define ILI_TRANSFER_CHUNK_SIZE (254)
@@ -201,19 +195,22 @@ void ili9341_init() {
 	uint32_t err_code;
 
 	//Init SPI0 for the LCD
-	nrfx_spim_config_t spi_config = NRFX_SPIM_DEFAULT_CONFIG;
-	spi_config.sck_pin = ILI9341_SCK_PIN;
-	spi_config.mosi_pin = ILI9341_MOSI_PIN;
-	spi_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
-	spi_config.ss_pin = ILI9341_PIN_CS;
-	spi_config.irq_priority = NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY;
-	spi_config.frequency = NRF_SPIM_FREQ_32M;
-	spi_config.orc = 0x00;
-	spi_config.mode = NRF_SPIM_MODE_0;
-	spi_config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
-    spi_config.use_hw_ss      = true;
-    spi_config.ss_active_high = false;
-
+	auto spi_config = nrfx_spim_config_t{
+		ILI9341_SCK_PIN,
+		ILI9341_MOSI_PIN,
+		NRFX_SPIM_PIN_NOT_USED,
+		ILI9341_PIN_CS,
+		false,
+		NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY,
+		0x00,
+		NRF_SPIM_FREQ_32M,
+		NRF_SPIM_MODE_0,
+		NRF_SPIM_BIT_ORDER_MSB_FIRST,
+		NRFX_SPIM_PIN_NOT_USED,
+		2,
+		true
+	};
+	 
 	APP_ERROR_CHECK(
 			nrfx_spim_init(&lcd_spim, &spi_config, __spim_event_handler, nullptr)
 	);
@@ -246,7 +243,7 @@ void inline ili9341_push_color(uint16_t color) {
 /**
  * Push many colors to the display
  */
-inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
+inline void ili9341_push_colors(uint8_t *p_colors, uint32_t size) {
 
     uint8_t count = 0;
 
@@ -270,7 +267,7 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
 /**
  * Push many colors to the display very fast
  */
-nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
+nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, uint32_t size) {
 	//Don't start next transfer until previous is complete
 	while (m_busy) {
 		//wait for previous transfer to complete before starting a new one

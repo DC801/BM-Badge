@@ -21,17 +21,18 @@
 #include "fonts/Monaco9.h"
 #include "utility.h"
 
-#include <modules/ble.h>
 #include <modules/drv_ili9341.h>
-#include <modules/i2c.h>
+#include <modules/keyboard.h>
 #include <modules/sd.h>
 #include <modules/usb.h>
 
-#include "sdk_shim.h"
-#include "shim_timer.h"
-#include "shim_err.h"
-#include "shim_rng.h"
-#include "shim_rng.h"
+#include <shim_adc.h>
+#include <shim_ble.h>
+#include <shim_err.h>
+#include <shim_i2c.h>
+#include <shim_rng.h>
+#include <shim_timer.h>
+#include <sdk_shim.h>
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>

@@ -31,8 +31,13 @@
 
 #define UNUSED(x)			((void) (x))
 #define CLAMP(x, a, b)		((x) < (a) ? (a) : (x) > (b) ? (b) : (x))
+#ifndef MIN
 #define MIN(a, b)			((a) < (b) ? (a) : (b))
+#endif
+
+#ifndef MAX
 #define MAX(a, b)			((a) > (b) ? (a) : (b))
+#endif
 
 #define FX_BITS				(12)
 #define FX_UNIT				(1 << FX_BITS)

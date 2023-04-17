@@ -4,6 +4,7 @@
 
 #ifdef DC801_EMBEDDED
 #include <app_pwm.h>
+#include <nrfx_pwm.h>
 #else
 
 #include <stdint.h>

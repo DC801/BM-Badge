@@ -1,6 +1,7 @@
 #include <cassert>
 #include "shim_gpio.h"
 
+#ifndef DC801_EMBEDDED
 #define MAX_PIN_COUNT 48
 
 static PIN pins[MAX_PIN_COUNT] = { 0 };
@@ -72,3 +73,4 @@ void nrf_gpio_set_callback(nrf_gpio_callback *gpio_callback)
         callback = gpio_callback;
     }
 }
+#endif //DC801_EMBEDDED

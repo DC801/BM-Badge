@@ -27,8 +27,26 @@
 #define UTIL_UTIL_SD_H_
 
 #ifdef DC801_EMBEDDED
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include "EnginePanic.h"
+
+#include "config/custom_board.h"
+#include "utility.h"
+
+#include <nrf.h>
+#include <bsp.h>
+#include <ff.h>
+#include <diskio.h>
+#include <diskio_blkdev.h>
+#include <nrf_block_dev_sdc.h>
+#include <nrf_log.h>
+#include <nrf_log_ctrl.h>
+#include <nrf_log_default_backends.h>
+
+#include <stdint.h>
 extern bool util_sd_available();
-extern uint32_t util_sd_file_size(const char* path);
 extern void util_sd_load_file(const char* path, char* p_buffer, uint32_t count);
 extern void util_sd_store_file(const char* path, char* p_buffer, uint32_t count);
 extern bool util_sd_init();

@@ -11,29 +11,15 @@
 #include "utility.h"
 #include "EnginePanic.h"
 #include "fonts/Monaco9.h"
-#include "modules/adc.h"
 #include "modules/led.h"
-
-#ifndef DC801_EMBEDDED
+#include "shim_adc.h"
 #include "shim_timer.h"
 #include "shim_pwm.h"
-#else
-#include <app_timer.h>
-#include <app_pwm.h>
-#endif
 
 #include <chrono>
 #include <filesystem>
 
-#define EE_R1 3900
-#define EE_R2 10000
-#define EE_R3 15000
-#define EE_R4 4999
-#define EE_TOTR (EE_R1 + EE_R2 + EE_R3 + EE_R4)
-#define EE_VOLT(X) (getVccMillivolts() * (X) / EE_TOTR)
-
 APP_TIMER_DEF(sysTickID);
-APP_PWM_INSTANCE(PWM1, 1);
 APP_TIMER_DEF(morseID);
 volatile static uint32_t systick = 0;
 bool morse_running = false;
@@ -173,24 +159,6 @@ uint32_t millis(void)
 #endif
 }
 
-void EEpwm_init() {
-	app_pwm_config_t pwm1_cfg = APP_PWM_DEFAULT_CONFIG_1CH(5000L, 11);
-	APP_ERROR_CHECK(app_pwm_init(&PWM1,&pwm1_cfg,NULL));
-	app_pwm_enable(&PWM1);
-}
-
-
-void EEpwm_set(int r)
-{
-	r = r%101;
-	app_pwm_channel_duty_set(&PWM1, 0, 100-r);
-}
-
-void EEget_milliVolts(int r, int *v1, int *v2, int *v3) {
-	*v1 = EE_VOLT(EE_R4) * r / 100;
-	*v2 = EE_VOLT(EE_R3 +EE_R4) * r / 100;
-	*v3 = EE_VOLT(EE_R2 + EE_R3 + EE_R4) * r / 100;
-}
 
 //Turns hex 0x2305 to 2305
 uint32_t hex2dec(uint32_t v) {
