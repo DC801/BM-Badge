@@ -26,7 +26,7 @@
       "architecture": "win32",
       "binaryDir": "${sourceDir}/build/",
       "generator": "Visual Studio 17 2022",
-      "toolchainFile": "${sourceDir}/Software/GameEngine/cmake/toolchain-msvc_win32.cmake",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-msvc_win32.cmake",
       "cacheVariables": {
         "CMAKE_CXX_STANDARD": "17",
         "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
@@ -46,7 +46,7 @@
       "name": "gcc",
       "hidden": true,
       "binaryDir": "${sourceDir}/build/",
-      "toolchainFile": "${sourceDir}/Software/GameEngine/cmake/toolchain-gcc_x86.cmake",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_x86.cmake",
       "generator": "Unix Makefiles",
       "cacheVariables": {
         "CMAKE_CXX_STANDARD": "17",
@@ -62,9 +62,9 @@
       "hidden": true,
       "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/build_hw",
-      "toolchainFile": "${sourceDir}/Software/GameEngine/cmake/toolchain-gcc_arm.cmake",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_arm.cmake",
       "cacheVariables": {
-        "SDK_ROOT": "${sourceDir}/nordic-sdk15.3.0",
+        "SDK_ROOT": "${sourceDir}/nordic-sdk17.1.0",
         "CMAKE_CXX_STANDARD": "17",
         "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
         "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
