@@ -31,12 +31,12 @@
             "servertype": "jlink",
             "serverpath": "/usr/bin/JLinkGDBServer",
             "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/build/bm_badge",
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
             "runToMain": true,
             "cwd": "${workspaceRoot}",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+            "svdFile": "${workspaceRoot}/../nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd"
         },
         {
             "name": "Debug Attach (Physical Badge)",
@@ -45,11 +45,11 @@
             "servertype": "jlink",
             "serverpath": "/usr/bin/JLinkGDBServer",
             "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/build/bm_badge",
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
             "cwd": "${workspaceRoot}",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk15.3.0/modules/nrfx/mdk/nrf52840.svd"
+            "svdFile": "${workspaceRoot}/../nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd"
         }
     ]
 }

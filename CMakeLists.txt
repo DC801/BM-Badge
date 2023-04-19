@@ -10,9 +10,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/
 # set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
 
 if(EMBEDDED_BUILD)
-    include("${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/cmake/hw_sdk.cmake")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/hw_sdk.cmake")
 else()
-    include("${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/cmake/shim_sdk.cmake")
+    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/shim_sdk.cmake")
 
     find_package(SDL2 MODULE REQUIRED)
 
