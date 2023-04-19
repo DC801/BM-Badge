@@ -1,6 +1,10 @@
 #ifndef SHIM_TIMER_H
 #define SHIM_TIMER_H
 
+#ifdef DC801_EMBEDDED
+#include <app_timer.h>
+#else
+
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -107,6 +111,7 @@ extern "C" {
 
 #ifdef __cplusplus
 }
-#endif
+#endif //__cplusplus
 
-#endif
+#endif //DC801_EMBEDDED
+#endif //SHIM_TIMER_H

@@ -6,12 +6,19 @@
  * @date 12/24/2020
  *
  */
+#ifndef QSPI_H
+#define QSPI_H
+
+#include <stdint.h>
 
 #ifdef DC801_EMBEDDED
 
-#ifdef NRFX_QSPI_DEFAULT_CONFIG
-#undef NRFX_QSPI_DEFAULT_CONFIG
-#endif
+#include "config/custom_board.h"
+#include <nrf_gpio.h>
+#include <nrfx_qspi.h>
+#include <nrf_drv_qspi.h>
+#include <nrf_error.h>
+#else
 
 #define NRFX_QSPI_DEFAULT_CONFIG                                        \
 {                                                                       \
@@ -40,7 +47,14 @@
 }
 
 
-typedef enum {
+#ifdef NRFX_QSPI_DEFAULT_CONFIG
+#undef NRFX_QSPI_DEFAULT_CONFIG
+#endif
+
+#endif // DC801_EMBEDDED
+
+typedef enum
+{
 	// BLOCK_SIZE_4K, // disabled because this does nothing at all on our hardware
 	// BLOCK_SIZE_64K, // disabled because this is a DAMN LIE on our hardware
 	BLOCK_SIZE_256K,
@@ -70,4 +84,4 @@ class QSPI
 		static void qspi_handler(nrfx_qspi_evt_t event, void * p_context);
 };
 
-#endif
+#endif //QSPI_H

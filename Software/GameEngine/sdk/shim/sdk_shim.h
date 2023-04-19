@@ -1,13 +1,18 @@
 #ifndef SDK_SHIM_H
 #define SDK_SHIM_H
 
-#include <stdint.h>
+
+#ifdef DC801_EMBEDDED
+#include <nrfx.h>
+#include <nrf_log.h>
+#include <nrf_log_ctrl.h>
+#include <nrf_log_default_backends.h>
+#else
+
 #include <errno.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
-
-
-
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
@@ -46,5 +51,5 @@
 
 
 
-
-#endif
+#endif //DC801_EMBEDDED
+#endif //SDK_SHIM_H

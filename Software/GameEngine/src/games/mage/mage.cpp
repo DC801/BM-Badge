@@ -1,14 +1,16 @@
 #include "mage.h"
 
-#include <SDL.h>
-
 #include "convert_endian.h"
 #include "utility.h"
 
 #include "mage_defines.h"
 #include "mage_script_control.h"
 
-#ifndef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
+#include <sd.h>
+#include <nrf_delay.h>
+#else
+#include <SDL.h>
 #include "shim_timer.h"
 #endif
 
@@ -27,7 +29,7 @@ void MageGameEngine::Run()
       if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
       {
          scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-         LoadMap(ROM()->GetCurrentSave()->currentMapId);
+         LoadMap(ROM()->GetCurrentSave().currentMapId);
          engineIsInitialized = true;
       }
       GameLoop();
@@ -116,7 +118,7 @@ void MageGameEngine::LoadMap(uint16_t index)
    //get the data for the map:
    mapControl->Load(index);
 
-   mapControl->getPlayerEntity().SetName(ROM()->GetCurrentSave()->name);
+   mapControl->getPlayerEntity().SetName(ROM()->GetCurrentSave().name);
 
    scriptControl->initializeScriptsOnMapLoad();
 
@@ -145,14 +147,14 @@ void MageGameEngine::applyUniversalInputs()
       if (button.IsPressed(KeyPress::Mem3))
       {
          //make map reload global regardless of player control state:
-         mapControl->mapLoadId = ROM()->GetCurrentSave()->currentMapId;
+         mapControl->mapLoadId = ROM()->GetCurrentSave().currentMapId;
          return;
       }
       else if (button.IsPressed(KeyPress::Mem1))
       {
          mapControl->isEntityDebugOn = !mapControl->isEntityDebugOn;
          scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-         LoadMap(ROM()->GetCurrentSave()->currentMapId);
+         LoadMap(ROM()->GetCurrentSave().currentMapId);
          return;
       }
    }

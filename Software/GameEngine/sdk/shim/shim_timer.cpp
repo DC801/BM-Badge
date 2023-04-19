@@ -1,4 +1,7 @@
 
+#include "shim_timer.h"
+#include "shim_err.h"
+#ifndef DC801_EMBEDDED
 #include <atomic>
 #include <chrono>
 #include <cstdlib>
@@ -6,18 +9,6 @@
 #include <list>
 #include <mutex>
 #include <thread>
-
-// #include <csignal>
-// #include <cstdio>
-
-#ifdef EMSCRIPTEN
-#include <emscripten.h>
-#endif
-
-#include "shim_timer.h"
-#include "shim_err.h"
-
-// TODO: Implement this shit
 
 NRF_TIMER_Type NRF_TIMER_1 = { 0 };
 NRF_TIMER_Type *NRF_TIMER1 = &NRF_TIMER_1;
@@ -198,3 +189,4 @@ extern "C"
 		#endif
 	}
 }
+#endif //DC801_EMBEDDED

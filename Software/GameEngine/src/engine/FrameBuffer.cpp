@@ -14,11 +14,17 @@
 
 #include <algorithm>
 
-#ifndef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
+
+#include <drv_ili9341.h>
+
+#else
+
 #include <SDL.h>
 #include "shim_timer.h"
 #include "shim_err.h"
 #include "EngineWindowFrame.h"
+
 #endif
 
 #define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
@@ -26,7 +32,7 @@
 //Cursor coordinates
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
-static inline area_t m_cursor_area = { 0, 0, ScreenWidth, ScreenHeight };
+static inline Rect m_cursor_area = { 0, 0, ScreenWidth, ScreenHeight };
 static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
@@ -158,20 +164,7 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
    uint8_t xx, yy, bits = 0, bit = 0;
 
    // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
-   // THIS IS ON PURPOSE AND BY DESIGN.  The background color feature
-   // has typically been used with the 'classic' font to overwrite old
-   // screen contents with new data.  This ONLY works because the
-   // characters are a uniform size; it's not a sensible thing to do with
-   // proportionally-spaced fonts with glyphs of varying sizes (and that
-   // may overlap).  To replace previously-drawn text when using a custom
-   // font, use the getTextBounds() function to determine the smallest
-   // rectangle encompassing a string, erase the area with fillRect(),
-   // then draw new text.  This WILL infortunately 'blink' the text, but
-   // is unavoidable.  Drawing 'background' pixels will NOT fix this,
-   // only creates a new set of problems.  Have an idea to work around
-   // this (a canvas object type for MCUs that can afford the RAM and
-   // displays supporting setAddrWindow() and pushC(olors()), but haven't
-   // implemented this yet.
+   // THIS IS ON PURPOSE AND BY DESIGN. 
 
    int16_t yyy;
    for (yy = 0; yy < h; yy++)
@@ -185,7 +178,7 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
          if (bits & 0x80)
          {
             yyy = y + yo + yy;
-            if (yyy >= m_cursor_area.ys && yyy <= m_cursor_area.ye)
+            if (yyy >= m_cursor_area.origin.y && yyy <= m_cursor_area.w)
             {
                drawPixel(x + xo + xx, y + yo + yy, color);
             }
@@ -200,7 +193,7 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
    //If newline, move down a row
    if (c == '\n')
    {
-      m_cursor_x = m_cursor_area.xs;
+      m_cursor_x = m_cursor_area.origin.x;
       m_cursor_y += font.yAdvance;
    }
    //Otherwise, print the character (ignoring carriage return)
@@ -221,10 +214,10 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
          { // Is there an associated bitmap?
             int16_t xo = glyph->xOffset;
 
-            if ((m_cursor_x + (xo + w)) >= m_cursor_area.xe && m_wrap)
+            if ((m_cursor_x + (xo + w)) >= m_cursor_area.w && m_wrap)
             {
                // Drawing character would go off right edge; wrap to new line
-               m_cursor_x = m_cursor_area.xs;
+               m_cursor_x = m_cursor_area.origin.x;
                m_cursor_y += font.yAdvance;
             }
 
@@ -238,8 +231,8 @@ void FrameBuffer::write_char(uint8_t c, GFXfont font)
 void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, int x, int y)
 {
    m_color = color;
-   m_cursor_area.xs = x;
-   m_cursor_x = m_cursor_area.xs;
+   m_cursor_area.origin.x = x;
+   m_cursor_x = m_cursor_area.origin.x;
    m_cursor_y = y + (font.yAdvance / 2);
 
    // this prevents crashing if the first character of the string is null
@@ -250,152 +243,19 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
          write_char(text[i], font);
       }
    }
-   m_cursor_area.xs = 0;
-}
-
-void FrameBuffer::setTextArea(area_t* area)
-{
-   m_cursor_area = *area;
-}
-
-void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16_t y, bounds_t* bounds)
-{
-   getTextBounds(font, text, x, y, NULL, bounds);
-}
-
-void FrameBuffer::getTextBounds(GFXfont font, const char* text, int16_t x, int16_t y, area_t* near, bounds_t* bounds)
-{
-   bounds->width = 0;
-   bounds->height = 0;
-
-   if (near != NULL)
-   {
-      m_cursor_area = *near;
-   }
-
-   GFXglyph glyph;
-
-   uint8_t c;
-   uint8_t first = font.first;
-   uint8_t last = font.last;
-
-   uint8_t gw, gh, xa;
-   int8_t xo, yo;
-
-   int16_t minx = ScreenWidth;
-   int16_t miny = ScreenHeight;
-
-   int16_t maxx = -1;
-   int16_t maxy = -1;
-
-   int16_t gx1, gy1, gx2, gy2;
-   int16_t ya = font.yAdvance;
-
-   // Walk the string
-   while ((c = *text++))
-   {
-      if ((c != '\n') && (c != '\r'))
-      {
-         if ((c >= first) && (c <= last))
-         {
-            c -= first;
-            glyph = font.glyph[c];
-
-            gw = glyph.width;
-            gh = glyph.height;
-
-            xa = glyph.xAdvance;
-            xo = glyph.xOffset;
-            yo = glyph.yOffset;
-
-            if (m_wrap && ((x + ((int16_t)xo + gw)) >= ScreenWidth))
-            {
-               // Line wrap
-               x = 0;
-               y += ya;
-            }
-
-            gx1 = x + xo;
-            gy1 = y + yo;
-            gx2 = gx1 + gw - 1;
-            gy2 = gy1 + gh - 1;
-
-            if (gx1 < minx)
-            {
-               minx = gx1;
-            }
-
-            if (gy1 < miny)
-            {
-               miny = gy1;
-            }
-
-            if (gx2 > maxx)
-            {
-               maxx = gx2;
-            }
-
-            if (gy2 > maxy)
-            {
-               maxy = gy2;
-            }
-
-            x += xa;
-         }
-      }
-      else if (c == '\n')
-      {
-         x = 0;
-         y += ya;
-      }
-   }
-
-   if (maxx >= minx)
-   {
-      bounds->width = maxx - minx + 1;
-   }
-
-   if (maxy >= miny)
-   {
-      bounds->height = maxy - miny + 1;
-   }
-}
-
-void draw_raw_async(int16_t x, int16_t y, uint16_t w, uint16_t h, uint16_t* p_raw)
-{
-   //clip
-   if ((x < 0) || (x > ScreenWidth - w) || (y < 0) || (y > ScreenHeight - h))
-   {
-      return;
-   }
-#ifdef DC801_EMBEDDED
-   while (ili9341_is_busy())
-   {
-      //wait for previous transfer to complete before starting a new one
-   }
-   ili9341_set_addr(x, y, x + w - 1, y + h - 1);
-   uint32_t bytecount = w * h * 2;
-   ili9341_push_colors((uint8_t*)p_raw, bytecount);
-#endif
-   /*
-   //Blast data to TFT
-   while (bytecount > 0) {
-
-      uint32_t count = MIN(320*80*2, bytecount);
-
-      ili9341_push_colors((uint8_t*)p_raw, count);
-
-      p_raw += count / 2; //convert to uint16_t count
-      bytecount -= count;
-   }
-   //don't wait for it to finish
-   */
+   m_cursor_area.origin.x = 0;
 }
 
 void FrameBuffer::blt(ButtonState button)
 {
-#ifdef DC801_EMBEDDED
-   draw_raw_async(0, 0, ScreenWidth, ScreenHeight, frame);
+#ifdef DC801_EMBEDDED 
+   while (ili9341_is_busy())
+   {
+      //wait for previous transfer to complete before starting a new one
+   }
+   ili9341_set_addr(0, 0, ScreenWidth - 1, ScreenHeight - 1);
+   uint32_t bytecount = ScreenWidth * ScreenHeight * 2;
+   ili9341_push_colors((uint8_t*)frame.data(), bytecount);
 #else
    windowFrame->GameBlt(frame.data(), button);
 #endif

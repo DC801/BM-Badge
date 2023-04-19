@@ -99,7 +99,7 @@ $SDL2DIR is an environment variable that would correspond to the
 Created by Amine Ben Hassouna:
   Adapt FindSDL_image.cmake to SDL2_image (FindSDL2_image.cmake).
   Add cache variables for more flexibility:
-    SDL2_IMAGE_PATH, SDL2_IMAGE_NO_DEFAULT_PATH (for details, see doc above).
+    SDL2_IMAGE_PATH, SDL2_IMAGE_NO_DEFAULT_PATH (for details, see doc above).------
   Add SDL2 as a required dependency.
   Modernize the FindSDL2_image.cmake module by creating a specific target:
     SDL2::Image (for details, see doc above).
@@ -128,7 +128,7 @@ endif()
 
 # Define options for searching SDL2_image Library in a custom path
 
-set(SDL2_IMAGE_PATH "" CACHE STRING "Custom SDL2_image Library path")
+set(SDL2_IMAGE_PATH "" CACHE PATH "Custom SDL2_image Library path")
 
 set(_SDL2_IMAGE_NO_DEFAULT_PATH OFF)
 if(SDL2_IMAGE_PATH)

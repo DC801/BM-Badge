@@ -595,10 +595,10 @@ std::optional<uint16_t> MageScriptActions::action_check_save_flag(const uint8_t*
       uint8_t paddingG;
    } ActionCheckSaveFlag;
    auto argStruct = (ActionCheckSaveFlag*)args;
-   auto currentSave = ROM()->GetCurrentSave();
+   auto& currentSave = ROM()->GetCurrentSave();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
+   uint8_t currentByteValue = currentSave.saveFlags[byteOffset];
    bool bitValue = (currentByteValue >> bitOffset) & 0x01u;
 
    if (bitValue == (bool)argStruct->expectedBoolValue)
@@ -686,9 +686,9 @@ std::optional<uint16_t> MageScriptActions::action_check_warp_state(const uint8_t
       uint8_t paddingG;
    } ActionCheckWarpState;
    auto argStruct = (ActionCheckWarpState*)args;
-   auto currentSave = ROM()->GetCurrentSave();
+   auto& currentSave = ROM()->GetCurrentSave();
 
-   bool doesWarpStateMatch = currentSave->warpState == argStruct->stringId;
+   bool doesWarpStateMatch = currentSave.warpState == argStruct->stringId;
    if (doesWarpStateMatch == (bool)(argStruct->expectedBoolValue))
    {
       return argStruct->successScriptId;
@@ -1355,10 +1355,10 @@ std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* a
       uint8_t paddingG;
    } ActionSetSaveFlag;
    auto argStruct = (ActionSetSaveFlag*)args;
-   auto currentSave = ROM()->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSaveCopy();
    uint16_t byteOffset = argStruct->saveFlagOffset / 8;
    uint8_t bitOffset = argStruct->saveFlagOffset % 8;
-   uint8_t currentByteValue = currentSave->saveFlags[byteOffset];
+   uint8_t currentByteValue = currentSave.saveFlags[byteOffset];
 
    if (argStruct->newBoolValue)
    {
@@ -1369,7 +1369,8 @@ std::optional<uint16_t> MageScriptActions::action_set_save_flag(const uint8_t* a
       // tilde operator inverts all the bits on a byte; Bitwise NOT
       currentByteValue &= ~(0x01u << bitOffset);
    }
-   currentSave->saveFlags[byteOffset] = currentByteValue;
+   currentSave.saveFlags[byteOffset] = currentByteValue;
+   ROM()->SetCurrentSave(currentSave);
    return std::nullopt;
 }
 
@@ -1436,9 +1437,10 @@ std::optional<uint16_t> MageScriptActions::action_set_warp_state(const uint8_t* 
       uint8_t paddingG;
    } ActionSetWarpState;
    auto argStruct = (ActionSetWarpState*)args;
-   auto currentSave = ROM()->GetCurrentSave();
+   auto currentSave = ROM()->GetCurrentSaveCopy();
 
-   currentSave->warpState = argStruct->stringId;
+   currentSave.warpState = argStruct->stringId;
+   ROM()->SetCurrentSave(currentSave);
    return std::nullopt;
 }
 
@@ -1990,7 +1992,7 @@ std::optional<uint16_t> MageScriptActions::action_set_screen_shake(const uint8_t
       resumeState,
       argStruct->duration);
 
-   if (progress < 1.0)
+   if (progress < 1.0f)
    {
       camera.shaking = true;
       camera.shakeAmplitude = argStruct->amplitude;
@@ -2053,9 +2055,6 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t*
       uint8_t paddingF;
       uint8_t paddingG;
    } ActionMutateVariable;
-   auto argStruct = (ActionMutateVariable*)args;
-   auto currentSave = ROM()->GetCurrentSave();
-   uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
 
    // I wanted to log some stats on how well our random function worked
    // on desktop and hardware after the new random seed changes.
@@ -2084,10 +2083,11 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variable(const uint8_t*
    //);
    //	}
    //}
-   mutate(
-      argStruct->operation,
-      currentValue,
-      argStruct->value);
+   auto argStruct = (ActionMutateVariable*)args;
+   auto currentSave = ROM()->GetCurrentSaveCopy();
+   mutate(argStruct->operation, currentSave.scriptVariables[argStruct->variableId], argStruct->value);
+   ROM()->SetCurrentSave(currentSave);
+
    return std::nullopt;
 }
 
@@ -2104,11 +2104,9 @@ std::optional<uint16_t> MageScriptActions::action_mutate_variables(const uint8_t
       uint8_t paddingG;
    } ActionMutateVariables;
    auto argStruct = (ActionMutateVariables*)args;
-   auto currentSave = ROM()->GetCurrentSave();
-   uint16_t* currentValue = &currentSave->scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
-
-   mutate(argStruct->operation, currentValue, sourceValue);
+   auto currentSave = ROM()->GetCurrentSaveCopy();
+   mutate(argStruct->operation, currentSave.scriptVariables[argStruct->variableId], currentSave.scriptVariables[argStruct->sourceId]);
+   ROM()->SetCurrentSave(currentSave);
    return std::nullopt;
 }
 
@@ -2125,14 +2123,14 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
       uint8_t paddingG;
    } ActionCopyVariable;
    auto argStruct = (ActionCopyVariable*)args;
-   auto currentSave = ROM()->GetCurrentSave();
-   auto currentValue = &currentSave->scriptVariables[argStruct->variableId];
+   auto currentSave = ROM()->GetCurrentSaveCopy();
+   auto currentValue = &currentSave.scriptVariables[argStruct->variableId];
 
    int16_t sourceEntityIndex = mapControl->GetUsefulEntityIndexFromActionEntityId(argStruct->entityId, entityId);
    if (sourceEntityIndex != NO_PLAYER)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      auto variableValue = &currentSave->scriptVariables[argStruct->variableId];
+      auto& variableValue = currentSave.scriptVariables[argStruct->variableId];
       uint8_t* fieldValue = ((uint8_t*)&entity) + (uint8_t)argStruct->field;
 
       switch (argStruct->field)
@@ -2145,12 +2143,12 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
       case MageEntityFieldOffset::secondaryId:
          if (argStruct->inbound)
          {
-            *variableValue = (uint16_t)*fieldValue;
+            variableValue = (uint16_t)*fieldValue;
          }
          else
          {
             uint16_t* destination = (uint16_t*)fieldValue;
-            *destination = *variableValue;
+            *destination = variableValue;
          }
          break;
       case MageEntityFieldOffset::primaryIdType:
@@ -2163,18 +2161,17 @@ std::optional<uint16_t> MageScriptActions::action_copy_variable(const uint8_t* a
       case MageEntityFieldOffset::hackableStateD:
          if (argStruct->inbound)
          {
-            *variableValue = (uint8_t)*fieldValue;
+            variableValue = (uint8_t)*fieldValue;
          }
          else
          {
-            *fieldValue = *variableValue % 256;
+            *fieldValue = variableValue % 256;
          }
          break;
-      default: debug_print(
-         "copyVariable received an invalid field: %d",
-         argStruct->field);
+      default: debug_print("copyVariable received an invalid field: %d", argStruct->field);
       }
    }
+   ROM()->SetCurrentSave(currentSave);
    return std::nullopt;
 }
 
@@ -2189,8 +2186,8 @@ std::optional<uint16_t> MageScriptActions::action_check_variable(const uint8_t* 
       uint8_t expectedBool;
    } ActionCheckVariable;
    auto argStruct = (ActionCheckVariable*)args;
-   auto currentSave = ROM()->GetCurrentSave();
-   uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
+   auto& currentSave = ROM()->GetCurrentSave();
+   uint16_t variableValue = currentSave.scriptVariables[argStruct->variableId];
    bool comparison = compare(argStruct->comparison, variableValue, argStruct->value);
    if (comparison == (bool)argStruct->expectedBool)
    {
@@ -2212,9 +2209,9 @@ std::optional<uint16_t> MageScriptActions::action_check_variables(const uint8_t*
    } ActionCheckVariables;
    auto argStruct = (ActionCheckVariables*)args;
 
-   auto currentSave = ROM()->GetCurrentSave();
-   uint16_t variableValue = currentSave->scriptVariables[argStruct->variableId];
-   uint16_t sourceValue = currentSave->scriptVariables[argStruct->sourceId];
+   auto& currentSave = ROM()->GetCurrentSave();
+   uint16_t variableValue = currentSave.scriptVariables[argStruct->variableId];
+   uint16_t sourceValue = currentSave.scriptVariables[argStruct->sourceId];
    bool comparison = compare(
       argStruct->comparison,
       variableValue,
@@ -2239,7 +2236,6 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
       uint8_t paddingG;
    } ActionSlotSave;
    auto argStruct = (ActionSlotSave*)args;
-   auto currentSave = ROM()->GetCurrentSave();
    // In the case that someone hacks an on_tick script to save, we don't want it
    // just burning through 8 ROM writes per second, our chip would be fried in a
    // matter on minutes. So how do we counter? Throw up a "Save Completed" dialog
@@ -2252,18 +2248,18 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
    {
       // do rom writes
       auto playerName = mapControl->getPlayerEntity().name;
-      auto currentSave = ROM()->GetCurrentSave();
+      auto currentSave = ROM()->GetCurrentSaveCopy();
       for (auto i = 0; i < MAGE_ENTITY_NAME_LENGTH; i++)
       {
          if (playerName[i])
          {
-            currentSave->name[i] = playerName[i];
+            currentSave.name[i] = playerName[i];
          }
          else
          {
             while (i < MAGE_ENTITY_NAME_LENGTH)
             {
-               currentSave->name[i++] = 0;
+               currentSave.name[i++] = 0;
             }
          }
       }
@@ -2274,6 +2270,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_save(const uint8_t* args,
       //debug_print("Opening dialog %d\n", argStruct->dialogId);
       auto jumpScriptId = dialogControl->StartModalDialog("Save complete.");
       resumeState.totalLoopsToNextAction = 1;
+      ROM()->SetCurrentSave(currentSave);
       return jumpScriptId;
    }
    else if (!dialogControl->isOpen())
@@ -2296,13 +2293,13 @@ std::optional<uint16_t> MageScriptActions::action_slot_load(const uint8_t* args,
       uint8_t paddingG;
    } ActionSlotLoad;
    auto argStruct = (ActionSlotLoad*)args;
-   auto currentSave = ROM()->GetCurrentSave();
+   auto& currentSave = ROM()->GetCurrentSave();
    //delaying until next tick allows for displaying of an error message on read before resuming
    if (resumeState.totalLoopsToNextAction == 0)
    {
       ROM()->LoadSaveSlot(argStruct->slotIndex);
 
-      mapControl->Load(currentSave->currentMapId);
+      mapControl->Load(currentSave.currentMapId);
       resumeState.totalLoopsToNextAction = 1;
    }
    else if (!dialogControl->isOpen())
@@ -2341,7 +2338,7 @@ std::optional<uint16_t> MageScriptActions::action_slot_erase(const uint8_t* args
       // do rom writes
       //copyNameToAndFromPlayerAndSave(true);
       auto playerName = mapControl->getPlayerEntity().name;
-      //memcpy(currentSave->name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
+      //memcpy(currentSave.name, playerName.c_str(), MAGE_ENTITY_NAME_LENGTH < playerName.length() ? MAGE_ENTITY_NAME_LENGTH : playerName.length());
       //ROM()->WriteSaveSlot(argStruct->slotIndex, &currentSave);
       ROM()->LoadSaveSlot(argStruct->slotIndex);
 
@@ -2585,19 +2582,19 @@ void MageScriptActions::initializeEntityGeometryPath(MageScriptState& resumeStat
    setResumeStatePointsAndEntityDirection(resumeState, sourceEntityIndex, geometry);
 }
 
-void MageScriptActions::mutate(MageMutateOperation operation, uint16_t* destination, uint16_t value)
+void MageScriptActions::mutate(MageMutateOperation operation, uint16_t& destination, uint16_t value)
 {
    //protect against division by 0 errors
    uint16_t safeValue = value == 0 ? 1 : value;
    switch (operation)
    {
-   case MageMutateOperation::SET: *destination = value; break;
-   case MageMutateOperation::ADD: *destination += value; break;
-   case MageMutateOperation::SUB: *destination -= value; break;
-   case MageMutateOperation::DIV: *destination /= safeValue; break;
-   case MageMutateOperation::MUL: *destination *= value; break;
-   case MageMutateOperation::MOD: *destination %= safeValue; break;
-   case MageMutateOperation::RNG: *destination = rand() % safeValue; break;
+   case MageMutateOperation::SET: destination = value; break;
+   case MageMutateOperation::ADD: destination += value; break;
+   case MageMutateOperation::SUB: destination -= value; break;
+   case MageMutateOperation::DIV: destination /= safeValue; break;
+   case MageMutateOperation::MUL: destination *= value; break;
+   case MageMutateOperation::MOD: destination %= safeValue; break;
+   case MageMutateOperation::RNG: destination = rand() % safeValue; break;
    default: debug_print(
       "mutateVariable received an invalid operation: %d",
       operation);

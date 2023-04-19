@@ -3,7 +3,6 @@
 //
 #include "shim_i2c.h"
 
-#ifdef DC801_EMBEDDED
 static const nrf_drv_twi_t m_twi_master = NRF_DRV_TWI_INSTANCE(I2C_INSTANCE);
 
 void twi_master_init(void){
@@ -33,5 +32,3 @@ void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size)
     nrf_drv_twi_rx(&m_twi_master, addr, pdata, size);
     //badge_mutex_unlock(&i2c_mutex);
 }
-
-#endif

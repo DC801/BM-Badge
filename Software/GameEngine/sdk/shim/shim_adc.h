@@ -1,10 +1,13 @@
 #ifndef SHIM_ADC_H
 #define SHIM_ADC_H
 
+#ifdef DC801_EMBEDDED
+#include "config/custom_board.h"
+#include <nrf_drv_saadc.h>
+#else
+
 #include <stdint.h>
 #include "shim_err.h"
-
-
 
 #define NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(PIN_P) \
 {                                                   \
@@ -164,6 +167,10 @@ typedef uint32_t ret_code_t;
 
 typedef void (* nrf_drv_saadc_event_handler_t)(nrf_drv_saadc_evt_t const * p_event);
 
+void EEpwm_init();
+void EEpwm_set(int percent);
+void EEget_milliVolts(int percent, int* v1, int* v2, int* v3);
+
 ret_code_t nrf_drv_saadc_init(nrf_drv_saadc_config_t const * p_config, nrf_drv_saadc_event_handler_t  event_handler);
 nrf_err_t nrf_drv_saadc_sample(void);
 nrf_err_t nrf_drv_saadc_buffer_convert(nrf_saadc_value_t * buffer, uint16_t size);
@@ -171,4 +178,5 @@ nrfx_err_t nrf_drv_saadc_channel_init(uint8_t channel, nrf_saadc_channel_config_
 
 
 
-#endif
+#endif //DC801_EMBEDDED
+#endif //SHIM_ADC_H

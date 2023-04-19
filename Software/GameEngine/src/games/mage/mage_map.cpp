@@ -1,9 +1,16 @@
 #include "mage_map.h"
 #include "EnginePanic.h"
-#include "shim_err.h"
 #include <algorithm>
 #include <numeric>
 #include "mage.h"
+
+
+#ifndef DC801_EMBEDDED
+#include "shim_err.h"
+#else
+#include <nrf_error.h>
+#endif
+
 
 void MapControl::Load(uint16_t index)
 {

@@ -50,7 +50,7 @@ struct Point
 
 	Point lerp(Point b, float progress) const
 	{
-		Point point = Point{
+		auto point = Point{
 			Util::lerp(x, b.x, progress),
 			Util::lerp(y, b.y, progress)
 		};
@@ -175,11 +175,11 @@ struct Point
 		float angle = atan2f(target.y - y, target.x - x);
 		float absoluteAngle = abs(angle);
 		MageEntityAnimationDirection direction = SOUTH;
-		if (absoluteAngle > 2.356194)
+		if (absoluteAngle > 2.356194f)
 		{
 			direction = WEST;
 		}
-		else if (absoluteAngle < 0.785398)
+		else if (absoluteAngle < 0.785398f)
 		{
 			direction = EAST;
 		}

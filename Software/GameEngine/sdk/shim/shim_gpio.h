@@ -1,9 +1,11 @@
 #ifndef SHIM_GPIO_H
 #define SHIM_GPIO_H
 
+#ifdef DC801_EMBEDDED
+#include <nrf_gpio.h>
+#else
+
 #include "sdk_shim.h"
-
-
 
 typedef enum
 {
@@ -33,4 +35,5 @@ void nrf_gpio_set_callback(nrf_gpio_callback *gpio_callback);
 
 
 
-#endif
+#endif //DC801_EMBEDDED
+#endif //SHIM_GPIO_H

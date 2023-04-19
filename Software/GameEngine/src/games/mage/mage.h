@@ -36,38 +36,18 @@ class MageGameEngine
 {
 public:
 
-   MageGameEngine()
+   MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer, const MageSaveGame& currentSave)
    {
-      audioPlayer = std::make_unique<AudioPlayer>();
-      inputHandler = std::make_shared<EngineInput>();
-
-      frameBuffer = std::make_shared<FrameBuffer>();
-      
-      //skip 'MAGEGAME' at front of .dat file
-      uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
-
-      ROM()->Read(engineVersion, offset);
-
-      if (engineVersion != ENGINE_VERSION)
-      {
-         throw std::runtime_error{ "game.dat is incompatible with Engine" };// \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
-      }
-
-      ROM()->Read(scenarioDataCRC32, offset);
-      ROM()->Read(scenarioDataLength, offset);
-
-      ROM()->SetCurrentSave(scenarioDataCRC32);
-
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_unique<MapControl>(frameBuffer, tileManager);
-      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave()->memOffsets);
-      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave()->scriptVariables);
+      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, currentSave.memOffsets);
+      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, currentSave.scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
       camera = MageCamera{ mapControl };
 
       auto scriptActions = std::make_unique<MageScriptActions>(frameBuffer, inputHandler, camera, mapControl, dialogControl, commandControl, hexEditor, stringLoader);
       scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
-      commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl);
+      commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl, stringLoader);
    }
 
    //updates the state of all the things before rendering:

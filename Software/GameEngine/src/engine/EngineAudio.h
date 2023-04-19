@@ -24,6 +24,7 @@
 // Max number of sounds that can be in the audio queue at anytime, stops too much mixing
 #define AUDIO_MAX_SOUNDS 25
 
+#ifndef DC801_EMBEDDED
 
 // Contains SDL Audio Device information
 struct AudioDevice
@@ -32,6 +33,7 @@ struct AudioDevice
 	SDL_AudioSpec spec;			// Secifications of our audio
 	bool enabled;				// Whether the audio driver is loaded and ready
 };
+#endif
 
 // The audio player uses a linked list to play up to 25 sounds and one background track simultaneously
 class Audio
@@ -40,8 +42,8 @@ class Audio
 public:
 	Audio(const char* filename)
 		:Audio(cm_new_source_from_file(filename)) { }
-	Audio(cm_Source* source = nullptr)
-		:source(source) { }
+	Audio(cm_Source* src = nullptr)
+		:source(src) { }
 	~Audio() {
 		// Stop playing
 		cm_stop(source);
@@ -63,7 +65,10 @@ private:
 	bool end{ false };					// The sample is done playing, free it
 
 	cm_Source* source; 		// cmixer audio source
+
+#ifndef DC801_EMBEDDED
 	SDL_AudioSpec spec{};			// Specifications of the audio sample
+#endif
 
 	std::unique_ptr<Audio> next{ nullptr };			// Next item in the list
 };
@@ -75,13 +80,10 @@ public:
 	void loop(const char *name, double gain);
 	void stop_loop();
 
-	static void forwardCallback(void* userdata, Uint8* stream, int len)
+	static void forwardCallback(void* userdata, uint8_t* stream, int len)
 	{
 		static_cast<AudioPlayer*>(userdata)->callback(stream, len);
 	}
-
-	AudioPlayer();
-	~AudioPlayer();
 
 private:
 	void callback(uint8_t* stream, int len);
@@ -93,6 +95,7 @@ private:
 	uint32_t soundCount = 0;			// Current number of simultaneous audio samples
 	AudioMutex mutex{};
 
+#ifndef DC801_EMBEDDED
 	AudioDevice device{ 0, 
 		SDL_AudioSpec{
 		AUDIO_FREQUENCY,
@@ -105,8 +108,8 @@ private:
 		AudioPlayer::forwardCallback,
 		this
 	}, false };
-
+#endif
 	std::unique_ptr<Audio> head;
 };
 
-#endif
+#endif //AUDIO_H

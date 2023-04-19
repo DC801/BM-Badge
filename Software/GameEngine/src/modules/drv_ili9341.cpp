@@ -1,6 +1,3 @@
-// System headers
-#ifdef DC801_EMBEDDED
-
 
 #include "drv_ili9341.h"
 
@@ -24,7 +21,7 @@ static volatile bool m_busy = false;
 
 static bool m_large_tx = false;
 static uint32_t m_large_tx_size = 0;
-static uint8_t *p_large_tx_data = NULL;
+static uint8_t *p_large_tx_data = nullptr;
 
 /**
  * Handler for unblocked SPI transfers that assumes the transfer is complete
@@ -59,7 +56,7 @@ static void __spim_event_handler(nrfx_spim_evt_t const * p_event, void * context
  */
 static void inline __writeCommand(uint8_t command) {
 	nrf_spim_tx_buffer_set(SPIM(LCD_SPIM_INSTANCE), &command, 1);
-	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), NULL, 0);
+	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -82,7 +79,7 @@ static void inline __writeCommand(uint8_t command) {
  */
 static void inline __writeData(uint8_t data) {
 	nrf_spim_tx_buffer_set(SPIM(LCD_SPIM_INSTANCE), &data, 1);
-	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), NULL, 0);
+	nrf_spim_rx_buffer_set(SPIM(LCD_SPIM_INSTANCE), nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -100,7 +97,7 @@ static void inline __writeData(uint8_t data) {
 static inline void __writeData16(uint16_t data) {
 	data = SWAP(data);
 //	nrf_spim_tx_buffer_set(LCD_SPIM, (uint8_t *) &data, 2);
-//	nrf_spim_rx_buffer_set(LCD_SPIM, NULL, 0);
+//	nrf_spim_rx_buffer_set(LCD_SPIM, nullptr, 0);
 
 	while (ili9341_is_busy()) {
 		APP_ERROR_CHECK(sd_app_evt_wait());
@@ -198,21 +195,24 @@ void ili9341_init() {
 	uint32_t err_code;
 
 	//Init SPI0 for the LCD
-	nrfx_spim_config_t spi_config = NRFX_SPIM_DEFAULT_CONFIG;
-	spi_config.sck_pin = ILI9341_SCK_PIN;
-	spi_config.mosi_pin = ILI9341_MOSI_PIN;
-	spi_config.miso_pin = NRFX_SPIM_PIN_NOT_USED;
-	spi_config.ss_pin = ILI9341_PIN_CS;
-	spi_config.irq_priority = NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY;
-	spi_config.frequency = NRF_SPIM_FREQ_32M;
-	spi_config.orc = 0x00;
-	spi_config.mode = NRF_SPIM_MODE_0;
-	spi_config.bit_order = NRF_SPIM_BIT_ORDER_MSB_FIRST;
-    spi_config.use_hw_ss      = true;
-    spi_config.ss_active_high = false;
-
+	auto spi_config = nrfx_spim_config_t{
+		ILI9341_SCK_PIN,
+		ILI9341_MOSI_PIN,
+		NRFX_SPIM_PIN_NOT_USED,
+		ILI9341_PIN_CS,
+		false,
+		NRFX_SPIM_DEFAULT_CONFIG_IRQ_PRIORITY,
+		0x00,
+		NRF_SPIM_FREQ_32M,
+		NRF_SPIM_MODE_0,
+		NRF_SPIM_BIT_ORDER_MSB_FIRST,
+		NRFX_SPIM_PIN_NOT_USED,
+		2,
+		true
+	};
+	 
 	APP_ERROR_CHECK(
-			nrfx_spim_init(&lcd_spim, &spi_config, __spim_event_handler, NULL)
+			nrfx_spim_init(&lcd_spim, &spi_config, __spim_event_handler, nullptr)
 	);
 
 	
@@ -243,7 +243,7 @@ void inline ili9341_push_color(uint16_t color) {
 /**
  * Push many colors to the display
  */
-inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
+inline void ili9341_push_colors(uint8_t *p_colors, uint32_t size) {
 
     uint8_t count = 0;
 
@@ -267,7 +267,7 @@ inline void ili9341_push_colors(uint8_t *p_colors, int32_t size) {
 /**
  * Push many colors to the display very fast
  */
-nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, int32_t size) {
+nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, uint32_t size) {
 	//Don't start next transfer until previous is complete
 	while (m_busy) {
 		//wait for previous transfer to complete before starting a new one
@@ -452,5 +452,3 @@ void ili9341_start() {
 	CRITICAL_REGION_EXIT();
 
 }
-
-#endif

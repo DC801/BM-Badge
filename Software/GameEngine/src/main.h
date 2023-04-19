@@ -25,7 +25,6 @@ extern volatile sig_atomic_t application_quit;
 
 static void speaker_init(void);
 static void log_init(void);
-static void rom_init(void);
 
 int main(int argc, char* argv[]);
 

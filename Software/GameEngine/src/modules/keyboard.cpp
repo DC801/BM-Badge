@@ -9,6 +9,8 @@ uint32_t last_keyboard_interrupt_time = 0;
 #ifdef DC801_EMBEDDED
 #include "nrfx_gpiote.h"
 #include "app_error.h"
+#include <config/custom_board.h>
+#include <shim_i2c.h>
 
 void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {

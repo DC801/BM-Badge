@@ -1,10 +1,7 @@
-#include <EngineAudio.h>
-
-#include <iostream>
-
 #ifndef DC801_EMBEDDED
-#include <SDL.h>
+#include <EngineAudio.h>
 #include <cstring>
+#include <iostream>
 
 /*
 
@@ -77,8 +74,6 @@ AudioPlayer::~AudioPlayer()
 		SDL_CloseAudioDevice(device.id);
 	}
 }
-
-#endif
 
 // Callbacks issued by SDL
 //  Here we:
@@ -274,3 +269,4 @@ void AudioPlayer::stop_loop()
 		}
 	}
 }
+#endif //DC801_EMBEDDED

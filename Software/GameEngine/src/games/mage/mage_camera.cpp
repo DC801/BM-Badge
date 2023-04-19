@@ -14,7 +14,7 @@ void MageCamera::applyEffects(uint32_t deltaTime)
 
    if (shaking)
    {
-      position.x += cos(PI * 2 * shakePhase) * (float)shakeAmplitude;
-      position.y += sin(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
+      position.x += cosf(PI * 2 * shakePhase) * (float)shakeAmplitude;
+      position.y += sinf(PI * 2 * (shakePhase * 2)) * (float)shakeAmplitude;
    }
 }

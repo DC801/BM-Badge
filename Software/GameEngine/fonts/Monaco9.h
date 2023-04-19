@@ -1,12 +1,12 @@
 #ifndef MONACO9_H
 #define MONACO9_H
 
-#include "modules/gfx.h"
+//#include "modules/gfx.h"
 #include "adafruit/gfxfont.h"
 
 // Monaco9 in AdaFruit GFXfont format
 
-const uint8_t Monaco9Bitmaps[] PROGMEM = {
+const uint8_t Monaco9Bitmaps[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x08,
 	0x20, 0x82, 0x00, 0x20, 0x00, 0x00, 0x00, 0x05, 0x14, 0x50, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x05, 0x3e, 0x53, 0xe5, 0x00, 0x00, 0x00, 0x00,
@@ -81,7 +81,7 @@ const uint8_t Monaco9Bitmaps[] PROGMEM = {
 	0x00, 0x00, 0x00
 };
 
-const GFXglyph Monaco9Glyphs[] PROGMEM = {
+const GFXglyph Monaco9Glyphs[] = {
 	{0, 6, 12, 6, 0, 0},		// 0x20 ' '
 	{9, 6, 12, 6, 0, 0},		// 0x21 '!'
 	{18, 6, 12, 6, 0, 0},		// 0x22 '"'
@@ -179,7 +179,7 @@ const GFXglyph Monaco9Glyphs[] PROGMEM = {
 	{846, 6, 12, 6, 0, 0},		// 0x7e '~'
 };
 
-const GFXfont Monaco9 PROGMEM = {
+const GFXfont Monaco9 = {
 	(uint8_t *)Monaco9Bitmaps,
 	(GFXglyph *)Monaco9Glyphs,
 	0x20,

@@ -5,7 +5,7 @@
 #include "mage_geometry.h"
 #include <stdint.h>
 
-static inline const float PI = 3.141592653589793;
+static inline const float PI = 3.141592653589793f;
 
 struct Point;
 class MapControl;

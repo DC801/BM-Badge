@@ -1,6 +1,5 @@
 #include "shim_pwm.h"
-
-// TODO: Implement this shit
+#ifndef DC801_EMBEDDED
 
 ret_code_t app_pwm_init(app_pwm_t const * const p_instance, app_pwm_config_t const * const p_config, app_pwm_callback_t p_ready_callback)
 {
@@ -24,3 +23,4 @@ ret_code_t app_pwm_channel_duty_set(app_pwm_t const * const p_instance, uint8_t 
 
     return NRF_SUCCESS;
 }
+#endif //DC801_EMBEDDED

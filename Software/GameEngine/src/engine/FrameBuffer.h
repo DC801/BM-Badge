@@ -6,7 +6,6 @@
 #include "games/mage/mage_geometry.h"
 #include "EngineWindowFrame.h"
 #include "adafruit/gfxfont.h"
-#include "modules/gfx.h"
 #include "convert_endian.h"
 #include <array>
 #include <stdint.h>
@@ -148,14 +147,13 @@ public:
 	void write_char(uint8_t c, GFXfont font);
 	void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
 
-	void setTextArea(area_t *area);
-	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, bounds_t *bounds);
-	void getTextBounds(GFXfont font, const char *text, int16_t x, int16_t y, area_t *near, bounds_t *bounds);
 	void blt(ButtonState button);
 
 private:
-	std::unique_ptr<EngineWindowFrame> windowFrame{std::make_unique<EngineWindowFrame>()};
-
+#ifndef DC801_EMBEDDED
+	std::unique_ptr<EngineWindowFrame> windowFrame{ std::make_unique<EngineWindowFrame>() };
+#endif
+	
 	//variables used for screen fading
 	float fadeFraction{ 0.0f };
 	bool isFading{ false };

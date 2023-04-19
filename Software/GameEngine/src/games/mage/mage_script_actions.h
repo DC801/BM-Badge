@@ -403,7 +403,7 @@ private:
       GT
    };
 
-   void mutate(MageMutateOperation operation, uint16_t* destination, uint16_t value);
+   void mutate(MageMutateOperation operation, uint16_t& destination, uint16_t value);
    bool compare(MageCheckComparison comparison, uint16_t a, uint16_t b);
    
 private:

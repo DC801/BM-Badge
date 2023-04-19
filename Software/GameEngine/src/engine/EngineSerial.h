@@ -2,8 +2,7 @@
 #define ENGINE_SERIAL_H
 
 #include <stdint.h>
-
-
+#include <usb.h>
 
 #define COMMAND_BUFFER_SIZE 1024
 #define COMMAND_RESPONSE_SIZE (COMMAND_BUFFER_SIZE + 128)

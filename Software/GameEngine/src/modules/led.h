@@ -32,9 +32,7 @@
 
 
 
-#ifndef DC801_EMBEDDED
-#include "i2c.h"
-#endif
+#include <shim_i2c.h>
 
 #ifndef SOFTWARE_LED_H
 #define SOFTWARE_LED_H
