@@ -3,5 +3,18 @@
     "Local Machine": [
       "build\\"
     ]
-  }
+  },
+  "ExpandedNodes": [
+    "",
+    "\\Software",
+    "\\Software\\GameEngine",
+    "\\Software\\GameEngine\\sdk",
+    "\\Software\\GameEngine\\sdk\\shim",
+    "\\Software\\GameEngine\\src",
+    "\\Software\\GameEngine\\src\\engine",
+    "\\Software\\GameEngine\\src\\games",
+    "\\Software\\GameEngine\\src\\games\\mage"
+  ],
+  "SelectedNode": "\\Software\\GameEngine\\src\\games\\mage\\mage_map.cpp",
+  "PreviewInSolutionExplorer": false
 }

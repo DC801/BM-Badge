@@ -138,9 +138,9 @@ void MapControl::UpdateEntities(uint32_t deltaTime)
 void MapControl::TryMovePlayer(const Point& playerVelocity)
 {
    auto pushback = Point{ 0,0 };
-   auto minPushback = float{ 9999.9f };
+   auto maxPushback = float{ 0.0f };
 
-   auto setPushbackToMinCollision = [&](const Point& hitboxCorner) {
+   auto setPushbackToMinCollision = [&](const Point& pointA, const Point& pointB) {
 
       auto internalPushbackCalc = [&](const MageMapTile* tile, const Point& tileCorner) {
 
@@ -149,19 +149,20 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
          if (geometry)
          {
             auto geometryPoints = geometry->FlipByFlags(tile->flags, tileset->TileWidth, tileset->TileHeight);
-            for (auto i = 0; i < geometryPoints.size(); i += 2)
+            for (auto i = 0; i < geometryPoints.size(); i++)
             {
                auto& geometryPointA = geometryPoints[i] + tileCorner;
                auto& geometryPointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileCorner;
 
-               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(hitboxCorner, hitboxCorner + playerVelocity, geometryPointA, geometryPointB);
+               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointB, geometryPointA, geometryPointB);
                if (intersection.has_value())
                {
-                  auto& intersectionPoint = intersection.value();
-                  auto cornerDistance = MageGeometry::VectorLength(intersectionPoint.x - hitboxCorner.x, intersectionPoint.y - hitboxCorner.y);
-                  if (cornerDistance < minPushback)
+                  auto cornerVector = intersection.value() - pointA;
+                  auto cornerDistance = MageGeometry::VectorLength(cornerVector.x, cornerVector.y);
+                  if (cornerDistance > maxPushback)
                   {
-                     pushback = intersectionPoint - hitboxCorner;
+                     pushback = cornerVector;
+                     maxPushback = cornerDistance;
                   }
                }
             }
@@ -183,10 +184,10 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
             return &layerTiles[tileIndex];
          };
 
-         const auto tile = getTile(hitboxCorner);
+         const auto tile = getTile(pointA);
          internalPushbackCalc(tile, tileCorner);
 
-         const auto tileAfterMove = getTile(hitboxCorner + playerVelocity);
+         const auto tileAfterMove = getTile(pointB);
          if (tile != tileAfterMove)
          {
             internalPushbackCalc(tileAfterMove, tileCorner);
@@ -200,30 +201,47 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
    const auto bottomLeft = Point{ playerHitBox.origin.x, playerHitBox.origin.y + playerHitBox.h };
    const auto bottomRight = Point{ playerHitBox.origin.x + playerHitBox.w, playerHitBox.origin.y + playerHitBox.h };
 
-   //right
    if (playerVelocity.x > 0)
    {
-      setPushbackToMinCollision(topRight);
-      setPushbackToMinCollision(bottomRight);
+      //right
+      setPushbackToMinCollision(topRight, bottomRight);
+
+      if (playerVelocity.y > 0)
+      {
+         //down-right
+         setPushbackToMinCollision(bottomRight, bottomRight + playerVelocity);
+      }
+      else if (playerVelocity.y < 0)
+      {
+         //up-right
+         setPushbackToMinCollision(topRight, topRight + playerVelocity);
+      }
    }
-   //left
    else if (playerVelocity.x < 0)
    {
-      setPushbackToMinCollision(topLeft);
-      setPushbackToMinCollision(bottomLeft);
-   }
+      //left
+      setPushbackToMinCollision(topLeft, bottomLeft);
 
-   //down
-   if (playerVelocity.y > 0)
-   {
-      setPushbackToMinCollision(bottomLeft);
-      setPushbackToMinCollision(bottomRight);
+      if (playerVelocity.y > 0)
+      {
+         //down-left
+         setPushbackToMinCollision(bottomLeft, bottomLeft + playerVelocity);
+      }
+      else if (playerVelocity.y < 0)
+      {
+         //up-left
+         setPushbackToMinCollision(topLeft, topLeft + playerVelocity);
+      }
    }
-   //up
+   else if (playerVelocity.y > 0)
+   {
+      //straight down
+      setPushbackToMinCollision(bottomLeft, bottomRight);
+   }
    else if (playerVelocity.y < 0)
    {
-      setPushbackToMinCollision(topLeft);
-      setPushbackToMinCollision(topRight);
+      //straight up
+      setPushbackToMinCollision(topLeft, topRight);
    }
 
    getPlayerEntity().x += playerVelocity.x - pushback.x;

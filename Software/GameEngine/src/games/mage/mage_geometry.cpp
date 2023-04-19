@@ -63,39 +63,37 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
    const Point& lineBPointA, const Point& lineBPointB
 )
 {
-   float x1 = lineAPointA.x;
-   float x2 = lineAPointB.x;
-   float x3 = lineBPointA.x;
-   float x4 = lineBPointB.x;
-   float y1 = lineAPointA.y;
-   float y2 = lineAPointB.y;
-   float y3 = lineBPointA.y;
-   float y4 = lineBPointB.y;
+   auto x1 = lineAPointA.x;
+   auto x2 = lineAPointB.x;
+   auto x3 = lineBPointA.x;
+   auto x4 = lineBPointB.x;
+   auto y1 = lineAPointA.y;
+   auto y2 = lineAPointB.y;
+   auto y3 = lineBPointA.y;
+   auto y4 = lineBPointB.y;
 
-   float x12 = x1 - x2;
-   float x34 = x3 - x4;
-   float y12 = y1 - y2;
-   float y34 = y3 - y4;
+   auto x12 = x1 - x2;
+   auto x34 = x3 - x4;
+   auto y12 = y1 - y2;
+   auto y34 = y3 - y4;
 
-   float c = x12 * y34 - y12 * x34;
+   auto c = x12 * y34 - y12 * x34;
 
-   if (fabs(c) > 0.01)
+   if (c > 0)
    {
       // Intersection
-      float a = x1 * y2 - y1 * x2;
-      float b = x3 * y4 - y3 * x4;
-
-      float x = (a * x34 - b * x12) / c;
-      float y = (a * y34 - b * y12) / c;
-
-      float lineAXMin = MIN(x1, x2);
-      float lineAXMax = MAX(x1, x2);
-      float lineAYMin = MIN(y1, y2);
-      float lineAYMax = MAX(y1, y2);
-      float lineBXMin = MIN(x3, x4);
-      float lineBXMax = MAX(x3, x4);
-      float lineBYMin = MIN(y3, y4);
-      float lineBYMax = MAX(y3, y4);
+      auto a = x1 * y2 - y1 * x2;
+      auto b = x3 * y4 - y3 * x4;
+      auto x = (a * x34 - b * x12) / c;
+      auto y = (a * y34 - b * y12) / c;
+      auto lineAXMin = MIN(x1, x2);
+      auto lineAXMax = MAX(x1, x2);
+      auto lineAYMin = MIN(y1, y2);
+      auto lineAYMax = MAX(y1, y2);
+      auto lineBXMin = MIN(x3, x4);
+      auto lineBXMax = MAX(x3, x4);
+      auto lineBYMin = MIN(y3, y4);
+      auto lineBYMax = MAX(y3, y4);
 
       // Determine if the intersection is inside the bounds of lineA AND lineB
       if (x >= lineAXMin && x <= lineAXMax
@@ -103,7 +101,7 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
          && x >= lineBXMin && x <= lineBXMax
          && y >= lineBYMin && y <= lineBYMax)
       {
-         return Point{ static_cast<int32_t>(x), static_cast<int32_t>(y) };
+         return Point{ x, y };
       }
    }
    // No intersection
