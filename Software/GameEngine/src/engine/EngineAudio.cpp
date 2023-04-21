@@ -3,6 +3,7 @@
 #include "EngineAudio.h"
 
 #include "cmixer.h"
+#include <functional>
 
 // Used in place of std::mutex because of size constraints when including
 // C++ threading and synchronization. More info here:
@@ -24,22 +25,10 @@
 uint32_t stream[2][BUFFER_SIZE];
 uint32_t soundCount = 0;
 
-AudioMutex audio_mutex;
+AudioMutex audio_mutex{};
+Audio head{};
 
-// typedef struct sound
-// {
-// 	bool fade;
-// 	bool free;
-// 	bool end;
-
-// 	cm_Source *source;
-
-// 	struct sound *next;
-// } Audio;
-
-Audio head;
-
-void lockAudio(cm_Event *e)
+void AudioPlayer::lockAudio(cm_Event* e)
 {
 	if (e->type == CM_EVENT_LOCK)
 	{
@@ -52,30 +41,7 @@ void lockAudio(cm_Event *e)
 	}
 }
 
-void freeAudio(Audio *audio)
-{
-	Audio *temp;
-
-	while (audio != NULL)
-	{
-		// If the SDL sample is loaded, free it
-		if (audio->free)
-		{
-			if (audio->source != NULL)
-			{
-				cm_destroy_source(audio->source);
-			}
-		}
-
-		// Unlink this item from the list
-		temp = audio;
-		audio = audio->next;
-		// And free it
-		delete temp;
-	}
-}
-
-void AudioPlayer::callback(nrfx_i2s_buffers_t const *p_released, uint32_t status)
+void AudioPlayer::callback(const nrfx_i2s_buffers_t* p_released, uint32_t status)
 {
 	if ((status & NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED) == 0)
 	{
@@ -83,20 +49,20 @@ void AudioPlayer::callback(nrfx_i2s_buffers_t const *p_released, uint32_t status
 	}
 
 	// Capture the root of the list
-	Audio *previous = &head;
+	auto previous = head.get();
 	// Pull the first audio sample
-	Audio *audio = previous->next;
+	auto audio = previous->next.get();
 
 	int length = sizeof(stream[1]) * sizeof(stream[1][0]) / sizeof(cm_Int16);
 	memset(reinterpret_cast<cm_Int16*>(stream[1]), 0, length);
 
 	// Walk the list
-	while (audio != NULL)
+	while (audio)
 	{
-		cm_Source *source = audio->source;
+		auto source = audio->source;
 
 		// If this sample has remaining data to play
-		if (audio->end == false)
+		if (!audio->end)
 		{
 			// And the audio is being faded
 			if (audio->fade == 1)
@@ -112,8 +78,6 @@ void AudioPlayer::callback(nrfx_i2s_buffers_t const *p_released, uint32_t status
 				}
 			}
 
-			int length = sizeof(stream[1]) * sizeof(stream[1][0]) / sizeof(cm_Int16);
-
 			// Mix with cmixer
 			cm_process(reinterpret_cast<cm_Int16*>(stream[1]), length);
 
@@ -123,45 +87,48 @@ void AudioPlayer::callback(nrfx_i2s_buffers_t const *p_released, uint32_t status
 		// Otherwise, this sample is finished
 		else
 		{
-			// Stop playing
-			cm_stop(audio->source);
+			// // Stop playing
+			// cm_stop(audio->source);
+
+			// // Offset our sample count for non-looped samples
+			// if (audio->source->loop == 0)
+			// {
+			// 	soundCount -= 1;
+			// }
 
 			// Unlink the sample
-			previous->next = audio->next;
-			// Offset our sample count for non-looped samples
-			if (audio->source->loop == 0)
-			{
-				soundCount -= 1;
-			}
-
-			// Unlink the next sample
-			audio->next = NULL;
-			// Free the sample and delete the audio object
-			freeAudio(audio);
+			previous->next = std::move(audio->next);
 		}
 
 		// Iterate to the next sample
-		audio = previous->next;
+		audio = previous->next.get();
 	}
 
+#ifdef DC801_EMBEDDED
 	if (!p_released->p_rx_buffer)
 	{
-		nau8810_next(stream[1]);
+		nrfx_i2s_buffers_t buffers = { nullptr, stream[1] };
+
+		nrfx_i2s_next_buffers_set(&buffers);
 	}
 	else
 	{
-		nau8810_next(p_released->p_tx_buffer);
+		nrfx_i2s_buffers_t buffers = { nullptr, p_released->p_tx_buffer };
+
+		nrfx_i2s_next_buffers_set(&buffers);
 	}
+#endif
 }
 
 // Indicate that an audio sample should be faded out and removed
 // The current driver only allows one looped audio sample
-void fadeAudio(Audio *audio)
+void AudioPlayer::fadeAudio()
 {
 	// Walk the tree
-	while ((audio != NULL) && (audio->source != NULL))
+	auto audio = head->next.get();
+	while ((audio) && (audio->source))
 	{
-		cm_Source *source = audio->source;
+		cm_Source* source = audio->source;
 		// Find any looped samples and fade them
 		if (source->loop == 1)
 		{
@@ -170,31 +137,12 @@ void fadeAudio(Audio *audio)
 		}
 
 		// Iterate to the next sample
-		audio = audio->next;
+		audio = audio->next.get();
 	}
-}
-
-// Add an audio sample to the end of the list
-void addAudio(Audio *root, Audio *audio)
-{
-	// Sanity check
-	if (root == NULL)
-	{
-		return;
-	}
-
-	// Walk the tree to the end
-	while (root->next != NULL)
-	{
-		root = root->next;
-	}
-
-	// Link the new item to the end
-	root->next = audio;
 }
 
 // Loads a wave file and adds it to the list of samples to be played
-void playAudio(const char *filename, bool loop, double gain)
+void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 {
 	// Sanity check
 	if (filename == NULL)
@@ -212,7 +160,7 @@ void playAudio(const char *filename, bool loop, double gain)
 	soundCount += 1;
 
 	// Allocate a new audio object
-	Audio *audio = new Audio();
+	Audio* audio = new Audio();
 
 	audio->next = NULL;				// At the end of the list
 	audio->fade = false;			// New sample, don't fade
@@ -242,73 +190,83 @@ void playAudio(const char *filename, bool loop, double gain)
 	// If the sample we're adding is looped, fade any and all existing looped samples
 	if (loop == true)
 	{
-		fadeAudio(&head);
+		fadeAudio();
 	}
 
 	// Append the sample to the end of the list
-	addAudio(&head, audio);
+	auto root = head->next.get();
+
+	if (root)
+	{
+		// Walk the tree to the end
+		while (root->next)
+		{
+			root = root->next.get();
+		}
+
+		// Link the new item to the end
+		root->next = std::unique_ptr<Audio>{ audio };
+	}
 
 	audio_mutex.unlock();
 }
 
-void AudioPlayer::play(const char *name, double gain)
+void AudioPlayer::play(const char* name, double gain)
 {
 	playAudio(name, false, gain);
 }
 
-void AudioPlayer::loop(const char *name, double gain)
+void AudioPlayer::loop(const char* name, double gain)
 {
 	playAudio(name, true, gain);
 }
 
 void AudioPlayer::stop_loop()
 {
-	Audio *item = &head;
+	auto item = head->next.get();
 
-	while (item != NULL)
+	while (item)
 	{
-		if (item->source != NULL)
+		if (item->source)
 		{
-			if (item->source->loop != 0)
+			if (item->source->loop)
 			{
 				item->end = true;
 				return;
 			}
 		}
 
-		item = item->next;
+		item = item->next.get();
 	}
 }
 
 AudioPlayer::AudioPlayer()
 {
+#ifdef DC801_EMBEDDED
 	// Initialize Audio chip
 	nau8810_init(callback);
+#endif
 
-	head.fade = false;
-	head.free = false;
-	head.end = false;
+	head->fade = false;
+	head->free = false;
+	head->end = false;
 
-	head.source = NULL;
-	head.next = NULL;
+	head->source = nullptr;
+	head->next = nullptr;
 
 	// Initialize cmixer
 	cm_init(AUDIO_FREQUENCY);
-	cm_set_lock(lockAudio);
+	static auto lockFn = [this](cm_Event* e) { lockAudio(e); };
+	cm_set_lock([](cm_Event* e) { lockFn(e); });
 	cm_set_master_gain(1.0);
 
+#ifdef DC801_EMBEDDED
 	// Initialize audio chip
 	nau8810_init(callback);
 
 	// Start DMA
 	nau8810_start(stream[0], BUFFER_SIZE);
-}
-
-// Not really necessary on embedded, but...
-AudioPlayer::~AudioPlayer()
-{
-	// Delete all audio samples
-	freeAudio(head.next);
+#endif
 }
 
 #endif

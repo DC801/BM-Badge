@@ -3,7 +3,7 @@
 //
 
 #include "uart.h"
-#ifndef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
 
 #include <cstring> 
 #include <ctype.h> 

@@ -1,6 +1,8 @@
 
 #include "drv_ili9341.h"
 
+#ifdef DC801_EMBEDDED
+
 //size of chunk to transfer each interrupt
 #define ILI_TRANSFER_CHUNK_SIZE (254)
 
@@ -452,3 +454,4 @@ void ili9341_start() {
 	CRITICAL_REGION_EXIT();
 
 }
+#endif

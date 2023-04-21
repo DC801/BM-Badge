@@ -11,9 +11,6 @@
 #include "shim_err.h"
 #include "shim_timer.h"
 
-
-
-
 typedef enum
 {
     NRFX_DRV_STATE_UNINITIALIZED, // Uninitialized

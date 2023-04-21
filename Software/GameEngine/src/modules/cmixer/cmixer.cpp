@@ -50,7 +50,7 @@
 static struct
 {
   const char* lasterror;        /* Last error message */
-  AudioMutex* mutex;         /* Event handler for lock/unlock events */
+  cm_EventHandler lock;         /* Event handler for lock/unlock events */
   cm_Source* sources;           /* Linked list of active (playing) sources */
   cm_Int32 buffer[CM_BUFFER_SIZE]; /* Internal master buffer */
   int samplerate;               /* Master samplerate */
@@ -60,9 +60,9 @@ static struct
 
 static void lock(void)
 {
-  if (cmixer.mutex)
+  if (cmixer.lock)
   {
-    cmixer.mutex->lock();
+    // cmixer.mutex->lock();
   }
 }
 
@@ -70,10 +70,10 @@ static void lock(void)
 static void unlock(void)
 {
 
-  if (cmixer.mutex)
-  {
-    cmixer.mutex->unlock();
-  }
+  // if (cmixer.mutex)
+  // {
+  //   cmixer.mutex->unlock();
+  // }
 }
 
 
@@ -95,15 +95,15 @@ static const char* error(const char* msg)
 void cm_init(int samplerate)
 {
   cmixer.samplerate = samplerate;
-  cmixer.mutex = nullptr;
+  cmixer.lock = nullptr;
   cmixer.sources = nullptr;
   cmixer.gain = FX_UNIT;
 }
 
 
-void cm_set_mutex(AudioMutex* mutex)
+void cm_set_lock(cm_EventHandler lock)
 {
-  cmixer.mutex = mutex;
+  cmixer.lock = lock;
 }
 
 

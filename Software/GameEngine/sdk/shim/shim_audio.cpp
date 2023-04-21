@@ -1,4 +1,4 @@
-#ifndef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
 #include <EngineAudio.h>
 #include <cstring>
 #include <iostream>
@@ -154,16 +154,17 @@ void AudioPlayer::fadeAudio()
 }
 
 // Add an audio sample to the end of the list
-void AudioPlayer::addAudio(Audio* root, std::unique_ptr<Audio> audio)
+void AudioPlayer::addAudio(std::unique_ptr<Audio> audio)
 {
+	auto root = head.get();
 	// Sanity check
-	if (root == NULL)
+	if (!root)
 	{
 		return;
 	}
 
 	// Walk the tree to the end
-	while (root->next.get() != nullptr)
+	while (root->next.get())
 	{
 		root = root->next.get();
 	}
@@ -233,7 +234,7 @@ void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 	// If the sample we're adding is looped, fade any and all existing looped samples
 	if (loop == true)
 	{
-		//reinterpret_cast<std::unique_ptr<Audio>&>(device.spec.userdata)
+		//reinterpret_cast<Audio*>(device.spec.userdata)
 		fadeAudio();
 	}
 

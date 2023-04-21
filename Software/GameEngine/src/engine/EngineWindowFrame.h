@@ -1,15 +1,17 @@
 #ifndef _ENGINEWINDOWFRAME_H
 #define _ENGINEWINDOWFRAME_H
 
+#include <stdint.h>
+#include "EngineInput.h"
+#include "modules/keyboard.h"
+#include "modules/led.h"
+
 static const inline auto ScreenWidth = 320;
 static const inline auto ScreenHeight = 240;
 static const inline auto DrawWidthHalf = ScreenWidth/2;
 static const inline auto DrawHeightHalf = ScreenHeight/2;
 static const inline uint32_t FramebufferSize = ScreenWidth * ScreenHeight;
 
-#include "EngineInput.h"
-#include "modules/keyboard.h"
-#include "modules/led.h"
 #ifndef DC801_EMBEDDED
 
 #include <SDL.h>

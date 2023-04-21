@@ -114,7 +114,7 @@
 
 	const char* cm_get_error(void);
 	void cm_init(int samplerate);
-	void cm_set_mutex(AudioMutex* mutex);
+	void cm_set_lock(cm_EventHandler lock);
 	void cm_set_master_gain(double gain);
 	void cm_process(cm_Int16* dst, int len);
 

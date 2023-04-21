@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string.h>
 #include "shim_err.h"
 #include "shim_serial.h"
@@ -56,7 +57,7 @@ bool usb_serial_read_line(char* input_buffer, size_t max_len) {
                 usb_buffer[i++] = '\0';
             }
 
-            size_t read =  MIN(i, max_len);
+            size_t read =  std::min(i, max_len);
 
             memcpy(input_buffer, usb_buffer, read);
 

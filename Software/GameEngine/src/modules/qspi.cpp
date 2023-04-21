@@ -8,6 +8,7 @@
  */
 #include "qspi.h"
 #include "utility.h"
+#ifdef DC801_EMBEDDED
 
  /**
   * Handler for the qspi interrupt
@@ -289,3 +290,4 @@ bool QSPI::read(void* data, size_t len, uint32_t startAddress)
 
 	return false;
 }
+#endif

@@ -26,6 +26,11 @@
  * 	Adapted for the dc801 dc26 badge and SDK15 by @hamster
  *****************************************************************************/
 
+#include <stdint.h>
+#include <filesystem>
+#include <fstream>
+#include "utility.h"
+
 #ifdef DC801_EMBEDDED
 
 #include "sd.h"

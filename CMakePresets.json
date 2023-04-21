@@ -32,6 +32,7 @@
         "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
+        "EMBEDDED_BUILD": "OFF",
         "VS_DEBUGGER_WORKING_DIRECTORY": "$<TARGET_FILE_DIR:bm_badge>"
       },
       "vendor": {
