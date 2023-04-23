@@ -1091,6 +1091,12 @@ var initActionData = function (action) {
 	if (actionIndex === -1) {
 		throw new Error(`Invalid Action: ${action.action}`);
 	}
+	if (
+		(action.action || '').includes('REGISTER')
+		&& (action.command || '').toLocaleLowerCase() === "look"
+	) {
+		throw new Error(`"LOOK" cannot be registered as a custom serial command`);
+	}
 	dataView.setUint8(
 		0, // action index
 		actionIndex
