@@ -50,3 +50,53 @@ on_go-castle-23-south {
 	copy warping-out-fade-out
 	load map ch2-castle-22
 }
+
+/* ---------- HEATSINK (ADMIN) ---------- */
+
+ch2-hide-heatsink {
+	teleport entity "Heat Sink" to geometry hiding-spot
+	set entity "Heat Sink" name to " "
+}
+
+ch2-touch-heatsink {
+	if (flag ch2-heatsink-firstlook is false) {
+		show dialog {
+			PLAYER "TODO heatsink1"
+		}
+		set flag ch2-heatsink-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO heatsink2."
+	}
+	show dialog {
+		name "" "(Pick up the heat sink?)"
+		> "Yes" : ch2-touch-heatsink-yes
+		> "No" : ch2-touch-heatsink-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
+}
+ch2-touch-heatsink-yes {
+	show dialog {
+		name "" "(You pick up the heat sink!)"
+	}
+	copy script ch2-hide-heatsink
+	set flag ch2-carrying-heatsink to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-heatsink-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
+}
+
+ch2-install-heatsink {
+	set flag ch2-carrying-heatsink to false
+	set flag ch2-installed-heatsink to true
+}
+on_look-heatsink {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look heatsink TODO"
+	}
+}

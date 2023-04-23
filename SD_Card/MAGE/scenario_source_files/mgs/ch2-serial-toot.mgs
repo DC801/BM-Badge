@@ -293,41 +293,75 @@ ch2-toot-step5a {
 	goto ch2-toot-step5b
 }
 
+// NOTE: These must be written generically enough to be seen in isolation
 serial dialog ch2-describe-clock {
-	// NOTE: These must be written generically enough to be seen in isolation
 	"<m>LAMBDA:</> We'll need a <c>CLOCK</>. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
 	"\tIn our case... well, we don't have a lot of options, but I do know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
+serial dialog ch2-describe-heatsink {
+	"<m>LAMBDA:</> TODO: heatsink description"
+}
+
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
 	show serial dialog {
 		" "
 		# "What else?" : ch2-toot-step5c
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+ch2-toot-step5c {
+	show serial dialog ch2-describe-heatsink
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5d
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
 
-ch2-toot-step5c {
-	goto ch2-toot-step6
+ch2-toot-step5d {
+	goto ch2-toot-step5-endoflist
 }
 
-ch2-toot-step6 {
-	// state must be set first because the serial dialog branches
+ch2-toot-step99-cleanstate {
 	mutate ch2-toot-level = 99
 	set flag ch2-toot-done to true
+}
+ch2-toot-step5-bypass {
+	// state must be set first because the serial dialog branches
+	copy ch2-toot-step99-cleanstate
+	// actual convo
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Yeah, okay, I get it. You can finish explaining the rest later."
+		" "
+		"<m>LAMBDA:</> No problem. If you want to hear more about a part, feel free to ask me at any time."
+	}
+	goto ch2-toot-step99
+}
+ch2-toot-step5-endoflist {
+	// state must be set first because the serial dialog branches
+	copy ch2-toot-step99-cleanstate
 	// actual convo
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> What else?"
 		" "
 		"<m>LAMBDA:</> And... that might be it."
+	}
+	goto ch2-toot-step99
+}
+
+ch2-toot-step99 {
+	show serial dialog {
 		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
 		" "
-		# "Let's do it!" : ch2-toot-step6-end
-		# "Actually, I had a question." : ch2-toot-step6-continue
+		# "Let's do it!" : ch2-toot-step99-end
+		# "Actually, I had a different question." : ch2-toot-step99-continue
 	}
 }
 
-ch2-toot-step6-end {
+ch2-toot-step99-end {
 	show serial dialog spacer
 	show serial dialog {
 		"<c>YOU:</> Yeah, let's do it!"
@@ -336,10 +370,10 @@ ch2-toot-step6-end {
 	}
 }
 
-ch2-toot-step6-continue {
+ch2-toot-step99-continue {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> Actually, I had a question."
+		"<c>YOU:</> Actually, I had a different question."
 		" "
 		"<m>LAMBDA:</> Sure. What did you want to know?"
 	}
