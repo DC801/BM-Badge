@@ -25,6 +25,7 @@ public:
 	uint32_t offset(uint32_t num) const;
 	uint32_t length(uint32_t num) const;
 	uint32_t size() const;
+	uint32_t ramSize() const;
 	bool valid() const;
 }; //class MageHeader
 

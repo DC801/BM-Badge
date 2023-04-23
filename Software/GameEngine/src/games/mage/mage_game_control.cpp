@@ -162,21 +162,21 @@ MageGameControl::MageGameControl()
 uint32_t MageGameControl::Size() const
 {
 	uint32_t size = (
-		mapHeader.size() +
-		tilesetHeader.size() +
-		animationHeader.size() +
-		entityTypeHeader.size() +
-		entityHeader.size() +
-		geometryHeader.size() +
-		scriptHeader.size() +
-		portraitHeader.size() +
-		dialogHeader.size() +
-		serialDialogHeader.size() +
-		colorPaletteHeader.size() +
-		stringHeader.size() +
-		saveFlagHeader.size() +
-		variableHeader.size() +
-		imageHeader.size() +
+		mapHeader.ramSize() +
+		tilesetHeader.ramSize() +
+		animationHeader.ramSize() +
+		entityTypeHeader.ramSize() +
+		entityHeader.ramSize() +
+		geometryHeader.ramSize() +
+		scriptHeader.ramSize() +
+		portraitHeader.ramSize() +
+		dialogHeader.ramSize() +
+		serialDialogHeader.ramSize() +
+		colorPaletteHeader.ramSize() +
+		stringHeader.ramSize() +
+		saveFlagHeader.ramSize() +
+		variableHeader.ramSize() +
+		imageHeader.ramSize() +
 		map.Size() +
 		sizeof(mageSpeed) +
 		sizeof(isMoving) +
