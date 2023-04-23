@@ -14,6 +14,10 @@ ch2-report-inventory {
 		show serial dialog { "\tclock" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-heatsink is true) {
+		show serial dialog { "\theat sink" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		show serial dialog { "\t(nothing)" }
 	}
@@ -26,11 +30,17 @@ ch2-count-flags {
 	if (flag ch2-installed-clock is true) {
 		mutate ch2-storyflags-tally + 1
 	}
+	if (flag ch2-installed-heatsink is true) {
+		mutate ch2-storyflags-tally + 1
+	}
 	set flag ch2-storyflags-tallied to true
 	set entity "%SELF%" tick_script to null_script
 }
 
 ch2-interact-mainframe {
+	if (flag ch2-toot-done is false) {
+		goto ch2-interact-mainframe-madamada
+	}
 	set flag temp to false
 	if (flag ch2-installed-clock is false) {
 		if (flag ch2-carrying-clock is true) {
@@ -42,11 +52,28 @@ ch2-interact-mainframe {
 			copy ch2-install-clock
 		}
 	}
-	if (flag temp is false) {
+	if (flag ch2-installed-heatsink is false) {
+		if (flag ch2-carrying-heatsink is true) {
+			show dialog {
+				name "" "(Now installing... the heat sink!)"
+				"(TODO: heatsink functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-heatsink
+		}
+	}
+	if (flag temp is false) { // no components were installed
 		show dialog {
 			name "" "(You don't have any components to install.)"
 		}
 	}
 	set flag temp to false
+	set entity "%SELF%" interact_script to ch2-interact-mainframe
+}
+
+ch2-interact-mainframe-madamada {
+	show dialog {
+		PLAYER "What is this hunk of junk?"
+	}
 	set entity "%SELF%" interact_script to ch2-interact-mainframe
 }

@@ -123,3 +123,30 @@ Starting item: enclosure/motherboard (room 1)
 8. `mouse` (rodent) (room 33)
 9. `monitor` (room ?)
 10. `mainframeos` (room 99)
+
+For each item: (Copy existing pattern wherever these are found)
+
+1. Put entity on a map (`ENTITY`) and set `on_interact` = `ch2-touch-ITEM`
+2. In file `ch2-admin.mgs`:
+	1. Script `ch2-report-inventory` — Add serial dialog `\tITEM` display check (using flag `ch2-carrying-ITEM`)
+	2. Script `ch2-count-flags` — Add tally logic check (using flag `ch2-installed-ITEM`)
+	3. Script `ch2-interact-mainframe` — Add installation dialog (using flags `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
+3. In script file for the map room:
+	1. Room's `on_load` — Add entity hide behavior (using flags `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
+	2. Make script `ch2-hide-ITEM`
+		- `teleport entity ENTITY to geometry hiding-spot`
+		- `set entity ENTITY name to " "`
+	3. Make script `ch2-touch-ITEM`
+		- (Copy existing pattern)
+	4. Make script `ch2-install-ITEM`
+		- `set flag ch2-carrying-ITEM to false`
+		- `set flag ch2-installed-ITEM to true`
+	5. Make script `on_look-ITEM`
+4. In file `ch2-serial-toot.mgs`
+	1. Make serial dialog `ch2-describe-ITEM`
+	2. Add a new substep to script `ch2-toot-step-5X`
+5. In file `ch2-man-tree.mgs`
+	1. Make script `ch2-describe-ITEM`: `show serial dialog ch2-describe-ITEM`
+	2. Make script `ch2-lambda-parts-ITEM` (copy an existing)
+	3. Add to `ch2-lambda-topic-parts` (using flag `ch2-installed-ITEM`)
+	4. Add to script `ch2-lambda-topic-parts-q` (if multiple words, add a no-spaces option, too)
