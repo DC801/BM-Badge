@@ -8,7 +8,7 @@ serial dialog spacer {
 
 /* ---------- CASTLE ON_LOAD INIT ---------- */
 
-ch2-castle-init {
+ch2-map-init {
 	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
 
 	// misc game state
@@ -51,36 +51,6 @@ ch2-castle-init {
 
 /* ---------- NON-CASTLE ON_LOAD INIT ---------- */
 // the town (overworld) has its own version
-
-ch2-noncastle-init {
-	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
-
-	set hex control to on
-
-	// serial features
-	if (flag ch2-has-artifact is false) {
-		set serial control off // safety
-	} else {
-		set serial control on
-		register rtfm -> serial-rtfm
-		register inventory -> ch2-report-inventory
-		copy ch2-register-manual
-		if (flag ch2-map-granted is true) {
-			copy ch2-map-enable
-		}
-	}
-
-	// CALLBACK "MAGIC"
-	if (variable CALLBACK is 98) {
-		goto on_load-ch2-castle-outside-RESUME
-	} else {
-		show serial dialog {
-			"<r>ERROR: invalid callback value ($CALLBACK$)</>"
-			"<r>   script: 'ch2-noncastle-init'</>"
-			"<r>   file: 'ch2-common.mgs'</>"
-		}
-	}
-}
 
 /* ---------- MAN PAGES ---------- */
 

@@ -22,7 +22,7 @@ on_load-ch2-lodge {
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	}
 	// player control comes on after this next script is over:
-	goto ch2-castle-init
+	goto ch2-map-init
 }
 
 /* ---------- ON_TICK ---------- */

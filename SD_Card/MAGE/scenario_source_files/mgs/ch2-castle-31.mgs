@@ -27,8 +27,7 @@ on_load-ch2-castle-31 {
 		show serial dialog { "Entering <bold>WORKSHOP</>..." }
 	}
 	
-	goto ch2-castle-init
-	// use callback pattern to return to this point if needed
+	goto ch2-map-init
 }
 
 /* ---------- ON_TICK ---------- */
