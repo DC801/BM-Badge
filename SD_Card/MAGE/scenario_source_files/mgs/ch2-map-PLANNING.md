@@ -110,19 +110,21 @@ Nethack-like
 
 Starting item: enclosure/motherboard (room 1)
 
+(Only non-indented items count as story flags)
+
 1. `clock` (grandfather clock) (room 14)
-2. `cpu`
+2. `cpu` (room 13)
 	- `goldfish` (room 13)
 	- `abacus` (room 21)
 3. `heatsink` (room 23)
-	- `cactuscooler` (Bob's club)
+	- `cactuscooler` (Bob's club) (partially implemented)
 4. `powersupply` (room 22)
 5. `ramchips` (room 32)
 6. `hd` (plates) (room 34)
 7. `keyboard` (room 31)
 8. `mouse` (rodent) (room 33)
 9. `monitor` (room ?)
-10. `mainframeos` (room 99)
+10. `mainframeos` (room 99) (might be handled differently)
 
 For each item: (Copy existing pattern wherever these are found)
 
