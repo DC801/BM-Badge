@@ -8,7 +8,7 @@ settings for dialog {
 on_look-ch2-castle-31 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: WORKSHOP on_look text\n "
+		"TODO: GRAND HALL on_look text\n "
 	}
 }
 
@@ -26,7 +26,12 @@ on_load-ch2-castle-31 {
 	} else {
 		show serial dialog { "Entering <bold>WORKSHOP</>..." }
 	}
-	
+	if (
+		flag ch2-installed-keyboard is true
+		|| flag ch2-carrying-keyboard is true
+	) {
+		copy script ch2-hide-keyboard
+	}
 	goto ch2-map-init
 }
 
@@ -53,4 +58,55 @@ on_go-castle-31-west {
 	copy on_exit-ch2-castle-31
 	copy warping-out-fade-out
 	load map ch2-castle-12
+}
+
+
+/* ---------- KEYBOARD (ADMIN) ---------- */
+
+ch2-hide-keyboard {
+	teleport entity "Keyboard" to geometry hiding-spot
+	set entity "Keyboard" name to " "
+}
+
+ch2-touch-keyboard {
+	if (flag ch2-keyboard-firstlook is false) {
+		show dialog {
+			PLAYER "TODO keyboard1"
+		}
+		set flag ch2-keyboard-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO keyboard2."
+	}
+	show dialog {
+		name "" "(Pick up the keyboard?)"
+		> "Yes" : ch2-touch-keyboard-yes
+		> "No" : ch2-touch-keyboard-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
+}
+ch2-touch-keyboard-yes {
+	show dialog {
+		name "" "(You pick up the keyboard!)"
+	}
+	copy script ch2-hide-keyboard
+	set flag ch2-carrying-keyboard to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-keyboard-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
+}
+
+ch2-install-keyboard {
+	set flag ch2-carrying-keyboard to false
+	set flag ch2-installed-keyboard to true
+}
+on_look-keyboard {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look keyboard TODO"
+	}
 }

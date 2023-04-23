@@ -301,6 +301,9 @@ serial dialog ch2-describe-clock {
 serial dialog ch2-describe-heatsink {
 	"<m>LAMBDA:</> TODO: heatsink description"
 }
+serial dialog ch2-describe-keyboard {
+	"<m>LAMBDA:</> TODO: keyboard description"
+}
 
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
@@ -311,10 +314,20 @@ ch2-toot-step5b {
 	}
 }
 ch2-toot-step5c {
+	show serial dialog spacer
 	show serial dialog ch2-describe-heatsink
 	show serial dialog {
 		" "
 		# "What else?" : ch2-toot-step5d
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+ch2-toot-step5d {
+	show serial dialog spacer
+	show serial dialog ch2-describe-keyboard
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5e
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }

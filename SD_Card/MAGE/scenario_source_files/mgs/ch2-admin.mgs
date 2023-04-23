@@ -18,6 +18,10 @@ ch2-report-inventory {
 		show serial dialog { "\theat sink" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-keyboard is true) {
+		show serial dialog { "\tkeyboard" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		show serial dialog { "\t(nothing)" }
 	}
@@ -31,6 +35,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-heatsink is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-keyboard is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	set flag ch2-storyflags-tallied to true
@@ -62,9 +69,19 @@ ch2-interact-mainframe {
 			copy ch2-install-heatsink
 		}
 	}
+	if (flag ch2-installed-keyboard is false) {
+		if (flag ch2-carrying-keyboard is true) {
+			show dialog {
+				name "" "(Now installing... the keyboard!)"
+				"(TODO: keyboard functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-keyboard
+		}
+	}
 	if (flag temp is false) { // no components were installed
 		show dialog {
-			name "" "(You don't have any components to install.)"
+			name "" "(You don't have any new components to install.)"
 		}
 	}
 	set flag temp to false

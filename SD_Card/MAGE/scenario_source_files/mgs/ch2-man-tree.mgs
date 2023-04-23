@@ -36,6 +36,7 @@ ch2-lambda-topic-parts {
 	show serial dialog spacer
 	show serial dialog {
 		"<m>LAMBDA:</> These are the parts we need:"
+		// TODO change this to a MD checklist thingy
 	}
 	set flag temp to false
 	if (flag ch2-installed-clock is false) {
@@ -44,6 +45,10 @@ ch2-lambda-topic-parts {
 	}
 	if (flag ch2-installed-heatsink is false) {
 		show serial dialog { "\t- heat sink" }
+		set flag temp to true
+	}
+	if (flag ch2-installed-keyboard is false) {
+		show serial dialog { "\t- keyboard" }
 		set flag temp to true
 	}
 	if (flag temp is false) {
@@ -67,6 +72,8 @@ ch2-lambda-topic-parts-q {
 
 		_ "HEAT SINK" : ch2-lambda-parts-heatsink
 		_ "HEATSINK" : ch2-lambda-parts-heatsink
+		
+		_ "KEYBOARD" : ch2-lambda-parts-keyboard
 	}
 }
 
@@ -75,6 +82,9 @@ ch2-describe-clock {
 }
 ch2-describe-heatsink {
 	show serial dialog ch2-describe-heatsink
+}
+ch2-describe-keyboard {
+	show serial dialog ch2-describe-keyboard
 }
 
 ch2-lambda-parts-clock {
@@ -95,6 +105,17 @@ ch2-lambda-parts-heatsink {
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-keyboard {
+	show serial dialog spacer
+	if (flag ch2-installed-keyboard is false) {
+		copy ch2-describe-keyboard
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO keyboard is already installed."
 		}
 	}
 	goto ch2-lambda-topic-parts-q
