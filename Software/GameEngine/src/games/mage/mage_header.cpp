@@ -81,6 +81,14 @@ uint32_t MageHeader::size() const
 		counts * sizeof(uint32_t);		// Lengths
 }
 
+uint32_t MageHeader::ramSize() const {
+	return (
+		sizeof(counts) +
+		sizeof(start)
+	);
+}
+
+
 bool MageHeader::valid() const
 {
 	if (!start)
