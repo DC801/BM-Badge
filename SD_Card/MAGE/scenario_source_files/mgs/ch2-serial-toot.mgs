@@ -304,6 +304,9 @@ serial dialog ch2-describe-heatsink {
 serial dialog ch2-describe-keyboard {
 	"<m>LAMBDA:</> TODO: keyboard description"
 }
+serial dialog ch2-describe-cpu {
+	"<m>LAMBDA:</> TODO: cpu description"
+}
 
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
@@ -331,8 +334,17 @@ ch2-toot-step5d {
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
+ch2-toot-step5e {
+	show serial dialog spacer
+	show serial dialog ch2-describe-cpu
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5f
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
 
-ch2-toot-step5d {
+ch2-toot-step5f {
 	goto ch2-toot-step5-endoflist
 }
 

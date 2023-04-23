@@ -54,3 +54,52 @@ on_go-castle-13-south {
 	copy warping-out-fade-out
 	load map ch2-castle-12
 }
+
+ch2-hide-cpu {
+	teleport entity "cpu" to geometry hiding-spot
+	set entity "cpu" name to " "
+}
+
+ch2-touch-cpu {
+	if (flag ch2-cpu-firstlook is false) {
+		show dialog {
+			PLAYER "TODO cpu1"
+		}
+		set flag ch2-cpu-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO cpu2."
+	}
+	show dialog {
+		name "" "(Pick up the cpu?)"
+		> "Yes" : ch2-touch-cpu-yes
+		> "No" : ch2-touch-cpu-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-cpu // RESET
+}
+
+ch2-touch-cpu-yes {
+	show dialog {
+		name "" "(You pick up the cpu!)"
+	}
+	copy script ch2-hide-cpu
+	set flag ch2-carrying-cpu to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-cpu-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-cpu // RESET
+}
+
+ch2-install-cpu {
+	set flag ch2-carrying-cpu to false
+	set flag ch2-installed-cpu to true
+}
+on_look-cpu {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look cpu TODO"
+	}
+}

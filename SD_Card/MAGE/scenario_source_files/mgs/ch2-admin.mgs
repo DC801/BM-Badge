@@ -14,6 +14,10 @@ ch2-report-inventory {
 		show serial dialog { "\tclock" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-cpu is true) {
+		show serial dialog { "\tcpu" }
+		set flag temp to true
+	}
 	if (flag ch2-carrying-heatsink is true) {
 		show serial dialog { "\theat sink" }
 		set flag temp to true
@@ -40,6 +44,9 @@ ch2-count-flags {
 	if (flag ch2-installed-keyboard is true) {
 		mutate ch2-storyflags-tally + 1
 	}
+	if (flag ch2-installed-cpu is true) {
+		mutate ch2-storyflags-tally + 1
+	}
 	set flag ch2-storyflags-tallied to true
 	set entity "%SELF%" tick_script to null_script
 }
@@ -57,6 +64,16 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-clock
+		}
+	}
+	if (flag ch2-installed-cpu is false) {
+		if (flag ch2-carrying-cpu is true) {
+			show dialog {
+				name "" "(Now installing... the cpu!)"
+				"(We have a CPU!)"
+			}
+			set flag temp to true
+			copy ch2-install-cpu
 		}
 	}
 	if (flag ch2-installed-heatsink is false) {
