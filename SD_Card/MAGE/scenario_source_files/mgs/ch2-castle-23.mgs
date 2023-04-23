@@ -26,7 +26,12 @@ on_load-ch2-castle-23 {
 	} else {
 		show serial dialog { "Entering <bold>POWER PLANT</>..." }
 	}
-	
+	if (
+		flag ch2-installed-heatsink is true
+		|| flag ch2-carrying-heatsink is true
+	) {
+		copy script ch2-hide-heatsink
+	}
 	goto ch2-map-init
 }
 
