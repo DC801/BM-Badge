@@ -51,6 +51,10 @@ ch2-lambda-topic-parts {
 		show serial dialog { "\t- keyboard" }
 		set flag temp to true
 	}
+	if (flag ch2-installed-cpu is false) {
+		show serial dialog { "\t- cpu" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		goto ch2-lambda-topic-parts-finished
 	}
@@ -72,6 +76,8 @@ ch2-lambda-topic-parts-q {
 
 		_ "HEAT SINK" : ch2-lambda-parts-heatsink
 		_ "HEATSINK" : ch2-lambda-parts-heatsink
+
+		_ "CPU" : ch2-lambda-parts-cpu
 		
 		_ "KEYBOARD" : ch2-lambda-parts-keyboard
 	}
@@ -85,6 +91,9 @@ ch2-describe-heatsink {
 }
 ch2-describe-keyboard {
 	show serial dialog ch2-describe-keyboard
+}
+ch2-describe-cpu {
+	show serial dialog ch2-describe-cpu
 }
 
 ch2-lambda-parts-clock {
@@ -116,6 +125,17 @@ ch2-lambda-parts-keyboard {
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> TODO keyboard is already installed."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-cpu {
+	show serial dialog spacer
+	if (flag ch2-installed-cpu is false) {
+		copy ch2-describe-cpu
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> The cpu's installed already. It's been computin."
 		}
 	}
 	goto ch2-lambda-topic-parts-q
