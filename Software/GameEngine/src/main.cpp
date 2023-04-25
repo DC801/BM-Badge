@@ -168,7 +168,7 @@ int main(int argc, char* argv[]) {
 	debug_print("Booted!\nCreating and started game...\n");
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
-	static auto audioPlayer = std::make_shared<AudioPlayer>();
+	static auto audioPlayer = std::make_unique<AudioPlayer>();
 	static auto inputHandler = std::make_shared<EngineInput>();
 	static auto frameBuffer = std::make_shared<FrameBuffer>();
 
@@ -185,9 +185,9 @@ int main(int argc, char* argv[]) {
 	// ROM()->Read(scenarioDataCRC32, offset);
 	// ROM()->Read(scenarioDataLength, offset);
 
-	auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
+	//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 
-	auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer, currentSave);
+	auto game = std::make_unique<MageGameEngine>(std::move(audioPlayer), inputHandler, frameBuffer);
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
 	break;

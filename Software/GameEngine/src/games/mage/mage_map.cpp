@@ -161,7 +161,9 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
                auto& geometryPointA = geometryPoints[i] + tileCorner;
                auto& geometryPointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileCorner;
 
-               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointB, geometryPointA, geometryPointB);
+               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA + playerVelocity, pointB + playerVelocity, geometryPointA, geometryPointB);
+               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointA + playerVelocity, geometryPointA, geometryPointB);
+               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointB, pointB + playerVelocity, geometryPointA, geometryPointB);
                if (intersection.has_value())
                {
                   auto cornerVector = intersection.value() - pointA;
@@ -191,6 +193,15 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
             return &layerTiles[tileIndex];
          };
 
+         const auto tileA = getTile(pointA);
+         internalPushbackCalc(tileA, tileCorner);
+
+         const auto tileAMove = getTile(pointB);
+         if (tileA != tileAMove)
+         {
+            internalPushbackCalc(tileAMove, tileCorner);
+         }
+
          const auto tile = getTile(pointA);
          internalPushbackCalc(tile, tileCorner);
 
@@ -212,42 +223,21 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
    {
       //right
       setPushbackToMinCollision(topRight, bottomRight);
-
-      if (playerVelocity.y > 0)
-      {
-         //down-right
-         setPushbackToMinCollision(bottomRight, bottomRight + playerVelocity);
-      }
-      else if (playerVelocity.y < 0)
-      {
-         //up-right
-         setPushbackToMinCollision(topRight, topRight + playerVelocity);
-      }
    }
    else if (playerVelocity.x < 0)
    {
       //left
       setPushbackToMinCollision(topLeft, bottomLeft);
-
-      if (playerVelocity.y > 0)
-      {
-         //down-left
-         setPushbackToMinCollision(bottomLeft, bottomLeft + playerVelocity);
-      }
-      else if (playerVelocity.y < 0)
-      {
-         //up-left
-         setPushbackToMinCollision(topLeft, topLeft + playerVelocity);
-      }
    }
-   else if (playerVelocity.y > 0)
+   
+   if (playerVelocity.y > 0)
    {
-      //straight down
+      //down
       setPushbackToMinCollision(bottomLeft, bottomRight);
    }
    else if (playerVelocity.y < 0)
    {
-      //straight up
+      //up
       setPushbackToMinCollision(topLeft, topRight);
    }
 

@@ -59,8 +59,7 @@ bool MageGeometry::isPointInGeometry(const Point& point) const
    }
 }
 
-// Returns true if collision has occurred, and if it has,
-// sets the new value of intersectPoint.
+// Returns a value if collision has occurred
 // Ref: https://stackoverflow.com/a/385355
 // Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(

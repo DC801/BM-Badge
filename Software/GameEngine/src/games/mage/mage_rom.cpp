@@ -37,9 +37,10 @@
 std::unique_ptr<MageROM>& ROM()
 {
    auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
+   static std::unique_ptr<MageROM> romPtr;
 #ifdef DC801_EMBEDDED 
    // point to 0x0 - the beginning of the ROM
-   static auto romPtr = std::make_unique<MageROM>((char*)0x0);
+   romPtr = std::make_unique<MageROM>((char*)0x0);
    
    // if (std::filesystem::exists(filePath))
    // {
@@ -85,29 +86,32 @@ std::unique_ptr<MageROM>& ROM()
    
 #else
    static auto romData = new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } ;
-   if (std::filesystem::exists(filePath))
+   if (!romPtr)
    {
-      auto romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
-
-      if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+      if (std::filesystem::exists(filePath))
       {
-         ENGINE_PANIC("Invalid ROM file size: larger than the hardware's ROM chip capacity!");
-      }
-      auto romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
+         auto romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
 
-      // copy the file into the buffer
-      if (!romFile.read(romData, romFileSize))
-      {
-         ENGINE_PANIC("Desktop build: ROM->RAM read failed");
+         if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+         {
+            ENGINE_PANIC("Invalid ROM file size: larger than the hardware's ROM chip capacity!");
+         }
+         auto romFile = std::fstream{ filePath, std::ios_base::in | std::ios_base::out | std::ios_base::binary };
+
+         // copy the file into the buffer
+         if (!romFile.read(romData, romFileSize))
+         {
+            ENGINE_PANIC("Desktop build: ROM->RAM read failed");
+         }
+         romFile.close();
       }
-      romFile.close();
-   }
-   else
-   {
-      ENGINE_PANIC("Unable to read ROM file size at %s", MAGE_GAME_DAT_PATH);
+      else
+      {
+         ENGINE_PANIC("Unable to read ROM file size at %s", MAGE_GAME_DAT_PATH);
+      }
    }
    
-   static auto romPtr = std::make_unique<MageROM>(romData);
+   romPtr = std::make_unique<MageROM>(romData);
 #endif
    return romPtr;
 }

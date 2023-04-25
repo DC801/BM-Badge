@@ -36,12 +36,13 @@ class MageGameEngine
 {
 public:
 
-   MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer, const MageSaveGame& currentSave)
+   MageGameEngine(std::unique_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
+      : audioPlayer(std::move(audioPlayer)), inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_unique<MapControl>(frameBuffer, tileManager);
-      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, currentSave.memOffsets);
-      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, currentSave.scriptVariables);
+      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
+      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
       camera = MageCamera{ mapControl };
 

@@ -125,7 +125,7 @@ void AudioPlayer::callback(const nrfx_i2s_buffers_t* p_released, uint32_t status
 void AudioPlayer::fadeAudio()
 {
 	// Walk the tree
-	auto audio = head->next.get();
+	auto audio = head.get();
 	while ((audio) && (audio->source))
 	{
 		cm_Source* source = audio->source;
@@ -160,7 +160,7 @@ void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 	soundCount += 1;
 
 	// Allocate a new audio object
-	Audio* audio = new Audio();
+	auto audio = std::make_unique<Audio>();
 
 	audio->next = NULL;				// At the end of the list
 	audio->fade = false;			// New sample, don't fade
@@ -193,20 +193,9 @@ void AudioPlayer::playAudio(const char* filename, bool loop, double gain)
 		fadeAudio();
 	}
 
-	// Append the sample to the end of the list
-	auto root = head->next.get();
-
-	if (root)
-	{
-		// Walk the tree to the end
-		while (root->next)
-		{
-			root = root->next.get();
-		}
-
-		// Link the new item to the end
-		root->next = std::unique_ptr<Audio>{ audio };
-	}
+	// Prepend the sample to the list
+	audio->next = std::move(head);
+	head = std::move(audio);
 
 	audio_mutex.unlock();
 }
@@ -223,20 +212,12 @@ void AudioPlayer::loop(const char* name, double gain)
 
 void AudioPlayer::stop_loop()
 {
-	auto item = head->next.get();
-
-	while (item)
+	for (auto audio = head.get(); audio; audio = audio->next.get())
 	{
-		if (item->source)
+		if (audio->source && audio->source->loop)
 		{
-			if (item->source->loop)
-			{
-				item->end = true;
-				return;
-			}
-		}
-
-		item = item->next.get();
+			audio->end = true;
+		}		
 	}
 }
 
@@ -246,13 +227,6 @@ AudioPlayer::AudioPlayer()
 	// Initialize Audio chip
 	nau8810_init(callback);
 #endif
-
-	head->fade = false;
-	head->free = false;
-	head->end = false;
-
-	head->source = nullptr;
-	head->next = nullptr;
 
 	// Initialize cmixer
 	cm_init(AUDIO_FREQUENCY);
