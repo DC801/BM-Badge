@@ -175,6 +175,24 @@
                  "width":0,
                  "x":-15.9138002486531,
                  "y":-67.6336510567758
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":35,
+                 "name":"goldfish",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-goldfish"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":66.35391628678,
+                 "y":128.815582262743
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -183,7 +201,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

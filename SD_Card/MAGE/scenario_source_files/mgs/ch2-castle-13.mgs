@@ -103,3 +103,52 @@ on_look-cpu {
 		"on_look cpu TODO"
 	}
 }
+
+ch2-hide-goldfish {
+	teleport entity "goldfish" to geometry hiding-spot
+	set entity "goldfish" name to " "
+}
+
+ch2-touch-goldfish {
+	if (flag ch2-goldfish-firstlook is false) {
+		show dialog {
+			PLAYER "TODO goldfish1"
+		}
+		set flag ch2-goldfish-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO goldfish2."
+	}
+	show dialog {
+		name "" "(Pick up the goldfish?)"
+		> "Yes" : ch2-touch-goldfish-yes
+		> "No" : ch2-touch-goldfish-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
+}
+
+ch2-touch-goldfish-yes {
+	show dialog {
+		name "" "(You pick up the goldfish!)"
+	}
+	copy script ch2-hide-goldfish
+	set flag ch2-carrying-goldfish to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-goldfish-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
+}
+
+ch2-install-goldfish {
+	set flag ch2-carrying-goldfish to false
+	set flag ch2-installed-goldfish to true
+}
+on_look-goldfish {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look goldfish TODO"
+	}
+}

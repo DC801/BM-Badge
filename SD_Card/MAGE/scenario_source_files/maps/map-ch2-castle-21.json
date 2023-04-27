@@ -117,6 +117,24 @@
                  "width":32,
                  "x":287.054674479867,
                  "y":173.307671630558
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":32,
+                 "name":"abacus",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-abacus"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":63.3729796933277,
+                 "y":256.815582262743
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -140,6 +158,18 @@
                  "width":0,
                  "x":-154,
                  "y":462
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":33,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-41.5,
+                 "y":-26.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -148,7 +178,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":32,
+ "nextobjectid":34,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -185,6 +215,10 @@
         {
          "firstgid":351,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":607,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",
