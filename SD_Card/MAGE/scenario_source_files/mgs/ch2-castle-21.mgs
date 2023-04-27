@@ -12,6 +12,13 @@ on_look-ch2-castle-21 {
 	}
 }
 
+on_look-abacus {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look abacus TODO"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-castle-21 {
@@ -53,4 +60,47 @@ on_go-castle-21-east {
 	copy on_exit-ch2-castle-21
 	copy warping-out-fade-out
 	load map ch2-castle-11
+}
+
+ch2-touch-abacus {
+	if (flag ch2-abacus-firstlook is false) {
+		show dialog {
+			PLAYER "TODO abacus1"
+		}
+		set flag ch2-abacus-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO abacus2."
+	}
+	show dialog {
+		name "" "(Pick up the abacus?)"
+		> "Yes" : ch2-touch-abacus-yes
+		> "No" : ch2-touch-abacus-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
+}
+
+ch2-hide-abacus {
+	teleport entity "abacus" to geometry hiding-spot
+	set entity "abacus" name to " "
+}
+
+ch2-touch-abacus-yes {
+	show dialog {
+		name "" "(You pick up the abacus!)"
+	}
+	copy script ch2-hide-abacus
+	set flag ch2-carrying-abacus to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-abacus-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
+}
+
+ch2-install-abacus {
+	set flag ch2-carrying-abacus to false
+	set flag ch2-installed-abacus to true
 }

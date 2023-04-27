@@ -307,6 +307,12 @@ serial dialog ch2-describe-keyboard {
 serial dialog ch2-describe-cpu {
 	"<m>LAMBDA:</> TODO: cpu description"
 }
+serial dialog ch2-describe-goldfish {
+	"<m>LAMBDA:</> TODO: goldfish description"
+}
+serial dialog ch2-describe-abacus {
+	"<m>LAMBDA:</> TODO: abacus description"
+}
 
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
@@ -343,8 +349,27 @@ ch2-toot-step5e {
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
-
 ch2-toot-step5f {
+	show serial dialog spacer
+	show serial dialog ch2-describe-goldfish
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5g
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+ch2-toot-step5g {
+	show serial dialog spacer
+	show serial dialog ch2-describe-abacus
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5h
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+
+
+ch2-toot-step5h {
 	goto ch2-toot-step5-endoflist
 }
 

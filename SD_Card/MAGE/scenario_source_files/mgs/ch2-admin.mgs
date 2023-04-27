@@ -18,6 +18,14 @@ ch2-report-inventory {
 		show serial dialog { "\tcpu" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-goldfish is true) {
+		show serial dialog { "\tgoldfish" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-abacus is true) {
+		show serial dialog { "\tabacus" }
+		set flag temp to true
+	}
 	if (flag ch2-carrying-heatsink is true) {
 		show serial dialog { "\theat sink" }
 		set flag temp to true
@@ -47,6 +55,12 @@ ch2-count-flags {
 	if (flag ch2-installed-cpu is true) {
 		mutate ch2-storyflags-tally + 1
 	}
+	if (flag ch2-installed-goldfish is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-abacus is true) {
+		mutate ch2-storyflags-tally + 1
+	}
 	set flag ch2-storyflags-tallied to true
 	set entity "%SELF%" tick_script to null_script
 }
@@ -74,6 +88,26 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-cpu
+		}
+	}
+	if (flag ch2-installed-goldfish is false) {
+		if (flag ch2-carrying-goldfish is true) {
+			show dialog {
+				name "" "(Now installing... the goldfish!)"
+				"(We have a goldfish!)"
+			}
+			set flag temp to true
+			copy ch2-install-goldfish
+		}
+	}
+	if (flag ch2-installed-abacus is false) {
+		if (flag ch2-carrying-abacus is true) {
+			show dialog {
+				name "" "(Now installing... the abacus!)"
+				"(We have a abacus!)"
+			}
+			set flag temp to true
+			copy ch2-install-abacus
 		}
 	}
 	if (flag ch2-installed-heatsink is false) {

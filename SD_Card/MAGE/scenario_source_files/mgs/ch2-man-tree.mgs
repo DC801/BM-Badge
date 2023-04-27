@@ -55,6 +55,14 @@ ch2-lambda-topic-parts {
 		show serial dialog { "\t- cpu" }
 		set flag temp to true
 	}
+	if (flag ch2-installed-goldfish is false) {
+		show serial dialog { "\t- goldfish" }
+		set flag temp to true
+	}
+	if (flag ch2-installed-abacus is false) {
+		show serial dialog { "\t- abacus" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		goto ch2-lambda-topic-parts-finished
 	}
