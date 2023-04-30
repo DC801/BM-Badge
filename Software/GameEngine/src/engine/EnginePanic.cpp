@@ -1,5 +1,4 @@
 #include <string>
-#include <filesystem>
 
 #include "EnginePanic.h"
 #include "EngineInput.h"
@@ -41,7 +40,7 @@ void EnginePanic(const char *filename, int lineno, const char *format, ...)
 	// Starting point for text
 	// Frame size (x, y):
 	//   (45, 0)
-	//   (ScreenWidth - 45, ScreenHeight - (yAdvance * 2))
+	//   (DrawWidth - 45, DrawHeight - (yAdvance * 2))
 	const int x = 45;
 	int y = 0;
 

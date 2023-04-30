@@ -36,9 +36,7 @@ else()
             -fsanitize=undefined
         )
 
-        set_source_files_properties(${SOURCEFILES}
-            PROPERTIES
-            COMPILE_FLAGS "-fsanitize=undefined -fno-inline  -felide-constructors -fno-rtti -O3")
+        set_source_files_properties(${SOURCEFILES} PROPERTIES COMPILE_FLAGS "-fsanitize=undefined -fno-inline -felide-constructors -fno-rtti -O3")
 
         string(JOIN " " USE_FLAGS ${LINK_DEFS})
         set(CMAKE_EXE_LINKER_FLAGS ${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS})
@@ -76,7 +74,6 @@ set(SOURCEFILES
     Software/GameEngine/src/engine/EngineInput.h
     Software/GameEngine/src/engine/EnginePanic.cpp
     Software/GameEngine/src/engine/EnginePanic.h
-    Software/GameEngine/src/engine/EngineROM.cpp
     Software/GameEngine/src/engine/EngineROM.h
     Software/GameEngine/src/engine/EngineSerial.cpp
     Software/GameEngine/src/engine/EngineSerial.h
@@ -183,10 +180,10 @@ target_compile_definitions(bm_badge PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})
 if (EMSCRIPTEN)
     target_link_libraries(bm_badge ${SDL2_LIBRARIES})
 else()
-    target_link_libraries(bm_badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
     if(EMBEDDED_BUILD)
         set_target_properties(bm_badge PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
     endif()
+    target_link_libraries(bm_badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")

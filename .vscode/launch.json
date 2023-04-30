@@ -29,27 +29,27 @@
             "type": "cortex-debug",
             "request": "launch",
             "servertype": "jlink",
-            "serverpath": "/usr/bin/JLinkGDBServer",
-            "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/build_hw/bm_badge",
-            "runToMain": true,
-            "cwd": "${workspaceRoot}",
+            "serverpath": "JLinkGDBServerCLExe",
+            "runToEntryPoint": "main",
+            "cwd": "${workspaceRoot}/build_hw",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd"
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
+            "svdFile": "${workspaceRoot}/nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd",
+            "ipAddress": "192.168.1.132"
         },
         {
             "name": "Debug Attach (Physical Badge)",
             "type": "cortex-debug",
             "request": "attach",
             "servertype": "jlink",
-            "serverpath": "/usr/bin/JLinkGDBServer",
-            "armToolchainPath": "/usr/bin",
-            "executable": "${workspaceRoot}/build_hw/bm_badge",
-            "cwd": "${workspaceRoot}",
+            "serverpath": "JLinkGDBServerCLExe",
+            "cwd": "${workspaceRoot}/build_hw",
             "device": "NRF52840_XXAA",
             "interface": "swd",
-            "svdFile": "${workspaceRoot}/../nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd"
+            "executable": "${workspaceRoot}/build_hw/bm_badge",
+            "svdFile": "${workspaceRoot}/nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd",
+            "ipAddress": "192.168.1.132"
         }
     ]
 }

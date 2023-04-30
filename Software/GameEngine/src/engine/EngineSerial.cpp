@@ -3,6 +3,7 @@
 #include <iostream>
 #include <regex>
 #include <string>
+#include <cstring>
 
 char command_buffer[COMMAND_BUFFER_SIZE];
 uint16_t command_buffer_length = 0;

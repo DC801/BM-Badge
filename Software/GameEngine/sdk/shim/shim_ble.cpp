@@ -101,8 +101,8 @@ static void ble_scan_timeout_handler(void* p_context)
 
     }
 
-    if (lockBadges)    
-{
+    if (lockBadges)
+    {
         // Punt for now
         return;
     }
@@ -537,8 +537,8 @@ bool parseAdvertisementData(uint8_t* data, uint8_t len, ADVERTISEMENT* adv)
             {
                 block_type = data[loc];
             }
-            else            
-{
+            else
+            {
                 block_data[j++] = data[loc + i];
             }
         }

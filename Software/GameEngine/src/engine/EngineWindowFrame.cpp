@@ -65,8 +65,8 @@ EngineWindowFrame::EngineWindowFrameComponents::EngineWindowFrameComponents()
 		renderer,
 		SDL_PIXELFORMAT_RGB565,
 		SDL_TEXTUREACCESS_STREAMING,
-		ScreenWidth,
-		ScreenHeight
+		DrawWidth,
+		DrawHeight
 	);
 }
 
@@ -92,7 +92,7 @@ EngineWindowFrame::EngineWindowFrameComponents::~EngineWindowFrameComponents()
 	window = nullptr;
 }
 
-void EngineWindowFrame::drawButtonStates(ButtonState button) const
+void EngineWindowFrame::DrawButtonStates(ButtonState button) const
 {
 	for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i)
 	{
@@ -108,7 +108,7 @@ void EngineWindowFrame::drawButtonStates(ButtonState button) const
 	}
 }
 
-void EngineWindowFrame::drawLEDStates() const
+void EngineWindowFrame::DrawLEDStates() const
 {
 	SDL_Point LEDPoint{};
 	uint8_t LEDState{0};
@@ -136,7 +136,7 @@ void EngineWindowFrame::drawLEDStates() const
 	}
 }
 
-void EngineWindowFrame::GameBlt(const uint16_t frame[], ButtonState button) const
+void EngineWindowFrame::GameBlt(const uint16_t frame[]) const
 {
 	int pitch{0};
 
@@ -164,10 +164,6 @@ void EngineWindowFrame::GameBlt(const uint16_t frame[], ButtonState button) cons
 		&gameViewportSrcRect,
 		&gameViewportDstRect
 	);
-
-	drawButtonStates(button);
-	drawLEDStates();
-
 	SDL_RenderPresent(components.renderer);
 }
 

@@ -1,6 +1,6 @@
 {
     "files.associations": {
-		"*.make": "makefile",
+		"*.cmake": "cmake",
 		"*.x": "linkerscript",
 		"array": "cpp",
 		"atomic": "cpp",
@@ -75,5 +75,7 @@
 		"cfenv": "cpp",
 		"typeindex": "cpp"
 	},
-	"C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+	"cortex-debug.showDevDebugOutput": "parsed",
+	"cortex-debug.variableUseNaturalFormat": false,
+	"C_Cpp.dimInactiveRegions": false
 }

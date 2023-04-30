@@ -34,20 +34,16 @@
 #include <shim_timer.h>
 #include <sdk_shim.h>
 
-#ifndef DC801_EMBEDDED
-#include <SDL.h>
-#endif
-
-
 #ifdef DC801_EMBEDDED
-//only init QSPI if we're in embedded mode:
+
 #include "qspi.h"
-QSPI qspiControl;
 
 #else
 
-#include <time.h>
+#include <SDL.h>
 #include "EngineWindowFrame.h"
+#include <time.h>
+
 volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
@@ -80,7 +76,6 @@ static void log_init(void){
 	NRF_LOG_ERROR("Error Logging to hardware UART enabled.");
 	NRF_LOG_INFO("Debug Logging to hardware UART enabled.");
 }
-
 /**
  * @brief Main app
  * @return Not used
@@ -98,9 +93,27 @@ int main(int argc, char* argv[]) {
 
 	// Timers
 	app_timer_init();
+	
+	static auto inputHandler = std::make_shared<EngineInput>();
+	static auto frameBuffer = std::make_shared<FrameBuffer>();
 
 #ifdef DC801_EMBEDDED
 
+	// Init the display
+	ili9341_init();
+	ili9341_start();
+	
+	//Init the SD Card
+	if(!util_sd_init()){
+		//util_sd_error();
+		debug_print("No SD card present on boot.");
+	}
+
+	//QSPI ROM Chip
+	static auto qspiControl = QSPI{};
+
+	qspiControl.HandleROMUpdate(inputHandler, frameBuffer);
+	
 	//USB serial
 	usb_serial_init();
 
@@ -112,27 +125,12 @@ int main(int argc, char* argv[]) {
 
 	// BLE
 	//gap_params_init();
-	ble_stack_init();
-	scan_start();
+	//ble_stack_init();
+	//scan_start();
 
-	// Init the display
-	ili9341_init();
-	ili9341_start();
-
-	//Init the SD Card
-	if(!util_sd_init()){
-		//util_sd_error();
-		debug_print("No SD card present on boot.");
-	}
-
-	//QSPI ROM Chip
-	if (!qspiControl.init())
-	{
-		ENGINE_PANIC("Failed to init qspiControl.");
-	}
 
 	// Init the random number generator
-	nrf_drv_rng_init(NULL);
+	//nrf_drv_rng_init(NULL);
 
 	// Setup the battery monitor
 	//adc_configure();
@@ -142,14 +140,14 @@ int main(int argc, char* argv[]) {
 	//uart_init();
 
 	// Setup I2C
-	twi_master_init();
+	//twi_master_init();
 
 	//EEpwm_init();
 
 	const char* ble_name = "TheMage801"; // must be 10char
 	debug_print("advertising user: %s", ble_name);
-	advertising_setUser(ble_name);
-	ble_adv_start();
+	//advertising_setUser(ble_name);
+	//ble_adv_start();
 
 	// Setup LEDs
 	ledInit();
@@ -169,21 +167,7 @@ int main(int argc, char* argv[]) {
 	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
 	static auto audioPlayer = std::make_shared<AudioPlayer>();
-	static auto inputHandler = std::make_shared<EngineInput>();
-	static auto frameBuffer = std::make_shared<FrameBuffer>();
 
-	//skip 'MAGEGAME' at front of .dat file
-	uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
-
-	// ROM()->Read(engineVersion, offset);
-
-	// if (engineVersion != ENGINE_VERSION)
-	// {
-	// 	throw std::runtime_error{ "game.dat is incompatible with Engine" };// \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
-	// }
-
-	// ROM()->Read(scenarioDataCRC32, offset);
-	// ROM()->Read(scenarioDataLength, offset);
 
 	auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 
