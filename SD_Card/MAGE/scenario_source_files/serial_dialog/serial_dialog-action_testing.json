@@ -266,5 +266,10 @@
 		"messages": [
 			"You mooned the moon. It blushes."
 		]
+	},
+	"serial_dialog-mage01-look_script": {
+		"messages": [
+			"Looks like you just ran the look script on the entity named `%SELF%`! Goat job!"
+		]
 	}
 }

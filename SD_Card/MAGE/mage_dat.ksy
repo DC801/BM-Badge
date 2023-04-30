@@ -6,7 +6,7 @@ seq:
     contents: MAGEGAME
   - id: engine_version
     type: u4
-    valid: 4
+    valid: 5
     doc: If your engine versions mismatch with the ksy version, you are going to have a bad time. This validity check will stop parsing _really early_ if they do not match up.
   - id: dat_file_content_crc32
     type: u4
@@ -395,14 +395,12 @@ types:
             'entity_primary_id_type::tileset_id': render_flags
             'entity_primary_id_type::animation_id': render_flags
             'entity_primary_id_type::entity_type_id': entity_render_flags
-      - id: hackable_state_a
-        type: u1
-      - id: hackable_state_b
-        type: u1
-      - id: hackable_state_c
-        type: u1
-      - id: hackable_state_d
-        type: u1
+      - id: path_id
+        type: u2
+        doc: local index to the map's geometry list
+      - id: on_look_script_id
+        type: u2
+        doc: local index to the map's script list
 
   geometry:
     seq:
@@ -660,103 +658,90 @@ enums:
     03: check_entity_y
     04: check_entity_interact_script
     05: check_entity_tick_script
-    06: check_entity_type
-    07: check_entity_primary_id
-    08: check_entity_secondary_id
-    09: check_entity_primary_id_type
-    10: check_entity_current_animation
-    11: check_entity_current_frame
-    12: check_entity_direction
-    13: check_entity_glitched
-    14: check_entity_hackable_state_a
-    15: check_entity_hackable_state_b
-    16: check_entity_hackable_state_c
-    17: check_entity_hackable_state_d
-    18: check_entity_hackable_state_a_u2
-    19: check_entity_hackable_state_c_u2
-    20: check_entity_hackable_state_a_u4
-    21: check_entity_path
-    22: check_save_flag
-    23: check_if_entity_is_in_geometry
-    24: check_for_button_press
-    25: check_for_button_state
-    26: check_warp_state
-    27: run_script
-    28: blocking_delay
-    29: non_blocking_delay
-    30: set_entity_name
-    31: set_entity_x
-    32: set_entity_y
-    33: set_entity_interact_script
-    34: set_entity_tick_script
-    35: set_entity_type
-    36: set_entity_primary_id
-    37: set_entity_secondary_id
-    38: set_entity_primary_id_type
-    39: set_entity_current_animation
-    40: set_entity_current_frame
-    41: set_entity_direction
-    42: set_entity_direction_relative
-    43: set_entity_direction_target_entity
-    44: set_entity_direction_target_geometry
-    45: set_entity_glitched
-    46: set_entity_hackable_state_a
-    47: set_entity_hackable_state_b
-    48: set_entity_hackable_state_c
-    49: set_entity_hackable_state_d
-    50: set_entity_hackable_state_a_u2
-    51: set_entity_hackable_state_c_u2
-    52: set_entity_hackable_state_a_u4
-    53: set_entity_path
-    54: set_save_flag
-    55: set_player_control
-    56: set_map_tick_script
-    57: set_hex_cursor_location
-    58: set_warp_state
-    59: set_hex_editor_state
-    60: set_hex_editor_dialog_mode
-    61: set_hex_editor_control
-    62: set_hex_editor_control_clipboard
-    63: load_map
-    64: show_dialog
-    65: play_entity_animation
-    66: teleport_entity_to_geometry
-    67: walk_entity_to_geometry
-    68: walk_entity_along_geometry
-    69: loop_entity_along_geometry
-    70: set_camera_to_follow_entity
-    71: teleport_camera_to_geometry
-    72: pan_camera_to_entity
-    73: pan_camera_to_geometry
-    74: pan_camera_along_geometry
-    75: loop_camera_along_geometry
-    76: set_screen_shake
-    77: screen_fade_out
-    78: screen_fade_in
-    79: mutate_variable
-    80: mutate_variables
-    81: copy_variable
-    82: check_variable
-    83: check_variables
-    84: slot_save
-    85: slot_load
-    86: slot_erase
-    87: set_connect_serial_dialog
-    88: show_serial_dialog
-    89: inventory_get
-    90: inventory_drop
-    91: check_inventory
-    92: set_map_look_script
-    93: set_entity_look_script
-    94: set_teleport_enabled
-    95: check_map
-    96: set_ble_flag
-    97: check_ble_flag
-    98: set_serial_dialog_control
-    99: register_serial_dialog_command
-    100: register_serial_dialog_command_argument
-    101: unregister_serial_dialog_command
-    102: unregister_serial_dialog_command_argument
+    06: check_entity_look_script
+    07: check_entity_type
+    08: check_entity_primary_id
+    09: check_entity_secondary_id
+    10: check_entity_primary_id_type
+    11: check_entity_current_animation
+    12: check_entity_current_frame
+    13: check_entity_direction
+    14: check_entity_glitched
+    15: check_entity_path
+    16: check_save_flag
+    17: check_if_entity_is_in_geometry
+    18: check_for_button_press
+    19: check_for_button_state
+    20: check_warp_state
+    21: run_script
+    22: blocking_delay
+    23: non_blocking_delay
+    24: set_entity_name
+    25: set_entity_x
+    26: set_entity_y
+    27: set_entity_interact_script
+    28: set_entity_tick_script
+    30: set_entity_type
+    31: set_entity_primary_id
+    32: set_entity_secondary_id
+    33: set_entity_primary_id_type
+    34: set_entity_current_animation
+    35: set_entity_current_frame
+    36: set_entity_direction
+    37: set_entity_direction_relative
+    38: set_entity_direction_target_entity
+    39: set_entity_direction_target_geometry
+    40: set_entity_glitched
+    41: set_entity_path
+    42: set_save_flag
+    43: set_player_control
+    44: set_map_tick_script
+    45: set_hex_cursor_location
+    46: set_warp_state
+    47: set_hex_editor_state
+    48: set_hex_editor_dialog_mode
+    49: set_hex_editor_control
+    50: set_hex_editor_control_clipboard
+    51: load_map
+    52: show_dialog
+    53: play_entity_animation
+    54: teleport_entity_to_geometry
+    55: walk_entity_to_geometry
+    56: walk_entity_along_geometry
+    57: loop_entity_along_geometry
+    58: set_camera_to_follow_entity
+    59: teleport_camera_to_geometry
+    60: pan_camera_to_entity
+    61: pan_camera_to_geometry
+    62: pan_camera_along_geometry
+    63: loop_camera_along_geometry
+    64: set_screen_shake
+    65: screen_fade_out
+    66: screen_fade_in
+    67: mutate_variable
+    68: mutate_variables
+    69: copy_variable
+    70: check_variable
+    71: check_variables
+    72: slot_save
+    73: slot_load
+    74: slot_erase
+    75: set_connect_serial_dialog
+    76: show_serial_dialog
+    77: inventory_get
+    78: inventory_drop
+    79: check_inventory
+    80: set_map_look_script
+    81: set_entity_look_script
+    82: set_teleport_enabled
+    83: check_map
+    84: set_ble_flag
+    85: check_ble_flag
+    86: set_serial_dialog_control
+    87: register_serial_dialog_command
+    88: register_serial_dialog_command_argument
+    89: unregister_serial_dialog_command
+    90: unregister_serial_dialog_command_argument
 
   dialog_screen_alignment_type:
     0: bottom_left

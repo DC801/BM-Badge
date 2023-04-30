@@ -314,7 +314,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"I test the action COPY_VARIABLE.\nChange my 'hackable_state_a' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
+				"I test the action COPY_VARIABLE.\nChange my 'path_id' to != 00,\nand I will transform into that type,\nand confirm that the copy is working!"
 			]
 		}
 	],
@@ -323,7 +323,7 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"Hooray! 'hackable_state_a' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
+				"Hooray! 'path_id' had a value of\n$entity_type_id$, which is not 00,\nand I set my `primary_id` to that.\nChanging back now!"
 			]
 		}
 	],

@@ -4,26 +4,6 @@
         "name": "alfonso",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -40,6 +20,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -55,26 +40,6 @@
         "name": "baby_goat",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -91,6 +56,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -106,26 +76,6 @@
         "name": "baker",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -142,6 +92,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -157,26 +112,6 @@
         "name": "bender",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -193,6 +128,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -208,26 +148,6 @@
         "name": "bender_sadbutt",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -244,6 +164,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -259,26 +184,6 @@
         "name": "bert",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -295,6 +200,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -310,26 +220,6 @@
         "name": "blacksmith",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -346,6 +236,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -361,26 +256,6 @@
         "name": "cleo",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -397,6 +272,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -412,26 +292,6 @@
         "name": "dragon_skull",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -452,6 +312,11 @@
                 "value": ""
             },
             {
+                "name": "on_look",
+                "type": "string",
+                "value": ""
+            },
+            {
                 "name": "path",
                 "type": "object",
                 "value": 0
@@ -462,26 +327,6 @@
         "color": "#ffe27f05",
         "name": "exa",
         "properties": [
-            {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
             {
                 "name": "is_debug",
                 "type": "bool",
@@ -508,6 +353,11 @@
                 "value": ""
             },
             {
+                "name": "on_look",
+                "type": "string",
+                "value": ""
+            },
+            {
                 "name": "path",
                 "type": "object",
                 "value": 0
@@ -518,26 +368,6 @@
         "color": "#ffbb00bb",
         "name": "eye_faerie",
         "properties": [
-            {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
             {
                 "name": "is_glitched",
                 "type": "bool",
@@ -555,6 +385,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -570,26 +405,6 @@
         "name": "golem",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -606,6 +421,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -621,26 +441,6 @@
         "name": "goose",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -657,6 +457,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -672,26 +477,6 @@
         "name": "lightning_boy",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -708,6 +493,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -723,26 +513,6 @@
         "name": "mage",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -759,6 +529,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -774,26 +549,6 @@
         "name": "marta",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -810,6 +565,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -825,26 +585,6 @@
         "name": "old_lady",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -861,6 +601,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -876,26 +621,6 @@
         "name": "old_man",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -912,6 +637,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -927,26 +657,6 @@
         "name": "pipscat",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -963,6 +673,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -978,26 +693,6 @@
         "name": "sheep",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1014,6 +709,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1029,26 +729,6 @@
         "name": "sports_kid",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1065,6 +745,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1080,26 +765,6 @@
         "name": "ssen",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1116,6 +781,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1131,26 +801,6 @@
         "name": "strong_bad",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1167,6 +817,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1182,26 +837,6 @@
         "name": "tailor",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1218,6 +853,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1233,26 +873,6 @@
         "name": "trekkie",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1269,6 +889,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1284,26 +909,6 @@
         "name": "verthandi",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1320,6 +925,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },
@@ -1335,26 +945,6 @@
         "name": "village_elder",
         "properties": [
             {
-                "name": "hackable_state_a",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_b",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_c",
-                "type": "int",
-                "value": 0
-            },
-            {
-                "name": "hackable_state_d",
-                "type": "int",
-                "value": 0
-            },
-            {
                 "name": "is_glitched",
                 "type": "bool",
                 "value": false
@@ -1371,6 +961,11 @@
             },
             {
                 "name": "on_tick",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "on_look",
                 "type": "string",
                 "value": ""
             },

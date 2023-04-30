@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 4
+#define ENGINE_VERSION 5
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -126,10 +126,8 @@ typedef enum : uint8_t {
 	currentAnimation = 25,
 	currentFrame = 26,
 	direction = 27,
-	hackableStateA = 28,
-	hackableStateB = 29,
-	hackableStateC = 30,
-	hackableStateD = 31
+	pathId = 28,
+	onLookScriptId = 30
 } MageEntityField;
 
 //this contains the possible options for an entity PrimaryIdType value.
@@ -199,10 +197,8 @@ typedef struct {
 	uint8_t currentAnimation;
 	uint8_t currentFrame;
 	MageEntityAnimationDirection direction;
-	uint8_t hackableStateA;
-	uint8_t hackableStateB;
-	uint8_t hackableStateC;
-	uint8_t hackableStateD;
+	uint16_t pathId;
+	uint16_t onLookScriptId;
 } MageEntity;
 
 typedef struct MageSaveGame {

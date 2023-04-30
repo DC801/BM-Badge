@@ -51,6 +51,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	std::string word;
 	std::string verb;
 	std::string subject;
+	std::string modifier;
 
 	// Traverse through all words
 	// while loop through segments to store in string word
@@ -76,8 +77,16 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		wordCount++;
 		if (wordCount == 1) {
 			verb = "" + word;
+		} else if (wordCount == 2 && word == "at") {
+			modifier = word;
 		} else if (wordCount == 2) {
 			subject = "" + word;
+		} else if (wordCount > 2 && modifier == "at") {
+			if (subject == "") {
+				subject = word;
+			} else {
+				subject += " " + word;
+			}
 		} else {
 			// only cases could be wordCount > 2
 			syntaxValid = false;
@@ -95,7 +104,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	} else {
 		commandResponseBuffer += (
 			"Invalid command! Commands are exactly one or two words.\n"
-			"Examples: help | look | look $ITEM | go $DIRECTION\n"
+			"Examples: help | look | look at $ENTITY | go $DIRECTION\n"
 		);
 		return;
 	}
@@ -123,19 +132,63 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 	else if(verb == "look") {
 		lastCommandUsed = COMMAND_LOOK;
-		commandResponseBuffer += (
-			"You try to look.\n"
-		);
-		MageScript->initScriptState(
-			&MageScript->resumeStates.serial,
-			MageGame->Map().onLook,
-			true
-		);
-		std::string directionNames = MageGame->Map().getDirectionNames();
-		if(directionNames.length() > 0) {
-			postDialogBuffer += "Exits are:\n";
-			postDialogBuffer += directionNames;
-			postDialogBuffer += "\n";
+		if (subject == "") {
+			commandResponseBuffer += (
+				"You try to look.\n"
+			);
+			MageScript->initScriptState(
+				&MageScript->resumeStates.serial,
+				MageGame->Map().onLook,
+				true
+			);
+			std::string directionNames = MageGame->Map().getDirectionNames();
+			if (directionNames.length() > 0) {
+				postDialogBuffer += "Exits are:\n";
+				postDialogBuffer += directionNames;
+				postDialogBuffer += "\n";
+			}
+		} else {
+			// commandResponseBuffer += (
+			// 	"You try to look AT " +
+			// 	subject + "\n"
+			// );
+			// commandResponseBuffer += (
+			// 	"Entities in the room:\n"
+			// );
+			std::vector<std::string> names = MageGame->getEntityNamesInRoom();
+			std::string name;
+			bool entityFound = false;
+			uint16_t lookScriptId = 0;
+			for (size_t i = 0; i < names.size(); ++i) {
+				name = names[i];
+				badAsciiLowerCase(&name);
+				// commandResponseBuffer += (
+				// 	"\t" + std::to_string(i) + ":\"" + name + "\"\n"
+				// );
+				if (!strcmp(name.c_str(), subject.c_str())) {
+					entityFound = true;
+					// commandResponseBuffer += (
+					// 	"\tFound it! Entity index is: "+std::to_string(i)+"\n"
+					// );
+					lookScriptId = MageGame->entities[i].onLookScriptId;
+					// commandResponseBuffer += (
+					// 	"\tlookScriptId is: "+std::to_string(lookScriptId)+"\n"
+					// );
+					MageScript->initScriptState(
+						MageScript->getEntityLookResumeState(i),
+						lookScriptId,
+						true
+					);
+					break;
+				}
+			}
+			if(!entityFound) {
+				commandResponseBuffer += "\"" + subject + "\" is not a valid entity name.\n";
+			} else if (!lookScriptId) {
+				commandResponseBuffer += "You looked at \"" + subject + "\", but learned nothing in particular.\n";
+			} else {
+				commandResponseBuffer += "You looked at \"" + subject + "\".\n";
+			}
 		}
 	}
 	else if(verb == "go") {
@@ -268,7 +321,8 @@ void MageCommandControl::processInputAsTrappedResponse(std::string input) {
 
 void MageCommandControl::showSerialDialog(
 	uint16_t _serialDialogId,
-	bool disableNewline
+	bool disableNewline,
+	uint8_t selfId
 ) {
 	serialDialogId = _serialDialogId;
 	jumpScriptId = MAGE_NO_SCRIPT;
@@ -282,7 +336,7 @@ void MageCommandControl::showSerialDialog(
 	ROM_ENDIAN_U2_BUFFER(&serialDialog.stringId, 1);
 	std::string dialogString = MageGame->getString(
 		serialDialog.stringId,
-		NO_PLAYER
+		selfId
 	);
 	// serialDialogBuffer += (
 	// 	"showSerialDialog: " + std::to_string(serialDialogId) + "\n" +

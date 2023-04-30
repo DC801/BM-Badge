@@ -57,6 +57,11 @@ void MageScriptControl::initializeScriptsOnMapLoad()
 			entity->onInteractScriptId,
 			false
 		);
+		initScriptState(
+			getEntityLookResumeState(i),
+			entity->onInteractScriptId,
+			false
+		);
 	}
 	MageCommand->reset();
 	handleMapOnLoadScript(true);
@@ -311,6 +316,8 @@ void MageScriptControl::setEntityScript(
 			entity->onInteractScriptId = mapLocalScriptId;
 		} else if(scriptType == MageScriptType::ON_TICK) {
 			entity->onTickScriptId = mapLocalScriptId;
+		} else if(scriptType == MageScriptType::ON_LOOK) {
+			entity->onLookScriptId = mapLocalScriptId;
 		}
 	}
 }
@@ -337,6 +344,11 @@ MageScriptState* MageScriptControl::getEntityInteractResumeState(uint8_t index)
 MageScriptState* MageScriptControl::getEntityTickResumeState(uint8_t index)
 {
 	return &entityTickResumeStates[index];
+}
+
+MageScriptState* MageScriptControl::getEntityLookResumeState(uint8_t index)
+{
+	return &entityLookResumeStates[index];
 }
 
 void MageScriptControl::handleMapOnLoadScript(bool isFirstRun)
@@ -372,7 +384,7 @@ void MageScriptControl::handleMapOnTickScript()
 	//re-initialize the *ResumeState struct from the currentScriptId
 	else if(
 		!scriptIsRunning ||
-			resumeState->currentScriptId != onTickScriptId
+		resumeState->currentScriptId != onTickScriptId
 	)
 	{
 		//populate the MageScriptState struct with appropriate init data
@@ -493,6 +505,42 @@ void MageScriptControl::handleEntityOnInteractScript(uint8_t filteredEntityId)
 	);
 }
 
+void MageScriptControl::handleEntityOnLookScript(uint8_t filteredEntityId)
+{
+	MageScriptState	*scriptState = &entityLookResumeStates[filteredEntityId];
+	uint16_t mapLocalScriptId = MageGame->entities[filteredEntityId].onLookScriptId;
+	//if a script is not currently running, do nothing.
+	if(!scriptState->scriptIsRunning)
+	{
+		return;
+	}
+	//if the entity currentScriptId doesn't match what is in the entityInteractResumeStates[filteredEntityId] struct, re-init it
+	//with .scriptIsRunning set to false to stop all current actions.
+	else if(scriptState->currentScriptId != mapLocalScriptId)
+	{
+		initScriptState(
+			scriptState,
+			mapLocalScriptId,
+			false
+		);
+		return;
+	}
+	else
+	{
+		//if the resumeState.scriptIsRunning is true, then we don't want to modify the state of the
+		//resumeState struct, so we will proceed with the remaining info in the struct as-is.
+		//the currentScriptId is contained within the *ResumeState struct so we can call actions:
+	}
+	//set the current entity to the current entity index value.
+	currentEntityId = MageGame->getMapLocalEntityId(filteredEntityId);
+	//now that the *ResumeState struct is correctly configured, process the script:
+	processScript(
+		scriptState,
+		currentEntityId,
+		MageScriptType::ON_LOOK
+	);
+}
+
 void MageScriptControl::tickScripts()
 {
 	//Note: all script handlers check for hex editor mode internally and will only continue
@@ -519,6 +567,9 @@ void MageScriptControl::tickScripts()
 		//handle Entity onTick scripts for the local entity at Id 'i':
 		//these scripts will run every tick, starting from the beginning as they complete.
 		handleEntityOnTickScript(i);
+		if(mapLoadId != MAGE_NO_MAP) { return; }
+		// yolo
+		handleEntityOnLookScript(i);
 		if(mapLoadId != MAGE_NO_MAP) { return; }
 	}
 	MageCommand->sendBufferedOutput();
