@@ -174,7 +174,8 @@
 			"greenhouse": "on_go-ch2-town-greenhouse",
 			"smith": "on_go-ch2-town-smith",
 			"beatrice": "on_go-ch2-town-beatrice",
-			"wopr": "on_go-ch2-town-wopr"
+			"wopr": "on_go-ch2-town-wopr",
+			"bobsclub": "on_go-ch2-town-bobsclub"
 		}
 	},
 	"ch2-oldcouplehouse":{
@@ -230,6 +231,25 @@
 		"on_look": "on_look-ch2-lodge-rtfm",
 		"directions": {
 			"south": "on_go-ch2-lodge-rtfm-south"
+		}
+	},
+	"ch2-bobsclub":{
+		"path": "maps/map-ch2-bobsclub.json",
+		"on_tick": "on_tick-ch2-bobsclub",
+		"on_load": "on_load-ch2-bobsclub",
+		"on_look": "on_look-ch2-bobsclub",
+		"directions": {
+			"stairs": "on_go-ch2-bobsclub-stairs",
+			"south": "on_go-ch2-bobsclub-south"
+		}
+	},
+	"ch2-bobsclub-basement":{
+		"path": "maps/map-ch2-bobsclub-basement.json",
+		"on_tick": "on_tick-ch2-bobsclub-basement",
+		"on_load": "on_load-ch2-bobsclub-basement",
+		"on_look": "on_look-ch2-bobsclub-basement",
+		"directions": {
+			"stairs": "on_go-ch2-bobsclub-basement-stairs"
 		}
 	},
 

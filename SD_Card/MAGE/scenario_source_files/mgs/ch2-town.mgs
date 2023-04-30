@@ -154,6 +154,11 @@ on_go-ch2-town-smith {
 	copy warping-out-fade-out
 	load map ch2-smithfamily
 }
+on_go-ch2-town-bobsclub {
+	copy on_exit-ch2-town
+	copy warping-out-fade-out
+	load map ch2-bobsclub
+}
 
 /* ---------- ENTITIES ---------- */
 
