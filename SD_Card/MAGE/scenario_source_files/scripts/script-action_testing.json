@@ -381,6 +381,12 @@
 			"script": "mage01-check_entity_name"
 		}
 	],
+	"mage01-look_script": [
+		{
+			"action": "SHOW_SERIAL_DIALOG",
+			"serial_dialog":"serial_dialog-mage01-look_script"
+		}
+	],
 	"mage02-check_entity_x": [
 		{
 			"doc": "Mage 02 tests CHECK_ENTITY_(X/Y) and then SET_ENTITY_(X/Y) after a successful check to reset itself.",
@@ -1103,7 +1109,7 @@
 			"variable": "entity_type_id",
 			"inbound": false,
 			"entity": "%SELF%",
-			"field": "hackable_state_a"
+			"field": "path_id"
 		},
 		{
 			"action": "COPY_VARIABLE",
@@ -1124,7 +1130,7 @@
 			"variable": "entity_type_id",
 			"inbound": true,
 			"entity": "%SELF%",
-			"field": "hackable_state_a"
+			"field": "path_id"
 		},
 		{
 			"action": "CHECK_VARIABLE",

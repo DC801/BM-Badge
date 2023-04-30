@@ -167,6 +167,33 @@ void action_check_entity_tick_script(uint8_t * args, MageScriptState * resumeSta
 	}
 }
 
+void action_check_entity_look_script(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t successScriptId;
+		uint16_t expectedScript;
+		uint8_t entityId;
+		uint8_t expectedBool;
+		uint8_t paddingG;
+	} ActionCheckEntityLookScript;
+	auto *argStruct = (ActionCheckEntityLookScript*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+	argStruct->expectedScript = ROM_ENDIAN_U2_VALUE(argStruct->expectedScript);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		MageScript->currentEntityId
+	);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
+		bool identical = (entity->onLookScriptId == argStruct->expectedScript);
+		if(identical == argStruct->expectedBool) {
+			MageScript->jumpScriptId = argStruct->successScriptId;
+		}
+	}
+}
+
 void action_check_entity_type(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -397,195 +424,6 @@ void action_check_entity_glitched(uint8_t * args, MageScriptState * resumeStateS
 	}
 }
 
-void action_check_entity_hackable_state_a(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint8_t entityId;
-		uint8_t expectedValue;
-		uint8_t expectedBool;
-		uint8_t paddingG;
-	} ActionCheckEntityHackableStateA;
-	auto *argStruct = (ActionCheckEntityHackableStateA*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		bool identical = (entity->hackableStateA == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_b(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint8_t entityId;
-		uint8_t expectedValue;
-		uint8_t expectedBool;
-		uint8_t paddingG;
-	} ActionCheckEntityHackableStateB;
-	auto *argStruct = (ActionCheckEntityHackableStateB*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		bool identical = (entity->hackableStateB == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_c(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint8_t entityId;
-		uint8_t expectedValue;
-		uint8_t expectedBool;
-		uint8_t paddingG;
-	} ActionCheckEntityHackableStateC;
-	auto *argStruct = (ActionCheckEntityHackableStateC*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		bool identical = (entity->hackableStateC == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_d(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint8_t entityId;
-		uint8_t expectedValue;
-		uint8_t expectedBool;
-		uint8_t paddingG;
-	} ActionCheckEntityHackableStateD;
-	auto *argStruct = (ActionCheckEntityHackableStateD*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		bool identical = (entity->hackableStateD == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_a_u2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint16_t expectedValue;
-		uint8_t entityId;
-		uint8_t expectedBool;
-	} ActionCheckEntityHackableStateAU2;
-	auto *argStruct = (ActionCheckEntityHackableStateAU2*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
-		);
-		bool identical = (u2_value == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_c_u2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t successScriptId;
-		uint16_t expectedValue;
-		uint8_t entityId;
-		uint8_t expectedBool;
-	} ActionCheckEntityHackableStateCU2;
-	auto *argStruct = (ActionCheckEntityHackableStateCU2*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-	argStruct->expectedValue = ROM_ENDIAN_U2_VALUE(argStruct->expectedValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		uint16_t u2_value = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateC)
-		);
-		bool identical = (u2_value == argStruct->expectedValue);
-		if(identical == argStruct->expectedBool) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
-void action_check_entity_hackable_state_a_u4(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint32_t expectedValue;
-		uint16_t successScriptId;
-		uint8_t entityId;
-	} ActionCheckEntityHackableStateAU4;
-	auto *argStruct = (ActionCheckEntityHackableStateAU4*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->expectedValue = ROM_ENDIAN_U4_VALUE(argStruct->expectedValue);
-	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
-			*(uint32_t *)((uint8_t *)&entity->hackableStateA)
-		);
-		if(u4_value == argStruct->expectedValue) {
-			MageScript->jumpScriptId = argStruct->successScriptId;
-		}
-	}
-}
-
 void action_check_entity_path(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -605,9 +443,7 @@ void action_check_entity_path(uint8_t * args, MageScriptState * resumeStateStruc
 	);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		uint16_t pathId = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
-		);
+		uint16_t pathId = entity->pathId;
 		bool identical = (pathId == argStruct->expectedValue);
 		if(identical == argStruct->expectedBool) {
 			MageScript->jumpScriptId = argStruct->successScriptId;
@@ -1254,168 +1090,6 @@ void action_set_entity_glitched(uint8_t * args, MageScriptState * resumeStateStr
 	}
 }
 
-void action_set_entity_hackable_state_a(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint8_t newValue;
-		uint8_t entityId;
-		uint8_t paddingC;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateA;
-	auto *argStruct = (ActionSetEntityHackableStateA*)args;
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		entity->hackableStateA = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_b(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint8_t newValue;
-		uint8_t entityId;
-		uint8_t paddingC;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateB;
-	auto *argStruct = (ActionSetEntityHackableStateB*)args;
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		entity->hackableStateB = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_c(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint8_t newValue;
-		uint8_t entityId;
-		uint8_t paddingC;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateC;
-	auto *argStruct = (ActionSetEntityHackableStateC*)args;
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		entity->hackableStateC = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_d(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint8_t newValue;
-		uint8_t entityId;
-		uint8_t paddingC;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateD;
-	auto *argStruct = (ActionSetEntityHackableStateD*)args;
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		entity->hackableStateD = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_a_u2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t newValue;
-		uint8_t entityId;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateAU2;
-	auto *argStruct = (ActionSetEntityHackableStateAU2*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_c_u2(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint16_t newValue;
-		uint8_t entityId;
-		uint8_t paddingD;
-		uint8_t paddingE;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateCU2;
-	auto *argStruct = (ActionSetEntityHackableStateCU2*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->newValue = ROM_ENDIAN_U2_VALUE(argStruct->newValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint16_t *)((uint8_t *)&entity->hackableStateC) = argStruct->newValue;
-	}
-}
-
-void action_set_entity_hackable_state_a_u4(uint8_t * args, MageScriptState * resumeStateStruct)
-{
-	typedef struct {
-		uint32_t newValue;
-		uint8_t entityId;
-		uint8_t paddingF;
-		uint8_t paddingG;
-	} ActionSetEntityHackableStateAU4;
-	auto *argStruct = (ActionSetEntityHackableStateAU4*)args;
-	//endianness conversion for arguments larger than 1 byte:
-	argStruct->newValue = ROM_ENDIAN_U4_VALUE(argStruct->newValue);
-
-	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
-		argStruct->entityId,
-		MageScript->currentEntityId
-	);
-	if(entityIndex != NO_PLAYER) {
-		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint32_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
-	}
-}
-
 void action_set_entity_path(uint8_t * args, MageScriptState * resumeStateStruct)
 {
 	typedef struct {
@@ -1436,7 +1110,7 @@ void action_set_entity_path(uint8_t * args, MageScriptState * resumeStateStruct)
 	);
 	if(entityIndex != NO_PLAYER) {
 		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
-		*(uint16_t *)((uint8_t *)&entity->hackableStateA) = argStruct->newValue;
+		entity->pathId = argStruct->newValue;
 	}
 }
 
@@ -2362,6 +2036,8 @@ void action_copy_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 			case onTickScriptId :
 			case primaryId :
 			case secondaryId :
+			case pathId :
+			case onLookScriptId :
 				if(argStruct->inbound) {
 					*variableValue = (uint16_t)*fieldValue;
 				} else {
@@ -2373,10 +2049,6 @@ void action_copy_variable(uint8_t * args, MageScriptState * resumeStateStruct)
 			case currentAnimation :
 			case currentFrame :
 			case direction :
-			case hackableStateA :
-			case hackableStateB :
-			case hackableStateC :
-			case hackableStateD :
 				if(argStruct->inbound) {
 					*variableValue = (uint8_t)*fieldValue;
 				} else {
@@ -2557,7 +2229,8 @@ void action_show_serial_dialog(uint8_t * args, MageScriptState * resumeStateStru
 	if(resumeStateStruct->totalLoopsToNextAction == 0) {
 		MageCommand->showSerialDialog(
 			argStruct->serialDialogId,
-			argStruct->disableNewline
+			argStruct->disableNewline,
+			MageScript->currentEntityId
 		);
 		if(MageCommand->isInputTrapped) {
 			resumeStateStruct->totalLoopsToNextAction = 1;
@@ -2645,8 +2318,18 @@ void action_set_entity_look_script(uint8_t * args, MageScriptState * resumeState
 		uint8_t paddingG;
 	} ActionSetEntityLookScript;
 	auto *argStruct = (ActionSetEntityLookScript*)args;
-	ROM_ENDIAN_U2_BUFFER(&argStruct->scriptId, 1);
-	// TODO: implement this
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->scriptId = ROM_ENDIAN_U2_VALUE(argStruct->scriptId);
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		MageScript->currentEntityId
+	);
+	MageScript->setEntityScript(
+		argStruct->scriptId,
+		entityIndex,
+		ON_LOOK
+	);
 }
 
 void action_set_teleport_enabled(uint8_t * args, MageScriptState * resumeStateStruct)
@@ -2805,6 +2488,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_check_entity_y,
 	&action_check_entity_interact_script,
 	&action_check_entity_tick_script,
+	&action_check_entity_look_script,
 	&action_check_entity_type,
 	&action_check_entity_primary_id,
 	&action_check_entity_secondary_id,
@@ -2813,13 +2497,6 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_check_entity_current_frame,
 	&action_check_entity_direction,
 	&action_check_entity_glitched,
-	&action_check_entity_hackable_state_a,
-	&action_check_entity_hackable_state_b,
-	&action_check_entity_hackable_state_c,
-	&action_check_entity_hackable_state_d,
-	&action_check_entity_hackable_state_a_u2,
-	&action_check_entity_hackable_state_c_u2,
-	&action_check_entity_hackable_state_a_u4,
 	&action_check_entity_path,
 	&action_check_save_flag,
 	&action_check_if_entity_is_in_geometry,
@@ -2845,13 +2522,6 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_set_entity_direction_target_entity,
 	&action_set_entity_direction_target_geometry,
 	&action_set_entity_glitched,
-	&action_set_entity_hackable_state_a,
-	&action_set_entity_hackable_state_b,
-	&action_set_entity_hackable_state_c,
-	&action_set_entity_hackable_state_d,
-	&action_set_entity_hackable_state_a_u2,
-	&action_set_entity_hackable_state_c_u2,
-	&action_set_entity_hackable_state_a_u4,
 	&action_set_entity_path,
 	&action_set_save_flag,
 	&action_set_player_control,
@@ -2911,9 +2581,7 @@ uint16_t getUsefulGeometryIndexFromActionGeometryId(
 {
 	uint16_t geometryIndex = geometryId;
 	if(geometryIndex == MAGE_ENTITY_PATH) {
-		geometryIndex = ROM_ENDIAN_U2_VALUE(
-			*(uint16_t *)((uint8_t *)&entity->hackableStateA)
-		);
+		geometryIndex = entity->pathId;
 	}
 	return geometryIndex;
 }

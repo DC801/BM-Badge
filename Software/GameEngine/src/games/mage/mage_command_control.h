@@ -65,7 +65,8 @@ class MageCommandControl {
 		void processInputAsTrappedResponse(std::string input);
 		void showSerialDialog(
 			uint16_t serialDialogId,
-			bool disableNewline = false
+			bool disableNewline = false,
+			uint8_t selfId = NO_PLAYER
 		);
 		void registerCommand(
 			uint16_t commandStringId,

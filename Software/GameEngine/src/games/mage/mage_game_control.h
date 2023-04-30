@@ -9,6 +9,7 @@
 #include "mage_entity_type.h"
 #include "mage_geometry.h"
 #include "mage_color_palette.h"
+#include <vector>
 
 #define MAGE_COLLISION_SPOKE_COUNT 6
 
@@ -254,6 +255,8 @@ public:
 	);
 
 	void copyNameToAndFromPlayerAndSave(bool intoSaveRam) const;
+
+	std::vector<std::string> getEntityNamesInRoom() const;
 
 	#ifdef DC801_DESKTOP
 	void verifyAllColorPalettes(const char* errorTriggerDescription);

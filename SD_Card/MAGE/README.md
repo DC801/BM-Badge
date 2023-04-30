@@ -650,11 +650,9 @@ These properties must be manually added. To add one, first click the plus at the
 
 **`is_debug` (bool)** — This indicates whether the entity is hidden when [debug mode](#debug-mode) is off. (While this can be toggled in the hex editor within BMG2020, in practice it will not actually affect anything in-game, as the map is reloaded afresh when debug mode is toggled.)
 
-**`hackable_state_a` (int)** and **`hackable_state_b` (int)** — These can be set arbitrarily as ints, but currently the MGE uses these bytes to store the entity's path. (See below.)
-
 **`path` (object)** — You can use this property to assign a vector object to an entity. It's primarily used for self-referential reasons: so that you can give multiple entities the same script to walk along a path and have each walk along their own path. (Set the target `geometry` to `%ENTITY_PATH%` in such scripts.)
 
-**`hackable_state_c` (int)** and **`hackable_state_d` (int)** — These are not used for anything in the MGE yet, so might be considered "special use space."
+**[`on_look`](on_interact-scripts) (string)** — This identifies the script that is run when the player interacts with the entity using the Serial Dialog system via `look at %ENTITY_NAME%`.
 
 ### Additional Entity Properties
 
@@ -2311,6 +2309,12 @@ See [Entity Types](#entity-properties) for specific information about what each 
 - `entity`
 - `expected_bool`
 
+### `CHECK_ENTITY_LOOK_SCRIPT`
+- `success_script`
+- `expected_script` — the name (string) of the target script
+- `entity`
+- `expected_bool`
+
 ### `CHECK_ENTITY_TYPE`
 - `success_script`
 - `entity_type` — the name (string) of the entity type (for character entities)
@@ -2363,48 +2367,6 @@ The int value for entity animations:
 
 ### `CHECK_ENTITY_GLITCHED`
 - `success_script`
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_A`
-- `success_script`
-- `expected_byte` — the target int value in `hackable_state_a`
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_B`
-- `success_script`
-- `expected_byte` — the target int value in `hackable_state_b`
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_C`
-- `success_script`
-- `expected_byte` — the target int value in `hackable_state_c`
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_D`
-- `success_script`
-- `expected_byte` — the target int value in `hackable_state_d`
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_A_U2`
-- `success_script`
-- `expected_u2` — the target int value in `hackable_state_a` and `hackable_state_b` if interpreted as a u2
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_C_U2`
-- `success_script`
-- `expected_u2` — the target int value in `hackable_state_c` and `hackable_state_d` if interpreted as a u2
-- `entity`
-- `expected_bool`
-
-### `CHECK_ENTITY_HACKABLE_STATE_A_U4`
-- `success_script`
-- `expected_u4` — the target int value in all four "hackable state" bytes if interpreted as a u4
 - `entity`
 - `expected_bool`
 
@@ -2534,34 +2496,6 @@ Counterparts to many of the above "check" actions.
 ### `SET_ENTITY_PRIMARY_ID_TYPE`
 - `u2_value` — the int value for the `primary_id_type` being set
 - `entity`
-
-### `SET_ENTITY_HACKABLE_STATE_A`
-- `entity`
-- `byte_value` — the desired int value in `hackable_state_a`
-
-### `SET_ENTITY_HACKABLE_STATE_B`
-- `entity`
-- `byte_value` — the desired int value in `hackable_state_b`
-
-### `SET_ENTITY_HACKABLE_STATE_C`
-- `entity`
-- `byte_value` — the desired int value in `hackable_state_c`
-
-### `SET_ENTITY_HACKABLE_STATE_D`
-- `entity`
-- `byte_value` — the desired int value in `hackable_state_d`
-
-### `SET_ENTITY_HACKABLE_STATE_A_U2`
-- `entity`
-- `u2_value` — the desired int value in `hackable_state_a` and `hackable_state_b` if interpreted as a u2
-
-### `SET_ENTITY_HACKABLE_STATE_C_U2`
-- `entity`
-- `u2_value` — the desired int value in `hackable_state_c` and `hackable_state_d` if interpreted as a u2
-
-### `SET_ENTITY_HACKABLE_STATE_A_U4`
-`entity`
-`expected_u4` — the desired int value in all four "hackable state" bytes if interpreted as a u4
 
 ## Entity Choreography (Paths)
 
@@ -2738,6 +2672,10 @@ If you use this action to change the script slot that is currently running the a
 [experiment with this]
 
 ### `SET_ENTITY_TICK_SCRIPT`
+- `script` — the name (string) of the desired script
+- `entity`
+
+### `SET_ENTITY_LOOK_SCRIPT`
 - `script` — the name (string) of the desired script
 - `entity`
 

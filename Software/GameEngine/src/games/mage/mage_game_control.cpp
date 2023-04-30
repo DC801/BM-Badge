@@ -456,45 +456,30 @@ MageEntity MageGameControl::LoadEntity(uint32_t address)
 	//increment address
 	address += sizeof(entity.direction);
 
-	// Read entity.hackableStateA
+	// Read entity.pathId
 	EngineROM_Read(
 		address,
-		sizeof(entity.hackableStateA),
-		(uint8_t *)&entity.hackableStateA,
-		"Failed to read Entity property 'hackableStateA'"
+		sizeof(entity.pathId),
+		(uint8_t *)&entity.pathId,
+		"Failed to read Entity property 'pathId'"
 	);
-	//increment address
-	address += sizeof(entity.hackableStateA);
 
-	// Read entity.hackableStateB
-	EngineROM_Read(
-		address,
-		sizeof(entity.hackableStateB),
-		(uint8_t *)&entity.hackableStateB,
-		"Failed to read Entity property 'hackableStateB'"
-	);
-	//increment address
-	address += sizeof(entity.hackableStateB);
+	// Endianness conversion
+	entity.pathId = ROM_ENDIAN_U2_VALUE(entity.pathId);
 
-	// Read entity.hackableStateC
-	EngineROM_Read(
-		address,
-		sizeof(entity.hackableStateC),
-		(uint8_t *)&entity.hackableStateC,
-		"Failed to read Entity property 'hackableStateC'"
-	);
 	//increment address
-	address += sizeof(entity.hackableStateC);
+	address += sizeof(entity.pathId);
 
-	// Read entity.hackableStateD
+	// Read entity.onLookScriptId
 	EngineROM_Read(
 		address,
-		sizeof(entity.hackableStateD),
-		(uint8_t *)&entity.hackableStateD,
-		"Failed to read Entity property 'hackableStateD'"
+		sizeof(entity.onLookScriptId),
+		(uint8_t *)&entity.onLookScriptId,
+		"Failed to read Entity property 'onLookScriptId'"
 	);
-	//increment address
-	address += sizeof(entity.hackableStateD);
+
+	// Endianness conversion
+	entity.onLookScriptId = ROM_ENDIAN_U2_VALUE(entity.onLookScriptId);
 
 	return entity;
 }
@@ -613,6 +598,17 @@ void MageGameControl::copyNameToAndFromPlayerAndSave(bool intoSaveRam) const {
 		source,
 		MAGE_ENTITY_NAME_LENGTH
 	);
+}
+
+std::vector<std::string> MageGameControl::getEntityNamesInRoom() const
+{
+	std::vector<std::string> result = {};
+	for (int i = 0; i < map.entityCount; ++i) {
+		std::string name = "";
+		name =+ entities[i].name;
+		result.push_back(name);
+	}
+	return result;
 }
 
 void MageGameControl::applyUniversalInputs()

@@ -30,6 +30,12 @@ var actionFieldsMap = {
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
 	],
+	CHECK_ENTITY_LOOK_SCRIPT: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_script', size: 2},
+		{propertyName: 'entity', size: 1},
+		{propertyName: 'expected_bool', size: 1},
+	],
 	CHECK_ENTITY_TYPE: [
 		{propertyName: 'success_script', size: 2},
 		{propertyName: 'entity_type', size: 2},
@@ -76,47 +82,6 @@ var actionFieldsMap = {
 		{propertyName: 'success_script', size: 2},
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_B: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_C: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_D: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_byte', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A_U2: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'expected_u2', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_C_U2: [
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'expected_u2', size: 2},
-		{propertyName: 'entity', size: 1},
-		{propertyName: 'expected_bool', size: 1},
-	],
-	CHECK_ENTITY_HACKABLE_STATE_A_U4: [
-		{propertyName: 'expected_u4', size: 4},
-		{propertyName: 'success_script', size: 2},
-		{propertyName: 'entity', size: 1},
 	],
 	CHECK_ENTITY_PATH: [
 		{propertyName: 'success_script', size: 2},
@@ -178,6 +143,10 @@ var actionFieldsMap = {
 		{propertyName: 'script', size: 2},
 		{propertyName: 'entity', size: 1},
 	],
+	SET_ENTITY_LOOK_SCRIPT: [
+		{propertyName: 'script', size: 2},
+		{propertyName: 'entity', size: 1},
+	],
 	SET_ENTITY_TYPE: [
 		{propertyName: 'entity_type', size: 2},
 		{propertyName: 'entity', size: 1},
@@ -221,34 +190,6 @@ var actionFieldsMap = {
 	SET_ENTITY_GLITCHED: [
 		{propertyName: 'entity', size: 1},
 		{propertyName: 'bool_value', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_B: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_C: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_D: [
-		{propertyName: 'byte_value', size: 1},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A_U2: [
-		{propertyName: 'u2_value', size: 2},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_C_U2: [
-		{propertyName: 'u2_value', size: 2},
-		{propertyName: 'entity', size: 1},
-	],
-	SET_ENTITY_HACKABLE_STATE_A_U4: [
-		{propertyName: 'u4_value', size: 4},
-		{propertyName: 'entity', size: 1},
 	],
 	SET_ENTITY_PATH: [
 		{propertyName: 'geometry', size: 2},
@@ -458,6 +399,7 @@ var actionNames = [
 	'CHECK_ENTITY_Y',
 	'CHECK_ENTITY_INTERACT_SCRIPT',
 	'CHECK_ENTITY_TICK_SCRIPT',
+	'CHECK_ENTITY_LOOK_SCRIPT',
 	'CHECK_ENTITY_TYPE',
 	'CHECK_ENTITY_PRIMARY_ID',
 	'CHECK_ENTITY_SECONDARY_ID',
@@ -466,13 +408,6 @@ var actionNames = [
 	'CHECK_ENTITY_CURRENT_FRAME',
 	'CHECK_ENTITY_DIRECTION',
 	'CHECK_ENTITY_GLITCHED',
-	'CHECK_ENTITY_HACKABLE_STATE_A',
-	'CHECK_ENTITY_HACKABLE_STATE_B',
-	'CHECK_ENTITY_HACKABLE_STATE_C',
-	'CHECK_ENTITY_HACKABLE_STATE_D',
-	'CHECK_ENTITY_HACKABLE_STATE_A_U2',
-	'CHECK_ENTITY_HACKABLE_STATE_C_U2',
-	'CHECK_ENTITY_HACKABLE_STATE_A_U4',
 	'CHECK_ENTITY_PATH',
 	'CHECK_SAVE_FLAG',
 	'CHECK_IF_ENTITY_IS_IN_GEOMETRY',
@@ -498,13 +433,6 @@ var actionNames = [
 	'SET_ENTITY_DIRECTION_TARGET_ENTITY',
 	'SET_ENTITY_DIRECTION_TARGET_GEOMETRY',
 	'SET_ENTITY_GLITCHED',
-	'SET_ENTITY_HACKABLE_STATE_A',
-	'SET_ENTITY_HACKABLE_STATE_B',
-	'SET_ENTITY_HACKABLE_STATE_C',
-	'SET_ENTITY_HACKABLE_STATE_D',
-	'SET_ENTITY_HACKABLE_STATE_A_U2',
-	'SET_ENTITY_HACKABLE_STATE_C_U2',
-	'SET_ENTITY_HACKABLE_STATE_A_U4',
 	'SET_ENTITY_PATH',
 	'SET_SAVE_FLAG',
 	'SET_PLAYER_CONTROL',
@@ -935,10 +863,8 @@ var entityFieldMap = {
 	current_animation: 25,
 	current_frame: 26,
 	direction: 27,
-	hackable_state_a: 28,
-	hackable_state_b: 29,
-	hackable_state_c: 30,
-	hackable_state_d: 31,
+	path_id: 28,
+	look_script_id: 30,
 };
 var getFieldFromAction = function (
 	propertyName,
@@ -1425,7 +1351,11 @@ var handleScript = function(
 	return result;
 };
 
-var possibleEntityScripts = ['on_interact', 'on_tick'];
+var possibleEntityScripts = [
+	'on_interact',
+	'on_tick',
+	'on_look',
+];
 
 var handleMapEntityScripts = function (
 	map,
