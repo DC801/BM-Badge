@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 	parameters for label GBob { entity "Guardian Bob" }
 }
 settings for serial dialog { wrap 60 }
@@ -42,19 +43,29 @@ on_go-ch2-bobsclub-basement-stairs {
 /* ---------- CUTSCENE ---------- */
 
 ch2-cutscene-bob-party {
+	// Fade in.
+	if (warp state is warping) {
+		// this is here because the cutscene must come after the warp-in thing
+		copy warping-in-fade-in
+		set flag ch2-manual-warp to true // this will skip the "init" script's warp stuff
+	}
 	set hex control off
 	set serial control off
 	set player control off
-	// Fade in.
 	// The player takes a couple steps forward and looks around.
+	wait 400ms
+	set entity "%PLAYER%" tick_script to look-left-and-right-fast
+	wait 1200ms
 	show dialog {
-		PLAYER "What the...."
+		PLAYER "Huh. Well, I found the source of the noise...."
 	}
-	// Guardian Bob pops out from somewhere
+	set entity "%PLAYER%" tick_script to null_script
+	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		GBob "Hey! You're not allowed in here!"
 	}
-	// He rushes to you but then slows
+	walk entity "Guardian Bob" along geometry bob-walk over 1200ms
+	wait 800ms
 	show dialog {
 		GBob "Oh, wait. I remember you. Your name was Bob, wasn't it?"
 	}
@@ -71,15 +82,13 @@ ch2-cutscene-bob-party {
 	show dialog {
 		GBob "Oh, well. Too late, regardless."
 	}
-	// GBob looks around
+	set entity "Guardian Bob" tick_script to spin_self_clockwise
 	show dialog {
 		GBob "Welcome to the annual Bob's Club party."
 		PLAYER "I thought the party was canceled this year."
 	}
-	// GBob stops looking around; looks at player
-	wait 80ms
+	set entity "Guardian Bob" tick_script to null_script
 	turn entity "Guardian Bob" toward entity "%PLAYER%"
-	wait 150ms
 	show dialog {
 		GBob "It was, but... we seem to be experiencing a time anomaly."
 		PLAYER "What? A time anomaly?"
@@ -107,31 +116,31 @@ ch2-cutscene-bob-party {
 	show dialog {
 		PLAYER "The Big Bad?"
 	}
-	wait 50ms
 	turn entity "Guardian Bob" toward entity "%PLAYER%"
-	wait 30ms
 	show dialog {
 		GBob "Probably."
 	}
-	// player looks around
+	wait 100ms
+	set entity "%PLAYER%" tick_script to spin_self_clockwise
+	wait 240ms
 	show dialog {
 		PLAYER "This is freaking me out. How do we stop it?"
 	}
 	turn entity "Guardian Bob" south
+	set entity "%PLAYER%" tick_script to null_script
+	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		GBob "Depends on the exact cause. I've been keeping my eye on it with my keytool, Glitch. Trying to investigate from several angles."
 		"But I don't have a lot of power in here."
 	}
-	wait 40ms
 	turn entity "Guardian Bob" toward entity "%PLAYER%"
-	wait 180ms
 	show dialog {
 		GBob  "Honestly, Bob, the sooner you can stop the Big Bad, the better."
 		"No pressure!"
 	}
-	wait 40ms
+	wait 80ms
 	turn entity "Guardian Bob" north
-	wait 150ms
+	wait 400ms
 	show dialog {
 		GBob "Anyway, I'll keep watch here."
 		"Help yourself to the food. There's plenty."
@@ -145,31 +154,41 @@ ch2-cutscene-bob-party {
 			GBob "Sure. We've got a lifetime supply in the ice chest back there. Help yourself."
 		}
 	}
-	// GBob walks a short ways away then slowly looks around the room
+	set flag ch2-cutseen-bob-party to true
+	wait 150ms
+	walk entity "Guardian Bob" to geometry bob-walk2 over 800ms
+	set entity "Guardian Bob" tick_script to loiter-slow
 	goto ch2-map-init
+}
+
+loiter-slow {
+	turn entity "%SELF%" south /**/ wait 3200ms
+	turn entity "%SELF%" east /**/ wait 2000ms
+	turn entity "%SELF%" west /**/ wait 4400ms
 }
 
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-guardianbob {
 	show dialog {
+		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up...."
 		SELF "TODO"
 	}
 }
 interact-ch2-marathonbob {
 	// capture original facing direction
-	if (entity "Entity Name" direction is north) {
+	if (entity "%SELF%" direction is north) {
 		mutate tempvar = 0
-	} else if (entity "Entity Name" direction is east) {
+	} else if (entity "%SELF%" direction is east) {
 		mutate tempvar = 1
-	} else if (entity "Entity Name" direction is south) {
+	} else if (entity "%SELF%" direction is south) {
 		mutate tempvar = 2
-	} else if (entity "Entity Name" direction is west) {
+	} else if (entity "%SELF%" direction is west) {
 		mutate tempvar = 3
 	}
 	// normal behavior
 	copy face-player
-	mutate random ? 6
+	mutate random ? 8
 	// https://www.youtube.com/watch?v=7dpxLPbamnA for BoB quotes
 	if (variable random is 1) {
 		show dialog { SELF "They're everywhere!" "Us Bobs, that is. We're everywhere!" }
@@ -181,10 +200,12 @@ interact-ch2-marathonbob {
 		show dialog { SELF "AAHHHH!" "I bit my tongue!" }
 	} else if (variable random is 5) {
 		show dialog { SELF "Get me outta here." "This dubstep is too much." }
-	} else if (variable random is 5) {
-		show dialog { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." }
 	} else if (variable random is 6) {
+		show dialog { SELF "Hey! He's shooting at us!" "That DSLR looks nice. Wonder where he got it." }
+	} else if (variable random is 7) {
 		show dialog { SELF "Perimeter secured." "No non-Bobs here!" }
+	} else if (variable random is 8) {
+		show dialog { SELF "All right!" "This is the best Bob's Club party yet!" }
 	} else {
 		show dialog { SELF "Frog blast the vent core!" "That's the name of my favorite drink." }
 	}
@@ -230,6 +251,9 @@ interact-ch2-icechest {
 			show dialog { PLAYER "This really is a lot of Cactus Cooler. Guess I'll grab a can for the road." }
 		} else {
 			show dialog { PLAYER "Bingo! Cactus Cooler!" }
+		}
+		show dialog {
+			name "" "(You pick up the can of Cactus Cooler!)"
 		}
 		set flag ch2-carrying-cactuscooler to true
 		set flag interrupt to true // you just picked it up

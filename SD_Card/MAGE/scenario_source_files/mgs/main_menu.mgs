@@ -21,12 +21,25 @@ on_load-main_menu {
 	/* DEBUG QUICK STUFFS */
 	register debug -> debug
 	register hub -> hub
+	register bob -> bob
+	register bob2 -> bob2
 	register ch2 -> start-chapter2
 	register rtfm -> serial-rtfm
 }
 
 hub {
 	load map warp_zone
+}
+bob {
+	set flag ch2-has-artifact to true
+	set flag ch2-map-granted to true
+	load map ch2-bobsclub
+}
+bob2 {
+	set warp state to warping
+	set flag ch2-has-artifact to true
+	set flag ch2-map-granted to true
+	load map ch2-bobsclub-basement
 }
 
 debug {
