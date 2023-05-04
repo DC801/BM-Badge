@@ -4,12 +4,19 @@
 #include "games/mage/mage_rom.h"
 #include "games/mage/mage_color_palette.h"
 #include "games/mage/mage_geometry.h"
-#include "EngineWindowFrame.h"
 #include "adafruit/gfxfont.h"
 #include "convert_endian.h"
 #include <array>
 #include <stdint.h>
 #include "utility.h"
+
+#ifndef DC801_EMBEDDED
+#include "EngineWindowFrame.h"
+#endif
+
+static const inline auto DrawWidth = 320;
+static const inline auto DrawHeight = 240;
+static const inline uint32_t FramebufferSize = DrawWidth * DrawHeight;
 
 #define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
 class MageColorPalette;
@@ -43,111 +50,116 @@ class MageGameEngine;
 #define COLOR_NEONPURPLE	0xFD5F
 #define COLOR_BSOD			0x03DA
 
-typedef struct {
-	int16_t width;
-	int16_t height;
+typedef struct
+{
+    int16_t width;
+    int16_t height;
 } bounds_t;
 
-typedef struct {
-	int16_t x;
-	int16_t y;
+typedef struct
+{
+    int16_t x;
+    int16_t y;
 } cursor_t;
 
-class FrameBuffer {
+class FrameBuffer
+{
 public:
-	constexpr void ResetFade() { fadeFraction = 0.0f; }
-	constexpr void SetFade(uint16_t color, float progress)
-	{
-		fadeColor = color;
-		fadeFraction = progress;
-		if (progress < 1.0f)
-		{
-			isFading = true;
-		}
-	}
+    constexpr void ResetFade() { fadeFraction = 0.0f; }
+    constexpr void SetFade(uint16_t color, float progress)
+    {
+        fadeColor = color;
+        fadeFraction = progress;
+        if (progress < 1.0f)
+        {
+            isFading = true;
+        }
+    }
 
-	void clearScreen(uint16_t color);
-	constexpr void drawPixel(int x, int y, uint16_t color) 
-	{ 
-		if (x < 0 || x >= ScreenWidth
-		 || y < 0 || y >= ScreenHeight
-		 || color == TRANSPARENCY_COLOR) 
-		{ return; }
+    void clearScreen(uint16_t color);
+    constexpr void drawPixel(int x, int y, uint16_t color)
+    {
+        if (x < 0 || x >= DrawWidth
+            || y < 0 || y >= DrawHeight
+            || color == TRANSPARENCY_COLOR)
+        {
+            return;
+        }
 
-		frame[y * ScreenWidth + x] = color;
-	}
+        frame[y * DrawWidth + x] = color;
+    }
 
-	inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
-	{
-		drawLine(p1.x, p1.y, p2.x, p2.y, color);
-	}
-	void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
+    inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
+    {
+        drawLine(p1.x, p1.y, p2.x, p2.y, color);
+    }
+    void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 
-	/*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
-	{
-		const auto topLeft = p - size;
-		const auto bottomRight = p + size;
-		const auto bottomLeft = Point{ p.x - size, p.y + size };
+    /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
+    {
+        const auto topLeft = p - size;
+        const auto bottomRight = p + size;
+        const auto bottomLeft = Point{ p.x - size, p.y + size };
       const auto topRight = Point{ p.x + size, p.y - size };
-		drawLine(topLeft, bottomRight, color);
-		drawLine(bottomLeft, topRight, color);
-	}*/
+        drawLine(topLeft, bottomRight, color);
+        drawLine(bottomLeft, topRight, color);
+    }*/
 
-	// pixels: pointer to first pixel of image in ROM, unmodifiable
-	// colorPalette: translate indexed image colors, unmodifiable
-	// target: where to draw on the screen
-	// source: coordinates to offset into base image
-	// source_width: total width of base image
-	// flags: render flags
-	void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags = 0);
+    // pixels: pointer to first pixel of image in ROM, unmodifiable
+    // colorPalette: translate indexed image colors, unmodifiable
+    // target: where to draw on the screen
+    // source: coordinates to offset into base image
+    // source_width: total width of base image
+    // flags: render flags
+    void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags = 0);
 
-	inline void fillRect(const Point& p, int w, int h, uint16_t color)
-	{
-		fillRect(p.x, p.y, w, h, color);
-	}
+    inline void fillRect(const Point& p, int w, int h, uint16_t color)
+    {
+        fillRect(p.x, p.y, w, h, color);
+    }
 
-	void fillRect(int x, int y, int w, int h, uint16_t color)
-	{
-		if ((x >= ScreenWidth) || (y >= ScreenHeight))
-		{
-			return;
-		}
+    void fillRect(int x, int y, int w, int h, uint16_t color)
+    {
+        if ((x >= DrawWidth) || (y >= DrawHeight))
+        {
+            return;
+        }
 
-		// Clip to screen
-		auto right = x + w;
-		if (right >= ScreenWidth) { right = ScreenWidth - 1; }
-		auto bottom = y + h;
-		if (bottom >= ScreenHeight) { bottom = ScreenHeight - 1; }
-		// X
-		for (int i = x; i < right; i++)
-		{
-			// Y
-			for (int j = y; j < bottom; j++)
-			{
-				drawPixel(i, j, color);
-			}
-		}
-	}
+        // Clip to screen
+        auto right = x + w;
+        if (right >= DrawWidth) { right = DrawWidth - 1; }
+        auto bottom = y + h;
+        if (bottom >= DrawHeight) { bottom = DrawHeight - 1; }
+        // X
+        for (int i = x; i < right; i++)
+        {
+            // Y
+            for (int j = y; j < bottom; j++)
+            {
+                drawPixel(i, j, color);
+            }
+        }
+    }
 
-	inline void drawRect(const Rect& r, uint16_t color)
-	{
-		auto x = r.origin.x;
-		auto y = r.origin.y;
-		// top
-		drawLine(x, y, x + r.w, y, color);
-		// left
-		drawLine(x, y, x, y + r.h, color);
-		// right
-		drawLine(x + r.w, y, x + r.w, y + r.h, color);
-		// bottom
-		drawLine(x, y + r.h, x + r.w, y + r.h, color);
-	}
+    inline void drawRect(const Rect& r, uint16_t color)
+    {
+        auto x = r.origin.x;
+        auto y = r.origin.y;
+        // top
+        drawLine(x, y, x + r.w, y, color);
+        // left
+        drawLine(x, y, x, y + r.h, color);
+        // right
+        drawLine(x + r.w, y, x + r.w, y + r.h, color);
+        // bottom
+        drawLine(x, y + r.h, x + r.w, y + r.h, color);
+    }
 
 
-	void write_char(uint8_t c, GFXfont font);
-	void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
+    void write_char(uint8_t c, GFXfont font);
+    void printMessage(std::string text, GFXfont font, uint16_t color, int x, int y);
 
-	void blt(ButtonState button);
+    void blt();
 
 private:
 #ifndef DC801_EMBEDDED
@@ -159,15 +171,16 @@ private:
 	bool isFading{ false };
 	uint16_t fadeColor{ 0 };
 
-  static inline std::array<uint16_t, FramebufferSize> frame{0};
-	void __draw_char(
-		int16_t x,
-		int16_t y,
-		unsigned char c,
-		uint16_t color,
-		uint16_t bg,
-		GFXfont font
-	);
+    static inline std::array<uint16_t, FramebufferSize> frame{0};
+    
+    void __draw_char(
+        int16_t x,
+        int16_t y,
+        unsigned char c,
+        uint16_t color,
+        uint16_t bg,
+        GFXfont font
+    );
 };
 
 

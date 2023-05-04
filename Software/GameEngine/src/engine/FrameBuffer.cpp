@@ -32,7 +32,7 @@
 //Cursor coordinates
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
-static inline Rect m_cursor_area = { 0, 0, ScreenWidth, ScreenHeight };
+static inline Rect m_cursor_area = { 0, 0, DrawWidth, DrawHeight };
 static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
@@ -51,13 +51,13 @@ void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPa
    }
 
    // skip any chunks that aren't drawn to the frame buffer
-   if (target.origin.x + target.w < 0 || target.origin.x >= ScreenWidth
-      || target.origin.y + target.h < 0 || target.origin.y >= ScreenHeight)
+   if (target.origin.x + target.w < 0 || target.origin.x >= DrawWidth
+      || target.origin.y + target.h < 0 || target.origin.y >= DrawHeight)
    { return; }
 
    // draw to the target pixel by pixel, read from the source based on flags:
-   for (auto row = 0; row < target.h && row < ScreenHeight; row++)
-   for (auto col = 0; col < target.w && col < ScreenWidth; col++)
+   for (auto row = 0; row < target.h && row < DrawHeight; row++)
+   for (auto col = 0; col < target.w && col < DrawWidth; col++)
    {
       auto pixelRow = row;
       auto pixelCol = col;
@@ -130,14 +130,14 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       {
          if (p >= 0)
          {
-            auto y = drawDownward ? ScreenHeight - y1 : y1;
+            auto y = drawDownward ? DrawHeight - y1 : y1;
             drawPixel(x1, y, color);
             y1++;
             p = p + 2 * dy - 2 * dx;
          }
          else
          {
-            auto y = drawDownward ? ScreenHeight - y1 : y1;
+            auto y = drawDownward ? DrawHeight - y1 : y1;
             drawPixel(x1, y, color);
             p = p + 2 * dy;
          }
@@ -246,17 +246,17 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
    m_cursor_area.origin.x = 0;
 }
 
-void FrameBuffer::blt(ButtonState button)
+void FrameBuffer::blt()
 {
 #ifdef DC801_EMBEDDED 
    while (ili9341_is_busy())
    {
       //wait for previous transfer to complete before starting a new one
    }
-   ili9341_set_addr(0, 0, ScreenWidth - 1, ScreenHeight - 1);
-   uint32_t bytecount = ScreenWidth * ScreenHeight * 2;
+   ili9341_set_addr(0, 0, DrawWidth - 1, DrawHeight - 1);
+   uint32_t bytecount = DrawWidth * DrawHeight * 2;
    ili9341_push_colors((uint8_t*)frame.data(), bytecount);
 #else
-   windowFrame->GameBlt(frame.data(), button);
+   windowFrame->GameBlt(frame.data());
 #endif
 }

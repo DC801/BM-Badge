@@ -8,7 +8,7 @@ void MageCamera::applyEffects(uint32_t deltaTime)
    if (followEntityId != NO_PLAYER)
    {
       const auto& followEntityRenderableData = mapControl->getEntityRenderableData(followEntityId);
-      const auto midScreen = Point{ DrawWidthHalf, DrawHeightHalf };
+      const auto midScreen = Point{ DrawWidth / 2, DrawHeight / 2 };
       position = followEntityRenderableData.center - midScreen;
    }
 

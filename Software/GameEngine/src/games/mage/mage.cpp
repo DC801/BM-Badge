@@ -22,7 +22,7 @@ void MageGameEngine::Run()
 {
    //main game loop:
 #ifdef EMSCRIPTEN
-   emscripten_set_main_loop(GameLoop, 24, 1);
+   emscripten_set_main_loop(gameLoop, 24, 1);
 #else
    while (inputHandler->IsRunning())
    {
@@ -32,7 +32,7 @@ void MageGameEngine::Run()
          LoadMap(ROM()->GetCurrentSave().currentMapId);
          engineIsInitialized = true;
       }
-      GameLoop();
+      gameLoop();
    }
 #endif
 
@@ -188,7 +188,7 @@ void MageGameEngine::applyUniversalInputs()
    }
 }
 
-void MageGameEngine::ProcessInputs()
+void MageGameEngine::processInputs()
 {
    //apply inputs that work all the time
    applyUniversalInputs();
@@ -396,7 +396,7 @@ void MageGameEngine::applyGameModeInputs(uint32_t deltaTime)
 }
 
 
-void MageGameEngine::GameUpdate(uint32_t deltaTime)
+void MageGameEngine::gameUpdate(uint32_t deltaTime)
 {
    //check for loadMap:
    if (mapControl->mapLoadId != MAGE_NO_MAP) { return; }
@@ -448,7 +448,7 @@ void MageGameEngine::GameUpdate(uint32_t deltaTime)
    }
 }
 
-void MageGameEngine::GameRender()
+void MageGameEngine::gameRender()
 {
    //make hax do
    if (hexEditor->isHexEditorOn())
@@ -486,18 +486,18 @@ void MageGameEngine::GameRender()
    //update the state of the LEDs
    hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
 
-   //update the screen
-   frameBuffer->blt(inputHandler->GetButtonState());
+   //update the framebuffer
+   frameBuffer->blt();
 }
 
-void MageGameEngine::GameLoop()
+void MageGameEngine::gameLoop()
 {
    //update timing information at the start of every game loop
    now = millis();
 
    frameBuffer->clearScreen(RGB(0, 0, 0));
 
-   ProcessInputs();
+   processInputs();
 
    // If a map is set to (re)load, do so before rendering
    if (mapControl->mapLoadId != MAGE_NO_MAP)
@@ -524,10 +524,12 @@ void MageGameEngine::GameLoop()
    lastTime = now;
 
    //updates the state of all the things before rendering:
-   GameUpdate(deltaTime);
+   gameUpdate(deltaTime);
 
    //This renders the game to the screen based on the loop's updated state.
-   GameRender();
+   gameRender();
+   // drawButtonStates(inputHandler->GetButtonState());
+   // drawLEDStates();
 
    uint32_t fullLoopTime = millis() - lastTime;
 

@@ -12,9 +12,8 @@ else ()
 endif ()
 
 set(SDK_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/config/custom_board.h
 	${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/config/sdk_config.h
-	${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S 
-	${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c 
 	${SDK_ROOT}/components/ble/ble_advertising/ble_advertising.c 
 	${SDK_ROOT}/components/ble/ble_db_discovery/ble_db_discovery.c 
 	${SDK_ROOT}/components/ble/ble_services/ble_lbs/ble_lbs.c 
@@ -120,6 +119,8 @@ set(SDK_SRCS
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_i2s.c 
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_qspi.c 
 	${SDK_ROOT}/modules/nrfx/soc/nrfx_atomic.c
+	${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S 
+	${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c 
 )
 
 set (SDK_INCLUDES

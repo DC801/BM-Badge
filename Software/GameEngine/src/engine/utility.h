@@ -17,10 +17,12 @@
 #include "sdk_shim.h"
 
 #ifdef DC801_EMBEDDED
+
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
 #define debug_print(...)   NRF_LOG_INFO(__VA_ARGS__)
+
 #else
 
 #define NRF_LOG_RAW_INFO printf

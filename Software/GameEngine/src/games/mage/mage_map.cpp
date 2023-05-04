@@ -105,8 +105,8 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
       auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
       
       // don't draw tiles that are entirely outside the screen bounds
-      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= ScreenWidth
-       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= ScreenHeight) 
+      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
+       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight) 
       { continue; }
 
       tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId-1, tileDrawPoint, currentTile->flags);

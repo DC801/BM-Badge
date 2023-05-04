@@ -168,37 +168,53 @@ if(NOT EMBEDDED_BUILD)
 endif()
 
 if(WIN32)
-    add_executable(bm_badge WIN32 ${SOURCEFILES})
+    add_executable(${CMAKE_PROJECT_NAME} WIN32 ${SOURCEFILES})
 else()
-    add_executable(bm_badge ${SOURCEFILES})
+    add_executable(${CMAKE_PROJECT_NAME} ${SOURCEFILES})
 endif()
-set_property(TARGET bm_badge PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
-target_include_directories(bm_badge PUBLIC ${INCLUDEDIRS})
-target_compile_definitions(bm_badge PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${INCLUDEDIRS})
+target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})
 
 if (EMSCRIPTEN)
-    target_link_libraries(bm_badge ${SDL2_LIBRARIES})
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARIES})
 else()
     if(EMBEDDED_BUILD)
-        set_target_properties(bm_badge PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
+        set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
     endif()
-    target_link_libraries(bm_badge ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
+    target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 set(source "${CMAKE_CURRENT_SOURCE_DIR}/SD_Card/MAGE")
-set(destination "$<TARGET_FILE_DIR:bm_badge>/MAGE")
+set(destination "$<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/MAGE")
 add_custom_command(
-    TARGET bm_badge POST_BUILD
+    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${source} ${destination}
     DEPENDS ${destination}
     COMMENT "symbolic link created: ${source} <==> ${destination}"
 )
 
+if(EMBEDDED_BUILD)
+  add_custom_command(
+    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND arm-none-eabi-objcopy -O ihex $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
+    DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}
+    COMMENT "generating ${CMAKE_PROJECT_NAME}.hex"
+    )
+  add_custom_command(
+    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND 
+    python3 ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/tools/uf2conv.py $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex -c -f 0xADA52840 -o $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.UF2
+    DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
+    COMMENT "converting ${CMAKE_PROJECT_NAME}.hex into UF2"
+    )
+endif()
+
 if(WIN32)
-    add_custom_command(TARGET bm_badge POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/lib/x86/SDL2.dll $<TARGET_FILE_DIR:bm_badge>
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/lib/x86/SDL2_image.dll $<TARGET_FILE_DIR:bm_badge>
+    add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/lib/x86/SDL2.dll $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/lib/x86/SDL2_image.dll $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>
         COMMAND_EXPAND_LISTS
     )
 endif()

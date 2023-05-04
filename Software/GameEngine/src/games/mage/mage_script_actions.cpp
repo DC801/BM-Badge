@@ -1,6 +1,7 @@
 #include "mage_script_actions.h"
 
 #include "EngineInput.h"
+#include "FrameBuffer.h"
 #include "mage_camera.h"
 #include "mage_command_control.h"
 #include "mage_dialog_control.h"
@@ -1872,7 +1873,7 @@ std::optional<uint16_t> MageScriptActions::action_teleport_camera_to_geometry(co
    auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(globalGeometryIndex);
 
    camera.followEntityId = NO_PLAYER;
-   const auto midScreen = Point{ DrawWidthHalf, DrawHeightHalf };
+   const auto midScreen = Point{ DrawWidth/2, DrawHeight/2 };
    camera.position = geometry->GetPoint(0) - midScreen;
    return std::nullopt;
 }
@@ -1903,7 +1904,7 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_entity(const uin
       float progress = manageProgressOfAction(resumeState, argStruct->duration);
       // yes, this is intentional;
       // if the entity is moving, pan will continue to the entity
-      resumeState.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidthHalf, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeightHalf };
+      resumeState.pointB = { mapControl->getEntityRenderableData(sourceEntityIndex).center.x - DrawWidth/2, mapControl->getEntityRenderableData(sourceEntityIndex).center.y - DrawHeight/2 };
       Point betweenPoint = resumeState.pointA.lerp(resumeState.pointB, progress);
       camera.position.x = betweenPoint.x;
       camera.position.y = betweenPoint.y;
@@ -1938,8 +1939,8 @@ std::optional<uint16_t> MageScriptActions::action_pan_camera_to_geometry(const u
          camera.position.y,
       };
       resumeState.pointB = {
-         geometry->GetPoint(0).x - DrawWidthHalf,
-         geometry->GetPoint(0).y - DrawHeightHalf,
+         geometry->GetPoint(0).x - DrawWidth/2,
+         geometry->GetPoint(0).y - DrawHeight/2,
       };
    }
    float progress = manageProgressOfAction(resumeState, argStruct->duration);

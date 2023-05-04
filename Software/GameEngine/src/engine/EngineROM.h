@@ -81,12 +81,12 @@ private:
 //this is all the bytes on our ROM chip. We aren't able to write more than this
 //to the ROM chip, as there are no more bytes on it. Per the datasheet, there are 32MB,
 //which is defined as 2^25 bytes available for writing.
-//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data and the end of rom
-#define ENGINE_ROM_SAVE_GAME_SLOTS 3
-#define ENGINE_ROM_QSPI_CHIP_SIZE 33554432
-#define ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS)
-#define ENGINE_ROM_MAX_DAT_FILE_SIZE (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE)
-#define ENGINE_ROM_SAVE_OFFSET (ENGINE_ROM_MAX_DAT_FILE_SIZE)
+//We are also subtracting ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE for save data at the end of rom
+static const inline uint8_t ENGINE_ROM_SAVE_GAME_SLOTS = 3;
+static const inline uint32_t ENGINE_ROM_QSPI_CHIP_SIZE = 33554432;
+static const inline uint32_t ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE = (ENGINE_ROM_ERASE_PAGE_SIZE * ENGINE_ROM_SAVE_GAME_SLOTS);
+static const inline uint32_t ENGINE_ROM_MAX_DAT_FILE_SIZE = (ENGINE_ROM_QSPI_CHIP_SIZE - ENGINE_ROM_SAVE_RESERVED_MEMORY_SIZE);
+static const inline uint32_t ENGINE_ROM_SAVE_OFFSET = (ENGINE_ROM_MAX_DAT_FILE_SIZE);
 
 //This is a return code indicating that the verification was successful
 //it needs to be a negative number, as the Verify function returns
@@ -276,15 +276,10 @@ struct EngineROM
       return currentSave;
    }
 
-   constexpr uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) const
-   {
-      return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
-   }
-
    void LoadSaveSlot(uint8_t slotIndex)
    {
 #ifdef DC801_EMBEDDED
-      auto saveAddress = getSaveSlotAddressByIndex(slotIndex);
+      auto saveAddress = uint32_t{ ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE) };
       Read(currentSave, saveAddress);
 #else
 

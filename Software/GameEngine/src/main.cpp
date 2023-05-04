@@ -73,8 +73,8 @@ static void log_init(void){
 	APP_ERROR_CHECK(err_code);
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
 	NRF_LOG_INFO("--------------SYSTEM REBOOTED--------------");
-	NRF_LOG_ERROR("Error Logging to hardware UART enabled.");
-	NRF_LOG_INFO("Debug Logging to hardware UART enabled.");
+	NRF_LOG_ERROR("Error Logging enabled.");
+	NRF_LOG_INFO("Debug Logging enabled.");
 }
 /**
  * @brief Main app
@@ -168,15 +168,14 @@ int main(int argc, char* argv[]) {
 
 	static auto audioPlayer = std::make_shared<AudioPlayer>();
 
+	//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 
-	auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
-
-	auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer, currentSave);
+	//auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer, currentSave);
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
 	break;
 #else
-	game->Run();
+	//game->Run();
 #endif
 
 

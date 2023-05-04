@@ -39,7 +39,7 @@ public:
    MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer, const MageSaveGame& currentSave)
    {
       tileManager = std::make_shared<TileManager>(frameBuffer);
-      mapControl = std::make_unique<MapControl>(frameBuffer, tileManager);
+      mapControl = std::make_shared<MapControl>(frameBuffer, tileManager);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, currentSave.memOffsets);
       stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, currentSave.scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
@@ -49,15 +49,6 @@ public:
       scriptControl = std::make_shared<MageScriptControl>(mapControl, hexEditor, std::move(scriptActions));
       commandControl = std::make_shared<MageCommandControl>(mapControl, tileManager, scriptControl, stringLoader);
    }
-
-   //updates the state of all the things before rendering:
-   void GameUpdate(uint32_t deltaTime);
-
-   //This renders the game to the screen based on the loop's updated state.
-   void GameRender();
-   void GameLoop();
-   void ProcessInputs();
-
    //this will load a map to be the current map.
    void LoadMap(uint16_t index);
 
@@ -66,6 +57,16 @@ public:
    void Run();
 
 private:
+   void gameLoop();
+
+   void processInputs();
+
+   //updates the state of all the things before rendering:
+   void gameUpdate(uint32_t deltaTime);
+
+   //This renders the game to the frame buffer based on the loop's updated state.
+   void gameRender();
+
    //this will handle any blocking delays at the end of the loop
    void handleBlockingDelay();
 

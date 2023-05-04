@@ -1,6 +1,7 @@
 #ifndef _MAGE_SCRIPT_ACTIONS_H
 #define _MAGE_SCRIPT_ACTIONS_H
 
+#include "EngineInput.h"
 #include "FrameBuffer.h"
 #include "mage_rom.h"
 #include "mage_camera.h"

@@ -1,12 +1,7 @@
 #ifndef _ENGINEWINDOWFRAME_H
 #define _ENGINEWINDOWFRAME_H
 
-static const inline auto ScreenWidth = 320;
-static const inline auto ScreenHeight = 240;
-static const inline auto DrawWidthHalf = ScreenWidth/2;
-static const inline auto DrawHeightHalf = ScreenHeight/2;
-static const inline uint32_t FramebufferSize = ScreenWidth * ScreenHeight;
-
+#include "FrameBuffer.h"
 #include "EngineInput.h"
 #include "modules/keyboard.h"
 #include "modules/led.h"
@@ -27,11 +22,11 @@ extern int SDL_RenderSetLogicalSize(SDL_Renderer* renderer, int w, int h);
 class EngineWindowFrame
 {
 public:
-   void GameBlt(const uint16_t* frame, ButtonState button) const;
+   void GameBlt(const uint16_t* frame) const;
+   void DrawButtonStates(ButtonState button) const;
+   void DrawLEDStates() const;
    void Resize(int change);
 private:
-   void drawButtonStates(ButtonState button) const;
-   void drawLEDStates() const;
 
    struct EngineWindowFrameComponents
    {
@@ -49,8 +44,8 @@ private:
       SDL_Texture* gameViewportTexture = nullptr;
    } components{};
    
-   const SDL_Rect gameViewportSrcRect = { 0, 0, ScreenWidth, ScreenHeight };
-   const SDL_Rect gameViewportDstRect = { 112, 56, ScreenWidth, ScreenHeight };
+   const SDL_Rect gameViewportSrcRect = { 0, 0, DrawWidth, DrawHeight };
+   const SDL_Rect gameViewportDstRect = { 112, 56, DrawWidth, DrawHeight };
    const SDL_Rect buttonOffSrcRect = { 0, 0, 32, 32 };
    const SDL_Rect buttonOnSrcRect = { 0, 32, 32, 32 };
    const SDL_Rect LEDOffSrcRect = { 0, 0, 16, 8 };

@@ -151,8 +151,8 @@ uint8_t util_sd_getnum_files(const char* path, const char* extension) {
 //void util_sd_error()
 //{
 //	//ENGINE_PANIC("SD Card Error\nCheck card and reboot");
-//	p_canvas()->clearScreen(COLOR_BLUE);
-//	p_canvas()->printMessage(
+//	frameBuffer->clearScreen(COLOR_BLUE);
+//	frameBuffer->printMessage(
 //		"SD Card did not initialize properly.\n\
 //		Check Card and Reboot if you\n\
 //		want to use the SD Card to reflash\n\
@@ -162,6 +162,6 @@ uint8_t util_sd_getnum_files(const char* path, const char* extension) {
 //		32,
 //		32
 //	);
-//	p_canvas()->blt();
+//	frameBuffer->blt();
 //	nrf_delay_ms(5000);
 //}
