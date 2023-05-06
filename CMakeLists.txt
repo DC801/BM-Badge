@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
+enable_language(ASM)
 project(bm_badge)
 
 include(CheckCXXSymbolExists)
@@ -149,6 +150,7 @@ set(SOURCEFILES
         Software/GameEngine/src/modules/mutex.h
         Software/GameEngine/src/modules/keyboard.h
         Software/GameEngine/src/modules/qspi.h
+        Software/GameEngine/src/modules/usb.h
         
         Software/GameEngine/src/modules/cmixer/cmixer.cpp
         Software/GameEngine/src/modules/drv_ili9341.cpp
@@ -158,6 +160,7 @@ set(SOURCEFILES
         Software/GameEngine/src/modules/mutex.cpp
         Software/GameEngine/src/modules/keyboard.cpp
         Software/GameEngine/src/modules/qspi.cpp
+        Software/GameEngine/src/modules/usb.cpp
 )
 
 if(NOT EMBEDDED_BUILD)
@@ -177,12 +180,14 @@ set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${INCLUDEDIRS})
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})
 
+if(EMBEDDED_BUILD)
+    #set_source_files_properties(${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S PROPERTY LANGUAGE C)
+    set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
+endif()
+
 if (EMSCRIPTEN)
     target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARIES})
 else()
-    if(EMBEDDED_BUILD)
-        set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/badge_gcc_nrf52.ld)
-    endif()
     target_link_libraries(${CMAKE_PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 endif()
 
@@ -196,18 +201,30 @@ add_custom_command(
 )
 
 if(EMBEDDED_BUILD)
-  add_custom_command(
-    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-    COMMAND arm-none-eabi-objcopy -O ihex $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
-    DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}
-    COMMENT "generating ${CMAKE_PROJECT_NAME}.hex"
+    # convert binary to hex file without softdevice
+    add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND arm-none-eabi-objcopy -O ihex $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME} $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}_nosd.hex
+        DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}
+        COMMENT "Generating ${CMAKE_PROJECT_NAME}_nosd.hex"
     )
-  add_custom_command(
-    TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
-    COMMAND 
-    python3 ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/tools/uf2conv.py $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex -c -f 0xADA52840 -o $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.UF2
-    DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
-    COMMENT "converting ${CMAKE_PROJECT_NAME}.hex into UF2"
+
+    # merge in softdevice
+    add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND 
+        mergehex -m ${SDK_ROOT}/components/softdevice/s140/hex/s140_nrf52_7.2.0_softdevice.hex $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}_nosd.hex -o $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
+        DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}_nosd.hex
+        COMMENT "Merging ${CMAKE_PROJECT_NAME}_nosd.hex into  ${CMAKE_PROJECT_NAME}.hex"
+    )
+
+    # convert to UF2
+    add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND 
+        python3 ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/tools/uf2conv.py $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex -c -f 0xADA52840 -o $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.UF2
+        DEPENDS $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/${CMAKE_PROJECT_NAME}.hex
+        COMMENT "Converting ${CMAKE_PROJECT_NAME}.hex into UF2"
     )
 endif()
 

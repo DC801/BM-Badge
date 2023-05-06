@@ -2,13 +2,7 @@
 #define ENGINE_SERIAL_H
 
 #include <stdint.h>
-#include <usb.h>
-
-#define COMMAND_BUFFER_SIZE 1024
-#define COMMAND_RESPONSE_SIZE (COMMAND_BUFFER_SIZE + 128)
-
-// always allow for a null termination byte
-#define COMMAND_BUFFER_MAX_READ (COMMAND_BUFFER_SIZE - 1)
+#include "shim_serial.h"
 
 extern char command_buffer[COMMAND_BUFFER_SIZE];
 extern uint16_t command_buffer_length;

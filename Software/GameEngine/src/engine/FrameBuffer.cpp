@@ -1,29 +1,17 @@
 #include "FrameBuffer.h"
-
-#include "main.h"
-#include "games/mage/mage.h"
-#include "utility.h"
-#include "games/mage/mage_defines.h"
-#include "games/mage/mage_color_palette.h"
-#include "convert_endian.h"
-#include "modules/sd.h"
-#include "config/custom_board.h"
 #include "EnginePanic.h"
-
-#include "adafruit/gfxfont.h"
 
 #include <algorithm>
 
 #ifdef DC801_EMBEDDED
 
-#include <drv_ili9341.h>
+#include "drv_ili9341.h"
 
 #else
 
 #include <SDL.h>
 #include "shim_timer.h"
 #include "shim_err.h"
-#include "EngineWindowFrame.h"
 
 #endif
 

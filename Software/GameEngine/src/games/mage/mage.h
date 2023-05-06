@@ -36,12 +36,12 @@ class MageGameEngine
 {
 public:
 
-   MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer, const MageSaveGame& currentSave)
+   MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
    {
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_shared<MapControl>(frameBuffer, tileManager);
-      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, currentSave.memOffsets);
-      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, currentSave.scriptVariables);
+      hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
+      stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
       camera = MageCamera{ mapControl };
 
@@ -82,11 +82,6 @@ private:
 
    bool engineIsInitialized{ false };
 
-   //used to verify whether a save is compatible with game data
-   uint32_t engineVersion;
-   uint32_t scenarioDataCRC32;
-   uint32_t scenarioDataLength;
-   
    uint32_t lastTime{ millis() };
    uint32_t now{ 0 };
    uint32_t deltaTime{ 0 };

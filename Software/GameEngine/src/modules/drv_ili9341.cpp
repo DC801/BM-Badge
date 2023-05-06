@@ -1,3 +1,4 @@
+#ifdef DC801_EMBEDDED
 
 #include "drv_ili9341.h"
 
@@ -120,7 +121,7 @@ static inline void __writeData16(uint16_t data) {
  * the first byte) "
  * Ref: http://crawlingrobotfortress.blogspot.com/2015/12/better-3d-graphics-engine-on-arduino.html
  */
-static inline void __set_XY_fast(uint16_t x, uint16_t y) {
+inline void __set_XY_fast(uint16_t x, uint16_t y) {
 	// Adjust screen offset in case GRAM does not match actual screen resolution
 	x += LCD_X_OFFSET;
 	y += LCD_Y_OFFSET;
@@ -137,30 +138,16 @@ static inline void __set_XY_fast(uint16_t x, uint16_t y) {
 /**
  * Convert RGB color to 565
  */
-uint16_t ili9341_color565(uint8_t r, uint8_t g, uint8_t b) {
+uint16_t ili9341_color565(uint8_t r, uint8_t g, uint8_t b)
+{
 	return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
-}
-
-/**
- * Draw a single pixel to the display
- */
-void inline ili9341_draw_pixel(uint16_t x, uint16_t y, uint16_t color) {
-	//Clip and adjust for display offsets
-	if ((x < 0) || (x >= LCD_WIDTH) || (y < 0) || (y >= LCD_HEIGHT)) {
-		return;
-	}
-
-	while(ili9341_is_busy());
-
-	__set_XY_fast(x, y);
-	__writeData16(color);
-
 }
 
 /**
  * Fill an area on the screen with a single color
  */
-void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
 	int32_t bytecount = w * h * 2;
 	uint8_t color_lsb[254];
 	for (uint8_t i = 0; i < 254; i += 2) {
@@ -227,23 +214,14 @@ void ili9341_init() {
 /**
  * Simple check for if the bus is busy
  */
-inline bool ili9341_is_busy() {
+bool ili9341_is_busy() {
 	return m_busy;
-}
-
-/**
- * Push a single color (pixel) to the display. This is not very efficient as the CS line is toggled.
- * If pushing more than one pixel highly recommend streaming the colors through a DMA transfer
- */
-void inline ili9341_push_color(uint16_t color) {
-	//color = SWAP(color);
-	__writeData16(color);
 }
 
 /**
  * Push many colors to the display
  */
-inline void ili9341_push_colors(uint8_t *p_colors, uint32_t size) {
+void ili9341_push_colors(uint8_t *p_colors, uint32_t size) {
 
     uint8_t count = 0;
 
@@ -452,3 +430,5 @@ void ili9341_start() {
 	CRITICAL_REGION_EXIT();
 
 }
+
+#endif // DC801_EMBEDDED

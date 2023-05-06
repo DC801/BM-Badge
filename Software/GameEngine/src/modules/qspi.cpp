@@ -55,7 +55,7 @@ QSPI::QSPI()
     errCode = nrfx_qspi_init(&config, &QSPI::qspi_handler, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        debug_print("Failure at nrfx_qspi_init() call.");
+        error_print("Failure at nrfx_qspi_init() call.");
         throw std::runtime_error{"qspi init"};
     }
 
@@ -122,7 +122,7 @@ QSPI::QSPI()
     errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        debug_print("Failure at QSPI chip reset command.");
+        error_print("Failure at QSPI chip reset command.");
         throw std::runtime_error{"qspi init"};
     }
 
@@ -133,7 +133,7 @@ QSPI::QSPI()
     errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        debug_print("Failure at QSPI qspi mode set command.");
+        error_print("Failure at QSPI qspi mode set command.");
         throw std::runtime_error{"qspi init"};
     }
 
@@ -145,9 +145,10 @@ QSPI::QSPI()
     errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        debug_print("Failure at QSPI extended addressing set command.");
+        error_print("Failure at QSPI extended addressing set command.");
         throw std::runtime_error{"qspi init"};
     }
+    debug_print("QSPI Initialized");
 }
 
 /**
@@ -216,9 +217,11 @@ bool QSPI::write(void const* data, size_t len, uint32_t startAddress) const
  * @param data A pointer to some memory to write the data into
  * @param len Number of bytes to read
  */
-bool QSPI::read(void* data, size_t len, uint32_t startAddress) const
+bool QSPI::read(void* data, size_t len, uint32_t& startAddress) const
 {
-    return NRFX_SUCCESS == nrfx_qspi_read(data, len, startAddress);
+    auto result = nrfx_qspi_read(data, len, startAddress);
+    startAddress += len;
+    return NRFX_SUCCESS == result;
 }
 
 
@@ -226,26 +229,43 @@ bool QSPI::read(void* data, size_t len, uint32_t startAddress) const
 
 void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer) const
 {
+    debug_print("Checking for ROM update on SD card");
     // handles hardware inputs and makes their state available
     inputHandler->HandleKeyboard();
 
     //skip 'MAGEGAME' at front of .dat file
     uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
 
-    char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
-    char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
-    bool gameDatSDPresent = false;
-    bool eraseWholeRomChip = false;
+    char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] = { 0 };
+    char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] = { 0 };
+    auto gameDatSDPresent = false;
+    auto eraseWholeRomChip = false;
     auto headerHashMatch = true;
-    // ROM()->Read(engineVersion, offset);
 
-    // if (engineVersion != ENGINE_VERSION)
-    // {
-    // 	throw std::runtime_error{ "game.dat is incompatible with Engine" };// \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
-    // }
+    //used to verify whether a save is compatible with game data
+    uint32_t engineVersion;
+    uint32_t scenarioDataCRC32;
+    uint32_t scenarioDataLength;
 
-    // ROM()->Read(scenarioDataCRC32, offset);
-    // ROM()->Read(scenarioDataLength, offset);
+    if (!read(&engineVersion, sizeof(engineVersion), offset))
+    {
+        error_print("Failed to read engineVersion");
+    }
+
+    if (engineVersion != ENGINE_VERSION)
+    {
+        throw std::runtime_error{ "game.dat is incompatible with Engine" };
+        // \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
+    }
+
+    if (!read(&scenarioDataCRC32, sizeof(scenarioDataCRC32), offset))
+    {
+        error_print("Failed to read scenarioDataCRC32");
+    }
+    if (!read(&scenarioDataLength, sizeof(scenarioDataLength), offset))
+    {
+        error_print("Failed to read scenarioDataLength");
+    }
 
     const char* updateMessagePrefix;
     if (!headerHashMatch)
@@ -260,6 +280,7 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
     }
     else
     {
+        debug_print("ROM file matched")
         // there is no update, and user is not holding MEM3, proceed as normal
         return;
     }
@@ -279,6 +300,8 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
         updateMessagePrefix,
         gameDatHashSD,
         gameDatHashROM);
+    debug_print(debugString);
+    
     frameBuffer->clearScreen(COLOR_BLACK);
     frameBuffer->printMessage(debugString, Monaco9, 0xffff, 16, 16);
     frameBuffer->blt();
@@ -336,6 +359,7 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
         {
             //Debug Print:
             sprintf(debugString, "Erasing currentAddress: %08u\nromFileSize:%08u", currentAddress, romFileSize);
+            debug_print(debugString);
             frameBuffer->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
             frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
             frameBuffer->blt();
@@ -415,6 +439,7 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
         romPagesToWrite += 1;
     }
     //print success message:
+    debug_print("Successfully copied ROM to QSPI ROM")
     frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
     frameBuffer->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
     frameBuffer->blt();

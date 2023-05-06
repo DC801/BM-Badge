@@ -28,8 +28,8 @@
       "generator": "Visual Studio 17 2022",
       "toolchainFile": "${sourceDir}/cmake/toolchain-msvc_win32.cmake",
       "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "17",
-        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
         "VS_DEBUGGER_WORKING_DIRECTORY": "$<TARGET_FILE_DIR:bm_badge>"
@@ -49,8 +49,8 @@
       "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_x86.cmake",
       "generator": "Unix Makefiles",
       "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "17",
-        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
         "CMAKE_C_COMPILER": "gcc",
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_C_FLAGS": "-m32 -g",
@@ -65,8 +65,8 @@
       "toolchainFile": "${sourceDir}/cmake/toolchain-gcc_arm.cmake",
       "cacheVariables": {
         "SDK_ROOT": "${sourceDir}/nordic-sdk17.1.0",
-        "CMAKE_CXX_STANDARD": "17",
-        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "17",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_CXX_LIBRARY_ARCHITECTURE": "20",
         "CMAKE_C_COMPILER": "arm-none-eabi-gcc",
         "CMAKE_CXX_COMPILER": "arm-none-eabi-g++",
         "EMBEDDED_BUILD": "ON"

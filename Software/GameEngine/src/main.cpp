@@ -30,6 +30,7 @@
 #include <shim_ble.h>
 #include <shim_err.h>
 #include <shim_i2c.h>
+#include <shim_serial.h>
 #include <shim_rng.h>
 #include <shim_timer.h>
 #include <sdk_shim.h>
@@ -109,16 +110,22 @@ int main(int argc, char* argv[]) {
 		debug_print("No SD card present on boot.");
 	}
 
+	//USB serial
+	usb_serial_init();
+
+	// Setup I2C
+	twi_master_init();
+
+	// Setup the UART
+	//uart_init();
+
+	//keyboard controls all hardware buttons on this badge
+	keyboard_init();
+
 	//QSPI ROM Chip
 	static auto qspiControl = QSPI{};
 
 	qspiControl.HandleROMUpdate(inputHandler, frameBuffer);
-	
-	//USB serial
-	usb_serial_init();
-
-	//keyboard controls all hardware buttons on this badge
-	keyboard_init();
 
 	//this function will set up the NAU8810 chip to play sounds
 	//speaker_init();
@@ -136,11 +143,6 @@ int main(int argc, char* argv[]) {
 	//adc_configure();
 	//adc_start();
 
-	// Setup the UART
-	//uart_init();
-
-	// Setup I2C
-	//twi_master_init();
 
 	//EEpwm_init();
 
@@ -164,18 +166,17 @@ int main(int argc, char* argv[]) {
 
 	// Boot! Boot! Boot!
 	debug_print("Booted!\nCreating and started game...\n");
-	// printf goes to the RTT_Terminal.log after you've fired up debug.sh
 
 	static auto audioPlayer = std::make_shared<AudioPlayer>();
 
 	//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 
-	//auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer, currentSave);
+	auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer);
 #if defined(TEST) || defined(TEST_ALL)
 	DC801_Test::Test();
 	break;
 #else
-	//game->Run();
+	game->Run();
 #endif
 
 

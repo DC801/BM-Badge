@@ -1,13 +1,9 @@
 #include "EngineSerial.h"
-#include "modules/usb.h"
 #include <iostream>
 #include <regex>
 #include <string>
 #include <cstring>
 
-char command_buffer[COMMAND_BUFFER_SIZE];
-uint16_t command_buffer_length = 0;
-bool was_serial_started = false;
 bool was_command_entered = false;
 void (*on_start_function_pointer)() = nullptr;
 void (*on_command_function_pointer)(char *commandString) = nullptr;

@@ -80,7 +80,7 @@ public:
 	bool erase(tBlockSize blockSize, uint32_t startAddress = 0) const;
 	bool chipErase() const;
 	bool write(void const* data, size_t len, uint32_t startAddress) const;
-	bool read(void* data, size_t len, uint32_t startAddress) const;
+	bool read(void* data, size_t len, uint32_t& startAddress) const;
 #ifdef DC801_EMBEDDED
 	void HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer) const;
 	void EraseSaveSlot(uint8_t slotIndex) const;
