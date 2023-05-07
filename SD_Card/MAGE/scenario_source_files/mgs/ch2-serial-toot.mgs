@@ -316,6 +316,9 @@ serial dialog ch2-describe-abacus {
 serial dialog ch2-describe-powersupply {
 	"<m>LAMBDA:</> TODO: powersupply description"
 }
+serial dialog ch2-describe-ramchips {
+	"<m>LAMBDA:</> TODO: ramchips description"
+}
 
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
@@ -379,9 +382,18 @@ ch2-toot-step5h {
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
-
-
 ch2-toot-step5i {
+	show serial dialog spacer
+	show serial dialog ch2-describe-ramchips
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5j
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+
+
+ch2-toot-step5j {
 	goto ch2-toot-step5-endoflist
 }
 

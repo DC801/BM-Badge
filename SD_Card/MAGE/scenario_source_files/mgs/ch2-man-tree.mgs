@@ -118,6 +118,9 @@ ch2-describe-goldfish {
 ch2-describe-powersupply {
 	show serial dialog ch2-describe-powersupply
 }
+ch2-describe-ramchips {
+	show serial dialog ch2-describe-ramchips
+}
 
 ch2-lambda-parts-clock {
 	show serial dialog spacer
@@ -178,6 +181,17 @@ ch2-lambda-parts-powersupply {
 	show serial dialog spacer
 	if (flag ch2-installed-powersupply is false) {
 		copy ch2-describe-powersupply
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO powersupply is already installed."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-ramchips {
+	show serial dialog spacer
+	if (flag ch2-installed-ramchips is false) {
+		copy ch2-describe-ramchips
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> TODO powersupply is already installed."
