@@ -339,7 +339,7 @@ interact-ch2-icechest {
 		} else {
 			// if you did just pick it up AND you know you need it
 			show dialog {
-				PLAYER "Got my can of Cactus Cooler. Time to bring it to the server room guys."
+				PLAYER "Got my can of Cactus Cooler. Time to bring it to the power plant guys."
 			}
 		}
 	} else if (
@@ -348,7 +348,7 @@ interact-ch2-icechest {
 	) {
 		// you've already turned the soda in
 		show dialog {
-			PLAYER "The server room guys already have their Cactus Cooler. I'll leave the rest for everyone else."
+			PLAYER "The power plant guys already have their Cactus Cooler. I'll leave the rest for everyone else."
 		}
 	} else { // You get to pick up a Cactus Cooler!
 		if (flag ch2-want-cactuscooler is false) {
