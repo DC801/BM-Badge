@@ -2481,6 +2481,37 @@ void action_unregister_serial_dialog_command_argument(uint8_t * args, MageScript
 	);
 }
 
+void action_set_entity_movement_relative(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		int8_t relativeDirection;
+		uint8_t entityId;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionSetEntityMotionRelative;
+	auto *argStruct = (ActionSetEntityMotionRelative*)args;
+
+	int16_t entityIndex = getUsefulEntityIndexFromActionEntityId(
+		argStruct->entityId,
+		MageScript->currentEntityId
+	);
+	if(entityIndex != NO_PLAYER) {
+		MageEntity *entity = MageGame->getEntityByMapLocalId(entityIndex);
+		entity->direction = MageEntityAnimationDirection (
+			(
+				entity->direction
+				& (255 ^ RENDER_FLAGS_RELATIVE_DIRECTION)
+			)
+			| argStruct->relativeDirection << 4
+		);
+		MageGame->updateEntityRenderableData(entityIndex);
+	}
+}
+
+
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
 	&action_check_entity_name,
@@ -2572,6 +2603,7 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_register_serial_dialog_command_argument,
 	&action_unregister_serial_dialog_command,
 	&action_unregister_serial_dialog_command_argument,
+	&action_set_entity_movement_relative,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

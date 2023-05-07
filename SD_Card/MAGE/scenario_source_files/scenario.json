@@ -1,6 +1,7 @@
 {
 	"scriptPaths": [
-		"scripts/script-action_testing.json"
+		"scripts/script-action_testing.json",
+		"scripts/script-test.json"
 	],
 	"dialogPaths": [
 		"dialog/dialog-action_testing.json"

@@ -1335,12 +1335,22 @@ MageEntityAnimationDirection MageGameControl::getValidEntityTypeDirection(
 	);
 }
 
+MageEntityAnimationDirection MageGameControl::getRelativeEntityTypeDirection(
+	MageEntityAnimationDirection direction
+) {
+	return (MageEntityAnimationDirection) (
+		((direction & RENDER_FLAGS_RELATIVE_DIRECTION) >> 4)
+		% NUM_DIRECTIONS
+	);
+}
+
 MageEntityAnimationDirection MageGameControl::updateDirectionAndPreserveFlags(
 	MageEntityAnimationDirection desired,
 	MageEntityAnimationDirection previous
 ) {
 	return (MageEntityAnimationDirection) (
 		getValidEntityTypeDirection(desired)
+		| (previous & RENDER_FLAGS_RELATIVE_DIRECTION)
 		| (previous & RENDER_FLAGS_IS_DEBUG)
 		| (previous & RENDER_FLAGS_IS_GLITCHED)
 	);
@@ -1443,6 +1453,9 @@ void MageGameControl::updateEntityRenderableData(
 
 		//get a valid direction for the animation:
 		uint8_t direction = getValidEntityTypeDirection(entityPointer->direction);
+		uint8_t relativeDirection = getRelativeEntityTypeDirection(entityPointer->direction);
+		direction += relativeDirection;
+		direction %= 4;
 
 		//create a directedAnimation entity based on entityPointer->direction:
 		MageEntityTypeAnimationDirection directedAnimation;
