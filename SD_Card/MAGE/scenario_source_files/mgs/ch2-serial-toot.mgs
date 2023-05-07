@@ -415,8 +415,17 @@ ch2-toot-step5k {
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
-
 ch2-toot-step5l {
+	show serial dialog spacer
+	show serial dialog ch2-describe-mouse
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5m
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+
+ch2-toot-step5m {
 	goto ch2-toot-step5-endoflist
 }
 
