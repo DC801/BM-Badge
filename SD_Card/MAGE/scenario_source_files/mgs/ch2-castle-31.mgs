@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-31 {
+look-ch2-castle-31 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: GRAND HALL on_look text\n "
@@ -104,7 +104,7 @@ ch2-install-keyboard {
 	set flag ch2-carrying-keyboard to false
 	set flag ch2-installed-keyboard to true
 }
-on_look-keyboard {
+look-keyboard {
 	show serial dialog spacer
 	show serial dialog {
 		"on_look keyboard TODO"

@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-magehouse {
+look-ch2-magehouse {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: mage house text"

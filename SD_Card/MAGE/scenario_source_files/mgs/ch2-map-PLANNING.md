@@ -143,7 +143,7 @@ For each item: (Copy existing pattern wherever these are found)
 	4. Make script `ch2-install-ITEM`
 		- `set flag ch2-carrying-ITEM to false`
 		- `set flag ch2-installed-ITEM to true`
-	5. Make script `on_look-ITEM`
+	5. Make script `look-ITEM`
 4. In file `ch2-serial-toot.mgs`
 	1. Make serial dialog `ch2-describe-ITEM`
 	2. Add a new substep to script `ch2-toot-step-5X`

@@ -94,7 +94,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"on_look-player"
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,

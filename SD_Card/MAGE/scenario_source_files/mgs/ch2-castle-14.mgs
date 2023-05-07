@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-14 {
+look-ch2-castle-14 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: KING GIBSON'S BEDROOM on_look text\n "
@@ -104,7 +104,7 @@ ch2-install-clock {
 	set flag ch2-carrying-clock to false
 	set flag ch2-installed-clock to true
 }
-on_look-clock {
+look-clock {
 	show serial dialog spacer
 	show serial dialog {
 		"A giant grandfather clock that's very definitely larger than you. Never mind how it could fit in your pocket."

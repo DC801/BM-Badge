@@ -5,14 +5,14 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-21 {
+look-ch2-castle-21 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: WORKSHOP on_look text\n "
 	}
 }
 
-on_look-abacus {
+look-abacus {
 	show serial dialog spacer
 	show serial dialog {
 		"on_look abacus TODO"

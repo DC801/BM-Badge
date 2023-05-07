@@ -14,7 +14,7 @@ const! (
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-bobsclub {
+look-ch2-bobsclub {
 	show serial dialog spacer
 	show serial dialog {
 		"You look around at the <m><bold>Bob's Club</>."

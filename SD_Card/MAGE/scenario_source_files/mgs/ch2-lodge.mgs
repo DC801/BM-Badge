@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-lodge {
+look-ch2-lodge {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Lodge text"

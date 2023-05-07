@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-lodge-rtfm {
+look-ch2-lodge-rtfm {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: RTFM room text"

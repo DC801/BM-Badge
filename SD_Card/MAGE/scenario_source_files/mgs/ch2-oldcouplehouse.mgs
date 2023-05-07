@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-oldcouplehouse {
+look-ch2-oldcouplehouse {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Delmar and Beatrice's house text"

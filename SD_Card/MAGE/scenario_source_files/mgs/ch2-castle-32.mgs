@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-32 {
+look-ch2-castle-32 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: KITCHEN on_look text\n "

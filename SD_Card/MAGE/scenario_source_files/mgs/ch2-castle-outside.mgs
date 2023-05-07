@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-outside {
+look-ch2-castle-outside {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: castle room exterior on_look text"

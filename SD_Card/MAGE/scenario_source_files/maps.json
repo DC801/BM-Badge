@@ -3,7 +3,7 @@
 	"ch2-castle-outside": {
 		"path": "maps/map-ch2-castle-outside.json",
 		"on_load": "on_load-ch2-castle-outside",
-		"on_look": "on_look-ch2-castle-outside",
+		"on_look": "look-ch2-castle-outside",
 		"on_tick": "on_tick-ch2-castle-outside",
 		"directions": {
 			"north": "on_go-castle-outside-north",
@@ -13,7 +13,7 @@
 	"ch2-castle-1": {
 		"path": "maps/map-ch2-castle-1.json",
 		"on_load": "on_load-ch2-castle-1",
-		"on_look": "on_look-ch2-castle-1",
+		"on_look": "look-ch2-castle-1",
 		"on_tick": "on_tick-ch2-castle-1",
 		"directions": {
 			"north": "on_go-castle-1-north",
@@ -23,7 +23,7 @@
 	"ch2-castle-11": {
 		"path": "maps/map-ch2-castle-11.json",
 		"on_load": "on_load-ch2-castle-11",
-		"on_look": "on_look-ch2-castle-11",
+		"on_look": "look-ch2-castle-11",
 		"on_tick": "on_tick-ch2-castle-11",
 		"directions": {
 			"north": "on_go-castle-11-north",
@@ -34,7 +34,7 @@
 	"ch2-castle-12": {
 		"path": "maps/map-ch2-castle-12.json",
 		"on_load": "on_load-ch2-castle-12",
-		"on_look": "on_look-ch2-castle-12",
+		"on_look": "look-ch2-castle-12",
 		"on_tick": "on_tick-ch2-castle-12",
 		"directions": {
 			"north": "on_go-castle-12-north",
@@ -45,7 +45,7 @@
 	"ch2-castle-13": {
 		"path": "maps/map-ch2-castle-13.json",
 		"on_load": "on_load-ch2-castle-13",
-		"on_look": "on_look-ch2-castle-13",
+		"on_look": "look-ch2-castle-13",
 		"on_tick": "on_tick-ch2-castle-13",
 		"directions": {
 			"north": "on_go-castle-13-north",
@@ -55,7 +55,7 @@
 	"ch2-castle-14": {
 		"path": "maps/map-ch2-castle-14.json",
 		"on_load": "on_load-ch2-castle-14",
-		"on_look": "on_look-ch2-castle-14",
+		"on_look": "look-ch2-castle-14",
 		"on_tick": "on_tick-ch2-castle-14",
 		"directions": {
 			"south": "on_go-castle-14-south"
@@ -64,7 +64,7 @@
 	"ch2-castle-21": {
 		"path": "maps/map-ch2-castle-21.json",
 		"on_load": "on_load-ch2-castle-21",
-		"on_look": "on_look-ch2-castle-21",
+		"on_look": "look-ch2-castle-21",
 		"on_tick": "on_tick-ch2-castle-21",
 		"directions": {
 			"north": "on_go-castle-21-north",
@@ -74,7 +74,7 @@
 	"ch2-castle-22": {
 		"path": "maps/map-ch2-castle-22.json",
 		"on_load": "on_load-ch2-castle-22",
-		"on_look": "on_look-ch2-castle-22",
+		"on_look": "look-ch2-castle-22",
 		"on_tick": "on_tick-ch2-castle-22",
 		"directions": {
 			"north": "on_go-castle-22-north",
@@ -84,7 +84,7 @@
 	"ch2-castle-23": {
 		"path": "maps/map-ch2-castle-23.json",
 		"on_load": "on_load-ch2-castle-23",
-		"on_look": "on_look-ch2-castle-23",
+		"on_look": "look-ch2-castle-23",
 		"on_tick": "on_tick-ch2-castle-23",
 		"directions": {
 			"south": "on_go-castle-23-south"
@@ -93,7 +93,7 @@
 	"ch2-castle-31": {
 		"path": "maps/map-ch2-castle-31.json",
 		"on_load": "on_load-ch2-castle-31",
-		"on_look": "on_look-ch2-castle-31",
+		"on_look": "look-ch2-castle-31",
 		"on_tick": "on_tick-ch2-castle-31",
 		"directions": {
 			"north": "on_go-castle-31-north",
@@ -103,7 +103,7 @@
 	"ch2-castle-32": {
 		"path": "maps/map-ch2-castle-32.json",
 		"on_load": "on_load-ch2-castle-32",
-		"on_look": "on_look-ch2-castle-32",
+		"on_look": "look-ch2-castle-32",
 		"on_tick": "on_tick-ch2-castle-32",
 		"directions": {
 			"northeast": "on_go-castle-32-northeast",
@@ -114,7 +114,7 @@
 	"ch2-castle-33": {
 		"path": "maps/map-ch2-castle-33.json",
 		"on_load": "on_load-ch2-castle-33",
-		"on_look": "on_look-ch2-castle-33",
+		"on_look": "look-ch2-castle-33",
 		"on_tick": "on_tick-ch2-castle-33",
 		"directions": {
 			"south": "on_go-castle-33-south"
@@ -123,7 +123,7 @@
 	"ch2-castle-34": {
 		"path": "maps/map-ch2-castle-34.json",
 		"on_load": "on_load-ch2-castle-34",
-		"on_look": "on_look-ch2-castle-34",
+		"on_look": "look-ch2-castle-34",
 		"on_tick": "on_tick-ch2-castle-34",
 		"directions": {
 			"south": "on_go-castle-34-south"
@@ -157,7 +157,7 @@
 		"path": "maps/map-ch2-magehouse.json",
 		"on_load": "on_load-ch2-magehouse",
 		"on_tick": "on_tick-ch2-magehouse",
-		"on_look": "on_look-ch2-magehouse",
+		"on_look": "look-ch2-magehouse",
 		"directions": {
 			"south": "on_go-ch2-magehouse-south"
 		}
@@ -166,7 +166,7 @@
 		"path": "maps/map-main2.json",
 		"on_load": "on_load-ch2-town",
 		"on_tick": "on_tick-ch2-town",
-		"on_look": "on_look-ch2-town",
+		"on_look": "look-ch2-town",
 		"directions": {
 			"west": "on_go-ch2-town-west",
 			"home": "on_go-ch2-town-home",
@@ -182,7 +182,7 @@
 		"path": "maps/map-ch2-oldcouplehouse.json",
 		"on_tick": "on_tick-ch2-oldcouplehouse",
 		"on_load": "on_load-ch2-oldcouplehouse",
-		"on_look": "on_look-ch2-oldcouplehouse",
+		"on_look": "look-ch2-oldcouplehouse",
 		"directions": {
 			"south": "on_go-ch2-oldcouplehouse-south"
 		}
@@ -191,7 +191,7 @@
 		"path": "maps/map-ch2-smithfamily.json",
 		"on_tick": "on_tick-ch2-smithfamily",
 		"on_load": "on_load-ch2-smithfamily",
-		"on_look": "on_look-ch2-smithfamily",
+		"on_look": "look-ch2-smithfamily",
 		"directions": {
 			"south": "on_go-ch2-smithfamily-south"
 		}
@@ -200,7 +200,7 @@
 		"path": "maps/map-ch2-bakery.json",
 		"on_tick": "on_tick-ch2-bakery",
 		"on_load": "on_load-ch2-bakery",
-		"on_look": "on_look-ch2-bakery",
+		"on_look": "look-ch2-bakery",
 		"directions": {
 			"south": "on_go-ch2-bakery-south"
 		}
@@ -209,7 +209,7 @@
 		"path": "maps/map-ch2-greenhouse.json",
 		"on_tick": "on_tick-ch2-greenhouse",
 		"on_load": "on_load-ch2-greenhouse",
-		"on_look": "on_look-ch2-greenhouse",
+		"on_look": "look-ch2-greenhouse",
 		"directions": {
 			"south": "on_go-ch2-greenhouse-south"
 		}
@@ -218,7 +218,7 @@
 		"path": "maps/map-ch2-lodge.json",
 		"on_tick": "on_tick-ch2-lodge",
 		"on_load": "on_load-ch2-lodge",
-		"on_look": "on_look-ch2-lodge",
+		"on_look": "look-ch2-lodge",
 		"directions": {
 			"north": "on_go-ch2-lodge-north",
 			"south": "on_go-ch2-lodge-south"
@@ -228,7 +228,7 @@
 		"path": "maps/map-ch2-lodge-rtfm.json",
 		"on_tick": "on_tick-ch2-lodge-rtfm",
 		"on_load": "on_load-ch2-lodge-rtfm",
-		"on_look": "on_look-ch2-lodge-rtfm",
+		"on_look": "look-ch2-lodge-rtfm",
 		"directions": {
 			"south": "on_go-ch2-lodge-rtfm-south"
 		}
@@ -237,7 +237,7 @@
 		"path": "maps/map-ch2-bobsclub.json",
 		"on_tick": "on_tick-ch2-bobsclub",
 		"on_load": "on_load-ch2-bobsclub",
-		"on_look": "on_look-ch2-bobsclub",
+		"on_look": "look-ch2-bobsclub",
 		"directions": {
 			"stairs": "on_go-ch2-bobsclub-stairs",
 			"south": "on_go-ch2-bobsclub-south"
@@ -247,7 +247,7 @@
 		"path": "maps/map-ch2-bobsclub-basement.json",
 		"on_tick": "on_tick-ch2-bobsclub-basement",
 		"on_load": "on_load-ch2-bobsclub-basement",
-		"on_look": "on_look-ch2-bobsclub-basement",
+		"on_look": "look-ch2-bobsclub-basement",
 		"directions": {
 			"stairs": "on_go-ch2-bobsclub-basement-stairs"
 		}

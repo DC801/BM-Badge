@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-11 {
+look-ch2-castle-11 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: FRONT HALLWAY on_look text\n "

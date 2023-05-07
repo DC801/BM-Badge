@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-99 {
+look-ch2-castle-99 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: SECRET ROOM on_look text\n "

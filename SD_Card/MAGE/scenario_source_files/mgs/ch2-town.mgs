@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-town {
+look-ch2-town {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Town text"
