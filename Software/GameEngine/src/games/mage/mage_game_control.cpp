@@ -604,8 +604,10 @@ std::vector<std::string> MageGameControl::getEntityNamesInRoom() const
 {
 	std::vector<std::string> result = {};
 	for (int i = 0; i < map.entityCount; ++i) {
+		char nameWithNullByte[MAGE_ENTITY_NAME_LENGTH + 1] = {0};
+		memcpy(nameWithNullByte, entities[i].name, MAGE_ENTITY_NAME_LENGTH);
 		std::string name = "";
-		name =+ entities[i].name;
+		name =+ nameWithNullByte;
 		result.push_back(name);
 	}
 	return result;
