@@ -35,7 +35,7 @@ ch2-report-inventory {
 		set flag temp to true
 	}
 	if (flag ch2-carrying-powersupply is true) {
-		show serial dialog { "\tpowersupply" }
+		show serial dialog { "\tpower supply" }
 		set flag temp to true
 	}
 	if (flag ch2-carrying-ramchips is true) {
@@ -44,6 +44,10 @@ ch2-report-inventory {
 	}
 	if (flag ch2-carrying-cactuscooler is true) {
 		show serial dialog { "\tcan of Cactus Cooler" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-harddrive is true) {
+		show serial dialog { "\thard drive" }
 		set flag temp to true
 	}
 	if (flag temp is false) {
@@ -77,6 +81,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-ramchips is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-harddrive is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	set flag ch2-storyflags-tallied to true
@@ -166,6 +173,16 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-ramchips
+		}
+	}
+	if (flag ch2-installed-harddrive is false) {
+		if (flag ch2-carrying-harddrive is true) {
+			show dialog {
+				name "" "(Now installing... the Hard Drive!)"
+				"(TODO: Hard Drive functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-harddrive
 		}
 	}
 	if (flag temp is false) { // no components were installed
