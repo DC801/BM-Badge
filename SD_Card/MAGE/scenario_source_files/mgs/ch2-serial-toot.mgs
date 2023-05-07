@@ -391,7 +391,15 @@ ch2-toot-step5i {
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
-
+ch2-toot-step5j {
+	show serial dialog spacer
+	show serial dialog ch2-describe-harddrive
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5j
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
 
 ch2-toot-step5j {
 	goto ch2-toot-step5-endoflist

@@ -49,3 +49,52 @@ on_go-castle-34-south {
 	copy warping-out-fade-out
 	load map ch2-castle-32
 }
+
+
+ch2-hide-harddrive {
+	teleport entity "Hard Drive" to geometry hiding-spot
+	set entity "Hard Drive" name to " "
+}
+
+ch2-touch-harddrive {
+	if (flag ch2-harddrive-firstlook is false) {
+		show dialog {
+			PLAYER "TODO harddrive1"
+		}
+		set flag ch2-harddrive-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO harddrive2."
+	}
+	show dialog {
+		name "" "(Pick up the hard drive?)"
+		> "Yes" : ch2-touch-harddrive-yes
+		> "No" : ch2-touch-harddrive-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-harddrive // RESET
+}
+ch2-touch-harddrive-yes {
+	show dialog {
+		name "" "(You pick up the hard drive!)"
+	}
+	copy script ch2-hide-harddrive
+	set flag ch2-carrying-harddrive to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-harddrive-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-harddrive // RESET
+}
+
+ch2-install-harddrive {
+	set flag ch2-carrying-harddrive to false
+	set flag ch2-installed-harddrive to true
+}
+look-harddrive {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look harddrive TODO"
+	}
+}

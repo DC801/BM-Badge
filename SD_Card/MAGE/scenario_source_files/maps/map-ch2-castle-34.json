@@ -83,6 +83,36 @@
                  "width":32,
                  "x":175.814771143745,
                  "y":252.376031729017
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":33,
+                 "name":"Hard Drive",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-harddrive"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":63.966846249482,
+                 "y":128.815582262743
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":34,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-56,
+                 "y":-43.3333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -135,7 +165,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":33,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -172,6 +202,10 @@
         {
          "firstgid":351,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":607,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",
