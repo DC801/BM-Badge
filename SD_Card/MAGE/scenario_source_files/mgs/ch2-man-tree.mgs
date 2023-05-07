@@ -124,6 +124,9 @@ ch2-describe-ramchips {
 ch2-describe-harddrive {
 	show serial dialog ch2-describe-harddrive
 }
+ch2-describe-mouse {
+	show serial dialog ch2-describe-mouse
+}
 
 ch2-lambda-parts-clock {
 	show serial dialog spacer
@@ -209,6 +212,17 @@ ch2-lambda-parts-harddrive {
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> TODO harddrive is already installed."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-mouse {
+	show serial dialog spacer
+	if (flag ch2-installed-mouse is false) {
+		copy ch2-describe-mouse
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO mouse is already installed."
 		}
 	}
 	goto ch2-lambda-topic-parts-q
