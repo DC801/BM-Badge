@@ -38,6 +38,10 @@ ch2-report-inventory {
 		show serial dialog { "\tpowersupply" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-ramchips is true) {
+		show serial dialog { "\tramchips" }
+		set flag temp to true
+	}
 	if (flag ch2-carrying-cactuscooler is true) {
 		show serial dialog { "\tcan of Cactus Cooler" }
 		set flag temp to true
@@ -70,6 +74,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-abacus is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-ramchips is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	set flag ch2-storyflags-tallied to true
@@ -149,6 +156,16 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-powersupply
+		}
+	}
+	if (flag ch2-installed-ramchips is false) {
+		if (flag ch2-carrying-ramchips is true) {
+			show dialog {
+				name "" "(Now installing... the ramchips!)"
+				"(TODO: ramchips functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-ramchips
 		}
 	}
 	if (flag temp is false) { // no components were installed

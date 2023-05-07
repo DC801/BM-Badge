@@ -59,3 +59,51 @@ on_go-castle-32-south {
 	copy warping-out-fade-out
 	load map ch2-castle-31
 }
+
+ch2-hide-ramchips {
+	teleport entity "Ram Chips" to geometry hiding-spot
+	set entity "Ram Chips" name to " "
+}
+
+ch2-touch-ramchips {
+	if (flag ch2-ramchips-firstlook is false) {
+		show dialog {
+			PLAYER "TODO ramchips1"
+		}
+		set flag ch2-ramchips-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO ramchips2."
+	}
+	show dialog {
+		name "" "(Pick up the ramchips?)"
+		> "Yes" : ch2-touch-ramchips-yes
+		> "No" : ch2-touch-ramchips-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-ramchips // RESET
+}
+ch2-touch-ramchips-yes {
+	show dialog {
+		name "" "(You pick up the ramchips!)"
+	}
+	copy script ch2-hide-ramchips
+	set flag ch2-carrying-ramchips to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-ramchips-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-ramchips // RESET
+}
+
+ch2-install-ramchips {
+	set flag ch2-carrying-ramchips to false
+	set flag ch2-installed-ramchips to true
+}
+look-ramchips {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look ramchips TODO"
+	}
+}
