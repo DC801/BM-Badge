@@ -1,23 +1,23 @@
-look-bert {
+look-ch2-bert {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at Bert."
+		"You looked at <m>Bert</>."
 		" "
 		"TODO"
 	}
 }
-look-alfonso {
+look-ch2-alfonso {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at Alfonso."
+		"You looked at <m>Alfonso</>."
 		" "
 		"TODO"
 	}
 }
-look-jackob {
+look-ch2-jackob {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at Jackob."
+		"You looked at <m>Jackob</>."
 		" "
 		"TODO"
 	}
@@ -34,7 +34,7 @@ look-player {
 look-xa {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at XA."
+		"You looked at <m>XA</>."
 		" "
 		"It's some kind of orange, spider-shaped robot. It looks as though it might have the power to scoot around without actually moving its legs."
 		}
@@ -43,7 +43,7 @@ look-xa {
 look-save_floppy {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at the save floppy."
+		"You looked at <m>the save floppy</>."
 		" "
 		"Wow, someone 3D-printed a save icon. What will they think up next?"
 	}

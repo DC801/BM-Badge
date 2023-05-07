@@ -255,7 +255,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-bert"
+                         "value":"look-ch2-bert"
                         }, 
                         {
                          "name":"on_tick",
@@ -288,7 +288,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-alfonso"
+                         "value":"look-ch2-alfonso"
                         }, 
                         {
                          "name":"on_tick",
@@ -321,7 +321,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"look-jackob"
+                         "value":"look-ch2-jackob"
                         }, 
                         {
                          "name":"on_tick",

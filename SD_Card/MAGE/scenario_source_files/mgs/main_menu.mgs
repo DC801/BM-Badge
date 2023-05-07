@@ -23,6 +23,7 @@ on_load-main_menu {
 	register hub -> hub
 	register bob -> bob
 	register bob2 -> bob2
+	register bob3 -> bob3
 	register ch2 -> start-chapter2
 	register rtfm -> serial-rtfm
 }
@@ -39,6 +40,13 @@ bob2 {
 	set warp state to warping
 	set flag ch2-has-artifact to true
 	set flag ch2-map-granted to true
+	load map ch2-bobsclub-basement
+}
+bob3 {
+	set warp state to warping
+	set flag ch2-has-artifact to true
+	set flag ch2-map-granted to true
+	set flag ch2-cutseen-bob-party to true
 	load map ch2-bobsclub-basement
 }
 
