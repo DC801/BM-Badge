@@ -161,7 +161,7 @@
                         {
                          "name":"current_frame",
                          "type":"int",
-                         "value":1
+                         "value":2
                         }, 
                         {
                          "name":"on_interact",
@@ -294,6 +294,11 @@
                  "name":"Marathon Bob",
                  "properties":[
                         {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-marathonbob"
@@ -321,6 +326,11 @@
                  "id":45,
                  "name":"Marathon Bob",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":1
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -368,6 +378,11 @@
                  "id":47,
                  "name":"Marathon Bob",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":6
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
@@ -420,6 +435,11 @@
                  "name":"Marathon Bob",
                  "properties":[
                         {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-marathonbob"
@@ -471,6 +491,11 @@
                  "name":"Marathon Bob",
                  "properties":[
                         {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-marathonbob"
@@ -494,6 +519,11 @@
                  "name":"Marathon Bob",
                  "properties":[
                         {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-marathonbob"
@@ -516,6 +546,11 @@
                  "id":57,
                  "name":"Marathon Bob",
                  "properties":[
+                        {
+                         "name":"current_frame",
+                         "type":"int",
+                         "value":4
+                        }, 
                         {
                          "name":"on_interact",
                          "type":"string",
