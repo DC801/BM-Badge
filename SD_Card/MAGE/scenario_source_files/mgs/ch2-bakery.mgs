@@ -9,7 +9,9 @@ settings for dialog {
 look-ch2-bakery {
 	show serial dialog spacer
 	show serial dialog {
-		"   TODO: Bakery text"
+		"You looked around the <m>bakery</>."
+		" "
+		"The smell inside is amazing! TODO"
 	}
 }
 
@@ -41,6 +43,7 @@ on_go-ch2-bakery-south {
 
 interact-ch2-baker {
 	show dialog {
-		SELF "TODO"
+		SELF "Sorry, can't talk now."
+		"But good look conquering the serial dungeon."
 	}
 }

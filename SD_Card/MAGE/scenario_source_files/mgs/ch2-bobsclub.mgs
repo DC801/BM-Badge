@@ -144,7 +144,11 @@ on_load-ch2-bobsclub {
 /* ---------- ON_TICK ---------- */
 
 on_tick-ch2-bobsclub {
-	goto null_script
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		set warp state to exit_from-bobsclub
+		load map main2
+	}
+	set map tick_script to on_tick-ch2-bobsclub // reset
 }
 
 /* ---------- EXIT STUFF ---------- */
