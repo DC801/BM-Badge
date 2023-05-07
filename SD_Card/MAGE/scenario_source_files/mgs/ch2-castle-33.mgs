@@ -49,3 +49,52 @@ on_go-castle-33-south {
 	copy warping-out-fade-out
 	load map ch2-castle-32
 }
+
+
+ch2-hide-mouse {
+	teleport entity "Mouse" to geometry hiding-spot
+	set entity "Mouse" name to " "
+}
+
+ch2-touch-mouse {
+	if (flag ch2-mouse-firstlook is false) {
+		show dialog {
+			PLAYER "TODO mouse1"
+		}
+		set flag ch2-mouse-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO mouse2."
+	}
+	show dialog {
+		name "" "(Pick up the mouse?)"
+		> "Yes" : ch2-touch-mouse-yes
+		> "No" : ch2-touch-mouse-no
+	}
+	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
+}
+ch2-touch-mouse-yes {
+	show dialog {
+		name "" "(You pick up the mouse!)"
+	}
+	copy script ch2-hide-mouse
+	set flag ch2-carrying-mouse to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-mouse-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
+}
+
+ch2-install-mouse {
+	set flag ch2-carrying-mouse to false
+	set flag ch2-installed-mouse to true
+}
+look-mouse {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look mouse TODO"
+	}
+}

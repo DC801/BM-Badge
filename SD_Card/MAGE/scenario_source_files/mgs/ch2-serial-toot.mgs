@@ -319,6 +319,12 @@ serial dialog ch2-describe-powersupply {
 serial dialog ch2-describe-ramchips {
 	"<m>LAMBDA:</> TODO: ramchips description"
 }
+serial dialog ch2-describe-harddrive {
+	"<m>LAMBDA:</> TODO: harddrive description"
+}
+serial dialog ch2-describe-mouse {
+	"<m>LAMBDA:</> TODO: mouse description"
+}
 
 ch2-toot-step5b {
 	show serial dialog ch2-describe-clock
@@ -396,12 +402,21 @@ ch2-toot-step5j {
 	show serial dialog ch2-describe-harddrive
 	show serial dialog {
 		" "
-		# "What else?" : ch2-toot-step5j
+		# "What else?" : ch2-toot-step5k
+		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+	}
+}
+ch2-toot-step5k {
+	show serial dialog spacer
+	show serial dialog ch2-describe-mouse
+	show serial dialog {
+		" "
+		# "What else?" : ch2-toot-step5l
 		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
 }
 
-ch2-toot-step5j {
+ch2-toot-step5l {
 	goto ch2-toot-step5-endoflist
 }
 
