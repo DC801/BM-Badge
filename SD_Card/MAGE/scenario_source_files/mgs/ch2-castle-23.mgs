@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-23 {
+look-ch2-castle-23 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: POWER PLANT on_look text\n "
@@ -98,7 +98,7 @@ ch2-install-heatsink {
 	set flag ch2-carrying-heatsink to false
 	set flag ch2-installed-heatsink to true
 }
-on_look-heatsink {
+look-heatsink {
 	show serial dialog spacer
 	show serial dialog {
 		"on_look heatsink TODO"

@@ -7,7 +7,7 @@ settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-1 {
+look-ch2-castle-1 {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked around the <bold>FOYER</>."

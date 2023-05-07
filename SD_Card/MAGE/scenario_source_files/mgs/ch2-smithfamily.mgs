@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-smithfamily {
+look-ch2-smithfamily {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Smith family house text"

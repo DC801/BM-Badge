@@ -10,10 +10,41 @@ settings for serial dialog { wrap 60 }
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-bobsclub-basement {
+look-ch2-bobsclub-basement {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Bob's Club basement text"
+	}
+}
+
+look-ch2-bobaustin {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Bob Austin on_look"
+	}
+}
+look-ch2-bobmoss {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Bob Moss on_look"
+	}
+}
+look-ch2-icechest {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Ice Chest on_look"
+	}
+}
+look-ch2-marathonbob {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Marathon Bob on_look"
+	}
+}
+look-ch2-guardianbob {
+	show serial dialog spacer
+	show serial dialog {
+		"   TODO: Guardian Bob on_look"
 	}
 }
 
@@ -98,7 +129,10 @@ ch2-cutscene-bob-party {
 		PLAYER "Yesterday."
 		GBob "Was it yesterday? Or was it actually a few years ago?"
 	}
-	// player steps backward
+	// (turn animations backward)
+	walk entity "%PLAYER%" to geometry gasp-spot over 200ms
+	// (turn animations forward)
+	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		PLAYER "Wait. What?"
 	}
@@ -170,11 +204,30 @@ loiter-slow {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-guardianbob {
+	copy face-player
 	show dialog {
 		PLAYER "So why is the party in the basement? I thought it was going to be upstairs. There were decorations half set up...."
 		SELF "TODO"
 	}
 }
+
+interact-ch2-bobaustin {
+	copy face-player
+	show dialog {
+		SELF "I'm the MC for Bob Jeopardy."
+		"TODO"
+	}
+	turn entity "%SELF%" south
+}
+
+interact-ch2-bobmoss {
+	copy face-player
+	show dialog {
+		SELF "TODO"
+	}
+	turn entity "%SELF%" south
+}
+
 interact-ch2-marathonbob {
 	// capture original facing direction
 	if (entity "%SELF%" direction is north) {

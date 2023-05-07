@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-13 {
+look-ch2-castle-13 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: THRONE ROOM on_look text\n "
@@ -97,7 +97,7 @@ ch2-install-cpu {
 	set flag ch2-carrying-cpu to false
 	set flag ch2-installed-cpu to true
 }
-on_look-cpu {
+look-cpu {
 	show serial dialog spacer
 	show serial dialog {
 		"on_look cpu TODO"
@@ -146,7 +146,7 @@ ch2-install-goldfish {
 	set flag ch2-carrying-goldfish to false
 	set flag ch2-installed-goldfish to true
 }
-on_look-goldfish {
+look-goldfish {
 	show serial dialog spacer
 	show serial dialog {
 		"on_look goldfish TODO"

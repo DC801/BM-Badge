@@ -1,4 +1,4 @@
-on_look-bert {
+look-bert {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at Bert."
@@ -6,7 +6,7 @@ on_look-bert {
 		"TODO"
 	}
 }
-on_look-alfonso {
+look-alfonso {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at Alfonso."
@@ -14,7 +14,7 @@ on_look-alfonso {
 		"TODO"
 	}
 }
-on_look-jackob {
+look-jackob {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at Jackob."
@@ -22,16 +22,16 @@ on_look-jackob {
 		"TODO"
 	}
 }
-on_look-player {
+look-player {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked at yourself."
+		"You looked at <c>yourself</>."
 		" "
 		"Yikes. You need a haircut."
 	}
 }
 
-on_look-xa {
+look-xa {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at XA."
@@ -40,7 +40,7 @@ on_look-xa {
 		}
 }
 
-on_look-save_floppy {
+look-save_floppy {
 	show serial dialog spacer
 	show serial dialog {
 		"You looked at the save floppy."

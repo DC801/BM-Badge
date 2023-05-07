@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-greenhouse {
+look-ch2-greenhouse {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Greenhouse text"

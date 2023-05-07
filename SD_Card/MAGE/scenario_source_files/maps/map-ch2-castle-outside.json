@@ -85,7 +85,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"on_look-player"
+                         "value":"look-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -255,7 +255,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"on_look-bert"
+                         "value":"look-bert"
                         }, 
                         {
                          "name":"on_tick",
@@ -288,7 +288,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"on_look-alfonso"
+                         "value":"look-alfonso"
                         }, 
                         {
                          "name":"on_tick",
@@ -321,7 +321,7 @@
                         {
                          "name":"on_look",
                          "type":"string",
-                         "value":"on_look-jackob"
+                         "value":"look-jackob"
                         }, 
                         {
                          "name":"on_tick",

@@ -5,7 +5,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-castle-34 {
+look-ch2-castle-34 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: PANTRY on_look text\n "

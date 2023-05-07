@@ -6,7 +6,7 @@ settings for dialog {
 
 /* ---------- LOOK SCRIPTS ---------- */
 
-on_look-ch2-bakery {
+look-ch2-bakery {
 	show serial dialog spacer
 	show serial dialog {
 		"   TODO: Bakery text"
