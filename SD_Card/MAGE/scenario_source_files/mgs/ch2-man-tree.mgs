@@ -63,6 +63,10 @@ ch2-lambda-topic-parts {
 		show serial dialog { "\t- abacus" }
 		set flag temp to true
 	}
+	if (flag ch2-installed-powersupply is false) {
+		show serial dialog { "\t- powersupply" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		goto ch2-lambda-topic-parts-finished
 	}
@@ -86,6 +90,11 @@ ch2-lambda-topic-parts-q {
 		_ "HEATSINK" : ch2-lambda-parts-heatsink
 
 		_ "CPU" : ch2-lambda-parts-cpu
+
+		_ "GOLDFISH" : ch2-lambda-parts-goldfish
+
+		_ "POWERSUPPLY" : ch2-lambda-parts-powersupply
+		_ "POWER SUPPLY" : ch2-lambda-parts-powersupply
 		
 		_ "KEYBOARD" : ch2-lambda-parts-keyboard
 	}
@@ -102,6 +111,12 @@ ch2-describe-keyboard {
 }
 ch2-describe-cpu {
 	show serial dialog ch2-describe-cpu
+}
+ch2-describe-goldfish {
+	show serial dialog ch2-describe-goldfish
+}
+ch2-describe-powersupply {
+	show serial dialog ch2-describe-powersupply
 }
 
 ch2-lambda-parts-clock {
@@ -144,6 +159,28 @@ ch2-lambda-parts-cpu {
 	} else {
 		show serial dialog {
 			"<m>LAMBDA:</> The cpu's installed already. It's been computin."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-goldfish {
+	show serial dialog spacer
+	if (flag ch2-installed-goldfish is false) {
+		copy ch2-describe-goldfish
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO goldfish is already installed."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-powersupply {
+	show serial dialog spacer
+	if (flag ch2-installed-powersupply is false) {
+		copy ch2-describe-powersupply
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO powersupply is already installed."
 		}
 	}
 	goto ch2-lambda-topic-parts-q
