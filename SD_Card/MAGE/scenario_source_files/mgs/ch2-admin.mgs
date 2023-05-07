@@ -34,6 +34,10 @@ ch2-report-inventory {
 		show serial dialog { "\tkeyboard" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-powersupply is true) {
+		show serial dialog { "\tpowersupply" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		show serial dialog { "\t(nothing)" }
 	}
@@ -56,6 +60,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-goldfish is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-powersupply is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-abacus is true) {
@@ -128,6 +135,16 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-keyboard
+		}
+	}
+	if (flag ch2-installed-powersupply is false) {
+		if (flag ch2-carrying-powersupply is true) {
+			show dialog {
+				name "" "(Now installing... the powersupply!)"
+				"(TODO: powersupply functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-powersupply
 		}
 	}
 	if (flag temp is false) { // no components were installed
