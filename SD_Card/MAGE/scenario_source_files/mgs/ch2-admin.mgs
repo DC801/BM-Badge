@@ -54,6 +54,10 @@ ch2-report-inventory {
 		show serial dialog { "\tmouse" }
 		set flag temp to true
 	}
+	if (flag ch2-carrying-monitor is true) {
+		show serial dialog { "\tmonitor" }
+		set flag temp to true
+	}
 	if (flag temp is false) {
 		show serial dialog { "\t(nothing)" }
 	}
@@ -91,6 +95,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	if (flag ch2-installed-mouse is true) {
+		mutate ch2-storyflags-tally + 1
+	}
+	if (flag ch2-installed-monitor is true) {
 		mutate ch2-storyflags-tally + 1
 	}
 	set flag ch2-storyflags-tallied to true
@@ -200,6 +207,16 @@ ch2-interact-mainframe {
 			}
 			set flag temp to true
 			copy ch2-install-mouse
+		}
+	}
+	if (flag ch2-installed-monitor is false) {
+		if (flag ch2-carrying-monitor is true) {
+			show dialog {
+				name "" "(Now installing... the Monitor!)"
+				"(TODO: Monitor functioning flavor text)"
+			}
+			set flag temp to true
+			copy ch2-install-monitor
 		}
 	}
 	if (flag temp is false) { // no components were installed
