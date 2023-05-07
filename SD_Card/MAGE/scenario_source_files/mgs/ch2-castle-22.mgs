@@ -55,9 +55,14 @@ on_go-castle-22-south {
 	load map ch2-castle-21
 }
 
+/* ---------- ENTITIES ---------- */
+
+
+/* ---------- POWER SUPPLY (ADMIN) ---------- */
+
 ch2-hide-powersupply {
-	teleport entity "powersupply" to geometry hiding-spot
-	set entity "powersupply" name to " "
+	teleport entity "Power Supply" to geometry hiding-spot
+	set entity "Power Supply" name to " "
 }
 
 ch2-touch-powersupply {
@@ -71,7 +76,7 @@ ch2-touch-powersupply {
 		PLAYER "TODO powersupply2."
 	}
 	show dialog {
-		name "" "(Pick up the powersupply?)"
+		name "" "(Pick up the power supply?)"
 		> "Yes" : ch2-touch-powersupply-yes
 		> "No" : ch2-touch-powersupply-no
 	}

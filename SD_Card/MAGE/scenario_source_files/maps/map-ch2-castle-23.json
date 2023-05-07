@@ -101,6 +101,29 @@
                  "width":32,
                  "x":285,
                  "y":126
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484265,
+                 "height":32,
+                 "id":35,
+                 "name":"Rocco",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-rocco"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-rocco"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":251,
+                 "y":117
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -165,7 +188,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -206,6 +229,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-ssen.json"
         }],
  "tilewidth":32,
  "type":"map",

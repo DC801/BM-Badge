@@ -55,6 +55,8 @@ on_load-ch2-town {
 		walk entity "%PLAYER%" along geometry walk_from-smithfamily over 200ms
 	} else if (warp state is walk_from-woprhouse) {
 		walk entity "%PLAYER%" along geometry walk_from-woprhouse over 200ms
+	} else if (warp state is walk_from-bobsclub) {
+		walk entity "%PLAYER%" along geometry walk_from-bobsclub over 200ms
 	}
 	goto ch2-map-init
 }
@@ -81,6 +83,9 @@ on_tick-ch2-town {
 	}
 	if (entity "%PLAYER%" is inside geometry door-oldcouplehouse) {
 		load map ch2-oldcouplehouse
+	}
+	if (entity "%PLAYER%" is inside geometry door-bobsclub) {
+		load map ch2-bobsclub
 	}
 	if (entity "%PLAYER%" is inside geometry door-woprhouse) {
 		load map woprhouse // both chapters use the same map

@@ -107,7 +107,7 @@
                  "gid":607,
                  "height":32,
                  "id":33,
-                 "name":"powersupply",
+                 "name":"Power Supply",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -183,7 +183,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -224,6 +224,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-ssen.json"
         }],
  "tilewidth":32,
  "type":"map",

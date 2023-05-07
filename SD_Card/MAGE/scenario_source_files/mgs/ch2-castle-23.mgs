@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -9,6 +10,15 @@ look-ch2-castle-23 {
 	show serial dialog spacer
 	show serial dialog {
 		"TODO: POWER PLANT on_look text\n "
+	}
+}
+
+look-ch2-rocco {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked at <m>Rocco</>."
+		" "
+		"TODO: Rocco on_look"
 	}
 }
 
@@ -55,7 +65,77 @@ on_go-castle-23-south {
 	load map ch2-castle-22
 }
 
-/* ---------- HEATSINK (ADMIN) ---------- */
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-rocco {
+	copy face-player
+	if (
+		flag ch2-carrying-heatsink is true
+		|| flag ch2-installed-heatsink is true
+	) {
+		show dialog {
+			SELF "TODO\n(Love this stuff! To cool the machines, I mean.)"
+		}
+	}
+	else if (flag ch2-rocco-backstory is false) {
+		show dialog {
+			SELF "TODO\n(Can't give power supply; bring us Cactus Cooler first.)"
+			"(Blah blah blah)"
+		}
+		set flag ch2-rocco-backstory to true
+		set flag ch2-want-cactuscooler to true
+		if (flag ch2-carrying-cactuscooler is true) {
+			show dialog {
+				SELF "Hey, wait a minute! You have a can of Cactus Cooler already! I don't suppose...."
+			}
+			goto interact-ch2-rocco-give-q // jump
+		}
+	}
+	else if (flag ch2-carrying-cactuscooler is false) {
+		show dialog {
+			SELF "TODO\n(Remember? Give us Cactus Cooler.)"
+		}
+	}
+	else {
+		show dialog {
+			SELF "Oh, it looks like you found some Cactus Cooler somewhere! Could I...?"
+		}
+		goto interact-ch2-rocco-give-q // jump
+	}
+	goto interact-ch2-rocco-wrapup
+}
+
+interact-ch2-rocco-give-q {
+	show dialog {
+		name "" "(Give %Rocco% the Cactus Cooler)?"
+		> "Yes" : interact-ch2-rocco-give
+		> "No" : interact-ch2-rocco-nogive
+	}
+}
+
+interact-ch2-rocco-give {
+	show dialog {
+		SELF "Hey, thanks, buddy!"
+		name "" "(Gave %Rocco% the can of Cactus Cooler!)"
+		SELF "Hey, that's swell! Go ahead and take that heat sink now. We'll be all right with this stuff instead."
+	}
+	set flag ch2-heatsink-permission to true
+	set flag ch2-carrying-cactuscooler to false
+	goto interact-ch2-rocco-wrapup
+}
+
+interact-ch2-rocco-nogive {
+	show dialog {
+		SELF "Aww, come on, now! No Cactus Cooler, no heat sink! That was the deal!"
+	}
+	goto interact-ch2-rocco-wrapup
+}
+
+interact-ch2-rocco-wrapup {
+	set entity "%SELF%" interact_script to interact-ch2-rocco
+}
+
+/* ---------- HEAT SINK (ADMIN) ---------- */
 
 ch2-hide-heatsink {
 	teleport entity "Heat Sink" to geometry hiding-spot
@@ -72,10 +152,16 @@ ch2-touch-heatsink {
 	show dialog {
 		PLAYER "TODO heatsink2."
 	}
-	show dialog {
-		name "" "(Pick up the heat sink?)"
-		> "Yes" : ch2-touch-heatsink-yes
-		> "No" : ch2-touch-heatsink-no
+	if (flag ch2-heatsink-permission is false) {
+		show dialog {
+			PLAYER "But I think the power plant is still using this. I better convince the guys to let me have it."
+		}
+	} else {
+		show dialog {
+			name "" "(Pick up the heat sink?)"
+			> "Yes" : ch2-touch-heatsink-yes
+			> "No" : ch2-touch-heatsink-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
 }
@@ -89,7 +175,7 @@ ch2-touch-heatsink-yes {
 }
 ch2-touch-heatsink-no {
 	show dialog {
-		PLAYER "Maybe later, then."
+		PLAYER "Another time, perhaps."
 	}
 	set entity "%SELF%" interact_script to ch2-touch-heatsink // RESET
 }
