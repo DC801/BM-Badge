@@ -25,7 +25,7 @@ all of the old code used as the foundation of this badge.
 //it will automatically be loaded.
 #define MAGE_GAME_DAT_PATH "MAGE/game.dat"
 
-#define ENGINE_VERSION 5
+#define ENGINE_VERSION 6
 
 #define MAP_GO_DIRECTION_NAME_LENGTH 12
 
@@ -150,6 +150,7 @@ typedef enum : uint8_t{
 #define RENDER_FLAGS_IS_GLITCHED_MASK		0b01111111
 #define RENDER_FLAGS_IS_GLITCHED			0b10000000
 #define RENDER_FLAGS_IS_DEBUG				0b01000000
+#define RENDER_FLAGS_RELATIVE_DIRECTION		0b00110000
 #define RENDER_FLAGS_FLIP_X					0b00000100
 #define RENDER_FLAGS_FLIP_Y					0b00000010
 #define RENDER_FLAGS_FLIP_DIAG				0b00000001

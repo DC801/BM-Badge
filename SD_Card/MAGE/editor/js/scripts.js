@@ -143,10 +143,6 @@ var actionFieldsMap = {
 		{propertyName: 'script', size: 2},
 		{propertyName: 'entity', size: 1},
 	],
-	SET_ENTITY_LOOK_SCRIPT: [
-		{propertyName: 'script', size: 2},
-		{propertyName: 'entity', size: 1},
-	],
 	SET_ENTITY_TYPE: [
 		{propertyName: 'entity_type', size: 2},
 		{propertyName: 'entity', size: 1},
@@ -390,6 +386,10 @@ var actionFieldsMap = {
 		{propertyName: 'command', size: 2},
 		{propertyName: 'argument', size: 2},
 	],
+	SET_ENTITY_MOVEMENT_RELATIVE: [
+		{propertyName: 'relative_direction', size: 1},
+		{propertyName: 'entity', size: 1},
+	],
 };
 
 var actionNames = [
@@ -483,6 +483,7 @@ var actionNames = [
 	'REGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 	'UNREGISTER_SERIAL_DIALOG_COMMAND',
 	'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
+	'SET_ENTITY_MOVEMENT_RELATIVE',
 ];
 
 var specialKeywordsEnum = {

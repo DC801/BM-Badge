@@ -194,6 +194,9 @@ public:
 	MageEntityAnimationDirection getValidEntityTypeDirection(
 		MageEntityAnimationDirection direction
 	);
+	MageEntityAnimationDirection getRelativeEntityTypeDirection(
+		MageEntityAnimationDirection direction
+	);
 	MageEntityAnimationDirection updateDirectionAndPreserveFlags(
 		MageEntityAnimationDirection desired,
 		MageEntityAnimationDirection previous
