@@ -16,24 +16,15 @@ class MageGameEngine;
 #define TRANSPARENCY_COLOR	0x0020
 
 
-#ifdef IS_BIG_ENDIAN
 struct Color_565
 {
-   uint8_t r : 5;
-   uint8_t g : 5;
-   uint8_t a : 1;
-   uint8_t b : 5;
-};
-#else
-struct Color_565
-{
-   #ifdef IS_BIG_ENDIAN
-   Color_565(uint16_t color) noexcept
-      : r((color & 0b0000000011111000) >> 3),
-      g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
-      b((color & 0b0001111100000000) >> 8),
-      a((color & 0b0010000000000000) >> 13)
-   {}
+   #ifdef DC801_EMBEDDED
+      Color_565(uint16_t color) noexcept
+         : r((color & 0b0000000011111000) >> 3),
+         g((color & 0b1100000000000000) >> 14 | (color & 0b111) << 2),
+         b((color & 0b0001111100000000) >> 8),
+         a((color & 0b0010000000000000) >> 13)
+      {}
    #else
       Color_565(uint16_t color) noexcept
          : r((color & 0b0000000011111000) >> 3),
@@ -43,13 +34,16 @@ struct Color_565
       {}
    #endif
 
-   uint16_t RGBA() const { return r << 11 | g << 6 | b | a << 5; }
+#ifdef DC801_EMBEDDED
+      uint16_t RGBA() const { return r << 11 | g << 6 | b | a << 5; }
+#else
+      uint16_t RGBA() const { return r << 11 | g << 6 | b | a << 5; }
+#endif
    uint8_t b : 5;
    uint8_t a : 1;
    uint8_t g : 5;
    uint8_t r : 5;
 };
-#endif
 
 class MageColorPalette
 {

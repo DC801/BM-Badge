@@ -87,6 +87,7 @@ set(SDK_SRCS
 	${SDK_ROOT}/components/softdevice/common/nrf_sdh_ble.c 
 	${SDK_ROOT}/components/softdevice/common/nrf_sdh_soc.c 
 	${SDK_ROOT}/external/fatfs/port/diskio_blkdev.c 
+	${SDK_ROOT}/external/fatfs/src/ff.h
 	${SDK_ROOT}/external/fatfs/src/ff.c 
 	${SDK_ROOT}/external/fprintf/nrf_fprintf.c 
 	${SDK_ROOT}/external/fprintf/nrf_fprintf_format.c 

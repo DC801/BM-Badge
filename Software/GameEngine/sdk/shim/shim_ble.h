@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 
-#define DATA_SAVE_LEN 16
+static const inline uint8_t DATA_SAVE_LEN = 16;
 
 typedef struct
 {

@@ -46,7 +46,7 @@ private:
 }; //class Header
 
 //size of chunk to be read/written when writing game.dat to ROM per loop
-#define ENGINE_ROM_SD_CHUNK_READ_SIZE 65536
+static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
 
 //This is the smallest page we know how to erase on our chip,
 //because the smaller values provided by nordic are incorrect,

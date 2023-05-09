@@ -335,7 +335,6 @@ void usb_serial_init() {
 
     ret = app_usbd_init(&usbd_config);
     APP_ERROR_CHECK(ret);
-    debug_print("USBD CDC ACM example started.");
 
     app_usbd_class_inst_t const* class_cdc_acm = app_usbd_cdc_acm_class_inst_get(&m_app_cdc_acm);
     ret = app_usbd_class_append(class_cdc_acm);
@@ -378,7 +377,7 @@ bool usb_serial_read_line(char* input_buffer, uint32_t max_len) {
                 usb_buffer[i++] = '\0';
             }
 
-            uint32_t read =  MIN(i, max_len);
+            uint32_t read =  std::min(i, max_len);
 
             memcpy(input_buffer, usb_buffer, read);
 

@@ -5,13 +5,10 @@
 
 #include "mage_defines.h"
 #include "mage_script_control.h"
-
-#ifdef DC801_EMBEDDED
-#include <sd.h>
-#include <nrf_delay.h>
-#else
-#include <SDL.h>
 #include "shim_timer.h"
+
+#ifndef DC801_EMBEDDED
+#include <SDL.h>
 #endif
 
 #ifdef EMSCRIPTEN

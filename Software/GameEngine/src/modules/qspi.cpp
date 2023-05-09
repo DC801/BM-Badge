@@ -11,6 +11,7 @@
 #include "fonts/Monaco9.h"
 #include <exception>
 #include <nrf_delay.h>
+#include "sd.h"
 
 
  /**
@@ -233,35 +234,192 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
     // handles hardware inputs and makes their state available
     inputHandler->HandleKeyboard();
 
-    //skip 'MAGEGAME' at front of .dat file
-    uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
-
-    char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] = { 0 };
-    char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1] = { 0 };
-    auto gameDatSDPresent = false;
-    auto eraseWholeRomChip = false;
-    auto headerHashMatch = true;
-
     //used to verify whether a save is compatible with game data
-    uint32_t engineVersion;
     uint32_t scenarioDataCRC32;
     uint32_t scenarioDataLength;
+    uint32_t engineVersion;
+
+    //skip 'MAGEGAME' and engine version at front of .dat file
+    uint32_t offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
+
+    char gameDatHashSD[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
+    char gameDatHashROM[ENGINE_ROM_MAGIC_HASH_LENGTH + 1]{ 0 };
+    auto gameDatSDPresent = false;
+    auto eraseWholeRomChip = false;
+    auto headerHashMatch = false;
+
+    char debugString[512]{ 0 };
+    char sdReadBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE]{ 0 };
+
 
     if (!read(&engineVersion, sizeof(engineVersion), offset))
     {
         error_print("Failed to read engineVersion");
     }
 
-    if (engineVersion != ENGINE_VERSION)
+    auto romFileIn = SDCardFileStream{ MAGE_GAME_DAT_PATH, std::ios_base::in | std::ios_base::binary };
+
+    if (romFileIn)
     {
-        throw std::runtime_error{ "game.dat is incompatible with Engine" };
-        // \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
+        if (!romFileIn.read(gameDatHashSD, ENGINE_ROM_MAGIC_HASH_LENGTH))
+        {
+            error_print("Could not read hash from game.dat on SD card");
+        }
+        else
+        {
+            headerHashMatch = strcmp(gameDatHashSD, gameDatHashROM) != 0;
+            if (!headerHashMatch)
+            {
+
+                //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
+                auto romFileSize = (uint32_t)std::filesystem::file_size(MAGE_GAME_DAT_PATH);
+                if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
+                {
+                    ENGINE_PANIC(
+                        "Your game.dat is larger than %d bytes.\n"
+                        "You will need to reduce its size to use it\n"
+                        "on this board.",
+                        ENGINE_ROM_MAX_DAT_FILE_SIZE
+                    );
+                }
+
+                //48 chars is a good character width for screen width plus some padding
+                sprintf(debugString,
+                    "Hash doesn't match, press Mem3 to attempt update\n\n"
+                    " SD hash: %s\n"
+                    "ROM hash: %s\n\n"
+                    "Would you like to update your scenario data?\n"
+                    "------------------------------------------------\n\n\n"
+                    "    > Press MEM0 to cancel\n\n"
+                    "    > Press MEM2 to erase whole ROM for recovery\n\n"
+                    "    > Press MEM3 to update the ROM",
+                    gameDatHashSD,
+                    gameDatHashROM);
+                debug_print(debugString);
+
+
+                frameBuffer->clearScreen(COLOR_BLACK);
+                frameBuffer->printMessage(debugString, Monaco9, 0xffff, 16, 16);
+                frameBuffer->blt();
+                
+                auto activatedButtons = inputHandler->GetButtonActivatedState();
+                do
+                {
+                    nrf_delay_ms(10);
+                    inputHandler->HandleKeyboard();
+                    if (activatedButtons.IsPressed(KeyPress::Mem0))
+                    {
+                        // frameBuffer->clearScreen(COLOR_BLACK);
+                        // frameBuffer->blt();
+                        return;
+                    }
+                    else if (activatedButtons.IsPressed(KeyPress::Mem2))
+                    {
+                        eraseWholeRomChip = true;
+                    }
+                    activatedButtons = inputHandler->GetButtonActivatedState();
+                } while (!activatedButtons.IsPressed(KeyPress::Mem2) && !activatedButtons.IsPressed(KeyPress::Mem3));
+
+
+                if (eraseWholeRomChip)
+                {
+                    frameBuffer->printMessage("Erasing WHOLE ROM chip.\nPlease be patient, this may take a few minutes", Monaco9, COLOR_WHITE, 16, 96);
+                    frameBuffer->blt();
+                    if (!chipErase())
+                    {
+                        ENGINE_PANIC("Failed to erase WHOLE ROM Chip.");
+                    }
+                }
+                else
+                {
+                    frameBuffer->printMessage("Erasing ROM chip", Monaco9, COLOR_WHITE, 16, 96);
+                    frameBuffer->blt();
+                    // I mean, you _COULD_ start by erasing the whole chip...
+                    // or you could do it one page at a time, so it saves a LOT of time
+
+                    for (auto currentAddress = uint32_t{ 0 }; currentAddress < romFileSize; currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE)
+                    {
+                        //Debug Print:
+                        sprintf(debugString, "Erasing currentAddress: %08u\nromFileSize:%08u", currentAddress, romFileSize);
+                        debug_print(debugString);
+                        frameBuffer->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
+                        frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
+                        frameBuffer->blt();
+
+                        if (!erase(tBlockSize::BLOCK_SIZE_256K, currentAddress))
+                        {
+                            ENGINE_PANIC("Failed to send erase command.");
+                        }
+                        while (isBusy())
+                        {
+                            // is very busy
+                        }
+                    }
+
+                    // erase save games at the end of ROM chip too when copying
+                    // because new dat files means new save flags and variables
+                    for (uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++)
+                    {
+                        EraseSaveSlot(i);
+                    }
+                }
+
+                //then write the entire SD card game.dat file to the ROM chip ENGINE_ROM_SD_CHUNK_READ_SIZE bytes at a time.
+                for (auto currentAddress = 0; romFileIn && currentAddress < romFileSize; currentAddress += std::min(ENGINE_ROM_SD_CHUNK_READ_SIZE, (romFileSize - currentAddress)))
+                {
+                    // copy the file into the buffer
+                    if (!romFileIn.read(sdReadBuffer, ENGINE_ROM_SD_CHUNK_READ_SIZE))
+                    {
+                        ENGINE_PANIC("Desktop build: ROM->RAM read failed");
+                    }
+
+                    //write the buffer to the ROM chip:
+                    uint32_t romPagesToWrite = ENGINE_ROM_SD_CHUNK_READ_SIZE / ENGINE_ROM_WRITE_PAGE_SIZE;
+                    uint32_t partialPageBytesLeftOver = ENGINE_ROM_SD_CHUNK_READ_SIZE % ENGINE_ROM_WRITE_PAGE_SIZE;
+                    if (partialPageBytesLeftOver)
+                    {
+                        romPagesToWrite += 1;
+                    }
+                    for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
+                    {
+                        //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
+                        //Debug Print:
+                        sprintf(debugString, "Copying currentAddress: %08u\nromFileSize:%08u", currentAddress, romFileSize);
+                        frameBuffer->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
+                        frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
+                        frameBuffer->blt();
+
+                        auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
+                        auto readOffset = sdReadBuffer + romPageOffset;
+                        auto writeOffset = currentAddress + romPageOffset;
+                        auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
+                        auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
+
+                        if (i == (romPagesToWrite - 1))
+                        {
+                            debug_print("Write Size at %d is %d", i, writeSize);
+                        }
+                        write((uint8_t*)readOffset, writeSize, writeOffset);
+                        // TODO FIXME
+                        //verify that the data was correctly written or return false.
+                        // Verify(
+                        //     writeOffset,
+                        //     writeSize,
+                        //     (uint8_t*)readOffset,
+                        //     true
+                        // );
+                    }
+                }
+                headerHashMatch = true;
+            }
+        }
     }
 
     if (!read(&scenarioDataCRC32, sizeof(scenarioDataCRC32), offset))
     {
         error_print("Failed to read scenarioDataCRC32");
     }
+
     if (!read(&scenarioDataLength, sizeof(scenarioDataLength), offset))
     {
         error_print("Failed to read scenarioDataLength");
@@ -281,155 +439,12 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
     else
     {
         debug_print("ROM file matched")
-        // there is no update, and user is not holding MEM3, proceed as normal
-        return;
-    }
-    // show update confirmation
-    char debugString[512];
-
-    //48 chars is a good character width for screen width plus some padding
-    sprintf(debugString,
-        "%s\n\n"
-        " SD hash: %s\n"
-        "ROM hash: %s\n\n"
-        "Would you like to update your scenario data?\n"
-        "------------------------------------------------\n\n\n"
-        "    > Press MEM0 to cancel\n\n"
-        "    > Press MEM2 to erase whole ROM for recovery\n\n"
-        "    > Press MEM3 to update the ROM",
-        updateMessagePrefix,
-        gameDatHashSD,
-        gameDatHashROM);
-    debug_print(debugString);
-    
-    frameBuffer->clearScreen(COLOR_BLACK);
-    frameBuffer->printMessage(debugString, Monaco9, 0xffff, 16, 16);
-    frameBuffer->blt();
-
-    auto activatedButtons = inputHandler->GetButtonActivatedState();
-    do
-    {
-        nrf_delay_ms(10);
-        inputHandler->HandleKeyboard();
-        if (activatedButtons.IsPressed(KeyPress::Mem0))
-        {
-            // frameBuffer->clearScreen(COLOR_BLACK);
-            // frameBuffer->blt();
+            // there is no update, and user is not holding MEM3, proceed as normal
             return;
-        }
-        else if (activatedButtons.IsPressed(KeyPress::Mem2))
-        {
-            eraseWholeRomChip = true;
-        }
-        activatedButtons = inputHandler->GetButtonActivatedState();
-    } while (!activatedButtons.IsPressed(KeyPress::Mem2) && !activatedButtons.IsPressed(KeyPress::Mem3));
-
-    //this will copy from the file `MAGE/game.dat` on the SD card into the ROM chip.
-    auto romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
-    if (romFileSize > ENGINE_ROM_MAX_DAT_FILE_SIZE)
-    {
-        ENGINE_PANIC(
-            "Your game.dat is larger than %d bytes.\n"
-            "You will need to reduce its size to use it\n"
-            "on this board.",
-            ENGINE_ROM_MAX_DAT_FILE_SIZE
-        );
     }
 
     frameBuffer->clearScreen(COLOR_BLACK);
-    char sdReadBuffer[ENGINE_ROM_SD_CHUNK_READ_SIZE]{ 0 };
-    
-    if (eraseWholeRomChip)
-    {
-        frameBuffer->printMessage("Erasing WHOLE ROM chip.\nPlease be patient, this may take a few minutes", Monaco9, COLOR_WHITE, 16, 96);
-        frameBuffer->blt();
-        if (!chipErase())
-        {
-            ENGINE_PANIC("Failed to erase WHOLE ROM Chip.");
-        }
-    }
-    else
-    {
-        frameBuffer->printMessage("Erasing ROM chip", Monaco9, COLOR_WHITE, 16, 96);
-        frameBuffer->blt();
-        // I mean, you _COULD_ start by erasing the whole chip...
-        // or you could do it one page at a time, so it saves a LOT of time
 
-        for (auto currentAddress = uint32_t{ 0 }; currentAddress < romFileSize; currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE)
-        {
-            //Debug Print:
-            sprintf(debugString, "Erasing currentAddress: %08u\nromFileSize:%08u", currentAddress, romFileSize);
-            debug_print(debugString);
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
-            frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
-            frameBuffer->blt();
-
-            if (!erase(tBlockSize::BLOCK_SIZE_256K, currentAddress))
-            {
-                ENGINE_PANIC("Failed to send erase command.");
-            }
-            while (isBusy())
-            {
-                // is very busy
-            }
-        }
-
-        // erase save games at the end of ROM chip too when copying
-        // because new dat files means new save flags and variables
-        for (uint8_t i = 0; i < ENGINE_ROM_SAVE_GAME_SLOTS; i++)
-        {
-            EraseSaveSlot(i);
-        }
-    }
-    
-    auto romFileIn = std::fstream{ MAGE_GAME_DAT_PATH, std::ios_base::in | std::ios_base::binary };
-
-    //then write the entire SD card game.dat file to the ROM chip ENGINE_ROM_SD_CHUNK_READ_SIZE bytes at a time.
-    for (auto currentAddress = 0;romFileIn && currentAddress < romFileSize; currentAddress += MIN(ENGINE_ROM_SD_CHUNK_READ_SIZE, (romFileSize - currentAddress)))
-    {
-        // copy the file into the buffer
-        if (!romFileIn.read(sdReadBuffer, ENGINE_ROM_SD_CHUNK_READ_SIZE))
-        {
-            ENGINE_PANIC("Desktop build: ROM->RAM read failed");
-        }
-        
-        //write the buffer to the ROM chip:
-        uint32_t romPagesToWrite = ENGINE_ROM_SD_CHUNK_READ_SIZE / ENGINE_ROM_WRITE_PAGE_SIZE;
-        uint32_t partialPageBytesLeftOver = ENGINE_ROM_SD_CHUNK_READ_SIZE % ENGINE_ROM_WRITE_PAGE_SIZE;
-        if (partialPageBytesLeftOver)
-        {
-            romPagesToWrite += 1;
-        }
-        for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
-        {
-            //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
-            //Debug Print:
-            sprintf(debugString, "Copying currentAddress: %08u\nromFileSize:%08u", currentAddress, romFileSize);
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, COLOR_BLACK);
-            frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 96);
-            frameBuffer->blt();
-
-            auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
-            auto readOffset = sdReadBuffer + romPageOffset;
-            auto writeOffset = currentAddress + romPageOffset;
-            auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
-            auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
-
-            if (i == (romPagesToWrite - 1))
-            {
-                debug_print("Write Size at %d is %d", i, writeSize);
-            }
-            write((uint8_t*)readOffset, writeSize, writeOffset);
-            // TODO FIXME
-            //verify that the data was correctly written or return false.
-            // Verify(
-            //     writeOffset,
-            //     writeSize,
-            //     (uint8_t*)readOffset,
-            //     true
-            // );
-        }
-    }
 
     romFileIn.close();
     uint32_t romPagesToWrite = ENGINE_ROM_SD_CHUNK_READ_SIZE / ENGINE_ROM_WRITE_PAGE_SIZE;
@@ -440,9 +455,22 @@ void QSPI::HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::share
     }
     //print success message:
     debug_print("Successfully copied ROM to QSPI ROM")
-    frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
+        frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
     frameBuffer->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
     frameBuffer->blt();
+
+
+    offset = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
+    if (!read(&engineVersion, sizeof(engineVersion), offset))
+    {
+        error_print("Failed to read engineVersion");
+    }
+
+    if (engineVersion != ENGINE_VERSION)
+    {
+        throw std::runtime_error{ "game.dat is incompatible with Engine" };
+        // \n\nEngine version : % d\ngame.dat version : % d", ENGINE_VERSION, engineVersion };
+    }
 }
 
 void QSPI::EraseSaveSlot(uint8_t slotIndex) const

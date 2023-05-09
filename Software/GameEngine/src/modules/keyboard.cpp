@@ -11,6 +11,7 @@ uint32_t last_keyboard_interrupt_time = 0;
 #include "app_error.h"
 #include <config/custom_board.h>
 #include <shim_i2c.h>
+#include "utility.h"
 
 void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
@@ -30,8 +31,9 @@ void keyboard_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 void keyboard_init(void){
 	#ifdef DC801_EMBEDDED
 	//setup keyboard interrupt pin
-    nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
-	#endif
+	nrf_gpio_cfg_input(KEYBOARD_INT_PIN, NRF_GPIO_PIN_NOPULL);
+	debug_print("Keyboard initialized")
+#endif
 }
 
 /**

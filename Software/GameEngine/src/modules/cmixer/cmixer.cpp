@@ -32,11 +32,11 @@
 #define UNUSED(x)			((void) (x))
 #define CLAMP(x, a, b)		((x) < (a) ? (a) : (x) > (b) ? (b) : (x))
 #ifndef MIN
-#define MIN(a, b)			((a) < (b) ? (a) : (b))
+#define std::min(a, b)			((a) < (b) ? (a) : (b))
 #endif
 
 #ifndef MAX
-#define MAX(a, b)			((a) > (b) ? (a) : (b))
+#define std::max(a, b)			((a) > (b) ? (a) : (b))
 #endif
 
 #define FX_BITS				(12)
@@ -184,10 +184,10 @@ static void process_source(cm_Source* src, int len)
     }
 
     /* Work out how many frames we should process in the loop */
-    n = MIN(src->nextfill - 2, src->end) - frame;
+    n = std::min(src->nextfill - 2, src->end) - frame;
     count = (n << FX_BITS) / src->rate;
-    count = MAX(count, 1);
-    count = MIN(count, len / 2);
+    count = std::max(count, 1);
+    count = std::min(count, len / 2);
     len -= count * 2;
 
     /* Add audio to master buffer */
@@ -596,7 +596,7 @@ static void wav_handler(cm_Event* e)
     dst = e->buffer;
     len = e->length / 2;
   fill:
-    n = MIN(len, s->wav.length - s->idx);
+    n = std::min(len, s->wav.length - s->idx);
     len -= n;
     if (s->wav.bitdepth == 16 && s->wav.channels == 1)
     {

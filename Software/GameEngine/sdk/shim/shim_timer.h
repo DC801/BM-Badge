@@ -3,6 +3,7 @@
 
 #ifdef DC801_EMBEDDED
 #include <app_timer.h>
+#include <nrf_delay.h>
 #else
 
 #include <stdint.h>

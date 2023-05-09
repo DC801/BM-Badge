@@ -1,6 +1,7 @@
 #include "shim_ble.h"
 #include "shim_timer.h"
 #include "utility.h"
+#include <algorithm>
 #include <cstring>
 
 #define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
@@ -349,7 +350,7 @@ static void ble_evt_handler(ble_evt_t const* p_ble_evt, void* p_context)
                     badge.year = (BADGE_YEAR)adv.appearance;
                     if (adv.long_name_len != 0)
                     {
-                        memcpy(&badge.name, adv.long_name, MIN(adv.long_name_len, DATA_SAVE_LEN));
+                        memcpy(&badge.name, adv.long_name, std::min(adv.long_name_len, DATA_SAVE_LEN));
                         badge.name[DATA_SAVE_LEN] = '\0';
                     }
                     badge.appearance = adv.manu;
@@ -563,7 +564,9 @@ bool parseAdvertisementData(uint8_t* data, uint8_t len, ADVERTISEMENT* adv)
             uint16_t id = ((uint16_t)block_data[1] << 8) | block_data[0];
             adv->manu = id;
             memset(adv->manu_data, 0, DATA_SAVE_LEN);
-            memcpy(adv->manu_data, &block_data[2], MIN(13, block_size));
+            // TODO: Why is this 13?
+            const auto minBlockSize = uint8_t{ 13 };
+            memcpy(adv->manu_data, &block_data[2], std::min(minBlockSize, block_size));
             //debug_print("Manu %04X\n", adv->manu);
             break;
         }

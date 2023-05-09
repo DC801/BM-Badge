@@ -30,7 +30,6 @@
 
 #include "sd.h"
 
-static FATFS m_fs;
 static bool m_sd_available = false;
 
 static nrf_block_dev_sdc_work_t m_block_dev_sdc_work{};
@@ -79,14 +78,13 @@ bool util_sd_init() {
 	}
 
 	m_sd_available = true;
-	debug_print("SD init OK");
+	debug_print("SD initialized");
 	return true;
 }
 
 #endif //DC801_EMBEDDED
 void util_sd_load_file(const char* path, char* p_buffer, uint32_t count)
 {
-	
     debug_print("Try to load %s\n", path);
 
 	auto file = std::fstream{ path, std::ios_base::in| std::ios_base::binary };

@@ -1,9 +1,10 @@
 #ifdef DC801_EMBEDDED
 
 #include "drv_ili9341.h"
+#include <algorithm>
 
 //size of chunk to transfer each interrupt
-#define ILI_TRANSFER_CHUNK_SIZE (254)
+static const inline uint32_t ILI_TRANSFER_CHUNK_SIZE =254;
 
 // Register defines
 #define ILI9341_CASET    		(0x2A)
@@ -36,7 +37,7 @@ static void __spim_event_handler(nrfx_spim_evt_t const * p_event, void * context
 		}
 
 		uint8_t rx = 0;
-		uint8_t count = MIN(ILI_TRANSFER_CHUNK_SIZE, m_large_tx_size);
+		uint8_t count = std::min(ILI_TRANSFER_CHUNK_SIZE, m_large_tx_size);
 		nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_large_tx_data, count);
 		nrfx_spim_xfer(&lcd_spim, &xfer_desc, 0);
 
@@ -148,7 +149,7 @@ uint16_t ili9341_color565(uint8_t r, uint8_t g, uint8_t b)
  */
 void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
-	int32_t bytecount = w * h * 2;
+	uint32_t bytecount = w * h * 2;
 	uint8_t color_lsb[254];
 	for (uint8_t i = 0; i < 254; i += 2) {
 		color_lsb[i] = (uint8_t) (color >> 8);
@@ -166,8 +167,8 @@ void ili9341_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colo
     ili9341_set_addr(x, y, x + w - 1, y + h - 1);
 
 	while (bytecount > 0) {
-        ili9341_push_colors((uint8_t *) color_lsb, MIN(254, bytecount));
-		bytecount -= 254;
+        ili9341_push_colors((uint8_t *) color_lsb, std::min(ILI_TRANSFER_CHUNK_SIZE, bytecount));
+		bytecount -= ILI_TRANSFER_CHUNK_SIZE;
 	}
 
 	while (m_busy) {
@@ -226,7 +227,7 @@ void ili9341_push_colors(uint8_t *p_colors, uint32_t size) {
     uint8_t count = 0;
 
     while (size > 0) {
-        count = MIN(ILI_TRANSFER_CHUNK_SIZE, size);
+        count = std::min(ILI_TRANSFER_CHUNK_SIZE, size);
 
         //Don't start next transfer until previous is complete
         while (m_busy) {
@@ -256,7 +257,7 @@ nrfx_err_t inline ili9341_push_colors_fast(uint8_t *p_colors, uint32_t size) {
 		m_large_tx = true;
 		p_large_tx_data = p_colors;
 		m_large_tx_size = size;
-		size = MIN(ILI_TRANSFER_CHUNK_SIZE, size);
+		size = std::min(ILI_TRANSFER_CHUNK_SIZE, size);
 	}
 
 	nrfx_spim_xfer_desc_t xfer_desc = NRFX_SPIM_XFER_TX(p_colors, size);
@@ -378,8 +379,9 @@ void ili9341_start() {
         __writeData(0x27);
 
         __writeCommand(0xF6);
-        __writeData(0x01);
-        __writeData(0x30);
+		__writeData(0x01);
+		__writeData(0x30);
+		__writeData(0x10);
 
         __writeCommand(0xF2);    // 3Gamma Function Disable
         __writeData(0x00);

@@ -15,7 +15,7 @@ set(CMAKE_COMMON_FLAGS "-flto -ffunction-sections -fdata-sections -fno-strict-al
 set(CMAKE_C_FLAGS_INIT "${CMAKE_COMMON_FLAGS} ${DEFINE_FLAGS} ${MCPU_FLAGS} ${MFPU_FLAGS} -D_DEFAULT_SOURCE")
 set(CMAKE_CXX_FLAGS_INIT "${CMAKE_COMMON_FLAGS} ${DEFINE_FLAGS} ${MCPU_FLAGS} ${MFPU_FLAGS} -felide-constructors -fno-rtti -Wno-register")
 set(CMAKE_ASM_FLAGS_INIT "${CMAKE_COMMON_FLAGS} ${DEFINE_FLAGS} ${MCPU_FLAGS} ${MFPU_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_COMMON_FLAGS} ${LD_FLAGS} -lc -lm -lstdc++ -lnosys -specs=nano.specs -Wl,--gc-sections,-print-memory-usage -L${SDK_ROOT}/modules/nrfx/mdk -T${CMAKE_CURRENT_LIST_DIR}/../Software/GameEngine/badge_gcc_nrf52.ld")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "${CMAKE_COMMON_FLAGS} ${LD_FLAGS} -lc -lm -lstdc++ -specs=nano.specs -Wl,--gc-sections,-print-memory-usage -L${SDK_ROOT}/modules/nrfx/mdk -T${CMAKE_CURRENT_LIST_DIR}/../Software/GameEngine/badge_gcc_nrf52.ld")
 
 set(CMAKE_C_FLAGS_DEBUG_INIT "-Os -DDEBUG=1 -g3")
 set(CMAKE_CXX_FLAGS_DEBUG_INIT "-Os -g3 -DDEBUG=1")
