@@ -60,7 +60,7 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 MGS Natlang is a "natural" language meant to be easy to read and write.
 
-It consists of phrases and patterns that correspond to the JSON required by the MGE encoder. Strictly speaking, it is not a recursive language, but it is much more flexible and compact than writing the equivalent script actions and dialogs in MGE JSON.
+It consists of phrases that correlate to the shape of JSON required by the MGE encoder. It is not a genuine recursive language, but it is much more flexible and compact than writing the equivalent JSON.
 
 All .mgs files are turned into MGE JSON by the MGE encoder. And unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; all .mgs files inside `scenario_source_files` will be imported.
 
@@ -306,11 +306,11 @@ These blocks must occur on the root level.
 
 Dialog settings are applied to dialogs in order as the parser encounters them; a dialog settings block partway down the file will affect only the dialogs afterward, and none before.
 
-- **New settings will override old settings.**
+- New settings will override old settings.
 	- E.g. if you assign the player the alignment `TOP_RIGHT` and then `BOTTOM_RIGHT` back-to-back, dialogs will use `BOTTOM_RIGHT`.
-- **Entity settings will override global settings.**
+- Entity settings will override global settings.
 	- E.g. if you assign alignment `BOTTOM_LEFT` to the global defaults, and `BOTTOM_RIGHT` to the player entity, dialogs involving the player entity will use `BOTTOM_RIGHT`.
-- **Label settings will override entity settings.**
+- Label settings will override entity settings.
 - Parameters given in a dialog's body will override any other settings, however.
 
 ### Dialog settings target block
@@ -345,6 +345,18 @@ parameters for label PLAYER {
 
 This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](#dialog-identifier) for [dialogs](#dialog).
 
+```
+dialog test {
+  PLAYER "Test dialog message" // with label
+}
+
+// vs
+
+dialog test {
+  entity "%PLAYER%" "Test dialog message" // without label
+}
+```
+
 ### Serial dialog settings block
 
 ```
@@ -371,7 +383,7 @@ dialog $string {}
 
 Dialog blocks allow you to name and populate a game dialog.
 
-As these dialog blocks don't have any baked-in script context, a dialog name is required. (The name is whatever is given for [string](#string).)
+As these dialog blocks aren't being defined inside a script body, a dialog name is required. (The name is whatever is given for [string](#string).)
 
 These blocks must occur on the root level.
 
@@ -385,7 +397,7 @@ serial dialog $string {}
 
 Similar to dialog blocks, serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
 
-Again, these blocks don't have any baked-in script context, so a serial dialog name is required. (The name is whatever is given for [string](#string).)
+Again, these blocks aren't being defined inside a script body, so a serial dialog name is required. (The name is whatever is given for [string](#string).)
 
 These blocks must occur on the root level.
 
@@ -407,7 +419,7 @@ These blocks must occur on the root level.
 
 Inside a [script block](#script-block), some actions can be **combined** with their associated definition block. In other words, you can "call" a [dialog](#dialog) or [serial dialog](#serial-dialog) and define it in place.
 
-For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names for one-offs is recommended to keep things clean.
+For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names is recommended to keep things clean.
 
 #### Show dialog block
 
@@ -446,6 +458,8 @@ Any number of dialogs can be given back-to-back within their parent block.
 3. [Dialog message](#dialog-message): 1+
 4. [Dialog option](#dialog-option): 0-4x
 
+Multiple dialogs can occur back-to-back inside a single dialog block.
+
 #### Dialog identifier
 
 This identifies the "speaker" of the dialog messages that immediately follow. For most cases, this will be a specific entity (with option #1 or #2), though you could also build up a dialog from its component pieces instead (with option #3).
@@ -455,7 +469,7 @@ The three options:
 1. `$bareword`
 	- The bareword identifier refers to a dialog label within a [dialog settings target block](#dialog-settings-target-block).
 		- If no dialog label is found, the bareword value is assumed to be an entity name instead. This usage also provides the entity name as an `entity` [parameter](#dialog-parameter) for the dialog.
-		- Entity names with spaces or other special characters are not eligible for this usage, however.
+		- Entity names with spaces or other special characters are not eligible for this usage.
 	- NOTE: A [quoted string](#quoted-string) is NOT allowed here! This string *must* be a [bareword](#bareword)!
 2. `entity $string`
 	- [string](#string): an entity's given name (i.e. the entity's name within the Tiled map).
@@ -464,6 +478,7 @@ The three options:
 3. `name $string`
 	- [string](#string): the dialog's display name.
 	- This usage also provides a `name` [parameter](#dialog-parameter) for the dialog.
+	- If you don't want a name displayed, use an empty quoted string (`name ""`).
 
 #### Dialog parameter
 
@@ -480,7 +495,7 @@ Syntax for each parameter:
 	- [String](#string): a fixed string of no more than 12 ASCII characters. For a relative name instead, wrap a specific entity's name in `%`s.
 		- Can be `%PLAYER%` or `%SELF%`.
 	- Overrides names inherited via the `entity` parameter.
-	- If this string is empty, the dialog label will be absent entirely. (An empty string must be wrapped in quotes!)
+	- If this string is empty (`name ""`), the dialog label will be absent entirely.
 - `portrait $string`
 	- [String](#string): the name of a MGE portrait.
 	- Overrides portraits inherited via the `entity` parameter.
@@ -515,7 +530,7 @@ Any [quoted string](#quoted-string).
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 	- `%` and `$` are printable characters unless used in pairs within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
-- Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
+- Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
 
 #### Dialog option
 
@@ -573,7 +588,7 @@ Found within a [serial dialog block](#serial-dialog-block).
 2. [Serial dialog message](#serial-dialog-message): 1+
 3. [Serial dialog option](#serial-dialog-option): 0+
 
-NOTE: unlike with conventional [dialogs](#dialog), serial dialog block contents cannot loop; no serial dialog parameters can be given after a serial dialog message, and nothing can come after a serial dialog option (except more options).
+NOTE: unlike with conventional [dialogs](#dialog), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no serial parameters can be given after a serial message, and nothing can come after a serial option (except more options).
 
 #### Serial dialog parameter
 
@@ -590,8 +605,8 @@ Any [quoted string](#quoted-string).
 - Some characters must be escaped in the message body, such as double quote: `\"`
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
-- Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
-- These messages may be [styled](#serial-styles).
+- Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
+- These messages may be given ANSI [styles](#serial-styles). (Use the built-in styling syntax for best results.)
 
 #### Serial dialog option
 
@@ -606,7 +621,7 @@ Two choices:
 	- `_ $label:quotedString : (goto) (script) $script:string`
 	- The **label** indicates what the player must type for the game to jump to the indicated script.
 	- There is no explicit prompt for these options, but upon reaching the free response portion of the serial dialog block, the player can type whatever they want into the serial console.
-	- An invalid response will fall through, and the next action down in the same script will execute; therefore, only a valid response will result in a script jump.
+	- An invalid response will fall through, i.e. the script will continue executing actions further below the serial dialog containing the free response option option(s). Therefore, only a valid response will result in a script jump.
 	- The user's response is case insensitive. (The label `"CAT"` will match the user input of `cat`.)
 
 Behaviors in common between the two:
@@ -654,6 +669,8 @@ serial dialog grandpaRambling {
 }
 ```
 
+(NOTE: Github won't display the colors in the examples below. Sorry....)
+
 > That doll is <span style="color:#b00;">evil</span>, I tells ya! <span style="color:#f33;font-weight:bold;">EVIL</span>!!
 
 You can also add styles one at a time, and they will accumulate:
@@ -667,6 +684,8 @@ serial dialog accumulation {
 > plain text <span style="color:#b00;">add red </span><span style="color:#f33;font-weight:bold;">add bold </span><span style="color:#f33;font-weight:bold;background-color:#00b">add blue background</span> clear all
 
 The user's color theme affects how styles appear in their serial console, and not all styles are implemented in all themes (or consoles). We therefore recommend using styles for optional flavor only, and not to impart gameplay-critical information.
+
+NOTE: The web build of the game currently styles serial output one line at a time, and so styling may be dropped after a line break. As a workaround, manually insert your style tags again before the word that was wrapped.
 
 #### Example serial dialog
 
@@ -995,12 +1014,34 @@ Note that the actions `RUN_SCRIPT` (`goto script $string`) and `LOAD_MAP` (`load
 
 #### Consequences and drawbacks
 
-1. This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
-	- **This is currently a big problem for `on_tick` scripts**, as the game will crash if an empty `on_tick` script is attempted. Several kinds of common `on_tick` behavior will therefore need to be done the old way.
-2. This abstracted syntax obscures the fact that script jumps are happening.
-	- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
-	- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is any zigzagging involved.
-3. Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference.
+This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
+
+Importantly, this abstracted syntax obscures the fact that script jumps are happening, so scripts using zigzags might need special handling:
+
+- Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference, and zigzagging script names (after the first) are procedurally generated.
+- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
+- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is **any** zigzagging involved.
+	- IMPORTANT: Do not do this with a `goto` (`RUN_SCRIPT`) or it will result in an infinite loop. Instead, manually set the `on_interact` or `on_tick` to the name of original script. This allows the script to finish its "turn" and hand control to other game logic, while still allowing it to start from the correct script when its turn comes again.
+
+Script reset example:
+
+```
+example {
+  if (flag bob-met is true) {
+    show dialog { SELF "I remember you." }
+  } else {
+    show dialog { SELF "Nice to meet you!" }
+    set flag bob-met to true
+  }
+
+  show dialog { SELF "How's it going?" }
+
+  // reset here:
+  set entity Bob interact_script to example
+}
+```
+
+If you don't reset in this manner, upon interacting with Bob a second time, he will only say "How's it going?" until the map is reloaded.
 
 #### Syntax
 
@@ -1091,7 +1132,7 @@ The macro literally replaces each const with the token collected during its orig
 
 These consts are *not* meant to be used as variables for in-game logic, as the game will never see the const as a variable at all, but will only see the token captured by the macro. To emphasize this point, you cannot change the value of a const once you've defined it. If you find yourself wanting to do this, you probably want to be using a MGE variable instead.
 
-For value assignment:
+To start declaring constants:
 
 ```
 const! ()
@@ -1106,7 +1147,7 @@ Inside the above parentheses can be any number of constant assignments:
 - `CONST_NAME`: `$` + [bareword](#bareword) (e.g. `$varName`)
 - `VALUE`: any MGS Natlang variable whatsoever, e.g. any [number](#number), [string](#string), [bareword](#bareword), [duration](#duration), etc.
 
-Keep in mind that `$` is used for [MGS Natlang variables](#mgs-natlang-variables) in his document's example syntax, but that is a different usage, as those variables are to be replaced by values of that variable type, whereas these constants will appear in the final MGS file literally in the form `$_`.
+Keep in mind that `$` is used for [MGS Natlang variables](#mgs-natlang-variables) in his document's example syntax (e.g. `wait $duration`), but that is a different usage, as those variables are to be replaced by values of that variable type (e.g. `wait 100ms`), whereas these constants will appear in the final MGS file literally in the form `$_`.
 
 #### Example
 

@@ -62,7 +62,7 @@ Introducing "MageGameScript Natlang" — a simplified approach to writing game c
 
 MGS Natlang is a "natural" language meant to be easy to read and write.
 
-It consists of phrases and patterns that correspond to the JSON required by the MGE encoder. Strictly speaking, it is not a recursive language, but it is much more flexible and compact than writing the equivalent script actions and dialogs in MGE JSON.
+It consists of phrases that correlate to the shape of JSON required by the MGE encoder. It is not a genuine recursive language, but it is much more flexible and compact than writing the equivalent JSON.
 
 All .mgs files are turned into MGE JSON by the MGE encoder. And unlike script files and dialog files, you don't need to declare .mgs files in the game's `scenario.json`; all .mgs files inside `scenario_source_files` will be imported.
 
@@ -308,11 +308,11 @@ These blocks must occur on the root level.
 
 Dialog settings are applied to dialogs in order as the parser encounters them; a dialog settings block partway down the file will affect only the dialogs afterward, and none before.
 
-- **New settings will override old settings.**
+- New settings will override old settings.
 	- E.g. if you assign the player the alignment `TOP_RIGHT` and then `BOTTOM_RIGHT` back-to-back, dialogs will use `BOTTOM_RIGHT`.
-- **Entity settings will override global settings.**
+- Entity settings will override global settings.
 	- E.g. if you assign alignment `BOTTOM_LEFT` to the global defaults, and `BOTTOM_RIGHT` to the player entity, dialogs involving the player entity will use `BOTTOM_RIGHT`.
-- **Label settings will override entity settings.**
+- Label settings will override entity settings.
 - Parameters given in a dialog's body will override any other settings, however.
 
 ### Dialog settings target block
@@ -347,6 +347,18 @@ parameters for label PLAYER {
 
 This is a common use case for dialog settings, after which you can use `PLAYER` instead of `entity "%PLAYER%"` as a [dialog identifier](#dialog-identifier) for [dialogs](#dialog).
 
+```
+dialog test {
+  PLAYER "Test dialog message" // with label
+}
+
+// vs
+
+dialog test {
+  entity "%PLAYER%" "Test dialog message" // without label
+}
+```
+
 ### Serial dialog settings block
 
 ```
@@ -373,7 +385,7 @@ dialog $string {}
 
 Dialog blocks allow you to name and populate a game dialog.
 
-As these dialog blocks don't have any baked-in script context, a dialog name is required. (The name is whatever is given for [string](#string).)
+As these dialog blocks aren't being defined inside a script body, a dialog name is required. (The name is whatever is given for [string](#string).)
 
 These blocks must occur on the root level.
 
@@ -387,7 +399,7 @@ serial dialog $string {}
 
 Similar to dialog blocks, serial dialog blocks allow you to name and populate a serial dialog. Serial dialogs are shown in the serial console instead of the badge's physical screen.
 
-Again, these blocks don't have any baked-in script context, so a serial dialog name is required. (The name is whatever is given for [string](#string).)
+Again, these blocks aren't being defined inside a script body, so a serial dialog name is required. (The name is whatever is given for [string](#string).)
 
 These blocks must occur on the root level.
 
@@ -409,7 +421,7 @@ These blocks must occur on the root level.
 
 Inside a [script block](#script-block), some actions can be **combined** with their associated definition block. In other words, you can "call" a [dialog](#dialog) or [serial dialog](#serial-dialog) and define it in place.
 
-For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names for one-offs is recommended to keep things clean.
+For combination blocks of all types, a dialog name ([string](#string)) is optional. Internally, the JSON still requires a dialog name, but if absent, the MGS Natlang translator generates one based on the file name and line number. For authors writing content in MGS Natlang exclusively, this will be invisible. Omitting dialog names is recommended to keep things clean.
 
 #### Show dialog block
 
@@ -448,6 +460,8 @@ Any number of dialogs can be given back-to-back within their parent block.
 3. [Dialog message](#dialog-message): 1+
 4. [Dialog option](#dialog-option): 0-4x
 
+Multiple dialogs can occur back-to-back inside a single dialog block.
+
 #### Dialog identifier
 
 This identifies the "speaker" of the dialog messages that immediately follow. For most cases, this will be a specific entity (with option #1 or #2), though you could also build up a dialog from its component pieces instead (with option #3).
@@ -457,7 +471,7 @@ The three options:
 1. `$bareword`
 	- The bareword identifier refers to a dialog label within a [dialog settings target block](#dialog-settings-target-block).
 		- If no dialog label is found, the bareword value is assumed to be an entity name instead. This usage also provides the entity name as an `entity` [parameter](#dialog-parameter) for the dialog.
-		- Entity names with spaces or other special characters are not eligible for this usage, however.
+		- Entity names with spaces or other special characters are not eligible for this usage.
 	- NOTE: A [quoted string](#quoted-string) is NOT allowed here! This string *must* be a [bareword](#bareword)!
 2. `entity $string`
 	- [string](#string): an entity's given name (i.e. the entity's name within the Tiled map).
@@ -466,6 +480,7 @@ The three options:
 3. `name $string`
 	- [string](#string): the dialog's display name.
 	- This usage also provides a `name` [parameter](#dialog-parameter) for the dialog.
+	- If you don't want a name displayed, use an empty quoted string (`name ""`).
 
 #### Dialog parameter
 
@@ -482,7 +497,7 @@ Syntax for each parameter:
 	- [String](#string): a fixed string of no more than 12 ASCII characters. For a relative name instead, wrap a specific entity's name in `%`s.
 		- Can be `%PLAYER%` or `%SELF%`.
 	- Overrides names inherited via the `entity` parameter.
-	- If this string is empty, the dialog label will be absent entirely. (An empty string must be wrapped in quotes!)
+	- If this string is empty (`name ""`), the dialog label will be absent entirely.
 - `portrait $string`
 	- [String](#string): the name of a MGE portrait.
 	- Overrides portraits inherited via the `entity` parameter.
@@ -517,7 +532,7 @@ Any [quoted string](#quoted-string).
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
 	- `%` and `$` are printable characters unless used in pairs within a single line, in which case the only way to print them is to escape them (e.g. `\%`).
-- Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
+- Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
 
 #### Dialog option
 
@@ -575,7 +590,7 @@ Found within a [serial dialog block](#serial-dialog-block).
 2. [Serial dialog message](#serial-dialog-message): 1+
 3. [Serial dialog option](#serial-dialog-option): 0+
 
-NOTE: unlike with conventional [dialogs](#dialog), serial dialog block contents cannot loop; no serial dialog parameters can be given after a serial dialog message, and nothing can come after a serial dialog option (except more options).
+NOTE: unlike with conventional [dialogs](#dialog), serial dialog blocks cannot contain more than one serial dialog. In other words, inside a serial dialog block, no serial parameters can be given after a serial message, and nothing can come after a serial option (except more options).
 
 #### Serial dialog parameter
 
@@ -592,8 +607,8 @@ Any [quoted string](#quoted-string).
 - Some characters must be escaped in the message body, such as double quote: `\"`
 	- `\t` (tabs) are auto-converted to four spaces.
 	- `\n` (new lines) are honored, but since text is wrapped automatically, don't worry about hard wrapping your messages unless you want to put line breaks in arbitrary places.
-- Word processor "smart" characters such as ellipses (…) or emdashes (—) are auto converted to ASCII equivalents (`...`) (`--`).
-- These messages may be [styled](#serial-styles).
+- Word processor "smart" characters such as ellipses (…), emdashes (—), and smart quotes (“”) are auto converted to ASCII equivalents (`...`) (`--`) (`"`).
+- These messages may be given ANSI [styles](#serial-styles). (Use the built-in styling syntax for best results.)
 
 #### Serial dialog option
 
@@ -608,7 +623,7 @@ Two choices:
 	- `_ $label:quotedString : (goto) (script) $script:string`
 	- The **label** indicates what the player must type for the game to jump to the indicated script.
 	- There is no explicit prompt for these options, but upon reaching the free response portion of the serial dialog block, the player can type whatever they want into the serial console.
-	- An invalid response will fall through, and the next action down in the same script will execute; therefore, only a valid response will result in a script jump.
+	- An invalid response will fall through, i.e. the script will continue executing actions further below the serial dialog containing the free response option option(s). Therefore, only a valid response will result in a script jump.
 	- The user's response is case insensitive. (The label `"CAT"` will match the user input of `cat`.)
 
 Behaviors in common between the two:
@@ -656,6 +671,8 @@ serial dialog grandpaRambling {
 }
 ```
 
+(NOTE: Github won't display the colors in the examples below. Sorry....)
+
 > That doll is <span style="color:#b00;">evil</span>, I tells ya! <span style="color:#f33;font-weight:bold;">EVIL</span>!!
 
 You can also add styles one at a time, and they will accumulate:
@@ -669,6 +686,8 @@ serial dialog accumulation {
 > plain text <span style="color:#b00;">add red </span><span style="color:#f33;font-weight:bold;">add bold </span><span style="color:#f33;font-weight:bold;background-color:#00b">add blue background</span> clear all
 
 The user's color theme affects how styles appear in their serial console, and not all styles are implemented in all themes (or consoles). We therefore recommend using styles for optional flavor only, and not to impart gameplay-critical information.
+
+NOTE: The web build of the game currently styles serial output one line at a time, and so styling may be dropped after a line break. As a workaround, manually insert your style tags again before the word that was wrapped.
 
 #### Example serial dialog
 
@@ -997,12 +1016,34 @@ Note that the actions `RUN_SCRIPT` (`goto script $string`) and `LOAD_MAP` (`load
 
 #### Consequences and drawbacks
 
-1. This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
-	- **This is currently a big problem for `on_tick` scripts**, as the game will crash if an empty `on_tick` script is attempted. Several kinds of common `on_tick` behavior will therefore need to be done the old way.
-2. This abstracted syntax obscures the fact that script jumps are happening.
-	- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
-	- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is any zigzagging involved.
-3. Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference.
+This macro does not understand MGS Natlang syntax at all, and moves tokens around into an expanded form somewhat naively. What's more is that this macro does not create procedural scripts intelligently; it will make empty scripts in certain conditions, e.g. when there's no converging behavior after a zigzag.
+
+Importantly, this abstracted syntax obscures the fact that script jumps are happening, so scripts using zigzags might need special handling:
+
+- Any piece of script behavior that needs to be referenced by an external script cannot be made into a zigzag, as the external script needs a script name to reference, and zigzagging script names (after the first) are procedurally generated.
+- If you `COPY_SCRIPT` a script containing any zigzag syntax, only actions from the first script chunk will be copied.
+- For `on_interact` scripts that must always start from the top on each attempt and for `on_tick` scripts that must loop indefinitely, you will need to **reset** the script as the very last action if there is **any** zigzagging involved.
+	- IMPORTANT: Do not do this with a `goto` (`RUN_SCRIPT`) or it will result in an infinite loop. Instead, manually set the `on_interact` or `on_tick` to the name of original script. This allows the script to finish its "turn" and hand control to other game logic, while still allowing it to start from the correct script when its turn comes again.
+
+Script reset example:
+
+```
+example {
+  if (flag bob-met is true) {
+    show dialog { SELF "I remember you." }
+  } else {
+    show dialog { SELF "Nice to meet you!" }
+    set flag bob-met to true
+  }
+
+  show dialog { SELF "How's it going?" }
+
+  // reset here:
+  set entity Bob interact_script to example
+}
+```
+
+If you don't reset in this manner, upon interacting with Bob a second time, he will only say "How's it going?" until the map is reloaded.
 
 #### Syntax
 
@@ -1093,7 +1134,7 @@ The macro literally replaces each const with the token collected during its orig
 
 These consts are *not* meant to be used as variables for in-game logic, as the game will never see the const as a variable at all, but will only see the token captured by the macro. To emphasize this point, you cannot change the value of a const once you've defined it. If you find yourself wanting to do this, you probably want to be using a MGE variable instead.
 
-For value assignment:
+To start declaring constants:
 
 ```
 const! ()
@@ -1108,7 +1149,7 @@ Inside the above parentheses can be any number of constant assignments:
 - `CONST_NAME`: `$` + [bareword](#bareword) (e.g. `$varName`)
 - `VALUE`: any MGS Natlang variable whatsoever, e.g. any [number](#number), [string](#string), [bareword](#bareword), [duration](#duration), etc.
 
-Keep in mind that `$` is used for [MGS Natlang variables](#mgs-natlang-variables) in his document's example syntax, but that is a different usage, as those variables are to be replaced by values of that variable type, whereas these constants will appear in the final MGS file literally in the form `$_`.
+Keep in mind that `$` is used for [MGS Natlang variables](#mgs-natlang-variables) in his document's example syntax (e.g. `wait $duration`), but that is a different usage, as those variables are to be replaced by values of that variable type (e.g. `wait 100ms`), whereas these constants will appear in the final MGS file literally in the form `$_`.
 
 #### Example
 
@@ -1243,9 +1284,14 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SET_MAP_TICK_SCRIPT](#set_map_tick_script)
 	- `set map tick_script to scriptName`
 - [SET_ENTITY_INTERACT_SCRIPT](#set_entity_interact_script)
+	- `set entity "Entity Name" on_interact to scriptName`
 	- `set entity "Entity Name" interact_script to scriptName`
 - [SET_ENTITY_TICK_SCRIPT](#set_entity_tick_script)
+	- `set entity "Entity Name" on_tick to scriptName`
 	- `set entity "Entity Name" tick_script to scriptName`
+- [SET_ENTITY_LOOK_SCRIPT](#set_entity_look_script)
+	- `set entity "Entity Name" on_look to scriptName`
+	- `set entity "Entity Name" look_script to scriptName`
 
 #### [Entity choreography](#entity-choreography-actions)
 
@@ -1271,11 +1317,13 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 - [SET_ENTITY_DIRECTION](#set_entity_direction)
 	- `turn entity "Entity Name" north`
 - [SET_ENTITY_DIRECTION_RELATIVE](#set_entity_direction_relative)
-	- `rotate entity "Entity Name" -1`
+	- `rotate entity "Entity Name" 3`
 - [SET_ENTITY_DIRECTION_TARGET_ENTITY](#set_entity_direction_target_entity)
 	- `turn entity "Entity Name" toward entity "Target Entity"`
 - [SET_ENTITY_DIRECTION_TARGET_GEOMETRY](#set_entity_direction_target_geometry)
 	- `turn entity "Entity Name" toward geometry "vector object name"`
+- [SET_ENTITY_MOVEMENT_RELATIVE](#set_entity_movement_relative)
+	- `set entity "Entity Name" relative_direction to 3`
 - [SET_ENTITY_GLITCHED](#set_entity_glitched)
 	- `make entity "Entity Name" glitched`
 	- `make entity "Entity Name" unglitched`
@@ -1296,20 +1344,6 @@ Sample syntax (with sample values) for each action, grouped by category. Click a
 	- `set entity "Entity Name" secondary_id to 2`
 - [SET_ENTITY_PRIMARY_ID_TYPE](#set_entity_primary_id_type)
 	- `set entity "Entity Name" primary_id_type to 0`
-- [SET_ENTITY_HACKABLE_STATE_A](#set_entity_hackable_state_a)
-	- `set entity "Entity Name" hackable_state_a to 0`
-- [SET_ENTITY_HACKABLE_STATE_B](#set_entity_hackable_state_b)
-	- `set entity "Entity Name" hackable_state_b to 0`
-- [SET_ENTITY_HACKABLE_STATE_C](#set_entity_hackable_state_c)
-	- `set entity "Entity Name" hackable_state_c to 0`
-- [SET_ENTITY_HACKABLE_STATE_D](#set_entity_hackable_state_d)
-	- `set entity "Entity Name" hackable_state_d to 0`
-- [SET_ENTITY_HACKABLE_STATE_A_U2](#set_entity_hackable_state_a_u2)
-	- `set entity "Entity Name" hackable_state_au2 to 2`
-- [SET_ENTITY_HACKABLE_STATE_C_U2](#set_entity_hackable_state_c_u2)
-	- `set entity "Entity Name" hackable_state_cu2 to 2`
-- [SET_ENTITY_HACKABLE_STATE_A_U4](#set_entity_hackable_state_a_u4)
-	- `set entity "Entity Name" hackable_state_au4 to 4`
 
 #### [Set variables](#set-variables-actions)
 
@@ -1348,9 +1382,18 @@ Consists of actions from the [check entity properies](#check-entity-properies-ac
 - [CHECK_ENTITY_INTERACT_SCRIPT](#check_entity_interact_script)
 	- `entity "Entity Name" interact_script is scriptName`
 	- `entity "Entity Name" interact_script is not scriptName`
+	- `entity "Entity Name" on_interact is scriptName`
+	- `entity "Entity Name" on_interact is not scriptName`
 - [CHECK_ENTITY_TICK_SCRIPT](#check_entity_tick_script)
 	- `entity "Entity Name" tick_script is scriptName`
 	- `entity "Entity Name" tick_script is not scriptName`
+	- `entity "Entity Name" on_tick is scriptName`
+	- `entity "Entity Name" on_tick is not scriptName`
+- [CHECK_ENTITY_LOOK_SCRIPT](#check_entity_look_script)
+	- `entity "Entity Name" look_script is scriptName`
+	- `entity "Entity Name" look_script is not scriptName`
+	- `entity "Entity Name" on_look is scriptName`
+	- `entity "Entity Name" on_look is not scriptName`
 - [CHECK_ENTITY_TYPE](#check_entity_type)
 	- `entity "Entity Name" type is old_man`
 	- `entity "Entity Name" type is not old_man`
@@ -1375,26 +1418,6 @@ Consists of actions from the [check entity properies](#check-entity-properies-ac
 - [CHECK_ENTITY_GLITCHED](#check_entity_glitched)
 	- `entity "Entity Name" is glitched`
 	- `entity "Entity Name" is not glitched`
-- [CHECK_ENTITY_HACKABLE_STATE_A](#check_entity_hackable_state_a)
-	- `entity "Entity Name" hackable_state_a is 2`
-	- `entity "Entity Name" hackable_state_a is not 2`
-- [CHECK_ENTITY_HACKABLE_STATE_B](#check_entity_hackable_state_b)
-	- `entity "Entity Name" hackable_state_b is 2`
-	- `entity "Entity Name" hackable_state_b is not 2`
-- [CHECK_ENTITY_HACKABLE_STATE_C](#check_entity_hackable_state_c)
-	- `entity "Entity Name" hackable_state_c is 2`
-	- `entity "Entity Name" hackable_state_c is not 2`
-- [CHECK_ENTITY_HACKABLE_STATE_D](#check_entity_hackable_state_d)
-	- `entity "Entity Name" hackable_state_d is 2`
-	- `entity "Entity Name" hackable_state_d is not 2`
-- [CHECK_ENTITY_HACKABLE_STATE_A_U2](#check_entity_hackable_state_a_u2)
-	- `entity "Entity Name" hackable_state_au2 is 32`
-	- `entity "Entity Name" hackable_state_au2 is not 32`
-- [CHECK_ENTITY_HACKABLE_STATE_C_U2](#check_entity_hackable_state_c_u2)
-	- `entity "Entity Name" hackable_state_cu2 is 32`
-	- `entity "Entity Name" hackable_state_cu2 is not 32`
-- [CHECK_ENTITY_HACKABLE_STATE_A_U4](#check_entity_hackable_state_a_u4)
-	- `entity "Entity Name" hackable_state_au4 is 9001`
 - [CHECK_ENTITY_PATH](#check_entity_path)
 	- `entity "Entity Name" path is "vector object name"`
 	- `entity "Entity Name" path is not "vector object name"`
@@ -1598,14 +1621,12 @@ This action is also available as a [combination block](#combination-blocks).
 
 ```
 show serial dialog $serial_dialog:string
-	// Built-in values:
-	// disable_newline (false)
+	// disable_newline: false
 ```
 
 ```
 concat serial dialog $serial_dialog:string
-	// Built-in values:
-	// disable_newline (true)
+	// disable_newline: true
 ```
 
 Examples:
@@ -1636,20 +1657,17 @@ Commands must be a single word.
 
 ```
 register (command) $command:string -> (script) $script:string
-	// Built-in values:
-	// is_fail (false)
+	// is_fail: false
 ```
 
 ```
 register (command) $command:string fail -> (script) $script:string
-	// Built-in values:
-	// is_fail (true)
+	// is_fail: true
 ```
 
 ```
 register (command) $command:string failure -> (script) $script:string
-	// Built-in values:
-	// is_fail (true)
+	// is_fail: true
 ```
 
 Examples:
@@ -1665,20 +1683,17 @@ Examples:
 
 ```
 unregister (command) $command:string
-	// Built-in values:
-	// is_fail (false)
+	// is_fail: false
 ```
 
 ```
 unregister (command) $command:string fail
-	// Built-in values:
-	// is_fail (true)
+	// is_fail: true
 ```
 
 ```
 unregister (command) $command:string failure
-	// Built-in values:
-	// is_fail (true)
+	// is_fail: true
 ```
 
 Examples:
@@ -1854,20 +1869,51 @@ If you use this action to change the script slot that is currently running the a
 Because entity properties are reset when a map is loaded, and because entities retain the last script that was run in their `on_interact` slot, you should restore an entity's original interact script at the end of their interact script tree.
 
 ```
+set entity $entity:string on_interact (to) $script:string
+```
+
+```
 set entity $entity:string interact_script (to) $script:string
 ```
 
-Example: `set entity "Entity Name" interact_script to scriptName`
+Examples:
+
+- `set entity "Entity Name" on_interact to scriptName`
+- `set entity "Entity Name" interact_script to scriptName`
 
 #### SET_ENTITY_TICK_SCRIPT
 
 Sets an entity's `on_tick` script.
 
 ```
+set entity $entity:string on_tick (to) $script:string
+```
+
+```
 set entity $entity:string tick_script (to) $script:string
 ```
 
-Example: `set entity "Entity Name" tick_script to scriptName`
+Examples:
+
+- `set entity "Entity Name" on_tick to scriptName`
+- `set entity "Entity Name" tick_script to scriptName`
+
+#### SET_ENTITY_LOOK_SCRIPT
+
+Sets an entity's `on_look` script.
+
+```
+set entity $entity:string on_look (to) $script:string
+```
+
+```
+set entity $entity:string look_script (to) $script:string
+```
+
+Examples:
+
+- `set entity "Entity Name" on_look to scriptName`
+- `set entity "Entity Name" look_script to scriptName`
 
 ### Entity choreography actions
 
@@ -1997,7 +2043,7 @@ This action can be chained with another similar one for complex behaviors. For e
 rotate entity $entity:string $relative_direction:number
 ```
 
-Example: `rotate entity "Entity Name" -1`
+Example: `rotate entity "Entity Name" 3`
 
 #### SET_ENTITY_DIRECTION_TARGET_ENTITY
 
@@ -2019,20 +2065,30 @@ turn entity $entity:string toward geometry $target_geometry:string
 
 Example: `turn entity "Entity Name" toward geometry "vector object name"`
 
+#### SET_ENTITY_MOVEMENT_RELATIVE
+
+This adds a rotation to an entity's animations. This is different from turning an entity toward something or someone (see [SET_ENTITY_DIRECTION](#set_entity_direction) and related actions); this action applies a rotation to *all* an entity's animations, including while the entity is in motion. In short, use this action to make an entity walk backwards or strafe (walk sideways).
+
+This number cannot be negative.
+
+```
+set entity $entity:string relative_direction (to) $relative_direction:number
+```
+
+Example: `set entity "Entity Name" relative_direction to 3`
+
 #### SET_ENTITY_GLITCHED
 
 Set the glitched render flag on an entity.
 
 ```
 make entity $entity:string glitched
-	// Built-in values:
-	// bool_value (true)
+	// bool_value: true
 ```
 
 ```
 make entity $entity:string unglitched
-	// Built-in values:
-	// bool_value (false)
+	// bool_value: false
 ```
 
 Examples:
@@ -2122,76 +2178,6 @@ set entity $entity:string primary_id_type (to) $byte_value:number
 
 Example: `set entity "Entity Name" primary_id_type to 0`
 
-#### SET_ENTITY_HACKABLE_STATE_A
-
-Sets the value of an entity's `hackable_state_a` byte. Max value: 255
-
-```
-set entity $entity:string hackable_state_a (to) $byte_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_a to 0`
-
-#### SET_ENTITY_HACKABLE_STATE_B
-
-Sets the value of an entity's `hackable_state_b` byte. Max value: 255
-
-```
-set entity $entity:string hackable_state_b (to) $byte_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_b to 0`
-
-#### SET_ENTITY_HACKABLE_STATE_C
-
-Sets the value of an entity's `hackable_state_c` byte. Max value: 255
-
-```
-set entity $entity:string hackable_state_c (to) $byte_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_c to 0`
-
-#### SET_ENTITY_HACKABLE_STATE_D
-
-Sets the value of an entity's `hackable_state_d` byte. Max value: 255
-
-```
-set entity $entity:string hackable_state_d (to) $byte_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_d to 0`
-
-#### SET_ENTITY_HACKABLE_STATE_A_U2
-
-Sets the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535
-
-```
-set entity $entity:string hackable_state_au2 (to) $u2_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_au2 to 2`
-
-#### SET_ENTITY_HACKABLE_STATE_C_U2
-
-Sets the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535
-
-```
-set entity $entity:string hackable_state_cu2 (to) $u2_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_cu2 to 2`
-
-#### SET_ENTITY_HACKABLE_STATE_A_U4
-
-Sets the values of an entity's `hackable_state_a` through `hackable_state_d` bytes, interpreted together as if a U4. Max value: …big
-
-```
-set entity $entity:string hackable_state_au4 (to) $u4_value:number
-```
-
-Example: `set entity "Entity Name" hackable_state_au4 to 4`
-
 ### Set variables actions
 
 Manipulate MGE variables or set them to an arbitrary value.
@@ -2246,26 +2232,22 @@ Copies the value of an entity property into a variable or vice versa.
 
 ```
 copy entity $entity:string $field:bareword into variable $variable:string
-	// Built-in values:
-	// inbound (true)
+	// inbound: true
 ```
 
 ```
 copy variable $variable:string from entity $entity:string $field:bareword
-	// Built-in values:
-	// inbound (true)
+	// inbound: true
 ```
 
 ```
 copy variable $variable:string into entity $entity:string $field:bareword
-	// Built-in values:
-	// inbound (false)
+	// inbound: false
 ```
 
 ```
 copy entity $entity:string $field:bareword from variable $variable:string
-	// Built-in values:
-	// inbound (false)
+	// inbound: false
 ```
 
 Examples:
@@ -2288,15 +2270,13 @@ Checks an entity's current `name`.
 ```
 if entity $entity:string name is $string:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string name is not $string:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2311,15 +2291,13 @@ Checks an entity's `x` coordinate.
 ```
 if entity $entity:string x is $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string x is not $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2334,15 +2312,13 @@ Checks an entity's `y` coordinate.
 ```
 if entity $entity:string y is $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string y is not $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2357,21 +2333,33 @@ Checks an entity's `on_interact` script (by the script's name).
 ```
 if entity $entity:string interact_script is $expected_script:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string interact_script is not $expected_script:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
+```
+
+```
+if entity $entity:string on_interact is $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: true
+```
+
+```
+if entity $entity:string on_interact is not $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: false
 ```
 
 Examples:
 
 - `if entity "Entity Name" interact_script is scriptName then goto successScript`
 - `if entity "Entity Name" interact_script is not scriptName then goto successScript`
+- `if entity "Entity Name" on_interact is scriptName then goto successScript`
+- `if entity "Entity Name" on_interact is not scriptName then goto successScript`
 
 #### CHECK_ENTITY_TICK_SCRIPT
 
@@ -2380,21 +2368,68 @@ Checks an entity's `on_tick` script (by the script's name).
 ```
 if entity $entity:string tick_script is $expected_script:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string tick_script is not $expected_script:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
+```
+
+```
+if entity $entity:string on_tick is $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: true
+```
+
+```
+if entity $entity:string on_tick is not $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: false
 ```
 
 Examples:
 
 - `if entity "Entity Name" tick_script is scriptName then goto successScript`
 - `if entity "Entity Name" tick_script is not scriptName then goto successScript`
+- `if entity "Entity Name" on_tick is scriptName then goto successScript`
+- `if entity "Entity Name" on_tick is not scriptName then goto successScript`
+
+#### CHECK_ENTITY_LOOK_SCRIPT
+
+Checks an entity's `on_look` script (by the script's name).
+
+```
+if entity $entity:string look_script is $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: true
+```
+
+```
+if entity $entity:string look_script is not $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: false
+```
+
+```
+if entity $entity:string on_look is $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: true
+```
+
+```
+if entity $entity:string on_look is not $expected_script:string
+	then goto (script) $success_script:string
+	// expected_bool: false
+```
+
+Examples:
+
+- `if entity "Entity Name" look_script is scriptName then goto successScript`
+- `if entity "Entity Name" look_script is not scriptName then goto successScript`
+- `if entity "Entity Name" on_look is scriptName then goto successScript`
+- `if entity "Entity Name" on_look is not scriptName then goto successScript`
 
 #### CHECK_ENTITY_TYPE
 
@@ -2405,15 +2440,13 @@ This action is useful because you can check entity types by name, which is easy 
 ```
 if entity $entity:string type is $entity_type:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string type is not $entity_type:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2430,15 +2463,13 @@ Checks whether an entity has the given `primary_id`.
 ```
 if entity $entity:string primary_id is $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id is not $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2457,15 +2488,13 @@ Tiles are referenced by their index, starting at the top and going toward the ri
 ```
 if entity $entity:string secondary_id is $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string secondary_id is not $expected_u2:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2480,15 +2509,13 @@ Checks an entity's `primary_id_type`: either (0) tile, (1) animation, or (2) cha
 ```
 if entity $entity:string primary_id_type is $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string primary_id_type is not $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2503,15 +2530,13 @@ Checks the id of the entity's current `animation`. (See [entity animations](#ent
 ```
 if entity $entity:string animation is $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string animation is not $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2526,15 +2551,13 @@ Checks the frame (number) of the entity's current animation.
 ```
 if entity $entity:string animation_frame is $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string animation_frame is not $expected_byte:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2549,15 +2572,13 @@ Checks whether an entity is facing one of the four cardinal directions: `north`,
 ```
 if entity $entity:string direction is $direction:bareword
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string direction is not $direction:bareword
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2572,172 +2593,19 @@ Checks whether an entity currently has it's "glitched" render flag set.
 ```
 if entity $entity:string is glitched
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not glitched
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
 
 - `if entity "Entity Name" is glitched then goto successScript`
 - `if entity "Entity Name" is not glitched then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_A
-
-Checks the value of an entity's `hackable_state_a` byte. Max value: 255
-
-```
-if entity $entity:string hackable_state_a is $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_a is not $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_a is 2 then goto successScript`
-- `if entity "Entity Name" hackable_state_a is not 2 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_B
-
-Checks the value of an entity's `hackable_state_b` byte. Max value: 255
-
-```
-if entity $entity:string hackable_state_b is $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_b is not $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_b is 2 then goto successScript`
-- `if entity "Entity Name" hackable_state_b is not 2 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_C
-
-Checks the value of an entity's `hackable_state_c` byte. Max value: 255
-
-```
-if entity $entity:string hackable_state_c is $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_c is not $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_c is 2 then goto successScript`
-- `if entity "Entity Name" hackable_state_c is not 2 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_D
-
-Checks the value of an entity's `hackable_state_d` byte. Max value: 255
-
-```
-if entity $entity:string hackable_state_d is $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_d is not $expected_byte:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_d is 2 then goto successScript`
-- `if entity "Entity Name" hackable_state_d is not 2 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_A_U2
-
-Checks the values of an entity's `hackable_state_a` and `hackable_state_b` bytes, interpreted together as if a U2. Max value: 65535
-
-```
-if entity $entity:string hackable_state_au2 is $expected_u2:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_au2 is not $expected_u2:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_au2 is 32 then goto successScript`
-- `if entity "Entity Name" hackable_state_au2 is not 32 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_C_U2
-
-Checks the values of an entity's `hackable_state_c` and `hackable_state_d` bytes, interpreted together as if a U2. Max value: 65535
-
-```
-if entity $entity:string hackable_state_cu2 is $expected_u2:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-```
-
-```
-if entity $entity:string hackable_state_cu2 is not $expected_u2:number
-	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-```
-
-Examples:
-
-- `if entity "Entity Name" hackable_state_cu2 is 32 then goto successScript`
-- `if entity "Entity Name" hackable_state_cu2 is not 32 then goto successScript`
-
-#### CHECK_ENTITY_HACKABLE_STATE_A_U4
-
-Checks the values of an entity's `hackable_state_a` through `hackable_state_d` bytes, interpreted together as if a U4. Max value: …big
-
-NOTE: This is the only "check" action that can only check for equality, not inequality. (There aren't enough bytes to spare for the `expected_bool`!)
-
-```
-if entity $entity:string hackable_state_au4 is $expected_u4:number
-	then goto (script) $success_script:string
-```
-
-Example: `if entity "Entity Name" hackable_state_au4 is 9001 then goto successScript`
 
 #### CHECK_ENTITY_PATH
 
@@ -2746,15 +2614,13 @@ Checks the `path` name (geometry) of an entity.
 ```
 if entity $entity:string path is $geometry:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string path is not $geometry:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2771,15 +2637,13 @@ This action can behave erratically if any of the vertices in the geometry object
 ```
 if entity $entity:string is inside geometry $geometry:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if entity $entity:string is not inside geometry $geometry:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2800,31 +2664,27 @@ Compares the value of a variable against the given value.
 ```
 if variable $variable:string is $value:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-	// comparison (==)
+	// expected_bool: true
+	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $value:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $value:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-	// comparison (==)
+	// expected_bool: false
+	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $value:number
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2843,31 +2703,27 @@ Compares the value of a variable against another.
 ```
 if variable $variable:string is $source:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
-	// comparison (==)
+	// expected_bool: true
+	// comparison: ==
 ```
 
 ```
 if variable $variable:string is $comparison:operator $source:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if variable $variable:string is not $source:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
-	// comparison (==)
+	// expected_bool: false
+	// comparison: ==
 ```
 
 ```
 if variable $variable:string is not $comparison:operator $source:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2916,15 +2772,13 @@ If checking for whether a button is newly pressed, see [CHECK_FOR_BUTTON_PRESS](
 ```
 if button $button_id:bareword is currently pressed
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if button $button_id:bareword is not currently pressed
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
@@ -2939,15 +2793,13 @@ Checks whether the warp state string is a specific value.
 ```
 if warp state is $string:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (true)
+	// expected_bool: true
 ```
 
 ```
 if warp state is not $string:string
 	then goto (script) $success_script:string
-	// Built-in values:
-	// expected_bool (false)
+	// expected_bool: false
 ```
 
 Examples:
