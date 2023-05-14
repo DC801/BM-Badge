@@ -292,15 +292,15 @@ natlang.tryBranch = function (tokens, tokenPos, branch) {
 		if (!foundTwigMatch) {
 			var expected = ref.next
 				.map(function (item) {
-					var flat = "unknownEntry";
 					if (item.value) {
-						flat = item.value;
-					} else if (item.capture) {
-						flat = `$${item.capture.label}:${item.capture.type}`;
+						return item.value;
 					}
-					return flat;
+					if (item.capture) {
+						return `$${item.capture.label}:${item.capture.type}`;
+					}
+					throw new Error("Your AST probably has a null word in it! (HINT: patterns are split by spaces when added to the tree, so make sure there are no double spaces in there!!");
 				}).map(function (item) {
-					return '"' + item + '"';
+					return `"${item}"`;
 				})
 			report.currentTwig = ref;
 			report.currentToken = token;

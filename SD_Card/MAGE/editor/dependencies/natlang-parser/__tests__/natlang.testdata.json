@@ -1042,12 +1042,25 @@
 		{
 			"json": {
 				"action": "SHOW_SERIAL_DIALOG",
-				"serial_dialog": "serial-dialog"
+				"serial_dialog": "serial-dialog",
+				"disable_newline": false
 			},
 			"natlang": [
 				"show serial dialog serial-dialog",
 				"show serial dialog 'serial-dialog'",
 				"show serial dialog \"serial-dialog\""
+			]
+		},
+		{
+			"json": {
+				"action": "SHOW_SERIAL_DIALOG",
+				"serial_dialog": "serial-dialog",
+				"disable_newline": true
+			},
+			"natlang": [
+				"concat serial dialog serial-dialog",
+				"concat serial dialog 'serial-dialog'",
+				"concat serial dialog \"serial-dialog\""
 			]
 		},
 		{
@@ -1649,83 +1662,6 @@
 		},
 		{
 			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_A",
-				"entity": "Entity Name",
-				"byte_value": 128
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_a to 128",
-				"set entity \"Entity Name\" hackable_state_a 128"
-		]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_B",
-				"entity": "Entity Name",
-				"byte_value": 128
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_b to 128",
-				"set entity \"Entity Name\" hackable_state_b 128"
-			]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_C",
-				"entity": "Entity Name",
-				"byte_value": 128
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_c to 128",
-				"set entity \"Entity Name\" hackable_state_c 128"
-			]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_D",
-				"entity": "Entity Name",
-				"byte_value": 128
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_d to 128",
-				"set entity \"Entity Name\" hackable_state_d 128"
-			]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_A_U2",
-				"entity": "Entity Name",
-				"u2_value": 2
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_au2 to 2",
-				"set entity \"Entity Name\" hackable_state_au2 2"
-			]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_C_U2",
-				"entity": "Entity Name",
-				"u2_value": 2
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_cu2 to 2",
-				"set entity \"Entity Name\" hackable_state_cu2 2"
-			]
-		},
-		{
-			"json": {
-				"action": "SET_ENTITY_HACKABLE_STATE_A_U4",
-				"entity": "Entity Name",
-				"u4_value": 4
-			},
-			"natlang": [
-				"set entity \"Entity Name\" hackable_state_au4 to 4",
-				"set entity \"Entity Name\" hackable_state_au4 4"
-			]
-		},
-		{
-			"json": {
 				"action": "SET_ENTITY_PATH",
 				"entity": "Entity Name",
 				"geometry": "geometry-name-entity-path"
@@ -1768,12 +1704,12 @@
 				"script": "script-entity-interact"
 			},
 			"natlang": [
-				"set entity \"Entity Name\" interact_script to script-entity-interact",
-				"set entity \"Entity Name\" interact_script to 'script-entity-interact'",
-				"set entity \"Entity Name\" interact_script to \"script-entity-interact\"",
-				"set entity \"Entity Name\" interact_script script-entity-interact",
-				"set entity \"Entity Name\" interact_script 'script-entity-interact'",
-				"set entity \"Entity Name\" interact_script \"script-entity-interact\""
+				"set entity \"Entity Name\" on_interact to script-entity-interact",
+				"set entity \"Entity Name\" on_interact to 'script-entity-interact'",
+				"set entity \"Entity Name\" on_interact to \"script-entity-interact\"",
+				"set entity \"Entity Name\" on_interact script-entity-interact",
+				"set entity \"Entity Name\" on_interact 'script-entity-interact'",
+				"set entity \"Entity Name\" on_interact \"script-entity-interact\""
 			]
 		},
 		{
@@ -1783,12 +1719,12 @@
 				"script": "script-entity-tick"
 			},
 			"natlang": [
-				"set entity \"Entity Name\" tick_script to script-entity-tick",
-				"set entity \"Entity Name\" tick_script to 'script-entity-tick'",
-				"set entity \"Entity Name\" tick_script to \"script-entity-tick\"",
-				"set entity \"Entity Name\" tick_script script-entity-tick",
-				"set entity \"Entity Name\" tick_script 'script-entity-tick'",
-				"set entity \"Entity Name\" tick_script \"script-entity-tick\""
+				"set entity \"Entity Name\" on_tick to script-entity-tick",
+				"set entity \"Entity Name\" on_tick to 'script-entity-tick'",
+				"set entity \"Entity Name\" on_tick to \"script-entity-tick\"",
+				"set entity \"Entity Name\" on_tick script-entity-tick",
+				"set entity \"Entity Name\" on_tick 'script-entity-tick'",
+				"set entity \"Entity Name\" on_tick \"script-entity-tick\""
 			]
 		},
 		{
@@ -2050,18 +1986,6 @@
 		},
 		{
 			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U4",
-				"entity": "Entity Name",
-				"expected_u4": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_au4 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_au4 is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
 				"action": "CHECK_ENTITY_NAME",
 				"entity": "Entity Name",
 				"expected_bool": true,
@@ -2201,84 +2125,6 @@
 			"natlang": [
 				"if entity \"Entity Name\" direction is north then goto script \"branch script\"",
 				"if entity \"Entity Name\" direction is north then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_a is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_a is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_b is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_b is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_c is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_c is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_d is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_d is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_u2": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_au2 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_au2 is 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
-				"entity": "Entity Name",
-				"expected_bool": true,
-				"expected_u2": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_cu2 is 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_cu2 is 1 then goto \"branch script\""
 			]
 		},
 		{
@@ -2435,84 +2281,6 @@
 			"natlang": [
 				"if entity \"Entity Name\" direction is not north then goto script \"branch script\"",
 				"if entity \"Entity Name\" direction is not north then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_A",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_a is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_a is not 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_B",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_b is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_b is not 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_C",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_c is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_c is not 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_D",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_byte": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_d is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_d is not 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_A_U2",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_u2": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_au2 is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_au2 is not 1 then goto \"branch script\""
-			]
-		},
-		{
-			"json": {
-				"action": "CHECK_ENTITY_HACKABLE_STATE_C_U2",
-				"entity": "Entity Name",
-				"expected_bool": false,
-				"expected_u2": 1,
-				"success_script": "branch script"
-			},
-			"natlang": [
-				"if entity \"Entity Name\" hackable_state_cu2 is not 1 then goto script \"branch script\"",
-				"if entity \"Entity Name\" hackable_state_cu2 is not 1 then goto \"branch script\""
 			]
 		},
 		{

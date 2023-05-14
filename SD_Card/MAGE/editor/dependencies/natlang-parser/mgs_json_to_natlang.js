@@ -44,21 +44,23 @@ mgs.actionToNatlang = function (origJSON) {
 		patternChoices = patternChoices
 			.filter(function (entry) {
 				var commonValues = true;
-				if (!entry.values) {
-					throw new Error("This action has several dictionary entries but no means of distinguishing them! Action: " + origJSON.action);
+				if (entry.values) {
+					var params = Object.keys(entry.values);
+					params.forEach(function (param) {
+						if (entry.values[param] !== origJSON[param]) {
+							commonValues = false;
+						}
+					})
+					return commonValues;
+				} else {
+					console.log(`Action ${origJSON.action} has synonyms with no contrasting properties. (This might be fine.)`)
+					return true;
 				}
-				var params = Object.keys(entry.values);
-				params.forEach(function (param) {
-					if (entry.values[param] !== origJSON[param]) {
-						commonValues = false;
-					}
-				})
-				return commonValues;
 			})
 	}
 	if (patternChoices.length === 0) { // overfiltered
 		console.error(origJSON)
-		throw new Error("The above action was so aggressively filtered there was nothing left! Action: " + origJSON.action);
+		throw new Error(`The above action was so aggressively filtered there was nothing left! Action: ${origJSON.action}`);
 	} else if (patternChoices.length > 1) { // underfiltered
 		if (log) {console.log(origJSON); }
 		if (log) {console.log("This action has several dictionary entries and filtering failed to sufficiently distinguish them. Assuming synonyms...."); }
