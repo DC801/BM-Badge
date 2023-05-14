@@ -124,17 +124,19 @@ int main(int argc, char* argv[]) {
 
 	//QSPI ROM Chip
 	auto qspiControl = QSPI{};
-	
-	//Init the SD Card
-	static auto sdCard = std::make_unique<SDCard>();
-	if(!*sdCard){
-		//util_sd_error();
-		debug_print("No SD card present on boot.");
-	}
-	else
 	{
-		auto romUpdater = RomUpdater(qspiControl, *sdCard);
-		romUpdater.HandleROMUpdate(inputHandler, frameBuffer);
+		//Init the SD Card
+		auto sdCard = std::make_unique<SDCard>();
+		if (!*sdCard)
+		{
+			//util_sd_error();
+			debug_print("No SD card present on boot.");
+		}
+		else
+		{
+			auto romUpdater = RomUpdater(qspiControl, *sdCard);
+			romUpdater.HandleROMUpdate(inputHandler, frameBuffer);
+		}
 	}
 
 	//this function will set up the NAU8810 chip to play sounds

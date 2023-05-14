@@ -108,7 +108,6 @@ public:
                 "%s\n\n"
                 " SD hash: %08x        SD version: %d\n"
                 "ROM hash: %08x       ROM version: %d\n\n"
-
                 "Would you like to update your scenario data?\n"
                 "------------------------------------------------\n\n"
 
@@ -205,42 +204,45 @@ public:
                 {
                     romPagesToWrite += 1;
                 }
-                for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
+                if (!qspi.write(sdReadBuffer.data(), ENGINE_ROM_SD_CHUNK_READ_SIZE, currentAddress))
                 {
-                    //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
-                    //Debug Print:
-                    sprintf(debugString, "Copying range %d/%d: %08x-%08x4\n", i, romPagesToWrite, currentAddress, currentAddress + ENGINE_ROM_SD_CHUNK_READ_SIZE);
-                    debug_print(debugString);
-                    frameBuffer->fillRect(0, 150, DrawWidth, 150, COLOR_BLACK);
-                    frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 150);
-
-                    auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
-                    auto readOffset = &sdReadBuffer[romPageOffset];
-                    auto writeOffset = currentAddress + romPageOffset;
-                    auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
-                    auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
-
-                    if (i == (romPagesToWrite - 1))
-                    {
-                        debug_print("Write Size at %d is %d", i, writeSize);
-                    }
-                    qspi.write((uint8_t*)readOffset, writeSize, writeOffset);
-                    // TODO FIXME
-                    //verify that the data was correctly written or return false.
-                    // Verify(
-                    //     writeOffset,
-                    //     writeSize,
-                    //     (uint8_t*)readOffset,
-                    //     true
-                    // );
+                    debug_print("Failed to write buffer");
                 }
 
-                //print success message:
-                debug_print("Successfully copied ROM from SD to QSPI ROM");
-                frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-                frameBuffer->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
-                headerHashMatch = true;
+                // for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
+                // {
+                //     //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
+                //     //Debug Print:
+                //     sprintf(debugString, "Copying range %d/%d: %08x-%08x4\n", i, romPagesToWrite, currentAddress, currentAddress + ENGINE_ROM_SD_CHUNK_READ_SIZE);
+                //     debug_print(debugString);
+                //     frameBuffer->fillRect(0, 150, DrawWidth, 150, COLOR_BLACK);
+                //     frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 150);
+
+                //     auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
+                //     auto readOffset = &sdReadBuffer[romPageOffset];
+                //     auto writeOffset = currentAddress + romPageOffset;
+                //     auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
+                //     auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
+
+                //     if (i == (romPagesToWrite - 1))
+                //     {
+                //         debug_print("Write Size at %d is %d", i, writeSize);
+                //     }
+                //     // TODO FIXME
+                //     //verify that the data was correctly written or return false.
+                //     // Verify(
+                //     //     writeOffset,
+                //     //     writeSize,
+                //     //     (uint8_t*)readOffset,
+                //     //     true
+                //     // );
+                // }
             }
+            //print success message:
+            debug_print("Successfully copied ROM from SD to QSPI ROM");
+            frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
+            frameBuffer->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
+            headerHashMatch = true;
 
         }
 
