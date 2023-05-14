@@ -1,6 +1,7 @@
 #ifdef DC801_EMBEDDED
 
 #include "drv_ili9341.h"
+#include "utility.h"
 #include <algorithm>
 
 //size of chunk to transfer each interrupt
@@ -210,6 +211,8 @@ void ili9341_init() {
 
 	//Keep CS pin low for all time, saves time later.
 	//nrf_gpio_pin_clear(ILI9341_PIN_CS);
+
+	debug_print("Initilized ili9341");
 }
 
 /**

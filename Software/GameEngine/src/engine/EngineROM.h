@@ -48,11 +48,9 @@ private:
 //size of chunk to be read/written when writing game.dat to ROM per loop
 static const inline uint32_t ENGINE_ROM_SD_CHUNK_READ_SIZE = 65536;
 
-//This is the smallest page we know how to erase on our chip,
-//because the smaller values provided by nordic are incorrect,
-//and this is the only one that has worked for us so far
+//This is the smallest page that can be erased on the FL256SSVF01 chip which uses uniform 256kB page sizes
 //262144 bytes = 256KB
-#define ENGINE_ROM_ERASE_PAGE_SIZE 262144
+static const inline uint32_t ENGINE_ROM_ERASE_PAGE_SIZE = 262144;
 
 //size of largest single Write data that can be sent at one time:
 //make sure that ENGINE_ROM_SD_CHUNK_READ_SIZE is evenly divisible by this

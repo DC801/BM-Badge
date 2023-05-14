@@ -232,6 +232,7 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
       }
    }
    m_cursor_area.origin.x = 0;
+   blt();
 }
 
 void FrameBuffer::blt()

@@ -18,6 +18,7 @@
 #include "games/mage/mage_rom.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
+#include "RomUpdater.h"
 #include "fonts/Monaco9.h"
 #include "utility.h"
 
@@ -103,12 +104,11 @@ int main(int argc, char* argv[]) {
 	// Init the display
 	ili9341_init();
 	ili9341_start();
-	
-	//Init the SD Card
-	if(!util_sd_init()){
-		//util_sd_error();
-		debug_print("No SD card present on boot.");
-	}
+
+	frameBuffer->clearScreen(COLOR_BLACK);
+	frameBuffer->printMessage("Screen initialized", Monaco9, 0xffff, 16, 16);
+	frameBuffer->blt();
+
 
 	//USB serial
 	usb_serial_init();
@@ -117,15 +117,25 @@ int main(int argc, char* argv[]) {
 	twi_master_init();
 
 	// Setup the UART
-	//uart_init();
+	uart_init();
 
 	//keyboard controls all hardware buttons on this badge
 	keyboard_init();
 
 	//QSPI ROM Chip
-	static auto qspiControl = QSPI{};
-
-	qspiControl.HandleROMUpdate(inputHandler, frameBuffer);
+	auto qspiControl = QSPI{};
+	
+	//Init the SD Card
+	static auto sdCard = std::make_unique<SDCard>();
+	if(!*sdCard){
+		//util_sd_error();
+		debug_print("No SD card present on boot.");
+	}
+	else
+	{
+		auto romUpdater = RomUpdater(qspiControl, *sdCard);
+		romUpdater.HandleROMUpdate(inputHandler, frameBuffer);
+	}
 
 	//this function will set up the NAU8810 chip to play sounds
 	//speaker_init();
@@ -142,7 +152,6 @@ int main(int argc, char* argv[]) {
 	// Setup the battery monitor
 	//adc_configure();
 	//adc_start();
-
 
 	//EEpwm_init();
 

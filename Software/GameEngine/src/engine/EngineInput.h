@@ -34,7 +34,6 @@ public:
    }
 
    void HandleKeyboard();
-
    bool IsRunning() const { return running; }
    bool ShouldReloadGameDat() const { return shouldReloadGameDat; }
    void TriggerRomReload() { shouldReloadGameDat = true; }

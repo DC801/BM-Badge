@@ -26,29 +26,10 @@
  * 	Adapted for the dc801 dc26 badge and SDK15 by @hamster
  *****************************************************************************/
 
-#ifdef DC801_EMBEDDED
-
 #include "sd.h"
 
-static bool m_sd_available = false;
-
-static nrf_block_dev_sdc_work_t m_block_dev_sdc_work{};
-static const auto m_block_dev_sdc = nrf_block_dev_sdc_t
+SDCard::SDCard()
 {
-		nrf_block_dev_t{
-			reinterpret_cast<const nrf_block_dev_s::nrf_block_dev_ops_s*>(& nrf_block_device_sdc_ops)
-		},
-		nrf_block_dev_info_strings_t{"Nordic", "SDC", "1.00"},
-		nrf_block_dev_sdc_config_t{SDC_SECTOR_SIZE, app_sdc_config_t{SDC_MOSI_PIN, SDC_MISO_PIN, SDC_SCK_PIN, SDC_CS_PIN}},
-		&m_block_dev_sdc_work
-};
-
-bool util_sd_available() {
-	return m_sd_available;
-}
-
-bool util_sd_init() {
-
 	FRESULT ff_result;
 	DSTATUS disk_state = STA_NOINIT;
 
@@ -57,66 +38,26 @@ bool util_sd_init() {
 
 	diskio_blockdev_register(drives, ARRAY_SIZE(drives));
 
-
 	for (uint32_t retries = 3; retries && disk_state; --retries) {
 		disk_state = disk_initialize(0);
 	}
 
 	if (disk_state) {
 		debug_print("Can't init SD Card");
-		return false;
 	}
-
-	uint32_t blocks_per_mb = (1024uL * 1024uL) / m_block_dev_sdc.block_dev.p_ops->geometry(&m_block_dev_sdc.block_dev)->blk_size;
-	uint32_t capacity = m_block_dev_sdc.block_dev.p_ops->geometry(&m_block_dev_sdc.block_dev)->blk_count / blocks_per_mb;
-	UNUSED_VARIABLE(capacity);
 
 	ff_result = f_mount(&m_fs, "", 1);
 	if (ff_result) {
 		debug_print("Can't mount SD Card");
-		return false;
 	}
 
-	m_sd_available = true;
+	sdCardInitialized = true;
 	debug_print("SD initialized");
-	return true;
 }
 
-#endif //DC801_EMBEDDED
-void util_sd_load_file(const char* path, char* p_buffer, uint32_t count)
+SDCard::~SDCard()
 {
-    debug_print("Try to load %s\n", path);
-
-	auto file = std::fstream{ path, std::ios_base::in| std::ios_base::binary };
-
-	// copy the file into the buffer
-	if (!file || !file.read(p_buffer, count))
-	{
-		debug_print("Can't load file %s\n", path);
-	}
-	file.close();
-}
-
-void util_sd_store_file(const char* path, char* p_buffer, uint32_t count)
-{
-	auto file = std::fstream{ path, std::ios_base::out | std::ios_base::binary };
-
-	// copy the file into the buffer
-	if (!file || !file.write(p_buffer, count))
-	{
-		debug_print("Can't write file %s\n", path);
-	}
-	file.close();
-
-}
-
-bool util_sd_recover() {
-#ifdef DC801_EMBEDDED
 	disk_uninitialize(0);
-	return util_sd_init();
-#else
-	return true;
-#endif
 }
 
 
@@ -145,21 +86,3 @@ uint8_t util_sd_getnum_files(const char* path, const char* extension) {
 	}
 	return counter;
 }
-//
-//void util_sd_error()
-//{
-//	//ENGINE_PANIC("SD Card Error\nCheck card and reboot");
-//	frameBuffer->clearScreen(COLOR_BLUE);
-//	frameBuffer->printMessage(
-//		"SD Card did not initialize properly.\n\
-//		Check Card and Reboot if you\n\
-//		want to use the SD Card to reflash\n\
-//		the ROM chip with a new mage.dat file.",
-//		Monaco9,
-//		COLOR_WHITE,
-//		32,
-//		32
-//	);
-//	frameBuffer->blt();
-//	nrf_delay_ms(5000);
-//}

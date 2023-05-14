@@ -33,69 +33,99 @@
 
 #define NRFX_QSPI_DEFAULT_CONFIG                                        \
 {                                                                       \
-	.xip_offset  = NRFX_QSPI_CONFIG_XIP_OFFSET,                         \
-	.pins = {                                                           \
-	   .sck_pin     = NRFX_QSPI_PIN_SCK,                                \
-	   .csn_pin     = NRFX_QSPI_PIN_CSN,                                \
-	   .io0_pin     = NRFX_QSPI_PIN_IO0,                                \
-	   .io1_pin     = NRFX_QSPI_PIN_IO1,                                \
-	   .io2_pin     = NRFX_QSPI_PIN_IO2,                                \
-	   .io3_pin     = NRFX_QSPI_PIN_IO3,                                \
-	},                                                                  \
-	.prot_if = {                                                        \
-		.readoc     = (nrf_qspi_readoc_t)NRFX_QSPI_CONFIG_READOC,       \
-		.writeoc    = (nrf_qspi_writeoc_t)NRFX_QSPI_CONFIG_WRITEOC,     \
-		.addrmode   = (nrf_qspi_addrmode_t)NRFX_QSPI_CONFIG_ADDRMODE,   \
-		.dpmconfig  = false,                                            \
-	},                                                                  \
-	.phy_if = {                                                         \
-		.sck_delay  = (uint8_t)NRFX_QSPI_CONFIG_SCK_DELAY,              \
-		.dpmen      = false,                                            \
-		.spi_mode   = (nrf_qspi_spi_mode_t)NRFX_QSPI_CONFIG_MODE,       \
-		.sck_freq   = (nrf_qspi_frequency_t)NRFX_QSPI_CONFIG_FREQUENCY, \
-	},                                                                  \
-	.irq_priority   = (uint8_t)NRFX_QSPI_CONFIG_IRQ_PRIORITY            \
+    .xip_offset  = NRFX_QSPI_CONFIG_XIP_OFFSET,                         \
+    .pins = {                                                           \
+       .sck_pin     = NRFX_QSPI_PIN_SCK,                                \
+       .csn_pin     = NRFX_QSPI_PIN_CSN,                                \
+       .io0_pin     = NRFX_QSPI_PIN_IO0,                                \
+       .io1_pin     = NRFX_QSPI_PIN_IO1,                                \
+       .io2_pin     = NRFX_QSPI_PIN_IO2,                                \
+       .io3_pin     = NRFX_QSPI_PIN_IO3,                                \
+    },                                                                  \
+    .prot_if = {                                                        \
+        .readoc     = (nrf_qspi_readoc_t)NRFX_QSPI_CONFIG_READOC,       \
+        .writeoc    = (nrf_qspi_writeoc_t)NRFX_QSPI_CONFIG_WRITEOC,     \
+        .addrmode   = (nrf_qspi_addrmode_t)NRFX_QSPI_CONFIG_ADDRMODE,   \
+        .dpmconfig  = false,                                            \
+    },                                                                  \
+    .phy_if = {                                                         \
+        .sck_delay  = (uint8_t)NRFX_QSPI_CONFIG_SCK_DELAY,              \
+        .dpmen      = false,                                            \
+        .spi_mode   = (nrf_qspi_spi_mode_t)NRFX_QSPI_CONFIG_MODE,       \
+        .sck_freq   = (nrf_qspi_frequency_t)NRFX_QSPI_CONFIG_FREQUENCY, \
+    },                                                                  \
+    .irq_priority   = (uint8_t)NRFX_QSPI_CONFIG_IRQ_PRIORITY            \
 }
 
 #endif // DC801_EMBEDDED
 
 typedef enum
 {
-	// BLOCK_SIZE_4K, // disabled because this does nothing at all on our hardware
-	// BLOCK_SIZE_64K, // disabled because this is a DAMN LIE on our hardware
-	BLOCK_SIZE_256K,
-	BLOCK_SIZE_ALL
+    // BLOCK_SIZE_4K, // disabled because this does nothing at all on our hardware
+    // BLOCK_SIZE_64K, // disabled because this is a DAMN LIE on our hardware
+    BLOCK_SIZE_256K,
+    BLOCK_SIZE_ALL
 } tBlockSize;
 
 class QSPI
 {
 public:
-	QSPI();
-	~QSPI();
+    QSPI();
+    ~QSPI();
 
-	bool init();
-	void uninit();
+    // inline bool isBusy() const { return !dataReady; };
 
-	bool isBusy() const {return dataReady;};
-	bool erase(tBlockSize blockSize, uint32_t startAddress = 0) const;
-	bool chipErase() const;
-	bool write(void const* data, size_t len, uint32_t startAddress) const;
-	bool read(void* data, size_t len, uint32_t& startAddress) const;
+    /**
+     * Erase a number of 256Kb blocks
+     * @param startAddress Address to start erasing
+     * @return True if successful
+     */
+    inline bool erase(tBlockSize blockSize, uint32_t startAddress = 0) const
+    {
+        return NRFX_SUCCESS == nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
+    }
+
+    /**
+     * Erase the whole chip
+     * @return True on success
+     */
+    inline bool chipErase() const
+    {
+        return NRFX_SUCCESS == nrfx_qspi_chip_erase();
+    }
+
+    /**
+     * Write some data out to the qspi device
+     * @param data A pointer to an array of data to write out
+     * @param len Number of bytes to send, 
+     * @param startAddress offset into the QSPI ROM to write data
+     */
+    inline bool write(void const* data, size_t len, uint32_t startAddress) const
+    {
+        return NRFX_SUCCESS == nrfx_qspi_write(data, len, startAddress);
+    }
+
+
+    /**
+     * Read from the qspi device
+     * @param data A pointer to some memory to write the data into
+     * @param len Number of bytes to read
+     */
+    bool read(void* data, size_t len, uint32_t& startAddress) const;
+    
 #ifdef DC801_EMBEDDED
-	void HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer) const;
-	void EraseSaveSlot(uint8_t slotIndex) const;
-	void WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const;
-	bool LoadFromSD(uint32_t gameDatFilesize, std::filesystem::path gameDatPath, bool eraseWholeRomChip = false);
+    void EraseSaveSlot(uint8_t slotIndex) const;
+    void WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const;
 #endif // DC801_EMBEDDED
-	
+
 private:
-	inline static volatile bool dataReady = false;
-	static void qspi_handler(nrfx_qspi_evt_t event, void* p_context);
-	
-   constexpr uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) const
-   {
-      return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
-   }
+    inline static volatile bool dataReady = false;
+    static void qspi_handler(nrfx_qspi_evt_t event, void* p_context);
+
+    constexpr uint32_t getSaveSlotAddressByIndex(uint8_t slotIndex) const
+    {
+        return ENGINE_ROM_SAVE_OFFSET + (slotIndex * ENGINE_ROM_ERASE_PAGE_SIZE);
+    }
 };
 
 #endif //QSPI_H
