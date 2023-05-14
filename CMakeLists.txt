@@ -6,9 +6,9 @@ project(bm_badge)
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(std::filesystem::path::preferred_separator filesystem cxx17fs)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/cmake/)
-# set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/)
-# set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
+set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2/)
+set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/sdl2_image/)
 
 if(EMBEDDED_BUILD)
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/hw_sdk.cmake")

@@ -14,6 +14,8 @@
 #include <tuple>
 #include <vector>
 
+#define DESKTOP_SAVE_FILE_PATH "MAGE/save_games/"
+
 static const inline auto ENGINE_VERSION = 3;
 
 template <typename TData>
@@ -306,7 +308,7 @@ struct EngineROM
          }
          else
          {
-            saveFile.read((char*)currentSave.get(), sizeof(TSave));
+            saveFile.read((char*)&currentSave, sizeof(TSave));
             if (saveFile.gcount() != sizeof(TSave))
             {
                // The file on disk can't be read?

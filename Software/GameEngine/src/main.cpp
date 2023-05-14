@@ -178,7 +178,7 @@ int main(int argc, char* argv[]) {
 	// Boot! Boot! Boot!
 	debug_print("Booted!\nCreating and started game...\n");
 
-	static auto audioPlayer = std::make_shared<AudioPlayer>();
+	static auto audioPlayer = std::make_unique<AudioPlayer>();
 
 	//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 

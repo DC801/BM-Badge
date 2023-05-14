@@ -39,3 +39,4 @@ void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size)
     //badge_mutex_unlock(&i2c_mutex);
 #endif
 }
+#endif

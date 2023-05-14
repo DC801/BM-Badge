@@ -59,8 +59,7 @@ bool MageGeometry::isPointInGeometry(const Point& point) const
    }
 }
 
-// Returns true if collision has occurred, and if it has,
-// sets the new value of intersectPoint.
+// Returns a value if collision has occurred
 // Ref: https://stackoverflow.com/a/385355
 // Ref: https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
 std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
@@ -68,39 +67,37 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
    const Point& lineBPointA, const Point& lineBPointB
 )
 {
-   float x1 = lineAPointA.x;
-   float x2 = lineAPointB.x;
-   float x3 = lineBPointA.x;
-   float x4 = lineBPointB.x;
-   float y1 = lineAPointA.y;
-   float y2 = lineAPointB.y;
-   float y3 = lineBPointA.y;
-   float y4 = lineBPointB.y;
+   auto x1 = lineAPointA.x;
+   auto x2 = lineAPointB.x;
+   auto x3 = lineBPointA.x;
+   auto x4 = lineBPointB.x;
+   auto y1 = lineAPointA.y;
+   auto y2 = lineAPointB.y;
+   auto y3 = lineBPointA.y;
+   auto y4 = lineBPointB.y;
 
-   float x12 = x1 - x2;
-   float x34 = x3 - x4;
-   float y12 = y1 - y2;
-   float y34 = y3 - y4;
+   auto x12 = x1 - x2;
+   auto x34 = x3 - x4;
+   auto y12 = y1 - y2;
+   auto y34 = y3 - y4;
 
-   float c = x12 * y34 - y12 * x34;
+   auto c = x12 * y34 - y12 * x34;
 
-   if (fabs(c) > 0.01)
+   if (c > 0)
    {
       // Intersection
-      float a = x1 * y2 - y1 * x2;
-      float b = x3 * y4 - y3 * x4;
-
-      float x = (a * x34 - b * x12) / c;
-      float y = (a * y34 - b * y12) / c;
-
-      float lineAXMin = std::min(x1, x2);
-      float lineAXMax = std::max(x1, x2);
-      float lineAYMin = std::min(y1, y2);
-      float lineAYMax = std::max(y1, y2);
-      float lineBXMin = std::min(x3, x4);
-      float lineBXMax = std::max(x3, x4);
-      float lineBYMin = std::min(y3, y4);
-      float lineBYMax = std::max(y3, y4);
+      auto a = x1 * y2 - y1 * x2;
+      auto b = x3 * y4 - y3 * x4;
+      auto x = (a * x34 - b * x12) / c;
+      auto y = (a * y34 - b * y12) / c;
+      auto lineAXMin = std::min(x1, x2);
+      auto lineAXMax = std::max(x1, x2);
+      auto lineAYMin = std::min(y1, y2);
+      auto lineAYMax = std::max(y1, y2);
+      auto lineBXMin = std::min(x3, x4);
+      auto lineBXMax = std::max(x3, x4);
+      auto lineBYMin = std::min(y3, y4);
+      auto lineBYMax = std::max(y3, y4);
 
       // Determine if the intersection is inside the bounds of lineA AND lineB
       if (x >= lineAXMin && x <= lineAXMax
@@ -108,7 +105,7 @@ std::optional<Point> MageGeometry::getIntersectPointBetweenLineSegments(
          && x >= lineBXMin && x <= lineBXMax
          && y >= lineBYMin && y <= lineBYMax)
       {
-         return Point{ static_cast<int32_t>(x), static_cast<int32_t>(y) };
+         return Point{ x, y };
       }
    }
    // No intersection

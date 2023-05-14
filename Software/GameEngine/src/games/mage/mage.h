@@ -78,9 +78,10 @@ private:
    //the hex editor is open, when it is closed, when in any menus, etc.
    void applyUniversalInputs();
    void handleEntityInteract(bool hack);
-   Point getPushBackFromTilesThatCollideWithPlayer();
+   void movePlayer(MageEntity& playerEntity, ButtonState button);
 
    bool engineIsInitialized{ false };
+
 
    uint32_t lastTime{ millis() };
    uint32_t now{ 0 };
@@ -89,7 +90,6 @@ private:
 
    float mageSpeed{ 0.0f };
    bool isMoving{ false };
-   Point playerVelocity = { 0,0 };
 
    uint8_t currentSaveIndex{ 0 };
 

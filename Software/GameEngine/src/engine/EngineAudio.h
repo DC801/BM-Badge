@@ -4,9 +4,12 @@
 #include <stdint.h>
 #include "cmixer.h"
 #include <memory>
+#include "shim_i2c.h"
+
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
+#define NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED 1UL
 #endif
 
 // SDL_AudioFormat of files, such as s16 little endian
@@ -44,19 +47,12 @@ public:
 		:Audio(cm_new_source_from_file(filename)) { }
 	Audio(cm_Source* src = nullptr)
 		:source(src) { }
-	~Audio() {
-		// Stop playing
-		cm_stop(source);
-
-		if (free && source)
+	~Audio()
+	{
+		if (source)
 		{
 			cm_destroy_source(source);
 		}
-		// collapse the audio list
-		for (auto audio = std::move(next);
-			audio;
-			audio = std::move(audio->next))
-		{}
 	}
 	
 private:
@@ -76,21 +72,23 @@ private:
 class AudioPlayer
 {
 public:
-	void play(const char *name, double gain);
+	AudioPlayer();
+	void play(const char* name, double gain);
 	void loop(const char *name, double gain);
 	void stop_loop();
 
 	static void forwardCallback(void* userdata, uint8_t* stream, int len)
 	{
-		static_cast<AudioPlayer*>(userdata)->callback(stream, len);
+		static_cast<AudioPlayer*>(userdata)->callback((const nrfx_i2s_buffers_t*)stream, len);
 	}
 
 private:
-	void callback(uint8_t* stream, int len);
-	void addAudio(Audio* root, std::unique_ptr<Audio> audio);
+	void callback(const nrfx_i2s_buffers_t* stream, uint32_t len);
+	void addAudio(std::unique_ptr<Audio> audio);
 	void playAudio(const char* filename, bool loop, double gain);
 	void fadeAudio();
-	//void lockAudio(cm_Event* e);
+	void freeAudio(Audio* audio);
+	void lockAudio(cm_Event* e);
 
 	uint32_t soundCount = 0;			// Current number of simultaneous audio samples
 	AudioMutex mutex{};

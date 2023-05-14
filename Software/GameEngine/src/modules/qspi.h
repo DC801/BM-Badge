@@ -24,6 +24,38 @@
 #include <nrfx_qspi.h>
 #include <nrf_drv_qspi.h>
 #include <nrf_error.h>
+
+typedef enum
+{
+	// BLOCK_SIZE_4K, // disabled because this does nothing at all on our hardware
+	// BLOCK_SIZE_64K, // disabled because this is a DAMN LIE on our hardware
+	BLOCK_SIZE_256K,
+	BLOCK_SIZE_ALL
+} tBlockSize;
+
+class QSPI
+{
+public:
+	QSPI();
+
+	bool init();
+	void uninit();
+
+	bool isBusy();
+	bool erase(tBlockSize blockSize, uint32_t startAddress = 0);
+	bool chipErase();
+	bool write(void const* data, size_t len, uint32_t startAddress);
+	bool read(void* data, size_t len, uint32_t startAddress);
+
+
+private:
+
+	bool initialized;
+
+	inline static volatile bool ready = false;
+	static void qspi_handler(nrfx_qspi_evt_t event, void* p_context);
+};
+
 #else
 
 

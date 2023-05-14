@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string.h>
 #include "shim_err.h"
 #include "shim_serial.h"

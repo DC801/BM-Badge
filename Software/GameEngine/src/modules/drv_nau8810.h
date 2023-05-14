@@ -4,10 +4,6 @@
 #include <stdint.h>
 
 
-#ifdef DC801_EMBEDDED
-
-#include "nrfx_i2s.h"
-
 // NAU8810 Register map
 #define NAU8810_REG_RESET				0x00
 #define NAU8810_REG_POWER1				0x01
@@ -280,6 +276,12 @@
 #define NAU8810_BYPMOUT_SFT				1
 #define NAU8810_AUXMOUT_SFT				2
 #define NAU8810_MOUTMXMT_SFT			6
+
+
+#ifdef DC801_EMBEDDED
+
+#include "nrfx_i2s.h"
+
 
 void nau8810_init(nrfx_i2s_data_handler_t handler);
 

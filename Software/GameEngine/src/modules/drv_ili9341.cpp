@@ -1,8 +1,6 @@
 #ifdef DC801_EMBEDDED
 
 #include "drv_ili9341.h"
-#include "utility.h"
-#include <algorithm>
 
 //size of chunk to transfer each interrupt
 static const inline uint32_t ILI_TRANSFER_CHUNK_SIZE =254;

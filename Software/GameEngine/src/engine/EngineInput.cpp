@@ -52,12 +52,12 @@ uint32_t EngineInput::GetDesktopInputState()
          /*else if (e.key.keysym.sym == SDLK_MINUS)
          {
             MainWindow->Resize(-1);
-            return;
+            return 0;
          }
          else if (e.key.keysym.sym == SDLK_EQUALS)
          {
             MainWindow->Resize(1);
-            return;
+            return 0;
          }*/
       }
    }

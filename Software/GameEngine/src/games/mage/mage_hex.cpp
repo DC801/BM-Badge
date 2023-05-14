@@ -4,6 +4,7 @@
 #include "utility.h"
 #include "mage_dialog_control.h"
 #include <fonts/Monaco9.h>
+#include <algorithm>
 
 #ifndef DC801_EMBEDDED
 #include "shim_err.h"
@@ -239,7 +240,7 @@ void MageHexEditor::applyHexModeInputs(uint8_t* currentByte)
             {
                //paste
                memcpy(currentByte, clipboard, clipboardLength);
-               mapControl->UpdateEntities(0, Point{ 0,0 });
+               mapControl->UpdateEntities(0);
                memcpy(currentByte, clipboard, clipboardLength);
             }
          }
@@ -318,10 +319,7 @@ void MageHexEditor::renderHexHeader(const uint8_t* entityDataPointer)
 
    if (playerHasClipboardControl)
    {
-      uint8_t clipboardPreviewClamp = std::min(
-         (uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH,
-         clipboardLength
-      );
+      uint8_t clipboardPreviewClamp = std::min((uint8_t)HEXED_CLIPBOARD_PREVIEW_LENGTH, clipboardLength);
       for (uint8_t i = 0; i < clipboardPreviewClamp; i++)
       {
          sprintf(clipboardPreview + (i * 2), "%02X", *(clipboard + i));
