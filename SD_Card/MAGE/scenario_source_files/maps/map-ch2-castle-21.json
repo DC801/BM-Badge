@@ -120,7 +120,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":607,
+                 "gid":617,
                  "height":32,
                  "id":32,
                  "name":"abacus",
@@ -219,6 +219,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-abacus.json"
         }],
  "tilewidth":32,
  "type":"map",
