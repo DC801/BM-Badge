@@ -104,7 +104,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":607,
+                 "gid":635,
                  "height":32,
                  "id":33,
                  "name":"Power Supply",
@@ -228,6 +228,10 @@
         {
          "firstgid":617,
          "source":"..\/entities\/entity-ssen.json"
+        }, 
+        {
+         "firstgid":635,
+         "source":"..\/entities\/entity-powersupply.json"
         }],
  "tilewidth":32,
  "type":"map",
