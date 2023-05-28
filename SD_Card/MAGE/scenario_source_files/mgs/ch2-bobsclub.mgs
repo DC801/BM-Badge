@@ -118,8 +118,7 @@ on_load-ch2-bobsclub {
 		if (flag ch2-want-cactuscooler is true) { // If you know you need CC
 			if ( // You've already collected the CC
 				flag ch2-carrying-cactuscooler is true
-				|| flag ch2-carrying-heatsink is true
-				|| flag ch2-installed-heatsink is true
+				|| flag ch2-cactuscooler-delivered is true
 			) {
 				// DO NOTHING
 			}
@@ -232,8 +231,7 @@ interact-ch2-bobglasses {
 interact-ch2-bobfridge {
 	if ( // You've already collected the CC
 		flag ch2-carrying-cactuscooler is true
-		|| flag ch2-carrying-heatsink is true
-		|| flag ch2-installed-heatsink is true
+		|| flag ch2-cactuscooler-delivered is true
 	) {
 		show dialog { PLAYER "Nothing in here." }
 	}
