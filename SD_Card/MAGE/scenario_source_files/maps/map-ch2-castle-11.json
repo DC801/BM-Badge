@@ -134,36 +134,6 @@
                  "width":32,
                  "x":320,
                  "y":160
-                }, 
-                {
-                 "class":"",
-                 "gid":607,
-                 "height":32,
-                 "id":31,
-                 "name":"Monitor",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-touch-monitor"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":287.911215739028,
-                 "y":128.637632419707
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":32,
-                 "name":"hiding-spot",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":-52,
-                 "y":-54.6666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
