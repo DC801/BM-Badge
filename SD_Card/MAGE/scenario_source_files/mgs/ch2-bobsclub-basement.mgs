@@ -179,9 +179,12 @@ ch2-cutscene-bob-party {
 		PLAYER "Yesterday."
 		GBob "Was it yesterday? Or was it actually a few years ago?"
 	}
+	wait 100ms
 	// (turn animations backward)
+	set entity "%PLAYER%" relative_direction to 2
 	walk entity "%PLAYER%" to geometry gasp-spot over 200ms
 	// (turn animations forward)
+	set entity "%PLAYER%" relative_direction to 0
 	turn entity "%PLAYER%" toward entity "Guardian Bob"
 	show dialog {
 		PLAYER "Wait. What?"

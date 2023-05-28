@@ -416,6 +416,10 @@ ch2-lambda-topic-person-q {
 		_ "YOU" : ch2-lambda-person-lambda
 		_ "LAMBDA" : ch2-lambda-person-lambda
 
+		_ "WIZARD" : ch2-lambda-person-wizard
+		_ "RACCOON" : ch2-lambda-person-raccoon
+		_ "RACOON" : ch2-lambda-person-raccoon
+
 		_ "BERT" : ch2-lambda-person-bert
 		
 		_ "BOB" : ch2-lambda-person-bob
@@ -708,6 +712,32 @@ ch2-lambda-person-bob {
 		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
 	}
 	goto ch2-lambda-topic-person-s
+}
+
+// Wizard
+
+ch2-lambda-person-wizard {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What's with this \"Wizard\" guy?"
+		" "
+		"<m>LAMBDA:</> Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued
+}
+ch2-lambda-person-raccoon {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What's with the raccoon?"
+		" "
+		"<m>LAMBDA:</> The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued
+}
+ch2-lambda-person-wizard-continued {
+	show serial dialog {
+		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
+	}
 }
 
 // Bert

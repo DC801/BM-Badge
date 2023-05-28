@@ -30,7 +30,18 @@ on_load-ch2-castle-1 {
 		show serial dialog { "Entering <bold>FOYER</>..." }
 	}
 
+	// room unique stuff
+	register toot -> debug-finish-toot
+	if (flag ch2-ring-zero-restored is true) {
+		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
+		set entity "Wizard" animation to 3 // head poking up
+	}
+
+	// the rest of the owl
 	goto ch2-map-init
+}
+debug-finish-toot {
+	set flag ch2-toot-done to true
 }
 
 /* ---------- ON_TICK ---------- */
@@ -149,21 +160,90 @@ ch2-attempt-door-check {
 // 4: descend
 // 5: ascend
 
-interact-ch2-wizard {
+ch2-wizard-ascend {
 	set player control off
 	play entity Wizard animation 5 once
 	set entity Wizard animation to 3
-	set entity "%SELF%" interact_script to interact-ch2-wizard-alt
 	set player control on
-	show dialog { SELF "Hi." }
 }
-interact-ch2-wizard-alt {
+ch2-wizard-descend {
 	set player control off
-	show dialog { SELF "Bye." }
 	play entity Wizard animation 4 once
 	set entity Wizard animation to 0
-	set entity "%SELF%" interact_script to interact-ch2-wizard
 	set player control on
+}
+
+interact-ch2-wizard {
+	if (entity "%SELF%" animation is 0) { // WIZARD IS DOWN
+		// go up
+		copy script ch2-wizard-ascend
+		// wizard is up now
+	} else { // WIZARD IS UP (but should go down)
+		if (flag ch2-toot-done is false) {
+			show dialog { SELF "Bye." }
+			copy script ch2-wizard-descend
+			goto interact-ch2-wizard-wrapup // "return" early
+		}
+	}
+	// wizard is up now and can talk normally
+	if (flag ch2-toot-done is false) {// pre-toot version
+		show dialog { SELF "Hi." }
+	} else {
+		if (flag ch2-wizard-backstory is false) {
+			show dialog {
+				SELF "Hey."
+				PLAYER "Hi."
+				SELF "Heard you talking to Lambda. Building a computer?"
+				PLAYER "Yeah, we're going to fix the mainframe."
+				SELF "Cool, cool."
+				"So you should know... I'm an installation wizard. I'm pretty great with computers."
+				PLAYER "Oh, yeah? Could you help me install computer parts into the mainframe?"
+				SELF "Nah, I'm a software guy, actually."
+				PLAYER "Oh."
+				SELF "But once it's built, I can help install up the OS or whatever programs you might need to do whatever. Always happy to help."
+			}
+			set flag ch2-wizard-backstory to true
+			set flag interrupt2 to true // `interrupt` is used for Bert cutscene 
+		} else {
+			if (flag interrupt2 is true) {
+				show dialog {
+					SELF "So Lambda wants to put that thing back together, huh? I don't really get it, but okie-dokie."
+					"Let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+				}
+			} else {
+				if (flag interrupt3 is false) {
+					show dialog {
+						SELF "Hey."
+						PLAYER "Hi."
+						SELF "Finished building that computer yet?"
+						PLAYER "Not yet."
+						SELF "Cool, cool. So anyway, let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+						PLAYER "Okay. Thanks."
+					}
+					set flag interrupt3 to true // OwO
+				} else {
+					show dialog {
+						SELF "Finished it already?"
+						PLAYER "Not exactly."
+						SELF "Yeah, didn't think so."
+						"Later, gator."
+					}
+				}
+				copy script ch2-wizard-descend
+			}
+		}
+	}
+	goto interact-ch2-wizard-wrapup // RESET
+}
+interact-ch2-wizard-wrapup {
+	set entity "%SELF%" interact_script to interact-ch2-wizard
+}
+
+interact-ch2-wizard-mainframedone {
+	show dialog {
+		SELF "I love the smell of software in the morning!"
+		"...What? That's a thing!"
+	}
 }
 
 interact-ch2-xa {
@@ -178,7 +258,7 @@ interact-ch2-xa {
 
 				PLAYER "I can hear you."
 
-				name "???" "Oh! Oh! It's a person! Yes, hello! My name is... well...."
+				name "???" "Oh! Oh! It's a person! Yes, hello! My name is...."
 
 				Lambda "Lambda! Yeah, call me Lambda!"
 				"I'm speaking to you through the Exa! It's this old intercom thing I set up ages ago. Looks like you're in the castle entrance. I'm surprised the Exa was still..."
@@ -190,7 +270,7 @@ interact-ch2-xa {
 				Lambda "No, no, that can't be right. The village elders?"
 				"They're the ones who told me to PROTECT the artifact! I have to keep it away from everyone else at all costs!"
 
-				PLAYER "Well we're going to need it soon! I don't know if you felt that earthquake last night, but the Big Bad is coming back and I need it to defeat him!"
+				PLAYER "Well we're going to need it soon. I don't know if you felt that earthquake last night, but the Big Bad is coming back and I need it to defeat him."
 
 				Lambda "The Big Bad, coming back? Yes, I see... he might still have the power to trigger an earthquake, even after...."
 				"I, um, don't know why the village elders would have changed their minds about this, but...."
@@ -220,17 +300,16 @@ interact-ch2-xa {
 			// player walks closer
 			show dialog {
 				PLAYER "Crippled? What happened?"
-
 				Lambda "Well, ahh, I crippled it."
 			}
 			// player walks closer
 			show dialog {
 				PLAYER "What? Why?!"
-				Lambda "I couldn't let the Big Bad have access to it again!"
-				"And we weren't using it for much otherwise...."
+				Lambda "I couldn't let the Big Bad have access to it again."
+				"And we weren't using it for much otherwise."
 				PLAYER "But now no one can use it!"
 				Lambda "Frankly, that's a small price to pay for keeping that power out of the Big Bad's hands. Although...."
-				"That was easier to say before the earthquake. The castle's in kind of a bad state now, and with the mainframe down we can't fix anything."
+				"That was easier to say before the earthquake. The castle's in a bad state now, and with the mainframe down we can't fix anything."
 				"It's why you might as well have the portable interface. You could help out around here while I vet your story."
 				PLAYER "Vet my story? You don't believe the village elders sent me?"
 				Lambda "Well, um... this is all very complicated. I need to be sure that this isn't a trap."
@@ -248,8 +327,8 @@ interact-ch2-xa {
 			}
 			show dialog {
 				Lambda "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services."
-				"Normally, XA bridges the town's network with the castle...."
-				"You know what? There's a lot to explain, and it might be easier to chat with the artifact itself. Let me help you set it up."
+				"Normally, XA bridges the town's network with...."
+				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let's set it up."
 			}
 			set player control on
 			set flag ch2-has-artifact to true
@@ -280,7 +359,7 @@ ch2-terminal-setup-check {
 ch2-terminal-setup-nevermind {
 	if (flag ch2-toot-done is false) {
 		show dialog {
-			Lambda "Ah, okay! Um, if you change your mind, speak to the exa again and I'll walk you through everything."
+			Lambda "Ah, okay! Um, if you change your mind, speak to the Exa again and I'll walk you through everything."
 			"To finish our conversation, type \"MAN\" into the console."
 		}
 		set serial control on
@@ -370,7 +449,7 @@ ch2-terminal-os-unix {
 
 ch2-terminal-message-test {
 	show dialog {
-		Lambda "Let's test the serial connection!"
+		Lambda "Let's test the serial connection."
 	}
 	show serial dialog spacer
 	show serial dialog {
