@@ -26,7 +26,12 @@ on_load-ch2-castle-13 {
 	} else {
 		show serial dialog { "Entering <bold>THRONE ROOM</>..." }
 	}
-	
+	if (
+		flag ch2-installed-cpu is true
+		|| flag ch2-carrying-cpu is true
+	) {
+		copy script ch2-hide-cpu
+	}
 	goto ch2-map-init
 }
 
@@ -54,6 +59,8 @@ on_go-castle-13-south {
 	copy warping-out-fade-out
 	load map ch2-castle-12
 }
+
+/* ---------- CPU (ADMIN) ---------- */
 
 ch2-hide-cpu {
 	teleport entity "cpu" to geometry hiding-spot

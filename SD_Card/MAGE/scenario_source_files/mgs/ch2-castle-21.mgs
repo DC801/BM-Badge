@@ -33,7 +33,12 @@ on_load-ch2-castle-21 {
 	} else {
 		show serial dialog { "Entering <bold>WORKSHOP</>..." }
 	}
-	
+	if (
+		flag ch2-installed-abacus is true
+		|| flag ch2-carrying-abacus is true
+	) {
+		copy script ch2-hide-abacus
+	}
 	goto ch2-map-init
 }
 
@@ -61,6 +66,8 @@ on_go-castle-21-east {
 	copy warping-out-fade-out
 	load map ch2-castle-11
 }
+
+/* ---------- ABACUS (ADMIN) ---------- */
 
 ch2-touch-abacus {
 	if (flag ch2-abacus-firstlook is false) {

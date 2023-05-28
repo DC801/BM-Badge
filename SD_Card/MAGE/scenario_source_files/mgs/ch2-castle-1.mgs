@@ -16,6 +16,62 @@ look-ch2-castle-1 {
 		"This castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
 	}
 }
+look-ch2-mainframe {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked at the <m>mainframe</>."
+		" "
+	}
+	set flag temp to false
+	show serial dialog { "This hardy red-and-black box contains:"}
+	// normal
+	if (flag ch2-installed-heatsink is true) {
+		show serial dialog { "\t- a heatsink" }
+	}
+	if (flag ch2-installed-powersupply is true) {
+		show serial dialog { "\t- a power supply (1kw)" }
+	}
+	// abstract
+	if (flag ch2-installed-ramchips is true) {
+		show serial dialog { "\t- a bunch of RAM chips" }
+	}
+	if (flag ch2-installed-harddrive is true) {
+		show serial dialog { "\t- a hard drive" }
+	}
+	// desperate
+	if (flag ch2-installed-clock is true) {
+		show serial dialog { "\t- a system clock" }
+	}
+	if (flag ch2-installed-cpu is true) {
+		show serial dialog { "\t- a CPU" }
+	}
+	show serial dialog {
+		"\t- wires"
+		"\t- what looks like a huge circuit board"
+	}
+	// EXTERNAL
+	show serial dialog { "On the outside is:" }
+	if (
+		flag ch2-installed-monitor is true
+		|| flag ch2-installed-keyboard is true
+		|| flag ch2-installed-mouse is true
+	) {
+		if (flag ch2-installed-monitor is true) {
+			show serial dialog { "\t- a monitor" }
+		}
+		if (flag ch2-installed-keyboard is true) {
+			show serial dialog { "\t- a keyboard" }
+		}
+		if (flag ch2-installed-mouse is true) {
+			show serial dialog { "\t- a mouse" }
+		}
+	}
+	show serial dialog {
+		"\t- a bunch of tiny penguin stickers"
+		"\t- and one yak sticker?"
+	}
+	set entity "%SELF%" look_script to look-ch2-mainframe
+}
 
 /* ---------- ON_LOAD ---------- */
 

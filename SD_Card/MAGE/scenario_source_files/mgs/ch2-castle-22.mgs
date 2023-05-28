@@ -26,6 +26,12 @@ on_load-ch2-castle-22 {
 	} else {
 		show serial dialog { "Entering <bold>SERVER ROOM</>..." }
 	}
+	if (
+		flag ch2-installed-powersupply is true
+		|| flag ch2-carrying-powersupply is true
+	) {
+		copy script ch2-hide-powersupply
+	}
 	
 	goto ch2-map-init
 }

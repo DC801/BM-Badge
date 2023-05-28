@@ -108,23 +108,29 @@ Nethack-like
 
 ## STORY FLAGS
 
-Starting item: enclosure/motherboard (room 1)
+- Starting item: enclosure/motherboard (room 1)
 
-(Only non-indented items count as story flags)
+(Only numbered items count as story flags)
 
-1. `clock` (grandfather clock) (room 14)
-2. `cpu` (room 13)
-	- `goldfish` (room 13)
-	- `abacus` (room 21)
-3. `heatsink` (room 23)
-	- `cactuscooler` (Bob's club) (partially implemented)
-4. `powersupply` (room 22)
-5. `ramchips` (room 32)
-6. `harddrive` (plates) (room 34)
-7. `keyboard` (room 31)
-8. `mouse` (rodent) (room 33)
-9. `monitor` (room ?)
-10. `mainframeos` (room 99) (might be handled differently)
+- FIRST ROUND (normal)
+	1. `heatsink` (room 23)
+		- `cactuscooler` (Bob's club)
+	2. `powersupply` (room 22)
+	3. `monitor` (room 11)
+- Bert cutscene happens when 2/3 of the above are done
+- SECOND ROUND (abstract)
+	4. `ramchips` (bag of Doritos) (room 32)
+	5. `harddrive` (dinner plates) (room 34)
+	6. `keyboard` (keytar) (room 31)
+	7. `mouse` (rodent) (room 33)
+- Bert "any messages yet?" convo happens when 2/4 of the above are done
+- THIRD ROUND (desperate)
+	8. `clock` (grandfather clock) (room 14)
+	9. `cpu`
+		- `goldfish` (same goldfish sprite as bedroom) (room 13)
+		- `abacus` (room 21)
+- FINAL ROUND (software)
+	10. `mainframeos` (room 99) (might be handled differently)
 
 For each item: (Copy existing pattern wherever these are found)
 

@@ -26,6 +26,12 @@ on_load-ch2-castle-32 {
 	} else {
 		show serial dialog { "Entering <bold>KITCHEN</>..." }
 	}
+	if (
+		flag ch2-installed-ramchips is true
+		|| flag ch2-carrying-ramchips is true
+	) {
+		copy script ch2-hide-ramchips
+	}
 	
 	goto ch2-map-init
 }
@@ -60,6 +66,8 @@ on_go-castle-32-south {
 	load map ch2-castle-31
 }
 
+/* ---------- RAMCHIPS (ADMIN) ---------- */
+
 ch2-hide-ramchips {
 	teleport entity "Ram Chips" to geometry hiding-spot
 	set entity "Ram Chips" name to " "
@@ -68,12 +76,14 @@ ch2-hide-ramchips {
 ch2-touch-ramchips {
 	if (flag ch2-ramchips-firstlook is false) {
 		show dialog {
-			PLAYER "TODO ramchips1"
+			PLAYER "That's the biggest bag of chips I've ever seen in my life."
+			"...It's probably only a quarter full."
 		}
 		set flag ch2-ramchips-firstlook to true
-	}
-	show dialog {
-		PLAYER "TODO ramchips2."
+	} else {
+		show dialog {
+			PLAYER "That's an obscene amount of chips."
+		}
 	}
 	show dialog {
 		name "" "(Pick up the ramchips?)"
