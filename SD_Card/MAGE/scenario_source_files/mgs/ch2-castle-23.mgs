@@ -28,6 +28,9 @@ on_load-ch2-castle-23 {
 	// ch2 room state
 	mutate ch2-in-room = 23
 
+	// DEBUG
+	register get + thing -> debug-get-thing
+
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-23 is false) {
@@ -43,6 +46,9 @@ on_load-ch2-castle-23 {
 		copy script ch2-hide-heatsink
 	}
 	goto ch2-map-init
+}
+debug-get-thing {
+	set flag ch2-carrying-cactuscooler to true
 }
 
 /* ---------- ON_TICK ---------- */
@@ -69,12 +75,9 @@ on_go-castle-23-south {
 
 interact-ch2-rocco {
 	copy face-player
-	if (
-		flag ch2-carrying-heatsink is true
-		|| flag ch2-installed-heatsink is true
-	) {
+	if (flag ch2-cactuscooler-delivered is true) {
 		show dialog {
-			SELF "TODO\n(Love this stuff! To cool the machines, I mean.)"
+			SELF "TODO\n(Love Cactus Cooler! To cool the machines, I mean.)"
 		}
 	}
 	else if (flag ch2-rocco-backstory is false) {
@@ -88,19 +91,28 @@ interact-ch2-rocco {
 			show dialog {
 				SELF "Hey, wait a minute! You have a can of Cactus Cooler already! I don't suppose...."
 			}
+			set flag interrupt to true
 			goto interact-ch2-rocco-give-q // jump
 		}
 	}
-	else if (flag ch2-carrying-cactuscooler is false) {
-		show dialog {
-			SELF "TODO\n(Remember? Give us Cactus Cooler.)"
+	else if (flag ch2-carrying-cactuscooler is true) {
+		if (flag interrupt is false) {
+			show dialog {
+				SELF "Oh, it looks like you found a can of Cactus Cooler somewhere! Willing to give it to us?"
+			}
+			set flag interrupt to true
 		}
+		else {
+			show dialog {
+				SELF "Change your mind? Willing to give up your can of Cactus Cooler?"
+			}
+		}
+		goto interact-ch2-rocco-give-q // jump
 	}
 	else {
 		show dialog {
-			SELF "Oh, it looks like you found some Cactus Cooler somewhere! Could I...?"
+			SELF "Remember, we'll give up this heat sink if you bring us a substitute. A can of Cactus Cooler will do."
 		}
-		goto interact-ch2-rocco-give-q // jump
 	}
 	goto interact-ch2-rocco-wrapup
 }
@@ -119,6 +131,7 @@ interact-ch2-rocco-give {
 		name "" "(Gave %Rocco% the can of Cactus Cooler!)"
 		SELF "Hey, that's swell! Go ahead and take that heat sink now. We'll be all right with this stuff instead."
 	}
+	set flag ch2-cactuscooler-delivered to true
 	set flag ch2-heatsink-permission to true
 	set flag ch2-carrying-cactuscooler to false
 	goto interact-ch2-rocco-wrapup

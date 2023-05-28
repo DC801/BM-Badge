@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 	parameters for label Lambda { name Lambda }
 }
 settings for serial dialog { wrap 60 }
@@ -140,6 +141,30 @@ ch2-attempt-door-check {
 }
 
 /* ---------- ENTITIES ---------- */
+
+// 0 (idle): in trash
+// 1 (walk): flip around completely
+// 2 (action): ascend, then descend
+// 3: head poking up
+// 4: descend
+// 5: ascend
+
+interact-ch2-wizard {
+	set player control off
+	play entity Wizard animation 5 once
+	set entity Wizard animation to 3
+	set entity "%SELF%" interact_script to interact-ch2-wizard-alt
+	set player control on
+	show dialog { SELF "Hi." }
+}
+interact-ch2-wizard-alt {
+	set player control off
+	show dialog { SELF "Bye." }
+	play entity Wizard animation 4 once
+	set entity Wizard animation to 0
+	set entity "%SELF%" interact_script to interact-ch2-wizard
+	set player control on
+}
 
 interact-ch2-xa {
 	if (flag ch2-toot-done is false) {

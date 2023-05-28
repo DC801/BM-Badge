@@ -86,9 +86,9 @@
                 }, 
                 {
                  "class":"",
-                 "gid":607,
-                 "height":32,
-                 "id":33,
+                 "gid":617,
+                 "height":40,
+                 "id":35,
                  "name":"Clock",
                  "properties":[
                         {
@@ -98,9 +98,9 @@
                         }],
                  "rotation":0,
                  "visible":true,
-                 "width":32,
-                 "x":287,
-                 "y":125
+                 "width":40,
+                 "x":249,
+                 "y":106
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -165,7 +165,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -206,6 +206,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-clock.json"
         }],
  "tilewidth":32,
  "type":"map",

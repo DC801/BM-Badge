@@ -104,9 +104,9 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484265,
+                 "gid":2147484292,
                  "height":32,
-                 "id":35,
+                 "id":36,
                  "name":"Rocco",
                  "properties":[
                         {
@@ -122,8 +122,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":251,
-                 "y":117
+                 "x":249,
+                 "y":120
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -188,7 +188,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -233,6 +233,10 @@
         {
          "firstgid":617,
          "source":"..\/entities\/entity-ssen.json"
+        }, 
+        {
+         "firstgid":635,
+         "source":"..\/entities\/entity-welder.json"
         }],
  "tilewidth":32,
  "type":"map",

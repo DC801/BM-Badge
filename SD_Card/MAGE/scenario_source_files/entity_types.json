@@ -2747,6 +2747,194 @@
 					"flip_x": false
 				}
 			]
-		}
+		},
+		"scenarioIndex": 42,
+		"serialized": {}
+	},
+	"welder": {
+		"type": "welder",
+		"tileset": "entity-welder.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 11,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 10,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 9,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 23,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": true
+				},
+				{
+					"tileid": 22,
+					"flip_x": false
+				},
+				{
+					"tileid": 21,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 43,
+		"serialized": {}
+	},
+	"raccoon": {
+		"type": "raccoon",
+		"tileset": "entity-raccoon.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 7,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 12,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false
+				}
+			],
+			"special": [
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"extra_special": [
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				},
+				{
+					"tileid": 6,
+					"flip_x": false
+				}
+			],
+			"really_extra_special": [
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				},
+				{
+					"tileid": 8,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 44,
+		"serialized": {}
 	}
 }

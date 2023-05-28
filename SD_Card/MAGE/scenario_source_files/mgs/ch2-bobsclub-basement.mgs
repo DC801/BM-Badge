@@ -342,10 +342,7 @@ interact-ch2-icechest {
 				PLAYER "Got my can of Cactus Cooler. Time to bring it to the power plant guys."
 			}
 		}
-	} else if (
-		flag ch2-carrying-heatsink is true
-		|| flag ch2-installed-heatsink is true
-	) {
+	} else if (flag ch2-cactuscooler-delivered is true) {
 		// you've already turned the soda in
 		show dialog {
 			PLAYER "The power plant guys already have their Cactus Cooler. I'll leave the rest for everyone else."
