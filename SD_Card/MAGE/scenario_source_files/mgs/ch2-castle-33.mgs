@@ -26,6 +26,12 @@ on_load-ch2-castle-33 {
 	} else {
 		show serial dialog { "Entering <bold>HYDROPONICS</>..." }
 	}
+	if (
+		flag ch2-installed-mouse is true
+		|| flag ch2-carrying-mouse is true
+	) {
+		copy script ch2-hide-mouse
+	}
 	
 	goto ch2-map-init
 }
@@ -50,6 +56,7 @@ on_go-castle-33-south {
 	load map ch2-castle-32
 }
 
+/* ---------- MOUSE (ADMIN) ---------- */
 
 ch2-hide-mouse {
 	teleport entity "Mouse" to geometry hiding-spot

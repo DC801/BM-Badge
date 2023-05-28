@@ -86,6 +86,11 @@
                          "name":"on_look",
                          "type":"string",
                          "value":"look-player"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -197,6 +202,16 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"ch2-interact-mainframe"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-mainframe"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"null_script"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -226,24 +241,6 @@
                  "width":32,
                  "x":257,
                  "y":106
-                }, 
-                {
-                 "class":"",
-                 "gid":634,
-                 "height":32,
-                 "id":31,
-                 "name":"Monitor",
-                 "properties":[
-                        {
-                         "name":"on_interact",
-                         "type":"string",
-                         "value":"ch2-touch-monitor"
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":32,
-                 "x":98.9352614763747,
-                 "y":212.29392971246
                 }],
          "opacity":1,
          "type":"objectgroup",

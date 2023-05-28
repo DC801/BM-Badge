@@ -160,14 +160,32 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":15,
-                 "name":"",
+                 "id":33,
+                 "name":"hiding-spot",
                  "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":-154,
-                 "y":462
+                 "x":-128,
+                 "y":-162
+                }, 
+                {
+                 "class":"",
+                 "gid":617,
+                 "height":32,
+                 "id":34,
+                 "name":"Monitor",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-monitor"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":279,
+                 "y":131
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -176,7 +194,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":33,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -217,6 +235,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-monitor.json"
         }],
  "tilewidth":32,
  "type":"map",

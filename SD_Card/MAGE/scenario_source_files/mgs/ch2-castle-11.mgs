@@ -26,7 +26,12 @@ on_load-ch2-castle-11 {
 	} else {
 		show serial dialog { "Entering <bold>FRONT HALLWAY</>..." }
 	}
-	
+	if (
+		flag ch2-installed-monitor is true
+		|| flag ch2-carrying-monitor is true
+	) {
+		copy script ch2-hide-monitor
+	}
 	goto ch2-map-init
 }
 
