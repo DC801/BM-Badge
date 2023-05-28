@@ -10,6 +10,8 @@ serial dialog spacer {
 
 ch2-map-init {
 	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
+	set flag interrupt2 to false // for when you need a second one
+	set flag interrupt3 to false // OwO
 
 	// misc game state
 	if (

@@ -79,8 +79,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":258,
-                 "y":224
+                 "x":218,
+                 "y":390
                 }, 
                 {
                  "class":"",
@@ -127,6 +127,24 @@
                  "width":32,
                  "x":257,
                  "y":177
+                }, 
+                {
+                 "class":"",
+                 "gid":281,
+                 "height":32,
+                 "id":60,
+                 "name":"Sink",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-sink"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":320,
+                 "y":180
                 }, 
                 {
                  "class":"",
@@ -210,17 +228,17 @@
                  "name":"bob-walk",
                  "polyline":[
                         {
-                         "x":234.31598173516,
+                         "x":216.58847980651,
                          "y":1
                         }, 
                         {
-                         "x":106.31598173516,
+                         "x":98.2724980713499,
                          "y":1
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":150,
+                 "x":167.72750192865,
                  "y":379
                 }, 
                 {
@@ -346,7 +364,8 @@
                  "width":32,
                  "x":298,
                  "y":326
-                }, 
+                },
+            
                 {
                  "class":"",
                  "gid":555,
@@ -369,8 +388,7 @@
                  "width":32,
                  "x":297,
                  "y":351
-                },
-            
+                }, 
                 {
                  "class":"",
                  "gid":553,
@@ -605,7 +623,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":60,
+ "nextobjectid":61,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

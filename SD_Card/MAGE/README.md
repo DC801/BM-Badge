@@ -1113,7 +1113,7 @@ The default value for int variables is `0`.
 
 ### Save Flags (Booleans)
 
-Save flags are booleans with arbitrary names (strings) that can be used for various logic checks.
+Save flags are booleans with arbitrary names (strings) that can be used for various logic checks. You may have up to 65,535 of these.
 
 Common use cases for save flags include tracking whether the player has:
 - heard specific entities' backstories
