@@ -92,9 +92,11 @@ var compositeEntityInheritedData = function (entity, map, objects, fileNameMap, 
 		tileData.tile,
 		entity
 	);
+	// Tiled changed the field name in the tilesets >:(
+	var entityType = mergedWithTile.type || mergedWithTile.class
 	var entityPrototype = (
-		scenarioData.entityTypesPlusProperties[mergedWithTile.type]
-		|| scenarioData.entityTypes[mergedWithTile.type]
+		scenarioData.entityTypesPlusProperties[entityType]
+		|| scenarioData.entityTypes[entityType]
 	);
 	var compositeEntity = assignToLessFalsy(
 		{},
