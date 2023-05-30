@@ -550,8 +550,7 @@ std::optional<uint16_t> MageScriptActions::action_check_entity_hackable_state_a_
    if (sourceEntityIndex != NO_PLAYER)
    {
       auto& entity = mapControl->getEntityByMapLocalId(sourceEntityIndex);
-      uint32_t u4_value = ROM_ENDIAN_U4_VALUE(
-         *(uint32_t*)((uint8_t*)&entity.hackableStateA));
+      uint32_t u4_value = *(uint32_t*)((uint8_t*)&entity.hackableStateA);
       if (u4_value == argStruct->expectedValue)
       {
          return argStruct->successScriptId;

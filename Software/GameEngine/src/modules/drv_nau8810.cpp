@@ -1,4 +1,3 @@
-#include <common.h>
 #include "drv_nau8810.h"
 
 /*

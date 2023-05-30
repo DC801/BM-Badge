@@ -5,7 +5,6 @@
 #include "games/mage/mage_color_palette.h"
 #include "games/mage/mage_geometry.h"
 #include "adafruit/gfxfont.h"
-#include "convert_endian.h"
 #include <array>
 #include <stdint.h>
 #include "utility.h"
@@ -77,7 +76,7 @@ public:
     }
 
     void clearScreen(uint16_t color);
-    constexpr void drawPixel(int x, int y, uint16_t color)
+    constexpr void drawPixel(int x, int y, const uint16_t& color)
     {
         if (x < 0 || x >= DrawWidth
             || y < 0 || y >= DrawHeight
@@ -89,10 +88,21 @@ public:
         frame[y * DrawWidth + x] = color;
     }
 
+    constexpr void setPixel(int i, const uint16_t& color)
+    {
+        if (i < 0 || i >= DrawWidth * DrawHeight
+            || color == TRANSPARENCY_COLOR)
+        {
+            return;
+        }
+        frame[i] = color;
+    }
+
     inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
     {
         drawLine(p1.x, p1.y, p2.x, p2.y, color);
     }
+    
     void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
 
     /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
@@ -104,14 +114,6 @@ public:
         drawLine(topLeft, bottomRight, color);
         drawLine(bottomLeft, topRight, color);
     }*/
-
-    // pixels: pointer to first pixel of image in ROM, unmodifiable
-    // colorPalette: translate indexed image colors, unmodifiable
-    // target: where to draw on the screen
-    // source: coordinates to offset into base image
-    // source_width: total width of base image
-    // flags: render flags
-    void drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags = 0);
 
     inline void fillRect(const Point& p, int w, int h, uint16_t color)
     {

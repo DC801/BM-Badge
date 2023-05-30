@@ -24,43 +24,27 @@ struct Color_565
       b((color & 0b0001111100000000) >> 8),
       a((color & 0b0010000000000000) >> 13)
    {}
-   uint16_t RGBA() const { return r << 11 | g << 6 | b | a << 5; }
+   operator uint16_t() { return r << 11 | g << 6 | a << 5| b ; }
 
-   uint8_t b : 5;
-   uint8_t a : 1;
-   uint8_t g : 5;
    uint8_t r : 5;
+   uint8_t g : 5;
+   uint8_t a : 1;
+   uint8_t b : 5;
 };
 
 class MageColorPalette
 {
 public:
-   MageColorPalette() noexcept = default;
-   uint16_t colorAt(uint8_t colorIndex, uint16_t fadeColorValue, float fadeFraction = 0.0f) const
+   const uint16_t& get(uint8_t colorIndex) const
    {
-      auto colorData = (const uint16_t*)(&colorCount + 2);
-      auto sourceColor = colorData[colorIndex % colorCount];
-
-      auto color = Color_565{ sourceColor };
-
-      if (fadeFraction >= 1.0f)
-      {
-         return fadeColorValue;
-      }
-      else if (fadeFraction > 0.0f)
-      {
-         auto fadeColor = Color_565{ fadeColorValue };
-         color.r = Util::lerp(color.r, fadeColor.r, fadeFraction);
-         color.g = Util::lerp(color.g, fadeColor.g, fadeFraction);
-         color.b = Util::lerp(color.b, fadeColor.b, fadeFraction);
-         color.a = fadeFraction > 0.5f ? fadeColor.a : color.a;
-      }
-      return color.RGBA();
+      
+      return colorData[colorIndex % colorCount];
    }
 
 private:
    char name[COLOR_PALETTE_NAME_SIZE]{ 0 };
    uint8_t colorCount{ 0 };
+   const uint16_t* colorData{ (const uint16_t*)(&colorCount + 2) };
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

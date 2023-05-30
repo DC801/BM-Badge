@@ -192,7 +192,7 @@ void MageDialogControl::drawDialogBox(const std::string& string, const Rect& box
       {
          auto targetPoint = Point{ offsetX + ((box.w - 2) * tileWidth), offsetY + ((box.h - 2) * tileHeight) + bounce };
          // bounce the arrow at the bottom
-         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint, RENDER_FLAGS_FLIP_X | RENDER_FLAGS_FLIP_Y | RENDER_FLAGS_FLIP_DIAG);
+         tileManager->DrawTile(currentFrameTilesetIndex, tileset->ImageId, targetPoint);
       }
    }
 

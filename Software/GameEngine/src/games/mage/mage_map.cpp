@@ -103,12 +103,14 @@ void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
 
          if (!currentTile->tileId) { continue; }
 
-      auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
-      
-      // don't draw tiles that are entirely outside the screen bounds
-      if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
-       || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight) 
-      { continue; }
+         auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
+
+         // don't draw tiles that are entirely outside the screen bounds
+         if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
+            || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight)
+         {
+            continue;
+         }
 
          tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
       }
@@ -144,7 +146,7 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
 {
    auto pushback = Point{ 0,0 };
    auto maxPushback = float{ 0.0f };
-
+#if false
    auto setPushbackToMinCollision = [&](const Point& pointA, const Point& pointB) {
 
       auto internalPushbackCalc = [&](const MageMapTile* tile, const Point& tileCorner) {
@@ -156,12 +158,12 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
             auto geometryPoints = geometry->FlipByFlags(tile->flags, tileset->TileWidth, tileset->TileHeight);
             for (auto i = 0; i < geometryPoints.size(); i++)
             {
-               auto& geometryPointA = geometryPoints[i] + tileCorner;
-               auto& geometryPointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileCorner;
+               auto geometryPointA = geometryPoints[i] + tileCorner;
+               auto geometryPointB = geometryPoints[(i + 1) % geometryPoints.size()] + tileCorner;
 
                auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA + playerVelocity, pointB + playerVelocity, geometryPointA, geometryPointB);
-               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointA + playerVelocity, geometryPointA, geometryPointB);
-               auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointB, pointB + playerVelocity, geometryPointA, geometryPointB);
+               // auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointA, pointA + playerVelocity, geometryPointA, geometryPointB);
+               // auto intersection = MageGeometry::getIntersectPointBetweenLineSegments(pointB, pointB + playerVelocity, geometryPointA, geometryPointB);
                if (intersection.has_value())
                {
                   auto cornerVector = intersection.value() - pointA;
@@ -179,7 +181,7 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
       for (auto layerIndex = 0; layerIndex < LayerCount(); layerIndex++)
       {
          auto tileCorner = Point{ 0,0 };
-         auto getTile = [&](const Point & point)
+         auto getTile = [&](const Point& point)
          {
             auto layerAddress = LayerAddress(layerIndex);
             auto layerTiles = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
@@ -227,7 +229,7 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
       //left
       setPushbackToMinCollision(topLeft, bottomLeft);
    }
-   
+
    if (playerVelocity.y > 0)
    {
       //down
@@ -238,6 +240,7 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
       //up
       setPushbackToMinCollision(topLeft, topRight);
    }
+#endif //false
 
    getPlayerEntity().x += playerVelocity.x - pushback.x;
    getPlayerEntity().y += playerVelocity.y - pushback.y;

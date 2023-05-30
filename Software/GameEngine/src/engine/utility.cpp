@@ -25,6 +25,14 @@ volatile static uint32_t systick = 0;
 bool morse_running = false;
 
 /**
+ * Every second, update the systick handler
+ * @param p_context
+ */
+void sysTickHandler(void * p_context){
+	systick++;
+}
+
+/**
  * Start the local time reference
  * It's seeded at bootup from the user storage, if it exists
  * @param time
@@ -42,13 +50,6 @@ uint32_t getSystick(void){
 	return systick;
 }
 
-/**
- * Every second, update the systick handler
- * @param p_context
- */
-void sysTickHandler(void * p_context){
-	systick++;
-}
 
 uint8_t getButton(bool waitForLongPress) { return 0; }
 
@@ -152,11 +153,11 @@ uint32_t millis_elapsed(uint32_t currentMillis, uint32_t previousMillis)
 
 uint32_t millis(void)
 {
-#ifdef DC801_EMBEDDED
-	return(app_timer_cnt_get() / 32.768);
-#else
+// #ifdef DC801_EMBEDDED
+// 	return(app_timer_cnt_get() / 32.768);
+// #else
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
-#endif
+//#endif
 }
 
 

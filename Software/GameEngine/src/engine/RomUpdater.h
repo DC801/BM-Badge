@@ -9,19 +9,19 @@
 class RomUpdater
 {
 public:
-    RomUpdater(QSPI& qspi, SDCard& sdCard)
-        : qspi(qspi), sdCard(sdCard) {}
+    RomUpdater(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
+        : inputHandler(inputHandler), frameBuffer(frameBuffer) {}
 
 
-    void HandleROMUpdate(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer) const
+    void HandleROMUpdate(QSPI& qspi, SDCard& sdCard) const
     {
         if (!sdCard)
         {
-            debug_print("No SD card detected");
+            debug_print("No SD card present on boot");
             return;
         }
-
         debug_print("Checking for ROM update on SD card");
+
 
         auto sdFile = sdCard.openFile(MAGE_GAME_DAT_PATH);
         if (!sdFile)
@@ -58,14 +58,14 @@ public:
 
         //skip 'MAGEGAME' and engine version at front of ROM
         uint32_t offsetROM = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
-        if (!qspi.read(&engineVersionROM, sizeof(engineVersionROM), offsetROM))
+        if (!qspi.read((char*)&engineVersionROM, sizeof(engineVersionROM), offsetROM))
         {
             error_print("Failed to read engineVersionROM");
             frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
             frameBuffer->printMessage("Could not read engineVersion from ROM", Monaco9, 0xffff, 16, 96);
         }
 
-        if (!qspi.read(&gameDatHashROM, sizeof(gameDatHashROM), offsetROM))
+        if (!qspi.read((char*)&gameDatHashROM, sizeof(gameDatHashROM), offsetROM))
         {
             error_print("Failed to read gameDatHashROM");
         }
@@ -164,15 +164,15 @@ public:
 
                 // I mean, you _COULD_ start by erasing the whole chip...
                 // or you could do it one page at a time, so it saves a LOT of time
-                for (auto currentAddress = uint32_t{ 0 }; currentAddress < romFileSize; currentAddress += ENGINE_ROM_ERASE_PAGE_SIZE)
+                for (auto offset = uint32_t{ 0 }; offset < romFileSize; offset += ENGINE_ROM_ERASE_PAGE_SIZE)
                 {
                     //Debug Print:
-                    sprintf(debugString, "Erasing: 0x%08x\n", currentAddress);
+                    sprintf(debugString, "Erasing: 0x%08x\n", offset);
                     debug_print(debugString);
-                    frameBuffer->fillRect(0, 132, DrawWidth, 96, COLOR_BLACK);
+                    frameBuffer->fillRect(0, 132, DrawWidth, DrawHeight - 132, COLOR_BLACK);
                     frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 132);
 
-                    if (!qspi.erase(tBlockSize::BLOCK_SIZE_256K, currentAddress))
+                    if (!qspi.erase(offset))
                     {
                         ENGINE_PANIC("Failed to send erase command.");
                     }
@@ -185,81 +185,95 @@ public:
                     qspi.EraseSaveSlot(i);
                 }
             }
-            auto sdReadBuffer = std::array<char, ENGINE_ROM_SD_CHUNK_READ_SIZE>{0};
-
+            auto sdReadBuffer = std::make_unique<std::array<char, ENGINE_ROM_SD_CHUNK_READ_SIZE>>();
+            
             //then write the entire SD card game.dat file to the ROM chip ENGINE_ROM_SD_CHUNK_READ_SIZE bytes at a time.
-            for (auto currentAddress = 0; sdFile && currentAddress < romFileSize; currentAddress += std::min(ENGINE_ROM_SD_CHUNK_READ_SIZE, (romFileSize - currentAddress)))
+            for (auto offset = 0; offset < romFileSize; offset += ENGINE_ROM_SD_CHUNK_READ_SIZE)
             {
-                // seek to the beginning to ensure we copy the whole file into the buffer
-                sdFile.lseek(0);
-                if (!sdFile.read(sdReadBuffer.data(), ENGINE_ROM_SD_CHUNK_READ_SIZE))
+                auto copySize = std::min(ENGINE_ROM_SD_CHUNK_READ_SIZE, romFileSize - offset);
+                sprintf(debugString, "Copying range %08x-%08x", offset, offset + copySize);
+                debug_print(debugString);
+                frameBuffer->fillRect(0, 140, DrawWidth, 11, COLOR_BLACK);
+                frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 141);
+                
+                sdFile.lseek(offset);
+                if (!sdFile.read(sdReadBuffer->data(), copySize))
                 {
                     ENGINE_PANIC("Failed to read chunk from game.dat on SD");
                 }
-
+                
                 //write the buffer to the ROM chip:
-                uint32_t romPagesToWrite = ENGINE_ROM_SD_CHUNK_READ_SIZE / ENGINE_ROM_WRITE_PAGE_SIZE;
-                uint32_t partialPageBytesLeftOver = ENGINE_ROM_SD_CHUNK_READ_SIZE % ENGINE_ROM_WRITE_PAGE_SIZE;
-                if (partialPageBytesLeftOver)
+                if (!qspi.write(sdReadBuffer->data(), copySize, offset))
                 {
-                    romPagesToWrite += 1;
+                    ENGINE_PANIC("Failed to write chunk from game.dat to ROM");
                 }
-                if (!qspi.write(sdReadBuffer.data(), ENGINE_ROM_SD_CHUNK_READ_SIZE, currentAddress))
-                {
-                    debug_print("Failed to write buffer");
-                }
-
-                // for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
+                
+                // uint32_t romPagesToWrite = ENGINE_ROM_SD_CHUNK_READ_SIZE / ENGINE_ROM_WRITE_PAGE_SIZE;
+                // uint32_t partialPageBytesLeftOver = ENGINE_ROM_SD_CHUNK_READ_SIZE % ENGINE_ROM_WRITE_PAGE_SIZE;
+                // if (partialPageBytesLeftOver)
                 // {
-                //     //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, currentAddress);
-                //     //Debug Print:
-                //     sprintf(debugString, "Copying range %d/%d: %08x-%08x4\n", i, romPagesToWrite, currentAddress, currentAddress + ENGINE_ROM_SD_CHUNK_READ_SIZE);
-                //     debug_print(debugString);
-                //     frameBuffer->fillRect(0, 150, DrawWidth, 150, COLOR_BLACK);
-                //     frameBuffer->printMessage(debugString, Monaco9, COLOR_WHITE, 16, 150);
-
-                //     auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
-                //     auto readOffset = &sdReadBuffer[romPageOffset];
-                //     auto writeOffset = currentAddress + romPageOffset;
-                //     auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
-                //     auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
-
-                //     if (i == (romPagesToWrite - 1))
-                //     {
-                //         debug_print("Write Size at %d is %d", i, writeSize);
-                //     }
-                //     // TODO FIXME
-                //     //verify that the data was correctly written or return false.
-                //     // Verify(
-                //     //     writeOffset,
-                //     //     writeSize,
-                //     //     (uint8_t*)readOffset,
-                //     //     true
-                //     // );
+                //     romPagesToWrite += 1;
                 // }
+
+            //     for (auto i = uint32_t{ 0 }; i < romPagesToWrite; i++)
+            //     {
+            //         //debug_print("Writing ROM Page %d/%d offset from %d", i, romPagesToWrite, offset);
+            //         //Debug Print:
+                    
+
+            //         auto romPageOffset = i * ENGINE_ROM_WRITE_PAGE_SIZE;
+            //         auto readOffset = &(*sdReadBuffer)[romPageOffset];
+            //         auto writeOffset = offset + romPageOffset;
+            //         auto shouldUsePartialBytes = (i == (romPagesToWrite - 1)) && (partialPageBytesLeftOver != 0);
+            //         auto writeSize = shouldUsePartialBytes ? partialPageBytesLeftOver : ENGINE_ROM_WRITE_PAGE_SIZE;
+
+            //         if (i == (romPagesToWrite - 1))
+            //         {
+            //             debug_print("Write Size at %d is %d", i, writeSize);
+            //         }
+            //         // TODO FIXME
+            //         //verify that the data was correctly written or return false.
+            //         // Verify(
+            //         //     writeOffset,
+            //         //     writeSize,
+            //         //     (uint8_t*)readOffset,
+            //         //     true
+            //         // );
+            //     }
             }
+            
+            //reset offset to again skip 'MAGEGAME' and engine version at front of ROM
+            offsetROM = ENGINE_ROM_IDENTIFIER_STRING_LENGTH;
+            if (!qspi.read((char*)&engineVersionROM, sizeof(engineVersionROM), offsetROM))
+            {
+                error_print("Failed to read engineVersionROM");
+                frameBuffer->fillRect(0, 78, DrawWidth, 96, 0x0000);
+                frameBuffer->printMessage("Could not read engineVersion from ROM", Monaco9, 0xffff, 16, 78);
+            }
+
+            if (!qspi.read((char*)&gameDatHashROM, sizeof(gameDatHashROM), offsetROM))
+            {
+                error_print("Failed to read gameDatHashROM");
+            }
+            
             //print success message:
             debug_print("Successfully copied ROM from SD to QSPI ROM");
-            frameBuffer->fillRect(0, 96, DrawWidth, 96, 0x0000);
-            frameBuffer->printMessage("SD -> ROM chip copy success", Monaco9, 0xffff, 16, 96);
-            headerHashMatch = true;
-
+            frameBuffer->fillRect(0, 78, DrawWidth, 96, 0x0000);
+            frameBuffer->printMessage("Successfully copied ROM from SD to QSPI ROM", Monaco9, 0xffff, 16, 78);
         }
+        
+
+        headerHashMatch = gameDatHashROM != gameDatHashSD || engineVersionROM != engineVersionSD;
 
         if (!headerHashMatch)
         {
             throw std::runtime_error("The file `game.dat` on your SD card does not match what is on your badge ROM chip.");
         }
-        else
-        {
-            debug_print("ROM file matched")
-                // there is no update, and user is not holding MEM3, proceed as normal
-                return;
-        }
     }
 private:
-    QSPI& qspi;
-    SDCard& sdCard;
+    std::shared_ptr<EngineInput> inputHandler;
+    std::shared_ptr<FrameBuffer> frameBuffer;
+    std::unique_ptr<SDCard> sdCard;
 };
 
 

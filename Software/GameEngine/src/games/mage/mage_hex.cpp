@@ -1,6 +1,5 @@
 #include "mage_hex.h"
 #include "EngineInput.h"
-#include "convert_endian.h"
 #include "utility.h"
 #include "mage_dialog_control.h"
 #include <fonts/Monaco9.h>
@@ -309,9 +308,8 @@ void MageHexEditor::renderHexHeader(const uint8_t* entityDataPointer)
 
    sprintf(
       headerString,
-      "%s | uint8: %03d  | uint16: %05d\n"
+      "Little Endian | uint8: %03d  | uint16: %05d\n"
       "string output: %s",
-      endian_label,
       u1Value,
       u2Value,
       stringPreview.c_str()

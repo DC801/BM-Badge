@@ -70,7 +70,7 @@ struct MageEntity
       }
    }
 
-   bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
+   inline bool isDebug() const { return direction & RENDER_FLAGS_IS_DEBUG; }
    void updateRenderableData(RenderableData& renderableData, uint32_t deltaTime);
 };
 

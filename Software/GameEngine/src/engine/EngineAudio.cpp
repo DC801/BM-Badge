@@ -1,7 +1,6 @@
-#ifndef DC801_EMBEDDED
-
 #include "EngineAudio.h"
 
+#include "modules/drv_nau8810.h"
 #include "cmixer.h"
 #include <functional>
 
@@ -223,9 +222,14 @@ void AudioPlayer::stop_loop()
 
 AudioPlayer::AudioPlayer()
 {
+
 #ifdef DC801_EMBEDDED
-	// Initialize Audio chip
-	nau8810_init(callback);
+	//TODO FIXME:
+	// Initialize audio chip
+	// nau8810_init(&AudioPlayer::callback);
+
+	// Start DMA
+	// nau8810_start(stream[0], BUFFER_SIZE);
 #endif
 
 	// Initialize cmixer
@@ -233,14 +237,4 @@ AudioPlayer::AudioPlayer()
 	static auto lockFn = [this](cm_Event* e) { lockAudio(e); };
 	cm_set_lock([](cm_Event* e) { lockFn(e); });
 	cm_set_master_gain(1.0);
-
-#ifdef DC801_EMBEDDED
-	// Initialize audio chip
-	nau8810_init(callback);
-
-	// Start DMA
-	nau8810_start(stream[0], BUFFER_SIZE);
-#endif
 }
-
-#endif

@@ -95,7 +95,10 @@ public:
       : frameBuffer(frameBuffer)
    {}
 
-   void DrawTile(const RenderableData& renderableData, const Point& cameraPosition, uint16_t geometryId = 0) const;
+   inline void DrawTile(const RenderableData& renderableData, const Point& cameraPosition, uint16_t geometryId = 0) const
+   {
+      DrawTile(renderableData.tilesetId, renderableData.tileId, renderableData.origin - cameraPosition, renderableData.renderFlags);
+   }
 
    void DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags = 0) const;
 

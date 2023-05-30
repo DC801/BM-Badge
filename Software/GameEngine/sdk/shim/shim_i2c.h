@@ -12,20 +12,21 @@
 
 #else
 
-#include "shim_err.h"
-
-#include <stdint.h>
-#include <stddef.h>
-
 typedef struct
 {
     uint32_t* p_rx_buffer;
     uint32_t const* p_tx_buffer;
 } nrfx_i2s_buffers_t;
 
+#endif //DC801_EMBEDDED
+
+#include "shim_err.h"
+
+#include <stdint.h>
+#include <stddef.h>
+
 void twi_master_init(void);
 void i2cMasterTransmit(uint16_t addr, uint8_t const* pdata, size_t size);
 void i2cMasterRead(uint16_t addr, uint8_t *pdata, size_t size);
 
-#endif //DC801_EMBEDDED
 #endif //I2C_H

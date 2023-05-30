@@ -30,29 +30,37 @@
 
 SDCard::SDCard()
 {
-	FRESULT ff_result;
-	DSTATUS disk_state = STA_NOINIT;
-
 	// Initialize FATFS disk I/O interface by providing the block device.
 	static diskio_blkdev_t drives[] = { DISKIO_BLOCKDEV_CONFIG(NRF_BLOCKDEV_BASE_ADDR(m_block_dev_sdc, block_dev), NULL) };
 
 	diskio_blockdev_register(drives, ARRAY_SIZE(drives));
 
-	for (uint32_t retries = 3; retries && disk_state; --retries) {
-		disk_state = disk_initialize(0);
-	}
+	auto disk_state = disk_status(0);
+	if (RES_OK == disk_state)
+	{
+		for (uint32_t retries = 3; retries && disk_state; --retries)
+		{
+			disk_state = disk_initialize(0);
+		}
 
-	if (disk_state) {
-		debug_print("Can't init SD Card");
-	}
+		if (disk_state)
+		{
+			debug_print("Can't init SD Card");
+		}
 
-	ff_result = f_mount(&m_fs, "", 1);
-	if (ff_result) {
-		debug_print("Can't mount SD Card");
-	}
+		auto ff_result = f_mount(&m_fs, "", 1);
+		if (ff_result)
+		{
+			debug_print("Can't mount SD Card");
+		}
 
-	sdCardInitialized = true;
-	debug_print("SD initialized");
+		sdCardInitialized = true;
+		debug_print("SD initialized");
+	}
+	else
+	{
+		debug_print("No SD card inserted");
+	}
 }
 
 SDCard::~SDCard()

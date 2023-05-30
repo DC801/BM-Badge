@@ -117,7 +117,7 @@ constexpr std::size_t type_index_v = type_index<T, Tuple>::value;
 template<typename TSave, typename... THeaders>
 struct EngineROM
 {
-   // noexcept because we want to fail fast/call std::terminate if this fails0
+   // noexcept because we want to fail fast/call std::terminate if this fails
    EngineROM(char* romData) noexcept
       : romData(romData),
         headers(headersFor<THeaders...>(ENGINE_ROM_MAGIC_HASH_LENGTH))
@@ -336,9 +336,9 @@ private:
    template <typename T>
    auto headerFor(uint32_t& address) const
    {
-      uint32_t count;
-      Read(count, address);
-      return Header<T>{count, address};
+      auto countPointer = (const uint32_t*)(romData + address);
+      address += sizeof(*countPointer);
+      return Header<T>{*countPointer, address};
    }
 
    template <typename... TRest>

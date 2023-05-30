@@ -5,7 +5,6 @@
 #include "EngineSerial.h"
 #include "StringLoader.h"
 #include <vector>
-#include "convert_endian.h"
 
 void MageCommandControl::handleStart()
 {

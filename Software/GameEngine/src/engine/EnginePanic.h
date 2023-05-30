@@ -4,6 +4,7 @@
 #include <cstring>
 #include <stdexcept>
 #include <utility>
+#include "utility.h"
 
 // Capture File Number, Line Number, and Message.
 //   Message should be at most 39 columns by 10 lines
@@ -41,7 +42,7 @@ static inline void ENGINE_PANIC(const char* s)
 }
 
 
-	[[noreturn]] void EnginePanic(const char* filename, int lineno, const char* format, ...);
+[[noreturn]] void EnginePanic(const char* filename, int lineno, const char* format, ...);
 
 
 

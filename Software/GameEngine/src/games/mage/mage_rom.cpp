@@ -1,5 +1,8 @@
 #include "mage_rom.h"
 
+#ifdef DC801_EMBEDDED 
+#include "custom_board.h"
+#endif
 
 
 //    bool Write(uint32_t offset, uint32_t length, uint8_t* data, const char* errorString)
@@ -37,14 +40,14 @@
 std::unique_ptr<MageROM>& ROM()
 {
    static std::unique_ptr<MageROM> romPtr;
+   if (!romPtr)
+   {
 #ifdef DC801_EMBEDDED 
    // point to 0x12000000 - the beginning of the QSPI ROM using XIP mapping
-   static auto romPtr = std::make_unique<MageROM>((char*)0x12000000);   
+   romPtr = std::make_unique<MageROM>((char*)ROM_START_ADDRESS);
 #else
    auto filePath = std::filesystem::absolute(MAGE_GAME_DAT_PATH);
    static auto romData = new char[ENGINE_ROM_MAX_DAT_FILE_SIZE] { 0 } ;
-   if (!romPtr)
-   {
       if (std::filesystem::exists(filePath))
       {
          auto romFileSize = std::filesystem::file_size(MAGE_GAME_DAT_PATH);
@@ -66,8 +69,8 @@ std::unique_ptr<MageROM>& ROM()
       {
          ENGINE_PANIC("Unable to read ROM file size at %s", MAGE_GAME_DAT_PATH);
       }
-   }
    romPtr = std::make_unique<MageROM>(romData);
 #endif
+   }
    return romPtr;
 }

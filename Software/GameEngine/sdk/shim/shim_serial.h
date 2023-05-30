@@ -48,7 +48,7 @@ void send_serial_message(const char* message);
 void usb_serial_connect();
 uint32_t usb_serial_write_in(const char* buffer);
 
-extern bool was_serial_started;
-extern uint16_t command_buffer_length;
-
+static bool was_serial_started{false};
+static char command_buffer[COMMAND_BUFFER_SIZE];
+static uint16_t command_buffer_length{COMMAND_BUFFER_SIZE};
 #endif

@@ -102,24 +102,43 @@ set(SDK_SRCS
 	${SDK_ROOT}/integration/nrfx/legacy/nrf_drv_twi.c 
 	${SDK_ROOT}/integration/nrfx/legacy/nrf_drv_uart.c 
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_clock.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_clock.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_gpiote.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_gpiote.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_power.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_power.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_ppi.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_ppi.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_rng.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_rng.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_saadc.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_saadc.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_spi.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_spi.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_spim.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_spim.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_systick.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_systick.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_timer.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_timer.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_twi.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_twi.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_twim.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_twim.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_uart.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_uart.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_uarte.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_uarte.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_usbd.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_usbd.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/prs/nrfx_prs.c 
+	${SDK_ROOT}/modules/nrfx/drivers/src/prs/nrfx_prs.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_i2s.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_i2s.h
 	${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_qspi.c 
+	${SDK_ROOT}/modules/nrfx/drivers/include/nrfx_qspi.h
 	${SDK_ROOT}/modules/nrfx/soc/nrfx_atomic.c
+	${SDK_ROOT}/modules/nrfx/soc/nrfx_atomic.h
 	${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S 
 	${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c 
 )

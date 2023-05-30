@@ -6,11 +6,24 @@
 #include <memory>
 #include "shim_i2c.h"
 
+#ifdef DC801_EMBEDDED
+#include <nrf_drv_i2s.h>
+#endif // DC801_EMBEDDED
+
 
 #ifndef DC801_EMBEDDED
 #include <SDL.h>
+
+// Contains SDL Audio Device information
+struct AudioDevice
+{
+	SDL_AudioDeviceID id;		// SDL Audio Device ID
+	SDL_AudioSpec spec;			// Secifications of our audio
+	bool enabled;				// Whether the audio driver is loaded and ready
+};
 #define NRFX_I2S_STATUS_NEXT_BUFFERS_NEEDED 1UL
 #endif
+
 
 // SDL_AudioFormat of files, such as s16 little endian
 #define AUDIO_FORMAT AUDIO_S16LSB
@@ -26,17 +39,6 @@
 
 // Max number of sounds that can be in the audio queue at anytime, stops too much mixing
 #define AUDIO_MAX_SOUNDS 25
-
-#ifndef DC801_EMBEDDED
-
-// Contains SDL Audio Device information
-struct AudioDevice
-{
-	SDL_AudioDeviceID id;		// SDL Audio Device ID
-	SDL_AudioSpec spec;			// Secifications of our audio
-	bool enabled;				// Whether the audio driver is loaded and ready
-};
-#endif
 
 // The audio player uses a linked list to play up to 25 sounds and one background track simultaneously
 class Audio

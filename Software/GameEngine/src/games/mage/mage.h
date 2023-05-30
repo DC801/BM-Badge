@@ -22,22 +22,14 @@
 #include "shim_timer.h"
 #endif
 
-class AudioPlayer;
-class EngineInput;
-class EngineWindowFrame;
-class FrameBuffer;
-class MageHexEditor;
-class MageScriptControl;
-class MageCommandControl;
-class MageScriptActions;
-class StringLoader;
-
 class MageGameEngine
 {
 public:
 
-   MageGameEngine(std::shared_ptr<AudioPlayer> audioPlayer, std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
+   MageGameEngine(std::shared_ptr<EngineInput> inputHandler, std::shared_ptr<FrameBuffer> frameBuffer)
+      : inputHandler(inputHandler), frameBuffer(frameBuffer)
    {
+      audioPlayer = std::make_unique<AudioPlayer>();
       tileManager = std::make_shared<TileManager>(frameBuffer);
       mapControl = std::make_shared<MapControl>(frameBuffer, tileManager);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
@@ -84,7 +76,7 @@ private:
 
 
    uint32_t lastTime{ millis() };
-   uint32_t now{ 0 };
+   uint32_t now{ millis() };
    uint32_t deltaTime{ 0 };
    uint32_t lastLoopTime{ millis() };
 

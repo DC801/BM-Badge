@@ -1,6 +1,5 @@
 #include "mage.h"
 
-#include "convert_endian.h"
 #include "utility.h"
 
 #include "mage_defines.h"
@@ -415,27 +414,11 @@ void MageGameEngine::gameRender()
       //run hex editor if appropriate
       hexEditor->renderHexEditor(mapControl->GetEntityDataPointer());
    }
-
    //otherwise be boring and normal/run mage game:
    else
    {
       //then draw the map and entities:
-      uint8_t layerCount = mapControl->LayerCount();
-
-      for (uint8_t layerIndex = 0; layerIndex == 0 || layerIndex < (layerCount - 1); layerIndex++)
-      {
-         //draw all map layers except the last one before drawing entities.
-         mapControl->DrawLayer(layerIndex, camera.position);
-      }
-
-      //now that the entities are updated, draw them to the screen.
-      mapControl->DrawEntities(camera.position);
-
-      if (layerCount > 1)
-      {
-         //draw the final layer above the entities.
-         mapControl->DrawLayer(layerCount - 1, camera.position);
-      }
+      mapControl->Draw(camera.position);
 
       if (dialogControl->isOpen())
       {
@@ -454,10 +437,6 @@ void MageGameEngine::gameLoop()
    //update timing information at the start of every game loop
    now = millis();
 
-   frameBuffer->clearScreen(RGB(0, 0, 0));
-
-   processInputs();
-
    // If a map is set to (re)load, do so before rendering
    if (mapControl->mapLoadId != MAGE_NO_MAP)
    {
@@ -469,22 +448,25 @@ void MageGameEngine::gameLoop()
       mapControl->mapLoadId = MAGE_NO_MAP;
    }
 
+   deltaTime = now - lastTime;
+   
    //frame limiter code to keep game running at a specific FPS:
    //only do this on the real hardware:
 #ifdef DC801_EMBEDDED
-// if(now < (lastLoopTime + MAGE_MIN_MILLIS_BETWEEN_FRAMES) )
-// { continue; }
+   if (deltaTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) { return; }
 
 // //code below here will only be run if enough ms have passed since the last frame:
 // lastLoopTime = now;
 #endif
 
-   deltaTime = now - lastTime;
+   processInputs();
+
    lastTime = now;
 
    //updates the state of all the things before rendering:
    gameUpdate(deltaTime);
 
+   frameBuffer->clearScreen(RGB(0, 0, 0));
    //This renders the game to the screen based on the loop's updated state.
    gameRender();
    // drawButtonStates(inputHandler->GetButtonState());

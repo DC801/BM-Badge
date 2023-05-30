@@ -7,104 +7,27 @@
  *
  */
 #include "qspi.h"
-#include "utility.h"
-#include "fonts/Monaco9.h"
-#include <exception>
-#include <nrf_delay.h>
-#include "sd.h"
 
-/**
- * Constructor for the QSPI driver class
- */
-QSPI::QSPI()
+#ifdef DC801_EMBEDDED
+
+QSPI::QSPI() noexcept
 {
-    auto errCode = nrfx_err_t{ 0 };
-    auto config = nrfx_qspi_config_t{
-        NRFX_QSPI_CONFIG_XIP_OFFSET,
-        nrf_qspi_pins_t{
-           NRFX_QSPI_PIN_SCK,
-           NRFX_QSPI_PIN_CSN,
-           NRFX_QSPI_PIN_IO0,
-           NRFX_QSPI_PIN_IO1,
-           NRFX_QSPI_PIN_IO2,
-           NRFX_QSPI_PIN_IO3
-        },
-        nrf_qspi_prot_conf_t{
-            (nrf_qspi_readoc_t)NRFX_QSPI_CONFIG_READOC,
-            (nrf_qspi_writeoc_t)NRFX_QSPI_CONFIG_WRITEOC,
-            (nrf_qspi_addrmode_t)NRFX_QSPI_CONFIG_ADDRMODE,
-            false,
-        },
-        nrf_qspi_phy_conf_t{
-            (uint8_t)NRFX_QSPI_CONFIG_SCK_DELAY,
-            false,
-            (nrf_qspi_spi_mode_t)NRFX_QSPI_CONFIG_MODE,
-            (nrf_qspi_frequency_t)NRFX_QSPI_CONFIG_FREQUENCY
-        },
-        (uint8_t)NRFX_QSPI_CONFIG_IRQ_PRIORITY
-    };
+    nrfx_qspi_config_t config = NRFX_QSPI_DEFAULT_CONFIG;
 
-    // errCode = nrfx_qspi_init(&config, &QSPI::qspi_handler, NULL);
-    // removing handler to use synchronous transfer mode
-    errCode = nrfx_qspi_init(&config, NULL, NULL);
+    nrfx_err_t errCode = nrfx_qspi_init(&config, NULL, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        error_print("Failure at nrfx_qspi_init() call.");
-        throw std::runtime_error{"qspi init"};
+        nrfx_qspi_uninit();
+        error_print("Failure at nrfx_qspi_init() call: 0x%d", errCode);
+        return;
+    }
+    else
+    {
+        debug_print("Initialized QSPI")
     }
 
-    //Add High Drive mode to QSPI pin config:
-    nrf_gpio_cfg(
-        BSP_QSPI_SCK_PIN,
-        NRF_GPIO_PIN_DIR_OUTPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_NOPULL,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-    nrf_gpio_cfg(
-        BSP_QSPI_CSN_PIN,
-        NRF_GPIO_PIN_DIR_OUTPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_NOPULL,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-    nrf_gpio_cfg(
-        BSP_QSPI_IO0_PIN,
-        NRF_GPIO_PIN_DIR_INPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_PULLUP,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-    nrf_gpio_cfg(
-        BSP_QSPI_IO1_PIN,
-        NRF_GPIO_PIN_DIR_INPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_PULLUP,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-    nrf_gpio_cfg(
-        BSP_QSPI_IO2_PIN,
-        NRF_GPIO_PIN_DIR_INPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_PULLUP,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-    nrf_gpio_cfg(
-        BSP_QSPI_IO3_PIN,
-        NRF_GPIO_PIN_DIR_INPUT,
-        NRF_GPIO_PIN_INPUT_DISCONNECT,
-        NRF_GPIO_PIN_PULLUP,
-        NRF_GPIO_PIN_H0H1,
-        NRF_GPIO_PIN_NOSENSE
-    );
-
     nrf_qspi_cinstr_conf_t cinstr_cfg = {
-        .opcode = 0xF0,
+        .opcode = 0xF0, // reset
         .length = NRF_QSPI_CINSTR_LEN_1B,
         .io2_level = true,
         .io3_level = true,
@@ -112,68 +35,114 @@ QSPI::QSPI()
         .wren = true
     };
 
-    // Send reset to chip
     errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        error_print("Failure at QSPI chip reset command.");
-        throw std::runtime_error{"qspi init"};
+        error_print("Failure at QSPI chip reset command: 0x%d", errCode);
+        return;
+    }
+    else
+    {
+        debug_print("Soft Reset QSPI")
+    }
+    
+    cinstr_cfg.opcode = 0x30, // clear status register
+    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, NULL, NULL);
+    if (errCode != NRFX_SUCCESS)
+    {
+        error_print("Failure at QSPI chip CLSR command: 0x%d", errCode);
+        return;
+    }
+    else
+    {
+        debug_print("Cleared QSPI status register")
     }
 
     // Set chip to qspi mode
-    auto conf_buf = uint8_t{ 0x40 };
+    uint8_t conf_buf[2] = { 0x00, 0x02 };
     cinstr_cfg.opcode = 0x01;
     cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_3B;
-    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &conf_buf, NULL);
+    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, conf_buf, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        error_print("Failure at QSPI qspi mode set command.");
-        throw std::runtime_error{"qspi init"};
+        error_print("Failure at QSPI qspi mode set command: 0x%d", errCode);
+        return;
+    }
+    else
+    {
+        debug_print("Set mode to QSPI")
     }
 
     // Enable extended addressing
     cinstr_cfg.opcode = 0x17;
     cinstr_cfg.wren = false;
+    uint8_t extendedAddressing = 0x80;
     cinstr_cfg.length = NRF_QSPI_CINSTR_LEN_2B;
-    uint8_t extadd = 0x80;
-    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extadd, NULL);
+    errCode = nrfx_qspi_cinstr_xfer(&cinstr_cfg, &extendedAddressing, NULL);
     if (errCode != NRFX_SUCCESS)
     {
-        error_print("Failure at QSPI extended addressing set command.");
-        throw std::runtime_error{"qspi init"};
+        error_print("Failure at QSPI extended addressing set command: 0x%d", errCode);
+        return;
     }
-    debug_print("QSPI Initialized");
+    else
+    {
+        debug_print("Enabled extended addressing")
+    }
+    
+    initialized = true;
+    debug_print("QSPI Configuration Complete");
 }
 
-/**
- * De-initialize the qspi interface
- */
-QSPI::~QSPI()
+QSPI::~QSPI() noexcept
 {
     nrfx_qspi_uninit();
 }
 
-bool QSPI::read(void* data, size_t len, uint32_t& startAddress) const
+bool QSPI::erase(uint32_t startAddress) const noexcept
 {
-    dataReady = false;
-    auto result = nrfx_qspi_read(data, len, startAddress);
-    if (NRFX_SUCCESS == result)
+    auto errResult = nrfx_qspi_erase(NRF_QSPI_ERASE_LEN_64KB, startAddress);
+    if (NRFX_SUCCESS != errResult) { debug_print("Erase error result: 0x%d", errResult); }
+    //while (NRFX_ERROR_BUSY == nrfx_qspi_mem_busy_check()) {}
+    return NRFX_SUCCESS == errResult;
+}
+
+bool QSPI::chipErase() const noexcept
+{
+    auto errResult = nrfx_qspi_chip_erase();
+    if (NRFX_SUCCESS != errResult) { debug_print("Erase all error result: 0x%d", errResult); }
+    //while (NRFX_ERROR_BUSY == nrfx_qspi_mem_busy_check()) {}
+    return NRFX_SUCCESS == errResult;
+}
+
+bool QSPI::read(char* data, size_t len, uint32_t& startAddress) const noexcept
+{
+#ifdef DC801_EMBEDDED
+    if (NRFX_SUCCESS == nrfx_qspi_read(data, len, startAddress))
     {
         startAddress += len;
-        
+
         return true;
     }
+
+#endif
     return false;
 }
 
+bool QSPI::write(const char* data, size_t len, uint32_t startAddress) const noexcept
+{
+    static_assert(alignof(data) % 4 == 0, "Write pointers must be aligned to 4-bytes");
+    // The QSPI peripheral automatically takes care of splitting DMA transfers into page writes.
+    auto errResult = nrfx_qspi_write(data, len, startAddress);
+    if (NRFX_SUCCESS != errResult) { debug_print("Write error result: 0x%d", errResult); }
+    //while (NRFX_ERROR_BUSY == nrfx_qspi_mem_busy_check()) {}
+    return NRFX_SUCCESS == errResult;
+}
 
-#ifdef DC801_EMBEDDED
-
-void QSPI::EraseSaveSlot(uint8_t slotIndex) const
+void QSPI::EraseSaveSlot(uint8_t slotIndex) const noexcept
 {
 #ifdef DC801_EMBEDDED
     const auto slotAddress = getSaveSlotAddressByIndex(slotIndex);
-    if (!erase(tBlockSize::BLOCK_SIZE_256K, slotAddress))
+    if (!erase(slotAddress))
     {
         ENGINE_PANIC("Failed to send erase command for save slot.");
     }
@@ -182,14 +151,14 @@ void QSPI::EraseSaveSlot(uint8_t slotIndex) const
 #endif
 }
 
-void QSPI::WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const
+void QSPI::WriteSaveSlot(uint8_t slotIndex, const MageSaveGame* saveData) const noexcept
 {
 
 #ifdef DC801_EMBEDDED
 
     EraseSaveSlot(slotIndex);
     auto slotAddress = getSaveSlotAddressByIndex(slotIndex);
-    if (!write(saveData, sizeof(MageSaveGame), slotAddress))
+    if (!write((const char*)saveData, sizeof(MageSaveGame), slotAddress))
     {
         ENGINE_PANIC("WriteSaveSlot Failed");
     }

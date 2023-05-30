@@ -1,13 +1,15 @@
 #ifdef DC801_EMBEDDED
 
 #include "drv_ili9341.h"
+#include "utility.h"
+#include <algorithm>
 
 //size of chunk to transfer each interrupt
 static const inline uint32_t ILI_TRANSFER_CHUNK_SIZE =254;
 
 // Register defines
 #define ILI9341_CASET    		(0x2A)
-#define ILI9341_RASET    		(0x2B)
+#define ILI9341_PAGE_ADDRESS_SET    		(0x2B)
 #define ILI9341_RAMWR    		(0x2C)
 
 #define SWAP(c) (((c>>8)&0xFF)|(c&0xFF)<<8)
@@ -129,18 +131,10 @@ inline void __set_XY_fast(uint16_t x, uint16_t y) {
 	__writeCommand(ILI9341_CASET); // Column addr set
 	__writeData16(x);
 
-	__writeCommand(ILI9341_RASET); // Row addr set
+	__writeCommand(ILI9341_PAGE_ADDRESS_SET); // Row addr set
 	__writeData16(y);
 
 	__writeCommand(ILI9341_RAMWR); // write to RAM
-}
-
-/**
- * Convert RGB color to 565
- */
-uint16_t ili9341_color565(uint8_t r, uint8_t g, uint8_t b)
-{
-	return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
 /**
@@ -282,7 +276,7 @@ void ili9341_set_addr(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
 	__writeData16(x0 + LCD_X_OFFSET); // XSTART
 	__writeData16(x1 + LCD_X_OFFSET); // XEND
 
-	__writeCommand(ILI9341_RASET); // Row addr set
+	__writeCommand(ILI9341_PAGE_ADDRESS_SET); // Row addr set
 	__writeData16(y0 + LCD_Y_OFFSET); // YSTART
 	__writeData16(y1 + LCD_Y_OFFSET); // YEND
 
@@ -372,9 +366,10 @@ void ili9341_start() {
 		//Frame Control: 
         __writeCommand(0xB1);
         __writeData(0x00); //DIVA = 0: division ratio for processor
-        __writeData(0x18); //
-
-        __writeCommand(0xB6);    // Display Function Control
+		__writeData(0x18); //
+		
+		// Display Function Control
+        __writeCommand(0xB6);
         __writeData(0x08);
         __writeData(0x82);
         __writeData(0x27);
@@ -382,7 +377,7 @@ void ili9341_start() {
         __writeCommand(0xF6);
 		__writeData(0x01);
 		__writeData(0x30);
-		__writeData(0x10);
+		__writeData(0x20);
 
         __writeCommand(0xF2);    // 3Gamma Function Disable
         __writeData(0x00);

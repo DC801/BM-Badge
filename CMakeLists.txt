@@ -67,8 +67,6 @@ set(SOURCEFILES
     Software/GameEngine/src/main.cpp
     Software/GameEngine/src/main.h
 
-    Software/GameEngine/src/engine/convert_endian.cpp
-    Software/GameEngine/src/engine/convert_endian.h
     Software/GameEngine/src/engine/EngineAudio.cpp
     Software/GameEngine/src/engine/EngineAudio.h
     Software/GameEngine/src/engine/EngineInput.cpp

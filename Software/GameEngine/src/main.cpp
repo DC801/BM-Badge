@@ -39,6 +39,7 @@
 #ifdef DC801_EMBEDDED
 
 #include "qspi.h"
+#include "nrf_drv_clock.h"
 
 #else
 
@@ -59,18 +60,12 @@ void sig_handler(int signo)
 
 #endif
 
-/**
- * Initialize the speaker
- */
-static void speaker_init(void){
-	// Setup the nau8810 later -Tim
-	//nrf_gpio_cfg_output(SPEAKER);
-}
 
 /**
  * Initialize the logging backend for logging over JTAG
  */
-static void log_init(void){
+static void log_init(void)
+{
 	ret_code_t err_code = NRF_LOG_INIT(NULL);
 	APP_ERROR_CHECK(err_code);
 	NRF_LOG_DEFAULT_BACKENDS_INIT();
@@ -82,10 +77,10 @@ static void log_init(void){
  * @brief Main app
  * @return Not used
  */
-int main(int argc, char* argv[]) {
-
+int main(int argc, char* argv[])
+{
 #if !defined(EMSCRIPTEN) && !defined(DC801_EMBEDDED)
-	
+
 	signal(SIGINT, sig_handler);
 
 #endif
@@ -95,104 +90,92 @@ int main(int argc, char* argv[]) {
 
 	// Timers
 	app_timer_init();
-	
+
 	static auto inputHandler = std::make_shared<EngineInput>();
 	static auto frameBuffer = std::make_shared<FrameBuffer>();
 
+	// try
+	// {
 #ifdef DC801_EMBEDDED
-
+	// Init the clock 
+	APP_ERROR_CHECK(nrf_drv_clock_init());
+	
 	// Init the display
-	ili9341_init();
-	ili9341_start();
+		ili9341_init();
+		ili9341_start();
 
-	frameBuffer->clearScreen(COLOR_BLACK);
-	frameBuffer->printMessage("Screen initialized", Monaco9, 0xffff, 16, 16);
-	frameBuffer->blt();
+		frameBuffer->clearScreen(COLOR_BLACK);
+		frameBuffer->printMessage("Screen initialized", Monaco9, 0xffff, 16, 16);
+		frameBuffer->blt();
 
+		//USB serial
+		usb_serial_init();
 
-	//USB serial
-	usb_serial_init();
+		// Setup I2C
+		twi_master_init();
 
-	// Setup I2C
-	twi_master_init();
+		// Setup the UART
+		uart_init();
 
-	// Setup the UART
-	uart_init();
+		//keyboard controls all hardware buttons on this badge
+		keyboard_init();
 
-	//keyboard controls all hardware buttons on this badge
-	keyboard_init();
-
-	//QSPI ROM Chip
-	auto qspiControl = QSPI{};
-	{
-		//Init the SD Card
-		auto sdCard = std::make_unique<SDCard>();
-		if (!*sdCard)
+		//QSPI ROM Chip
+		static auto qspiControl = QSPI{};
+		if (qspiControl)
 		{
-			//util_sd_error();
-			debug_print("No SD card present on boot.");
+			auto sdCard = SDCard{};
+			if (sdCard)
+			{
+				auto romUpdater = std::make_unique<RomUpdater>(inputHandler, frameBuffer);
+				romUpdater->HandleROMUpdate(qspiControl, sdCard);
+			}
 		}
 		else
 		{
-			auto romUpdater = RomUpdater(qspiControl, *sdCard);
-			romUpdater.HandleROMUpdate(inputHandler, frameBuffer);
+			return -1;
 		}
-	}
 
-	//this function will set up the NAU8810 chip to play sounds
-	//speaker_init();
+		// BLE
+		//gap_params_init();
+		//ble_stack_init();
+		//scan_start();
 
-	// BLE
-	//gap_params_init();
-	//ble_stack_init();
-	//scan_start();
+		// Setup the battery monitor
+		//adc_configure();
+		//adc_start();
 
+		//EEpwm_init();
 
-	// Init the random number generator
-	//nrf_drv_rng_init(NULL);
+		const auto ble_name = "TheMage801"; // must be 10char
+		debug_print("advertising user: %s", ble_name);
+		advertising_setUser(ble_name);
+		ble_adv_start();
 
-	// Setup the battery monitor
-	//adc_configure();
-	//adc_start();
+		// Setup LEDs
+		ledInit();
+		ledsOff();
 
-	//EEpwm_init();
+		setUpRandomSeed();
 
-	const char* ble_name = "TheMage801"; // must be 10char
-	debug_print("advertising user: %s", ble_name);
-	//advertising_setUser(ble_name);
-	//ble_adv_start();
+		//morse isn't used on this badge yet...
+		//morseInit();
 
-	// Setup LEDs
-	ledInit();
-	ledsOff();
+		// Configure the systick
+		sysTickStart();
+
+		// Boot! Boot! Boot!
+		debug_print("Booted!\nCreating and started game...\n");
+
+		//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
+
 #endif
-	
-	setUpRandomSeed();
-
-	//morse isn't used on this badge yet...
-	//morseInit();
-
-	// Configure the systick
-	sysTickStart();
-
-	// Boot! Boot! Boot!
-	debug_print("Booted!\nCreating and started game...\n");
-
-	static auto audioPlayer = std::make_unique<AudioPlayer>();
-
-	//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
-
-	auto game = std::make_unique<MageGameEngine>(audioPlayer, inputHandler, frameBuffer);
-#if defined(TEST) || defined(TEST_ALL)
-	DC801_Test::Test();
-	break;
-#else
-	game->Run();
-#endif
-
-
-// If we make it here - we shouldn't - but if, reset the badge/exit
+		auto game = std::make_unique<MageGameEngine>(inputHandler, frameBuffer);
+		game->Run();
+		
+		// If we make it here - we shouldn't - but if, reset the badge/exit
 #ifdef DC801_EMBEDDED
+		
 	while (1)
 	{
 		NVIC_SystemReset();
@@ -205,17 +188,21 @@ int main(int argc, char* argv[]) {
 
 }
 
-void setUpRandomSeed() {
+void setUpRandomSeed()
+{
 #ifdef DC801_EMBEDDED
+	// Init the random number generator
+	nrf_drv_rng_init(NULL);
+	
 	//Set random seed with something from nordic sdk,
 	//so as long as nrf_drv_rng_init() has been run,
 	//this is actually pretty random, probably.
 	uint32_t seed = (
-		(nrf_rng_random_value_get() <<  0) +
-		(nrf_rng_random_value_get() <<  8) +
+		(nrf_rng_random_value_get() << 0) +
+		(nrf_rng_random_value_get() << 8) +
 		(nrf_rng_random_value_get() << 16) +
 		(nrf_rng_random_value_get() << 24)
-	);
+		);
 #else
 	//Set random seed with number of seconds since
 	//unix epoc so two desktops launched the same

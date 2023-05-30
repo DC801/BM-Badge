@@ -30,7 +30,7 @@
             "request": "launch",
             "servertype": "jlink",
             "serverpath": "JLinkGDBServerCLExe",
-            "runToEntryPoint": "main",
+           //"runToEntryPoint": "main",
             "cwd": "${workspaceRoot}/build_hw",
             "device": "NRF52840_XXAA",
             "interface": "swd",

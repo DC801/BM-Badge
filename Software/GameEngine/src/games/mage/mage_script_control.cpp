@@ -2,7 +2,6 @@
 #include "EngineInput.h"
 #include "mage_script_actions.h"
 #include "mage_command_control.h"
-#include "convert_endian.h"
 #include "shim_err.h"
 
 //load in the global variables that the scripts will be operating on:

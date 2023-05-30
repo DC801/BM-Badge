@@ -41,8 +41,8 @@ static inline void debug_print(const char* strLike)
 #endif
 
 namespace Util {
-   template <typename T>
-   static inline T lerp(T a, T b, float progress) { return (T)((b - a) * progress) + a; }
+   template <typename T, typename P>
+   static inline T lerp(T a, T b, P progress) { return (T)((b - a) * progress) + a; }
 };
 
 

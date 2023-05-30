@@ -32,7 +32,6 @@ static void cdc_acm_user_ev_handler(
 #define CDC_ACM_DATA_EPIN       NRF_DRV_USBD_EPIN1
 #define CDC_ACM_DATA_EPOUT      NRF_DRV_USBD_EPOUT1
 
-bool was_serial_started = false;
 static bool was_command_entered = false;
 
 // do not change READ_SIZE, this is the size the NRF SDK
@@ -43,9 +42,6 @@ static char m_rx_buffer[READ_SIZE];
 static char echo_buffer[ECHO_BUFFER_SIZE];
 static uint16_t echo_buffer_length = 0;
 static bool is_echo_buffer_populated = false;
-
-char command_buffer[COMMAND_BUFFER_SIZE];
-uint16_t command_buffer_length = 0;
 
 
 /**
@@ -307,7 +303,7 @@ static void usbd_user_ev_handler(app_usbd_event_type_t event)
     }
 }
 
-
+#ifndef DC801_EMBEDDED
 void uart_init()
 {
     memset(uart_buffer, 0, BUFFER_SIZE + 1);
@@ -320,6 +316,7 @@ uint32_t app_uart_put(uint8_t byte)
 
     return NRF_SUCCESS;
 }
+#endif // DC801_EMBEDDED
 
 void usb_serial_init() {
     memset(usb_buffer, 0, BUFFER_SIZE + 1);

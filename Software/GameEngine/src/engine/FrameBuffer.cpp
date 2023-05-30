@@ -30,52 +30,6 @@ void FrameBuffer::clearScreen(uint16_t color)
    frame.fill(color);
 }
 
-void FrameBuffer::drawChunkWithFlags(const MagePixels* pixels, const MageColorPalette* colorPalette, Rect&& target, uint16_t source_width, uint8_t flags)
-{
-   if (flags & RENDER_FLAGS_IS_GLITCHED)
-   {
-      target.origin.x += target.w * 0.125;
-      target.w *= 0.75;
-   }
-
-   // skip any chunks that aren't drawn to the frame buffer
-   if (target.origin.x + target.w < 0 || target.origin.x >= DrawWidth
-      || target.origin.y + target.h < 0 || target.origin.y >= DrawHeight)
-   { return; }
-
-   // draw to the target pixel by pixel, read from the source based on flags:
-   for (auto row = 0; row < target.h && row < DrawHeight; row++)
-   for (auto col = 0; col < target.w && col < DrawWidth; col++)
-   {
-      auto pixelRow = row;
-      auto pixelCol = col;
-
-      // for a flip in the y-axis, get the last indexable row of the source
-      if (flags & RENDER_FLAGS_FLIP_X) 
-      { 
-         pixelCol = source_width - col - 1;
-      }
-      // for a flip in the x-axis, get the last indexable column of the source
-      if (flags & RENDER_FLAGS_FLIP_Y) 
-      { 
-         pixelRow = source_width - row - 1;
-      }
-      // for a diagonal flip, invert both row and column
-      if (flags & RENDER_FLAGS_FLIP_DIAG)
-      {
-         pixelRow = target.h - pixelRow - 1;
-         pixelCol = target.w - pixelCol - 1;
-      }
-      // compute the source pixel offset from the pixels pointer
-      auto pixelIndex = (pixelRow * source_width) + pixelCol;
-      
-      // use the pixels pointer to get the color from the palette
-      auto& colorIndex = pixels[pixelIndex];
-      auto color = colorPalette->colorAt(colorIndex, fadeColor, fadeFraction);
-      drawPixel(target.origin.x + col, target.origin.y + row, color);
-   }
-}
-
 void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
 {
    if (x2 < x1)
@@ -237,6 +191,20 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
 
 void FrameBuffer::blt()
 {
+   // TODO FIXME: Moved this out of color palette lookup, think it might belong here, right before blitting the data
+   // if (fadeFraction >= 1.0f)
+   // {
+   //    return fadeColorValue;
+   // }
+   // else if (fadeFraction > 0.0f)
+   // {
+   //    auto fadeColor = Color_565{ fadeColorValue };
+   //    color.r = Util::lerp(color.r, fadeColor.r, fadeFraction);
+   //    color.g = Util::lerp(color.g, fadeColor.g, fadeFraction);
+   //    color.b = Util::lerp(color.b, fadeColor.b, fadeFraction);
+   //    color.a = fadeFraction > 0.5f ? fadeColor.a : color.a;
+   // }
+      
 #ifdef DC801_EMBEDDED 
    while (ili9341_is_busy())
    {

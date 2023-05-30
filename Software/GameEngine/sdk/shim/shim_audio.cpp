@@ -1,4 +1,4 @@
-#ifdef DC801_EMBEDDED
+#ifndef DC801_EMBEDDED
 #include <EngineAudio.h>
 #include <cstring>
 #include <iostream>

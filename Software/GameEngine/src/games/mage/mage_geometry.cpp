@@ -1,6 +1,5 @@
 #include "mage_geometry.h"
 #include "mage_tileset.h"
-#include "convert_endian.h"
 #include <algorithm>
 
 #ifndef DC801_EMBEDDED

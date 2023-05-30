@@ -68,7 +68,7 @@ public:
       tileManager(tileManager)
    { }
 
-   uint8_t* GetEntityDataPointer() { return (uint8_t*)entities.data(); }
+   inline uint8_t* GetEntityDataPointer() { return (uint8_t*)entities.data(); }
    void Load(uint16_t index);
    void DrawLayer(uint8_t layer, const Point& cameraPosition) const;
    void DrawGeometry(const Point& cameraPosition) const;
@@ -98,15 +98,37 @@ public:
       }
    }
 
-   std::string Name() const { return currentMap->name; }
-   uint16_t TileWidth() const { return currentMap->tileWidth; }
-   uint16_t TileHeight() const { return currentMap->tileHeight; }
-   uint16_t Cols() const { return currentMap->cols; }
-   uint16_t Rows() const { return currentMap->rows; }
-   uint8_t LayerCount() const { return currentMap->layerCount; }
-   uint8_t FilteredEntityCount() const { return currentMap->entityCount; }
-   uint16_t GeometryCount() const { return currentMap->geometryCount; }
-   uint16_t ScriptCount() const { return currentMap->scriptCount; }
+   void Draw(const Point& cameraPosition) const
+   {
+      //then draw the map and entities:
+      uint8_t layerCount = LayerCount();
+
+      for (uint8_t layerIndex = 0; layerIndex == 0 || layerIndex < (layerCount - 1); layerIndex++)
+      {
+         //draw all map layers except the last one before drawing entities.
+         DrawLayer(layerIndex, cameraPosition);
+      }
+
+      //now that the entities are updated, draw them to the screen.
+      DrawEntities(cameraPosition);
+
+      if (layerCount > 1)
+      {
+         //draw the final layer above the entities.
+         DrawLayer(layerCount - 1, cameraPosition);
+      }
+
+   }
+
+   inline std::string Name() const { return currentMap->name; }
+   inline uint16_t TileWidth() const { return currentMap->tileWidth; }
+   inline uint16_t TileHeight() const { return currentMap->tileHeight; }
+   inline uint16_t Cols() const { return currentMap->cols; }
+   inline uint16_t Rows() const { return currentMap->rows; }
+   inline uint8_t LayerCount() const { return currentMap->layerCount; }
+   inline uint8_t FilteredEntityCount() const { return currentMap->entityCount; }
+   inline uint16_t GeometryCount() const { return currentMap->geometryCount; }
+   inline uint16_t ScriptCount() const { return currentMap->scriptCount; }
 
    uint16_t getGlobalEntityId(uint16_t mapLocalEntityId) const
    {
@@ -125,12 +147,12 @@ public:
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   MageEntity& getPlayerEntity()
+   inline MageEntity& getPlayerEntity()
    {
       return getEntity(currentMap->playerEntityIndex);
    }
 
-   RenderableData& getPlayerEntityRenderableData()
+   inline RenderableData& getPlayerEntityRenderableData()
    {
       return getEntityRenderableData(currentMap->playerEntityIndex);
    }
@@ -141,33 +163,33 @@ public:
       return entities[id];
    }
 
-   MageEntity& getEntity(uint16_t id)
+   inline MageEntity& getEntity(uint16_t id)
    {
       return entities[id];
    }
 
-   RenderableData& getEntityRenderableData(uint16_t id)
+   inline RenderableData& getEntityRenderableData(uint16_t id)
    {
       return entityRenderableData[id];
    }
 
-   uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
+   inline uint8_t getFilteredEntityId(uint8_t mapLocalEntityId) const
    {
       return filteredMapLocalEntityIds[mapLocalEntityId % MAX_ENTITIES_PER_MAP];
    }
 
-   const MageEntity& getEntityByMapLocalId(uint16_t mapLocalId) const
+   inline const MageEntity& getEntityByMapLocalId(uint16_t mapLocalId) const
    {
       auto entityId = currentMap->entityGlobalIds[mapLocalId % currentMap->entityCount];
       return entities[entityId];
    }
 
-   MageEntity& getEntityByMapLocalId(uint16_t mapLocalId)
+   inline MageEntity& getEntityByMapLocalId(uint16_t mapLocalId)
    {
       return entities[mapLocalId % currentMap->entityCount];
    }
 
-   uint32_t LayerAddress(uint16_t layerIndex) const
+   inline uint32_t LayerAddress(uint16_t layerIndex) const
    {
       return currentMap->layerAddresses[layerIndex % currentMap->layerCount];
    }
@@ -195,13 +217,13 @@ public:
       return 0;
    }
 
-   uint8_t getPlayerEntityIndex() const { return currentMap->playerEntityIndex; }
-   uint16_t GetOnLoad() const { return currentMap->onLoad; }
-   uint16_t GetOnLook() const { return currentMap->onLook; }
-   uint16_t GetOnTick() const { return currentMap->onTick; }
-   void SetOnLoad(uint16_t loadId) { currentMap->onLoad = loadId; }
-   void SetOnLook(uint16_t lookId) { currentMap->onLook = lookId; }
-   void SetOnTick(uint16_t tickId) { currentMap->onTick = tickId; }
+   inline uint8_t getPlayerEntityIndex() const { return currentMap->playerEntityIndex; }
+   inline uint16_t GetOnLoad() const { return currentMap->onLoad; }
+   inline uint16_t GetOnLook() const { return currentMap->onLook; }
+   inline uint16_t GetOnTick() const { return currentMap->onTick; }
+   inline void SetOnLoad(uint16_t loadId) { currentMap->onLoad = loadId; }
+   inline void SetOnLook(uint16_t lookId) { currentMap->onLook = lookId; }
+   inline void SetOnTick(uint16_t tickId) { currentMap->onTick = tickId; }
 
 
    //this is used by the loadMap action to indicate when a new map needs to be loaded.
