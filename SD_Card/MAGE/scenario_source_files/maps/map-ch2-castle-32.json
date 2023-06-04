@@ -125,7 +125,7 @@
                  "gid":607,
                  "height":32,
                  "id":35,
-                 "name":"Ram Chips",
+                 "name":"RAM Chips",
                  "properties":[
                         {
                          "name":"on_interact",
@@ -135,8 +135,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":67.5474513054289,
-                 "y":251.749689183589
+                 "x":153,
+                 "y":112
                 }, 
                 {
                  "class":"",
@@ -149,6 +149,24 @@
                  "width":0,
                  "x":-77.3333333333333,
                  "y":-12
+                }, 
+                {
+                 "class":"",
+                 "gid":618,
+                 "height":64,
+                 "id":38,
+                 "name":"Sea Moss",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-seamoss"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":180,
+                 "y":117
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -185,14 +203,26 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":15,
-                 "name":"",
+                 "id":39,
+                 "name":"ch2-chips-slide",
                  "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":-154,
-                 "y":462
+                 "x":169,
+                 "y":93
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":40,
+                 "name":"ch2-chips-land",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":169,
+                 "y":101
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -201,7 +231,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":41,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -242,6 +272,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"..\/entities\/entity-bobmoss.json"
         }],
  "tilewidth":32,
  "type":"map",

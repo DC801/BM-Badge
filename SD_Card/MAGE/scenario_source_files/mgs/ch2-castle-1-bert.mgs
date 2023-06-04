@@ -29,7 +29,7 @@ ch2-cutscene-bert-secret {
 	turn entity Bert toward entity "%PLAYER%"
 	wait 200ms
 	show dialog {
-		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold!"
+		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
 		Bert "I remembered back door. But...."
 	}
 	set entity Bert tick_script to spin_self_clockwise
@@ -44,7 +44,7 @@ ch2-cutscene-bert-secret {
 		"Something is wrong."
 		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
 		"It is only gone today. This morning."
-		PLAYER "What? What are you saying? The book only went missing this morning?"
+		PLAYER "The book only went missing this morning?"
 		Bert "Yes. I am sure of it."
 		"%PLAYER%, something wants to stop you. Or delay you."
 		PLAYER "Are we too late, then? Is the Big Bad here?"

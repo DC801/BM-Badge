@@ -119,6 +119,24 @@
                  "width":32,
                  "x":64.7625362619146,
                  "y":254.534604227103
+                }, 
+                {
+                 "class":"",
+                 "gid":692,
+                 "height":32,
+                 "id":36,
+                 "name":"Scuzzy",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-scuzzy"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":61,
+                 "y":137
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -183,7 +201,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":37,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -232,6 +250,10 @@
         {
          "firstgid":635,
          "source":"..\/entities\/entity-powersupply.json"
+        }, 
+        {
+         "firstgid":683,
+         "source":"..\/entities\/entity-welder.json"
         }],
  "tilewidth":32,
  "type":"map",

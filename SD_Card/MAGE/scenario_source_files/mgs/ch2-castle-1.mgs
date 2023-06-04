@@ -157,6 +157,11 @@ on_go-castle-1-north {
 }
 
 on_go-castle-1-south {
+	// entrance text
+	if (flag ch2-has-artifact is true) {
+		show serial dialog spacer
+		show serial dialog { "Leaving the <bold>CASTLE</>..." }
+	}
 	copy on_exit-ch2-castle-1
 	copy warping-out-fade-out
 	load map ch2-castle-outside
@@ -291,14 +296,14 @@ interact-ch2-wizard {
 	}
 	goto interact-ch2-wizard-wrapup // RESET
 }
-interact-ch2-wizard-wrapup {
+interact-ch2-wizard-wrapup { // must be a separate script so the branching above can "return" early
 	set entity "%SELF%" interact_script to interact-ch2-wizard
 }
 
 interact-ch2-wizard-mainframedone {
 	show dialog {
-		SELF "I love the smell of software in the morning!"
-		"...What? That's a thing!"
+		SELF "I love the smell of software in the morning."
+		"...What? That's a thing."
 	}
 }
 
@@ -314,23 +319,23 @@ interact-ch2-xa {
 
 				PLAYER "I can hear you."
 
-				name "???" "Oh! Oh! It's a person! Yes, hello! My name is...."
+				name "???" "Oh! It's a person! Yes, hello! My name is...."
 
 				Lambda "Lambda! Yeah, call me Lambda!"
-				"I'm speaking to you through the Exa! It's this old intercom thing I set up ages ago. Looks like you're in the castle entrance. I'm surprised the Exa was still..."
-				"Wait a minute. Who are you? How did you even get in?"
+				"I'm speaking to you through the Exa! It's this old intercom I set up ages ago. Looks like you're in the castle entrance. I'm surprised the Exa was still..."
+				"Wait. Who are you? How did you even get in?"
 
 				PLAYER "I'm %PLAYER%. The village elders sent me here to collect the castle artifact so I could defeat the Big Bad."
 				"And I'm not a hacker, I just...\n...you know...\n...hack things. With Ring Zero."
 				
-				Lambda "No, no, that can't be right. The village elders?"
-				"They're the ones who told me to PROTECT the artifact! I have to keep it away from everyone else at all costs!"
+				Lambda "No, no, that can't be right."
+				"The village elders are the ones who told me to PROTECT the artifact! I have to keep it away from everyone at all costs!"
 
 				PLAYER "Well we're going to need it soon. I don't know if you felt that earthquake last night, but the Big Bad is coming back and I need it to defeat him."
 
 				Lambda "The Big Bad, coming back? Yes, I see... he might still have the power to trigger an earthquake, even after...."
 				"I, um, don't know why the village elders would have changed their minds about this, but...."
-				"Hmm. Well, you're welcome to the artifact. It's right over there, to your right."
+				"Well, you're welcome to the artifact. It's over there, to your right."
 			}
 			// a dumbwaiter-esque thing opens
 			// player turns to the right
@@ -345,7 +350,7 @@ interact-ch2-xa {
 			// picks it up
 			show dialog {
 				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
-				Lambda "Yeah, well, it doesn't exactly work right now, so...."
+				Lambda "Well, it doesn't exactly work right now, so...."
 			}
 			// player turns toward XA
 			show dialog {
@@ -364,8 +369,8 @@ interact-ch2-xa {
 				Lambda "I couldn't let the Big Bad have access to it again."
 				"And we weren't using it for much otherwise."
 				PLAYER "But now no one can use it!"
-				Lambda "Frankly, that's a small price to pay for keeping that power out of the Big Bad's hands. Although...."
-				"That was easier to say before the earthquake. The castle's in a bad state now, and with the mainframe down we can't fix anything."
+				Lambda "Small price to pay for keeping that power out of the Big Bad's hands. Although...."
+				"That was easier to say before the earthquake. With the mainframe down we can't fix anything."
 				"It's why you might as well have the portable interface. You could help out around here while I vet your story."
 				PLAYER "Vet my story? You don't believe the village elders sent me?"
 				Lambda "Well, um... this is all very complicated. I need to be sure that this isn't a trap."
@@ -446,7 +451,7 @@ ch2-terminal-plugged-check {
 
 ch2-terminal-plugged-no {
 	show dialog {
-		Lambda "Well, this won't exactly work wirelessly! You're going to have to find a USB-C cable somewhere, so, um...."
+		Lambda "Well, this won't exactly work wirelessly. You're going to have to find a USB-C cable somewhere, so, um...."
 	}
 	goto ch2-terminal-plugged-check
 }
@@ -510,7 +515,6 @@ ch2-terminal-message-test {
 	show serial dialog spacer
 	show serial dialog {
 		"<m>LAMBDA</>: Testing, testing...."
-		"\tCan you see this message?"
 	}
 	show dialog {
 		Lambda "Did you see my serial message?"

@@ -376,9 +376,9 @@ ch2-lambda-castle-who {
 ch2-lambda-castle-damage {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> The earthquake caused some damage, then?"
+		"<c>YOU:</> The earthquake caused some damage?"
 		" "
-		"<m>LAMBDA:</> Oh, for sure. A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"<m>LAMBDA:</> A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
 		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
 		" "
 	}
@@ -468,7 +468,7 @@ ch2-lambda-person-player-2a {
 	show serial dialog {
 		"<c>YOU:</> Cameras? That's creepy."
 		" "
-		"<m>LAMBDA:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense at one point, back when there was a lot more traffic in and out of here, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to...."
+		"<m>LAMBDA:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense back when there was a lot more traffic in and out, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to."
 	}
 	goto ch2-lambda-topic-person-s
 }
@@ -593,14 +593,14 @@ ch2-lambda-person-lambda-name {
 		"<m>LAMBDA:</> Well, no. But you see... this is a little embarrassing, but...."
 		"\tI... sort of... don't remember my real name."
 		" "
-		# "Are you kidding? You can't expect me to believe that." : ch2-lambda-person-lambda-name-2a
+		# "You're kidding, right?" : ch2-lambda-person-lambda-name-2a
 		# "How could you forget your own name? What happened?" : ch2-lambda-person-lambda-name-2b
 	}
 }
 ch2-lambda-person-lambda-name-2a {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> Are you kidding? You can't expect me to believe that."
+		"<c>YOU:</> You're kidding, right?"
 		" "
 		"<m>LAMBDA:</> You have to understand... this place, our memories... it's all ones and zeroes."
 		"\tWhen everything is digital, it is <bold>absolutely</> possible for information to disappear permanently. In my case...."
@@ -805,9 +805,9 @@ ch2-lambda-bert-door {
 		" "
 		"<m>LAMBDA:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
 		" "
-		"<c>YOU:</> But Bert's not a hacker! Or can <bold>anyone</> use a backdoor?"
+		"<c>YOU:</> But Bert's not a hacker. Or can <bold>anyone</> use a backdoor?"
 		" "
-		"<m>LAMBDA:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required!"
+		"<m>LAMBDA:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
 	}
 	goto ch2-lambda-bert-q
 }
@@ -835,8 +835,8 @@ ch2-lambda-bert-quit {
 		mutate CALLBACK = 0
 		show serial dialog spacer
 		show serial dialog {
-			"<m>LAMBDA:</> Yeah, sorry to go off on a long tangent like that when you were probably calling me about something else."
-			"\tDid you have a general question?"
+			"<m>LAMBDA:</> Sorry to go off on a long tangent like that when you were probably calling me about something else."
+			"\tDid you have a question?"
 			" "
 			# "Yes" : ch2-lambda-topic-q
 			# "No" : ch2-lambda-bert-quitquit
@@ -850,6 +850,6 @@ ch2-lambda-bert-quitquit {
 	show serial dialog {
 		"<c>YOU:</> Nope, no questions right now."
 		" "
-		"<m>LAMBDA:</> Cool! Just let me know if you want to know something."
+		"<m>LAMBDA:</> Cool. Just let me know if you want to know something."
 	}
 }
