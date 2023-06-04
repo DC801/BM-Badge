@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -63,6 +64,16 @@ on_go-castle-22-south {
 
 /* ---------- ENTITIES ---------- */
 
+interact-ch2-scuzzy {
+	copy face-player
+	show dialog {
+		SELF "You know, the castle is a computer, too."
+		"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
+		"In isolation each room, and each of us, are capable of little. But together, we can collaborate and build amazing things."
+	}
+	set flag ch2-namelessnpc-backstory to true
+	turn entity "%SELF%" west
+}
 
 /* ---------- POWER SUPPLY (ADMIN) ---------- */
 

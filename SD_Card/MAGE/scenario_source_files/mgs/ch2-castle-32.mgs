@@ -1,6 +1,7 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 }
 
 /* ---------- LOOK SCRIPTS ---------- */
@@ -18,6 +19,9 @@ on_load-ch2-castle-32 {
 	// ch2 room state
 	mutate ch2-in-room = 32
 
+	// DEBUG
+	register want + chips -> debug-want-chips
+
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-32 is false) {
@@ -27,13 +31,16 @@ on_load-ch2-castle-32 {
 		show serial dialog { "Entering <bold>KITCHEN</>..." }
 	}
 	if (
-		flag ch2-installed-ramchips is true
-		|| flag ch2-carrying-ramchips is true
+		flag ch2-ramchips-dispensed is false
 	) {
 		copy script ch2-hide-ramchips
 	}
 	
 	goto ch2-map-init
+}
+
+debug-want-chips {
+	set flag ch2-want-ramchips to true
 }
 
 /* ---------- ON_TICK ---------- */
@@ -66,18 +73,106 @@ on_go-castle-32-south {
 	load map ch2-castle-31
 }
 
+/* ---------- ENTITIES ---------- */
+
+interact-ch2-seamoss {
+	copy face-player
+	if (flag ch2-want-ramchips is false) {
+		if (flag ch2-seamoss-backstory is false) {
+			show dialog {
+				PLAYER "You know, you remind me of Bob Moss."
+				SELF "Oh sure. Bob Moss is my cousin. I'm Sea Moss."
+				"Nice to meetcha."
+			}
+			set flag ch2-seamoss-backstory to true
+		} else {
+			show dialog {
+				SELF "I've been stuck in here for a while now."
+				"I don't mind much, though, since this is where the vending machine is."
+			}
+		}
+	} else {
+		if (flag ch2-cutsceen-ramchips is false) {
+			if (flag ch2-seamoss-backstory is false) {
+				show dialog {
+					PLAYER "Say, are you Sea Moss?"
+					SELF "Yup, that's me. How did you know?"
+					PLAYER "Lucky guess. Anyway, I heard you knew something about computer memory."
+				}
+				set flag ch2-seamoss-backstory to true
+			} else {
+				show dialog {
+					PLAYER "Hey, Sea Moss. I heard you knew something about computer memory."
+				}
+			}
+			// The above can't be part of the copy script below, since script jumps are involved
+			copy interact-ch2-seamoss-cutscene
+		} else {
+			show dialog {
+				SELF "I do declare... chips are the greatest invention on the planet."
+				"Bar none."
+			}
+		}
+	}
+	turn entity "%SELF%" south
+	set entity "%SELF%" interact_script to interact-ch2-seamoss //RESET
+}
+
+interact-ch2-seamoss-cutscene {
+	set player control off
+	show dialog {
+		SELF "Oh, sure. I remember all sorts of stuff about that."
+		PLAYER "Well, I need some RAM to build a computer, but Lambda can't think of anything around here that would work."
+		SELF "RAM, like RAM chips? You could try the vending machine over yonder."
+		PLAYER "...Because it dispenses chips?"
+		SELF "You gotta keep your mind open for this stuff, man. Feel like a computer. Breathe like one. Understand what a computer wants."
+		"It wants to contain the whole universe within itself, to build and share its stories with each and every one of us at a keyboard or network port."
+		"For a computer to live, it must remember itself and allow itself to exist from moment to moment."
+		PLAYER "Uh...."
+		SELF "And if you need RAM chips, the sky's the limit, my dude. Anything is possible. Chips is chips!"
+		PLAYER "I really don't think that's true."
+		SELF "It'll be fine. Come here, I'll show you."
+	}
+	wait 400ms
+	turn entity "Sea Moss" west
+	wait 100ms
+	show dialog {
+		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
+	}
+	wait 750ms
+	set entity "RAM Chips" name to "RAM Chips"
+	teleport entity "RAM Chips" to geometry ch2-chips-slide
+	wait 400ms
+	walk entity "RAM Chips" to geometry ch2-chips-land over 300ms
+	wait 1300ms
+	show dialog {
+		PLAYER "Oh my god."
+	}
+	copy script face-player
+	show dialog {
+		SELF "There you are, friend! Some spicy nacho DDR5 RAM chips, on the house."
+		PLAYER "...Thanks...?"
+		SELF "Any time."
+	}
+	set player control on
+	// Sea Moss returns to his table
+	turn entity "Sea Moss" south
+	set flag ch2-cutsceen-ramchips to true
+	set flag ch2-ramchips-dispensed to true
+}
+
 /* ---------- RAMCHIPS (ADMIN) ---------- */
 
 ch2-hide-ramchips {
-	teleport entity "Ram Chips" to geometry hiding-spot
-	set entity "Ram Chips" name to " "
+	teleport entity "RAM Chips" to geometry hiding-spot
+	set entity "RAM Chips" name to " "
 }
 
 ch2-touch-ramchips {
 	if (flag ch2-ramchips-firstlook is false) {
 		show dialog {
 			PLAYER "That's the biggest bag of chips I've ever seen in my life."
-			"...It's probably only a quarter full."
+			"...And it's probably only a quarter full."
 		}
 		set flag ch2-ramchips-firstlook to true
 	} else {
@@ -86,7 +181,7 @@ ch2-touch-ramchips {
 		}
 	}
 	show dialog {
-		name "" "(Pick up the ramchips?)"
+		name "" "(Pick up the RAM chips?)"
 		> "Yes" : ch2-touch-ramchips-yes
 		> "No" : ch2-touch-ramchips-no
 	}
@@ -94,10 +189,11 @@ ch2-touch-ramchips {
 }
 ch2-touch-ramchips-yes {
 	show dialog {
-		name "" "(You pick up the ramchips!)"
+		name "" "(You pick up the RAM chips!)"
 	}
 	copy script ch2-hide-ramchips
 	set flag ch2-carrying-ramchips to true
+	set flag ch2-ramchips-dispensed to false
 	set entity "%SELF%" interact_script to null_script
 }
 ch2-touch-ramchips-no {

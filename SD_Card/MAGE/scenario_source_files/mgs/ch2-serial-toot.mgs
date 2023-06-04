@@ -323,7 +323,7 @@ serial dialog ch2-describe-harddrive {
 	"<m>LAMBDA:</> TODO: harddrive description"
 }
 serial dialog ch2-describe-mouse {
-	"<m>LAMBDA:</> To be honest, you don't need a mouse to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you if you're not too used to using a terminal."
+	"<m>LAMBDA:</> To be honest, you don't need a mouse to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
 	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat</> for a lead."
 }
 
