@@ -28,15 +28,9 @@ class MageDialogControl;
 #define HEXED_CLIPBOARD_PREVIEW_LENGTH 6
 #define HEXED_CLIPBOARD_MAX_LENGTH 64
 
-
-#ifdef DC801_EMBEDDED
 #define HEXED_QUICK_PRESS_TIMEOUT 500
 #define HEXED_TICK_DELAY 1
-#else
-//have to have two values since millis() doesn't work right for 801_DESKTOP:
-#define HEXED_QUICK_PRESS_TIMEOUT 50
-#define HEXED_TICK_DELAY 1
-#endif
+
 enum HEX_OPS {
 	HEX_OPS_XOR,
 	HEX_OPS_ADD,
@@ -163,7 +157,6 @@ private:
 
 	//these two variables allow for a 'quick press' action on the page button to advance one memory page.
 	bool previousPageButtonState{ false }; //tracks previous button state
-	uint32_t lastPageButtonPressTime{ 0 }; //tracks time of last press of page button
 
 	//clipboard GUI state
 	bool isCopying{ false };

@@ -13,7 +13,6 @@ set(SDL2_IMAGE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Software/GameEngine/src/modules/
 if(EMBEDDED_BUILD)
     include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/hw_sdk.cmake")
 else()
-    include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/shim_sdk.cmake")
 
     find_package(SDL2 MODULE REQUIRED)
 
@@ -86,6 +85,8 @@ set(SOURCEFILES
 
     Software/GameEngine/src/games/mage/mage_animation.cpp
     Software/GameEngine/src/games/mage/mage_animation.h
+    Software/GameEngine/src/games/mage/mage_app_timers.cpp
+    Software/GameEngine/src/games/mage/mage_app_timers.h
     Software/GameEngine/src/games/mage/mage_camera.cpp
     Software/GameEngine/src/games/mage/mage_camera.h
     Software/GameEngine/src/games/mage/mage_color_palette.cpp
@@ -173,7 +174,6 @@ if(WIN32)
 else()
     add_executable(${CMAKE_PROJECT_NAME} ${SOURCEFILES})
 endif()
-set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${INCLUDEDIRS})
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${COMPILEDEFS} ${SDK_COMPILEDEFS})

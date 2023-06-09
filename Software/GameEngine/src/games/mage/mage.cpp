@@ -20,15 +20,66 @@ void MageGameEngine::Run()
 #ifdef EMSCRIPTEN
    emscripten_set_main_loop(gameLoop, 24, 1);
 #else
+
+   //update timing information at the start of every game loop
+   auto lastTime = Util::millis();
+
    while (inputHandler->IsRunning())
    {
+      auto loopStart = Util::millis();
+      auto deltaTime = loopStart - lastTime;
+      debug_print("Now: %dms\tLast time: %dms\tDelta: %dms", loopStart, lastTime, deltaTime);
+      lastTime = loopStart;
+
       if (!engineIsInitialized || inputHandler->ShouldReloadGameDat())
       {
          scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
          LoadMap(ROM()->GetCurrentSave().currentMapId);
          engineIsInitialized = true;
       }
-      gameLoop();
+
+      // If a map is set to (re)load, do so before rendering
+      if (mapControl->mapLoadId != MAGE_NO_MAP)
+      {
+         //load the new map data into gameControl
+         LoadMap(mapControl->mapLoadId);
+
+         //clear the mapLoadId to prevent infinite reloads
+         scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
+         mapControl->mapLoadId = MAGE_NO_MAP;
+      }
+      processInputs();
+
+      //updates the state of all the things before rendering:
+      gameUpdate(deltaTime);
+
+      //frame limiter code to keep game running at a specific FPS:
+      //only do this on the real hardware:
+#ifdef DC801_EMBEDDED
+      //if (deltaTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) { continue; }
+#else
+      if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES)
+      {
+         SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
+      }
+#endif
+      //This renders the game to the screen based on the loop's updated state.
+      gameRender();
+
+      frameBuffer->blt();
+      
+      // drawButtonStates(inputHandler->GetButtonState());
+      // drawLEDStates();
+
+      // if a blocking delay was added by any actions, pause before returning to the game loop:
+      if (inputHandler->blockingDelayTime)
+      {
+         debug_print("About to block for %x", inputHandler->blockingDelayTime);
+         //delay for the right amount of time
+         nrf_delay_ms(inputHandler->blockingDelayTime);
+         //reset delay time when done so we don't do this every loop.
+         inputHandler->blockingDelayTime = 0;
+      }
    }
 #endif
 
@@ -427,70 +478,10 @@ void MageGameEngine::gameRender()
    }
    //update the state of the LEDs
    hexEditor->updateHexLights(mapControl->GetEntityDataPointer());
-
-   //update the framebuffer
-   frameBuffer->blt();
 }
 
 void MageGameEngine::gameLoop()
 {
-   //update timing information at the start of every game loop
-   now = millis();
-
-   // If a map is set to (re)load, do so before rendering
-   if (mapControl->mapLoadId != MAGE_NO_MAP)
-   {
-      //load the new map data into gameControl
-      LoadMap(mapControl->mapLoadId);
-
-      //clear the mapLoadId to prevent infinite reloads
-      scriptControl->jumpScriptId = MAGE_NO_SCRIPT;
-      mapControl->mapLoadId = MAGE_NO_MAP;
-   }
-
-   deltaTime = now - lastTime;
-   
-   //frame limiter code to keep game running at a specific FPS:
-   //only do this on the real hardware:
-#ifdef DC801_EMBEDDED
-   if (deltaTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES) { return; }
-
-// //code below here will only be run if enough ms have passed since the last frame:
-// lastLoopTime = now;
-#endif
-
-   processInputs();
-
-   lastTime = now;
-
-   //updates the state of all the things before rendering:
-   gameUpdate(deltaTime);
-
-   frameBuffer->clearScreen(RGB(0, 0, 0));
-   //This renders the game to the screen based on the loop's updated state.
-   gameRender();
-   // drawButtonStates(inputHandler->GetButtonState());
-   // drawLEDStates();
-
-   uint32_t fullLoopTime = millis() - lastTime;
-
-   // if a blocking delay was added by any actions, pause before returning to the game loop:
-   if (inputHandler->blockingDelayTime)
-   {
-      //delay for the right amount of time
-      nrf_delay_ms(inputHandler->blockingDelayTime);
-      //reset delay time when done so we don't do this every loop.
-      inputHandler->blockingDelayTime = 0;
-   }
-
-   uint32_t updateAndRenderTime = millis() - lastTime;
-
-#ifndef DC801_EMBEDDED
-   if (updateAndRenderTime < MAGE_MIN_MILLIS_BETWEEN_FRAMES)
-   {
-      SDL_Delay(MAGE_MIN_MILLIS_BETWEEN_FRAMES - updateAndRenderTime);
-   }
-#endif
 }
 
 void MageGameEngine::movePlayer(MageEntity& playerEntity, ButtonState button)

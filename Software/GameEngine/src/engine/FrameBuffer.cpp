@@ -15,8 +15,6 @@
 
 #endif
 
-#define MAX_ROM_CONTINUOUS_COLOR_DATA_READ_LENGTH 64
-
 //Cursor coordinates
 static inline int16_t m_cursor_x = 0;
 static inline int16_t m_cursor_y = 0;
@@ -25,12 +23,63 @@ static inline uint16_t m_color = COLOR_WHITE;
 static inline bool m_wrap = true;
 static inline volatile bool m_stop = false;
 
+
+void FrameBuffer::setPixel(uint16_t x, uint16_t y, const uint16_t& color)
+{
+   if (x < 0 || x >= DrawWidth
+      || y < 0 || y >= DrawHeight
+      || color == TRANSPARENCY_COLOR)
+   {
+      return;
+   }
+   minXChange = std::min<int>(minXChange, x);
+   maxXChange = std::max<int>(maxXChange, x);
+
+   minYChange = std::min<int>(minYChange, y);
+   maxYChange = std::max<int>(maxYChange, y);
+
+   frame[y * DrawWidth + x] = color;
+}
+
 void FrameBuffer::clearScreen(uint16_t color)
 {
+   minXChange = 0;
+   maxXChange = DrawWidth - 1;
+   minYChange = 0;
+   maxYChange = DrawHeight - 1;
+
    frame.fill(color);
 }
 
-void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
+void FrameBuffer::fillRect(int x, int y, int w, int h, uint16_t color)
+{
+
+#if DC801_EMBEDDED
+   ili9341_fill_rect(x, y, w, h, color);
+#else
+   if ((x >= DrawWidth) || (y >= DrawHeight))
+   {
+      return;
+   }
+
+   // Clip to screen
+   auto right = x + w;
+   if (right >= DrawWidth) { right = DrawWidth - 1; }
+   auto bottom = y + h;
+   if (bottom >= DrawHeight) { bottom = DrawHeight - 1; }
+   // X
+   for (int i = x; i < right; i++)
+   {
+      // Y
+      for (int j = y; j < bottom; j++)
+      {
+         setPixel(i, j, color);
+      }
+   }
+#endif
+}
+
+void FrameBuffer::drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
 {
    if (x2 < x1)
    {
@@ -38,13 +87,18 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
       std::swap(y1, y2);
    }
 
+   minXChange = std::min<int>(minXChange, x1);
+   maxXChange = std::max<int>(maxXChange, x2);
+   minYChange = std::min<int>(minYChange, y1);
+   maxYChange = std::max<int>(maxYChange, y2);
+
    // optimization for vertical lines
    if (x1 == x2)
    {
       if (y2 < y1) { std::swap(y1, y2); }
       while (y1++ != y2)
       {
-         drawPixel(x1, y1, color);
+         setPixel(x1, y1, color);
       }
    }
    // optimization for horizontal lines
@@ -52,7 +106,7 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
    {
       while (x1++ != x2)
       {
-         drawPixel(x1, y1, color);
+         setPixel(x1, y1, color);
       }
    }
    // Bresenham’s Line Generation Algorithm
@@ -73,14 +127,14 @@ void FrameBuffer::drawLine(int x1, int y1, int x2, int y2, uint16_t color)
          if (p >= 0)
          {
             auto y = drawDownward ? DrawHeight - y1 : y1;
-            drawPixel(x1, y, color);
+            setPixel(x1, y, color);
             y1++;
             p = p + 2 * dy - 2 * dx;
          }
          else
          {
             auto y = drawDownward ? DrawHeight - y1 : y1;
-            drawPixel(x1, y, color);
+            setPixel(x1, y, color);
             p = p + 2 * dy;
          }
       }
@@ -105,6 +159,11 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
    int8_t yo = glyph->yOffset;
    uint8_t xx, yy, bits = 0, bit = 0;
 
+   minXChange = std::min<int>(minXChange, x);
+   maxXChange = std::max<int>(maxXChange, x + w);
+   minYChange = std::min<int>(minYChange, y);
+   maxYChange = std::max<int>(maxYChange, y + h);
+
    // NOTE: THERE IS NO 'BACKGROUND' COLOR OPTION ON CUSTOM FONTS.
    // THIS IS ON PURPOSE AND BY DESIGN. 
 
@@ -122,7 +181,7 @@ void FrameBuffer::__draw_char(int16_t x, int16_t y, unsigned char c, uint16_t co
             yyy = y + yo + yy;
             if (yyy >= m_cursor_area.origin.y && yyy <= m_cursor_area.w)
             {
-               drawPixel(x + xo + xx, y + yo + yy, color);
+               setPixel(x + xo + xx, y + yo + yy, color);
             }
          }
          bits <<= 1;
@@ -177,16 +236,17 @@ void FrameBuffer::printMessage(std::string text, GFXfont font, uint16_t color, i
    m_cursor_x = m_cursor_area.origin.x;
    m_cursor_y = y + (font.yAdvance / 2);
 
-   // this prevents crashing if the first character of the string is null
-   if (text[0] != '\0')
+   for (uint16_t i = 0; text[i] && i < text.length(); i++)
    {
-      for (uint16_t i = 0; i < text.length(); i++)
-      {
-         write_char(text[i], font);
-      }
+      write_char(text[i], font);
    }
    m_cursor_area.origin.x = 0;
-   blt();
+}
+
+void FrameBuffer::regionBlt(const Point& drawPoint, int w, int h) const
+{
+   ili9341_set_addr(drawPoint.x, drawPoint.y, drawPoint.x + w, drawPoint.y + h);
+   ili9341_push_colors((uint8_t*)&frame[DrawWidth * drawPoint.y + drawPoint.x], w * h);
 }
 
 void FrameBuffer::blt()
@@ -204,15 +264,14 @@ void FrameBuffer::blt()
    //    color.b = Util::lerp(color.b, fadeColor.b, fadeFraction);
    //    color.a = fadeFraction > 0.5f ? fadeColor.a : color.a;
    // }
-      
+
 #ifdef DC801_EMBEDDED 
-   while (ili9341_is_busy())
-   {
-      //wait for previous transfer to complete before starting a new one
-   }
+      // ili9341_set_addr(minXChange, minYChange, maxXChange, maxYChange);
    ili9341_set_addr(0, 0, DrawWidth - 1, DrawHeight - 1);
-   uint32_t bytecount = DrawWidth * DrawHeight * 2;
+
+   const auto bytecount = 2 * FramebufferSize;// (maxXChange - minXChange + 1 + maxYChange - minYChange + 1);
    ili9341_push_colors((uint8_t*)frame.data(), bytecount);
+
 #else
    windowFrame->GameBlt(frame.data());
 #endif

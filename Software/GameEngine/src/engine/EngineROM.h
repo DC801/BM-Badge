@@ -195,9 +195,8 @@ struct EngineROM
    const T* GetReadPointerByIndex(uint16_t index) const
    {
       static_assert(sizeof(romData) == 4, "Expected 32-bit pointers");
-      auto&& header = getHeader<T>();
-      auto address = header.address((uint32_t)romData, index);
       
+      auto address = getHeader<T>().address((uint32_t)romData, index);
       return reinterpret_cast<const T*>((uint32_t)romData + address);
    }
 
@@ -213,8 +212,8 @@ struct EngineROM
    std::unique_ptr<T> InitializeRAMCopy(uint16_t index) const
    {
       static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
+      
       auto address = getHeader<T>().address((uint32_t)romData, index);
-
       return std::make_unique<T>(address);
    }
    
@@ -222,6 +221,7 @@ struct EngineROM
    void InitializeVectorFrom(std::vector<T>& v, uint32_t& address, size_t count) const
    {
       static_assert(std::is_constructible_v<T, uint32_t&> || std::is_standard_layout_v<T>, "Must be constructible from an address or a standard layout type");
+      
       for (auto i = 0; i < count; i++)
       {
          if constexpr (std::is_standard_layout_v<T>)

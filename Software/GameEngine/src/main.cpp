@@ -9,12 +9,13 @@
  *
  */
 
-#if __cplusplus > 199711L
-#define register      // Deprecated in C++11.
-#endif  // #if __cplusplus > 199711L
+ // #if __cplusplus > 199711L
+ // #define register      // Deprecated in C++11.
+ // #endif  // #if __cplusplus > 199711L
 
 #include "main.h"
 #include "games/mage/mage.h"
+#include "games/mage/mage_app_timers.h"
 #include "games/mage/mage_rom.h"
 #include "FrameBuffer.h"
 #include "EnginePanic.h"
@@ -40,6 +41,7 @@
 
 #include "qspi.h"
 #include "nrf_drv_clock.h"
+#include <nrf_pwr_mgmt.h>
 
 #else
 
@@ -51,13 +53,12 @@ volatile sig_atomic_t application_quit = 0;
 
 void sig_handler(int signo)
 {
-	if (signo == SIGINT)
-	{
-		debug_print("received SIGINT\n");
-		application_quit = 1;
-	}
+    if (signo == SIGINT)
+    {
+        debug_print("received SIGINT\n");
+        application_quit = 1;
+    }
 }
-
 #endif
 
 
@@ -66,12 +67,12 @@ void sig_handler(int signo)
  */
 static void log_init(void)
 {
-	ret_code_t err_code = NRF_LOG_INIT(NULL);
-	APP_ERROR_CHECK(err_code);
-	NRF_LOG_DEFAULT_BACKENDS_INIT();
-	NRF_LOG_INFO("--------------SYSTEM REBOOTED--------------");
-	NRF_LOG_ERROR("Error Logging enabled.");
-	NRF_LOG_INFO("Debug Logging enabled.");
+    ret_code_t err_code = NRF_LOG_INIT(app_timer_cnt_get);
+    APP_ERROR_CHECK(err_code);
+    NRF_LOG_DEFAULT_BACKENDS_INIT();
+    NRF_LOG_INFO("--------------SYSTEM REBOOTED--------------");
+    NRF_LOG_ERROR("Error Logging enabled.");
+    NRF_LOG_INFO("Debug Logging enabled.");
 }
 /**
  * @brief Main app
@@ -81,109 +82,105 @@ int main(int argc, char* argv[])
 {
 #if !defined(EMSCRIPTEN) && !defined(DC801_EMBEDDED)
 
-	signal(SIGINT, sig_handler);
+    signal(SIGINT, sig_handler);
 
 #endif
 
-	// Setup the system
-	log_init();
+    // Setup the system
+    log_init();
+    static auto inputHandler = std::make_shared<EngineInput>();
+    static auto frameBuffer = std::make_shared<FrameBuffer>();
 
-	// Timers
-	app_timer_init();
-
-	static auto inputHandler = std::make_shared<EngineInput>();
-	static auto frameBuffer = std::make_shared<FrameBuffer>();
-
-	// try
-	// {
+    // try
+    // {
 #ifdef DC801_EMBEDDED
-	// Init the clock 
-	APP_ERROR_CHECK(nrf_drv_clock_init());
-	
-	// Init the display
-		ili9341_init();
-		ili9341_start();
+    // Init the clock 
+    APP_ERROR_CHECK(nrf_drv_clock_init());
+    nrfx_systick_init();
+    APP_ERROR_CHECK(app_timer_init());
+    sysTickStart();
 
-		frameBuffer->clearScreen(COLOR_BLACK);
-		frameBuffer->printMessage("Screen initialized", Monaco9, 0xffff, 16, 16);
-		frameBuffer->blt();
+    //USB serial
+    usb_serial_init();
 
-		//USB serial
-		usb_serial_init();
+    // Setup I2C
+    twi_master_init();
 
-		// Setup I2C
-		twi_master_init();
+    // Setup the UART
+    uart_init();
 
-		// Setup the UART
-		uart_init();
+    //keyboard controls all hardware buttons on this badge
+    keyboard_init();
 
-		//keyboard controls all hardware buttons on this badge
-		keyboard_init();
+    // Init the display
+    ili9341_init();
+    ili9341_start();
 
-		//QSPI ROM Chip
-		static auto qspiControl = QSPI{};
-		if (qspiControl)
-		{
-			auto sdCard = SDCard{};
-			if (sdCard)
-			{
-				auto romUpdater = std::make_unique<RomUpdater>(inputHandler, frameBuffer);
-				romUpdater->HandleROMUpdate(qspiControl, sdCard);
-			}
-		}
-		else
-		{
-			return -1;
-		}
+    frameBuffer->clearScreen(COLOR_DARKCYAN);
+    frameBuffer->printMessage("Screen initialized", Monaco9, 0xffff, 16, 16);
+    frameBuffer->blt();
 
-		// BLE
-		//gap_params_init();
-		//ble_stack_init();
-		//scan_start();
+    //QSPI ROM Chip
+    static auto qspiControl = QSPI{};
+    if (qspiControl)
+    {
+        auto sdCard = SDCard{};
+        if (sdCard)
+        {
+            auto romUpdater = std::make_unique<RomUpdater>(inputHandler, frameBuffer);
+            romUpdater->HandleROMUpdate(qspiControl, sdCard);
+        }
+    }
+    else
+    {
+        return -1;
+    }
 
-		// Setup the battery monitor
-		//adc_configure();
-		//adc_start();
+    // BLE
+    //gap_params_init();
+    //ble_stack_init();
+    //scan_start();
 
-		//EEpwm_init();
+    // Setup the battery monitor
+    //adc_configure();
+    //adc_start();
 
-		const auto ble_name = "TheMage801"; // must be 10char
-		debug_print("advertising user: %s", ble_name);
-		advertising_setUser(ble_name);
-		ble_adv_start();
+    //EEpwm_init();
 
-		// Setup LEDs
-		ledInit();
-		ledsOff();
+    const auto ble_name = "TheMage801"; // must be 10char
+    debug_print("advertising user: %s", ble_name);
+    advertising_setUser(ble_name);
+    ble_adv_start();
 
-		setUpRandomSeed();
+    // Setup LEDs
+    ledInit();
+    ledsOff();
 
-		//morse isn't used on this badge yet...
-		//morseInit();
+    setUpRandomSeed();
 
-		// Configure the systick
-		sysTickStart();
+    //morse isn't used on this badge yet...
+    //morseInit();
 
-		// Boot! Boot! Boot!
-		debug_print("Booted!\nCreating and started game...\n");
+    // Boot! Boot! Boot!
+    debug_print("Booted!\nCreating and started game...\n");
 
-		//auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
+    //auto& currentSave = ROM()->ResetCurrentSave(0);//scenarioDataCRC32);
 
 #endif
-		auto game = std::make_unique<MageGameEngine>(inputHandler, frameBuffer);
-		game->Run();
-		
-		// If we make it here - we shouldn't - but if, reset the badge/exit
+    auto game = std::make_unique<MageGameEngine>(inputHandler, frameBuffer);
+    game->Run();
+
+    // If we make it here - we shouldn't - but if, reset the badge/exit
 #ifdef DC801_EMBEDDED
-		
-	while (1)
-	{
-		NVIC_SystemReset();
-	}
+
+    while (1)
+    {
+        NVIC_SystemReset();
+    }
 #else
-	debug_print("Exiting gracefully...\n");
-	SDL_Quit();
-	return 0;
+    debug_print("Exiting gracefully...\n");
+    SDL_Quit();
+    return 0;
 #endif
 
 }
@@ -191,25 +188,25 @@ int main(int argc, char* argv[])
 void setUpRandomSeed()
 {
 #ifdef DC801_EMBEDDED
-	// Init the random number generator
-	nrf_drv_rng_init(NULL);
-	
-	//Set random seed with something from nordic sdk,
-	//so as long as nrf_drv_rng_init() has been run,
-	//this is actually pretty random, probably.
-	uint32_t seed = (
-		(nrf_rng_random_value_get() << 0) +
-		(nrf_rng_random_value_get() << 8) +
-		(nrf_rng_random_value_get() << 16) +
-		(nrf_rng_random_value_get() << 24)
-		);
+    // Init the random number generator
+    nrf_drv_rng_init(NULL);
+
+    //Set random seed with something from nordic sdk,
+    //so as long as nrf_drv_rng_init() has been run,
+    //this is actually pretty random, probably.
+    uint32_t seed = (
+        (nrf_rng_random_value_get() << 0) +
+        (nrf_rng_random_value_get() << 8) +
+        (nrf_rng_random_value_get() << 16) +
+        (nrf_rng_random_value_get() << 24)
+        );
 #else
-	//Set random seed with number of seconds since
-	//unix epoc so two desktops launched the same
-	//second get the same rng, and that totally
-	//doesn't matter. Good enough for a simple
-	//dice roll for scripts.
-	uint32_t seed = time(NULL);
+    //Set random seed with number of seconds since
+    //unix epoc so two desktops launched the same
+    //second get the same rng, and that totally
+    //doesn't matter. Good enough for a simple
+    //dice roll for scripts.
+    uint32_t seed = time(NULL);
 #endif //DC801_DESKTOP
-	srand(seed);
+    srand(seed);
 }

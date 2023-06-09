@@ -1,12 +1,19 @@
 #ifndef SHIM_TIMER_H
 #define SHIM_TIMER_H
 
+#include <stdint.h>
+
 #ifdef DC801_EMBEDDED
+#include <atomic>
+#include <chrono>
+#include <cstdlib>
+#include <iostream>
+#include <list>
+#include <mutex>
 #include <app_timer.h>
+#include <nrfx_timer.h>
 #include <nrf_delay.h>
 #else
-
-#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,11 +23,11 @@ extern "C" {
 
    enum
    {
-      //    NRFX_TIMER0_INST_IDX,
+      NRFX_TIMER0_INST_IDX,
       NRFX_TIMER1_INST_IDX,
-      //    NRFX_TIMER2_INST_IDX,
-      //    NRFX_TIMER3_INST_IDX,
-      //    NRFX_TIMER4_INST_IDX,
+      NRFX_TIMER2_INST_IDX,
+      NRFX_TIMER3_INST_IDX,
+      NRFX_TIMER4_INST_IDX,
       NRFX_TIMER_ENABLED_COUNT
    };
 
@@ -114,5 +121,5 @@ extern "C" {
 }
 #endif //__cplusplus
 
-#endif //DC801_EMBEDDED
+#endif //!DC801_EMBEDDED
 #endif //SHIM_TIMER_H

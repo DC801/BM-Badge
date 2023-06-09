@@ -22,7 +22,8 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "${defaultBuildTask}"
         },
         {
             "name": "Debug Launch (Physical Badge)",
@@ -36,7 +37,19 @@
             "interface": "swd",
             "executable": "${workspaceRoot}/build_hw/bm_badge",
             "svdFile": "${workspaceRoot}/nordic-sdk17.1.0/modules/nrfx/mdk/nrf52840.svd",
-            "ipAddress": "192.168.1.132"
+            "ipAddress": "192.168.1.132",
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "preLaunchTask": "${defaultBuildTask}"
         },
         {
             "name": "Debug Attach (Physical Badge)",

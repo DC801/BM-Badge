@@ -1,26 +1,26 @@
 #ifndef FRAMEBUFFER_H
 #define FRAMEBUFFER_H
 
+#include <array>
+#include <stdint.h>
+#include "adafruit/gfxfont.h"
+
 #include "games/mage/mage_rom.h"
 #include "games/mage/mage_color_palette.h"
 #include "games/mage/mage_geometry.h"
-#include "adafruit/gfxfont.h"
-#include <array>
-#include <stdint.h>
 #include "utility.h"
 
-#ifndef DC801_EMBEDDED
+#ifdef DC801_EMBEDDED
+#include "modules/drv_ili9341.h"
+#else
 #include "EngineWindowFrame.h"
 #endif
 
-static const inline auto DrawWidth = 320;
-static const inline auto DrawHeight = 240;
+static const inline auto DrawWidth = uint16_t{ 320 };
+static const inline auto DrawHeight = uint16_t{ 240 };
 static const inline uint32_t FramebufferSize = DrawWidth * DrawHeight;
 
-#define RGB(r, g, b) (uint16_t)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | ((b) >> 3))
-class MageColorPalette;
 class MageGameEngine;
-
 
 // Color definitions
 #define COLOR_BLACK			0x0000	/*   0,   0,   0 */
@@ -49,21 +49,10 @@ class MageGameEngine;
 #define COLOR_NEONPURPLE	0xFD5F
 #define COLOR_BSOD			0x03DA
 
-typedef struct
-{
-    int16_t width;
-    int16_t height;
-} bounds_t;
-
-typedef struct
-{
-    int16_t x;
-    int16_t y;
-} cursor_t;
-
 class FrameBuffer
 {
 public:
+    //inline uint16_t& operator()(int index) { return frame->data()[index]; }
     constexpr void ResetFade() { fadeFraction = 0.0f; }
     constexpr void SetFade(uint16_t color, float progress)
     {
@@ -76,34 +65,14 @@ public:
     }
 
     void clearScreen(uint16_t color);
-    constexpr void drawPixel(int x, int y, const uint16_t& color)
-    {
-        if (x < 0 || x >= DrawWidth
-            || y < 0 || y >= DrawHeight
-            || color == TRANSPARENCY_COLOR)
-        {
-            return;
-        }
-
-        frame[y * DrawWidth + x] = color;
-    }
-
-    constexpr void setPixel(int i, const uint16_t& color)
-    {
-        if (i < 0 || i >= DrawWidth * DrawHeight
-            || color == TRANSPARENCY_COLOR)
-        {
-            return;
-        }
-        frame[i] = color;
-    }
-
+    void setPixel(uint16_t x, uint16_t y, const uint16_t& color);
+    
     inline void drawLine(const Point& p1, const Point& p2, uint16_t color)
     {
         drawLine(p1.x, p1.y, p2.x, p2.y, color);
     }
-    
-    void drawLine(int x1, int y1, int x2, int y2, uint16_t color);
+
+    void drawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
 
     /*inline void drawPoint(const Point& p, uint8_t size, uint16_t color)
     {
@@ -120,28 +89,7 @@ public:
         fillRect(p.x, p.y, w, h, color);
     }
 
-    void fillRect(int x, int y, int w, int h, uint16_t color)
-    {
-        if ((x >= DrawWidth) || (y >= DrawHeight))
-        {
-            return;
-        }
-
-        // Clip to screen
-        auto right = x + w;
-        if (right >= DrawWidth) { right = DrawWidth - 1; }
-        auto bottom = y + h;
-        if (bottom >= DrawHeight) { bottom = DrawHeight - 1; }
-        // X
-        for (int i = x; i < right; i++)
-        {
-            // Y
-            for (int j = y; j < bottom; j++)
-            {
-                drawPixel(i, j, color);
-            }
-        }
-    }
+    void fillRect(int x, int y, int w, int h, uint16_t color);
 
     inline void drawRect(const Rect& r, uint16_t color)
     {
@@ -163,18 +111,21 @@ public:
 
     void blt();
 
+    void regionBlt(const Point& drawPoint, int w, int h) const;
+
 private:
 #ifndef DC801_EMBEDDED
-	std::unique_ptr<EngineWindowFrame> windowFrame{ std::make_unique<EngineWindowFrame>() };
+    std::unique_ptr<EngineWindowFrame> windowFrame{ std::make_unique<EngineWindowFrame>() };
 #endif
-	
-	//variables used for screen fading
-	float fadeFraction{ 0.0f };
-	bool isFading{ false };
-	uint16_t fadeColor{ 0 };
+    std::array<uint16_t, FramebufferSize> frame{};
 
-    static inline std::array<uint16_t, FramebufferSize> frame{0};
-    
+    int minXChange{ DrawWidth }, maxXChange{ -1 }, minYChange{ DrawHeight }, maxYChange{ -1 };
+
+    //variables used for screen fading
+    float fadeFraction{ 0.0f };
+    bool isFading{ false };
+    uint16_t fadeColor{ 0 };
+
     void __draw_char(
         int16_t x,
         int16_t y,

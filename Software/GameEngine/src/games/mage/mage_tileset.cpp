@@ -1,15 +1,21 @@
 #include "mage_tileset.h"
 #include "mage_portrait.h"
 #include "EnginePanic.h"
+#include <algorithm>
+#include <ranges>
+#include <array>
 
+#ifdef DC801_EMBEDDED
+#include "modules/drv_ili9341.h"
+#endif
 
 void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& tileDrawPoint, uint8_t flags) const
 {
     auto tileset = ROM()->GetReadPointerByIndex<MageTileset>(tilesetId);
-    auto pixels = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId);
     auto colorPalette = ROM()->GetReadPointerByIndex<MageColorPalette>(tilesetId);
 
-    pixels += tileId * tileset->TileWidth * tileset->TileHeight;
+    // offset to the start address of the tile
+    auto sourceTilePtr = ROM()->GetReadPointerByIndex<MagePixels>(tilesetId) + tileId * tileset->TileWidth * tileset->TileHeight;
     auto target = Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight };
 
     if (flags & RENDER_FLAGS_IS_GLITCHED)
@@ -17,72 +23,40 @@ void TileManager::DrawTile(uint16_t tilesetId, uint16_t tileId, const Point& til
         target.origin.x += target.w * 0.125;
         target.w *= 0.75;
     }
+    
+    auto yMin = 0;
+    auto yMax = target.h - 1;
+    auto xMin = 0;
+    auto xMax = target.w - 1;
+    auto iteratorY = 1;
 
-    // skip any chunks that aren't drawn to the frame buffer
-    if (target.origin.x + target.w < 0 || target.origin.x >= DrawWidth
-        || target.origin.y + target.h < 0 || target.origin.y >= DrawHeight)
-    {
-        return;
-    }
-
-    auto rowIterator = tileset->ImageWidth;
-    auto colIterator = 1;
-    auto rowStart = 0;
-    auto rowEnd = tileset->ImageHeight - 1;
-    auto colStart = 0;
-    auto colEnd = tileset->ImageWidth - 1;
-
-    auto rowIndexAdjustment = 0;
-    auto colIndexAdjustment = 0;
-
-    if (flags & RENDER_FLAGS_FLIP_X)
-    {
-        colIterator = -1;
-        colStart = tileset->ImageWidth;
-        colEnd = 0;
-        colIndexAdjustment = -1;
-    }
     if (flags & RENDER_FLAGS_FLIP_Y)
     {
-        rowIterator = -tileset->ImageWidth;
-        rowStart = tileset->ImageHeight;
-        rowEnd = 0;
-        rowIndexAdjustment = -1;
+        yMin = target.h - 1;
+        yMax = 0;
+        xMin = target.w - 1;
+        xMax = 0;
+        iteratorY = -1;
     }
-    
-    for (auto row = rowStart; row != rowEnd; row += rowIterator)
+    for (auto y = yMin; y <= yMax; y += iteratorY)
     {
-        for (auto col = colStart; col != colEnd; col += colIterator)
+        for (auto x = xMin; x < xMax; x++)
         {
-            const auto rowIndex = row + rowIndexAdjustment;
-            const auto colIndex = col + colIndexAdjustment;
-            // compute the source pixel offset from the pixels pointer
-            const auto pixelIndex = rowIndex * tileset->ImageWidth + colIndex;
-            const auto targetFrameBufferIndex = (target.origin.y + rowIndex) * DrawWidth + (target.origin.x + colIndex);
-            const auto& color = colorPalette->get(pixels[pixelIndex]);
-            frameBuffer->setPixel(targetFrameBufferIndex, color);
+            const auto drawX = tileDrawPoint.x + x;
+            const auto drawY = tileDrawPoint.y + y;
+            // compute the source pixel offset from the sourceTilePtr pointer
+            const auto& color = colorPalette->get(sourceTilePtr[tileset->ImageWidth * y + x]);
+            if (drawX < 0 || drawX >= DrawWidth
+             || drawY < 0 || drawY >= DrawHeight
+             || TRANSPARENCY_COLOR == color)
+            {
+                continue;
+            }
+            frameBuffer->setPixel(drawX, drawY, color);
+            // frameBuffer->(DrawWidth * drawY + drawX) = color;
         }
     }
 
-    // // draw to the target pixel by pixel, read from the source based on flags:
-    // for (auto row = 0; row < target.h && row < DrawHeight; row++)
-    // {
-    //     // for a flip in the x-axis, get the last indexable column of the source
-    //     auto pixelRow = (flags & RENDER_FLAGS_FLIP_X) ? tileset->ImageWidth - row - 1 : row;
-
-    //     for (auto col = 0; col < target.w && col < DrawWidth; col++)
-    //     {
-    //         // for a flip in the y-axis, get the last indexable row of the source
-    //         auto pixelCol = (flags & RENDER_FLAGS_FLIP_Y) ? tileset->ImageWidth - col - 1 : col;
-
-    //         // compute the source pixel offset from the pixels pointer
-    //         auto pixelIndex = (pixelRow * tileset->ImageWidth) + pixelCol;
-
-    //         // use the pixels pointer to get the color from the palette
-    //         const auto& color = (*colorPalette)[pixels[pixelIndex]];
-    //         frameBuffer->drawPixel(target.origin.x + col, target.origin.y + row, color);
-    //     }
-    // }
     if (drawGeometry)
     {
         //frameBuffer->drawRect(Rect{ tileDrawPoint, tileset->TileWidth, tileset->TileHeight }, COLOR_RED);

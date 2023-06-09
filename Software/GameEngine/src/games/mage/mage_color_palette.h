@@ -2,6 +2,7 @@
 #define SOFTWARE_MAGE_COLOR_PALETTE_H
 
 #include <memory>
+#include <span>
 #include "mage_rom.h"
 #include "utility.h"
 
@@ -35,16 +36,15 @@ struct Color_565
 class MageColorPalette
 {
 public:
-   const uint16_t& get(uint8_t colorIndex) const
+   constexpr const uint16_t& get(uint8_t idx) const
    {
-      
-      return colorData[colorIndex % colorCount];
+      const uint16_t* colorData{ (const uint16_t*)(&colorCount + 2) };
+      return colorData[idx % colorCount];
    }
 
 private:
    char name[COLOR_PALETTE_NAME_SIZE]{ 0 };
    uint8_t colorCount{ 0 };
-   const uint16_t* colorData{ (const uint16_t*)(&colorCount + 2) };
 };
 
 #endif //SOFTWARE_MAGE_COLOR_PALETTE_H

@@ -31,7 +31,7 @@ public:
    {
       audioPlayer = std::make_unique<AudioPlayer>();
       tileManager = std::make_shared<TileManager>(frameBuffer);
-      mapControl = std::make_shared<MapControl>(frameBuffer, tileManager);
+      mapControl = std::make_shared<MapControl>(tileManager);
       hexEditor = std::make_shared<MageHexEditor>(frameBuffer, inputHandler, mapControl, ROM()->GetCurrentSave().memOffsets);
       stringLoader = std::make_shared<StringLoader>(scriptControl, mapControl, ROM()->GetCurrentSave().scriptVariables);
       dialogControl = std::make_unique<MageDialogControl>(frameBuffer, inputHandler, tileManager, stringLoader, mapControl);
@@ -73,12 +73,6 @@ private:
    void movePlayer(MageEntity& playerEntity, ButtonState button);
 
    bool engineIsInitialized{ false };
-
-
-   uint32_t lastTime{ millis() };
-   uint32_t now{ millis() };
-   uint32_t deltaTime{ 0 };
-   uint32_t lastLoopTime{ millis() };
 
    float mageSpeed{ 0.0f };
    bool isMoving{ false };

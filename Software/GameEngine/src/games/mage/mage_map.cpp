@@ -2,13 +2,13 @@
 #include "EnginePanic.h"
 #include <algorithm>
 #include <numeric>
+#include <vector>
 #include "mage.h"
-
-
-#ifndef DC801_EMBEDDED
 #include "shim_err.h"
-#else
-#include <nrf_error.h>
+
+
+#ifdef DC801_EMBEDDED
+#include "modules/drv_ili9341.h"
 #endif
 
 
@@ -16,23 +16,16 @@ void MapControl::Load(uint16_t index)
 {
    auto map = ROM()->InitializeRAMCopy<MapData>(index);
 
-   for (auto i = 0; i < MAX_ENTITIES_PER_MAP; i++)
-   {
-      if (i < map->entityCount)
-      {
-         auto entityAddress = ROM()->GetAddress<MageEntity>(map->entityGlobalIds[i]);
-         ROM()->Read(entities[i], entityAddress);
-      }
-      else
-      {
-         entities[i] = {};
-      }
-   }
    currentMap = std::move(map);
 }
 
 MapData::MapData(uint32_t& address)
 {
+   auto layerCount = uint8_t{ 0 };
+   uint16_t entityCount{ 0 };
+   uint16_t geometryCount{ 0 };
+   uint16_t scriptCount{ 0 };
+   uint8_t goDirectionsCount{ 0 };
    ROM()->Read(name, address, MapNameLength);
    ROM()->Read(tileWidth, address);
    ROM()->Read(tileHeight, address);
@@ -55,20 +48,40 @@ MapData::MapData(uint32_t& address)
 
    address += sizeof(uint8_t); // padding for 4-byte alignment
 
+   std::vector<uint16_t> entityGlobalIds{};
+   std::vector<uint16_t> geometryGlobalIds{};
+   std::vector<uint16_t> scriptGlobalIds{};
    ROM()->InitializeVectorFrom(entityGlobalIds, address, entityCount);
    ROM()->InitializeVectorFrom(geometryGlobalIds, address, geometryCount);
    ROM()->InitializeVectorFrom(scriptGlobalIds, address, scriptCount);
    ROM()->InitializeVectorFrom(goDirections, address, goDirectionsCount);
+
 
    //padding to align with uint32_t memory spacing:
    if ((entityCount + geometryCount + scriptCount) % 2)
    {
       address += sizeof(uint16_t);
    }
+   
+   for (auto& geometryId : geometryGlobalIds)
+   {
+      geometries.push_back(ROM()->GetReadPointerByIndex<MageGeometry>(geometryGlobalIds[geometryId]));
+   }
+
+   for (auto& scriptId : scriptGlobalIds)
+   {
+      scripts.push_back(ROM()->GetReadPointerByIndex<MageScript>(scriptGlobalIds[scriptId]));
+   }
+
+   for (auto i = 0; i < entityCount; i++)
+   {
+      auto entityAddress = ROM()->GetAddress<MageEntity>(entityGlobalIds[i]);
+      ROM()->Read(entities[i], entityAddress);
+   }
 
    for (auto i = 0; i < layerCount; i++)
    {
-      layerAddresses.push_back(address);
+      layers.push_back(ROM()->GetReadPointerToAddress<MageMapTile>(address));
       address += rows * cols * sizeof(uint8_t*);
    }
 }
@@ -76,44 +89,16 @@ MapData::MapData(uint32_t& address)
 void MapControl::DrawEntities(const Point& cameraPosition) const
 {
    //sort entity indices by the entity y values:
-   std::vector<size_t> entityDrawOrder(currentMap->entityCount);
+   static std::vector<size_t> entityDrawOrder(currentMap->entities.size());
    std::iota(entityDrawOrder.begin(), entityDrawOrder.end(), 0);
-   auto sortByY = [&](size_t i1, size_t i2) { return entities[i1].y < entities[i2].y; };
+   auto sortByY = [&](size_t i1, size_t i2) { return currentMap->entities[i1].y < currentMap->entities[i2].y; };
    std::stable_sort(entityDrawOrder.begin(), entityDrawOrder.end(), sortByY);
 
    //now that we've got a sorted array with the lowest y values first,
    //iterate through it and draw the entities one by one:
    for (auto& entityIndex : entityDrawOrder)
    {
-      tileManager->DrawTile(entityRenderableData[entityIndex], cameraPosition, getGlobalGeometryId(entityIndex));
-   }
-}
-
-void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
-{
-   auto layerAddress = LayerAddress(layer);
-   auto layers = ROM()->GetReadPointerToAddress<MageMapTile>(layerAddress);
-
-   for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
-   {
-      for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
-      {
-         auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
-         auto currentTile = &layers[tileIndex];
-
-         if (!currentTile->tileId) { continue; }
-
-         auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
-
-         // don't draw tiles that are entirely outside the screen bounds
-         if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
-            || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight)
-         {
-            continue;
-         }
-
-         tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
-      }
+      tileManager->DrawTile(currentMap->entityRenderableData[entityIndex], cameraPosition);
    }
 }
 
@@ -122,22 +107,83 @@ void MapControl::DrawGeometry(const Point& camera) const
    bool isColliding = false;
    if (currentMap->playerEntityIndex != NO_PLAYER)
    {
-      auto playerPosition = entityRenderableData[currentMap->playerEntityIndex].center;
+      auto playerPosition = currentMap->entityRenderableData[currentMap->playerEntityIndex].center;
       for (uint16_t i = 0; i < GeometryCount(); i++)
       {
-         auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
-         isColliding = geometry->isPointInGeometry(playerPosition);
+         // auto geometry = ROM()->GetReadPointerByIndex<MageGeometry>(getGlobalGeometryId(i));
+         // isColliding = geometry->isPointInGeometry(playerPosition);
          //geometry->draw(camera.x, camera.y, isColliding ? COLOR_RED : COLOR_GREEN);
       }
    }
 }
 
+void MapControl::DrawLayer(uint8_t layer, const Point& cameraPosition) const
+{
+   auto layerTiles = currentMap->layers[layer];
+   for (auto mapTileRow = 0; mapTileRow < currentMap->rows; mapTileRow++)
+   {
+      for (auto mapTileCol = 0; mapTileCol < currentMap->cols; mapTileCol++)
+      {
+         auto tileIndex = mapTileCol + (mapTileRow * currentMap->cols);
+         auto currentTile = &layerTiles[tileIndex];
+
+         if (!currentTile->tileId) { return; }
+
+         auto tileDrawPoint = Point{ currentMap->tileWidth * mapTileCol, currentMap->tileHeight * mapTileRow } - cameraPosition;
+
+         // don't draw tiles that are entirely outside the screen bounds
+         if (tileDrawPoint.x + currentMap->tileWidth < 0 || tileDrawPoint.x >= DrawWidth
+            || tileDrawPoint.y + currentMap->tileHeight < 0 || tileDrawPoint.y >= DrawHeight)
+         {
+            return;
+         }
+
+         tileManager->DrawTile(currentTile->tilesetId, currentTile->tileId - 1, tileDrawPoint, currentTile->flags);
+      }
+   }
+}
+
+void MapControl::Draw(const Point& cameraPosition) const
+{
+   // always draw layer 0 
+   DrawLayer(0, cameraPosition);
+   
+   //draw remaining map layers except the last one before drawing entities.
+   for (uint8_t layerIndex = 1; layerIndex < LayerCount() - 1; layerIndex++)
+   {
+      DrawLayer(layerIndex, cameraPosition);
+   }
+
+   DrawEntities(cameraPosition);
+
+   //draw the final layer above the entities only when there is more than one layer
+   if (LayerCount() > 1)
+   {
+      DrawLayer(LayerCount() - 1, cameraPosition);
+   }
+   
+   // we can fit up to 254 bytes in a single transfer window, each color is 2 bytes
+   // if (tileset->ImageWidth * target.h * sizeof(uint16_t) <= 254)
+   // {
+   //    std::array<uint16_t, 254 / sizeof(uint16_t)> tileBuffer{0};
+   //    for (auto i = 0; i < tileBuffer.size(); i++)
+   //    {
+   //       auto& color = colorPalette->get(sourceTilePtr[i]);
+   //       if (color != TRANSPARENCY_COLOR)
+   //       {
+   //          tileBuffer[i] = color;
+   //       }
+   //    }
+
+   // }
+}
+
 void MapControl::UpdateEntities(uint32_t deltaTime)
 {
-   for (auto i = 0; i < currentMap->entityCount; i++)
+   for (auto i = 0; i < currentMap->entities.size(); i++)
    {
-      auto& entity = entities[i];
-      auto& renderableData = entityRenderableData[i];
+      auto& entity = currentMap->entities[i];
+      auto& renderableData = currentMap->entityRenderableData[i];
       entity.updateRenderableData(renderableData, deltaTime);
    }
 }
@@ -146,6 +192,7 @@ void MapControl::TryMovePlayer(const Point& playerVelocity)
 {
    auto pushback = Point{ 0,0 };
    auto maxPushback = float{ 0.0f };
+   // TODO FML
 #if false
    auto setPushbackToMinCollision = [&](const Point& pointA, const Point& pointB) {
 
