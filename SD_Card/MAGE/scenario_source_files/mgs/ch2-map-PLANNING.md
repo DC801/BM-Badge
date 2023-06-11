@@ -125,17 +125,17 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- Starting item: enclosure/motherboard (room 1)
 
 - FIRST ROUND: normal
-	- [ ] (1.) `monitor` (room 11)
+	- [x] (1.) `monitor` (room 11)
 	- [x] (2.) `heatsink` (room 23)
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
 	- Bert cutscene (happens when 2/3 of the above are done)
 
 - SECOND ROUND: abstract
-	- [ ] (4.) `keyboard` (keytar) (room 31)
+	- [x] (4.) `keyboard` (keytar) (room 31)
 	- [ ] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive`
-		- [ ] `plates` (dinner plates) (room 34)
+		- [x] `plates` (dinner plates) (room 34)
 		- [ ] `needle` (phonograph needle) (room 12)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- Bert "any messages yet?" convo happens when 2/4 of the above are done
@@ -144,7 +144,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
-		- [ ] `abacus` (room 21)
+		- [x] `abacus` (room 21)
 
 - FINAL ROUND: software
 	- [ ] (10.) `mainframeos` (room 99) (might be handled differently)

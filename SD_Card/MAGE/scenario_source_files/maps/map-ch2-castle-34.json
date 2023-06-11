@@ -86,7 +86,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":607,
+                 "gid":617,
                  "height":32,
                  "id":33,
                  "name":"Hard Drive",
@@ -206,6 +206,10 @@
         {
          "firstgid":607,
          "source":"..\/entities\/entity-goldfish.json"
+        }, 
+        {
+         "firstgid":617,
+         "source":"entity-harddrive.json"
         }],
  "tilewidth":32,
  "type":"map",
