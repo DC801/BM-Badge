@@ -79,10 +79,12 @@ ch2-touch-keyboard {
 	show dialog {
 		PLAYER "TODO keyboard2."
 	}
-	show dialog {
-		name "" "(Pick up the keyboard?)"
-		> "Yes" : ch2-touch-keyboard-yes
-		> "No" : ch2-touch-keyboard-no
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the keyboard?)"
+			> "Yes" : ch2-touch-keyboard-yes
+			> "No" : ch2-touch-keyboard-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
 }

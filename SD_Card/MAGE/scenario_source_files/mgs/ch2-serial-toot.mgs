@@ -284,28 +284,42 @@ ch2-toot-step4b-pro {
 	}
 }
 
-ch2-toot-step5a {
-	show serial dialog spacer
-	show serial dialog {
-		"<c>YOU:</> Really? Around here? Parts like what?"
-		" "
-	}
-	goto ch2-toot-step5b
-}
-
 // NOTE: These must be written generically enough to be seen in isolation
-serial dialog ch2-describe-clock {
-	"<m>LAMBDA:</> We'll need a <c>CLOCK</>. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
-	"\tIn our case... well, we don't have a lot of options, but I do know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+
+// ROUND ONE: normal
+serial dialog ch2-describe-monitor {
+	"<m>LAMBDA:</> You'll need a computer monitor if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor near the front of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
 }
 serial dialog ch2-describe-heatsink {
-	"<m>LAMBDA:</> TODO: heatsink description"
+	"<m>LAMBDA:</> The mainframe generates so much heat we'll definitely need a <c>HEAT SINK</>. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
 }
+serial dialog ch2-describe-powersupply {
+	"<m>LAMBDA:</> TODO: powersupply description"
+}
+
+// ROUND TWO: abstract
 serial dialog ch2-describe-keyboard {
 	"<m>LAMBDA:</> TODO: keyboard description"
 }
+serial dialog ch2-describe-mouse {
+	"<m>LAMBDA:</> To be honest, you don't need a <c>MOUSE</> to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
+	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat</> for a lead."
+}
+serial dialog ch2-describe-harddrive {
+	"<m>LAMBDA:</> TODO: harddrive description"
+}
+serial dialog ch2-describe-ramchips {
+	"<m>LAMBDA:</> For <c>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. I think you'll have to <m>consult the hardware guys in the workshop</>. One of them might have an idea about how to cobble something together."
+}
+
+// ROUND THREE: desperate
+serial dialog ch2-describe-clock {
+	"<m>LAMBDA:</> We'll need a <c>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
+	"\tIn our case... well, I know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
+}
 serial dialog ch2-describe-cpu {
-	"<m>LAMBDA:</> TODO: cpu description"
+	"<m>LAMBDA:</> The <c>CPU</> is the most important part of the computer -- it's like the computer's brain. There aren't any spare lying around, but we could approximate one... maybe?"
+	"\tTODO: (all the rest)"
 }
 serial dialog ch2-describe-goldfish {
 	"<m>LAMBDA:</> TODO: goldfish description"
@@ -313,153 +327,64 @@ serial dialog ch2-describe-goldfish {
 serial dialog ch2-describe-abacus {
 	"<m>LAMBDA:</> TODO: abacus description"
 }
-serial dialog ch2-describe-powersupply {
-	"<m>LAMBDA:</> TODO: powersupply description"
-}
-serial dialog ch2-describe-ramchips {
-	"<m>LAMBDA:</> TODO: ramchips description"
-}
-serial dialog ch2-describe-harddrive {
-	"<m>LAMBDA:</> TODO: harddrive description"
-}
-serial dialog ch2-describe-mouse {
-	"<m>LAMBDA:</> To be honest, you don't need a mouse to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
-	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat</> for a lead."
-}
 
-ch2-toot-step5b {
-	show serial dialog ch2-describe-clock
+ch2-toot-step5a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Really? Around here? Parts like what?"
+		" "
+	}
+	show serial dialog ch2-describe-monitor
 	show serial dialog {
 		" "
-		# "What else?" : ch2-toot-step5c
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+		# "What else?" : ch2-toot-step5b
+	}
+}
+ch2-toot-step5b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What else?"
+		" "
+	}
+	show serial dialog ch2-describe-heatsink
+	show serial dialog {
+		" "
+		# "Then what?" : ch2-toot-step5c
 	}
 }
 ch2-toot-step5c {
 	show serial dialog spacer
-	show serial dialog ch2-describe-heatsink
 	show serial dialog {
+		"<c>YOU:</> Then what?"
 		" "
-		# "What else?" : ch2-toot-step5d
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
 	}
-}
-ch2-toot-step5d {
-	show serial dialog spacer
-	show serial dialog ch2-describe-keyboard
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5e
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5e {
-	show serial dialog spacer
-	show serial dialog ch2-describe-cpu
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5f
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5f {
-	show serial dialog spacer
-	show serial dialog ch2-describe-goldfish
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5g
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5g {
-	show serial dialog spacer
-	show serial dialog ch2-describe-abacus
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5h
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5h {
-	show serial dialog spacer
 	show serial dialog ch2-describe-powersupply
 	show serial dialog {
 		" "
-		# "What else?" : ch2-toot-step5i
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5i {
-	show serial dialog spacer
-	show serial dialog ch2-describe-ramchips
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5j
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5j {
-	show serial dialog spacer
-	show serial dialog ch2-describe-harddrive
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5k
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5k {
-	show serial dialog spacer
-	show serial dialog ch2-describe-mouse
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5l
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
-	}
-}
-ch2-toot-step5l {
-	show serial dialog spacer
-	show serial dialog ch2-describe-mouse
-	show serial dialog {
-		" "
-		# "What else?" : ch2-toot-step5m
-		# "Yeah, I get it. Explain the rest later." : ch2-toot-step5-bypass
+		# "Anything else?" : ch2-toot-step5e
 	}
 }
 
-ch2-toot-step5m {
-	goto ch2-toot-step5-endoflist
+ch2-toot-step5e {
+	// state must be set first because the serial dialog branches
+	copy ch2-toot-step99-cleanstate
+	// actual convo
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Anything else?"
+		" "
+		"<m>LAMBDA:</> And... the rest might be a little tricky. I'll keep looking for options, but for now just start with those three."
+	}
+	goto ch2-toot-step99
 }
 
 ch2-toot-step99-cleanstate {
 	mutate ch2-toot-level = 99
 	set flag ch2-toot-done to true
 }
-ch2-toot-step5-bypass {
-	// state must be set first because the serial dialog branches
-	copy ch2-toot-step99-cleanstate
-	// actual convo
-	show serial dialog spacer
-	show serial dialog {
-		"<c>YOU:</> Yeah, okay, I get it. You can finish explaining the rest later."
-		" "
-		"<m>LAMBDA:</> No problem. If you want to hear more about a part, feel free to ask me at any time."
-	}
-	goto ch2-toot-step99
-}
-ch2-toot-step5-endoflist {
-	// state must be set first because the serial dialog branches
-	copy ch2-toot-step99-cleanstate
-	// actual convo
-	show serial dialog spacer
-	show serial dialog {
-		"<c>YOU:</> What else?"
-		" "
-		"<m>LAMBDA:</> And... that might be it."
-	}
-	goto ch2-toot-step99
-}
 
 ch2-toot-step99 {
+	mutate ch2-storyflag-round = 1
 	show serial dialog {
 		"\tYou know, I'm actually getting a little excited about building this thing! We can actually do this!"
 		" "

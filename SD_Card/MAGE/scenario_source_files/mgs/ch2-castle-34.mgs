@@ -74,10 +74,12 @@ ch2-touch-harddrive {
 	show dialog {
 		PLAYER "TODO harddrive2."
 	}
-	show dialog {
-		name "" "(Pick up the hard drive?)"
-		> "Yes" : ch2-touch-harddrive-yes
-		> "No" : ch2-touch-harddrive-no
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the hard drive?)"
+			> "Yes" : ch2-touch-harddrive-yes
+			> "No" : ch2-touch-harddrive-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-harddrive // RESET
 }

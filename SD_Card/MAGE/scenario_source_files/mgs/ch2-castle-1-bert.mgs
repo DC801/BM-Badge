@@ -62,7 +62,7 @@ ch2-cutscene-bert-secret {
 	show dialog {
 		Bert "I must go. There is something I must learn. Quickly. But I will return."
 		"Do not wait for me. Go and get artifact."
-		"If I find answer, I will leave message with XA."
+		"If I find answer, I will leave message with trash panda Wizard."
 		"Good luck."
 	}
 	set flag ch2-saw-bert-secret to true

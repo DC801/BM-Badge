@@ -35,42 +35,76 @@ ch2-lambda-topic-nevermind {
 ch2-lambda-topic-parts {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>LAMBDA:</> These are the parts we need:"
-		// TODO change this to a MD checklist thingy
+		"<m>LAMBDA:</> As for parts, we still need:"
+	}
+	goto ch2-lambda-topic-parts-print
+}
+ch2-lambda-topic-parts-print {
+	if (variable ch2-storyflag-round is == 0) {
+		show serial dialog { "<r>DEBUG:</> You've asked for a parts list but 'ch2-storyflag-round' is still set to '0'!" }
 	}
 	set flag temp to false
-	if (flag ch2-installed-clock is false) {
-		show serial dialog { "\t- clock" }
+	// ROUND ONE: normal
+	if (variable ch2-storyflag-round is == 1) {
+		if (flag ch2-installed-heatsink is false) {
+			show serial dialog { "\t- heat sink" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-powersupply is false) {
+			show serial dialog { "\t- power supply" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-monitor is false) {
+			show serial dialog { "\t- monitor" }
+			set flag temp to true
+		}
+	}
+	// ROUND TWO: abstract
+	else if (variable ch2-storyflag-round is == 2) {
+		if (flag ch2-installed-ramchips is false) {
+			show serial dialog { "\t- RAM chips" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-harddrive is false) {
+			show serial dialog { "\t- hard drive" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-keyboard is false) {
+			show serial dialog { "\t- keyboard" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-mouse is false) {
+			show serial dialog { "\t- mouse" }
+			set flag temp to true
+		}
+	}
+	// ROUND THREE: desperate
+	else if (variable ch2-storyflag-round is == 3) {
+		if (flag ch2-installed-clock is false) {
+			show serial dialog { "\t- clock" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-cpu is false) {
+			show serial dialog { "\t- cpu" }
+			set flag temp to true
+		}
+	}
+	// FINAL ROUND: software
+	else if (variable ch2-storyflag-round is == 4) {
+		goto ch2-lambda-topic-parts-finished
 		set flag temp to true
 	}
-	if (flag ch2-installed-heatsink is false) {
-		show serial dialog { "\t- heat sink" }
-		set flag temp to true
-	}
-	if (flag ch2-installed-keyboard is false) {
-		show serial dialog { "\t- keyboard" }
-		set flag temp to true
-	}
-	if (flag ch2-installed-cpu is false) {
-		show serial dialog { "\t- cpu" }
-		set flag temp to true
-	}
-	if (flag ch2-installed-goldfish is false) {
-		show serial dialog { "\t- goldfish" }
-		set flag temp to true
-	}
-	if (flag ch2-installed-abacus is false) {
-		show serial dialog { "\t- abacus" }
-		set flag temp to true
-	}
-	if (flag ch2-installed-powersupply is false) {
-		show serial dialog { "\t- powersupply" }
-		set flag temp to true
+	else {
+		show serial dialog spacer
+		show serial dialog { "<r>DEBUG:</> Your 'ch2-storyflag-round' value is borked! (Current value: '$ch2-storyflag-round$')" }
 	}
 	if (flag temp is false) {
-		goto ch2-lambda-topic-parts-finished
+		show serial dialog spacer
+		show serial dialog { "<r>DEBUG:</> You've installed all the parts for story flag round '$ch2-storyflag-round$' but are still stuck in that round??" }
 	}
 	set flag temp to false
+
+	// FINISH
 	goto ch2-lambda-topic-parts-q
 }
 
@@ -83,62 +117,81 @@ ch2-lambda-topic-parts-q {
 
 		_ "Q" : ch2-command-man-normal-convo
 		_ "QUIT" : ch2-command-man-normal-convo
+
+		// ROUND ONE: normal
 		
-		_ "CLOCK" : ch2-lambda-parts-clock
+		_ "MONITOR" : ch2-lambda-parts-monitor
 
 		_ "HEAT SINK" : ch2-lambda-parts-heatsink
 		_ "HEATSINK" : ch2-lambda-parts-heatsink
+
+		_ "POWER SUPPLY" : ch2-lambda-parts-powersupply
+		_ "POWERSUPPLY" : ch2-lambda-parts-powersupply
+
+		// ROUND TWO: abstract
+		
+		_ "KEYBOARD" : ch2-lambda-parts-keyboard
+		
+		_ "MOUSE" : ch2-lambda-parts-mouse
+		
+		_ "HARD DRIVE" : ch2-lambda-parts-harddrive
+		_ "HARDDRIVE" : ch2-lambda-parts-harddrive
+		_ "HDD" : ch2-lambda-parts-harddrive
+
+		_ "RAM CHIPS" : ch2-lambda-parts-ramchips
+		_ "RAMCHIPS" : ch2-lambda-parts-ramchips
+		_ "RAM" : ch2-lambda-parts-ramchips
+
+		// ROUND THREE: desperate
+		
+		_ "CLOCK" : ch2-lambda-parts-clock
 
 		_ "CPU" : ch2-lambda-parts-cpu
 
 		_ "GOLDFISH" : ch2-lambda-parts-goldfish
 
-		_ "POWERSUPPLY" : ch2-lambda-parts-powersupply
-		_ "POWER SUPPLY" : ch2-lambda-parts-powersupply
-		
-		_ "KEYBOARD" : ch2-lambda-parts-keyboard
+		_ "ABACUS" : ch2-lambda-parts-abacus
 	}
-}
-
-ch2-describe-clock {
-	show serial dialog ch2-describe-clock
-}
-ch2-describe-heatsink {
-	show serial dialog ch2-describe-heatsink
-}
-ch2-describe-keyboard {
-	show serial dialog ch2-describe-keyboard
-}
-ch2-describe-cpu {
-	show serial dialog ch2-describe-cpu
-}
-ch2-describe-goldfish {
-	show serial dialog ch2-describe-goldfish
-}
-ch2-describe-powersupply {
-	show serial dialog ch2-describe-powersupply
-}
-ch2-describe-ramchips {
-	show serial dialog ch2-describe-ramchips
-}
-ch2-describe-harddrive {
-	show serial dialog ch2-describe-harddrive
-}
-ch2-describe-mouse {
-	show serial dialog ch2-describe-mouse
-}
-ch2-describe-monitor {
-	show serial dialog ch2-describe-monitor
-}
-
-ch2-lambda-parts-clock {
 	show serial dialog spacer
-	if (flag ch2-installed-clock is false) {
-		copy ch2-describe-clock
+	show serial dialog {
+		"<m>LAMBDA:</> Not sure what you mean. Want to ask about something else?"
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+ch2-describe-monitor { show serial dialog ch2-describe-monitor }
+ch2-describe-heatsink { show serial dialog ch2-describe-heatsink }
+ch2-describe-powersupply { show serial dialog ch2-describe-powersupply }
+
+ch2-describe-keyboard { show serial dialog ch2-describe-keyboard }
+ch2-describe-mouse { show serial dialog ch2-describe-mouse }
+ch2-describe-harddrive { show serial dialog ch2-describe-harddrive }
+ch2-describe-ramchips { show serial dialog ch2-describe-ramchips }
+
+ch2-describe-clock { show serial dialog ch2-describe-clock }
+ch2-describe-cpu { show serial dialog ch2-describe-cpu }
+ch2-describe-goldfish { show serial dialog ch2-describe-goldfish }
+ch2-describe-abacus { show serial dialog ch2-describe-abacus }
+
+ch2-lambda-parts-ahead {
+	show serial dialog spacer
+	show serial dialog { "<m>LAMBDA:</> Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:" }
+	goto ch2-lambda-topic-parts-print
+}
+ch2-lambda-parts-ahead-confused {
+	show serial dialog spacer
+	show serial dialog { "<m>LAMBDA:</> I don't know if that will be of any use, but... want to ask about something else?" }
+	goto ch2-lambda-topic-parts-q
+}
+
+// ROUND ONE: normal
+
+ch2-lambda-parts-monitor {
+	show serial dialog spacer
+	if (flag ch2-installed-monitor is false) {
+		copy ch2-describe-monitor
 	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> The clock's installed already. It's just... you know... clocking away."
-		}
+		show serial dialog { "<m>LAMBDA:</> You've got the monitor all set up already." }
 	}
 	goto ch2-lambda-topic-parts-q
 }
@@ -147,42 +200,7 @@ ch2-lambda-parts-heatsink {
 	if (flag ch2-installed-heatsink is false) {
 		copy ch2-describe-heatsink
 	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now."
-		}
-	}
-	goto ch2-lambda-topic-parts-q
-}
-ch2-lambda-parts-keyboard {
-	show serial dialog spacer
-	if (flag ch2-installed-keyboard is false) {
-		copy ch2-describe-keyboard
-	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO keyboard is already installed."
-		}
-	}
-	goto ch2-lambda-topic-parts-q
-}
-ch2-lambda-parts-cpu {
-	show serial dialog spacer
-	if (flag ch2-installed-cpu is false) {
-		copy ch2-describe-cpu
-	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> The cpu's installed already. It's been computin."
-		}
-	}
-	goto ch2-lambda-topic-parts-q
-}
-ch2-lambda-parts-goldfish {
-	show serial dialog spacer
-	if (flag ch2-installed-goldfish is false) {
-		copy ch2-describe-goldfish
-	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO goldfish is already installed."
-		}
+		show serial dialog { "<m>LAMBDA:</> You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now." }
 	}
 	goto ch2-lambda-topic-parts-q
 }
@@ -191,58 +209,120 @@ ch2-lambda-parts-powersupply {
 	if (flag ch2-installed-powersupply is false) {
 		copy ch2-describe-powersupply
 	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO powersupply is already installed."
-		}
+		show serial dialog { "<m>LAMBDA:</> TODO powersupply is already installed." }
 	}
 	goto ch2-lambda-topic-parts-q
 }
-ch2-lambda-parts-ramchips {
-	show serial dialog spacer
-	if (flag ch2-installed-ramchips is false) {
-		copy ch2-describe-ramchips
-	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO powersupply is already installed."
-		}
+
+// ROUND TWO: abstract
+
+ch2-lambda-parts-keyboard {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
 	}
-	goto ch2-lambda-topic-parts-q
-}
-ch2-lambda-parts-harddrive {
 	show serial dialog spacer
-	if (flag ch2-installed-harddrive is false) {
-		copy ch2-describe-harddrive
+	if (flag ch2-installed-keyboard is false) {
+		copy ch2-describe-keyboard
 	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO harddrive is already installed."
-		}
+		show serial dialog { "<m>LAMBDA:</> TODO keyboard is already installed." }
 	}
 	goto ch2-lambda-topic-parts-q
 }
 ch2-lambda-parts-mouse {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
 	show serial dialog spacer
 	if (flag ch2-installed-mouse is false) {
 		copy ch2-describe-mouse
 	} else {
-		show serial dialog {
-			"<m>LAMBDA:</> TODO mouse is already installed."
-		}
+		show serial dialog { "<m>LAMBDA:</> TODO mouse is already installed." }
 	}
 	goto ch2-lambda-topic-parts-q
 }
-ch2-lambda-parts-monitor {
+ch2-lambda-parts-harddrive {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
 	show serial dialog spacer
-	if (flag ch2-installed-monitor is false) {
-		copy ch2-describe-monitor
+	if (flag ch2-installed-harddrive is false) {
+		copy ch2-describe-harddrive
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO hard drive is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-ramchips {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (variable ch2-storyflag-round is not 2) { goto ch2-lambda-parts-ahead }
+	if (flag ch2-installed-ramchips is false) {
+		copy ch2-describe-ramchips
 	} else {
 		show serial dialog {
-			"<m>LAMBDA:</> TODO mouse is already installed."
+			"<m>LAMBDA:</> TODO power supply is already installed."
 		}
 	}
 	goto ch2-lambda-topic-parts-q
 }
 
+// ROUND THREE: desperate
+
+ch2-lambda-parts-clock {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-clock is false) {
+		copy ch2-describe-clock
+	} else {
+		show serial dialog { "<m>LAMBDA:</> The clock's installed already. It's just... you know... clocking away." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-cpu {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-cpu is false) {
+		copy ch2-describe-cpu
+	} else {
+		show serial dialog { "<m>LAMBDA:</> The cpu's installed already. It's been computin." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-goldfish {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-goldfish is false) {
+		copy ch2-describe-goldfish
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO goldfish is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-abacus {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-abacus is false) {
+		copy ch2-describe-abacus
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO abacus is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+// FINISH
+
 ch2-lambda-topic-parts-finished {
+	show serial dialog spacer
 	show serial dialog {
 		"\tOh, wait, is that everything? Huzzah! (TODO)"
 	}
@@ -765,7 +845,7 @@ ch2-lambda-bert-q {
 		# "What is Bert like?" : ch2-lambda-bert-like
 		# "Bert's never mentioned you." : ch2-lambda-bert-mentioned
 		# "What did he mean by 'back door?'" : ch2-lambda-bert-door
-		# "Did Bert leave a message yet?" : ch2-lambda-bert-message
+		# "Do you know if Bert left a message yet?" : ch2-lambda-bert-message
 		# "(Quit)" : ch2-lambda-bert-quit
 	}
 }
@@ -815,7 +895,7 @@ ch2-lambda-bert-door {
 ch2-lambda-bert-message {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> Did Bert leave a message yet?"
+		"<c>YOU:</> Do you know if Bert left a message yet?"
 		" "
 	}
 	if (flag interrupt is true) {
@@ -824,7 +904,7 @@ ch2-lambda-bert-message {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA:</> Nothing so far, sorry...."
+			"<m>LAMBDA:</> You might want to double check with Wizard, but I haven't heard anything so far, sorry."
 		}
 	}
 	goto ch2-lambda-bert-q

@@ -133,9 +133,9 @@ interact-ch2-seamoss-cutscene {
 		PLAYER "I really don't think that's true."
 		SELF "It'll be fine. Come here, I'll show you."
 	}
-	wait 400ms
-	turn entity "Sea Moss" west
 	wait 100ms
+	turn entity "Sea Moss" west
+	wait 400ms
 	show dialog {
 		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
 	}

@@ -78,10 +78,12 @@ ch2-touch-cpu {
 	show dialog {
 		PLAYER "TODO cpu2."
 	}
-	show dialog {
-		name "" "(Pick up the cpu?)"
-		> "Yes" : ch2-touch-cpu-yes
-		> "No" : ch2-touch-cpu-no
+	if (variable ch2-storyflag-round is >= 3) {
+		show dialog {
+			name "" "(Pick up the cpu?)"
+			> "Yes" : ch2-touch-cpu-yes
+			> "No" : ch2-touch-cpu-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-cpu // RESET
 }
@@ -127,10 +129,12 @@ ch2-touch-goldfish {
 	show dialog {
 		PLAYER "TODO goldfish2."
 	}
-	show dialog {
-		name "" "(Pick up the goldfish?)"
-		> "Yes" : ch2-touch-goldfish-yes
-		> "No" : ch2-touch-goldfish-no
+	if (variable ch2-storyflag-round is >= 3) {
+		show dialog {
+			name "" "(Pick up the goldfish?)"
+			> "Yes" : ch2-touch-goldfish-yes
+			> "No" : ch2-touch-goldfish-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-goldfish // RESET
 }
