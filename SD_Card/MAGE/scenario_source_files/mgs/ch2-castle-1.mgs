@@ -24,6 +24,10 @@ look-ch2-mainframe {
 	}
 	set flag temp to false
 	show serial dialog { "This hardy red-and-black box contains:"}
+	show serial dialog {
+		"\t- wires"
+		"\t- what looks like a huge circuit board"
+	}
 	// normal
 	if (flag ch2-installed-heatsink is true) {
 		show serial dialog { "\t- a heatsink" }
@@ -44,10 +48,6 @@ look-ch2-mainframe {
 	}
 	if (flag ch2-installed-cpu is true) {
 		show serial dialog { "\t- a CPU" }
-	}
-	show serial dialog {
-		"\t- wires"
-		"\t- what looks like a huge circuit board"
 	}
 	// EXTERNAL
 	show serial dialog { "On the outside is:" }
@@ -88,6 +88,9 @@ on_load-ch2-castle-1 {
 
 	// room unique stuff
 	register toot -> debug-finish-toot
+	show serial dialog {
+		"<g>DEBUG</>: type <c>TOOT</> to skip tutorial"
+	}
 	if (flag ch2-ring-zero-restored is true) {
 		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
 		set entity "Wizard" animation to 3 // head poking up
@@ -150,21 +153,38 @@ on_exit-ch2-castle-1 { // sanitize ch2 room state
 
 // SERIAL: go
 
+on_go_ch2-notyet {
+	show serial dialog spacer
+	show serial dialog {
+		"(You better finish your conversation with Lambda before attempting to <c>GO</> anywhere....)"
+		" "
+		"(Type <c>MAN</> to resume the converstion.)"
+	}
+}
+
 on_go-castle-1-north {
-	copy on_exit-ch2-castle-1
-	copy warping-out-fade-out
-	load map ch2-castle-11
+	if (flag ch2-toot-done is false) {
+		goto on_go_ch2-notyet
+	} else {
+		copy on_exit-ch2-castle-1
+		copy warping-out-fade-out
+		load map ch2-castle-11
+	}
 }
 
 on_go-castle-1-south {
 	// entrance text
-	if (flag ch2-has-artifact is true) {
-		show serial dialog spacer
-		show serial dialog { "Leaving the <bold>CASTLE</>..." }
+	if (flag ch2-toot-done is false) {
+		goto on_go_ch2-notyet
+	} else {
+		if (flag ch2-has-artifact is true) {
+			show serial dialog spacer
+			show serial dialog { "Leaving the <bold>CASTLE</>..." }
+		}
+		copy on_exit-ch2-castle-1
+		copy warping-out-fade-out
+		load map ch2-castle-outside
 	}
-	copy on_exit-ch2-castle-1
-	copy warping-out-fade-out
-	load map ch2-castle-outside
 }
 
 /* ---------- TUTORIAL ROOM STUFF ---------- */
@@ -226,6 +246,11 @@ ch2-wizard-ascend {
 	play entity Wizard animation 5 once
 	set entity Wizard animation to 3
 	set player control on
+}
+tick-ch2-wizard-ascend-and-watch {
+	play entity Wizard animation 5 once
+	set entity Wizard animation to 3
+	set entity Wizard tick_script to face-player
 }
 ch2-wizard-descend {
 	set player control off
