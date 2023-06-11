@@ -1,5 +1,51 @@
 # Chapter 2 planning
 
+## Sprite wishlist
+
+### Inventory items
+
+- [x] `monitor`
+- [ ] `heatsink`
+	- [x] `cactuscooler`
+- [x] `powersupply`
+- [x] `keyboard` (keytar)
+- [ ] `mouse` (rodent)
+- [ ] `harddrive`
+	- [ ] `plates` (dinner plates)
+	- [ ] `needle` (phonograph needle)
+- [x] `ramchips` (bag of Doritos)
+- [x] `clock` (grandfather clock)
+- [ ] `cpu`
+	- [x] `goldfish` (same sprite as bedroom?)
+	- [x] `abacus`
+
+### NPCs
+
+- [ ] Lambda
+- [ ] King Gibson
+- [ ] Cat Cook
+- [ ] Castle goose (red bow)
+- [ ] Sea Moss
+- [x] Trash panda ("Wizard")
+- [x] Welder ("Rocco")
+- [ ] Better Exa sprite
+- [ ] Misc other humanoid NPCs
+
+### Sets and doodads
+
+- [ ] Vending machine
+- [ ] Band instruments
+- [ ] Normal walls/floor (vaguely circuit-like)
+- [ ] Throne room (resembles Admiral's Gibson renders)
+- [ ] Geothermal power plant
+- [ ] Old timey-bedroom
+- [ ] Blacksmith / workshop
+- [ ] Server room
+- [ ] Kitchen
+- [ ] Hydroponics
+- [ ] Pantry
+- [ ] Messy computer lab (tiny)
+
 ## Serial dialogs styles
 
 - Before printing a fresh message to the serial console, show the serial dialog "spacer" -- this is currently a line break, a bunch of hyphens, and another line break. This makes it obvious where a new serial message begins.

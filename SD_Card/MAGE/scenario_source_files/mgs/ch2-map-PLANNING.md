@@ -45,7 +45,7 @@ Nethack-like
 11. Front hallway
 	- ITEM: Monitor
 12. Back hallway
-	- ITEM: phonograph (maybe?)
+	- ITEM: phonograph
 13. Throne room
 	- the royal advisor (a goldfish, ruling in King Gibson's absence)
 	- ITEM: goldfish (CPU item 1)
@@ -111,7 +111,7 @@ Nethack-like
 
 (Only numbered items count as story flags)
 
-Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten).
+Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten); see `ch2-PLANNING.md` for the sprites checklist.
 
 - INTRO
 	- [x] Intro to Lambda
@@ -134,8 +134,9 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 - SECOND ROUND: abstract
 	- [ ] (4.) `keyboard` (keytar) (room 31)
 	- [ ] (5.) `mouse` (rodent) (room 33)
-	- [ ] (6.) `harddrive` (dinner plates) (room 34)
-		- [ ] `needle` (phonograph needle) (room 12) (maybe?)
+	- [ ] (6.) `harddrive`
+		- [ ] `plates` (dinner plates) (room 34)
+		- [ ] `needle` (phonograph needle) (room 12)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- Bert "any messages yet?" convo happens when 2/4 of the above are done
 
