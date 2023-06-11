@@ -45,6 +45,7 @@
 - [ ] Hydroponics
 - [ ] Pantry
 - [ ] Messy computer lab (tiny)
+- [ ] Collapsed rocks (blocking doorways + incidental fallen rocks)
 
 ## Serial dialogs styles
 

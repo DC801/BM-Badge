@@ -137,6 +137,24 @@
                  "width":32,
                  "x":61,
                  "y":137
+                }, 
+                {
+                 "class":"",
+                 "gid":693,
+                 "height":32,
+                 "id":37,
+                 "name":"C. K. Watt",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-ckwatt"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":53,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -201,7 +219,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":37,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
