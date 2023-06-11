@@ -25,15 +25,22 @@ ch2-map-init {
 	}
 
 	// serial features
-	if (flag ch2-has-artifact is false) {
-		set serial control off // safety
-	} else {
-		set serial control on
-		register rtfm -> serial-rtfm
-		register inventory -> ch2-report-inventory
-		copy ch2-register-manual
-		if (flag ch2-map-granted is true) {
-			copy ch2-map-enable
+	if (flag ch2-has-artifact is false) { // no artifact at all
+		set serial control off
+	} else { // you have the artifact
+		if (
+			variable ch2-in-room is not 0 // if you're in the castle
+			|| flag ch2-toot-done is true // or if the toot is all the way done
+		) {
+			set serial control on
+			register rtfm -> serial-rtfm
+			register inventory -> ch2-report-inventory
+			copy ch2-register-manual
+			if (flag ch2-map-granted is true) {
+				copy ch2-map-enable
+			}
+		} else { // you're not in the castle and the toot isn't done yet
+			set serial control off
 		}
 	}
 	
@@ -50,9 +57,6 @@ ch2-map-init {
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)
 	// IF SO, be sure to turn off serial control and player control before doing any of that, and let it come back on again with this script.
 }
-
-/* ---------- NON-CASTLE ON_LOAD INIT ---------- */
-// the town (overworld) has its own version
 
 /* ---------- MAN PAGES ---------- */
 

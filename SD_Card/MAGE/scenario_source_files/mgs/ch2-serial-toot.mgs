@@ -194,6 +194,10 @@ ch2-toot-step3-halftime {
 ch2-toot-step3-check {
 	if (variable ch2-map-test is 0) {
 		// you haven't seen the map toot intro
+		show serial dialog spacer
+		show serial dialog {
+			"<m>LAMBDA</>: Let's pick up where we left off, shall we?"
+		}
 		goto ch2-toot-step3-start
 	} else if (variable ch2-map-test is 1) {
 		// you've seen the intro but haven't seen the map yet

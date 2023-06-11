@@ -127,6 +127,10 @@ ch2-interact-mainframe {
 		goto ch2-interact-mainframe-madamada
 	}
 	set flag temp to false
+	// wizard comes up if down
+	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+		set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch
+	}
 	// normal
 	if (flag ch2-installed-heatsink is false) {
 		if (flag ch2-carrying-heatsink is true) {
