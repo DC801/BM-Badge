@@ -73,6 +73,28 @@ interact-ch2-scuzzy {
 	}
 	turn entity "%SELF%" west
 }
+interact-ch2-ckwatt {
+	copy face-player
+	if (flag ch2-ckwatt-backstory is false) {
+		show dialog {
+			SELF "Huh? You need a power supply?"
+			"Go ahead and take this one."
+			PLAYER "You're sure?"
+			SELF "Sure. My new rig needed something more beefy than this, so I bought a better one a while back. This one is extra."
+			PLAYER "Neat. Thank you!"
+			SELF "No prob."
+		}
+		set flag ch2-ckwatt-backstory to true
+		set flag ch2-powersupply-permission to true
+	} else {
+		show dialog {
+			SELF "When you upgrade computers regularly, you tend to accumulate extra stuff. After a while, it can start to take up a lot of space."
+			"Glad that old power supply will see some use."
+		}
+	}
+	turn entity "%SELF%" south
+	set entity "%SELF%" interact_script to interact-ch2-ckwatt // RESET
+}
 
 /* ---------- POWER SUPPLY (ADMIN) ---------- */
 
@@ -91,10 +113,16 @@ ch2-touch-powersupply {
 	show dialog {
 		PLAYER "TODO powersupply2."
 	}
-	show dialog {
-		name "" "(Pick up the power supply?)"
-		> "Yes" : ch2-touch-powersupply-yes
-		> "No" : ch2-touch-powersupply-no
+	if (flag ch2-powersupply-permission is false) { // TODO make this a thing
+		show dialog {
+			PLAYER "I better ask permission before taking this, since it probably belongs to someone."
+		}
+	} else {
+		show dialog {
+			name "" "(Pick up the power supply?)"
+			> "Yes" : ch2-touch-powersupply-yes
+			> "No" : ch2-touch-powersupply-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-powersupply // RESET
 }

@@ -128,7 +128,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [ ] (1.) `monitor` (room 11)
 	- [x] (2.) `heatsink` (room 23)
 		- [x] `cactuscooler` (Bob's club)
-	- [ ] (3.) `powersupply` (room 22)
+	- [x] (3.) `powersupply` (room 22)
 	- Bert cutscene (happens when 2/3 of the above are done)
 
 - SECOND ROUND: abstract
