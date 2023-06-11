@@ -100,7 +100,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":209,
+                 "gid":2147483857,
                  "height":32,
                  "id":3,
                  "name":"XA",
@@ -123,8 +123,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":74,
-                 "y":117
+                 "x":270,
+                 "y":112
                 }, 
                 {
                  "class":"",
@@ -216,8 +216,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":288,
-                 "y":108
+                 "x":104,
+                 "y":112
                 }, 
                 {
                  "class":"",
@@ -239,8 +239,40 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":257,
-                 "y":106
+                 "x":76,
+                 "y":104
+                }, 
+                {
+                 "class":"",
+                 "gid":236,
+                 "height":40,
+                 "id":37,
+                 "name":"Bert",
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":-95,
+                 "y":-62
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":38,
+                 "name":"bert-spot",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":-1,
+                         "y":-116
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":193,
+                 "y":243
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -299,6 +331,18 @@
                  "width":0,
                  "x":195.432991424248,
                  "y":177.78375651589
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":36,
+                 "name":"entrance1-path",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":246
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -307,7 +351,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":35,
+ "nextobjectid":39,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

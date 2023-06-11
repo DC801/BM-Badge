@@ -88,8 +88,11 @@ on_load-ch2-castle-1 {
 
 	// room unique stuff
 	register toot -> debug-finish-toot
+	register bert -> debug-bert
 	show serial dialog {
-		"<g>DEBUG</>: type <c>TOOT</> to skip tutorial"
+		"\t<g>DEBUG</> stuff"
+		"<c>TOOT</>: skip tutorial"
+		"<c>BERT</>: to start 'Bert secret' cutscene"
 	}
 	if (flag ch2-ring-zero-restored is true) {
 		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
@@ -101,6 +104,9 @@ on_load-ch2-castle-1 {
 }
 debug-finish-toot {
 	set flag ch2-toot-done to true
+}
+debug-bert {
+	goto ch2-cutscene-bert-secret
 }
 
 /* ---------- ON_TICK ---------- */

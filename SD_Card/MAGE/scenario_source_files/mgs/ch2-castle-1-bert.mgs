@@ -1,3 +1,8 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
 settings for serial dialog { wrap 60 }
 
 /* ---------- BERT SECRET CUTSCENE ---------- */
@@ -27,7 +32,7 @@ ch2-cutscene-bert-secret {
 	walk entity Bert along geometry bert-spot over 1200ms
 	wait 100ms
 	turn entity Bert toward entity "%PLAYER%"
-	wait 200ms
+	wait 900ms
 	show dialog {
 		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
 		Bert "I remembered back door. But...."
@@ -61,13 +66,12 @@ ch2-cutscene-bert-secret {
 	turn entity Bert south
 	show dialog {
 		Bert "I must go. There is something I must learn. Quickly. But I will return."
-		"Do not wait for me. Go and get artifact."
+		"Do not wait for me. Go and fix artifact."
 		"If I find answer, I will leave message with trash panda Wizard."
 		"Good luck."
 	}
 	set flag ch2-saw-bert-secret to true
-	wait 100ms
-	walk entity Bert to geometry entrance1-path over 600ms
+	walk entity Bert to geometry entrance1-path over 800ms
 	wait 80ms
 	teleport entity Bert to geometry hiding-spot
 	set entity "%PLAYER%" tick_script to null_script
