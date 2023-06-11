@@ -74,10 +74,12 @@ ch2-touch-mouse {
 	show dialog {
 		PLAYER "TODO mouse2."
 	}
-	show dialog {
-		name "" "(Pick up the mouse?)"
-		> "Yes" : ch2-touch-mouse-yes
-		> "No" : ch2-touch-mouse-no
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the mouse?)"
+			> "Yes" : ch2-touch-mouse-yes
+			> "No" : ch2-touch-mouse-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
 }

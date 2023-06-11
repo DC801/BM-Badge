@@ -30,6 +30,7 @@ on_load-ch2-castle-23 {
 
 	// DEBUG
 	register get + thing -> debug-get-thing
+	show serial dialog { "\t<g>DEBUG option:</> 'get thing' to acquire Cactus Cooler" }
 
 	// entrance text
 	show serial dialog spacer

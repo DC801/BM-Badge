@@ -48,11 +48,14 @@ reset {
 		"RESET"
 	}
 }
+
 // END DEBUG
 
 on_load-ch2-bobsclub {
 	// do unique stuff first (but turn serial / player control off first, if you do)
 	mutate ch2-rattle-count = 0
+
+	// DEBUG
 	register find + cc -> find-cc
 	register unfind + cc -> unfind-cc
 	register want + cc -> want-cc
@@ -64,6 +67,23 @@ on_load-ch2-bobsclub {
 	register carry + cc -> carry-cc
 	register uncarry + cc -> uncarry-cc
 	register reset -> reset
+	show serial dialog spacer
+	show serial dialog {
+		"\t<g>Bob's Club debug options:</>"
+		"<c>FIND CC</>: you found CC in ch1"
+		"<c>UNFIND CC</>: you didn't find CC in ch1"
+		"<c>WANT CC</>: you know you want CC"
+		"<c>UNWANT CC</>: you don't yet know you want CC"
+		"<c>CARRY CC</>: you have CC on you"
+		"<c>UNCARRY CC</>: you don't have CC on you"
+		"<c>BASEMENT</>: you've been to the Bob's Club basement already"
+		"<c>UNBASEMENT</>: you've haven't been to the Bob's Club basement yet"
+		"<c>TOOT</>: you've finished Lambda's artifact tutorial already"
+		"<c>UNTOOT</>: you haven't finished Lambda's artifact tutorial yet"
+		"<c>RESET</>: set all above flags to false, and set the 'heard a dubstep rattle' to 0"
+	}
+	// END DEBUG
+	
 	set serial control on
 	
 	if (warp state is warping) {
@@ -222,8 +242,7 @@ interact-ch2-bobcupboard {
 }
 interact-ch2-bobglasses {
 	show dialog {
-		PLAYER
-		"These glasses look super fancy."
+		PLAYER "These glasses look super fancy."
 	}
 	mutate CALLBACK = $glasses
 	goto ch2-bobrattling

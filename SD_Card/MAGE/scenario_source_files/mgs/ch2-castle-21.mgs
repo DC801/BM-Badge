@@ -80,10 +80,12 @@ ch2-touch-abacus {
 	show dialog {
 		PLAYER "TODO abacus2."
 	}
-	show dialog {
-		name "" "(Pick up the abacus?)"
-		> "Yes" : ch2-touch-abacus-yes
-		> "No" : ch2-touch-abacus-no
+	if (variable ch2-storyflag-round is >= 3) {
+		show dialog {
+			name "" "(Pick up the abacus?)"
+			> "Yes" : ch2-touch-abacus-yes
+			> "No" : ch2-touch-abacus-no
+		}
 	}
 	set entity "%SELF%" interact_script to ch2-touch-abacus // RESET
 }

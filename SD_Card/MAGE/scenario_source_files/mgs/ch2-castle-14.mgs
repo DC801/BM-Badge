@@ -73,17 +73,19 @@ ch2-touch-clock {
 	show dialog {
 		PLAYER "What a robust ticking ambience."
 	}
-	// if (flag ch2-clock-permission is false) { // TODO make this a thing
-	// 	show dialog {
-	// 		PLAYER "Can I just take this, though? Maybe I should ask the king first...."
-	// 	}
-	// } else {
-		show dialog {
-			name "" "(Pick up the clock?)"
-			> "Yes" : ch2-touch-clock-yes
-			> "No" : ch2-touch-clock-no
-		}
-	// }
+	if (variable ch2-storyflag-round is >= 3) {
+		// if (flag ch2-clock-permission is false) { // TODO make this a thing
+		// 	show dialog {
+		// 		PLAYER "Can I just take this, though? Maybe I should ask the king first...."
+		// 	}
+		// } else {
+			show dialog {
+				name "" "(Pick up the clock?)"
+				> "Yes" : ch2-touch-clock-yes
+				> "No" : ch2-touch-clock-no
+			}
+		// }
+	}
 	set entity "%SELF%" interact_script to ch2-touch-clock // RESET
 }
 ch2-touch-clock-yes {

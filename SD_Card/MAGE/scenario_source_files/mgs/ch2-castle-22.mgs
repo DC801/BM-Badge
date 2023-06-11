@@ -71,7 +71,6 @@ interact-ch2-scuzzy {
 		"Each room has its specialized function, and resources and information may flow between rooms when they are connected."
 		"In isolation each room, and each of us, are capable of little. But together, we can collaborate and build amazing things."
 	}
-	set flag ch2-namelessnpc-backstory to true
 	turn entity "%SELF%" west
 }
 

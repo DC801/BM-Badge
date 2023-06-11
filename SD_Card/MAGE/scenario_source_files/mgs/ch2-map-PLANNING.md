@@ -80,7 +80,6 @@ Nethack-like
 	- ITEM: mainframe OS
 
 // TOWN
-- ITEM: sea moss (CMOS) (?)
 - ITEM: cactus cooler (needed for heat sink)
 ```
 
@@ -106,31 +105,49 @@ Nethack-like
 16-------------------------------
 ```
 
-## STORY FLAGS
-
-- Starting item: enclosure/motherboard (room 1)
+## STORY PROGRESSION
 
 (Only numbered items count as story flags)
 
-- FIRST ROUND (normal)
-	1. `heatsink` (room 23)
-		- `cactuscooler` (Bob's club)
-	2. `powersupply` (room 22)
-	3. `monitor` (room 11)
-- Bert cutscene happens when 2/3 of the above are done
-- SECOND ROUND (abstract)
-	4. `ramchips` (bag of Doritos) (room 32)
-	5. `harddrive` (dinner plates) (room 34)
-	6. `keyboard` (keytar) (room 31)
-	7. `mouse` (rodent) (room 33)
-- Bert "any messages yet?" convo happens when 2/4 of the above are done
-- THIRD ROUND (desperate)
-	8. `clock` (grandfather clock) (room 14)
-	9. `cpu`
-		- `goldfish` (same goldfish sprite as bedroom) (room 13)
-		- `abacus` (room 21)
-- FINAL ROUND (software)
-	10. `mainframeos` (room 99) (might be handled differently)
+Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten).
+
+- INTRO
+	- [x] Intro to Lambda
+		- [ ] Connecting the artifact on Windows
+		- [ ] Connecting the artifact on MacOS / Linux
+		- [x] Connecting the artifact on web
+		- [x] Intro to artifact
+	- [x] Installation Wizard
+		- [x] Introduction
+		- [x] Waiting for completion
+	- Starting item: enclosure/motherboard (room 1)
+
+- FIRST ROUND: normal
+	- [ ] (1.) `monitor` (room 11)
+	- [x] (2.) `heatsink` (room 23)
+		- [x] `cactuscooler` (Bob's club)
+	- [ ] (3.) `powersupply` (room 22)
+	- Bert cutscene (happens when 2/3 of the above are done)
+
+- SECOND ROUND: abstract
+	- [ ] (4.) `keyboard` (keytar) (room 31)
+	- [ ] (5.) `mouse` (rodent) (room 33)
+	- [ ] (6.) `harddrive` (dinner plates) (room 34)
+	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
+	- Bert "any messages yet?" convo happens when 2/4 of the above are done
+
+- THIRD ROUND: desperate
+	- [ ] (8.) `clock` (grandfather clock) (room 14)
+	- [ ] (9.) `cpu`
+		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
+		- [ ] `abacus` (room 21)
+
+- FINAL ROUND: software
+	- [ ] (10.) `mainframeos` (room 99) (might be handled differently)
+		- [ ] Cutscene: OS installation wizard
+	- [ ] End cutscene
+
+### Scripts needed
 
 For each item: (Copy existing pattern wherever these are found)
 
