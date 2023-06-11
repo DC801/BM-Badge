@@ -43,7 +43,9 @@ Nethack-like
 
 // MAIN BRANCH
 11. Front hallway
+	- ITEM: Monitor
 12. Back hallway
+	- ITEM: phonograph (maybe?)
 13. Throne room
 	- the royal advisor (a goldfish, ruling in King Gibson's absence)
 	- ITEM: goldfish (CPU item 1)
@@ -133,6 +135,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [ ] (4.) `keyboard` (keytar) (room 31)
 	- [ ] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive` (dinner plates) (room 34)
+		- [ ] `needle` (phonograph needle) (room 12) (maybe?)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- Bert "any messages yet?" convo happens when 2/4 of the above are done
 
