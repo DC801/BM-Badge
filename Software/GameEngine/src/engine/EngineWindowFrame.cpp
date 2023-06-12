@@ -94,7 +94,7 @@ SDL_Rect LEDTargetRect = {.x = 0, .y = 0, .w = 16, .h = 8};
 const SDL_Point buttonHalf = {16, 16};
 const SDL_Point LEDHalf = {8, 4};
 
-const SDL_Point buttonDestPoints[] = {
+const SDL_Point buttonDestPoints[KEYBOARD_NUM_KEYS] = {
 	{506, 98},
 	{506, 98 + 42},
 	{506, 98 + 42 + 42},
