@@ -92,7 +92,7 @@ interact-ch2-seamoss {
 			}
 		}
 	} else {
-		if (flag ch2-cutsceen-ramchips is false) {
+		if (flag ch2-cutseen-ramchips is false) {
 			if (flag ch2-seamoss-backstory is false) {
 				show dialog {
 					PLAYER "Say, are you Sea Moss?"
@@ -106,6 +106,7 @@ interact-ch2-seamoss {
 				}
 			}
 			// The above can't be part of the copy script below, since script jumps are involved
+			// (spun off into its own script for length reasons)
 			copy interact-ch2-seamoss-cutscene
 		} else {
 			show dialog {
@@ -140,9 +141,12 @@ interact-ch2-seamoss-cutscene {
 		SELF "I know a secret code for the ultimate cache of cache. Just need some cash...."
 	}
 	wait 750ms
+	// bag of RAM chips appears in front of the vending machine
 	set entity "RAM Chips" name to "RAM Chips"
 	teleport entity "RAM Chips" to geometry ch2-chips-slide
+	// hovers for a moment
 	wait 400ms
+	// then slides downward gently
 	walk entity "RAM Chips" to geometry ch2-chips-land over 300ms
 	wait 1300ms
 	show dialog {
@@ -157,7 +161,7 @@ interact-ch2-seamoss-cutscene {
 	set player control on
 	// Sea Moss returns to his table
 	turn entity "Sea Moss" south
-	set flag ch2-cutsceen-ramchips to true
+	set flag ch2-cutseen-ramchips to true
 	set flag ch2-ramchips-dispensed to true
 }
 
@@ -166,6 +170,8 @@ interact-ch2-seamoss-cutscene {
 ch2-hide-ramchips {
 	teleport entity "RAM Chips" to geometry hiding-spot
 	set entity "RAM Chips" name to " "
+	// ^^ when viewed with hex editor its name will appear blank
+	// (you must still target this entity with its original name, though)
 }
 
 ch2-touch-ramchips {
