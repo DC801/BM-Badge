@@ -395,12 +395,12 @@ void MageCommandControl::registerCommand(
 ) {
 	std::string lowercasedString = MageGame->getString(commandStringId, NO_PLAYER);
 	badAsciiLowerCase(&lowercasedString);
-	MageSerialDialogCommand command = {
-		.combinedString = lowercasedString,
-		.commandStringId = commandStringId,
-		.scriptId = scriptId,
-		.isFail = isFail,
-	};
+	MageSerialDialogCommand command;
+	command.combinedString = lowercasedString;
+	command.argumentStringId = 0;
+	command.commandStringId = commandStringId;
+	command.scriptId = scriptId;
+	command.isFail = isFail;
 	registeredCommands.push_back(command);
 }
 void MageCommandControl::registerArgument(
