@@ -7,11 +7,6 @@
 extern "C" {
 #endif
 
-/* NOTE: defined/primarily used in EngineWindowFrame.cpp, also used in EngineInput for screen clicks */
-extern const SDL_Point buttonDestPoints[KEYBOARD_NUM_KEYS];
-extern const SDL_Point buttonHalf;
-extern SDL_Rect buttonTargetRect;
-
 typedef struct {
 	bool mem0;
 	bool mem1;
