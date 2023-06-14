@@ -38,20 +38,21 @@ bool *buttonBoolPointerArray[] = {
 	&EngineInput_Buttons.op_sub,
 	&EngineInput_Buttons.op_page,
 	&EngineInput_Buttons.ljoy_center,
-	&EngineInput_Buttons.ljoy_left,
-	&EngineInput_Buttons.ljoy_down,
 	&EngineInput_Buttons.ljoy_up,
+	&EngineInput_Buttons.ljoy_down,
+	&EngineInput_Buttons.ljoy_left,
 	&EngineInput_Buttons.ljoy_right,
 	&EngineInput_Buttons.rjoy_center,
-	&EngineInput_Buttons.rjoy_left,
-	&EngineInput_Buttons.rjoy_down,
 	&EngineInput_Buttons.rjoy_up,
+	&EngineInput_Buttons.rjoy_down,
+	&EngineInput_Buttons.rjoy_left,
 	&EngineInput_Buttons.rjoy_right,
 	&EngineInput_Buttons.hax,
 };
 
 #ifdef DC801_DESKTOP
 
+int32_t buttonClickedOnScreenKeyboardIndex = -1;
 void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 {
 	if (application_quit != 0)
@@ -102,6 +103,25 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 			else if (e.key.keysym.sym == SDLK_EQUALS) {
 				EngineWindowFrameResize(1);
 				return;
+			}
+		}
+
+		if (e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
+			buttonClickedOnScreenKeyboardIndex = -1;
+
+			if (e.button.state == SDL_PRESSED) {
+				for (int i = 0; i < KEYBOARD_NUM_KEYS; ++i) {
+					SDL_Point buttonPoint = buttonDestPoints[i];
+					buttonTargetRect.x = buttonPoint.x - buttonHalf.x;
+					buttonTargetRect.y = buttonPoint.y - buttonHalf.y;
+
+					SDL_Point mousePos = { e.button.x, e.button.y };
+
+					if (SDL_EnclosePoints(&mousePos, 1, &buttonTargetRect, nullptr)) {
+						buttonClickedOnScreenKeyboardIndex = i;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -167,6 +187,10 @@ void EngineGetDesktopInputState(uint32_t *keyboardBitmask)
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_GRAVE] << KEYBOARD_KEY_RJOY_UP; // AKA Backtick
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_BACKSLASH] << KEYBOARD_KEY_RJOY_UP;
 	newValue ^= (uint32_t) keys[SDL_SCANCODE_RETURN] << KEYBOARD_KEY_RJOY_RIGHT;
+
+	if (buttonClickedOnScreenKeyboardIndex > -1) {
+		newValue ^= 1 << (uint32_t)buttonClickedOnScreenKeyboardIndex;
+	}
 
 	*keyboardBitmask = newValue;
 	// debug_print("EngineGetDesktopInputState keyboardBitmask: %" PRIu32 "\n", *keyboardBitmask);
