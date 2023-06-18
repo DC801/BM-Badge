@@ -134,6 +134,24 @@
                  "width":32,
                  "x":32,
                  "y":160
+                }, 
+                {
+                 "class":"",
+                 "gid":607,
+                 "height":32,
+                 "id":31,
+                 "name":"Needle",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"ch2-touch-needle"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":285,
+                 "y":127
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -168,6 +186,18 @@
                  "width":0,
                  "x":-154,
                  "y":462
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":32,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-54,
+                 "y":-56
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -176,7 +206,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":31,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -213,6 +243,10 @@
         {
          "firstgid":351,
          "source":"..\/tilesets\/tileset-town.json"
+        }, 
+        {
+         "firstgid":607,
+         "source":"..\/entities\/entity-goldfish.json"
         }],
  "tilewidth":32,
  "type":"map",

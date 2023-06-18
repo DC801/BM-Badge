@@ -7,28 +7,22 @@ settings for serial dialog { wrap 60 }
 
 /* ---------- BERT SECRET CUTSCENE ---------- */
 
-// not currently used (in the live one)
-
-ch2-cutscene-bert-secret-start {
-	set entity "%PLAYER%" animation to 0
-	copy ch2-cutscene-bert-secret
-	// CLEANUP: depends on trigger
-}
-
 watch-bert {
 	turn entity "%SELF%" toward entity Bert
 }
 
 ch2-cutscene-bert-secret {
+	set player control to off
+	wait 800ms
 	teleport entity Bert to geometry bert-spot
 	turn entity Bert north
 	show dialog {
 		Bert "%PLAYER%, wait."
 	}
-	set player control to off
 	wait 100ms
 	set entity "%PLAYER%" tick_script to watch-bert
 	wait 400ms
+	set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch-with-check
 	walk entity Bert along geometry bert-spot over 1200ms
 	wait 100ms
 	turn entity Bert toward entity "%PLAYER%"
@@ -70,7 +64,7 @@ ch2-cutscene-bert-secret {
 		"If I find answer, I will leave message with trash panda Wizard."
 		"Good luck."
 	}
-	set flag ch2-saw-bert-secret to true
+	set flag ch2-cutseen-bert-secret to true
 	walk entity Bert to geometry entrance1-path over 800ms
 	wait 80ms
 	teleport entity Bert to geometry hiding-spot

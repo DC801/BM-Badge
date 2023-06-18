@@ -74,12 +74,6 @@ debug {
 	load map ch2-castle-1
 }
 
-bert {
-	set flag ch2-lambda-bert-explanation to true
-	set flag interrupt to true
-	goto ch2-bert-secret-lambda-intro
-}
-
 serial-color-test {
 	show serial dialog spacer
 	show serial dialog {

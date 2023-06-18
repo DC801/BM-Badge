@@ -295,7 +295,7 @@ serial dialog ch2-describe-monitor {
 	"<m>LAMBDA:</> You'll need a computer monitor if you want to see anything the computer is doing. I'm pretty sure there's a <m>monitor near the front of the castle</> that no one is using. Be sure to take its video cable and power cable, too."
 }
 serial dialog ch2-describe-heatsink {
-	"<m>LAMBDA:</> The mainframe generates so much heat we'll definitely need a <c>HEAT SINK</>. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
+	"<m>LAMBDA:</> The mainframe generates so much heat we'll definitely need a <m>HEAT SINK</>. According to the castle's inventory sheets, the <m>server room</> has a bunch extra. I'm sure they'd let you take one."
 }
 serial dialog ch2-describe-powersupply {
 	"<m>LAMBDA:</> TODO: powersupply description"
@@ -303,26 +303,29 @@ serial dialog ch2-describe-powersupply {
 
 // ROUND TWO: abstract
 serial dialog ch2-describe-keyboard {
-	"<m>LAMBDA:</> TODO: keyboard description"
+	"<m>LAMBDA:</> You're definitely going to need a <m>KEYBOARD</>. Fortunately the <m>band in the Great Hall</> has one they're not exactly using. Okay, it's not QWERTY or DVORAK so much as it is a twelve-tone scale, but I think it'll work as an input device. Better than nothing, anyway."
 }
 serial dialog ch2-describe-mouse {
-	"<m>LAMBDA:</> To be honest, you don't need a <c>MOUSE</> to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
-	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat</> for a lead."
+	"<m>LAMBDA:</> To be honest, you don't need a <m>MOUSE</> to use a computer, but a lot of people prefer not to use the keyboard alone. I think it might be nice for you to have if you're not used to a terminal."
+	"\tMice might be hard to come by, though, so if I were you, I'd <m>ask a cat to fetch one</> for you."
 }
 serial dialog ch2-describe-harddrive {
-	"<m>LAMBDA:</> TODO: harddrive description"
+	"<m>LAMBDA:</> As I said before, to make a hard drive we'll need two things:"
+	"\tFirst, a <m>PLATE</>. But not just any plate -- we need a plate that can spin very smoothly without wobbling. <m>Ask the <m>kitchen staff</> if they have a plate like that."
+	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
+	// see aftermath of each usage for an additional line
 }
 serial dialog ch2-describe-ramchips {
-	"<m>LAMBDA:</> For <c>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. I think you'll have to <m>consult the hardware guys in the workshop</>. One of them might have an idea about how to cobble something together."
+	"<m>LAMBDA:</> For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. I think you'll have to <m>consult the hardware guys in the <m>workshop</>. Those guys should be able to hook you up."
 }
 
 // ROUND THREE: desperate
 serial dialog ch2-describe-clock {
-	"<m>LAMBDA:</> We'll need a <c>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
+	"<m>LAMBDA:</> We'll need a <m>CLOCK</> to keep all the computer parts coordinated. Normally CPU clocks are very tiny quartz crystals, which are shaped to oscillate at a specific rate...."
 	"\tIn our case... well, I know <m>King Gibson has a very nice grandfather clock in <m>his bedroom</>. Maybe ask him if you can use it."
 }
 serial dialog ch2-describe-cpu {
-	"<m>LAMBDA:</> The <c>CPU</> is the most important part of the computer -- it's like the computer's brain. There aren't any spare lying around, but we could approximate one... maybe?"
+	"<m>LAMBDA:</> The <m>CPU</> is the most important part of the computer -- it's like the computer's brain. There aren't any spare lying around, but we could approximate one... maybe?"
 	"\tTODO: (all the rest)"
 }
 serial dialog ch2-describe-goldfish {

@@ -28,10 +28,10 @@ on_load-ch2-castle-13 {
 		show serial dialog { "Entering <bold>THRONE ROOM</>..." }
 	}
 	if (
-		flag ch2-installed-cpu is true
-		|| flag ch2-carrying-cpu is true
+		flag ch2-installed-goldfish is true
+		|| flag ch2-carrying-goldfish is true
 	) {
-		copy script ch2-hide-cpu
+		copy script ch2-hide-goldfish
 	}
 	goto ch2-map-init
 }
@@ -61,58 +61,7 @@ on_go-castle-13-south {
 	load map ch2-castle-12
 }
 
-/* ---------- CPU (ADMIN) ---------- */
-
-ch2-hide-cpu {
-	teleport entity "cpu" to geometry hiding-spot
-	set entity "cpu" name to " "
-}
-
-ch2-touch-cpu {
-	if (flag ch2-cpu-firstlook is false) {
-		show dialog {
-			PLAYER "TODO cpu1"
-		}
-		set flag ch2-cpu-firstlook to true
-	}
-	show dialog {
-		PLAYER "TODO cpu2."
-	}
-	if (variable ch2-storyflag-round is >= 3) {
-		show dialog {
-			name "" "(Pick up the cpu?)"
-			> "Yes" : ch2-touch-cpu-yes
-			> "No" : ch2-touch-cpu-no
-		}
-	}
-	set entity "%SELF%" interact_script to ch2-touch-cpu // RESET
-}
-
-ch2-touch-cpu-yes {
-	show dialog {
-		name "" "(You pick up the cpu!)"
-	}
-	copy script ch2-hide-cpu
-	set flag ch2-carrying-cpu to true
-	set entity "%SELF%" interact_script to null_script
-}
-ch2-touch-cpu-no {
-	show dialog {
-		PLAYER "Maybe later, then."
-	}
-	set entity "%SELF%" interact_script to ch2-touch-cpu // RESET
-}
-
-ch2-install-cpu {
-	set flag ch2-carrying-cpu to false
-	set flag ch2-installed-cpu to true
-}
-look-cpu {
-	show serial dialog spacer
-	show serial dialog {
-		"on_look cpu TODO"
-	}
-}
+/* ---------- GOLDFISH (ADMIN) ---------- */
 
 ch2-hide-goldfish {
 	teleport entity "goldfish" to geometry hiding-spot
@@ -157,6 +106,10 @@ ch2-touch-goldfish-no {
 ch2-install-goldfish {
 	set flag ch2-carrying-goldfish to false
 	set flag ch2-installed-goldfish to true
+}
+ch2-install-cpu {
+	set flag ch2-carrying-cpu to false
+	set flag ch2-installed-cpu to true
 }
 look-goldfish {
 	show serial dialog spacer

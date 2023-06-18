@@ -8,6 +8,15 @@ serial dialog spacer {
 
 /* ---------- CASTLE ON_LOAD INIT ---------- */
 
+ch2-do-init-on-end {
+	// This is so you can run the init stuff at an arbitrary time, usually at the end of a big involved thing. The flag here should be false most of the time.
+	if (flag ch2-do-init-on-end is true) {
+		set flag ch2-do-init-on-end to false
+		goto ch2-map-init
+	}
+	goto null_script
+}
+
 ch2-map-init {
 	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
 	set flag interrupt2 to false // for when you need a second one
@@ -39,6 +48,9 @@ ch2-map-init {
 			if (flag ch2-map-granted is true) {
 				copy ch2-map-enable
 			}
+			if (flag ch2-permission-to-fuse is true) {
+				copy ch2-register-fuse
+			}
 		} else { // you're not in the castle and the toot isn't done yet
 			set serial control off
 		}
@@ -69,6 +81,11 @@ ch2-register-manual {
 	register man + help -> ch2-man-help
 	register man + rtfm -> ch2-man-rtfm
 	register man fail -> ch2-man-fail
+}
+
+ch2-register-fuse {
+	register fuse -> ch2-command-fuse
+	register man + fuse -> ch2-man-fuse
 }
 
 ch2-man-man {
@@ -137,6 +154,18 @@ ch2-man-map {
 		"The <c><bold>@</> symbol indicates which room you're in."
 	}
 }
+ch2-man-fuse {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - FUSE</>"
+		" "
+		"This command enables you to combine two inventory items into one."
+		" "
+		"You must have both items in your possession. Both items are consumed in the process."
+		" "
+		"If you're wondering how a software command can manipulate objects in the real world, <bold>just repeat to yourself it's just a game -- you should really just relax!</> ;)"
+	}
+}
 
 /* ---------- INITIALIZING: map command ---------- */
 
@@ -184,4 +213,77 @@ warping-in-fade-in {
 	set warp state to warped // it needs to be set to SOMETHING...
 	set player control to on // TODO: remove after shared behavior is fully merged
 	set serial control on // TODO: remove after shared behavior is fully merged
+}
+
+/* ---------- MISC COMMANDS ---------- */
+
+ch2-command-fuse {
+	mutate tempvar = 0
+	if (flag ch2-carrying-plate is true) {
+		if (flag ch2-carrying-needle is true) {
+			mutate tempvar = 1
+		}
+	} else if (flag ch2-carrying-goldfish is true) {
+		if (flag ch2-carrying-abacus is true) {
+			mutate tempvar = 2
+		}
+	}
+	if (variable tempvar is 1) {
+		goto ch2-command-fuse-combo1
+	} else if (variable tempvar is 2) {
+		goto ch2-command-fuse-combo2
+	} else {
+		show serial dialog spacer
+		show serial dialog {
+			"You have no compatible items to fuse."
+		}
+	}
+}
+
+ch2-command-fuse-combo1 {
+	show serial dialog spacer
+	show serial dialog {
+		"Fuse <m>dinner plate</> and <m>phonograph needle</>?"
+		" "
+		"(Type <c>YES</> or <c>NO</>)"
+		_ "YES" : ch2-command-fuse-combo1-yes
+		_ "Y" : ch2-command-fuse-combo1-yes
+	}
+	show serial dialog {
+		" "
+		"Your original items remain intact... for now!"
+	}
+}
+ch2-command-fuse-combo1-yes {
+	copy ch2-install-plate
+	copy ch2-install-needle
+	set flag ch2-carrying-harddrive to true
+	show serial dialog spacer
+	show serial dialog {
+		"Items fused into <m>HARD DRIVE</>!"
+	}
+}
+
+ch2-command-fuse-combo2 {
+	show serial dialog spacer
+	show serial dialog {
+		"Fuse <m>goldish</> and <m>abacus</>?"
+		" "
+		"(Type <c>YES</> or <c>NO</>)"
+		_ "YES" : ch2-command-fuse-combo2-yes
+		_ "Y" : ch2-command-fuse-combo2-yes
+	}
+	show serial dialog {
+		" "
+		"Your original items remain intact... for now!"
+	}
+}
+ch2-command-fuse-combo2-yes {
+	copy ch2-install-goldfish
+	copy ch2-install-abacus
+	set flag ch2-carrying-cpu to true
+	show serial dialog spacer
+	show serial dialog {
+		"Items fused into <m>CPU</>!"
+	}
 }

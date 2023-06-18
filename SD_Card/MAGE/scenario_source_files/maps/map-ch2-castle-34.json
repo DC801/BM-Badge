@@ -89,12 +89,12 @@
                  "gid":617,
                  "height":32,
                  "id":33,
-                 "name":"Hard Drive",
+                 "name":"Plate",
                  "properties":[
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":"ch2-touch-harddrive"
+                         "value":"ch2-touch-plate"
                         }],
                  "rotation":0,
                  "visible":true,

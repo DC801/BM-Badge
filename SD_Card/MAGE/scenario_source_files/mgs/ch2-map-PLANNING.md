@@ -73,7 +73,7 @@ Nethack-like
 33. Hydroponics area
 	- ITEM: mouse (an actual rodent)
 34. Pantry
-	- ITEM: SSD/HD (plates)
+	- ITEM: SSD/HD (plate)
 
 // THE END
 99. Secret room (teleport only)
@@ -114,6 +114,9 @@ Nethack-like
 Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten); see `ch2-PLANNING.md` for the sprites checklist.
 
 - INTRO
+	- ch2-storyflag-round = 0
+		- [ ] Village elders are all right outside
+		- [ ] Villagers direct you to western dungeon (castle)
 	- [x] Intro to Lambda
 		- [ ] Connecting the artifact on Windows
 		- [ ] Connecting the artifact on MacOS / Linux
@@ -125,31 +128,49 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- Starting item: enclosure/motherboard (room 1)
 
 - FIRST ROUND: normal
+	- ch2-storyflag-round = 1
+		- [ ] Village elders are in the library or various places (not in the same room though)
+		- [ ] Villagers ask how things are going
 	- [x] (1.) `monitor` (room 11)
 	- [x] (2.) `heatsink` (room 23)
 		- [x] `cactuscooler` (Bob's club)
 	- [x] (3.) `powersupply` (room 22)
-	- Bert cutscene (happens when 2/3 of the above are done)
+	- [x] Bert secret cutscene happens when all of the above are done
+	- [x] Lambda gives next round of the parts list
 
 - SECOND ROUND: abstract
+	- ch2-storyflag-round = 2
+		- [ ] Village elders are all around village
 	- [x] (4.) `keyboard` (keytar) (room 31)
 	- [ ] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive`
-		- [x] `plates` (dinner plates) (room 34)
+		- [x] `plate` (dinner plate) (room 34)
 		- [ ] `needle` (phonograph needle) (room 12)
 	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
-	- Bert "any messages yet?" convo happens when 2/4 of the above are done
+	- [ ] Bert "any messages yet?" convo happens when all of the above are done
+	- [ ] Lambda gives next round of the parts list
 
 - THIRD ROUND: desperate
+	- ch2-storyflag-round = 3
+		- [ ] Village elders are both in the inner sanctum
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
 		- [x] `abacus` (room 21)
+	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
 - FINAL ROUND: software
+	- ch2-storyflag-round = 4
+		- [ ] Village elders are waiting outside
 	- [ ] (10.) `mainframeos` (room 99) (might be handled differently)
 		- [ ] Cutscene: OS installation wizard
 	- [ ] End cutscene
+	- [ ] Credits
+
+- AFTERWARD
+	- ch2-storyflag-round = 5
+		- [ ] Villagers speculate on the next area: software!
+		- [ ] Village elders say how you can have a break now
 
 ### Scripts needed
 
