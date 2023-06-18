@@ -42,8 +42,8 @@ ch2-map-init {
 			|| flag ch2-toot-done is true // or if the toot is all the way done
 		) {
 			set serial control on
-			register rtfm -> command-rtfm
-			register inventory -> ch2-report-inventory
+			copy register-rtfm
+			copy register-inventory
 			copy register-manual
 			if (flag ch2-map-granted is true) {
 				copy register-map

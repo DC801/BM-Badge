@@ -1,0 +1,91 @@
+settings for serial dialog { wrap 60 }
+
+// REGISTER
+
+register-inventory {
+	register man + inventory -> man-inventory
+	register inventory -> command-inventory
+}
+
+// MAN PAGE
+
+man-inventory {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - INVENTORY</>"
+		" "
+		"Use this command to see what items you are currently carrying."
+		" "
+		"See also: <c>FUSE</>"
+	}
+}
+
+// COMMAND
+
+command-inventory {
+	set flag temp to false
+	show serial dialog spacer
+	show serial dialog {
+		"<c>INVENTORY:</>"
+	}
+	// normal
+	if (flag ch2-carrying-cactuscooler is true) {
+		show serial dialog { "\tcan of Cactus Cooler" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-heatsink is true) {
+		show serial dialog { "\theat sink" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-powersupply is true) {
+		show serial dialog { "\tpower supply" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-monitor is true) {
+		show serial dialog { "\tmonitor" }
+		set flag temp to true
+	}
+	// abstract
+	if (flag ch2-carrying-ramchips is true) {
+		show serial dialog { "\tramchips" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-harddrive is true) {
+		show serial dialog { "\thard drive" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-keyboard is true) {
+		show serial dialog { "\tkeyboard" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-mouse is true) {
+		show serial dialog { "\tmouse" }
+		set flag temp to true
+	}
+	// desperate
+	if (flag ch2-carrying-clock is true) {
+		show serial dialog { "\tclock" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-cpu is true) {
+		show serial dialog { "\tcpu" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-goldfish is true) {
+		show serial dialog { "\tgoldfish" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-abacus is true) {
+		show serial dialog { "\tabacus" }
+		set flag temp to true
+	}
+	// final
+	if (flag ch2-carrying-mainframeos is true) {
+		show serial dialog { "\tmainframe os CD" }
+		set flag temp to true
+	}
+	if (flag temp is false) {
+		show serial dialog { "\t(nothing)" }
+	}
+	set flag temp to false
+}
