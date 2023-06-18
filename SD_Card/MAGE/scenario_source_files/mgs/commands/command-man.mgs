@@ -1,0 +1,1001 @@
+settings for serial dialog { wrap 60 }
+
+// REGISTER
+
+register-manual {
+	// the default set
+	register man -> command-man
+	register man + man -> man-man
+	register man + look -> man-look
+	register man + go -> man-go
+	register man + help -> man-help
+	register man + rtfm -> man-rtfm
+	register man fail -> man-fail
+}
+
+// MAN PAGE
+
+man-man {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAN</>"
+		" "
+		"Displays manual pages for various MGE serial commands. Type <c>MAN</> followed by the name of the command you want to read about, e.g. <c>MAN LOOK</>"
+		" "
+		"<m>NOTE</>: Hi, there, birthday mage! I've rigged this thing to call me if you use <c>MAN</> as a single word. I \"hacked\" the man page to tell you that!"
+	}
+}
+
+// FAIL
+
+man-fail {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold>MAN PAGE NOT FOUND!</> There is no documentation for that command, or that command does not exist."
+	}
+}
+
+// COMMAND
+
+command-man {
+	if (
+		flag ch2-ring-zero-restored is true // the artifact is full power
+		|| variable ch2-in-room is not 0 // OR you're in the castle
+	) {
+		// `man` works normally
+		goto command-man-normal
+	} else {
+		// otherwise, `man` cannot reach Lambda
+		show serial dialog spacer
+		show serial dialog {
+			"<bold><r>ERROR:</> <bold>lambda-talk</> timed out"
+			" "
+			"Connection to secure network \"GIBSON\" could not be established. Please move artifact closer to castle base station and try again."
+			" "
+			"<bold>lambda-talk</> exited with code 1"
+		}
+	}
+}
+
+command-man-normal {
+	if (flag ch2-cutseen-bert-secret is true) {
+		if (flag ch2-lambda-bert-prelude is false) {
+			goto ch2-bert-secret-lambda-intro
+		}
+	}
+	
+	if (flag ch2-toot-done is true) {
+		goto command-man-normal-convo
+	}
+
+	// You're talking to Lambda over serial for the first time:
+	// (You need to finish the toot)
+	goto ch2-toot-check
+}
+
+/* ---------- LAMBDA NORMAL CONVO ---------- */
+
+command-man-normal-convo {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> What do you want to know?"
+		" "
+	}
+	goto ch2-lambda-topic-q
+}
+
+ch2-lambda-topic-q {
+	show serial dialog {
+		"(Ask about:)"
+		# "Parts list" : ch2-lambda-topic-parts
+		# "Using the artifact" : ch2-lambda-topic-artifact
+		# "The mainframe" : ch2-lambda-topic-mainframe
+		# "The castle" : ch2-lambda-topic-castle
+		# "Someone specific" : ch2-lambda-topic-person-start
+		# "(Quit)" : ch2-lambda-ishouldgo
+	}
+}
+
+ch2-lambda-ishouldgo {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> I should go."
+		" "
+		"<m>LAMBDA:</> No problem! Just let me know if you have a question about anything."
+	}
+}
+
+/* ---------- ARTIFACT ---------- */
+
+ch2-lambda-topic-parts {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> As for parts, we still need:"
+	}
+	goto ch2-lambda-topic-parts-print
+}
+ch2-lambda-topic-parts-print {
+	if (variable ch2-storyflag-round is == 0) {
+		show serial dialog { "<r>DEBUG:</> You've asked for a parts list but 'ch2-storyflag-round' is still set to '0'!" }
+	}
+	set flag temp to false
+	// ROUND ONE: normal
+	if (variable ch2-storyflag-round is == 1) {
+		if (flag ch2-installed-heatsink is false) {
+			show serial dialog { "\t- heat sink" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-powersupply is false) {
+			show serial dialog { "\t- power supply" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-monitor is false) {
+			show serial dialog { "\t- monitor" }
+			set flag temp to true
+		}
+	}
+	// ROUND TWO: abstract
+	else if (variable ch2-storyflag-round is == 2) {
+		if (flag ch2-installed-ramchips is false) {
+			show serial dialog { "\t- RAM chips" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-harddrive is false) {
+			show serial dialog { "\t- hard drive" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-keyboard is false) {
+			show serial dialog { "\t- keyboard" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-mouse is false) {
+			show serial dialog { "\t- mouse" }
+			set flag temp to true
+		}
+	}
+	// ROUND THREE: desperate
+	else if (variable ch2-storyflag-round is == 3) {
+		if (flag ch2-installed-clock is false) {
+			show serial dialog { "\t- clock" }
+			set flag temp to true
+		}
+		if (flag ch2-installed-cpu is false) {
+			show serial dialog { "\t- cpu" }
+			set flag temp to true
+		}
+	}
+	// FINAL ROUND: software
+	else if (variable ch2-storyflag-round is == 4) {
+		goto ch2-lambda-topic-parts-finished
+		set flag temp to true
+	}
+	else {
+		show serial dialog spacer
+		show serial dialog { "<r>DEBUG:</> Your 'ch2-storyflag-round' value is borked! (Current value: '$ch2-storyflag-round$')" }
+	}
+	if (flag temp is false) {
+		show serial dialog spacer
+		show serial dialog { "<r>DEBUG:</> You've installed all the parts for story flag round '$ch2-storyflag-round$' but are still stuck in that round??" }
+	}
+	set flag temp to false
+
+	// FINISH
+	goto ch2-lambda-topic-parts-q
+}
+
+ch2-lambda-topic-parts-q {
+	// TODO: change his parts list checklist into MD style boxes: [~] for carrying and [x] for installed
+	show serial dialog {
+		" "
+		"(Type the part name for more info, <c>LIST</> to see the parts list again, or <c>QUIT</> to go back)"
+
+		_ "LIST" : ch2-lambda-topic-parts
+
+		_ "Q" : command-man-normal-convo
+		_ "QUIT" : command-man-normal-convo
+
+		// ROUND ONE: normal
+		
+		_ "MONITOR" : ch2-lambda-parts-monitor
+
+		_ "HEAT SINK" : ch2-lambda-parts-heatsink
+		_ "HEATSINK" : ch2-lambda-parts-heatsink
+
+		_ "POWER SUPPLY" : ch2-lambda-parts-powersupply
+		_ "POWERSUPPLY" : ch2-lambda-parts-powersupply
+
+		// ROUND TWO: abstract
+		
+		_ "KEYBOARD" : ch2-lambda-parts-keyboard
+		
+		_ "MOUSE" : ch2-lambda-parts-mouse
+		
+		_ "HARD DRIVE" : ch2-lambda-parts-harddrive
+		_ "HARDDRIVE" : ch2-lambda-parts-harddrive
+		_ "HDD" : ch2-lambda-parts-harddrive
+
+		_ "RAM CHIPS" : ch2-lambda-parts-ramchips
+		_ "RAMCHIPS" : ch2-lambda-parts-ramchips
+		_ "RAM" : ch2-lambda-parts-ramchips
+
+		// ROUND THREE: desperate
+		
+		_ "CLOCK" : ch2-lambda-parts-clock
+
+		_ "CPU" : ch2-lambda-parts-cpu
+
+		_ "GOLDFISH" : ch2-lambda-parts-goldfish
+
+		_ "ABACUS" : ch2-lambda-parts-abacus
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> Not sure what you mean. Want to ask about something else?"
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+ch2-describe-monitor { show serial dialog ch2-describe-monitor }
+ch2-describe-heatsink { show serial dialog ch2-describe-heatsink }
+ch2-describe-powersupply { show serial dialog ch2-describe-powersupply }
+
+ch2-describe-keyboard { show serial dialog ch2-describe-keyboard }
+ch2-describe-mouse { show serial dialog ch2-describe-mouse }
+ch2-describe-harddrive { show serial dialog ch2-describe-harddrive }
+ch2-describe-ramchips { show serial dialog ch2-describe-ramchips }
+
+ch2-describe-clock { show serial dialog ch2-describe-clock }
+ch2-describe-cpu { show serial dialog ch2-describe-cpu }
+ch2-describe-goldfish { show serial dialog ch2-describe-goldfish }
+ch2-describe-abacus { show serial dialog ch2-describe-abacus }
+
+ch2-lambda-parts-ahead {
+	show serial dialog spacer
+	show serial dialog { "<m>LAMBDA:</> Hold on! Don't get ahead of yourself, haha.... For now just focus on the below:" }
+	goto ch2-lambda-topic-parts-print
+}
+ch2-lambda-parts-ahead-confused {
+	show serial dialog spacer
+	show serial dialog { "<m>LAMBDA:</> I don't know if that will be of any use, but... want to ask about something else?" }
+	goto ch2-lambda-topic-parts-q
+}
+
+// ROUND ONE: normal
+
+// TODO: different convo for carrying vs installed vs needed
+
+ch2-lambda-parts-monitor {
+	show serial dialog spacer
+	if (flag ch2-installed-monitor is false) {
+		copy ch2-describe-monitor
+	} else {
+		show serial dialog { "<m>LAMBDA:</> You've got the monitor all set up already." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-heatsink {
+	show serial dialog spacer
+	if (flag ch2-installed-heatsink is false) {
+		copy ch2-describe-heatsink
+	} else {
+		show serial dialog { "<m>LAMBDA:</> You've got the heat sink in there already. Oh, I guess this means I can turn off the furnace in there now." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-powersupply {
+	show serial dialog spacer
+	if (flag ch2-installed-powersupply is false) {
+		copy ch2-describe-powersupply
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO powersupply is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+// ROUND TWO: abstract
+
+ch2-lambda-parts-keyboard {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-keyboard is false) {
+		copy ch2-describe-keyboard
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO keyboard is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-mouse {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-mouse is false) {
+		copy ch2-describe-mouse
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO mouse is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-harddrive {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-harddrive is false) {
+		copy ch2-describe-harddrive
+		show serial dialog {
+			"\tUse the <c>FUSE</> command to combine both items into a <m>HARD DISK</>."
+		}
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO hard drive is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-ramchips {
+	if (variable ch2-storyflag-round is < 2) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (variable ch2-storyflag-round is not 2) { goto ch2-lambda-parts-ahead }
+	if (flag ch2-installed-ramchips is false) {
+		copy ch2-describe-ramchips
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> TODO power supply is already installed."
+		}
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+// ROUND THREE: desperate
+
+ch2-lambda-parts-clock {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-clock is false) {
+		copy ch2-describe-clock
+	} else {
+		show serial dialog { "<m>LAMBDA:</> The clock's installed already. It's just... you know... clocking away." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-cpu {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-cpu is false) {
+		copy ch2-describe-cpu
+	} else {
+		show serial dialog { "<m>LAMBDA:</> The cpu's installed already. It's been computin." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-goldfish {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-goldfish is false) {
+		copy ch2-describe-goldfish
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO goldfish is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+ch2-lambda-parts-abacus {
+	if (variable ch2-storyflag-round is < 3) {
+		goto ch2-lambda-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-abacus is false) {
+		copy ch2-describe-abacus
+	} else {
+		show serial dialog { "<m>LAMBDA:</> TODO abacus is already installed." }
+	}
+	goto ch2-lambda-topic-parts-q
+}
+
+// FINISH
+
+ch2-lambda-topic-parts-finished {
+	show serial dialog spacer
+	show serial dialog {
+		"\tOh, wait, is that everything? Huzzah! (TODO)"
+	}
+}
+
+ch2-lambda-topic-artifact {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> You had a question about the artifact?"
+		" "
+	}
+	goto ch2-lambda-topic-artifact-q
+}
+
+ch2-lambda-topic-artifact-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Magic words (Commands)" : ch2-lambda-topic-artifact-words
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-topic-artifact-words {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What can you tell me about \"magic words?\" You said they were commands?"
+		" "
+		"<m>LAMBDA:</> Yeah, so, when I say \"magic words\" I mean serial commands -- that is, things you type in the terminal to make the artifact do something."
+		"\tYou can use the command <c>HELP</> to see a list of commands that are valid at the moment. To learn more about a specific command, type <c>MAN</> plus the name of the command. For example, type <c>MAN LOOK</> to see the manual page for the <c>LOOK</> command."
+		" "
+	}
+	goto ch2-lambda-topic-artifact-q
+}
+
+/* ---------- MAINFRAME ---------- */
+
+ch2-lambda-topic-mainframe {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> You had a question about the mainframe?"
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q
+}
+
+ch2-lambda-topic-mainframe-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Why did you break it?" : ch2-lambda-mainframe-broken
+		# "How broken is it?" : ch2-lambda-mainframe-broken-1
+		# "How do we fix it?" : ch2-lambda-mainframe-fix-1
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-mainframe-broken {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Why did you break it?"
+		" "
+		"<m>LAMBDA:</> Like I said, I broke it to keep it out of the <r>Big Bad</>'s hands."
+		"\tTODO: more convo"
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q
+}
+
+ch2-lambda-mainframe-broken-1 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What exactly about it is broken?"
+		" "
+		"<m>LAMBDA:</> Well, sort of... everything. It's in a million pieces, to be precise."
+		# "Thorough. Nice!" : ch2-lambda-mainframe-broken-1a
+		# "Was that necessary?" : ch2-lambda-mainframe-broken-1a
+	}
+}
+ch2-lambda-mainframe-broken-1a {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> Yeah, so, ahhh... it might not have been necessary, strictly speaking. I wiped its software, first. That would've been enough on its own, to be honest...."
+		"\tI don't know. I just wanted to be <bold>sure</>. I sort of regret it now."
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q
+}
+
+ch2-lambda-mainframe-fix-1 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How do we fix it? What do we need?"
+		" "
+		"<m>LAMBDA:</> We'll have to build a new computer from scratch. The old bits are... well, just bits -- bits of copper and plastic and silicon debris."
+		"\tBut there should be enough <m>computer parts</> scattered throughout the castle. I have my parts list right here. The software though... I'll, um, get back to you about that."
+		" "
+	}
+	goto ch2-lambda-topic-mainframe-q
+}
+
+/* ---------- CASTLE ---------- */
+
+ch2-lambda-topic-castle {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> You had a question about the castle?"
+		" "
+	}
+	goto ch2-lambda-topic-castle-q
+}
+
+ch2-lambda-topic-castle-q {
+		show serial dialog {
+		"(Ask about:)"
+		# "Whose castle is this?" : ch2-lambda-castle-who
+		# "The earthquake caused damage?" : ch2-lambda-castle-damage
+		# "(Go back)" : command-man-normal-convo
+	}
+}
+
+ch2-lambda-castle-who {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Whose castle is this?"
+		" "
+		"<m>LAMBDA:</> I'm kind of surprised you didn't know, but it's King Gibson's castle. "
+		"\tTODO: more convo"
+		" "
+	}
+	goto ch2-lambda-topic-castle-q
+}
+ch2-lambda-castle-damage {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> The earthquake caused some damage?"
+		" "
+		"<m>LAMBDA:</> A bunch of doors got jammed or caved in. That's one of the reasons I'm letting you have the portable interface -- it'll let you get past blockages, and just about everyone inside the castle is trapped in place."
+		"\tIf the mainframe were still working, we would've been able to... well, it would have enabled people to get around, anyway."
+		" "
+	}
+	goto ch2-lambda-topic-castle-q
+}
+
+/* ---------- PEOPLE ---------- */
+
+ch2-lambda-topic-person-start {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> Who did you want to ask about?"
+		" "
+	}
+	goto ch2-lambda-topic-person-q
+}
+ch2-lambda-topic-person-s {
+	show serial dialog {
+		"\tUm, did you want to ask about anyone else?"
+		" "
+	}
+	goto ch2-lambda-topic-person-q
+}
+
+ch2-lambda-topic-person-q {
+	show serial dialog {
+		"(Type a name, or type <c>CANCEL</> to go back)"
+		
+		_ "BIG BAD" : ch2-lambda-person-big-bad
+
+		_ "ME" : ch2-lambda-person-player
+		_ "BLACK MAGE" : ch2-lambda-person-player
+		_ "MAGE" : ch2-lambda-person-player
+		
+		_ "YOU" : ch2-lambda-person-lambda
+		_ "LAMBDA" : ch2-lambda-person-lambda
+
+		_ "WIZARD" : ch2-lambda-person-wizard
+		_ "RACCOON" : ch2-lambda-person-raccoon
+		_ "RACOON" : ch2-lambda-person-raccoon
+
+		_ "BERT" : ch2-lambda-person-bert
+		
+		_ "BOB" : ch2-lambda-person-bob
+
+		_ "CANCEL" : command-man-normal-convo
+		_ "QUIT" : command-man-normal-convo
+		_ "STOP" : command-man-normal-convo
+		_ "NEVER MIND" : command-man-normal-convo
+		_ "(Go back)" : command-man-normal-convo
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> Sorry, not sure who you mean."
+		" "
+	}
+	goto ch2-lambda-topic-person-q
+}
+
+// The player
+
+ch2-lambda-person-player {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Tell me about me!"
+		" "
+		"<m>LAMBDA:</> Oh, um, I don't actually know anything about you."
+		"\tI guess... if anything... you've got a cool hat. That's not nothing, I suppose...."
+		" "
+		# "How did you know I'm wearing a hat?" : ch2-lambda-person-player-2
+	}
+}
+ch2-lambda-person-player-2 {
+	set flag ch2-cameras-explanation to true
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How did you know I'm wearing a hat?"
+		" "
+		"<m>LAMBDA:</> That's, um... that would be because of the... well, the cameras."
+		" "
+		# "Cameras? That's creepy!" : ch2-lambda-person-player-2a
+		# "Cameras? That's sensible." : ch2-lambda-person-player-2b
+	}
+}
+ch2-lambda-person-player-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Cameras? That's creepy."
+		" "
+		"<m>LAMBDA:</> Yeah, I realize it doesn't sound great, having cameras everywhere. The cameras made a bit more sense back when there was a lot more traffic in and out, but thinking about it, I guess it's pretty invasive. Funny, the things you just get used to."
+	}
+	goto ch2-lambda-topic-person-s
+}
+ch2-lambda-person-player-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Cameras? That's a sensible measure to take."
+		" "
+		"<m>LAMBDA:</> You almost sound like you approve. They don't really do much good, certainly not anymore, and it's a little invasive, don't you think?"
+		" "
+		# "It's not that invasive." : ch2-lambda-person-player-3b
+		# "Okay, maybe it's a little invasive." : ch2-lambda-person-player-3a
+	}
+}
+ch2-lambda-person-player-3a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Okay, maybe it's a little invasive."
+		" "
+		"<m>LAMBDA:</> Yeah. They've made it easier for me to help people in the castle from time to time, but I'm a little embarrassed to admit that they're everywhere."
+	}
+	goto ch2-lambda-topic-person-s
+}
+ch2-lambda-person-player-3b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> It's not that invasive."
+		" "
+		"<m>LAMBDA:</> It's true I would feel more nervous about a stranger inside the castle if the cameras were turned off or removed, but I'm not going to argue they're not invasive."
+	}
+	goto ch2-lambda-topic-person-s
+}
+
+// Lambda
+
+ch2-lambda-person-lambda {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Tell me about you!"
+		" "
+		"<m>LAMBDA:</> Me? Ohh, ummm... what's to know? I mean, I'm not that interesting, really...."
+	}
+	goto ch2-lambda-person-lambda-q
+}
+
+ch2-lambda-person-lambda-q {
+	show serial dialog {
+		" "
+		"(Ask:)"
+		# "Where are you?" : ch2-lambda-person-lambda-where
+		# "How long have you been here?" : ch2-lambda-person-lambda-time
+		# "What's your real name?" : ch2-lambda-person-lambda-name
+		# "(Go back)" : ch2-lambda-topic-person-start
+	}
+}
+ch2-lambda-person-lambda-where {
+	show serial dialog spacer
+	if (flag ch2-seen-room-99 is false) {
+		show serial dialog {
+			"<c>YOU:</> Where are you?"
+			"TODO: convo"
+		}
+	} else {
+		if (variable ch2-in-room is 99) {
+			show serial dialog {
+				"<c>YOU:</> Where are you? I mean, where are WE? There aren't any doors here."
+			}
+		} else {
+			show serial dialog {
+				"<c>YOU:</> Where are you? I mean, spatially, where is that lab of yours? There weren't any doors inside."
+			}
+		}
+		show serial dialog {
+			" "
+			"<m>LAMBDA:</> I'd say it's a pocket dimension, but it's more mundane than that. It's just its own separate space somewhere under the mountain. I set it all up back before everything went south, back when everyone was using the mainframe for all sorts of trivial nonsense."
+		}
+	}
+	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-time {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How long have you been here?"
+		" "
+		"<m>LAMBDA:</> Where I am now, or at the castle in general?"
+		" "
+		# "Where you are now." : ch2-lambda-person-lambda-time-2a
+		# "The castle in general." : ch2-lambda-person-lambda-time-2b
+		# "Both." : ch2-lambda-person-lambda-time-2c
+	}
+	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-time-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Where you are now."
+		"TODO: rest of the convo"
+	}
+	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-time-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> The castle in general."
+		"TODO: rest of the convo"
+	}
+	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-time-2c {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Both."
+		"TODO: rest of the convo"
+	}
+	goto ch2-lambda-person-lambda-q
+}
+ch2-lambda-person-lambda-name {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What's your real name? It's not really \"Lambda,\" is it?"
+		" "
+		"<m>LAMBDA:</> Well, no. But you see... this is a little embarrassing, but...."
+		"\tI... sort of... don't remember my real name."
+		" "
+		# "You're kidding, right?" : ch2-lambda-person-lambda-name-2a
+		# "How could you forget your own name? What happened?" : ch2-lambda-person-lambda-name-2b
+	}
+}
+ch2-lambda-person-lambda-name-2a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> You're kidding, right?"
+		" "
+		"<m>LAMBDA:</> You have to understand... this place, our memories... it's all ones and zeroes."
+		"\tWhen everything is digital, it is <bold>absolutely</> possible for information to disappear permanently. In my case...."
+	}
+	goto ch2-lambda-person-lambda-name-2c
+}
+ch2-lambda-person-lambda-name-2b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> How could you forget your own name? What happened?"
+		" "
+		"<m>LAMBDA:</> Our world is entirely digital. All ones and zeroes. Even you and me. So what happened was...."
+	}
+	goto ch2-lambda-person-lambda-name-2c
+}
+ch2-lambda-person-lambda-name-2c {
+	show serial dialog {
+		"\t...I found the place in the world where my name linked to my data as an entity... and destroyed it."
+		" "
+		# "What? But why?" : ch2-lambda-person-lambda-name-3
+	}
+}
+ch2-lambda-person-lambda-name-3 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What? But why?"
+		" "
+		"<m>LAMBDA:</> I did it to protect myself from the <r>Big Bad</>. He couldn't target me with hacks without knowing my name, so I made it impossible to learn my name, or even know my name."
+		"\tI severed more than I intended, but...."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup {
+	show serial dialog {
+		" "
+		"(Ask a followup question:)"
+		# "What else was severed?" : ch2-lambda-person-lambda-name-followup-severed
+		# "Is that why the Big Bad doesn't have a name?" : ch2-lambda-person-lambda-name-followup-bigbad
+		# "Does a nickname not count as a name?" : ch2-lambda-person-lambda-name-followup-nickname
+		# "Why \"Lambda\" though?" : ch2-lambda-person-lambda-name-followup-lambda
+		# "(Quit)" : ch2-lambda-person-lambda-q
+	}
+}
+
+ch2-lambda-person-lambda-name-followup-severed {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What else was severed?"
+		" "
+		"<m>LAMBDA:</> There are gaps in my mind. I... I think they might have appeared when I deleted my name. Hard to tell."
+		"\tIt's a lot harder to remember people, for a start. My skills seem to be intact, but I feel... disconnected. It's like everything I <bold>can</> remember is stripped of context."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup-bigbad {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Is that why the <r>Big Bad</> doesn't have a name? Did he destroy his name, too, so that other hackers can't target him for hacks?"
+		" "
+		"<m>LAMBDA:</> Probably. Good insight."
+		"\tIn his case, though, I think he likes the mystique, too."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+ch2-lambda-person-lambda-name-followup-nickname {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Does a nickname not count as a name? I've been calling you \"Lambda,\" after all. Isn't that a name?"
+		" "
+		"<m>LAMBDA:</> No, by \"name\" I don't mean the label on my messages, or what someone calls me."
+		"\tI destroyed my <m>name</>, which is to say I damaged the world's mechanism of referring to me at all. If someone else's memories link to me, that link has been severed, because my name is now a broken reference. I am an unreachable entity."
+		"\tI've since learned that many links go in two directions...."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+
+ch2-lambda-person-lambda-name-followup-lambda {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Why \"Lambda\" though?"
+		" "
+		"<m>LAMBDA:</> I thought of it on the spot. It's because I'm a <bold>functionary with no name</>, you see! You see?"
+		"\tNo? Oh, um... yeah, never mind."
+	}
+	goto ch2-lambda-person-lambda-name-followup
+}
+
+// Big Bad
+
+ch2-lambda-person-big-bad {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Tell me about the <r>Big Bad</>."
+		" "
+		"<m>LAMBDA:</> Oh, um, that's complicated."
+		"TODO: rest of the convo"
+	}
+	goto ch2-lambda-topic-person-s
+}
+
+// Bob
+
+ch2-lambda-person-bob {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Tell me about Bob."
+		" "
+		"<m>LAMBDA:</> Bob? Which one? I know plenty. Fat Bobs, skinny Bobs, Bobs who climb on rocks... oh yeah, and Bobs who ARE rocks...."
+		"\t...Well, okay, I actually don't <bold>know</> any of them, but I know <bold>of</> them...."
+	}
+	goto ch2-lambda-topic-person-s
+}
+
+// Wizard
+
+ch2-lambda-person-wizard {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What's with this \"Wizard\" guy?"
+		" "
+		"<m>LAMBDA:</> Oh, yeah, the Wiz is pretty rad. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued
+}
+ch2-lambda-person-raccoon {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What's with the raccoon?"
+		" "
+		"<m>LAMBDA:</> The raccoon? Oh, you mean the Wiz. He's awesome at setting up custom software configurations."
+	}
+	goto ch2-lambda-person-wizard-continued
+}
+ch2-lambda-person-wizard-continued {
+	show serial dialog {
+		"\tYou should have seen him at King Gibson's last Halloween party! He'd found this little blue wizard's hat and cape...."
+	}
+}
+
+// Bert
+
+ch2-lambda-person-bert {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> About Bert...."
+	}
+	if (flag ch2-cutseen-bert-secret is true) {
+		goto ch2-lambda-bert-q
+	} else {
+		show serial dialog {
+			" "
+			"<m>LAMBDA:</> Bert? I don't know any Berts."
+		}
+	}
+	goto ch2-lambda-topic-person-s
+}
+
+ch2-lambda-bert-q {
+	show serial dialog {
+		" "
+		"(Ask about:)"
+		# "What is Bert like?" : ch2-lambda-bert-like
+		# "Bert's never mentioned you." : ch2-lambda-bert-mentioned
+		# "What did he mean by 'back door?'" : ch2-lambda-bert-door
+		# "Do you know if Bert left a message yet?" : ch2-lambda-bert-message
+		# "(Quit)" : ch2-lambda-bert-quit
+	}
+}
+
+ch2-lambda-bert-like {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What is Bert like?"
+		" "
+		"<m>LAMBDA:</> Bert is a surprisingly sweet guy. He doesn't say much, but he's actually pretty smart. And he's irritatingly stubborn when he gets stuck on something though. Once, way back, when...."
+		"\tBack when... hmmm."
+		" "
+		"<c>YOU:</> What is it?"
+		" "
+		"<m>LAMBDA:</> It was a fleeting thought, but it's gone now. Sorry, I can't remember what I was going to say."
+	}
+	goto ch2-lambda-bert-q
+}
+ch2-lambda-bert-mentioned {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Bert's never mentioned you."
+		" "
+		"<m>LAMBDA:</> Well... he might not know I'm here. In the castle."
+		" "
+		"<c>YOU:</> But the village elders knew XA was here. In the castle."
+		" "
+		"<m>LAMBDA:</> Yes, well, that's because...."
+		"\tLook... um... sometimes it's not so bad being left behind, you know? They're all better off without me. It's complicated, but by staying apart, I'm keeping everyone safer, believe it or not."
+	}
+	goto ch2-lambda-bert-q
+}
+ch2-lambda-bert-door {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What did Bert mean by 'back door?'"
+		" "
+		"<m>LAMBDA:</> A backdoor is a secret way into a secure area. Hackers will create backdoors so they can still get in somewhere after the normal entrance is no longer accessable to them."
+		" "
+		"<c>YOU:</> But Bert's not a hacker. Or can <bold>anyone</> use a backdoor?"
+		" "
+		"<m>LAMBDA:</> I mean, it's probably <bold>easier</> if you're a hacker, but a door's a door. Say, there's probably still a backdoor or two in the village you could find if you tried. No hacking required."
+	}
+	goto ch2-lambda-bert-q
+}
+
+ch2-lambda-bert-message {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Do you know if Bert left a message yet?"
+		" "
+	}
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>LAMBDA:</> Haha! He's only been gone a moment! Be patient."
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
+		}
+	}
+	goto ch2-lambda-bert-q
+}
+
+ch2-lambda-bert-quit {
+	if (variable CALLBACK is 1) {
+		mutate CALLBACK = 0
+		goto ch2-lambda-round-2-parts1
+	} else {
+		goto ch2-lambda-topic-person-s
+	}
+}

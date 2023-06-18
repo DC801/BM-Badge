@@ -1,0 +1,115 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-31 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: GRAND HALL on_look text\n "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-31 {
+	// ch2 room state
+	mutate ch2-in-room = 31
+
+	// entrance text
+	show serial dialog spacer
+	if (flag ch2-seen-room-31 is false) {
+		show serial dialog { "Discovered <bold><c>WORKSHOP</>! Room added to map!" }
+		set flag ch2-seen-room-31 to true
+	} else {
+		show serial dialog { "Entering <bold>WORKSHOP</>..." }
+	}
+	if (
+		flag ch2-installed-keyboard is true
+		|| flag ch2-carrying-keyboard is true
+	) {
+		copy script ch2-hide-keyboard
+	}
+	goto ch2-map-init
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-31 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-31 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go-castle-31-north {
+	copy on_exit-ch2-castle-31
+	copy warping-out-fade-out
+	load map ch2-castle-32
+}
+on_go-castle-31-west {
+	copy on_exit-ch2-castle-31
+	copy warping-out-fade-out
+	load map ch2-castle-12
+}
+
+
+/* ---------- KEYBOARD (ADMIN) ---------- */
+
+ch2-hide-keyboard {
+	teleport entity "Keyboard" to geometry hiding-spot
+	set entity "Keyboard" name to " "
+}
+
+ch2-touch-keyboard {
+	if (flag ch2-keyboard-firstlook is false) {
+		show dialog {
+			PLAYER "TODO keyboard1"
+		}
+		set flag ch2-keyboard-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO keyboard2."
+	}
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the keyboard?)"
+			> "Yes" : ch2-touch-keyboard-yes
+			> "No" : ch2-touch-keyboard-no
+		}
+	}
+	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
+}
+ch2-touch-keyboard-yes {
+	show dialog {
+		name "" "(You pick up the keyboard!)"
+	}
+	copy script ch2-hide-keyboard
+	set flag ch2-carrying-keyboard to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-keyboard-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-keyboard // RESET
+}
+
+ch2-install-keyboard {
+	set flag ch2-carrying-keyboard to false
+	set flag ch2-installed-keyboard to true
+}
+look-keyboard {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look keyboard TODO"
+	}
+}

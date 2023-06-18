@@ -1,0 +1,232 @@
+settings for serial dialog { wrap 60 }
+
+// MAN PAGE
+
+man-rtfm {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - RTFM</>"
+		" "
+		"A portable copy of the books and pamphlets kept within the <m>inner sanctum</> at the back of the library. They primarily describe how to use Ring Zero's hex editor, but also contain peripheral information."
+		" "
+		"Fun fact, <bold><c>RTFM</> stands for \"read the <r>flamin'</> manual.\""
+	}
+}
+
+// COMMAND
+
+command-rtfm {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><cyan>RTFM!</> Hex editor docs! Read which book?"
+		"\t1: <g>Entities 1</>"
+		"\t2: <g>Entities 2</>"
+		"\t3: <g>Entities 3</>"
+		"\t4: <g>Entities 4</>"
+		"\t5: <g>Hex Edits 1</>"
+		"\t6: <g>Hex Edits 2</>"
+		"\tA: <b>Bits & Bytes</>"
+		"\tB: <b>Math</>"
+		"\tC: <r>Book Origins</>"
+		"\tD: <r>Red Letters</>"
+		"\tQ: QUIT"
+		_ "1" : serial-entities1
+		_ "2" : serial-entities2
+		_ "3" : serial-entities3
+		_ "4" : serial-entities4
+		_ "5" : serial-hexediting
+		_ "6" : serial-hexediting2
+		_ "a" : serial-bitsbytes
+		_ "b" : serial-math
+		_ "c" : serial-bookorigins
+		_ "d" : serial-redletters
+		_ "q" : command-rtfm-quit
+		_ "quit" : command-rtfm-quit
+	}
+	goto command-rtfm-invalid
+}
+
+command-rtfm-another {
+	show serial dialog {
+		" "
+		"<bold><c>RTFM:</><bold> Read another? (Y/N) (or type a book id: 1-6, A-D)"
+		_ "1" : serial-entities1
+		_ "2" : serial-entities2
+		_ "3" : serial-entities3
+		_ "4" : serial-entities4
+		_ "5" : serial-hexediting
+		_ "6" : serial-hexediting2
+		_ "a" : serial-bitsbytes
+		_ "b" : serial-math
+		_ "c" : serial-bookorigins
+		_ "d" : serial-redletters
+		_ "q" : command-rtfm-quit
+		_ "quit" : command-rtfm-quit
+		_ "n" : command-rtfm-quit
+		_ "no" : command-rtfm-quit
+		_ "y" : command-rtfm
+		_ "yes" : command-rtfm
+	}
+	goto command-rtfm-invalid
+}
+command-rtfm-invalid {
+	show serial dialog spacer
+	show serial dialog {
+		"Invalid book id! Restarting...."
+	}
+	goto command-rtfm
+}
+command-rtfm-quit {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><cyan>RTFM!</> Thanks for reading!"
+	}
+}
+
+serial-entities1 {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #1 - ENTITIES 1</>"
+		" "
+		"After many years of research, we have discovered the data structure of all living beings, as well as miscellaneous inanimate objects."
+		"\tIn all cases, hackable beings and objects -- or 'entities' -- are driven by 32 bytes of data, appearing as two rows of 16 bytes."
+		"\t[<c>X X X X X X X X X X X X <m>Y Y Y Y</>]"
+		"\tThe first twelve bytes (<c>X</>) on the first row are the entity's true name, given in something called \"Ass Key.\""
+		"\tAfter the name, the next four bytes (<m>Y</>) are the entity's position in the world, two bytes for X and two bytes for Y."
+		"\tThe position of each byte within each pair is backwards relative to what seems to us to be logical -- and from what we understand, a Mr. N. Dian is to blame."
+	}
+	goto command-rtfm-another
+}
+
+serial-entities2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #2 - ENTITIES 2</>"
+		" "
+		"The second row of entity data is far more complicated."
+		"\t[<c>X X <m>Y Y</> . . . . . . . . . . . .]"
+		"\tThe first pair of bytes (<c>X</>) seems to affect what the entity does when interacted with</>. Changing these values is frequently counterproductive."
+		"\tHowever, changing the second pair of bytes (<m>Y</>) causes unspeakable chaos. We have learned to leave these bytes undisturbed."
+		"\t[. . . . <c>A A <m>B B <g>C</> . . . . . . .]"
+		"\tThe next five bytes apparently concern how an entity appears, but the last byte (<g>C</>) affects the others in ways we are still trying to understand."
+		"\tThe first pair (<c>A</>) is more useful, seeming to change the entity type, or which among its category the entity appears to be."
+		"\tThe second pair (<m>B</>) appears to do nothing the vast majority of the time, but occasionally it changes the entity's appearance in odd ways -- it's almost as if certain entities exist in a series along a parallel dimension, and we can simply choose which dimension is realized."
+		"\tAgain, all two-byte pairs are backwards in their manifestation. We are preparing a strongly-worded letter to Mr. N. Dian."
+	}
+	goto command-rtfm-another
+}
+
+serial-entities3 {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #3 - ENTITIES 3</>"
+		" "
+		"The next three bytes on the second row apparently describe how the entity is behaving."
+		"\t[. . . . . . . . . <c>X <m>Y <g>Z</> . . . .]"
+		"\tThe first byte (<c>X</>) describes the action the entity is currently performing, while the next (<m>Y</>) describes how far along into the action the entity has progressed."
+		"\tAlas, not all entities are capable of all actions, though some appear delightfully animated."
+		"\tThe next byte (<g>Z</>) first appeared only to represent the cardinal direction the entity is facing, but we have discovered a secret:"
+		"\tIf this byte is considered not as a unit but instead as a series of 8 bits, then the largest bit toggles a bizarre disruption in appearance, which we have found useful to cause great alarm and panic among our less-enlightened neighbors."
+	}
+	goto command-rtfm-another
+}
+
+serial-entities4 {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #4 - ENTITIES 4</>"
+		" "
+		"The final four bytes are quite abstract."
+		"\t[. . . . . . . . . . . . <c>X X <m>Y Y</>]"
+		"\tThe first pair (<c>X</>) seems to us to bond the entity to a physical place -- a beloved path, a favorite chair, etc."
+		"\tThe function of the final pair (<m>Y</>) escapes us, at least for the moment."
+		"\tThere may yet be undiscovered secrets, and the world may yet change around us, rendering invalid the structure we have already mapped. But we will endeavor to continue our research."
+	}
+	goto command-rtfm-another
+}
+
+serial-hexediting {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #5 - HEX EDITS 1</>"
+		" "
+		"<c>Triangle</>, a button thought by most scholars to do nothing, apparently provides a shortcut to an entity's first row of data."
+		"\tOnce inside the hex editor, however, this button instead increments the currently-selected byte by one."
+		"\tIts companion, the <m>X</> button, decrements the currently-selected byte."
+		"\tBoth <c>triangle</> and <m>X</> thus provide convenient ways of altering data, but when outside the hex editor, we must rely on the standard methods:"
+		"\tPressing the bit buttons while the correct operator (XOR, ADD, SUB) is selected."
+	}
+	goto command-rtfm-another
+}
+
+serial-hexediting2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><g>RTFM #6 - HEX EDITS 2</>"
+		" "
+		"Some advanced tricks we have discovered:"
+		"\tHolding <c>PAGE</> and pressing a <m>MEM</> button reassigns the <m>MEM <m>shortcut</> to the currently-selected hex cell."
+		"\tConveniently, <m>MEM references</> are relative to the entity the cursor is positioned within."
+		"\tThough we've found little reason to change the mapping more than a handful of times. Our favorite bytes continue to be the same four."
+		"\tIn addition, the use of --"
+		" "
+		"(...The last page appears to be missing!)"
+	}
+	goto command-rtfm-another
+}
+
+serial-bitsbytes {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><b>RTFM #A - BITS & BYTES</>"
+		" "
+		"A bit is a one or a zero. But combine eight of them, and you can describe numbers up to 255 -- a byte."
+		"\tFor simplicity, it is best to think of a byte as a pair of numbers between 0 and 15 -- or 0 and F."
+		" "
+		"(There's more text here, but it's dry and uninteresting. Your eyes glaze over....)"
+	}
+	goto command-rtfm-another
+}
+
+serial-math {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><b>RTFM #B - MATH</>"
+		" "
+		"You know what ADDing and SUBtracting does, but XOR is less intuitive -- unless you are looking at the bits making up each byte."
+		"\tIn which case, think of XOR as a toggle on a single bit."
+		"\tIt's like each byte is actually eight boolean switches! Amazing!"
+	}
+	goto command-rtfm-another
+}
+
+serial-bookorigins {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><r>RTFM #C - BOOK ORIGINS</>"
+		" "
+		"<bold>Meeting minutes</>: Smarch 32nd, year 1337"
+		"<bold>Subject</>: who wrote the 'Entity' and 'Hex Edits' books?"
+		"\t<m>Alfonso:</> Whoever wrote those books must have had access to the real Ring Zero."
+		"\t<m>Bert:</> The <r>Big Bad</>?"
+		"\t<m>Jackob:</> But the <r>Big Bad</> had no accomplices, and there were clearly multiple people doing this research."
+		"\t<m>Alfonso:</> Then perhaps the <r>Big Bad</> was not the first mage to have Ring Zero. Perhaps he will not be the last."
+		"\t<m>Bert:</> Or is there more than one ring?"
+	}
+	goto command-rtfm-another
+}
+
+serial-redletters {
+	show serial dialog spacer
+	show serial dialog {
+		"<bold><r>RTFM #D - RED LETTERS</>"
+		" "
+		"<bold>Meeting minutes</>: Smarch 16th, year 1337"
+		"<bold>Subject</>: a rubbing taken from a dilapidated granite plaque found deep in the Fortran Forest: <r>\"RED LETTERS MARK THE <r>HACKER.\"</>"
+		"\t<m>Alfonso:</> Obviously this is a reference to a calendar. Perhaps the power to hack is granted to mages on specific days -- 'red-letter' days!"
+		"\t<m>Jackob:</> You mean mages can only become hackers on national holidays? Certainly not!"
+		"\t<m>Alfonso:</> What else might it mean by 'red letters,' then? Perhaps... when a mage becomes a hacker, it IS a red-letter day!"
+		"\t<m>Jackob:</> Or perhaps the phrase 'red letters' is a red herring!"
+	}
+	goto command-rtfm-another
+}

@@ -1,0 +1,110 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-33 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: HYDROPONICS on_look text\n "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-33 {
+	// ch2 room state
+	mutate ch2-in-room = 33
+
+	// entrance text
+	show serial dialog spacer
+	if (flag ch2-seen-room-33 is false) {
+		show serial dialog { "Discovered <bold><c>HYDROPONICS</>! Room added to map!" }
+		set flag ch2-seen-room-33 to true
+	} else {
+		show serial dialog { "Entering <bold>HYDROPONICS</>..." }
+	}
+	if (
+		flag ch2-installed-mouse is true
+		|| flag ch2-carrying-mouse is true
+	) {
+		copy script ch2-hide-mouse
+	}
+	
+	goto ch2-map-init
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-33 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-33 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go-castle-33-south {
+	copy on_exit-ch2-castle-33
+	copy warping-out-fade-out
+	load map ch2-castle-32
+}
+
+/* ---------- MOUSE (ADMIN) ---------- */
+
+ch2-hide-mouse {
+	teleport entity "Mouse" to geometry hiding-spot
+	set entity "Mouse" name to " "
+}
+
+ch2-touch-mouse {
+	if (flag ch2-mouse-firstlook is false) {
+		show dialog {
+			PLAYER "TODO mouse1"
+		}
+		set flag ch2-mouse-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO mouse2."
+	}
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the mouse?)"
+			> "Yes" : ch2-touch-mouse-yes
+			> "No" : ch2-touch-mouse-no
+		}
+	}
+	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
+}
+ch2-touch-mouse-yes {
+	show dialog {
+		name "" "(You pick up the mouse!)"
+	}
+	copy script ch2-hide-mouse
+	set flag ch2-carrying-mouse to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-mouse-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-mouse // RESET
+}
+
+ch2-install-mouse {
+	set flag ch2-carrying-mouse to false
+	set flag ch2-installed-mouse to true
+}
+look-mouse {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look mouse TODO"
+	}
+}

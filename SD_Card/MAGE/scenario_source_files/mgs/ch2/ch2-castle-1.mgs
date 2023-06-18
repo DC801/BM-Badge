@@ -1,0 +1,692 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+	parameters for label Lambda { name Lambda }
+}
+settings for serial dialog { wrap 60 }
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-1 {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked around the <bold>FOYER</>."
+		" "
+		"This castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
+	}
+}
+look-ch2-mainframe {
+	show serial dialog spacer
+	show serial dialog {
+		"You looked at the <m>mainframe</>."
+		" "
+	}
+	set flag temp to false
+	show serial dialog { "This hardy red-and-black box contains:"}
+	show serial dialog {
+		"\t- wires"
+		"\t- what looks like a huge circuit board"
+	}
+	// normal
+	if (flag ch2-installed-heatsink is true) {
+		show serial dialog { "\t- a heatsink" }
+	}
+	if (flag ch2-installed-powersupply is true) {
+		show serial dialog { "\t- a power supply (1kw)" }
+	}
+	// abstract
+	if (flag ch2-installed-ramchips is true) {
+		show serial dialog { "\t- a bunch of RAM chips" }
+	}
+	if (flag ch2-installed-harddrive is true) {
+		show serial dialog { "\t- a hard drive" }
+	}
+	// desperate
+	if (flag ch2-installed-clock is true) {
+		show serial dialog { "\t- a system clock" }
+	}
+	if (flag ch2-installed-cpu is true) {
+		show serial dialog { "\t- a CPU" }
+	}
+	// EXTERNAL
+	show serial dialog { "On the outside is:" }
+	if (
+		flag ch2-installed-monitor is true
+		|| flag ch2-installed-keyboard is true
+		|| flag ch2-installed-mouse is true
+	) {
+		if (flag ch2-installed-monitor is true) {
+			show serial dialog { "\t- a monitor" }
+		}
+		if (flag ch2-installed-keyboard is true) {
+			show serial dialog { "\t- a keyboard" }
+		}
+		if (flag ch2-installed-mouse is true) {
+			show serial dialog { "\t- a mouse" }
+		}
+	}
+	show serial dialog {
+		"\t- a bunch of tiny penguin stickers"
+		"\t- and one yak sticker?"
+	}
+	set entity "%SELF%" look_script to look-ch2-mainframe
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-1 {
+	// ch2 room state
+	mutate ch2-in-room = 1
+	set flag ch2-seen-room-1 to true
+
+	// entrance text
+	if (flag ch2-has-artifact is true) {
+		show serial dialog spacer
+		show serial dialog { "Entering <bold>FOYER</>..." }
+	}
+
+	// room unique stuff
+
+	// DEBUG
+	register toot -> debug-finish-toot
+	register bert -> debug-bert
+	register get + monitor -> debug-get-monitor
+	register get + heatsink -> debug-get-heatsink
+	register get + cactuscooler -> debug-get-cactuscooler
+	register get + powersupply -> debug-get-powersupply
+	register get + keyboard -> debug-get-keyboard
+	register get + mouse -> debug-get-mouse
+	register get + harddrive -> debug-get-harddrive
+	register get + plate -> debug-get-plate
+	register get + needle -> debug-get-needle
+	register get + plate -> debug-get-plate
+	register get + needle -> debug-get-needle
+	register get + ramchips -> debug-get-ramchips
+	register get + clock -> debug-get-clock
+	register get + goldfish -> debug-get-goldfish
+	register get + abacus -> debug-get-abacus
+	register get + cpu -> debug-get-cpu
+	register round + "1" -> debug-round1
+	register round + "2" -> debug-round2
+	register round + "3" -> debug-round3
+	show serial dialog {
+		"\t<g>DEBUG</> shortcuts"
+		"<c>TOOT</>: skip tutorial"
+		"<c>BERT</>: to start 'Bert secret' cutscene"
+		"<c>GET _</>: pick up the named item"
+		"<c>ROUND _</>: collect the items for that round"
+
+	}
+	// END DEBUG
+
+	if (flag ch2-ring-zero-restored is true) {
+		set entity "Wizard" interact_script to interact-ch2-wizard-mainframedone
+		set entity "Wizard" animation to 3 // head poking up
+	}
+
+	// if cutscene was interrupted, intercept here:
+	if (flag ch2-cutseen-bert-secret is false) {
+		if (variable ch2-storyflag-round is 2) {
+			if (warp state is warping) {
+				// this is here because the cutscene dialog must come after the warp-in thing
+				copy warping-in-fade-in
+				set flag ch2-manual-warp to true // this will skip the on_load "init" script's warp stuff
+			}		
+			teleport entity "%PLAYER%" to geometry mainframe-look-spot
+			turn entity "%PLAYER%" north
+			set flag ch2-do-init-on-end to true
+			goto ch2-start-round-2
+		}
+	}
+	goto ch2-map-init
+}
+debug-finish-toot {
+	mutate ch2-storyflag-round = 1
+	set flag ch2-toot-done to true
+}
+debug-bert {
+	teleport entity "%PLAYER%" to geometry mainframe-look-spot
+	turn entity "%PLAYER%" north
+	goto ch2-start-round-2
+}
+debug-get-monitor {
+	set flag ch2-carrying-monitor to true
+}
+debug-get-heatsink {
+	set flag ch2-carrying-heatsink to true
+}
+debug-get-cactuscooler {
+	set flag ch2-carrying-cactuscooler to true
+}
+debug-get-powersupply {
+	set flag ch2-carrying-powersupply to true
+}
+debug-get-keyboard {
+	set flag ch2-carrying-keyboard to true
+}
+debug-get-mouse {
+	set flag ch2-carrying-mouse to true
+}
+debug-get-harddrive {
+	set flag ch2-carrying-harddrive to true
+}
+debug-get-plate {
+	set flag ch2-carrying-plate to true
+}
+debug-get-needle {
+	set flag ch2-carrying-needle to true
+}
+debug-get-ramchips {
+	set flag ch2-carrying-ramchips to true
+}
+debug-get-clock {
+	set flag ch2-carrying-clock to true
+}
+debug-get-cpu {
+	set flag ch2-carrying-cpu to true
+}
+debug-get-goldfish {
+	set flag ch2-carrying-goldfish to true
+}
+debug-get-abacus {
+	set flag ch2-carrying-abacus to true
+}
+
+debug-round1 {
+	copy debug-get-monitor
+	copy debug-get-heatsink
+	copy debug-get-powersupply
+}
+debug-round2 {
+	copy debug-get-keyboard
+	copy debug-get-mouse
+	copy debug-get-harddrive
+	copy debug-get-ramchips
+}
+debug-round3 {
+	copy debug-get-clock
+	copy debug-get-cpu
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-1 {
+	if (entity "%PLAYER%" is inside geometry south-hitbox) {
+		copy on_exit-ch2-castle-1
+		set warp state to walk_from-north
+		load map ch2-castle-outside
+	}
+	// check for hax button press
+	// (Not going to do shenanigans like this for other rooms because if you've left room 1 then you've seen the tutorial already)
+	if (flag ch2-ring-zero-restored is false) {
+		if (button HAX) { // You're attempting to use Ring Zero and...
+			// ...you've been told Ring Zero won't work
+			if (flag ch2-toot-done is true) {
+				show dialog {
+					PLAYER "Oh, yeah. Ring Zero won't work in in the castle until I fix the mainframe."
+				}
+			}
+			// ...you've discovered Ring Zero won't work
+			else if (flag ch2-hax-attempted is true) {
+				show dialog {
+					PLAYER "Why doesn't Ring Zero work?"
+				}
+			}
+			// ...you've tried the door already
+			else if (flag ch2-door-attempted is true) {
+				show dialog {
+					PLAYER "Weird. I can't get Ring Zero to work, either."
+				}
+			}
+			// ...you did NOT try the door yet
+			else {
+				show dialog {
+					PLAYER "Weird. I can't get Ring Zero to work."
+				}
+			}
+			set flag ch2-hax-attempted to true
+		}
+	}
+	set map tick_script to on_tick-ch2-castle-1 // reset
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-1 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go_ch2-notyet {
+	show serial dialog spacer
+	show serial dialog {
+		"(You better finish your conversation with Lambda before attempting to <c>GO</> anywhere....)"
+		" "
+		"(Type <c>MAN</> to resume the converstion.)"
+	}
+}
+
+on_go-castle-1-north {
+	if (flag ch2-toot-done is false) {
+		goto on_go_ch2-notyet
+	} else {
+		copy on_exit-ch2-castle-1
+		copy warping-out-fade-out
+		load map ch2-castle-11
+	}
+}
+
+on_go-castle-1-south {
+	// entrance text
+	if (flag ch2-toot-done is false) {
+		goto on_go_ch2-notyet
+	} else {
+		if (flag ch2-has-artifact is true) {
+			show serial dialog spacer
+			show serial dialog { "Leaving the <bold>CASTLE</>..." }
+		}
+		copy on_exit-ch2-castle-1
+		copy warping-out-fade-out
+		load map ch2-castle-outside
+	}
+}
+
+/* ---------- TUTORIAL ROOM STUFF ---------- */
+
+ch2-attempt-door-check {
+	if (flag ch2-toot-done is true) {
+		// you've been told some doors won't work
+		show dialog {
+			PLAYER "Oh, yeah. I'll need to move between rooms with the serial console."
+		}
+	} else if (flag ch2-door-attempted is false) {
+		// you've already discovered the doors don't work
+		if (flag ch2-hax-attempted is true) {
+			show dialog {
+				PLAYER "The doors don't work, either? This is going to be a short quest."
+			}
+		} else {
+			show dialog {
+				PLAYER "The doors don't work? This is going to be a short quest."
+			}
+		}
+		set flag ch2-door-attempted to true
+	} else {
+		// being obnoxious now :3
+		if (variable ch2-pretoot-door-attempts is 0) {
+			show dialog {
+				PLAYER "How am I supposed to get around if the doors don't work?"
+			}
+		} else if (variable ch2-pretoot-door-attempts is 1) {
+			show dialog {
+				PLAYER "Hmm. Maybe there's something else in this room I can investigate."
+			}
+		} else if (variable ch2-pretoot-door-attempts is 2) {
+			show dialog {
+				PLAYER "That's kind of a funny orange spider, isn't it? I wonder if it can help me."
+			}
+		} else {
+			show dialog {
+				PLAYER "I should go talk to the spider robot over there."
+			}
+		}
+		mutate ch2-pretoot-door-attempts + 1
+	}
+	// reset
+	set entity "%SELF%" interact_script to ch2-attempt-door-check
+}
+
+/* ---------- ENTITIES ---------- */
+
+// 0 (idle): in trash
+// 1 (walk): flip around completely
+// 2 (action): ascend, then descend
+// 3: head poking up
+// 4: descend
+// 5: ascend
+
+ch2-wizard-ascend {
+	set player control off
+	play entity Wizard animation 5 once
+	set entity Wizard animation to 3
+	set player control on
+}
+tick-ch2-wizard-ascend-and-watch-with-check {
+	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+		goto tick-ch2-wizard-ascend-and-watch
+	}
+	set entity Wizard tick_script to face-player
+}
+tick-ch2-wizard-ascend-and-watch {
+	play entity Wizard animation 5 once
+	set entity Wizard animation to 3
+	set entity Wizard tick_script to face-player
+}
+ch2-wizard-descend {
+	set player control off
+	play entity Wizard animation 4 once
+	set entity Wizard animation to 0
+	set player control on
+}
+
+interact-ch2-wizard {
+	if (entity "%SELF%" animation is 0) { // WIZARD IS DOWN
+		// go up
+		copy script ch2-wizard-ascend
+		// wizard is up now
+	} else { // WIZARD IS UP (but should go down)
+		if (flag ch2-toot-done is false) {
+			show dialog { SELF "Bye." }
+			copy script ch2-wizard-descend
+			goto interact-ch2-wizard-wrapup // "return" early
+		}
+	}
+	// wizard is up now and can talk normally
+	if (flag ch2-toot-done is false) {// pre-toot version
+		show dialog { SELF "Hi." }
+	} else if (flag ch2-lambda-paging is true) {
+		show dialog {
+			SELF "Looks like Lambda is paging you. Better answer him on the terminal."
+		}
+	}
+	else {
+		if (flag ch2-wizard-backstory is false) {
+			show dialog {
+				SELF "Hey."
+				PLAYER "Hi."
+				SELF "Heard you talking to Lambda. Building a computer?"
+				PLAYER "Yeah, we're going to fix the mainframe."
+				SELF "Cool, cool."
+				"So you should know... I'm an installation wizard. I'm pretty great with computers."
+				PLAYER "Oh, yeah? Could you help me install computer parts into the mainframe?"
+				SELF "Nah, I'm a software guy, actually."
+				PLAYER "Oh."
+				SELF "But once it's built, I can help install up the OS or whatever programs you might need to do whatever. Always happy to help."
+			}
+			set flag ch2-wizard-backstory to true
+			set flag interrupt2 to true // `interrupt` is used for Bert cutscene 
+		} else {
+			if (flag interrupt2 is true) {
+				show dialog {
+					SELF "So Lambda wants to put that thing back together, huh? I don't really get it, but okie-dokie."
+					"Let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+				}
+			} else {
+				if (flag interrupt3 is false) {
+					show dialog {
+						SELF "Hey."
+						PLAYER "Hi."
+						SELF "Finished building that computer yet?"
+						PLAYER "Not yet."
+						SELF "Cool, cool. So anyway, let me know when the hardware is done and I can help install the OS and stuff. I'm great with software."
+						PLAYER "Okay. Thanks."
+					}
+					set flag interrupt3 to true // OwO
+				} else {
+					show dialog {
+						SELF "Finished it already?"
+						PLAYER "Not exactly."
+						SELF "Yeah, didn't think so."
+						"Later, gator."
+					}
+				}
+				copy script ch2-wizard-descend
+			}
+		}
+	}
+	goto interact-ch2-wizard-wrapup // RESET
+}
+interact-ch2-wizard-wrapup { // must be a separate script so the branching above can "return" early
+	set entity "%SELF%" interact_script to interact-ch2-wizard
+}
+
+interact-ch2-wizard-mainframedone {
+	show dialog {
+		SELF "I love the smell of software in the morning."
+		"...What? That's a thing."
+	}
+}
+
+interact-ch2-xa {
+	if (flag ch2-toot-done is false) {
+		if (flag ch2-has-artifact is false) {
+			set player control off
+			show dialog {
+				name "???" "..."
+				"...huh?"
+				"Oh! Ohhh, is the light on? Hello?"
+				"Oh my goodness. Is there actually someone there? Hello? Can you hear me?"
+
+				PLAYER "I can hear you."
+
+				name "???" "Oh! It's a person! Yes, hello! My name is...."
+
+				Lambda "Lambda! Yeah, call me Lambda!"
+				"I'm speaking to you through the Exa! It's this old intercom I set up ages ago. Looks like you're in the castle entrance. I'm surprised the Exa was still..."
+				"Wait. Who are you? How did you even get in?"
+
+				PLAYER "I'm %PLAYER%. The village elders sent me here to collect the castle artifact so I could defeat the Big Bad."
+				"And I'm not a hacker, I just...\n...you know...\n...hack things. With Ring Zero."
+				
+				Lambda "No, no, that can't be right."
+				"The village elders are the ones who told me to PROTECT the artifact! I have to keep it away from everyone at all costs!"
+
+				PLAYER "Well we're going to need it soon. I don't know if you felt that earthquake last night, but the Big Bad is coming back and I need it to defeat him."
+
+				Lambda "The Big Bad, coming back? Yes, I see... he might still have the power to trigger an earthquake, even after...."
+				"I, um, don't know why the village elders would have changed their minds about this, but...."
+				"Well, you're welcome to the artifact. It's over there, to your right."
+			}
+			// a dumbwaiter-esque thing opens
+			// player turns to the right
+			show dialog {
+				PLAYER "What, right here?"
+			}
+			// walks up to it
+			
+			show dialog {
+				PLAYER "Huh. Almost looks like one of those old, fancy calculators."
+			}
+			// picks it up
+			show dialog {
+				PLAYER "That was easy. I thought there would be a quest or something. Puzzles, at least."
+				Lambda "Well, it doesn't exactly work right now, so...."
+			}
+			// player turns toward XA
+			show dialog {
+				PLAYER "...Wait, what?"
+				Lambda "That little thing can't do much on its own. The real powerful stuff was handled by the castle mainframe. They were linked wirelessly."
+				"But the mainframe was crippled."
+			}
+			// player walks closer
+			show dialog {
+				PLAYER "Crippled? What happened?"
+				Lambda "Well, ahh, I crippled it."
+			}
+			// player walks closer
+			show dialog {
+				PLAYER "What? Why?!"
+				Lambda "I couldn't let the Big Bad have access to it again."
+				"And we weren't using it for much otherwise."
+				PLAYER "But now no one can use it!"
+				Lambda "Small price to pay for keeping that power out of the Big Bad's hands. Although...."
+				"That was easier to say before the earthquake. With the mainframe down we can't fix anything."
+				"It's why you might as well have the portable interface. You could help out around here while I vet your story."
+				PLAYER "Vet my story? You don't believe the village elders sent me?"
+				Lambda "Well, um... this is all very complicated. I need to be sure that this isn't a trap."
+				"If it helps, I don't think you're the Big Bad. He would have caused more mischief in that room, even with Ring Zero disabled."
+			}
+			if (flag ch2-hax-attempted is true) {
+				show dialog {
+					PLAYER "Yeah, about that... why won't Ring Zero work in here?"
+				}
+			} else {
+				show dialog {
+					PLAYER "Ring Zero is disabled? Since when?"
+					Lambda "Since you crossed the threshold."
+				}
+			}
+			show dialog {
+				Lambda "The castle walls are lined with aluminum. Acts as a faraday cage. And Ring Zero's hex editor relies on some wireless services."
+				"Normally, XA bridges the town's network with...."
+				"You know what? There's a lot to explain, and it might be easier to chat with the artifact. Let's set it up."
+			}
+			set player control on
+			set flag ch2-has-artifact to true
+		} else {
+			show dialog {
+				Lambda "Let's get the artifact set up. I can help walk you through it."
+			}
+		}
+		show dialog {
+			Lambda "Er, that is, do you want help?"
+			> "Yes, please!" : ch2-terminal-setup-start
+			> "No, thanks." : ch2-terminal-setup-nevermind
+		}
+	} else {
+		goto ch2-terminal-setup-check
+	}
+}
+/* ---------- XA SERIAL CONSOLE WALKTHROUGH ---------- */
+
+ch2-terminal-setup-check {
+	show dialog {
+		Lambda "Need help getting the console working?"
+		> "Yes" : ch2-terminal-setup-start
+		> "No" : ch2-terminal-setup-nevermind
+	}
+}
+
+ch2-terminal-setup-nevermind {
+	if (flag ch2-toot-done is false) {
+		show dialog {
+			Lambda "Ah, okay! Um, if you change your mind, speak to the Exa again and I'll walk you through everything."
+			"To finish our conversation, type \"MAN\" into the console."
+		}
+		set serial control on
+	} else {
+		show dialog {
+			Lambda "Ah, okay. Carry on!\n\nAlso, remember you can speak to me in the console with the command \"MAN\"."
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-xa
+}
+
+ch2-terminal-setup-start {
+	show dialog {
+		Lambda "First, plug the artifact into your computer. (Or, if it's plugged in but not working, try flipping the cable the other direction, or try another USB port.)"
+	}
+	goto ch2-terminal-plugged-check
+}
+
+ch2-terminal-plugged-check {
+	show dialog {
+		Lambda "Is the artifact plugged in now?"
+		> "Yes" : ch2-terminal-plugged-yes
+		> "No" : ch2-terminal-plugged-no
+		> "I'm on the web" : ch2-terminal-plugged-web
+		> "Never mind" : ch2-terminal-setup-nevermind
+	}
+}
+
+ch2-terminal-plugged-no {
+	show dialog {
+		Lambda "Well, this won't exactly work wirelessly. You're going to have to find a USB-C cable somewhere, so, um...."
+	}
+	goto ch2-terminal-plugged-check
+}
+
+ch2-terminal-plugged-web {
+	show dialog {
+		Lambda "Oh, then you're all set already! Your console will be directly below the game screen, in your browser window."
+		"You may have to click between the game screen and the console depending on what you want to be doing. Clicking gives focus to what you clicked on."
+	}
+	goto ch2-terminal-message-test
+	set entity "%SELF%" interact_script to interact-ch2-xa
+}
+
+ch2-terminal-plugged-yes {
+	show dialog {
+		Lambda "Great! So now, um, what OS do you have?"
+		> "Windows" : ch2-terminal-os-windows
+		> "Mac or Linux" : ch2-terminal-os-unix
+		> "Something else" : ch2-terminal-os-other
+		> "Never mind" : ch2-terminal-setup-nevermind
+	}
+	set entity "%SELF%" interact_script to interact-ch2-xa
+}
+
+ch2-terminal-os-other {
+	show dialog {
+		Lambda "Oh, I see. Well, um, I'm afraid I can't be very much help then...."
+		"But, ahh, do please ask around at DC801, and maybe one of the folks there can help point you in the right direction."
+	}
+	set entity "%SELF%" interact_script to interact-ch2-xa
+}
+
+ch2-terminal-os-windows {
+	show dialog {
+		Lambda "   TODO: do it on Windows"
+	}
+	// on Windows 10
+	// open Device Manager
+	// under Ports (COM & LPT), a serial device should show up; look at the COM port (e.g. COM4)
+	// `Serial line` should be whatever the device was
+	// Open the application called `PuTTY` (this doesn't come with Windows)
+	// Set `Connection type` to Serial
+	// `Speed` should be 115200 baud
+	// Click `OPEN`
+	// If you see a serial "welcome" type message, it worked
+	goto ch2-terminal-message-test
+}
+
+ch2-terminal-os-unix {
+	show dialog {
+		Lambda "Good! Ahh, you should have some kind of terminal program already. It might even be called \"Terminal.\" Though, uh, I'm fond of iTerm myself, haha...."
+		"   TODO: Mac/Linux tutorial"
+	}
+	goto ch2-terminal-message-test
+}
+
+ch2-terminal-message-test {
+	show dialog {
+		Lambda "Let's test the serial connection."
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA</>: Testing, testing...."
+	}
+	show dialog {
+		Lambda "Did you see my serial message?"
+		> "Yes" : ch2-terminal-message-test-success
+		> "No" : ch2-terminal-message-test-fail
+	}
+}
+
+ch2-terminal-message-test-fail {
+	show dialog {
+		Lambda "Hmm. Well, um, let's go over the steps again."
+	}
+	goto ch2-terminal-setup-start
+}
+
+ch2-terminal-message-test-success {
+	if (flag ch2-toot-done is false) {
+		show dialog {
+			Lambda "Excellent! Let's continue our conversation using the terminal. Type \"MAN\" into the console to get things started."
+		}
+		copy register-manual
+		set serial control on
+		show serial dialog spacer
+		show serial dialog {
+			"(Type <c>MAN</> to resume your conversation with Lambda.)"
+		}
+	} else {
+		show dialog {
+			Lambda "Excellent! You're all set!"
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-xa
+}
