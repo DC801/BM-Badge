@@ -11,7 +11,7 @@
 - [x] `keyboard` (keytar)
 - [ ] `mouse` (rodent)
 - [ ] `harddrive`
-	- [ ] `plates` (dinner plates)
+	- [ ] `plate` (dinner plate)
 	- [ ] `needle` (phonograph needle)
 - [x] `ramchips` (bag of Doritos)
 - [x] `clock` (grandfather clock)

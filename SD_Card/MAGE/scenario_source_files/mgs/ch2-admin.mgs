@@ -1,13 +1,12 @@
 settings for dialog {
 	parameters for global defaults { alignment BL }
 	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
 }
 settings for serial dialog { wrap 60 }
 
 const! (
-	$bert-secret-cutscene = 2
 	$goto-round-2 = 3 // count of story flags through round 1
-	$bert-messages-cutscene = 5
 	$goto-round-3 = 7 // count of story flags through round 2
 	$goto-round-4 = 9 // count of story flags through round 3
 	$total-ch2-flags = 10
@@ -128,9 +127,7 @@ ch2-interact-mainframe {
 	}
 	set flag temp to false
 	// wizard comes up if down
-	if (entity Wizard animation is 0) { // WIZARD IS DOWN
-		set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch
-	}
+	set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch-with-check
 	// normal
 	if (flag ch2-installed-heatsink is false) {
 		if (flag ch2-carrying-heatsink is true) {
@@ -251,6 +248,9 @@ ch2-interact-mainframe {
 		}
 	} else {
 		set flag temp to false
+		show dialog {
+			PLAYER "That's all for now."
+		}
 		set entity "%PLAYER%" tick_script to ch2-count-flags
 		set entity "%SELF%" tick_script to ch2-count-flags-wait
 	}
@@ -260,35 +260,56 @@ ch2-count-flags-wait {
 	if flag ch2-storyflags-tallied is true
 		then goto ch2-count-flags-done
 }
+
 ch2-count-flags-done {
+	// REMINDER: This bit is running in the `on_tick` slot on the mainframe entity
 	set flag ch2-storyflags-tallied to false
 	show serial dialog { "\t<g>DEBUG: $ch2-storyflags-tally$ total parts installed!</>" }
-
-	// BIG TODO: what happens if you need to trigger a mid-round cutscene and round-end cutscene at the same time???
-	// BIG TODO: how to show the new round of parts lists from Lambda
-
-	if (variable ch2-storyflags-tally is == $bert-secret-cutscene) {
-		show serial dialog { "\t<g>DEBUG: Bert cutscene goes here!</>" }
-		// TODO: cutscene
-	}
+	// the below are separate scripts so that multiple things can trigger them
 	if (variable ch2-storyflags-tally is == $goto-round-2) {
-		mutate ch2-storyflag-round = 2
-		show serial dialog { "\t<g>DEBUG: Lambda's next round of parts list cutscene goes here! (Round 2)</>" }
-		// TODO: cutscene
-	}
-	else if (variable ch2-storyflags-tally is == $bert-messages-cutscene) {
-		// TODO: cutscene
+		goto ch2-start-round-2
 	}
 	if (variable ch2-storyflags-tally is == $goto-round-3) {
-		mutate ch2-storyflag-round = 3
-		show serial dialog { "\t<g>DEBUG: Lambda's next round of parts list cutscene goes here! (Round 3)</>" }
-		// TODO: cutscene
+		goto ch2-start-round-3
 	}
 	else if (variable ch2-storyflags-tally is == $goto-round-4) {
-		show serial dialog { "\t<g>DEBUG: the Wiz is now ready to install thing!</>" }
-		// TODO cutscene
+		goto ch2-start-round-4
 	}
-	goto null_script
+	goto null_script // ENDS
+}
+
+ch2-start-round-2 {
+	mutate ch2-storyflag-round = 2
+	set entity "%PLAYER%" animation to 0
+	copy ch2-cutscene-bert-secret
+	set flag ch2-lambda-paging to true
+	set player control off
+	wait 700ms
+	// TODO: Play bell on terminal
+	show dialog {
+		PLAYER "...? Did I just hear some kind of digital sound effect?"
+		Wizard "That was the bell on the terminal. Lambda is paging you."
+		"Better talk to him."
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
+	}
+	set player control on
+	goto ch2-do-init-on-end
+}
+ch2-start-round-3 {
+	mutate ch2-storyflag-round = 3
+	show serial dialog { "\t<g>DEBUG: Bert 'any messages?' cutscene goes here!</>" }
+	show serial dialog { "\t<g>DEBUG: Lambda's next round of parts list cutscene goes here! (Round 3)</>" }
+	// TODO: cutscene
+	goto ch2-do-init-on-end
+}
+ch2-start-round-4 {
+	show serial dialog { "\t<g>DEBUG: Lambda invites you to room #99 cutscene! (Round 4)</>" }
+	show serial dialog { "\t<g>DEBUG: the Wiz is now ready to install thing!</>" }
+	// TODO cutscene
+	goto ch2-do-init-on-end
 }
 
 ch2-interact-mainframe-madamada {

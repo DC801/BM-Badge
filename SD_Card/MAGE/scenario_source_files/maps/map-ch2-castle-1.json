@@ -343,6 +343,18 @@
                  "width":0,
                  "x":192,
                  "y":246
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":39,
+                 "name":"mainframe-look-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":120,
+                 "y":125
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -351,7 +363,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

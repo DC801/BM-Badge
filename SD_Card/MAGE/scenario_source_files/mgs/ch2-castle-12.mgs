@@ -28,6 +28,12 @@ on_load-ch2-castle-12 {
 		show serial dialog { "Entering <bold>BACK HALLWAY</>..." }
 	}
 	
+	if (
+		flag ch2-installed-needle is true
+		|| flag ch2-carrying-needle is true
+	) {
+		copy script ch2-hide-needle
+	}
 	goto ch2-map-init
 }
 
@@ -59,4 +65,63 @@ on_go-castle-12-south {
 	copy on_exit-ch2-castle-12
 	copy warping-out-fade-out
 	load map ch2-castle-11
+}
+
+
+/* ---------- NEEDLE (ADMIN) ---------- */
+
+ch2-hide-needle {
+	teleport entity "Needle" to geometry hiding-spot
+	set entity "Needle" name to " "
+}
+
+ch2-touch-needle {
+	if (flag ch2-needle-firstlook is false) {
+		show dialog {
+			PLAYER "TODO needle1"
+		}
+		set flag ch2-needle-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO needle2."
+	}
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the phonograph needle?)"
+			> "Yes" : ch2-touch-needle-yes
+			> "No" : ch2-touch-needle-no
+		}
+	}
+	set entity "%SELF%" interact_script to ch2-touch-needle // RESET
+}
+
+ch2-touch-needle-yes {
+	show dialog {
+		name "" "(You pick up the needle!)"
+	}
+	copy script ch2-hide-needle
+	set flag ch2-carrying-needle to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-needle-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-needle // RESET
+}
+
+ch2-install-needle {
+	set flag ch2-carrying-needle to false
+	set flag ch2-installed-needle to true
+}
+look-needle {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look needle TODO"
+	}
+}
+
+ch2-install-harddrive {
+	set flag ch2-carrying-harddrive to false
+	set flag ch2-installed-harddrive to true
 }

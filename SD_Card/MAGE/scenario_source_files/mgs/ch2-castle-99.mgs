@@ -53,6 +53,7 @@ ch2-castle-99-welcome {
 	// Lambda turns all around
 	show dialog {
 		Lambda "...well, my lab. Welcome to my lab, I guess."
+		"Everyone else will have forgotten this, but I am one of the village elders."
 		"Sorry. It's just a little strange seeing someone else in here. In the flesh, I mean."
 		"It's been so long. I think. Not sure how long it's been, to be perfectly honest."
 	}

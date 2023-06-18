@@ -186,6 +186,9 @@ ch2-lambda-parts-ahead-confused {
 
 // ROUND ONE: normal
 
+// TODO: different convo for carrying vs installed vs needed
+// TODO: change his parts list checklist into MD style boxes: [~] for carrying and [x] for installed
+
 ch2-lambda-parts-monitor {
 	show serial dialog spacer
 	if (flag ch2-installed-monitor is false) {
@@ -247,6 +250,9 @@ ch2-lambda-parts-harddrive {
 	show serial dialog spacer
 	if (flag ch2-installed-harddrive is false) {
 		copy ch2-describe-harddrive
+		show serial dialog {
+			"\tUse the <c>FUSE</> command to combine both items into a <m>HARD DISK</>."
+		}
 	} else {
 		show serial dialog { "<m>LAMBDA:</> TODO hard drive is already installed." }
 	}
@@ -827,7 +833,7 @@ ch2-lambda-person-bert {
 	show serial dialog {
 		"<c>YOU:</> About Bert...."
 	}
-	if (flag ch2-lambda-bert-explanation is true) {
+	if (flag ch2-cutseen-bert-secret is true) {
 		goto ch2-lambda-bert-q
 	} else {
 		show serial dialog {
@@ -904,7 +910,7 @@ ch2-lambda-bert-message {
 		}
 	} else {
 		show serial dialog {
-			"<m>LAMBDA:</> You might want to double check with Wizard, but I haven't heard anything so far, sorry."
+			"<m>LAMBDA:</> You might want to double check with the Wiz, but I haven't heard anything so far, sorry."
 		}
 	}
 	goto ch2-lambda-bert-q
@@ -913,23 +919,126 @@ ch2-lambda-bert-message {
 ch2-lambda-bert-quit {
 	if (variable CALLBACK is 1) {
 		mutate CALLBACK = 0
-		show serial dialog spacer
-		show serial dialog {
-			"<m>LAMBDA:</> Sorry to go off on a long tangent like that when you were probably calling me about something else."
-			"\tDid you have a question?"
-			" "
-			# "Yes" : ch2-lambda-topic-q
-			# "No" : ch2-lambda-bert-quitquit
-		}
+		goto ch2-lambda-round-2-parts1
 	} else {
 		goto ch2-lambda-topic-person-s
 	}
 }
-ch2-lambda-bert-quitquit {
+
+ch2-lambda-round-2-parts1 {
 	show serial dialog spacer
 	show serial dialog {
-		"<c>YOU:</> Nope, no questions right now."
+		"<m>LAMBDA:</> Sorry, um, that was a bit of a tangent. But I actually wanted you to know that I have another round of parts for the parts list."
+		"\tJust as a heads up, these parts are going to be a little... abstract."
 		" "
-		"<m>LAMBDA:</> Cool. Just let me know if you want to know something."
+		# "Abstract?" : ch2-lambda-round-2-parts2
 	}
+}
+
+ch2-lambda-round-2-parts2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Abstract? What is that supposed to mean?"
+		" "
+		"<m>LAMBDA:</> Yeah, so, like the hard drive, for example. I can't find one in storage anywhere, and no one I've contacted have any to spare, so we're going to have to <m>make one</>."
+		"\tOld-style hard drives are made of spinning plates of metal, and they have a little read head in there that can magnetically interact with the plate... I mean, it needs electricity, but it can read a 1 and a 0, or change a 1 to a 0... that is, magnetic fields and electric fields are sort of the same thing, in the sense that --"
+		" "
+		# "What?" : ch2-lambda-round-2-parts3
+	}
+}
+
+ch2-lambda-round-2-parts3 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What?"
+		" "
+		"<m>LAMBDA:</> <dim>*ahem*</> Well, it's all pretty cool, but the point is... we'll need a <m>plate</> and we'll need a <m>needle</>, and together they can approximate a hard drive."
+		" "
+		"<c>YOU:</> Plate? Like a dinner plate?"
+		" "
+		"<m>LAMBDA:</> Like I said..."
+		"\t...<bold>abstract</>."
+		" "
+		# "Is this really going to work?" : ch2-lambda-round-2-parts4
+	}
+}
+
+ch2-lambda-round-2-parts4 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Is this really going to work?"
+		" "
+		"<m>LAMBDA:</> ...<bold>Sure</>."
+		" "
+		# "Okay, so what's the new parts list?" : ch2-lambda-round-2-parts5a
+	}
+}
+
+ch2-lambda-round-2-parts5a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Okay, so what's the new parts list?"
+		" "
+	}
+	show serial dialog ch2-describe-keyboard
+	show serial dialog {
+		" "
+		# "Then what?" : ch2-lambda-round-2-parts5b
+	}
+
+}
+
+ch2-lambda-round-2-parts5b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Then what?"
+		" "
+	}
+	show serial dialog ch2-describe-mouse
+	show serial dialog {
+		" "
+		# "Okay, and then?" : ch2-lambda-round-2-parts5c
+	}
+
+}
+ch2-lambda-round-2-parts5c {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Okay, and then?"
+		" "
+	}
+	show serial dialog ch2-describe-harddrive
+	show serial dialog {
+		"\tI'll grant you access to the <c>FUSE</> command, which will let you construct a <m>HARD DISK</> once you have both items."
+	}
+	show serial dialog {
+		" "
+		# "What next?" : ch2-lambda-round-2-parts5d
+	}
+
+}
+ch2-lambda-round-2-parts5d {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What next?"
+		" "
+	}
+	show serial dialog ch2-describe-ramchips
+	show serial dialog {
+		" "
+		# "Anything else?" : ch2-lambda-round-2-parts5e
+	}
+}
+
+ch2-lambda-round-2-parts5e {
+	set flag ch2-lambda-paging to false
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Anything else?"
+		" "
+		"<m>LAMBDA:</> That's all for the moment. The last few parts are going to be really esoteric compared to these, so I'll need more time to come up with ideas."
+		"\tI'll leave you to it. Good luck."
+	}
+	set flag ch2-permission-to-fuse to true
+	copy ch2-register-fuse
 }
