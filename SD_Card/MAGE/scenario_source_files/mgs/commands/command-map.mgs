@@ -1,0 +1,40 @@
+settings for serial dialog { wrap 60 }
+
+// REGISTER
+
+register-map {
+	register man + map -> man-map
+	register map -> command-map
+}
+
+// MAN PAGE
+
+man-map {
+	show serial dialog spacer
+	show serial dialog {
+		"<c><bold>MGE GENERAL COMMANDS MANUAL - MAP</>"
+		" "
+		"Displays an ASCII map of the castle, though only while you're inside the castle."
+		" "
+		"Rooms are added to the map as you visit them."
+		" "
+		"The <c><bold>@</> symbol indicates which room you're in."
+	}
+}
+
+// COMMAND
+
+command-map {
+	// for ch2-toot:
+	if (variable ch2-map-test is 1) {
+		mutate ch2-map-test = 2
+	}
+	// normal stuff
+	if (variable ch2-in-room is 0) {
+		show serial dialog {
+			"You don't seem to have a map for this place."
+		}
+	} else {
+		goto draw-ch2-serial-map
+	}
+}

@@ -1,0 +1,110 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+
+/* ---------- LOOK SCRIPTS ---------- */
+
+look-ch2-castle-34 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO: PANTRY on_look text\n "
+	}
+}
+
+/* ---------- ON_LOAD ---------- */
+
+on_load-ch2-castle-34 {
+	// ch2 room state
+	mutate ch2-in-room = 34
+
+	// entrance text
+	show serial dialog spacer
+	if (flag ch2-seen-room-34 is false) {
+		show serial dialog { "Discovered the <bold><c>PANTRY</>! Room added to map!" }
+		set flag ch2-seen-room-34 to true
+	} else {
+		show serial dialog { "Entering the <bold>PANTRY</>..." }
+	}
+	if (
+		flag ch2-installed-plate is true
+		|| flag ch2-carrying-plate is true
+	) {
+		copy script ch2-hide-plate
+	}
+	
+	goto ch2-map-init
+}
+
+/* ---------- ON_TICK ---------- */
+
+on_tick-ch2-castle-34 {
+	goto null_script
+}
+
+/* ---------- EXIT STUFF ---------- */
+
+on_exit-ch2-castle-34 { // sanitize ch2 room state
+	mutate ch2-in-room = 0
+}
+
+// SERIAL: go
+
+on_go-castle-34-south {
+	copy on_exit-ch2-castle-34
+	copy warping-out-fade-out
+	load map ch2-castle-32
+}
+
+/* ---------- HARDDRIVE (ADMIN) ---------- */
+
+ch2-hide-plate {
+	teleport entity "Plate" to geometry hiding-spot
+	set entity "Plate" name to " "
+}
+
+ch2-touch-plate {
+	if (flag ch2-plate-firstlook is false) {
+		show dialog {
+			PLAYER "TODO plate1"
+		}
+		set flag ch2-plate-firstlook to true
+	}
+	show dialog {
+		PLAYER "TODO plate2."
+	}
+	if (variable ch2-storyflag-round is >= 2) {
+		show dialog {
+			name "" "(Pick up the plate?)"
+			> "Yes" : ch2-touch-plate-yes
+			> "No" : ch2-touch-plate-no
+		}
+	}
+	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
+}
+ch2-touch-plate-yes {
+	show dialog {
+		name "" "(You pick up the plate!)"
+	}
+	copy script ch2-hide-plate
+	set flag ch2-carrying-plate to true
+	set entity "%SELF%" interact_script to null_script
+}
+ch2-touch-plate-no {
+	show dialog {
+		PLAYER "Maybe later, then."
+	}
+	set entity "%SELF%" interact_script to ch2-touch-plate // RESET
+}
+
+ch2-install-plate {
+	set flag ch2-carrying-plate to false
+	set flag ch2-installed-plate to true
+}
+look-plate {
+	show serial dialog spacer
+	show serial dialog {
+		"on_look plate TODO"
+	}
+}

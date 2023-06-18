@@ -1,0 +1,97 @@
+settings for serial dialog { wrap 60 }
+
+serial dialog spacer {
+	" "
+	"------------"
+	" "
+}
+
+/* ---------- CASTLE ON_LOAD INIT ---------- */
+
+ch2-do-init-on-end {
+	// This is so you can run the init stuff at an arbitrary time, usually at the end of a big involved thing. The flag here should be false most of the time.
+	if (flag ch2-do-init-on-end is true) {
+		set flag ch2-do-init-on-end to false
+		goto ch2-map-init
+	}
+	goto null_script
+}
+
+ch2-map-init {
+	set flag interrupt to false // flag set when something happens in the room and you haven't left the room yet
+	set flag interrupt2 to false // for when you need a second one
+	set flag interrupt3 to false // OwO
+
+	// misc game state
+	if (
+		flag ch2-ring-zero-restored is true // you've fixed Ring Zero
+		|| variable ch2-in-room is 0 // OR you're not in the castle at all
+	) {
+		set hex control on
+	} else {
+		set hex control to off
+		set hex clipboard to off
+	}
+
+	// serial features
+	if (flag ch2-has-artifact is false) { // no artifact at all
+		set serial control off
+	} else { // you have the artifact
+		if (
+			variable ch2-in-room is not 0 // if you're in the castle
+			|| flag ch2-toot-done is true // or if the toot is all the way done
+		) {
+			set serial control on
+			register rtfm -> command-rtfm
+			register inventory -> ch2-report-inventory
+			copy register-manual
+			if (flag ch2-map-granted is true) {
+				copy register-map
+			}
+			if (flag ch2-permission-to-fuse is true) {
+				copy register-fuse
+			}
+		} else { // you're not in the castle and the toot isn't done yet
+			set serial control off
+		}
+	}
+	
+	// warp-in animation
+	if (flag ch2-manual-warp is true) { // workaround for WOPR
+		set flag ch2-manual-warp to false
+	} else {
+		if (warp state is warping) {
+			copy warping-in-fade-in
+		}
+	}
+	set player control on
+
+	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)
+	// IF SO, be sure to turn off serial control and player control before doing any of that, and let it come back on again with this script.
+}
+
+/* ---------- ON_WARP & ON_GO ANIMATION ---------- */
+
+spin-quickly {
+	rotate entity "%SELF%" -1
+	wait 150ms
+}
+
+warping-out-fade-out {
+	set player control to off
+	set serial control off
+	set warp state to warping
+	set entity "%PLAYER%" tick_script to spin-quickly
+	fade out camera to #000000 over 500ms
+}
+
+warping-in-fade-in {
+	teleport entity "%PLAYER%" to geometry warp-spot
+	set entity "%PLAYER%" tick_script to spin-quickly
+	fade in camera from #000000 over 300ms
+	set entity "%PLAYER%" tick_script to null_script
+	turn entity "%PLAYER%" south
+	set warp state to warped // it needs to be set to SOMETHING...
+	set player control to on // TODO: remove after shared behavior is fully merged
+	set serial control on // TODO: remove after shared behavior is fully merged
+}

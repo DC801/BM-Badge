@@ -3,7 +3,7 @@
 		{
 			"action": "REGISTER_SERIAL_DIALOG_COMMAND",
 			"command": "map",
-			"script": "command-map"
+			"script": "command-map-test"
 		},
 		{
 			"action": "SHOW_SERIAL_DIALOG",
@@ -66,7 +66,7 @@
 			"serial_dialog":"serial_dialog-go_unregister"
 		}
 	],
-	"command-map": [
+	"command-map-test": [
 		{
 			"action": "SHOW_SERIAL_DIALOG",
 			"serial_dialog":"serial_dialog-command-map"

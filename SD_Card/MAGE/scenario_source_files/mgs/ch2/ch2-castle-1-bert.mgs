@@ -1,0 +1,123 @@
+settings for dialog {
+	parameters for global defaults { alignment BL }
+	parameters for label PLAYER { entity "%PLAYER%" alignment BR }
+	parameters for label SELF { entity "%SELF%" }
+}
+settings for serial dialog { wrap 60 }
+
+/* ---------- BERT SECRET CUTSCENE ---------- */
+
+watch-bert {
+	turn entity "%SELF%" toward entity Bert
+}
+
+ch2-cutscene-bert-secret {
+	set player control to off
+	wait 800ms
+	teleport entity Bert to geometry bert-spot
+	turn entity Bert north
+	show dialog {
+		Bert "%PLAYER%, wait."
+	}
+	wait 100ms
+	set entity "%PLAYER%" tick_script to watch-bert
+	wait 400ms
+	set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch-with-check
+	walk entity Bert along geometry bert-spot over 1200ms
+	wait 100ms
+	turn entity Bert toward entity "%PLAYER%"
+	wait 900ms
+	show dialog {
+		PLAYER "Bert? But how did you get in? I thought none of you could cross the threshold."
+		Bert "I remembered back door. But...."
+	}
+	set entity Bert tick_script to spin_self_clockwise
+	wait 400ms
+	show dialog {
+		Bert "No. I can go no further. I could, once. Perhaps."
+	}
+	set entity Bert tick_script to null_script
+	turn entity Bert toward entity "%PLAYER%"
+	show dialog {
+		Bert "%PLAYER%, I must not stay long. But I must tell you this."
+		"Something is wrong."
+		"That book we wanted to give you... it was not gone yesterday. It was on shelf, in library."
+		"It is only gone today. This morning."
+		PLAYER "The book only went missing this morning?"
+		Bert "Yes. I am sure of it."
+		"%PLAYER%, something wants to stop you. Or delay you."
+		PLAYER "Are we too late, then? Is the Big Bad here?"
+		Bert "No. We would know. Big Bad would not hide."
+	}
+	turn entity Bert east
+	show dialog {
+		Bert "But perhaps he can still reach into our village. Small hacks. Subtle things."
+		"Perhaps he left traps. Protocols. Magic that waits for his signal before working."
+		"I once knew more. But I am old, and...."
+		"...."
+		PLAYER "...?"
+	}
+	turn entity Bert south
+	show dialog {
+		Bert "I must go. There is something I must learn. Quickly. But I will return."
+		"Do not wait for me. Go and fix artifact."
+		"If I find answer, I will leave message with trash panda Wizard."
+		"Good luck."
+	}
+	set flag ch2-cutseen-bert-secret to true
+	walk entity Bert to geometry entrance1-path over 800ms
+	wait 80ms
+	teleport entity Bert to geometry hiding-spot
+	set entity "%PLAYER%" tick_script to null_script
+	set player control to on
+	set flag interrupt to true
+}
+
+ch2-bert-secret-lambda-intro {
+	show serial dialog spacer
+	if (flag interrupt is true) {
+		show serial dialog {
+			"<m>LAMBDA:</> Bert? BERT! Oh my God, Bert! I remember that guy!"
+			" "
+			"<c>YOU:</> What? You know him?"
+		}
+	} else {
+		show serial dialog {
+			"<m>LAMBDA:</> Oh man, Bert! That guy... I haven't seen him in ages! I forgot all about him!"
+			" "
+			"<c>YOU:</> What? You know Bert?"
+		}
+	}
+	show serial dialog {
+		" "
+		"<m>LAMBDA:</> His name was a complete blank until you said it, but I recognized his face!"
+	}
+	if (flag ch2-cameras-explanation is false) {
+		show serial dialog {
+			" "
+			"<c>YOU:</> Wait, how did you see his face?"
+			" "
+			"<m>LAMBDA:</> The cameras! They're all around in -- look, it doesn't matter. The point is...."
+		}
+		set flag ch2-cameras-explanation to true
+	}
+	show serial dialog {
+		"\tAw, man. The two of us? We go way back!"
+		" "
+		# "Should I go back and fetch him?" : ch2-bert-secret-lambda-intro2
+	}
+}
+ch2-bert-secret-lambda-intro2 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Should I go back and fetch him? Let you talk to him?"
+		" "
+		"<m>LAMBDA:</> No, that... um, that won't be necessary. I can't exactly help him from where I am, and what he's doing sounds pretty important. We shouldn't bother him."
+		"\t...Damn. It's been a while, though."
+		" "
+		"<c>YOU:</> Wow, you know Bert, huh?"
+	}
+	set flag ch2-lambda-bert-prelude to true
+	mutate CALLBACK = 1
+	goto ch2-lambda-bert-q
+}

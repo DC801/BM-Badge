@@ -5,7 +5,7 @@ settings for dialog {
 }
 
 show_dialog-timewarp {
-	register rtfm -> serial-rtfm
+	register rtfm -> command-rtfm
 	fade out camera to #000000 over 1ms
 	wait 200ms
 	set player control to off
