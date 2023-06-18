@@ -263,6 +263,32 @@
 		"scenarioIndex": 5,
 		"serialized": {}
 	},
+	"seamoss": {
+		"tileset": "entity-seamoss.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			]
+		},
+		"type": "seamoss",
+		"scenarioIndex": 6,
+		"serialized": {}
+	},
 	"lightning_boy": {
 		"tileset": "entity-lightning_boy.json",
 		"animations": {
@@ -286,7 +312,7 @@
 			]
 		},
 		"type": "lightning_boy",
-		"scenarioIndex": 6,
+		"scenarioIndex": 7,
 		"serialized": {}
 	},
 	"lightning_boy2": {
@@ -312,7 +338,7 @@
 			]
 		},
 		"type": "lightning_boy2",
-		"scenarioIndex": 7,
+		"scenarioIndex": 8,
 		"serialized": {}
 	},
 	"goose": {
@@ -374,7 +400,69 @@
 			]
 		},
 		"type": "goose",
-		"scenarioIndex": 8,
+		"scenarioIndex": 9,
+		"serialized": {}
+	},
+	"goose-bow": {
+		"tileset": "entity-goose-bow.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 5,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": true
+				},
+				{
+					"tileid": 4,
+					"flip_x": false
+				},
+				{
+					"tileid": 3,
+					"flip_x": false
+				}
+			]
+		},
+		"type": "goose-bow",
+		"scenarioIndex": 10,
 		"serialized": {}
 	},
 	"sheep": {
@@ -436,7 +524,7 @@
 			]
 		},
 		"type": "sheep",
-		"scenarioIndex": 9,
+		"scenarioIndex": 11,
 		"serialized": {}
 	},
 	"helga": {
@@ -498,7 +586,7 @@
 			]
 		},
 		"type": "helga",
-		"scenarioIndex": 10,
+		"scenarioIndex": 12,
 		"serialized": {}
 	},
 	"village_elder": {
@@ -560,7 +648,7 @@
 			]
 		},
 		"type": "village_elder",
-		"scenarioIndex": 11,
+		"scenarioIndex": 13,
 		"serialized": {}
 	},
 	"old_lady": {
@@ -622,7 +710,7 @@
 			]
 		},
 		"type": "old_lady",
-		"scenarioIndex": 12,
+		"scenarioIndex": 14,
 		"serialized": {}
 	},
 	"baby_goat": {
@@ -684,7 +772,7 @@
 			]
 		},
 		"type": "baby_goat",
-		"scenarioIndex": 13,
+		"scenarioIndex": 15,
 		"serialized": {}
 	},
 	"alfonso": {
@@ -746,7 +834,7 @@
 			]
 		},
 		"type": "alfonso",
-		"scenarioIndex": 14,
+		"scenarioIndex": 16,
 		"serialized": {}
 	},
 	"cleo": {
@@ -808,7 +896,7 @@
 			]
 		},
 		"type": "cleo",
-		"scenarioIndex": 15,
+		"scenarioIndex": 17,
 		"serialized": {}
 	},
 	"verthandi": {
@@ -870,7 +958,7 @@
 			]
 		},
 		"type": "verthandi",
-		"scenarioIndex": 16,
+		"scenarioIndex": 18,
 		"serialized": {}
 	},
 	"pipscat": {
@@ -986,7 +1074,7 @@
 			]
 		},
 		"type": "pipscat",
-		"scenarioIndex": 17,
+		"scenarioIndex": 19,
 		"serialized": {}
 	},
 	"blacksmith": {
@@ -1048,7 +1136,7 @@
 			]
 		},
 		"type": "blacksmith",
-		"scenarioIndex": 18,
+		"scenarioIndex": 20,
 		"serialized": {}
 	},
 	"old_man": {
@@ -1128,7 +1216,7 @@
 			]
 		},
 		"type": "old_man",
-		"scenarioIndex": 19,
+		"scenarioIndex": 21,
 		"serialized": {}
 	},
 	"bert": {
@@ -1190,7 +1278,7 @@
 			]
 		},
 		"type": "bert",
-		"scenarioIndex": 20,
+		"scenarioIndex": 22,
 		"serialized": {}
 	},
 	"sports_kid": {
@@ -1252,7 +1340,7 @@
 			]
 		},
 		"type": "sports_kid",
-		"scenarioIndex": 21,
+		"scenarioIndex": 23,
 		"serialized": {}
 	},
 	"ssen": {
@@ -1314,7 +1402,7 @@
 			]
 		},
 		"type": "ssen",
-		"scenarioIndex": 22,
+		"scenarioIndex": 24,
 		"serialized": {}
 	},
 	"baker": {
@@ -1376,7 +1464,7 @@
 			]
 		},
 		"type": "baker",
-		"scenarioIndex": 23,
+		"scenarioIndex": 25,
 		"serialized": {}
 	},
 	"marta": {
@@ -1438,7 +1526,7 @@
 			]
 		},
 		"type": "marta",
-		"scenarioIndex": 24,
+		"scenarioIndex": 26,
 		"serialized": {}
 	},
 	"tailor": {
@@ -1554,7 +1642,7 @@
 			]
 		},
 		"type": "tailor",
-		"scenarioIndex": 25,
+		"scenarioIndex": 27,
 		"serialized": {}
 	},
 	"bender": {
@@ -1634,7 +1722,7 @@
 			]
 		},
 		"type": "bender",
-		"scenarioIndex": 26,
+		"scenarioIndex": 28,
 		"serialized": {}
 	},
 	"bender_sadbutt": {
@@ -1715,7 +1803,7 @@
 			]
 		},
 		"type": "bender_sadbutt",
-		"scenarioIndex": 27,
+		"scenarioIndex": 29,
 		"serialized": {}
 	},
 	"strong_bad": {
@@ -1831,7 +1919,7 @@
 			]
 		},
 		"type": "strong_bad",
-		"scenarioIndex": 28,
+		"scenarioIndex": 30,
 		"serialized": {}
 	},
 	"trekkie": {
@@ -1893,7 +1981,7 @@
 			]
 		},
 		"type": "trekkie",
-		"scenarioIndex": 29,
+		"scenarioIndex": 31,
 		"serialized": {}
 	},
 	"bob": {
@@ -1955,7 +2043,7 @@
 			]
 		},
 		"type": "bob",
-		"scenarioIndex": 30,
+		"scenarioIndex": 32,
 		"serialized": {}
 	},
 	"blitzball": {
@@ -2003,7 +2091,7 @@
 			]
 		},
 		"type": "blitzball",
-		"scenarioIndex": 31,
+		"scenarioIndex": 33,
 		"serialized": {}
 	},
 	"maru": {
@@ -2069,7 +2157,7 @@
 			]
 		},
 		"type": "maru",
-		"scenarioIndex": 32,
+		"scenarioIndex": 34,
 		"serialized": {}
 	},
 	"bmurray": {
@@ -2135,7 +2223,7 @@
 			]
 		},
 		"type": "bmurray",
-		"scenarioIndex": 33,
+		"scenarioIndex": 35,
 		"serialized": {}
 	},
 	"felix": {
@@ -2201,7 +2289,7 @@
 			]
 		},
 		"type": "felix",
-		"scenarioIndex": 34,
+		"scenarioIndex": 36,
 		"serialized": {}
 	},
 	"deut": {
@@ -2267,7 +2355,7 @@
 			]
 		},
 		"type": "deut",
-		"scenarioIndex": 35,
+		"scenarioIndex": 37,
 		"serialized": {}
 	},
 	"modem": {
@@ -2369,7 +2457,7 @@
 			]
 		},
 		"type": "modem",
-		"scenarioIndex": 36,
+		"scenarioIndex": 38,
 		"serialized": {}
 	},
 	"bookcase": {
@@ -2453,7 +2541,7 @@
 			]
 		},
 		"type": "bookcase",
-		"scenarioIndex": 37,
+		"scenarioIndex": 39,
 		"serialized": {}
 	},
 	"rake": {
@@ -2483,7 +2571,7 @@
 			]
 		},
 		"type": "rake",
-		"scenarioIndex": 38,
+		"scenarioIndex": 40,
 		"serialized": {}
 	},
 	"marta_broom": {
@@ -2514,7 +2602,7 @@
 			]
 		},
 		"type": "marta_broom",
-		"scenarioIndex": 39,
+		"scenarioIndex": 41,
 		"serialized": {}
 	},
 	"hamster": {
@@ -2580,7 +2668,7 @@
 			]
 		},
 		"type": "hamster",
-		"scenarioIndex": 40,
+		"scenarioIndex": 42,
 		"serialized": {}
 	},
 	"yabbo_mongo": {
@@ -2646,7 +2734,7 @@
 			]
 		},
 		"type": "yabbo_mongo",
-		"scenarioIndex": 41,
+		"scenarioIndex": 43,
 		"serialized": {}
 	},
 	"cake": {
@@ -2748,7 +2836,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 42,
+		"scenarioIndex": 44,
 		"serialized": {}
 	},
 	"welder": {
@@ -2814,7 +2902,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 43,
+		"scenarioIndex": 45,
 		"serialized": {}
 	},
 	"raccoon": {
@@ -2934,7 +3022,7 @@
 				}
 			]
 		},
-		"scenarioIndex": 44,
+		"scenarioIndex": 46,
 		"serialized": {}
 	}
 }

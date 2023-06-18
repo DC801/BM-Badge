@@ -135,6 +135,24 @@
                  "width":32,
                  "x":63.3729796933277,
                  "y":256.815582262743
+                }, 
+                {
+                 "class":"",
+                 "gid":2147484289,
+                 "height":48,
+                 "id":34,
+                 "name":"Goose",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"show_dialog-goose-generic"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":48,
+                 "x":57,
+                 "y":120
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -178,7 +196,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":34,
+ "nextobjectid":35,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -223,6 +241,10 @@
         {
          "firstgid":617,
          "source":"..\/entities\/entity-abacus.json"
+        }, 
+        {
+         "firstgid":641,
+         "source":"..\/entities\/entity-goose-bow.json"
         }],
  "tilewidth":32,
  "type":"map",

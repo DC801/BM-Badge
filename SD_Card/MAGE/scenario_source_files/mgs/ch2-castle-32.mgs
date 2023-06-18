@@ -29,6 +29,10 @@ on_load-ch2-castle-32 {
 		set flag ch2-seen-room-32 to true
 	} else {
 		show serial dialog { "Entering <bold>KITCHEN</>..." }
+		show serial dialog {
+			" "
+			"<g>\tDEBUG option:</> want chips"
+		}
 	}
 	if (
 		flag ch2-ramchips-dispensed is false
