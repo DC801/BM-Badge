@@ -17,6 +17,16 @@ look-ch2-lodge-rtfm {
 
 on_load-ch2-lodge-rtfm {
 	// do unique stuff first (but turn serial / player control off first, if you do)
+	
+	// Village elders hiding
+	if (variable ch2-storyflag-round is not 1) {
+		set entity Bert tick_script to yeet
+		}
+	if (variable ch2-storyflag-round is not 3) {
+		set entity Jackob tick_script to yeet
+		set entity Alfonso tick_script to yeet
+		}
+	// unique stuff done
 	goto ch2-map-init
 }
 
@@ -38,4 +48,43 @@ on_go-ch2-lodge-rtfm-south {
 }
 
 /* ---------- ENTITIES ---------- */
+
+interact-ch2-alfonso-rtfm {
+	// divert people trying to hack their way to see this convo early
+	// can't use a zigzag for this!
+	if variable ch2-storyflag-round is not 3
+		then goto null_script
+	copy face-player
+	show dialog {
+		SELF
+		"Bert said he was going to check something, but whatever he's doing, he's sure is taking his time."
+		"I confess I'm getting worried, %PLAYER%. Something isn't right about all of this."
+	}
+	turn entity "%SELF%" west
+}
+interact-ch2-jackob-rtfm {
+	// can't use a zigzag for this kind of safety check!
+	if variable ch2-storyflag-round is not 3
+		then goto null_script
+	copy face-player
+	show dialog {
+		SELF
+		"We're doing just fine here, %PLAYER%, but don't you dwaddle too long. Time is slipping away from us."
+		"There's so little we can do to help you right now, yet all I feel is this increasing urgency, like a vise tightening around my chest."
+		"Doom is coming, and only you can head it off. Please hurry."
+	}
+	turn entity "%SELF%" south
+}
+interact-ch2-bert-rtfm {
+	// can't use a zigzag for this kind of safety check!
+	if variable ch2-storyflag-round is not 1
+		then goto null_script
+	copy face-player
+	show dialog {
+		SELF
+		"This morning we could not find the book you need, but I want to find it still."
+		"Still I am looking. I will bring it if I find it."
+	}
+	turn entity "%SELF%" north
+}
 

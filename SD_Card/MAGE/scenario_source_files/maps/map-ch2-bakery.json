@@ -301,6 +301,19 @@
                  "width":0,
                  "x":216.678966789668,
                  "y":292.841328413284
+                },
+            
+                {
+                 "class":"",
+                 "height":0,
+                 "id":45,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-61,
+                 "y":-65
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -342,6 +355,11 @@
                          "name":"on_interact",
                          "type":"string",
                          "value":"interact-ch2-baker"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-baker"
                         }, 
                         {
                          "name":"on_tick",
@@ -659,6 +677,35 @@
                  "width":32,
                  "x":133,
                  "y":241
+                },
+            
+                {
+                 "class":"",
+                 "gid":242,
+                 "height":32,
+                 "id":48,
+                 "name":"Jackob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jackob-bakery"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-jackob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":88,
+                 "y":225
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -689,7 +736,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":45,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -716,6 +763,10 @@
         {
          "firstgid":227,
          "source":"..\/entities\/entity-null.json"
+        }, 
+        {
+         "firstgid":229,
+         "source":"..\/entities\/entity-village_elder.json"
         }],
  "tilewidth":32,
  "type":"map",

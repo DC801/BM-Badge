@@ -222,26 +222,6 @@
                 }, 
                 {
                  "class":"",
-                 "height":0,
-                 "id":35,
-                 "name":"walk_from-west",
-                 "polyline":[
-                        {
-                         "x":-139.5,
-                         "y":41.5
-                        }, 
-                        {
-                         "x":-121.2686,
-                         "y":41.328701
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":152.5,
-                 "y":127
-                }, 
-                {
-                 "class":"",
                  "gid":235,
                  "height":40,
                  "id":36,
@@ -260,12 +240,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":321
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -293,12 +268,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":319
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -326,18 +296,25 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"null_script"
-                        }, 
-                        {
-                         "name":"path",
-                         "type":"object",
-                         "value":320
+                         "value":"face-player"
                         }],
                  "rotation":0,
                  "visible":true,
                  "width":32,
                  "x":98.5,
                  "y":114.5
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":39,
+                 "name":"hiding-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":-69,
+                 "y":-115
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -346,7 +323,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":39,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",

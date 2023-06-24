@@ -15,16 +15,30 @@ look-ch2-town {
 
 /* ---------- ON_LOAD ---------- */
 
+ch2-setup-alfonso-verthandi {
+	teleport entity Alfonso to geometry alfonso-verthandi-spot
+	turn entity Alfonso west
+	turn entity Verthandi east
+	set entity Alfonso interact_script to interact-ch2-alfonso-verthandi
+	set entity Verthandi interact_script to interact-ch2-alfonso-verthandi
+}
+
 on_load-ch2-town {
 	// cutscene interrupt:
 	if (warp state is cutscene-escort) {
 		goto ch2-escort-cutscene
 	}
 
-	// map state:
-	set entity Jackob tick_script to yeet
-	set entity Alfonso tick_script to yeet
-	set entity Bert tick_script to yeet
+	// elders:
+	set entity Bert tick_script to yeet // always hiding
+	if (variable ch2-storyflag-round is < 5) {
+		set entity Jackob tick_script to yeet // always hiding before end
+		if (variable ch2-storyflag-round is 2) {
+			copy ch2-setup-alfonso-verthandi
+		} else {
+			set entity Alfonso tick_script to yeet
+		}
+	}
 
 	// walking out of doorways:
 	set player control to off
@@ -181,3 +195,54 @@ interact-ch2-verthandi {
 	turn entity "%SELF%" south
 }
 
+interact-ch2-alfonso-verthandi {
+	turn entity Alfonso toward entity "%PLAYER%"
+	turn entity Verthandi toward entity "%PLAYER%"
+	show dialog {
+		Alfonso "You know, miss Verthandi here is very knowledgeable about the nature of reality and our relationship to our digital environment."
+	}
+	turn entity Verthandi toward entity Alfonso
+	show dialog {
+		Verthandi "Oh, you're too kind! I am only a hobbyist when it comes to such topics. There is always more to learn."
+	}
+	turn entity Verthandi toward entity "%PLAYER%"
+	show dialog {
+		Alfonso "In any case, we are brainstorming things we might do to help you on your quest."
+		Verthandi "We will at least wish you luck!"
+	}
+	turn entity Alfonso toward entity Verthandi
+	turn entity Verthandi toward entity Alfonso
+}
+
+interact-ch2-jackob-end {
+	// can't use a zigzag for this kind of safety check!
+	if variable ch2-storyflag-round is not >= 5
+		then goto null_script
+	copy face-player
+	show dialog {
+		SELF "Ah, %PLAYER%, well done!"
+	}
+	if (flag wonthedemo is false) {
+		// need to check this again because it's a new script (due to zigzagging)
+		if variable ch2-storyflag-round is not >= 5
+			then goto null_script
+		show dialog {
+			SELF "But you know, %PLAYER%, it seems like you still haven't finished chapter 1 in this save file."
+			"I'm not angry, just disappointed."
+			"...Just kidding. If the game didn't want you to beat chapter 2 before chapter 1, it should have tried harder to stop you!"
+			"In all seriousness, do feel free to give chapter 1 a go."
+		}
+	}
+	set entity "%SELF%" interact_script to interact-ch2-jackob-end // RESET
+}
+
+interact-ch2-alfonso-end {
+	// can't use a zigzag for this kind of safety check!
+	if variable ch2-storyflag-round is not >= 5
+		then goto null_script
+	copy face-player
+	show dialog {
+		SELF "Good job, %PLAYER%!"
+		"Looks like you can have a well-deserved break while we prepare things for the next dungeon."
+	}
+}

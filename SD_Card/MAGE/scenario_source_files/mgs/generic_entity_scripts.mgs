@@ -154,6 +154,8 @@ button_success_script {
 
 yeet {
 	teleport entity "%SELF%" to geometry "hiding-spot"
+	set entity "%SELF%" interact_script to null_script
+	set entity "%SELF%" look_script to null_script
 	set entity "%SELF%" name to " "
 	goto null_script
 }

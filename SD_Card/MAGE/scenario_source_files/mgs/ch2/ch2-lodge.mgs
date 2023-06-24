@@ -17,6 +17,11 @@ look-ch2-lodge {
 
 on_load-ch2-lodge {
 	// do unique stuff first (but turn serial / player control off first, if you do)
+	if (variable ch2-storyflag-round is not 1) {
+		set entity Alfonso tick_script to yeet
+		set entity Jackob tick_script to yeet
+	}
+
 	if (warp state is walk_from-north) {
 		set player control to off
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
@@ -37,6 +42,17 @@ on_tick-ch2-lodge {
 		load map ch2-lodge-rtfm
 	}
 	set map tick_script to on_tick-ch2-lodge // reset
+}
+
+look-left-sometimes {
+	turn entity "%SELF%" west
+	wait 800ms
+	turn entity "%SELF%" north
+	wait 3800ms
+	turn entity "%SELF%" west
+	wait 500ms
+	turn entity "%SELF%" north
+	wait 2500ms
 }
 
 /* ---------- EXIT STUFF ---------- */
@@ -63,3 +79,40 @@ interact-ch2-cat-lodge {
 	}
 }
 
+interact-ch2-jackob-library {
+	show dialog {
+		SELF
+		"I hate geese. Especially that one."
+		"It keeps staring at me. I can't concentrate on what I'm doing."
+	}
+}
+
+const!( $bookcount = 4)
+
+interact-ch2-alfonso-library {
+	mutate ch2-alfonso-library-count + 1
+	mutate ch2-alfonso-library-count % $bookcount
+	if (variable ch2-alfonso-library-count is 1) {
+		show dialog {
+			SELF "Oh, goodness! It's \"The Importance of Being Earnest.\" I remember this play. Twenty years ago, Jackob and I did a reading of it with..."
+		}
+	} else if (variable ch2-alfonso-library-count is 2) {
+		show dialog {
+			SELF "Aha, \"A Brief History of Time!\" You know, I've always wanted learn about time and space and the universe and all that. And it isn't very long...."
+		}
+	} else if (variable ch2-alfonso-library-count is 3) {
+		show dialog {
+			SELF "Oho, \"The Complete Plays of Gilbert and Sullivan.\" I think I memorized one of their patter songs once. But was it from Pinafore or Penzance?"
+		}
+	} else {
+		show dialog {
+			SELF "Oh, look at that. \"Rendezvous with Rama,\" but what a stunning cover! I don't recognize this edition. Who publizhed this one? Gollancz?"
+		}
+	}
+	copy face-player
+	show dialog {
+		SELF "Yes, yes, I'm getting work done! What does it look like I'm doing?"
+	}
+	turn entity "%SELF%" north
+	set entity "%SELF%" interact_script to interact-ch2-alfonso-library // RESET
+}

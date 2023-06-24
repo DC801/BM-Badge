@@ -299,6 +299,81 @@
                  "width":16,
                  "x":333,
                  "y":263
+                }, 
+                {
+                 "class":"",
+                 "gid":233,
+                 "height":40,
+                 "id":49,
+                 "name":"Alfonso",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-alfonso-rtfm"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-alfonso"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":138,
+                 "y":223
+                }, 
+                {
+                 "class":"",
+                 "gid":253,
+                 "height":40,
+                 "id":50,
+                 "name":"Bert",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-bert-rtfm"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-bert"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":360,
+                 "y":220
+                },
+            
+                {
+                 "class":"",
+                 "gid":222,
+                 "height":32,
+                 "id":52,
+                 "name":"Jackob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jackob-rtfm"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-jackob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":""
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":358,
+                 "y":241
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -314,26 +389,6 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":44,
-                 "name":"walk_from-north",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":17.5
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":272,
-                 "y":190
-                }, 
-                {
-                 "class":"",
-                 "height":0,
                  "id":45,
                  "name":"warp-spot",
                  "point":true,
@@ -346,42 +401,14 @@
                 {
                  "class":"",
                  "height":0,
-                 "id":46,
-                 "name":"walk_from-east",
-                 "polyline":[
-                        {
-                         "x":-104.325,
-                         "y":-3.90331
-                        }, 
-                        {
-                         "x":-123.325,
-                         "y":-3.90331
-                        }],
+                 "id":48,
+                 "name":"hiding-spot",
+                 "point":true,
                  "rotation":0,
                  "visible":true,
                  "width":0,
-                 "x":488,
-                 "y":228
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":47,
-                 "name":"walk_from-west",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":18.2314,
-                         "y":-0.171299
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":160,
-                 "y":224
+                 "x":-36,
+                 "y":-49
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -417,7 +444,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":48,
+ "nextobjectid":53,
  "orientation":"orthogonal",
  "properties":[
         {

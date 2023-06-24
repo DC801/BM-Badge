@@ -15,10 +15,20 @@ look-ch2-bakery {
 	}
 }
 
+look-ch2-baker {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO on_look baker"
+	}
+}
+
 /* ---------- ON_LOAD ---------- */
 
 on_load-ch2-bakery {
 	// do unique stuff first (but turn serial / player control off first, if you do)
+	if (variable ch2-storyflag-round is not 2) {
+		set entity Jackob tick_script to yeet
+	}
 	goto ch2-map-init
 }
 
@@ -46,4 +56,13 @@ interact-ch2-baker {
 		SELF "Sorry, can't talk now."
 		"But good luck conquering the serial dungeon."
 	}
+}
+
+interact-ch2-jackob-bakery {
+	copy face-player
+	show dialog {
+		SELF "I'm just taking a little shopping break. Sometimes you just really want some fresh bread, you know?"
+		"Mmmm, fresh bread!"
+	}
+	turn entity "%SELF%" south
 }

@@ -113,10 +113,9 @@ Nethack-like
 
 Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer to script scaffolding (the exact convos may be still unwritten); see `ch2-PLANNING.md` for the sprites checklist.
 
-- INTRO
-	- ch2-storyflag-round = 0
-		- [ ] Village elders are all right outside
-		- [ ] Villagers direct you to western dungeon (castle)
+### PLOT
+
+- INTRO (`ch2-storyflag-round` = 0)
 	- [x] Intro to Lambda
 		- [ ] Connecting the artifact on Windows
 		- [ ] Connecting the artifact on MacOS / Linux
@@ -127,10 +126,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 		- [x] Waiting for completion
 	- Starting item: enclosure/motherboard (room 1)
 
-- FIRST ROUND: normal
-	- ch2-storyflag-round = 1
-		- [ ] Village elders are in the library or various places (not in the same room though)
-		- [ ] Villagers ask how things are going
+- FIRST ROUND: normal (`ch2-storyflag-round` = 1)
 	- [x] (1.) `monitor` (room 11)
 	- [x] (2.) `heatsink` (room 23)
 		- [x] `cactuscooler` (Bob's club)
@@ -138,9 +134,7 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [x] Bert secret cutscene happens when all of the above are done
 	- [x] Lambda gives next round of the parts list
 
-- SECOND ROUND: abstract
-	- ch2-storyflag-round = 2
-		- [ ] Village elders are all around village
+- SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
 	- [x] (4.) `keyboard` (keytar) (room 31)
 	- [ ] (5.) `mouse` (rodent) (room 33)
 	- [ ] (6.) `harddrive`
@@ -150,29 +144,66 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [ ] Bert "any messages yet?" convo happens when all of the above are done
 	- [ ] Lambda gives next round of the parts list
 
-- THIRD ROUND: desperate
-	- ch2-storyflag-round = 3
-		- [ ] Village elders are both in the inner sanctum
+- THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)
 		- [x] `abacus` (room 21)
 	- [ ] Lambda shows you how to `warp` and invites you to room #99 
 
-- FINAL ROUND: software
-	- ch2-storyflag-round = 4
-		- [ ] Village elders are waiting outside
+- FINAL ROUND: software (`ch2-storyflag-round` = 4)
+	- [~] Lambda talks to you in person
 	- [ ] (10.) `mainframeos` (room 99) (might be handled differently)
-		- [ ] Cutscene: OS installation wizard
-	- [ ] End cutscene
+	- [ ] Cutscene: OS installation wizard
+	- [ ] "You did it" cutscene
 	- [ ] Credits
 
-- AFTERWARD
-	- ch2-storyflag-round = 5
-		- [ ] Villagers speculate on the next area: software!
-		- [ ] Village elders say how you can have a break now
+- AFTERWARD (`ch2-storyflag-round` = 5)
+	- [ ] Post-credits sequence: Alfonso mentions one of the Big Bad's powers that most people don't know about
+	- [ ] Go about the overworld now
 
-### Scripts needed
+### Village elder locations
+
+ALL DONE!
+
+- INTRO (`ch2-storyflag-round` = 0)
+	- [x] All outside castle entrance
+	- [x] All encouraging you
+- FIRST ROUND: normal (`ch2-storyflag-round` = 1)
+	- [x] Alfonso: in the library, getting distracted by random books on accident
+	- [x] Jackob: in the library, in a staring contest with the goose
+	- [x] Bert: in the inner sanctum, looking for the book they lost
+	- Bert visits you
+- SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
+	- [x] Alfonso: talking to Verthandi
+	- [x] Jackob: in the bakery, shopping for fresh bread
+- THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
+	- [x] Jackob in inner sanctum, worried about the time you are taking
+	- [x] Alfonso in inner sanctum, worried about Bert
+- FINAL ROUND: software (`ch2-storyflag-round` = 4)
+	- [x] Jackob/Alfonso waiting outside
+	- [x] Jackob/Alfonso urging you to finish
+- AFTERWARD (`ch2-storyflag-round` = 5)
+	- [x] In the main square
+	- [x] Mention how you can have a break now
+		- [x] If you haven't beaten part 1, Jackob invites you to do so now
+
+### Villager dialog
+
+- INTRO (`ch2-storyflag-round` = 0)
+	- [ ] Villagers direct you to western dungeon (castle)
+- FIRST ROUND: normal (`ch2-storyflag-round` = 1)
+	- [ ] Villagers ask how things are going
+- SECOND ROUND: abstract (`ch2-storyflag-round` = 2)
+	- (DITTO ABOVE)
+- THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
+	- [ ] Player asks villages about Bert, they haven't seen him
+- FINAL ROUND: software (`ch2-storyflag-round` = 4)
+	- (DITTO ABOVE)
+- AFTERWARD (`ch2-storyflag-round` = 5)
+	- [ ] Speculate on next location: software!
+
+### Scripts needed for story items
 
 For each item: (Copy existing pattern wherever these are found)
 
