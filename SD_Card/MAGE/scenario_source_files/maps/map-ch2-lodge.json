@@ -90,8 +90,8 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":52,
-                 "y":264
+                 "x":38,
+                 "y":258
                 }, 
                 {
                  "class":"",
@@ -118,14 +118,14 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":582,
-                 "y":269
+                 "x":411,
+                 "y":161
                 }, 
                 {
                  "class":"",
                  "height":0,
                  "id":29,
-                 "name":"lodge-hidingplace",
+                 "name":"hiding-spot",
                  "point":true,
                  "rotation":0,
                  "visible":true,
@@ -214,6 +214,57 @@
                  "width":16,
                  "x":293,
                  "y":332
+                }, 
+                {
+                 "class":"",
+                 "gid":209,
+                 "height":32,
+                 "id":125,
+                 "name":"Jackob",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-jackob-library"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-jackob"
+                        }, 
+                        {
+                         "name":"on_tick",
+                         "type":"string",
+                         "value":"look-left-sometimes"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":95,
+                 "y":256
+                }, 
+                {
+                 "class":"",
+                 "gid":163,
+                 "height":40,
+                 "id":126,
+                 "name":"Alfonso",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-alfonso-library"
+                        }, 
+                        {
+                         "name":"on_look",
+                         "type":"string",
+                         "value":"look-ch2-alfonso"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":40,
+                 "x":534,
+                 "y":254
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -290,46 +341,6 @@
                  "width":0,
                  "x":337,
                  "y":281
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":122,
-                 "name":"walk_from-east",
-                 "polyline":[
-                        {
-                         "x":-104.325,
-                         "y":-3.90331
-                        }, 
-                        {
-                         "x":-123.325,
-                         "y":-3.90331
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":573,
-                 "y":284
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":123,
-                 "name":"walk_from-west",
-                 "polyline":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":18.2314,
-                         "y":-0.171299
-                        }],
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":206,
-                 "y":280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -363,55 +374,7 @@
          "draworder":"topdown",
          "id":8,
          "name":"ring_zero",
-         "objects":[
-                {
-                 "class":"",
-                 "gid":727,
-                 "height":64,
-                 "id":96,
-                 "name":"Ring Zero[0]",
-                 "rotation":0,
-                 "visible":true,
-                 "width":192,
-                 "x":240,
-                 "y":696
-                }, 
-                {
-                 "class":"",
-                 "gid":728,
-                 "height":64,
-                 "id":97,
-                 "name":"Ring Zero[1]",
-                 "rotation":0,
-                 "visible":true,
-                 "width":192,
-                 "x":240,
-                 "y":760
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":100,
-                 "name":"ring_zero_when_off_screen[0]",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":336,
-                 "y":680
-                }, 
-                {
-                 "class":"",
-                 "height":0,
-                 "id":101,
-                 "name":"ring_zero_when_off_screen[1]",
-                 "point":true,
-                 "rotation":0,
-                 "visible":true,
-                 "width":0,
-                 "x":336,
-                 "y":744
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -444,7 +407,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":124,
+ "nextobjectid":128,
  "orientation":"orthogonal",
  "properties":[
         {

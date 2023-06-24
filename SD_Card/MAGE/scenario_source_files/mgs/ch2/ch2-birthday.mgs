@@ -263,9 +263,9 @@ birthday-march-on-own-path-player {
 	wait 600ms
 	walk entity "%PLAYER%" to geometry birthday-alfonso over 400ms
 	turn entity "%PLAYER%" west
-	wait 100ms
-	pan camera to entity "%PLAYER%" over 600ms
 	wait 250ms
+	pan camera to entity "%PLAYER%" over 400ms
+	wait 300ms
 	show dialog {
 		PLAYER "All right. Take a deep breath.\nYou can do it, %PLAYER%."
 	}

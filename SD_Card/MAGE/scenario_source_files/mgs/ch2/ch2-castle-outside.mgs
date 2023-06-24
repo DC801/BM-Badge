@@ -20,6 +20,23 @@ on_load-ch2-castle-outside {
 	if (flag ch2-full-escort-cutseen is false) {
 		// TODO: cutscene: leading you inside
 	}
+	// Village elders hiding
+	if (variable ch2-storyflag-round is not 0) {
+		set entity Bert tick_script to yeet
+		}
+	if (
+		variable ch2-storyflag-round is 1
+		|| variable ch2-storyflag-round is 2
+		|| variable ch2-storyflag-round is 3
+		|| variable ch2-storyflag-round is >= 5
+	) {
+		set entity Jackob tick_script to yeet
+		set entity Alfonso tick_script to yeet
+		}
+	show serial dialog {
+		"<g>DEBUG</>: ch2-storyflag-round = $ch2-storyflag-round$"
+	}
+	// animations
 	if (warp state is walk_from-north) {
 		walk entity "%PLAYER%" along geometry walk_from-north over 200ms
 	} else if (warp state is walk_from-east) {
@@ -28,6 +45,7 @@ on_load-ch2-castle-outside {
 			// borrowing this from town scripts
 		fade in camera from #000000 over 400ms
 	}
+	// unique stuff done
 	goto ch2-map-init // (player control comes back here)
 }
 
@@ -73,9 +91,23 @@ on_go-castle-outside-east {
 /* ---------- ENTITIES ---------- */
 
 interact-ch2-alfonso-outside {
-	show dialog {
-		SELF "Go on in! You'll do fine!"
+	if (variable ch2-storyflag-round is 4) {
+		if (flag ch2-alfonso-almostdone is false) {
+			show dialog {
+				SELF "Word on the street is that you're almost done repairing the artifact." "Very well done so far, but keep going!"
+			}
+			set flag ch2-alfonso-almostdone to true
+		} else {
+			show dialog {
+				SELF "Keep going! We need that artifact working!"
+			}
+		}
+	} else {
+		show dialog {
+			SELF "Go on in! You'll do fine!"
+		}
 	}
+	set entity "%SELF%" interact_script to interact-ch2-alfonso-outside // RESET
 }
 
 interact-ch2-bert-outside {
@@ -85,8 +117,21 @@ interact-ch2-bert-outside {
 }
 
 interact-ch2-jackob-outside {
-	show dialog {
-		SELF "XA will be able to help you on the inside. Good luck!"
+	if (variable ch2-storyflag-round is 4) {
+		if (flag ch2-jackob-almostdone is false) {
+			show dialog {
+				SELF "There's a buzz around town that you're nearly finished. Very impressive."
+			}
+			set flag ch2-jackob-almostdone to true
+		}
+		show dialog {
+			SELF "Don't stop now. Get that software installed quick!"
+		}
+	} else {
+		show dialog {
+			SELF "XA will be able to help you on the inside. Good luck."
+		}
 	}
+	set entity "%SELF%" interact_script to interact-ch2-jackob-outside // RESET
 }
 

@@ -168,7 +168,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_goat_high"
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,
@@ -448,7 +448,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-alfonso-end"
                         }, 
                         {
                          "name":"on_tick",
@@ -476,7 +476,7 @@
                         {
                          "name":"on_interact",
                          "type":"string",
-                         "value":""
+                         "value":"interact-ch2-jackob-end"
                         }, 
                         {
                          "name":"on_tick",
@@ -570,7 +570,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"check_if_player_is_goat_high"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -1317,6 +1317,18 @@
                  "width":0,
                  "x":1391,
                  "y":1258
+                }, 
+                {
+                 "class":"",
+                 "height":0,
+                 "id":333,
+                 "name":"alfonso-verthandi-spot",
+                 "point":true,
+                 "rotation":0,
+                 "visible":true,
+                 "width":0,
+                 "x":1177,
+                 "y":1013
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1813,7 +1825,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":333,
+ "nextobjectid":334,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
