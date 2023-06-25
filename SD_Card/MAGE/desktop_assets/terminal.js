@@ -9,6 +9,13 @@ var appendMessage = function (input, classname) {
 	newMessage.innerHTML = convert.toHtml(input);
 	outputBuffer.appendChild(newMessage);
 	outputBuffer.scrollTo(0, outputBuffer.scrollHeight);
+	// system bell
+	if (input.includes("\u0007")) {
+		outputBuffer.className = "flash";
+		requestAnimationFrame(function () {
+			outputBuffer.className = "";
+		});
+	}
 };
 
 window.addEventListener('message', function (messageEvent) {

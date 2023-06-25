@@ -60,6 +60,12 @@ body.game_body .container * + * {
 	white-space: pre-wrap;
 	display: block;
 	overflow-y: scroll;
+	transition-property: all;
+	transition-duration: 500ms;
+}
+#output.flash {
+	transition-duration: 0ms;
+	background-color: #666;
 }
 #input {
 	border-top: 1px solid #333;

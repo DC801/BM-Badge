@@ -689,7 +689,8 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently NOT trapped.\nWould you like me to open a serial dialog?"
+				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently NOT trapped.",
+				"Would you like me to open a serial dialog?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
@@ -709,7 +710,8 @@
 			"alignment": "BOTTOM_LEFT",
 			"entity": "%SELF%",
 			"messages": [
-				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently trapped.\nWould you like me to close the serial dialog?"
+				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently trapped.",
+				"Would you like me to close the serial dialog?"
 			],
 			"response_type": "SELECT_FROM_SHORT_LIST",
 			"options": [
