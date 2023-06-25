@@ -47,7 +47,6 @@ enum MageDialogResponseType : uint8_t {
 
 
 typedef struct {
-	// TODO: portraits, after we have some graphics for them
 	uint16_t nameStringIndex;
 	uint16_t borderTilesetIndex;
 	MageDialogScreenAlignment alignment;

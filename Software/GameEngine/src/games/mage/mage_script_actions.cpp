@@ -2511,6 +2511,99 @@ void action_set_entity_movement_relative(uint8_t * args, MageScriptState * resum
 	}
 }
 
+void action_check_dialog_open(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t expectedBool;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckDialogOpen;
+	auto *argStruct = (ActionCheckDialogOpen*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	bool value = MageDialog->isOpen;
+	if(value == argStruct->expectedBool) {
+		MageScript->jumpScriptId = argStruct->successScriptId;
+	}
+}
+
+void action_check_serial_dialog_open(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t expectedBool;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	bool value = MageCommand->isInputTrapped;
+	if(value == argStruct->expectedBool) {
+		MageScript->jumpScriptId = argStruct->successScriptId;
+	}
+}
+
+
+void action_check_debug_mode(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint16_t successScriptId;
+		uint8_t expectedBool;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+	//endianness conversion for arguments larger than 1 byte:
+	argStruct->successScriptId = ROM_ENDIAN_U2_VALUE(argStruct->successScriptId);
+
+	bool value = MageGame->isEntityDebugOn;
+	if(value == argStruct->expectedBool) {
+		MageScript->jumpScriptId = argStruct->successScriptId;
+	}
+}
+
+void action_close_dialog(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t paddingA;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCloseDialog;
+	auto *argStruct = (ActionCloseDialog*)args;
+
+	MageDialog->closeDialog();
+}
+
+void action_close_serial_dialog(uint8_t * args, MageScriptState * resumeStateStruct)
+{
+	typedef struct {
+		uint8_t paddingA;
+		uint8_t paddingB;
+		uint8_t paddingC;
+		uint8_t paddingD;
+		uint8_t paddingE;
+		uint8_t paddingF;
+		uint8_t paddingG;
+	} ActionCheckSerialDialogOpen;
+	auto *argStruct = (ActionCheckSerialDialogOpen*)args;
+
+	MageCommand->cancelTrap();
+}
+
 
 ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_null_action,
@@ -2604,6 +2697,11 @@ ActionFunctionPointer actionFunctions[MageScriptActionTypeId::NUM_ACTIONS] = {
 	&action_unregister_serial_dialog_command,
 	&action_unregister_serial_dialog_command_argument,
 	&action_set_entity_movement_relative,
+	&action_check_dialog_open,
+	&action_check_serial_dialog_open,
+	&action_check_debug_mode,
+	&action_close_dialog,
+	&action_close_serial_dialog,
 };
 
 uint16_t getUsefulGeometryIndexFromActionGeometryId(

@@ -115,6 +115,11 @@ typedef enum : uint8_t {
 	UNREGISTER_SERIAL_DIALOG_COMMAND,
 	UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT,
 	SET_ENTITY_MOVEMENT_RELATIVE,
+	CHECK_DIALOG_OPEN,
+	CHECK_SERIAL_DIALOG_OPEN,
+	CHECK_DEBUG_MODE,
+	CLOSE_DIALOG,
+	CLOSE_SERIAL_DIALOG,
 	//this tracks the number of actions we're at:
 	NUM_ACTIONS
 } MageScriptActionTypeId;
@@ -322,6 +327,16 @@ void action_unregister_serial_dialog_command(uint8_t * args, MageScriptState * r
 void action_unregister_serial_dialog_command_argument(uint8_t * args, MageScriptState * resumeStateStruct);
 //Action Logic Type: I
 void action_set_entity_movement_relative(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_dialog_open(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_serial_dialog_open(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_check_debug_mode(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_close_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
+//Action Logic Type: I+C
+void action_close_serial_dialog(uint8_t * args, MageScriptState * resumeStateStruct);
 
 //typedef for the array of function pointers to script action functions:
 typedef void(*ActionFunctionPointer)(uint8_t * args, MageScriptState * resumeStateStruct);

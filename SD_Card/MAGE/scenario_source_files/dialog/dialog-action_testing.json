@@ -637,5 +637,91 @@
 				"Great Jeaoarb!"
 			]
 		}
+	],
+	"dialog-mage26-interact": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"Here is dialog part one!\nYou won't even be able to read it in time!\nHere's more words you can't read!"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"This is message you should not see"
+			]
+		},
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"You WON'T see this if the bug got fixed",
+				"Do you see this text?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "mage26-reset"
+				},
+				{
+					"label": "No",
+					"script": "mage26-reset"
+				}
+			]
+		}
+	],
+	"dialog-mage26-delay_interrupt": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"portrait": "codec-goose",
+			"name": "Metal Goose",
+			"border_tileset": "codec",
+			"messages": [
+				"HONK!"
+			]
+		}
+	],
+	"dialog-mage27-interact_closed": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently NOT trapped.\nWould you like me to open a serial dialog?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "mage27-reset_with_dialog"
+				},
+				{
+					"label": "No",
+					"script": "mage27-reset"
+				}
+			]
+		}
+	],
+	"dialog-mage27-interact_open": [
+		{
+			"alignment": "BOTTOM_LEFT",
+			"entity": "%SELF%",
+			"messages": [
+				"I test the action: CHECK_SERIAL_DIALOG_OPEN!\nThe serial console is currently trapped.\nWould you like me to close the serial dialog?"
+			],
+			"response_type": "SELECT_FROM_SHORT_LIST",
+			"options": [
+				{
+					"label": "Yes",
+					"script": "close_serial_dialog"
+				},
+				{
+					"label": "No",
+					"script": "null_script"
+				}
+			]
+		}
 	]
 }

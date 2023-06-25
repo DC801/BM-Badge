@@ -390,6 +390,20 @@ var actionFieldsMap = {
 		{propertyName: 'relative_direction', size: 1},
 		{propertyName: 'entity', size: 1},
 	],
+	CHECK_DIALOG_OPEN: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_SERIAL_DIALOG_OPEN: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CHECK_DEBUG_MODE: [
+		{propertyName: 'success_script', size: 2},
+		{propertyName: 'expected_bool', size: 1},
+	],
+	CLOSE_DIALOG: [],
+	CLOSE_SERIAL_DIALOG: [],
 };
 
 var actionNames = [
@@ -484,6 +498,11 @@ var actionNames = [
 	'UNREGISTER_SERIAL_DIALOG_COMMAND',
 	'UNREGISTER_SERIAL_DIALOG_COMMAND_ARGUMENT',
 	'SET_ENTITY_MOVEMENT_RELATIVE',
+	'CHECK_DIALOG_OPEN',
+	'CHECK_SERIAL_DIALOG_OPEN',
+	'CHECK_DEBUG_MODE',
+	'CLOSE_DIALOG',
+	'CLOSE_SERIAL_DIALOG',
 ];
 
 var specialKeywordsEnum = {
