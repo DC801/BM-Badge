@@ -9,7 +9,7 @@ settings for dialog {
 look-ch2-castle-12 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: BACK HALLWAY on_look text\n "
+		"TODO: CASTLE HALLWAY BACK on_look text\n "
 	}
 }
 
@@ -22,10 +22,10 @@ on_load-ch2-castle-12 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-12 is false) {
-		show serial dialog { "Discovered <bold><c>BACK HALLWAY</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>CASTLE HALLWAY BACK</>! Room added to map!" }
 		set flag ch2-seen-room-12 to true
 	} else {
-		show serial dialog { "Entering <bold>BACK HALLWAY</>..." }
+		show serial dialog { "Entering <bold>CASTLE HALLWAY BACK</>..." }
 	}
 	
 	if (

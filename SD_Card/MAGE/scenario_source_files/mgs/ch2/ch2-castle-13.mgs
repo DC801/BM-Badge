@@ -9,7 +9,7 @@ settings for dialog {
 look-ch2-castle-13 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: THRONE ROOM on_look text\n "
+		"TODO: CASTLE THRONE ROOM on_look text\n "
 	}
 }
 
@@ -22,10 +22,10 @@ on_load-ch2-castle-13 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-13 is false) {
-		show serial dialog { "Discovered <bold><c>THRONE ROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>CASTLE THRONE ROOM</>! Room added to map!" }
 		set flag ch2-seen-room-13 to true
 	} else {
-		show serial dialog { "Entering <bold>THRONE ROOM</>..." }
+		show serial dialog { "Entering <bold>CASTLE THRONE ROOM</>..." }
 	}
 	if (
 		flag ch2-installed-goldfish is true

@@ -9,7 +9,7 @@ settings for dialog {
 look-ch2-castle-33 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: HYDROPONICS on_look text\n "
+		"TODO: HYDROPONICS ROOM on_look text\n "
 	}
 }
 
@@ -22,10 +22,10 @@ on_load-ch2-castle-33 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-33 is false) {
-		show serial dialog { "Discovered <bold><c>HYDROPONICS</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>HYDROPONICS ROOM</>! Room added to map!" }
 		set flag ch2-seen-room-33 to true
 	} else {
-		show serial dialog { "Entering <bold>HYDROPONICS</>..." }
+		show serial dialog { "Entering <bold>HYDROPONICS ROOM</>..." }
 	}
 	if (
 		flag ch2-installed-mouse is true

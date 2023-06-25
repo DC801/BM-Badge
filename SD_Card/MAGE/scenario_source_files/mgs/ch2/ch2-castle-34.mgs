@@ -9,7 +9,7 @@ settings for dialog {
 look-ch2-castle-34 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: PANTRY on_look text\n "
+		"TODO: CASTLE PANTRY on_look text\n "
 	}
 }
 
@@ -22,10 +22,10 @@ on_load-ch2-castle-34 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-34 is false) {
-		show serial dialog { "Discovered the <bold><c>PANTRY</>! Room added to map!" }
+		show serial dialog { "Discovered the <bold><c>CASTLE PANTRY</>! Room added to map!" }
 		set flag ch2-seen-room-34 to true
 	} else {
-		show serial dialog { "Entering the <bold>PANTRY</>..." }
+		show serial dialog { "Entering the <bold>CASTLE PANTRY</>..." }
 	}
 	if (
 		flag ch2-installed-plate is true

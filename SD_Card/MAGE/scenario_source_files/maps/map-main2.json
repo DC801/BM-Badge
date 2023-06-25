@@ -168,7 +168,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":""
+                         "value":"check_if_player_is_goat_high"
                         }],
                  "rotation":0,
                  "visible":true,
@@ -570,7 +570,7 @@
                         {
                          "name":"on_tick",
                          "type":"string",
-                         "value":"check_if_player_is_goat_high"
+                         "value":""
                         }],
                  "rotation":0,
                  "visible":true,
