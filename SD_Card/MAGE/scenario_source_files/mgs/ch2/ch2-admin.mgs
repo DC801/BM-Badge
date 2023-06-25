@@ -9,7 +9,7 @@ const! (
 	$goto-round-2 = 3 // count of story flags through round 1
 	$goto-round-3 = 7 // count of story flags through round 2
 	$goto-round-4 = 9 // count of story flags through round 3
-	$total-ch2-flags = 10
+	$goto-round-5 = 10
 )
 
 ch2-count-flags {
@@ -26,9 +26,6 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	// abstract
-	if (flag ch2-installed-ramchips is true) {
-		mutate ch2-storyflags-tally + 1
-	}
 	if (flag ch2-installed-harddrive is true) {
 		mutate ch2-storyflags-tally + 1
 	}
@@ -39,6 +36,9 @@ ch2-count-flags {
 		mutate ch2-storyflags-tally + 1
 	}
 	// desperate
+	if (flag ch2-installed-ramchips is true) {
+		mutate ch2-storyflags-tally + 1
+	}
 	if (flag ch2-installed-clock is true) {
 		mutate ch2-storyflags-tally + 1
 	}
@@ -92,16 +92,6 @@ ch2-interact-mainframe {
 		}
 	}
 	// abstract
-	if (flag ch2-installed-ramchips is false) {
-		if (flag ch2-carrying-ramchips is true) {
-			show dialog {
-				name "" "(Now installing... the RAM chips!)"
-				"(The RAM chips went in with a terrifying SNAP, but they seem snug now. You better wash your hands, though.)"
-			}
-			set flag temp to true
-			copy ch2-install-ramchips
-		}
-	}
 	if (flag ch2-installed-harddrive is false) {
 		if (flag ch2-carrying-harddrive is true) {
 			show dialog {
@@ -133,6 +123,16 @@ ch2-interact-mainframe {
 		}
 	}
 	// desperate
+	if (flag ch2-installed-ramchips is false) {
+		if (flag ch2-carrying-ramchips is true) {
+			show dialog {
+				name "" "(Now installing... the RAM chips!)"
+				"(The RAM chips went in with a terrifying SNAP, but they seem snug now. You better wash your hands, though.)"
+			}
+			set flag temp to true
+			copy ch2-install-ramchips
+		}
+	}
 	if (flag ch2-installed-clock is false) {
 		if (flag ch2-carrying-clock is true) {
 			show dialog {
@@ -211,7 +211,6 @@ ch2-count-flags-done {
 }
 
 ch2-start-round-2 {
-	mutate ch2-storyflag-round = 2
 	set entity "%PLAYER%" animation to 0
 	copy ch2-cutscene-bert-secret
 	set flag ch2-lambda-paging to true
@@ -228,19 +227,34 @@ ch2-start-round-2 {
 		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
 	}
 	set player control on
+	mutate ch2-storyflag-round = 2
 	goto ch2-do-init-on-end
 }
 ch2-start-round-3 {
-	mutate ch2-storyflag-round = 3
 	show serial dialog { "\t<g>DEBUG: Bert 'any messages?' cutscene goes here!</>" }
 	show serial dialog { "\t<g>DEBUG: Lambda's next round of parts list cutscene goes here! (Round 3)</>" }
 	// TODO: cutscene
+	set flag ch2-lambda-paging to true
+	set player control off
+	wait 700ms
+	// TODO: Play bell on terminal
+	show dialog {
+		PLAYER "...? Oh, that's the terminal bell. I guess Lambda is calling me."
+	}
+	show serial dialog spacer
+	show serial dialog {
+		"(Lambda wants to talk to you! Type <c>MAN</> to answer.)"
+	}
+	set player control on
+
+	mutate ch2-storyflag-round = 3
 	goto ch2-do-init-on-end
 }
 ch2-start-round-4 {
 	show serial dialog { "\t<g>DEBUG: Lambda invites you to room #99 cutscene! (Round 4)</>" }
-	show serial dialog { "\t<g>DEBUG: the Wiz is now ready to install thing!</>" }
+	show serial dialog { "\t<g>DEBUG: the Wiz installs thing! More cutscene I guess!</>" }
 	// TODO cutscene
+	mutate ch2-storyflag-round = 4
 	goto ch2-do-init-on-end
 }
 
@@ -249,4 +263,63 @@ ch2-interact-mainframe-madamada {
 		PLAYER "What is this hunk of junk?"
 	}
 	set entity "%SELF%" interact_script to ch2-interact-mainframe
+}
+
+// DEBUG
+
+register-storyflag {
+	register storyflag -> ch2-debug-storyflag
+	register storyflag + "0" -> ch2-debug-storyflag-0
+	register storyflag + "1" -> ch2-debug-storyflag-1
+	register storyflag + "2" -> ch2-debug-storyflag-2
+	register storyflag + "3" -> ch2-debug-storyflag-3
+	register storyflag + "4" -> ch2-debug-storyflag-4
+	register storyflag + "5" -> ch2-debug-storyflag-5
+}
+
+ch2-debug-storyflag {
+	show serial dialog spacer
+	show serial dialog {
+		"<g>DEBUG</>: Set flag 'ch2-storyflag-round' to what value? (0-5)"
+		_ "0" : ch2-debug-storyflag-0
+		_ "1" : ch2-debug-storyflag-1
+		_ "2" : ch2-debug-storyflag-2
+		_ "3" : ch2-debug-storyflag-3
+		_ "4" : ch2-debug-storyflag-4
+		_ "5" : ch2-debug-storyflag-5
+	}
+	show serial dialog {
+		"Nothing changed."
+	}
+}
+
+ch2-debug-storyflag-0 {
+	mutate ch2-storyflag-round = 0
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-1 {
+	mutate ch2-storyflag-round = 1
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-2 {
+	mutate ch2-storyflag-round = 2
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-3 {
+	mutate ch2-storyflag-round = 3
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-4 {
+	mutate ch2-storyflag-round = 4
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-5 {
+	mutate ch2-storyflag-round = 5
+	goto ch2-debug-storyflag-wrapup
+}
+ch2-debug-storyflag-wrapup {
+	show serial dialog spacer
+	show serial dialog {
+		"Flag 'ch2-storyflag-round' is now $ch2-storyflag-round$"
+	}
 }

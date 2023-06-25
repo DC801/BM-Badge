@@ -36,13 +36,13 @@ look-ch2-mainframe {
 		show serial dialog { "\t- a power supply (1kw)" }
 	}
 	// abstract
-	if (flag ch2-installed-ramchips is true) {
-		show serial dialog { "\t- a bunch of RAM chips" }
-	}
 	if (flag ch2-installed-harddrive is true) {
 		show serial dialog { "\t- a hard drive" }
 	}
 	// desperate
+	if (flag ch2-installed-ramchips is true) {
+		show serial dialog { "\t- a bunch of RAM chips" }
+	}
 	if (flag ch2-installed-clock is true) {
 		show serial dialog { "\t- a system clock" }
 	}
@@ -203,9 +203,9 @@ debug-round2 {
 	copy debug-get-keyboard
 	copy debug-get-mouse
 	copy debug-get-harddrive
-	copy debug-get-ramchips
 }
 debug-round3 {
+	copy debug-get-ramchips
 	copy debug-get-clock
 	copy debug-get-cpu
 }

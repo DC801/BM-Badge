@@ -63,6 +63,11 @@ command-man-normal {
 			goto ch2-bert-secret-lambda-intro
 		}
 	}
+	if (flag ch2-cutseen-bert-message is true) {
+		if (flag ch2-lambda-message-prelude is false) {
+			goto ch2-bert-message-lambda-intro
+		}
+	}
 	
 	if (flag ch2-toot-done is true) {
 		goto command-man-normal-convo

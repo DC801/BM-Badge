@@ -46,12 +46,16 @@ command-inventory {
 		set flag temp to true
 	}
 	// abstract
-	if (flag ch2-carrying-ramchips is true) {
-		show serial dialog { "\tramchips" }
-		set flag temp to true
-	}
 	if (flag ch2-carrying-harddrive is true) {
 		show serial dialog { "\thard drive" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-plate is true) {
+		show serial dialog { "\tdinner plate" }
+		set flag temp to true
+	}
+	if (flag ch2-carrying-needle is true) {
+		show serial dialog { "\tphonograph needle" }
 		set flag temp to true
 	}
 	if (flag ch2-carrying-keyboard is true) {
@@ -63,6 +67,10 @@ command-inventory {
 		set flag temp to true
 	}
 	// desperate
+	if (flag ch2-carrying-ramchips is true) {
+		show serial dialog { "\tramchips" }
+		set flag temp to true
+	}
 	if (flag ch2-carrying-clock is true) {
 		show serial dialog { "\tclock" }
 		set flag temp to true
