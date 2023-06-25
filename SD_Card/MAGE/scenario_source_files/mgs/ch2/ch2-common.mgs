@@ -5,6 +5,10 @@ serial dialog spacer {
 	"------------"
 	" "
 }
+serial dialog lambda-over {
+	// check if there's a blank line just before using this dialog (there should be one)
+	"<bold>lambda-talk</> connection closed succesfully"
+}
 
 // QUICK DEBUGS
 
@@ -100,6 +104,9 @@ ch2-map-init {
 			if (flag ch2-permission-to-fuse is true) {
 				copy register-fuse
 			}
+			if (variable ch2-storyflag-round is > 0) {
+				copy register-parts
+			}
 		} else { // you're not in the castle and the toot isn't done yet
 			set serial control off
 		}
@@ -117,9 +124,6 @@ ch2-map-init {
 
 	// DEBUG
 	register storyflag -> ch2-debug-storyflag
-	show serial dialog {
-		"\t<g>DEBUG:</> run <c>STORYFLAG</> to choose storyflag round (ch2)"
-	}
 	// END DEBUG
 
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)

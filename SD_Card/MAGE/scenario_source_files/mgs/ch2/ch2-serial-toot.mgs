@@ -184,8 +184,8 @@ ch2-toot-step3-halftime {
 		"\tAnyway, for the final demonstration, I'll end our conversation so you can try using the magic word <c>MAP</>. Here, I'll grant you permission to use the map program."
 		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
 		" "
-		"(Lambda appears to have \"hung up\")"
 	}
+	show serial dialog lambda-over
 	set flag ch2-map-granted to true
 	mutate ch2-map-test = 1
 	copy register-map
@@ -220,8 +220,8 @@ ch2-toot-step3-summary {
 		"<m>LAMBDA</>: Try running the <c>MAP</> command using the artifact."
 		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
 		" "
-		"(Lambda appears to have \"hung up\")"
 	}
+	show serial dialog lambda-over
 }
 
 ch2-toot-step3-end {

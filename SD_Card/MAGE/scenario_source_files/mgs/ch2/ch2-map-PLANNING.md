@@ -226,8 +226,8 @@ For each item: (Copy existing pattern wherever these are found)
 4. In file `ch2/ch2-serial-toot.mgs`
 	1. Make serial dialog `ch2-describe-ITEM`
 	2. Add a new substep to script `ch2-toot-step-5X`
-5. In file `commands/command-man.mgs`
+5. In file `commands/command-parts.mgs`
 	1. Make script `ch2-describe-ITEM`: `show serial dialog ch2-describe-ITEM`
-	2. Make script `ch2-lambda-parts-ITEM` (copy an existing)
-	3. Add to `ch2-lambda-topic-parts` (using flag `ch2-installed-ITEM`)
-	4. Add to script `ch2-lambda-topic-parts-q` (if multiple words, add a no-spaces option, too)
+	2. Make script `command-parts-ITEM` (copy an existing)
+	3. Add to `command-parts` (using flag `ch2-installed-ITEM` and `ch2-carrying-ITEM`)
+	4. Add to script `command-parts-q` (if multiple words, add a no-spaces option, too)

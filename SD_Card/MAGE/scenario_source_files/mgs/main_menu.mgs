@@ -38,6 +38,7 @@ on_load-main_menu {
 		"<c>BOB2</>: ch2 bob's club basement"
 		"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
 		"<c>RTFM</>: Early access to RTFM books"
+		"<c>STORYFLAG</>: choose round (whole game, not just menu)"
 	}
 }
 
