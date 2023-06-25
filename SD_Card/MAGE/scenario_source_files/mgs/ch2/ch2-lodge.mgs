@@ -102,11 +102,11 @@ interact-ch2-alfonso-library {
 		}
 	} else if (variable ch2-alfonso-library-count is 3) {
 		show dialog {
-			SELF "Oho, \"The Complete Plays of Gilbert and Sullivan.\" I think I memorized one of their patter songs once. But was it from Pinafore or Penzance?"
+			SELF "Oho, \"The Complete Plays of Gilbert and Sullivan.\" I think I memorized one of their patter songs once. But was it from Pinafore or Penzance...?"
 		}
 	} else {
 		show dialog {
-			SELF "Oh, look at that. \"Rendezvous with Rama,\" but what a stunning cover! I don't recognize this edition. Who publizhed this one? Gollancz?"
+			SELF "Oh, look at that. \"Rendezvous with Rama,\" but what a stunning cover! I don't recognize this edition. Who publizhed this one? Gollancz...?"
 		}
 	}
 	copy face-player

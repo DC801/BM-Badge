@@ -22,10 +22,10 @@ on_load-ch2-castle-31 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-31 is false) {
-		show serial dialog { "Discovered <bold><c>WORKSHOP</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>GRAND HALL</>! Room added to map!" }
 		set flag ch2-seen-room-31 to true
 	} else {
-		show serial dialog { "Entering <bold>WORKSHOP</>..." }
+		show serial dialog { "Entering <bold>GRAND HALL</>..." }
 	}
 	if (
 		flag ch2-installed-keyboard is true

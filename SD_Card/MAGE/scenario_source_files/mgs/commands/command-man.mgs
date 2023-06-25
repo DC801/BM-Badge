@@ -503,7 +503,7 @@ ch2-lambda-person-lambda-name-followup {
 		# "Is that why the Big Bad doesn't have a name?" : ch2-lambda-person-lambda-name-followup-bigbad
 		# "Does a nickname not count as a name?" : ch2-lambda-person-lambda-name-followup-nickname
 		# "Why \"Lambda\" though?" : ch2-lambda-person-lambda-name-followup-lambda
-		# "(Quit)" : ch2-lambda-person-lambda-q
+		# "(Go back)" : ch2-lambda-person-lambda-q
 	}
 }
 

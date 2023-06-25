@@ -11,7 +11,7 @@ settings for serial dialog { wrap 60 }
 look-ch2-castle-1 {
 	show serial dialog spacer
 	show serial dialog {
-		"You looked around the <bold>FOYER</>."
+		"You looked around the <bold>CASTLE ENTRANCE</>."
 		" "
 		"This castle might have been glorious once, but it seems that time has not been kind to it. The edges of its banners are fraying and grungy, and you're not sure you'll ever get the \"used castle smell\" out of your hat."
 	}
@@ -83,7 +83,7 @@ on_load-ch2-castle-1 {
 	// entrance text
 	if (flag ch2-has-artifact is true) {
 		show serial dialog spacer
-		show serial dialog { "Entering <bold>FOYER</>..." }
+		show serial dialog { "Entering <bold>CASTLE ENTRANCE</>..." }
 	}
 
 	// room unique stuff
@@ -623,8 +623,9 @@ ch2-terminal-os-other {
 	show dialog {
 		Lambda "Oh, I see. Well, um, I'm afraid I can't be very much help then...."
 		"But, ahh, do please ask around at DC801, and maybe one of the folks there can help point you in the right direction."
+		"So, assuming you've gotten some help...."
 	}
-	set entity "%SELF%" interact_script to interact-ch2-xa
+	goto ch2-terminal-message-test
 }
 
 ch2-terminal-os-windows {

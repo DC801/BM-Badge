@@ -37,8 +37,11 @@ on_load-main_menu {
 		"<c>BOB</>: ch2 bob's club entrance"
 		"<c>BOB2</>: ch2 bob's club basement"
 		"<c>BOB3</>: ch2 bob's club basement (after cutscene)"
+		" "
+		"\t<g>Entire game debug options:</>"
 		"<c>RTFM</>: Early access to RTFM books"
-		"<c>STORYFLAG</>: choose round (whole game, not just menu)"
+		"<c>STORYFLAG _</>: choose round (whole game, not just menu)"
+		"<c>WARP _</>: warp to that castle room"
 	}
 }
 

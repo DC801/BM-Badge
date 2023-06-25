@@ -9,7 +9,7 @@ settings for dialog {
 look-ch2-castle-99 {
 	show serial dialog spacer
 	show serial dialog {
-		"TODO: SECRET ROOM on_look text\n "
+		"TODO: SECRET LAB on_look text\n "
 	}
 }
 
@@ -22,10 +22,10 @@ on_load-ch2-castle-99 {
 	// entrance text
 	show serial dialog spacer
 	if (flag ch2-seen-room-99 is false) {
-		show serial dialog { "Discovered <bold><c>SECRET ROOM</>! Room added to map!" }
+		show serial dialog { "Discovered <bold><c>SECRET LAB</>! Room added to map!" }
 		set flag ch2-seen-room-99 to true
 	} else {
-		show serial dialog { "Entering <bold>SECRET ROOM</>..." }
+		show serial dialog { "Entering <bold>SECRET LAB</>..." }
 	}
 	
 	goto ch2-map-init

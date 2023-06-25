@@ -124,6 +124,13 @@ ch2-map-init {
 
 	// DEBUG
 	register storyflag -> ch2-debug-storyflag
+	register storyflag + "0" -> ch2-debug-storyflag-0
+	register storyflag + "1" -> ch2-debug-storyflag-1
+	register storyflag + "2" -> ch2-debug-storyflag-2
+	register storyflag + "3" -> ch2-debug-storyflag-3
+	register storyflag + "4" -> ch2-debug-storyflag-4
+	register storyflag + "5" -> ch2-debug-storyflag-5
+	copy register-warp-debug
 	// END DEBUG
 
 	// For anything that needs to take time (like fade ins and walking animations) or anything that needs unique handling (hiding entities after checking game state) do that stuff BEFORE jumping to this script. That way this script can be a dead end. (The if/else "zigzags" require this to be a deadend, unless you use a callback variable to branch back again)

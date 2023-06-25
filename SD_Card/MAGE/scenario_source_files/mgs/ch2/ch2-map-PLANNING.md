@@ -34,56 +34,74 @@ Nethack-like
   |---------------
          |   1   |
          ---------
+```
 
-// ENTRANCE
-1. Exa room
+### ENTRANCE
+
+1. `Castle entrance`
 	- XA: intercom with XB (outside) and XC in room 99
 	- Save floppy
 	- ITEM: computer enclosure + motherboard
 
-// MAIN BRANCH
-11. Front hallway
+### MAIN BRANCH
+
+11. `Castle hallway front`
 	- ITEM: Monitor
-12. Back hallway
+12. `Castle hallway back`
 	- ITEM: phonograph
-13. Throne room
+13. `Throne room`
 	- the royal advisor (a goldfish, ruling in King Gibson's absence)
 	- ITEM: goldfish (CPU item 1)
-14. King Gibson's bedroom
+14. `King Gibson's bedroom`
 	- ITEM: grandfather clock
 
-// INDUSTRIAL AREA
-21. Blacksmith / workshop area
+### INDUSTRIAL AREA
+
+21. `Workshop`
 	- ITEM: abacus (CPU item 2)
 	- (will combine goldfish with abacus)
-22. Server room
+22. `Server room`
 	- ITEM: power supply
-23. Geothermal power plant
+23. `Power plant` (geothermal)
 	- Deliver Cactus Cooler to them to receive ITEM
 	- ITEM: Heat sink
 
-// FOOD STUFFS
-31. Grand hall
+### FOOD STUFFS
+
+31. `Grand hall`
 	- Copy Pasta bar
 	- Vending machine
 	- Rock band
 		- ITEM: keyboard (or possibly keytar)
-32. Kitchen
+32. `Castle kitchen`
 	- ITEM: RAM chips (from vending machine)
-33. Hydroponics area
+33. `Hydroponics room`
 	- ITEM: mouse (an actual rodent)
-34. Pantry
+34. `Castle pantry`
 	- ITEM: SSD/HD (plate)
 
-// THE END
-99. Secret room (teleport only)
+### THE END
+
+99. `Lambda's lab` (teleport only)
 	- Lambda
 	- XC: intercom with XB (outside) and XA in room 1
 	- ITEM: mainframe OS
 
-// TOWN
+### TOWN
+
+- `Town`
+- `Bakery`
+- `Greenhouse`
+- `Library`
+- `RTFM room` (aka `inner sanctum`)
+- `Mage house`
+- `Bob's club`
+- `Bob's club basement`
+- `Beatrice's house`
+- `Smith's house`
+- `WOPR room`
+
 - ITEM: cactus cooler (needed for heat sink)
-```
 
 ## ZONES
 

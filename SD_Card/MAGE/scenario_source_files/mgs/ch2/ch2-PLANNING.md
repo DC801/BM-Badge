@@ -11,7 +11,7 @@
 - [x] `keyboard` (keytar)
 - [ ] `mouse` (rodent)
 - [ ] `harddrive`
-	- [ ] `plate` (dinner plate)
+	- [x] `plate` (dinner plate)
 	- [ ] `needle` (phonograph needle)
 - [x] `ramchips` (bag of Doritos)
 - [x] `clock` (grandfather clock)
@@ -24,8 +24,8 @@
 - [ ] Lambda
 - [ ] King Gibson
 - [ ] Cat Cook
-- [ ] Castle goose (red bow)
-- [ ] Sea Moss
+- [x] Castle goose (red bow)
+- [x] Sea Moss
 - [x] Trash panda ("Wizard")
 - [x] Welder ("Rocco")
 - [ ] Better Exa sprite
