@@ -121,3 +121,41 @@ ch2-bert-secret-lambda-intro2 {
 	mutate CALLBACK = 1
 	goto ch2-lambda-bert-q
 }
+
+ch2-bert-message-lambda-intro {
+	show serial dialog spacer
+	show serial dialog {
+		"<m>LAMBDA:</> Hey, there! I saw that you finished the last list, and had just worked out the last few parts we need...."
+		" "
+		# "Oh yeah? What parts?" : ch2-bert-message-lambda-intro2a
+		# "Wait! What about Bert? Have you heard anything?" : ch2-bert-message-lambda-intro2b
+	}
+}
+ch2-bert-message-lambda-intro2a {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Oh yeah? What parts?"
+		" "
+		"<m>LAMBDA:</> TODO"
+	}
+	goto ch2-bert-message-lambda-intro3
+}
+ch2-bert-message-lambda-intro2b {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> Wait! What about Bert? Have you heard anything?"
+		" "
+		"<m>LAMBDA:</> TODO"
+	}
+	goto ch2-bert-message-lambda-intro3
+}
+ch2-bert-message-lambda-intro3 {
+	set flag ch2-lambda-message-prelude to true
+	show serial dialog spacer
+	show serial dialog {
+		"(TODO)"
+		" "
+		# "So we're almost done?" : ch2-lambda-round-3-parts1
+	}
+}
+

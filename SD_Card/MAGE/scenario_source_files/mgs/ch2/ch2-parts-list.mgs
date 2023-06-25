@@ -31,6 +31,12 @@ serial dialog ch2-describe-harddrive {
 	"\tNext, a <m>NEEDLE</>, like a record player needle. There's a <m>phonograph player somewhere in the central wing</> of the castle. That might be your best bet."
 	// see aftermath of each usage for an additional line
 }
+serial dialog ch2-describe-plate {
+	"<m>LAMBDA:</> TODO plate description"
+}
+serial dialog ch2-describe-needle {
+	"<m>LAMBDA:</> TODO needle description"
+}
 serial dialog ch2-describe-ramchips {
 	"<m>LAMBDA:</> For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. I think you'll have to <m>consult the hardware guys in the <m>workshop</>. Those guys should be able to hook you up."
 }
@@ -233,24 +239,12 @@ ch2-lambda-round-2-parts5c {
 	}
 	show serial dialog {
 		" "
-		# "What next?" : ch2-lambda-round-2-parts5d
+		# "Anything else?" : ch2-lambda-round-2-parts5d
 	}
 
 }
+
 ch2-lambda-round-2-parts5d {
-	show serial dialog spacer
-	show serial dialog {
-		"<c>YOU:</> What next?"
-		" "
-	}
-	show serial dialog ch2-describe-ramchips
-	show serial dialog {
-		" "
-		# "Anything else?" : ch2-lambda-round-2-parts5e
-	}
-}
-
-ch2-lambda-round-2-parts5e {
 	set flag ch2-lambda-paging to false
 	show serial dialog spacer
 	show serial dialog {
@@ -264,3 +258,63 @@ ch2-lambda-round-2-parts5e {
 	set flag ch2-permission-to-fuse to true
 	copy register-fuse
 }
+
+/* ---------- PARTS LIST: ROUND 3 ---------- */
+
+ch2-lambda-round-3-parts1 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> So we're almost done?"
+		" "
+		"<m>LAMBDA:</> Yeah, we're getting pretty close to the end here. Only a few parts left, but one is a bit of a doozy."
+		" "
+		# "In what way?" : ch2-lambda-round-3-parts2
+	}
+}
+
+ch2-lambda-round-3-parts2 {
+	show serial dialog spacer
+	show serial dialog {
+		"TODO"
+		" "
+		# "What else?" : ch2-lambda-round-3-parts3
+	}
+}
+ch2-lambda-round-3-parts3 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU:</> What else?"
+		" "
+	}
+	show serial dialog ch2-describe-ramchips
+	show serial dialog {
+		" "
+		# "Anything else?" : ch2-lambda-round-3-parts4
+	}
+}
+
+ch2-lambda-round-3-parts4 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU</>: And then?"
+		" "
+	}
+	show serial dialog ch2-describe-clock
+	show serial dialog {
+		" "
+		# "And then?" : ch2-lambda-round-3-parts5
+	}
+}
+
+ch2-lambda-round-3-parts5 {
+	show serial dialog spacer
+	show serial dialog {
+		"<c>YOU</>: And then?"
+		" "
+		"<m>LAMBDA:</> Then we're done."
+		"\tAfter that, you'll have to install the OS, and I'm still tweaking that. I should be done right about when you finish up there."
+		"\tRemember you can type <c>PARTS</> To see the parts list again. Good luck."
+	}
+	show serial dialog lambda-over
+}
+

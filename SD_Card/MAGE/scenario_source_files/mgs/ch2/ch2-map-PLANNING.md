@@ -158,11 +158,11 @@ Choose which "round" with the `ch2-storyflag-round` variable. Checkboxes refer t
 	- [ ] (6.) `harddrive`
 		- [x] `plate` (dinner plate) (room 34)
 		- [ ] `needle` (phonograph needle) (room 12)
-	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
-	- [ ] Bert "any messages yet?" convo happens when all of the above are done
-	- [ ] Lambda gives next round of the parts list
+	- [~] Bert "any messages yet?" convo happens when all of the above are done
+	- [~] Lambda gives next round of the parts list
 
 - THIRD ROUND: desperate (`ch2-storyflag-round` = 3)
+	- [x] (7.) `ramchips` (bag of Doritos) (room 32)
 	- [ ] (8.) `clock` (grandfather clock) (room 14)
 	- [ ] (9.) `cpu`
 		- [ ] `goldfish` (same goldfish sprite as bedroom) (room 13)

@@ -25,7 +25,7 @@ man-parts {
 command-parts {
 	show serial dialog spacer
 	show serial dialog {
-		"<m>LAMBDA:</> As for parts, we still need:"
+		"<m>LAMBDA:</> For parts, we still need:"
 	}
 	goto command-parts-print
 }
@@ -63,20 +63,26 @@ command-parts-print {
 	// ROUND TWO: abstract
 	else if (variable ch2-storyflag-round is == 2) {
 
-		if (flag ch2-installed-ramchips is true) {
-			show serial dialog { "\t- [x] RAM chips" }
-		} else if (flag ch2-carrying-ramchips is true) {
-			show serial dialog { "\t- [~] RAM chips" }
-		} else {
-			show serial dialog { "\t- [ ] RAM chips" }
-		}
-
 		if (flag ch2-installed-harddrive is true) {
 			show serial dialog { "\t- [x] hard drive" }
 		} else if (flag ch2-carrying-harddrive is true) {
 			show serial dialog { "\t- [~] hard drive" }
 		} else {
 			show serial dialog { "\t- [ ] hard drive" }
+		}
+		if (flag ch2-installed-plate is true) {
+			show serial dialog { "\t\t- [x] dinner plate" }
+		} else if (flag ch2-carrying-plate is true) {
+			show serial dialog { "\t\t- [~] dinner plate" }
+		} else {
+			show serial dialog { "\t\t- [ ] dinner plate" }
+		}
+		if (flag ch2-installed-needle is true) {
+			show serial dialog { "\t\t- [x] phonograph needle" }
+		} else if (flag ch2-carrying-needle is true) {
+			show serial dialog { "\t\t- [~] phonograph needle" }
+		} else {
+			show serial dialog { "\t\t- [ ] phonograph needle" }
 		}
 
 		if (flag ch2-installed-keyboard is true) {
@@ -98,6 +104,13 @@ command-parts-print {
 	// ROUND THREE: desperate
 	else if (variable ch2-storyflag-round is == 3) {
 
+		if (flag ch2-installed-ramchips is true) {
+			show serial dialog { "\t- [x] RAM chips" }
+		} else if (flag ch2-carrying-ramchips is true) {
+			show serial dialog { "\t- [~] RAM chips" }
+		} else {
+			show serial dialog { "\t- [ ] RAM chips" }
+		}
 
 		if (flag ch2-installed-clock is true) {
 			show serial dialog { "\t- [x] clock" }
@@ -113,6 +126,20 @@ command-parts-print {
 			show serial dialog { "\t- [~] cpu" }
 		} else {
 			show serial dialog { "\t- [ ] cpu" }
+		}
+		if (flag ch2-installed-goldfish is true) {
+			show serial dialog { "\t\t- [x] goldfish" }
+		} else if (flag ch2-carrying-goldfish is true) {
+			show serial dialog { "\t\t- [~] goldfish" }
+		} else {
+			show serial dialog { "\t\t- [ ] goldfish" }
+		}
+		if (flag ch2-installed-abacus is true) {
+			show serial dialog { "\t\t- [x] abacus" }
+		} else if (flag ch2-carrying-abacus is true) {
+			show serial dialog { "\t\t- [~] abacus" }
+		} else {
+			show serial dialog { "\t\t- [ ] abacus" }
 		}
 
 	}
@@ -164,13 +191,15 @@ command-parts-q {
 		
 		_ "HARD DRIVE" : command-parts-harddrive
 		_ "HARDDRIVE" : command-parts-harddrive
+		_ "HARD DISK" : command-parts-harddrive
+		_ "HARDDISK" : command-parts-harddrive
 		_ "HDD" : command-parts-harddrive
+
+		// ROUND THREE: desperate
 
 		_ "RAM CHIPS" : command-parts-ramchips
 		_ "RAMCHIPS" : command-parts-ramchips
 		_ "RAM" : command-parts-ramchips
-
-		// ROUND THREE: desperate
 		
 		_ "CLOCK" : command-parts-clock
 
@@ -194,8 +223,10 @@ ch2-describe-powersupply { show serial dialog ch2-describe-powersupply }
 ch2-describe-keyboard { show serial dialog ch2-describe-keyboard }
 ch2-describe-mouse { show serial dialog ch2-describe-mouse }
 ch2-describe-harddrive { show serial dialog ch2-describe-harddrive }
-ch2-describe-ramchips { show serial dialog ch2-describe-ramchips }
+ch2-describe-plate { show serial dialog ch2-describe-plate }
+ch2-describe-needle { show serial dialog ch2-describe-needle }
 
+ch2-describe-ramchips { show serial dialog ch2-describe-ramchips }
 ch2-describe-clock { show serial dialog ch2-describe-clock }
 ch2-describe-cpu { show serial dialog ch2-describe-cpu }
 ch2-describe-goldfish { show serial dialog ch2-describe-goldfish }
@@ -297,6 +328,42 @@ command-parts-harddrive {
 	}
 	goto command-parts-q
 }
+command-parts-plate {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-plate is true) {
+		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the plate to make a CPU. You're good." }
+	} else if (flag ch2-carrying-plate is true) {
+		if (flag ch2-carrying-needle is false) {
+			show serial dialog { "<m>LAMBDA:</> You've got a good spinnable plate already. So now what you need is a phonograph needle to act as a read head." }
+		} else {
+			show serial dialog { "<m>LAMBDA:</> Now that you have both the plate and needle, you can use the <c>FUSE</> command to combine them." "\tAh, so it seems the plate has enough iron content in the ceramic for this to actually work, huh?" }
+		}
+	} else {
+		copy ch2-describe-plate
+	}
+	goto command-parts-q
+}
+command-parts-needle {
+	if (variable ch2-storyflag-round is < 3) {
+		goto command-parts-ahead-confused
+	}
+	show serial dialog spacer
+	if (flag ch2-installed-needle is true) {
+		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the needle to make a CPU. You're good." }
+	} else if (flag ch2-carrying-needle is true) {
+		if (flag ch2-carrying-plate is false) {
+			show serial dialog { "<m>LAMBDA:</> You've got a read head -- of sorts -- already. So now what you need is a dinner plate to act as a hard drive platter." }
+		} else {
+			show serial dialog { "<m>LAMBDA:</> Now that you have both the needle and plate, you can use the <c>FUSE</> command to combine them." "\tOh, wow, it looks like that phonograph needle is electric. Weird... but also serendipitous." }
+		}
+	} else {
+		copy ch2-describe-needle
+	}
+	goto command-parts-q
+}
 command-parts-ramchips {
 	if (variable ch2-storyflag-round is < 2) {
 		goto command-parts-ahead
@@ -351,7 +418,7 @@ command-parts-goldfish {
 		show serial dialog { "<m>LAMBDA:</> You've already... um, \"used\" the goldfish to make a CPU. You're good." }
 	} else if (flag ch2-carrying-goldfish is true) {
 		if (flag ch2-carrying-abacus is false) {
-			show serial dialog { "<m>LAMBDA:</> You've got the goldfish already, the thinking part of the CPU, so you'll need to pick up the other half: the abacus." }
+			show serial dialog { "<m>LAMBDA:</> You've got the goldfish already, the \"thinking\" part of the CPU, so you'll need to pick up the other half: the abacus." }
 		} else {
 			show serial dialog { "<m>LAMBDA:</> Now that you have both the goldfish and abacus, you can use the <c>FUSE</> command to combine them." "\tAh... don't worry about the fact that the goldfish is sentient and its identity will be transmogrified by this. It's all going to be fine." }
 		}
@@ -369,7 +436,7 @@ command-parts-abacus {
 		show serial dialog { "<m>LAMBDA:</> You've already got the abacus combined with the goldfish into a CPU, so don't worry about the abacus half of things now." }
 	} else if (flag ch2-carrying-abacus is true) {
 		if (flag ch2-carrying-goldfish is false) {
-			show serial dialog { "<m>LAMBDA:</> You've got an abacus already, the remembering part of the CPU, so you'll need to pick up the other half: the goldfish." }
+			show serial dialog { "<m>LAMBDA:</> You've got an abacus already, the \"remembering\" part of the CPU, so you'll need to pick up the other half: the goldfish." }
 		} else {
 			show serial dialog { "<m>LAMBDA:</> Now that you have both the abacus and goldfish, you can use the <c>FUSE</> command to combine them." "\tYeah, it's... um... just kind of a magical invocation that doesn't make a lot of physical sense. But just trust the process." }
 		}

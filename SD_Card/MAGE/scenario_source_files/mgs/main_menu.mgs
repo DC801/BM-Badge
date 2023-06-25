@@ -27,6 +27,8 @@ on_load-main_menu {
 	register bob3 -> bob3
 	register ch2 -> start-chapter2
 	register rtfm -> command-rtfm
+	copy register-warp-debug
+	copy register-storyflag
 	show serial dialog spacer
 	show serial dialog {
 		"\t<g>Main menu debug options:</>"
