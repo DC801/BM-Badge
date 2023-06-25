@@ -60,9 +60,10 @@ class MageCommandControl {
 		bool isInputEnabled = true;
 		MageCommandControl();
 		void handleStart();
-		void processCommand(char *commandString);
+		void processCommand(const char *commandString);
 		void processInputAsCommand(std::string input);
-		void processInputAsTrappedResponse(std::string input);
+		void processInputAsTrappedResponse(const std::string& input);
+		void cancelTrap();
 		void showSerialDialog(
 			uint16_t serialDialogId,
 			bool disableNewline = false,
@@ -87,8 +88,8 @@ class MageCommandControl {
 			uint16_t argumentStringId
 		);
 		MageSerialDialogCommand* searchForCommand(
-			std::string verb,
-			std::string subject
+			const std::string& verb,
+			const std::string& subject
 		);
 		uint32_t size();
 		void reset();

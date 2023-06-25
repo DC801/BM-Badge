@@ -271,5 +271,38 @@
 		"messages": [
 			"Looks like you just ran the look script on the entity named `%SELF%`! Goat job!"
 		]
+	},
+	"serial_dialog-map-action_testing-gui_open" : {
+		"messages": [
+			"---",
+			" ",
+			"Looks like a GUI dialog was indeed open!"
+		]
+	},
+	"serial_dialog-map-action_testing-gui_closed" : {
+		"messages": [
+			"---",
+			" ",
+			"Looks like a GUI dialog was NOT open!"
+		]
+	},
+	"serial_dialog-map-action_testing-debug_false" : {
+		"messages": [
+			"---",
+			" ",
+			"Oh hey! Normal mode! (not debug)"
+		]
+	},
+	"serial_dialog-map-action_testing-debug_true" : {
+		"messages": [
+			"---",
+			" ",
+			"Oh hey! Debug mode!"
+		]
+	},
+	"honk_point" : {
+		"messages": [
+			"HONK!"
+		]
 	}
 }

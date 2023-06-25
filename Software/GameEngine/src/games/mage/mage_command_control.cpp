@@ -34,7 +34,7 @@ void MageCommandControl::handleStart() {
 	}
 }
 
-void MageCommandControl::processCommand(char *commandString) {
+void MageCommandControl::processCommand(const char *commandString) {
 	std::string lowercasedInput = commandString;
 	badAsciiLowerCase(&lowercasedInput);
 	if (!isInputTrapped) {
@@ -46,7 +46,6 @@ void MageCommandControl::processCommand(char *commandString) {
 
 void MageCommandControl::processInputAsCommand(std::string input) {
 	// Used to split string around spaces.
-	bool syntaxValid = true;
 	uint8_t wordCount = 0;
 	std::string word;
 	std::string verb;
@@ -55,11 +54,8 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 
 	// Traverse through all words
 	// while loop through segments to store in string word
-	while (
-		input.compare("") != 0
-		&& syntaxValid
-	) {
-		size_t index = input.find_first_of(" ");
+	while (!input.empty()) {
+		size_t index = input.find_first_of(' ');
 		if (index != std::string::npos) {
 			// we found a space
 			word = input.substr(0,index);
@@ -77,37 +73,26 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 		wordCount++;
 		if (wordCount == 1) {
 			verb = "" + word;
-		} else if (wordCount == 2 && word == "at") {
+		} else if (
+			wordCount == 2
+			&& ( word == "at" || word == "to" )
+		) {
 			modifier = word;
-		} else if (wordCount == 2) {
-			subject = "" + word;
-		} else if (wordCount > 2 && modifier == "at") {
-			if (subject == "") {
-				subject = word;
-			} else {
-				subject += " " + word;
-			}
 		} else {
-			// only cases could be wordCount > 2
-			syntaxValid = false;
+			if(!subject.empty()) {
+				subject += " ";
+			}
+			subject += word;
 		}
 	}
 
-	if (syntaxValid) {
-		std::string message = "Verb: " + verb;
-		if (subject.length() == 0) {
-			message += "\n";
-		} else {
-			message += " | Subject: " + subject + "\n";
-		}
-		commandResponseBuffer += message;
-	} else {
-		commandResponseBuffer += (
-			"Invalid command! Commands are exactly one or two words.\n"
-			"Examples: help | look | look at $ENTITY | go $DIRECTION\n"
-		);
-		return;
-	}
+
+	std::string message = "Verb: " + verb;
+	if (!modifier.empty()) { message += " | Modifier: " + modifier; }
+	if (!subject.empty()) { message += " | Subject: " + subject; }
+	message += "\n";
+	commandResponseBuffer += message;
+
 
 	if(verb == "help") {
 		// I sure thought `lastCommandUsed` & the `MageSerialCommands` enum
@@ -117,14 +102,13 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			"Supported Verbs:\n"
 			"  help  look  go"
 		);
-		if (registeredCommands.size() > 0) {
-			for (size_t i = 0; i < registeredCommands.size(); ++i) {
-				auto command = &registeredCommands[i];
+		if (registeredCommands.empty()) {
+			for (const auto& command : registeredCommands) {
 				if (
-					command->argumentStringId == 0
-					&& !command->isFail
+					command.argumentStringId == 0
+					&& !command.isFail
 				) {
-					commandResponseBuffer += "  " + command->combinedString;
+					commandResponseBuffer += "  " + command.combinedString;
 				}
 			}
 		}
@@ -132,7 +116,7 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 	}
 	else if(verb == "look") {
 		lastCommandUsed = COMMAND_LOOK;
-		if (subject == "") {
+		if (subject.empty()) {
 			commandResponseBuffer += (
 				"You try to look.\n"
 			);
@@ -254,27 +238,26 @@ void MageCommandControl::processInputAsCommand(std::string input) {
 			subject
 		);
 		if (command != nullptr) {
-			commandResponseBuffer = "COMMAND FOUND!!!!: " + verb + "\n";
+			commandResponseBuffer += "COMMAND FOUND!!!!: " + verb + "\n";
 			MageScript->initScriptState(
 				&MageScript->resumeStates.serial,
 				command->scriptId,
 				true
 			);
 		} else {
-			commandResponseBuffer = "Unrecognized Verb: " + verb + "\n";
+			commandResponseBuffer += "Unrecognized Verb: " + verb + "\n";
 		}
 	}
 }
 
-void MageCommandControl::processInputAsTrappedResponse(std::string input) {
+void MageCommandControl::processInputAsTrappedResponse(const std::string& input) {
 	commandResponseBuffer += "processInputAsTrappedResponse: " + input + "\n";
 	MageSerialDialogResponseTypes responseType = serialDialog.serialResponseType;
 	if (responseType == RESPONSE_ENTER_NUMBER) {
-		int responseIndex;
 		bool errorWhileParsingInt = false;
-		if (sscanf(input.c_str(), "%d", &responseIndex) == 1) {
-			// commandResponseBuffer += "Parse string as number success";
-		} else {
+		char *parseStatus;
+		long responseIndex = strtol(input.c_str(), &parseStatus, 0);
+		if(*parseStatus != 0){
 			// commandResponseBuffer += "Parse string as number FAIL!!!";
 			errorWhileParsingInt = true;
 		}
@@ -318,6 +301,10 @@ void MageCommandControl::processInputAsTrappedResponse(std::string input) {
 		}
 	}
 }
+
+void MageCommandControl::cancelTrap() {
+	isInputTrapped = false;
+};
 
 void MageCommandControl::showSerialDialog(
 	uint16_t _serialDialogId,
@@ -431,9 +418,8 @@ void MageCommandControl::unregisterCommand(
 	bool wasCommandFound = false;
 	if (isFail) {
 		// We're unregistering ONLY the fail state
-		for (size_t i = 0; i < registeredCommands.size(); ++i) {
-			auto command = registeredCommands[i];
-			if (
+		for (const auto& command : registeredCommands) {
+				if (
 				!(
 					command.commandStringId == commandStringId
 					&& command.isFail
@@ -446,9 +432,9 @@ void MageCommandControl::unregisterCommand(
 		}
 	} else {
 		// We're unregistering all the arguments, the fail state, and the root command
-		for (size_t i = 0; i < registeredCommands.size(); ++i) {
-			if (registeredCommands[i].commandStringId != commandStringId) {
-				newCommands.push_back(registeredCommands[i]);
+		for (auto & registeredCommand : registeredCommands) {
+			if (registeredCommand.commandStringId != commandStringId) {
+				newCommands.push_back(registeredCommand);
 			} else {
 				wasCommandFound = true;
 			}
@@ -468,14 +454,14 @@ void MageCommandControl::unregisterArgument(
 ) {
 	std::vector<MageSerialDialogCommand> newCommands = {};
 	bool wasCommandFound = false;
-	for (size_t i = 0; i < registeredCommands.size(); ++i) {
+	for (auto & registeredCommand : registeredCommands) {
 		if (
 			!(
-				registeredCommands[i].commandStringId == commandStringId
-				&& registeredCommands[i].argumentStringId == argumentStringId
+				registeredCommand.commandStringId == commandStringId
+				&& registeredCommand.argumentStringId == argumentStringId
 			)
 		) {
-			newCommands.push_back(registeredCommands[i]);
+			newCommands.push_back(registeredCommand);
 		} else {
 			wasCommandFound = true;
 		}
@@ -490,29 +476,28 @@ void MageCommandControl::unregisterArgument(
 }
 
 MageSerialDialogCommand* MageCommandControl::searchForCommand(
-	std::string verb,
-	std::string subject
+	const std::string& verb,
+	const std::string& subject
 ) {
 	MageSerialDialogCommand* failStateCommand = nullptr;
 	MageSerialDialogCommand* successStateCommand = nullptr;
 
 	auto combinedString = verb;
-	if (subject != "") {
+	if (!subject.empty()) {
 		combinedString += " " + subject;
 	}
-	for (size_t i = 0; i < registeredCommands.size(); ++i) {
-		auto command = &registeredCommands[i];
+	for (auto & command : registeredCommands) {
 		if (
-			command->combinedString == combinedString
-			&& !command->isFail
+			command.combinedString == combinedString
+			&& !command.isFail
 		) {
-			successStateCommand = command;
+			successStateCommand = &command;
 			break;
 		} else if (
-			command->combinedString == verb
-			&& command->isFail
+			command.combinedString == verb
+			&& command.isFail
 		) {
-			failStateCommand = command;
+			failStateCommand = &command;
 		}
 	}
 
