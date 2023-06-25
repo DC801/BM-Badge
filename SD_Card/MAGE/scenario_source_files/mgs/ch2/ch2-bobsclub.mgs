@@ -35,8 +35,14 @@ carry-cc { set flag ch2-carrying-cactuscooler to true }
 uncarry-cc { set flag ch2-carrying-cactuscooler to false }
 basement { set flag ch2-cutseen-bob-party to true }
 unbasement { set flag ch2-cutseen-bob-party to false }
-toot { set flag ch2-toot-done to true }
-untoot { set flag ch2-toot-done to false }
+toot {
+	set flag ch2-toot-done to true
+	copy register-parts
+}
+untoot {
+	set flag ch2-toot-done to false
+	unregister parts
+}
 reset {
 	set flag ch2-carrying-cactuscooler to false
 	set flag ch2-want-cactuscooler to false
