@@ -37,9 +37,6 @@ serial dialog ch2-describe-plate {
 serial dialog ch2-describe-needle {
 	"<m>LAMBDA:</> TODO needle description"
 }
-serial dialog ch2-describe-ramchips {
-	"<m>LAMBDA:</> For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. I think you'll have to <m>consult the hardware guys in the <m>workshop</>. Those guys should be able to hook you up."
-}
 
 // ROUND THREE: desperate
 
@@ -56,6 +53,9 @@ serial dialog ch2-describe-goldfish {
 }
 serial dialog ch2-describe-abacus {
 	"<m>LAMBDA:</> TODO: abacus description"
+}
+serial dialog ch2-describe-ramchips {
+	"<m>LAMBDA:</> For <m>RAM</>... I'll admit I'm at a complete loss. I'm finding nothing in the inventory sheets that might work. But <m>ask the hardware guys in the <m>workshop</>. Those guys know their stuff, and I trust them to come up with something."
 }
 
 /* ---------- PARTS LIST: ROUND 1 ---------- */

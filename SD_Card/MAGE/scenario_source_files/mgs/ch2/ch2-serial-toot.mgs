@@ -74,7 +74,7 @@ ch2-toot-step1-notokay {
 
 ch2-toot-step1-end {
 	show serial dialog {
-		"\tNote that dialog options begin with \"0\" instead of \"1\". That's for <bold>computer reasons</>...."
+		"\tNote that dialog options begin with \"0\" instead of \"1\". That's for \"<bold>computer reasons</>.\""
 	}
 	mutate ch2-toot-level = 2
 	goto ch2-toot-step2-start
@@ -181,7 +181,7 @@ ch2-toot-step3-nomagic {
 
 ch2-toot-step3-halftime {
 	show serial dialog {
-		"\tAnyway, for the final demonstration, I'll end our conversation so you can try using the magic word <c>MAP</>. Here, I'll grant you permission to use the map program."
+		"\tAnyway, for the final demonstration, I'll end our conversation so you can try using the magic word--that is, the command--<c>MAP</>. Here, I'll grant you permission to use the map program."
 		"\tOnce you've tried using the map, type <c>MAN</> to restart our conversation."
 		" "
 	}
