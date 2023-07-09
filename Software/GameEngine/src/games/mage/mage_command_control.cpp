@@ -401,7 +401,17 @@ void MageCommandControl::registerCommand(
 	command.commandStringId = commandStringId;
 	command.scriptId = scriptId;
 	command.isFail = isFail;
-	registeredCommands.push_back(command);
+	int32_t existingCommandIndex = getCommandIndex(command.combinedString, command.isFail, true);
+	if (existingCommandIndex != -1) {
+		// replace the existing one
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "Duplicate command registration, you may wanna verify that: " + lowercasedString + "\n";
+		}
+		registeredCommands[existingCommandIndex] = command;
+	} else {
+		// is new, put it on the end
+		registeredCommands.push_back(command);
+	}
 }
 void MageCommandControl::registerArgument(
 	uint16_t commandStringId,
@@ -421,8 +431,48 @@ void MageCommandControl::registerArgument(
 		.scriptId = scriptId,
 		.isFail = false,
 	};
-	registeredCommands.push_back(command);
+	int32_t existingCommandIndex = getCommandIndex(command.combinedString, command.isFail, false);
+	if (existingCommandIndex != -1) {
+		// replace the existing one
+		if(MageGame->isEntityDebugOn) {
+			commandResponseBuffer += "Duplicate argument registration, you may wanna verify that: " + lowercasedString + "\n";
+		}
+		registeredCommands[existingCommandIndex] = command;
+	} else {
+		// is new, put it on the end
+		registeredCommands.push_back(command);
+	}
 }
+int32_t MageCommandControl::getCommandIndex(const std::string &combinedString, bool isFail, bool useFail) {
+	int32_t result = -1;
+	for (auto & command : registeredCommands) {
+		bool areStringsTheSame = combinedString == command.combinedString;
+		bool areFailureStatesTheSame = useFail ? command.isFail == isFail : true;
+		/*
+		std::string debugMessage = "";
+		debugMessage += "'" + combinedString + "'";
+		debugMessage += " == ";
+		debugMessage += "'" + command.combinedString + "'";
+		debugMessage += ": areStringsTheSame?";
+		debugMessage += areStringsTheSame ? "Yes" : "No";
+		debugMessage += " fails?: ";
+		debugMessage += isFail ? "1" : "0";
+		debugMessage += " == ";
+		debugMessage += command.isFail ? "1" : "0";
+		debugMessage += " | areFailureStatesTheSame?:";
+		debugMessage += areFailureStatesTheSame ? "Yes" : "No";
+		debugMessage += "\n";
+		printf(debugMessage.c_str());
+		*/
+		if (areStringsTheSame && areFailureStatesTheSame) {
+			// found an existing incomingCommand with the same params, get its id
+			result = &command - &registeredCommands[0];
+			break;
+		}
+	}
+	return result;
+}
+
 void MageCommandControl::unregisterCommand(
 	uint16_t commandStringId,
 	bool isFail
