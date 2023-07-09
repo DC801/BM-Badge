@@ -359,13 +359,20 @@ ch2-wizard-ascend {
 }
 tick-ch2-wizard-ascend-and-watch-with-check {
 	if (entity Wizard animation is 0) { // WIZARD IS DOWN
+		// show serial dialog {"DEBUG: Wizard is down! Switching on_tick to to 'tick-ch2-wizard-ascend-and-watch'"}
 		goto tick-ch2-wizard-ascend-and-watch
+	} else {
+		// show serial dialog {"DEBUG: Wizard is not <bold>strictly</> down..."}
+		set entity Wizard animation to 3
 	}
 	set entity Wizard tick_script to face-player
 }
 tick-ch2-wizard-ascend-and-watch {
+	// show serial dialog {"\t'play entity Wizard animation 5 once'"}
 	play entity Wizard animation 5 once
+	// show serial dialog {"\t'set entity Wizard animation to 3'"}
 	set entity Wizard animation to 3
+	// show serial dialog {"\t'set entity Wizard tick_script to face-player'"}
 	set entity Wizard tick_script to face-player
 }
 ch2-wizard-descend {
