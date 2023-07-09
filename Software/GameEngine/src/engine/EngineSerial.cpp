@@ -104,7 +104,7 @@ void EngineHandleSerialInput ()
 		if(on_command_function_pointer != nullptr) {
 			on_command_function_pointer(command_buffer);
 		}
-		EngineSendSerialMessage("> ");
+		EngineSendSerialMessage("");
 		memset(
 			command_buffer,
 			0,
