@@ -3024,5 +3024,201 @@
 		},
 		"scenarioIndex": 46,
 		"serialized": {}
+	},
+	"cockatiel": {
+		"type": "cockatiel",
+		"tileset": "entity-cockatiel.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 47,
+		"serialized": {}
+	},
+	"npc01": {
+		"type": "npc01",
+		"tileset": "entity-npc01.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 20,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": true
+				},
+				{
+					"tileid": 19,
+					"flip_x": false
+				},
+				{
+					"tileid": 18,
+					"flip_x": false
+				}
+			]
+		},
+		"scenarioIndex": 48,
+		"serialized": {}
+	},
+	"npc02": {
+		"type": "npc02",
+		"tileset": "entity-npc02.json",
+		"animations": {
+			"idle": [
+				{
+					"tileid": 14,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": true,
+					"flip_y": false
+				},
+				{
+					"tileid": 13,
+					"flip_x": false,
+					"flip_y": false
+				},
+				{
+					"tileid": 12,
+					"flip_x": false,
+					"flip_y": false
+				}
+			],
+			"walk": [
+				{
+					"tileid": 2,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": true
+				},
+				{
+					"tileid": 1,
+					"flip_x": false
+				},
+				{
+					"tileid": 0,
+					"flip_x": false
+				}
+			],
+			"action": [
+				{
+					"tileid": 17,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": true
+				},
+				{
+					"tileid": 16,
+					"flip_x": false
+				},
+				{
+					"tileid": 15,
+					"flip_x": false
+				}
+			]
+		}
 	}
 }

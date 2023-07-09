@@ -22,6 +22,8 @@ ch2-cutscene-bert-secret {
 	wait 100ms
 	set entity "%PLAYER%" tick_script to watch-bert
 	wait 400ms
+	// the below is unnecessary if this cutscene is triggered via normal means; cannot use a zigzag here, though, since this script is run with COPY_SCRIPT
+	// you can't trigger the "stuck on animation 5" with this, though, since you can't feasibly get to this part of the script before the Wiz is all the way ascended anyway. (Hitting `tick-ch2-wizard-ascend-and-watch-with-check` when it's in progress breaks things!)
 	set entity Wizard tick_script to tick-ch2-wizard-ascend-and-watch-with-check
 	walk entity Bert along geometry bert-spot over 1200ms
 	wait 100ms

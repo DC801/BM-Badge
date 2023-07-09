@@ -138,7 +138,7 @@
                 }, 
                 {
                  "class":"",
-                 "gid":2147484289,
+                 "gid":641,
                  "height":48,
                  "id":34,
                  "name":"Goose",
@@ -151,14 +151,14 @@
                  "rotation":0,
                  "visible":true,
                  "width":48,
-                 "x":57,
+                 "x":282,
                  "y":120
                 }, 
                 {
                  "class":"",
-                 "gid":692,
+                 "gid":2147484367,
                  "height":32,
-                 "id":35,
+                 "id":36,
                  "name":"Jean-Paul",
                  "properties":[
                         {
@@ -169,8 +169,26 @@
                  "rotation":0,
                  "visible":true,
                  "width":32,
-                 "x":60,
-                 "y":163
+                 "x":61,
+                 "y":204
+                }, 
+                {
+                 "class":"",
+                 "gid":741,
+                 "height":32,
+                 "id":37,
+                 "name":"Frankie",
+                 "properties":[
+                        {
+                         "name":"on_interact",
+                         "type":"string",
+                         "value":"interact-ch2-frankie"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":32,
+                 "x":72,
+                 "y":157
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -214,7 +232,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":36,
+ "nextobjectid":38,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.9.2",
@@ -267,6 +285,15 @@
         {
          "firstgid":683,
          "source":"..\/entities\/entity-welder.json"
+        },
+    
+        {
+         "firstgid":707,
+         "source":"..\/entities\/entity-cockatiel.json"
+        }, 
+        {
+         "firstgid":728,
+         "source":"..\/entities\/entity-npc01.json"
         }],
  "tilewidth":32,
  "type":"map",
